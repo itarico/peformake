@@ -1,0 +1,1 @@
+ALTER TABLE public.clients ADD COLUMN videomaker_id UUID REFERENCES public.staff_members(id);

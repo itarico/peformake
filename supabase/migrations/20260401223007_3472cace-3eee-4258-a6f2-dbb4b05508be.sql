@@ -1,0 +1,1 @@
+UPDATE public.notification_email_settings SET agency_whatsapp_phone = '81985672212' WHERE id = '00000000-0000-0000-0000-000000000001';

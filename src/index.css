@@ -1,0 +1,342 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* SISTEMA PEFORMAKE - Design System Profissional/Corporativo
+   All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Cores principais - Azul corporativo refinado */
+    --background: 220 20% 97%;
+    --foreground: 224 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 47% 11%;
+
+    /* Primary - Azul profundo premium */
+    --primary: 222 80% 28%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Secondary - Cinza refinado */
+    --secondary: 220 16% 96%;
+    --secondary-foreground: 224 47% 11%;
+
+    /* Muted - Cinza quente */
+    --muted: 220 14% 93%;
+    --muted-foreground: 220 13% 46%;
+
+    /* Accent - Azul suave */
+    --accent: 220 60% 95%;
+    --accent-foreground: 222 80% 28%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Success */
+    --success: 152 69% 36%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    /* Info */
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 220 20% 91%;
+    --input: 220 20% 91%;
+    --ring: 222 80% 28%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar - Dark premium */
+    --sidebar-background: 224 47% 9%;
+    --sidebar-foreground: 220 25% 90%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 224 40% 16%;
+    --sidebar-accent-foreground: 220 25% 95%;
+    --sidebar-border: 224 30% 16%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* Chart colors */
+    --chart-1: 217 91% 60%;
+    --chart-2: 152 69% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 199 89% 48%;
+    --chart-5: 262 83% 58%;
+
+    /* Peformake Landing Theme */
+    --performake-primary: 183 100% 12%;
+    --performake-dark: 186 94% 7%;
+    --performake-darker: 186 94% 5%;
+    --performake-text: 180 33% 93%;
+    --performake-muted: 184 14% 55%;
+    --performake-accent: 182 100% 39%;
+    --performake-accent-glow: 182 100% 50%;
+
+    /* Gastronomy Vertical Theme — warm amber/burnt tones */
+    --gastro-dark: 25 40% 8%;
+    --gastro-darker: 25 45% 5%;
+    --gastro-primary: 30 60% 15%;
+    --gastro-accent: 36 100% 50%;
+    --gastro-accent-glow: 40 100% 60%;
+    --gastro-muted: 30 20% 50%;
+    --gastro-text: 35 30% 92%;
+  }
+
+  .dark {
+    --background: 224 47% 7%;
+    --foreground: 210 40% 98%;
+
+    --card: 224 40% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 224 40% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 224 33% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 224 33% 15%;
+    --muted-foreground: 220 20% 65%;
+
+    --accent: 224 33% 15%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 152 69% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 224 25% 15%;
+    --input: 224 25% 15%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 224 47% 5%;
+    --sidebar-foreground: 220 25% 90%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 224 40% 10%;
+    --sidebar-accent-foreground: 220 25% 95%;
+    --sidebar-border: 224 30% 10%;
+    --sidebar-ring: 217 91% 60%;
+
+    --chart-1: 217 91% 60%;
+    --chart-2: 152 69% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 199 89% 48%;
+    --chart-5: 262 83% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeSpeed; /* Melhora a performance de scroll em páginas longas */
+  }
+}
+
+/* Landing page uses Inter for corporate authority feel */
+.landing-page {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Mobile fallback: ensure framer-motion whileInView elements become visible
+   even if IntersectionObserver fails to fire (common on some mobile browsers
+   with lazy-loaded sections). After 1.5s, force visibility. */
+@media (max-width: 767px) {
+  .landing-page [style*="opacity: 0"],
+  .landing-page [style*="opacity:0"] {
+    animation: force-visible 0.01s ease 1.5s forwards;
+  }
+}
+
+@keyframes force-visible {
+  to {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Premium text gradient utility */
+.text-gradient-accent {
+  background: linear-gradient(135deg, hsl(182 100% 39%), hsl(182 100% 55%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: hsla(186, 94%, 7%, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid hsla(0, 0%, 100%, 0.06);
+}
+
+.glass-card-light {
+  background: hsla(0, 0%, 100%, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid hsla(0, 0%, 100%, 0.06);
+}
+
+/* Internal app card variants */
+.card-elevated {
+  box-shadow: 0 1px 3px hsla(224, 47%, 11%, 0.04), 0 4px 12px hsla(224, 47%, 11%, 0.03);
+  border: 1px solid hsla(220, 20%, 91%, 0.8);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-elevated:hover {
+  box-shadow: 0 2px 8px hsla(224, 47%, 11%, 0.06), 0 8px 24px hsla(224, 47%, 11%, 0.06);
+}
+
+.card-interactive {
+  box-shadow: 0 1px 3px hsla(224, 47%, 11%, 0.04), 0 4px 12px hsla(224, 47%, 11%, 0.03);
+  border: 1px solid hsla(220, 20%, 91%, 0.8);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  box-shadow: 0 4px 12px hsla(224, 47%, 11%, 0.08), 0 12px 32px hsla(224, 47%, 11%, 0.06);
+  transform: translateY(-1px);
+  border-color: hsl(217 91% 60% / 0.2);
+}
+
+/* KPI icon containers */
+.kpi-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Subtle background gradient for main content area */
+.app-main-bg {
+  background: linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(220 25% 95%) 100%);
+}
+
+/* Animated gradient border */
+@keyframes border-rotate {
+  0% { --border-angle: 0deg; }
+  100% { --border-angle: 360deg; }
+}
+
+.gradient-border {
+  position: relative;
+  overflow: hidden;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 60%, hsl(182 100% 39%) 80%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-rotate 4s linear infinite;
+}
+
+/* Noise texture overlay */
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Custom scrollbar for professional look */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* PWA safe areas for notch/home indicator */
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* PWA standalone mode adjustments */
+@media (display-mode: standalone) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Remove Lovable badges and branding */
+a[href*="lovable.dev"], 
+iframe[src*="lovable.dev"],
+div[style*="Edit with Lovable"],
+.lovable-badge {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: -9999 !important;
+}

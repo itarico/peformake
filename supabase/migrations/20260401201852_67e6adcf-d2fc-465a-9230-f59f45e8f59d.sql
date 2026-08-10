@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_crm_leads_client_phone ON public.crm_leads (client_id, phone);

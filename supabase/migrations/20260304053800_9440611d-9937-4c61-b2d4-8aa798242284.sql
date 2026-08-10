@@ -1,0 +1,1 @@
+ALTER TABLE public.ai_analyses ALTER COLUMN instance_id DROP NOT NULL;

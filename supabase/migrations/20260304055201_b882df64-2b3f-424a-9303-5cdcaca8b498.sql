@@ -1,0 +1,1 @@
+ALTER TABLE traffic_meta_connections ALTER COLUMN ad_account_id DROP NOT NULL;

@@ -1,0 +1,117 @@
+project_id = "zhnpkvsbsyghxuxpakdh"
+
+[functions.claude-mcp]
+verify_jwt = false
+
+
+
+[functions.consulting-ai]
+verify_jwt = false
+
+[functions.consulting-ai-assistant]
+verify_jwt = false
+
+[functions.consulting-audiovisual-ai]
+verify_jwt = false
+
+[functions.consulting-audiovisual-research]
+verify_jwt = false
+
+[functions.consulting-audiovisual-scripts]
+verify_jwt = false
+
+[functions.consulting-audiovisual-scriptwriter]
+verify_jwt = false
+
+[functions.consulting-content-analysis]
+verify_jwt = false
+
+[functions.consulting-extract-metrics]
+verify_jwt = false
+
+[functions.consulting-firecrawl-research]
+verify_jwt = false
+
+[functions.consulting-generate-context]
+verify_jwt = false
+
+[functions.consulting-guided-ai]
+verify_jwt = false
+
+[functions.consulting-portal-ai]
+verify_jwt = false
+
+[functions.consulting-seasonality-research]
+verify_jwt = false
+
+[functions.consulting-social-media-ai]
+verify_jwt = false
+
+[functions.consulting-strategic-chat]
+verify_jwt = false
+
+[functions.consulting-suggest-sites]
+verify_jwt = false
+
+[functions.meta-ads-oauth]
+verify_jwt = false
+
+[functions.meta-ads-sync]
+verify_jwt = false
+
+[functions.consulting-traffic-ai]
+verify_jwt = false
+
+[functions.crm-wasender]
+verify_jwt = false
+
+[functions.crm-wasender-webhook]
+verify_jwt = false
+
+[functions.crm-ai-analyze]
+verify_jwt = false
+
+[functions.crm-meta-conversion-events]
+verify_jwt = false
+
+[functions.meta-ads-audiences]
+verify_jwt = false
+
+[functions.meta-ads-campaigns]
+verify_jwt = false
+
+[functions.send-notification-email]
+verify_jwt = false
+
+[functions.crm-bot-ai]
+verify_jwt = false
+
+[functions.crm-intelligence-engine]
+verify_jwt = false
+
+[functions.crm-agent-dispatcher]
+verify_jwt = false
+
+[functions.send-whatsapp-notification]
+verify_jwt = false
+
+[functions.commission-auto-check]
+verify_jwt = false
+
+[functions.whatsapp-art-events]
+verify_jwt = false
+
+[functions.whatsapp-cron-client]
+verify_jwt = false
+
+[functions.whatsapp-cron-staff]
+verify_jwt = false
+
+[functions.whatsapp-daily-briefing]
+verify_jwt = false
+
+[functions.crm-conversation-summary]
+verify_jwt = false
+
+[functions.instagram-sync]
+verify_jwt = false

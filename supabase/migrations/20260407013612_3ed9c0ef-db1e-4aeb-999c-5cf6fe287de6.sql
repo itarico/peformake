@@ -1,0 +1,1 @@
+UPDATE crm_quote_configs SET page_type = 'gastro_form', reward_text = 'Preencha e ganhe um brinde especial!', whatsapp_redirect_number = '5500000000000' WHERE client_id = 'c56026e1-953e-4917-8fee-594da6161c92';

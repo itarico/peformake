@@ -1,0 +1,1 @@
+ALTER TABLE public.arts ADD COLUMN IF NOT EXISTS asset_urls TEXT[] DEFAULT '{}';

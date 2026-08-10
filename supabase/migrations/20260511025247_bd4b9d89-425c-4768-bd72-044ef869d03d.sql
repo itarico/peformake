@@ -1,0 +1,1 @@
+ALTER TABLE public.audiovisual_projects ADD COLUMN IF NOT EXISTS shoot_time TEXT;

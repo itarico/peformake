@@ -1,0 +1,1 @@
+ALTER TABLE public.agency_expenses ADD COLUMN client_id UUID REFERENCES public.clients(id);

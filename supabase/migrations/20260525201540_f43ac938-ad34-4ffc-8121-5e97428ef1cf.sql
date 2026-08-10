@@ -1,0 +1,1 @@
+ALTER TABLE public.arts ADD COLUMN IF NOT EXISTS audio_observation_url TEXT;

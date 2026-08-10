@@ -1,0 +1,1 @@
+ALTER TABLE public.sdr_leads ADD COLUMN IF NOT EXISTS instagram_handle TEXT;

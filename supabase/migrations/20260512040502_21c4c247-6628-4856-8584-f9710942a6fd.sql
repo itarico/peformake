@@ -1,0 +1,1 @@
+ALTER TABLE public.clients ADD COLUMN nps INTEGER CHECK (nps >= 0 AND nps <= 10);

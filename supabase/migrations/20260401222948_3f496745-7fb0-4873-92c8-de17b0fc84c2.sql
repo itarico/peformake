@@ -1,0 +1,1 @@
+ALTER TABLE public.notification_email_settings ADD COLUMN IF NOT EXISTS agency_whatsapp_phone TEXT DEFAULT '81985672212';

@@ -1,0 +1,1 @@
+CREATE POLICY "Public can update quiz leads" ON public.quiz_leads FOR UPDATE USING (true) WITH CHECK (true);

@@ -1,0 +1,1 @@
+ALTER TABLE public.quiz_leads ADD COLUMN IF NOT EXISTS qualification text;
