@@ -1,31 +1,13 @@
-import { useEffect, useRef, useState, type FC } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
 
 const ClientLogosSection = () => {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    const element = sectionRef.current;
-    if (!element || shouldLoad) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoad(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '300px 0px' }
-    );
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [shouldLoad]);
-
-  const { data: allClients } = useQuery({
+  // Este componente já é carregado sob demanda (code-split) pela página,
+  // então buscamos os dados assim que ele monta — sem depender de um
+  // segundo gatilho de "entrou na tela", que podia travar a seção
+  // permanentemente no esqueleto de carregamento se não disparasse.
+  const { data: allClients, isLoading, isError } = useQuery({
     queryKey: ['landing-all-client-logos'],
     queryFn: async () => {
       const { data: activeClients } = await supabase
@@ -44,10 +26,12 @@ const ClientLogosSection = () => {
       const clientMap = new Map<string, { id: string; name: string; logo_url: string | null }>();
 
       (activeClients || []).forEach(c => {
+        if (!c.name) return;
         clientMap.set(c.name.toLowerCase(), { id: c.id, name: c.name, logo_url: c.logo_url });
       });
 
       (portfolioCases || []).forEach(c => {
+        if (!c.client_name) return;
         const key = c.client_name.toLowerCase();
         if (!clientMap.has(key)) {
           clientMap.set(key, { id: c.id, name: c.client_name, logo_url: c.logo_url });
@@ -58,15 +42,24 @@ const ClientLogosSection = () => {
 
       return Array.from(clientMap.values());
     },
-    enabled: shouldLoad,
     staleTime: 1000 * 60 * 30,
     gcTime: 1000 * 60 * 60,
   });
 
+  if (isError) {
+    console.error('ClientLogosSection: falha ao carregar clientes do Supabase');
+  }
+
   const clients = allClients || [];
 
+  // Nada pra mostrar (e não é mais loading) -> some com a seção
+  // em vez de ficar presa num esqueleto de carregamento pra sempre.
+  if (!isLoading && (isError || clients.length === 0)) {
+    return null;
+  }
+
   return (
-    <section ref={sectionRef} className="border-t border-border bg-card py-16 md:py-24 overflow-hidden">
+    <section className="border-t border-border bg-card py-16 md:py-24 overflow-hidden">
       <div className="mx-auto max-w-6xl px-6 mb-10 md:mb-14">
         <div className="text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Nossos clientes</span>
@@ -80,7 +73,7 @@ const ClientLogosSection = () => {
       </div>
 
       <div className="w-full">
-        {shouldLoad && clients.length > 0 ? (
+        {clients.length > 0 ? (
           <InfiniteSlider gap={24} duration={30} durationOnHover={60}>
             {clients.map((client) => (
               <div key={client.id} className="flex-shrink-0 flex flex-col items-center gap-2 w-24">
