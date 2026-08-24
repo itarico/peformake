@@ -184,12 +184,28 @@ const IncomingLeads = ({ sdrStaffId }: IncomingLeadsProps) => {
             </div>
             
             <div className="space-y-3 min-h-[100px] bg-muted/20 p-2 rounded-xl border border-dashed border-muted-foreground/20">
-              {groupedLeads[tier.value]?.map((lead: any) => (
-                <Card key={lead.id} className="border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all group">
+              {groupedLeads[tier.value]?.map((lead: any) => {
+                const isLost = lead.status === 'lost';
+                return (
+                <Card
+                  key={lead.id}
+                  className={`shadow-sm hover:shadow-md transition-all group ${
+                    isLost
+                      ? 'border-l-4 border-l-red-600 bg-red-50/60 dark:bg-red-950/20 border-red-200 dark:border-red-900'
+                      : 'border-l-4 border-l-primary'
+                  }`}
+                >
                   <CardContent className="p-3 space-y-3">
                     <div className="flex justify-between items-start">
                       <div className="min-w-0">
-                        <h4 className="font-bold text-sm truncate">{lead.contact_name}</h4>
+                        <div className="flex items-center gap-1 mb-0.5">
+                          <h4 className="font-bold text-sm truncate">{lead.contact_name}</h4>
+                          {isLost && (
+                            <Badge className="h-4 px-1.5 text-[8px] font-bold bg-red-600 text-white border-none shrink-0">
+                              Perdido
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-[10px] text-muted-foreground truncate">{lead.company_name || 'Individual'}</p>
                         {lead.sdr_staff_id && (
                           <div className="flex items-center gap-1 mt-1">
@@ -217,7 +233,8 @@ const IncomingLeads = ({ sdrStaffId }: IncomingLeadsProps) => {
                     </Button>
                   </CardContent>
                 </Card>
-              ))}
+                );
+              })}
               {groupedLeads[tier.value]?.length === 0 && (
                 <div className="text-center py-8 text-[10px] text-muted-foreground font-medium uppercase tracking-tighter opacity-50">
                   Nenhum lead
