@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { differenceInMinutes } from 'date-fns';
+import { ROLE_OPTIONS, normalizeRoles } from '@/lib/staffRoles';
+import { useStaffAuth } from '@/contexts/StaffAuthContext';
 import { TeamProductivityTracking } from './TeamProductivityTracking';
 import { VList } from 'virtua';
 import { OptimizedAvatar } from '@/components/ui/OptimizedAvatar';
@@ -183,6 +185,8 @@ const RoleKPIs = memo(({ role, metrics, executionTimes }: { role: string, metric
 // StaffPerformanceCard moved to separate file for better performance
 
 function IntegratedStaffPanel() {
+  const { isAdmin: isStaffAdminRole, isLeader: isStaffLeaderRole, isEllcazo: isEllcazoRole, isFinanceEllcazo: isFinanceEllcazoRole } = useStaffAuth();
+  const isEllcazoOnly = (isEllcazoRole || isFinanceEllcazoRole) && !isStaffAdminRole && !isStaffLeaderRole;
   const [activeTab, setActiveTab] = useState('payments');
   const [activeConfigTab, setActiveConfigTab] = useState('membros');
   const [editingGoalId, setEditingGoalId] = useState<string | null>(null);
@@ -214,7 +218,7 @@ function IntegratedStaffPanel() {
   const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false);
   const [isCommissionDialogOpen, setIsCommissionDialogOpen] = useState(false);
   const [selectedMetasCategory, setSelectedMetasCategory] = useState('all');
-  const [activeEntity, setActiveEntity] = useState<'all' | 'peformake' | 'ellcazo'>('all');
+  const [activeEntity, setActiveEntity] = useState<'all' | 'peformake' | 'ellcazo'>(isEllcazoOnly ? 'ellcazo' : 'all');
   
   const [newGoal, setNewGoal] = useState<{
     id?: string;
@@ -918,7 +922,7 @@ function IntegratedStaffPanel() {
           {/* Header title removed per user request */}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex bg-muted p-1 rounded-lg mr-2">
+          <div className={cn('flex bg-muted p-1 rounded-lg mr-2', isEllcazoOnly && 'hidden')}>
             <Button 
               variant={activeEntity === 'all' ? 'secondary' : 'ghost'} 
               size="sm" 
@@ -2169,16 +2173,14 @@ function StaffConfigCard({ member, onUpdate }: { member: any, onUpdate: (data: a
   const [comm, setComm] = useState((member.commission_percent || 0) * 100);
   const [jobTitle, setJobTitle] = useState(member.job_title || '');
   const [role, setRole] = useState(member.role || 'social_media');
-  const [roles, setRoles] = useState<string[]>(member.roles || [member.role || 'social_media']);
+  // normalizeRoles corrige por alias cargos gravados errado direto no banco (ex: 'video' em vez
+  // de 'videomaker') — sem isso o checkbox aparecia desmarcado mesmo com o cargo "atribuído".
+  const [roles, setRoles] = useState<string[]>(normalizeRoles(member.roles && member.roles.length > 0 ? member.roles : [member.role || 'social_media']));
 
-  const roleOptions = [
-    { value: 'social_media', label: 'Social Media' },
-    { value: 'designer', label: 'Designer' },
-    { value: 'traffic_manager', label: 'Gestor Tráfego' },
-    { value: 'sdr', label: 'SDR' },
-    { value: 'leader', label: 'Head de Marketing' },
-    { value: 'closer', label: 'Closer' }
-  ];
+  // Lista completa de cargos vem de src/lib/staffRoles.ts (ROLE_OPTIONS) — fonte única
+  // compartilhada com a outra tela de cargos (Equipe); antes essa lista era própria daqui e
+  // ficava incompleta (faltavam Videomaker/Editor/Ellcazo/Admin).
+  const roleOptions = ROLE_OPTIONS;
 
   const toggleRole = (r: string) => {
     if (roles.includes(r)) {

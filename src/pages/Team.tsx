@@ -21,6 +21,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { AppRole } from '@/types/database';
 import { ImageUpload } from '@/components/ImageUpload';
+import { ROLE_OPTIONS, normalizeRoles } from '@/lib/staffRoles';
 
 interface StaffMember {
   id: string;
@@ -225,7 +226,9 @@ export default function Team() {
       email: member.email || '',
       phone: member.phone || '',
       role: member.role,
-      selectedRoles: member.roles && member.roles.length > 0 ? member.roles : [member.role],
+      // normalizeRoles corrige por alias cargos gravados errado direto no banco (ex: 'video' em
+      // vez de 'videomaker') — sem isso o checkbox aparecia desmarcado mesmo com o cargo "atribuído".
+      selectedRoles: normalizeRoles(member.roles && member.roles.length > 0 ? member.roles : [member.role]),
       cost_per_art: (member.cost_per_art || 0).toString(),
       monthly_cost: (member.monthly_cost || 0).toString(),
       base_salary_percent: (member.base_salary_percent || 60).toString(),
@@ -252,34 +255,19 @@ export default function Team() {
     }
   };
 
+  // Rótulo vem de ROLE_OPTIONS (mesma fonte da lista de checkboxes abaixo) — nunca mais desatualiza
+  // sozinho. normalizeRoles cobre o caso de um valor legado (ex: 'video') que ainda não foi
+  // resalvo com o valor certo.
   const getRoleLabel = (role: AppRole) => {
-    const labels: Record<string, string> = { 
-      admin: 'Administrador', 
-      social_media: 'Social Media', 
-      designer: 'Designer',
-      traffic: 'Tráfego',
-      sdr: 'SDR',
-      leader: 'Head de Marketing',
-      videomaker: 'Videomaker',
-      editor: 'Editor',
-      closer: 'Closer'
-    };
-    return labels[role] || role;
+    const normalized = normalizeRoles([role])[0];
+    return ROLE_OPTIONS.find((o) => o.value === normalized)?.label || role;
   };
 
-  const getRoleBadgeVariant = (role: AppRole) => {
-    const variants: Record<string, 'default' | 'secondary' | 'outline'> = { 
-      admin: 'default', 
-      social_media: 'secondary', 
-      designer: 'outline',
-      traffic: 'secondary',
-      sdr: 'outline',
-      leader: 'default',
-      videomaker: 'secondary',
-      editor: 'outline',
-      closer: 'default'
-    };
-    return variants[role] || 'outline';
+  const getRoleBadgeVariant = (role: AppRole): 'default' | 'secondary' | 'outline' => {
+    const normalized = normalizeRoles([role])[0];
+    if (normalized === 'admin' || normalized === 'ellcazo') return 'default';
+    if (['social_media', 'traffic', 'traffic_manager', 'videomaker', 'gestor_trafego'].includes(normalized)) return 'secondary';
+    return 'outline';
   };
 
   const formatCurrency = (value: number) =>
@@ -369,27 +357,20 @@ export default function Team() {
 
                   <TabsContent value="roles" className="space-y-4">
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 rounded-lg border p-3 bg-muted/20">
-                      {([
-                        ['admin', 'Admin'], 
-                        ['social_media', 'Social Media'], 
-                        ['designer', 'Designer'], 
-                        ['traffic', 'Tráfego'], 
-                        ['sdr', 'SDR'],
-                        ['closer', 'Closer'],
-                        ['videomaker', 'Video'], 
-                        ['editor', 'Editor'], 
-                        ['leader', 'Head de Marketing']
-                      ] as const).map(([value, label]) => (
+                      {/* Lista vem de src/lib/staffRoles.ts (ROLE_OPTIONS) — fonte única compartilhada
+                          com a outra tela de cargos (Financeiro > Equipe); antes essa lista era
+                          própria daqui e ficava incompleta (foi assim que "Ellcazo" sumiu de atribuir). */}
+                      {ROLE_OPTIONS.map(({ value, label }) => (
                         <div key={value} className="flex items-center gap-2 hover:bg-muted/50 p-2 rounded transition-colors border border-transparent hover:border-border">
                           <Checkbox
                             id={`role-${value}`}
-                            checked={formData.selectedRoles.includes(value as any)}
+                            checked={formData.selectedRoles.includes(value)}
                             onCheckedChange={(checked) => {
                               setFormData((prev) => {
                                 const next = checked
-                                  ? [...prev.selectedRoles, value as AppRole]
+                                  ? [...prev.selectedRoles, value]
                                   : prev.selectedRoles.filter((r) => r !== value);
-                                return { ...prev, selectedRoles: next.length > 0 ? next : [value as AppRole], role: next[0] || (value as AppRole) };
+                                return { ...prev, selectedRoles: next.length > 0 ? next : [value], role: next[0] || value };
                               });
                             }}
                           />

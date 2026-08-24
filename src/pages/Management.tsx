@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs-l
 import { useQueryClient } from '@tanstack/react-query';
 import { LayoutDashboard, DollarSign, Users, ClipboardCheck, KeyRound, Globe, BarChart3 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useStaffAuth } from '@/contexts/StaffAuthContext';
 
 // Lazy loading components with custom prefetch support
 const ManagementDashboard = lazy(() => import('@/components/management/ManagementDashboard'));
@@ -15,11 +16,19 @@ const SitePanel = lazy(() => import('@/components/management/SitePanel'));
 const CohortPanel = lazy(() => import('@/components/management/CohortPanel'));
 
 const Management = () => {
+  const { isAdmin: isStaffAdmin, isLeader, isFinanceEllcazo, isEllcazo } = useStaffAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTab = searchParams.get('tab') || 'dashboard';
   const [activeTab, setActiveTab] = useState(initialTab);
   const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
+
+  // Cargo "Financeiro (Ellcazo)": só a aba financeira, nada mais de Financeiro (Equipe,
+  // Credenciais, Site, Cohort). A trava de entidade (só Ellcazo, sem alternar pra Peformake/Geral)
+  // é dentro do próprio FinancialPanel.
+  const isFinanceEllcazoOnly = isFinanceEllcazo && !isEllcazo && !isStaffAdmin && !isLeader;
+  // Perfil "Admin Ellcazo": financeiro da Ellcazo com lançamentos + equipe da Ellcazo.
+  const isEllcazoOnly = isEllcazo && !isStaffAdmin && !isLeader;
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -63,6 +72,49 @@ const Management = () => {
       queryClient.prefetchQuery({ queryKey: ['cohort-tab-events'] });
     }
   };
+
+  if (isFinanceEllcazoOnly) {
+    return (
+      <div className="container mx-auto py-6 space-y-6">
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Financeiro — Ellcazo</h1>
+          <p className="text-muted-foreground">Acesso restrito aos dados financeiros da Ellcazo.</p>
+        </div>
+        <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+          <FinancialPanel />
+        </Suspense>
+      </div>
+    );
+  }
+
+  if (isEllcazoOnly) {
+    return (
+      <div className="container mx-auto py-6 space-y-6">
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Financeiro — Ellcazo</h1>
+          <p className="text-muted-foreground">Lançamentos e equipe da produtora.</p>
+        </div>
+        <Tabs value={activeTab === 'performance' ? 'performance' : 'financial'} onValueChange={handleTabChange} className="space-y-4">
+          <TabsList className="flex flex-wrap items-center justify-start gap-1 p-0.5 bg-background border rounded-lg h-auto w-fit">
+            <TabsTrigger value="financial" className="flex items-center gap-1.5 text-xs py-2 px-3">
+              <DollarSign className="h-3.5 w-3.5" /> Lançamentos
+            </TabsTrigger>
+            <TabsTrigger value="performance" className="flex items-center gap-1.5 text-xs py-2 px-3">
+              <Users className="h-3.5 w-3.5" /> Equipe
+            </TabsTrigger>
+          </TabsList>
+          <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+            <TabsContent value="financial" className="border-none p-0 outline-none">
+              <FinancialPanel />
+            </TabsContent>
+            <TabsContent value="performance" className="border-none p-0 outline-none">
+              <IntegratedStaffPanel />
+            </TabsContent>
+          </Suspense>
+        </Tabs>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-6 space-y-6">

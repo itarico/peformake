@@ -16,6 +16,7 @@ import {
   Search, Clock, Phone, ExternalLink, Camera, Film
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { normalizeRoles } from '@/lib/staffRoles';
 
 export default function AudiovisualOperation() {
   const queryClient = useQueryClient();
@@ -114,12 +115,14 @@ export default function AudiovisualOperation() {
     p.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const videomakers = staffMembers.filter((s: any) => 
-    s.role === 'videomaker' || (s.roles || []).includes('videomaker') || s.role === 'admin'
+  // normalizeRoles corrige cargos gravados com valor errado direto no banco (ex: 'video' em vez
+  // de 'videomaker'), senão a pessoa some dessas listas mesmo estando marcada.
+  const videomakers = staffMembers.filter((s: any) =>
+    normalizeRoles(s.roles && s.roles.length > 0 ? s.roles : [s.role]).some((r) => r === 'videomaker' || r === 'admin')
   );
 
-  const editors = staffMembers.filter((s: any) => 
-    s.role === 'editor' || (s.roles || []).includes('editor') || s.role === 'admin'
+  const editors = staffMembers.filter((s: any) =>
+    normalizeRoles(s.roles && s.roles.length > 0 ? s.roles : [s.role]).some((r) => r === 'editor' || r === 'admin')
   );
 
   return (

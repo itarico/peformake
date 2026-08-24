@@ -83,7 +83,7 @@ const adminMenuItems = [
 
 export function AppSidebar() {
   const { profile, isAdmin, isSocialMedia, isDesigner, isStaff, signOut } = useAuth();
-  const { staffMember, staffSignOut, isAdmin: isStaffAdmin, isLeader: isStaffLeader, isSocialMedia: isStaffSocialMedia, isDesigner: isStaffDesigner, isSDR: isStaffSDR, isCloser: isStaffCloser, isVideomaker: isStaffVideomaker, isEditor: isStaffEditor, isHeadMarketing: isStaffHeadMarketing, isStaff: isStaffMember, activeRole, setActiveRole } = useStaffAuth();
+  const { staffMember, staffSignOut, isAdmin: isStaffAdmin, isLeader: isStaffLeader, isSocialMedia: isStaffSocialMedia, isDesigner: isStaffDesigner, isSDR: isStaffSDR, isCloser: isStaffCloser, isVideomaker: isStaffVideomaker, isEditor: isStaffEditor, isHeadMarketing: isStaffHeadMarketing, isFinanceEllcazo: isStaffFinanceEllcazo, isAudiovisualFull: isStaffAudiovisualFull, isEllcazo: isStaffEllcazo, isStaff: isStaffMember, activeRole, setActiveRole } = useStaffAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -146,9 +146,14 @@ export function AppSidebar() {
       ]
     : socialMediaItems;
 
+  // Bug real corrigido: "Design" era item fixo aqui, sem guarda de cargo nenhuma — qualquer um que
+  // visse o grupo Serviços (ex: videomaker/editor/ellcazo, só por causa do link de Audiovisual) via
+  // "Design" listado também, mesmo sem o cargo designer. Cada item agora tem sua própria condição.
   const servicesMenuItems = [
-    { title: 'Design', icon: Palette, href: '/production' },
-    ...(isFullAdmin || isStaffLeader || isStaffVideomaker || isStaffEditor || effectiveIsSocialMedia ? [
+    ...(isFullAdmin || isStaffLeader ? [
+      { title: 'Design', icon: Palette, href: '/production' },
+    ] : []),
+    ...(isFullAdmin || isStaffLeader || isStaffVideomaker || isStaffEditor || effectiveIsSocialMedia || isStaffAudiovisualFull || isStaffEllcazo ? [
       { title: 'Audiovisual', icon: Film, href: '/audiovisual' },
     ] : []),
     ...(isFullAdmin ? [
@@ -342,8 +347,28 @@ export function AppSidebar() {
           renderGroup('Planejamento', planningMenuItems, planningOpen, setPlanningOpen)}
 
         {/* Serviços */}
-        {(isFullAdmin || isStaffLeader || isStaffHeadMarketing || effectiveIsSocialMedia || (effectiveIsDesigner && isRealAdmin) || isStaffVideomaker || isStaffEditor) &&
+        {(isFullAdmin || isStaffLeader || isStaffHeadMarketing || effectiveIsSocialMedia || (effectiveIsDesigner && isRealAdmin) || isStaffVideomaker || isStaffEditor || isStaffAudiovisualFull || isStaffEllcazo) &&
           renderGroup('Serviços', servicesMenuItems, servicesOpen, setServicesOpen)}
+
+        {/* Financeiro (Ellcazo) — cargo restrito só à aba financeira da Ellcazo */}
+        {(isStaffFinanceEllcazo || isStaffEllcazo) && !isFullAdmin && !isStaffLeader && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    onClick={() => navigate('/management?tab=financial')}
+                    isActive={isActive('/management')}
+                    tooltip="Financeiro (Ellcazo)"
+                  >
+                    <BarChart3 className="h-4 w-4" />
+                    <span>Financeiro (Ellcazo)</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
         
         {/* Specific Design Menu for non-admin designers */}
         {effectiveIsDesigner && !isFullAdmin && !isStaffLeader && (

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRole } from '@/types/database';
+import { normalizeRoles } from '@/lib/staffRoles';
 
 interface StaffMember {
   id: string;
@@ -26,6 +27,9 @@ interface StaffAuthContextType {
   isVideomaker: boolean;
   isEditor: boolean;
   isHeadMarketing: boolean;
+  isFinanceEllcazo: boolean;
+  isAudiovisualFull: boolean;
+  isEllcazo: boolean;
   isStaff: boolean;
   activeRole: AppRole | null;
   setActiveRole: (role: AppRole) => void;
@@ -35,9 +39,14 @@ interface StaffAuthContextType {
 
 const StaffAuthContext = createContext<StaffAuthContextType | null>(null);
 
-function deriveRoles(staff: StaffMember) {
-  const roles = staff.roles && staff.roles.length > 0 ? staff.roles : [staff.role];
-  return roles;
+/**
+ * Normaliza por alias (ex: 'video' -> 'videomaker') — cargos atribuídos direto no banco, fora da
+ * tela de atribuição, às vezes usaram valores que não batem com o que o código espera. Ver
+ * src/lib/staffRoles.ts.
+ */
+function deriveRoles(staff: StaffMember): AppRole[] {
+  const raw = staff.roles && staff.roles.length > 0 ? staff.roles : [staff.role];
+  return normalizeRoles(raw);
 }
 
 export function StaffAuthProvider({ children }: { children: ReactNode }) {
@@ -73,7 +82,8 @@ export function StaffAuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     const roles = deriveRoles(staffMember);
-    const stored = localStorage.getItem('staff_active_role') as AppRole | null;
+    const storedRaw = localStorage.getItem('staff_active_role');
+    const stored = storedRaw ? normalizeRoles([storedRaw])[0] : null;
     if (stored && roles.includes(stored)) {
       setActiveRoleState(stored);
     } else {
@@ -158,6 +168,10 @@ export function StaffAuthProvider({ children }: { children: ReactNode }) {
   const isVideomaker = roles.includes('videomaker') || effectiveRole === 'videomaker';
   const isEditor = roles.includes('editor') || effectiveRole === 'editor';
   const isHeadMarketing = roles.includes('head_marketing') || effectiveRole === 'head_marketing';
+  const isFinanceEllcazo = roles.includes('finance_ellcazo') || effectiveRole === 'finance_ellcazo';
+  const isAudiovisualFull = roles.includes('audiovisual_full') || effectiveRole === 'audiovisual_full';
+  // Perfil dedicado da produtora Ellcazo (braço da Peformake): Audiovisual + Financeiro Ellcazo.
+  const isEllcazo = roles.includes('ellcazo') || effectiveRole === 'ellcazo';
   const isStaff = !!staffMember;
 
   return (
@@ -174,6 +188,9 @@ export function StaffAuthProvider({ children }: { children: ReactNode }) {
         isVideomaker,
         isEditor,
         isHeadMarketing,
+        isFinanceEllcazo,
+        isAudiovisualFull,
+        isEllcazo,
         isStaff,
         activeRole: effectiveRole,
         setActiveRole,
