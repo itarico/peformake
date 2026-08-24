@@ -61,6 +61,27 @@ interface Stage {
   is_lost: boolean;
 }
 
+/** Trilha de bolinhas mostrando em que sub-etapa o lead está dentro da etapa macro atual (ex:
+ *  dentro de "2º Etapa: SDR Pipeline", que tem 3 sub-etapas) — bolinha preenchida = já passou ou
+ *  está nela, vazia = ainda não chegou. */
+const StageProgressDots = ({ stagesList, currentStageId }: { stagesList: Stage[]; currentStageId: string | null }) => {
+  if (stagesList.length <= 1) return null;
+  const currentIndex = stagesList.findIndex(s => s.id === currentStageId);
+  return (
+    <div className="flex items-center gap-1" title={stagesList[currentIndex]?.name}>
+      {stagesList.map((s, i) => (
+        <span
+          key={s.id}
+          className={`h-1.5 w-1.5 rounded-full transition-colors ${
+            i <= currentIndex ? '' : 'bg-muted-foreground/20'
+          }`}
+          style={i <= currentIndex ? { backgroundColor: s.color || 'currentColor' } : undefined}
+        />
+      ))}
+    </div>
+  );
+};
+
 const SDRPipelineKanban = ({ viewMode }: { viewMode?: 'sdr' | 'closer' }) => {
   const { sdrStaffId, isAdminView, sdrList } = useSDRContext();
   const queryClient = useQueryClient();
@@ -585,27 +606,40 @@ const SDRPipelineKanban = ({ viewMode }: { viewMode?: 'sdr' | 'closer' }) => {
                     </div>
 
                     <div className="p-3 space-y-3 flex-1 overflow-y-auto no-scrollbar max-h-[600px]">
-                      {stageLeads.map(lead => (
+                      {stageLeads.map(lead => {
+                        const isLost = lead.status === 'lost';
+                        return (
                         <Card
                           key={lead.id}
                           draggable
                           onDragStart={() => setDraggedLead(lead.id)}
-                          className="cursor-move hover:shadow-xl transition-all border-l-4 border-l-transparent hover:border-l-primary group relative bg-background border shadow-sm"
+                          className={`cursor-move hover:shadow-xl transition-all group relative shadow-sm ${
+                            isLost
+                              ? 'border-l-4 border-l-red-600 bg-red-50/60 dark:bg-red-950/20 border-red-200 dark:border-red-900'
+                              : 'border-l-4 border-l-transparent hover:border-l-primary bg-background border'
+                          }`}
                         >
                           <CardContent className="p-3 space-y-3">
                             <div className="flex justify-between items-start gap-2">
                               <div className="flex-1 min-w-0" onClick={() => openEdit(lead)}>
                                 <div className="flex flex-col gap-1.5 mb-1.5">
                                   <div className="flex items-center justify-between gap-1.5">
-                                    <Badge className={`h-4 px-1.5 text-[9px] font-bold ${
-                                      lead.lead_tier === 'A' ? 'bg-purple-600' : 
-                                      lead.lead_tier === 'B' ? 'bg-blue-600' : 
-                                      lead.lead_tier === 'C' ? 'bg-slate-600' : 
-                                      lead.lead_tier === 'Desqualificado' ? 'bg-red-600' : 'bg-gray-400'
-                                    } text-white border-none shadow-sm`}>
-                                      Prioridade {lead.lead_tier}
-                                    </Badge>
-                                    
+                                    <div className="flex items-center gap-1">
+                                      <Badge className={`h-4 px-1.5 text-[9px] font-bold ${
+                                        lead.lead_tier === 'A' ? 'bg-purple-600' :
+                                        lead.lead_tier === 'B' ? 'bg-blue-600' :
+                                        lead.lead_tier === 'C' ? 'bg-slate-600' :
+                                        lead.lead_tier === 'Desqualificado' ? 'bg-red-600' : 'bg-gray-400'
+                                      } text-white border-none shadow-sm`}>
+                                        Prioridade {lead.lead_tier}
+                                      </Badge>
+                                      {isLost && (
+                                        <Badge className="h-4 px-1.5 text-[9px] font-bold bg-red-600 text-white border-none shadow-sm">
+                                          Perdido
+                                        </Badge>
+                                      )}
+                                    </div>
+
                                     {lead.staff_members?.full_name && (
                                       <div className="flex items-center gap-1">
                                         <UserCheck className="h-2.5 w-2.5 text-primary" />
@@ -616,11 +650,14 @@ const SDRPipelineKanban = ({ viewMode }: { viewMode?: 'sdr' | 'closer' }) => {
                                     )}
                                   </div>
                                   <h4 className="text-sm font-bold truncate leading-none group-hover:text-primary transition-colors">{lead.contact_name}</h4>
-                                  <div className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3 text-muted-foreground" />
-                                    <span className="text-[10px] text-muted-foreground font-medium">
-                                      {new Date(lead.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
-                                    </span>
+                                  <div className="flex items-center justify-between gap-1">
+                                    <div className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3 text-muted-foreground" />
+                                      <span className="text-[10px] text-muted-foreground font-medium">
+                                        {new Date(lead.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                                      </span>
+                                    </div>
+                                    <StageProgressDots stagesList={stagesList} currentStageId={lead.stage_id} />
                                   </div>
                                 </div>
                                 <p className="text-[11px] text-muted-foreground truncate font-medium">{lead.company_name || 'Individual'}</p>
@@ -709,7 +746,8 @@ const SDRPipelineKanban = ({ viewMode }: { viewMode?: 'sdr' | 'closer' }) => {
                             </div>
                           </CardContent>
                         </Card>
-                      ))}
+                        );
+                      })}
                       {stageLeads.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-10 opacity-20 select-none">
                           <Target className="h-8 w-8 mb-2" />
