@@ -253,7 +253,10 @@ export default function Users() {
       head_marketing: 'Head de Marketing',
       closer: 'Closer',
       traffic_manager: 'Gestor de Tráfego',
-      gestor_trafego: 'Gestor de Tráfego'
+      gestor_trafego: 'Gestor de Tráfego',
+      finance_ellcazo: 'Financeiro (Ellcazo)',
+      ellcazo: 'Admin Ellcazo',
+      audiovisual_full: 'Audiovisual (Completo)'
     };
     return labels[role] || role;
   };
@@ -271,7 +274,10 @@ export default function Users() {
       head_marketing: 'default',
       closer: 'outline',
       traffic_manager: 'secondary',
-      gestor_trafego: 'secondary'
+      gestor_trafego: 'secondary',
+      finance_ellcazo: 'default',
+      ellcazo: 'default',
+      audiovisual_full: 'default'
     };
     return variants[role] || 'outline';
   };

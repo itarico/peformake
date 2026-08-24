@@ -24,7 +24,7 @@ const AudiovisualProjects = lazy(() => import('@/components/audiovisual/Audiovis
 const AudiovisualCalendar = lazy(() => import('@/components/audiovisual/AudiovisualCalendar'));
 
 export default function Audiovisual() {
-  const { isAdmin: isStaffAdmin, isLeader, staffMember, isLoading: staffAuthLoading } = useStaffAuth();
+  const { isAdmin: isStaffAdmin, isLeader, isVideomaker, isEditor, staffMember, isLoading: staffAuthLoading } = useStaffAuth();
   const { isAdmin: isNormalAdmin, isLoading: normalAuthLoading } = useAuth();
 
   const isAdmin = isStaffAdmin || isNormalAdmin;
@@ -91,10 +91,21 @@ export default function Audiovisual() {
   if (authLoading) return <div className="flex items-center justify-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   if (!isStaff && !isAdmin) return <Navigate to="/dashboard" replace />;
 
-  const deliveryProjects = projects.filter((p: any) =>
-    (canManage || p.editor_id === staffMember?.id || p.videographer_id === staffMember?.id) &&
-    ['awaiting_capture', 'captured', 'in_editing', 'awaiting_approval', 'revision_requested'].includes(p.status)
-  );
+  // Projeto SEM videomaker/editor atribuído ainda (criado antes da atribuição automática, ou
+  // atribuído na mão sem preencher o campo) fica visível pra qualquer um com o cargo certo agir —
+  // antes disso, um projeto "órfão" ficava bloqueado pra todo mundo além de admin/líder, mesmo pro
+  // videomaker/editor que deveria conseguir adicionar o link.
+  const deliveryProjects = projects.filter((p: any) => {
+    const canActAsAssignee =
+      p.editor_id === staffMember?.id ||
+      p.videographer_id === staffMember?.id ||
+      (!p.editor_id && isEditor) ||
+      (!p.videographer_id && isVideomaker);
+    return (
+      (canManage || canActAsAssignee) &&
+      ['awaiting_capture', 'captured', 'in_editing', 'awaiting_approval', 'revision_requested'].includes(p.status)
+    );
+  });
 
 
   return (
@@ -149,7 +160,14 @@ export default function Audiovisual() {
                 <EditingCard
                   key={p.id}
                   project={p}
-                  onUpdate={(updates: any) => updateStatusMutation.mutate({ id: p.id, updates })}
+                  onUpdate={(updates: any) => {
+                    // Projeto sem videomaker/editor atribuído ainda: quem realmente adicionou o
+                    // link (captação ou edição) assume o crédito, em vez de ficar "órfão" pra sempre.
+                    const credit: any = {};
+                    if (!p.videographer_id && updates.raw_video_url && staffMember?.id) credit.videographer_id = staffMember.id;
+                    if (!p.editor_id && updates.finished_assets_url && staffMember?.id) credit.editor_id = staffMember.id;
+                    updateStatusMutation.mutate({ id: p.id, updates: { ...updates, ...credit } });
+                  }}
                 />
 
               ))}

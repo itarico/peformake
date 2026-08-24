@@ -1,6 +1,6 @@
 // Tipos do Sistema Peformake
 
-export type AppRole = 'admin' | 'social_media' | 'designer' | 'traffic' | 'sdr' | 'leader' | 'videomaker' | 'editor' | 'head_marketing' | 'closer' | 'traffic_manager' | 'gestor_trafego';
+export type AppRole = 'admin' | 'social_media' | 'designer' | 'traffic' | 'sdr' | 'leader' | 'videomaker' | 'editor' | 'head_marketing' | 'closer' | 'traffic_manager' | 'gestor_trafego' | 'finance_ellcazo' | 'audiovisual_full' | 'ellcazo';
 
 export type ArtType = 'post_instagram' | 'story' | 'carrossel' | 'anuncio' | 'feed';
 

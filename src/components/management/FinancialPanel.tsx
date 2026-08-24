@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import FinancialReportDialog from './FinancialReportDialog';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStaffAuth } from '@/contexts/StaffAuthContext';
 
 const CATEGORIES = ['aluguel', 'software', 'salários', 'marketing', 'impostos', 'freelancer', 'ferramentas', 'equipe', 'serviço', 'Edição', 'Captação', 'Fotografia', 'Drone', 'outros'];
 const CATEGORY_COLORS: Record<string, string> = {
@@ -81,10 +82,14 @@ const parseSafeDate = (dateStr: string | null | undefined) => {
 
 const FinancialPanel = () => {
   const { isAdmin } = useAuth();
+  const { isAdmin: isStaffAdmin, isLeader, isFinanceEllcazo, isEllcazo } = useStaffAuth();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const now = new Date();
-  const [activeView, setActiveView] = useState<'all' | 'peformake' | 'ellcazo'>('all');
+  // Cargo "Financeiro (Ellcazo)"/"Admin Ellcazo": só enxerga a entidade Ellcazo aqui, sem opção de
+  // trocar pra Peformake/Geral (ver src/lib/staffRoles.ts).
+  const isEllcazoOnlyView = (isFinanceEllcazo || isEllcazo) && !isStaffAdmin && !isLeader;
+  const [activeView, setActiveView] = useState<'all' | 'peformake' | 'ellcazo'>(isEllcazoOnlyView ? 'ellcazo' : 'all');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [filterMonth, setFilterMonth] = useState(now.getMonth() + 1);
   const [filterYear, setFilterYear] = useState(now.getFullYear());
@@ -1675,9 +1680,9 @@ const FinancialPanel = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-4">
         <div className="bg-card p-3 rounded-xl border shadow-sm space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-1 bg-muted/30 p-1 rounded-lg border">
-              <Button 
-                variant={activeView === 'all' ? 'default' : 'ghost'} 
+            <div className={`flex items-center gap-1 bg-muted/30 p-1 rounded-lg border ${isEllcazoOnlyView ? 'hidden' : ''}`}>
+              <Button
+                variant={activeView === 'all' ? 'default' : 'ghost'}
                 size="sm" 
                 className={`h-8 text-[10px] font-bold gap-1.5 px-4 rounded-md ${activeView === 'all' ? 'shadow-sm' : 'text-muted-foreground'}`}
                 onClick={() => { setActiveView('all'); setActiveTab('dashboard'); }}
