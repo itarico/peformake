@@ -111,6 +111,7 @@ Aponte o elo mais fraco (lei 2). Ele vira a prioridade nº 1 do ciclo.
 - Base técnica de qualquer área (marketing 360°, neuromarketing, vendas, operação,
   finanças/tributos BR, jurídico BR, RH BR) → `ceo-conhecimento`
 - CEO aplicado na empresa de um cliente → `ceo-de-clientes`
+- Cruzar anúncio → WhatsApp → venda (direto × indireto) → `ceo-placar-resultado`
 - Catálogo de plugins para instalar → `docs/estrategia/catalogo-skills-plugins.md`
 - Diagnóstico de cliente novo → `diagnostico-cliente-agencia`
 - Estratégia mensal de um cliente → `estrategia-360-agencia`
