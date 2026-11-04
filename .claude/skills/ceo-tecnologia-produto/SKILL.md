@@ -28,6 +28,19 @@ um número do Painel do CEO.
 
 ## 2. Prioridades atuais do sistema (diagnóstico 2026-11)
 
+> **Dois sistemas — não confundir.**
+> - **Antigo (Lovable):** este repositório `itarico/peformake`, Supabase
+>   `zhnpkvsbsyghxuxpakdh`, site peformake.com.br. Os itens 1–6 abaixo vêm da
+>   auditoria do código DESTE sistema.
+> - **Novo (peformake-gestao, Vercel):** Supabase `peformake-app`
+>   (`wkkzcjnxyylrqoolmmhi`). Código não está neste repo — ainda não auditado.
+>   Banco (advisors 04/11/2026): RLS ok; 9 funções security definer chamáveis sem
+>   login (8 de portal/orçamento por token — conferir validação de token;
+>   `strategy_item_to_script` não deveria ser pública); proteção de senha vazada
+>   desligada. Os itens 2–5 abaixo viram **requisitos** do sistema novo.
+> - Se o antigo vai ser desligado: não consertar, só tirar do ar/proteger e
+>   corrigir o WhatsApp do site.
+
 1. **Segurança (bloqueante)** — funções edge sem verificação de JWT/autenticação
    (custo de IA e WhatsApp abusável por quem souber a URL); senhas em texto puro
    (portal, CRM, staff); políticas RLS `USING (true)` em comissões, leads, preços de

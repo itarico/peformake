@@ -99,6 +99,12 @@ CTA de WhatsApp do site apontando para número placeholder, canal de aquisição
 vazio em 73% dos clientes. Não dá para saber CAC nem qual canal escalar.
 
 ### D6 — O sistema é um ativo, mas tem risco de segurança
+> **Escopo:** os números de negócio (seções 1–2) vêm do banco do **sistema novo**
+> (peformake-gestao / Supabase `peformake-app`) e valem para a empresa. Os achados
+> técnicos abaixo vêm do código do **sistema antigo** (este repositório, Lovable,
+> peformake.com.br). O banco do sistema novo está bem mais seguro (ver
+> `ceo-tecnologia-produto`); o código dele ainda não foi auditado.
+
 (Detalhe técnico na skill `ceo-tecnologia-produto`.) Funções edge abertas sem
 autenticação (custo de IA/WhatsApp abusável), senhas em texto puro, RLS aberta em
 comissões, leads e preços de clientes. Há painéis prontos e escondidos (Retenção,
