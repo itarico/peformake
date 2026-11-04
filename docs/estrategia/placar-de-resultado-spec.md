@@ -24,6 +24,18 @@ trocáveis; qualquer sistema (o app peformake-gestao, planilha, BI, IA) lê dali
 | Intenção/resumo do contato por IA | `wa_contacts.ai_intent`, `ai_summary` | ✅ existe |
 | Venda ligada a contato e cliente, com trecho da conversa e revisão humana | `crm_sales` (`client_id`, `contact_id`, `value_cents`, `source`, `excerpt`, `reviewed_by`) | ✅ estrutura existe (0 registros) |
 
+**Verificação no banco (04/11/2026, somente leitura):**
+- MF Máquinas: conta Meta ligada ao cliente; 8 dias de dados (26/10–02/11):
+  R$ 74,47 investidos, 499 cliques (≈ R$ 0,15/clique); campanhas/objetivo ainda
+  não sincronizados em `traffic_entities`; nenhuma conversão registrada como resultado.
+- 12 clientes têm conta de anúncio ligada.
+- WhatsApp: só 1 conta conectada (provedor Wasender, status "novo"), **sem
+  cliente vinculado** — é a da agência. Nenhum WhatsApp de cliente conectado ainda.
+- Das 2.619 mensagens, 3 trazem os campos `conversionSource`/`entryPointConversion`
+  no `raw` — o provedor **entrega o sinal de origem** de conversas vindas de
+  anúncio/ponto de entrada. Atribuição direta por anúncio é viável (confirmar o
+  conteúdo exato num caso real de anúncio de clique-para-WhatsApp).
+
 **Falta:** (a) origem de cada contato (de qual anúncio/canal veio), (b) visitas
 ao perfil e dados orgânicos, (c) linha de base, (d) tabela de fatos diária, (e) o
 cálculo direto × indireto, (f) telas e relatório.
