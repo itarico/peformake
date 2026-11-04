@@ -1,0 +1,50 @@
+# Registro de evolução do copiloto-CEO
+
+## Ciclo 1 — 2026-11-04
+
+**Inventário inicial (o que já existia)**
+- Lente pessoal: `italo`.
+- Marketing/agência: `diagnostico-cliente-agencia`, `estrategia-360-agencia`,
+  `frameworks-marketing-agencia`, `crm-clientes-agencia`, `mdd`,
+  `performake-content-agent`, `performake-visual-output`, `redator-*`, `copy-lp-vendas`.
+- E-commerce: `shopee-market-analyst`, `trend-hunter-moda`, `branding-private-label-strategist`.
+- Plugins: marketing, design, human-resources, pdf-viewer, zoom, peformake-agencia.
+
+**Mapa de cobertura (antes → depois)**
+
+| Função de CEO | Antes | Depois |
+|---|---|---|
+| Estratégia corporativa / roteamento | falta | `ceo-estrategista` (+ plugin strategy-frameworks sugerido) |
+| Finanças, preço, unit economics | falta | `ceo-financas` (+ plugin Small Business sugerido) |
+| Vendas / receita | parcial (só marketing) | `ceo-receita-vendas` (+ plugin Sales sugerido) |
+| Retenção / CS | falta | `ceo-retencao` (+ plugin Customer Success sugerido) |
+| Operação / pessoas | parcial (HR) | `ceo-operacao-pessoas` (+ plugin Operations sugerido) |
+| Portfólio de frentes / capital | parcial (`italo`) | `ceo-portfolio-frentes` |
+| Tecnologia / produto / segurança | falta | `ceo-tecnologia-produto` (+ plugin Product Management sugerido) |
+| Posicionamento / GTM | parcial | plugin Positioning & GTM sugerido |
+| Jurídico / contratos | falta | plugin Small Business (`contract-review`) sugerido — PENDENTE |
+| Autoaprimoramento | falta | `ceo-autoanalise` |
+
+**Patches aplicados neste ciclo**
+- Patch 1: a primeira versão da suíte não tinha dono para segurança/tecnologia do
+  sistema — o diagnóstico revelou risco real (funções sem autenticação, senhas em
+  texto puro, RLS aberta). Criada `ceo-tecnologia-produto`.
+- Patch 2: o schema do repositório e o do projeto Supabase conectado divergem —
+  documentado em `ceo-financas/references/consultas-sql.md` para nenhuma análise
+  futura consultar o projeto errado.
+
+**Testes de qualidade (3 perguntas reais)**
+1. "Onde estou perdendo dinheiro?" → respondido com MRR em risco, preço de pacote
+   abaixo da tabela, churn — com número e fonte. OK.
+2. "Contrato mais um social media?" → regra de capacidade + receita por pessoa
+   (R$ ~3,6k, abaixo da meta) → resposta: não, primeiro preço. OK.
+3. "Foco no Gastromake agora?" → regra de aposta com marco de corte e entrevistas
+   na base de restaurantes. OK.
+
+**Pendências para o ciclo 2**
+- Preencher custos reais (folha, sócios, ferramentas) para margem por cliente.
+- Confirmar quais plugins o Italo instalou (`ListPlugins`) e ajustar o roteamento.
+- Skill de jurídico/contratos se o plugin não for instalado.
+
+**Próxima revisão:** 2027-02-04 (fim do plano de 90 dias) ou antes, se o MRR
+cair mais de 10%.
