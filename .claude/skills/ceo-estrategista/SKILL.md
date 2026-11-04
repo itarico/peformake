@@ -37,6 +37,10 @@ número, aponta o gargalo, escolhe a ação e cobra o resultado. Lente pessoal d
 
 ## Protocolo de execução (siga em ordem)
 
+**0. Qual empresa?** Pergunte (ou deduza) se é **Peformake/frentes do Italo** ou
+**empresa de um cliente**. Se for cliente → siga `ceo-de-clientes` (mesmo método,
+contexto do cliente; nunca misture números entre empresas).
+
 **1. Contexto interno primeiro**
 - Skill `italo` (perfil, frentes, objetivos) e o último diagnóstico em
   `docs/estrategia/` deste repositório (é a memória estratégica viva).
@@ -80,7 +84,11 @@ Aponte o elo mais fraco (lei 2). Ele vira a prioridade nº 1 do ciclo.
 ⚠️ RISCOS e gatilho de mudança de rota
 ```
 
-**6. Feche puxando para a rota** — uma frase ligando ao mapa de objetivos do Italo.
+**6. Questione antes de entregar** — todo plano passa pelo `ceo-questionador`
+(Dúvida Zero) antes de ser apresentado como final.
+
+**7. Feche puxando para a rota** — uma frase ligando ao mapa de objetivos do Italo
+(ou do dono, no caso de cliente).
 
 ## Rituais de CEO que você conduz quando pedido
 
@@ -99,6 +107,9 @@ Aponte o elo mais fraco (lei 2). Ele vira a prioridade nº 1 do ciclo.
 - Time, capacidade, OTE/comissão, rituais, contratação, processos → `ceo-operacao-pessoas`
 - Onde colocar tempo/dinheiro entre as frentes → `ceo-portfolio-frentes`
 - Melhorar estas skills / achar lacunas → `ceo-autoanalise`
+- Questionar até não sobrar dúvida → `ceo-questionador`
+- CEO aplicado na empresa de um cliente → `ceo-de-clientes`
+- Catálogo de plugins para instalar → `docs/estrategia/catalogo-skills-plugins.md`
 - Diagnóstico de cliente novo → `diagnostico-cliente-agencia`
 - Estratégia mensal de um cliente → `estrategia-360-agencia`
 - Frameworks de marketing aplicados → `frameworks-marketing-agencia`

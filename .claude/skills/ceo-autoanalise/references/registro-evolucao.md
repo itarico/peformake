@@ -46,5 +46,33 @@
 - Confirmar quais plugins o Italo instalou (`ListPlugins`) e ajustar o roteamento.
 - Skill de jurídico/contratos se o plugin não for instalado.
 
+## Ciclo 2 — 2026-11-04 (mesmo dia, pedido do Italo)
+
+**Gatilho:** "não quero ficar preso só à Peformake; aplicar o CEO na empresa dos
+clientes; uma IA que questione tudo até não sobrar dúvida e se auto-evolua".
+
+**Furos encontrados na suíte do ciclo 1**
+- Patch 3: todas as skills assumiam a Peformake como a empresa analisada. Criada
+  `ceo-de-clientes` (mesmo método, contexto do cliente, tabela por modelo de
+  negócio, entrega em 2 versões) e passo 0 "qual empresa?" no `ceo-estrategista`.
+- Patch 4: não existia etapa obrigatória de contestação antes de entregar plano.
+  Criada `ceo-questionador` (Livro de Dúvidas, 13 perguntas, critério Dúvida
+  Zero) e passo 6 no `ceo-estrategista`.
+- Patch 5: a auto-evolução dependia de alguém pedir. Agora toda dúvida sem dono
+  vira registro abaixo; 2 ocorrências = patch obrigatório.
+- Patch 6: a análise inicial misturou sistema antigo (Lovable) e novo
+  (peformake-gestao). Corrigido em `ceo-tecnologia-produto` e no diagnóstico.
+
+**Catálogo analisado:** ver `docs/estrategia/catalogo-skills-plugins.md`
+(7 🟢, 9 🟡, ~15 🔴).
+
+## Dúvidas sem dono (alimentado pelo `ceo-questionador`)
+
+| Data | Dúvida | Frente/cliente | Skill que deveria saber | Ocorrências |
+|---|---|---|---|---|
+| 2026-11-04 | Custo real da folha e dos sócios por entidade | Peformake/Ellcazo | ceo-financas (falta dado) | 1 |
+| 2026-11-04 | Datas de início de contrato são reais ou da migração? | Peformake | ceo-financas | 1 |
+| 2026-11-04 | Qual skill de "simulação de empresa" o Italo viu? | — | ceo-autoanalise | 1 |
+
 **Próxima revisão:** 2027-02-04 (fim do plano de 90 dias) ou antes, se o MRR
 cair mais de 10%.
