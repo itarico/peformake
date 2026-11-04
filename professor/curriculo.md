@@ -66,6 +66,96 @@ Inglês entra **em toda aula** (bloco de 5–10 min) com o vocabulário do próp
 | 6.3 | Contratar e delegar: quando, quem, como medir | 🟡 |
 | 6.4 | Hábitos e energia: sono, treino, ciclos de baixa (sem moralismo) | 🟢 |
 
+## Trilha 7 — Programação e software
+
+Laboratório: o próprio repositório `peformake` (React, TypeScript, Supabase) e os projetos do Lovable. Aprender lendo e mexendo no código que já é seu.
+
+| # | Tema | Prioridade | Por que |
+|---|---|---|---|
+| 7.1 | Ler o código que o Lovable/Claude gera: estrutura de pastas, componentes, de onde vem cada dado | 🔴 | Você constrói SaaS sem entender o que está embaixo; isso trava quando algo quebra |
+| 7.2 | Banco de dados e Supabase: tabela, relação, consulta, segurança de linha (RLS) | 🔴 | Gastromake e o CRM dependem disso; erro aqui vaza dado de cliente |
+| 7.3 | Git: commit, branch, merge, desfazer sem medo | 🟡 | Base para trabalhar com IA no código sem perder nada |
+| 7.4 | Lógica de programação e JavaScript/TypeScript básico | 🟡 | Saber pedir à IA e conferir o que ela entregou |
+| 7.5 | Produto de software: MVP, métricas de uso, custo de servidor | 🟢 | Decidir o que construir |
+
+## Trilha 8 — Oratória e comunicação
+
+Você já transformou a dicção em ofício. Agora o objetivo é refinar com método e medição.
+
+| # | Tema | Prioridade |
+|---|---|---|
+| 8.1 | Estrutura de fala: abrir com o problema, uma ideia por vez, fechar com ação | 🔴 |
+| 8.2 | Medir a própria fala: palavras por minuto, vícios ("né", "tipo"), pausas (com gravação) | 🔴 |
+| 8.3 | Voz e dicção: respiração diafragmática, articulação, projeção (exercícios de fonoaudiologia) | 🟡 |
+| 8.4 | Falar para vender: reunião de diagnóstico, pitch de 60s, palestra | 🟡 |
+| 8.5 | Storytelling (estrutura de jornada, contraste antes/depois) | 🟢 |
+
+## Trilha 9 — Música
+
+Nível e objetivo **a definir**: você quer tocar algum instrumento, produzir trilha para vídeo ou entender música para editar melhor? A trilha muda muito conforme a resposta.
+
+| # | Tema | Prioridade |
+|---|---|---|
+| 9.1 | Escuta ativa: ritmo, compasso, dinâmica, e como isso conversa com a edição de vídeo | 🟡 |
+| 9.2 | Teoria mínima: notas, escalas, acordes, campo harmônico | 🟢 |
+| 9.3 | Instrumento ou produção (a escolher) | 🟢 |
+
+## Trilha 10 — Ciência e biologia
+
+Objetivo: pensar como cientista (que serve para tudo) e entender o próprio corpo.
+
+| # | Tema | Prioridade |
+|---|---|---|
+| 10.1 | Método científico aplicado ao negócio: hipótese, teste, grupo controle | 🔴 |
+| 10.2 | Como ler um estudo e não cair em manchete (amostra, correlação × causa) | 🟡 |
+| 10.3 | Biologia do cérebro: sono, dopamina, hábito, estresse (liga com motivação e disciplina) | 🟡 |
+| 10.4 | Fisiologia do exercício e nutrição (liga com a trilha 13) | 🟡 |
+| 10.5 | Evolução, genética, ecologia: a base que explica o resto | 🟢 |
+
+## Trilha 11 — Gastronomia
+
+Dupla função: prazer e vida pessoal, e entender o cliente do Gastromake e dos restaurantes da Ellcazo (Fornário, Samba, Brio Burger etc.).
+
+| # | Tema | Prioridade |
+|---|---|---|
+| 11.1 | Os 4 elementos: sal, gordura, ácido, calor (cozinhar sem receita) | 🟡 |
+| 11.2 | Técnica base: faca, ponto de carne, emulsão, molhos-mãe | 🟢 |
+| 11.3 | Negócio de restaurante: ficha técnica, CMV, giro de mesa, delivery × salão | 🔴 (para o Gastromake) |
+| 11.4 | Ciência da cozinha: Maillard, fermentação, por que a receita funciona | 🟢 |
+
+## Trilha 12 — Desenvolvimento pessoal
+
+Só o que tem evidência. Nada de autoajuda vazia.
+
+| # | Tema | Prioridade |
+|---|---|---|
+| 12.1 | Sistemas > motivação: hábitos, intenções de implementação ("quando X, faço Y") | 🔴 |
+| 12.2 | Autocobrança e autocompaixão: como manter alto padrão sem se destruir (evidência de Kristin Neff) | 🔴 |
+| 12.3 | Revisão semanal e gestão de energia (não só de tempo) | 🟡 |
+| 12.4 | Tomada de decisão: vieses, pré-mortem, decisões reversíveis × irreversíveis | 🟡 |
+| 12.5 | Relacionamento e vida a dois com o trabalho junto (Aline) | 🟢 |
+
+## Trilha 13 — Educação física e físico
+
+Objetivo declarado: melhorar o físico. Antes de qualquer programa de carga: check-up médico se fizer tempo sem treinar. O professor ensina princípios e organiza o plano; não substitui médico, nutricionista ou educador físico presencial.
+
+| # | Tema | Prioridade |
+|---|---|---|
+| 13.1 | Princípios que funcionam: sobrecarga progressiva, volume, frequência, recuperação | 🔴 |
+| 13.2 | Treino de força básico: os 5 padrões de movimento (agachar, empurrar, puxar, levantar do chão, carregar) | 🔴 |
+| 13.3 | Proteína, calorias e sono: o tripé do resultado | 🔴 |
+| 13.4 | Condicionamento para o que você curte: kart (pescoço, core, resistência), praia, esportes radicais | 🟡 |
+| 13.5 | Medir progresso sem se enganar: carga, medidas, fotos, não só a balança | 🟡 |
+
+## Como as 13 trilhas cabem numa aula por semana
+
+As áreas que você listou são **sinais, não regra fixa**. O professor decide o que entra pelo momento. Cada aula tem:
+- **1 tema principal**, escolhido pela ordem de decisão do método;
+- **bloco de inglês**, sempre, com o vocabulário do próprio tema;
+- **"1 minuto de..."**: uma curiosidade ou micro-hábito de outra trilha (ciência, corpo, gastronomia, música), em rodízio, para dar amplitude sem dispersar.
+
+As trilhas práticas (corpo, voz, instrumento, cozinha) só melhoram com **prática frequente**, não com uma aula por semana. Nelas, a aula semanal ensina e define a prática da semana, e o diário registra a evolução.
+
 ## Pontos cegos — o que você provavelmente não sabe que precisa saber
 
 Uma aula a cada quatro vem daqui. São coisas que empresários que aprenderam na prática costumam descobrir tarde e caro:

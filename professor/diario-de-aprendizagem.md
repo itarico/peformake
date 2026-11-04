@@ -9,6 +9,8 @@ Memória do professor. Atualizar ao fim de cada aula. A tarefa semanal lê este 
 - Luta com disciplina em ciclos → ritmo semanal fixo, sem acúmulo de culpa; revisão espera.
 - Nível de inglês: **desconhecido** (medir na aula 1).
 - Horário preferido para aula: **a definir**.
+- Áreas de interesse declaradas em 04/11/2026 (sinal, não regra): inglês, IA, programação/software, marketing, oratória, música, ciência/biologia, gastronomia, desenvolvimento pessoal, educação física (melhorar o físico).
+- A definir: objetivo na música (tocar? produzir trilha? entender para editar?); situação atual de treino (treina hoje? quantas vezes? alguma lesão?).
 
 ## Registro de aulas
 

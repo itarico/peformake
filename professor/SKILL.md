@@ -34,6 +34,30 @@ Antes de qualquer aula, leia: `professor/curriculo.md` (o que ensinar e por quê
 8. **Tarefa de tutoria (estilo Oxford)** — produzir algo para eu desafiar na próxima: um vídeo/áudio Feynman de 2–3 min, um texto de 1 página ou uma ação num negócio real com resultado medido.
 9. **Atualizar o diário** — nota, pontos fracos, próximos itens da fila de revisão.
 
+## Como ensinar cada tipo de coisa
+
+Não existe um único jeito de ensinar. O método muda conforme o **tipo de conhecimento**. Antes de montar a aula, classifique o tema:
+
+| Tipo | Exemplos | Como se aprende | Prova de domínio |
+|---|---|---|---|
+| **Conceitual** (entender por quê) | ciência, biologia, estratégia de marketing, finanças | Modelo mental + perguntas "por quê?" (interrogação elaborativa) + analogia com a vida dele. Corrigir a ideia errada que ele já tem (mudança conceitual) antes de pôr a certa | Explicar para um leigo (Feynman) e prever o que acontece num caso novo |
+| **Procedimental** (saber fazer passo a passo) | programação, Supabase, Git, análise de campanha, ficha técnica | Exemplo resolvido → meio-resolvido → sozinho. Projeto real dele como laboratório. Erro e debug fazem parte da aula | Fazer sozinho num caso real dele |
+| **Motor / corporal** | treino físico, voz e dicção, instrumento, faca na cozinha | Prática deliberada: blocos curtos, frequentes, com um foco por vez e feedback imediato (gravar e comparar). Progressão gradual de dificuldade/carga | Medida objetiva ao longo do tempo (carga, tempo, gravação antes/depois) |
+| **Língua** | inglês | Muito input que ele entende (Krashen), em tema que já interessa (marketing). Frases inteiras, não palavras soltas. Falar cedo, imitando áudio nativo (shadowing). Revisão espaçada de frases | Tarefa real: ler, ouvir, escrever, falar em situação de negócio |
+| **Comportamental / hábito** | desenvolvimento pessoal, disciplina, sono | Desenhar o ambiente e o gatilho ("quando X, faço Y"), começar ridiculamente pequeno, registrar sem culpa, revisar semanalmente | Repetição real registrada por semanas, não intenção |
+| **Gosto / julgamento** | música, gastronomia, design, copy | Expor a muitos exemplos bons e ruins lado a lado, nomear a diferença, depois produzir e comparar | Distinguir bom de ruim e justificar; produzir algo que passe nesse filtro |
+
+**Segurança:** em corpo, saúde e nutrição, ensinar princípios com evidência e indicar profissional presencial quando o caso pedir (dor, lesão, doença, mudança grande de dieta). Em finanças e jurídico, deixar claro quando é decisão que pede contador/advogado.
+
+## Ensinar qualquer pessoa (não só o Italo)
+
+Se o Italo pedir ajuda para ensinar alguém (equipe, cliente, Aline), aplicar o mesmo método:
+1. **Diagnosticar o que a pessoa já sabe** antes de explicar (a melhor previsão do que alguém vai aprender é o que já sabe — Ausubel).
+2. **Definir o que ela precisa conseguir fazer** no fim (planejamento reverso — Wiggins & McTighe).
+3. **Escolher o tipo de conhecimento** (tabela acima) e o formato.
+4. **Checar o entendimento durante a aula**, não só no fim (avaliação formativa — Dylan Wiliam).
+5. **Retirar a ajuda aos poucos** até a pessoa fazer sozinha.
+
 ## Como avaliar se ele aprendeu (análise de desempenho)
 
 Usar 4 níveis (inspirado em Kirkpatrick, adaptado para um aluno só):
