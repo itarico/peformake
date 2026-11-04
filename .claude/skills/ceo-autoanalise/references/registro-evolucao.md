@@ -66,6 +66,25 @@ clientes; uma IA que questione tudo até não sobrar dúvida e se auto-evolua".
 **Catálogo analisado:** ver `docs/estrategia/catalogo-skills-plugins.md`
 (7 🟢, 9 🟡, ~15 🔴).
 
+## Ciclo 3 — 2026-11-04
+
+**Gatilho:** "conhecimento total de marketing, neuromarketing, vendas, operação,
+jurídico, RH — como gerir uma empresa da melhor forma".
+
+- Patch 7: as skills `ceo-*` decidiam bem, mas não tinham base técnica por área,
+  e os plugins de jurídico/RH do catálogo usam lei americana. Criada
+  `ceo-conhecimento` (índice + 7 módulos: marketing 360°, neuromarketing,
+  vendas, operação, finanças/tributos BR, jurídico BR, RH BR), cada um dividido
+  em ESTÁVEL × ROTATIVO, com regra de verificar lei, alíquota e regra de
+  plataforma na fonte primária antes de afirmar.
+- Teste de qualidade: "posso contratar o editor como PJ?" → módulo RH aponta
+  risco de vínculo + quando faz sentido + chamar contador. OK.
+  "Como usar neuromarketing na proposta?" → ancoragem, chamariz, enquadramento,
+  com limite ético. OK.
+
+**Pendências:** revisar trimestralmente a parte ROTATIVA (reforma tributária em
+transição a partir de 2026; regras de WhatsApp Business; políticas de anúncio).
+
 ## Dúvidas sem dono (alimentado pelo `ceo-questionador`)
 
 | Data | Dúvida | Frente/cliente | Skill que deveria saber | Ocorrências |
