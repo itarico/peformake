@@ -85,6 +85,22 @@ jurídico, RH — como gerir uma empresa da melhor forma".
 **Pendências:** revisar trimestralmente a parte ROTATIVA (reforma tributária em
 transição a partir de 2026; regras de WhatsApp Business; políticas de anúncio).
 
+## Ciclo 4 — 2026-11-05
+
+**Gatilho:** "cruzar todos os dados (esforço, entregas, tráfego, WhatsApp, vendas,
+reunião, SWOT, Instagram, NPS, tempo de casa, sazonalidade, mercado) — tudo baseado
+em dados".
+
+- Patch 8: faltava dono para análise de dados cruzada. Criada
+  `ceo-inteligencia-dados` (Cliente 360°, matriz de carteira, coorte, mês de
+  queda, sazonalidade, margem por esforço) com consultas prontas.
+- Patch 9: faltava separar problema do cliente × movimento do mercado. Criada
+  `ceo-mercado-setorial` (ficha do setor, fontes oficiais BR, quadrante
+  cliente × mercado), integrada à estratégia mensal.
+- Inventário de dados: `docs/estrategia/mapa-de-dados-cliente-360.md`. Lacunas
+  críticas: sem registro de horas, histórico curto no banco novo (importar do
+  antigo), WhatsApp de clientes e vendas vazios, reuniões e alterações não lançadas.
+
 ## Dúvidas sem dono (alimentado pelo `ceo-questionador`)
 
 | Data | Dúvida | Frente/cliente | Skill que deveria saber | Ocorrências |
