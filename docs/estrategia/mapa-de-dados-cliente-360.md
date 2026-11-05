@@ -39,6 +39,24 @@ Fonte verificada: banco do sistema novo (`peformake-app`), somente leitura.
 | Perdas: 4 (ago), 5 (set), 1 (out) | `clients.lost_at` | Outubro melhorou; novembro é o teste |
 | R$ 6.799 de mídia gerida em outubro (12 clientes) | `traffic_daily_metrics` | Base para cobrar gestão de mídia proporcional ao investimento |
 
+### "A partir de que mês o cliente cai?" — primeira resposta (05/11/2026)
+
+Saúde média (avaliação interna) por mês de casa, todos os clientes:
+
+| Mês de casa | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| Saúde média | 79 | 57 | 48 | 100 (n=1) | 36 | 15 |
+| Avaliações | 11 | 11 | 4 | 1 | 44 | 4 |
+
+**Leitura (preliminar, série curta):** a satisfação começa a cair **já no 2º
+mês** e chega a zona vermelha no 5º–6º — exatamente antes da renovação de 6
+meses (a North Star). O mês 5 pesa muito porque concentra a coorte de maio.
+Decisão sugerida: reforço de valor no **mês 2** (primeiro resultado visível +
+ligação de feedback) e plano de renovação no **mês 4**.
+
+Coortes: entrada em mai/2026 → 68% ativos hoje (19 → 13); set/2026 → 64% (11 → 7)
+em apenas 2 meses — a coorte de setembro está perdendo cliente mais rápido.
+
 ## 3. O que falta registrar (para o cruzamento ficar completo)
 
 Prioridade pela decisão que destrava:
