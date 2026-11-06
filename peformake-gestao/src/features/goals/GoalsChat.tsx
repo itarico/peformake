@@ -10,7 +10,7 @@ import { useClientDeliveries } from '@/features/clients/DeliveryBar'
 import { listNotifications, markRead } from '@/features/notifications/notificationsApi'
 import { useProduction } from '@/features/production/useProduction'
 import { noticesFrom, pendingFrom, type Notice } from './chatNotices'
-import { cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
+import { brl, cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
 
 // Chat de metas: conversa diária, uma mensagem por vez, montada com os dados do sistema.
 // Cada resposta mostra "atualizando seus dados…" por um instante, como quem foi buscar.
@@ -23,9 +23,10 @@ type NewMsg =
   | { from: 'bot'; kind: 'notice'; n: Notice }
   | { from: 'bot'; kind: 'pending'; list: Pend[] }
   | { from: 'bot'; kind: 'summary' }
+  | { from: 'bot'; kind: 'divider'; text: string }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'summary'; key?: string }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'summary'; key?: string; role?: GoalRole }
 /** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
 type Pend = { id: string; client: string; label: string; late: number }
 type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
@@ -195,7 +196,33 @@ function PendingCard({ list }: { list: Pend[] }) {
 
 type Task = { id: string; client: string | null; title: string; status: string; due_date: string | null }
 type Piece = { id: string; client: string; title: string; status: string; deadline: string | null }
-type MyDayLite = { linked: boolean; tasks?: Task[]; pieces?: Piece[] }
+type Video = { id: string; client: string; title: string; status: string; shoot_at: string | null; edit_due_at: string | null; my_part: string }
+type MyDayLite = { linked: boolean; tasks?: Task[]; pieces?: Piece[]; videos?: Video[] }
+type Tab = 'chat' | 'metas' | 'novidades' | 'tarefas' | 'pendencias'
+const isOpenTask = (t: Task) => !/done|conclu|feit|cancel/i.test(t.status)
+const isOpenPiece = (p: Piece) => !/approved|aprovad|published|publicad|cancel/i.test(p.status)
+const isOpenVideo = (v: Video) => !/delivered|cancelled|approved/i.test(v.status)
+const dmy = (iso: string | null) => (iso ? `${iso.slice(8, 10)}/${iso.slice(5, 7)}` : '')
+const PIECE_STATUS: Record<string, string> = { briefing: 'briefing', in_production: 'em produção', review: 'revisão interna', client_review: 'com o cliente', changes_requested: 'ajuste pedido', ready: 'pronta' }
+const VIDEO_STATUS: Record<string, string> = { script: 'roteiro', scheduled: 'captação marcada', captured: 'captado', editing: 'em edição', review: 'revisão interna', client_review: 'com o cliente', changes_requested: 'ajuste pedido' }
+
+/** Linha de lista das abas: texto, detalhe à direita e clique que leva ao lugar certo. */
+function Row({ to, onGo, title, sub, right, tone }: { to: string; onGo: () => void; title: string; sub?: string; right?: string; tone?: 'warn' | 'ok' }) {
+  return (
+    <Link to={to} onClick={onGo} className="flex items-center gap-2 rounded-xl px-2.5 py-2 text-ink no-underline transition-colors hover:bg-raised">
+      <span className="min-w-0 flex-1"><b className="block truncate text-[12.5px] font-semibold">{title}</b>{sub && <span className="block truncate text-[11.5px] text-muted">{sub}</span>}</span>
+      {right && <span className={cn('shrink-0 rounded-full px-1.5 py-px text-[10.5px] font-semibold', tone === 'warn' ? 'bg-warn-soft text-warn-ink' : tone === 'ok' ? 'bg-ok-soft text-ok-ink' : 'bg-raised text-muted')}>{right}</span>}
+    </Link>
+  )
+}
+function Group({ title, children, empty }: { title: string; children: React.ReactNode[]; empty: string }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className="px-2.5 pb-0.5 pt-2 text-[11px] font-semibold uppercase tracking-wide text-muted">{title}{children.length ? ` · ${children.length}` : ''}</span>
+      {children.length ? children : <span className="px-2.5 py-1.5 text-[12px] text-muted">{empty}</span>}
+    </div>
+  )
+}
 
 /** Resumo: o que está pendente, o que fazer e o que aconteceu, num lugar só. */
 function SummaryCard({ pend, tasks, pieces, updates, today }: { pend: Pend[]; tasks: Task[]; pieces: Piece[]; updates: Notice[]; today: string }) {
@@ -273,7 +300,7 @@ export function GoalsChat() {
   const [seen, setSeen] = useState<Set<string>>(() => new Set(JSON.parse(store.get('pf-goals-seen') ?? '[]') as string[]))
   const mark = (ids: string[]) => setSeen((cur) => {
     const next = new Set(cur); ids.forEach((i) => next.add(i))
-    store.set('pf-goals-seen', JSON.stringify([...next].filter((i) => i.includes(month))))
+    store.set('pf-goals-seen', JSON.stringify([...next].filter((i) => i.includes(month) || i.startsWith('ntf:')).slice(-400)))
     return next
   })
   const lastSnap = useMemo(() => new Map<string, number | null>((JSON.parse(store.get('pf-goals-snap') ?? '[]') as [string, number | null][])), []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -305,11 +332,15 @@ export function GoalsChat() {
   const tips = items.filter((i) => i.kind === 'tip')
 
   const [open, setOpen] = useState(false)
-  const [log, setLog] = useState<Msg[]>([])
+  // Conversa do dia: fica guardada no aparelho até o fim do dia, para reler quando quiser.
+  const LOG_KEY = `pf-goals-log:${cal.iso}`
+  const [log, setLog] = useState<Msg[]>(() => { try { return JSON.parse(store.get(LOG_KEY) ?? '[]') as Msg[] } catch { return [] } })
+  const [tab, setTab] = useState<Tab>('chat')
+  const [metaRole, setMetaRole] = useState<GoalRole | undefined>(undefined)
   const [replies, setReplies] = useState<Reply[]>([])
   const [typing, setTyping] = useState<string | null>(null)
   const [links, setLinks] = useState<Action[]>([])
-  const idRef = useRef(1)
+  const idRef = useRef(Math.max(0, ...log.map((m) => m.id)) + 1)
   const genRef = useRef(0)
   const lastFormat = useRef<GoalFormat | undefined>(undefined)
   const box = useRef<HTMLDivElement>(null)
@@ -317,7 +348,9 @@ export function GoalsChat() {
   const pick = useMemo(() => pickWith(rnd), [rnd])
   const started = useRef(false)
 
-  useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing])
+  // Sempre mostra a última mensagem, inclusive quando aparecem os botões embaixo.
+  useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing, links, replies, tab])
+  useEffect(() => { store.set(LOG_KEY, JSON.stringify(log.slice(-80))) }, [log, LOG_KEY])
   // Não abre sozinho: o botão "Abre aí!" e o balão chamam, a pessoa decide quando abrir.
   const talked = useRef<GoalRole | undefined>(undefined)
   useEffect(() => {
@@ -384,7 +417,7 @@ export function GoalsChat() {
       // Visto no chat = lido no sininho também.
       void markRead(n.ids).then(() => { void queryClient.invalidateQueries({ queryKey: ['notifications'] }); void queryClient.invalidateQueries({ queryKey: ['notifications-unread'] }) }).catch(() => undefined)
       const pk = pickWith(seeded(item.id))
-      say([...prefix, { from: 'bot', kind: 'text', text: pk(['Chegou novidade:', 'Olha o que aconteceu:', 'Aviso rápido:', 'Novidade por aqui:']) }, { from: 'bot', kind: 'notice', n }], repliesFor(undefined, remaining), n.action ? [n.action] : [])
+      say([...prefix, ...(prefix.length ? [] : [{ from: 'bot' as const, kind: 'text' as const, text: pk(['Chegou novidade:', 'Olha o que aconteceu:', 'Aviso rápido:', 'Novidade por aqui:']) }]), { from: 'bot', kind: 'notice', n }], repliesFor(undefined, remaining), n.action ? [n.action] : [])
       return
     }
     if (item.kind === 'pending') {
@@ -422,16 +455,24 @@ export function GoalsChat() {
   }
 
   function begin() {
-    setLog([])
-    if (!news.length) { summary([{ from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }]); return }
+    setTab('chat')
+    const talkedToday = log.some((m) => m.from === 'bot')
+    // Já conversamos hoje: a conversa continua de onde parou, sem cumprimentar de novo.
+    if (talkedToday) {
+      if (!news.length) { setReplies([{ label: 'Ver resumo', act: 'summary' }, ...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' }]); setLinks([]); return }
+      setLog((l) => [...l, { id: idRef.current++, from: 'bot', kind: 'divider', text: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) }])
+      show(news[0], [{ from: 'bot', kind: 'text', text: pick(['Voltei com novidade:', 'Chegou coisa nova desde a última vez:', 'Atualizei por aqui:']) }])
+      return
+    }
     const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }
+    if (!news.length) { summary([hello]); return }
     show(news[0] ?? tips[0], [hello])
   }
 
   function act(r: Reply) {
     me(r.label)
     if (r.act === 'how') {
-      const g = goal(r.key)
+      const g = (r.role ? rowOf(r.role, r.key ?? '') : undefined) ?? goal(r.key)
       const all = steps(g, coach.data, day, days)
       const remaining = news.filter((x) => !seen.has(x.id))
       say([{ from: 'bot', kind: 'text', text: `${pick(['Fiz as contas:', 'O caminho é este:', 'Passo a passo:'])}\n\n${all.map((t, i) => `${i + 1}. ${t}`).join('\n\n')}` }],
@@ -440,9 +481,8 @@ export function GoalsChat() {
     if (r.act === 'next') show(news.find((x) => !seen.has(x.id)) ?? tips.find((x) => !seen.has(x.id)))
     if (r.act === 'tip') show(tips.find((x) => !seen.has(x.id)))
     if (r.act === 'all') {
-      setLog([])
-      setTimeout(() => say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all', role: role! }],
-        [...list.slice(0, 2).map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key })), { label: 'Fechar', act: 'bye' as const }]), 50)
+      say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all', role: role! }],
+        [...list.slice(0, 2).map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key, role: x.role })), { label: 'Fechar', act: 'bye' as const }])
     }
     if (r.act === 'summary') summary()
     if (r.act === 'bye') close()
@@ -453,18 +493,117 @@ export function GoalsChat() {
     store.set('pf-goals-snap', JSON.stringify(rows.map((r) => [`${r.role}:${r.key}`, r.actual])))
   }
 
+  // Abas: tudo organizado num lugar só.
+  const tasksOpen = (myDay.data?.tasks ?? []).filter(isOpenTask)
+  const piecesOpen = (myDay.data?.pieces ?? []).filter(isOpenPiece)
+  const videosOpen = (myDay.data?.videos ?? []).filter(isOpenVideo)
+  const latePieces = piecesOpen.filter((p) => p.deadline && p.deadline < cal.iso)
+  const lateTasks = tasksOpen.filter((t) => t.due_date && t.due_date < cal.iso)
+  const overdue = isAdmin ? coach.data?.overdue ?? [] : []
+  const noticesWeek = noticesFrom(notifs.data ?? [], Date.now(), { includeRead: true })
+  const unreadNotices = noticesFrom(notifs.data ?? []).length
+  const pendCount = pendAll.length + latePieces.length + lateTasks.length + overdue.length
+  const tabs: { id: Tab; label: string; n: number; alert?: boolean }[] = [
+    { id: 'chat', label: 'Chat', n: news.length },
+    ...(available.length ? [{ id: 'metas' as const, label: 'Metas', n: 0 }] : []),
+    { id: 'novidades', label: 'Novidades', n: unreadNotices },
+    { id: 'tarefas', label: 'Tarefas', n: tasksOpen.length + piecesOpen.length + videosOpen.length },
+    { id: 'pendencias', label: 'Pendências', n: pendCount, alert: pendCount > 0 },
+  ]
+  const go = () => close()
+  function panel() {
+    if (tab === 'metas') {
+      const r0 = metaRole && available.includes(metaRole) ? metaRole : role
+      const goals = rows.filter((x) => x.role === r0)
+      return (
+        <div className="flex flex-col gap-2 px-1.5 py-1.5">
+          {available.length > 1 && <span className="flex flex-wrap gap-1">{available.map((a) => <button key={a} type="button" onClick={() => setMetaRole(a)} className={cn('min-h-7 cursor-pointer rounded-full border px-2.5 text-[11.5px] font-semibold', a === r0 ? 'border-ink bg-raised' : 'border-line text-muted hover:border-line-strong')}>{ROLE_LABEL[a]}</button>)}</span>}
+          {goals.map((g) => {
+            const a = one(g)[0]
+            return (
+              <div key={g.key} className="flex flex-col gap-2 rounded-2xl border border-line bg-surface p-3">
+                <GoalBubble r={g} day={day} days={days} />
+                <span className="flex flex-wrap gap-1.5">
+                  <button type="button" onClick={() => { setTab('chat'); act({ label: `Como bater ${GOAL_META[g.key]!.short.toLowerCase()}?`, act: 'how', key: g.key, role: g.role }) }} className="min-h-7 cursor-pointer rounded-full border border-line-strong px-2.5 text-[11.5px] font-medium hover:border-ink">Como bater?</button>
+                  {a && <Link to={a.to} onClick={go} className="inline-flex min-h-7 items-center rounded-full bg-fill px-2.5 text-[11.5px] font-semibold text-on-fill no-underline">{a.label} →</Link>}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      )
+    }
+    if (tab === 'novidades') {
+      return (
+        <div className="flex flex-col">
+          {unreadNotices > 0 && <button type="button" onClick={() => { const ids = noticesFrom(notifs.data ?? []).flatMap((n) => n.ids); void markRead(ids).then(() => { void queryClient.invalidateQueries({ queryKey: ['notifications'] }); void queryClient.invalidateQueries({ queryKey: ['notifications-unread'] }) }) }} className="mx-2.5 mt-1.5 cursor-pointer self-end text-[11.5px] font-semibold text-accent-ink hover:underline">Marcar tudo como lido</button>}
+          <Group title="Últimos 7 dias" empty="Nenhuma novidade esta semana.">
+            {noticesWeek.map((n) => {
+              const unread = (notifs.data ?? []).some((x) => n.ids.includes(x.id) && !x.readAt)
+              return <Row key={n.id} to={n.action?.to ?? '/notificacoes'} onGo={go} title={`${unread ? '🔵 ' : ''}${n.icon} ${n.title}`} sub={n.lines.join(' · ')} right={n.when} />
+            })}
+          </Group>
+          <Link to="/notificacoes" onClick={go} className="mx-2.5 my-2 text-[12px] font-semibold text-accent-ink no-underline hover:underline">Ver todos os avisos →</Link>
+        </div>
+      )
+    }
+    if (tab === 'tarefas') {
+      if (myDay.data && !myDay.data.linked) return <p className="px-3 py-4 text-[12.5px] text-muted">Seu login ainda não está ligado ao seu cadastro na equipe. Peça ao administrador em Configurações → Acessos para ver suas tarefas aqui.</p>
+      return (
+        <div className="flex flex-col">
+          <Group title="Tarefas" empty="Nenhuma tarefa aberta com você. 👌">
+            {tasksOpen.map((t) => <Row key={t.id} to="/" onGo={go} title={t.title} sub={t.client ?? undefined} right={t.due_date ? `até ${dmy(t.due_date)}` : undefined} tone={t.due_date && t.due_date < cal.iso ? 'warn' : undefined} />)}
+          </Group>
+          <Group title="Peças" empty="Nenhuma peça com você agora.">
+            {piecesOpen.map((p) => <Row key={p.id} to={`/conteudo/peca/${p.id}`} onGo={go} title={`${p.client} · ${p.title}`} sub={PIECE_STATUS[p.status] ?? p.status} right={p.deadline ? `até ${dmy(p.deadline)}` : undefined} tone={p.deadline && p.deadline < cal.iso ? 'warn' : undefined} />)}
+          </Group>
+          <Group title="Vídeos" empty="Nenhum vídeo com você agora.">
+            {videosOpen.map((v) => <Row key={v.id} to={`/audiovisual/projeto/${v.id}`} onGo={go} title={`${v.client} · ${v.title}`} sub={`${VIDEO_STATUS[v.status] ?? v.status}${v.my_part ? ` · você: ${v.my_part}` : ''}`} right={v.shoot_at && v.status === 'scheduled' ? `grava ${dmy(v.shoot_at.slice(0, 10))}` : v.edit_due_at ? `edita até ${dmy(v.edit_due_at.slice(0, 10))}` : undefined} />)}
+          </Group>
+        </div>
+      )
+    }
+    // Pendências: tudo que passou do prazo.
+    return (
+      <div className="flex flex-col">
+        {seesDeliveries && <Group title="Entregas dos clientes" empty="Nenhuma entrega atrasada. 👏">
+          {pendAll.map((p, i) => <Row key={`${p.id}${i}`} to={`/clientes/${p.id}`} onGo={go} title={p.client} sub={p.label} right={`${p.late} ${p.late === 1 ? 'dia' : 'dias'}`} tone="warn" />)}
+        </Group>}
+        <Group title="Suas peças e tarefas atrasadas" empty="Nada seu atrasado. 👌">
+          {[...latePieces.map((p) => <Row key={p.id} to={`/conteudo/peca/${p.id}`} onGo={go} title={`${p.client} · ${p.title}`} sub="peça" right={`venceu ${dmy(p.deadline)}`} tone="warn" />),
+            ...lateTasks.map((t) => <Row key={t.id} to="/" onGo={go} title={t.title} sub={t.client ?? 'tarefa'} right={`venceu ${dmy(t.due_date)}`} tone="warn" />)]}
+        </Group>
+        {isAdmin && <Group title="Cobranças em atraso" empty="Ninguém devendo. 💚">
+          {overdue.map((o) => <Row key={o.id} to={`/clientes/${o.id}?aba=contrato`} onGo={go} title={o.name} sub="fatura em aberto" right={o.amount ? brl(o.amount) : undefined} tone="warn" />)}
+        </Group>}
+      </div>
+    )
+  }
+
   return (
     <div className="pointer-events-none fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
       {open && (
-        <section role="dialog" aria-label="Bate Meta, assistente de metas" className="pf-rise pointer-events-auto flex max-h-[min(560px,calc(100dvh-150px))] w-[min(370px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
+        <section role="dialog" aria-label="Bate Meta, assistente de metas" className="pf-rise pointer-events-auto flex h-[min(600px,calc(100dvh-150px))] w-[min(380px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
           <header onClick={close} title="Clique para recolher" className="flex cursor-pointer items-center gap-2.5 bg-[#075e54] px-3 py-2 text-white dark:bg-[#1f2c34]">
             <span className="relative"><Mascot size={38} /><span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-[#25d366] ring-2 ring-[#075e54] dark:ring-[#1f2c34]" /></span>
             <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">Bate Meta</b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'online'}</span></span>
             <span className="hidden text-[11px] opacity-70 sm:inline">{role ? `${ROLE_LABEL[role]} · ` : ''}dia {day}/{days}</span>
             <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Recolher" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-white/10"><ChevronDown size={18} aria-hidden="true" /></button>
           </header>
-          <div ref={box} aria-live="polite" className="wa-wallpaper flex min-h-[180px] flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-3 [scrollbar-width:thin]">
-            {log.map((m) => m.from === 'me'
+          <nav aria-label="Seções do Bate Meta" className="flex shrink-0 gap-0.5 border-b border-line bg-surface px-1.5 py-1.5">
+            {tabs.map((t) => (
+              <button key={t.id} type="button" onClick={() => setTab(t.id)} aria-pressed={tab === t.id}
+                className={cn('inline-flex min-h-8 min-w-0 flex-auto cursor-pointer items-center justify-center gap-0.5 rounded-full px-1.5 text-[11px] font-semibold transition-colors', tab === t.id ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>
+                {t.label}{t.n > 0 && <span className={cn('rounded-full px-1 text-[9.5px] leading-4', tab === t.id ? 'bg-black/15' : t.alert ? 'bg-warn-soft text-warn-ink' : 'bg-raised')}>{t.n}</span>}
+              </button>
+            ))}
+          </nav>
+          {tab !== 'chat' && <div className="min-h-0 flex-1 overflow-y-auto px-1.5 py-1 [scrollbar-width:thin]">{panel()}</div>}
+          {tab === 'chat' && <>
+          <div ref={box} aria-live="polite" className="wa-wallpaper flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-3 [scrollbar-width:thin]">
+            {log.map((m) => m.kind === 'divider'
+              ? <span key={m.id} className="my-1 self-center rounded-full bg-raised px-2.5 py-0.5 text-[10.5px] font-semibold text-muted">{m.text}</span>
+              : m.from === 'me'
               ? <p key={m.id} className="wa-out pf-rise max-w-[80%] self-end rounded-xl rounded-tr-sm px-3 py-1.5 text-[13px] shadow-sm">{m.text}</p>
               : (
                 <div key={m.id} className="pf-rise max-w-[92%] self-start whitespace-pre-line rounded-xl rounded-tl-sm bg-surface px-3 py-2 text-[13px] shadow-sm">
@@ -480,15 +619,16 @@ export function GoalsChat() {
             {typing && <span className="inline-flex w-fit gap-1 rounded-xl rounded-tl-sm bg-surface px-3 py-3 shadow-sm" aria-label={typing}>{[0, 1, 2].map((i) => <i key={i} className="size-1.5 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 0.15}s` }} />)}</span>}
           </div>
           {links.length > 0 && !typing && (
-            <div className="flex flex-wrap gap-1.5 border-t border-line bg-accent-soft/40 px-3 py-2">
-              <span className="w-full text-[11px] font-semibold uppercase tracking-wide text-muted">Agir agora</span>
+            <div className="flex shrink-0 flex-wrap items-center gap-1.5 border-t border-line bg-accent-soft/40 px-3 py-1.5">
+              <span className="text-[10.5px] font-semibold uppercase tracking-wide text-muted">Agir agora</span>
               {links.map((l) => <Link key={l.to + l.label} to={l.to} onClick={close} className="inline-flex min-h-8 items-center rounded-full bg-fill px-3 text-[12.5px] font-semibold text-on-fill no-underline hover:opacity-90">{l.label} →</Link>)}
             </div>
           )}
-          <div className="flex flex-wrap gap-1.5 border-t border-line px-3 py-2">
+          <div className="flex shrink-0 flex-wrap gap-1.5 border-t border-line px-3 py-2">
             {replies.map((r) => <button key={r.label} type="button" onClick={() => act(r)} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{r.label}</button>)}
             {!replies.length && <span className="py-1 text-[12px] text-muted">{typing ? 'digitando…' : ' '}</span>}
           </div>
+          </>}
         </section>
       )}
       {!open && showPill && (
