@@ -10,6 +10,7 @@ export interface IntelSettingsRow {
   contract_remind_days: number; contract_alert_days: number; contract_ending_days: number; approval_stuck_days: number
   upsell_min_months: number; upsell_min_pct: number; alert_yellow: number; temp_hot: number; temp_warm: number
   goal_growth_pct: number; tier_diamond: number; tier_gold: number; tier_silver: number
+  delivery_yellow_days: number; meeting_due_day: number; strategy_due_day: number
 }
 type Key = keyof IntelSettingsRow
 
@@ -43,6 +44,14 @@ const GROUPS: { title: string; text: string; fields: { key: Key; label: string; 
       { key: 'art_sla_hours', label: 'Arte', unit: 'horas' },
       { key: 'video_sla_hours', label: 'Vídeo depois da captação', unit: 'horas' },
       { key: 'approval_stuck_days', label: 'Aprovação do cliente parada depois de', unit: 'dias' },
+    ],
+  },
+  {
+    title: 'Entregas do mês', text: 'Barra de progresso de cada cliente: reunião, estratégia, relatórios, artes e vídeos.',
+    fields: [
+      { key: 'meeting_due_day', label: 'Reunião com o cliente até o dia', unit: 'do mês' },
+      { key: 'strategy_due_day', label: 'Estratégia do mês até o dia', unit: 'do mês' },
+      { key: 'delivery_yellow_days', label: 'Amarelo com até', unit: 'dias de atraso (acima, vermelho)' },
     ],
   },
   {

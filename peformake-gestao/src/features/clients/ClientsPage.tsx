@@ -30,6 +30,7 @@ import { useClients } from './useClients'
 import { isLiveClient } from './clientRules'
 import { monthsIdle, rankStars, rankWhy, TEMP_LABEL, useClientIntel, useClientRanking } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
+import { DeliveryBar, useClientDeliveries } from './DeliveryBar'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
 const chipSelect = 'min-h-9 cursor-pointer rounded-xl border border-line bg-canvas px-3 text-[13px] font-medium text-ink hover:border-line-strong'
@@ -81,6 +82,7 @@ export function ClientsPage() {
   const intel = useClientIntel()
   const ranking = useClientRanking()
   const settings = useIntelSettings()
+  const deliveries = useClientDeliveries()
   const [params, setParams] = useSearchParams()
   const filters = readFilters(params)
   const today = todayInBrazil()
@@ -260,6 +262,7 @@ export function ClientsPage() {
                         <p className="truncate text-[12px] text-muted">
                           {KIND_LABEL[view.kind]}{view.entity === 'ellcazo' && ' · Ellcazo'}{client.segment && ` · ${client.segment}`}
                         </p>
+                        <span className="relative z-10 mt-1 block"><DeliveryBar clientId={client.id} clientName={client.name} items={deliveries.data?.get(client.id)} /></span>
                       </div>
                     </div>
 

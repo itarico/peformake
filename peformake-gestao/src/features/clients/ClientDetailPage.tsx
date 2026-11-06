@@ -17,6 +17,7 @@ import { cn } from '@/lib/cn'
 import { ClientOverview } from './ClientOverview'
 import { monthsIdle, useClientIntel } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
+import { DeliveryBar, useClientDeliveries } from './DeliveryBar'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
 import { ClientContractTab } from '@/features/contracts/ClientContractTab'
 import { ClientFinanceTab } from './ClientFinanceTab'
@@ -51,6 +52,7 @@ export function ClientDetailPage() {
   const { isAdmin, canManage, query } = useClients()
   const intel = useClientIntel()
   const settings = useIntelSettings()
+  const deliveries = useClientDeliveries()
   const [editing, setEditing] = useState(false)
   const accounts = useQuery({ queryKey: ['ad-accounts'], queryFn: listAdAccounts })
   const client = query.data?.find((item) => item.id === id)
@@ -104,6 +106,7 @@ export function ClientDetailPage() {
               <PartnerChip clientId={client.id} on={!!client.isPartner} />
               <span className={cn('rounded-full px-2.5 py-0.5 font-medium', client.isActive ? 'bg-ok-soft text-ok-ink' : 'bg-warn-soft text-warn-ink')}>{clientStatusLabel(client)}</span>
             </p>
+            <div className="mt-2 max-w-md"><p className="mb-1 text-[12px] font-semibold uppercase tracking-wide text-muted">Entregas do mês</p><DeliveryBar wide clientId={client.id} clientName={client.name} items={deliveries.data?.get(client.id)} /></div>
           </div>
           <div className="flex flex-wrap gap-2">
             {whatsapp && (
