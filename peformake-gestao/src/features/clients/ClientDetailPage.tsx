@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { AlertTriangle, ArrowLeft, ChevronLeft, ChevronRight, Mail, MessageCircle, Pencil, Phone } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, MessageCircle, Pencil } from 'lucide-react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
 import { PortalLinkCard } from '@/features/portal/PortalLinkCard'
@@ -9,44 +9,22 @@ import { accountAlerts } from '@/features/traffic/accountRules'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { ClientAvatar } from './ClientAvatar'
 import { HistorySection, LinksSection, StatusSection } from './ClientExtras'
-import { clientStatusLabel, describeClient, groupTeam, whatsappLink } from './clientRules'
+import { clientStatusLabel, describeClient, whatsappLink } from './clientRules'
 import { ClientDialog } from './ClientFormPage'
 import { ClientAssets } from './ClientAssets'
 import { cn } from '@/lib/cn'
-import { HealthSection } from './HealthSection'
+import { ClientOverview } from './ClientOverview'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
 import { ClientContractTab } from '@/features/contracts/ClientContractTab'
 import { ClientFinanceTab } from './ClientFinanceTab'
 import { monthStart } from '@/features/traffic/planRules'
-import { ATTENTION_LABEL, KIND_LABEL, type AttentionFlag } from './portfolioRules'
+import { KIND_LABEL } from './portfolioRules'
 import { ServicesSection } from './ServicesSection'
 import { TeamSection } from './TeamSection'
-import { dateBr } from './format'
-import { Block, ContractCell, ErrorBox, Fact, HealthBadge } from './ui'
+import { Block, ErrorBox } from './ui'
 import { useClients } from './useClients'
 
-const ACTION: Record<AttentionFlag, string> = {
-  risk: 'Converse com o cliente e registre o plano na saúde do relacionamento.',
-  expired: 'Renove o contrato e atualize as datas em Editar.',
-  ending: 'Comece a conversa de renovação.',
-  no_service: 'Adicione os serviços contratados.',
-  no_team: 'Defina quem cuida deste cliente.',
-  stale: 'Registre uma avaliação do relacionamento.',
-  upsell: 'Cliente satisfeito e com tempo de casa: bom momento para apresentar a próxima frente.',
-}
 
-function Text({ label, value }: { label: string; value: string | null }) {
-  const [open, setOpen] = useState(false)
-  if (!value?.trim()) return null
-  const long = value.length > 360
-  return (
-    <div>
-      <h3 className="text-[13px] font-semibold">{label}</h3>
-      <p className={cn('mt-0.5 max-w-[75ch] whitespace-pre-line text-muted', long && !open && 'line-clamp-5')}>{value}</p>
-      {long && <button type="button" onClick={() => setOpen((o) => !o)} className="mt-1 min-h-9 cursor-pointer text-[13px] font-semibold text-accent-ink hover:underline">{open ? 'Mostrar menos' : 'Ver tudo'}</button>}
-    </div>
-  )
-}
 
 type Tab = 'geral' | 'entregas' | 'servicos' | 'contrato' | 'financeiro' | 'arquivos' | 'historico'
 const TABS: { id: Tab; label: string; admin?: boolean }[] = [
@@ -59,14 +37,6 @@ const TABS: { id: Tab; label: string; admin?: boolean }[] = [
   { id: 'historico', label: 'Histórico' },
 ]
 
-function Stat({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="min-w-0 rounded-2xl bg-raised/70 px-4 py-3">
-      <p className="text-[12px] font-medium text-muted">{label}</p>
-      <div className="mt-1 text-[15px] font-semibold">{children}</div>
-    </div>
-  )
-}
 
 export function ClientDetailPage() {
   const { id = '' } = useParams()
@@ -95,10 +65,6 @@ export function ClientDetailPage() {
   const view = describeClient(client, today)
   const whatsapp = whatsappLink(client.phone)
   const linked = (accounts.data ?? []).filter((account) => account.clientId === client.id)
-  const hasBusiness = [client.description, client.targetAudience, client.valueProposition, client.competitors].some((value) => value?.trim())
-  const people = groupTeam(client.team)
-  const activeServices = client.services.filter((s) => s.isActive)
-  const sinceMonths = client.since ? Math.max(0, Math.floor((Date.parse(today) - Date.parse(client.since)) / (30.44 * 86_400_000))) : null
 
   return (
     <>
@@ -131,16 +97,6 @@ export function ClientDetailPage() {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-          <Stat label="Relacionamento"><HealthBadge health={view.health} compact /></Stat>
-          <Stat label={view.kind === 'avulso' ? 'Projeto' : 'Contrato'}>
-            {view.contract.state === 'project' ? 'Avulso' : view.contract.elapsedMonths && view.contract.totalMonths
-              ? <span className={cn(view.contract.state !== 'ok' && 'text-warn-ink')}>Mês {view.contract.elapsedMonths} de {view.contract.totalMonths}</span>
-              : 'Sem data de fim'}
-          </Stat>
-          <Stat label="Cliente há">{sinceMonths === null ? 'Sem data' : sinceMonths < 1 ? 'Menos de 1 mês' : `${sinceMonths} ${sinceMonths === 1 ? 'mês' : 'meses'}`}</Stat>
-          <Stat label="Serviços e equipe">{activeServices.length} {activeServices.length === 1 ? 'serviço' : 'serviços'} · {people.length} {people.length === 1 ? 'pessoa' : 'pessoas'}</Stat>
-        </div>
       </header>
       {canManage && <ClientDialog open={editing} onClose={() => setEditing(false)} clientId={client.id} />}
 
@@ -150,16 +106,6 @@ export function ClientDetailPage() {
         </p>
       )}
 
-      {view.flags.length > 0 && (
-        <section aria-label="O que fazer agora" className="flex flex-col gap-2 rounded-3xl border border-warn/30 bg-warn-soft/60 px-5 py-4">
-          <h2 className="flex items-center gap-2 text-[14px] font-semibold text-warn-ink"><AlertTriangle size={16} aria-hidden="true" /> O que fazer agora</h2>
-          <ul className="flex flex-col gap-1.5">
-            {view.flags.map((flag) => (
-              <li key={flag} className="text-[14px]"><b className="font-semibold">{flag === 'upsell' && view.upsell ? `Oferecer ${view.upsell}` : ATTENTION_LABEL[flag]}.</b> {ACTION[flag]}</li>
-            ))}
-          </ul>
-        </section>
-      )}
 
       <div role="tablist" aria-label="Seções do cliente" className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((t) => (
@@ -187,48 +133,7 @@ export function ClientDetailPage() {
         {tab === 'contrato' && isAdmin && <ClientContractTab client={client} kindLabel={KIND_LABEL[view.kind]} />}
         {tab === 'financeiro' && isAdmin && <ClientFinanceTab client={client} />}
         {tab === 'geral' && (
-          <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-3">
-            <HealthSection clientId={client.id} health={view.health} history={client.assessments} canAssess />
-            <Block title={view.kind === 'avulso' ? 'Projeto' : 'Contrato'}>
-              <ContractCell contract={view.contract} />
-              <dl className="flex flex-col gap-2">
-                <Fact label="Início" value={dateBr(client.contract?.startDate ?? null)} />
-                <Fact label="Fim" value={dateBr(client.contract?.endDate ?? null)} />
-                <Fact label="Cliente desde" value={dateBr(client.since)} />
-                <Fact label="Como chegou" value={client.acquisitionChannel ?? 'Não informado'} />
-              </dl>
-            </Block>
-            <Block title="Contatos">
-              {!client.phone && !client.email && <p className="text-muted">Nenhum contato cadastrado.</p>}
-              {client.phone && (
-                whatsapp ? (
-                  <a href={whatsapp} target="_blank" rel="noreferrer" className="flex min-h-9 items-center gap-2 font-medium hover:underline">
-                    <MessageCircle size={16} aria-hidden="true" /> {client.phone}
-                  </a>
-                ) : (
-                  <p className="flex min-h-9 items-center gap-2"><Phone size={16} aria-hidden="true" /> {client.phone} <span className="text-[12px] text-warn-ink">número incompleto</span></p>
-                )
-              )}
-              {client.email && (
-                <a href={`mailto:${client.email}`} className="flex min-h-9 min-w-0 items-center gap-2 font-medium hover:underline">
-                  <Mail size={16} aria-hidden="true" className="shrink-0" /> <span className="truncate">{client.email}</span>
-                </a>
-              )}
-              <p className="text-[13px] text-muted">{client.showOnSite ? 'Aparece no site da Peformake.' : 'Não aparece no site.'}</p>
-            </Block>
-            <Block title="Sobre o negócio" className="@3xl:col-span-3">
-              {hasBusiness ? (
-                <div className="grid grid-cols-1 gap-4 @2xl:grid-cols-2">
-                  <Text label="O que a empresa faz" value={client.description} />
-                  <Text label="Público-alvo" value={client.targetAudience} />
-                  <Text label="Diferencial" value={client.valueProposition} />
-                  <Text label="Concorrentes" value={client.competitors} />
-                </div>
-              ) : (
-                <p className="text-muted">Nada registrado.{canManage && ' Preencha em Editar para a equipe planejar melhor.'}</p>
-              )}
-            </Block>
-          </div>
+          <ClientOverview view={view} isAdmin={isAdmin} canManage={canManage} whatsapp={whatsapp} onOpenTab={(t) => setTab(t)} />
         )}
 
         {tab === 'servicos' && (

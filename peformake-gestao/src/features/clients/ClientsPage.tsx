@@ -26,6 +26,7 @@ import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
 import { isLiveClient } from './clientRules'
+import { TEMP_LABEL, TEMP_TONE, useClientIntel } from './intelApi'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
 const chipSelect = 'min-h-9 cursor-pointer rounded-xl border border-line bg-canvas px-3 text-[13px] font-medium text-ink hover:border-line-strong'
@@ -73,6 +74,7 @@ const DEFAULTS: Record<string, string> = { situacao: 'active', tipo: 'all', empr
 
 export function ClientsPage() {
   const { canManage, isAdmin, query } = useClients()
+  const intel = useClientIntel()
   const [params, setParams] = useSearchParams()
   const filters = readFilters(params)
   const today = todayInBrazil()
@@ -179,7 +181,7 @@ export function ClientsPage() {
               {tab === 'recorrentes' && (
                 <>
                   <Chips label="Tipo" value={filters.kind} onChange={(value) => set('kind', value)}
-                    options={[{ id: 'all', label: 'Fixo e TCV' }, { id: 'fixo', label: 'Fixo' }, { id: 'tcv', label: 'TCV' }]} />
+                    options={[{ id: 'all', label: 'Todos' }, { id: 'fixo', label: 'Fixo' }, { id: 'tcv', label: 'TCV' }]} />
                   <span aria-hidden="true" className="hidden h-6 w-px bg-line sm:block" />
                 </>
               )}
@@ -209,7 +211,7 @@ export function ClientsPage() {
           <div className="@container">
             <ul className="flex flex-col overflow-hidden rounded-3xl border border-line bg-surface">
               <li aria-hidden="true" className="hidden grid-cols-[minmax(0,2.4fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.3fr)_40px] gap-4 border-b border-line bg-raised/50 px-5 py-2.5 text-[12px] font-medium text-muted @4xl:grid">
-                <span>Cliente</span><span>Equipe</span><span>Contrato</span><span>Saúde</span><span>Atenção</span><span />
+                <span>Cliente</span><span>Equipe</span><span>Contrato</span><span>Saúde e temperatura</span><span>Atenção</span><span />
               </li>
               {visible.map((view) => {
                 const { client } = view
@@ -253,7 +255,12 @@ export function ClientsPage() {
                       <ContractCell contract={view.contract} />
                       {isAdmin && clientValue(client.services).value > 0 && <p className="text-[12px] font-semibold tabular-nums">{brlValue(clientValue(client.services).value)}{view.kind === 'fixo' ? '/mês' : ''}</p>}
                     </div>
-                    <div className="justify-self-end @4xl:justify-self-start"><HealthBadge health={view.health} /></div>
+                    <div className="flex flex-col items-end gap-1 justify-self-end @4xl:items-start @4xl:justify-self-start">
+                      <HealthBadge health={view.health} />
+                      {intel.data?.get(client.id) && intel.data.get(client.id)!.label !== 'sem_dados' && (
+                        <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-semibold', TEMP_TONE[intel.data.get(client.id)!.label])} title={`Temperatura ${intel.data.get(client.id)!.temperature}/100`}>{TEMP_LABEL[intel.data.get(client.id)!.label]}</span>
+                      )}
+                    </div>
                     <div className="hidden @4xl:block"><FlagChips flags={view.flags} upsell={view.upsell} /></div>
 
                     <div className="relative z-10 hidden justify-end @4xl:flex">
