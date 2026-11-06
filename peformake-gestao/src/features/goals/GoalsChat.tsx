@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronDown, Target } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
@@ -17,7 +17,9 @@ type NewMsg =
   | { from: 'bot'; kind: 'all' }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'next' | 'how' | 'step' | 'all' | 'tip' | 'bye' | 'goal'; key?: string }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye'; key?: string }
+/** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
+type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip'; key?: string; from?: number; text?: string }
 
 const PATH_ROLE: [RegExp, GoalRole][] = [[/^\/comercial/, 'comercial'], [/^\/financeiro/, 'financeiro'], [/^\/clientes/, 'relacionamento'], [/^\/trafego/, 'trafego'], [/^\/conteudo/, 'conteudo'], [/^\/audiovisual/, 'audiovisual']]
 const MONTH = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(new Date())
@@ -34,6 +36,24 @@ function useCoach() {
   })
 }
 
+/** Bate Meta: o mascote. Um alvo sorridente com uma flecha no centro. */
+function Mascot({ size = 36 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 40 40" width={size} height={size} aria-hidden="true" className="shrink-0">
+      <circle cx="20" cy="20" r="19" fill="#1fc8db" />
+      <circle cx="20" cy="21" r="14" fill="#fff" />
+      <circle cx="20" cy="21" r="10" fill="#e5484d" />
+      <circle cx="20" cy="21" r="6" fill="#fff" />
+      <circle cx="16.2" cy="18.6" r="1.6" fill="#061417" />
+      <circle cx="23.8" cy="18.6" r="1.6" fill="#061417" />
+      <path d="M15.8 23.2 Q20 27 24.2 23.2" fill="none" stroke="#061417" strokeWidth="1.6" strokeLinecap="round" />
+      {/* Flecha cravada no centro: penas para fora. */}
+      <path d="M23 18 L34 7" stroke="#061417" strokeWidth="2" strokeLinecap="round" />
+      <path d="M34 7 l0.5 -3.5 M34 7 l3.5 -0.5 M31.5 9.5 l0.5 -3.5 M31.5 9.5 l3.5 -0.5" stroke="#eda100" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function GoalBubble({ r, day, days }: { r: GoalRow; day: number; days: number }) {
   const m = GOAL_META[r.key]!
   const p = paceOf(r, day, days)
@@ -43,7 +63,7 @@ function GoalBubble({ r, day, days }: { r: GoalRow; day: number; days: number })
     <div className="flex flex-col gap-1">
       <span className="flex items-start justify-between gap-2"><b className="text-[13px] leading-tight">{m.title(r.info)}</b><span className={cn('shrink-0 rounded-full px-1.5 py-px text-[10px] font-semibold', st.tone)}>{st.label}</span></span>
       <span className="text-[15px] font-semibold tabular-nums">{fmt(actual, m.money)} <span className="text-[12px] font-normal text-muted">{m.kind === 'atMost' ? `limite ${fmt(r.target, m.money)}` : `de ${fmt(r.target, m.money)}`}</span></span>
-      <span className="relative mt-0.5 h-2 rounded-full bg-surface">
+      <span className="relative mt-0.5 h-2 rounded-full bg-raised">
         <span className={cn('pf-grow-x block h-full rounded-full', st.bar)} style={{ width: `${m.kind === 'atMost' ? 100 : Math.max(4, p.pct)}%` }} />
         {m.kind !== 'atMost' && p.state !== 'batida' && <span title="Onde deveria estar hoje" className="absolute -top-1 h-4 w-0.5 rounded bg-ink/60" style={{ left: `${Math.min(100, p.expectedPct)}%` }} />}
       </span>
@@ -66,147 +86,152 @@ export function GoalsChat() {
   const rows = (board.data ?? []).filter((r) => mine.includes(r.role) && GOAL_META[r.key])
   const available = mine.filter((m) => rows.some((r) => r.role === m))
   const fromPath = PATH_ROLE.find(([re]) => re.test(location.pathname))?.[1]
-  const [tab, setTab] = useState<GoalRole | null>(null)
-  const role = (tab && available.includes(tab) ? tab : fromPath && available.includes(fromPath) ? fromPath : available[0]) as GoalRole | undefined
+  const role = (fromPath && available.includes(fromPath) ? fromPath : available[0]) as GoalRole | undefined
   const list = rows.filter((r) => r.role === role)
+  const day = cal.day, days = cal.days, month = cal.iso.slice(0, 7)
 
-  // Novidade: primeira visita do dia ou número que mudou desde a última vez que abriu.
-  const snapshot = JSON.stringify(rows.map((r) => [r.role, r.key, r.actual]))
-  const seenDay = store.get('pf-goals-day') === cal.iso
-  const lastSnap = store.get('pf-goals-snap')
-  const changed = !!lastSnap && !!rows.length && lastSnap !== snapshot
-  const unread = !seenDay || changed
+  // Memória do que já foi mostrado (no aparelho): não repete no mesmo dia; meta batida avisa uma vez no mês.
+  const [seen, setSeen] = useState<Set<string>>(() => new Set(JSON.parse(store.get('pf-goals-seen') ?? '[]') as string[]))
+  const mark = (ids: string[]) => setSeen((cur) => {
+    const next = new Set(cur); ids.forEach((i) => next.add(i))
+    const keep = [...next].filter((i) => i.includes(month))
+    store.set('pf-goals-seen', JSON.stringify(keep))
+    return new Set(keep)
+  })
+  const lastSnap = useMemo(() => new Map<string, number | null>((JSON.parse(store.get('pf-goals-snap') ?? '[]') as [string, number | null][])), []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pool = (insights.data ?? []).filter((x) => x.role === role)
+  const items: Item[] = useMemo(() => {
+    if (!role || !list.length) return []
+    const out: Item[] = []
+    for (const r of list) {
+      const k = `${r.role}:${r.key}`
+      const prev = lastSnap.get(k)
+      if (prev !== undefined && prev !== r.actual && !seen.has(`chg:${month}:${k}:${r.actual}`)) out.push({ id: `chg:${month}:${k}:${r.actual}`, kind: 'change', key: r.key, from: prev ?? 0 })
+      if (paceOf(r, day, days).state === 'batida' && !seen.has(`hit:${month}:${k}`)) out.push({ id: `hit:${month}:${k}`, kind: 'hit', key: r.key })
+    }
+    const today = list[cal.doy % list.length]!
+    const dayId = `day:${cal.iso}:${role}:${today.key}`
+    if (!seen.has(dayId) && !out.some((i) => i.key === today.key)) out.push({ id: dayId, kind: 'day', key: today.key })
+    pool.forEach((t, i) => { const id = `tip:${cal.iso}:${role}:${i}`; if (!seen.has(id)) out.push({ id, kind: 'tip', text: t.text }) })
+    return out
+  }, [role, list, seen, pool, lastSnap, cal.iso, cal.doy, day, days, month])
+  const news = items.filter((i) => i.kind !== 'tip')
+  const tips = items.filter((i) => i.kind === 'tip')
 
   const [open, setOpen] = useState(false)
   const [log, setLog] = useState<Msg[]>([])
   const [replies, setReplies] = useState<Reply[]>([])
   const [typing, setTyping] = useState<string | null>(null)
-  const [stepIdx, setStepIdx] = useState(0)
-  const [focus, setFocus] = useState<string | null>(null)
   const [links, setLinks] = useState<Action[]>([])
   const idRef = useRef(1)
   const box = useRef<HTMLDivElement>(null)
-  const turn = useRef(0)
-  const rnd = useMemo(() => seeded(`${cal.iso}-${role}-${turn.current}`), [cal.iso, role]) // eslint-disable-line react-hooks/exhaustive-deps
+  const rnd = useMemo(() => seeded(`${cal.iso}-${role}`), [cal.iso, role])
   const pick = useMemo(() => pickWith(rnd), [rnd])
+  const started = useRef(false)
 
   useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing])
-  // Abre sozinho na primeira visita do dia.
-  useEffect(() => { if (!seenDay && list.length && state.status === 'ready') setOpen(true) }, [seenDay, list.length, state.status])
-  useEffect(() => {
-    if (!open || !role || !list.length) return
-    store.set('pf-goals-day', cal.iso)
-    start(changed)
-    store.set('pf-goals-snap', snapshot)
-  }, [open, role]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Abre sozinho quando tem novidade de verdade (uma vez por sessão).
+  useEffect(() => { if (news.length && !started.current && state.status === 'ready') setOpen(true) }, [news.length, state.status])
+  useEffect(() => { if (open && !started.current && role) { started.current = true; begin() } }, [open, role]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (state.status !== 'ready' || board.isError || !role || rows.length === 0) return null
+  // Nada novo e chat fechado: some.
+  if (!open && news.length === 0) return null
 
-  const day = cal.day, days = cal.days
-  const todayGoal = list[cal.doy % list.length]!
-  const goal = (key: string | null) => list.find((r) => r.key === key) ?? todayGoal
-  const pool = (insights.data ?? []).filter((x) => x.role === role || mine.includes(x.role))
-
-  /** Envia uma mensagem do assistente depois de "buscar os dados". */
-  const say = (msgs: NewMsg[], next: Reply[]) => {
-    setReplies([])
+  const goal = (key?: string) => list.find((r) => r.key === key) ?? list[0]!
+  const say = (msgs: NewMsg[], next: Reply[], newLinks: Action[] = []) => {
+    setReplies([]); setLinks([])
     let i = 0
     const send = () => {
       const m = msgs[i++]
-      if (!m) { setTyping(null); setReplies(next); return }
+      if (!m) { setTyping(null); setReplies(next); setLinks(newLinks); return }
       setTyping(i === 1 ? pick(['atualizando seus dados…', 'buscando seus números…', 'conferindo o mês…']) : 'digitando…')
       const text = m.kind === 'text' ? m.text : ''
-      setTimeout(() => { setLog((l) => [...l, { ...m, id: idRef.current++ }]); setTyping(null); setTimeout(send, 250) }, Math.min(1700, 900 + text.length * 8))
+      setTimeout(() => { setLog((l) => [...l, { ...m, id: idRef.current++ }]); setTyping(null); setTimeout(send, 200) }, Math.min(1500, 850 + text.length * 6))
     }
     send()
   }
   const me = (text: string) => setLog((l) => [...l, { id: idRef.current++, from: 'me', kind: 'text', text }])
 
-  const after = (key: string): Reply[] => [{ label: pick(['Como bato essa meta?', 'Me mostra o passo a passo', 'O que eu faço?']), act: 'how', key }, { label: 'Ver todas as metas', act: 'all' }, { label: pick(['Me dá uma dica', 'Alguma ideia para hoje?']), act: 'tip' }]
+  const repliesFor = (key: string | undefined, remaining: Item[]): Reply[] => [
+    ...(key ? [{ label: 'Como bater?', act: 'how' as const, key }] : []),
+    ...(remaining.length ? [{ label: pick(['Próxima novidade', 'Tem mais?', 'O que mais?']), act: 'next' as const }] : []),
+    { label: 'Ver todas as metas', act: 'all' },
+    ...(tips.length && !remaining.some((x) => x.kind === 'tip') ? [{ label: 'Uma dica', act: 'tip' as const }] : []),
+    { label: remaining.length ? 'Depois eu vejo' : 'Entendi', act: 'bye' },
+  ]
 
-  function start(withChange: boolean) {
-    setLog([]); setStepIdx(0); setFocus(todayGoal.key); setLinks([])
-    const msgs: NewMsg[] = [{ from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }]
-    if (withChange) {
-      const before = new Map<string, number | null>((JSON.parse(lastSnap ?? '[]') as [string, string, number | null][]).map(([ro, k, a]) => [`${ro}:${k}`, a]))
-      const moved = list.find((r) => before.has(`${r.role}:${r.key}`) && before.get(`${r.role}:${r.key}`) !== r.actual)
-      if (moved) {
-        const b = before.get(`${moved.role}:${moved.key}`) ?? 0
-        const m = GOAL_META[moved.key]!
-        msgs.push({ from: 'bot', kind: 'text', text: `${(moved.actual ?? 0) > (b ?? 0) ? pick(['Novidade boa! 🎉', 'Opa, andou! ↗']) : 'Atualizei aqui:'} ${m.short}: ${fmt(b ?? 0, m.money)} → ${fmt(moved.actual ?? 0, m.money)}.` })
-        setFocus(moved.key)
-        setLinks(actions(moved, coach.data))
-        msgs.push({ from: 'bot', kind: 'goal', key: moved.key })
-        say(msgs, after(moved.key))
-        return
-      }
+  /** Mostra um item novo e já marca como visto. */
+  function show(item: Item | undefined, prefix: NewMsg[] = []) {
+    const remaining = news.filter((x) => x.id !== item?.id && !seen.has(x.id))
+    if (!item) {
+      say([...prefix, { from: 'bot', kind: 'text', text: pick(['Por hoje é isso! ✅ Volto quando tiver novidade.', 'Tudo visto por hoje. Quando um número mudar, eu aviso.']) }], [{ label: 'Ver todas as metas', act: 'all' }, { label: 'Fechar', act: 'bye' }])
+      return
     }
-    say(msgs, [{ label: pick(['Bora ver', 'Mostra a meta do dia', 'Manda']), act: 'next' }])
+    mark([item.id])
+    if (item.kind === 'tip') { say([...prefix, { from: 'bot', kind: 'text', text: `💡 ${item.text}` }], repliesFor(undefined, remaining.filter((x) => x.kind !== 'tip'))); return }
+    const g = goal(item.key)
+    const m = GOAL_META[g.key]!
+    const head: NewMsg = item.kind === 'change'
+      ? { from: 'bot', kind: 'text', text: `${(g.actual ?? 0) > (item.from ?? 0) ? pick(['Novidade boa! 🎉', 'Andou! ↗']) : 'Atualizei aqui:'} ${m.short}: ${fmt(item.from ?? 0, m.money)} → ${fmt(g.actual ?? 0, m.money)}.` }
+      : item.kind === 'hit' ? { from: 'bot', kind: 'text', text: pick([`🏆 Meta batida: ${m.title(g.info).toLowerCase()}!`, `🏆 Bateu! ${m.title(g.info)} com ${days - day} dias de folga.`]) }
+        : { from: 'bot', kind: 'text', text: goalIntro(pick) }
+    const sug = item.kind !== 'hit' ? suggestion(pick, g, coach.data) : null
+    say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key }, { from: 'bot', kind: 'text', text: `${cheer(pick, paceOf(g, day, days))}${sug ? `\n\n${sug}` : ''}` }], repliesFor(g.key, remaining), actions(g, coach.data))
+  }
+
+  function begin() {
+    setLog([])
+    const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }
+    show(news[0] ?? tips[0], [hello])
   }
 
   function act(r: Reply) {
-    turn.current += 1
     me(r.label)
-    const g = goal(r.key ?? focus)
-    if (r.act === 'next') {
-      const sug = suggestion(pick, g, coach.data)
-      setLinks(actions(g, coach.data))
-      say([{ from: 'bot', kind: 'text', text: goalIntro(pick) }, { from: 'bot', kind: 'goal', key: g.key }, { from: 'bot', kind: 'text', text: cheer(pick, paceOf(g, day, days)) }, ...(sug ? [{ from: 'bot' as const, kind: 'text' as const, text: sug }] : [])], after(g.key))
-    }
-    if (r.act === 'how' || r.act === 'step') {
+    if (r.act === 'how') {
+      const g = goal(r.key)
       const all = steps(g, coach.data, day, days)
-      const idx = r.act === 'how' ? 0 : stepIdx
-      setFocus(g.key)
-      setLinks(actions(g, coach.data))
-      const text = `${r.act === 'how' ? pick(['Bora! Passo a passo:', 'Vamos lá, um passo de cada vez.', 'Fiz as contas. Olha o caminho:']) + '\n\n' : ''}${idx + 1}. ${all[idx]}`
-      const last = idx + 1 >= all.length
-      setStepIdx(idx + 1)
-      say([{ from: 'bot', kind: 'text', text }], last
-        ? [{ label: pick(['Valeu!', 'Bora fazer', 'Entendi']), act: 'bye' }, { label: 'Ver todas as metas', act: 'all' }]
-        : [{ label: pick(['Próximo passo', 'E depois?', 'Continua']), act: 'step', key: g.key }, { label: 'Ver todas as metas', act: 'all' }])
+      const remaining = news.filter((x) => !seen.has(x.id))
+      say([{ from: 'bot', kind: 'text', text: `${pick(['Fiz as contas:', 'O caminho é este:', 'Passo a passo:'])}\n\n${all.map((t, i) => `${i + 1}. ${t}`).join('\n\n')}` }],
+        [...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), { label: 'Ver todas as metas', act: 'all' }, { label: 'Bora fazer', act: 'bye' }], actions(g, coach.data))
     }
+    if (r.act === 'next') show(news.find((x) => !seen.has(x.id)) ?? tips.find((x) => !seen.has(x.id)))
+    if (r.act === 'tip') show(tips.find((x) => !seen.has(x.id)))
     if (r.act === 'all') {
-      setLog([]); setStepIdx(0); setLinks([])
-      setTimeout(() => say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'Aqui está o placar completo:', 'Todas de uma vez:']) }, { from: 'bot', kind: 'all' }],
-        list.map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key }))), 50)
+      setLog([])
+      setTimeout(() => say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all' }],
+        [...list.map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key })), { label: 'Fechar', act: 'bye' as const }]), 50)
     }
-    if (r.act === 'tip') {
-      const tip = pool.length ? pool[(cal.doy + turn.current) % pool.length]!.text : 'Hoje a dica é simples: escolha uma meta e faça uma ação concreta antes do almoço.'
-      say([{ from: 'bot', kind: 'text', text: `💡 ${tip}` }], [{ label: 'Como bato a meta do dia?', act: 'how', key: todayGoal.key }, { label: 'Ver todas as metas', act: 'all' }])
-    }
-    if (r.act === 'bye') say([{ from: 'bot', kind: 'text', text: pick(['Combinado! Amanhã eu trago mais. 💪', 'Fechado. Qualquer coisa é só me chamar aqui.', 'Isso aí! Te vejo amanhã com os números novos.']) }], [{ label: 'Ver todas as metas', act: 'all' }])
+    if (r.act === 'bye') close()
   }
 
-  const close = () => { setOpen(false); store.set('pf-goals-snap', snapshot) }
+  function close() {
+    setOpen(false)
+    store.set('pf-goals-snap', JSON.stringify(rows.map((r) => [`${r.role}:${r.key}`, r.actual])))
+  }
 
   return (
     <div className="pointer-events-none fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
       {open && (
-        <section role="dialog" aria-label="Assistente de metas" className="pf-rise pointer-events-auto flex h-[min(560px,calc(100dvh-150px))] w-[min(370px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
-          <header onClick={close} title="Clique para recolher" className="flex cursor-pointer items-center gap-2.5 border-b border-line px-3.5 py-2.5 hover:bg-raised/50">
-            <span className="grid size-8 place-items-center rounded-full bg-fill text-on-fill"><Target size={15} aria-hidden="true" /></span>
-            <span className="min-w-0 flex-1"><b className="block text-[13.5px]">Assistente de metas</b><span className="text-[11.5px] text-muted">{typing ?? `online · ${ROLE_LABEL[role]}`}</span></span>
-            <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Minimizar" className="grid size-8 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised"><ChevronDown size={18} aria-hidden="true" /></button>
+        <section role="dialog" aria-label="Bate Meta, assistente de metas" className="pf-rise pointer-events-auto flex max-h-[min(560px,calc(100dvh-150px))] w-[min(370px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
+          <header onClick={close} title="Clique para recolher" className="flex cursor-pointer items-center gap-2.5 bg-[#075e54] px-3 py-2 text-white dark:bg-[#1f2c34]">
+            <span className="relative"><Mascot size={38} /><span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-[#25d366] ring-2 ring-[#075e54] dark:ring-[#1f2c34]" /></span>
+            <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">Bate Meta</b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'online'}</span></span>
+            <span className="hidden text-[11px] opacity-70 sm:inline">{ROLE_LABEL[role]} · dia {day}/{days}</span>
+            <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Recolher" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-white/10"><ChevronDown size={18} aria-hidden="true" /></button>
           </header>
-          {available.length > 1 && (
-            <div role="tablist" aria-label="Função" className="flex gap-1 overflow-x-auto border-b border-line px-3 py-1.5 [scrollbar-width:none]">
-              {available.map((m) => (
-                <button key={m} type="button" role="tab" aria-selected={role === m} onClick={() => { setTab(m) }}
-                  className={cn('min-h-7 shrink-0 cursor-pointer rounded-full px-2.5 text-[11.5px] font-semibold', role === m ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{ROLE_LABEL[m]}</button>
-              ))}
-            </div>
-          )}
-          <div ref={box} aria-live="polite" className="flex flex-1 flex-col gap-2 overflow-y-auto bg-canvas/50 px-3 py-3 [scrollbar-width:thin]">
+          <div ref={box} aria-live="polite" className="wa-wallpaper flex min-h-[180px] flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-3 [scrollbar-width:thin]">
             {log.map((m) => m.from === 'me'
-              ? <p key={m.id} className="pf-rise max-w-[80%] self-end rounded-2xl rounded-br-sm bg-accent-soft px-3 py-1.5 text-[13px]">{m.text}</p>
+              ? <p key={m.id} className="wa-out pf-rise max-w-[80%] self-end rounded-xl rounded-tr-sm px-3 py-1.5 text-[13px] shadow-sm">{m.text}</p>
               : (
-                <div key={m.id} className="pf-rise max-w-[90%] self-start whitespace-pre-line rounded-2xl rounded-bl-sm bg-raised px-3 py-2 text-[13px]">
+                <div key={m.id} className="pf-rise max-w-[92%] self-start whitespace-pre-line rounded-xl rounded-tl-sm bg-surface px-3 py-2 text-[13px] shadow-sm">
                   {m.kind === 'text' && m.text}
                   {m.kind === 'goal' && <GoalBubble r={goal(m.key)} day={day} days={days} />}
                   {m.kind === 'all' && <span className="flex flex-col gap-3">{list.map((r) => <GoalBubble key={r.key} r={r} day={day} days={days} />)}</span>}
                 </div>
               ))}
-            {typing && <span className="inline-flex w-fit gap-1 rounded-2xl rounded-bl-sm bg-raised px-3 py-3" aria-label={typing}>{[0, 1, 2].map((i) => <i key={i} className="size-1.5 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 0.15}s` }} />)}</span>}
+            {typing && <span className="inline-flex w-fit gap-1 rounded-xl rounded-tl-sm bg-surface px-3 py-3 shadow-sm" aria-label={typing}>{[0, 1, 2].map((i) => <i key={i} className="size-1.5 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 0.15}s` }} />)}</span>}
           </div>
           {links.length > 0 && !typing && (
             <div className="flex flex-wrap gap-1.5 border-t border-line bg-accent-soft/40 px-3 py-2">
@@ -216,17 +241,16 @@ export function GoalsChat() {
           )}
           <div className="flex flex-wrap gap-1.5 border-t border-line px-3 py-2">
             {replies.map((r) => <button key={r.label} type="button" onClick={() => act(r)} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{r.label}</button>)}
-            {!replies.length && !typing && <span className="py-1 text-[12px] text-muted">…</span>}
-            {isAdmin && replies.length > 0 && <Link to="/configuracoes/metas" onClick={close} className="ml-auto self-center text-[11.5px] text-muted no-underline hover:text-ink">Configurar</Link>}
+            {!replies.length && <span className="py-1 text-[12px] text-muted">{typing ? 'digitando…' : ' '}</span>}
           </div>
         </section>
       )}
-      {!open && (
-        <button type="button" onClick={() => setOpen(true)} aria-label={`Acompanhar metas${unread ? ': tem novidade' : ''}`}
-          className={cn('pointer-events-auto relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill px-4 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 transition-transform hover:-translate-y-0.5', unread && 'animate-[pf-nudge_2.4s_ease-in-out_infinite]')}>
-          <Target size={16} aria-hidden="true" /> Acompanhar metas
-          {unread && <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">1</span>}
-          {unread && <span aria-hidden="true" className="absolute inset-0 -z-10 animate-ping rounded-full bg-fill opacity-40" />}
+      {!open && news.length > 0 && (
+        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Bate Meta: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}`}
+          className="pointer-events-auto relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill px-4 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 transition-transform hover:-translate-y-0.5">
+          <span aria-hidden="true" className="absolute inset-0 -z-10 animate-ping rounded-full bg-fill opacity-40" />
+          <span className="-ml-2 rounded-full bg-white/20"><Mascot size={30} /></span> Bate Meta
+          <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>
         </button>
       )}
     </div>

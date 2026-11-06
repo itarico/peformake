@@ -7,6 +7,7 @@ const c: Coach = {
   cut: 1500, avg_ticket: 1162, avulsos: 6, stuck: 12, leads_new: 0, arts_due_week: 6, videos_due: 0, open_quotes: 0,
   low_ticket: [{ id: 'a', name: 'Jogada Criativa', ticket: 350 }, { id: 'b', name: 'Dra. Acácia', ticket: 450 }],
   idle_avulsos: [{ id: 'n', name: 'Dra. Nayane Francis', months: 8 }], happy: [{ id: 'h', name: '3LM' }], unhappy: [{ id: 'u', name: 'Cajá Limão' }],
+  hot_leads: [{ name: 'Padaria Sol', source: 'Pedido pelo site', to_: '/comercial/prospeccao' }], frequent_avulsos: [{ id: 'f', name: 'Partem', months: 3, avg: 500 }],
   overdue: [], no_meeting: [{ id: 'm', name: 'APM' }], lost_month: [{ id: 'l', name: 'Lord Barber', reason: 'Cancelou por preço' }],
 }
 const row = (p: Partial<GoalRow>): GoalRow => ({ role: 'comercial', key: 'mrr_total', target: 26800, actual: 24400, info: { base: 24400 }, source: 'auto', position: 1, ...p })
@@ -19,7 +20,8 @@ describe('coach', () => {
     expect(s.join(' ')).toContain('Cajá Limão')
   })
   it('ações levam ao cliente certo', () => {
-    expect(actions(row({ key: 'novos', target: 5, actual: 1 }), c)[0]).toEqual({ label: 'Abrir prospecção', to: '/comercial/prospeccao' })
+    expect(actions(row({ key: 'novos', target: 5, actual: 1 }), c).map((a) => a.label)).toEqual(['Chamar Padaria Sol', 'Oferecer plano a Partem', 'Ver todos os leads'])
+    expect(steps(row({ key: 'novos', target: 5, actual: 1 }), c, 6, 30).join(' ')).toContain('Partem (3 meses seguidos')
     expect(actions(row({ key: 'avulsos', target: 3, actual: 2 }), c)[0]!.to).toBe('/clientes/n')
   })
   it('sorteio do dia é estável e sugestões citam alguém', () => {

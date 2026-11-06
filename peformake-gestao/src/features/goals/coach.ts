@@ -7,6 +7,7 @@ export interface Coach {
   cut: number; avg_ticket: number; avulsos: number; stuck: number; leads_new: number; arts_due_week: number; videos_due: number; open_quotes: number
   low_ticket: { id: string; name: string; ticket: number }[]; idle_avulsos: { id: string; name: string; months: number }[]
   happy: { id: string; name: string }[]; unhappy: { id: string; name: string }[]
+  hot_leads: { name: string; source: string; to_: string }[]; frequent_avulsos: { id: string; name: string; months: number; avg: number | null }[]
   overdue: { id: string; name: string; amount: number }[]; no_meeting: { id: string; name: string }[]; lost_month: { id: string; name: string; reason: string | null }[]
 }
 
@@ -91,12 +92,14 @@ export function steps(r: GoalRow, c: Coach | undefined, day: number, days: numbe
     }
     case 'novos': case 'novos_premium': {
       const premium = r.key === 'novos_premium'
-      out.push(`Faltam ${rem} ${rem === 1 ? 'cliente' : 'clientes'}${premium ? ` com mensalidade acima de ${brl(cut)}` : ''} em ${left} dias.`)
-      if (happy.length) out.push(`Peça indicação a quem está feliz: ${names(happy)}. Indicação fecha mais rápido e mais caro.`)
-      if (idle.length && !premium) out.push(`Avulsos que já compram: ${names(idle.map((x) => x.name))}. Ofereça o plano mensal com um mês de bônus.`)
-      if (premium) out.push(`Para passar de ${brl(cut)}, monte o pacote completo: tráfego + social + audiovisual. Mostre o resultado de um cliente do mesmo nicho.`)
-      if (c?.leads_new) out.push(`Tem ${c.leads_new} ${c.leads_new === 1 ? 'lead novo esperando' : 'leads novos esperando'} em Prospecção. Responda hoje: lead frio esfria em 48h.`)
-      out.push(`Combinado: ${Math.max(1, Math.ceil(rem / Math.max(1, left / 7)))} ${rem === 1 ? 'proposta' : 'propostas'} por semana até o fim do mês.`)
+      const leads = c?.hot_leads ?? []
+      const freq = c?.frequent_avulsos ?? []
+      out.push(`Faltam ${rem} ${rem === 1 ? 'cliente' : 'clientes'}${premium ? ` com mensalidade acima de ${brl(cut)}` : ''} em ${left} dias: ${Math.max(1, Math.ceil(rem / Math.max(1, left / 7)))} por semana.`)
+      if (leads.length) out.push(`Chame hoje: ${names(leads.map((x) => `${x.name} (${x.source.trim()})`))}.`)
+      else out.push('Não há lead quente no funil agora. Rode uma busca em Prospecção: o sistema encontra empresas do nicho com WhatsApp.')
+      if (!premium && freq.length) out.push(`Avulsos que compram todo mês: ${names(freq.map((x) => `${x.name} (${x.months} meses seguidos${x.avg ? `, média ${brl(x.avg)}` : ''})`))}. Proponha o plano mensal: para eles já é rotina.`)
+      if (happy.length) out.push(`Peça indicação a quem está satisfeito: ${names(happy)}.`)
+      if (premium) out.push(`Para passar de ${brl(cut)}, proponha o pacote completo (tráfego + social + audiovisual) com o resultado de um cliente do mesmo nicho.`)
       break
     }
     case 'avulsos': {
@@ -168,7 +171,14 @@ export function actions(r: GoalRow, c: Coach | undefined): Action[] {
   const a: Action[] = []
   const client = (x: { id: string; name: string } | undefined, verb: string, tab = '') => { if (x) a.push({ label: `${verb} ${first(x.name)}`, to: `/clientes/${x.id}${tab}` }) }
   switch (r.key) {
-    case 'novos': case 'novos_premium': a.push({ label: 'Abrir prospecção', to: '/comercial/prospeccao' }); client(c?.happy[0], 'Pedir indicação a'); if (r.key === 'novos') client(c?.idle_avulsos[0], 'Oferecer plano a'); break
+    case 'novos': case 'novos_premium': {
+      const lead = c?.hot_leads[0]
+      if (lead) a.push({ label: `Chamar ${first(lead.name)}`, to: lead.to_ })
+      if (r.key === 'novos') client(c?.frequent_avulsos[0], 'Oferecer plano a')
+      a.push({ label: lead ? 'Ver todos os leads' : 'Buscar leads', to: '/comercial/prospeccao' })
+      client(c?.happy[0], 'Pedir indicação a')
+      break
+    }
     case 'mrr_total': case 'upsell': client(c?.low_ticket[0], 'Propor upsell a'); client(c?.low_ticket[1], 'Propor upsell a'); a.push({ label: 'Ver clientes', to: '/clientes?aba=recorrentes&atencao=upsell' }); break
     case 'avulsos': client(c?.idle_avulsos[0], 'Falar com'); client(c?.idle_avulsos[1], 'Falar com'); a.push({ label: 'Montar orçamento', to: '/audiovisual/orcamentos/novo' }); break
     case 'reunioes': client(c?.no_meeting[0], 'Marcar com'); client(c?.no_meeting[1], 'Marcar com'); break
@@ -190,6 +200,8 @@ export function suggestion(pick: <T>(a: readonly T[]) => T, r: GoalRow, c: Coach
   if (!c) return null
   switch (r.key) {
     case 'novos': case 'novos_premium': {
+      if (c.hot_leads[0]) return `Lead para chamar hoje: ${c.hot_leads[0].name} (${c.hot_leads[0].source.trim().toLowerCase()}).`
+      if (r.key === 'novos' && c.frequent_avulsos[0]) return `${first(c.frequent_avulsos[0].name)} compra avulso há ${c.frequent_avulsos[0].months} meses seguidos: é cliente recorrente sem contrato. Ofereça o plano.`
       if (c.happy[0]) return pick([`Sugestão para hoje: peça uma indicação a ${first(c.happy[0].name)}. Avaliou bem a gente há pouco tempo.`, `Que tal mandar uma mensagem para ${first(c.happy[0].name)} pedindo indicação? Está satisfeito com o trabalho.`])
       if (c.idle_avulsos[0]) return `Sugestão: ${first(c.idle_avulsos[0].name)} já compra avulso. Ofereça o plano mensal.`
       return c.leads_new ? `Tem ${c.leads_new} lead(s) novo(s) em Prospecção esperando resposta.` : null
