@@ -21,7 +21,7 @@ import {
   type SortKey,
   type StatusFilter,
 } from './clientRules'
-import { ATTENTION_LABEL, KIND_LABEL, clientValue, type AttentionFlag } from './portfolioRules'
+import { ATTENTION_LABEL, KIND_LABEL, type AttentionFlag } from './portfolioRules'
 import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
@@ -253,7 +253,7 @@ export function ClientsPage() {
 
                     <div className="hidden @4xl:block">
                       <ContractCell contract={view.contract} />
-                      {isAdmin && clientValue(client.services).value > 0 && <p className="text-[12px] font-semibold tabular-nums">{brlValue(clientValue(client.services).value)}{view.kind === 'fixo' ? '/mês' : ''}</p>}
+                      {isAdmin && view.value > 0 && <p className="text-[12px] font-semibold tabular-nums">{view.kind === 'avulso' ? 'Último serviço: ' : ''}{brlValue(view.value)}{view.kind === 'fixo' ? '/mês' : ''}</p>}
                     </div>
                     <div className="flex flex-col items-end gap-1 justify-self-end @4xl:items-start @4xl:justify-self-start">
                       <HealthBadge health={view.health} />

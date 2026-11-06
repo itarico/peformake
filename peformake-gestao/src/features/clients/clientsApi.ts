@@ -79,7 +79,7 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
       .from('clients')
       .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id, document, legal_name, address, billing_email')
       .order('name'),
-    supabase.from('client_services').select('id, client_id, service_id, is_active, quantity, notes, package_id'),
+    supabase.from('client_services').select('id, client_id, service_id, is_active, quantity, notes, package_id, billing_month, legacy_created_at'),
     supabase.from('services').select('id, name, is_audiovisual'),
     supabase.from('client_contracts').select('client_id, contract_model, start_date, end_date, months, billing_day'),
     supabase.from('client_team').select('client_id, staff_id, role_in_client'),
@@ -152,6 +152,7 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
             quantity: link.quantity,
             notes: link.notes,
             packageId: link.package_id,
+            date: link.billing_month ?? link.legacy_created_at,
             ...(isAdmin
               ? {
                   price: price?.price === null || price?.price === undefined ? null : Number(price.price),

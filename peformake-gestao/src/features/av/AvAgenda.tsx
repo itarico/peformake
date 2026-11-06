@@ -57,7 +57,7 @@ export function AvAgenda() {
 
   const shoots = (projects.data ?? []).filter((p) => p.shootAt && p.status !== 'cancelled' && p.shootAt.slice(0, 7) === month.slice(0, 7))
   const shotClients = new Set(shoots.map((p) => p.clientId))
-  const toSchedule = (clients ?? []).filter((c) => c.isActive && inAreas(c, AV_AREAS) && !shotClients.has(c.id)).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+  const toSchedule = (clients ?? []).filter((c) => c.isActive && c.recurring && inAreas(c, AV_AREAS) && !shotClients.has(c.id)).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
   const googleEvents = (calendar.data?.events ?? []).filter((e) => !e.av_project_id)
   const byDay = new Map<string, { shoots: AvProject[]; events: typeof googleEvents }>()
   const slot = (d: string) => { if (!byDay.has(d)) byDay.set(d, { shoots: [], events: [] }); return byDay.get(d)! }
@@ -126,7 +126,7 @@ export function AvAgenda() {
 
         <aside aria-labelledby="para-agendar" className="flex flex-col gap-2 self-start rounded-3xl border border-line bg-surface p-4">
           <h2 id="para-agendar" className="font-semibold">Para agendar <span className="text-muted">· {toSchedule.length}</span></h2>
-          <p className="text-[12px] text-muted">Clientes com vídeo no plano e sem gravação marcada em {monthLabel(month).toLowerCase()}.</p>
+          <p className="text-[12px] text-muted">Clientes fixos com vídeo no plano e sem gravação marcada em {monthLabel(month).toLowerCase()}.</p>
           <ul className="flex flex-col">
             {toSchedule.map((c) => (
               <li key={c.id} className="border-t border-line first:border-t-0">

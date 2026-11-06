@@ -43,6 +43,8 @@ export interface ClientServiceItem {
   quantity: number | null
   notes: string | null
   packageId: string | null
+  /** Mês do serviço (avulso) ou data de entrada, para achar o último serviço. */
+  date?: string | null
   /** Só chega para administrador. Para os demais fica indefinido. */
   price?: number | null
   discountType?: DiscountType | null
@@ -124,7 +126,7 @@ export function describeClient(client: ClientRecord, today: string): ClientView 
   const kind = clientKind(client.clientType, client.contract?.model ?? null)
   const contract = contractStatus(client.contract, kind, today)
   const health = healthStatus(client.assessments, today)
-  const { value, missingPrices } = clientValue(client.services)
+  const { value, missingPrices } = clientValue(client.services, kind)
   const people = new Set(client.team.map((entry) => entry.staffId)).size
   const active = client.services.filter((item) => item.isActive)
   const attention = {

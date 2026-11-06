@@ -34,7 +34,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
   const paid = rows.filter((r) => r.status === 'pago').reduce((s, r) => s + Number(r.amount), 0)
   const open = rows.filter((r) => r.status !== 'pago' && r.status !== 'cancelado')
   const late = open.filter((r) => r.due_date < today)
-  const value = clientValue(client.services)
+  const value = clientValue(client.services, client.clientType === 'one-off' ? 'avulso' : undefined)
   const active = client.services.filter((s) => s.isActive)
 
   return (

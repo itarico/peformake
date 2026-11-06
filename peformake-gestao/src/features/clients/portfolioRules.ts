@@ -56,7 +56,21 @@ export function lineValue(line: Pick<ServiceLine, 'price' | 'quantity' | 'discou
   return base
 }
 
-export function clientValue(services: readonly ServiceLine[]): { value: number; missingPrices: number } {
+/** Último serviço do cliente (o mais recente pela data; empate fica com o último da lista). */
+export function lastService<T extends ServiceLine & { date?: string | null }>(services: readonly T[]): T | null {
+  if (!services.length) return null
+  return [...services].sort((a, b) => (a.date ?? '').localeCompare(b.date ?? '')).at(-1) ?? null
+}
+
+/**
+ * Valor do cliente. Recorrente: soma dos serviços ativos (mensalidade ou TCV).
+ * Avulso: só o último serviço, porque cada serviço avulso é cobrado uma vez e não vira carteira.
+ */
+export function clientValue(services: readonly (ServiceLine & { date?: string | null })[], kind?: ClientKind): { value: number; missingPrices: number } {
+  if (kind === 'avulso') {
+    const last = lastService(services)
+    return { value: last ? Math.round(lineValue(last) * 100) / 100 : 0, missingPrices: last && (last.price === null || last.price === undefined) ? 1 : 0 }
+  }
   const active = services.filter((item) => item.isActive)
   return {
     value: Math.round(active.reduce((sum, item) => sum + lineValue(item), 0) * 100) / 100,

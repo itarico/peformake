@@ -54,7 +54,8 @@ export function ContractsPage() {
   })
   const [filter, setFilter] = useState<Situation | 'todos'>('todos')
   const today = todayInBrazil()
-  const rows = useMemo(() => (q.data ?? []).map((r) => ({ ...r, situation: situationOf(r, today) })), [q.data, today])
+  // Avulso fecha pelo aceite da proposta e não entra na carteira de contratos.
+  const rows = useMemo(() => (q.data ?? []).filter((r) => r.client_type !== 'one-off').map((r) => ({ ...r, situation: situationOf(r, today) })), [q.data, today])
   const counts = rows.reduce<Record<string, number>>((acc, r) => ({ ...acc, [r.situation]: (acc[r.situation] ?? 0) + 1 }), {})
   const shown = filter === 'todos' ? rows : rows.filter((r) => r.situation === filter)
   const signedValue = rows.filter((r) => r.situation === 'assinado' || r.situation === 'vencendo').reduce((s, r) => s + Number(r.monthly ?? 0), 0)
@@ -62,11 +63,11 @@ export function ContractsPage() {
 
   return (
     <>
-      <SectionHeader title="Financeiro" sub="Contrato de cada cliente ativo: quem já assinou, quem falta e o que vence." tabs={FINANCE_TABS} />
+      <SectionHeader title="Financeiro" sub="Contrato de cada cliente fixo e TCV: quem já assinou, quem falta e o que vence. Avulso fecha pelo aceite da proposta." tabs={FINANCE_TABS} />
 
       <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
         {[
-          ['Clientes ativos', String(rows.length)],
+          ['Clientes recorrentes', String(rows.length)],
           ['Com contrato assinado', `${(counts.assinado ?? 0) + (counts.vencendo ?? 0)} de ${rows.length}`],
           ['Valor coberto por contrato', `${brlValue(signedValue)}/mês`],
           ['Valor sem contrato assinado', `${brlValue(uncovered)}/mês`],

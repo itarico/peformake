@@ -10,6 +10,8 @@ export interface ClientOption {
   isActive: boolean
   /** Áreas com serviço ativo: design, social, trafego, audiovisual... */
   areas: string[]
+  /** Fixo ou TCV. Avulso só recebe trabalho quando pede. */
+  recurring: boolean
 }
 
 /** Cliente só aparece numa área se tiver serviço ativo dela. */
@@ -23,7 +25,7 @@ export function inAreas(c: ClientOption, areas: readonly string[]): boolean {
 async function listClients(): Promise<ClientOption[]> {
   const { data, error } = await supabase.rpc('production_clients', {} as Record<string, never>)
   if (error) throw error
-  return (data ?? []).map((c) => ({ id: c.id, name: c.name, isActive: c.is_active, areas: c.areas ?? [] }))
+  return (data ?? []).map((c) => ({ id: c.id, name: c.name, isActive: c.is_active, areas: c.areas ?? [], recurring: (c as { recurring?: boolean }).recurring !== false }))
 }
 
 async function listStaff(): Promise<{ id: string; name: string; mainRole: string | null }[]> {

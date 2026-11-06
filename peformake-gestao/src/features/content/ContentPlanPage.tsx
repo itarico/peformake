@@ -75,7 +75,7 @@ export function ContentPlanPage() {
   if (!clients || !plans.data || !items.data) {
     return <LoadState isPending={isPending || plans.isPending || items.isPending} isError={isError || plans.isError || items.isError} refetch={() => { refetch(); void plans.refetch(); void items.refetch() }} />
   }
-  const active = clients.filter((c) => c.isActive && inAreas(c, DESIGN_AREAS))
+  const active = clients.filter((c) => c.isActive && c.recurring && inAreas(c, DESIGN_AREAS))
   const mine = items.data.filter((i) => i.clientId === clientId).sort((a, b) => a.number - b.number)
   const sum = summarize(mine, today)
   const inReview = mine.filter((i) => i.status === 'review').length

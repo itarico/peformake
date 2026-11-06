@@ -101,7 +101,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
   const all = docs.data ?? []
   const current = all.find((d) => d.status !== 'cancelado') ?? null
   const history = all.filter((d) => d !== current)
-  const value = clientValue(client.services)
+  const value = clientValue(client.services, client.clientType === 'one-off' ? 'avulso' : undefined)
   const c = client.contract
   const daysLeft = c?.endDate ? Math.round((Date.parse(c.endDate) - Date.parse(todayInBrazil())) / 86_400_000) : null
   const missing = [!client.document && 'CPF/CNPJ', !client.legalName && 'razão social', !client.address && 'endereço', !(client.billingEmail || client.email) && 'e-mail'].filter(Boolean) as string[]

@@ -190,10 +190,10 @@ export function ServicesSection({ clientId, services, kind, isAdmin, canManage }
       )}
       {isAdmin && services.some((s) => s.isActive) && (
         <p className="mt-3 flex items-baseline justify-between border-t border-line pt-3">
-          <span className="text-[13px] font-medium text-muted">{kind === 'fixo' ? 'Valor do contrato por mês' : 'Valor do contrato'}</span>
+          <span className="text-[13px] font-medium text-muted">{kind === 'fixo' ? 'Valor do contrato por mês' : kind === 'avulso' ? 'Valor do último serviço' : 'Valor do contrato'}</span>
           <span className="text-[17px] font-semibold tabular-nums">
-            {brlValue(clientValue(services).value)}
-            {clientValue(services).missingPrices > 0 && <span className="ml-2 text-[12px] font-normal text-warn-ink">{clientValue(services).missingPrices} sem preço</span>}
+            {brlValue(clientValue(services, kind).value)}
+            {clientValue(services, kind).missingPrices > 0 && <span className="ml-2 text-[12px] font-normal text-warn-ink">{clientValue(services, kind).missingPrices} sem preço</span>}
           </span>
         </p>
       )}
