@@ -1,8 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, Lightbulb, MessageCircle, Pencil, Plus, RotateCcw, Target, Trash2 } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
-import { useAuth } from '@/auth/context'
+import { Pencil, Plus, RotateCcw, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
@@ -15,7 +13,7 @@ export type GoalRole = 'gestao' | 'comercial' | 'relacionamento' | 'trafego' | '
 export const ROLE_LABEL: Record<GoalRole, string> = {
   gestao: 'Gestão', comercial: 'Comercial', relacionamento: 'Relacionamento', trafego: 'Tráfego', conteudo: 'Conteúdo', audiovisual: 'Audiovisual', financeiro: 'Financeiro',
 }
-const APP_ROLE: Record<string, GoalRole> = {
+export const APP_ROLE: Record<string, GoalRole> = {
   head_marketing: 'relacionamento', sdr: 'comercial', closer: 'comercial', traffic_manager: 'trafego', social_media: 'conteudo', designer: 'conteudo', videomaker: 'audiovisual', editor: 'audiovisual', ellcazo: 'audiovisual',
 }
 
@@ -67,7 +65,7 @@ export const GOAL_META: Record<string, Meta> = {
 type Rpc = (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 export const monthStartOf = (offset = 0) => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + offset); return d.toISOString().slice(0, 10) }
-const fmt = (n: number, money?: boolean) => (money ? brl(n) : Math.round(n).toLocaleString('pt-BR'))
+export const fmt = (n: number, money?: boolean) => (money ? brl(n) : Math.round(n).toLocaleString('pt-BR'))
 
 export function useGoalsBoard(month: string) {
   return useQuery({
@@ -80,14 +78,14 @@ export function useGoalsBoard(month: string) {
     },
   })
 }
-function useInsights() {
+export function useInsights() {
   return useQuery({
     queryKey: ['company-goals', 'insights'], staleTime: 30 * 60_000, retry: false,
     queryFn: async () => { const { data, error } = await rpc('goals_insights', {}); if (error) throw new Error(error.message); return (data ?? []) as { role: GoalRole; text: string }[] },
   })
 }
 
-function calendar() {
+export function calendar() {
   const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }))
   const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
   return { day: now.getDate(), days, iso: now.toISOString().slice(0, 10), doy: Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86_400_000) }
@@ -116,7 +114,7 @@ export function paceOf(r: GoalRow, day: number, days: number): Pace {
   const remaining = Math.max(0, r.target - actual)
   return { pct, expectedPct, state: actual >= r.target ? 'batida' : pct >= expectedPct * 0.9 ? 'ritmo' : 'atras', remaining, perDay: remaining / left }
 }
-const STATE: Record<Pace['state'], { label: string; tone: string; bar: string }> = {
+export const STATE: Record<Pace['state'], { label: string; tone: string; bar: string }> = {
   batida: { label: 'Batida', tone: 'bg-ok-soft text-ok-ink', bar: 'bg-ok' },
   ritmo: { label: 'No ritmo', tone: 'bg-accent-soft text-accent-ink', bar: 'bg-accent' },
   atras: { label: 'Atrás do ritmo', tone: 'bg-[#eda100]/15 text-[#8a5d00] dark:text-[#eda100]', bar: 'bg-[#eda100]' },
@@ -124,107 +122,6 @@ const STATE: Record<Pace['state'], { label: string; tone: string; bar: string }>
   ok: { label: 'Dentro', tone: 'bg-ok-soft text-ok-ink', bar: 'bg-ok' },
 }
 
-
-const PATH_ROLE: [RegExp, GoalRole][] = [[/^\/comercial/, 'comercial'], [/^\/financeiro/, 'financeiro'], [/^\/clientes/, 'relacionamento'], [/^\/trafego/, 'trafego'], [/^\/conteudo/, 'conteudo'], [/^\/audiovisual/, 'audiovisual']]
-
-/** Chat de metas (estilo suporte): abre sozinho uma vez por dia, mensagens animadas; depois fica num botão no canto. */
-export function GoalsChat() {
-  const { state } = useAuth()
-  const location = useLocation()
-  const q = useGoalsBoard(monthStartOf(0))
-  const insights = useInsights()
-  const cal = calendar()
-  const roles = state.status === 'ready' ? state.user.roles : []
-  const isAdmin = roles.includes('admin')
-  const firstName = state.status === 'ready' ? (state.user.fullName ?? '').split(' ')[0] : ''
-  const mine = useMemo<GoalRole[]>(() => (isAdmin ? ['gestao', 'comercial', 'relacionamento', 'financeiro', 'trafego', 'conteudo', 'audiovisual'] : [...new Set(roles.map((r) => APP_ROLE[r]).filter(Boolean) as GoalRole[])]), [isAdmin, roles])
-  const rows = (q.data ?? []).filter((r) => mine.includes(r.role) && GOAL_META[r.key])
-  const available = mine.filter((m) => rows.some((r) => r.role === m))
-  const fromPath = PATH_ROLE.find(([re]) => re.test(location.pathname))?.[1]
-  const auto = fromPath && available.includes(fromPath) ? fromPath : available[0]
-  const [tab, setTab] = useState<GoalRole | null>(null)
-  const active = tab && available.includes(tab) ? tab : auto
-  const seenKey = `pf-goals-chat-${cal.iso}`
-  const [open, setOpen] = useState(() => { try { return localStorage.getItem(seenKey) !== '1' } catch { return false } })
-  const [actionsFor, setActionsFor] = useState<string | null>(null)
-  const [play, setPlay] = useState(0)
-  const close = () => { setOpen(false); try { localStorage.setItem(seenKey, '1') } catch { /* sem armazenamento */ } }
-  if (state.status !== 'ready' || q.isError || !active || rows.length === 0) return null
-  const list = rows.filter((r) => r.role === active)
-  const behind = rows.filter((r) => { const st = paceOf(r, cal.day, cal.days).state; return st === 'atras' || st === 'estourou' }).length
-  const pool = (insights.data ?? []).filter((x) => x.role === active || mine.includes(x.role))
-  const insight = pool.length ? pool[cal.doy % pool.length]!.text : null
-  const hour = new Date().getHours()
-  const hello = `${hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'}${firstName ? `, ${firstName}` : ''}! Hoje é dia ${cal.day} de ${cal.days}.`
-  const anim = (i: number) => ({ animationDelay: `${i * 380}ms` })
-
-  return (
-    <div className="pointer-events-none fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
-      {open && (
-        <section role="dialog" aria-label="Metas do mês" className="pf-rise pointer-events-auto flex max-h-[min(640px,calc(100dvh-140px))] w-[min(380px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
-          <header className="flex items-center gap-3 bg-fill px-4 py-3 text-on-fill">
-            <span className="grid size-9 place-items-center rounded-full bg-on-fill/15"><Target size={17} aria-hidden="true" /></span>
-            <span className="min-w-0 flex-1"><b className="block text-[14px]">Metas do mês</b><span className="text-[12px] opacity-80">{ROLE_LABEL[active]} · dia {cal.day} de {cal.days}</span></span>
-            <button type="button" onClick={close} aria-label="Minimizar" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-on-fill/15"><ChevronDown size={18} aria-hidden="true" /></button>
-          </header>
-          {available.length > 1 && (
-            <div role="tablist" aria-label="Função" className="flex gap-1 overflow-x-auto border-b border-line px-3 py-2 [scrollbar-width:none]">
-              {available.map((m) => (
-                <button key={m} type="button" role="tab" aria-selected={active === m} onClick={() => { setTab(m); setActionsFor(null); setPlay((p) => p + 1) }}
-                  className={cn('min-h-7 shrink-0 cursor-pointer rounded-full px-2.5 text-[11.5px] font-semibold', active === m ? 'bg-fill text-on-fill' : 'bg-raised text-muted hover:text-ink')}>{ROLE_LABEL[m]}</button>
-              ))}
-            </div>
-          )}
-          <div key={`${active}-${play}`} className="flex flex-col gap-2.5 overflow-y-auto bg-canvas/60 px-3 py-4 [scrollbar-width:thin]">
-            <p className="pf-rise max-w-[85%] rounded-2xl rounded-tl-sm bg-surface px-3 py-2 text-[13px] shadow-sm" style={anim(0)}>{hello} Suas 3 metas de {ROLE_LABEL[active].toLowerCase()}:</p>
-            {list.map((r, i) => {
-              const m = GOAL_META[r.key]!
-              const p = paceOf(r, cal.day, cal.days)
-              const st = STATE[p.state]
-              const actual = r.actual ?? 0
-              const hint = m.kind === 'atMost' ? (p.state === 'ok' ? 'Dentro do limite' : `Passou ${fmt(actual - r.target, m.money)} do limite`)
-                : p.state === 'batida' ? 'Meta batida!' : `Faltam ${fmt(p.remaining, m.money)}${cal.day < cal.days && p.perDay > 0 ? ` · ${m.money ? fmt(p.perDay, true) : p.perDay < 1 ? `1 a cada ${Math.round(1 / p.perDay)} dias` : `${p.perDay.toFixed(1).replace('.0', '').replace('.', ',')} por dia`}` : ''}`
-              return (
-                <div key={r.key} className="pf-rise flex max-w-[92%] flex-col gap-1.5 rounded-2xl rounded-tl-sm bg-surface px-3 py-2.5 shadow-sm" style={anim(i + 1)}>
-                  <span className="flex items-center justify-between gap-2"><b className="text-[13px] leading-tight">{p.state === 'batida' && '🏆 '}{m.title(r.info)}</b><span className={cn('shrink-0 rounded-full px-1.5 py-px text-[10px] font-semibold', st.tone)}>{st.label}</span></span>
-                  <span className="flex items-baseline gap-1.5"><b className="text-[18px] leading-none tabular-nums">{fmt(actual, m.money)}</b><span className="text-[12px] text-muted">{m.kind === 'atMost' ? `limite ${fmt(r.target, m.money)}` : `de ${fmt(r.target, m.money)}`}</span></span>
-                  <span className="relative h-1.5 rounded-full bg-raised">
-                    <span className={cn('pf-grow-x block h-full rounded-full', st.bar)} style={{ width: `${m.kind === 'atMost' ? 100 : Math.max(3, p.pct)}%`, ...anim(i + 1) }} />
-                    {m.kind !== 'atMost' && p.state !== 'batida' && <span className="absolute -top-1 h-3.5 w-0.5 rounded bg-ink/60" style={{ left: `${Math.min(100, p.expectedPct)}%` }} title="Onde deveria estar hoje" />}
-                  </span>
-                  <span className="flex items-center justify-between gap-2 text-[11.5px] text-muted">
-                    <span>{hint}</span>
-                    <button type="button" onClick={() => setActionsFor(actionsFor === r.key ? null : r.key)} className="shrink-0 cursor-pointer font-semibold text-accent-ink hover:underline">{actionsFor === r.key ? 'Fechar' : 'Como bater'}</button>
-                  </span>
-                  {actionsFor === r.key && (
-                    <ul className="pf-rise mt-1 flex flex-col gap-0.5 border-l-2 border-line pl-2.5 text-[12px]">
-                      {m.actions(r.info).map((a) => <li key={a}>{a}</li>)}
-                      {m.link && <li><Link to={m.link} onClick={close} className="font-semibold text-accent-ink">Ir resolver →</Link></li>}
-                    </ul>
-                  )}
-                </div>
-              )
-            })}
-            {insight && (
-              <p className="pf-rise flex max-w-[92%] gap-2 rounded-2xl rounded-tl-sm bg-[#eda100]/12 px-3 py-2 text-[12.5px] shadow-sm" style={anim(list.length + 1)}>
-                <Lightbulb size={14} aria-hidden="true" className="mt-0.5 shrink-0 text-[#eda100]" /><span><b className="block text-[10.5px] uppercase tracking-wide text-muted">Dica do dia</b>{insight}</span>
-              </p>
-            )}
-          </div>
-          <footer className="flex flex-wrap gap-1.5 border-t border-line px-3 py-2">
-            <button type="button" onClick={() => setPlay((p) => p + 1)} className="min-h-8 cursor-pointer rounded-full border border-line px-3 text-[12px] font-medium hover:border-ink">Ver de novo</button>
-            {isAdmin && <Link to="/configuracoes/metas" onClick={close} className="inline-flex min-h-8 items-center rounded-full border border-line px-3 text-[12px] font-medium text-ink no-underline hover:border-ink">Configurar metas</Link>}
-          </footer>
-        </section>
-      )}
-      <button type="button" onClick={() => (open ? close() : (setOpen(true), setPlay((p) => p + 1)))} aria-label={open ? 'Minimizar metas' : `Abrir metas do mês${behind ? `: ${behind} atrás do ritmo` : ''}`}
-        className="pointer-events-auto relative grid size-14 cursor-pointer place-items-center rounded-full bg-fill text-on-fill shadow-xl shadow-black/30 transition-transform hover:scale-105">
-        {open ? <ChevronDown size={22} aria-hidden="true" /> : <MessageCircle size={22} aria-hidden="true" />}
-        {!open && behind > 0 && <span className="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-warn text-[11px] font-bold text-white">{behind}</span>}
-      </button>
-    </div>
-  )
-}
 
 interface Template { id?: string; role: GoalRole; key: string; mode: 'auto' | 'fixo' | 'crescimento'; value: number | null; active: boolean; position: number }
 const MODE_LABEL: Record<Template['mode'], string> = { auto: 'Automático pelos dados', fixo: 'Valor fixo', crescimento: '% sobre o mês anterior' }

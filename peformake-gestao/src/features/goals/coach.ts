@@ -1,0 +1,204 @@
+// Motor da conversa de metas: junta as metas, o ritmo e os dados do sistema em mensagens que mudam todo dia.
+// Nada de IA externa: frases-modelo com variáveis, escolhidas por um sorteio fixo do dia (o mesmo dia repete, o dia seguinte muda).
+
+import type { GoalRow, Pace } from './goals'
+
+export interface Coach {
+  cut: number; avg_ticket: number; avulsos: number; stuck: number; leads_new: number; arts_due_week: number; videos_due: number; open_quotes: number
+  low_ticket: { id: string; name: string; ticket: number }[]; idle_avulsos: { id: string; name: string; months: number }[]
+  happy: { id: string; name: string }[]; unhappy: { id: string; name: string }[]
+  overdue: { id: string; name: string; amount: number }[]; no_meeting: { id: string; name: string }[]; lost_month: { id: string; name: string; reason: string | null }[]
+}
+
+export const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
+const n0 = (n: number) => Math.round(n).toLocaleString('pt-BR')
+
+/** Sorteio fixo por semente: mesma semente, mesma escolha. */
+export function seeded(seed: string) {
+  let h = 2166136261
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 16777619)
+  return () => { h += 0x6d2b79f5; let t = h; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 }
+}
+export const pickWith = (rnd: () => number) => <T,>(a: readonly T[]): T => a[Math.floor(rnd() * a.length)]!
+
+export const names = (list: string[], max = 3) => {
+  const l = list.map((s) => s.trim()).filter(Boolean).slice(0, max)
+  return l.length <= 1 ? (l[0] ?? '') : `${l.slice(0, -1).join(', ')} e ${l[l.length - 1]}`
+}
+
+const WEEKDAY = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado']
+
+export function greeting(pick: <T>(a: readonly T[]) => T, firstName: string, day: number, days: number, monthName: string) {
+  const left = days - day
+  const hour = new Date().getHours()
+  const hi = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
+  const wd = WEEKDAY[new Date().getDay()]!
+  const who = firstName ? `, ${firstName}` : ''
+  return pick([
+    `${hi}${who}! ${wd[0]!.toUpperCase()}${wd.slice(1)}, dia ${day} de ${days}. Faltam ${left} dias para fechar ${monthName}.`,
+    `${hi}${who}! ☕ Dia ${day} de ${monthName}: ainda temos ${left} dias de jogo.`,
+    `E aí${who}! Passando para o nosso papo do dia. Hoje é dia ${day}, faltam ${left} para o mês acabar.`,
+    `${hi}${who}! Atualizei seus números agora há pouco. Dia ${day} de ${days}.`,
+    `${hi}${who}! ${left > 20 ? 'Mês começando: é a melhor hora de acelerar.' : left > 10 ? 'Meio do mês: hora de ajustar a rota.' : 'Reta final do mês: cada dia conta.'}`,
+  ])
+}
+
+export function goalIntro(pick: <T>(a: readonly T[]) => T) {
+  return pick(['Sua meta em foco hoje é esta:', 'Hoje vamos olhar para esta aqui:', 'Separei uma meta para a gente conversar hoje:', 'A meta do dia é:'])
+}
+
+export function cheer(pick: <T>(a: readonly T[]) => T, p: Pace) {
+  const by: Record<Pace['state'], string[]> = {
+    batida: ['Meta batida! 🏆 Daqui pra frente é bônus.', 'Fechou! 🎉 Que tal mirar mais alto?', 'Batida com folga. Esse é o padrão.'],
+    ritmo: ['No ritmo. Mantém a constância que dá. 💪', 'Caminhando bem: o segredo agora é não tirar o pé.', 'Do jeito certo. Segue o plano.'],
+    atras: ['Dá pra virar: um bom dia resolve muito. 🚀', 'Atrás, mas longe de perdido. Bora acelerar?', 'Hora de colocar foco aqui hoje.'],
+    estourou: ['Esse passou do limite. Vamos entender o que houve e segurar o resto do mês.', 'Aqui o sinal é vermelho: vale agir hoje para não repetir.'],
+    ok: ['Dentro do limite. Continue de olho. 👀', 'Tudo sob controle por aqui.'],
+  }
+  return pick(by[p.state])
+}
+
+/** Frase simples do que falta, em linguagem do dia a dia. */
+export function plain(r: GoalRow, p: Pace, day: number, days: number, money?: boolean, kind?: string): string {
+  const actual = r.actual ?? 0
+  const left = Math.max(1, days - day)
+  if (kind === 'atMost') return actual <= r.target ? 'Dentro do limite do mês.' : `Passou ${n0(actual - r.target)} do limite.`
+  if (p.state === 'batida') return 'Meta batida!'
+  const rem = r.target - actual
+  if (money) return `Faltam ${brl(rem)} em ${left} dias (${brl((rem / left) * 7)} por semana).`
+  const perWeek = (rem / left) * 7
+  return `Falta${rem > 1 ? 'm' : ''} ${n0(rem)} em ${left} dias${perWeek >= 1 ? ` (uns ${n0(Math.ceil(perWeek))} por semana)` : ''}.`
+}
+
+/** Passo a passo para bater a meta, montado com os dados reais do sistema. */
+export function steps(r: GoalRow, c: Coach | undefined, day: number, days: number): string[] {
+  const actual = r.actual ?? 0
+  const rem = Math.max(0, r.target - actual)
+  const left = Math.max(1, days - day)
+  const cut = c?.cut ?? r.info.cut ?? 1500
+  const low = c?.low_ticket ?? []
+  const happy = (c?.happy ?? []).map((x) => x.name)
+  const idle = c?.idle_avulsos ?? []
+  const out: string[] = []
+  switch (r.key) {
+    case 'mrr_total': {
+      out.push(`Faltam ${brl(rem)} de mensalidade até o fim do mês. Vamos quebrar isso em partes.`)
+      out.push(`1 cliente novo de ticket alto (acima de ${brl(cut)}) já cobre ${Math.min(100, Math.round((cut / Math.max(1, rem)) * 100))}% do que falta.`)
+      if (low.length) out.push(`Upsell na base: ${names(low.map((x) => `${x.name.trim()} (${brl(x.ticket)})`))} pagam pouco. Um serviço a mais de R$ 400 em cada soma ${brl(400 * Math.min(3, low.length))}.`)
+      if (c?.unhappy.length) out.push(`Proteja o que já entra: ${names(c.unhappy.map((x) => x.name))} estão insatisfeitos. Uma ligação hoje evita uma saída.`)
+      out.push(`Ritmo para chegar: ${brl((rem / left) * 7)} por semana. Anote isso na sua rotina.`)
+      break
+    }
+    case 'novos': case 'novos_premium': {
+      const premium = r.key === 'novos_premium'
+      out.push(`Faltam ${rem} ${rem === 1 ? 'cliente' : 'clientes'}${premium ? ` com mensalidade acima de ${brl(cut)}` : ''} em ${left} dias.`)
+      if (happy.length) out.push(`Peça indicação a quem está feliz: ${names(happy)}. Indicação fecha mais rápido e mais caro.`)
+      if (idle.length && !premium) out.push(`Avulsos que já compram: ${names(idle.map((x) => x.name))}. Ofereça o plano mensal com um mês de bônus.`)
+      if (premium) out.push(`Para passar de ${brl(cut)}, monte o pacote completo: tráfego + social + audiovisual. Mostre o resultado de um cliente do mesmo nicho.`)
+      if (c?.leads_new) out.push(`Tem ${c.leads_new} ${c.leads_new === 1 ? 'lead novo esperando' : 'leads novos esperando'} em Prospecção. Responda hoje: lead frio esfria em 48h.`)
+      out.push(`Combinado: ${Math.max(1, Math.ceil(rem / Math.max(1, left / 7)))} ${rem === 1 ? 'proposta' : 'propostas'} por semana até o fim do mês.`)
+      break
+    }
+    case 'avulsos': {
+      out.push(`Faltam ${rem} ${rem === 1 ? 'venda' : 'vendas'} para a base avulsa (${c?.avulsos ?? r.info.base ?? 0} clientes).`)
+      if (idle.length) out.push(`Comece por quem está parado: ${names(idle.map((x) => `${x.name.trim()} (${x.months} ${x.months === 1 ? 'mês' : 'meses'})`))}.`)
+      out.push('Mande uma ideia pronta, não um catálogo: "que tal gravar 3 vídeos do produto novo esta semana?".')
+      out.push('Pacote de 3 vídeos com preço fechado vende mais que hora avulsa. Use um pacote pronto no Orçamento.')
+      break
+    }
+    case 'upsell': {
+      out.push(`Meta: ${rem} ${rem === 1 ? 'upsell' : 'upsells'} até o fim do mês.`)
+      if (low.length) out.push(`Os mais fáceis: ${names(low.map((x) => `${x.name.trim()} (${brl(x.ticket)})`))}. Mensalidade baixa tem espaço para crescer.`)
+      out.push('Leve a proposta na reunião do mês, com os números dele na tela.')
+      out.push('Ofereça o próximo serviço da trilha (o sistema sugere em Clientes → Atenção).')
+      break
+    }
+    case 'reunioes': {
+      const no = (c?.no_meeting ?? []).map((x) => x.name)
+      out.push(`${no.length} ${no.length === 1 ? 'cliente ainda não tem' : 'clientes ainda não têm'} reunião este mês.`)
+      if (no.length) out.push(`Comece por: ${names(no, 4)}.`)
+      out.push(`Para fechar todas até o dia 14, são umas ${Math.max(1, Math.ceil(no.length / Math.max(1, 14 - day)))} por dia útil.`)
+      out.push('Marque pela barra de entregas do cliente: o convite sai pronto para o WhatsApp.')
+      break
+    }
+    case 'saidas': {
+      const lost = c?.lost_month ?? []
+      if (lost.length) out.push(`Saíram este mês: ${names(lost.map((x) => `${x.name.trim()}${x.reason ? ` (${x.reason.toLowerCase()})` : ''}`))}.`)
+      else out.push('Ninguém saiu este mês. Vamos manter assim.')
+      if (c?.unhappy.length) out.push(`Risco agora: ${names(c.unhappy.map((x) => x.name))}. Ligue para ouvir, sem defender o trabalho.`)
+      out.push('Reunião do mês com todos: quem conversa com a gente não sai.')
+      out.push('Para quem caiu de selo, entregue um extra rápido esta semana.')
+      break
+    }
+    case 'devendo': case 'inadimplencia': {
+      const od = c?.overdue ?? []
+      if (od.length) { out.push(`Em aberto: ${names(od.map((x) => `${x.name.trim()} (${brl(x.amount)})`))}.`); out.push('Ligue no primeiro dia de atraso e mande o link de pagamento junto.') }
+      else out.push('Ninguém devendo hoje. 👏 Confira as faturas que vencem esta semana para continuar assim.')
+      out.push('Combinou nova data? Registre por escrito na ficha do cliente.')
+      break
+    }
+    case 'aprovacao_parada': case 'artes': {
+      if (c?.stuck) out.push(`${c.stuck} ${c.stuck === 1 ? 'peça está parada' : 'peças estão paradas'} na aprovação do cliente.`)
+      if (c?.arts_due_week) out.push(`${c.arts_due_week} ${c.arts_due_week === 1 ? 'peça vence' : 'peças vencem'} nos próximos 7 dias: comece por elas.`)
+      out.push('Mande para aprovação em lote, com a peça anexada: aprovar fica a um toque.')
+      out.push('Cliente que demora: combine um aprovador fixo.')
+      break
+    }
+    case 'relatorios': case 'estrategias': {
+      out.push(r.key === 'relatorios' ? `Faltam ${rem} relatórios no mês.` : `Faltam ${rem} estratégias, até o dia 15.`)
+      out.push(r.key === 'relatorios' ? 'Ligue o envio automático em Tráfego → Configurações.' : 'Gere logo depois da reunião do mês: a conversa vira estratégia.')
+      out.push('Comece pelos clientes de maior mensalidade.')
+      break
+    }
+    case 'videos': out.push(`${c?.videos_due ?? rem} ${c?.videos_due === 1 ? 'vídeo previsto' : 'vídeos previstos'} até o fim do mês.`, 'Bruto no mesmo dia, edição no dia seguinte.', 'Aprovação interna antes de mandar ao cliente.'); break
+    case 'orcamentos_aceitos': out.push(`${c?.open_quotes ?? 0} ${c?.open_quotes === 1 ? 'orçamento aguardando' : 'orçamentos aguardando'} resposta.`, 'Retome em 48 horas quem não respondeu.', 'Use os pacotes prontos: orçamento em 2 minutos.'); break
+    case 'fotos_extras': out.push('Toda captação com foto vira galeria para o cliente escolher.', 'Suba as fotos no mesmo dia: a emoção vende as extras.', 'Avise o parceiro que ele já tem desconto.'); break
+    case 'recebido': out.push(`Faltam ${brl(rem)} para entrar no caixa.`, 'Confira as faturas que vencem esta semana.', 'Quem atrasou: ligar no primeiro dia.'); break
+    case 'planos': out.push(`Faltam ${rem} planejamentos.`, 'Feche o planejamento na primeira semana do mês.', 'Use a estratégia do mês como base.'); break
+    default: out.push('Foque nesta meta hoje e registre o que fez.')
+  }
+  return out.filter(Boolean)
+}
+
+export interface Action { label: string; to: string }
+const first = (n: string) => n.trim().split(' ').slice(0, 2).join(' ')
+
+/** Atalhos para agir agora: a área certa do sistema e, quando dá, um cliente específico para procurar. */
+export function actions(r: GoalRow, c: Coach | undefined): Action[] {
+  const a: Action[] = []
+  const client = (x: { id: string; name: string } | undefined, verb: string, tab = '') => { if (x) a.push({ label: `${verb} ${first(x.name)}`, to: `/clientes/${x.id}${tab}` }) }
+  switch (r.key) {
+    case 'novos': case 'novos_premium': a.push({ label: 'Abrir prospecção', to: '/comercial/prospeccao' }); client(c?.happy[0], 'Pedir indicação a'); if (r.key === 'novos') client(c?.idle_avulsos[0], 'Oferecer plano a'); break
+    case 'mrr_total': case 'upsell': client(c?.low_ticket[0], 'Propor upsell a'); client(c?.low_ticket[1], 'Propor upsell a'); a.push({ label: 'Ver clientes', to: '/clientes?aba=recorrentes&atencao=upsell' }); break
+    case 'avulsos': client(c?.idle_avulsos[0], 'Falar com'); client(c?.idle_avulsos[1], 'Falar com'); a.push({ label: 'Montar orçamento', to: '/audiovisual/orcamentos/novo' }); break
+    case 'reunioes': client(c?.no_meeting[0], 'Marcar com'); client(c?.no_meeting[1], 'Marcar com'); break
+    case 'saidas': client(c?.unhappy[0], 'Ligar para'); a.push({ label: 'Perdidos e pausados', to: '/clientes?aba=perdidos' }); break
+    case 'devendo': case 'inadimplencia': client(c?.overdue[0], 'Cobrar', '?aba=contrato'); a.push({ label: 'Abrir cobrança', to: '/financeiro/cobranca' }); break
+    case 'artes': case 'aprovacao_parada': case 'planos': a.push({ label: 'Abrir conteúdo', to: '/conteudo' }); break
+    case 'relatorios': a.push({ label: 'Abrir relatórios', to: '/trafego/relatorios' }); break
+    case 'estrategias': a.push({ label: 'Abrir estratégias', to: '/trafego/estrategia' }); break
+    case 'videos': a.push({ label: 'Abrir produção', to: '/audiovisual/producao' }); break
+    case 'orcamentos_aceitos': a.push({ label: 'Abrir orçamentos', to: '/audiovisual/orcamentos' }); break
+    case 'fotos_extras': a.push({ label: 'Abrir fotos', to: '/audiovisual/fotos' }); break
+    case 'recebido': a.push({ label: 'Abrir financeiro', to: '/financeiro' }); break
+  }
+  return a.slice(0, 3)
+}
+
+/** Uma sugestão concreta de quem procurar hoje, com o porquê. */
+export function suggestion(pick: <T>(a: readonly T[]) => T, r: GoalRow, c: Coach | undefined): string | null {
+  if (!c) return null
+  switch (r.key) {
+    case 'novos': case 'novos_premium': {
+      if (c.happy[0]) return pick([`Sugestão para hoje: peça uma indicação a ${first(c.happy[0].name)}. Avaliou bem a gente há pouco tempo.`, `Que tal mandar uma mensagem para ${first(c.happy[0].name)} pedindo indicação? Está satisfeito com o trabalho.`])
+      if (c.idle_avulsos[0]) return `Sugestão: ${first(c.idle_avulsos[0].name)} já compra avulso. Ofereça o plano mensal.`
+      return c.leads_new ? `Tem ${c.leads_new} lead(s) novo(s) em Prospecção esperando resposta.` : null
+    }
+    case 'mrr_total': case 'upsell': return c.low_ticket[0] ? pick([`Sugestão: ${first(c.low_ticket[0].name)} paga ${brl(c.low_ticket[0].ticket)}. É o upsell mais fácil do mês.`, `Comece por ${first(c.low_ticket[0].name)}: mensalidade de ${brl(c.low_ticket[0].ticket)}, com espaço para mais um serviço.`]) : null
+    case 'avulsos': return c.idle_avulsos[0] ? `Sugestão: ${first(c.idle_avulsos[0].name)} não compra há ${c.idle_avulsos[0].months} ${c.idle_avulsos[0].months === 1 ? 'mês' : 'meses'}. Mande uma ideia pronta de captação.` : null
+    case 'reunioes': return c.no_meeting[0] ? `Comece marcando com ${first(c.no_meeting[0].name)}${c.no_meeting[1] ? ` e ${first(c.no_meeting[1].name)}` : ''}.` : null
+    case 'saidas': return c.unhappy[0] ? `Atenção a ${first(c.unhappy[0].name)}: a última avaliação foi ruim. Uma ligação hoje faz diferença.` : null
+    case 'devendo': case 'inadimplencia': return c.overdue[0] ? `${first(c.overdue[0].name)} está com ${brl(c.overdue[0].amount)} em aberto.` : null
+    default: return null
+  }
+}
