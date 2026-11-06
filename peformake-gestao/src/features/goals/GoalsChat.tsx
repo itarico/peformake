@@ -252,6 +252,22 @@ export function GoalsChat() {
   // Nada novo e chat fechado: some.
   if (!open && news.length === 0) return null
 
+  /** Prévia da novidade ao lado do botão: a pessoa já lê o principal sem abrir o chat. */
+  const teaser = (() => {
+    const it = news[0]
+    if (!it) return null
+    const g = list.find((r) => r.key === it.key)
+    if (!g) return null
+    const m = GOAL_META[g.key]!
+    const who = firstName ? `${firstName}, ` : ''
+    const rem = Math.max(0, g.target - (g.actual ?? 0))
+    const text = it.kind === 'hit' ? `🏆 ${who}meta batida: ${m.title(g.info).toLowerCase()}!`
+      : it.kind === 'change' ? `${who}novidade em ${m.short}: ${fmt(it.from ?? 0, m.money)} → ${fmt(g.actual ?? 0, m.money)}${(g.actual ?? 0) > (it.from ?? 0) ? ' ↗' : ''}.`
+        : m.kind === 'atMost' ? `${who}a meta do dia é ${m.title(g.info).toLowerCase()}: ${fmt(g.actual ?? 0, m.money)} de limite ${fmt(g.target, m.money)}.`
+          : `${who}meta do dia: ${m.title(g.info).toLowerCase()}. ${rem === 1 ? 'Falta' : 'Faltam'} ${fmt(rem, m.money)}.`
+    return `${text[0]!.toUpperCase()}${text.slice(1)}${news.length > 1 ? ` E mais ${news.length - 1} ${news.length === 2 ? 'novidade' : 'novidades'}.` : ''}`
+  })()
+
   const goal = (key?: string) => list.find((r) => r.key === key) ?? list[0]!
   /** Mensagens antigas guardam a área: trocar de tela não muda o que já foi dito. */
   const rowOf = (rl: GoalRole, key: string) => rows.find((r) => r.role === rl && r.key === key)
@@ -382,6 +398,13 @@ export function GoalsChat() {
             {!replies.length && <span className="py-1 text-[12px] text-muted">{typing ? 'digitando…' : ' '}</span>}
           </div>
         </section>
+      )}
+      {!open && news.length > 0 && teaser && (
+        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label="Abrir o Bate Meta"
+          className="pf-rise pointer-events-auto max-w-[min(290px,calc(100vw-32px))] cursor-pointer rounded-2xl rounded-br-sm border border-line bg-surface px-3.5 py-2.5 text-left text-[13px] leading-snug shadow-xl shadow-black/20 hover:border-line-strong">
+          <b className="block text-[12px] text-accent-ink">Bate Meta</b>
+          {teaser}
+        </button>
       )}
       {!open && news.length > 0 && (
         <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Bate Meta: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}`}
