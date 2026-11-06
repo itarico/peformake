@@ -12,7 +12,7 @@ const TABLE_KEYS: Record<string, string[][]> = {
   invoices: [['client-invoices'], ['client-billing-status'], ['client-intel'], ['client-ranking']],
   content_items: [['client-intel'], ['client-timeline'], ['company-goals'], ['client-deliveries']],
   av_projects: [['client-intel'], ['company-goals'], ['client-deliveries']],
-  client_meetings: [['client-deliveries']],
+  client_meetings: [['client-deliveries'], ['client-meetings']],
   traffic_reports: [['client-deliveries']],
   traffic_strategies: [['client-deliveries']],
   photo_galleries: [['galleries']],

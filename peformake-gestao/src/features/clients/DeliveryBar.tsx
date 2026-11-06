@@ -123,7 +123,7 @@ function DeliveryDialog({ open, onClose, clientId, clientName, items, yellow }: 
 }
 
 /** Marca a reunião do mês e já abre o WhatsApp com o convite (você confere antes de mandar). */
-function MeetingDialog({ open, onClose, clientId, clientName }: { open: boolean; onClose: () => void; clientId: string; clientName: string }) {
+export function MeetingDialog({ open, onClose, clientId, clientName }: { open: boolean; onClose: () => void; clientId: string; clientName: string }) {
   const queryClient = useQueryClient()
   const [when, setWhen] = useState('')
   const [agenda, setAgenda] = useState('Resultados do mês, estratégia do próximo e próximos passos.')

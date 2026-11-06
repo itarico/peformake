@@ -18,6 +18,7 @@ import { ClientOverview } from './ClientOverview'
 import { monthsIdle, useClientIntel } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { DeliveryBar, useClientDeliveries } from './DeliveryBar'
+import { MeetingsSection } from './MeetingsSection'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
 import { ClientContractTab } from '@/features/contracts/ClientContractTab'
 import { ClientFinanceTab } from './ClientFinanceTab'
@@ -175,6 +176,7 @@ export function ClientDetailPage() {
             <ServicesSection clientId={client.id} services={client.services} kind={view.kind} isAdmin={isAdmin} canManage={canManage} />
             <TeamSection key={client.updatedAt} clientId={client.id} team={client.team} squadId={client.squadId} canManage={canManage} />
           </div>
+          <MeetingsSection clientId={client.id} clientName={client.name} />
                   </div>
         )}
 
