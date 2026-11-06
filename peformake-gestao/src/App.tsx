@@ -44,6 +44,7 @@ const AvHome = lazy(() => import('@/features/av/AvHome').then((m) => ({ default:
 const StaffCapturePage = lazy(() => import('@/features/av/StaffCapturePage').then((m) => ({ default: m.StaffCapturePage })))
 const OperationPage = lazy(() => import('@/features/operation/OperationPage').then((m) => ({ default: m.OperationPage })))
 const FinancePage = lazy(() => import('@/features/finance/FinancePage').then((m) => ({ default: m.FinancePage })))
+const ContractsPage = lazy(() => import('@/features/finance/ContractsPage').then((m) => ({ default: m.ContractsPage })))
 const BillingPage = lazy(() => import('@/features/finance/BillingPage').then((m) => ({ default: m.BillingPage })))
 const NichePage = lazy(() => import('@/site/NichePage').then((m) => ({ default: m.NichePage })))
 const StrategyLayout = lazy(() => import('@/features/strategy/StrategyLayout').then((m) => ({ default: m.StrategyLayout })))
@@ -126,6 +127,7 @@ export function App() {
           <Route element={<RequireRole roles={['admin', 'ellcazo']} />}>
             <Route path="financeiro" element={<FinancePage />} />
             <Route path="financeiro/cobranca" element={<BillingPage />} />
+            <Route path="financeiro/contratos" element={<ContractsPage />} />
           </Route>
           <Route path="equipe/*" element={<TeamPage />} />
           <Route path="social" element={<MovedTo to="/conteudo/redes" />} />

@@ -1,2 +1,2 @@
 /** Abas do Financeiro: caixa e cobrança. */
-export const FINANCE_TABS = [{ to: '/financeiro', label: 'Caixa' }, { to: '/financeiro/cobranca', label: 'Cobrança' }]
+export const FINANCE_TABS = [{ to: '/financeiro', label: 'Caixa' }, { to: '/financeiro/cobranca', label: 'Cobrança' }, { to: '/financeiro/contratos', label: 'Contratos' }]
