@@ -74,7 +74,7 @@ export function Niches() {
     },
   })
   const [editing, setEditing] = useState<Niche | null>(null)
-  if (!niches.data) return niches.isError ? <p className="rounded-2xl bg-raised px-4 py-3">A Metodologia ainda não foi ligada no servidor.</p> : <LoadState isPending isError={false} refetch={() => undefined} />
+  if (!niches.data) return <LoadState isPending={niches.isPending} isError={niches.isError} refetch={() => void niches.refetch()} />
   const ready = niches.data.filter((n) => n.headline)
   return (
     <div className="flex flex-col gap-3">

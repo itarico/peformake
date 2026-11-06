@@ -70,8 +70,9 @@ export function SocialPage() {
   )
 }
 
-function NotReady({ isError }: { isError: boolean }) {
-  return isError ? <p className="rounded-2xl bg-raised px-4 py-3">A área de Social Media ainda não foi ligada no servidor.</p> : <LoadState isPending isError={false} refetch={() => undefined} />
+/** Carregando, ou erro com "Tentar de novo" (nunca fica carregando para sempre). */
+function NotReady({ isError, retry }: { isError: boolean; retry: () => void }) {
+  return <LoadState isPending={!isError} isError={isError} refetch={retry} />
 }
 
 // ===== Painel =====
@@ -80,7 +81,7 @@ function Overview() {
   const news = useSocial<News>('news', 'social_news')
   const sugg = useSocial<Suggestion>('suggestions', 'social_suggestions')
   const { clientName } = useProduction()
-  if (!tasks.data) return <NotReady isError={tasks.isError} />
+  if (!tasks.data) return <NotReady isError={tasks.isError} retry={() => void tasks.refetch()} />
   const open = tasks.data.filter((t) => t.status !== 'feito')
   const fresh = (news.data ?? []).filter((n) => n.status === 'nova')
   const pending = (sugg.data ?? []).filter((s) => s.status === 'nova')
@@ -139,7 +140,7 @@ export function Board() {
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['social', 'tasks'] }),
   })
-  if (!tasks.data) return <NotReady isError={tasks.isError} />
+  if (!tasks.data) return <NotReady isError={tasks.isError} retry={() => void tasks.refetch()} />
   const list = tasks.data.filter((t) => !client || t.client_id === client)
   return (
     <div className="flex flex-col gap-3">
@@ -295,7 +296,7 @@ export function Agent() {
     },
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['social'] }) },
   })
-  if (!news.data) return <NotReady isError={news.isError} />
+  if (!news.data) return <NotReady isError={news.isError} retry={() => void news.refetch()} />
   const openSugg = (sugg.data ?? []).filter((s) => s.status === 'nova')
   const visibleNews = news.data.filter((n) => n.status === 'nova' || n.status === 'lida')
   return (
@@ -358,7 +359,7 @@ export function Docs() {
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['social', 'docs'] }),
   })
-  if (!docs.data || !clients) return <NotReady isError={docs.isError} />
+  if (!docs.data || !clients) return <NotReady isError={docs.isError} retry={() => void docs.refetch()} />
   const list = clients.filter((c) => inAreas(c, DESIGN_AREAS))
   const find = (client: string, kind: string) => docs.data!.find((d) => d.client_id === client && d.kind === kind && d.month === month)
   return (
@@ -426,7 +427,7 @@ export function Accounts() {
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['social', 'accounts'] }),
   })
-  if (!accounts.data || !clients) return <NotReady isError={accounts.isError} />
+  if (!accounts.data || !clients) return <NotReady isError={accounts.isError} retry={() => void accounts.refetch()} />
   const list = clients.filter((c) => inAreas(c, DESIGN_AREAS))
   return (
     <div className="flex flex-col gap-3">

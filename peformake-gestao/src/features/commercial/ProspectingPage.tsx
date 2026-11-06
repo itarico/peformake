@@ -117,7 +117,7 @@ export function ProspectingPage() {
 
       <SiteLeads />
 
-      {!searches.data ? <LoadState isPending={searches.isPending} isError={false} refetch={() => void searches.refetch()} /> : searches.data.length > 0 && (
+      {!searches.data ? <LoadState isPending={searches.isPending} isError={searches.isError} refetch={() => void searches.refetch()} /> : searches.data.length > 0 && (
         <ul className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
           {searches.data.map((s) => (
             <li key={s.id} className={cn('flex flex-col gap-1.5 rounded-2xl border bg-surface p-4', searchFilter === s.id ? 'border-ink' : 'border-line')}>

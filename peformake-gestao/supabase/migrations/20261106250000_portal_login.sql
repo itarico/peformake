@@ -4,3 +4,4 @@
 create unique index if not exists client_portal_links_one_team_link on public.client_portal_links (client_id) where revoked_at is null and user_id is null;
 create unique index if not exists client_portal_links_one_user_link on public.client_portal_links (user_id) where revoked_at is null and user_id is not null;
 drop index if exists public.client_portal_links_one_active;
+-- Parte 2 aplicada em 06/11: índices trocados e portal_create_link revoga só o link da equipe (user_id is null).

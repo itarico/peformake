@@ -23,7 +23,8 @@ export function StrategyHubPage() {
   const [month] = useMonthParam()
   const [params, setParams] = useSearchParams()
   const clientId = params.get('cliente') ?? ''
-  const { clients } = useProduction()
+  const production = useProduction()
+  const { clients } = production
   const [open, setOpen] = useState<Framework | null>(null)
   const [briefOpen, setBriefOpen] = useState(false)
   const [showAll, setShowAll] = useState(false)
@@ -88,8 +89,8 @@ export function StrategyHubPage() {
   }, [answers.data])
 
   const setClient = (id: string) => setParams((c) => { const n = new URLSearchParams(c); if (id) n.set('cliente', id); else n.delete('cliente'); return n }, { replace: true })
-  if (library.isError) return <p className="rounded-2xl bg-raised px-4 py-3">A área de Estratégia ainda não foi ligada no servidor.</p>
-  if (!library.data || !clients) return <LoadState isPending={library.isPending || !clients} isError={false} refetch={() => void library.refetch()} />
+  // Se algo falhar, mostra o erro com "Tentar de novo" em vez de ficar carregando para sempre.
+  if (!library.data || !clients) return <LoadState isPending={library.isPending || production.isPending} isError={library.isError || production.isError} refetch={() => { void library.refetch(); production.refetch() }} />
 
   const list = library.data
   const current = (f: Framework) => byPeriod.get(`${f.slug}:${periodOf(f.cadence, month)}`)
