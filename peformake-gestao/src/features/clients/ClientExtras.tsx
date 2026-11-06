@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ExternalLink, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { addLink, clientErrorMessage, deleteClient, listEvents, listLinks, removeLink, setClientStatus } from './clientsApi'
 import type { ClientRecord } from './clientRules'
@@ -30,9 +31,9 @@ export function LinksSection({ clientId, canManage }: { clientId: string; canMan
   const remove = useMutation({ mutationFn: removeLink, onSuccess: refresh })
 
   return (
-    <Block title="Arquivos e links" action={canManage && !adding ? <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setAdding(true)}>Adicionar</Button> : undefined}>
+    <Block title="Arquivos e links" action={canManage ? <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setAdding(true)}>Adicionar</Button> : undefined}>
       {links.isError && <p role="alert" className="text-warn-ink">Não foi possível carregar os links.</p>}
-      {links.data?.length === 0 && !adding && <p className="text-muted">Nenhum link. Guarde aqui a pasta do Drive, o contrato assinado e materiais do cliente.</p>}
+      {links.data?.length === 0 && <p className="text-muted">Nenhum link. Guarde aqui a pasta do Drive, o contrato assinado e materiais do cliente.</p>}
       <ul className="flex flex-col">
         {links.data?.map((link) => (
           <li key={link.id} className="flex items-center justify-between gap-2 border-t border-line py-1.5 first:border-t-0">
@@ -47,8 +48,8 @@ export function LinksSection({ clientId, canManage }: { clientId: string; canMan
           </li>
         ))}
       </ul>
-      {adding && (
-        <div className="flex flex-col gap-2 rounded-2xl border border-line-strong p-3">
+      <Dialog open={adding} onClose={() => setAdding(false)} title="Adicionar arquivo ou link" size="sm">
+        <div className="flex flex-col gap-2">
           <label className="flex flex-col text-[13px] font-semibold">Nome
             <input value={name} maxLength={120} onChange={(e) => setName(e.target.value)} className={cn(inputClass, 'mt-1 font-normal')} placeholder="Pasta do Drive" />
           </label>
@@ -62,7 +63,7 @@ export function LinksSection({ clientId, canManage }: { clientId: string; canMan
             <Button variant="secondary" onClick={() => setAdding(false)}>Cancelar</Button>
           </div>
         </div>
-      )}
+      </Dialog>
     </Block>
   )
 }
@@ -129,7 +130,7 @@ export function StatusSection({ client, canManage, isAdmin }: { client: ClientRe
         <p className="text-[13px]"><b>Perdido em {dateBr(client.lostAt)}.</b> {client.lostReason && <span className="text-muted">Motivo: {client.lostReason}</span>}</p>
       )}
 
-      {mode === 'idle' && (
+      {(
         <div className="flex flex-wrap gap-2">
           {client.isActive ? (
             <Button variant="secondary" onClick={() => { status.reset(); setMode('lose') }}>Marcar como perdido</Button>
@@ -140,8 +141,8 @@ export function StatusSection({ client, canManage, isAdmin }: { client: ClientRe
         </div>
       )}
 
-      {mode === 'lose' && (
-        <div className="flex flex-col gap-2 rounded-2xl border border-line-strong p-3">
+      <Dialog open={mode === 'lose'} onClose={() => setMode('idle')} title="Marcar como perdido" size="sm">
+        <div className="flex flex-col gap-2">
           <label htmlFor={`motivo-${client.id}`} className="text-[13px] font-semibold">Motivo da saída *</label>
           <select id={`motivo-${client.id}`} value={reason} onChange={(e) => setReason(e.target.value)} className={`${selectClass} w-full`}>
             <option value="">Escolha</option>
@@ -154,11 +155,12 @@ export function StatusSection({ client, canManage, isAdmin }: { client: ClientRe
             <Button disabled={!reason || (reason === 'Outro' && detail.trim().length < 5) || status.isPending} onClick={() => status.mutate(true)}>Confirmar saída</Button>
             <Button variant="secondary" onClick={() => setMode('idle')}>Cancelar</Button>
           </div>
+          {status.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{clientErrorMessage(status.error)}</p>}
         </div>
-      )}
+      </Dialog>
 
-      {mode === 'delete' && (
-        <div className="flex flex-col gap-2 rounded-2xl border-2 border-warn p-3">
+      <Dialog open={mode === 'delete'} onClose={() => setMode('idle')} title="Excluir cliente de vez" size="sm">
+        <div className="flex flex-col gap-2">
           <p className="font-semibold text-warn-ink">Excluir apaga o cliente, serviços, equipe, avaliações, links e histórico. Não tem volta.</p>
           <p className="text-[13px]">Na maioria dos casos, marcar como perdido é melhor: guarda o histórico para análise.</p>
           <label htmlFor={`confirmar-${client.id}`} className="text-[13px] font-semibold">Digite <b>{client.name}</b> para confirmar</label>
@@ -169,7 +171,7 @@ export function StatusSection({ client, canManage, isAdmin }: { client: ClientRe
             <Button variant="secondary" onClick={() => setMode('idle')}>Cancelar</Button>
           </div>
         </div>
-      )}
+      </Dialog>
       {status.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{clientErrorMessage(status.error)}</p>}
     </Block>
   )

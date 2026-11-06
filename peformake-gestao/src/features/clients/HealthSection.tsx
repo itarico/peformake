@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { addAssessment, clientErrorMessage } from './clientsApi'
 import type { AssessmentRecord } from './clientRules'
@@ -37,7 +38,7 @@ export function HealthSection({ clientId, health, history, canAssess }: {
   return (
     <Block
       title="Saúde do relacionamento"
-      action={canAssess && !open ? <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setOpen(true)}>Avaliar agora</Button> : undefined}
+      action={canAssess ? <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setOpen(true)}>Avaliar agora</Button> : undefined}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <HealthBadge health={health} />
@@ -45,7 +46,7 @@ export function HealthSection({ clientId, health, history, canAssess }: {
           <p className="text-right text-[13px] text-muted">Média de 30 dias<br /><b className="text-[17px] text-ink tabular-nums">{health.average.toFixed(1).replace('.', ',')}</b> de 5</p>
         )}
       </div>
-      {health.isStale && !open && (
+      {health.isStale && (
         <p className="rounded-2xl bg-raised px-3 py-2 text-[13px]">
           {health.latest ? `A última avaliação tem mais de ${ASSESSMENT_VALID_DAYS} dias.` : 'Este cliente ainda não foi avaliado.'} Avalie para manter o painel confiável.
         </p>
@@ -56,8 +57,8 @@ export function HealthSection({ clientId, health, history, canAssess }: {
         </p>
       )}
 
-      {open && (
-        <div className="flex flex-col gap-3 rounded-2xl border border-line-strong p-3">
+      <Dialog open={open} onClose={() => { if (!save.isPending) setOpen(false) }} title="Avaliar relacionamento" size="sm">
+        <div className="flex flex-col gap-3">
           <p className="font-medium">Como está o relacionamento hoje?</p>
           <div role="radiogroup" aria-label="Nível" className="grid grid-cols-5 gap-1">
             {HEALTH_LEVELS.map((item) => (
@@ -87,7 +88,7 @@ export function HealthSection({ clientId, health, history, canAssess }: {
             <Button variant="secondary" disabled={save.isPending} onClick={() => setOpen(false)}>Cancelar</Button>
           </div>
         </div>
-      )}
+      </Dialog>
 
       {history.length > 0 && (
         <ul className="flex flex-col">

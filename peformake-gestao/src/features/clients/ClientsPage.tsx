@@ -21,7 +21,8 @@ import {
   type SortKey,
   type StatusFilter,
 } from './clientRules'
-import { ATTENTION_LABEL, KIND_LABEL, type AttentionFlag } from './portfolioRules'
+import { ATTENTION_LABEL, KIND_LABEL, clientValue, type AttentionFlag } from './portfolioRules'
+import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
@@ -70,7 +71,7 @@ const PARAM: Record<keyof ClientFilters | 'sort', string> = {
 const DEFAULTS: Record<string, string> = { situacao: 'active', tipo: 'all', empresa: 'all', atencao: 'all', busca: '', ordem: 'name' }
 
 export function ClientsPage() {
-  const { canManage, query } = useClients()
+  const { canManage, isAdmin, query } = useClients()
   const [params, setParams] = useSearchParams()
   const filters = readFilters(params)
   const today = todayInBrazil()
@@ -236,7 +237,10 @@ export function ClientsPage() {
                       )}
                     </div>
 
-                    <div className="hidden @4xl:block"><ContractCell contract={view.contract} /></div>
+                    <div className="hidden @4xl:block">
+                      <ContractCell contract={view.contract} />
+                      {isAdmin && clientValue(client.services).value > 0 && <p className="text-[12px] font-semibold tabular-nums">{brlValue(clientValue(client.services).value)}{view.kind === 'fixo' ? '/mês' : ''}</p>}
+                    </div>
                     <div className="justify-self-end @4xl:justify-self-start"><HealthBadge health={view.health} /></div>
                     <div className="hidden @4xl:block"><FlagChips flags={view.flags} limit={1} /></div>
 

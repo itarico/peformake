@@ -7,10 +7,11 @@ import { cn } from '@/lib/cn'
 import { moneyText, parseMoney } from './clientFormRules'
 import { addServices, clientErrorMessage, listCatalog, removeService, updateService } from './clientsApi'
 import type { ClientServiceItem } from './clientRules'
-import type { ClientKind, DiscountType } from './portfolioRules'
+import { clientValue, lineValue, type ClientKind, type DiscountType } from './portfolioRules'
+import { brlValue } from './format'
 import { Block, inputClass, selectClass } from './ui'
 
-function ServiceRow({ item, isAdmin, canManage }: { item: ClientServiceItem; isAdmin: boolean; canManage: boolean }) {
+function ServiceRow({ item, isAdmin, canManage, isMonthly }: { item: ClientServiceItem; isAdmin: boolean; canManage: boolean; isMonthly: boolean }) {
   const queryClient = useQueryClient()
   const [editing, setEditing] = useState(false)
   const [confirmRemove, setConfirmRemove] = useState(false)
@@ -53,6 +54,12 @@ function ServiceRow({ item, isAdmin, canManage }: { item: ClientServiceItem; isA
           <span className="font-medium">{item.name}</span>
           {item.quantity && item.quantity > 1 ? <span className="text-muted"> | {item.quantity} unidades</span> : null}
           {!item.isActive && <span className="text-muted"> | encerrado</span>}
+          {isAdmin && (item.price === null || item.price === undefined
+            ? <span className="block text-[13px] text-warn-ink">Sem preço definido</span>
+            : <span className="block text-[13px] text-muted">
+                {brlValue(lineValue(item))}{isMonthly ? '/mês' : ''}
+                {item.discountType && item.discountValue ? ` (com desconto de ${item.discountType === 'percent' ? `${item.discountValue}%` : brlValue(item.discountValue)})` : ''}
+              </span>)}
           {item.notes && <span className="block text-[13px] text-muted">{item.notes}</span>}
         </span>
         <span className="flex items-center gap-1">
@@ -117,7 +124,7 @@ function ServiceRow({ item, isAdmin, canManage }: { item: ClientServiceItem; isA
   )
 }
 
-export function ServicesSection({ clientId, services, isAdmin, canManage }: {
+export function ServicesSection({ clientId, services, kind, isAdmin, canManage }: {
   clientId: string
   services: readonly ClientServiceItem[]
   kind: ClientKind
@@ -162,7 +169,7 @@ export function ServicesSection({ clientId, services, isAdmin, canManage }: {
                   {catalog.data.services.map((s) => <option key={s.id} value={`s:${s.id}`} disabled={active.has(s.id)}>{s.name}{active.has(s.id) ? ' (já ativo)' : ''}</option>)}
                 </optgroup>
               </select>
-              <p className="text-[12px] text-muted">O preço padrão entra sozinho.{isAdmin ? ' Ajuste no lápis; o valor aparece no Financeiro.' : ''} Serviço que já está ativo não entra de novo.</p>
+              <p className="text-[12px] text-muted">O preço padrão entra sozinho.{isAdmin ? ' Ajuste no lápis.' : ''} Serviço que já está ativo não entra de novo.</p>
             </>
           )}
           {add.isSuccess && add.data === 0 && <p role="status" className="text-[13px] text-warn-ink">Nada foi adicionado: estes serviços já estão ativos.</p>}
@@ -178,8 +185,17 @@ export function ServicesSection({ clientId, services, isAdmin, canManage }: {
         <p className="text-muted">Nenhum serviço contratado.</p>
       ) : (
         <ul className="flex flex-col">
-          {services.map((item) => <ServiceRow key={`${item.id}-${item.price ?? ''}-${item.quantity}-${item.isActive}`} item={item} isAdmin={isAdmin} canManage={canManage} />)}
+          {services.map((item) => <ServiceRow key={`${item.id}-${item.price ?? ''}-${item.quantity}-${item.isActive}`} item={item} isAdmin={isAdmin} canManage={canManage} isMonthly={kind === 'fixo'} />)}
         </ul>
+      )}
+      {isAdmin && services.some((s) => s.isActive) && (
+        <p className="mt-3 flex items-baseline justify-between border-t border-line pt-3">
+          <span className="text-[13px] font-medium text-muted">{kind === 'fixo' ? 'Valor do contrato por mês' : 'Valor do contrato'}</span>
+          <span className="text-[17px] font-semibold tabular-nums">
+            {brlValue(clientValue(services).value)}
+            {clientValue(services).missingPrices > 0 && <span className="ml-2 text-[12px] font-normal text-warn-ink">{clientValue(services).missingPrices} sem preço</span>}
+          </span>
+        </p>
       )}
 
     </Block>
