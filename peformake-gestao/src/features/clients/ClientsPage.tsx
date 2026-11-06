@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { GoalsCard } from '@/features/goals/goals'
 import { LiveValue } from '@/components/charts/Charts'
-import { MessageCircle, Plus, Search, X } from 'lucide-react'
+import { MessageCircle, Plus, Search, Star, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
@@ -28,7 +28,7 @@ import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
 import { isLiveClient } from './clientRules'
-import { monthsIdle, TEMP_LABEL, TEMP_TONE, TIER_LABEL, TIER_TONE, useClientIntel, useClientRanking } from './intelApi'
+import { monthsIdle, rankStars, rankWhy, TEMP_LABEL, TEMP_TONE, useClientIntel, useClientRanking } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
@@ -245,11 +245,17 @@ export function ClientsPage() {
                       <div className="min-w-0">
                         <span className="flex min-w-0 items-center gap-1.5">
                           <Link to={`/clientes/${client.id}`} className="block truncate text-[15px] font-semibold tracking-tight after:absolute after:inset-0">{client.name}</Link>
-                          {ranking.data?.get(client.id)?.tier && (
-                            <span className={cn('shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide', TIER_TONE[ranking.data.get(client.id)!.tier!])} title={`Nota ${ranking.data.get(client.id)!.score}/100 · ${ranking.data.get(client.id)!.rank}º da carteira`}>
-                              {ranking.data.get(client.id)!.rank === 1 ? 'Top 1 · ' : ''}{TIER_LABEL[ranking.data.get(client.id)!.tier!]}
-                            </span>
-                          )}
+                          {(() => {
+                            const r = ranking.data?.get(client.id)
+                            const st = r ? rankStars(r) : null
+                            if (!r || !st) return null
+                            return (
+                              <span className="relative z-10 flex shrink-0 cursor-help items-center -space-x-0.5" title={rankWhy(r)} aria-label={`${st.n} estrelas: ${rankWhy(r)}`}>
+                                {Array.from({ length: st.n }, (_, i) => <Star key={i} size={12} aria-hidden="true" fill={st.color} stroke={st.color} />)}
+                                {r.rank === 1 && <span className="ml-1 text-[10px] font-bold" style={{ color: st.color }}>TOP 1</span>}
+                              </span>
+                            )
+                          })()}
                         </span>
                         <p className="truncate text-[12px] text-muted">
                           {KIND_LABEL[view.kind]}{view.entity === 'ellcazo' && ' · Ellcazo'}{client.segment && ` · ${client.segment}`}

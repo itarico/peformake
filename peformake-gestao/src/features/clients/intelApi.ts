@@ -113,13 +113,31 @@ export function monthsIdle(intel: ClientIntel | null | undefined, kind: string, 
   return Math.floor((Date.parse(today) - Date.parse(last)) / (30.44 * 86_400_000))
 }
 
-export type Tier = 'diamante' | 'ouro' | 'prata'
+export type Tier = 'diamante' | 'ouro' | 'prata' | 'bronze'
 export interface ClientRank { score: number; tier: Tier | null; rank: number; parts: Record<string, number | boolean> }
-export const TIER_LABEL: Record<Tier, string> = { diamante: 'Diamante', ouro: 'Ouro', prata: 'Prata' }
+export const TIER_LABEL: Record<Tier, string> = { diamante: 'Diamante', ouro: 'Ouro', prata: 'Prata', bronze: 'Bronze' }
 export const TIER_TONE: Record<Tier, string> = {
   diamante: 'bg-[#159fb4]/15 text-[#0d8fa0] dark:text-[#5fd3e3]',
   ouro: 'bg-[#eda100]/15 text-[#a06c00] dark:text-[#f5c04d]',
   prata: 'bg-raised text-muted',
+  bronze: 'bg-raised text-muted',
+}
+
+const PART_LABEL: [string, string, number][] = [
+  ['valor', 'Valor', 30], ['servicos', 'Serviços', 15], ['temperatura', 'Temperatura', 15],
+  ['avaliacao', 'Avaliação', 15], ['tempo_de_casa', 'Tempo de casa', 15], ['pagamento', 'Pagamento em dia', 10],
+]
+/** Texto do "por quê" do selo, para mostrar ao passar o mouse. */
+export function rankWhy(r: ClientRank): string {
+  const lines = PART_LABEL.map(([k, label, max]) => `${label}: ${Number(r.parts[k] ?? 0)} de ${max}`)
+  return `${r.rank}º da carteira · nota ${r.score}/100${r.tier ? ` · ${TIER_LABEL[r.tier]}` : ''}\n${lines.join('\n')}`
+}
+/** Quantas estrelas e de que cor: ouro e diamante 3 douradas, prata 2 prateadas, bronze 1 bronze. */
+export function rankStars(r: ClientRank): { n: number; color: string } | null {
+  if (r.rank === 1 || r.tier === 'diamante' || r.tier === 'ouro') return { n: 3, color: '#eda100' }
+  if (r.tier === 'prata') return { n: 2, color: '#9aa7ad' }
+  if (r.tier === 'bronze') return { n: 1, color: '#b0703a' }
+  return null
 }
 
 /** Ranking dos melhores clientes: valor, serviços, temperatura, avaliação, tempo de casa e pagamento em dia. */
