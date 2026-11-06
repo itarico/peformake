@@ -65,8 +65,8 @@ arquivo, sempre conferir a peça antes de entregar (texto, marca, formato, legib
 | 7 | Continuidade | push ok |
 
 ## Próximos passos
-1. Corrigir acesso GitHub e fazer push desta branch.
-2. Preencher ficha de Infinity Graff e Natalia de Menudo.
-3. Criar brand kits (Canva) e preencher `brand_style` no banco para os 13 clientes.
+1. Italo aprovar as 13 identidades (página "Identidades Performake") e responder as pendências de cada ficha.
+2. Preencher ficha de Infinity Graff e Natalia de Menudo (identidades provisórias).
+3. Criar brand kits no Canva (exige Pro/Teams) com os dados de `docs/design-ia/marcas/brands.json`.
 4. Criar a skill `designer-ia-performake` (doc 03, item 3.1).
-5. Produzir as ideias aprovadas pelo Italo.
+5. Produzir as artes de novembro: Cajá Limão, MF Máquinas e Will Motos primeiro.
