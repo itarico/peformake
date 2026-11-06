@@ -20,14 +20,14 @@ export function EllcazoHeader({ children, sub, actions }: { children: ReactNode;
   )
 }
 
-/** Três abas e só: Agenda (marcar gravação), Produção (do roteiro à aprovação) e Orçamentos. */
+/** Agenda (marcar gravação), Produção (do roteiro à aprovação), Orçamentos e Fotos (curadoria). */
 export function AvTabs() {
   const { state } = useAuth()
   const manager = state.status === 'ready' && hasAnyRole(state.user.roles, AV_MANAGER_ROLES)
   const tabs = [
     ...(manager ? [{ to: '/audiovisual', label: 'Agenda', end: true }] : []),
     { to: '/audiovisual/producao', label: 'Produção', end: false },
-    ...(manager ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }] : []),
+    ...(manager ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }, { to: '/audiovisual/fotos', label: 'Fotos', end: false }] : []),
   ]
   if (tabs.length < 2) return null
   return (

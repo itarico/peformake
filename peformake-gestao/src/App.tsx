@@ -39,6 +39,9 @@ const TvPage = lazy(() => import('@/features/tv/TvPage').then((m) => ({ default:
 const AccountPage = lazy(() => import('@/features/account/AccountPage').then((m) => ({ default: m.AccountPage })))
 const AvQuotesPage = lazy(() => import('@/features/av/AvQuotesPage').then((m) => ({ default: m.AvQuotesPage })))
 const AvQuoteEditor = lazy(() => import('@/features/av/AvQuoteEditor').then((m) => ({ default: m.AvQuoteEditor })))
+const AvPhotosPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) => ({ default: m.AvPhotosPage })))
+const AvGalleryPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) => ({ default: m.AvGalleryPage })))
+const PublicGalleryPage = lazy(() => import('@/features/av/PublicGalleryPage').then((m) => ({ default: m.PublicGalleryPage })))
 const PublicQuotePage = lazy(() => import('@/features/av/PublicQuotePage').then((m) => ({ default: m.PublicQuotePage })))
 const AvHome = lazy(() => import('@/features/av/AvHome').then((m) => ({ default: m.AvHome })))
 const StaffCapturePage = lazy(() => import('@/features/av/StaffCapturePage').then((m) => ({ default: m.StaffCapturePage })))
@@ -64,6 +67,7 @@ export function App() {
       <Route path="/nova-senha" element={<NewPasswordPage />} />
       <Route path="/portal" element={<PortalPage />} />
       <Route path="/orcamento/:token" element={<PublicQuotePage />} />
+      <Route path="/galeria/:token" element={<PublicGalleryPage />} />
       <Route path="/captacao/:token" element={<StaffCapturePage />} />
       <Route element={<RequireAuth />}>
         <Route path="tv" element={<TvPage />} />
@@ -115,6 +119,8 @@ export function App() {
             <Route path="audiovisual/projeto/:id" element={<AvProjectPage />} />
             <Route path="audiovisual/servicos" element={<MovedTo to="/configuracoes/servicos?area=audiovisual" />} />
             <Route path="audiovisual/orcamentos" element={<AvQuotesPage />} />
+            <Route path="audiovisual/fotos" element={<AvPhotosPage />} />
+            <Route path="audiovisual/fotos/:id" element={<AvGalleryPage />} />
             <Route path="audiovisual/roteiros" element={<MovedTo to="/audiovisual/producao" />} />
             <Route path="audiovisual/orcamentos/novo" element={<AvQuoteEditor />} />
             <Route path="audiovisual/orcamentos/:id" element={<AvQuoteEditor />} />

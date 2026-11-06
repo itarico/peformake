@@ -36,13 +36,15 @@ export interface AvPricing {
   // Diárias e deslocamento por km (opcionais; sem valor salvo, usam o padrão de EXTRA_DEFAULTS).
   diaria_camera?: number; diaria_mobile?: number; diaria_operador?: number; diaria_auxiliar?: number
   km_valor?: number; km_minimo?: number; km_viagem?: number
+  /** Curadoria de fotos: valor de cada foto além das incluídas. */
+  foto_extra?: number
   base_endereco?: string; base_lat?: number; base_lng?: number
 }
 
 type NumKey = { [K in keyof AvPricing]-?: NonNullable<AvPricing[K]> extends number ? K : never }[keyof AvPricing]
 /** Padrões das variáveis novas: diária = 8 horas; km rodado a R$ 1,50 com taxa mínima de R$ 50; viagem a partir de 100 km. */
 export const EXTRA_DEFAULTS: Partial<Record<NumKey, number>> = {
-  diaria_camera: 800, diaria_mobile: 480, diaria_operador: 960, diaria_auxiliar: 560, km_valor: 1.5, km_minimo: 50, km_viagem: 100,
+  diaria_camera: 800, diaria_mobile: 480, diaria_operador: 960, diaria_auxiliar: 560, km_valor: 1.5, km_minimo: 50, km_viagem: 100, foto_extra: 10,
 }
 export const val = (p: AvPricing, k: NumKey): number => { const v = p[k]; return typeof v === 'number' && Number.isFinite(v) ? v : EXTRA_DEFAULTS[k] ?? 0 }
 
@@ -64,6 +66,7 @@ export const PRICING_LABELS: { key: NumKey; label: string; group: string; suffix
   { key: 'km_valor', label: 'Valor por km rodado (ida e volta)', group: 'Deslocamento' },
   { key: 'km_minimo', label: 'Taxa mínima de deslocamento', group: 'Deslocamento' },
   { key: 'km_viagem', label: 'Vira viagem a partir de', group: 'Deslocamento', suffix: 'km' },
+  { key: 'foto_extra', label: 'Cada foto extra na curadoria', group: 'Fotos' },
   { key: 'sinal_pct', label: 'Sinal na reserva', group: 'Pagamento', suffix: '%' },
   { key: 'validade_dias', label: 'Validade do orçamento', group: 'Pagamento', suffix: 'dias' },
 ]
