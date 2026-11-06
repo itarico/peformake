@@ -56,3 +56,19 @@ Escolha das 3: cada meta tem uma **prioridade pelos dados** (ex.: se há gente d
 - Cada meta: barra com o marcador do esperado, falta e por dia, e 2 ou 3 ações.
 - No fim do cartão, o **insight do dia**, em balão de conversa.
 - Configurações → Metas: ver as metas do mês por função e ajustar o valor à mão (ou voltar ao automático).
+
+## Revisão de 06/11 (2ª versão): compacto + padrões de meta
+### Como outros sistemas mostram metas
+| Sistema | Como mostra | O que aproveitamos |
+|---|---|---|
+| Pipedrive (Metas) | Um widget pequeno por meta no painel: barra com a linha do "esperado até hoje" | Marcador do esperado no anel |
+| HubSpot (Goals) | Metas criadas a partir de **modelos** (receita, reuniões, ligações) que se repetem todo mês; lista compacta com % | **Padrões de meta** por função, recriados todo mês |
+| Salesforce / RD Station | Meta por período com "atingido x previsto" e ranking | Estado: batida, no ritmo, atrás |
+| Lattice / Asana Goals | Lista enxuta; o detalhe (ações, histórico) só ao abrir | Detalhe em pop-up |
+
+### Como ficou
+- **Faixa de uma linha** nas telas: 3 anéis pequenos (curto: "MRR", "Novos", "Avulsos") com o realizado e o tracinho do esperado. Clicar abre o pop-up com barras, falta, por dia, ações e a dica do dia.
+- **Configurações → Metas**, por função:
+  - **Padrão**: até 3 metas que o sistema cria todo dia 1. Cada uma com o jeito de calcular: *automático pelos dados*, *valor fixo* ou *% sobre o mês anterior*. Sem padrão, o sistema escolhe as 3 mais urgentes.
+  - **Metas deste mês**: ajuste só do mês, sem mexer no padrão; botão "Aplicar ao mês atual agora".
+- Banco: `goal_templates`, `goal_template_save`, `role_goals_build` (padrão primeiro, automático para quem não tem padrão).

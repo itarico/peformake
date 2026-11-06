@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, ChevronUp, MessageCircle, NotebookPen, Pencil, RotateCcw, Trophy } from 'lucide-react'
+import { Lightbulb, Pencil, Plus, RotateCcw, Target, Trash2, Trophy } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
@@ -24,45 +24,45 @@ const APP_ROLE: Record<string, GoalRole> = {
 export interface GoalRow { role: GoalRole; key: string; target: number; actual: number | null; info: Record<string, number>; source: 'auto' | 'manual'; position: number }
 
 type Kind = 'reach' | 'atMost' | 'stock'
-interface Meta { title: (i: Record<string, number>) => string; money?: boolean; kind: Kind; actions: (i: Record<string, number>) => string[]; link?: string }
+interface Meta { short: string; title: (i: Record<string, number>) => string; money?: boolean; kind: Kind; actions: (i: Record<string, number>) => string[]; link?: string }
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
 
 export const GOAL_META: Record<string, Meta> = {
-  mrr_total: { title: () => 'Mensalidade total (MRR)', money: true, kind: 'stock', link: '/clientes',
+  mrr_total: { short: 'MRR', title: () => 'Mensalidade total (MRR)', money: true, kind: 'stock', link: '/clientes',
     actions: (i) => [`Partindo de ${brl(i.base ?? 0)}: cada cliente de ticket alto soma uns R$ 1.500.`, 'Upsell na base conta igual a cliente novo e custa menos.', 'Segure quem está frio: perder um cliente apaga um mês de crescimento.'] },
-  recebido: { title: () => 'Recebido no mês', money: true, kind: 'reach', link: '/financeiro',
+  recebido: { short: 'Recebido', title: () => 'Recebido no mês', money: true, kind: 'reach', link: '/financeiro',
     actions: () => ['Confira as faturas que vencem esta semana.', 'Quem atrasou: ligar no primeiro dia, não esperar o lembrete.', 'Link de pagamento sempre junto da mensagem.'] },
-  saidas: { title: () => 'Zero saídas de clientes', kind: 'atMost', link: '/clientes',
+  saidas: { short: 'Saídas', title: () => 'Zero saídas de clientes', kind: 'atMost', link: '/clientes',
     actions: () => ['Abra os clientes frios e com alerta vermelho primeiro.', 'Reunião do mês com todos: quem conversa não sai.', 'Entregue algo extra para quem caiu de selo.'] },
-  novos_premium: { title: (i) => `Fechar recorrente com ticket acima de ${brl(i.cut ?? 1500)}`, kind: 'reach', link: '/comercial',
+  novos_premium: { short: 'Ticket alto', title: (i) => `Fechar recorrente com ticket acima de ${brl(i.cut ?? 1500)}`, kind: 'reach', link: '/comercial',
     actions: (i) => [`Priorize leads com faturamento que comporta ${brl(i.cut ?? 1500)}/mês.`, 'Monte proposta com tráfego + social + audiovisual: o pacote completo é o ticket alto.', 'Use os cases dos clientes Diamante na apresentação.'] },
-  novos: { title: () => 'Novos clientes recorrentes', kind: 'reach', link: '/comercial',
+  novos: { short: 'Novos', title: () => 'Novos clientes recorrentes', kind: 'reach', link: '/comercial',
     actions: () => ['Retome os leads quentes da semana.', 'Peça indicação aos clientes satisfeitos.', 'Avulso que compra todo mês: ofereça o plano recorrente com desconto.'] },
-  upsell: { title: () => 'Upsell na base', kind: 'reach', link: '/clientes',
+  upsell: { short: 'Upsell', title: () => 'Upsell na base', kind: 'reach', link: '/clientes',
     actions: (i) => [`${i.eligible ?? 0} clientes já têm tempo de casa para receber proposta.`, 'Veja em Atenção quem tem sugestão de próximo serviço.', 'Leve a proposta na reunião do mês, com os números dele.'] },
-  avulsos: { title: (i) => `Vender ${''}serviços para a base avulsa (${i.base ?? 0} clientes)`, kind: 'reach', link: '/clientes?tipo=avulso',
+  avulsos: { short: 'Avulsos', title: (i) => `Vender serviços para a base avulsa (${i.base ?? 0} clientes)`, kind: 'reach', link: '/clientes?tipo=avulso',
     actions: () => ['Ofereça captação de fotos e vídeos para a data comemorativa do mês.', 'Quem não compra há 2 meses: mensagem com uma ideia pronta.', 'Pacote de 3 vídeos com preço fechado vende mais que hora avulsa.'] },
-  reunioes: { title: () => 'Reunião do mês com cada cliente', kind: 'reach', link: '/clientes',
+  reunioes: { short: 'Reuniões', title: () => 'Reunião do mês com cada cliente', kind: 'reach', link: '/clientes',
     actions: () => ['Marque pela barra de entregas, antes do dia 15.', 'Pauta: resultados, estratégia do mês e próximo passo.', 'Registre as decisões na ficha do cliente.'] },
-  devendo: { title: () => 'Nenhum cliente devendo', kind: 'atMost', link: '/financeiro/cobranca',
+  devendo: { short: 'Devendo', title: () => 'Nenhum cliente devendo', kind: 'atMost', link: '/financeiro/cobranca',
     actions: () => ['Ligue para quem venceu ontem.', 'Mande o link de pagamento junto.', 'Combine nova data por escrito, se precisar.'] },
-  inadimplencia: { title: () => 'Inadimplência zero', kind: 'atMost', link: '/financeiro/cobranca',
+  inadimplencia: { short: 'Inadimplência', title: () => 'Inadimplência zero', kind: 'atMost', link: '/financeiro/cobranca',
     actions: () => ['Revise as faturas vencidas todo dia de manhã.', 'Cobrança gentil no 1º dia, firme no 5º.', 'Cliente com 2 faturas abertas: pausar entregas extras.'] },
-  estrategias: { title: () => 'Estratégia do mês enviada até o dia 15', kind: 'reach', link: '/trafego/estrategia',
+  estrategias: { short: 'Estratégias', title: () => 'Estratégia do mês enviada até o dia 15', kind: 'reach', link: '/trafego/estrategia',
     actions: () => ['Gere as estratégias logo depois das reuniões.', 'Comece pelos clientes de maior ticket.', 'Revise e envie: rascunho parado não conta.'] },
-  relatorios: { title: () => 'Relatório toda segunda', kind: 'reach', link: '/trafego/relatorios',
+  relatorios: { short: 'Relatórios', title: () => 'Relatório toda segunda', kind: 'reach', link: '/trafego/relatorios',
     actions: (i) => [`${i.clients ?? 0} clientes × ${i.mondays ?? 0} segundas no mês.`, 'Ligue o envio automático em Tráfego → Configurações.', 'Se não saiu, gere e envie à mão no mesmo dia.'] },
-  artes: { title: () => 'Artes do mês aprovadas', kind: 'reach', link: '/conteudo',
+  artes: { short: 'Artes', title: () => 'Artes do mês aprovadas', kind: 'reach', link: '/conteudo',
     actions: () => ['Puxe primeiro as peças com prazo desta semana.', 'Mande para aprovação em lote, não uma por uma.', 'Peça parada com o cliente: lembrete com a peça anexada.'] },
-  aprovacao_parada: { title: () => 'Nenhuma peça parada na aprovação', kind: 'atMost', link: '/conteudo',
+  aprovacao_parada: { short: 'Aprovação parada', title: () => 'Nenhuma peça parada na aprovação', kind: 'atMost', link: '/conteudo',
     actions: () => ['Lembrete no WhatsApp com a peça anexada.', 'Combine um aprovador fixo por cliente.', 'Depois do prazo, publique a versão aprovada anterior.'] },
-  planos: { title: () => 'Planejamento do mês enviado', kind: 'reach', link: '/conteudo/planejamento',
+  planos: { short: 'Planejamentos', title: () => 'Planejamento do mês enviado', kind: 'reach', link: '/conteudo/planejamento',
     actions: () => ['Feche o planejamento na primeira semana.', 'Use a estratégia do mês como base.', 'Envie e marque como enviado.'] },
-  videos: { title: () => 'Vídeos entregues no prazo', kind: 'reach', link: '/audiovisual/producao',
+  videos: { short: 'Vídeos', title: () => 'Vídeos entregues no prazo', kind: 'reach', link: '/audiovisual/producao',
     actions: () => ['Bruto no mesmo dia da gravação.', 'Edição no dia seguinte.', 'Aprovação interna antes de ir para o cliente.'] },
-  orcamentos_aceitos: { title: () => 'Orçamentos de audiovisual aceitos', kind: 'reach', link: '/audiovisual/orcamentos',
+  orcamentos_aceitos: { short: 'Orçamentos', title: () => 'Orçamentos de audiovisual aceitos', kind: 'reach', link: '/audiovisual/orcamentos',
     actions: () => ['Use os pacotes prontos: orçamento em 2 minutos.', 'Mande no WhatsApp com a prévia em PDF.', 'Retome em 48 horas quem não respondeu.'] },
-  fotos_extras: { title: () => 'Fotos extras vendidas', money: true, kind: 'reach', link: '/audiovisual/fotos',
+  fotos_extras: { short: 'Fotos extras', title: () => 'Fotos extras vendidas', money: true, kind: 'reach', link: '/audiovisual/fotos',
     actions: () => ['Toda captação com foto vira galeria para escolher.', 'Suba as fotos no mesmo dia: a emoção vende.', 'Parceiro já ganha desconto: avise na mensagem.'] },
 }
 
@@ -157,7 +157,21 @@ function GoalLine({ r, day, days, showActions }: { r: GoalRow; day: number; days
   )
 }
 
-/** Cartão diário de metas (estilo bloco de notas): abre na primeira visita do dia, depois fica recolhido. */
+/** Anel de progresso pequeno, com o marcador de onde deveria estar hoje. */
+function Ring({ pct, expected, tone, size = 30 }: { pct: number; expected: number; tone: string; size?: number }) {
+  const r = 12, c = 2 * Math.PI * r
+  const a = (expected / 100) * 2 * Math.PI - Math.PI / 2
+  return (
+    <svg viewBox="0 0 30 30" width={size} height={size} aria-hidden="true" className="shrink-0">
+      <circle cx="15" cy="15" r={r} fill="none" stroke="var(--raised)" strokeWidth="4" />
+      <circle cx="15" cy="15" r={r} fill="none" stroke={tone} strokeWidth="4" strokeLinecap="round" strokeDasharray={`${(Math.max(2, pct) / 100) * c} ${c}`} transform="rotate(-90 15 15)" style={{ transition: 'stroke-dasharray 0.8s' }} />
+      {expected > 0 && expected < 100 && <line x1={15 + 9 * Math.cos(a)} y1={15 + 9 * Math.sin(a)} x2={15 + 15 * Math.cos(a)} y2={15 + 15 * Math.sin(a)} stroke="var(--ink)" strokeWidth="1.5" />}
+    </svg>
+  )
+}
+const RING: Record<Pace['state'], string> = { batida: 'var(--ok)', ok: 'var(--ok)', ritmo: 'var(--accent)', atras: '#eda100', estourou: 'var(--warn)' }
+
+/** Metas em uma linha (como Pipedrive e HubSpot fazem): 3 anéis com o essencial; o detalhe abre ao clicar. */
 export function GoalsCard({ area, title = 'Metas do mês' }: { area?: GoalArea; title?: string }) {
   const { state } = useAuth()
   const q = useGoalsBoard(monthStartOf(0))
@@ -170,124 +184,178 @@ export function GoalsCard({ area, title = 'Metas do mês' }: { area?: GoalArea; 
     if (isAdmin) return ['gestao', 'comercial', 'relacionamento', 'financeiro', 'trafego', 'conteudo', 'audiovisual']
     return [...new Set(roles.map((r) => APP_ROLE[r]).filter(Boolean) as GoalRole[])]
   }, [area, isAdmin, roles])
-  const seenKey = `pf-goals-seen-${area ?? 'home'}-${cal.iso}`
-  const [open, setOpen] = useState(() => { try { return localStorage.getItem(seenKey) !== '1' } catch { return true } })
+  const [open, setOpen] = useState(false)
   const [tab, setTab] = useState<GoalRole | null>(null)
-  const [actions, setActions] = useState(false)
-  const close = () => { setOpen(false); try { localStorage.setItem(seenKey, '1') } catch { /* sem armazenamento */ } }
-
   const rows = (q.data ?? []).filter((r) => mine.includes(r.role) && GOAL_META[r.key])
   if (q.isError || (!q.isPending && rows.length === 0)) return null
-  const active = tab && mine.includes(tab) ? tab : mine.find((m) => rows.some((r) => r.role === m)) ?? mine[0]!
-  const list = rows.filter((r) => r.role === active)
-  const paces = rows.map((r) => paceOf(r, cal.day, cal.days))
-  const good = paces.filter((p) => p.state === 'batida' || p.state === 'ritmo' || p.state === 'ok').length
+  const available = mine.filter((m) => rows.some((r) => r.role === m))
+  const main = available[0] ?? mine[0]!
+  const strip = rows.filter((r) => r.role === main)
+  const active = tab && available.includes(tab) ? tab : main
   const pool = (insights.data ?? []).filter((x) => mine.includes(x.role))
   const insight = pool.length ? pool[cal.doy % pool.length]!.text : null
-  const month = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(new Date())
-
-  if (!open) {
-    return (
-      <button type="button" onClick={() => setOpen(true)} className="flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 text-left hover:border-ink">
-        <NotebookPen size={16} aria-hidden="true" className="shrink-0 text-accent-ink" />
-        <span className="min-w-0 flex-1 text-[14px]"><b>{title}</b> <span className="text-muted">· dia {cal.day} de {cal.days} · {good} de {rows.length} no ritmo</span></span>
-        <ChevronDown size={16} aria-hidden="true" className="text-muted" />
-      </button>
-    )
-  }
 
   return (
-    <section aria-label={title} className="flex flex-col gap-3 rounded-3xl border border-line bg-[repeating-linear-gradient(to_bottom,transparent_0,transparent_27px,var(--line)_28px)] bg-surface p-5">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h2 className="flex items-center gap-2 text-[15px] font-semibold tracking-tight"><NotebookPen size={16} aria-hidden="true" className="text-accent-ink" /> {title}</h2>
-          <p className="text-[12px] text-muted">Hoje é dia {cal.day} de {cal.days} de {month} · {good} de {rows.length} metas no ritmo</p>
-        </div>
-        <button type="button" onClick={close} aria-label="Recolher metas" className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"><ChevronUp size={16} aria-hidden="true" /></button>
-      </div>
-      {mine.length > 1 && (
-        <div role="tablist" aria-label="Função" className="-mx-1 flex gap-1 overflow-x-auto px-1 [scrollbar-width:none]">
-          {mine.filter((m) => rows.some((r) => r.role === m)).map((m) => (
-            <button key={m} type="button" role="tab" aria-selected={active === m} onClick={() => setTab(m)}
-              className={cn('min-h-8 shrink-0 cursor-pointer rounded-full px-3 text-[12px] font-semibold', active === m ? 'bg-fill text-on-fill' : 'bg-raised text-muted hover:text-ink')}>{ROLE_LABEL[m]}</button>
-          ))}
-        </div>
-      )}
-      {q.isPending ? <p role="status" className="text-[13px] text-muted">Calculando</p> : (
-        <ul className="flex flex-col gap-4">{list.map((r) => <GoalLine key={r.key} r={r} day={cal.day} days={cal.days} showActions={actions} />)}</ul>
-      )}
-      <button type="button" onClick={() => setActions((v) => !v)} className="self-start cursor-pointer text-[12px] font-semibold text-accent-ink hover:underline">{actions ? 'Esconder ações' : 'Como bater: ver ações'}</button>
-      {insight && (
-        <div className="flex items-start gap-2">
-          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-accent-soft text-accent-ink"><MessageCircle size={15} aria-hidden="true" /></span>
-          <p className="rounded-2xl rounded-tl-sm bg-raised px-3 py-2 text-[13px]"><b className="block text-[11px] uppercase tracking-wide text-muted">Insight do dia</b>{insight}</p>
-        </div>
-      )}
-    </section>
+    <>
+      <button type="button" onClick={() => setOpen(true)} aria-label={`${title}: ver detalhes`}
+        className="flex w-full cursor-pointer flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-line bg-surface px-4 py-2.5 text-left hover:border-ink">
+        <span className="flex items-center gap-2 text-[13px] font-semibold"><Target size={15} aria-hidden="true" className="text-accent-ink" />{title}{available.length > 1 && <span className="font-normal text-muted">· {ROLE_LABEL[main]}</span>}<span className="font-normal text-muted">· dia {cal.day}/{cal.days}</span></span>
+        {q.isPending ? <span className="text-[12px] text-muted">Calculando</span> : strip.map((r) => {
+          const p = paceOf(r, cal.day, cal.days)
+          const m = GOAL_META[r.key]!
+          const actual = r.actual ?? 0
+          return (
+            <span key={r.key} className="flex min-w-0 items-center gap-1.5" title={`${m.title(r.info)}: ${fmt(actual, m.money)} ${m.kind === 'atMost' ? `(máx. ${fmt(r.target, m.money)})` : `de ${fmt(r.target, m.money)}`} · ${STATE[p.state].label}`}>
+              <Ring pct={m.kind === 'atMost' ? 100 : p.pct} expected={m.kind === 'atMost' ? 0 : p.expectedPct} tone={RING[p.state]} />
+              <span className="leading-tight"><span className="block text-[11px] text-muted">{m.short}</span><b className="text-[13px] tabular-nums">{m.kind === 'atMost' ? `${fmt(actual)}/${fmt(r.target)}` : m.money ? fmt(actual, true) : `${fmt(actual)}/${fmt(r.target)}`}</b></span>
+            </span>
+          )
+        })}
+        {insight && <span className="ml-auto hidden items-center gap-1 text-[12px] text-muted lg:flex" title={insight}><Lightbulb size={13} aria-hidden="true" className="text-[#eda100]" /> Dica do dia</span>}
+      </button>
+      <Dialog open={open} onClose={() => setOpen(false)} title={title} description={`Dia ${cal.day} de ${cal.days}. O tracinho mostra onde deveria estar hoje.`} size="md">
+        {available.length > 1 && (
+          <div role="tablist" aria-label="Função" className="-mx-1 mb-3 flex gap-1 overflow-x-auto px-1 [scrollbar-width:none]">
+            {available.map((m) => (
+              <button key={m} type="button" role="tab" aria-selected={active === m} onClick={() => setTab(m)}
+                className={cn('min-h-8 shrink-0 cursor-pointer rounded-full px-3 text-[12px] font-semibold', active === m ? 'bg-fill text-on-fill' : 'bg-raised text-muted hover:text-ink')}>{ROLE_LABEL[m]}</button>
+            ))}
+          </div>
+        )}
+        <ul className="flex flex-col gap-4">{rows.filter((r) => r.role === active).map((r) => <GoalLine key={r.key} r={r} day={cal.day} days={cal.days} showActions />)}</ul>
+        {insight && (
+          <p className="mt-4 flex items-start gap-2 rounded-2xl bg-raised px-3 py-2 text-[13px]"><Lightbulb size={15} aria-hidden="true" className="mt-0.5 shrink-0 text-[#eda100]" /><span><b className="block text-[11px] uppercase tracking-wide text-muted">Dica do dia</b>{insight}</span></p>
+        )}
+        {isAdmin && <Link to="/configuracoes/metas" onClick={() => setOpen(false)} className="mt-3 inline-block text-[13px] font-semibold text-accent-ink">Configurar metas e padrões →</Link>}
+      </Dialog>
+    </>
   )
 }
 
-/** Configurações → Metas: as 3 metas de cada função no mês, ajuste à mão e volta ao automático. */
+interface Template { id?: string; role: GoalRole; key: string; mode: 'auto' | 'fixo' | 'crescimento'; value: number | null; active: boolean; position: number }
+const MODE_LABEL: Record<Template['mode'], string> = { auto: 'Automático pelos dados', fixo: 'Valor fixo', crescimento: '% sobre o mês anterior' }
+const ROLES: GoalRole[] = ['gestao', 'comercial', 'relacionamento', 'financeiro', 'trafego', 'conteudo', 'audiovisual']
+
+function useTemplates() {
+  return useQuery({
+    queryKey: ['goal-templates'],
+    queryFn: async () => {
+      const { data, error } = await (supabase as unknown as { from: (t: string) => { select: (c: string) => Promise<{ data: unknown; error: { message: string } | null }> } }).from('goal_templates').select('id, role, key, mode, value, active, position')
+      if (error) throw new Error(error.message)
+      return (data ?? []) as Template[]
+    },
+  })
+}
+
+/** Configurações → Metas: padrões por função (o que o sistema cria todo mês) e as metas deste mês. */
 export function GoalsSettings() {
   const queryClient = useQueryClient()
-  const [offset, setOffset] = useState(0)
-  const month = monthStartOf(offset)
-  const q = useGoalsBoard(month)
-  const [editing, setEditing] = useState<GoalRow | null>(null)
+  const templates = useTemplates()
+  const q = useGoalsBoard(monthStartOf(0))
+  const [role, setRole] = useState<GoalRole>('gestao')
+  const [editing, setEditing] = useState<Template | null>(null)
+  const [adjust, setAdjust] = useState<GoalRow | null>(null)
   const [value, setValue] = useState('')
-  const refresh = () => void queryClient.invalidateQueries({ queryKey: ['company-goals'] })
-  const save = useMutation({
-    mutationFn: async () => {
-      const { error } = await rpc('role_goal_save', { _month: month, _role: editing!.role, _key: editing!.key, _target: Number(value.replace(/\./g, '').replace(',', '.')) })
-      if (error) throw new Error('Não foi possível salvar.')
-    },
+  const refresh = () => { void queryClient.invalidateQueries({ queryKey: ['goal-templates'] }); void queryClient.invalidateQueries({ queryKey: ['company-goals'] }) }
+  const saveTpl = useMutation({
+    mutationFn: async (t: Template) => { const { error } = await rpc('goal_template_save', { _role: t.role, _key: t.key, _mode: t.mode, _value: t.value, _active: t.active, _position: t.position }); if (error) throw new Error('Não foi possível salvar.') },
     onSuccess: () => { setEditing(null); refresh() },
   })
-  const reset = useMutation({
-    mutationFn: async (role: GoalRole) => { const { error } = await rpc('role_goals_reset', { _month: month, _role: role }); if (error) throw new Error('Não foi possível.') },
+  const apply = useMutation({
+    mutationFn: async (r: GoalRole) => { const { error } = await rpc('role_goals_reset', { _month: monthStartOf(0), _role: r }); if (error) throw new Error('Não foi possível.') },
     onSuccess: refresh,
   })
-  const label = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${month}T00:00:00Z`))
-  const roles = [...new Set((q.data ?? []).map((r) => r.role))]
+  const saveAdjust = useMutation({
+    mutationFn: async () => { const { error } = await rpc('role_goal_save', { _month: monthStartOf(0), _role: adjust!.role, _key: adjust!.key, _target: Number(value.replace(/\./g, '').replace(',', '.')) }); if (error) throw new Error('Não foi possível salvar.') },
+    onSuccess: () => { setAdjust(null); refresh() },
+  })
+  const mine = (templates.data ?? []).filter((t) => t.role === role && t.active).sort((a, b) => a.position - b.position)
+  const current = (q.data ?? []).filter((r) => r.role === role)
+  const usedKeys = new Set(mine.map((t) => t.key))
+
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-[14px] text-muted">Três metas por função, escolhidas pelos dados no começo do mês: o que está mais urgente entra primeiro e, a cada mês, algo novo. A meta fica fixa no mês; o realizado é sempre calculado. O estudo completo está em docs/PLANO-METAS.md.</p>
-      <div role="group" aria-label="Mês" className="inline-flex w-fit rounded-xl border border-line p-0.5">
-        {[0, 1].map((o) => (
-          <button key={o} type="button" aria-pressed={offset === o} onClick={() => setOffset(o)} className={cn('min-h-9 cursor-pointer rounded-lg px-4 text-[13px] font-semibold', offset === o ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{o === 0 ? 'Este mês' : 'Próximo mês'}</button>
+    <div className="flex flex-col gap-4">
+      <p className="text-[14px] text-muted">Todo dia 1 o sistema cria as metas do mês de cada função. <b className="text-ink">Com padrão</b>, ele usa as metas que você escolheu aqui (até 3), calculando o valor do jeito definido. <b className="text-ink">Sem padrão</b>, escolhe sozinho as 3 mais urgentes pelos dados. Dá para ajustar o valor deste mês a qualquer hora.</p>
+      <div role="tablist" aria-label="Função" className="flex flex-wrap gap-1">
+        {ROLES.map((r) => (
+          <button key={r} type="button" role="tab" aria-selected={role === r} onClick={() => setRole(r)}
+            className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-semibold', role === r ? 'bg-fill text-on-fill' : 'bg-raised text-muted hover:text-ink')}>{ROLE_LABEL[r]}</button>
         ))}
       </div>
-      <p className="text-[15px] font-semibold capitalize">{label}</p>
-      {q.isPending && <p role="status" className="text-muted">Carregando</p>}
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {roles.map((role) => (
-          <section key={role} aria-label={ROLE_LABEL[role]} className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4">
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="text-[15px] font-semibold">{ROLE_LABEL[role]}</h2>
-              <button type="button" onClick={() => reset.mutate(role)} title="Escolher de novo pelo automático" className="inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-full px-2 text-[12px] font-semibold text-muted hover:bg-raised hover:text-ink"><RotateCcw size={12} aria-hidden="true" /> Automático</button>
-            </div>
-            <ul className="flex flex-col gap-1.5">
-              {(q.data ?? []).filter((r) => r.role === role).map((r) => {
-                const m = GOAL_META[r.key]
-                if (!m) return null
-                return (
-                  <li key={r.key} className="flex items-center justify-between gap-2 rounded-2xl bg-raised/60 px-3 py-2">
-                    <span className="min-w-0 text-[13px]"><span className="block font-medium">{m.title(r.info)}</span><span className="text-[12px] text-muted">{m.kind === 'atMost' ? 'No máximo ' : 'Meta '}{fmt(r.target, m.money)}{r.source === 'manual' ? ' · ajustada à mão' : ''}</span></span>
-                    <button type="button" aria-label={`Ajustar ${m.title(r.info)}`} onClick={() => { setValue(String(r.target)); setEditing(r) }} className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-muted hover:text-ink"><Pencil size={14} aria-hidden="true" /></button>
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
-        ))}
+
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <section aria-label="Padrão" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4">
+          <div className="flex items-center justify-between gap-2">
+            <div><h2 className="text-[15px] font-semibold">Padrão de {ROLE_LABEL[role]}</h2><p className="text-[12px] text-muted">{mine.length ? 'O que o sistema cria todo mês.' : 'Sem padrão: o sistema escolhe pelos dados.'}</p></div>
+            <Button variant="secondary" className="min-h-9 px-3 text-[13px]" disabled={mine.length >= 3} onClick={() => setEditing({ role, key: Object.keys(GOAL_META).find((k) => !usedKeys.has(k))!, mode: 'auto', value: null, active: true, position: mine.length + 1 })}><Plus size={14} aria-hidden="true" /> Meta</Button>
+          </div>
+          <ul className="flex flex-col gap-1.5">
+            {mine.map((t) => (
+              <li key={t.key} className="flex items-center gap-2 rounded-2xl bg-raised/60 px-3 py-2">
+                <span className="min-w-0 flex-1 text-[13px]"><span className="block font-medium">{GOAL_META[t.key]?.title({}) ?? t.key}</span><span className="text-[12px] text-muted">{MODE_LABEL[t.mode]}{t.mode === 'fixo' && t.value != null ? `: ${fmt(t.value, GOAL_META[t.key]?.money)}` : ''}{t.mode === 'crescimento' && t.value != null ? `: +${t.value}%` : ''}</span></span>
+                <button type="button" aria-label="Editar" onClick={() => setEditing(t)} className="grid size-8 cursor-pointer place-items-center rounded-full text-muted hover:text-ink"><Pencil size={13} aria-hidden="true" /></button>
+                <button type="button" aria-label="Tirar do padrão" onClick={() => saveTpl.mutate({ ...t, active: false })} className="grid size-8 cursor-pointer place-items-center rounded-full text-muted hover:text-ink"><Trash2 size={13} aria-hidden="true" /></button>
+              </li>
+            ))}
+          </ul>
+          <button type="button" onClick={() => apply.mutate(role)} disabled={apply.isPending} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 self-start rounded-full px-2 text-[12px] font-semibold text-accent-ink hover:bg-raised"><RotateCcw size={12} aria-hidden="true" /> Aplicar ao mês atual agora</button>
+        </section>
+
+        <section aria-label="Este mês" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4">
+          <div><h2 className="text-[15px] font-semibold">Metas deste mês</h2><p className="text-[12px] text-muted">Ajuste só este mês, sem mudar o padrão.</p></div>
+          <ul className="flex flex-col gap-1.5">
+            {current.map((r) => {
+              const m = GOAL_META[r.key]
+              if (!m) return null
+              return (
+                <li key={r.key} className="flex items-center justify-between gap-2 rounded-2xl bg-raised/60 px-3 py-2">
+                  <span className="min-w-0 text-[13px]"><span className="block font-medium">{m.title(r.info)}</span><span className="text-[12px] text-muted">{m.kind === 'atMost' ? 'No máximo ' : 'Meta '}{fmt(r.target, m.money)} · hoje {fmt(r.actual ?? 0, m.money)}{r.source === 'manual' ? ' · ajustada à mão' : ''}</span></span>
+                  <button type="button" aria-label={`Ajustar ${m.title(r.info)}`} onClick={() => { setValue(String(r.target)); setAdjust(r) }} className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-full text-muted hover:text-ink"><Pencil size={13} aria-hidden="true" /></button>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
       </div>
-      <Dialog open={!!editing} onClose={() => setEditing(null)} title={editing ? GOAL_META[editing.key]?.title(editing.info) ?? '' : ''} size="sm">
-        <form onSubmit={(e) => { e.preventDefault(); save.mutate() }} className="flex flex-col gap-3">
+
+      <Dialog open={!!editing} onClose={() => setEditing(null)} title="Meta do padrão" description={editing ? `Função: ${ROLE_LABEL[editing.role]}` : undefined} size="sm">
+        {editing && <TemplateForm initial={editing} used={usedKeys} busy={saveTpl.isPending} onCancel={() => setEditing(null)} onSave={(t) => saveTpl.mutate(t)} />}
+      </Dialog>
+      <Dialog open={!!adjust} onClose={() => setAdjust(null)} title={adjust ? GOAL_META[adjust.key]?.title(adjust.info) ?? '' : ''} description="Só para este mês." size="sm">
+        <form onSubmit={(e) => { e.preventDefault(); saveAdjust.mutate() }} className="flex flex-col gap-3">
           <input inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 tabular-nums" aria-label="Meta" />
-          {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(save.error as Error).message}</p>}
-          <div className="flex gap-2"><Button type="submit" disabled={save.isPending}>Salvar</Button><Button variant="secondary" onClick={() => setEditing(null)}>Cancelar</Button></div>
+          {saveAdjust.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(saveAdjust.error as Error).message}</p>}
+          <div className="flex gap-2"><Button type="submit" disabled={saveAdjust.isPending}>Salvar</Button><Button variant="secondary" onClick={() => setAdjust(null)}>Cancelar</Button></div>
         </form>
       </Dialog>
     </div>
+  )
+}
+
+function TemplateForm({ initial, used, busy, onCancel, onSave }: { initial: Template; used: Set<string>; busy: boolean; onCancel: () => void; onSave: (t: Template) => void }) {
+  const [t, setT] = useState({ ...initial, valueText: initial.value == null ? '' : String(initial.value) })
+  const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
+  const meta = GOAL_META[t.key]
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); const { valueText, ...rest } = t; onSave({ ...rest, value: valueText.trim() === '' ? null : Number(valueText.replace(/\./g, '').replace(',', '.')) }) }} className="flex flex-col gap-3">
+      <label className="flex flex-col text-[13px] font-semibold">Meta
+        <select value={t.key} onChange={(e) => setT({ ...t, key: e.target.value })} className={field}>
+          {Object.keys(GOAL_META).filter((k) => k === initial.key || !used.has(k)).map((k) => <option key={k} value={k}>{GOAL_META[k]!.title({})}</option>)}
+        </select>
+      </label>
+      <label className="flex flex-col text-[13px] font-semibold">Como calcular o valor todo mês
+        <select value={t.mode} onChange={(e) => setT({ ...t, mode: e.target.value as Template['mode'] })} className={field}>
+          {(Object.keys(MODE_LABEL) as Template['mode'][]).map((m) => <option key={m} value={m}>{MODE_LABEL[m]}</option>)}
+        </select>
+      </label>
+      {t.mode !== 'auto' && (
+        <label className="flex flex-col text-[13px] font-semibold">{t.mode === 'fixo' ? `Valor${meta?.money ? ' (R$)' : ''}` : 'Crescimento (%)'}
+          <input inputMode="decimal" value={t.valueText} onChange={(e) => setT({ ...t, valueText: e.target.value })} className={field} />
+        </label>
+      )}
+      <p className="rounded-xl bg-raised px-3 py-2 text-[12px] text-muted">{t.mode === 'auto' ? 'O sistema calcula pelos dados do mês (média, base atual e o crescimento de Inteligência).' : t.mode === 'fixo' ? 'Todo mês começa com este valor.' : 'Todo mês: realizado do mês anterior + este percentual. No MRR, vale sobre o MRR atual.'}</p>
+      <label className="flex flex-col text-[13px] font-semibold">Ordem<input inputMode="numeric" value={t.position} onChange={(e) => setT({ ...t, position: Number(e.target.value.replace(/\D/g, '')) || 1 })} className={field} /></label>
+      <div className="flex gap-2"><Button type="submit" disabled={busy || (t.mode !== 'auto' && t.valueText.trim() === '')}>{busy ? 'Salvando' : 'Salvar'}</Button><Button variant="secondary" onClick={onCancel}>Cancelar</Button></div>
+    </form>
   )
 }
