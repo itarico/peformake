@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarCheck, CalendarPlus, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { VoiceNote } from '@/components/ui/VoiceNote'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { MeetingDialog, useClientDeliveries } from './DeliveryBar'
@@ -91,6 +92,7 @@ function DoneDialog({ meeting, onClose, onDone }: { meeting: Meeting | null; onC
         <label className="flex flex-col text-[13px] font-semibold">Decisões e anotações
           <textarea rows={5} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={'Ex.: aumentar verba em 20% no Instagram\nGravar 4 vídeos de produto até dia 20\nCliente aprovou o pacote de fotos'} className="mt-1 rounded-xl border border-line-strong bg-surface px-3 py-2 font-normal" />
         </label>
+        <VoiceNote onText={(t) => setNotes((n) => (n.trim() ? `${n.trim()}\n${t}` : t))} />
         {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(save.error as Error).message}</p>}
         <div className="flex gap-2"><Button type="submit" disabled={save.isPending}>{save.isPending ? 'Salvando' : 'Salvar'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>
       </form>

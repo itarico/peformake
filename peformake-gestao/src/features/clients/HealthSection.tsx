@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { addAssessment, clientErrorMessage } from './clientsApi'
+import { VoiceNote } from '@/components/ui/VoiceNote'
 import type { AssessmentRecord } from './clientRules'
 import { ASSESSMENT_VALID_DAYS, HEALTH_LABEL, HEALTH_LEVELS, HEALTH_SCORE, type HealthLevel, type HealthStatus } from './portfolioRules'
 import { Block, HealthBadge, inputClass } from './ui'
@@ -52,9 +53,26 @@ export function HealthSection({ clientId, health, history, canAssess }: {
         </p>
       )}
       {health.months.length > 1 && (
-        <p className="text-[13px] text-muted">
-          Por mês: {health.months.map((m) => `${MONTHS[Number(m.month.slice(5)) - 1]}/${m.month.slice(2, 4)} ${m.average.toFixed(1).replace('.', ',')}`).join(' | ')}
-        </p>
+        <div aria-label="Saúde por mês" role="img" className="flex items-end gap-1.5">
+          {health.months.slice(-6).map((m) => (
+            <span key={m.month} className="flex flex-1 flex-col items-center gap-1" title={`${MONTHS[Number(m.month.slice(5)) - 1]}/${m.month.slice(2, 4)}: ${m.average.toFixed(1).replace('.', ',')} de 5`}>
+              <span className="text-[11px] font-semibold tabular-nums">{m.average.toFixed(1).replace('.', ',')}</span>
+              <span className={cn('w-full rounded-md', m.average < 2.5 ? 'bg-warn' : m.average < 3.5 ? 'bg-[#eda100]' : 'bg-ok')} style={{ height: `${Math.max(6, (m.average / 5) * 56)}px` }} />
+              <span className="text-[11px] text-muted">{MONTHS[Number(m.month.slice(5)) - 1]}</span>
+            </span>
+          ))}
+        </div>
+      )}
+      {health.latest && HEALTH_SCORE[health.latest] <= 2 && (
+        <div className="rounded-2xl border border-warn/40 bg-warn-soft/50 px-3 py-2 text-[13px]">
+          <b className="block">Para segurar este cliente</b>
+          <ul className="mt-1 list-disc pl-4">
+            <li>Ligue hoje para ouvir, sem defender o trabalho: anote o motivo real.</li>
+            <li>Marque a reunião do mês antes da próxima entrega e leve os números dele.</li>
+            <li>Entregue um extra rápido (um criativo ou um ajuste pedido) nesta semana.</li>
+            <li>Reavalie em 15 dias: se não subir, o head assume o atendimento.</li>
+          </ul>
+        </div>
       )}
 
       <Dialog open={open} onClose={() => { if (!save.isPending) setOpen(false) }} title="Avaliar relacionamento" size="sm">
@@ -81,6 +99,7 @@ export function HealthSection({ clientId, health, history, canAssess }: {
             O que aconteceu {level && HEALTH_SCORE[level] <= 2 ? '(obrigatório)' : '(opcional)'}
           </label>
           <textarea id={`nota-${clientId}`} rows={2} maxLength={2000} value={note} onChange={(e) => setNote(e.target.value)} className={cn(inputClass, 'resize-y')} placeholder="Ex.: cobrou mais atenção nos posts" />
+          <VoiceNote onText={(t) => setNote((n) => (n.trim() ? `${n.trim()} ${t}` : t))} />
           {needsNote && <p className="text-[12px] text-warn-ink">Avaliação ruim precisa de um motivo, para a equipe agir.</p>}
           {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{clientErrorMessage(save.error)}</p>}
           <div className="flex gap-2">
