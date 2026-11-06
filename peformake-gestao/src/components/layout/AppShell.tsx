@@ -4,6 +4,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
 import { NotificationBell } from '@/features/notifications/NotificationBell'
+import { useRealtimeSync } from '@/lib/realtime'
 import { menuForRoles, tabsForRoles, type MenuIcon } from '@/lib/menu'
 import { Avatar } from '@/features/account/AccountPage'
 import { ROLE_LABELS } from '@/lib/roles'
@@ -165,6 +166,8 @@ function ViewAsBar() {
 }
 
 export function AppShell() {
+  const auth = useAuth()
+  useRealtimeSync(auth.state.status === 'ready')
   const [more, setMore] = useState(false)
   const location = useLocation()
   useEffect(() => { setMore(false) }, [location.pathname])

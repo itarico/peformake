@@ -273,3 +273,10 @@ select optgroup {
   .pf-rise, .pf-grow-y, .pf-grow-x, .pf-draw, .pf-fade, .pf-pulse { animation: none; }
   .pf-lift:hover { transform: none; }
 }
+
+/* Número que muda em tempo real: cai em vermelho, sobe em verde. */
+@keyframes pf-num-down { 0% { transform: translateY(-60%); opacity: 0; color: var(--warn); } 35% { opacity: 1; } 70% { transform: translateY(0); color: var(--warn); } 100% { color: inherit; } }
+@keyframes pf-num-up { 0% { transform: translateY(60%); opacity: 0; color: var(--ok); } 35% { opacity: 1; } 70% { transform: translateY(0); color: var(--ok); } 100% { color: inherit; } }
+.pf-num-down { animation: pf-num-down 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
+.pf-num-up { animation: pf-num-up 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
+@media (prefers-reduced-motion: reduce) { .pf-num-down, .pf-num-up { animation: none; } }

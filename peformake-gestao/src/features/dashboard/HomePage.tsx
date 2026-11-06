@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { GoalsCard } from '@/features/goals/goals'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -273,6 +274,7 @@ function BusinessHome() {
         <h1 className="text-3xl font-semibold tracking-tight">{greeting(hour)}{name ? `, ${name}` : ''}</h1>
         <p className="text-muted first-letter:uppercase">{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' })}</p>
       </header>
+      {can.operation && <GoalsCard title="Metas da empresa no mês" />}
 
       {can.admin ? <BusinessSection side={actionList} /> : (
         <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">

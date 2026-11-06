@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { ArrowDownRight, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/cn'
@@ -31,6 +31,28 @@ export function Sparkline({ values, className }: { values: readonly number[]; cl
   )
 }
 
+// ===== Número que se mexe quando muda: sobe em verde, cai em vermelho =====
+const toNumber = (v: string) => {
+  const m = v.replace(/\./g, '').replace(',', '.').match(/-?\d+(\.\d+)?/)
+  return m ? Number(m[0]) : null
+}
+export function LiveValue({ value, className }: { value: string; className?: string }) {
+  const prev = useRef(value)
+  const [dir, setDir] = useState<'up' | 'down' | null>(null)
+  useEffect(() => {
+    if (prev.current === value) return
+    const a = toNumber(prev.current)
+    const b = toNumber(value)
+    setDir(a !== null && b !== null ? (b < a ? 'down' : 'up') : 'up')
+    prev.current = value
+    const t = setTimeout(() => setDir(null), 1600)
+    return () => clearTimeout(t)
+  }, [value])
+  return (
+    <span key={value} className={cn('inline-block', dir === 'down' && 'pf-num-down', dir === 'up' && 'pf-num-up', className)}>{value}</span>
+  )
+}
+
 // ===== Cartão de número: valor, comparação e tendência =====
 export interface StatTileProps {
   label: string
@@ -48,7 +70,7 @@ export function StatTile({ label, value, hint, delta, spark, tone = 'default', t
   const body = (
     <>
       <p data-stat-label className="text-[12px] font-medium text-muted">{label}</p>
-      <p data-stat-value className={cn('mt-0.5 text-[26px] font-semibold leading-tight tracking-tight tabular-nums', tone === 'warn' && 'text-warn-ink', tone === 'ok' && 'text-ok-ink')}>{value}</p>
+      <p data-stat-value className={cn('mt-0.5 text-[26px] font-semibold leading-tight tracking-tight tabular-nums', tone === 'warn' && 'text-warn-ink', tone === 'ok' && 'text-ok-ink')}><LiveValue value={value} /></p>
       {delta && (
         <p className={cn('mt-0.5 flex items-center gap-1 text-[12px] font-medium', t === 'good' ? 'text-ok-ink' : t === 'bad' ? 'text-warn-ink' : 'text-muted')}>
           <Icon size={14} aria-hidden="true" /> {deltaText(delta.pct)}

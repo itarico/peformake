@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { GoalsCard } from '@/features/goals/goals'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, Send } from 'lucide-react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -85,6 +86,7 @@ export function ContentPlanPage() {
 
   return (
     <>
+      <GoalsCard area="conteudo" />
       <div className="flex flex-wrap items-center gap-2">
         <label htmlFor="plan-cliente" className="sr-only">Cliente</label>
         <select

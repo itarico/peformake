@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { GoalsCard } from '@/features/goals/goals'
+import { LiveValue } from '@/components/charts/Charts'
 import { MessageCircle, Plus, Search, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
@@ -131,7 +133,7 @@ export function ClientsPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Clientes</h1>
-          {query.data && <p className="text-muted">{liveRecurring} recorrentes e {liveOneOff} avulsos ativos · perdidos não entram nas contas</p>}
+          {query.data && <p className="text-muted"><LiveValue value={String(liveRecurring)} /> recorrentes e <LiveValue value={String(liveOneOff)} /> avulsos ativos · perdidos não entram nas contas</p>}
         </div>
         {canManage && (
           <button type="button" onClick={() => setCreating(true)} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand hover:opacity-85">
@@ -153,7 +155,7 @@ export function ClientsPage() {
       {query.isPending && <p role="status" className="text-muted">Carregando</p>}
       {query.isError && <ErrorBox text="Não foi possível carregar os clientes." onRetry={() => void query.refetch()} />}
 
-      {query.data && tab === 'summary' && <ClientsSummary />}
+      {query.data && tab === 'summary' && <><GoalsCard area="clientes" /><ClientsSummary /></>}
 
       {query.data && tab !== 'summary' && (
         <>

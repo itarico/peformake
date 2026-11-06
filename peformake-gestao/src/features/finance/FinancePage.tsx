@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
+import { GoalsCard } from '@/features/goals/goals'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, FileUp, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -136,6 +137,7 @@ export function FinancePage() {
           <MonthSwitcher />
         </>}
       />
+      <GoalsCard area="financeiro" />
 
       <section aria-label="Resumo do mês" className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {[

@@ -9,6 +9,7 @@ export interface IntelSettingsRow {
   inactivity_warn_months: number; inactivity_lost_months: number; art_sla_hours: number; video_sla_hours: number
   contract_remind_days: number; contract_alert_days: number; contract_ending_days: number; approval_stuck_days: number
   upsell_min_months: number; upsell_min_pct: number; alert_yellow: number; temp_hot: number; temp_warm: number
+  goal_growth_pct: number; tier_diamond: number; tier_gold: number; tier_silver: number
 }
 type Key = keyof IntelSettingsRow
 
@@ -57,6 +58,15 @@ const GROUPS: { title: string; text: string; fields: { key: Key; label: string; 
     fields: [
       { key: 'upsell_min_months', label: 'Tempo mínimo de casa', unit: 'meses' },
       { key: 'upsell_min_pct', label: 'Sugerir próximo serviço com chance de pelo menos', unit: '%' },
+    ],
+  },
+  {
+    title: 'Metas e melhores clientes', text: 'Crescimento usado na sugestão de metas e notas mínimas dos selos.',
+    fields: [
+      { key: 'goal_growth_pct', label: 'Crescimento sugerido nas metas', unit: '% sobre a média de 3 meses' },
+      { key: 'tier_diamond', label: 'Diamante a partir de', unit: 'pontos' },
+      { key: 'tier_gold', label: 'Ouro a partir de', unit: 'pontos' },
+      { key: 'tier_silver', label: 'Prata a partir de', unit: 'pontos' },
     ],
   },
   {
