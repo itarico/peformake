@@ -1,0 +1,7 @@
+.env*
+!.env.example
+*.local.sql
+.claude
+supabase
+node_modules
+dist

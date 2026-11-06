@@ -1,0 +1,53 @@
+@import '@fontsource-variable/archivo/wdth.css';
+@import 'tailwindcss';
+
+/* Peformake: petróleo profundo, ciano da marca, papel claro para respiro. */
+@theme {
+  --font-sans: 'Archivo Variable', system-ui, sans-serif;
+  --color-ink: #061417;
+  --color-deep: #0a1e22;
+  --color-panel: #0f272c;
+  --color-line: rgb(214 244 245 / 0.1);
+  --color-line-strong: rgb(214 244 245 / 0.22);
+  --color-fog: #9db3b6;
+  --color-paper: #eef5f4;
+  --color-cyan: #1fc8db;
+  --color-cyan-deep: #0d8fa0;
+  --color-lime: #c6f432;
+  --color-warm: #ff7a45;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body { font-family: var(--font-sans); font-variation-settings: 'wdth' 100; overflow-x: hidden; }
+::selection { background: var(--color-cyan); color: var(--color-ink); }
+
+/* Títulos expandidos: o Archivo largo conversa com o monograma PFMK. */
+.display { font-variation-settings: 'wdth' 125; font-weight: 800; letter-spacing: -0.035em; line-height: 0.92; }
+.wide { font-variation-settings: 'wdth' 118; }
+
+/* Linha que se desenha nos traços do logo. */
+.draw { stroke-dasharray: 1; }
+.intro-mark .draw, .hero-mark .draw { stroke-dashoffset: 1; }
+
+/* Grão fino por cima de tudo: tira o "liso de computador" do fundo escuro. */
+.grain::after {
+  content: ''; position: fixed; inset: -50%; z-index: 60; pointer-events: none; opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee { animation: marquee 48s linear infinite; }
+.marquee:hover { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee { animation: none; }
+  .intro-mark .draw, .hero-mark .draw { stroke-dashoffset: 0; }
+}

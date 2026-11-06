@@ -1,0 +1,4 @@
+# Enquanto não há domínio próprio, nada é indexado (ver meta robots no index.html).
+# Com o domínio: trocar por "Allow: /" e manter as áreas internas bloqueadas.
+User-agent: *
+Disallow: /

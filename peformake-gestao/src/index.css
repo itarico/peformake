@@ -1,0 +1,259 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --font-sans: Geist, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--ink);
+  --color-brand-dark: var(--ink);
+  --color-on-brand: var(--canvas);
+  --color-brand-soft: var(--accent-soft);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-second: var(--second);
+  --color-fill: var(--fill);
+  --color-on-fill: var(--on-fill);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-ink: var(--warn-ink);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-ok-ink: var(--ok-ink);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
+}
+
+:root {
+  color-scheme: light;
+  --canvas: oklch(0.972 0.006 210);
+  --surface: oklch(1 0 0);
+  --raised: oklch(0.948 0.009 210);
+  --ink: oklch(0.21 0.02 220);
+  --muted: oklch(0.47 0.02 220);
+  --line: oklch(0.21 0.02 220 / 0.11);
+  --line-strong: oklch(0.21 0.02 220 / 0.3);
+  --accent: hsl(189 92% 27%);
+  --accent-ink: hsl(189 92% 25%);
+  --accent-soft: hsl(189 92% 30% / 0.1);
+  --second: hsl(199 89% 42%);
+  --fill: hsl(196 70% 14%);
+  --on-fill: hsl(0 0% 100%);
+  --warn: oklch(0.5 0.16 40);
+  --warn-soft: oklch(0.5 0.16 40 / 0.1);
+  --warn-ink: oklch(0.42 0.14 40);
+  --ok: oklch(0.55 0.13 150);
+  --ok-soft: oklch(0.55 0.13 150 / 0.11);
+  --ok-ink: oklch(0.42 0.11 150);
+  /* Cores de gráfico: ordem fixa (paleta validada do dataviz). Nunca reciclar a ordem. */
+  --series-1: #0090ad;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --canvas: oklch(0.16 0.02 215);
+  --surface: oklch(0.205 0.022 215);
+  --raised: oklch(0.255 0.024 215);
+  --ink: oklch(0.975 0.005 200);
+  --muted: oklch(0.74 0.02 205);
+  --line: oklch(0.9 0.04 200 / 0.09);
+  --line-strong: oklch(0.9 0.04 200 / 0.26);
+  --accent: hsl(187 82% 46%);
+  --accent-ink: hsl(186 80% 70%);
+  --accent-soft: hsl(187 82% 46% / 0.16);
+  --second: hsl(199 89% 60%);
+  --fill: hsl(187 82% 46%);
+  --on-fill: hsl(195 60% 8%);
+  --warn: oklch(0.78 0.13 55);
+  --warn-soft: oklch(0.78 0.13 55 / 0.14);
+  --warn-ink: oklch(0.82 0.11 55);
+  --ok: oklch(0.75 0.14 150);
+  --ok-soft: oklch(0.75 0.14 150 / 0.15);
+  --ok-ink: oklch(0.83 0.12 150);
+  --series-1: #159fb4;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+}
+
+/* Ellcazo (produtora audiovisual): verde-limão sobre preto. Vale só dentro da área Audiovisual.
+   O limão é cor de preenchimento; texto em destaque usa o verde escuro para ter contraste no claro. */
+.theme-ellcazo {
+  --accent: oklch(0.86 0.2 128);
+  --accent-ink: oklch(0.43 0.12 132);
+  --accent-soft: oklch(0.86 0.2 128 / 0.2);
+  --fill: oklch(0.86 0.2 128);
+  --on-fill: oklch(0.17 0.01 130);
+  --ellcazo-band: oklch(0.17 0.01 130);
+  --ellcazo-band-ink: oklch(0.96 0.02 128);
+}
+[data-theme='dark'] .theme-ellcazo {
+  --accent: oklch(0.88 0.2 128);
+  --accent-ink: oklch(0.88 0.2 128);
+  --accent-soft: oklch(0.88 0.2 128 / 0.16);
+  --fill: oklch(0.88 0.2 128);
+  --on-fill: oklch(0.17 0.01 130);
+  --ellcazo-band: oklch(0.12 0.005 130);
+  --ellcazo-band-ink: oklch(0.96 0.02 128);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+select,
+input {
+  color: var(--ink);
+}
+
+/* Modo TV: tudo escala pela altura da tela, para ler de longe em 1080p ou 4K. */
+.tv-mode .tv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 6vh;
+  height: 6vh;
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.tv-mode .tv-btn:hover,
+.tv-mode .tv-btn:focus-visible {
+  background: var(--raised);
+}
+.tv-mode .tv-btn svg {
+  width: 3vh;
+  height: 3vh;
+}
+.tv-mode [data-kpi-row] {
+  height: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2vh;
+}
+.tv-mode [data-stat] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3vh 3vw;
+  border-radius: 3vh;
+  pointer-events: none;
+}
+.tv-mode [data-stat-label] {
+  font-size: 2.8vh;
+}
+.tv-mode [data-stat-value] {
+  font-size: 10vh;
+  margin-top: 1vh;
+}
+.tv-mode [data-stat-hint],
+.tv-mode [data-stat] p:not([data-stat-label]):not([data-stat-value]) {
+  font-size: 2.3vh;
+  margin-top: 1vh;
+}
+.tv-mode [data-stat] svg {
+  width: 2.4vh;
+  height: 2.4vh;
+}
+
+/* Sensação de aplicativo: sem flash azul no toque, sem zoom de fonte automático, sem "puxar" a página inteira. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  overscroll-behavior-y: none;
+}
+button,
+a,
+[role='button'] {
+  touch-action: manipulation;
+}
+/* No iPhone, campo com fonte menor que 16px dá zoom ao tocar. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+select option,
+select optgroup {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Conversa no estilo WhatsApp: fundo discreto e balão da mensagem enviada. */
+:root { --wa-out: #d9fdd3; --wa-wall: oklch(0.955 0.008 95); }
+[data-theme='dark'] { --wa-out: #005c4b; --wa-wall: oklch(0.18 0.01 200); }
+.wa-out { background: var(--wa-out); color: var(--ink); }
+.wa-wallpaper { background-color: var(--wa-wall); background-image: radial-gradient(circle at 1px 1px, rgb(0 0 0 / 0.035) 1px, transparent 0); background-size: 18px 18px; }
+
+/* ===== Motion: entra com propósito, nunca atrapalha. Desliga em prefers-reduced-motion. ===== */
+@keyframes pf-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes pf-grow-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes pf-grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes pf-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes pf-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pf-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--warn) 45%, transparent); } 50% { box-shadow: 0 0 0 5px transparent; } }
+
+.pf-rise { animation: pf-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.pf-grow-y { transform-origin: bottom; animation: pf-grow-y 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(120ms + var(--i, 0) * 35ms); }
+.pf-grow-x { transform-origin: left; animation: pf-grow-x 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(150ms + var(--i, 0) * 50ms); }
+.pf-draw { animation: pf-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) both 0.15s; }
+.pf-fade { animation: pf-fade 0.8s ease both 0.5s; }
+.pf-pulse { animation: pf-pulse 2.4s ease-in-out infinite; }
+.pf-lift { transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s, background-color 0.2s; }
+.pf-lift:hover { transform: translateY(-2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-rise, .pf-grow-y, .pf-grow-x, .pf-draw, .pf-fade, .pf-pulse { animation: none; }
+  .pf-lift:hover { transform: none; }
+}
