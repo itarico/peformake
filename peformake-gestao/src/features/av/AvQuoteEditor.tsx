@@ -5,10 +5,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
-import { useCatalog } from '@/features/catalog/ServiceCatalog'
 import { useProduction } from '@/features/production/useProduction'
 import { EllcazoHeader } from './AvBoard'
-import { calculateQuote, EMPTY_INPUTS, type AvPricing, type CatalogPick, type CaptureMode, type QuoteInputs } from './avPricing'
+import { calculateQuote, EMPTY_INPUTS, fromLegacy, isOffered, menuOf, modeOn, menuPick, MENU_PREFIX, UNIT_LABEL, type AvPricing, type CatalogPick, type CaptureMode, type QuoteInputs } from './avPricing'
 import { getPricing, getQuote, quoteLink, saveQuote, setQuoteStatus, type AvQuote, type QuoteKind } from './avQuotesApi'
 
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -46,9 +45,28 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { clients } = useProduction()
-  const catalog = useCatalog('audiovisual')
-  const [inputs, setInputs] = useState<QuoteInputs>(quote?.inputs ?? EMPTY_INPUTS)
-  const [picks, setPicks] = useState<CatalogPick[]>(quote?.items.picks ?? [])
+  const menu = menuOf(pricing)
+  const [start] = useState(() => {
+    if (quote?.inputs) return fromLegacy(pricing, quote.inputs, quote.items.picks)
+    const desloc = menu.items.find((i) => i.id === 'desloc_rmr' && isOffered(menu, i))
+    return { inputs: EMPTY_INPUTS, picks: quote ? quote.items.picks : desloc ? [menuPick(desloc)] : [] }
+  })
+  const modes = MODES.filter((m) => modeOn(menu, m.key) || m.key === start.inputs.mode)
+  const [inputs, setInputs] = useState<QuoteInputs>(() => modeOn(menu, start.inputs.mode) || quote ? start.inputs : { ...start.inputs, mode: modes[0]?.key ?? 'sem_captacao' })
+  const [picks, setPicks] = useState<CatalogPick[]>(start.picks)
+  const [cat, setCat] = useState<string>('todas')
+  const qty = (id: string) => picks.find((p) => p.serviceId === `${MENU_PREFIX}${id}`)?.quantity ?? 0
+  const setQty = (id: string, n: number) => {
+    const it = menu.items.find((x) => x.id === id)
+    if (!it) return
+    const key = `${MENU_PREFIX}${id}`
+    setPicks((cur) => n <= 0 ? cur.filter((p) => p.serviceId !== key) : cur.some((p) => p.serviceId === key) ? cur.map((p) => p.serviceId === key ? { ...p, quantity: n } : p) : [...cur, menuPick(it, n)])
+  }
+  const toggleRule = (id: string) => setInputs((cur) => { const r = new Set(cur.rules ?? []); if (r.has(id)) r.delete(id); else r.add(id); return { ...cur, rules: [...r] } })
+  const cats = menu.categories.filter((c) => c.active !== false && menu.items.some((i) => i.categoryId === c.id && isOffered(menu, i)))
+  const offered = menu.items.filter((i) => isOffered(menu, i) && (cat === 'todas' || i.categoryId === cat))
+  const optionalRules = menu.rules.filter((r) => r.active && r.when === 'opcional')
+  const alwaysRules = menu.rules.filter((r) => r.active && r.when === 'sempre')
   const [meta, setMeta] = useState({
     title: quote?.title ?? '', clientId: quote?.clientId ?? '', leadName: quote?.leadName ?? '', leadPhone: quote?.leadPhone ?? '', leadEmail: quote?.leadEmail ?? '',
     kind: (quote?.kind ?? 'avulso') as QuoteKind, months: quote?.months ? String(quote.months) : '', notes: quote?.notes ?? '',
@@ -56,7 +74,6 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
   const set = <K extends keyof QuoteInputs>(k: K, v: QuoteInputs[K]) => setInputs((cur) => ({ ...cur, [k]: v }))
   const [view, setView] = useState<'resumo' | 'previa'>('resumo')
   const result = useMemo(() => calculateQuote(pricing, inputs, picks), [pricing, inputs, picks])
-  const services = (catalog.data?.services ?? []).filter((s) => s.isActive && s.price != null)
 
   const save = useMutation({
     mutationFn: () => saveQuote(quote?.id ?? null, {
@@ -111,25 +128,23 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
           </div>
         </Box>
 
-        <Box title="Serviços prontos">
-          <div className="flex flex-col gap-2">
-            {picks.map((p, idx) => (
-              <div key={p.serviceId} className="flex items-center gap-2 rounded-2xl bg-raised px-3 py-2">
-                <span className="min-w-0 flex-1 truncate text-[14px]">{p.name} <span className="text-muted">· {brl(p.price)}</span></span>
-                <input aria-label={`Quantidade de ${p.name}`} inputMode="numeric" value={p.quantity} onChange={(e) => { const n = Math.max(0, Number(e.target.value) || 0); setPicks(picks.map((x, i) => i === idx ? { ...x, quantity: n } : x)) }} className="h-9 w-14 rounded-lg border border-line bg-surface text-center" />
-                <button type="button" aria-label={`Tirar ${p.name}`} onClick={() => setPicks(picks.filter((_, i) => i !== idx))} className="flex size-9 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-surface hover:text-ink"><Trash2 size={15} aria-hidden="true" /></button>
-              </div>
-            ))}
-            <select value="" onChange={(e) => { const s = services.find((x) => x.id === e.target.value); if (s && !picks.some((p) => p.serviceId === s.id)) setPicks([...picks, { serviceId: s.id, name: s.name, price: Number(s.price), quantity: 1 }]) }} className={cn(field, 'mt-0')}>
-              <option value="">Adicionar serviço do catálogo...</option>
-              {services.map((s) => <option key={s.id} value={s.id}>{s.name} · {brl(Number(s.price))}</option>)}
-            </select>
-          </div>
-        </Box>
+        {picks.some((p) => !p.serviceId.startsWith(MENU_PREFIX)) && (
+          <Box title="Do catálogo antigo">
+            <div className="flex flex-col gap-2">
+              {picks.map((p, idx) => p.serviceId.startsWith(MENU_PREFIX) ? null : (
+                <div key={p.serviceId} className="flex items-center gap-2 rounded-2xl bg-raised px-3 py-2">
+                  <span className="min-w-0 flex-1 truncate text-[14px]">{p.name} <span className="text-muted">· {brl(p.price)}</span></span>
+                  <input aria-label={`Quantidade de ${p.name}`} inputMode="numeric" value={p.quantity} onChange={(e) => { const n = Math.max(0, Number(e.target.value) || 0); setPicks(picks.map((x, i) => i === idx ? { ...x, quantity: n } : x)) }} className="h-9 w-14 rounded-lg border border-line bg-surface text-center" />
+                  <button type="button" aria-label={`Tirar ${p.name}`} onClick={() => setPicks(picks.filter((_, i) => i !== idx))} className="flex size-9 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-surface hover:text-ink"><Trash2 size={15} aria-hidden="true" /></button>
+                </div>
+              ))}
+            </div>
+          </Box>
+        )}
 
         <Box title="Montar sob medida">
           <div role="radiogroup" aria-label="Tipo de captação" className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {MODES.map((m) => (
+            {modes.map((m) => (
               <button key={m.key} type="button" role="radio" aria-checked={inputs.mode === m.key} onClick={() => set('mode', m.key)} title={m.hint}
                 className={cn('min-h-11 cursor-pointer rounded-2xl border px-3 text-[14px] font-medium', inputs.mode === m.key ? 'border-transparent bg-fill text-on-fill' : 'border-line hover:border-ink')}>{m.label}</button>
             ))}
@@ -137,38 +152,70 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
           {inputs.mode !== 'sem_captacao' && (
             <div className="divide-y divide-line">
               <Stepper label={inputs.mode === 'evento' ? 'Operadores' : 'Pessoas na captação'} value={inputs.pessoas} onChange={(v) => set('pessoas', v)} />
-              {inputs.mode === 'evento' && <Stepper label="Auxiliares" value={inputs.auxiliares} onChange={(v) => set('auxiliares', v)} />}
+              <Stepper label="Auxiliares" value={inputs.auxiliares} onChange={(v) => set('auxiliares', v)} />
               <Stepper label="Horas" value={inputs.horas} step={0.5} onChange={(v) => set('horas', v)} />
             </div>
           )}
           <div className="divide-y divide-line">
             <Stepper label="Vídeos editados" value={inputs.videos} onChange={(v) => set('videos', v)} />
-            <Stepper label="Cortes" value={inputs.cortes} onChange={(v) => set('cortes', v)} />
-            <Stepper label="Vídeos com drone" value={inputs.droneVideos} onChange={(v) => set('droneVideos', v)} />
-            <Stepper label="Criativos com motion" value={inputs.motion} onChange={(v) => set('motion', v)} />
-            <Stepper label="Pacotes de 10 fotos extras" value={inputs.fotosExtras10} onChange={(v) => set('fotosExtras10', v)} />
-            <Stepper label="Arquivos brutos (captações)" value={inputs.brutos} onChange={(v) => set('brutos', v)} />
-            <Stepper label="Gravações com apresentadora" value={inputs.apresentadora} onChange={(v) => set('apresentadora', v)} />
           </div>
-          <div className="mt-2 grid grid-cols-1 gap-x-4 sm:grid-cols-2">
-            {inputs.mode !== 'evento' && <Check label="Incluir roteiro de cada vídeo" checked={inputs.roteiro} onChange={(v) => set('roteiro', v)} />}
-            {inputs.mode !== 'evento' && <Check label="Edição no mesmo dia" checked={inputs.mesmoDia} onChange={(v) => set('mesmoDia', v)} />}
-            <Check label="Final de semana" checked={inputs.fimDeSemana} onChange={(v) => set('fimDeSemana', v)} />
-            <Check label="Noturno" checked={inputs.noturno} onChange={(v) => set('noturno', v)} />
-          </div>
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <label className="flex flex-col text-[13px] font-semibold">Deslocamento
-              <select value={inputs.deslocamento} onChange={(e) => set('deslocamento', e.target.value as QuoteInputs['deslocamento'])} className={field}>
-                <option value="rmr">Região Metropolitana</option><option value="fora">Fora da Região Metropolitana</option><option value="nenhum">Sem deslocamento (estúdio)</option>
-              </select>
-            </label>
-            <label className="flex flex-col text-[13px] font-semibold">Contrato
-              <select value={inputs.contrato} onChange={(e) => set('contrato', e.target.value as QuoteInputs['contrato'])} className={field}>
-                <option value="nenhum">Avulso, sem ajuste</option><option value="com_contrato">Plano com contrato de 5 meses (desconto)</option><option value="sem_contrato">Plano sem contrato (acréscimo)</option>
-              </select>
-            </label>
-          </div>
+          {inputs.mode !== 'evento' && (
+            <div className="mt-2 grid grid-cols-1 gap-x-4 sm:grid-cols-2">
+              <Check label="Incluir roteiro de cada vídeo" checked={inputs.roteiro} onChange={(v) => set('roteiro', v)} />
+              <Check label="Edição no mesmo dia" checked={inputs.mesmoDia} onChange={(v) => set('mesmoDia', v)} />
+            </div>
+          )}
         </Box>
+
+        {cats.length > 0 && (
+          <Box title="Serviços">
+            <div role="group" aria-label="Categoria" className="mb-2 flex flex-wrap gap-1">
+              {[{ id: 'todas', name: 'Todas' }, ...cats].map((c) => (
+                <button key={c.id} type="button" aria-pressed={cat === c.id} onClick={() => setCat(c.id)}
+                  className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', cat === c.id ? 'bg-fill text-on-fill' : 'border border-line text-muted hover:text-ink')}>{c.name}</button>
+              ))}
+            </div>
+            <ul className="divide-y divide-line">
+              {offered.map((it) => {
+                const n = qty(it.id)
+                return (
+                  <li key={it.id} className="flex items-center justify-between gap-3 py-2">
+                    <span className="min-w-0">
+                      <span className={cn('block text-[14px]', n > 0 && 'font-semibold')}>{it.name}</span>
+                      <span className="block text-[12px] text-muted">{brl(it.price)} por {UNIT_LABEL[it.unit][0]}{it.description ? ` · ${it.description}` : ''}</span>
+                    </span>
+                    {n === 0 ? (
+                      <button type="button" aria-label={`Adicionar ${it.name}`} onClick={() => setQty(it.id, 1)} className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line-strong hover:border-ink"><Plus size={15} aria-hidden="true" /></button>
+                    ) : (
+                      <span className="flex shrink-0 items-center gap-1">
+                        <button type="button" aria-label={`Menos ${it.name}`} onClick={() => setQty(it.id, n - 1)} className="flex size-9 cursor-pointer items-center justify-center rounded-full border border-line-strong hover:border-ink"><Minus size={15} aria-hidden="true" /></button>
+                        <span className="w-8 text-center font-semibold tabular-nums">{n}</span>
+                        <button type="button" aria-label={`Mais ${it.name}`} onClick={() => setQty(it.id, n + 1)} className="flex size-9 cursor-pointer items-center justify-center rounded-full bg-fill text-on-fill"><Plus size={15} aria-hidden="true" /></button>
+                      </span>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          </Box>
+        )}
+
+        {(optionalRules.length > 0 || alwaysRules.length > 0) && (
+          <Box title="Regras">
+            <div className="flex flex-wrap gap-2">
+              {optionalRules.map((r) => {
+                const on = (inputs.rules ?? []).includes(r.id)
+                return (
+                  <button key={r.id} type="button" aria-pressed={on} onClick={() => toggleRule(r.id)}
+                    className={cn('min-h-10 cursor-pointer rounded-full border px-3.5 text-[13px] font-medium', on ? 'border-transparent bg-fill text-on-fill' : 'border-line hover:border-ink')}>
+                    {r.name} <span className="opacity-70">{r.direction === 'desconto' ? '−' : '+'}{r.mode === 'pct' ? `${r.value}%` : brl(r.value)}</span>
+                  </button>
+                )
+              })}
+            </div>
+            {alwaysRules.length > 0 && <p className="mt-2 text-[12px] text-muted">Sempre aplicadas: {alwaysRules.map((r) => r.name).join(', ')}.</p>}
+          </Box>
+        )}
 
         <Box title="Observações para o cliente">
           <textarea rows={3} value={meta.notes} onChange={(e) => setMeta({ ...meta, notes: e.target.value })} placeholder="Prazos, o que o cliente precisa providenciar, forma de pagamento..." className={cn(field, 'mt-0')} />
@@ -286,7 +333,7 @@ export function AvQuoteEditor() {
   return (
     <div className="theme-ellcazo flex flex-col gap-4">
       <Link to="/audiovisual/orcamentos" className="inline-flex min-h-10 items-center gap-1.5 self-start text-[14px] font-medium"><ArrowLeft size={16} aria-hidden="true" /> Orçamentos</Link>
-      <EllcazoHeader sub={quote.data ? `${quote.data.code}` : 'Monte com serviços prontos ou sob medida. Os valores vêm de Configurações.'}>{quote.data ? quote.data.title : 'Novo orçamento'}</EllcazoHeader>
+      <EllcazoHeader sub={quote.data ? `${quote.data.code}` : 'Monte com pacotes prontos, serviços e regras. Tudo editável em Configurações → Orçamento.'}>{quote.data ? quote.data.title : 'Novo orçamento'}</EllcazoHeader>
       <Editor key={quote.data?.id ?? 'novo'} pricing={pricing.data} quote={quote.data ?? null} />
     </div>
   )

@@ -7,6 +7,7 @@ import { cn } from '@/lib/cn'
 import { ADMIN_ROLES, NOTIFICATION_ADMIN_ROLES } from '@/lib/roles'
 import { AccessPage } from '@/features/access/AccessPage'
 import { AvSettingsForm } from '@/features/av/AvSettingsForm'
+import { QuoteSettings } from '@/features/av/QuoteSettings'
 import { AREA_LABEL, ServiceCatalog, type Area } from '@/features/catalog/ServiceCatalog'
 import { CommercialSettingsPage } from '@/features/commercial/CommercialSettingsPage'
 import { PackagesPage } from '@/features/commercial/PackagesPage'
@@ -20,6 +21,7 @@ const TABS: SectionTab[] = [
   { to: '/configuracoes/servicos', label: 'Serviços e pacotes' },
   { to: '/configuracoes/notificacoes', label: 'Notificações' },
   { to: '/configuracoes/audiovisual', label: 'Audiovisual' },
+  { to: '/configuracoes/orcamento', label: 'Orçamento' },
   { to: '/configuracoes/inteligencia', label: 'Inteligência' },
   { to: '/configuracoes/metas', label: 'Metas' },
   { to: '/configuracoes/acessos', label: 'Acessos', roles: ADMIN_ROLES },
@@ -38,6 +40,7 @@ export function SettingsLayout() {
           <Route path="servicos" element={<CatalogSettings />} />
           <Route path="notificacoes" element={<NotificationSettingsPanel />} />
           <Route path="audiovisual" element={<AvSettingsForm />} />
+          <Route path="orcamento" element={<QuoteSettings />} />
           <Route path="inteligencia" element={<IntelSettingsPanel />} />
           <Route path="metas" element={<GoalsSettings />} />
         </Route>
