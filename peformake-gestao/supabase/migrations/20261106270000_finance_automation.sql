@@ -1,0 +1,9 @@
+-- Aplicado em 06/11 (via MCP):
+-- 1) Mensalidades: billing_day = 30 em todos os contratos (padrão 30); invoice_generate_month usa 30 quando não há contrato.
+-- 2) billing_gateway_queue: cobrança automática só pega faturas com due_date <= hoje (America/Sao_Paulo).
+--    Assim a fatura nasce no Financeiro no início do mês e o link de cobrança só é criado no vencimento.
+-- 3) Venda avulsa confirmada (crm_sales.status = 'confirmada') vira lançamento "a receber" em fin_entries
+--    (trigger crm_sale_to_fin; empresa por crm_sale_unit: foto/vídeo/captação/... = Ellcazo, resto = Peformake).
+-- 4) Tráfego: ad_accounts.read_source = 'mcp' nas contas lidas pelo conector oficial da Meta (API direta bloqueada).
+-- O SQL completo está registrado no histórico de migrações do Supabase:
+--   billing_due_day_30_charge_on_due, invoice_generate_month_default_30, crm_sale_to_fin_entry
