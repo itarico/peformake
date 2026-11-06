@@ -32,29 +32,40 @@ const WEEKDAY = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 's
 export function greeting(pick: <T>(a: readonly T[]) => T, firstName: string, day: number, days: number, monthName: string) {
   const left = days - day
   const hour = new Date().getHours()
-  const hi = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
+  const hi = hour < 12 ? pick(['Bom dia', 'Bom diaa', 'Bom dia, bom dia']) : hour < 18 ? pick(['Boa tarde', 'Oi, boa tarde']) : pick(['Boa noite', 'Oi, boa noite'])
   const wd = WEEKDAY[new Date().getDay()]!
   const who = firstName ? `, ${firstName}` : ''
+  const phase = left > 20 ? pick(['Mês começando: é a melhor hora de acelerar.', 'Início de mês: quem sai na frente chega mais tranquilo.']) : left > 10 ? pick(['Meio do mês: hora de ajustar a rota.', 'Metade do caminho. Bora ver como estamos?']) : pick(['Reta final do mês: cada dia conta.', `Só ${left} dias para fechar ${monthName}. Foco total!`])
+  const week = wd === 'segunda' ? pick(['Semana nova, energia nova! 💥', 'Segunda-feira: dia de planejar a semana.']) : wd === 'sexta' ? pick(['Sextou! Bora fechar a semana bem? 🎯', 'Sexta: ainda dá pra fazer a semana valer.']) : wd === 'sábado' || wd === 'domingo' ? 'Fim de semana, mas os números não descansam. 😄' : ''
   return pick([
     `${hi}${who}! ${wd[0]!.toUpperCase()}${wd.slice(1)}, dia ${day} de ${days}. Faltam ${left} dias para fechar ${monthName}.`,
     `${hi}${who}! ☕ Dia ${day} de ${monthName}: ainda temos ${left} dias de jogo.`,
-    `E aí${who}! Passando para o nosso papo do dia. Hoje é dia ${day}, faltam ${left} para o mês acabar.`,
-    `${hi}${who}! Atualizei seus números agora há pouco. Dia ${day} de ${days}.`,
-    `${hi}${who}! ${left > 20 ? 'Mês começando: é a melhor hora de acelerar.' : left > 10 ? 'Meio do mês: hora de ajustar a rota.' : 'Reta final do mês: cada dia conta.'}`,
+    `E aí${who}! Passando pro nosso papo do dia. ${phase}`,
+    `${hi}${who}! Atualizei seus números agora há pouco. ${phase}`,
+    `${hi}${who}! ${week || phase}`,
+    `${hi}${who}! Já são ${Math.round((day / days) * 100)}% do mês. Bora ver se as metas estão acompanhando?`,
+    `Opa${who}! Tenho novidade sobre suas metas. ${week || ''}`.trim(),
   ])
 }
 
 export function goalIntro(pick: <T>(a: readonly T[]) => T) {
-  return pick(['Sua meta em foco hoje é esta:', 'Hoje vamos olhar para esta aqui:', 'Separei uma meta para a gente conversar hoje:', 'A meta do dia é:'])
+  return pick(['Sua meta em foco hoje é esta:', 'Hoje vamos olhar para esta aqui:', 'Separei uma meta para a gente conversar hoje:', 'A meta do dia é:', 'Olha só como está esta:', 'Bora dar atenção para esta hoje:', 'Essa aqui merece seu olhar hoje:', 'Vamos ver essa?'])
+}
+
+/** Projeção: no ritmo de hoje, onde a meta termina o mês. */
+export function projection(r: GoalRow, day: number, days: number, stock = false): number {
+  const base = stock ? (r.info.base ?? 0) : 0
+  const actual = r.actual ?? 0
+  return base + ((actual - base) / Math.max(1, day)) * days
 }
 
 export function cheer(pick: <T>(a: readonly T[]) => T, p: Pace) {
   const by: Record<Pace['state'], string[]> = {
-    batida: ['Meta batida! 🏆 Daqui pra frente é bônus.', 'Fechou! 🎉 Que tal mirar mais alto?', 'Batida com folga. Esse é o padrão.'],
-    ritmo: ['No ritmo. Mantém a constância que dá. 💪', 'Caminhando bem: o segredo agora é não tirar o pé.', 'Do jeito certo. Segue o plano.'],
-    atras: ['Dá pra virar: um bom dia resolve muito. 🚀', 'Atrás, mas longe de perdido. Bora acelerar?', 'Hora de colocar foco aqui hoje.'],
+    batida: ['Meta batida! 🏆 Daqui pra frente é bônus.', 'Fechou! 🎉 Que tal mirar mais alto?', 'Batida com folga. Esse é o padrão.', 'Missão cumprida. ✅ Agora é jogar pelo recorde.'],
+    ritmo: ['No ritmo. Mantém a constância que dá. 💪', 'Caminhando bem: o segredo agora é não tirar o pé.', 'Do jeito certo. Segue o plano.', 'Tá redondo. Só não deixa esfriar.'],
+    atras: ['Dá pra virar: um bom dia resolve muito. 🚀', 'Atrás, mas longe de perdido. Bora acelerar?', 'Hora de colocar foco aqui hoje.', 'Um empurrão hoje e o gráfico já muda de cara.', 'Ainda dá tempo, mas o relógio está correndo. ⏱️'],
     estourou: ['Esse passou do limite. Vamos entender o que houve e segurar o resto do mês.', 'Aqui o sinal é vermelho: vale agir hoje para não repetir.'],
-    ok: ['Dentro do limite. Continue de olho. 👀', 'Tudo sob controle por aqui.'],
+    ok: ['Dentro do limite. Continue de olho. 👀', 'Tudo sob controle por aqui.', 'Zerado como tem que ser. 👌'],
   }
   return pick(by[p.state])
 }
@@ -228,4 +239,27 @@ export function primaryAction(r: GoalRow, c: Coach | undefined): (Action & { hin
   const who = a.to.startsWith('/clientes/') ? a.label.replace(/^(Pedir indicação a|Oferecer plano a|Propor upsell a|Falar com|Marcar com|Ligar para|Cobrar|Chamar)\s*/, '') : undefined
   const verb = r.key === 'novos' || r.key === 'novos_premium' ? (a.to.startsWith('/clientes/') ? 'Oferecer plano' : c?.hot_leads.length ? 'Chamar lead' : 'Buscar leads') : OBJECTIVE[r.key] ?? a.label
   return { label: verb, to: a.to, hint: who }
+}
+
+/** Cartão de cliente para procurar hoje: quem, por quê e o botão. */
+export function clientCard(r: GoalRow, c: Coach | undefined): { name: string; why: string; to: string; label: string } | null {
+  if (!c) return null
+  const card = (x: { id: string; name: string } | undefined, why: string, label: string) => (x ? { name: x.name.trim(), why, to: `/clientes/${x.id}`, label } : null)
+  switch (r.key) {
+    case 'novos': case 'novos_premium':
+      if (c.frequent_avulsos[0] && r.key === 'novos') return card(c.frequent_avulsos[0], `Compra avulso há ${c.frequent_avulsos[0].months} meses seguidos. Já é cliente de rotina: falta o contrato.`, 'Oferecer plano')
+      return card(c.happy[0], 'Avaliou muito bem a gente. Hora certa de pedir uma indicação.', 'Pedir indicação')
+    case 'mrr_total': case 'upsell': return card(c.low_ticket[0], `Mensalidade${c.low_ticket[0]?.ticket ? ` de ${brl(c.low_ticket[0].ticket)}` : ' baixa'}: espaço para mais um serviço.`, 'Propor upsell')
+    case 'avulsos': return card(c.idle_avulsos[0], `Não compra há ${c.idle_avulsos[0]?.months ?? 0} meses. Uma ideia pronta de captação costuma destravar.`, 'Oferecer captação')
+    case 'reunioes': return card(c.no_meeting[0], 'Ainda sem reunião este mês. Marque antes do dia 14.', 'Marcar reunião')
+    case 'saidas': return card(c.unhappy[0], 'A última avaliação foi ruim. Uma ligação hoje pode evitar uma saída.', 'Ligar para o cliente')
+    case 'devendo': case 'inadimplencia': return card(c.overdue[0], `Fatura em aberto${c.overdue[0]?.amount ? ` de ${brl(c.overdue[0].amount)}` : ''}.`, 'Cobrar')
+    default: return null
+  }
+}
+
+export type GoalFormat = 'bar' | 'chart' | 'big' | 'time'
+/** Formato da mensagem da meta: muda a cada dia e a cada meta. Limites (no máximo) ficam na barra. */
+export function formatFor(pick: <T>(a: readonly T[]) => T, kind: string): GoalFormat {
+  return kind === 'atMost' ? pick(['bar', 'big'] as const) : pick(['bar', 'chart', 'big', 'time'] as const)
 }

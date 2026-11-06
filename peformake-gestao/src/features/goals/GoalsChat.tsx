@@ -6,15 +6,16 @@ import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { APP_ROLE, calendar, fmt, GOAL_META, monthStartOf, paceOf, ROLE_LABEL, STATE, useGoalsBoard, useInsights, type GoalRole, type GoalRow } from './goals'
-import { cheer, primaryAction, goalIntro, greeting, pickWith, plain, seeded, steps, suggestion, type Action, type Coach } from './coach'
+import { cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
 
 // Chat de metas: conversa diária, uma mensagem por vez, montada com os dados do sistema.
 // Cada resposta mostra "atualizando seus dados…" por um instante, como quem foi buscar.
 
 type NewMsg =
   | { from: 'bot'; kind: 'text'; text: string }
-  | { from: 'bot'; kind: 'goal'; key: string }
-  | { from: 'bot'; kind: 'all' }
+  | { from: 'bot'; kind: 'goal'; key: string; role: GoalRole; format: GoalFormat }
+  | { from: 'bot'; kind: 'client'; card: Card }
+  | { from: 'bot'; kind: 'all'; role: GoalRole }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
 type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye'; key?: string }
@@ -72,6 +73,102 @@ function GoalBubble({ r, day, days }: { r: GoalRow; day: number; days: number })
   )
 }
 
+function Head({ r, p }: { r: GoalRow; p: ReturnType<typeof paceOf> }) {
+  const st = STATE[p.state]
+  return <span className="flex items-start justify-between gap-2"><b className="text-[13px] leading-tight">{GOAL_META[r.key]!.title(r.info)}</b><span className={cn('shrink-0 rounded-full px-1.5 py-px text-[10px] font-semibold', st.tone)}>{st.label}</span></span>
+}
+
+/** Gráfico do mês: o que foi feito até hoje, o ritmo ideal e para onde vai no ritmo atual. */
+function GoalChart({ r, day, days }: { r: GoalRow; day: number; days: number }) {
+  const m = GOAL_META[r.key]!
+  const p = paceOf(r, day, days)
+  const stock = m.kind === 'stock'
+  const base = stock ? (r.info.base ?? 0) : 0
+  const actual = r.actual ?? 0
+  const proj = projection(r, day, days, stock)
+  const lo = Math.min(base, actual, proj) * (stock ? 0.97 : 1), hi = Math.max(r.target, actual, proj, base + 1) * 1.08
+  const W = 260, H = 96, P = 6
+  const x = (d: number) => P + (d / days) * (W - 2 * P)
+  const y = (v: number) => H - P - ((v - lo) / Math.max(1e-9, hi - lo)) * (H - 2 * P)
+  const ok = proj >= r.target
+  return (
+    <div className="flex flex-col gap-1">
+      <Head r={r} p={p} />
+      <svg viewBox={`0 0 ${W} ${H}`} className="mt-1 w-full" role="img" aria-label={`Até hoje ${fmt(actual, m.money)}; no ritmo atual termina com ${fmt(Math.round(proj), m.money)}; meta ${fmt(r.target, m.money)}`}>
+        <line x1={P} x2={W - P} y1={y(r.target)} y2={y(r.target)} className="stroke-ok" strokeWidth="1.2" strokeDasharray="4 3" />
+        <text x={W - P} y={y(r.target) - 4} textAnchor="end" className="fill-ok-ink text-[9px] font-semibold">meta {fmt(r.target, m.money)}</text>
+        <line x1={x(0)} y1={y(base)} x2={x(days)} y2={y(r.target)} className="stroke-muted/40" strokeWidth="1" />
+        <line x1={x(day)} y1={y(actual)} x2={x(days)} y2={y(proj)} className={ok ? 'stroke-accent' : 'stroke-[#eda100]'} strokeWidth="2" strokeDasharray="2 3" strokeLinecap="round" />
+        <polyline points={`${x(0)},${y(base)} ${x(day)},${y(actual)}`} className="pf-grow-x fill-none stroke-accent" strokeWidth="2.6" strokeLinecap="round" />
+        <circle cx={x(day)} cy={y(actual)} r="4" className="fill-accent stroke-surface" strokeWidth="2" />
+      </svg>
+      <span className="flex justify-between text-[10px] text-muted"><span>dia 1</span><span>hoje · {fmt(actual, m.money)}</span><span>dia {days}</span></span>
+      {!stock && actual === 0 ? <span className="text-[12px] text-muted">Ainda sem número este mês. O primeiro resultado já faz a linha subir. 📈</span> : <span className="text-[12px] text-muted">No ritmo de hoje, fecha o mês com <b className={ok ? 'text-ok-ink' : 'text-ink'}>{fmt(Math.max(0, Math.round(proj)), m.money)}</b>{ok ? '. Passa da meta! 🎯' : `. Faltariam ${fmt(Math.max(0, Math.round(r.target - proj)), m.money)}.`}</span>}
+    </div>
+  )
+}
+
+/** Número grande: o que falta, sem rodeio. */
+function GoalBig({ r, day, days }: { r: GoalRow; day: number; days: number }) {
+  const m = GOAL_META[r.key]!
+  const p = paceOf(r, day, days)
+  const actual = r.actual ?? 0
+  const left = Math.max(1, days - day)
+  const atMost = m.kind === 'atMost'
+  const rem = Math.max(0, r.target - actual)
+  const big = atMost ? fmt(actual, m.money) : p.state === 'batida' ? '✓' : fmt(rem, m.money)
+  const label = atMost ? `no mês · limite ${fmt(r.target, m.money)}` : p.state === 'batida' ? 'meta batida' : `falta${rem === 1 ? '' : 'm'} em ${left} dias`
+  return (
+    <div className="flex flex-col gap-1">
+      <Head r={r} p={p} />
+      <span className="flex items-end gap-2 py-1"><b className={cn('pf-rise text-[38px] leading-none tabular-nums', STATE[p.state].bar.replace('bg-', 'text-'))}>{big}</b><span className="pb-1 text-[12px] text-muted">{label}</span></span>
+      <span className="text-[12px] text-muted">{atMost ? (actual <= r.target ? 'Segue assim: dentro do limite.' : 'Passou do limite. Vale entender o porquê.') : p.state === 'batida' ? `Fez ${fmt(actual, m.money)} de ${fmt(r.target, m.money)}.` : m.money ? `Uns ${fmt(Math.ceil((rem / left) * 7), true)} por semana resolvem.` : `Dá ${(rem / left * 7) < 1 ? 'menos de 1' : `uns ${Math.ceil((rem / left) * 7)}`} por semana. Feito ${fmt(actual)} de ${fmt(r.target)}.`}</span>
+    </div>
+  )
+}
+
+/** Tempo × meta: quanto do mês já passou contra quanto da meta já foi feita. */
+function GoalTime({ r, day, days }: { r: GoalRow; day: number; days: number }) {
+  const m = GOAL_META[r.key]!
+  const p = paceOf(r, day, days)
+  const t = Math.round((day / days) * 100), g = Math.round(p.pct)
+  const row = (label: string, v: number, cls: string) => (
+    <span className="grid grid-cols-[52px_1fr_34px] items-center gap-2 text-[11.5px]"><span className="text-muted">{label}</span><span className="h-2.5 rounded-full bg-raised"><span className={cn('pf-grow-x block h-full rounded-full', cls)} style={{ width: `${Math.max(3, Math.min(100, v))}%` }} /></span><b className="text-right tabular-nums">{v}%</b></span>
+  )
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Head r={r} p={p} />
+      {row('Mês', t, 'bg-muted/50')}
+      {row('Meta', g, STATE[p.state].bar)}
+      <span className="text-[12px] text-muted">{g >= t ? `A meta (${g}%) está na frente do calendário (${t}%). 💪` : `Já foi ${t}% do mês e ${g}% da meta (${fmt(r.actual ?? 0, m.money)} de ${fmt(r.target, m.money)}). Dá para alcançar o calendário.`}</span>
+    </div>
+  )
+}
+
+function GoalView({ format, ...p }: { r: GoalRow; day: number; days: number; format: GoalFormat }) {
+  const kind = GOAL_META[p.r.key]!.kind
+  if (format === 'chart' && kind !== 'atMost') return <GoalChart {...p} />
+  if (format === 'big') return <GoalBig {...p} />
+  if (format === 'time' && kind !== 'atMost') return <GoalTime {...p} />
+  return <GoalBubble {...p} />
+}
+
+type Card = NonNullable<ReturnType<typeof clientCard>>
+/** Cartão de cliente: quem procurar hoje, por quê, e o botão. */
+function ClientCard({ c, onGo }: { c: Card; onGo: () => void }) {
+  const ini = c.name.split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase()
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-[11px] font-semibold uppercase tracking-wide text-muted">Cliente para procurar hoje</span>
+      <span className="flex items-center gap-2.5">
+        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-fill text-[13px] font-bold text-on-fill">{ini}</span>
+        <span className="min-w-0"><b className="block truncate text-[13.5px]">{c.name}</b><span className="block text-[12px] leading-snug text-muted">{c.why}</span></span>
+      </span>
+      <Link to={c.to} onClick={onGo} className="inline-flex min-h-8 items-center justify-center rounded-full border border-line-strong px-3 text-[12.5px] font-semibold no-underline hover:border-ink">{c.label} →</Link>
+    </div>
+  )
+}
+
 export function GoalsChat() {
   const { state } = useAuth()
   const location = useLocation()
@@ -125,6 +222,7 @@ export function GoalsChat() {
   const [typing, setTyping] = useState<string | null>(null)
   const [links, setLinks] = useState<Action[]>([])
   const idRef = useRef(1)
+  const genRef = useRef(0)
   const box = useRef<HTMLDivElement>(null)
   const rnd = useMemo(() => seeded(`${cal.iso}-${role}`), [cal.iso, role])
   const pick = useMemo(() => pickWith(rnd), [rnd])
@@ -133,22 +231,32 @@ export function GoalsChat() {
   useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing])
   // Abre sozinho quando tem novidade de verdade (uma vez por sessão).
   useEffect(() => { if (news.length && !started.current && state.status === 'ready') setOpen(true) }, [news.length, state.status])
-  useEffect(() => { if (open && !started.current && role) { started.current = true; begin() } }, [open, role]) // eslint-disable-line react-hooks/exhaustive-deps
+  const talked = useRef<GoalRole | undefined>(undefined)
+  useEffect(() => {
+    if (!open || !role) return
+    // Abriu agora, ou mudou de tela com o chat aberto: conversa da área nova.
+    if (!started.current || talked.current !== role) { started.current = true; talked.current = role; begin() }
+  }, [open, role]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (state.status !== 'ready' || board.isError || !role || rows.length === 0) return null
   // Nada novo e chat fechado: some.
   if (!open && news.length === 0) return null
 
   const goal = (key?: string) => list.find((r) => r.key === key) ?? list[0]!
+  /** Mensagens antigas guardam a área: trocar de tela não muda o que já foi dito. */
+  const rowOf = (rl: GoalRole, key: string) => rows.find((r) => r.role === rl && r.key === key)
   const say = (msgs: NewMsg[], next: Reply[], newLinks: Action[] = []) => {
     setReplies([]); setLinks([])
+    // Uma conversa por vez: se outra começar (troca de tela), esta para de mandar.
+    const gen = ++genRef.current
     let i = 0
     const send = () => {
+      if (gen !== genRef.current) return
       const m = msgs[i++]
       if (!m) { setTyping(null); setReplies(next); setLinks(newLinks); return }
       setTyping(i === 1 ? pick(['atualizando seus dados…', 'buscando seus números…', 'conferindo o mês…']) : 'digitando…')
       const text = m.kind === 'text' ? m.text : ''
-      setTimeout(() => { setLog((l) => [...l, { ...m, id: idRef.current++ }]); setTyping(null); setTimeout(send, 200) }, Math.min(1500, 850 + text.length * 6))
+      setTimeout(() => { if (gen !== genRef.current) return; setLog((l) => [...l, { ...m, id: idRef.current++ }]); setTyping(null); setTimeout(send, 200) }, Math.min(1500, 850 + text.length * 6))
     }
     send()
   }
@@ -183,12 +291,20 @@ export function GoalsChat() {
     if (item.kind === 'tip') { say([...prefix, { from: 'bot', kind: 'text', text: `💡 ${item.text}` }], repliesFor(undefined, remaining.filter((x) => x.kind !== 'tip'))); return }
     const g = goal(item.key)
     const m = GOAL_META[g.key]!
+    // Sorteio próprio de cada mensagem: formato, frase e cartão mudam de uma para outra.
+    const pk = pickWith(seeded(item.id))
     const head: NewMsg = item.kind === 'change'
-      ? { from: 'bot', kind: 'text', text: `${(g.actual ?? 0) > (item.from ?? 0) ? pick(['Novidade boa! 🎉', 'Andou! ↗']) : 'Atualizei aqui:'} ${m.short}: ${fmt(item.from ?? 0, m.money)} → ${fmt(g.actual ?? 0, m.money)}.` }
-      : item.kind === 'hit' ? { from: 'bot', kind: 'text', text: pick([`🏆 Meta batida: ${m.title(g.info).toLowerCase()}!`, `🏆 Bateu! ${m.title(g.info)} com ${days - day} dias de folga.`]) }
-        : { from: 'bot', kind: 'text', text: goalIntro(pick) }
-    const sug = item.kind !== 'hit' ? suggestion(pick, g, coach.data) : null
-    say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key }, { from: 'bot', kind: 'text', text: `${cheer(pick, paceOf(g, day, days))}${sug ? `\n\n${sug}` : ''}` }], repliesFor(g.key, remaining), one(g))
+      ? { from: 'bot', kind: 'text', text: `${(g.actual ?? 0) > (item.from ?? 0) ? pk(['Novidade boa! 🎉', 'Andou! ↗']) : 'Atualizei aqui:'} ${m.short}: ${fmt(item.from ?? 0, m.money)} → ${fmt(g.actual ?? 0, m.money)}.` }
+      : item.kind === 'hit' ? { from: 'bot', kind: 'text', text: pk([`🏆 Meta batida: ${m.title(g.info).toLowerCase()}!`, `🏆 Bateu! ${m.title(g.info)} com ${days - day} dias de folga.`]) }
+        : { from: 'bot', kind: 'text', text: goalIntro(pk) }
+    // Cada mensagem num formato: barra, gráfico, número grande ou tempo × meta; às vezes já vem o cliente para procurar.
+    const format: GoalFormat = item.kind === 'hit' ? 'big' : formatFor(pk, m.kind)
+    const card = item.kind !== 'hit' && pk([true, true, false]) ? clientCard(g, coach.data) : null
+    const sug = item.kind !== 'hit' && !card ? suggestion(pk, g, coach.data) : null
+    const tail: NewMsg[] = card
+      ? [{ from: 'bot', kind: 'text', text: cheer(pk, paceOf(g, day, days)) }, { from: 'bot', kind: 'client', card }]
+      : [{ from: 'bot', kind: 'text', text: `${cheer(pk, paceOf(g, day, days))}${sug ? `\n\n${sug}` : ''}` }]
+    say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key, role: g.role, format }, ...tail], repliesFor(g.key, remaining), card ? [] : one(g))
   }
 
   function begin() {
@@ -210,7 +326,7 @@ export function GoalsChat() {
     if (r.act === 'tip') show(tips.find((x) => !seen.has(x.id)))
     if (r.act === 'all') {
       setLog([])
-      setTimeout(() => say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all' }],
+      setTimeout(() => say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all', role: role! }],
         [...list.slice(0, 2).map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key })), { label: 'Fechar', act: 'bye' as const }]), 50)
     }
     if (r.act === 'bye') close()
@@ -237,8 +353,9 @@ export function GoalsChat() {
               : (
                 <div key={m.id} className="pf-rise max-w-[92%] self-start whitespace-pre-line rounded-xl rounded-tl-sm bg-surface px-3 py-2 text-[13px] shadow-sm">
                   {m.kind === 'text' && m.text}
-                  {m.kind === 'goal' && <GoalBubble r={goal(m.key)} day={day} days={days} />}
-                  {m.kind === 'all' && <span className="flex flex-col gap-3">{list.map((r) => <GoalBubble key={r.key} r={r} day={day} days={days} />)}</span>}
+                  {m.kind === 'goal' && rowOf(m.role, m.key) && <GoalView r={rowOf(m.role, m.key)!} day={day} days={days} format={m.format} />}
+                  {m.kind === 'client' && <ClientCard c={m.card} onGo={close} />}
+                  {m.kind === 'all' && <span className="flex flex-col gap-3">{rows.filter((x) => x.role === m.role).map((r) => <GoalBubble key={r.key} r={r} day={day} days={days} />)}</span>}
                 </div>
               ))}
             {typing && <span className="inline-flex w-fit gap-1 rounded-xl rounded-tl-sm bg-surface px-3 py-3 shadow-sm" aria-label={typing}>{[0, 1, 2].map((i) => <i key={i} className="size-1.5 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 0.15}s` }} />)}</span>}
