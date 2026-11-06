@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 import { ArrowRight, Lightbulb, MessageCircle, ThermometerSun } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -85,6 +87,25 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
   const ltv = view.kind !== 'avulso' && months ? view.value * months : null
   const people = groupTeam(client.team).filter((p) => !p.roles.every((r) => r === 'squad'))
   const services = client.services.filter((s) => s.isActive)
+  // Pagamento: próxima fatura em aberto, atrasada (com quantos lembretes já foram) ou em dia.
+  const billing = useQuery({
+    queryKey: ['client-billing-status', client.id],
+    enabled: isAdmin,
+    queryFn: async () => {
+      const { data: inv } = await supabase.from('invoices').select('id, due_date, status, amount').eq('client_id', client.id).in('status', ['pendente', 'vencido']).order('due_date')
+      const open = (inv ?? []) as { id: string; due_date: string; status: string; amount: number }[]
+      let reminders = 0
+      if (open.length) {
+        const { count } = await (supabase.from as unknown as (t: string) => { select: (c: string, o: { count: 'exact'; head: true }) => { in: (k: string, v: string[]) => { eq: (k: string, v: string) => Promise<{ count: number | null }> } } })('billing_events')
+          .select('id', { count: 'exact', head: true }).in('invoice_id', open.map((i) => i.id)).eq('kind', 'lembrete')
+        reminders = count ?? 0
+      }
+      return { open, reminders }
+    },
+  })
+  const todayIso = new Date().toISOString().slice(0, 10)
+  const lateInv = billing.data?.open.find((i) => i.due_date < todayIso) ?? null
+  const nextInv = billing.data?.open.find((i) => i.due_date >= todayIso) ?? null
   const healthTrend = (timeline.data?.health ?? []).map((h) => HEALTH_SCORE[h.level as HealthLevel] ?? 3)
 
   // O que fazer agora: alertas do cliente + sinais da inteligência, do mais urgente ao oportuno.
@@ -130,8 +151,14 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
         </Tile>
 
         {isAdmin ? (
-          <Tile label="Valor" footer={ltv ? `${brlValue(ltv)} em ${months} ${months === 1 ? 'mês' : 'meses'} de casa` : view.missingPrices ? `${view.missingPrices} serviço sem preço` : undefined}>
+          <Tile label="Valor" className={cn(lateInv && 'border-warn bg-warn-soft/50')}
+            footer={lateInv
+              ? <span className="font-semibold text-warn-ink">Pendente desde {lateInv.due_date.slice(8)}/{lateInv.due_date.slice(5, 7)}{billing.data?.reminders ? ` · ${billing.data.reminders} ${billing.data.reminders === 1 ? 'lembrete enviado' : 'lembretes enviados'}` : ''}</span>
+              : nextInv ? `Vence ${nextInv.due_date.slice(8)}/${nextInv.due_date.slice(5, 7)}`
+              : client.contract?.billingDay && view.kind !== 'avulso' ? <span className="font-medium text-ok-ink">Cliente em dia · vence todo dia {client.contract.billingDay}</span>
+              : ltv ? `${brlValue(ltv)} em ${months} ${months === 1 ? 'mês' : 'meses'} de casa` : undefined}>
             <button type="button" onClick={() => onOpenTab('financeiro')} className="cursor-pointer text-left text-[22px] font-semibold tabular-nums hover:underline">{brlValue(view.value)}<span className="text-[13px] font-normal text-muted">{view.kind === 'fixo' ? '/mês' : ''}</span></button>
+            {ltv && (lateInv || nextInv || client.contract?.billingDay) ? <p className="text-[12px] text-muted">{brlValue(ltv)} em {months} {months === 1 ? 'mês' : 'meses'} de casa</p> : null}
           </Tile>
         ) : (
           <Tile label="Serviços"><p className="text-[22px] font-semibold tabular-nums">{services.length}</p></Tile>
@@ -182,7 +209,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
       </div>
 
       <section aria-label="Perfil" className="flex flex-wrap items-center gap-x-5 gap-y-3 rounded-3xl border border-line bg-surface px-5 py-3 text-[13px]">
-        <span><span className="text-muted">Porte </span><b>{intel?.size ? SIZE_LABEL[intel.size] : 'A definir'}</b>{intel?.size && <span className="text-muted"> ({intel.sizeSource === 'cnpj' ? 'Receita' : 'estimado pelo valor'})</span>}</span>
+        <span><span className="text-muted">Porte </span><b>{intel?.size ? SIZE_LABEL[intel.size] : <span className="text-warn-ink">sem CNPJ</span>}</b>{intel?.size && <span className="text-muted"> (Receita)</span>}</span>
         <span><span className="text-muted">Nicho </span><b>{client.segment ?? 'A definir'}</b></span>
         <span className="flex min-w-0 flex-wrap items-center gap-1">
           <span className="text-muted">Serviços </span>

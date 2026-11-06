@@ -103,6 +103,7 @@ export function PortalOverview({ token }: { token: string }) {
         </section>
       )}
 
+      <DeliveryRating token={token} />
       {!d.rated_this_week && d.areas.length > 0 && <WeeklyRating token={token} areas={d.areas} />}
     </>
   )
@@ -257,5 +258,59 @@ export function PortalContract({ token }: { token: string }) {
         </div>
       </Dialog>
     </section>
+  )
+}
+
+interface PendingRating { kind: 'content' | 'av'; id: string; title: string; done_at: string; by_name: string | null }
+
+/** Nota discreta de cada entrega: uma por vez, cinco estrelas, comentário opcional. Avalia quem fez. */
+function DeliveryRating({ token }: { token: string }) {
+  const queryClient = useQueryClient()
+  const q = useQuery({
+    queryKey: ['portal-pending-ratings', token],
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>)('portal_pending_ratings', { _token: token })
+      if (error) throw error
+      return (data ?? []) as PendingRating[]
+    },
+  })
+  const [score, setScore] = useState(0)
+  const [comment, setComment] = useState('')
+  const [asking, setAsking] = useState(false)
+  const [hidden, setHidden] = useState<string[]>([])
+  const item = (q.data ?? []).find((i) => !hidden.includes(i.id))
+  const send = useMutation({
+    mutationFn: async (n: number) => {
+      const { error } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ error: unknown }>)('portal_rate_delivery', { _token: token, _kind: item!.kind, _item: item!.id, _score: n, _comment: comment })
+      if (error) throw error
+    },
+    onSuccess: () => { setScore(0); setComment(''); setAsking(false); void queryClient.invalidateQueries({ queryKey: ['portal-pending-ratings', token] }) },
+  })
+  if (!item) return null
+  const pick = (n: number) => { setScore(n); if (n <= 3) setAsking(true); else send.mutate(n) }
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded-3xl border border-line bg-surface px-5 py-3">
+      <p className="min-w-0 text-[14px]">
+        <span className="text-muted">Como ficou </span><b>{item.title}</b>{item.by_name && <span className="text-muted"> de {item.by_name}</span>}<span className="text-muted">?</span>
+      </p>
+      <span className="flex items-center gap-1">
+        <span role="radiogroup" aria-label={`Nota para ${item.title}`} className="flex">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button key={n} type="button" role="radio" aria-checked={score === n} aria-label={`${n} de 5`} disabled={send.isPending} onClick={() => pick(n)}
+              className="grid size-9 cursor-pointer place-items-center rounded-full hover:bg-raised">
+              <Star size={18} aria-hidden="true" className={cn(score >= n ? 'fill-current text-accent-ink' : 'text-line-strong')} />
+            </button>
+          ))}
+        </span>
+        <button type="button" onClick={() => setHidden((h) => [...h, item.id])} className="ml-1 cursor-pointer text-[12px] text-muted hover:text-ink">Agora não</button>
+      </span>
+      <Dialog open={asking} onClose={() => { setAsking(false); setScore(0) }} title="O que podemos melhorar?" description={`${item.title}${item.by_name ? ` · ${item.by_name}` : ''}`} size="sm">
+        <div className="flex flex-col gap-3">
+          <textarea rows={3} value={comment} onChange={(e) => setComment(e.target.value)} maxLength={1000} className="w-full rounded-xl border border-line-strong bg-surface px-3 py-2" placeholder="Opcional, mas ajuda muito" />
+          <Button disabled={send.isPending} onClick={() => send.mutate(score)}>{send.isPending ? 'Enviando' : 'Enviar nota'}</Button>
+        </div>
+      </Dialog>
+    </div>
   )
 }
