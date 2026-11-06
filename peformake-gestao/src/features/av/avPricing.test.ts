@@ -61,3 +61,29 @@ describe('calculateQuote', () => {
     expect(calculateQuote(p, { ...EMPTY_INPUTS, videos: 0 }).total).toBe(250)
   })
 })
+
+describe('diária, km e itens automáticos', () => {
+  const base: AvPricing = { ...P, diaria_camera: 800, diaria_auxiliar: 500, km_valor: 2, km_minimo: 50, km_viagem: 100, menu: {
+    ...menuOf(P),
+    categories: [...menuOf(P).categories, { id: 'viagem', name: 'Viagem e equipe', active: true }],
+    items: [...menuOf(P).items,
+      { id: 'alim', categoryId: 'viagem', name: 'Alimentação', price: 40, unit: 'diaria', active: true, auto: 'diaria_pessoa' },
+      { id: 'hosp', categoryId: 'viagem', name: 'Hospedagem', price: 150, unit: 'noite', active: true, auto: 'viagem_pessoa' }],
+  } }
+  const i = { ...EMPTY_INPUTS, videos: 0, billing: 'diaria' as const, dias: 2, pessoas: 1, auxiliares: 1 }
+
+  it('diária cobra por pessoa por dia e já põe a alimentação', () => {
+    // 1 × 2 × 800 + 1 × 2 × 500 + alimentação 2 pessoas × 2 dias × 40 = 1600 + 1000 + 160
+    expect(calculateQuote(base, i).subtotal).toBe(2760)
+  })
+
+  it('tirar o automático e deslocamento por km com taxa mínima', () => {
+    expect(calculateQuote(base, { ...i, autoOff: ['alim'] }).subtotal).toBe(2600)
+    expect(calculateQuote(base, { ...i, autoOff: ['alim'], km: 10 }).subtotal).toBe(2650) // 10 × 2 × 2 = 40 → mínimo 50
+  })
+
+  it('longe da base vira viagem e entra hospedagem', () => {
+    // + km 120 × 2 × 2 = 480; hospedagem 2 pessoas × 2 dias × 150 = 600
+    expect(calculateQuote(base, { ...i, km: 120 }).subtotal).toBe(2760 + 480 + 600)
+  })
+})

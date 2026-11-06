@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
-import { menuOf, modeOn, newId, PRICING_LABELS, UNIT_LABEL, type AvPricing, type MenuCategory, type MenuItem, type MenuUnit, type PriceRule, type QuoteMenu } from './avPricing'
+import { AUTO_LABEL, menuOf, modeOn, newId, PRICING_LABELS, UNIT_LABEL, val, type AutoWhen, type AvPricing, type MenuCategory, type MenuItem, type MenuUnit, type PriceRule, type QuoteMenu } from './avPricing'
 import { getPricing, savePricing } from './avQuotesApi'
+import { searchPlaces, type Place } from './geo'
+import { supabase } from '@/lib/supabase'
 
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
@@ -69,8 +71,10 @@ function Panel({ pricing }: { pricing: AvPricing }) {
     <div className="flex flex-col gap-4">
       <p className="text-[14px] text-muted">Tudo o que a calculadora de orçamento usa. Mudou aqui, os próximos orçamentos já saem com o valor novo; os orçamentos salvos não mudam.</p>
 
+      <BaseCard pricing={pricing} busy={save.isPending} onSave={(b) => save.mutate({ ...pricing, ...b })} />
+
       <Card title="Variáveis da conta" text="A conta central: pessoas × horas × valor da hora, mais edição e roteiro por vídeo.">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {groups.map((g) => (
             <div key={g} className="flex flex-col gap-1 rounded-2xl border border-line p-3">
               <div className="flex items-center justify-between gap-2">
@@ -80,7 +84,7 @@ function Panel({ pricing }: { pricing: AvPricing }) {
               {PRICING_LABELS.filter((f) => f.group === g).map((f) => (
                 <div key={f.key} className="flex items-baseline justify-between gap-2 text-[13px]">
                   <span className="text-muted">{f.label}</span>
-                  <b className="shrink-0 tabular-nums">{f.suffix ? `${pricing[f.key] as number} ${f.suffix}` : brl(Number(pricing[f.key]) || 0)}</b>
+                  <b className="shrink-0 tabular-nums">{f.suffix ? `${val(pricing, f.key)} ${f.suffix}` : brl(val(pricing, f.key))}</b>
                 </div>
               ))}
             </div>
@@ -121,9 +125,10 @@ function Panel({ pricing }: { pricing: AvPricing }) {
                   {items.map((it) => (
                     <li key={it.id} className={cn('flex items-center gap-2 px-3 py-1.5', !it.active && 'opacity-60')}>
                       <Switch on={it.active} label={it.name} onChange={(v) => saveMenu({ ...menu, items: upsert(menu.items, { ...it, active: v }) })} />
+                      {it.photo && <img src={it.photo} alt="" loading="lazy" className="size-10 shrink-0 rounded-lg object-cover" />}
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[14px]">{it.name}</span>
-                        <span className="block text-[12px] text-muted">{brl(it.price)} por {UNIT_LABEL[it.unit][0]}</span>
+                        <span className="block text-[12px] text-muted">{brl(it.price)} por {UNIT_LABEL[it.unit][0]}{it.auto ? ' · automático' : ''}</span>
                       </span>
                       <IconBtn label={`Editar ${it.name}`} onClick={() => setEditing({ kind: 'item', value: it })}><Pencil size={14} aria-hidden="true" /></IconBtn>
                       <IconBtn label={`Apagar ${it.name}`} onClick={() => setEditing({ kind: 'delete', what: 'item', id: it.id, name: it.name })}><Trash2 size={14} aria-hidden="true" /></IconBtn>
@@ -190,7 +195,7 @@ function Actions({ busy, onCancel, disabled }: { busy: boolean; onCancel: () => 
 
 function VarsForm({ group, pricing, busy, onCancel, onSave }: { group: string; pricing: AvPricing; busy: boolean; onCancel: () => void; onSave: (v: Partial<AvPricing>) => void }) {
   const fields = PRICING_LABELS.filter((f) => f.group === group)
-  const [d, setD] = useState<Record<string, string>>(() => Object.fromEntries(fields.map((f) => [f.key, String(pricing[f.key] ?? 0).replace('.', ',')])))
+  const [d, setD] = useState<Record<string, string>>(() => Object.fromEntries(fields.map((f) => [f.key, String(val(pricing, f.key)).replace('.', ',')])))
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSave(Object.fromEntries(fields.map((f) => [f.key, toNum(d[f.key] ?? '0')]))) }} className="flex flex-col gap-3">
       {fields.map((f) => (
@@ -245,6 +250,13 @@ function ItemForm({ initial, categories, busy, onCancel, onSave }: { initial: Me
           {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
       </label>
+      <label className="flex flex-col text-[13px] font-semibold">Entra sozinho?
+        <select value={v.auto ?? ''} onChange={(e) => setV({ ...v, auto: (e.target.value || undefined) as AutoWhen | undefined })} className={field}>
+          <option value="">Não, só quando escolher</option>
+          {(Object.keys(AUTO_LABEL) as AutoWhen[]).map((k) => <option key={k} value={k}>{AUTO_LABEL[k]}</option>)}
+        </select>
+      </label>
+      <PhotoField id={v.id} photo={v.photo} onChange={(photo) => setV({ ...v, photo })} />
       <label className="flex items-center gap-2 text-[14px]"><input type="checkbox" checked={v.active} onChange={(e) => setV({ ...v, active: e.target.checked })} className="size-4" /> Ligado (aparece no orçamento)</label>
       <Actions busy={busy} onCancel={onCancel} disabled={v.name.trim().length < 2 || toNum(v.priceText) <= 0 || !v.categoryId} />
     </form>
@@ -289,5 +301,56 @@ function RuleForm({ initial, busy, onCancel, onSave }: { initial: PriceRule; bus
       <p className="rounded-xl bg-raised px-3 py-2 text-[13px] text-muted">Exemplo: num orçamento de R$ 1.000, {r.direction === 'desconto' ? 'desconta' : 'acrescenta'} {brl(r.mode === 'pct' ? 1000 * value / 100 : value)}{r.base === 'captacao' ? ' (calculado só sobre as horas)' : ''}.</p>
       <Actions busy={busy} onCancel={onCancel} disabled={r.name.trim().length < 2 || value <= 0 || (r.mode === 'pct' && value > 100 && r.direction === 'desconto')} />
     </form>
+  )
+}
+
+function PhotoField({ id, photo, onChange }: { id: string; photo?: string; onChange: (url: string | undefined) => void }) {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const upload = async (f: File) => {
+    if (f.size > 3_000_000) { setErr('Foto até 3 MB.'); return }
+    setBusy(true); setErr(null)
+    const path = `servicos/${id}-${Date.now()}.${(f.name.split('.').pop() ?? 'jpg').toLowerCase()}`
+    const { error } = await supabase.storage.from('quote-assets').upload(path, f, { upsert: true, contentType: f.type })
+    setBusy(false)
+    if (error) { setErr('Não foi possível enviar a foto.'); return }
+    onChange(supabase.storage.from('quote-assets').getPublicUrl(path).data.publicUrl)
+  }
+  return (
+    <div className="flex items-center gap-3 text-[13px] font-semibold">
+      {photo ? <img src={photo} alt="" className="size-16 rounded-xl object-cover" /> : <span className="grid size-16 place-items-center rounded-xl bg-raised text-[11px] font-normal text-muted">Sem foto</span>}
+      <span className="flex flex-col gap-1">
+        <label className="inline-flex min-h-9 cursor-pointer items-center rounded-full border border-line-strong px-3 hover:border-ink">{busy ? 'Enviando' : photo ? 'Trocar foto' : 'Pôr foto'}
+          <input type="file" accept="image/*" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f) }} />
+        </label>
+        {photo && <button type="button" onClick={() => onChange(undefined)} className="cursor-pointer text-left text-[12px] font-normal text-muted hover:text-ink">Tirar foto</button>}
+        {err && <span role="alert" className="text-[12px] font-medium text-warn-ink">{err}</span>}
+      </span>
+    </div>
+  )
+}
+
+function BaseCard({ pricing, busy, onSave }: { pricing: AvPricing; busy: boolean; onSave: (b: Pick<AvPricing, 'base_endereco' | 'base_lat' | 'base_lng'>) => void }) {
+  const [open, setOpen] = useState(false)
+  const [q, setQ] = useState(pricing.base_endereco ?? '')
+  const [found, setFound] = useState<Place[] | null>(null)
+  const [err, setErr] = useState<string | null>(null)
+  const search = async () => { setErr(null); try { const r = await searchPlaces(q); setFound(r); if (!r.length) setErr('Não achei. Tente com rua, bairro e cidade.') } catch (e) { setErr((e as Error).message) } }
+  return (
+    <Card title="Base da Ellcazo" text="Ponto de saída da equipe. A distância até o local da captação é calculada daqui, pela rota de carro."
+      action={<Button variant="secondary" className="min-h-9 shrink-0 px-3 text-[13px]" onClick={() => setOpen(true)}><Pencil size={13} aria-hidden="true" /> {pricing.base_endereco ? 'Trocar' : 'Cadastrar'}</Button>}>
+      <p className="text-[14px]">{pricing.base_endereco ?? <span className="text-muted">Ainda não cadastrada. Sem ela, os km são digitados à mão.</span>}</p>
+      <Dialog open={open} onClose={() => setOpen(false)} title="Base da Ellcazo" size="sm">
+        <form onSubmit={(e) => { e.preventDefault(); void search() }} className="flex flex-col gap-3">
+          <div className="flex gap-2"><input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Rua, número, bairro, cidade" className={cn(field, 'mt-0 flex-1')} /><Button type="submit" variant="secondary" disabled={q.trim().length < 3}>Buscar</Button></div>
+          {found && found.length > 0 && (
+            <ul className="overflow-hidden rounded-2xl border border-line">
+              {found.map((p) => <li key={`${p.lat},${p.lng}`}><button type="button" disabled={busy} onClick={() => { onSave({ base_endereco: p.label, base_lat: p.lat, base_lng: p.lng }); setOpen(false); setFound(null) }} className="w-full cursor-pointer px-3 py-2 text-left text-[14px] hover:bg-raised">{p.label}</button></li>)}
+            </ul>
+          )}
+          {err && <p role="alert" className="text-[13px] font-medium text-warn-ink">{err}</p>}
+        </form>
+      </Dialog>
+    </Card>
   )
 }

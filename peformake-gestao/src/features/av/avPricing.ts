@@ -33,10 +33,21 @@ export interface AvPricing {
   validade_dias: number
   /** Serviços, categorias e regras editáveis em Configurações → Orçamento. */
   menu?: QuoteMenu
+  // Diárias e deslocamento por km (opcionais; sem valor salvo, usam o padrão de EXTRA_DEFAULTS).
+  diaria_camera?: number; diaria_mobile?: number; diaria_operador?: number; diaria_auxiliar?: number
+  km_valor?: number; km_minimo?: number; km_viagem?: number
+  base_endereco?: string; base_lat?: number; base_lng?: number
 }
 
+type NumKey = { [K in keyof AvPricing]-?: NonNullable<AvPricing[K]> extends number ? K : never }[keyof AvPricing]
+/** Padrões das variáveis novas: diária = 8 horas; km rodado a R$ 1,50 com taxa mínima de R$ 50; viagem a partir de 100 km. */
+export const EXTRA_DEFAULTS: Partial<Record<NumKey, number>> = {
+  diaria_camera: 800, diaria_mobile: 480, diaria_operador: 960, diaria_auxiliar: 560, km_valor: 1.5, km_minimo: 50, km_viagem: 100,
+}
+export const val = (p: AvPricing, k: NumKey): number => { const v = p[k]; return typeof v === 'number' && Number.isFinite(v) ? v : EXTRA_DEFAULTS[k] ?? 0 }
 
-export const PRICING_LABELS: { key: keyof AvPricing; label: string; group: string; suffix?: string }[] = [
+
+export const PRICING_LABELS: { key: NumKey; label: string; group: string; suffix?: string }[] = [
   { key: 'hora_camera', label: 'Hora de câmera (por pessoa)', group: 'Horas de captação' },
   { key: 'hora_mobile', label: 'Hora mobile (por pessoa)', group: 'Horas de captação' },
   { key: 'hora_operador_evento', label: 'Hora do operador em evento', group: 'Horas de captação' },
@@ -46,17 +57,31 @@ export const PRICING_LABELS: { key: keyof AvPricing; label: string; group: strin
   { key: 'edicao_mobile', label: 'Edição de vídeo mobile', group: 'Por vídeo' },
   { key: 'edicao_camera', label: 'Edição de vídeo de câmera', group: 'Por vídeo' },
   { key: 'edicao_mesmo_dia_pct', label: 'Edição no mesmo dia (acréscimo)', group: 'Por vídeo', suffix: '%' },
+  { key: 'diaria_camera', label: 'Diária de câmera (por pessoa)', group: 'Diárias' },
+  { key: 'diaria_mobile', label: 'Diária mobile (por pessoa)', group: 'Diárias' },
+  { key: 'diaria_operador', label: 'Diária do operador em evento', group: 'Diárias' },
+  { key: 'diaria_auxiliar', label: 'Diária do auxiliar', group: 'Diárias' },
+  { key: 'km_valor', label: 'Valor por km rodado (ida e volta)', group: 'Deslocamento' },
+  { key: 'km_minimo', label: 'Taxa mínima de deslocamento', group: 'Deslocamento' },
+  { key: 'km_viagem', label: 'Vira viagem a partir de', group: 'Deslocamento', suffix: 'km' },
   { key: 'sinal_pct', label: 'Sinal na reserva', group: 'Pagamento', suffix: '%' },
   { key: 'validade_dias', label: 'Validade do orçamento', group: 'Pagamento', suffix: 'dias' },
 ]
 
-export type MenuUnit = 'unidade' | 'hora' | 'video' | 'captacao' | 'diaria' | 'mes' | 'pacote' | 'projeto'
+export type MenuUnit = 'unidade' | 'hora' | 'video' | 'captacao' | 'diaria' | 'mes' | 'pacote' | 'projeto' | 'noite'
 export const UNIT_LABEL: Record<MenuUnit, [string, string]> = {
   unidade: ['unidade', 'unidades'], hora: ['hora', 'horas'], video: ['vídeo', 'vídeos'], captacao: ['captação', 'captações'],
-  diaria: ['diária', 'diárias'], mes: ['mês', 'meses'], pacote: ['pacote', 'pacotes'], projeto: ['projeto', 'projetos'],
+  diaria: ['diária', 'diárias'], mes: ['mês', 'meses'], pacote: ['pacote', 'pacotes'], projeto: ['projeto', 'projetos'], noite: ['noite', 'noites'],
 }
 export interface MenuCategory { id: string; name: string; active?: boolean }
-export interface MenuItem { id: string; categoryId: string; name: string; description?: string; price: number; unit: MenuUnit; active: boolean }
+/** Entra sozinho no orçamento: por diária, por pessoa da equipe por diária, ou por pessoa por noite quando vira viagem. */
+export type AutoWhen = 'diaria' | 'diaria_pessoa' | 'viagem_pessoa'
+export const AUTO_LABEL: Record<AutoWhen, string> = {
+  diaria: 'Na cobrança por diária: 1 por diária',
+  diaria_pessoa: 'Na cobrança por diária: 1 por pessoa da equipe por diária',
+  viagem_pessoa: 'Em viagem (longe da base): 1 por pessoa da equipe por diária',
+}
+export interface MenuItem { id: string; categoryId: string; name: string; description?: string; price: number; unit: MenuUnit; active: boolean; photo?: string; auto?: AutoWhen }
 /** Regra de preço: acréscimo ou desconto, em % ou R$, sobre o total ou só sobre as horas de captação. */
 export interface PriceRule {
   id: string; name: string; mode: 'pct' | 'fixo'; value: number; direction: 'acrescimo' | 'desconto'
@@ -106,6 +131,14 @@ export interface QuoteInputs {
   mesmoDia: boolean
   /** Regras opcionais marcadas neste orçamento (ids). As regras "sempre" entram sozinhas. */
   rules?: string[]
+  /** Cobrar a captação por hora (padrão) ou por diária. */
+  billing?: 'hora' | 'diaria'
+  dias?: number
+  /** Distância da base até o local, só ida, em km. Zero ou vazio: sem deslocamento por km. */
+  km?: number
+  destino?: string
+  /** Itens automáticos que quem montou tirou deste orçamento. */
+  autoOff?: string[]
   // Campos antigos (orçamentos de antes das regras editáveis). Só lidos por fromLegacy.
   cortes?: number; motion?: number; droneVideos?: number; droneAvulso?: number; fotosExtras10?: number; brutos?: number; apresentadora?: number
   deslocamento?: 'nenhum' | 'rmr' | 'fora'; fimDeSemana?: boolean; noturno?: boolean; contrato?: 'nenhum' | 'com_contrato' | 'sem_contrato'
@@ -138,8 +171,28 @@ export function fromLegacy(p: AvPricing, i: QuoteInputs, picks: readonly Catalog
   if (i.noturno) rules.add('noturno')
   if (i.contrato === 'com_contrato') rules.add('contrato_5m')
   if (i.contrato === 'sem_contrato') rules.add('sem_contrato')
-  const { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia } = i
-  return { inputs: { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia, rules: [...rules] }, picks: out }
+  const { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia, billing, dias, km, destino, autoOff } = i
+  return { inputs: { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia, billing, dias, km, destino, autoOff, rules: [...rules] }, picks: out }
+}
+
+export const teamSize = (i: QuoteInputs) => (i.mode === 'sem_captacao' ? 0 : pos(i.pessoas) + pos(i.auxiliares))
+export const isTrip = (p: AvPricing, i: QuoteInputs) => pos(i.km) > 0 && pos(i.km) >= val(p, 'km_viagem')
+
+/** Itens que entram sozinhos neste orçamento, com a quantidade calculada. */
+export function autoItems(p: AvPricing, i: QuoteInputs, picks: readonly CatalogPick[]): { item: MenuItem; quantity: number }[] {
+  const m = menuOf(p)
+  const off = new Set(i.autoOff ?? [])
+  const byDay = i.billing === 'diaria' && i.mode !== 'sem_captacao'
+  const days = Math.max(1, pos(i.dias))
+  const out: { item: MenuItem; quantity: number }[] = []
+  for (const it of m.items) {
+    if (!it.auto || !isOffered(m, it) || off.has(it.id) || picks.some((x) => x.serviceId === `${MENU_PREFIX}${it.id}`)) continue
+    const q = it.auto === 'diaria' ? (byDay ? days : 0)
+      : it.auto === 'diaria_pessoa' ? (byDay ? days * teamSize(i) : 0)
+      : isTrip(p, i) ? (byDay ? days : 1) * teamSize(i) : 0
+    if (q > 0) out.push({ item: it, quantity: q })
+  }
+  return out
 }
 
 export interface QuoteLine { label: string; detail: string; total: number }
@@ -164,21 +217,28 @@ export function calculateQuote(p: AvPricing, i: QuoteInputs, picks: readonly Cat
   const horas = pos(i.horas)
   const videos = pos(i.videos)
 
-  // 1. Conta central: captação
+  // 1. Conta central: captação, por hora ou por diária
+  const byDay = i.billing === 'diaria' && i.mode !== 'sem_captacao'
+  const dias = byDay ? Math.max(1, pos(i.dias)) : 0
+  const qtyTxt = byDay ? `${num(dias)} ${dias === 1 ? 'diária' : 'diárias'}` : `${num(horas)}h`
+  const qty = byDay ? dias : horas
   let captureHours = 0
   if (i.mode === 'camera' || i.mode === 'mobile') {
-    const rate = i.mode === 'camera' ? p.hora_camera : p.hora_mobile
-    const main = pos(i.pessoas) * horas * rate
-    const aux = pos(i.auxiliares) * horas * p.hora_auxiliar_evento
+    const rate = byDay ? val(p, i.mode === 'camera' ? 'diaria_camera' : 'diaria_mobile') : i.mode === 'camera' ? p.hora_camera : p.hora_mobile
+    const auxRate = byDay ? val(p, 'diaria_auxiliar') : p.hora_auxiliar_evento
+    const main = pos(i.pessoas) * qty * rate
+    const aux = pos(i.auxiliares) * qty * auxRate
     captureHours = main + aux
-    add(`Captação ${i.mode === 'camera' ? 'com câmera' : 'mobile'}`, `${pos(i.pessoas)} ${pos(i.pessoas) === 1 ? 'pessoa' : 'pessoas'} × ${num(horas)}h × R$ ${rate}`, main)
-    add('Auxiliares', `${pos(i.auxiliares)} × ${num(horas)}h × R$ ${p.hora_auxiliar_evento}`, aux)
+    add(`Captação ${i.mode === 'camera' ? 'com câmera' : 'mobile'}`, `${pos(i.pessoas)} ${pos(i.pessoas) === 1 ? 'pessoa' : 'pessoas'} × ${qtyTxt} × R$ ${num(rate)}`, main)
+    add('Auxiliares', `${pos(i.auxiliares)} × ${qtyTxt} × R$ ${num(auxRate)}`, aux)
   } else if (i.mode === 'evento') {
-    const op = pos(i.pessoas) * horas * p.hora_operador_evento
-    const aux = pos(i.auxiliares) * horas * p.hora_auxiliar_evento
+    const opRate = byDay ? val(p, 'diaria_operador') : p.hora_operador_evento
+    const auxRate = byDay ? val(p, 'diaria_auxiliar') : p.hora_auxiliar_evento
+    const op = pos(i.pessoas) * qty * opRate
+    const aux = pos(i.auxiliares) * qty * auxRate
     captureHours = op + aux
-    add('Operadores do evento', `${pos(i.pessoas)} × ${num(horas)}h × R$ ${p.hora_operador_evento}`, op)
-    add('Auxiliares do evento', `${pos(i.auxiliares)} × ${num(horas)}h × R$ ${p.hora_auxiliar_evento}`, aux)
+    add('Operadores do evento', `${pos(i.pessoas)} × ${qtyTxt} × R$ ${num(opRate)}`, op)
+    add('Auxiliares do evento', `${pos(i.auxiliares)} × ${qtyTxt} × R$ ${num(auxRate)}`, aux)
   }
 
   // 2. Regras (opcionais ou sempre)
@@ -189,7 +249,7 @@ export function calculateQuote(p: AvPricing, i: QuoteInputs, picks: readonly Cat
     return round(r.direction === 'desconto' ? -Math.min(raw, base) : raw)
   }
   const ruleDetail = (r: PriceRule) => `${r.direction === 'desconto' ? '−' : '+'}${r.mode === 'pct' ? `${num(r.value)}%` : `R$ ${num(r.value)}`}`
-  for (const r of rules.filter((x) => x.base === 'captacao')) if (captureHours > 0) add(r.name, `${ruleDetail(r)} sobre as horas`, ruleValue(r, captureHours))
+  for (const r of rules.filter((x) => x.base === 'captacao')) if (captureHours > 0) add(r.name, `${ruleDetail(r)} sobre a captação`, ruleValue(r, captureHours))
 
   // Edição e roteiro por vídeo
   if (videos > 0) {
@@ -202,6 +262,13 @@ export function calculateQuote(p: AvPricing, i: QuoteInputs, picks: readonly Cat
 
   // Serviços escolhidos
   for (const s of picks) add(s.name, `${unitText(pos(s.quantity), s.unit)} × R$ ${num(s.price)}`, pos(s.quantity) * pos(s.price))
+
+  // Itens automáticos (alimentação na diária, hospedagem em viagem...), salvo se escolhidos à mão ou tirados
+  for (const a of autoItems(p, i, picks)) add(a.item.name, `automático · ${unitText(a.quantity, a.item.unit)} × R$ ${num(a.item.price)}`, a.quantity * a.item.price)
+
+  // Deslocamento por km: ida e volta × valor do km, com taxa mínima
+  const km = pos(i.km)
+  if (km > 0) add('Deslocamento', `${num(km)} km até ${i.destino?.trim() || 'o local'}, ida e volta × R$ ${num(val(p, 'km_valor'))}/km`, Math.max(val(p, 'km_minimo'), km * 2 * val(p, 'km_valor')))
 
   // 3. Regras sobre o total (contrato, desconto de pacote...)
   const subtotal = round(lines.reduce((sum, l) => sum + l.total, 0))

@@ -13,6 +13,13 @@ Estudo e entrega de 06/11/2026. Objetivo: montar e adaptar orçamento sem depend
 
 Já vêm cadastradas com os valores de hoje: Final de semana +10% e Noturno +15% (sobre as horas), Plano com contrato de 5 meses −15% e Plano sem contrato +20% (sobre o total).
 
+## Diária, distância, viagem e equipamentos (06/11, 2ª parte)
+- **Cobrar por hora ou por diária**: na diária, cada pessoa e auxiliar conta por dia (variáveis "Diárias": câmera, mobile, operador, auxiliar; padrão = 8 horas).
+- **Distância**: cadastra a **base da Ellcazo** uma vez; no orçamento digita o local e o sistema calcula os km pela rota de carro (OpenStreetMap + OSRM, grátis, sem chave). Cobra ida e volta × valor do km, com taxa mínima. Dá para corrigir os km à mão.
+- **Viagem**: a partir de X km (padrão 100) conta como viagem.
+- **Itens automáticos**: cada serviço pode "entrar sozinho": por diária, por pessoa por diária (ex.: **alimentação** liga junto com a diária) ou por pessoa em viagem (ex.: **hospedagem**). No orçamento aparece em "Entram sozinhos", com botão Tirar.
+- **Aluguel de equipamentos**: categoria própria; cada equipamento com valor, unidade (diária, hora...) e **foto**, que aparece na hora de montar.
+
 ## Na hora de montar
 1. Escolhe a forma (câmera, mobile, evento ou só serviços), pessoas, **auxiliares** (em qualquer captação), horas e vídeos.
 2. Adiciona serviços com **+ e −**, filtrando por categoria. Os pacotes prontos ficam aqui.

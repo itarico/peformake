@@ -7,7 +7,8 @@ import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
 import { useProduction } from '@/features/production/useProduction'
 import { EllcazoHeader } from './AvBoard'
-import { calculateQuote, EMPTY_INPUTS, fromLegacy, isOffered, menuOf, modeOn, menuPick, MENU_PREFIX, UNIT_LABEL, type AvPricing, type CatalogPick, type CaptureMode, type QuoteInputs } from './avPricing'
+import { autoItems, calculateQuote, EMPTY_INPUTS, fromLegacy, isOffered, isTrip, menuOf, modeOn, val, menuPick, MENU_PREFIX, UNIT_LABEL, type AvPricing, type CatalogPick, type CaptureMode, type QuoteInputs } from './avPricing'
+import { drivingKm, searchPlaces, type Place } from './geo'
 import { getPricing, getQuote, quoteLink, saveQuote, setQuoteStatus, type AvQuote, type QuoteKind } from './avQuotesApi'
 
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -41,6 +42,45 @@ function Box({ title, children }: { title: string; children: ReactNode }) {
   return <section className="rounded-3xl border border-line bg-surface p-5"><h2 className="mb-2 text-[13px] font-semibold uppercase tracking-wide text-muted">{title}</h2>{children}</section>
 }
 
+function DistanceBox({ pricing, km, destino, trip, onChange }: { pricing: AvPricing; km: number; destino: string; trip: boolean; onChange: (km: number, destino: string) => void }) {
+  const [q, setQ] = useState(destino)
+  const [found, setFound] = useState<Place[] | null>(null)
+  const [msg, setMsg] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const hasBase = typeof pricing.base_lat === 'number' && typeof pricing.base_lng === 'number'
+  const search = async () => {
+    if (q.trim().length < 3) return
+    setBusy(true); setMsg(null)
+    try { const r = await searchPlaces(q.trim()); setFound(r); if (!r.length) setMsg('Não achei. Tente com bairro e cidade.') } catch (e) { setMsg((e as Error).message) } finally { setBusy(false) }
+  }
+  const pick = async (p: Place) => {
+    setFound(null); setBusy(true)
+    const r = await drivingKm({ lat: pricing.base_lat!, lng: pricing.base_lng! }, p)
+    setBusy(false); setQ(p.label)
+    setMsg(r.estimated ? 'Distância estimada (a rota não respondeu). Confira.' : null)
+    onChange(r.km, p.label)
+  }
+  const cost = km > 0 ? Math.max(val(pricing, 'km_minimo'), km * 2 * val(pricing, 'km_valor')) : 0
+  return (
+    <Box title="Local e deslocamento">
+      {hasBase ? (
+        <form onSubmit={(e) => { e.preventDefault(); void search() }} className="flex gap-2">
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Endereço, bairro ou cidade da captação" aria-label="Local da captação" className={cn(field, 'mt-0 flex-1')} />
+          <Button type="submit" variant="secondary" disabled={busy || q.trim().length < 3}>{busy ? 'Calculando' : 'Calcular'}</Button>
+        </form>
+      ) : <p className="text-[13px] text-muted">Cadastre o endereço da base em Configurações → Orçamento para calcular a distância sozinho. Enquanto isso, informe os km abaixo.</p>}
+      {found && found.length > 0 && (
+        <ul className="mt-2 overflow-hidden rounded-2xl border border-line">
+          {found.map((p) => <li key={`${p.lat},${p.lng}`}><button type="button" onClick={() => void pick(p)} className="w-full cursor-pointer px-3 py-2 text-left text-[14px] hover:bg-raised">{p.label}</button></li>)}
+        </ul>
+      )}
+      <Stepper label="Distância da base (só ida, km)" value={km} step={5} onChange={(v) => onChange(Math.round(v), q)} />
+      {km > 0 && <p className="text-[13px] text-muted">Ida e volta: {km * 2} km · {brl(cost)}{trip ? ' · conta como viagem (entra hospedagem, se configurada)' : ''}</p>}
+      {msg && <p role="status" className="text-[13px] text-warn-ink">{msg}</p>}
+    </Box>
+  )
+}
+
 function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null }) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -67,6 +107,7 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
   const offered = menu.items.filter((i) => isOffered(menu, i) && (cat === 'todas' || i.categoryId === cat))
   const optionalRules = menu.rules.filter((r) => r.active && r.when === 'opcional')
   const alwaysRules = menu.rules.filter((r) => r.active && r.when === 'sempre')
+  const autos = autoItems(pricing, inputs, picks)
   const [meta, setMeta] = useState({
     title: quote?.title ?? '', clientId: quote?.clientId ?? '', leadName: quote?.leadName ?? '', leadPhone: quote?.leadPhone ?? '', leadEmail: quote?.leadEmail ?? '',
     kind: (quote?.kind ?? 'avulso') as QuoteKind, months: quote?.months ? String(quote.months) : '', notes: quote?.notes ?? '',
@@ -153,7 +194,18 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
             <div className="divide-y divide-line">
               <Stepper label={inputs.mode === 'evento' ? 'Operadores' : 'Pessoas na captação'} value={inputs.pessoas} onChange={(v) => set('pessoas', v)} />
               <Stepper label="Auxiliares" value={inputs.auxiliares} onChange={(v) => set('auxiliares', v)} />
-              <Stepper label="Horas" value={inputs.horas} step={0.5} onChange={(v) => set('horas', v)} />
+              <div className="flex items-center justify-between gap-3 py-1.5">
+                <span className="text-[14px]">Cobrar por</span>
+                <span role="radiogroup" aria-label="Cobrar por" className="inline-flex rounded-full border border-line p-0.5">
+                  {([['hora', 'Hora'], ['diaria', 'Diária']] as const).map(([k, l]) => (
+                    <button key={k} type="button" role="radio" aria-checked={(inputs.billing ?? 'hora') === k} onClick={() => set('billing', k)}
+                      className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', (inputs.billing ?? 'hora') === k ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{l}</button>
+                  ))}
+                </span>
+              </div>
+              {inputs.billing === 'diaria'
+                ? <Stepper label="Diárias" value={inputs.dias ?? 1} min={1} onChange={(v) => set('dias', Math.max(1, Math.round(v)))} />
+                : <Stepper label="Horas" value={inputs.horas} step={0.5} onChange={(v) => set('horas', v)} />}
             </div>
           )}
           <div className="divide-y divide-line">
@@ -166,6 +218,34 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
             </div>
           )}
         </Box>
+
+        <DistanceBox pricing={pricing} km={inputs.km ?? 0} destino={inputs.destino ?? ''} onChange={(km, destino) => {
+          setInputs((cur) => ({ ...cur, km, destino }))
+          if (km > 0) setPicks((cur) => cur.filter((p) => p.serviceId !== `${MENU_PREFIX}desloc_rmr` && p.serviceId !== `${MENU_PREFIX}desloc_fora`))
+        }} trip={isTrip(pricing, inputs)} />
+
+        {(autos.length > 0 || (inputs.autoOff ?? []).length > 0) && (
+          <Box title="Entram sozinhos">
+            <ul className="flex flex-col gap-1">
+              {autos.map((a) => (
+                <li key={a.item.id} className="flex items-center justify-between gap-3 text-[14px]">
+                  <span className="min-w-0"><b className="font-semibold">{a.item.name}</b> <span className="text-muted">· {a.quantity} × {brl(a.item.price)}</span></span>
+                  <button type="button" onClick={() => set('autoOff', [...(inputs.autoOff ?? []), a.item.id])} className="min-h-9 shrink-0 cursor-pointer rounded-full px-3 text-[13px] text-muted hover:bg-raised hover:text-ink">Tirar</button>
+                </li>
+              ))}
+              {(inputs.autoOff ?? []).map((id) => {
+                const it = menu.items.find((x) => x.id === id)
+                return it ? (
+                  <li key={id} className="flex items-center justify-between gap-3 text-[14px] text-muted">
+                    <span className="line-through">{it.name}</span>
+                    <button type="button" onClick={() => set('autoOff', (inputs.autoOff ?? []).filter((x) => x !== id))} className="min-h-9 shrink-0 cursor-pointer rounded-full px-3 text-[13px] font-semibold text-accent-ink hover:bg-raised">Voltar</button>
+                  </li>
+                ) : null
+              })}
+            </ul>
+            <p className="mt-1 text-[12px] text-muted">Alimentação na diária, hospedagem em viagem e o que mais estiver marcado como automático em Configurações → Orçamento.</p>
+          </Box>
+        )}
 
         {cats.length > 0 && (
           <Box title="Serviços">
@@ -180,7 +260,8 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
                 const n = qty(it.id)
                 return (
                   <li key={it.id} className="flex items-center justify-between gap-3 py-2">
-                    <span className="min-w-0">
+                    {it.photo && <img src={it.photo} alt="" loading="lazy" className="size-14 shrink-0 rounded-xl object-cover" />}
+                    <span className="min-w-0 flex-1">
                       <span className={cn('block text-[14px]', n > 0 && 'font-semibold')}>{it.name}</span>
                       <span className="block text-[12px] text-muted">{brl(it.price)} por {UNIT_LABEL[it.unit][0]}{it.description ? ` · ${it.description}` : ''}</span>
                     </span>
