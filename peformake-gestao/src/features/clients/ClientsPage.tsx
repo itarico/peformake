@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { GoalsCard } from '@/features/goals/goals'
 import { Gauge, LiveValue } from '@/components/charts/Charts'
 import { MessageCircle, Plus, Search, Star, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -158,7 +157,7 @@ export function ClientsPage() {
       {query.isPending && <p role="status" className="text-muted">Carregando</p>}
       {query.isError && <ErrorBox text="Não foi possível carregar os clientes." onRetry={() => void query.refetch()} />}
 
-      {query.data && tab === 'summary' && <><GoalsCard area="clientes" /><ClientsSummary /></>}
+      {query.data && tab === 'summary' && <ClientsSummary />}
 
       {query.data && tab === 'perdidos' && <LostPanel canManage={canManage} />}
 

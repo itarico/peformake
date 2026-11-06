@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { GoalsCard } from '@/features/goals/goals'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/cn'
@@ -98,7 +97,6 @@ export function TrafficDashboard() {
 
   return (
     <>
-      <GoalsCard area="trafego" />
       <div className="flex flex-wrap items-center gap-2">
         <div role="group" aria-label="Período" className="inline-flex rounded-full border border-line p-0.5">
           {([['current', 'Este mês'], ['last', 'Mês passado']] as const).map(([id, label]) => (

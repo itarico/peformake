@@ -5,6 +5,7 @@ import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
 import { NotificationBell } from '@/features/notifications/NotificationBell'
 import { useRealtimeSync } from '@/lib/realtime'
+import { GoalsChat } from '@/features/goals/goals'
 import { menuForRoles, tabsForRoles, type MenuIcon } from '@/lib/menu'
 import { Avatar } from '@/features/account/AccountPage'
 import { ROLE_LABELS } from '@/lib/roles'
@@ -209,6 +210,7 @@ export function AppShell() {
         </div>
       </main>
 
+      <GoalsChat />
       <TabBar moreOpen={more} onMore={() => setMore((v) => !v)} />
       <MoreSheet open={more} onClose={() => setMore(false)} />
     </div>
