@@ -22,10 +22,10 @@ function NavList({ rail = false, onNavigate }: { rail?: boolean; onNavigate?: ()
   const { state } = useAuth()
   if (state.status !== 'ready') return null
   return (
-    <div className={cn('flex flex-1 flex-col', rail ? 'gap-1' : 'gap-5')}>
-      {menuForRoles(state.user.roles).map((group) => (
-        <nav key={group.label} aria-label={group.label} className={cn('flex flex-col', rail ? 'gap-1' : 'gap-0.5')}>
-          {!rail && <div className="px-3.5 pb-1 text-[12px] font-medium uppercase tracking-wide text-muted">{group.label}</div>}
+    <div className={cn('flex flex-1 flex-col', rail ? 'gap-1' : 'gap-0')}>
+      {menuForRoles(state.user.roles).map((group, index) => (
+        // Sem títulos de grupo: só uma linha fina separa os blocos, para o menu caber na tela sem rolagem.
+        <nav key={group.label} aria-label={group.label} className={cn('flex flex-col', rail ? 'gap-1' : 'gap-0.5', !rail && index > 0 && 'mt-2 border-t border-line pt-2')}>
           {group.items.map((item) => {
             const Icon = MENU_ICONS[item.icon]
             return (
@@ -36,7 +36,7 @@ function NavList({ rail = false, onNavigate }: { rail?: boolean; onNavigate?: ()
                 title={rail ? item.label : undefined}
                 className={({ isActive }) => cn(
                   'flex items-center font-medium text-ink no-underline transition-colors',
-                  rail ? 'min-h-14 flex-col justify-center gap-1 rounded-2xl px-1 text-[11px] leading-tight' : 'min-h-11 gap-2.5 rounded-full px-3.5 py-2',
+                  rail ? 'min-h-13 flex-col justify-center gap-1 rounded-2xl px-1 text-[11px] leading-tight' : 'min-h-10 gap-2.5 rounded-full px-3.5 py-1.5 text-[14px]',
                   isActive ? 'bg-fill text-on-fill' : 'hover:bg-raised',
                 )}
               >
@@ -60,7 +60,7 @@ function AccountLink({ rail = false, onNavigate }: { rail?: boolean; onNavigate?
     <div className="border-t border-line pt-3">
       <NavLink to="/conta" onClick={onNavigate} title="Minha conta" className={({ isActive }) => cn(
         'flex items-center text-ink no-underline transition-colors hover:bg-raised',
-        rail ? 'min-h-14 flex-col justify-center gap-1 rounded-2xl text-[11px]' : 'min-h-12 gap-2.5 rounded-2xl px-2.5 py-2',
+        rail ? 'min-h-13 flex-col justify-center gap-1 rounded-2xl text-[11px]' : 'min-h-11 gap-2.5 rounded-2xl px-2.5 py-1.5',
         isActive && 'bg-raised',
       )}>
         <Avatar name={name} className={rail ? 'size-8 text-[12px]' : ''} />
@@ -183,14 +183,14 @@ export function AppShell() {
       </header>
 
       {/* Tablet: trilho de ícones */}
-      <aside className="hidden h-dvh flex-col items-stretch gap-4 overflow-y-auto border-r border-line bg-surface px-2 py-4 md:flex lg:hidden">
+      <aside className="hidden h-dvh flex-col items-stretch gap-3 overflow-y-auto border-r border-line bg-surface px-2 py-3 [scrollbar-width:none] md:flex lg:hidden">
         <span className="flex justify-center"><Brand compact /></span>
         <NavList rail />
         <AccountLink rail />
       </aside>
 
       {/* Computador: menu completo */}
-      <aside className="hidden h-dvh flex-col gap-6 overflow-y-auto border-r border-line bg-surface px-3 py-5 lg:flex">
+      <aside className="hidden h-dvh flex-col gap-4 overflow-y-auto border-r border-line bg-surface px-3 py-4 [scrollbar-width:none] lg:flex">
         <span className="px-3.5"><Brand /></span>
         <NavList />
         <AccountLink />
