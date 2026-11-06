@@ -16,13 +16,15 @@ import { GATEWAY_LABEL, SOURCE_LABEL, reminderStage, validDocument } from './bil
 import { parseMoney } from './statement'
 import { AsaasCard } from './AsaasCard'
 import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
+import { ClientAvatar } from '@/features/clients/ClientAvatar'
+import { logoPublicUrl } from '@/features/clients/clientsApi'
 
 const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-gateway`
 
 interface Invoice {
   id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string
   source: string; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null
-  clients?: { name: string } | null
+  clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
 }
 type Unit = 'todas' | 'peformake' | 'ellcazo'
 type StatusFilter = 'todas' | 'aberto' | 'vencido' | 'pago'
@@ -48,7 +50,7 @@ export function BillingPage() {
     queryKey: ['invoices', month],
     queryFn: async () => {
       const { data, error } = await supabase.from('invoices')
-        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, clients(name)')
+        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, clients(name, logo_path, legacy_logo_url)')
         // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
         .or(`and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`)
         .order('due_date').limit(1000)
@@ -200,6 +202,7 @@ export function BillingPage() {
             return (
               <li key={i.id} className="flex flex-col gap-2 border-b border-line px-4 py-3 last:border-b-0">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <ClientAvatar name={clientName} url={logoPublicUrl(i.clients?.logo_path ?? null) ?? i.clients?.legacy_logo_url ?? null} size="sm" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold">{clientName} <span className="font-normal text-muted">· {i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'} · {SOURCE_LABEL[i.source] ?? i.source}</span></p>
                     <p className="truncate text-[13px] text-muted">{i.description} · vence {dayLabel(i.due_date)}{i.paid_at ? ` · pago ${dayLabel(i.paid_at.slice(0, 10))}` : ''}</p>

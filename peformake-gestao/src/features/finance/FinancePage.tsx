@@ -16,13 +16,22 @@ import { WhatsappSenders } from './WhatsappSenders'
 import { RecurringDialog } from './RecurringDialog'
 import { useAuth } from '@/auth/context'
 import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
+import { ClientAvatar } from '@/features/clients/ClientAvatar'
+import { logoPublicUrl } from '@/features/clients/clientsApi'
 
 type Unit = 'peformake' | 'ellcazo'
 type Kind = 'entrada' | 'saida'
 const UNIT_LABEL: Record<Unit, string> = { peformake: 'Peformake', ellcazo: 'Ellcazo' }
 
 interface Category { id: string; unit: string; kind: string; name: string }
-interface Entry { id: string; kind: string; category_id: string | null; description: string; amount: number; due_date: string; paid_at: string | null; status: string; source: string }
+interface Entry {
+  id: string; kind: string; category_id: string | null; description: string; amount: number; due_date: string; paid_at: string | null; status: string; source: string
+  client_id?: string | null; clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
+}
+/** "Mensalidade 11/2026 · Design, Tráfego" vira "Mensalidade · Design, Tráfego": o mês já está no topo da tela. */
+const shortDesc = (d: string) => d.replace(/^Mensalidade \d{2}\/\d{4}\s*·\s*/, 'Mensalidade · ')
+const clientName = (e: Entry) => e.clients?.name?.trim() ?? null
+const clientLogo = (e: Entry) => logoPublicUrl(e.clients?.logo_path ?? null) ?? e.clients?.legacy_logo_url ?? null
 interface Summary {
   entradas_pagas: number; saidas_pagas: number; entradas_previstas: number; saidas_previstas: number
   atrasadas: number; sem_categoria: number; categorias: { kind: string; category: string; total: number }[]
@@ -62,12 +71,12 @@ export function FinancePage() {
     queryFn: async () => {
       const end = nextMonth(month)
       const { data, error } = await supabase.from('fin_entries')
-        .select('id, kind, category_id, description, amount, due_date, paid_at, status, source')
+        .select('id, kind, category_id, description, amount, due_date, paid_at, status, source, client_id, clients(name, logo_path, legacy_logo_url)')
         .eq('unit', unit!).neq('status', 'cancelado')
         .or(`and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${end}),and(status.eq.pendente,due_date.lt.${end})`)
         .order('due_date', { ascending: false }).limit(1000)
       if (error) throw error
-      return (data ?? []) as Entry[]
+      return (data ?? []) as unknown as Entry[]
     },
   })
   const summary = useQuery({
@@ -119,16 +128,16 @@ export function FinancePage() {
   const list = (entries.data ?? [])
     .filter((e) => filter === 'todos' ? true : filter === 'pendente' ? e.status === 'pendente' : filter === 'vencido' ? e.status === 'pendente' && e.due_date < today
       : filter === 'sem_categoria' ? !e.category_id : e.kind === filter)
-    .filter((e) => !q || fold(e.description).includes(q) || fold(catName.get(e.category_id ?? '') ?? '').includes(q))
+    .filter((e) => !q || fold(e.description).includes(q) || fold(clientName(e) ?? '').includes(q) || fold(catName.get(e.category_id ?? '') ?? '').includes(q))
     // Ordena pela data que aparece na linha (pago em, ou vence em).
     .sort((a, b) => (b.paid_at ?? b.due_date).localeCompare(a.paid_at ?? a.due_date))
   const s = summary.data
   const saldo = s ? s.entradas_pagas - s.saidas_pagas : 0
   const previsto = s ? saldo + s.entradas_previstas - s.saidas_previstas : 0
   const exportCsv = () => downloadCsv(`caixa-${UNIT_LABEL[unit].toLowerCase()}-${month.slice(0, 7)}.csv`,
-    ['Data', 'Situação', 'Tipo', 'Descrição', 'Categoria', 'Valor'],
+    ['Data', 'Situação', 'Tipo', 'Cliente', 'Descrição', 'Categoria', 'Valor'],
     list.map((e) => [dayLabel(e.paid_at ?? e.due_date), e.status === 'pago' ? 'Pago' : e.due_date < today ? 'Atrasado' : 'Em aberto', e.kind === 'entrada' ? 'Entrada' : 'Saída',
-      e.description, catName.get(e.category_id ?? '') ?? 'Sem categoria', e.kind === 'saida' ? -e.amount : e.amount]))
+      clientName(e) ?? '', e.description, catName.get(e.category_id ?? '') ?? 'Sem categoria', e.kind === 'saida' ? -e.amount : e.amount]))
 
   return (
     <>
@@ -194,8 +203,12 @@ export function FinancePage() {
             return (
               <li key={e.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-line px-4 py-3 last:border-b-0">
                 <span className="w-12 shrink-0 text-[13px] tabular-nums text-muted">{dayLabel(e.paid_at ?? e.due_date)}</span>
+                {clientName(e) ? <ClientAvatar name={clientName(e)!} url={clientLogo(e)} size="sm" />
+                  : <span aria-hidden="true" className={cn('grid size-7 shrink-0 place-items-center rounded-full text-[13px] font-bold', e.kind === 'entrada' ? 'bg-ok-soft text-ok-ink' : 'bg-raised text-muted')}>{e.kind === 'entrada' ? '+' : '−'}</span>}
                 <button type="button" onClick={() => setEditing(e)} className="min-w-0 flex-1 cursor-pointer text-left">
-                  <span className="block truncate font-medium">{e.description}</span>
+                  {clientName(e)
+                    ? <><span className="block truncate font-semibold">{clientName(e)}</span><span className="block truncate text-[13px] text-ink/80">{shortDesc(e.description)}</span></>
+                    : <span className="block truncate font-medium">{e.description}</span>}
                   <span className={cn('text-[12px]', late ? 'font-semibold text-warn-ink' : 'text-muted')}>
                     {e.status === 'pendente' ? (late ? 'Atrasado' : 'Em aberto') : 'Pago'}{e.source === 'extrato' ? ' · do extrato' : ''}
                   </span>
