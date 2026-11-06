@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, ChevronDown, Link2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { accountAlerts, suggestClient, validateLink, type AdAccount, type TrafficClient } from './accountRules'
 import { linkErrorMessage, saveAccountLink } from './accountsApi'
@@ -104,17 +105,18 @@ export function AccountRow({ account, clients, spending }: AccountRowProps) {
           {client
             ? <span className="truncate font-medium">{client.name}</span>
             : <span className="flex items-center gap-1.5 font-medium text-accent-ink"><Link2 size={14} aria-hidden="true" /> {suggestion ? `Vincular a ${suggestion.name}?` : 'Vincular cliente'}</span>}
-          <ChevronDown size={15} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', open && 'rotate-180')} />
+          <ChevronDown size={15} aria-hidden="true" className="shrink-0 text-muted" />
         </button>
 
         <span className="hidden w-16 text-right text-[12px] text-muted md:block">{account.enabled ? 'Lendo' : 'Desligada'}</span>
         <Switch checked={account.enabled} disabled={mutation.isPending || !account.clientId} label={`Leitura da conta ${account.name}`} onChange={toggle} />
       </div>
 
-      {(open || problem) && (
-        <div className="flex flex-col gap-2 border-t border-dashed border-line bg-raised/50 px-4 py-3">
-          {open && (
-            <div className="flex flex-wrap items-end gap-2">
+      {problem && !open && <p role="alert" className="border-t border-dashed border-line px-4 py-2 text-[13px] font-medium text-warn-ink">{problem}</p>}
+      <Dialog open={open} onClose={() => { setOpen(false); setConfirmingMove(false) }} title={`Conta ${account.name}`} description="Escolha o cliente dono desta conta de anúncio." size="sm">
+        <div className="flex flex-col gap-3">
+          {(
+            <div className="flex flex-col gap-2">
               <label htmlFor={fieldId} className="min-w-[220px] flex-1 text-[12px] font-semibold text-muted">
                 Cliente desta conta
                 <select id={fieldId} value={clientId} onChange={(e) => { setProblem(null); setConfirmingMove(false); setClientId(e.target.value) }}
@@ -142,7 +144,7 @@ export function AccountRow({ account, clients, spending }: AccountRowProps) {
           {confirmingMove && <p role="alert" className="text-[13px] font-medium text-warn-ink">Esta conta está ligada a {movingFrom}. Confirme para trocar.</p>}
           {problem && <p role="alert" className="text-[13px] font-medium text-warn-ink">{problem}</p>}
         </div>
-      )}
+      </Dialog>
     </li>
   )
 }

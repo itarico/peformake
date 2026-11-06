@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, Target, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { GOAL_BY_ID, GOAL_METRICS, STATUS_LABEL, STATUS_TONE, goalDetail, goalSentence, type GoalMetric, type GoalProgress } from './goalsRules'
@@ -62,10 +63,10 @@ export function TrafficGoalsPanel({ clientId, month, canEdit, compact = false }:
     <section aria-labelledby={`metas-${clientId}`} className={cn('flex flex-col gap-4', !compact && 'rounded-3xl border border-line bg-surface p-5')}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id={`metas-${clientId}`} className="flex items-center gap-2 text-[15px] font-semibold"><Target size={17} aria-hidden="true" /> Metas do mês</h2>
-        {canEdit && !adding && free.length > 0 && <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => { setMetric(free[0]!.id); setAdding(true) }}><Plus size={14} aria-hidden="true" /> Meta</Button>}
+        {canEdit && free.length > 0 && <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => { setMetric(free[0]!.id); setAdding(true) }}><Plus size={14} aria-hidden="true" /> Meta</Button>}
       </div>
       {goals.isPending && <p role="status" className="text-[13px] text-muted">Carregando</p>}
-      {!goals.isPending && list.length === 0 && !adding && (
+      {!goals.isPending && list.length === 0 && (
         <p className="text-[13px] text-muted">Nenhuma meta ainda. Ex.: custo por lead abaixo de R$ 15 ou 200 leads no mês. O sistema acompanha sozinho com os números da Meta.</p>
       )}
       <ul className="flex flex-col gap-4">
@@ -82,8 +83,8 @@ export function TrafficGoalsPanel({ clientId, month, canEdit, compact = false }:
           </li>
         ))}
       </ul>
-      {adding && (
-        <form onSubmit={(e) => { e.preventDefault(); if (value && value > 0) save.mutate({ metric, target: value }) }} className="flex flex-col gap-2 rounded-2xl bg-raised p-3">
+      <Dialog open={adding} onClose={() => setAdding(false)} title="Nova meta do mês" size="sm">
+        <form onSubmit={(e) => { e.preventDefault(); if (value && value > 0) save.mutate({ metric, target: value }) }} className="flex flex-col gap-3">
           <div className="flex flex-wrap items-end gap-2">
             <label className="flex flex-col text-[13px] font-semibold">Meta
               <select value={metric} onChange={(e) => setMetric(e.target.value as GoalMetric)} className="mt-1 min-h-11 rounded-xl border border-line-strong bg-surface px-3 font-normal">
@@ -98,7 +99,7 @@ export function TrafficGoalsPanel({ clientId, month, canEdit, compact = false }:
           </div>
           <p className="text-[12px] text-muted">{GOAL_BY_ID[metric].hint}</p>
         </form>
-      )}
+      </Dialog>
       {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">Não foi possível salvar a meta.</p>}
     </section>
   )

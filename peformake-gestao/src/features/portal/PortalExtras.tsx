@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CheckCircle2, FileSignature, Receipt, Star } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { AREA_NAME } from './portalExtrasRules'
@@ -110,17 +111,14 @@ function WeeklyRating({ token, areas }: { token: string; areas: string[] }) {
   })
   const shown = areas.filter((a) => a !== 'comercial' && a !== 'sistemas')
   if (!shown.length) return null
-  if (!open) {
-    return (
+  return (
+    <>
       <button type="button" onClick={() => setOpen(true)} className="flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-3xl border border-dashed border-line-strong px-5 py-3 text-left text-[14px] hover:border-ink">
         <span><b>Como foi a semana?</b> <span className="text-muted">Leva 10 segundos e ajuda a gente a melhorar.</span></span>
         <Star size={18} aria-hidden="true" className="shrink-0 text-muted" />
       </button>
-    )
-  }
-  return (
-    <section aria-labelledby="avaliar" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
-      <h2 id="avaliar" className="text-[17px] font-semibold tracking-tight">Como foi a semana?</h2>
+      <Dialog open={open} onClose={() => setOpen(false)} title="Como foi a semana?" description="Leva 10 segundos e ajuda a gente a melhorar." size="sm">
+    <div className="flex flex-col gap-3">
       {shown.map((a) => (
         <div key={a} className="flex flex-wrap items-center justify-between gap-2">
           <span className="text-[14px] font-medium">{AREA_NAME[a] ?? a}</span>
@@ -142,7 +140,9 @@ function WeeklyRating({ token, areas }: { token: string; areas: string[] }) {
         <Button variant="secondary" onClick={() => setOpen(false)}>Agora não</Button>
       </div>
       {send.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível enviar.</p>}
-    </section>
+    </div>
+      </Dialog>
+    </>
   )
 }
 
