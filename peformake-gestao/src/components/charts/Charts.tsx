@@ -237,7 +237,7 @@ export function Panel({ title, action, children, className }: { title: string; a
 }
 
 // ===== Velocímetro: faixas vermelha, amarela e verde com ponteiro =====
-export function Gauge({ value, warm = 35, hot = 60, label }: { value: number; warm?: number; hot?: number; label: string }) {
+export function Gauge({ value, warm = 35, hot = 60, label, className }: { value: number; warm?: number; hot?: number; label: string; className?: string }) {
   const v = Math.max(0, Math.min(100, value))
   const r = 40, cx = 50, cy = 48
   const pt = (pct: number, rad = r) => {
@@ -251,7 +251,7 @@ export function Gauge({ value, warm = 35, hot = 60, label }: { value: number; wa
   }
   const [nx, ny] = pt(v, r - 6)
   return (
-    <svg viewBox="0 0 100 56" role="img" aria-label={`${label}: ${v} de 100`} className="h-16 w-28 shrink-0 overflow-visible">
+    <svg viewBox="0 0 100 56" role="img" aria-label={`${label}: ${v} de 100`} className={className ?? 'h-16 w-28 shrink-0 overflow-visible'}>
       <path d={arc(0, warm)} fill="none" stroke="var(--warn)" strokeWidth="8" />
       <path d={arc(warm, hot)} fill="none" stroke="#eda100" strokeWidth="8" />
       <path d={arc(hot, 100)} fill="none" stroke="var(--ok)" strokeWidth="8" />

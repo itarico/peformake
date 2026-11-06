@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { GoalsCard } from '@/features/goals/goals'
-import { LiveValue } from '@/components/charts/Charts'
+import { Gauge, LiveValue } from '@/components/charts/Charts'
 import { MessageCircle, Plus, Search, Star, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
@@ -28,7 +28,7 @@ import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
 import { isLiveClient } from './clientRules'
-import { monthsIdle, rankStars, rankWhy, TEMP_LABEL, TEMP_TONE, useClientIntel, useClientRanking } from './intelApi'
+import { monthsIdle, rankStars, rankWhy, TEMP_LABEL, useClientIntel, useClientRanking } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
@@ -290,7 +290,7 @@ export function ClientsPage() {
                     <div className="flex flex-col items-end gap-1 justify-self-end @4xl:items-start @4xl:justify-self-start">
                       <HealthBadge health={view.health} />
                       {intel.data?.get(client.id) && intel.data.get(client.id)!.label !== 'sem_dados' && (
-                        <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-semibold', TEMP_TONE[intel.data.get(client.id)!.label])} title={`Temperatura ${intel.data.get(client.id)!.temperature}/100`}>{TEMP_LABEL[intel.data.get(client.id)!.label]}</span>
+                        <span title={`${TEMP_LABEL[intel.data.get(client.id)!.label]} · temperatura ${intel.data.get(client.id)!.temperature}/100`} className="inline-flex"><Gauge value={intel.data.get(client.id)!.temperature} warm={settings.data?.temp_warm} hot={settings.data?.temp_hot} label={`Temperatura de ${client.name}`} className="h-7 w-12 shrink-0 overflow-visible" /></span>
                       )}
                     </div>
                     <div className="hidden @4xl:flex flex-wrap gap-1">

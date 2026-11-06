@@ -42,12 +42,8 @@ create policy photo_galleries_team on public.photo_galleries for all to authenti
 drop policy if exists photo_gallery_items_team on public.photo_gallery_items;
 create policy photo_gallery_items_team on public.photo_gallery_items for all to authenticated using (public.can_access_av()) with check (public.can_access_av());
 
--- Prévias (marca d'água, baixa resolução) e finais (só das escolhidas) ficam em buckets públicos sob um token aleatório.
-insert into storage.buckets (id, name, public) values ('gallery-previews', 'gallery-previews', true), ('gallery-finals', 'gallery-finals', true) on conflict (id) do nothing;
-drop policy if exists gallery_files_write on storage.objects;
-create policy gallery_files_write on storage.objects for insert to authenticated with check (bucket_id in ('gallery-previews', 'gallery-finals') and public.can_access_av());
-drop policy if exists gallery_files_delete on storage.objects;
-create policy gallery_files_delete on storage.objects for delete to authenticated using (bucket_id in ('gallery-previews', 'gallery-finals') and public.can_access_av());
+-- Arquivos: Cloudflare R2 (função gallery-storage). Prévias com marca d'água e fotos em boa resolução sob a chave <files_token>/...;
+-- as boas só são liberadas (link temporário) depois da escolha/pagamento. Apagar sozinho: regra de ciclo de vida no bucket do R2.
 
 -- Fatura das fotos extras.
 alter table public.invoices drop constraint if exists invoices_source_check;
@@ -89,7 +85,7 @@ create or replace function public.gallery_public(_token text) returns jsonb lang
     'amount', (select i.amount from public.invoices i where i.id = g.invoice_id),
     'drive_link', case when g.status in ('paga', 'entregue') then g.drive_link end,
     'items', coalesce((select jsonb_agg(jsonb_build_object('id', x.id, 'name', x.name, 'preview', x.preview_path, 'selected', x.selected,
-        'final', case when g.status in ('paga', 'entregue') then x.final_path end) order by x.sort, x.name)
+        'final', case when g.status in ('paga', 'entregue') and x.selected then x.final_path end) order by x.sort, x.name)
       from public.photo_gallery_items x where x.gallery_id = g.id), '[]'::jsonb))
   from public.photo_galleries g join public.clients c on c.id = g.client_id
   where g.public_token = _token and length(_token) >= 40 and g.status <> 'rascunho';
@@ -133,7 +129,7 @@ begin
     update public.photo_galleries set status = 'paga', paid_at = now(), updated_at = now() where invoice_id = new.id and status = 'aguardando_pagamento' returning * into g;
     if found then
       perform public.notify(array(select distinct user_id from public.user_roles where role in ('admin', 'head_marketing', 'social_media', 'editor')),
-        'gallery_paid', 'Fotos pagas: ' || g.title, 'Pagamento confirmado. Suba as finais ou o link do Drive e entregue.', '/audiovisual/fotos/' || g.id, g.client_id);
+        'gallery_paid', 'Fotos pagas: ' || g.title, 'Pagamento confirmado. As fotos já estão liberadas para o cliente baixar.', '/audiovisual/fotos/' || g.id, g.client_id);
     end if;
   end if;
   return new;
