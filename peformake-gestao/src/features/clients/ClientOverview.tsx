@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { ArrowRight, Lightbulb, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -130,6 +130,9 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
 
   return (
     <div className="flex flex-col gap-3">
+      {canManage && view.kind !== 'avulso' && (view.contract.state === 'ending' || view.contract.state === 'expired') && (
+        <ContractEndBar view={view} onDone={(t) => onOpenTab(t)} />
+      )}
       <div className="grid grid-cols-2 gap-2 @3xl:grid-cols-4">
         <Tile label="Temperatura" footer={intel?.label === 'sem_dados' ? 'Ligue o grupo de WhatsApp do cliente para medir.' : contactDays !== null ? `Último contato há ${contactDays} ${contactDays === 1 ? 'dia' : 'dias'}` : 'Sem contato registrado'}>
           {intel ? (
@@ -248,5 +251,61 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
         </dl>
       </Dialog>
     </div>
+  )
+}
+
+/** Fim de contrato: o painel avisa sozinho e já oferece renovar (novo período + novo contrato) ou finalizar (sai como fim de contrato). */
+function ContractEndBar({ view, onDone }: { view: ClientView; onDone: (tab: 'contrato' | 'historico') => void }) {
+  const queryClient = useQueryClient()
+  const { client } = view
+  const [mode, setMode] = useState<'renew' | 'finish' | null>(null)
+  const [months, setMonths] = useState(String(client.contract?.months ?? 12))
+  const [note, setNote] = useState('')
+  const rpcCall = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>
+  const act = useMutation({
+    mutationFn: async () => {
+      const { error } = mode === 'renew'
+        ? await rpcCall('client_contract_renew', { _client: client.id, _months: Number(months) })
+        : await rpcCall('client_contract_finish', { _client: client.id, _note: note })
+      if (error) throw new Error('Não foi possível concluir.')
+    },
+    onSuccess: () => {
+      const wasRenew = mode === 'renew'
+      setMode(null)
+      void queryClient.invalidateQueries({ queryKey: ['clients'] })
+      onDone(wasRenew ? 'contrato' : 'historico')
+    },
+  })
+  const expired = view.contract.state === 'expired'
+  const end = client.contract?.endDate
+  return (
+    <section aria-label="Fim de contrato" className={cn('flex flex-wrap items-center justify-between gap-3 rounded-3xl border px-5 py-3', expired ? 'border-warn bg-warn-soft/60' : 'border-[#eda100] bg-[#eda100]/10')}>
+      <p className="min-w-0 text-[14px]">
+        <b>{expired ? `Contrato venceu${end ? ` em ${end.slice(8)}/${end.slice(5, 7)}/${end.slice(0, 4)}` : ''}` : `Contrato vence em ${view.contract.daysLeft} dias`}.</b>{' '}
+        <span className="text-muted">{view.kind === 'tcv' ? 'TCV: renove com um novo contrato ou finalize.' : 'Renove por mais um período ou finalize.'}</span>
+      </p>
+      <span className="flex gap-2">
+        <Button className="min-h-9 px-4 text-[13px]" onClick={() => { act.reset(); setMode('renew') }}>Renovar</Button>
+        <Button variant="secondary" className="min-h-9 px-4 text-[13px]" onClick={() => { act.reset(); setMode('finish') }}>Finalizar</Button>
+      </span>
+      <Dialog open={mode === 'renew'} onClose={() => setMode(null)} title="Renovar contrato" description="Novo período começando no dia seguinte ao fim. Os serviços continuam. Depois, gere e envie o novo contrato." size="sm">
+        <div className="flex flex-col gap-3">
+          <label className="flex flex-col text-[13px] font-semibold">Duração do novo período (meses)
+            <input inputMode="numeric" value={months} onChange={(e) => setMonths(e.target.value.replace(/\D/g, ''))} className="mt-1 min-h-11 w-28 rounded-xl border border-line-strong bg-surface px-3 font-normal tabular-nums" />
+          </label>
+          {act.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(act.error as Error).message}</p>}
+          <div className="flex gap-2"><Button disabled={!Number(months) || act.isPending} onClick={() => act.mutate()}>{act.isPending ? 'Renovando' : 'Renovar e gerar contrato'}</Button><Button variant="secondary" onClick={() => setMode(null)}>Cancelar</Button></div>
+        </div>
+      </Dialog>
+      <Dialog open={mode === 'finish'} onClose={() => setMode(null)} title="Finalizar contrato" description="O cliente sai como 'Fim de contrato' e vai para Perdidos, com o histórico guardado. Pendências (fatura ou entrega em aberto) continuam visíveis." size="sm">
+        <div className="flex flex-col gap-3">
+          <label className="flex flex-col text-[13px] font-semibold">Observação (opcional)
+            <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} className="mt-1 rounded-xl border border-line-strong bg-surface px-3 py-2 font-normal" placeholder="Ex.: cumpriu o projeto, pode voltar no 2º semestre" />
+          </label>
+          {act.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(act.error as Error).message}</p>}
+          <div className="flex gap-2"><Button disabled={act.isPending} onClick={() => act.mutate()}>{act.isPending ? 'Finalizando' : 'Finalizar contrato'}</Button><Button variant="secondary" onClick={() => setMode(null)}>Cancelar</Button></div>
+        </div>
+      </Dialog>
+    </section>
   )
 }

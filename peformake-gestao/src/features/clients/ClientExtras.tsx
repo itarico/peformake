@@ -68,7 +68,7 @@ export function LinksSection({ clientId, canManage }: { clientId: string; canMan
   )
 }
 
-const EVENT_LABEL = { joined: 'Entrou', churned: 'Saiu', reactivated: 'Voltou' } as const
+const EVENT_LABEL = { joined: 'Entrou', churned: 'Saiu', reactivated: 'Voltou', renewed: 'Renovou', contract_ended: 'Fim de contrato' } as const
 
 export function HistorySection({ clientId }: { clientId: string }) {
   const events = useQuery({ queryKey: ['client-events', clientId], queryFn: () => listEvents(clientId) })
