@@ -6,6 +6,53 @@ import { TeamList } from '@/features/portal/TeamList'
 import { clientErrorMessage, listSquads, listStaff, setTeam } from './clientsApi'
 import { ASSIGNABLE_ROLES, groupTeam, TEAM_ROLE_LABEL, type TeamEntry, type TeamRole } from './clientRules'
 import { Block, selectClass } from './ui'
+import type { StaffOption } from './clientsApi'
+import { cn } from '@/lib/cn'
+import { Check } from 'lucide-react'
+
+/** Escolha por foto: quem tem o cargo aparece primeiro; "Outra pessoa" abre a lista completa. */
+function PeoplePicker({ label, people, role, max, value, onChange }: {
+  label: string
+  people: readonly StaffOption[]
+  role: string
+  max: number
+  value: string[]
+  onChange: (ids: string[]) => void
+}) {
+  const suggested = people.filter((p) => p.mainRole === role || value.includes(p.id))
+  const others = people.filter((p) => !suggested.includes(p))
+  const toggle = (id: string) => {
+    if (value.includes(id)) onChange(value.filter((v) => v !== id))
+    else onChange(max === 1 ? [id] : [...value, id].slice(-max))
+  }
+  return (
+    <div role="group" aria-label={label} className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+      {suggested.map((p) => {
+        const on = value.includes(p.id)
+        return (
+          <button key={p.id} type="button" aria-pressed={on} onClick={() => toggle(p.id)} title={p.name}
+            className={cn('flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-3 text-[13px] font-medium transition-colors',
+              on ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:border-line-strong hover:text-ink')}>
+            <span className="relative">
+              {p.photoUrl
+                ? <img src={p.photoUrl} alt="" className="size-7 rounded-full object-cover" />
+                : <span className="flex size-7 items-center justify-center rounded-full bg-raised text-[12px] font-semibold text-ink">{p.name.slice(0, 1)}</span>}
+              {on && <Check size={12} aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 rounded-full bg-accent p-0.5 text-on-fill" />}
+            </span>
+            {p.name.split(' ')[0]}
+          </button>
+        )
+      })}
+      {others.length > 0 && (
+        <select aria-label={`Outra pessoa para ${label}`} value="" onChange={(e) => e.target.value && toggle(e.target.value)}
+          className="min-h-9 cursor-pointer rounded-full border border-dashed border-line-strong bg-transparent px-3 text-[13px] text-muted hover:text-ink">
+          <option value="">{suggested.length ? '+ Outra pessoa' : 'Escolher pessoa'}</option>
+          {others.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+        </select>
+      )}
+    </div>
+  )
+}
 
 type Slots = Record<Exclude<TeamRole, 'squad'>, string[]>
 
@@ -47,12 +94,6 @@ export function TeamSection({ clientId, team, squadId, canManage }: { clientId: 
     save.reset()
     setEditing(true)
   }
-  const setSlot = (role: Exclude<TeamRole, 'squad'>, index: number, value: string) =>
-    setSlots((current) => {
-      const list = [...current[role]]
-      list[index] = value
-      return { ...current, [role]: list }
-    })
   const duplicateSocial = slots.social_media[0] && slots.social_media[0] === slots.social_media[1]
   const people = groupTeam(team)
   const squadMembers = squads.data?.find((s) => s.id === squad)?.memberIds ?? []
@@ -70,7 +111,7 @@ export function TeamSection({ clientId, team, squadId, canManage }: { clientId: 
         </>
       ))}
 
-      <Dialog open={editing} onClose={() => setEditing(false)} title="Editar equipe" description="Quem cuida deste cliente em cada função.">
+      <Dialog open={editing} onClose={() => setEditing(false)} title="Editar equipe" description="Toque na foto para escolher quem cuida de cada função.">
         <div className="flex flex-col gap-3">
           {(staff.isPending || squads.isPending) && <p role="status" className="text-muted">Carregando equipe</p>}
           {(staff.isError || squads.isError) && <p role="alert" className="text-warn-ink">Não foi possível carregar a lista de pessoas.</p>}
@@ -88,26 +129,24 @@ export function TeamSection({ clientId, team, squadId, canManage }: { clientId: 
                   </p>
                 )}
               </div>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {ASSIGNABLE_ROLES.flatMap((role) =>
-                  Array.from({ length: SLOTS[role] }, (_, index) => (
-                    <div key={`${role}-${index}`}>
-                      <label htmlFor={`${role}-${index}-${clientId}`} className="mb-1 block text-[13px] font-semibold">
-                        {TEAM_ROLE_LABEL[role]}{SLOTS[role] > 1 ? ` ${index + 1}` : ''}
-                      </label>
-                      <select
-                        id={`${role}-${index}-${clientId}`}
-                        value={slots[role][index] ?? ''}
-                        onChange={(e) => setSlot(role, index, e.target.value)}
-                        className={`${selectClass} w-full`}
-                      >
-                        <option value="">Ninguém</option>
-                        {staff.data.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-                      </select>
-                    </div>
-                  )),
-                )}
-              </div>
+              <ul className="flex flex-col divide-y divide-line rounded-2xl border border-line">
+                {ASSIGNABLE_ROLES.map((role) => (
+                  <li key={role} className="flex flex-col gap-2 px-3 py-2.5 sm:flex-row sm:items-center sm:gap-3">
+                    <span className="w-36 shrink-0 text-[13px] font-semibold">
+                      {TEAM_ROLE_LABEL[role]}
+                      {SLOTS[role] > 1 && <span className="block text-[11px] font-normal text-muted">até {SLOTS[role]} pessoas</span>}
+                    </span>
+                    <PeoplePicker
+                      label={TEAM_ROLE_LABEL[role]}
+                      people={staff.data}
+                      role={role}
+                      max={SLOTS[role]}
+                      value={slots[role].filter(Boolean)}
+                      onChange={(ids) => setSlots((current) => ({ ...current, [role]: ids }))}
+                    />
+                  </li>
+                ))}
+              </ul>
             </>
           )}
           {duplicateSocial && <p role="alert" className="text-[13px] font-medium text-warn-ink">Escolha duas pessoas diferentes para social media.</p>}

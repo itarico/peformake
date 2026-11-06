@@ -6,6 +6,7 @@ export interface StaffOption {
   id: string
   name: string
   mainRole: string | null
+  photoUrl: string | null
 }
 
 export interface SquadOption {
@@ -175,9 +176,9 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
 }
 
 export async function listStaff(): Promise<StaffOption[]> {
-  const { data, error } = await supabase.from('staff_members').select('id, full_name, main_role').eq('is_active', true).order('full_name')
+  const { data, error } = await supabase.from('staff_members').select('id, full_name, main_role, avatar_path').eq('is_active', true).order('full_name')
   if (error) throw error
-  return (data ?? []).map((row) => ({ id: row.id, name: row.full_name.trim(), mainRole: row.main_role }))
+  return (data ?? []).map((row) => ({ id: row.id, name: row.full_name.trim(), mainRole: row.main_role, photoUrl: publicUrl('team-photos', row.avatar_path) }))
 }
 
 export async function listSquads(): Promise<SquadOption[]> {
