@@ -8,6 +8,7 @@ import type { ClientView } from './clientRules'
 import { groupTeam } from './clientRules'
 import { brlValue } from './format'
 import { HealthSection } from './HealthSection'
+import { ClientContactsDialog, useClientContacts } from './ClientContacts'
 import { SIZE_LABEL, TEMP_LABEL, TEMP_TONE, useClientIntel, useClientTimeline } from './intelApi'
 import { ATTENTION_LABEL, HEALTH_LABEL, HEALTH_SCORE, type AttentionFlag, type HealthLevel } from './portfolioRules'
 import { HealthBadge } from './ui'
@@ -74,6 +75,8 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
   const intel = intelQ.data?.get(client.id) ?? null
   const [health, setHealth] = useState(false)
   const [profile, setProfile] = useState(false)
+  const [contactsOpen, setContactsOpen] = useState(false)
+  const contacts = useClientContacts(client.id)
 
   const contactDays = daysSince(intel?.lastContactAt ?? null)
   const months = client.contract?.startDate ? Math.max(1, Math.round((Date.now() - Date.parse(client.contract.startDate)) / (30.44 * 86_400_000))) : null
@@ -185,6 +188,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
         </span>
         <span className="ml-auto flex gap-2">
           {whatsapp && <a href={whatsapp} target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-line-strong px-3 font-medium hover:border-ink"><MessageCircle size={14} aria-hidden="true" /> WhatsApp</a>}
+          <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setContactsOpen(true)}>Contatos{contacts.data?.length ? ` · ${contacts.data.length + 1}` : ''}</Button>
           <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setProfile(true)}>Perfil completo</Button>
         </span>
       </section>
@@ -192,6 +196,8 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
       <Dialog open={health} onClose={() => setHealth(false)} title="Relacionamento" size="md">
         <HealthSection clientId={client.id} health={view.health} history={client.assessments} canAssess={canManage || true} />
       </Dialog>
+
+      <ClientContactsDialog clientId={client.id} open={contactsOpen} onClose={() => setContactsOpen(false)} canManage={canManage} />
 
       <Dialog open={profile} onClose={() => setProfile(false)} title={client.name} size="md">
         <dl className="flex flex-col gap-3 text-[14px]">
