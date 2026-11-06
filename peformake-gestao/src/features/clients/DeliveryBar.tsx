@@ -19,9 +19,10 @@ export interface DeliveryItem {
 type Rpc = (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
-export function useClientDeliveries() {
+export function useClientDeliveries(enabled = true) {
   return useQuery({
     queryKey: ['client-deliveries'],
+    enabled,
     staleTime: 5 * 60_000,
     retry: false,
     queryFn: async () => {
