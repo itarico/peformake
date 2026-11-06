@@ -44,7 +44,7 @@ function Chips<T extends string>({ label, value, options, onChange }: { label: s
   )
 }
 
-const FLAGS: AttentionFlag[] = ['risk', 'expired', 'ending', 'no_service', 'no_team', 'stale']
+const FLAGS: AttentionFlag[] = ['risk', 'expired', 'ending', 'no_service', 'no_team', 'stale', 'upsell']
 const SORTS: { id: SortKey; label: string }[] = [
   { id: 'name', label: 'Nome' },
   { id: 'health', label: 'Pior saúde primeiro' },
@@ -112,6 +112,7 @@ export function ClientsPage() {
     { flag: 'any', label: 'Pedem atenção', n: summary.needAttention, warn: summary.needAttention > 0 },
     { flag: 'risk', label: 'Em risco', n: summary.atRisk, warn: summary.atRisk > 0 },
     { flag: 'ending', label: 'Contrato vencendo', n: summary.contractsEnding, warn: summary.contractsEnding > 0 },
+    { flag: 'upsell', label: 'Hora de oferecer mais', n: summary.upsell, warn: false },
   ]
 
   return (
@@ -253,7 +254,7 @@ export function ClientsPage() {
                       {isAdmin && clientValue(client.services).value > 0 && <p className="text-[12px] font-semibold tabular-nums">{brlValue(clientValue(client.services).value)}{view.kind === 'fixo' ? '/mês' : ''}</p>}
                     </div>
                     <div className="justify-self-end @4xl:justify-self-start"><HealthBadge health={view.health} /></div>
-                    <div className="hidden @4xl:block"><FlagChips flags={view.flags} limit={1} /></div>
+                    <div className="hidden @4xl:block"><FlagChips flags={view.flags} upsell={view.upsell} /></div>
 
                     <div className="relative z-10 hidden justify-end @4xl:flex">
                       {whatsapp && (

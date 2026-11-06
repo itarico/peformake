@@ -29,7 +29,9 @@ const client = (over: Partial<ClientRecord> = {}): ClientRecord => ({
 describe('describeClient', () => {
   it('junta tipo, valor, contrato, saúde e alertas', () => {
     const view = describeClient(client(), TODAY)
-    expect(view).toMatchObject({ kind: 'fixo', entity: 'peformake', value: 600, missingPrices: 0, people: 1, flags: [] })
+    expect(view).toMatchObject({ kind: 'fixo', entity: 'peformake', value: 600, missingPrices: 0, people: 1, flags: ['upsell'] })
+    // Satisfeito, 5 meses de casa e só com parte das frentes: hora de oferecer a próxima.
+    expect(view.upsell).toBeTruthy()
     expect(view.contract.state).toBe('ok')
     expect(view.health.latest).toBe('bom')
   })
@@ -77,7 +79,7 @@ describe('filtros e ordem', () => {
   })
 
   it('resume a carteira só com ativos', () => {
-    expect(summarizePortfolio(list)).toEqual({ active: 2, recurringValue: 600, projectValue: 300, needAttention: 1, atRisk: 1, contractsEnding: 0 })
+    expect(summarizePortfolio(list)).toEqual({ active: 2, recurringValue: 600, projectValue: 300, needAttention: 1, atRisk: 1, contractsEnding: 0, upsell: 1 })
   })
 })
 

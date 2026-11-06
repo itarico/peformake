@@ -135,7 +135,7 @@ export function healthStatus(entries: readonly AssessmentEntry[], today: string)
   }
 }
 
-export type AttentionFlag = 'risk' | 'stale' | 'ending' | 'expired' | 'no_team' | 'no_service'
+export type AttentionFlag = 'risk' | 'stale' | 'ending' | 'expired' | 'no_team' | 'no_service' | 'upsell'
 
 export const ATTENTION_LABEL: Record<AttentionFlag, string> = {
   risk: 'Relacionamento em risco',
@@ -144,6 +144,7 @@ export const ATTENTION_LABEL: Record<AttentionFlag, string> = {
   expired: 'Contrato vencido',
   no_team: 'Sem equipe',
   no_service: 'Sem serviço ativo',
+  upsell: 'Hora de oferecer mais',
 }
 
 export interface AttentionInput {
@@ -152,6 +153,35 @@ export interface AttentionInput {
   contract: ContractStatus
   teamSize: number
   activeServices: number
+  /** Nomes dos serviços ativos, para achar o que falta oferecer. */
+  serviceNames?: readonly string[]
+  /** Meses como cliente. */
+  months?: number | null
+}
+
+const strip = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
+/** As frentes que completam o "marketing inteiro num time só", na ordem em que costumam vender. */
+const AREAS: { label: string; match: RegExp }[] = [
+  { label: 'Tráfego pago', match: /trafego/ },
+  { label: 'Social media', match: /social/ },
+  { label: 'Audiovisual', match: /video|captacao|camera|mobile|diaria|visita|audiovisual|edicao|videocast/ },
+  { label: 'Design', match: /design|arte/ },
+]
+
+/**
+ * Upsell na hora certa: cliente satisfeito (última avaliação boa ou muito boa, recente), com pelo menos 3 meses de casa,
+ * sem contrato vencendo e sem outro alerta grave, e que ainda não tem todas as frentes. Devolve a frente sugerida.
+ */
+export function upsellSuggestion(input: AttentionInput): string | null {
+  if (!input.isActive || input.activeServices === 0) return null
+  const latest = input.health.latest
+  if (!latest || HEALTH_SCORE[latest] < 4 || input.health.isStale) return null
+  if ((input.months ?? 0) < 3) return null
+  if (input.contract.state === 'ending' || input.contract.state === 'expired') return null
+  const names = (input.serviceNames ?? []).map(strip)
+  const missing = AREAS.find((a) => !names.some((n) => a.match.test(n)))
+  return missing?.label ?? null
 }
 
 /** O que pede ação agora, do mais grave para o mais leve. Cliente perdido não gera alerta. */
@@ -164,5 +194,6 @@ export function attentionFlags(input: AttentionInput): AttentionFlag[] {
   if (input.activeServices === 0) flags.push('no_service')
   if (input.teamSize === 0) flags.push('no_team')
   if (input.health.isStale) flags.push('stale')
+  if (flags.length === 0 && upsellSuggestion(input)) flags.push('upsell')
   return flags
 }

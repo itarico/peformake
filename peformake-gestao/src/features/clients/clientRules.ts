@@ -1,5 +1,6 @@
 import {
   attentionFlags,
+  upsellSuggestion,
   clientKind,
   clientValue,
   contractStatus,
@@ -115,6 +116,8 @@ export interface ClientView {
   health: HealthStatus
   flags: AttentionFlag[]
   people: number
+  /** Frente que vale oferecer agora (só quando o momento é bom). */
+  upsell: string | null
 }
 
 export function describeClient(client: ClientRecord, today: string): ClientView {
@@ -123,6 +126,17 @@ export function describeClient(client: ClientRecord, today: string): ClientView 
   const health = healthStatus(client.assessments, today)
   const { value, missingPrices } = clientValue(client.services)
   const people = new Set(client.team.map((entry) => entry.staffId)).size
+  const active = client.services.filter((item) => item.isActive)
+  const attention = {
+    isActive: client.isActive && !client.isLost,
+    health,
+    contract,
+    teamSize: people,
+    activeServices: active.length,
+    serviceNames: active.map((item) => item.name),
+    months: client.contract?.startDate ? Math.floor((Date.parse(today) - Date.parse(client.contract.startDate)) / (30.44 * 86_400_000))
+      : client.since ? Math.floor((Date.parse(today) - Date.parse(client.since)) / (30.44 * 86_400_000)) : null,
+  }
   return {
     client,
     kind,
@@ -132,13 +146,8 @@ export function describeClient(client: ClientRecord, today: string): ClientView 
     contract,
     health,
     people,
-    flags: attentionFlags({
-      isActive: client.isActive,
-      health,
-      contract,
-      teamSize: people,
-      activeServices: client.services.filter((item) => item.isActive).length,
-    }),
+    flags: attentionFlags(attention),
+    upsell: upsellSuggestion(attention),
   }
 }
 
@@ -165,7 +174,7 @@ export function filterClients(items: readonly ClientView[], filters: ClientFilte
     if (filters.status === 'active' ? !isLiveClient(client) : isLiveClient(client)) return false
     if (filters.kind === 'recorrente' ? item.kind === 'avulso' : filters.kind !== 'all' && item.kind !== filters.kind) return false
     if (filters.entity !== 'all' && item.entity !== filters.entity) return false
-    if (filters.flag === 'any' && item.flags.length === 0) return false
+    if (filters.flag === 'any' && !item.flags.some((f) => f !== 'upsell')) return false
     // "Contrato vencendo" também mostra os já vencidos (o número do atalho conta os dois).
     if (filters.flag === 'ending' && !item.flags.includes('ending') && !item.flags.includes('expired')) return false
     if (filters.flag !== 'all' && filters.flag !== 'any' && filters.flag !== 'ending' && !item.flags.includes(filters.flag)) return false
@@ -197,6 +206,7 @@ export interface PortfolioSummary {
   needAttention: number
   atRisk: number
   contractsEnding: number
+  upsell: number
 }
 
 /** Ativo de verdade: nem perdido nem desativado. Perdido ou excluído não entra em conta nenhuma. */
@@ -208,7 +218,8 @@ export function summarizePortfolio(items: readonly ClientView[]): PortfolioSumma
     active: active.length,
     recurringValue: active.filter((item) => item.kind !== 'avulso').reduce((sum, item) => sum + item.value, 0),
     projectValue: active.filter((item) => item.kind === 'avulso').reduce((sum, item) => sum + item.value, 0),
-    needAttention: active.filter((item) => item.flags.length > 0).length,
+    needAttention: active.filter((item) => item.flags.some((f) => f !== 'upsell')).length,
+    upsell: active.filter((item) => item.flags.includes('upsell')).length,
     atRisk: active.filter((item) => item.flags.includes('risk')).length,
     contractsEnding: active.filter((item) => item.flags.includes('ending') || item.flags.includes('expired')).length,
   }

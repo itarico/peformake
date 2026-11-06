@@ -102,14 +102,14 @@ export function ContractCell({ contract }: { contract: ContractStatus }) {
   )
 }
 
-export function FlagChips({ flags, limit = 2 }: { flags: readonly AttentionFlag[]; limit?: number }) {
+export function FlagChips({ flags, limit = 99, upsell = null }: { flags: readonly AttentionFlag[]; limit?: number; upsell?: string | null }) {
   if (flags.length === 0) return null
   const shown = flags.slice(0, limit)
   return (
     <ul className="flex flex-wrap gap-1" aria-label="Pontos de atenção">
       {shown.map((flag) => (
-        <li key={flag} className={cn('rounded-full px-2 py-0.5 text-[12px] font-medium', flag === 'stale' || flag === 'no_team' ? 'bg-raised text-ink' : 'bg-warn-soft text-warn-ink')}>
-          {ATTENTION_LABEL[flag]}
+        <li key={flag} className={cn('rounded-full px-2 py-0.5 text-[12px] font-medium', flag === 'upsell' ? 'bg-ok-soft text-ok-ink' : flag === 'stale' || flag === 'no_team' ? 'bg-raised text-ink' : 'bg-warn-soft text-warn-ink')}>
+          {flag === 'upsell' && upsell ? `Oferecer ${upsell}` : ATTENTION_LABEL[flag]}
         </li>
       ))}
       {flags.length > limit && <li className="rounded-full bg-raised px-2 py-0.5 text-[12px] text-muted">+{flags.length - limit}</li>}

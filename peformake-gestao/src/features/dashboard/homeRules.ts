@@ -3,7 +3,7 @@
 import type { AttentionFlag } from '@/features/clients/portfolioRules'
 
 // Peso de cada ponto de atenção. Contrato vencido e relacionamento ruim vêm antes.
-const WEIGHT: Record<AttentionFlag, number> = { expired: 5, risk: 4, ending: 3, no_team: 2, no_service: 2, stale: 1 }
+const WEIGHT: Record<AttentionFlag, number> = { expired: 5, risk: 4, ending: 3, no_team: 2, no_service: 2, stale: 1, upsell: 1 }
 
 export function attentionScore(flags: readonly AttentionFlag[]): number {
   return flags.reduce((s, f) => s + WEIGHT[f], 0)

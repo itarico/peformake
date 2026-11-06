@@ -32,6 +32,7 @@ const ACTION: Record<AttentionFlag, string> = {
   no_service: 'Adicione os serviços contratados.',
   no_team: 'Defina quem cuida deste cliente.',
   stale: 'Registre uma avaliação do relacionamento.',
+  upsell: 'Cliente satisfeito e com tempo de casa: bom momento para apresentar a próxima frente.',
 }
 
 function Text({ label, value }: { label: string; value: string | null }) {
@@ -154,7 +155,7 @@ export function ClientDetailPage() {
           <h2 className="flex items-center gap-2 text-[14px] font-semibold text-warn-ink"><AlertTriangle size={16} aria-hidden="true" /> O que fazer agora</h2>
           <ul className="flex flex-col gap-1.5">
             {view.flags.map((flag) => (
-              <li key={flag} className="text-[14px]"><b className="font-semibold">{ATTENTION_LABEL[flag]}.</b> {ACTION[flag]}</li>
+              <li key={flag} className="text-[14px]"><b className="font-semibold">{flag === 'upsell' && view.upsell ? `Oferecer ${view.upsell}` : ATTENTION_LABEL[flag]}.</b> {ACTION[flag]}</li>
             ))}
           </ul>
         </section>
