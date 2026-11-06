@@ -214,3 +214,18 @@ export function suggestion(pick: <T>(a: readonly T[]) => T, r: GoalRow, c: Coach
     default: return null
   }
 }
+
+const OBJECTIVE: Record<string, string> = {
+  novos: 'Chamar lead', novos_premium: 'Chamar lead', mrr_total: 'Propor upsell', upsell: 'Propor upsell', avulsos: 'Oferecer captação',
+  reunioes: 'Marcar reunião', saidas: 'Ligar para o cliente', devendo: 'Cobrar', inadimplencia: 'Cobrar', artes: 'Ver peças', aprovacao_parada: 'Cobrar aprovação',
+  planos: 'Abrir planejamento', relatorios: 'Enviar relatórios', estrategias: 'Fazer estratégia', videos: 'Ver produção', orcamentos_aceitos: 'Ver orçamentos',
+  fotos_extras: 'Abrir fotos', recebido: 'Ver financeiro',
+}
+/** Uma ação só, objetiva: o verbo do que fazer agora, levando ao primeiro cliente ou à área certa. */
+export function primaryAction(r: GoalRow, c: Coach | undefined): (Action & { hint?: string }) | null {
+  const a = actions(r, c)[0]
+  if (!a) return null
+  const who = a.to.startsWith('/clientes/') ? a.label.replace(/^(Pedir indicação a|Oferecer plano a|Propor upsell a|Falar com|Marcar com|Ligar para|Cobrar|Chamar)\s*/, '') : undefined
+  const verb = r.key === 'novos' || r.key === 'novos_premium' ? (a.to.startsWith('/clientes/') ? 'Oferecer plano' : c?.hot_leads.length ? 'Chamar lead' : 'Buscar leads') : OBJECTIVE[r.key] ?? a.label
+  return { label: verb, to: a.to, hint: who }
+}

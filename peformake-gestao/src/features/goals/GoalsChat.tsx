@@ -6,7 +6,7 @@ import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { APP_ROLE, calendar, fmt, GOAL_META, monthStartOf, paceOf, ROLE_LABEL, STATE, useGoalsBoard, useInsights, type GoalRole, type GoalRow } from './goals'
-import { actions, cheer, goalIntro, greeting, pickWith, plain, seeded, steps, suggestion, type Action, type Coach } from './coach'
+import { cheer, primaryAction, goalIntro, greeting, pickWith, plain, seeded, steps, suggestion, type Action, type Coach } from './coach'
 
 // Chat de metas: conversa diária, uma mensagem por vez, montada com os dados do sistema.
 // Cada resposta mostra "atualizando seus dados…" por um instante, como quem foi buscar.
@@ -152,15 +152,25 @@ export function GoalsChat() {
     }
     send()
   }
+  const one = (g: GoalRow): Action[] => { const p = primaryAction(g, coach.data); return p ? [{ label: p.hint ? `${p.label}: ${p.hint}` : p.label, to: p.to }] : [] }
   const me = (text: string) => setLog((l) => [...l, { id: idRef.current++, from: 'me', kind: 'text', text }])
 
-  const repliesFor = (key: string | undefined, remaining: Item[]): Reply[] => [
-    ...(key ? [{ label: 'Como bater?', act: 'how' as const, key }] : []),
-    ...(remaining.length ? [{ label: pick(['Próxima novidade', 'Tem mais?', 'O que mais?']), act: 'next' as const }] : []),
-    { label: 'Ver todas as metas', act: 'all' },
-    ...(tips.length && !remaining.some((x) => x.kind === 'tip') ? [{ label: 'Uma dica', act: 'tip' as const }] : []),
-    { label: remaining.length ? 'Depois eu vejo' : 'Entendi', act: 'bye' },
-  ]
+  const tipLabel = () => {
+    const left = tips.filter((x) => !seen.has(x.id)).length
+    const shown = pool.length - left
+    return left <= 1 ? 'Última dica' : shown === 0 ? 'Uma dica' : 'Outra dica'
+  }
+  /** No máximo 3 botões: o mais útil primeiro, e sempre uma saída. */
+  const repliesFor = (key: string | undefined, remaining: Item[]): Reply[] => {
+    const tipsLeft = tips.some((x) => !seen.has(x.id))
+    const opts: Reply[] = [
+      ...(key ? [{ label: 'Como bater?', act: 'how' as const, key }] : []),
+      ...(remaining.some((x) => x.kind !== 'tip') ? [{ label: pick(['Próxima novidade', 'Tem mais?']), act: 'next' as const }] : []),
+      ...(tipsLeft ? [{ label: tipLabel(), act: 'tip' as const }] : []),
+      { label: 'Ver todas as metas', act: 'all' as const },
+    ]
+    return [...opts.slice(0, 2), { label: remaining.length ? 'Depois eu vejo' : 'Entendi', act: 'bye' as const }]
+  }
 
   /** Mostra um item novo e já marca como visto. */
   function show(item: Item | undefined, prefix: NewMsg[] = []) {
@@ -178,7 +188,7 @@ export function GoalsChat() {
       : item.kind === 'hit' ? { from: 'bot', kind: 'text', text: pick([`🏆 Meta batida: ${m.title(g.info).toLowerCase()}!`, `🏆 Bateu! ${m.title(g.info)} com ${days - day} dias de folga.`]) }
         : { from: 'bot', kind: 'text', text: goalIntro(pick) }
     const sug = item.kind !== 'hit' ? suggestion(pick, g, coach.data) : null
-    say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key }, { from: 'bot', kind: 'text', text: `${cheer(pick, paceOf(g, day, days))}${sug ? `\n\n${sug}` : ''}` }], repliesFor(g.key, remaining), actions(g, coach.data))
+    say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key }, { from: 'bot', kind: 'text', text: `${cheer(pick, paceOf(g, day, days))}${sug ? `\n\n${sug}` : ''}` }], repliesFor(g.key, remaining), one(g))
   }
 
   function begin() {
@@ -194,14 +204,14 @@ export function GoalsChat() {
       const all = steps(g, coach.data, day, days)
       const remaining = news.filter((x) => !seen.has(x.id))
       say([{ from: 'bot', kind: 'text', text: `${pick(['Fiz as contas:', 'O caminho é este:', 'Passo a passo:'])}\n\n${all.map((t, i) => `${i + 1}. ${t}`).join('\n\n')}` }],
-        [...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), { label: 'Ver todas as metas', act: 'all' }, { label: 'Bora fazer', act: 'bye' }], actions(g, coach.data))
+        [...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), { label: 'Ver todas as metas', act: 'all' as const }, { label: 'Bora fazer', act: 'bye' as const }].slice(0, 3), one(g))
     }
     if (r.act === 'next') show(news.find((x) => !seen.has(x.id)) ?? tips.find((x) => !seen.has(x.id)))
     if (r.act === 'tip') show(tips.find((x) => !seen.has(x.id)))
     if (r.act === 'all') {
       setLog([])
       setTimeout(() => say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all' }],
-        [...list.map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key })), { label: 'Fechar', act: 'bye' as const }]), 50)
+        [...list.slice(0, 2).map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key })), { label: 'Fechar', act: 'bye' as const }]), 50)
     }
     if (r.act === 'bye') close()
   }
@@ -247,10 +257,9 @@ export function GoalsChat() {
       )}
       {!open && news.length > 0 && (
         <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Bate Meta: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}`}
-          className="pointer-events-auto relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill px-4 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 transition-transform hover:-translate-y-0.5">
-          <span aria-hidden="true" className="absolute inset-0 -z-10 animate-ping rounded-full bg-fill opacity-40" />
+          className="pf-hop pointer-events-auto relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill px-4 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 hover:-translate-y-0.5">
           <span className="-ml-2 rounded-full bg-white/20"><Mascot size={30} /></span> Bate Meta
-          <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>
+          <span className="pf-blink absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>
         </button>
       )}
     </div>

@@ -281,3 +281,10 @@ select optgroup {
 .pf-num-down { animation: pf-num-down 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
 .pf-num-up { animation: pf-num-up 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
 @media (prefers-reduced-motion: reduce) { .pf-num-down, .pf-num-up { animation: none; } }
+
+/* Bate Meta: pula a cada 8 segundos e a bolinha de aviso pisca de leve até abrir. */
+@keyframes pf-hop { 0%, 86%, 100% { transform: translateY(0); } 89% { transform: translateY(-10px); } 92% { transform: translateY(0); } 95% { transform: translateY(-4px); } }
+@keyframes pf-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+.pf-hop { animation: pf-hop 8s ease-in-out infinite; }
+.pf-blink { animation: pf-blink 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .pf-hop, .pf-blink { animation: none; } }
