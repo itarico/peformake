@@ -16,7 +16,7 @@ interface Overview {
   rated_this_week: boolean
   areas: string[]
 }
-interface ContractView { id: string; title: string; status: string; body: string; signer_name: string | null; signer_email: string | null; has_document: boolean; signed_at: string | null }
+interface ContractView { id: string; title: string; status: string; body: string; signer_name: string | null; signer_email: string | null; has_document: boolean; signed_at: string | null; sign_method?: string; accepted_at?: string | null; has_pdf?: boolean }
 
 const brl = (n: number) => Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const field = 'mt-1 min-h-12 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
@@ -159,44 +159,90 @@ export function PortalContract({ token }: { token: string }) {
     },
   })
   const [f, setF] = useState({ name: '', document: '', email: '', address: '' })
-  const [reading, setReading] = useState(false)
+  const [a, setA] = useState({ name: '', document: '', agree: false })
+  const [dialog, setDialog] = useState<'dados' | 'ler' | 'aceitar' | null>(null)
+  const refresh = () => void queryClient.invalidateQueries({ queryKey: ['portal-contract', token] })
   const save = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.rpc('portal_contract_data', { _token: token, _name: f.name, _document: f.document, _email: f.email, _address: f.address })
       if (error) throw new Error(error.message.includes('CPF') ? 'CPF ou CNPJ inválido.' : error.message.includes('mail') ? 'E-mail inválido.' : 'Confira os dados e tente de novo.')
     },
-    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['portal-contract', token] }),
+    onSuccess: () => { setDialog(null); refresh() },
+  })
+  const accept = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.rpc('portal_contract_accept', { _token: token, _name: a.name, _document: a.document })
+      if (error) throw new Error(error.message.includes('confere') ? 'O CPF/CNPJ não é o mesmo do contrato.' : error.message.includes('nome') ? 'Escreva seu nome completo.' : 'Não foi possível registrar. Tente de novo.')
+    },
+    onSuccess: () => { setDialog(null); refresh() },
+  })
+  const pdf = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/contract-pdf`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY }, body: JSON.stringify({ portal_token: token }),
+      })
+      const out = await res.json().catch(() => ({}))
+      if (!res.ok || !out.url) throw new Error('Não foi possível gerar o PDF agora.')
+      window.open(out.url, '_blank', 'noopener')
+    },
   })
   const c = q.data
   if (!c) return null
   const needsData = c.status === 'aguardando_dados' || (c.status === 'rascunho' && !c.has_document)
   const statusText: Record<string, string> = {
-    rascunho: 'Recebemos seus dados. O contrato vai chegar no seu e-mail para assinar.',
-    enviado: `Enviamos o contrato para ${c.signer_email ?? 'seu e-mail'}. Abra o e-mail do Assinafy e assine pelo link.`,
+    aguardando_dados: 'Para preparar o seu contrato, precisamos dos dados de quem assina.',
+    rascunho: 'Recebemos seus dados. Estamos preparando o contrato.',
+    aguardando_aceite: 'Seu contrato está pronto. Leia e aceite por aqui mesmo, leva 1 minuto.',
+    enviado: `Enviamos o contrato para ${c.signer_email ?? 'seu e-mail'}. Abra o e-mail da Assinafy e assine pelo link.`,
     assinado_cliente: 'Você já assinou. Falta só a assinatura da Peformake.',
-    assinado: 'Contrato assinado pelas duas partes.',
+    assinado: c.sign_method === 'aceite' ? 'Contrato aceito. Obrigado pela confiança!' : 'Contrato assinado pelas duas partes.',
     erro: 'Tivemos um problema ao enviar. A equipe já foi avisada.',
   }
   return (
     <section aria-labelledby="contrato" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
-      <h2 id="contrato" className="flex items-center gap-2 text-[17px] font-semibold tracking-tight"><FileSignature size={18} aria-hidden="true" /> Contrato</h2>
-      {needsData ? (
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 id="contrato" className="flex items-center gap-2 text-[17px] font-semibold tracking-tight"><FileSignature size={18} aria-hidden="true" /> Contrato</h2>
+        {c.status === 'assinado' && <span className="flex items-center gap-1 rounded-full bg-ok-soft px-2.5 py-0.5 text-[12px] font-semibold text-ok-ink"><CheckCircle2 size={13} aria-hidden="true" /> {c.sign_method === 'aceite' ? 'Aceito' : 'Assinado'}</span>}
+      </div>
+      <p className="text-[14px] text-muted">{statusText[needsData ? 'aguardando_dados' : c.status] ?? ''}</p>
+      <div className="flex flex-wrap gap-2">
+        {needsData && <Button onClick={() => setDialog('dados')}>Preencher dados</Button>}
+        {c.status === 'aguardando_aceite' && <Button onClick={() => { accept.reset(); setDialog('aceitar') }}>Ler e aceitar</Button>}
+        {c.status !== 'aguardando_aceite' && <Button variant="secondary" onClick={() => setDialog('ler')}>Ler o contrato</Button>}
+        {c.status === 'assinado' && <Button variant="secondary" disabled={pdf.isPending} onClick={() => pdf.mutate()}>{pdf.isPending ? 'Gerando PDF' : 'Baixar PDF'}</Button>}
+      </div>
+      {pdf.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(pdf.error as Error).message}</p>}
+
+      <Dialog open={dialog === 'dados'} onClose={() => setDialog(null)} title="Dados para o contrato" description="Quem assina pela sua empresa. Usamos só no contrato e na cobrança." size="sm">
         <form onSubmit={(e) => { e.preventDefault(); save.mutate() }} className="flex flex-col gap-3">
-          <p className="text-[14px] text-muted">Para preparar o contrato, preencha os dados de quem assina. Depois ele chega no seu e-mail para assinar pelo celular.</p>
           <label className="flex flex-col text-[13px] font-semibold">Nome completo ou razão social<input value={f.name} onChange={(e) => setF((x) => ({ ...x, name: e.target.value }))} autoComplete="name" className={field} /></label>
           <label className="flex flex-col text-[13px] font-semibold">CPF ou CNPJ<input inputMode="numeric" value={f.document} onChange={(e) => setF((x) => ({ ...x, document: e.target.value }))} className={field} /></label>
-          <label className="flex flex-col text-[13px] font-semibold">E-mail para assinar<input type="email" inputMode="email" autoComplete="email" value={f.email} onChange={(e) => setF((x) => ({ ...x, email: e.target.value }))} className={field} /></label>
+          <label className="flex flex-col text-[13px] font-semibold">E-mail<input type="email" inputMode="email" autoComplete="email" value={f.email} onChange={(e) => setF((x) => ({ ...x, email: e.target.value }))} className={field} /></label>
           <label className="flex flex-col text-[13px] font-semibold">Endereço completo<input value={f.address} onChange={(e) => setF((x) => ({ ...x, address: e.target.value }))} autoComplete="street-address" className={field} /></label>
           {save.isError && <p role="alert" className="font-medium text-warn-ink">{(save.error as Error).message}</p>}
-          <div><Button type="submit" disabled={save.isPending}>{save.isPending ? 'Enviando' : 'Enviar dados'}</Button></div>
+          <Button type="submit" disabled={save.isPending}>{save.isPending ? 'Enviando' : 'Enviar dados'}</Button>
         </form>
-      ) : (
-        <>
-          <p className={cn('rounded-2xl px-4 py-3 text-[14px]', c.status === 'assinado' ? 'bg-ok-soft text-ok-ink' : 'bg-raised')}>{statusText[c.status] ?? ''}</p>
-          <button type="button" onClick={() => setReading((r) => !r)} className="self-start text-[13px] font-medium underline">{reading ? 'Fechar o texto' : 'Ler o contrato'}</button>
-          {reading && <pre className="max-h-96 overflow-auto whitespace-pre-wrap rounded-2xl bg-raised p-4 font-sans text-[13px] leading-relaxed">{c.body}</pre>}
-        </>
-      )}
+      </Dialog>
+
+      <Dialog open={dialog === 'ler'} onClose={() => setDialog(null)} title={c.title} size="lg">
+        <pre className="whitespace-pre-wrap font-sans text-[14px] leading-relaxed">{c.body}</pre>
+      </Dialog>
+
+      <Dialog open={dialog === 'aceitar'} onClose={() => setDialog(null)} title="Ler e aceitar o contrato" size="lg"
+        footer={<Button disabled={!a.agree || a.name.trim().length < 3 || a.document.replace(/\D/g, '').length < 11 || accept.isPending} onClick={() => accept.mutate()}>{accept.isPending ? 'Registrando' : 'Aceito o contrato'}</Button>}>
+        <div className="flex flex-col gap-4">
+          <pre className="max-h-[45dvh] overflow-auto whitespace-pre-wrap rounded-2xl bg-raised p-4 font-sans text-[13px] leading-relaxed">{c.body}</pre>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="flex flex-col text-[13px] font-semibold">Seu nome completo<input value={a.name} onChange={(e) => setA((x) => ({ ...x, name: e.target.value }))} autoComplete="name" className={field} /></label>
+            <label className="flex flex-col text-[13px] font-semibold">CPF ou CNPJ do contrato<input inputMode="numeric" value={a.document} onChange={(e) => setA((x) => ({ ...x, document: e.target.value }))} className={field} /></label>
+          </div>
+          <label className="flex cursor-pointer items-start gap-2 text-[14px]">
+            <input type="checkbox" checked={a.agree} onChange={(e) => setA((x) => ({ ...x, agree: e.target.checked }))} className="mt-0.5 size-5 accent-[var(--accent)]" />
+            <span>Li e concordo com todas as cláusulas. Entendo que este aceite eletrônico tem o mesmo valor de uma assinatura.</span>
+          </label>
+          {accept.isError && <p role="alert" className="font-medium text-warn-ink">{(accept.error as Error).message}</p>}
+        </div>
+      </Dialog>
     </section>
   )
 }

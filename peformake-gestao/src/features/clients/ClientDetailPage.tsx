@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { AlertTriangle, ArrowLeft, Mail, MessageCircle, Pencil, Phone } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, ChevronLeft, ChevronRight, Mail, MessageCircle, Pencil, Phone } from 'lucide-react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
 import { PortalLinkCard } from '@/features/portal/PortalLinkCard'
@@ -15,7 +15,8 @@ import { ClientAssets } from './ClientAssets'
 import { cn } from '@/lib/cn'
 import { HealthSection } from './HealthSection'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
-import { ClientContractBlock } from '@/features/contracts/ClientContractBlock'
+import { ClientContractTab } from '@/features/contracts/ClientContractTab'
+import { ClientFinanceTab } from './ClientFinanceTab'
 import { monthStart } from '@/features/traffic/planRules'
 import { ATTENTION_LABEL, KIND_LABEL, type AttentionFlag } from './portfolioRules'
 import { ServicesSection } from './ServicesSection'
@@ -46,12 +47,14 @@ function Text({ label, value }: { label: string; value: string | null }) {
   )
 }
 
-type Tab = 'geral' | 'servicos' | 'arquivos' | 'acessos' | 'historico'
-const TABS: { id: Tab; label: string }[] = [
+type Tab = 'geral' | 'entregas' | 'servicos' | 'contrato' | 'financeiro' | 'arquivos' | 'historico'
+const TABS: { id: Tab; label: string; admin?: boolean }[] = [
   { id: 'geral', label: 'Visão geral' },
+  { id: 'entregas', label: 'Entregas' },
   { id: 'servicos', label: 'Serviços e equipe' },
-  { id: 'arquivos', label: 'Arquivos e links' },
-  { id: 'acessos', label: 'Contas e portal' },
+  { id: 'contrato', label: 'Contrato', admin: true },
+  { id: 'financeiro', label: 'Financeiro', admin: true },
+  { id: 'arquivos', label: 'Arquivos e acessos' },
   { id: 'historico', label: 'Histórico' },
 ]
 
@@ -71,7 +74,10 @@ export function ClientDetailPage() {
   const [editing, setEditing] = useState(false)
   const accounts = useQuery({ queryKey: ['ad-accounts'], queryFn: listAdAccounts })
   const client = query.data?.find((item) => item.id === id)
-  const tab = (TABS.some((t) => t.id === params.get('aba')) ? params.get('aba') : 'geral') as Tab
+  const tabs = TABS.filter((t) => !t.admin || isAdmin)
+  const asked = params.get('aba') === 'acessos' ? 'arquivos' : params.get('aba')
+  const tab = (tabs.some((t) => t.id === asked) ? asked : 'geral') as Tab
+  const [month, setMonth] = useState(0)
   const setTab = (next: Tab) => setParams((current) => {
     const p = new URLSearchParams(current)
     if (next === 'geral') p.delete('aba')
@@ -155,7 +161,7 @@ export function ClientDetailPage() {
       )}
 
       <div role="tablist" aria-label="Seções do cliente" className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {TABS.map((t) => (
+        {tabs.map((t) => (
           <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}
             className={cn('-mb-px min-h-11 shrink-0 cursor-pointer border-b-2 px-4 text-[14px] font-semibold', tab === t.id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink')}>
             {t.label}
@@ -164,8 +170,21 @@ export function ClientDetailPage() {
       </div>
 
       <div className="@container">
-        {tab === 'geral' && canManage && <div className="mb-3"><ClientOperationBlock clientId={client.id} month={monthStart(todayInBrazil(), 0)} /></div>}
-        {tab === 'geral' && isAdmin && <div className="mb-3"><ClientContractBlock clientId={client.id} clientType={client.clientType} /></div>}
+        {tab === 'entregas' && (
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[15px] font-semibold capitalize">{new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${monthStart(today, month)}T00:00:00Z`))}</p>
+              <div className="flex gap-1">
+                <button type="button" onClick={() => setMonth((m) => m - 1)} aria-label="Mês anterior" className="grid size-10 cursor-pointer place-items-center rounded-full border border-line hover:border-ink"><ChevronLeft size={16} aria-hidden="true" /></button>
+                <button type="button" onClick={() => setMonth((m) => Math.min(m + 1, 1))} aria-label="Próximo mês" className="grid size-10 cursor-pointer place-items-center rounded-full border border-line hover:border-ink"><ChevronRight size={16} aria-hidden="true" /></button>
+              </div>
+            </div>
+            <ClientOperationBlock clientId={client.id} month={monthStart(today, month)} />
+            <p className="text-[12px] text-muted">O que foi combinado para o mês em cada serviço e quanto já foi entregue. Sem dados no mês, nada aparece.</p>
+          </div>
+        )}
+        {tab === 'contrato' && isAdmin && <ClientContractTab client={client} kindLabel={KIND_LABEL[view.kind]} />}
+        {tab === 'financeiro' && isAdmin && <ClientFinanceTab client={client} />}
         {tab === 'geral' && (
           <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-3">
             <HealthSection clientId={client.id} health={view.health} history={client.assessments} canAssess />
@@ -222,10 +241,6 @@ export function ClientDetailPage() {
           <div className="flex flex-col gap-3">
             <ClientAssets clientId={client.id} />
             <LinksSection clientId={client.id} canManage={canManage} />
-          </div>
-        )}
-
-        {tab === 'acessos' && (
           <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-2">
             <Block title="Contas de anúncios">
               {linked.length === 0 && (
@@ -249,6 +264,7 @@ export function ClientDetailPage() {
               <Block title="Portal do cliente"><p className="text-muted">Administrador ou head de marketing gera o link do portal.</p></Block>
             )}
           </div>
+                  </div>
         )}
 
         {tab === 'historico' && (
