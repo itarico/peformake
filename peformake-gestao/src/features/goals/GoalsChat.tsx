@@ -232,6 +232,7 @@ export function GoalsChat() {
   const [links, setLinks] = useState<Action[]>([])
   const idRef = useRef(1)
   const genRef = useRef(0)
+  const lastFormat = useRef<GoalFormat | undefined>(undefined)
   const box = useRef<HTMLDivElement>(null)
   const rnd = useMemo(() => seeded(`${cal.iso}-${role}`), [cal.iso, role])
   const pick = useMemo(() => pickWith(rnd), [rnd])
@@ -307,7 +308,8 @@ export function GoalsChat() {
       : item.kind === 'hit' ? { from: 'bot', kind: 'text', text: pk([`🏆 Meta batida: ${m.title(g.info).toLowerCase()}!`, `🏆 Bateu! ${m.title(g.info)} com ${days - day} dias de folga.`]) }
         : { from: 'bot', kind: 'text', text: goalIntro(pk) }
     // Cada mensagem num formato: barra, gráfico, número grande ou tempo × meta; às vezes já vem o cliente para procurar.
-    const format: GoalFormat = item.kind === 'hit' ? 'big' : formatFor(pk, m.kind)
+    const format: GoalFormat = item.kind === 'hit' ? 'big' : formatFor(m.kind, cal.doy, Math.max(0, list.indexOf(g)), lastFormat.current)
+    lastFormat.current = format
     const card = item.kind !== 'hit' && paceOf(g, day, days).state !== 'ok' && pk([true, true, false]) ? clientCard(g, coach.data) : null
     const sug = item.kind !== 'hit' && !card ? suggestion(pk, g, coach.data) : null
     const tail: NewMsg[] = card

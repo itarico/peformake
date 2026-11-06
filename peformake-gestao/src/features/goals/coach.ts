@@ -266,7 +266,16 @@ export function clientCard(r: GoalRow, c: Coach | undefined): { name: string; wh
 }
 
 export type GoalFormat = 'bar' | 'chart' | 'big' | 'time'
-/** Formato da mensagem da meta: muda a cada dia e a cada meta. Limites (no máximo) ficam na barra. */
-export function formatFor(pick: <T>(a: readonly T[]) => T, kind: string): GoalFormat {
-  return kind === 'atMost' ? pick(['bar', 'big'] as const) : pick(['bar', 'chart', 'big', 'time'] as const)
+const ROTATION: GoalFormat[] = ['chart', 'bar', 'time', 'big']
+const LIMIT_ROTATION: GoalFormat[] = ['bar', 'big']
+/**
+ * Formato da mensagem da meta, em rodízio: cada meta passa por todos os formatos a cada 4 dias
+ * (o gráfico aparece pelo menos uma vez por semana) e duas mensagens seguidas nunca saem iguais.
+ * Limites (no máximo) alternam só entre barra e número grande.
+ */
+export function formatFor(kind: string, dayOfYear: number, goalIndex: number, prev?: GoalFormat): GoalFormat {
+  const list = kind === 'atMost' ? LIMIT_ROTATION : ROTATION
+  let i = (dayOfYear + goalIndex) % list.length
+  if (list[i] === prev) i = (i + 1) % list.length
+  return list[i]!
 }

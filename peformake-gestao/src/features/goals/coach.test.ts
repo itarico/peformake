@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 vi.mock('@/lib/supabase', () => ({ supabase: { rpc: () => null } }))
-import { actions, names, pickWith, seeded, steps, suggestion, type Coach } from './coach'
+import { actions, formatFor, names, pickWith, seeded, steps, suggestion, type Coach } from './coach'
 import type { GoalRow } from './goals'
 
 const c: Coach = {
@@ -29,5 +29,17 @@ describe('coach', () => {
     expect(a).toBe(b)
     expect(suggestion(pickWith(seeded('s')), row({ key: 'avulsos' }), c)).toContain('Dra. Nayane')
     expect(names(['A', 'B', 'C'])).toBe('A, B e C')
+  })
+})
+
+describe('formatFor (rodízio)', () => {
+  it('passa por todos os formatos em 4 dias e nunca repete o anterior', () => {
+    const seen = new Set([0, 1, 2, 3].map((d) => formatFor('atLeast', d, 0)))
+    expect(seen.has('chart')).toBe(true)
+    expect(seen.size).toBe(4)
+    expect(formatFor('atLeast', 0, 0, formatFor('atLeast', 0, 0))).not.toBe(formatFor('atLeast', 0, 0))
+  })
+  it('limite só usa barra ou número grande', () => {
+    for (let d = 0; d < 6; d++) expect(['bar', 'big']).toContain(formatFor('atMost', d, 1))
   })
 })
