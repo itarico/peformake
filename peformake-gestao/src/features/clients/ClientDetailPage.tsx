@@ -28,16 +28,20 @@ import { useClients } from './useClients'
 
 
 
-type Tab = 'geral' | 'entregas' | 'servicos' | 'contrato' | 'financeiro' | 'arquivos' | 'historico'
+// 4 abas: o resumo, o dia a dia (entregas, serviços e equipe), o dinheiro (contrato e financeiro) e o arquivo.
+type Tab = 'geral' | 'operacao' | 'contrato' | 'arquivos'
+type AnyTab = Tab | 'entregas' | 'servicos' | 'financeiro' | 'historico' | 'acessos'
 const TABS: { id: Tab; label: string; admin?: boolean }[] = [
   { id: 'geral', label: 'Visão geral' },
-  { id: 'entregas', label: 'Entregas' },
-  { id: 'servicos', label: 'Serviços e equipe' },
-  { id: 'contrato', label: 'Contrato', admin: true },
-  { id: 'financeiro', label: 'Financeiro', admin: true },
-  { id: 'arquivos', label: 'Arquivos e acessos' },
-  { id: 'historico', label: 'Histórico' },
+  { id: 'operacao', label: 'Entregas e equipe' },
+  { id: 'contrato', label: 'Contrato e financeiro', admin: true },
+  { id: 'arquivos', label: 'Arquivos e histórico' },
 ]
+// Links antigos e atalhos continuam funcionando.
+const ALIAS: Record<string, { tab: Tab; sub?: 'contrato' | 'financeiro' }> = {
+  entregas: { tab: 'operacao' }, servicos: { tab: 'operacao' }, financeiro: { tab: 'contrato', sub: 'financeiro' },
+  historico: { tab: 'arquivos' }, acessos: { tab: 'arquivos' },
+}
 
 
 export function ClientDetailPage() {
@@ -50,16 +54,21 @@ export function ClientDetailPage() {
   const accounts = useQuery({ queryKey: ['ad-accounts'], queryFn: listAdAccounts })
   const client = query.data?.find((item) => item.id === id)
   const tabs = TABS.filter((t) => !t.admin || isAdmin)
-  const asked = params.get('aba') === 'acessos' ? 'arquivos' : params.get('aba')
+  const raw = params.get('aba') ?? 'geral'
+  const asked = ALIAS[raw]?.tab ?? raw
   const tab = (tabs.some((t) => t.id === asked) ? asked : 'geral') as Tab
+  const money = params.get('ver') === 'financeiro' || ALIAS[raw]?.sub === 'financeiro' ? 'financeiro' : 'contrato'
   const [month, setMonth] = useState(0)
-  const setTab = (next: Tab) => setParams((current) => {
+  const setTab = (next: AnyTab) => setParams((current) => {
     const p = new URLSearchParams(current)
-    if (next === 'geral') p.delete('aba')
-    else p.set('aba', next)
+    const target = ALIAS[next]?.tab ?? (next as Tab)
+    if (target === 'geral') p.delete('aba')
+    else p.set('aba', target)
+    if (ALIAS[next]?.sub) p.set('ver', ALIAS[next]!.sub!)
     p.delete('novo')
     return p
   }, { replace: true })
+  const setMoney = (v: 'contrato' | 'financeiro') => setParams((current) => { const p = new URLSearchParams(current); p.set('ver', v); return p }, { replace: true })
 
   if (query.isPending) return <p role="status" className="text-muted">Carregando</p>
   if (query.isError) return <ErrorBox text="Não foi possível carregar o cliente." onRetry={() => void query.refetch()} />
@@ -112,7 +121,7 @@ export function ClientDetailPage() {
 
       {params.get('novo') && (
         <p role="status" className="rounded-3xl bg-ok-soft px-5 py-3.5 text-ok-ink">
-          <b>Cliente cadastrado.</b> Próximo passo: defina a equipe e adicione os serviços em <button type="button" className="cursor-pointer font-semibold underline" onClick={() => setTab('servicos')}>Serviços e equipe</button>.
+          <b>Cliente cadastrado.</b> Próximo passo: defina a equipe e adicione os serviços em <button type="button" className="cursor-pointer font-semibold underline" onClick={() => setTab('operacao')}>Entregas e equipe</button>.
         </p>
       )}
 
@@ -127,7 +136,25 @@ export function ClientDetailPage() {
       </div>
 
       <div className="@container">
-        {tab === 'entregas' && (
+        {tab === 'contrato' && isAdmin && (
+          <div className="flex flex-col gap-3">
+            <div role="group" aria-label="Ver" className="inline-flex w-fit rounded-xl border border-line p-0.5">
+              {(['contrato', 'financeiro'] as const).map((v) => (
+                <button key={v} type="button" aria-pressed={money === v} onClick={() => setMoney(v)}
+                  className={cn('min-h-9 cursor-pointer rounded-lg px-4 text-[13px] font-semibold', money === v ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
+                  {v === 'contrato' ? 'Contrato' : 'Financeiro'}
+                </button>
+              ))}
+            </div>
+            {money === 'contrato' ? <ClientContractTab client={client} kindLabel={KIND_LABEL[view.kind]} /> : <ClientFinanceTab client={client} />}
+          </div>
+        )}
+        {tab === 'geral' && (
+          <ClientOverview view={view} isAdmin={isAdmin} canManage={canManage} whatsapp={whatsapp} onOpenTab={(t) => setTab(t)} />
+        )}
+
+        {tab === 'operacao' && (
+          <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-2">
               <p className="text-[15px] font-semibold capitalize">{new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${monthStart(today, month)}T00:00:00Z`))}</p>
@@ -139,18 +166,11 @@ export function ClientDetailPage() {
             <ClientOperationBlock clientId={client.id} month={monthStart(today, month)} />
             <p className="text-[12px] text-muted">O que foi combinado para o mês em cada serviço e quanto já foi entregue. Sem dados no mês, nada aparece.</p>
           </div>
-        )}
-        {tab === 'contrato' && isAdmin && <ClientContractTab client={client} kindLabel={KIND_LABEL[view.kind]} />}
-        {tab === 'financeiro' && isAdmin && <ClientFinanceTab client={client} />}
-        {tab === 'geral' && (
-          <ClientOverview view={view} isAdmin={isAdmin} canManage={canManage} whatsapp={whatsapp} onOpenTab={(t) => setTab(t)} />
-        )}
-
-        {tab === 'servicos' && (
-          <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+                  <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
             <ServicesSection clientId={client.id} services={client.services} kind={view.kind} isAdmin={isAdmin} canManage={canManage} />
             <TeamSection key={client.updatedAt} clientId={client.id} team={client.team} squadId={client.squadId} canManage={canManage} />
           </div>
+                  </div>
         )}
 
         {tab === 'arquivos' && (
@@ -161,7 +181,7 @@ export function ClientDetailPage() {
             <Block title="Contas de anúncios">
               {linked.length === 0 && (
                 <p className="text-muted">Nenhuma vinculada. <Link to="/trafego/contas?filtro=unlinked" className="font-medium text-accent-ink underline underline-offset-2">Vincular conta</Link></p>
-              )}
+                )}
               <ul className="flex flex-col gap-2">
                 {linked.map((account) => (
                   <li key={account.id} className="flex items-start justify-between gap-2">
@@ -180,15 +200,13 @@ export function ClientDetailPage() {
               <Block title="Portal do cliente"><p className="text-muted">Administrador ou head de marketing gera o link do portal.</p></Block>
             )}
           </div>
-                  </div>
-        )}
-
-        {tab === 'historico' && (
-          <div className="flex flex-col gap-3">
-            <HistorySection clientId={client.id} />
-            <StatusSection client={client} canManage={canManage} isAdmin={isAdmin} />
+            <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-2">
+              <HistorySection clientId={client.id} />
+              <StatusSection client={client} canManage={canManage} isAdmin={isAdmin} />
+            </div>
           </div>
         )}
+
       </div>
     </>
   )

@@ -112,3 +112,27 @@ export function monthsIdle(intel: ClientIntel | null | undefined, kind: string, 
   if (!last) return null
   return Math.floor((Date.parse(today) - Date.parse(last)) / (30.44 * 86_400_000))
 }
+
+export type Tier = 'diamante' | 'ouro' | 'prata'
+export interface ClientRank { score: number; tier: Tier | null; rank: number; parts: Record<string, number | boolean> }
+export const TIER_LABEL: Record<Tier, string> = { diamante: 'Diamante', ouro: 'Ouro', prata: 'Prata' }
+export const TIER_TONE: Record<Tier, string> = {
+  diamante: 'bg-[#159fb4]/15 text-[#0d8fa0] dark:text-[#5fd3e3]',
+  ouro: 'bg-[#eda100]/15 text-[#a06c00] dark:text-[#f5c04d]',
+  prata: 'bg-raised text-muted',
+}
+
+/** Ranking dos melhores clientes: valor, serviços, temperatura, avaliação, tempo de casa e pagamento em dia. */
+export function useClientRanking() {
+  return useQuery({
+    queryKey: ['client-ranking'],
+    staleTime: 5 * 60_000,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await rpc('client_ranking')
+      if (error) throw new Error(error.message)
+      const rows = (data ?? []) as { client_id: string; score: number; tier: Tier | null; rank: number; parts: Record<string, number | boolean> }[]
+      return new Map(rows.map((r) => [r.client_id, { score: r.score, tier: r.tier, rank: r.rank, parts: r.parts } satisfies ClientRank]))
+    },
+  })
+}

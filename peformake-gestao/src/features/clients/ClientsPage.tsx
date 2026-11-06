@@ -26,7 +26,7 @@ import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
 import { isLiveClient } from './clientRules'
-import { monthsIdle, TEMP_LABEL, TEMP_TONE, useClientIntel } from './intelApi'
+import { monthsIdle, TEMP_LABEL, TEMP_TONE, TIER_LABEL, TIER_TONE, useClientIntel, useClientRanking } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
@@ -47,13 +47,14 @@ function Chips<T extends string>({ label, value, options, onChange }: { label: s
 }
 
 const FLAGS: AttentionFlag[] = ['risk', 'expired', 'ending', 'no_service', 'no_team', 'stale', 'upsell']
-const SORTS: { id: SortKey; label: string }[] = [
+const SORTS: { id: SortKey | 'best'; label: string }[] = [
+  { id: 'best', label: 'Melhores clientes primeiro' },
   { id: 'name', label: 'Nome' },
   { id: 'health', label: 'Pior saúde primeiro' },
   { id: 'contract', label: 'Contrato que vence antes' },
 ]
 
-function readFilters(params: URLSearchParams): ClientFilters & { sort: SortKey } {
+function readFilters(params: URLSearchParams): ClientFilters & { sort: SortKey | 'best' } {
   const pick = <T extends string>(key: string, allowed: readonly T[], fallback: T): T => {
     const value = params.get(key) as T | null
     return value && allowed.includes(value) ? value : fallback
@@ -64,18 +65,19 @@ function readFilters(params: URLSearchParams): ClientFilters & { sort: SortKey }
     entity: pick<EntityFilter>('empresa', ['all', 'peformake', 'ellcazo'], 'all'),
     flag: pick<FlagFilter>('atencao', ['all', 'any', ...FLAGS], 'all'),
     search: params.get('busca') ?? '',
-    sort: pick<SortKey>('ordem', SORTS.map((item) => item.id), 'name'),
+    sort: pick<SortKey | 'best'>('ordem', SORTS.map((item) => item.id), 'best'),
   }
 }
 
 const PARAM: Record<keyof ClientFilters | 'sort', string> = {
   status: 'situacao', kind: 'tipo', entity: 'empresa', flag: 'atencao', search: 'busca', sort: 'ordem',
 }
-const DEFAULTS: Record<string, string> = { situacao: 'active', tipo: 'all', empresa: 'all', atencao: 'all', busca: '', ordem: 'name' }
+const DEFAULTS: Record<string, string> = { situacao: 'active', tipo: 'all', empresa: 'all', atencao: 'all', busca: '', ordem: 'best' }
 
 export function ClientsPage() {
   const { canManage, isAdmin, query } = useClients()
   const intel = useClientIntel()
+  const ranking = useClientRanking()
   const settings = useIntelSettings()
   const [params, setParams] = useSearchParams()
   const filters = readFilters(params)
@@ -106,7 +108,12 @@ export function ClientsPage() {
   const group = useMemo(() => views.filter((v) => (tab === 'avulsos' ? v.kind === 'avulso' : v.kind !== 'avulso')), [views, tab])
   const summary = useMemo(() => summarizePortfolio(group), [group])
   const effective = { ...filters, kind: tab === 'avulsos' ? 'avulso' as const : filters.kind === 'all' ? 'recorrente' as const : filters.kind }
-  const visible = useMemo(() => sortClients(filterClients(views, effective), filters.sort), [views, effective.kind, effective.status, effective.entity, effective.flag, effective.search, filters.sort]) // eslint-disable-line react-hooks/exhaustive-deps
+  const visible = useMemo(() => {
+    const list = filterClients(views, effective)
+    if (filters.sort !== 'best') return sortClients(list, filters.sort)
+    const r = ranking.data
+    return [...list].sort((a, b) => (r?.get(b.client.id)?.score ?? -1) - (r?.get(a.client.id)?.score ?? -1) || a.client.name.localeCompare(b.client.name, 'pt-BR'))
+  }, [ranking.data, views, effective.kind, effective.status, effective.entity, effective.flag, effective.search, filters.sort]) // eslint-disable-line react-hooks/exhaustive-deps
   const live = views.filter((v) => isLiveClient(v.client))
   const liveRecurring = live.filter((v) => v.kind !== 'avulso').length
   const liveOneOff = live.length - liveRecurring
@@ -234,7 +241,14 @@ export function ClientsPage() {
                     <div className="flex min-w-0 items-center gap-3">
                       <ClientAvatar name={client.name} url={client.logoUrl} />
                       <div className="min-w-0">
-                        <Link to={`/clientes/${client.id}`} className="block truncate text-[15px] font-semibold tracking-tight after:absolute after:inset-0">{client.name}</Link>
+                        <span className="flex min-w-0 items-center gap-1.5">
+                          <Link to={`/clientes/${client.id}`} className="block truncate text-[15px] font-semibold tracking-tight after:absolute after:inset-0">{client.name}</Link>
+                          {ranking.data?.get(client.id)?.tier && (
+                            <span className={cn('shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide', TIER_TONE[ranking.data.get(client.id)!.tier!])} title={`Nota ${ranking.data.get(client.id)!.score}/100 · ${ranking.data.get(client.id)!.rank}º da carteira`}>
+                              {ranking.data.get(client.id)!.rank === 1 ? 'Top 1 · ' : ''}{TIER_LABEL[ranking.data.get(client.id)!.tier!]}
+                            </span>
+                          )}
+                        </span>
                         <p className="truncate text-[12px] text-muted">
                           {KIND_LABEL[view.kind]}{view.entity === 'ellcazo' && ' · Ellcazo'}{client.segment && ` · ${client.segment}`}
                         </p>
