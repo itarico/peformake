@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, ChevronLeft, ChevronRight, MessageCircle, Pencil } from 'lucide-react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
@@ -8,6 +8,7 @@ import { listAdAccounts } from '@/features/traffic/accountsApi'
 import { accountAlerts } from '@/features/traffic/accountRules'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { ClientAvatar } from './ClientAvatar'
+import { setClientPartner } from './clientsApi'
 import { HistorySection, LinksSection, StatusSection } from './ClientExtras'
 import { clientStatusLabel, describeClient, whatsappLink } from './clientRules'
 import { ClientDialog } from './ClientFormPage'
@@ -100,6 +101,7 @@ export function ClientDetailPage() {
               <span className="rounded-full bg-raised px-2.5 py-0.5 font-medium">{KIND_LABEL[view.kind]}</span>
               {view.entity === 'ellcazo' && <span className="rounded-full bg-raised px-2.5 py-0.5 font-medium">Ellcazo</span>}
               {client.segment && <span className="rounded-full bg-raised px-2.5 py-0.5 font-medium">{client.segment}</span>}
+              <PartnerChip clientId={client.id} on={!!client.isPartner} />
               <span className={cn('rounded-full px-2.5 py-0.5 font-medium', client.isActive ? 'bg-ok-soft text-ok-ink' : 'bg-warn-soft text-warn-ink')}>{clientStatusLabel(client)}</span>
             </p>
           </div>
@@ -209,5 +211,21 @@ export function ClientDetailPage() {
 
       </div>
     </>
+  )
+}
+
+/** Tag de parceiro comercial. Clicar liga ou desliga (quem gerencia clientes). */
+function PartnerChip({ clientId, on }: { clientId: string; on: boolean }) {
+  const queryClient = useQueryClient()
+  const toggle = useMutation({
+    mutationFn: () => setClientPartner(clientId, !on),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['clients'] }),
+  })
+  return (
+    <button type="button" onClick={() => toggle.mutate()} disabled={toggle.isPending} aria-pressed={on}
+      title={on ? 'Parceiro comercial: tem o mesmo desconto do contrato de 5 meses. Clique para tirar.' : 'Marcar como parceiro comercial (mesmo desconto do contrato de 5 meses)'}
+      className={cn('cursor-pointer rounded-full px-2.5 py-0.5 font-medium', on ? 'bg-accent text-on-fill' : 'border border-dashed border-line-strong text-muted hover:text-ink')}>
+      {on ? 'Parceiro' : '+ Parceiro'}
+    </button>
   )
 }

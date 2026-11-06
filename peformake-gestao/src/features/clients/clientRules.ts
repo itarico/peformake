@@ -102,6 +102,8 @@ export interface ClientRecord {
   address: string | null
   billingEmail: string | null
   instagram?: string | null
+  /** Parceiro comercial: tem o mesmo desconto de quem fecha contrato de 5 meses. */
+  isPartner?: boolean
   website?: string | null
   contract: ContractRecord | null
   services: ClientServiceItem[]

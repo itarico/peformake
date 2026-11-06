@@ -146,6 +146,8 @@ export interface QuoteInputs {
   destino?: string
   /** Itens automáticos que quem montou tirou deste orçamento. */
   autoOff?: string[]
+  /** Cliente parceiro comercial: ganha o mesmo desconto do contrato de 5 meses. */
+  partner?: boolean
   // Campos antigos (orçamentos de antes das regras editáveis). Só lidos por fromLegacy.
   cortes?: number; motion?: number; droneVideos?: number; droneAvulso?: number; fotosExtras10?: number; brutos?: number; apresentadora?: number
   deslocamento?: 'nenhum' | 'rmr' | 'fora'; fimDeSemana?: boolean; noturno?: boolean; contrato?: 'nenhum' | 'com_contrato' | 'sem_contrato'
@@ -306,6 +308,13 @@ export function calculateQuote(p: AvPricing, i: QuoteInputs, picks: readonly Cat
     if (subtotal <= 0 || subtotal < pos(r.minTotal)) continue
     const v = ruleValue(r, subtotal)
     if (v !== 0) { adjustment += v; labels.push(`${r.name} (${ruleDetail(r)})`) }
+  }
+  // Parceiro comercial: mesmo desconto do contrato de 5 meses (sem somar com ele).
+  const contract = menuOf(p).rules.find((r) => r.id === 'contrato_5m')
+  if (i.partner && subtotal > 0 && !rules.some((r) => r.id === 'contrato_5m')) {
+    const pct = contract ? pos(contract.value) : pos(p.desconto_contrato_pct)
+    const v = round(-subtotal * pct / 100)
+    if (v !== 0) { adjustment += v; labels.push(`Parceiro comercial (−${num(pct)}%)`) }
   }
   adjustment = round(Math.max(adjustment, -subtotal))
   const total = round(subtotal + adjustment)

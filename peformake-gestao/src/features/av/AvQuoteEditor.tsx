@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, FileDown, Link2, Mail, MessageCircle, Minus, Package, Plus, Send, Trash2 } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { isValidPhone } from '@/features/clients/clientFormRules'
 import { cn } from '@/lib/cn'
+import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { useProduction } from '@/features/production/useProduction'
 import { EllcazoHeader } from './AvBoard'
@@ -115,6 +116,17 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
     kind: (quote?.kind ?? 'avulso') as QuoteKind, months: quote?.months ? String(quote.months) : '', notes: quote?.notes ?? '',
   })
   const set = <K extends keyof QuoteInputs>(k: K, v: QuoteInputs[K]) => setInputs((cur) => ({ ...cur, [k]: v }))
+  // Cliente parceiro: o desconto entra sozinho no orçamento.
+  const partnerQ = useQuery({
+    queryKey: ['client-partner', meta.clientId],
+    enabled: !!meta.clientId,
+    queryFn: async () => {
+      const { data } = await supabase.from('clients').select('is_partner').eq('id', meta.clientId).maybeSingle()
+      return !!(data as { is_partner?: boolean } | null)?.is_partner
+    },
+  })
+  const isPartner = !!meta.clientId && !!partnerQ.data
+  useEffect(() => { setInputs((cur) => (cur.partner === isPartner ? cur : { ...cur, partner: isPartner })) }, [isPartner])
   const [view, setView] = useState<'resumo' | 'previa'>('resumo')
   const result = useMemo(() => calculateQuote(pricing, inputs, picks), [pricing, inputs, picks])
 

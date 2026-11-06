@@ -295,6 +295,7 @@ export function ClientsPage() {
                     </div>
                     <div className="hidden @4xl:flex flex-wrap gap-1">
                       {idleWarn && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-[12px] font-medium text-warn-ink">{idleLost ? `Parado há ${idle} meses · avaliar perda` : `Sem serviço há ${idle} meses`}</span>}
+                      {client.isPartner && <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[12px] font-semibold text-accent-ink" title="Parceiro comercial: mesmo desconto do contrato de 5 meses">Parceiro</span>}
                       {debt > 0 && <span className="rounded-full bg-warn px-2 py-0.5 text-[12px] font-semibold text-white">Devendo{isAdmin && intel.data?.get(client.id)?.factors.devendo_valor ? ` ${brlValue(intel.data.get(client.id)!.factors.devendo_valor!)}` : ''}</span>}
                       <FlagChips flags={view.flags} upsell={view.upsell} />
                     </div>

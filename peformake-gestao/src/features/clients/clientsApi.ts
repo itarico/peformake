@@ -82,7 +82,7 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
   const [clients, links, services, contracts, team, staff, assessments, prices] = await Promise.all([
     supabase
       .from('clients')
-      .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id, document, legal_name, address, billing_email, instagram, website')
+      .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id, document, legal_name, address, billing_email, instagram, website, is_partner')
       .order('name'),
     supabase.from('client_services').select('id, client_id, service_id, is_active, quantity, notes, package_id, billing_month, legacy_created_at'),
     supabase.from('services').select('id, name, is_audiovisual'),
@@ -142,6 +142,7 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
       billingEmail: row.billing_email,
       instagram: (row as { instagram?: string | null }).instagram ?? null,
       website: (row as { website?: string | null }).website ?? null,
+      isPartner: !!(row as { is_partner?: boolean | null }).is_partner,
       contract: contract
         ? { model: contract.contract_model, startDate: contract.start_date, endDate: contract.end_date, months: contract.months, billingDay: contract.billing_day }
         : null,
@@ -422,4 +423,11 @@ export function sizeFromReceita(porte: string, capital: number, mei: boolean): {
   const p = porte.toUpperCase()
   const size: CompanyLookup['size'] = mei || p.includes('MICRO') ? 'micro' : p.includes('PEQUENO') ? 'pequena' : p.includes('DEMAIS') ? (capital >= 10_000_000 ? 'grande' : 'media') : null
   return { size, capital: capital || null }
+}
+
+/** Marca ou tira o cliente como parceiro comercial (mesmo desconto do contrato de 5 meses). */
+export async function setClientPartner(clientId: string, on: boolean): Promise<void> {
+  const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, args: Record<string, unknown>) => Promise<{ error: { message: string } | null }>
+  const { error } = await rpc('client_set_partner', { _client: clientId, _on: on })
+  if (error) throw new Error(error.message)
 }

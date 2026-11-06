@@ -27,6 +27,7 @@ export interface Database {
           segment: string | null
           client_type: string | null
           is_active: boolean
+          is_partner: boolean
           is_lost: boolean
           source: string
           synced_at: string
