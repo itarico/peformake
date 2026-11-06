@@ -63,6 +63,9 @@ export interface ClientDraft {
   legalName: string
   address: string
   billingEmail: string
+  /** Vem da consulta do CNPJ. */
+  companySize?: string | null
+  companyCapital?: number | null
   /** Só administrador envia. */
   setupFee?: string
 }
@@ -267,7 +270,7 @@ export async function saveClient(id: string | null, expectedUpdatedAt: string | 
   if (error) throw error
   const { error: legalError } = await supabase.rpc('client_save_legal', {
     _client_id: savedId,
-    _data: { document: draft.document, legal_name: draft.legalName, address: draft.address, billing_email: draft.billingEmail },
+    _data: { document: draft.document, legal_name: draft.legalName, address: draft.address, billing_email: draft.billingEmail, company_size: draft.companySize ?? '', company_capital: draft.companyCapital ?? '' },
   })
   if (legalError) throw legalError
   return savedId
@@ -372,6 +375,9 @@ export interface CompanyLookup {
   phone: string | null
   activity: string | null
   status: string | null
+  /** Porte pela Receita: micro, pequena, media ou grande. */
+  size: 'micro' | 'pequena' | 'media' | 'grande' | null
+  capital: number | null
 }
 
 /** Dados públicos da Receita pelo CNPJ (BrasilAPI, grátis). CPF não tem consulta pública: só confere os dígitos. */
@@ -400,5 +406,16 @@ export async function lookupCnpj(cnpj: string): Promise<CompanyLookup> {
     phone: phone || null,
     activity: part(d.cnae_fiscal_descricao) || null,
     status: part(d.descricao_situacao_cadastral) || null,
+    ...sizeFromReceita(part(d.porte), Number(d.capital_social) || 0, String(d.opcao_pelo_mei) === 'true'),
   }
+}
+
+/**
+ * Porte pela Receita. ME e MEI viram micro; EPP vira pequena; "DEMAIS" (fatura acima de R$ 4,8 mi/ano)
+ * vira média, ou grande quando o capital social passa de R$ 10 milhões.
+ */
+export function sizeFromReceita(porte: string, capital: number, mei: boolean): { size: CompanyLookup['size']; capital: number | null } {
+  const p = porte.toUpperCase()
+  const size: CompanyLookup['size'] = mei || p.includes('MICRO') ? 'micro' : p.includes('PEQUENO') ? 'pequena' : p.includes('DEMAIS') ? (capital >= 10_000_000 ? 'grande' : 'media') : null
+  return { size, capital: capital || null }
 }

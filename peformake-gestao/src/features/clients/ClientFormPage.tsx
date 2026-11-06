@@ -147,6 +147,8 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
       setDraft((current) => ({
         ...current,
         legalName: found.legalName || current.legalName,
+        companySize: found.size ?? current.companySize,
+        companyCapital: found.capital ?? current.companyCapital,
         address: found.address || current.address,
         billingEmail: current.billingEmail || found.email || '',
         email: current.email || found.email || '',
@@ -303,7 +305,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
           </div>
           {lookup.data && (
             <p role="status" className="rounded-xl bg-ok-soft px-3 py-2 text-[13px] text-ok-ink sm:col-span-2">
-              Achamos na Receita: <b>{lookup.data.legalName}</b>{lookup.data.status && ` · situação ${lookup.data.status.toLowerCase()}`}{lookup.data.activity && ` · ${lookup.data.activity}`}. Confira e ajuste se precisar.
+              Achamos na Receita: <b>{lookup.data.legalName}</b>{lookup.data.status && ` · situação ${lookup.data.status.toLowerCase()}`}{lookup.data.size && ` · porte ${lookup.data.size === 'media' ? 'médio' : lookup.data.size === 'pequena' ? 'pequeno' : lookup.data.size}`}{lookup.data.activity && ` · ${lookup.data.activity}`}. Confira e ajuste se precisar.
             </p>
           )}
         </div>
