@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom'
+import { IntelSettingsPanel } from './IntelSettings'
 import { RequireRole } from '@/auth/guards'
 import { SectionHeader, type SectionTab } from '@/components/layout/SectionTabs'
 import { cn } from '@/lib/cn'
@@ -18,6 +19,7 @@ const TABS: SectionTab[] = [
   { to: '/configuracoes/servicos', label: 'Serviços e pacotes' },
   { to: '/configuracoes/notificacoes', label: 'Notificações' },
   { to: '/configuracoes/audiovisual', label: 'Audiovisual' },
+  { to: '/configuracoes/inteligencia', label: 'Inteligência' },
   { to: '/configuracoes/acessos', label: 'Acessos', roles: ADMIN_ROLES },
 ]
 
@@ -34,6 +36,7 @@ export function SettingsLayout() {
           <Route path="servicos" element={<CatalogSettings />} />
           <Route path="notificacoes" element={<NotificationSettingsPanel />} />
           <Route path="audiovisual" element={<AvSettingsForm />} />
+          <Route path="inteligencia" element={<IntelSettingsPanel />} />
         </Route>
         <Route element={<RequireRole roles={ADMIN_ROLES} />}>
           <Route path="acessos" element={<AccessPage />} />

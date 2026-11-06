@@ -26,7 +26,8 @@ import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
 import { isLiveClient } from './clientRules'
-import { alertLevel, TEMP_LABEL, TEMP_TONE, useClientIntel } from './intelApi'
+import { monthsIdle, TEMP_LABEL, TEMP_TONE, useClientIntel } from './intelApi'
+import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
 const chipSelect = 'min-h-9 cursor-pointer rounded-xl border border-line bg-canvas px-3 text-[13px] font-medium text-ink hover:border-line-strong'
@@ -75,6 +76,7 @@ const DEFAULTS: Record<string, string> = { situacao: 'active', tipo: 'all', empr
 export function ClientsPage() {
   const { canManage, isAdmin, query } = useClients()
   const intel = useClientIntel()
+  const settings = useIntelSettings()
   const [params, setParams] = useSearchParams()
   const filters = readFilters(params)
   const today = todayInBrazil()
@@ -219,7 +221,12 @@ export function ClientsPage() {
                 const hasSquad = client.team.some((t) => t.role === 'squad')
                 const whatsapp = whatsappLink(client.phone)
                 const debt = intel.data?.get(client.id)?.factors.devendo ?? 0
-                const level = alertLevel(view.flags.filter((f) => f !== 'upsell').length + (debt > 0 ? 1 : 0))
+                const idle = monthsIdle(intel.data?.get(client.id), view.kind, today)
+                const idleWarn = idle !== null && settings.data ? idle >= settings.data.inactivity_warn_months : false
+                const idleLost = idle !== null && settings.data ? idle >= settings.data.inactivity_lost_months : false
+                const yellow = settings.data?.alert_yellow ?? 3
+                const count = view.flags.filter((f) => f !== 'upsell').length + (debt > 0 ? 1 : 0) + (idleWarn ? 1 : 0)
+                const level = count > yellow ? 'danger' : count === yellow ? 'warn' : 'none'
                 return (
                   <li key={client.id}
                     className={cn("relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 border-b border-line px-5 py-3.5 transition-colors last:border-b-0 hover:bg-raised/50 @4xl:grid-cols-[minmax(0,2.4fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.3fr)_40px]",
@@ -265,6 +272,7 @@ export function ClientsPage() {
                       )}
                     </div>
                     <div className="hidden @4xl:flex flex-wrap gap-1">
+                      {idleWarn && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-[12px] font-medium text-warn-ink">{idleLost ? `Parado há ${idle} meses · avaliar perda` : `Sem serviço há ${idle} meses`}</span>}
                       {debt > 0 && <span className="rounded-full bg-warn px-2 py-0.5 text-[12px] font-semibold text-white">Devendo{isAdmin && intel.data?.get(client.id)?.factors.devendo_valor ? ` ${brlValue(intel.data.get(client.id)!.factors.devendo_valor!)}` : ''}</span>}
                       <FlagChips flags={view.flags} upsell={view.upsell} />
                     </div>

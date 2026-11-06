@@ -9,7 +9,8 @@ import { groupTeam } from './clientRules'
 import { brlValue } from './format'
 import { HealthSection } from './HealthSection'
 import { ClientContactsDialog, useClientContacts } from './ClientContacts'
-import { SIZE_LABEL, TEMP_LABEL, TEMP_TONE, useClientIntel, useClientTimeline } from './intelApi'
+import { monthsIdle, SIZE_LABEL, TEMP_LABEL, TEMP_TONE, useClientIntel, useClientTimeline } from './intelApi'
+import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { ATTENTION_LABEL, HEALTH_LABEL, HEALTH_SCORE, type AttentionFlag, type HealthLevel } from './portfolioRules'
 import { HealthBadge } from './ui'
 
@@ -67,7 +68,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
   isAdmin: boolean
   canManage: boolean
   whatsapp: string | null
-  onOpenTab: (tab: 'entregas' | 'servicos' | 'contrato' | 'financeiro') => void
+  onOpenTab: (tab: 'entregas' | 'servicos' | 'contrato' | 'financeiro' | 'historico') => void
 }) {
   const { client } = view
   const intelQ = useClientIntel()
@@ -77,6 +78,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
   const [profile, setProfile] = useState(false)
   const [contactsOpen, setContactsOpen] = useState(false)
   const contacts = useClientContacts(client.id)
+  const settings = useIntelSettings()
 
   const contactDays = daysSince(intel?.lastContactAt ?? null)
   const months = client.contract?.startDate ? Math.max(1, Math.round((Date.now() - Date.parse(client.contract.startDate)) / (30.44 * 86_400_000))) : null
@@ -86,13 +88,18 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
   const healthTrend = (timeline.data?.health ?? []).map((h) => HEALTH_SCORE[h.level as HealthLevel] ?? 3)
 
   // O que fazer agora: alertas do cliente + sinais da inteligência, do mais urgente ao oportuno.
-  const actions: { tone: 'warn' | 'ok' | 'info'; title: string; text: string; tab?: 'entregas' | 'servicos' | 'contrato' | 'financeiro' }[] = []
+  const actions: { tone: 'warn' | 'ok' | 'info'; title: string; text: string; tab?: 'entregas' | 'servicos' | 'contrato' | 'financeiro' | 'historico' }[] = []
   for (const flag of view.flags.filter((f) => f !== 'upsell')) {
     actions.push({ tone: flag === 'stale' || flag === 'no_team' ? 'info' : 'warn', title: ATTENTION_LABEL[flag], text: ACTION[flag], tab: flag === 'ending' || flag === 'expired' ? 'contrato' : flag === 'no_service' || flag === 'no_team' ? 'servicos' : undefined })
   }
   if (intel?.label === 'frio') actions.push({ tone: 'warn', title: 'Cliente esfriando', text: `Pouca conversa e nenhuma aprovação recente${contactDays !== null ? ` (último contato há ${contactDays} dias)` : ''}. Ligue ou marque uma reunião.` })
   if ((intel?.factors.aprovacoes_paradas ?? 0) > 0) actions.push({ tone: 'warn', title: `${intel!.factors.aprovacoes_paradas} aprovação parada`, text: 'Esperando o cliente há mais de 4 dias. Lembre com carinho pelo grupo.', tab: 'entregas' })
   if ((intel?.factors.devendo ?? intel?.factors.faturas_atrasadas ?? 0) > 0) actions.unshift({ tone: 'warn', title: `Cliente devendo${isAdmin && intel?.factors.devendo_valor ? ` ${brlValue(intel.factors.devendo_valor)}` : ''}`, text: 'Tem fatura vencida. Antes de oferecer mais, resolva o financeiro.', tab: isAdmin ? 'financeiro' : undefined })
+  const idle = monthsIdle(intel, view.kind, new Date().toISOString().slice(0, 10))
+  if (idle !== null && settings.data && idle >= settings.data.inactivity_warn_months) {
+    const lost = idle >= settings.data.inactivity_lost_months
+    actions.unshift({ tone: 'warn', title: lost ? `Parado há ${idle} meses` : `Sem serviço há ${idle} meses`, text: lost ? 'Passou do limite: avalie marcar como perdido (ele entra na recuperação).' : 'Ofereça o próximo serviço antes que esfrie de vez.', tab: lost ? 'historico' : 'servicos' })
+  }
   if (view.upsell) actions.push({ tone: 'ok', title: `Oferecer ${view.upsell}`, text: ACTION.upsell, tab: 'servicos' })
   else if (intel?.nextService && view.flags.length === 0 && intel.label !== 'frio') {
     actions.push({ tone: 'ok', title: `Próximo serviço: ${intel.nextService}`, text: `${intel.nextServicePct}% dos clientes com os mesmos serviços também contratam ${intel.nextService}.`, tab: 'servicos' })

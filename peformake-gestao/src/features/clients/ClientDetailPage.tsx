@@ -14,7 +14,8 @@ import { ClientDialog } from './ClientFormPage'
 import { ClientAssets } from './ClientAssets'
 import { cn } from '@/lib/cn'
 import { ClientOverview } from './ClientOverview'
-import { alertLevel, useClientIntel } from './intelApi'
+import { monthsIdle, useClientIntel } from './intelApi'
+import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
 import { ClientContractTab } from '@/features/contracts/ClientContractTab'
 import { ClientFinanceTab } from './ClientFinanceTab'
@@ -44,6 +45,7 @@ export function ClientDetailPage() {
   const [params, setParams] = useSearchParams()
   const { isAdmin, canManage, query } = useClients()
   const intel = useClientIntel()
+  const settings = useIntelSettings()
   const [editing, setEditing] = useState(false)
   const accounts = useQuery({ queryKey: ['ad-accounts'], queryFn: listAdAccounts })
   const client = query.data?.find((item) => item.id === id)
@@ -67,7 +69,11 @@ export function ClientDetailPage() {
   const view = describeClient(client, today)
   const whatsapp = whatsappLink(client.phone)
   const debt = intel.data?.get(client.id)?.factors.devendo ?? 0
-  const headerLevel = alertLevel(view.flags.filter((f) => f !== 'upsell').length + (debt > 0 ? 1 : 0))
+  const idle = monthsIdle(intel.data?.get(client.id), view.kind, today)
+  const idleWarn = idle !== null && settings.data ? idle >= settings.data.inactivity_warn_months : false
+  const alerts = view.flags.filter((f) => f !== 'upsell').length + (debt > 0 ? 1 : 0) + (idleWarn ? 1 : 0)
+  const yellow = settings.data?.alert_yellow ?? 3
+  const headerLevel = alerts > yellow ? 'danger' : alerts === yellow ? 'warn' : 'none'
   const linked = (accounts.data ?? []).filter((account) => account.clientId === client.id)
 
   return (

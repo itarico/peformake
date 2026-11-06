@@ -22,6 +22,7 @@ export interface ClientIntel {
     avaliacao: string | null
     faturas_atrasadas: number
     devendo?: number
+    ultimo_servico?: string | null
     devendo_valor?: number
   }
 }
@@ -102,4 +103,12 @@ export function alertLevel(count: number): 'none' | 'warn' | 'danger' {
   if (count > 3) return 'danger'
   if (count === 3) return 'warn'
   return 'none'
+}
+
+/** Meses desde o último serviço (só para avulso, TCV e por execução; fixo mensal não para de "comprar"). */
+export function monthsIdle(intel: ClientIntel | null | undefined, kind: string, today: string): number | null {
+  if (!intel || kind === 'fixo') return null
+  const last = intel.factors.ultimo_servico
+  if (!last) return null
+  return Math.floor((Date.parse(today) - Date.parse(last)) / (30.44 * 86_400_000))
 }
