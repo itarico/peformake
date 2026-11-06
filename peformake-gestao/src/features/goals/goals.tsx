@@ -157,21 +157,7 @@ function GoalLine({ r, day, days, showActions }: { r: GoalRow; day: number; days
   )
 }
 
-/** Anel de progresso pequeno, com o marcador de onde deveria estar hoje. */
-function Ring({ pct, expected, tone, size = 30 }: { pct: number; expected: number; tone: string; size?: number }) {
-  const r = 12, c = 2 * Math.PI * r
-  const a = (expected / 100) * 2 * Math.PI - Math.PI / 2
-  return (
-    <svg viewBox="0 0 30 30" width={size} height={size} aria-hidden="true" className="shrink-0">
-      <circle cx="15" cy="15" r={r} fill="none" stroke="var(--raised)" strokeWidth="4" />
-      <circle cx="15" cy="15" r={r} fill="none" stroke={tone} strokeWidth="4" strokeLinecap="round" strokeDasharray={`${(Math.max(2, pct) / 100) * c} ${c}`} transform="rotate(-90 15 15)" style={{ transition: 'stroke-dasharray 0.8s' }} />
-      {expected > 0 && expected < 100 && <line x1={15 + 9 * Math.cos(a)} y1={15 + 9 * Math.sin(a)} x2={15 + 15 * Math.cos(a)} y2={15 + 15 * Math.sin(a)} stroke="var(--ink)" strokeWidth="1.5" />}
-    </svg>
-  )
-}
-const RING: Record<Pace['state'], string> = { batida: 'var(--ok)', ok: 'var(--ok)', ritmo: 'var(--accent)', atras: '#eda100', estourou: 'var(--warn)' }
-
-/** Metas em uma linha (como Pipedrive e HubSpot fazem): 3 anéis com o essencial; o detalhe abre ao clicar. */
+/** Metas em uma faixa: título e 3 colunas iguais (número, barra com o esperado de hoje e o que falta); o detalhe abre ao clicar. */
 export function GoalsCard({ area, title = 'Metas do mês' }: { area?: GoalArea; title?: string }) {
   const { state } = useAuth()
   const q = useGoalsBoard(monthStartOf(0))
@@ -198,20 +184,38 @@ export function GoalsCard({ area, title = 'Metas do mês' }: { area?: GoalArea; 
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} aria-label={`${title}: ver detalhes`}
-        className="flex w-full cursor-pointer flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-line bg-surface px-4 py-2.5 text-left hover:border-ink">
-        <span className="flex items-center gap-2 text-[13px] font-semibold"><Target size={15} aria-hidden="true" className="text-accent-ink" />{title}{available.length > 1 && <span className="font-normal text-muted">· {ROLE_LABEL[main]}</span>}<span className="font-normal text-muted">· dia {cal.day}/{cal.days}</span></span>
+        className="group grid w-full cursor-pointer grid-cols-1 gap-3 rounded-2xl border border-line bg-surface p-3 text-left transition-colors hover:border-ink sm:grid-cols-3 lg:grid-cols-[minmax(150px,0.8fr)_repeat(3,minmax(0,1fr))]">
+        <span className="flex flex-col justify-center gap-0.5 sm:col-span-3 lg:col-span-1">
+          <span className="flex items-center gap-2 text-[14px] font-semibold"><Target size={15} aria-hidden="true" className="text-accent-ink" />{title}</span>
+          <span className="text-[12px] text-muted">{available.length > 1 ? `${ROLE_LABEL[main]} · ` : ''}dia {cal.day} de {cal.days}</span>
+          <span className="text-[12px] font-semibold text-accent-ink group-hover:underline">Ver metas e ações{insight ? ' · dica do dia' : ''} →</span>
+        </span>
         {q.isPending ? <span className="text-[12px] text-muted">Calculando</span> : strip.map((r) => {
           const p = paceOf(r, cal.day, cal.days)
           const m = GOAL_META[r.key]!
+          const st = STATE[p.state]
           const actual = r.actual ?? 0
+          const big = m.money ? fmt(actual, true) : fmt(actual)
+          const of = m.kind === 'atMost' ? `limite ${fmt(r.target, m.money)}` : `de ${fmt(r.target, m.money)}`
+          const hint = m.kind === 'atMost'
+            ? (p.state === 'ok' ? 'Dentro do limite' : `Passou ${fmt(actual - r.target, m.money)} do limite`)
+            : p.state === 'batida' ? 'Meta batida'
+              : `Faltam ${fmt(p.remaining, m.money)}${cal.day < cal.days && p.perDay > 0 ? ` · ${m.money ? fmt(p.perDay, true) : p.perDay < 1 ? `1 a cada ${Math.round(1 / p.perDay)} dias` : `${p.perDay.toFixed(1).replace('.0', '').replace('.', ',')} por dia`}` : ''}`
           return (
-            <span key={r.key} className="flex min-w-0 items-center gap-1.5" title={`${m.title(r.info)}: ${fmt(actual, m.money)} ${m.kind === 'atMost' ? `(máx. ${fmt(r.target, m.money)})` : `de ${fmt(r.target, m.money)}`} · ${STATE[p.state].label}`}>
-              <Ring pct={m.kind === 'atMost' ? 100 : p.pct} expected={m.kind === 'atMost' ? 0 : p.expectedPct} tone={RING[p.state]} />
-              <span className="leading-tight"><span className="block text-[11px] text-muted">{m.short}</span><b className="text-[13px] tabular-nums">{m.kind === 'atMost' ? `${fmt(actual)}/${fmt(r.target)}` : m.money ? fmt(actual, true) : `${fmt(actual)}/${fmt(r.target)}`}</b></span>
+            <span key={r.key} className="flex min-w-0 flex-col gap-1.5 rounded-xl bg-raised/50 px-3 py-2" title={m.title(r.info)}>
+              <span className="flex items-center justify-between gap-2">
+                <span className="truncate text-[12px] font-medium text-muted">{m.short}</span>
+                <span className={cn('shrink-0 rounded-full px-1.5 py-px text-[10px] font-semibold', st.tone)}>{st.label}</span>
+              </span>
+              <span className="flex items-baseline gap-1.5"><b className="text-[20px] leading-none tabular-nums"><LiveValue value={big} /></b><span className="text-[12px] text-muted">{of}</span></span>
+              <span className="relative h-1.5 rounded-full bg-raised">
+                <span className={cn('block h-full rounded-full transition-[width] duration-700', st.bar)} style={{ width: `${m.kind === 'atMost' ? 100 : Math.max(3, p.pct)}%` }} />
+                {m.kind !== 'atMost' && p.state !== 'batida' && <span className="absolute -top-1 h-3.5 w-0.5 rounded bg-ink/60" style={{ left: `${Math.min(100, p.expectedPct)}%` }} />}
+              </span>
+              <span className="truncate text-[11px] text-muted">{hint}</span>
             </span>
           )
         })}
-        {insight && <span className="ml-auto hidden items-center gap-1 text-[12px] text-muted lg:flex" title={insight}><Lightbulb size={13} aria-hidden="true" className="text-[#eda100]" /> Dica do dia</span>}
       </button>
       <Dialog open={open} onClose={() => setOpen(false)} title={title} description={`Dia ${cal.day} de ${cal.days}. O tracinho mostra onde deveria estar hoje.`} size="md">
         {available.length > 1 && (
