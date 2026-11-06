@@ -20,6 +20,11 @@ Já vêm cadastradas com os valores de hoje: Final de semana +10% e Noturno +15%
 - **Itens automáticos**: cada serviço pode "entrar sozinho": por diária, por pessoa por diária (ex.: **alimentação** liga junto com a diária) ou por pessoa em viagem (ex.: **hospedagem**). No orçamento aparece em "Entram sozinhos", com botão Tirar.
 - **Aluguel de equipamentos**: categoria própria; cada equipamento com valor, unidade (diária, hora...) e **foto**, que aparece na hora de montar.
 
+## Pacotes, envio e lead (06/11, 3ª parte)
+- **Pacotes prontos são modelos**: não têm preço fixo; ao escolher, ligam e configuram a montagem (forma, equipe, horas ou diárias, vídeos, serviços e regras). Cria em "Salvar esta montagem como pacote"; liga, desliga, renomeia e apaga em Configurações → Orçamento.
+- **Salvar exige contato**: cliente cadastrado ou nome + WhatsApp do interessado. O interessado entra em Comercial → Prospecção como lead; ao aceitar, vira cliente e o lead é marcado como convertido.
+- **Enviar proposta**: WhatsApp (abre a conversa com a mensagem pronta, você confere e envia), e-mail, Baixar PDF e Copiar link. PDF só aparece aqui. Ao enviar, o orçamento vira "Enviado".
+
 ## Na hora de montar
 1. Escolhe a forma (câmera, mobile, evento ou só serviços), pessoas, **auxiliares** (em qualquer captação), horas e vídeos.
 2. Adiciona serviços com **+ e −**, filtrando por categoria. Os pacotes prontos ficam aqui.

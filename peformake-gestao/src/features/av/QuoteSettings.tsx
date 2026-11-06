@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
-import { AUTO_LABEL, menuOf, modeOn, newId, PRICING_LABELS, UNIT_LABEL, val, type AutoWhen, type AvPricing, type MenuCategory, type MenuItem, type MenuUnit, type PriceRule, type QuoteMenu } from './avPricing'
+import { AUTO_LABEL, presetSummary, type QuotePreset, menuOf, modeOn, newId, PRICING_LABELS, UNIT_LABEL, val, type AutoWhen, type AvPricing, type MenuCategory, type MenuItem, type MenuUnit, type PriceRule, type QuoteMenu } from './avPricing'
 import { getPricing, savePricing } from './avQuotesApi'
 import { searchPlaces, type Place } from './geo'
 import { supabase } from '@/lib/supabase'
@@ -44,7 +44,8 @@ type Editing =
   | { kind: 'category'; value: MenuCategory }
   | { kind: 'item'; value: MenuItem }
   | { kind: 'rule'; value: PriceRule }
-  | { kind: 'delete'; what: 'category' | 'item' | 'rule'; id: string; name: string }
+  | { kind: 'preset'; value: QuotePreset }
+  | { kind: 'delete'; what: 'category' | 'item' | 'rule' | 'preset'; id: string; name: string }
 
 /** Configurações → Orçamento: variáveis da conta, serviços por categoria e regras de preço. Tudo editável. */
 export function QuoteSettings() {
@@ -90,6 +91,23 @@ function Panel({ pricing }: { pricing: AvPricing }) {
             </div>
           ))}
         </div>
+      </Card>
+
+      <Card title="Pacotes prontos" text="Cada pacote liga e configura a montagem: forma, equipe, horas ou diárias, vídeos, serviços e regras. Para criar, monte um orçamento e toque em “Salvar esta montagem como pacote”.">
+        <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
+          {(menu.presets ?? []).map((x) => (
+            <li key={x.id} className={cn('flex items-center gap-2 rounded-2xl border border-line px-3 py-2', !x.active && 'opacity-60')}>
+              <Switch on={x.active} label={x.name} onChange={(v) => saveMenu({ ...menu, presets: upsert(menu.presets ?? [], { ...x, active: v }) })} />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[14px] font-medium">{x.name}</span>
+                <span className="block text-[12px] text-muted">{presetSummary(x)}{x.kind === 'plano' ? ' · plano mensal' : ''}</span>
+              </span>
+              <IconBtn label={`Editar ${x.name}`} onClick={() => setEditing({ kind: 'preset', value: x })}><Pencil size={14} aria-hidden="true" /></IconBtn>
+              <IconBtn label={`Apagar ${x.name}`} onClick={() => setEditing({ kind: 'delete', what: 'preset', id: x.id, name: x.name })}><Trash2 size={14} aria-hidden="true" /></IconBtn>
+            </li>
+          ))}
+          {(menu.presets ?? []).length === 0 && <li className="text-[13px] text-muted">Nenhum pacote ainda.</li>}
+        </ul>
       </Card>
 
       <Card title="Formas de montar" text="O que aparece em “Montar sob medida”. Desligue o que a Ellcazo não vende mais.">
@@ -165,10 +183,11 @@ function Panel({ pricing }: { pricing: AvPricing }) {
       {save.isError && !editing && <p role="alert" className="text-[13px] font-medium text-warn-ink">Não foi possível salvar. Só admin, head ou social media editam o orçamento.</p>}
 
       <Dialog open={!!editing} onClose={close} size="sm"
-        title={!editing ? '' : editing.kind === 'vars' ? editing.group : editing.kind === 'category' ? (editing.value.name ? 'Categoria' : 'Nova categoria') : editing.kind === 'item' ? (editing.value.name ? 'Serviço' : 'Novo serviço') : editing.kind === 'rule' ? (editing.value.name ? 'Regra' : 'Nova regra') : `Apagar ${editing.name}?`}>
+        title={!editing ? '' : editing.kind === 'vars' ? editing.group : editing.kind === 'category' ? (editing.value.name ? 'Categoria' : 'Nova categoria') : editing.kind === 'item' ? (editing.value.name ? 'Serviço' : 'Novo serviço') : editing.kind === 'rule' ? (editing.value.name ? 'Regra' : 'Nova regra') : editing.kind === 'preset' ? 'Pacote' : `Apagar ${editing.name}?`}>
         {editing?.kind === 'vars' && <VarsForm group={editing.group} pricing={pricing} busy={save.isPending} onCancel={close} onSave={(v) => save.mutate({ ...pricing, ...v })} />}
         {editing?.kind === 'category' && <CategoryForm initial={editing.value} busy={save.isPending} onCancel={close} onSave={(c) => saveMenu({ ...menu, categories: upsert(menu.categories, c) })} />}
         {editing?.kind === 'item' && <ItemForm initial={editing.value} categories={menu.categories} busy={save.isPending} onCancel={close} onSave={(it) => saveMenu({ ...menu, items: upsert(menu.items, it) })} />}
+        {editing?.kind === 'preset' && <PresetForm initial={editing.value} busy={save.isPending} onCancel={close} onSave={(x) => saveMenu({ ...menu, presets: upsert(menu.presets ?? [], x) })} />}
         {editing?.kind === 'rule' && <RuleForm initial={editing.value} busy={save.isPending} onCancel={close} onSave={(r) => saveMenu({ ...menu, rules: upsert(menu.rules, r) })} />}
         {editing?.kind === 'delete' && (
           <div className="flex flex-col gap-3">
@@ -177,6 +196,7 @@ function Panel({ pricing }: { pricing: AvPricing }) {
               <Button variant="secondary" className="bg-warn text-white" disabled={save.isPending} onClick={() => {
                 if (editing.what === 'category') saveMenu({ ...menu, categories: menu.categories.filter((c) => c.id !== editing.id), items: menu.items.filter((i) => i.categoryId !== editing.id) })
                 if (editing.what === 'item') saveMenu({ ...menu, items: menu.items.filter((i) => i.id !== editing.id) })
+                if (editing.what === 'preset') saveMenu({ ...menu, presets: (menu.presets ?? []).filter((x) => x.id !== editing.id) })
                 if (editing.what === 'rule') saveMenu({ ...menu, rules: menu.rules.filter((r) => r.id !== editing.id) })
               }}>Apagar</Button>
               <Button variant="secondary" onClick={close}>Cancelar</Button>
@@ -352,5 +372,25 @@ function BaseCard({ pricing, busy, onSave }: { pricing: AvPricing; busy: boolean
         </form>
       </Dialog>
     </Card>
+  )
+}
+
+function PresetForm({ initial, busy, onCancel, onSave }: { initial: QuotePreset; busy: boolean; onCancel: () => void; onSave: (x: QuotePreset) => void }) {
+  const [v, setV] = useState({ ...initial, description: initial.description ?? '', monthsText: initial.months ? String(initial.months) : '' })
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); const { monthsText, ...rest } = v; onSave({ ...rest, name: rest.name.trim(), description: rest.description.trim() || undefined, months: Number(monthsText) || undefined }) }} className="flex flex-col gap-3">
+      <label className="flex flex-col text-[13px] font-semibold">Nome<input autoFocus value={v.name} onChange={(e) => setV({ ...v, name: e.target.value })} className={field} /></label>
+      <label className="flex flex-col text-[13px] font-semibold">Descrição<input value={v.description} onChange={(e) => setV({ ...v, description: e.target.value })} className={field} /></label>
+      <div className="grid grid-cols-2 gap-3">
+        <label className="flex flex-col text-[13px] font-semibold">Tipo
+          <select value={v.kind ?? 'avulso'} onChange={(e) => setV({ ...v, kind: e.target.value as QuotePreset['kind'] })} className={field}>
+            <option value="avulso">Avulso</option><option value="plano">Plano mensal</option><option value="evento">Evento</option><option value="projeto">Projeto</option>
+          </select>
+        </label>
+        {v.kind === 'plano' && <label className="flex flex-col text-[13px] font-semibold">Meses<input inputMode="numeric" value={v.monthsText} onChange={(e) => setV({ ...v, monthsText: e.target.value.replace(/\D/g, '') })} className={field} /></label>}
+      </div>
+      <p className="rounded-xl bg-raised px-3 py-2 text-[13px] text-muted">Configura: {presetSummary(v)}. Para mudar a montagem, aplique o pacote num orçamento, ajuste e salve como pacote de novo.</p>
+      <Actions busy={busy} onCancel={onCancel} disabled={v.name.trim().length < 2} />
+    </form>
   )
 }

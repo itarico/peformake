@@ -87,7 +87,14 @@ export interface PriceRule {
   id: string; name: string; mode: 'pct' | 'fixo'; value: number; direction: 'acrescimo' | 'desconto'
   base: 'total' | 'captacao'; when: 'opcional' | 'sempre'; minTotal?: number; active: boolean
 }
-export interface QuoteMenu { categories: MenuCategory[]; items: MenuItem[]; rules: PriceRule[]; /** Formas de montar ligadas (padrão: todas). */ modes?: Partial<Record<CaptureMode, boolean>> }
+/** Pacote pronto: não tem preço fixo; ao escolher, liga e configura a montagem (forma, equipe, horas ou diárias, vídeos, serviços e regras). */
+export interface QuotePreset {
+  id: string; name: string; description?: string; active: boolean
+  kind?: 'avulso' | 'plano' | 'evento' | 'projeto'; months?: number
+  inputs: Pick<QuoteInputs, 'mode' | 'pessoas' | 'auxiliares' | 'horas' | 'videos' | 'roteiro' | 'mesmoDia' | 'billing' | 'dias' | 'rules'>
+  items: { id: string; quantity: number }[]
+}
+export interface QuoteMenu { presets?: QuotePreset[]; categories: MenuCategory[]; items: MenuItem[]; rules: PriceRule[]; /** Formas de montar ligadas (padrão: todas). */ modes?: Partial<Record<CaptureMode, boolean>> }
 export const newId = () => Math.random().toString(36).slice(2, 10)
 
 /** Ponto de partida: o que antes era fixo no código vira serviço e regra editável, com os valores que já existiam. */
@@ -173,6 +180,27 @@ export function fromLegacy(p: AvPricing, i: QuoteInputs, picks: readonly Catalog
   if (i.contrato === 'sem_contrato') rules.add('sem_contrato')
   const { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia, billing, dias, km, destino, autoOff } = i
   return { inputs: { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia, billing, dias, km, destino, autoOff, rules: [...rules] }, picks: out }
+}
+
+/** Aplica um pacote: devolve a montagem e os serviços que ele liga (só os que ainda existem e estão ligados). */
+export function applyPreset(p: AvPricing, preset: QuotePreset): { inputs: QuoteInputs; picks: CatalogPick[] } {
+  const m = menuOf(p)
+  const picks = preset.items.flatMap((x) => { const it = m.items.find((i) => i.id === x.id); return it && isOffered(m, it) && x.quantity > 0 ? [menuPick(it, x.quantity)] : [] })
+  const rules = (preset.inputs.rules ?? []).filter((id) => m.rules.some((r) => r.id === id && r.active))
+  return { inputs: { ...EMPTY_INPUTS, ...preset.inputs, rules }, picks }
+}
+
+/** Resumo legível do que o pacote configura. */
+export function presetSummary(preset: QuotePreset): string {
+  const i = preset.inputs
+  const parts: string[] = []
+  if (i.mode !== 'sem_captacao') {
+    parts.push(`${i.mode === 'camera' ? 'Câmera' : i.mode === 'mobile' ? 'Mobile' : 'Evento'}, ${i.pessoas} ${i.pessoas === 1 ? 'pessoa' : 'pessoas'}${i.auxiliares ? ` + ${i.auxiliares} aux.` : ''}`)
+    parts.push(i.billing === 'diaria' ? `${i.dias ?? 1} ${(i.dias ?? 1) === 1 ? 'diária' : 'diárias'}` : `${num(i.horas)}h`)
+  }
+  if (i.videos) parts.push(`${i.videos} ${i.videos === 1 ? 'vídeo' : 'vídeos'}`)
+  if (preset.items.length) parts.push(`${preset.items.length} ${preset.items.length === 1 ? 'serviço' : 'serviços'}`)
+  return parts.join(' · ')
 }
 
 export const teamSize = (i: QuoteInputs) => (i.mode === 'sem_captacao' ? 0 : pos(i.pessoas) + pos(i.auxiliares))

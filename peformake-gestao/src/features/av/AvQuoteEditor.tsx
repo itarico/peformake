@@ -1,15 +1,17 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Minus, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, FileDown, Link2, Mail, MessageCircle, Minus, Package, Plus, Send, Trash2 } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
+import { isValidPhone } from '@/features/clients/clientFormRules'
 import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
 import { useProduction } from '@/features/production/useProduction'
 import { EllcazoHeader } from './AvBoard'
-import { autoItems, calculateQuote, EMPTY_INPUTS, fromLegacy, isOffered, isTrip, menuOf, modeOn, val, menuPick, MENU_PREFIX, UNIT_LABEL, type AvPricing, type CatalogPick, type CaptureMode, type QuoteInputs } from './avPricing'
+import { applyPreset, autoItems, calculateQuote, newId, presetSummary, type QuotePreset, EMPTY_INPUTS, fromLegacy, isOffered, isTrip, menuOf, modeOn, val, menuPick, MENU_PREFIX, UNIT_LABEL, type AvPricing, type CatalogPick, type CaptureMode, type QuoteInputs } from './avPricing'
 import { drivingKm, searchPlaces, type Place } from './geo'
-import { getPricing, getQuote, quoteLink, saveQuote, setQuoteStatus, type AvQuote, type QuoteKind } from './avQuotesApi'
+import { getPricing, getQuote, quoteLink, savePricing, saveQuote, setQuoteStatus, type AvQuote, type QuoteKind } from './avQuotesApi'
 
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 font-normal text-ink'
@@ -124,7 +126,18 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
     }),
     onSuccess: (id) => { void queryClient.invalidateQueries({ queryKey: ['av-quotes'] }); void queryClient.invalidateQueries({ queryKey: ['av-quote', id] }); if (!quote) navigate(`/audiovisual/orcamentos/${id}`, { replace: true }) },
   })
-  const canSave = meta.title.trim().length >= 2 && (meta.clientId || meta.leadName.trim().length >= 2) && result.total > 0
+  const contactOk = !!meta.clientId || (meta.leadName.trim().length >= 2 && isValidPhone(meta.leadPhone))
+  const canSave = meta.title.trim().length >= 2 && contactOk && result.total > 0
+  const presets = (menu.presets ?? []).filter((x) => x.active)
+  const [presetId, setPresetId] = useState<string | null>(null)
+  const [savingPreset, setSavingPreset] = useState(false)
+  const usePreset = (x: QuotePreset) => {
+    const r = applyPreset(pricing, x)
+    setInputs(r.inputs)
+    setPicks((cur) => [...cur.filter((p) => !p.serviceId.startsWith(MENU_PREFIX)), ...r.picks])
+    setMeta((m) => ({ ...m, kind: x.kind ?? m.kind, months: x.months ? String(x.months) : m.months, title: m.title.trim() ? m.title : x.name }))
+    setPresetId(x.id)
+  }
   const locked = !!quote && !['rascunho', 'enviado'].includes(quote.status)
 
   return (
@@ -183,6 +196,21 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
           </Box>
         )}
 
+        {presets.length > 0 && (
+          <Box title="Pacotes prontos">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {presets.map((x) => (
+                <button key={x.id} type="button" aria-pressed={presetId === x.id} onClick={() => usePreset(x)}
+                  className={cn('flex cursor-pointer flex-col items-start gap-0.5 rounded-2xl border px-3 py-2.5 text-left', presetId === x.id ? 'border-transparent bg-fill text-on-fill' : 'border-line hover:border-ink')}>
+                  <span className="flex items-center gap-1.5 text-[14px] font-semibold"><Package size={14} aria-hidden="true" /> {x.name}</span>
+                  <span className={cn('text-[12px]', presetId === x.id ? 'opacity-80' : 'text-muted')}>{presetSummary(x)}</span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-[12px] text-muted">O pacote liga e configura a montagem abaixo. Depois dá para ajustar à vontade.</p>
+          </Box>
+        )}
+
         <Box title="Montar sob medida">
           <div role="radiogroup" aria-label="Tipo de captação" className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
             {modes.map((m) => (
@@ -217,6 +245,10 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
               <Check label="Edição no mesmo dia" checked={inputs.mesmoDia} onChange={(v) => set('mesmoDia', v)} />
             </div>
           )}
+          <div className="mt-3 border-t border-line pt-3">
+            <button type="button" onClick={() => setSavingPreset(true)} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold text-accent-ink hover:bg-raised"><Package size={14} aria-hidden="true" /> Salvar esta montagem como pacote</button>
+          </div>
+          <SavePresetDialog open={savingPreset} onClose={() => setSavingPreset(false)} pricing={pricing} inputs={inputs} picks={picks} kind={meta.kind} months={meta.months} />
         </Box>
 
         <DistanceBox pricing={pricing} km={inputs.km ?? 0} destino={inputs.destino ?? ''} onChange={(km, destino) => {
@@ -336,7 +368,7 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
           {locked ? <p className="text-[13px] opacity-80">Este orçamento já foi {quote?.status} e não pode mais ser editado.</p> : (
             <Button disabled={!canSave || save.isPending} onClick={() => save.mutate()} className="w-full">{save.isPending ? 'Salvando' : quote ? 'Salvar alterações' : 'Salvar orçamento'}</Button>
           )}
-          {!canSave && !locked && <p className="text-[12px] opacity-70">Preencha o título, o cliente ou o interessado, e algum valor.</p>}
+          {!canSave && !locked && <p className="text-[12px] opacity-70">{!contactOk ? 'Para salvar: escolha um cliente ou preencha nome e WhatsApp do interessado (ele fica salvo como lead até aprovar).' : 'Preencha o título e algum valor.'}</p>}
           {quote && <QuoteActions quote={quote} />}
         </div>
       </aside>
@@ -377,31 +409,82 @@ function QuotePreview({ title, who, plan, months, lines, subtotal, adjustment, a
   )
 }
 
+function SavePresetDialog({ open, onClose, pricing, inputs, picks, kind, months }: { open: boolean; onClose: () => void; pricing: AvPricing; inputs: QuoteInputs; picks: CatalogPick[]; kind: QuoteKind; months: string }) {
+  const queryClient = useQueryClient()
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const save = useMutation({
+    mutationFn: () => {
+      const m = menuOf(pricing)
+      const { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia, billing, dias, rules } = inputs
+      const preset: QuotePreset = {
+        id: newId(), name: name.trim(), description: description.trim() || undefined, active: true, kind, months: Number(months) || undefined,
+        inputs: { mode, pessoas, auxiliares, horas, videos, roteiro, mesmoDia, billing, dias, rules },
+        items: picks.filter((p) => p.serviceId.startsWith(MENU_PREFIX)).map((p) => ({ id: p.serviceId.slice(MENU_PREFIX.length), quantity: p.quantity })),
+      }
+      return savePricing({ ...pricing, menu: { ...m, presets: [...(m.presets ?? []), preset] } })
+    },
+    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['av-pricing'] }); setName(''); setDescription(''); onClose() },
+  })
+  return (
+    <Dialog open={open} onClose={onClose} title="Salvar como pacote" description="Guarda a forma, a equipe, as horas ou diárias, os vídeos, os serviços e as regras marcadas. Edite ou desligue em Configurações → Orçamento." size="sm">
+      <form onSubmit={(e) => { e.preventDefault(); save.mutate() }} className="flex flex-col gap-3">
+        <label className="flex flex-col text-[13px] font-semibold">Nome do pacote<input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Plano Câmera Mensal" className={field} /></label>
+        <label className="flex flex-col text-[13px] font-semibold">Descrição <span className="font-normal text-muted">(opcional)</span><input value={description} onChange={(e) => setDescription(e.target.value)} className={field} /></label>
+        {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">Não foi possível salvar. Só admin, head ou social media criam pacotes.</p>}
+        <div className="flex gap-2"><Button type="submit" disabled={name.trim().length < 2 || save.isPending}>{save.isPending ? 'Salvando' : 'Salvar pacote'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>
+      </form>
+    </Dialog>
+  )
+}
+
 function QuoteActions({ quote }: { quote: AvQuote }) {
   const queryClient = useQueryClient()
-  const [copied, setCopied] = useState<string | null>(null)
-  const share = useMutation({
-    mutationFn: () => quoteLink(quote.id),
-    onSuccess: async (url) => {
-      try { await navigator.clipboard.writeText(url); setCopied('Link copiado. Mande para o cliente no WhatsApp.') } catch { setCopied(url) }
-      void queryClient.invalidateQueries({ queryKey: ['av-quote', quote.id] }); void queryClient.invalidateQueries({ queryKey: ['av-quotes'] })
-    },
-  })
+  const { clients } = useProduction()
+  const [open, setOpen] = useState(false)
+  const [msg, setMsg] = useState<string | null>(null)
+  const client = quote.clientId ? (clients ?? []).find((c) => c.id === quote.clientId) : null
+  const phoneRaw = (quote.leadPhone ?? (client as { phone?: string | null } | null)?.phone ?? '').replace(/\D/g, '')
+  const phone = phoneRaw.length === 10 || phoneRaw.length === 11 ? `55${phoneRaw}` : phoneRaw
+  const email = quote.leadEmail ?? (client as { email?: string | null } | null)?.email ?? ''
+  const who = (quote.leadName ?? client?.name ?? '').split(' ')[0]
+  const refresh = () => { void queryClient.invalidateQueries({ queryKey: ['av-quote', quote.id] }); void queryClient.invalidateQueries({ queryKey: ['av-quotes'] }) }
+  const text = (url: string) => `Olá${who ? `, ${who}` : ''}! Segue a proposta da Ellcazo para "${quote.title}". Dá para ver tudo e aceitar por aqui: ${url}`
+  /** Marca como enviado e abre o canal. A janela abre antes da resposta para o navegador não bloquear. */
+  const send = async (channel: 'whatsapp' | 'email' | 'copiar' | 'pdf') => {
+    const w = channel === 'copiar' ? null : window.open('about:blank', '_blank')
+    try {
+      const url = await quoteLink(quote.id)
+      refresh()
+      if (channel === 'whatsapp' && w) w.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(text(url))}`
+      if (channel === 'email' && w) w.location.href = `mailto:${email}?subject=${encodeURIComponent(`Proposta Ellcazo · ${quote.title}`)}&body=${encodeURIComponent(text(url))}`
+      if (channel === 'pdf' && w) w.location.href = `${url}?pdf=1`
+      if (channel === 'copiar') { try { await navigator.clipboard.writeText(url); setMsg('Link copiado.') } catch { setMsg(url) } }
+    } catch { w?.close(); setMsg('Não foi possível gerar o link.') }
+  }
   const refuse = useMutation({
     mutationFn: (reason: string) => setQuoteStatus(quote.id, 'recusado', reason),
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['av-quote', quote.id] }); void queryClient.invalidateQueries({ queryKey: ['av-quotes'] }) },
+    onSuccess: refresh,
   })
+  const canSend = ['rascunho', 'enviado'].includes(quote.status)
+  const opt = 'flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-2xl border border-line px-4 text-left font-medium hover:border-ink disabled:cursor-not-allowed disabled:opacity-50'
   return (
     <div className="flex flex-col gap-2 border-t border-white/15 pt-3">
       <p className="text-[12px] opacity-70">Situação: <b>{quote.status}</b></p>
-      {['rascunho', 'enviado'].includes(quote.status) && (
-        <button type="button" onClick={() => share.mutate()} disabled={share.isPending} className="min-h-11 cursor-pointer rounded-full border border-white/30 px-4 font-medium hover:border-white">Copiar link da proposta</button>
-      )}
+      {canSend && <button type="button" onClick={() => { setMsg(null); setOpen(true) }} className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-4 font-semibold text-[var(--ellcazo-band)]"><Send size={16} aria-hidden="true" /> Enviar proposta</button>}
       <a href={`/orcamento/${quote.publicToken}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/30 px-4 font-medium text-inherit no-underline hover:border-white">Ver como o cliente vê</a>
-      {['rascunho', 'enviado'].includes(quote.status) && (
+      {canSend && (
         <button type="button" onClick={() => { const r = window.prompt('Por que o cliente recusou?'); if (r && r.trim().length >= 3) refuse.mutate(r.trim()) }} className="min-h-10 cursor-pointer text-[13px] underline opacity-80">Marcar como recusado</button>
       )}
-      {copied && <p role="status" className="break-all text-[12px] text-accent">{copied}</p>}
+      <Dialog open={open} onClose={() => setOpen(false)} title="Enviar proposta" description={`${quote.code} · ${who || 'cliente'}. Ao enviar, o orçamento fica como "Enviado".`} size="sm">
+        <div className="flex flex-col gap-2">
+          <button type="button" disabled={phone.length < 12} onClick={() => void send('whatsapp')} className={opt}><MessageCircle size={18} aria-hidden="true" /> <span>WhatsApp<span className="block text-[12px] font-normal text-muted">{phone.length >= 12 ? 'Abre a conversa com a mensagem pronta. Você confere e envia.' : 'Sem WhatsApp no cadastro.'}</span></span></button>
+          <button type="button" disabled={!email} onClick={() => void send('email')} className={opt}><Mail size={18} aria-hidden="true" /> <span>E-mail<span className="block text-[12px] font-normal text-muted">{email || 'Sem e-mail no cadastro.'}</span></span></button>
+          <button type="button" onClick={() => void send('pdf')} className={opt}><FileDown size={18} aria-hidden="true" /> <span>Baixar PDF<span className="block text-[12px] font-normal text-muted">Abre a proposta pronta para salvar em PDF.</span></span></button>
+          <button type="button" onClick={() => void send('copiar')} className={opt}><Link2 size={18} aria-hidden="true" /> Copiar link</button>
+          {msg && <p role="status" className="break-all text-[13px] text-ok-ink">{msg}</p>}
+        </div>
+      </Dialog>
     </div>
   )
 }

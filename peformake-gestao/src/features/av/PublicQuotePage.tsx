@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { CheckCircle2, Clapperboard, Download } from 'lucide-react'
 import { useParams } from 'react-router-dom'
@@ -25,6 +25,9 @@ export function PublicQuotePage() {
       return data as PublicQuote | null
     },
   })
+  // Aberto pelo botão "Baixar PDF" do envio: já abre a janela de salvar em PDF.
+  const wantsPdf = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('pdf')
+  useEffect(() => { if (wantsPdf && q.data) { const t = setTimeout(() => window.print(), 600); return () => clearTimeout(t) } }, [wantsPdf, q.data])
   const accept = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.rpc('av_quote_accept', { _token: token, _name: name })
