@@ -188,7 +188,9 @@ export function PortalPage() {
 
   useEffect(() => {
     document.title = portal.data ? `${portal.data.name} | Peformake` : 'Peformake'
-  }, [portal.data])
+    // Lembra o acesso neste aparelho: na próxima vez, é só tocar em Entrar → Sou cliente.
+    if (portal.data && token) { try { localStorage.setItem('pf-portal', JSON.stringify({ token, name: portal.data.name })) } catch { /* sem armazenamento */ } }
+  }, [portal.data, token])
 
   const invalid = <CenteredMessage title="Este link não está ativo" text="Peça um novo link à sua equipe da Peformake." />
   if (!token) return <Frame>{invalid}</Frame>
