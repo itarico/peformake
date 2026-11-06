@@ -37,7 +37,8 @@ Outros clientes citados nas sessões: Leazi Energia Solar (Feirão Solar BV), Ó
 | Leazi | verde Leazi; no Feirão: azul BV + branco | Montserrat, Anton, Poppins (Unbounded no lugar de Akira) | seguir diagramação oficial do BV |
 | MD Prime | preto + dourado | — | fala regional (Carpina/Zona da Mata) |
 | Will Motos | cores Performake nos vídeos | Poppins, Montserrat | moto centralizada, texto grande |
-| Performake | `#3C83F6`, `#1AF3FB`, `#0B1430` (app/vídeo); `#e94560`, `#00d4aa`, `#ffb800`, `#7c3aed` (entregáveis HTML) | Archivo (site) | fundo escuro, logo PFMK animado |
+| Performake (logo PFMK) | **`#003A3E` verde-petróleo** + branco. Arquivos: `docs/design-ia/marcas/performake/` | — | Logo oficial escura e branca, PNG transparente 1024px |
+| Performake (app/vídeo) | `#3C83F6`, `#1AF3FB`, `#0B1430` (app/vídeo); `#e94560`, `#00d4aa`, `#ffb800`, `#7c3aed` (entregáveis HTML) | Archivo (site) | fundo escuro, logo PFMK animado |
 
 ## Fluxo de entrega preferido
 Drive > Clientes > [cliente] > 2026 > [Mês] > Vídeos Prontos → envio pelo **site** (sem Drive, decisão mais recente) e aprovação no WhatsApp privado + grupo do cliente (Wasender, limite 100 MB).
