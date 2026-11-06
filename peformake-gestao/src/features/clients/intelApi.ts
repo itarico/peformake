@@ -130,14 +130,24 @@ const PART_LABEL: [string, string, number][] = [
 /** Texto do "por quê" do selo, para mostrar ao passar o mouse. */
 export function rankWhy(r: ClientRank): string {
   const lines = PART_LABEL.map(([k, label, max]) => `${label}: ${Number(r.parts[k] ?? 0)} de ${max}`)
-  return `${r.rank}º da carteira · nota ${r.score}/100${r.tier ? ` · ${TIER_LABEL[r.tier]}` : ''}\n${lines.join('\n')}`
+  const stars = rankCriteria(r).map((c) => `${c.ok ? '★' : '☆'} ${c.label}`)
+  return `${r.rank}º da carteira · nota ${r.score}/100${r.tier ? ` · ${TIER_LABEL[r.tier]}` : ''}\n${stars.join('\n')}\n\nComo a nota foi calculada:\n${lines.join('\n')}`
 }
-/** Quantas estrelas e de que cor: ouro e diamante 3 douradas, prata 2 prateadas, bronze 1 bronze. */
+/** Os 3 critérios das estrelas. Cada um cumprido vale uma estrela. */
+export function rankCriteria(r: ClientRank): { key: string; label: string; ok: boolean }[] {
+  const p = (k: string) => Number(r.parts[k] ?? 0)
+  return [
+    { key: 'valor', label: 'Valor: entre os 30% que mais pagam', ok: p('valor') >= 21 },
+    { key: 'relacao', label: 'Relacionamento: avaliação boa ou muito boa', ok: p('avaliacao') >= 11 },
+    { key: 'fidelidade', label: 'Fidelidade: 6+ meses de casa e pagamento em dia', ok: p('tempo_de_casa') >= 7.5 && p('pagamento') >= 10 },
+  ]
+}
+/** Estrelas = critérios cumpridos; a cor mostra o nível da nota (ouro, prata, bronze). */
 export function rankStars(r: ClientRank): { n: number; color: string } | null {
-  if (r.rank === 1 || r.tier === 'diamante' || r.tier === 'ouro') return { n: 3, color: '#eda100' }
-  if (r.tier === 'prata') return { n: 2, color: '#9aa7ad' }
-  if (r.tier === 'bronze') return { n: 1, color: '#b0703a' }
-  return null
+  const n = rankCriteria(r).filter((c) => c.ok).length
+  if (n === 0) return null
+  const color = r.tier === 'diamante' || r.tier === 'ouro' || r.rank === 1 ? '#eda100' : r.tier === 'prata' ? '#9aa7ad' : '#b0703a'
+  return { n, color }
 }
 
 /** Ranking dos melhores clientes: valor, serviços, temperatura, avaliação, tempo de casa e pagamento em dia. */
