@@ -61,7 +61,8 @@ arquivo, sempre conferir a peça antes de entregar (texto, marca, formato, legib
 | 5 | Radar semanal | feito: tarefa agendada segunda 07:43 (05) |
 | 6 | Designs de sucesso | feito (06) |
 | 6b | Ideias para clientes com Design ativo | feito (07, 13 clientes) |
-| 7 | Continuidade | push bloqueado: GitHub 403 |
+| 6c | Identidade visual dos 13 clientes | feito (marcas/, banco brand_style, página publicada) |
+| 7 | Continuidade | push ok |
 
 ## Próximos passos
 1. Corrigir acesso GitHub e fazer push desta branch.
