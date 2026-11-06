@@ -66,8 +66,9 @@
   --accent-ink: hsl(189 92% 25%);
   --accent-soft: hsl(189 92% 30% / 0.1);
   --second: hsl(199 89% 42%);
-  --fill: hsl(196 70% 14%);
-  --on-fill: hsl(0 0% 100%);
+  /* Ciano da marca (o mesmo do site) nos botões e destaques; texto petróleo por cima. */
+  --fill: #1fc8db;
+  --on-fill: #061417;
   --warn: oklch(0.5 0.16 40);
   --warn-soft: oklch(0.5 0.16 40 / 0.1);
   --warn-ink: oklch(0.42 0.14 40);

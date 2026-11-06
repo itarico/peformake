@@ -38,3 +38,10 @@ html.lenis, html.lenis body { height: auto; }
   .pk-site .marquee { animation: none; }
   .pk-site .intro-mark .draw, .pk-site .hero-mark .draw { stroke-dashoffset: 0; }
 }
+
+/* Faixa ciano (como o rodapé de contato): o que era ciano vira petróleo para ter contraste. */
+.pk-site .band-cyan .text-cyan { color: var(--color-night); }
+.pk-site .band-cyan .bg-cyan { background-color: var(--color-night); }
+.pk-site .band-cyan .text-fog { color: rgb(6 20 23 / 0.72); }
+.pk-site .band-cyan .border-hair { border-color: rgb(6 20 23 / 0.16); }
+.pk-site .band-cyan ::selection { background: var(--color-night); color: var(--color-cyan); }

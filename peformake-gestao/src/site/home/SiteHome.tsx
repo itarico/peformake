@@ -281,7 +281,7 @@ function Portal() {
 
 function Founder() {
   return (
-    <section className="border-y border-hair bg-deep">
+    <section className="band-cyan bg-cyan text-night">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 md:grid-cols-[0.8fr_1.2fr]">
         <div data-reveal className="relative mx-auto w-full max-w-sm overflow-hidden rounded-3xl">
           <img data-speed="0.92" src="/media/italo.jpg" alt="Italo Santos, fundador da Peformake" loading="lazy" className="aspect-[4/5] w-full scale-110 object-cover" />
@@ -291,7 +291,7 @@ function Founder() {
           <blockquote>
             <Words as="p" text="Eu não vendo post. Eu respondo pelo cliente que entra pela sua porta." accent={['cliente']} className="text-[clamp(28px,3.8vw,52px)] font-bold leading-[1.08] tracking-tight wide" />
           </blockquote>
-          <p data-reveal className="mt-6 text-[16px] text-fog"><b className="text-paper">Italo Santos</b> · fundador da Peformake e da Ellcazo</p>
+          <p data-reveal className="mt-6 text-[16px] text-fog"><b className="text-night">Italo Santos</b> · fundador da Peformake e da Ellcazo</p>
         </div>
       </div>
     </section>
@@ -321,7 +321,8 @@ function Fit() {
 
 function Start() {
   return (
-    <section className="mx-auto max-w-6xl px-4 pb-28 sm:px-6">
+    <section className="band-cyan bg-cyan text-night">
+      <div className="mx-auto max-w-6xl px-4 py-28 sm:px-6">
       <Eyebrow>Como começar</Eyebrow>
       <Words text="Do primeiro papo às primeiras peças em uma semana." accent={['semana.']} className="display max-w-[17ch] text-[clamp(32px,4.8vw,68px)]" />
       <ol className="mt-14 grid gap-4 md:grid-cols-3">
@@ -333,6 +334,7 @@ function Start() {
           </li>
         ))}
       </ol>
+      </div>
     </section>
   )
 }
