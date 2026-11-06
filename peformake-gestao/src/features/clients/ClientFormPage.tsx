@@ -18,6 +18,8 @@ const SEGMENTS = [
   'Advocacia', 'Automotivo', 'Construção civil', 'Contabilidade', 'E-commerce', 'Educação', 'Estética e beleza', 'Fitness',
   'Gastronomia', 'Imobiliário', 'Moda', 'Odontologia', 'Pet', 'Saúde', 'Serviços', 'Tecnologia', 'Varejo',
 ]
+type FormTab = 'dados' | 'contrato' | 'negocio'
+const CONTRACT_KEYS: readonly (keyof ClientDraft)[] = ['startDate', 'months', 'endDate', 'billingDay', 'setupFee']
 const CHANNELS = ['Indicação', 'Instagram', 'Tráfego pago', 'Google', 'Prospecção ativa', 'Evento', 'Site']
 
 function Field({ label, error, hint, children }: { label: string; error?: string; hint?: string; children: (id: string, describedBy?: string) => ReactNode }) {
@@ -36,13 +38,16 @@ function Field({ label, error, hint, children }: { label: string; error?: string
   )
 }
 
-function Section({ title, text, children }: { title: string; text?: string; children: ReactNode }) {
+/** flat: dentro do pop-up, sem cartão nem título (as abas já dizem onde você está). */
+function Section({ title, text, children, flat = false, hidden = false }: { title: string; text?: string; children: ReactNode; flat?: boolean; hidden?: boolean }) {
   return (
-    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
-      <div>
-        <h2 className="text-[17px] font-semibold tracking-tight">{title}</h2>
-        {text && <p className="text-[13px] text-muted">{text}</p>}
-      </div>
+    <section hidden={hidden} aria-label={title} className={cn('flex flex-col gap-3', !flat && 'rounded-3xl border border-line bg-surface p-5')}>
+      {(!flat || text) && (
+        <div>
+          {!flat && <h2 className="text-[17px] font-semibold tracking-tight">{title}</h2>}
+          {text && <p className="text-[13px] text-muted">{text}</p>}
+        </div>
+      )}
       {children}
     </section>
   )
@@ -93,6 +98,8 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
   const [logoError, setLogoError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const inDialog = !!onCancel
+  const [tab, setTab] = useState<FormTab>('dados')
   const kind: ClientKind = clientKind(draft.clientType, draft.contractModel)
   const segments = useMemo(() => [...new Set([...SEGMENTS, ...existingSegments])].sort((a, b) => a.localeCompare(b, 'pt-BR')), [existingSegments])
 
@@ -137,8 +144,11 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
     event.preventDefault()
     const found = validateDraft(draft)
     setErrors(found)
-    if (Object.keys(found).length > 0) {
-      document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+    const keys = Object.keys(found) as (keyof ClientDraft)[]
+    if (keys.length > 0) {
+      // No pop-up, abre a aba do primeiro erro antes de focar o campo.
+      if (inDialog) setTab(CONTRACT_KEYS.includes(keys[0]!) ? 'contrato' : 'dados')
+      setTimeout(() => document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(), 0)
       return
     }
     save.mutate()
@@ -175,7 +185,12 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         </>
       )}
 
-      <Section title="Identificação">
+      {inDialog && (
+        <Segmented label="Parte do cadastro" value={tab} onChange={setTab}
+          options={[{ id: 'dados', label: 'Dados' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Contrato' }, { id: 'negocio', label: 'Sobre o negócio' }]} />
+      )}
+
+      <Section title="Identificação" flat={inDialog} hidden={inDialog && tab !== 'dados'}>
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-[13px] font-semibold">Tipo de cliente</span>
           <Segmented
@@ -189,7 +204,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
           {kind === 'fixo' ? 'Paga todo mês enquanto o contrato durar.' : kind === 'tcv' ? 'Valor total fechado para o período do contrato.' : 'Projeto pontual, sem mensalidade.'}
         </p>
 
-        <div className="flex flex-col gap-4 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <div className="flex shrink-0 flex-col items-center gap-2">
             <ClientAvatar name={draft.name || '?'} url={logoPublicUrl(draft.logoPath)} size="lg" />
             <input ref={fileRef} type="file" accept={LOGO_TYPES.join(',')} className="sr-only" id="foto" onChange={(event) => void pickLogo(event.target.files?.[0])} />
@@ -206,7 +221,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
             {logoError && <p role="alert" className="max-w-[160px] text-center text-[12px] font-medium text-warn-ink">{logoError}</p>}
           </div>
 
-          <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="grid flex-1 grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <Field label="Nome do cliente *" error={errors.name}>
                 {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('name')} value={draft.name} onChange={(e) => update('name', e.target.value)} className={inputClass} autoComplete="off" />}
@@ -242,8 +257,8 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         </div>
       </Section>
 
-      <Section title={kind === 'avulso' ? 'Projeto' : 'Contrato'} text={kind === 'avulso' ? 'Datas do projeto, se houver.' : 'O fim é calculado pelo início e pela duração. Você pode ajustar.'}>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Section flat={inDialog} hidden={inDialog && tab !== 'contrato'} title={kind === 'avulso' ? 'Projeto' : 'Contrato'} text={kind === 'avulso' ? 'Datas do projeto, se houver.' : 'O fim é calculado pelo início e pela duração. Você pode ajustar.'}>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-4">
           <Field label="Início" error={errors.startDate}>
             {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('startDate')} type="date" value={draft.startDate} onChange={(e) => (kind === 'avulso' ? update('startDate', e.target.value) : setStartOrMonths(e.target.value, draft.months))} className={inputClass} />}
           </Field>
@@ -273,8 +288,8 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         </div>
       </Section>
 
-      <Section title="Sobre o negócio" text="Ajuda a equipe a planejar. Tudo opcional.">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <Section flat={inDialog} hidden={inDialog && tab !== 'negocio'} title="Sobre o negócio" text="Ajuda a equipe a planejar. Tudo opcional.">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
           {([
             ['description', 'O que a empresa faz'],
             ['targetAudience', 'Público-alvo'],
@@ -282,7 +297,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
             ['competitors', 'Concorrentes'],
           ] as const).map(([key, label]) => (
             <Field key={key} label={label}>
-              {(fid) => <textarea id={fid} rows={3} maxLength={2000} value={draft[key]} onChange={(e) => update(key, e.target.value)} className={cn(inputClass, 'resize-y')} />}
+              {(fid) => <textarea id={fid} rows={inDialog ? 2 : 3} maxLength={2000} value={draft[key]} onChange={(e) => update(key, e.target.value)} className={cn(inputClass, 'resize-y')} />}
             </Field>
           ))}
         </div>
