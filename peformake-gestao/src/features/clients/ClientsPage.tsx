@@ -31,6 +31,7 @@ import { isLiveClient } from './clientRules'
 import { monthsIdle, rankStars, rankWhy, TEMP_LABEL, useClientIntel, useClientRanking } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { DeliveryBar, useClientDeliveries } from './DeliveryBar'
+import { LostPanel } from './LostPanel'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
 const chipSelect = 'min-h-9 cursor-pointer rounded-xl border border-line bg-canvas px-3 text-[13px] font-medium text-ink hover:border-line-strong'
@@ -88,9 +89,9 @@ export function ClientsPage() {
   const today = todayInBrazil()
   // Resumo abre primeiro. Recorrentes (fixo e TCV) e avulsos ficam em listas separadas.
   const aba = params.get('aba')
-  const tab: 'summary' | 'recorrentes' | 'avulsos' = aba === 'avulsos' ? 'avulsos' : aba === 'recorrentes' || aba === 'lista' ? 'recorrentes' : 'summary'
+  const tab: 'summary' | 'recorrentes' | 'avulsos' | 'perdidos' = aba === 'avulsos' ? 'avulsos' : aba === 'perdidos' ? 'perdidos' : aba === 'recorrentes' || aba === 'lista' ? 'recorrentes' : 'summary'
   const [creating, setCreating] = useState(false)
-  const setTab = (next: 'summary' | 'recorrentes' | 'avulsos') => setParams(() => {
+  const setTab = (next: 'summary' | 'recorrentes' | 'avulsos' | 'perdidos') => setParams(() => {
     const p = new URLSearchParams()
     if (next !== 'summary') p.set('aba', next)
     return p
@@ -145,10 +146,10 @@ export function ClientsPage() {
       </div>
       {canManage && <ClientDialog open={creating} onClose={() => setCreating(false)} />}
 
-      <div role="tablist" aria-label="Clientes" className="flex gap-1 border-b border-line">
-        {([['summary', 'Resumo'], ['recorrentes', `Recorrentes · ${liveRecurring}`], ['avulsos', `Avulsos · ${liveOneOff}`]] as const).map(([id, label]) => (
+      <div role="tablist" aria-label="Clientes" className="flex gap-1 overflow-x-auto border-b border-line [scrollbar-width:none]">
+        {([['summary', 'Resumo'], ['recorrentes', `Recorrentes · ${liveRecurring}`], ['avulsos', `Avulsos · ${liveOneOff}`], ['perdidos', 'Perdidos e pausados']] as const).map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
-            className={cn('-mb-px min-h-11 cursor-pointer border-b-2 px-4 font-semibold', tab === id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink')}>
+            className={cn('-mb-px min-h-11 shrink-0 cursor-pointer whitespace-nowrap border-b-2 px-4 font-semibold', tab === id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink')}>
             {label}
           </button>
         ))}
@@ -159,7 +160,9 @@ export function ClientsPage() {
 
       {query.data && tab === 'summary' && <><GoalsCard area="clientes" /><ClientsSummary /></>}
 
-      {query.data && tab !== 'summary' && (
+      {query.data && tab === 'perdidos' && <LostPanel canManage={canManage} />}
+
+      {query.data && tab !== 'summary' && tab !== 'perdidos' && (
         <>
           <div className="flex flex-wrap gap-2" role="group" aria-label="Atalhos">
             {shortcuts.map((c) => {

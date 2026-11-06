@@ -4,7 +4,7 @@ import { supabase } from './supabase'
 
 // Cada tabela que muda no banco atualiza as telas que dependem dela. Sem recarregar a página.
 const TABLE_KEYS: Record<string, string[][]> = {
-  clients: [['clients'], ['client-intel'], ['client-ranking'], ['dash-clients'], ['contracts-overview'], ['production-clients']],
+  clients: [['clients'], ['clients-lost'], ['client-intel'], ['client-ranking'], ['dash-clients'], ['contracts-overview'], ['production-clients']],
   client_services: [['clients'], ['client-intel'], ['client-ranking'], ['contracts-overview']],
   client_assessments: [['clients'], ['client-intel'], ['client-ranking'], ['client-timeline'], ['dash-clients']],
   client_contracts: [['clients'], ['contracts-overview']],
