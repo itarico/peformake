@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, X } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
@@ -22,9 +22,10 @@ type NewMsg =
   | { from: 'bot'; kind: 'all'; role: GoalRole }
   | { from: 'bot'; kind: 'notice'; n: Notice }
   | { from: 'bot'; kind: 'pending'; list: Pend[] }
+  | { from: 'bot'; kind: 'summary' }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye'; key?: string }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'summary'; key?: string }
 /** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
 type Pend = { id: string; client: string; label: string; late: number }
 type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
@@ -192,6 +193,36 @@ function PendingCard({ list }: { list: Pend[] }) {
   )
 }
 
+type Task = { id: string; client: string | null; title: string; status: string; due_date: string | null }
+type Piece = { id: string; client: string; title: string; status: string; deadline: string | null }
+type MyDayLite = { linked: boolean; tasks?: Task[]; pieces?: Piece[] }
+
+/** Resumo: o que está pendente, o que fazer e o que aconteceu, num lugar só. */
+function SummaryCard({ pend, tasks, pieces, updates, today }: { pend: Pend[]; tasks: Task[]; pieces: Piece[]; updates: Notice[]; today: string }) {
+  const latePieces = pieces.filter((p) => p.deadline && p.deadline < today)
+  const Sec = ({ title, n, children }: { title: string; n: number; children: React.ReactNode }) => (
+    <div className="flex flex-col gap-1"><span className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wide text-muted">{title}<span className={cn('rounded-full px-1.5 text-[10px]', n ? 'bg-accent-soft text-accent-ink' : 'bg-raised')}>{n}</span></span>{children}</div>
+  )
+  const row = (k: string, a: string, b?: string, tone?: 'warn') => <span key={k} className="flex items-center justify-between gap-2 text-[12px]"><span className="min-w-0 truncate">{a}</span>{b && <span className={cn('shrink-0 text-[10.5px]', tone ? 'font-semibold text-warn-ink' : 'text-muted')}>{b}</span>}</span>
+  const none = (t: string) => <span className="text-[12px] text-muted">{t}</span>
+  return (
+    <div className="flex flex-col gap-3">
+      <Sec title="Pendências" n={pend.length + latePieces.length}>
+        {pend.length + latePieces.length === 0 ? none('Nada atrasado. 👌') : <>
+          {pend.slice(0, 3).map((p, i) => row(`p${i}`, `${p.client} · ${p.label}`, `${p.late} ${p.late === 1 ? 'dia' : 'dias'}`, 'warn'))}
+          {latePieces.slice(0, 2).map((p) => row(p.id, `${p.client} · ${p.title}`, 'peça atrasada', 'warn'))}
+        </>}
+      </Sec>
+      <Sec title="Tarefas a fazer" n={tasks.length}>
+        {tasks.length === 0 ? none('Nenhuma tarefa aberta com você.') : tasks.slice(0, 3).map((t) => row(t.id, `${t.client ? `${t.client} · ` : ''}${t.title}`, t.due_date ? `até ${t.due_date.slice(8, 10)}/${t.due_date.slice(5, 7)}` : undefined, t.due_date && t.due_date < today ? 'warn' : undefined))}
+      </Sec>
+      <Sec title="Atualizações (24 h)" n={updates.length}>
+        {updates.length === 0 ? none('Sem novidade nas últimas 24 horas.') : updates.slice(0, 3).map((u) => row(u.id, `${u.icon} ${u.title}`, u.when))}
+      </Sec>
+    </div>
+  )
+}
+
 type Card = NonNullable<ReturnType<typeof clientCard>>
 /** Cartão de cliente: quem procurar hoje, por quê, e o botão. */
 function ClientCard({ c, onGo }: { c: Card; onGo: () => void }) {
@@ -231,6 +262,12 @@ export function GoalsChat() {
   const seesDeliveries = isAdmin || mine.includes('relacionamento')
   const deliveries = useClientDeliveries(seesDeliveries && state.status === 'ready')
   const { clientName } = useProduction()
+  const myDay = useQuery({
+    queryKey: ['my-day', 'me'], staleTime: 60_000, retry: false, enabled: state.status === 'ready',
+    queryFn: async () => { const { data, error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>)('my_day', { _staff_id: null }); if (error) throw new Error(error.message); return data as MyDayLite },
+  })
+  // Recolhido pela pessoa: fica só o ícone pequeno até chegar novidade nova.
+  const [minimized, setMinimized] = useState(() => store.get('pf-goals-min') ?? '')
 
   // Memória do que já foi mostrado (no aparelho): não repete no mesmo dia; meta batida avisa uma vez no mês.
   const [seen, setSeen] = useState<Set<string>>(() => new Set(JSON.parse(store.get('pf-goals-seen') ?? '[]') as string[]))
@@ -263,6 +300,8 @@ export function GoalsChat() {
     return out
   }, [role, list, seen, pool, lastSnap, cal.iso, cal.doy, day, days, month, notifs.data, deliveries.data, seesDeliveries, clientName])
   const news = items.filter((i) => i.kind !== 'tip')
+  const pendAll = useMemo(() => (seesDeliveries ? pendingFrom(deliveries.data, clientName, cal.iso) : []), [seesDeliveries, deliveries.data, clientName, cal.iso])
+  const updates = useMemo(() => noticesFrom(notifs.data ?? [], Date.now(), { includeRead: true, maxAgeH: 24 }), [notifs.data])
   const tips = items.filter((i) => i.kind === 'tip')
 
   const [open, setOpen] = useState(false)
@@ -288,9 +327,11 @@ export function GoalsChat() {
   }, [open, role]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (state.status !== 'ready') return null
-  if (!role && !items.length) return null
-  // Nada novo e chat fechado: some.
-  if (!open && news.length === 0) return null
+  const newsSig = news.map((x) => x.id).join('|')
+  const showPill = news.length > 0 && minimized !== newsSig
+  const minimize = () => { store.set('pf-goals-min', newsSig); setMinimized(newsSig) }
+  // Sem metas e sem nada do sistema para mostrar: não aparece.
+  if (!role && !items.length && !pendAll.length && !updates.length && !(myDay.data?.tasks?.length)) return null
 
   const goal = (key?: string) => list.find((r) => r.key === key) ?? list[0]!
   /** Mensagens antigas guardam a área: trocar de tela não muda o que já foi dito. */
@@ -334,7 +375,7 @@ export function GoalsChat() {
   function show(item: Item | undefined, prefix: NewMsg[] = []) {
     const remaining = news.filter((x) => x.id !== item?.id && !seen.has(x.id))
     if (!item) {
-      say([...prefix, { from: 'bot', kind: 'text', text: pick(['Por hoje é isso! ✅ Volto quando tiver novidade.', 'Tudo visto por hoje. Quando um número mudar, eu aviso.']) }], [{ label: 'Ver todas as metas', act: 'all' }, { label: 'Fechar', act: 'bye' }])
+      say([...prefix, { from: 'bot', kind: 'text', text: pick(['Por hoje é isso! ✅ Volto quando tiver novidade.', 'Tudo visto por hoje. Quando um número mudar, eu aviso.']) }], [{ label: 'Ver resumo', act: 'summary' }, ...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' }])
       return
     }
     mark([item.id])
@@ -372,8 +413,17 @@ export function GoalsChat() {
     say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key, role: g.role, format }, ...tail], repliesFor(g.key, remaining), card || paceOf(g, day, days).state === 'ok' ? [] : one(g))
   }
 
+  /** Resumo do dia: pendências, tarefas e atualizações. Abre quando não há novidade, ou quando a pessoa pede. */
+  function summary(prefix: NewMsg[] = []) {
+    const first = pendAll[0]
+    say([...prefix, { from: 'bot', kind: 'text', text: pick(['Seu resumo de agora:', 'Aqui está o que está com você:', 'Resumo rápido:']) }, { from: 'bot', kind: 'summary' }],
+      [...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' as const }],
+      [...(first ? [{ label: `Resolver ${first.client.split(' ').slice(0, 2).join(' ')}`, to: `/clientes/${first.id}` }] : []), ...((myDay.data?.tasks?.length ?? 0) > 0 ? [{ label: 'Ver meu dia', to: '/' }] : []), ...(updates.length ? [{ label: 'Ver avisos', to: '/notificacoes' }] : [])].slice(0, 2))
+  }
+
   function begin() {
     setLog([])
+    if (!news.length) { summary([{ from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }]); return }
     const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }
     show(news[0] ?? tips[0], [hello])
   }
@@ -394,6 +444,7 @@ export function GoalsChat() {
       setTimeout(() => say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all', role: role! }],
         [...list.slice(0, 2).map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key })), { label: 'Fechar', act: 'bye' as const }]), 50)
     }
+    if (r.act === 'summary') summary()
     if (r.act === 'bye') close()
   }
 
@@ -422,6 +473,7 @@ export function GoalsChat() {
                   {m.kind === 'client' && <ClientCard c={m.card} onGo={close} />}
                   {m.kind === 'notice' && <NoticeCard n={m.n} />}
                   {m.kind === 'pending' && <PendingCard list={m.list} />}
+                  {m.kind === 'summary' && <SummaryCard pend={pendAll} tasks={(myDay.data?.tasks ?? []).filter((t) => !/done|conclu|feita/i.test(t.status))} pieces={myDay.data?.pieces ?? []} updates={updates} today={cal.iso} />}
                   {m.kind === 'all' && <span className="flex flex-col gap-3">{rows.filter((x) => x.role === m.role).map((r) => <GoalBubble key={r.key} r={r} day={day} days={days} />)}</span>}
                 </div>
               ))}
@@ -439,11 +491,23 @@ export function GoalsChat() {
           </div>
         </section>
       )}
-      {!open && news.length > 0 && (
-        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Bate Meta: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}`}
-          className="pf-hop pointer-events-auto relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill px-4 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 hover:-translate-y-0.5">
-          <span className="-ml-2 rounded-full bg-white/20"><Mascot size={30} /></span> Abre aí!
-          <span className="pf-blink absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>
+      {!open && showPill && (
+        <span className="pf-hop pointer-events-auto relative">
+          <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Bate Meta: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir`}
+            className="relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill py-0 pl-4 pr-9 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 hover:-translate-y-0.5">
+            <span className="-ml-2 rounded-full bg-white/20"><Mascot size={30} /></span> Abre aí!
+            <span className="pf-blink absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>
+          </button>
+          {/* Recolher: vira o ícone pequeno; volta a chamar quando chegar novidade nova. */}
+          <button type="button" onClick={minimize} aria-label="Recolher o Bate Meta" title="Recolher"
+            className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 cursor-pointer place-items-center rounded-full text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={14} aria-hidden="true" /></button>
+        </span>
+      )}
+      {!open && !showPill && (
+        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label="Bate Meta: ver pendências, tarefas e atualizações" title="Bate Meta: pendências, tarefas e atualizações"
+          className="pointer-events-auto relative grid size-11 cursor-pointer place-items-center rounded-full border border-line bg-surface shadow-lg shadow-black/20 transition-transform hover:scale-105">
+          <Mascot size={32} />
+          {news.length > 0 && <span className="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-[#e5484d] ring-2 ring-canvas" />}
         </button>
       )}
     </div>

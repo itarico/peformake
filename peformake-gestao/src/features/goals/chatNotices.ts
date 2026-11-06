@@ -49,8 +49,9 @@ export function ago(iso: string, now = Date.now()): string {
 }
 
 /** Avisos não lidos dos últimos 7 dias, agrupados por tipo, do mais novo para o mais antigo. */
-export function noticesFrom(list: AppNotification[], now = Date.now()): Notice[] {
-  const fresh = list.filter((n) => !n.readAt && now - Date.parse(n.createdAt) < 7 * 86_400_000)
+export function noticesFrom(list: AppNotification[], now = Date.now(), opts: { includeRead?: boolean; maxAgeH?: number } = {}): Notice[] {
+  const maxAge = (opts.maxAgeH ?? 7 * 24) * 3_600_000
+  const fresh = list.filter((n) => (opts.includeRead || !n.readAt) && now - Date.parse(n.createdAt) < maxAge)
   const byKind = new Map<string, AppNotification[]>()
   for (const n of fresh) byKind.set(n.kind, [...(byKind.get(n.kind) ?? []), n])
   const out: Notice[] = []
