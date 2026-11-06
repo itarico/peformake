@@ -12,6 +12,7 @@ import { brlValue, dateBr } from '@/features/clients/format'
 import { formatDocument } from '@/features/clients/clientFormRules'
 import { Block, Fact } from '@/features/clients/ui'
 import { CONTRACT_STATUS } from './contractStatus'
+import { ContractWizard } from './ContractWizard'
 
 
 const STEPS = ['Gerado', 'Dados', 'Enviado', 'Assinado'] as const
@@ -80,6 +81,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
   }
 
   const [creating, setCreating] = useState(false)
+  const [wizard, setWizard] = useState(false)
   const [template, setTemplate] = useState('')
   const [editing, setEditing] = useState<ContractDoc | null>(null)
   const [text, setText] = useState('')
@@ -111,7 +113,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
       {/* Documento atual */}
       <Block
         title="Documento"
-        action={<Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => { setTemplate(''); rpc.reset(); setCreating(true) }}><FilePlus2 size={14} aria-hidden="true" /> {current ? 'Gerar novo' : 'Gerar contrato'}</Button>}
+        action={<Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setWizard(true)}><FilePlus2 size={14} aria-hidden="true" /> {current ? 'Gerar novo' : 'Gerar contrato'}</Button>}
       >
         {docs.isPending && <p role="status" className="text-muted">Carregando</p>}
         {!docs.isPending && !current && (
@@ -225,6 +227,8 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
           {missing.length > 0 && <p className="text-[12px] text-muted">Complete em <b>Editar → Empresa</b>. Com o CNPJ, o botão Buscar preenche o resto.</p>}
         </Block>
       </div>
+
+      <ContractWizard client={client} open={wizard} onClose={() => setWizard(false)} onSent={refresh} />
 
       <Dialog open={creating} onClose={() => setCreating(false)} title="Gerar contrato" description="O texto sai pronto com os serviços, os valores e os dados da empresa. Você revisa antes de mandar." size="sm">
         <div className="flex flex-col gap-3">
