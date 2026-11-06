@@ -43,3 +43,5 @@ O histórico completo das decisões até 06/11/2026 está em `peformake-gestao/d
 ## Deploy
 
 Na pasta `peformake-gestao`: `npx tsc -b --noEmit`, commit, push, e `npx vercel deploy --prod --yes` (no ambiente da nuvem o token da Vercel é injetado pelo proxy).
+
+**Limite da Vercel (plano grátis): 100 publicações por dia.** Publicar em lotes (juntar várias mudanças), não a cada commit. Commit e push continuam a cada mudança.

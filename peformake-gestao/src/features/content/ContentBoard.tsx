@@ -42,7 +42,7 @@ export function ItemCard({ item, clientName, staffName, today }: { item: Content
 export function ContentBoard() {
   const [month] = useMonthParam()
   const today = todayInBrazil()
-  const { clients, staff, myStaffId, clientName, staffName, isPending, isError, refetch, isDesigner, canPlan } = useProduction()
+  const { clients, staff, myStaffId, clientName, staffName, isPending, isError, refetch, isDesigner, canPlan, isLive } = useProduction()
   const items = useQuery({ queryKey: ['content-items', month], queryFn: () => listItems([month]) })
   const [picked, setFilters] = useState<ContentFilters & { designerChosen?: boolean }>(EMPTY_FILTERS)
   // Designer começa vendo só as dele, assim que o login dele é conhecido.
@@ -50,13 +50,13 @@ export function ContentBoard() {
   const filters: ContentFilters = useMemo(() => (autoDesigner ? { ...picked, designerId: autoDesigner } : picked), [picked, autoDesigner])
   const [showDone, setShowDone] = useState(false)
 
-  const visible = useMemo(() => filterItems(items.data ?? [], filters, clientName), [items.data, filters, clientName])
+  const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId)), filters, clientName), [items.data, filters, clientName, isLive])
   if (!items.data || !clients || !staff) {
     return <LoadState isPending={items.isPending || isPending} isError={items.isError || isError} refetch={() => { refetch(); void items.refetch() }} />
   }
   const columns = STATUS_ORDER.filter((s) => showDone || (s !== 'approved' && s !== 'published'))
   const set = (patch: Partial<ContentFilters>) => setFilters((f) => ({ ...f, ...patch }))
-  const clientsInMonth = clients.filter((c) => items.data.some((i) => i.clientId === c.id))
+  const clientsInMonth = clients.filter((c) => c.isActive && items.data.some((i) => i.clientId === c.id))
 
   return (
     <>

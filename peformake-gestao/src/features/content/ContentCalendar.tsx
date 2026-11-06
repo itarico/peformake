@@ -28,16 +28,16 @@ function Chip({ item, clientName, showClient = true }: { item: ContentItem; clie
 export function ContentCalendar() {
   const [month] = useMonthParam()
   const today = todayInBrazil()
-  const { clients, clientName, isPending, isError, refetch } = useProduction()
+  const { clients, clientName, isPending, isError, refetch, isLive } = useProduction()
   const items = useQuery({ queryKey: ['content-items', month], queryFn: () => listItems([month]) })
   const [clientId, setClientId] = useState('')
-  const filtered = useMemo(() => (items.data ?? []).filter((i) => !clientId || i.clientId === clientId), [items.data, clientId])
+  const filtered = useMemo(() => (items.data ?? []).filter((i) => isLive(i.clientId) && (!clientId || i.clientId === clientId)), [items.data, clientId, isLive])
 
   if (!items.data || !clients) return <LoadState isPending={items.isPending || isPending} isError={items.isError || isError} refetch={() => { refetch(); void items.refetch() }} />
   const byDay = new Map<string, ContentItem[]>()
   for (const i of filtered) if (i.publishDate) byDay.set(i.publishDate, [...(byDay.get(i.publishDate) ?? []), i])
   const undated = filtered.filter((i) => !i.publishDate || i.publishDate.slice(0, 7) !== month.slice(0, 7))
-  const clientsInMonth = clients.filter((c) => items.data.some((i) => i.clientId === c.id))
+  const clientsInMonth = clients.filter((c) => c.isActive && items.data.some((i) => i.clientId === c.id))
 
   return (
     <>

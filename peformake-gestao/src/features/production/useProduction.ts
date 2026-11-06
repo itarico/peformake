@@ -56,7 +56,13 @@ export function useProduction() {
     return (id: string | null) => (id ? map.get(id) ?? 'Equipe' : 'Sem responsável')
   }, [staff.data])
 
+  // Cliente perdido ou desativado some da operação (quadros, calendário, agenda).
+  const isLive = useMemo(() => {
+    const set = new Set((clients.data ?? []).filter((c) => c.isActive).map((c) => c.id))
+    return (id: string | null | undefined) => !clients.data || (!!id && set.has(id))
+  }, [clients.data])
   return {
+    isLive,
     clients: clients.data,
     staff: staff.data,
     myStaffId: me.data ?? null,

@@ -64,14 +64,14 @@ export function AvBoard() {
   const [query, setQuery] = useState('')
   const [person, setPerson] = useState(canManageAv ? '' : 'me')
   const [creating, setCreating] = useState(false)
-  const { clientName } = useProduction()
+  const { clientName, isLive } = useProduction()
 
   const list = useMemo(() => (projects.data ?? []).filter((p) => {
-    if (p.status === 'cancelled') return false
+    if (p.status === 'cancelled' || !isLive(p.clientId)) return false
     if (person === 'me' && myStaffId && ![p.videomakerId, p.editorId, p.scriptwriterId].includes(myStaffId)) return false
     if (person && person !== 'me' && ![p.videomakerId, p.editorId, p.scriptwriterId].includes(person)) return false
     return !query || clientName(p.clientId).toLowerCase().includes(query.toLowerCase()) || p.title.toLowerCase().includes(query.toLowerCase())
-  }), [projects.data, person, myStaffId, query, clientName])
+  }), [projects.data, person, myStaffId, query, clientName, isLive])
 
   if (!projects.data) return <AvShell title="Produção"><LoadState isPending={projects.isPending} isError={projects.isError} refetch={() => void projects.refetch()} /></AvShell>
   const delivered = list.filter((p) => stageOf(p) === 'entregue' && p.month === month)

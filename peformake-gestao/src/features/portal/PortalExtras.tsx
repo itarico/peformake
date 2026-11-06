@@ -14,6 +14,7 @@ interface Overview {
   reports: number
   invoices: { id: string; description: string; amount: number; due_date: string; status: string; payment_url: string | null }[]
   rated_this_week: boolean
+  destaque?: { stars: number; top: boolean } | null
   areas: string[]
 }
 interface ContractView { id: string; title: string; status: string; body: string; signer_name: string | null; signer_email: string | null; has_document: boolean; signed_at: string | null; sign_method?: string; accepted_at?: string | null; has_pdf?: boolean }
@@ -103,6 +104,17 @@ export function PortalOverview({ token }: { token: string }) {
         </section>
       )}
 
+      {d.destaque && (
+        <section aria-label="Cliente destaque" className="flex items-center gap-3 rounded-3xl border border-[#eda100]/40 bg-[#eda100]/10 px-5 py-3">
+          <span className="flex shrink-0 -space-x-0.5" aria-hidden="true">
+            {Array.from({ length: Math.max(1, d.destaque.stars) }, (_, i) => <Star key={i} size={16} fill="#eda100" stroke="#eda100" />)}
+          </span>
+          <p className="text-[14px]">
+            <b>{d.destaque.top ? 'Cliente destaque Peformake' : 'Cliente Ouro'}</b>{' '}
+            <span className="text-muted">{d.destaque.top ? 'Você está entre os parceiros que mais crescem com a gente este mês. Obrigado pela confiança!' : 'Parceria forte, resultado de quem caminha junto. Obrigado!'}</span>
+          </p>
+        </section>
+      )}
       <DeliveryRating token={token} />
       {!d.rated_this_week && d.areas.length > 0 && <WeeklyRating token={token} areas={d.areas} />}
     </>
