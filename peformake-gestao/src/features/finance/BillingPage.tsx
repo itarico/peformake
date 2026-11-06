@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Copy, ExternalLink, Link2, Plus, RefreshCw, Settings } from 'lucide-react'
+import { Check, Copy, Download, ExternalLink, Link2, Plus, RefreshCw, Search, Settings, Undo2 } from 'lucide-react'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -15,20 +15,18 @@ import { monthLabel } from '@/features/traffic/planRules'
 import { GATEWAY_LABEL, SOURCE_LABEL, reminderStage, validDocument } from './billingRules'
 import { parseMoney } from './statement'
 import { AsaasCard } from './AsaasCard'
+import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
 
-const brl = (n: number) => Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-gateway`
 
 interface Invoice {
   id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string
   source: string; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null
+  clients?: { name: string } | null
 }
+type Unit = 'todas' | 'peformake' | 'ellcazo'
+type StatusFilter = 'todas' | 'aberto' | 'vencido' | 'pago'
 interface ClientRow { id: string; name: string; document: string | null; billing_email: string | null; email: string | null }
-
-function nextMonth(month: string): string {
-  const [y, m] = month.split('-').map(Number) as [number, number]
-  return m === 12 ? `${y + 1}-01-01` : `${y}-${String(m + 1).padStart(2, '0')}-01`
-}
 
 /** Cobrança: faturas do mês, régua de lembretes, gateway e repasse da Ellcazo. */
 export function BillingPage() {
@@ -40,17 +38,22 @@ export function BillingPage() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [billingFor, setBillingFor] = useState<ClientRow | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
-  const today = new Date().toISOString().slice(0, 10)
+  const today = todayBR()
+  const [unit, setUnit] = useState<Unit>('todas')
+  const [status, setStatusFilter] = useState<StatusFilter>('todas')
+  const [query, setQuery] = useState('')
+  const [paying, setPaying] = useState<Invoice | null>(null)
 
   const invoices = useQuery({
     queryKey: ['invoices', month],
     queryFn: async () => {
       const { data, error } = await supabase.from('invoices')
-        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at')
-        .or(`and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month})`)
+        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, clients(name)')
+        // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
+        .or(`and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`)
         .order('due_date').limit(1000)
       if (error) throw error
-      return (data ?? []) as Invoice[]
+      return (data ?? []) as unknown as Invoice[]
     },
   })
   const clients = useQuery({
@@ -63,9 +66,7 @@ export function BillingPage() {
   })
   const clientById = new Map((clients.data ?? []).map((c) => [c.id, c]))
   const refresh = () => {
-    void queryClient.invalidateQueries({ queryKey: ['invoices'] })
-    void queryClient.invalidateQueries({ queryKey: ['fin-entries'] })
-    void queryClient.invalidateQueries({ queryKey: ['fin-summary'] })
+    for (const k of ['invoices', 'fin-entries', 'fin-summary', 'client-invoices', 'dash-home-business']) void queryClient.invalidateQueries({ queryKey: [k] })
   }
 
   const generate = useMutation({
@@ -83,6 +84,23 @@ export function BillingPage() {
       if (error) throw error
     },
     onSuccess: refresh,
+    onError: (e) => setNotice(`Não foi possível mudar a cobrança: ${(e as Error).message}`),
+  })
+  const pay = useMutation({
+    mutationFn: async (v: { id: string; date: string }) => {
+      const { error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>)('invoice_set_paid', { _id: v.id, _paid_at: v.date })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => { setNotice('Pagamento registrado. O Caixa já foi atualizado.'); refresh() },
+    onError: (e) => setNotice(`Não foi possível registrar o pagamento: ${(e as Error).message}`),
+  })
+  const undo = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>)('invoice_undo_paid', { _id: id })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => { setNotice('Pagamento desfeito. A fatura voltou para em aberto.'); refresh() },
+    onError: (e) => setNotice(`Não foi possível desfazer: ${(e as Error).message}`),
   })
   const chargeNow = useMutation({
     mutationFn: async (id: string) => {
@@ -100,18 +118,33 @@ export function BillingPage() {
     onError: (e) => { setNotice((e as Error).message); refresh() },
   })
 
-  const list = invoices.data ?? []
-  const open = list.filter((i) => i.status === 'pendente' || i.status === 'vencido')
+  const nameOf = (i: Invoice) => i.clients?.name?.trim() ?? clientById.get(i.client_id)?.name ?? 'Cliente'
+  const byUnit = (invoices.data ?? []).filter((i) => unit === 'todas' || i.unit === unit)
+  const open = byUnit.filter((i) => i.status === 'pendente' || i.status === 'vencido')
   const late = open.filter((i) => i.due_date < today)
-  const paid = list.filter((i) => i.status === 'pago')
+  const paid = byUnit.filter((i) => i.status === 'pago')
+  const ready = open.filter((i) => !i.payment_url && i.due_date <= today)
+  const q = fold(query.trim())
+  const list = byUnit
+    .filter((i) => status === 'todas' ? i.status !== 'cancelado' : status === 'aberto' ? open.includes(i) : status === 'vencido' ? late.includes(i) : i.status === 'pago')
+    .filter((i) => !q || fold(nameOf(i)).includes(q) || fold(i.description).includes(q))
+  const exportCsv = () => downloadCsv(`cobranca-${unit}-${month.slice(0, 7)}.csv`, ['Vencimento', 'Cliente', 'Empresa', 'Descrição', 'Situação', 'Pago em', 'Valor', 'Link'],
+    list.map((i) => [dayLabel(i.due_date), nameOf(i), i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake', i.description,
+      i.status === 'pago' ? 'Pago' : i.due_date < today ? 'Vencido' : 'Em aberto', i.paid_at ? dayLabel(i.paid_at.slice(0, 10)) : '', Number(i.amount), i.payment_url ?? '']))
 
   return (
     <>
       <SectionHeader
         title="Financeiro"
-        sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto. Lembrete um dia antes, no dia e um dia depois; com 3 dias o gestor é avisado; com 7 a régua para.`}
+        sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto. O link sai sozinho no dia do vencimento.`}
         tabs={FINANCE_TABS}
         actions={<>
+          <div role="group" aria-label="Empresa" className="inline-flex rounded-full border border-line p-0.5">
+            {(['todas', 'peformake', 'ellcazo'] as Unit[]).map((u) => (
+              <button key={u} type="button" aria-pressed={u === unit} onClick={() => setUnit(u)}
+                className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-semibold', u === unit ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{u === 'todas' ? 'Todas' : u === 'peformake' ? 'Peformake' : 'Ellcazo'}</button>
+            ))}
+          </div>
           <MonthSwitcher />
           {isAdmin && <Button variant="secondary" onClick={() => setSettingsOpen(true)}><Settings size={15} aria-hidden="true" /> Configurar cobrança</Button>}
         </>}
@@ -121,12 +154,12 @@ export function BillingPage() {
 
       <section aria-label="Resumo" className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {[
-          { label: 'A receber', value: brl(open.reduce((a, i) => a + Number(i.amount), 0)), hint: `${open.length} faturas` },
-          { label: 'Atrasado', value: brl(late.reduce((a, i) => a + Number(i.amount), 0)), hint: `${late.length} faturas`, warn: late.length > 0 },
-          { label: 'Recebido', value: brl(paid.reduce((a, i) => a + Number(i.amount), 0)), hint: `${paid.length} faturas` },
-          { label: 'Sem link de pagamento', value: String(open.filter((i) => !i.payment_url).length) },
+          { label: 'A receber', value: brl(open.reduce((a, i) => a + Number(i.amount), 0)), hint: `${open.length} faturas`, f: 'aberto' as const },
+          { label: 'Vencido', value: brl(late.reduce((a, i) => a + Number(i.amount), 0)), hint: `${late.length} faturas`, warn: late.length > 0, f: 'vencido' as const },
+          { label: 'Recebido', value: brl(paid.reduce((a, i) => a + Number((i as Invoice & { paid_amount?: number }).paid_amount ?? i.amount), 0)), hint: `${paid.length} faturas`, f: 'pago' as const },
+          { label: 'Prontas para cobrar', value: String(ready.length), hint: ready.length ? 'Venceram e ainda estão sem link' : 'O link sai no dia do vencimento', warn: ready.length > 0, f: 'aberto' as const },
         ].map((t) => (
-          <div key={t.label} className="rounded-2xl border border-line bg-surface px-4 py-3">
+          <div key={t.label} onClick={() => setStatusFilter(t.f)} className="cursor-pointer rounded-2xl border border-line bg-surface px-4 py-3 hover:border-line-strong">
             <p className="text-[12px] font-medium text-muted">{t.label}</p>
             <p className={cn('text-[22px] font-semibold tabular-nums', t.warn && 'text-warn-ink')}>{t.value}</p>
             {t.hint && <p className="text-[12px] text-muted">{t.hint}</p>}
@@ -134,14 +167,28 @@ export function BillingPage() {
         ))}
       </section>
 
+      {notice && <p role="status" className="rounded-xl bg-raised px-4 py-2.5 text-[14px] font-medium">{notice}</p>}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        {notice ? <p role="status" className="text-[14px] font-medium">{notice}</p> : <span />}
+        <div role="group" aria-label="Situação" className="flex flex-wrap gap-1">
+          {([['todas', 'Tudo'], ['aberto', 'Em aberto'], ['vencido', 'Vencidas'], ['pago', 'Pagas']] as const).map(([k, l]) => (
+            <button key={k} type="button" aria-pressed={status === k} onClick={() => setStatusFilter(k)}
+              className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', status === k ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>{l}</button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <label className="relative flex items-center">
+            <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 text-muted" />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" aria-label="Buscar cobrança"
+              className="min-h-10 w-44 rounded-full border border-line bg-surface pl-9 pr-3 text-[13px]" />
+          </label>
+          <Button variant="secondary" onClick={exportCsv} disabled={!list.length}><Download size={15} aria-hidden="true" /> Planilha</Button>
         {isAdmin && (
-          <div className="flex flex-wrap gap-2">
+          <>
             <Button variant="secondary" disabled={generate.isPending} onClick={() => generate.mutate()}><RefreshCw size={15} aria-hidden="true" /> Gerar mensalidades do mês</Button>
             <Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button>
-          </div>
+          </>
         )}
+        </div>
       </div>
 
       {!invoices.data ? <LoadState isPending={invoices.isPending} isError={invoices.isError} refetch={() => void invoices.refetch()} /> : (
@@ -149,12 +196,13 @@ export function BillingPage() {
           {list.map((i) => {
             const st = reminderStage(i.due_date, today, i.status)
             const client = clientById.get(i.client_id)
+            const clientName = nameOf(i)
             return (
               <li key={i.id} className="flex flex-col gap-2 border-b border-line px-4 py-3 last:border-b-0">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold">{client?.name ?? 'Cliente'} <span className="font-normal text-muted">· {i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'} · {SOURCE_LABEL[i.source] ?? i.source}</span></p>
-                    <p className="truncate text-[13px] text-muted">{i.description}</p>
+                    <p className="truncate font-semibold">{clientName} <span className="font-normal text-muted">· {i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'} · {SOURCE_LABEL[i.source] ?? i.source}</span></p>
+                    <p className="truncate text-[13px] text-muted">{i.description} · vence {dayLabel(i.due_date)}{i.paid_at ? ` · pago ${dayLabel(i.paid_at.slice(0, 10))}` : ''}</p>
                   </div>
                   <span className="font-semibold tabular-nums">{brl(i.amount)}</span>
                   <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
@@ -173,18 +221,26 @@ export function BillingPage() {
                         chargeNow.mutate(i.id)
                       }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
                     )}
-                    <button type="button" disabled={setStatus.isPending} onClick={() => { if (window.confirm('Marcar como pago? Use quando o cliente pagou fora do link.')) setStatus.mutate({ id: i.id, status: 'pago' }) }} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Marcar pago</button>
+                    {isAdmin && <button type="button" disabled={pay.isPending} onClick={() => setPaying(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Check size={14} aria-hidden="true" /> Marcar pago</button>}
                     {isAdmin && <button type="button" disabled={setStatus.isPending} onClick={() => { if (window.confirm('Cancelar esta cobrança?')) setStatus.mutate({ id: i.id, status: 'cancelado' }) }} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>}
                     {i.gateway_error && <span className="text-warn-ink">{i.gateway_error}</span>}
+                  </div>
+                )}
+                {i.status === 'pago' && isAdmin && (
+                  <div className="flex flex-wrap items-center gap-2 text-[13px]">
+                    <button type="button" disabled={undo.isPending} onClick={() => { if (window.confirm('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.')) undo.mutate(i.id) }}
+                      className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-3 font-medium text-muted underline hover:text-ink"><Undo2 size={14} aria-hidden="true" /> Desfazer pagamento</button>
                   </div>
                 )}
               </li>
             )
           })}
-          {list.length === 0 && <li className="p-8 text-center text-muted">Nenhuma cobrança neste mês.{isAdmin ? ' Use "Gerar mensalidades do mês" para criar as dos contratos.' : ''}</li>}
+          {list.length === 0 && (q || status !== 'todas' || unit !== 'todas') && <li className="p-8 text-center text-muted">Nada encontrado com esse filtro.</li>}
+          {list.length === 0 && !q && status === 'todas' && unit === 'todas' && <li className="p-8 text-center text-muted">Nenhuma cobrança neste mês.{isAdmin ? ' Use "Gerar mensalidades do mês" para criar as dos contratos.' : ''}</li>}
         </ul>
       )}
 
+      {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} onClose={() => setPaying(null)} onPay={(date) => { pay.mutate({ id: paying.id, date }); setPaying(null) }} />}
       {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
       {settingsOpen && <BillingSettingsDialog onClose={() => setSettingsOpen(false)} />}
       {billingFor && <ClientBillingDialog client={billingFor} onClose={() => setBillingFor(null)} onSaved={() => { void queryClient.invalidateQueries({ queryKey: ['billing-clients'] }); setNotice('Dados de cobrança salvos. Agora crie o link.') }} />}
@@ -193,6 +249,20 @@ export function BillingPage() {
 }
 
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
+
+/** Pagamento feito fora do link: escolhe a data em que o dinheiro entrou. */
+function PayInvoiceDialog({ invoice, name, onClose, onPay }: { invoice: Invoice; name: string; onClose: () => void; onPay: (date: string) => void }) {
+  const [date, setDate] = useState(todayBR())
+  return (
+    <Dialog open onClose={onClose} title="Marcar como pago" description={`${name} · ${invoice.description} · ${brl(invoice.amount)}`} size="sm"
+      footer={<Button onClick={() => onPay(date)}><Check size={15} aria-hidden="true" /> Confirmar pagamento</Button>}>
+      <div className="flex flex-col gap-2">
+        <label className="flex flex-col text-[13px] font-semibold">Pago em<input type="date" value={date} max={todayBR()} onChange={(e) => setDate(e.target.value)} className={field} /></label>
+        <p className="text-[12.5px] text-muted">Use quando o cliente pagou fora do link. O Caixa é atualizado junto e a fatura não é cobrada de novo.</p>
+      </div>
+    </Dialog>
+  )
+}
 
 function InvoiceDialog({ clients, onClose, onSaved }: { clients: ClientRow[]; onClose: () => void; onSaved: () => void }) {
   const [client, setClient] = useState('')

@@ -9,7 +9,7 @@ const TABLE_KEYS: Record<string, string[][]> = {
   client_assessments: [['clients'], ['client-intel'], ['client-ranking'], ['client-timeline'], ['dash-clients']],
   client_contracts: [['clients'], ['contracts-overview']],
   client_contract_docs: [['contract-docs-all'], ['contracts-overview'], ['contract-docs']],
-  invoices: [['client-invoices'], ['client-billing-status'], ['client-intel'], ['client-ranking']],
+  invoices: [['client-invoices'], ['client-billing-status'], ['client-intel'], ['client-ranking'], ['invoices'], ['fin-entries'], ['fin-summary']],
   content_items: [['client-intel'], ['client-timeline'], ['company-goals'], ['client-deliveries']],
   av_projects: [['client-intel'], ['company-goals'], ['client-deliveries']],
   client_meetings: [['client-deliveries'], ['client-meetings']],
@@ -19,7 +19,7 @@ const TABLE_KEYS: Record<string, string[][]> = {
   company_goals: [['company-goals']],
   client_contacts: [['client-contacts']],
   delivery_ratings: [['client-ranking']],
-  fin_entries: [['company-goals']],
+  fin_entries: [['company-goals'], ['fin-entries'], ['fin-summary'], ['invoices']],
 }
 
 /** Liga o tempo real para a pessoa logada. Agrupa mudanças em rajada (meio segundo) para não recarregar demais. */

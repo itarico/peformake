@@ -7,3 +7,8 @@
 -- 4) Tráfego: ad_accounts.read_source = 'mcp' nas contas lidas pelo conector oficial da Meta (API direta bloqueada).
 -- O SQL completo está registrado no histórico de migrações do Supabase:
 --   billing_due_day_30_charge_on_due, invoice_generate_month_default_30, crm_sale_to_fin_entry
+-- 5) fin_entry_sync_invoice: Caixa → Cobrança (pago/cancelado/desfeito no Caixa atualiza a fatura; não cobra de novo).
+-- 6) fin_month_summary: vencido_receber/vencido_pagar de qualquer mês; datas em America/Sao_Paulo.
+-- 7) fin_entry_save: não apaga client_id/notes quando a tela não manda; fin_entry_set_status aceita pendente (desfazer).
+-- 8) invoice_set_paid(_id, _paid_at, _amount) e invoice_undo_paid(_id).
+-- 9) fin_recurring + fin_recurring_save + fin_recurring_generate (cron fin-recurring 09:20 UTC): contas fixas mensais.
