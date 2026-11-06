@@ -1,6 +1,6 @@
 import { useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, ImagePlus, Trash2 } from 'lucide-react'
+import { ArrowLeft, ImagePlus, Search, Trash2 } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -8,8 +8,8 @@ import { CenteredMessage } from '@/components/ui/CenteredMessage'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { ClientAvatar } from './ClientAvatar'
-import { addMonths, draftFromClient, emptyDraft, kindToDraft, moneyText, parseMoney, validateDraft, type DraftErrors } from './clientFormRules'
-import { clientErrorMessage, getSetupFee, LOGO_MAX_BYTES, LOGO_TYPES, logoPublicUrl, saveClient, uploadLogo, type ClientDraft } from './clientsApi'
+import { addMonths, draftFromClient, emptyDraft, formatDocument, kindToDraft, moneyText, parseMoney, validateDraft, type DraftErrors } from './clientFormRules'
+import { clientErrorMessage, getSetupFee, LOGO_MAX_BYTES, lookupCnpj, LOGO_TYPES, logoPublicUrl, saveClient, uploadLogo, type ClientDraft } from './clientsApi'
 import { clientKind, type ClientKind } from './portfolioRules'
 import { inputClass, Segmented } from './ui'
 import { useClients } from './useClients'
@@ -18,7 +18,8 @@ const SEGMENTS = [
   'Advocacia', 'Automotivo', 'Construção civil', 'Contabilidade', 'E-commerce', 'Educação', 'Estética e beleza', 'Fitness',
   'Gastronomia', 'Imobiliário', 'Moda', 'Odontologia', 'Pet', 'Saúde', 'Serviços', 'Tecnologia', 'Varejo',
 ]
-type FormTab = 'dados' | 'contrato' | 'negocio'
+type FormTab = 'dados' | 'empresa' | 'contrato' | 'negocio'
+const COMPANY_KEYS: readonly (keyof ClientDraft)[] = ['document', 'legalName', 'address', 'billingEmail']
 const CONTRACT_KEYS: readonly (keyof ClientDraft)[] = ['startDate', 'months', 'endDate', 'billingDay', 'setupFee']
 const CHANNELS = ['Indicação', 'Instagram', 'Tráfego pago', 'Google', 'Prospecção ativa', 'Evento', 'Site']
 
@@ -140,6 +141,21 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
     },
   })
 
+  const lookup = useMutation({
+    mutationFn: lookupCnpj,
+    onSuccess: (found) => {
+      setDraft((current) => ({
+        ...current,
+        legalName: found.legalName || current.legalName,
+        address: found.address || current.address,
+        billingEmail: current.billingEmail || found.email || '',
+        email: current.email || found.email || '',
+        phone: current.phone || found.phone || '',
+      }))
+      setErrors((current) => ({ ...current, document: undefined }))
+    },
+  })
+
   const submit = (event: React.FormEvent) => {
     event.preventDefault()
     const found = validateDraft(draft)
@@ -147,7 +163,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
     const keys = Object.keys(found) as (keyof ClientDraft)[]
     if (keys.length > 0) {
       // No pop-up, abre a aba do primeiro erro antes de focar o campo.
-      if (inDialog) setTab(CONTRACT_KEYS.includes(keys[0]!) ? 'contrato' : 'dados')
+      if (inDialog) setTab(CONTRACT_KEYS.includes(keys[0]!) ? 'contrato' : COMPANY_KEYS.includes(keys[0]!) ? 'empresa' : 'dados')
       setTimeout(() => document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(), 0)
       return
     }
@@ -187,7 +203,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
 
       {inDialog && (
         <Segmented label="Parte do cadastro" value={tab} onChange={setTab}
-          options={[{ id: 'dados', label: 'Dados' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Contrato' }, { id: 'negocio', label: 'Sobre o negócio' }]} />
+          options={[{ id: 'dados', label: 'Dados' }, { id: 'empresa', label: 'Empresa' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Contrato' }, { id: 'negocio', label: 'Negócio' }]} />
       )}
 
       <Section title="Identificação" flat={inDialog} hidden={inDialog && tab !== 'dados'}>
@@ -254,6 +270,42 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
               <span><b className="font-semibold">Mostrar no site</b> <span className="text-muted">na lista de clientes da página inicial</span></span>
             </label>
           </div>
+        </div>
+      </Section>
+
+      <Section flat={inDialog} hidden={inDialog && tab !== 'empresa'} title="Empresa" text="Dados que vão no contrato e na cobrança. Com CNPJ, a busca preenche o resto pela Receita.">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
+          <Field label="CPF ou CNPJ" error={errors.document ?? lookup.error?.message}>
+            {(fid, by) => (
+              <div className="flex gap-2">
+                <input id={fid} aria-describedby={by} aria-invalid={invalid('document')} inputMode="numeric" value={draft.document}
+                  onChange={(e) => update('document', e.target.value)} onBlur={(e) => update('document', formatDocument(e.target.value))}
+                  className={inputClass} placeholder="00.000.000/0000-00" />
+                <Button type="button" variant="secondary" className="shrink-0" disabled={draft.document.replace(/\D/g, '').length !== 14 || lookup.isPending}
+                  onClick={() => lookup.mutate(draft.document)}>
+                  <Search size={15} aria-hidden="true" /> {lookup.isPending ? 'Buscando' : 'Buscar'}
+                </Button>
+              </div>
+            )}
+          </Field>
+          <Field label="E-mail de cobrança" error={errors.billingEmail} hint="Recebe o contrato e as faturas.">
+            {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('billingEmail')} type="email" inputMode="email" value={draft.billingEmail} onChange={(e) => update('billingEmail', e.target.value)} className={inputClass} placeholder="financeiro@empresa.com" />}
+          </Field>
+          <div className="sm:col-span-2">
+            <Field label="Razão social (ou nome completo, se for CPF)">
+              {(fid) => <input id={fid} value={draft.legalName} onChange={(e) => update('legalName', e.target.value)} className={inputClass} />}
+            </Field>
+          </div>
+          <div className="sm:col-span-2">
+            <Field label="Endereço completo">
+              {(fid) => <input id={fid} value={draft.address} onChange={(e) => update('address', e.target.value)} className={inputClass} autoComplete="street-address" />}
+            </Field>
+          </div>
+          {lookup.data && (
+            <p role="status" className="rounded-xl bg-ok-soft px-3 py-2 text-[13px] text-ok-ink sm:col-span-2">
+              Achamos na Receita: <b>{lookup.data.legalName}</b>{lookup.data.status && ` · situação ${lookup.data.status.toLowerCase()}`}{lookup.data.activity && ` · ${lookup.data.activity}`}. Confira e ajuste se precisar.
+            </p>
+          )}
         </div>
       </Section>
 

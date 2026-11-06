@@ -34,6 +34,8 @@ export interface Database {
           phone: string | null
           document: string | null
           billing_email: string | null
+          legal_name: string | null
+          address: string | null
           niche: string | null
           logo_path: string | null
           legacy_logo_url: string | null
@@ -466,6 +468,20 @@ export interface Database {
         Returns: undefined
       }
       client_save: { Args: { _client_id: string | null; _expected_updated_at: string | null; _data: Record<string, unknown> }; Returns: string }
+      client_save_legal: { Args: { _client_id: string; _data: Record<string, unknown> }; Returns: undefined }
+      contract_update_body: { Args: { _id: string; _body: string }; Returns: undefined }
+      contract_set_method: { Args: { _id: string; _method: string }; Returns: undefined }
+      contract_release: { Args: { _id: string }; Returns: undefined }
+      portal_contract_accept: { Args: { _token: string; _name: string; _document: string }; Returns: undefined }
+      contracts_overview: {
+        Args: Record<string, never>
+        Returns: {
+          client_id: string; client_name: string; logo_path: string | null; client_type: string | null; contract_model: string | null
+          start_date: string | null; end_date: string | null; months: number | null; billing_day: number | null; monthly: number | null
+          has_document: boolean; doc_id: string | null; doc_status: string | null; sign_method: string | null
+          sent_at: string | null; signed_at: string | null; has_pdf: boolean
+        }[]
+      }
       client_set_team: { Args: { _client_id: string; _squad_id: string | null; _team: { staff_id: string; role: string }[] }; Returns: undefined }
       client_add_services: { Args: { _client_id: string; _service_ids: string[]; _package_id: string | null }; Returns: number }
       client_update_service: {

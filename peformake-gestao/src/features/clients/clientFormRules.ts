@@ -23,6 +23,7 @@ export function emptyDraft(today: string): ClientDraft {
     name: '', segment: '', clientType: 'recurring', contractModel: 'MRR', email: '', phone: '', logoPath: null, showOnSite: false,
     acquisitionChannel: '', description: '', targetAudience: '', valueProposition: '', competitors: '',
     startDate: today, endDate: addMonths(today, 12), months: '12', billingDay: '10',
+    document: '', legalName: '', address: '', billingEmail: '',
   }
 }
 
@@ -45,6 +46,10 @@ export function draftFromClient(client: ClientRecord): ClientDraft {
     endDate: client.contract?.endDate ?? '',
     months: client.contract?.months ? String(client.contract.months) : '',
     billingDay: client.contract?.billingDay ? String(client.contract.billingDay) : '',
+    document: formatDocument(client.document ?? ''),
+    legalName: client.legalName ?? '',
+    address: client.address ?? '',
+    billingEmail: client.billingEmail ?? '',
   }
 }
 
@@ -63,6 +68,9 @@ export function validateDraft(draft: ClientDraft): DraftErrors {
   else if (digits.length < 10 || digits.length > 13) errors.phone = 'Digite DDD e número. Exemplo: (81) 98888-7777.'
 
   if (draft.email.trim() && !EMAIL.test(draft.email.trim())) errors.email = 'E-mail incompleto. Exemplo: nome@empresa.com.'
+
+  if (draft.document.trim() && !isValidDocument(draft.document)) errors.document = 'CPF ou CNPJ inválido. Confira os números.'
+  if (draft.billingEmail.trim() && !EMAIL.test(draft.billingEmail.trim())) errors.billingEmail = 'E-mail incompleto.'
 
   if (draft.startDate && !DATE.test(draft.startDate)) errors.startDate = 'Data inválida.'
   if (draft.endDate && !DATE.test(draft.endDate)) errors.endDate = 'Data inválida.'
@@ -95,4 +103,37 @@ export function parseMoney(text: string): number | null {
 export function moneyText(value: number | null | undefined): string {
   if (value === null || value === undefined) return ''
   return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
+/** Formata 11 dígitos como CPF e 14 como CNPJ; o resto fica como está. */
+export function formatDocument(value: string): string {
+  const d = value.replace(/\D/g, '')
+  if (d.length === 11) return d.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')
+  if (d.length === 14) return d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+  return value
+}
+
+/** Confere os dígitos verificadores de CPF (11) ou CNPJ (14). */
+export function isValidDocument(value: string): boolean {
+  const d = value.replace(/\D/g, '')
+  if (/^(\d)\1+$/.test(d)) return false
+  const nums = d.split('').map(Number)
+  if (d.length === 11) {
+    const check = (len: number) => {
+      const sum = nums.slice(0, len).reduce((acc, n, i) => acc + n * (len + 1 - i), 0)
+      const r = (sum * 10) % 11
+      return r === 10 ? 0 : r
+    }
+    return check(9) === nums[9] && check(10) === nums[10]
+  }
+  if (d.length === 14) {
+    const check = (len: number) => {
+      const weights = len === 12 ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2] : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+      const sum = nums.slice(0, len).reduce((acc, n, i) => acc + n * weights[i]!, 0)
+      const r = sum % 11
+      return r < 2 ? 0 : 11 - r
+    }
+    return check(12) === nums[12] && check(13) === nums[13]
+  }
+  return false
 }

@@ -93,6 +93,11 @@ export interface ClientRecord {
   updatedAt: string
   showOnSite: boolean
   squadId: string | null
+  /** CPF/CNPJ só com números. */
+  document: string | null
+  legalName: string | null
+  address: string | null
+  billingEmail: string | null
   contract: ContractRecord | null
   services: ClientServiceItem[]
   team: TeamEntry[]

@@ -58,6 +58,11 @@ export interface ClientDraft {
   endDate: string
   months: string
   billingDay: string
+  /** Dados da empresa para contrato e cobrança. */
+  document: string
+  legalName: string
+  address: string
+  billingEmail: string
   /** Só administrador envia. */
   setupFee?: string
 }
@@ -72,7 +77,7 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
   const [clients, links, services, contracts, team, staff, assessments, prices] = await Promise.all([
     supabase
       .from('clients')
-      .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id')
+      .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id, document, legal_name, address, billing_email')
       .order('name'),
     supabase.from('client_services').select('id, client_id, service_id, is_active, quantity, notes, package_id'),
     supabase.from('services').select('id, name, is_audiovisual'),
@@ -126,6 +131,10 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
       updatedAt: row.updated_at,
       showOnSite: row.show_on_site,
       squadId: row.squad_id,
+      document: row.document,
+      legalName: row.legal_name,
+      address: row.address,
+      billingEmail: row.billing_email,
       contract: contract
         ? { model: contract.contract_model, startDate: contract.start_date, endDate: contract.end_date, months: contract.months, billingDay: contract.billing_day }
         : null,
@@ -255,6 +264,11 @@ export async function saveClient(id: string | null, expectedUpdatedAt: string | 
   if (draft.setupFee !== undefined) data.setup_fee = draft.setupFee
   const { data: savedId, error } = await supabase.rpc('client_save', { _client_id: id, _expected_updated_at: expectedUpdatedAt, _data: data })
   if (error) throw error
+  const { error: legalError } = await supabase.rpc('client_save_legal', {
+    _client_id: savedId,
+    _data: { document: draft.document, legal_name: draft.legalName, address: draft.address, billing_email: draft.billingEmail },
+  })
+  if (legalError) throw legalError
   return savedId
 }
 
@@ -347,4 +361,43 @@ export function clientErrorMessage(error: unknown): string {
   if (code === 'PF010') return 'O nome digitado não confere. Nada foi excluído.'
   if (code === '23503') return 'Este cliente tem conta de anúncios vinculada. Desvincule a conta antes de excluir.'
   return 'Não foi possível salvar. Nada foi alterado. Tente de novo.'
+}
+
+export interface CompanyLookup {
+  legalName: string
+  tradeName: string | null
+  address: string
+  email: string | null
+  phone: string | null
+  activity: string | null
+  status: string | null
+}
+
+/** Dados públicos da Receita pelo CNPJ (BrasilAPI, grátis). CPF não tem consulta pública: só confere os dígitos. */
+export async function lookupCnpj(cnpj: string): Promise<CompanyLookup> {
+  const digits = cnpj.replace(/\D/g, '')
+  const res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${digits}`)
+  if (res.status === 404 || res.status === 400) throw new Error('CNPJ não encontrado na Receita.')
+  if (!res.ok) throw new Error('A consulta do CNPJ está fora do ar. Tente de novo em instantes.')
+  const d = await res.json() as Record<string, string | number | null>
+  const part = (v: unknown) => (v === null || v === undefined ? '' : String(v).trim())
+  const kind = part(d.descricao_tipo_de_logradouro)
+  const street = kind && !part(d.logradouro).toUpperCase().startsWith(kind.toUpperCase()) ? `${kind} ${part(d.logradouro)}` : part(d.logradouro)
+  const address = [
+    [street, part(d.numero)].filter(Boolean).join(', '),
+    part(d.complemento),
+    part(d.bairro),
+    [part(d.municipio), part(d.uf)].filter(Boolean).join('/'),
+    part(d.cep) ? `CEP ${part(d.cep).replace(/^(\d{5})(\d{3})$/, '$1-$2')}` : '',
+  ].filter(Boolean).join(' - ')
+  const phone = part(d.ddd_telefone_1)
+  return {
+    legalName: part(d.razao_social),
+    tradeName: part(d.nome_fantasia) || null,
+    address,
+    email: part(d.email).toLowerCase() || null,
+    phone: phone || null,
+    activity: part(d.cnae_fiscal_descricao) || null,
+    status: part(d.descricao_situacao_cadastral) || null,
+  }
 }
