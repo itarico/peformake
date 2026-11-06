@@ -11,6 +11,17 @@ async function loadUser(session: Session): Promise<AuthState> {
     supabase.from('user_roles').select('role').eq('user_id', session.user.id),
   ])
 
+  // Cliente (sem perfil de equipe): abre o portal dele e encerra a sessão, para não ficar logado no sistema interno.
+  if (!profile.error && !roles.error && !profile.data && (roles.data ?? []).length === 0) {
+    const { data: token } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown }>)('portal_my_token', {})
+    if (typeof token === 'string' && token) {
+      try { localStorage.setItem('pf-portal', JSON.stringify({ token, name: 'meu painel' })) } catch { /* sem armazenamento */ }
+      await supabase.auth.signOut()
+      window.location.replace(`/portal#${token}`)
+      return { status: 'loading' }
+    }
+  }
+
   // Se não der para confirmar o acesso, a tela fica bloqueada. Nunca libera por padrão.
   if (profile.error || roles.error || !profile.data) return { status: 'error' }
 

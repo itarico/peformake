@@ -75,6 +75,7 @@ export async function getActivePortalLink(clientId: string): Promise<PortalLinkS
     .select('created_at, last_used_at, visits')
     .eq('client_id', clientId)
     .is('revoked_at', null)
+    .is('user_id' as never, null)
     .maybeSingle()
   if (error) throw error
   return data ? { createdAt: data.created_at, lastUsedAt: data.last_used_at, visits: data.visits } : null
