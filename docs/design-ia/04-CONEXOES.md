@@ -15,6 +15,7 @@ Checado em 05/11/2026 nesta sessão (cloud).
 | **Gmail / Calendar** | Enviar aprovações, agendar | — |
 | **Windsor.ai** | Ler dados de Meta Ads, Instagram, GA4… e **publicar** post no Instagram / mexer em campanhas | Fecha o ciclo: criativo → anúncio → resultado |
 | **Supabase** | Banco do app Performake (tabela `arts`, briefings) | — |
+| **Adobe** (conectado 06/11) | Express (design em HTML → documento editável), Photoshop/Lightroom (remover fundo, ajustes, máscara, crop inteligente, expandir imagem), Premiere (resize, quick cut, melhorar áudio), Illustrator (vetorizar), InDesign (data merge em lote via CSV), Adobe Fonts, Adobe Stock, Acrobat (PDF) | Geração de imagem do zero (Firefly text-to-image) NÃO disponível; só expandir |
 | **Firecrawl** | Pesquisa web e raspagem de referências | Usado no radar semanal |
 
 ## ❌ Configurados mas FALHANDO (rede do ambiente bloqueia — proxy 403)

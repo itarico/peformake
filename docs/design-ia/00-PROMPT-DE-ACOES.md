@@ -54,10 +54,18 @@ arquivo, sempre conferir a peça antes de entregar (texto, marca, formato, legib
 
 | # | Etapa | Status |
 |---|-------|--------|
-| 1 | Memória da agência | em andamento |
-| 2 | Erros e regras | em andamento |
-| 3 | Skills de design | em andamento |
-| 4 | Conexões | em andamento |
-| 5 | Radar semanal | em andamento |
-| 6 | Designs de sucesso | em andamento |
-| 7 | Continuidade | em andamento |
+| 1 | Memória da agência | feito (01) |
+| 2 | Erros e regras | feito (02, 27 erros + checklist QA) |
+| 3 | Skills de design | feito (03) |
+| 4 | Conexões | feito (04) + Adobe conectado em 06/11 |
+| 5 | Radar semanal | feito: tarefa agendada segunda 07:43 (05) |
+| 6 | Designs de sucesso | feito (06) |
+| 6b | Ideias para clientes com Design ativo | feito (07, 13 clientes) |
+| 7 | Continuidade | push bloqueado: GitHub 403 |
+
+## Próximos passos
+1. Corrigir acesso GitHub e fazer push desta branch.
+2. Preencher ficha de Infinity Graff e Natalia de Menudo.
+3. Criar brand kits (Canva) e preencher `brand_style` no banco para os 13 clientes.
+4. Criar a skill `designer-ia-performake` (doc 03, item 3.1).
+5. Produzir as ideias aprovadas pelo Italo.
