@@ -23,13 +23,14 @@ type NewMsg =
   | { from: 'bot'; kind: 'notice'; n: Notice }
   | { from: 'bot'; kind: 'pending'; list: Pend[] }
   | { from: 'bot'; kind: 'summary' }
+  | { from: 'bot'; kind: 'view'; view: 'pendencias' | 'tarefas' | 'novidades' }
   | { from: 'bot'; kind: 'divider'; text: string }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'summary'; key?: string; role?: GoalRole }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
 /** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
 type Pend = { id: string; client: string; label: string; late: number }
-type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
+type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending' | 'tasks'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
 
 const PATH_ROLE: [RegExp, GoalRole][] = [[/^\/comercial/, 'comercial'], [/^\/financeiro/, 'financeiro'], [/^\/clientes/, 'relacionamento'], [/^\/trafego/, 'trafego'], [/^\/conteudo/, 'conteudo'], [/^\/audiovisual/, 'audiovisual']]
 const MONTH = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(new Date())
@@ -306,28 +307,41 @@ export function GoalsChat() {
   const lastSnap = useMemo(() => new Map<string, number | null>((JSON.parse(store.get('pf-goals-snap') ?? '[]') as [string, number | null][])), []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const pool = (insights.data ?? []).filter((x) => x.role === role)
+  const pendAll = useMemo(() => (seesDeliveries ? pendingFrom(deliveries.data, clientName, cal.iso) : []), [seesDeliveries, deliveries.data, clientName, cal.iso])
+  // O que está com a pessoa: tarefas, peças, vídeos e o que passou do prazo.
+  const tasksOpen = (myDay.data?.tasks ?? []).filter(isOpenTask)
+  const piecesOpen = (myDay.data?.pieces ?? []).filter(isOpenPiece)
+  const videosOpen = (myDay.data?.videos ?? []).filter(isOpenVideo)
+  const latePieces = piecesOpen.filter((p) => p.deadline && p.deadline < cal.iso)
+  const lateTasks = tasksOpen.filter((t) => t.due_date && t.due_date < cal.iso)
+  const overdue = isAdmin ? coach.data?.overdue ?? [] : []
+  const noticesWeek = noticesFrom(notifs.data ?? [], Date.now(), { includeRead: true })
+  const unreadNotices = noticesFrom(notifs.data ?? []).length
+  const pendCount = pendAll.length + latePieces.length + lateTasks.length + overdue.length
+  const taskCount = tasksOpen.length + piecesOpen.length + videosOpen.length
+  // A conversa guia a pessoa nesta ordem: metas, novidades, pendências e tarefas.
   const items: Item[] = useMemo(() => {
     const out: Item[] = []
-    // Primeiro as novidades do sistema (vídeo pronto, cliente aprovou...), depois as entregas atrasadas e as metas.
-    for (const n of noticesFrom(notifs.data ?? [])) if (!seen.has(n.id)) out.push({ id: n.id, kind: 'notice', notice: n })
-    const pend = seesDeliveries ? pendingFrom(deliveries.data, clientName, cal.iso) : []
-    const pendId = `pend:${cal.iso}:${pend.length}`
-    if (pend.length && !seen.has(pendId)) out.push({ id: pendId, kind: 'pending', pend })
-    if (!role || !list.length) return out
-    for (const r of list) {
-      const k = `${r.role}:${r.key}`
-      const prev = lastSnap.get(k)
-      if (prev !== undefined && prev !== r.actual && !seen.has(`chg:${month}:${k}:${r.actual}`)) out.push({ id: `chg:${month}:${k}:${r.actual}`, kind: 'change', key: r.key, from: prev ?? 0 })
-      if (paceOf(r, day, days).state === 'batida' && !seen.has(`hit:${month}:${k}`)) out.push({ id: `hit:${month}:${k}`, kind: 'hit', key: r.key })
+    if (role && list.length) {
+      for (const r of list) {
+        const k = `${r.role}:${r.key}`
+        const prev = lastSnap.get(k)
+        if (prev !== undefined && prev !== r.actual && !seen.has(`chg:${month}:${k}:${r.actual}`)) out.push({ id: `chg:${month}:${k}:${r.actual}`, kind: 'change', key: r.key, from: prev ?? 0 })
+        if (paceOf(r, day, days).state === 'batida' && !seen.has(`hit:${month}:${k}`)) out.push({ id: `hit:${month}:${k}`, kind: 'hit', key: r.key })
+      }
+      const today = list[cal.doy % list.length]!
+      const dayId = `day:${cal.iso}:${role}:${today.key}`
+      if (!seen.has(dayId) && !out.some((i) => i.key === today.key)) out.push({ id: dayId, kind: 'day', key: today.key })
     }
-    const today = list[cal.doy % list.length]!
-    const dayId = `day:${cal.iso}:${role}:${today.key}`
-    if (!seen.has(dayId) && !out.some((i) => i.key === today.key)) out.push({ id: dayId, kind: 'day', key: today.key })
+    for (const n of noticesFrom(notifs.data ?? [])) if (!seen.has(n.id)) out.push({ id: n.id, kind: 'notice', notice: n })
+    const pendId = `pend:${cal.iso}:${pendCount}`
+    if (pendCount && !seen.has(pendId)) out.push({ id: pendId, kind: 'pending' })
+    const taskId = `tasks:${cal.iso}:${taskCount}`
+    if (taskCount && !seen.has(taskId)) out.push({ id: taskId, kind: 'tasks' })
     pool.forEach((t, i) => { const id = `tip:${cal.iso}:${role}:${i}`; if (!seen.has(id)) out.push({ id, kind: 'tip', text: t.text }) })
     return out
-  }, [role, list, seen, pool, lastSnap, cal.iso, cal.doy, day, days, month, notifs.data, deliveries.data, seesDeliveries, clientName])
+  }, [role, list, seen, pool, lastSnap, cal.iso, cal.doy, day, days, month, notifs.data, pendCount, taskCount])
   const news = items.filter((i) => i.kind !== 'tip')
-  const pendAll = useMemo(() => (seesDeliveries ? pendingFrom(deliveries.data, clientName, cal.iso) : []), [seesDeliveries, deliveries.data, clientName, cal.iso])
   const updates = useMemo(() => noticesFrom(notifs.data ?? [], Date.now(), { includeRead: true, maxAgeH: 24 }), [notifs.data])
   const tips = items.filter((i) => i.kind === 'tip')
 
@@ -335,7 +349,6 @@ export function GoalsChat() {
   // Conversa do dia: fica guardada no aparelho até o fim do dia, para reler quando quiser.
   const LOG_KEY = `pf-goals-log:${cal.iso}`
   const [log, setLog] = useState<Msg[]>(() => { try { return JSON.parse(store.get(LOG_KEY) ?? '[]') as Msg[] } catch { return [] } })
-  const [tab, setTab] = useState<Tab>('chat')
   const [metaRole, setMetaRole] = useState<GoalRole | undefined>(undefined)
   const [replies, setReplies] = useState<Reply[]>([])
   const [typing, setTyping] = useState<string | null>(null)
@@ -349,7 +362,7 @@ export function GoalsChat() {
   const started = useRef(false)
 
   // Sempre mostra a última mensagem, inclusive quando aparecem os botões embaixo.
-  useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing, links, replies, tab])
+  useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing, links, replies])
   useEffect(() => { store.set(LOG_KEY, JSON.stringify(log.slice(-80))) }, [log, LOG_KEY])
   // Não abre sozinho: o botão "Abre aí!" e o balão chamam, a pessoa decide quando abrir.
   const talked = useRef<GoalRole | undefined>(undefined)
@@ -392,23 +405,36 @@ export function GoalsChat() {
     const shown = pool.length - left
     return left <= 1 ? 'Última dica' : shown === 0 ? 'Uma dica' : 'Outra dica'
   }
-  /** No máximo 3 botões: o mais útil primeiro, e sempre uma saída. */
+  /** Nome do próximo passo, para a pessoa saber para onde a conversa vai. */
+  const nextLabel = (x: Item, remaining: Item[]): string => {
+    if (x.kind === 'notice') { const n = remaining.filter((y) => y.kind === 'notice').length; return n > 1 ? `Ver novidades (${n})` : 'Ver novidade' }
+    if (x.kind === 'pending') return `Ver pendências (${pendCount})`
+    if (x.kind === 'tasks') return `Ver tarefas (${taskCount})`
+    return 'Próxima meta'
+  }
+  /** Menu do fim (ou quando não há nada novo): metas, pendências e tarefas, no máximo 3 botões. */
+  const menu = (): Reply[] => [
+    ...(role ? [{ label: 'Ver metas', act: 'all' as const }] : []),
+    { label: pendCount ? `Pendências (${pendCount})` : 'Pendências', act: 'pend' as const },
+    { label: taskCount ? `Tarefas (${taskCount})` : 'Tarefas', act: 'tasks' as const },
+  ]
+  /** No máximo 3 botões: o próximo passo primeiro, depois a ajuda da meta, e sempre uma saída. */
   const repliesFor = (key: string | undefined, remaining: Item[]): Reply[] => {
-    const tipsLeft = tips.some((x) => !seen.has(x.id))
+    const nx = remaining.find((x) => x.kind !== 'tip')
+    const tipsLeft = !!key && tips.some((x) => !seen.has(x.id))
     const opts: Reply[] = [
+      ...(nx ? [{ label: nextLabel(nx, remaining), act: 'next' as const }] : [{ label: 'Finalizar ✅', act: 'next' as const }]),
       ...(key ? [{ label: 'Como bater?', act: 'how' as const, key }] : []),
-      ...(remaining.some((x) => x.kind !== 'tip') ? [{ label: pick(['Próxima novidade', 'Tem mais?']), act: 'next' as const }] : []),
       ...(tipsLeft ? [{ label: tipLabel(), act: 'tip' as const }] : []),
-      ...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []),
     ]
-    return [...opts.slice(0, 2), { label: remaining.length ? 'Depois eu vejo' : 'Entendi', act: 'bye' as const }]
+    return [...opts.slice(0, 2), { label: 'Depois eu vejo', act: 'bye' as const }]
   }
 
   /** Mostra um item novo e já marca como visto. */
   function show(item: Item | undefined, prefix: NewMsg[] = []) {
     const remaining = news.filter((x) => x.id !== item?.id && !seen.has(x.id))
     if (!item) {
-      say([...prefix, { from: 'bot', kind: 'text', text: pick(['Por hoje é isso! ✅ Volto quando tiver novidade.', 'Tudo visto por hoje. Quando um número mudar, eu aviso.']) }], [{ label: 'Ver resumo', act: 'summary' }, ...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' }])
+      say([...prefix, { from: 'bot', kind: 'text', text: pick(['Pronto, tudo em dia por aqui! ✅ Quando chegar novidade, eu chamo. Quer rever algo?', 'Por agora é isso. ✅ Se quiser, abro de novo suas metas, pendências ou tarefas.']) }], menu())
       return
     }
     mark([item.id])
@@ -421,9 +447,13 @@ export function GoalsChat() {
       return
     }
     if (item.kind === 'pending') {
-      const list0 = item.pend!
-      const first = list0[0]!
-      say([...prefix, { from: 'bot', kind: 'text', text: 'Tem entrega passando do prazo:' }, { from: 'bot', kind: 'pending', list: list0 }], repliesFor(undefined, remaining), [{ label: `Resolver ${first.client.split(' ').slice(0, 2).join(' ')}`, to: `/clientes/${first.id}` }])
+      const pk = pickWith(seeded(item.id))
+      say([...prefix, { from: 'bot', kind: 'text', text: pk([`Agora as pendências: ${pendCount} ${pendCount === 1 ? 'coisa passou' : 'coisas passaram'} do prazo. Toque para resolver:`, `Bora limpar o atrasado? São ${pendCount}. Toque em cada uma para resolver:`]) }, { from: 'bot', kind: 'view', view: 'pendencias' }], repliesFor(undefined, remaining))
+      return
+    }
+    if (item.kind === 'tasks') {
+      const pk = pickWith(seeded(item.id))
+      say([...prefix, { from: 'bot', kind: 'text', text: pk([`Por último, o que está com você hoje (${taskCount}):`, `Suas tarefas do momento (${taskCount}). Toque para abrir:`]) }, { from: 'bot', kind: 'view', view: 'tarefas' }], repliesFor(undefined, remaining))
       return
     }
     if (item.kind === 'tip') { say([...prefix, { from: 'bot', kind: 'text', text: `💡 ${item.text}` }], repliesFor(undefined, remaining.filter((x) => x.kind !== 'tip'))); return }
@@ -455,17 +485,16 @@ export function GoalsChat() {
   }
 
   function begin() {
-    setTab('chat')
     const talkedToday = log.some((m) => m.from === 'bot')
     // Já conversamos hoje: a conversa continua de onde parou, sem cumprimentar de novo.
     if (talkedToday) {
-      if (!news.length) { setReplies([{ label: 'Ver resumo', act: 'summary' }, ...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' }]); setLinks([]); return }
+      if (!news.length) { setReplies(menu()); setLinks([]); return }
       setLog((l) => [...l, { id: idRef.current++, from: 'bot', kind: 'divider', text: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) }])
       show(news[0], [{ from: 'bot', kind: 'text', text: pick(['Voltei com novidade:', 'Chegou coisa nova desde a última vez:', 'Atualizei por aqui:']) }])
       return
     }
     const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }
-    if (!news.length) { summary([hello]); return }
+    if (!news.length) { say([hello, { from: 'bot', kind: 'text', text: 'Nada novo desde a última vez. O que você quer ver?' }], menu()); return }
     show(news[0] ?? tips[0], [hello])
   }
 
@@ -478,13 +507,15 @@ export function GoalsChat() {
       say([{ from: 'bot', kind: 'text', text: `${pick(['Fiz as contas:', 'O caminho é este:', 'Passo a passo:'])}\n\n${all.map((t, i) => `${i + 1}. ${t}`).join('\n\n')}` }],
         [...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), { label: 'Ver todas as metas', act: 'all' as const }, { label: 'Bora fazer', act: 'bye' as const }].slice(0, 3), one(g))
     }
-    if (r.act === 'next') show(news.find((x) => !seen.has(x.id)) ?? tips.find((x) => !seen.has(x.id)))
+    if (r.act === 'next') show(news.find((x) => !seen.has(x.id)))
     if (r.act === 'tip') show(tips.find((x) => !seen.has(x.id)))
     if (r.act === 'all') {
-      say([{ from: 'bot', kind: 'text', text: pick(['Suas 3 metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all', role: role! }],
-        [...list.slice(0, 2).map((x) => ({ label: `Como bater ${GOAL_META[x.key]!.short.toLowerCase()}?`, act: 'how' as const, key: x.key, role: x.role })), { label: 'Fechar', act: 'bye' as const }])
+      say([{ from: 'bot', kind: 'text', text: pick(['Suas metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all', role: role! }], menu().filter((x) => x.act !== 'all').concat([{ label: 'Fechar', act: 'bye' }]))
     }
     if (r.act === 'summary') summary()
+    if (r.act === 'pend') say([{ from: 'bot', kind: 'text', text: pendCount ? 'Suas pendências agora:' : 'Nada atrasado agora. 👌' }, ...(pendCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'pendencias' as const }] : [])], menu())
+    if (r.act === 'tasks') say([{ from: 'bot', kind: 'text', text: taskCount ? 'O que está com você:' : 'Nenhuma tarefa aberta com você. 👌' }, ...(taskCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'tarefas' as const }] : [])], menu())
+    if (r.act === 'news') say([{ from: 'bot', kind: 'text', text: 'Novidades da semana:' }, { from: 'bot', kind: 'view', view: 'novidades' }], menu())
     if (r.act === 'bye') close()
   }
 
@@ -493,25 +524,8 @@ export function GoalsChat() {
     store.set('pf-goals-snap', JSON.stringify(rows.map((r) => [`${r.role}:${r.key}`, r.actual])))
   }
 
-  // Abas: tudo organizado num lugar só.
-  const tasksOpen = (myDay.data?.tasks ?? []).filter(isOpenTask)
-  const piecesOpen = (myDay.data?.pieces ?? []).filter(isOpenPiece)
-  const videosOpen = (myDay.data?.videos ?? []).filter(isOpenVideo)
-  const latePieces = piecesOpen.filter((p) => p.deadline && p.deadline < cal.iso)
-  const lateTasks = tasksOpen.filter((t) => t.due_date && t.due_date < cal.iso)
-  const overdue = isAdmin ? coach.data?.overdue ?? [] : []
-  const noticesWeek = noticesFrom(notifs.data ?? [], Date.now(), { includeRead: true })
-  const unreadNotices = noticesFrom(notifs.data ?? []).length
-  const pendCount = pendAll.length + latePieces.length + lateTasks.length + overdue.length
-  const tabs: { id: Tab; label: string; n: number; alert?: boolean }[] = [
-    { id: 'chat', label: 'Chat', n: news.length },
-    ...(available.length ? [{ id: 'metas' as const, label: 'Metas', n: 0 }] : []),
-    { id: 'novidades', label: 'Novidades', n: unreadNotices },
-    { id: 'tarefas', label: 'Tarefas', n: tasksOpen.length + piecesOpen.length + videosOpen.length },
-    { id: 'pendencias', label: 'Pendências', n: pendCount, alert: pendCount > 0 },
-  ]
   const go = () => close()
-  function panel() {
+  function panel(tab: Tab) {
     if (tab === 'metas') {
       const r0 = metaRole && available.includes(metaRole) ? metaRole : role
       const goals = rows.filter((x) => x.role === r0)
@@ -524,7 +538,7 @@ export function GoalsChat() {
               <div key={g.key} className="flex flex-col gap-2 rounded-2xl border border-line bg-surface p-3">
                 <GoalBubble r={g} day={day} days={days} />
                 <span className="flex flex-wrap gap-1.5">
-                  <button type="button" onClick={() => { setTab('chat'); act({ label: `Como bater ${GOAL_META[g.key]!.short.toLowerCase()}?`, act: 'how', key: g.key, role: g.role }) }} className="min-h-7 cursor-pointer rounded-full border border-line-strong px-2.5 text-[11.5px] font-medium hover:border-ink">Como bater?</button>
+                  <button type="button" onClick={() => { act({ label: `Como bater ${GOAL_META[g.key]!.short.toLowerCase()}?`, act: 'how', key: g.key, role: g.role }) }} className="min-h-7 cursor-pointer rounded-full border border-line-strong px-2.5 text-[11.5px] font-medium hover:border-ink">Como bater?</button>
                   {a && <Link to={a.to} onClick={go} className="inline-flex min-h-7 items-center rounded-full bg-fill px-2.5 text-[11.5px] font-semibold text-on-fill no-underline">{a.label} →</Link>}
                 </span>
               </div>
@@ -590,16 +604,6 @@ export function GoalsChat() {
             <span className="hidden text-[11px] opacity-70 sm:inline">{role ? `${ROLE_LABEL[role]} · ` : ''}dia {day}/{days}</span>
             <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Recolher" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-white/10"><ChevronDown size={18} aria-hidden="true" /></button>
           </header>
-          <nav aria-label="Seções do Bate Meta" className="flex shrink-0 gap-0.5 border-b border-line bg-surface px-1.5 py-1.5">
-            {tabs.map((t) => (
-              <button key={t.id} type="button" onClick={() => setTab(t.id)} aria-pressed={tab === t.id}
-                className={cn('inline-flex min-h-8 min-w-0 flex-auto cursor-pointer items-center justify-center gap-0.5 rounded-full px-1.5 text-[11px] font-semibold transition-colors', tab === t.id ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>
-                {t.label}{t.n > 0 && <span className={cn('rounded-full px-1 text-[9.5px] leading-4', tab === t.id ? 'bg-black/15' : t.alert ? 'bg-warn-soft text-warn-ink' : 'bg-raised')}>{t.n}</span>}
-              </button>
-            ))}
-          </nav>
-          {tab !== 'chat' && <div className="min-h-0 flex-1 overflow-y-auto px-1.5 py-1 [scrollbar-width:thin]">{panel()}</div>}
-          {tab === 'chat' && <>
           <div ref={box} aria-live="polite" className="wa-wallpaper flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-3 [scrollbar-width:thin]">
             {log.map((m) => m.kind === 'divider'
               ? <span key={m.id} className="my-1 self-center rounded-full bg-raised px-2.5 py-0.5 text-[10.5px] font-semibold text-muted">{m.text}</span>
@@ -613,7 +617,8 @@ export function GoalsChat() {
                   {m.kind === 'notice' && <NoticeCard n={m.n} />}
                   {m.kind === 'pending' && <PendingCard list={m.list} />}
                   {m.kind === 'summary' && <SummaryCard pend={pendAll} tasks={(myDay.data?.tasks ?? []).filter((t) => !/done|conclu|feita/i.test(t.status))} pieces={myDay.data?.pieces ?? []} updates={updates} today={cal.iso} />}
-                  {m.kind === 'all' && <span className="flex flex-col gap-3">{rows.filter((x) => x.role === m.role).map((r) => <GoalBubble key={r.key} r={r} day={day} days={days} />)}</span>}
+                  {m.kind === 'all' && <div className="-mx-2 -my-1 w-[300px] max-w-full">{panel('metas')}</div>}
+                  {m.kind === 'view' && <div className="-mx-2 -my-1 w-[300px] max-w-full">{panel(m.view)}</div>}
                 </div>
               ))}
             {typing && <span className="inline-flex w-fit gap-1 rounded-xl rounded-tl-sm bg-surface px-3 py-3 shadow-sm" aria-label={typing}>{[0, 1, 2].map((i) => <i key={i} className="size-1.5 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 0.15}s` }} />)}</span>}
@@ -628,7 +633,6 @@ export function GoalsChat() {
             {replies.map((r) => <button key={r.label} type="button" onClick={() => act(r)} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{r.label}</button>)}
             {!replies.length && <span className="py-1 text-[12px] text-muted">{typing ? 'digitando…' : ' '}</span>}
           </div>
-          </>}
         </section>
       )}
       {!open && showPill && (
@@ -645,8 +649,8 @@ export function GoalsChat() {
       )}
       {!open && !showPill && (
         <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label="Bate Meta: ver pendências, tarefas e atualizações" title="Bate Meta: pendências, tarefas e atualizações"
-          className="pointer-events-auto relative grid size-11 cursor-pointer place-items-center rounded-full border border-line bg-surface shadow-lg shadow-black/20 transition-transform hover:scale-105">
-          <Mascot size={32} />
+          className="pointer-events-auto relative inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-line bg-surface py-0 pl-1.5 pr-3.5 text-[12.5px] font-semibold text-ink shadow-lg shadow-black/20 transition-transform hover:-translate-y-0.5">
+          <Mascot size={28} /> Abre aí!
           {news.length > 0 && <span className="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-[#e5484d] ring-2 ring-canvas" />}
         </button>
       )}
