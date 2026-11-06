@@ -101,6 +101,8 @@ export interface ClientRecord {
   legalName: string | null
   address: string | null
   billingEmail: string | null
+  instagram?: string | null
+  website?: string | null
   contract: ContractRecord | null
   services: ClientServiceItem[]
   team: TeamEntry[]
@@ -135,6 +137,7 @@ export function describeClient(client: ClientRecord, today: string): ClientView 
     contract,
     teamSize: people,
     activeServices: active.length,
+    missingData: !client.document || !(client.billingEmail || client.email) || !client.phone,
     serviceNames: active.map((item) => item.name),
     months: client.contract?.startDate ? Math.floor((Date.parse(today) - Date.parse(client.contract.startDate)) / (30.44 * 86_400_000))
       : client.since ? Math.floor((Date.parse(today) - Date.parse(client.since)) / (30.44 * 86_400_000)) : null,

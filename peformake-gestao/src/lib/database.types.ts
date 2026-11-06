@@ -36,6 +36,8 @@ export interface Database {
           billing_email: string | null
           legal_name: string | null
           address: string | null
+          instagram: string | null
+          website: string | null
           niche: string | null
           logo_path: string | null
           legacy_logo_url: string | null

@@ -18,7 +18,7 @@ const TODAY = '2026-11-03'
 const client = (over: Partial<ClientRecord> = {}): ClientRecord => ({
   id: '1', name: 'Ótica Sul', segment: 'Varejo', clientType: 'recurring', isActive: true, isLost: false, email: 'a@b.co', phone: '(81) 98888-7777',
   logoPath: null, logoUrl: null, description: null, targetAudience: null, competitors: null, valueProposition: null, acquisitionChannel: null,
-  lostReason: null, lostAt: null, since: null, nps: null, updatedAt: '2026-11-01T00:00:00Z', showOnSite: false, squadId: null, document: null, legalName: null, address: null, billingEmail: null,
+  lostReason: null, lostAt: null, since: null, nps: null, updatedAt: '2026-11-01T00:00:00Z', showOnSite: false, squadId: null, document: '12345678000195', legalName: null, address: null, billingEmail: null,
   contract: { model: 'MRR', startDate: '2026-05-20', endDate: '2027-05-20', months: 12, billingDay: 10 },
   services: [{ id: 's', serviceId: 'x', name: 'Tráfego', isActive: true, isAudiovisual: false, quantity: 1, notes: null, packageId: null, price: 600 }],
   team: [{ staffId: 'p1', name: 'Ingrid', role: 'social_media', photoUrl: null }],

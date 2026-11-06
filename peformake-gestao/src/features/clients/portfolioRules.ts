@@ -149,7 +149,7 @@ export function healthStatus(entries: readonly AssessmentEntry[], today: string)
   }
 }
 
-export type AttentionFlag = 'risk' | 'stale' | 'ending' | 'expired' | 'no_team' | 'no_service' | 'upsell'
+export type AttentionFlag = 'risk' | 'stale' | 'ending' | 'expired' | 'no_team' | 'no_service' | 'missing_data' | 'upsell'
 
 export const ATTENTION_LABEL: Record<AttentionFlag, string> = {
   risk: 'Relacionamento em risco',
@@ -158,6 +158,7 @@ export const ATTENTION_LABEL: Record<AttentionFlag, string> = {
   expired: 'Contrato vencido',
   no_team: 'Sem equipe',
   no_service: 'Sem serviço ativo',
+  missing_data: 'Dados pendentes',
   upsell: 'Hora de oferecer mais',
 }
 
@@ -171,6 +172,8 @@ export interface AttentionInput {
   serviceNames?: readonly string[]
   /** Meses como cliente. */
   months?: number | null
+  /** Falta CPF/CNPJ, e-mail ou WhatsApp. */
+  missingData?: boolean
 }
 
 const strip = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -207,6 +210,7 @@ export function attentionFlags(input: AttentionInput): AttentionFlag[] {
   if (input.contract.state === 'ending') flags.push('ending')
   if (input.activeServices === 0) flags.push('no_service')
   if (input.teamSize === 0) flags.push('no_team')
+  if (input.missingData) flags.push('missing_data')
   if (input.health.isStale) flags.push('stale')
   if (flags.length === 0 && upsellSuggestion(input)) flags.push('upsell')
   return flags

@@ -48,7 +48,7 @@ function Chips<T extends string>({ label, value, options, onChange }: { label: s
   )
 }
 
-const FLAGS: AttentionFlag[] = ['risk', 'expired', 'ending', 'no_service', 'no_team', 'stale', 'upsell']
+const FLAGS: AttentionFlag[] = ['risk', 'expired', 'ending', 'no_service', 'no_team', 'missing_data', 'stale', 'upsell']
 const SORTS: { id: SortKey | 'best'; label: string }[] = [
   { id: 'best', label: 'Melhores clientes primeiro' },
   { id: 'name', label: 'Nome' },

@@ -235,3 +235,28 @@ export function Panel({ title, action, children, className }: { title: string; a
     </section>
   )
 }
+
+// ===== Velocímetro: faixas vermelha, amarela e verde com ponteiro =====
+export function Gauge({ value, warm = 35, hot = 60, label }: { value: number; warm?: number; hot?: number; label: string }) {
+  const v = Math.max(0, Math.min(100, value))
+  const r = 40, cx = 50, cy = 48
+  const pt = (pct: number, rad = r) => {
+    const a = Math.PI * (1 - pct / 100)
+    return [cx + rad * Math.cos(a), cy - rad * Math.sin(a)] as const
+  }
+  const arc = (from: number, to: number) => {
+    const [x1, y1] = pt(from)
+    const [x2, y2] = pt(to)
+    return `M${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 0 1 ${x2.toFixed(2)},${y2.toFixed(2)}`
+  }
+  const [nx, ny] = pt(v, r - 6)
+  return (
+    <svg viewBox="0 0 100 56" role="img" aria-label={`${label}: ${v} de 100`} className="h-16 w-28 shrink-0 overflow-visible">
+      <path d={arc(0, warm)} fill="none" stroke="var(--warn)" strokeWidth="8" />
+      <path d={arc(warm, hot)} fill="none" stroke="#eda100" strokeWidth="8" />
+      <path d={arc(hot, 100)} fill="none" stroke="var(--ok)" strokeWidth="8" />
+      <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ transition: 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)' }} />
+      <circle cx={cx} cy={cy} r="3.5" fill="currentColor" />
+    </svg>
+  )
+}

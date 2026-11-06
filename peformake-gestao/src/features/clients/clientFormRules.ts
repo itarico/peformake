@@ -23,7 +23,7 @@ export function emptyDraft(today: string): ClientDraft {
     name: '', segment: '', clientType: 'recurring', contractModel: 'MRR', email: '', phone: '', logoPath: null, showOnSite: false,
     acquisitionChannel: '', description: '', targetAudience: '', valueProposition: '', competitors: '',
     startDate: today, endDate: addMonths(today, 12), months: '12', billingDay: '10',
-    document: '', legalName: '', address: '', billingEmail: '',
+    document: '', legalName: '', address: '', billingEmail: '', instagram: '', website: '',
   }
 }
 
@@ -50,6 +50,8 @@ export function draftFromClient(client: ClientRecord): ClientDraft {
     legalName: client.legalName ?? '',
     address: client.address ?? '',
     billingEmail: client.billingEmail ?? '',
+    instagram: client.instagram ? `@${client.instagram}` : '',
+    website: client.website ?? '',
   }
 }
 
@@ -65,9 +67,12 @@ export function validateDraft(draft: ClientDraft): DraftErrors {
 
   const digits = draft.phone.replace(/\D/g, '')
   if (!digits) errors.phone = 'O WhatsApp é obrigatório.'
-  else if (digits.length < 10 || digits.length > 13) errors.phone = 'Digite DDD e número. Exemplo: (81) 98888-7777.'
+  else if (!isValidPhone(digits)) errors.phone = 'Número inválido. Use DDD e número, ex.: (81) 98888-7777.'
 
-  if (draft.email.trim() && !EMAIL.test(draft.email.trim())) errors.email = 'E-mail incompleto. Exemplo: nome@empresa.com.'
+  if (!draft.email.trim()) errors.email = 'O e-mail é obrigatório.'
+  else if (!EMAIL.test(draft.email.trim())) errors.email = 'E-mail incompleto. Exemplo: nome@empresa.com.'
+  if (draft.instagram.trim() && !/^@?[a-z0-9._]{1,30}$/i.test(instagramHandle(draft.instagram))) errors.instagram = 'Perfil inválido. Ex.: @empresa ou o link do perfil.'
+  if (draft.website.trim() && !/^(https?:\/\/)?[\w-]+(\.[\w-]+)+.*$/i.test(draft.website.trim())) errors.website = 'Site inválido. Ex.: empresa.com.br'
 
   if (draft.document.trim() && !isValidDocument(draft.document)) errors.document = 'CPF ou CNPJ inválido. Confira os números.'
   if (draft.billingEmail.trim() && !EMAIL.test(draft.billingEmail.trim())) errors.billingEmail = 'E-mail incompleto.'
@@ -136,4 +141,21 @@ export function isValidDocument(value: string): boolean {
     return check(12) === nums[12] && check(13) === nums[13]
   }
   return false
+}
+
+/** Telefone brasileiro real: DDD válido e celular com 9 dígitos começando em 9, ou fixo com 8 dígitos. Aceita +55. */
+export function isValidPhone(value: string): boolean {
+  let d = value.replace(/\D/g, '')
+  if (d.length >= 12 && d.startsWith('55')) d = d.slice(2)
+  if (d.length !== 10 && d.length !== 11) return false
+  const ddd = Number(d.slice(0, 2))
+  if (ddd < 11 || ddd > 99 || ddd % 10 === 0) return false
+  const rest = d.slice(2)
+  if (rest.length === 9) return rest.startsWith('9') && !/^(\d)\1+$/.test(rest)
+  return /^[2-5]/.test(rest) && !/^(\d)\1+$/.test(rest)
+}
+
+/** "@empresa", "instagram.com/empresa/" ou "https://www.instagram.com/empresa?x" viram "empresa". */
+export function instagramHandle(value: string): string {
+  return value.trim().replace(/^(https?:\/\/)?(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/[/?#].*$/, '')
 }

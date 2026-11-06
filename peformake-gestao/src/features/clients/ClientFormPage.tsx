@@ -8,7 +8,7 @@ import { CenteredMessage } from '@/components/ui/CenteredMessage'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { ClientAvatar } from './ClientAvatar'
-import { addMonths, draftFromClient, emptyDraft, formatDocument, kindToDraft, moneyText, parseMoney, validateDraft, type DraftErrors } from './clientFormRules'
+import { addMonths, draftFromClient, emptyDraft, formatDocument, instagramHandle, kindToDraft, moneyText, parseMoney, validateDraft, type DraftErrors } from './clientFormRules'
 import { clientErrorMessage, getSetupFee, LOGO_MAX_BYTES, lookupCnpj, LOGO_TYPES, logoPublicUrl, saveClient, uploadLogo, type ClientDraft } from './clientsApi'
 import { clientKind, type ClientKind } from './portfolioRules'
 import { inputClass, Segmented } from './ui'
@@ -20,6 +20,10 @@ const SEGMENTS = [
 ]
 type FormTab = 'dados' | 'empresa' | 'contrato' | 'negocio'
 const COMPANY_KEYS: readonly (keyof ClientDraft)[] = ['document', 'legalName', 'address', 'billingEmail']
+const ORDER: FormTab[] = ['empresa', 'dados', 'contrato', 'negocio']
+const STEP_KEYS: Record<FormTab, readonly (keyof ClientDraft)[]> = {
+  empresa: COMPANY_KEYS, dados: ['name', 'phone', 'email', 'instagram', 'website'], contrato: ['startDate', 'months', 'endDate', 'billingDay', 'setupFee'], negocio: [],
+}
 const CONTRACT_KEYS: readonly (keyof ClientDraft)[] = ['startDate', 'months', 'endDate', 'billingDay', 'setupFee']
 const CHANNELS = ['Indicação', 'Instagram', 'Tráfego pago', 'Google', 'Prospecção ativa', 'Evento', 'Site']
 
@@ -73,7 +77,7 @@ export function ClientDialog({ open, onClose, clientId = null }: { open: boolean
   return (
     <Dialog open={open} onClose={onClose} size="lg"
       title={client ? `Editar ${client.name}` : 'Novo cliente'}
-      description={client ? undefined : 'Depois de salvar, você define a equipe e os serviços na ficha do cliente.'}>
+      description={client ? undefined : 'Comece pelo CNPJ: o sistema busca na Receita e preenche o resto. Depois de cadastrar, você define equipe, serviços e contrato na ficha.'}>
       {(!clientId || client) && (
         <ClientForm key={client?.updatedAt ?? 'novo'} clientId={clientId} isAdmin={isAdmin}
           initial={client ? draftFromClient(client) : emptyDraft(todayInBrazil())} updatedAt={client?.updatedAt ?? null}
@@ -100,7 +104,17 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const inDialog = !!onCancel
-  const [tab, setTab] = useState<FormTab>('dados')
+  // Cliente novo: passo a passo, começando pela empresa (o CNPJ preenche o resto). Editar: abas livres.
+  const wizard = inDialog && !clientId
+  const [tab, setTab] = useState<FormTab>(wizard ? 'empresa' : 'dados')
+  const stepIndex = ORDER.indexOf(tab)
+  const next = () => {
+    const found = validateDraft(draft)
+    const here = Object.fromEntries(Object.entries(found).filter(([k]) => STEP_KEYS[tab].includes(k as keyof ClientDraft)))
+    setErrors(here)
+    if (Object.keys(here).length) { setTimeout(() => document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(), 0); return }
+    setTab(ORDER[Math.min(stepIndex + 1, ORDER.length - 1)]!)
+  }
   const kind: ClientKind = clientKind(draft.clientType, draft.contractModel)
   const segments = useMemo(() => [...new Set([...SEGMENTS, ...existingSegments])].sort((a, b) => a.localeCompare(b, 'pt-BR')), [existingSegments])
 
@@ -147,6 +161,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
       setDraft((current) => ({
         ...current,
         legalName: found.legalName || current.legalName,
+        name: current.name || found.tradeName || found.legalName,
         companySize: found.size ?? current.companySize,
         companyCapital: found.capital ?? current.companyCapital,
         address: found.address || current.address,
@@ -160,6 +175,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault()
+    if (wizard && stepIndex < ORDER.length - 1) return next()
     const found = validateDraft(draft)
     setErrors(found)
     const keys = Object.keys(found) as (keyof ClientDraft)[]
@@ -203,9 +219,19 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         </>
       )}
 
-      {inDialog && (
+      {inDialog && !wizard && (
         <Segmented label="Parte do cadastro" value={tab} onChange={setTab}
-          options={[{ id: 'dados', label: 'Dados' }, { id: 'empresa', label: 'Empresa' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Contrato' }, { id: 'negocio', label: 'Negócio' }]} />
+          options={[{ id: 'empresa', label: 'Empresa' }, { id: 'dados', label: 'Contato' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Condições' }, { id: 'negocio', label: 'Negócio' }]} />
+      )}
+      {wizard && (
+        <ol aria-label="Etapas do cadastro" className="grid grid-cols-4 gap-1.5">
+          {['Empresa', 'Contato', kind === 'avulso' ? 'Projeto' : 'Condições', 'Negócio'].map((label, i) => (
+            <li key={label} className="flex flex-col gap-1">
+              <span className={cn('h-1.5 rounded-full', i <= stepIndex ? 'bg-accent' : 'bg-raised')} />
+              <span className={cn('text-[12px]', i === stepIndex ? 'font-semibold' : 'text-muted')}>{i + 1}. {label}</span>
+            </li>
+          ))}
+        </ol>
       )}
 
       <Section title="Identificação" flat={inDialog} hidden={inDialog && tab !== 'dados'}>
@@ -248,8 +274,14 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
             <Field label="WhatsApp *" error={errors.phone} hint="Com DDD. Usado para contato e para o portal.">
               {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('phone')} inputMode="tel" value={draft.phone} onChange={(e) => update('phone', e.target.value)} className={inputClass} placeholder="(81) 98888-7777" />}
             </Field>
-            <Field label="E-mail" error={errors.email}>
+            <Field label="E-mail *" error={errors.email}>
               {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('email')} type="email" inputMode="email" value={draft.email} onChange={(e) => update('email', e.target.value)} className={inputClass} placeholder="contato@empresa.com" />}
+            </Field>
+            <Field label="Instagram" error={errors.instagram} hint="@perfil ou o link do perfil.">
+              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('instagram')} value={draft.instagram} onChange={(e) => update('instagram', e.target.value)} onBlur={(e) => e.target.value.trim() && update('instagram', `@${instagramHandle(e.target.value)}`)} className={inputClass} placeholder="@empresa" autoComplete="off" />}
+            </Field>
+            <Field label="Site" error={errors.website}>
+              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('website')} inputMode="url" value={draft.website} onChange={(e) => update('website', e.target.value)} className={inputClass} placeholder="empresa.com.br" autoComplete="off" />}
             </Field>
             <Field label="Segmento" hint="Escolha da lista ou digite um novo.">
               {(fid, by) => (
@@ -363,7 +395,10 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         {onCancel
           ? <button type="button" onClick={onCancel} className="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-line-strong px-4 font-medium hover:border-ink">Cancelar</button>
           : <Link to={back} className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-4 font-medium hover:border-ink">Cancelar</Link>}
-        <Button type="submit" disabled={save.isPending || uploading || !feeReady}>{save.isPending ? 'Salvando' : clientId ? 'Salvar alterações' : 'Cadastrar cliente'}</Button>
+        {wizard && stepIndex > 0 && <Button variant="secondary" onClick={() => setTab(ORDER[stepIndex - 1]!)}>Voltar</Button>}
+        {wizard && stepIndex < ORDER.length - 1
+          ? <Button type="button" onClick={next}>Continuar</Button>
+          : <Button type="submit" disabled={save.isPending || uploading || !feeReady}>{save.isPending ? 'Salvando' : clientId ? 'Salvar alterações' : 'Cadastrar cliente'}</Button>}
       </div>
     </form>
   )

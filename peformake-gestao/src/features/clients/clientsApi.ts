@@ -63,6 +63,8 @@ export interface ClientDraft {
   legalName: string
   address: string
   billingEmail: string
+  instagram: string
+  website: string
   /** Vem da consulta do CNPJ. */
   companySize?: string | null
   companyCapital?: number | null
@@ -80,7 +82,7 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
   const [clients, links, services, contracts, team, staff, assessments, prices] = await Promise.all([
     supabase
       .from('clients')
-      .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id, document, legal_name, address, billing_email')
+      .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id, document, legal_name, address, billing_email, instagram, website')
       .order('name'),
     supabase.from('client_services').select('id, client_id, service_id, is_active, quantity, notes, package_id, billing_month, legacy_created_at'),
     supabase.from('services').select('id, name, is_audiovisual'),
@@ -138,6 +140,8 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
       legalName: row.legal_name,
       address: row.address,
       billingEmail: row.billing_email,
+      instagram: (row as { instagram?: string | null }).instagram ?? null,
+      website: (row as { website?: string | null }).website ?? null,
       contract: contract
         ? { model: contract.contract_model, startDate: contract.start_date, endDate: contract.end_date, months: contract.months, billingDay: contract.billing_day }
         : null,
@@ -270,7 +274,7 @@ export async function saveClient(id: string | null, expectedUpdatedAt: string | 
   if (error) throw error
   const { error: legalError } = await supabase.rpc('client_save_legal', {
     _client_id: savedId,
-    _data: { document: draft.document, legal_name: draft.legalName, address: draft.address, billing_email: draft.billingEmail, company_size: draft.companySize ?? '', company_capital: draft.companyCapital ?? '' },
+    _data: { document: draft.document, legal_name: draft.legalName, address: draft.address, billing_email: draft.billingEmail, company_size: draft.companySize ?? '', company_capital: draft.companyCapital ?? '', instagram: draft.instagram, website: draft.website },
   })
   if (legalError) throw legalError
   return savedId

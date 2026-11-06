@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { ArrowRight, Lightbulb, MessageCircle, ThermometerSun } from 'lucide-react'
+import { ArrowRight, Lightbulb, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { Gauge } from '@/components/charts/Charts'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { ClientAvatar } from './ClientAvatar'
@@ -23,6 +24,7 @@ const ACTION: Record<AttentionFlag, string> = {
   no_service: 'Adicione os serviços contratados.',
   no_team: 'Defina quem cuida deste cliente.',
   stale: 'Registre como está o relacionamento.',
+  missing_data: 'Falta CPF/CNPJ, e-mail ou WhatsApp. Complete em Editar (o CNPJ busca o resto).',
   upsell: 'Cliente satisfeito e com tempo de casa: apresente a próxima frente.',
 }
 
@@ -131,13 +133,13 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
       <div className="grid grid-cols-2 gap-2 @3xl:grid-cols-4">
         <Tile label="Temperatura" footer={intel?.label === 'sem_dados' ? 'Ligue o grupo de WhatsApp do cliente para medir.' : contactDays !== null ? `Último contato há ${contactDays} ${contactDays === 1 ? 'dia' : 'dias'}` : 'Sem contato registrado'}>
           {intel ? (
-            <>
-              <p className="flex items-center gap-2">
-                <span className={cn('rounded-full px-2.5 py-0.5 text-[13px] font-semibold', TEMP_TONE[intel.label])}><ThermometerSun size={13} aria-hidden="true" className="-mt-0.5 mr-1 inline" />{TEMP_LABEL[intel.label]}</span>
-                {intel.label !== 'sem_dados' && <span className="text-[13px] tabular-nums text-muted">{intel.temperature}/100</span>}
+            <div className="flex items-center gap-3">
+              {intel.label !== 'sem_dados' && <Gauge value={intel.temperature} warm={settings.data?.temp_warm} hot={settings.data?.temp_hot} label="Temperatura" />}
+              <p className="flex flex-col items-start gap-0.5">
+                <span className={cn('rounded-full px-2.5 py-0.5 text-[13px] font-semibold', TEMP_TONE[intel.label])}>{TEMP_LABEL[intel.label]}</span>
+                {intel.label !== 'sem_dados' && <span className="text-[12px] tabular-nums text-muted">{intel.temperature} de 100</span>}
               </p>
-              {intel.label !== 'sem_dados' && <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-raised"><span className={cn('block h-full rounded-full', intel.label === 'quente' ? 'bg-ok' : intel.label === 'morno' ? 'bg-accent' : 'bg-warn')} style={{ width: `${intel.temperature}%` }} /></div>}
-            </>
+            </div>
           ) : <p className="text-[13px] text-muted">{intelQ.isPending ? 'Calculando' : 'Indisponível'}</p>}
         </Tile>
 

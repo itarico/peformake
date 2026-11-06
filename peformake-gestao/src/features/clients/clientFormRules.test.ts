@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { addMonths, emptyDraft, kindToDraft, moneyText, parseMoney, validateDraft } from './clientFormRules'
+import { instagramHandle, isValidPhone } from './clientFormRules'
 
-const valid = { ...emptyDraft('2026-11-03'), name: 'Ótica Sul', phone: '(81) 98888-7777' }
+const valid = { ...emptyDraft('2026-11-03'), name: 'Ótica Sul', phone: '(81) 98888-7777', email: 'contato@oticasul.com' }
 
 describe('datas do contrato', () => {
   it('soma meses e ajusta o fim do mês', () => {
@@ -21,7 +22,7 @@ describe('datas do contrato', () => {
 })
 
 describe('validação', () => {
-  it('aceita o mínimo: nome e WhatsApp', () => {
+  it('aceita o mínimo: nome, WhatsApp e e-mail', () => {
     expect(validateDraft(valid)).toEqual({})
   })
 
@@ -52,5 +53,19 @@ describe('dinheiro', () => {
   it('escreve no padrão brasileiro', () => {
     expect(moneyText(1500.5)).toBe('1.500,50')
     expect(moneyText(null)).toBe('')
+  })
+})
+
+describe('telefone e instagram', () => {
+  it('confere se o telefone é de verdade', () => {
+    expect(isValidPhone('(81) 98888-7777')).toBe(true)
+    expect(isValidPhone('+55 81 3333-4444')).toBe(true)
+    expect(isValidPhone('(81) 88888-7777')).toBe(false)
+    expect(isValidPhone('(10) 98888-7777')).toBe(false)
+    expect(isValidPhone('(81) 99999-9999')).toBe(false)
+  })
+  it('extrai o perfil do instagram', () => {
+    expect(instagramHandle('https://www.instagram.com/oticasul/?hl=pt')).toBe('oticasul')
+    expect(instagramHandle('@oticasul')).toBe('oticasul')
   })
 })
