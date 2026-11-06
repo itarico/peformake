@@ -92,7 +92,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
   }
   if (intel?.label === 'frio') actions.push({ tone: 'warn', title: 'Cliente esfriando', text: `Pouca conversa e nenhuma aprovação recente${contactDays !== null ? ` (último contato há ${contactDays} dias)` : ''}. Ligue ou marque uma reunião.` })
   if ((intel?.factors.aprovacoes_paradas ?? 0) > 0) actions.push({ tone: 'warn', title: `${intel!.factors.aprovacoes_paradas} aprovação parada`, text: 'Esperando o cliente há mais de 4 dias. Lembre com carinho pelo grupo.', tab: 'entregas' })
-  if ((intel?.factors.faturas_atrasadas ?? 0) > 0 && isAdmin) actions.push({ tone: 'warn', title: 'Fatura atrasada', text: 'Antes de oferecer mais, resolva o financeiro.', tab: 'financeiro' })
+  if ((intel?.factors.devendo ?? intel?.factors.faturas_atrasadas ?? 0) > 0) actions.unshift({ tone: 'warn', title: `Cliente devendo${isAdmin && intel?.factors.devendo_valor ? ` ${brlValue(intel.factors.devendo_valor)}` : ''}`, text: 'Tem fatura vencida. Antes de oferecer mais, resolva o financeiro.', tab: isAdmin ? 'financeiro' : undefined })
   if (view.upsell) actions.push({ tone: 'ok', title: `Oferecer ${view.upsell}`, text: ACTION.upsell, tab: 'servicos' })
   else if (intel?.nextService && view.flags.length === 0 && intel.label !== 'frio') {
     actions.push({ tone: 'ok', title: `Próximo serviço: ${intel.nextService}`, text: `${intel.nextServicePct}% dos clientes com os mesmos serviços também contratam ${intel.nextService}.`, tab: 'servicos' })

@@ -26,7 +26,7 @@ import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
 import { isLiveClient } from './clientRules'
-import { TEMP_LABEL, TEMP_TONE, useClientIntel } from './intelApi'
+import { alertLevel, TEMP_LABEL, TEMP_TONE, useClientIntel } from './intelApi'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
 const chipSelect = 'min-h-9 cursor-pointer rounded-xl border border-line bg-canvas px-3 text-[13px] font-medium text-ink hover:border-line-strong'
@@ -218,9 +218,12 @@ export function ClientsPage() {
                 const people = groupTeam(client.team).filter((p) => !p.roles.every((r) => r === 'squad'))
                 const hasSquad = client.team.some((t) => t.role === 'squad')
                 const whatsapp = whatsappLink(client.phone)
+                const debt = intel.data?.get(client.id)?.factors.devendo ?? 0
+                const level = alertLevel(view.flags.filter((f) => f !== 'upsell').length + (debt > 0 ? 1 : 0))
                 return (
                   <li key={client.id}
-                    className="relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 border-b border-line px-5 py-3.5 transition-colors last:border-b-0 hover:bg-raised/50 @4xl:grid-cols-[minmax(0,2.4fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.3fr)_40px]">
+                    className={cn("relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 border-b border-line px-5 py-3.5 transition-colors last:border-b-0 hover:bg-raised/50 @4xl:grid-cols-[minmax(0,2.4fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.3fr)_40px]",
+                      level === 'danger' && 'border-l-4 border-l-warn bg-warn-soft/70', level === 'warn' && 'border-l-4 border-l-[#eda100] bg-[#eda100]/10')}>
                     <div className="flex min-w-0 items-center gap-3">
                       <ClientAvatar name={client.name} url={client.logoUrl} />
                       <div className="min-w-0">
@@ -261,7 +264,10 @@ export function ClientsPage() {
                         <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-semibold', TEMP_TONE[intel.data.get(client.id)!.label])} title={`Temperatura ${intel.data.get(client.id)!.temperature}/100`}>{TEMP_LABEL[intel.data.get(client.id)!.label]}</span>
                       )}
                     </div>
-                    <div className="hidden @4xl:block"><FlagChips flags={view.flags} upsell={view.upsell} /></div>
+                    <div className="hidden @4xl:flex flex-wrap gap-1">
+                      {debt > 0 && <span className="rounded-full bg-warn px-2 py-0.5 text-[12px] font-semibold text-white">Devendo{isAdmin && intel.data?.get(client.id)?.factors.devendo_valor ? ` ${brlValue(intel.data.get(client.id)!.factors.devendo_valor!)}` : ''}</span>}
+                      <FlagChips flags={view.flags} upsell={view.upsell} />
+                    </div>
 
                     <div className="relative z-10 hidden justify-end @4xl:flex">
                       {whatsapp && (

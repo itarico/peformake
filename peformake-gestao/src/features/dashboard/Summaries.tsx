@@ -224,7 +224,7 @@ export function ClientsSummary() {
         <StatTile label="NPS" value={nps === null ? '-' : String(nps)} hint={d.nps.answers ? `${npsLabel(nps)} | ${d.nps.answers} respostas em 180 dias` : 'Peça a nota pelo Comercial'} tone={nps !== null && nps < 0 ? 'warn' : 'default'} />
       </KpiRow>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
         <Panel title="Entradas e saídas" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
           <FlowChart flow={d.flow} />
         </Panel>
@@ -243,7 +243,6 @@ export function ClientsSummary() {
             { label: 'Mais de 1 ano', value: b.gt12, slot: 3 },
             ...(b.unknown ? [{ label: 'Sem data', value: b.unknown, color: 'bg-line-strong' }] : []),
           ]} />
-          <p className="text-[13px] text-muted">Os primeiros 3 meses são os de maior risco de saída. Acompanhe de perto quem está nessa faixa.</p>
         </Panel>
         <Panel title="NPS" action={<span className="text-[12px] text-muted">{d.nps.answers} respostas</span>}>
           <SegmentedBar label="Notas de 0 a 10" empty="Nenhuma nota ainda. Peça pelo Comercial." parts={[
@@ -253,10 +252,10 @@ export function ClientsSummary() {
           ]} />
         </Panel>
         <Panel title="Serviços mais contratados">
-          <RankBars label="Clientes ativos por serviço" format={fmt.int} rows={d.services.map((s) => ({ label: s.name, value: s.n }))} />
+          <RankBars label="Clientes ativos por serviço" format={fmt.int} rows={d.services.slice(0, 5).map((s) => ({ label: s.name, value: s.n }))} />
         </Panel>
         <Panel title="Por que os clientes saíram" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
-          <RankBars label="Motivos de saída" format={fmt.int} empty="Nenhuma saída no período." rows={d.lost_reasons.map((r) => ({ label: r.reason, value: r.n, tone: 'warn' as const }))} />
+          <RankBars label="Motivos de saída" format={fmt.int} empty="Nenhuma saída no período." rows={d.lost_reasons.slice(0, 4).map((r) => ({ label: r.reason, value: r.n, tone: 'warn' as const }))} />
         </Panel>
       </div>
     </>

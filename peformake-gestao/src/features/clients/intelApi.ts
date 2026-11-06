@@ -21,6 +21,8 @@ export interface ClientIntel {
     ultima_visita_portal: string | null
     avaliacao: string | null
     faturas_atrasadas: number
+    devendo?: number
+    devendo_valor?: number
   }
 }
 
@@ -93,4 +95,11 @@ export function pricePosition(price: number, b: PriceBench | undefined): 'abaixo
   if (price < b.p25 * 0.95) return 'abaixo'
   if (price > b.p75 * 1.05) return 'acima'
   return 'na_media'
+}
+
+/** Quantos alertas sérios o cliente tem (sem contar oportunidade) e a cor da linha: 3 amarelo, mais de 3 vermelho. */
+export function alertLevel(count: number): 'none' | 'warn' | 'danger' {
+  if (count > 3) return 'danger'
+  if (count === 3) return 'warn'
+  return 'none'
 }

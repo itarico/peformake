@@ -36,19 +36,26 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
   const late = open.filter((r) => r.due_date < today)
   const value = clientValue(client.services, client.clientType === 'one-off' ? 'avulso' : undefined)
   const active = client.services.filter((s) => s.isActive)
+  // Próximo vencimento: a próxima fatura em aberto; sem fatura, o dia de cobrança do contrato no mês corrente ou seguinte.
+  const nextOpen = [...open].sort((a, b) => a.due_date.localeCompare(b.due_date))[0]?.due_date ?? null
+  const day = client.contract?.billingDay ?? null
+  const nextFromDay = day ? (() => { const [y, m] = today.split('-').map(Number); const pad = (n: number) => String(n).padStart(2, '0'); const thisMonth = `${y}-${pad(m!)}-${pad(day)}`; return thisMonth >= today ? thisMonth : `${m === 12 ? y! + 1 : y}-${pad(m === 12 ? 1 : m! + 1)}-${pad(day)}` })() : null
+  const nextDue = nextOpen ?? (client.clientType === 'one-off' ? null : nextFromDay)
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-2 gap-2 @3xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2 @3xl:grid-cols-5">
         {[
+          ['Vencimento', client.contract?.billingDay ? `Todo dia ${client.contract.billingDay}` : 'Não definido', nextDue ? `Próximo: ${dateBr(nextDue)}` : ''],
           ['Valor do contrato', `${brlValue(value.value)}${client.contract?.model === 'MRR' ? '/mês' : ''}`],
           ['Já recebido', brlValue(paid)],
           ['Em aberto', brlValue(open.reduce((s, r) => s + Number(r.amount), 0))],
           ['Em atraso', late.length ? `${late.length} · ${brlValue(late.reduce((s, r) => s + Number(r.amount), 0))}` : 'Nada'],
-        ].map(([label, v], i) => (
-          <div key={label} className={cn('rounded-2xl border border-line bg-surface px-4 py-3', i === 3 && late.length > 0 && 'border-warn/40 bg-warn-soft/50')}>
+        ].map(([label, v, hint], i) => (
+          <div key={label} className={cn('rounded-2xl border border-line bg-surface px-4 py-3', i === 4 && late.length > 0 && 'border-warn/40 bg-warn-soft/50')}>
             <p className="text-[12px] font-medium text-muted">{label}</p>
             <p className="mt-1 text-[18px] font-semibold tabular-nums">{v}</p>
+            {hint && <p className="text-[12px] text-muted">{hint}</p>}
           </div>
         ))}
       </div>

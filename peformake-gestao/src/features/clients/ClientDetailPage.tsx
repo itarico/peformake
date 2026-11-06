@@ -14,6 +14,7 @@ import { ClientDialog } from './ClientFormPage'
 import { ClientAssets } from './ClientAssets'
 import { cn } from '@/lib/cn'
 import { ClientOverview } from './ClientOverview'
+import { alertLevel, useClientIntel } from './intelApi'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
 import { ClientContractTab } from '@/features/contracts/ClientContractTab'
 import { ClientFinanceTab } from './ClientFinanceTab'
@@ -42,6 +43,7 @@ export function ClientDetailPage() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { isAdmin, canManage, query } = useClients()
+  const intel = useClientIntel()
   const [editing, setEditing] = useState(false)
   const accounts = useQuery({ queryKey: ['ad-accounts'], queryFn: listAdAccounts })
   const client = query.data?.find((item) => item.id === id)
@@ -64,6 +66,8 @@ export function ClientDetailPage() {
   const today = todayInBrazil()
   const view = describeClient(client, today)
   const whatsapp = whatsappLink(client.phone)
+  const debt = intel.data?.get(client.id)?.factors.devendo ?? 0
+  const headerLevel = alertLevel(view.flags.filter((f) => f !== 'upsell').length + (debt > 0 ? 1 : 0))
   const linked = (accounts.data ?? []).filter((account) => account.clientId === client.id)
 
   return (
@@ -72,7 +76,7 @@ export function ClientDetailPage() {
         <ArrowLeft size={16} aria-hidden="true" /> Clientes
       </Link>
 
-      <header className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5 md:p-6">
+      <header className={cn('flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5 md:p-6', headerLevel === 'danger' && 'border-warn bg-warn-soft/60', headerLevel === 'warn' && 'border-[#eda100] bg-[#eda100]/10')}>
         <div className="flex flex-wrap items-center gap-4">
           <ClientAvatar name={client.name} url={client.logoUrl} size="lg" />
           <div className="min-w-0 flex-1">
