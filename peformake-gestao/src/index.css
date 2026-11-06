@@ -2,6 +2,22 @@
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
+/* Site público (página inicial): petróleo profundo, ciano da marca, papel claro.
+   Nomes próprios (night, hair...) para não colidir com os tokens do sistema (ink, line). */
+@theme {
+  --color-night: #061417;
+  --color-deep: #0a1e22;
+  --color-panel: #0f272c;
+  --color-hair: rgb(214 244 245 / 0.1);
+  --color-hair-strong: rgb(214 244 245 / 0.22);
+  --color-fog: #9db3b6;
+  --color-paper: #eef5f4;
+  --color-cyan: #1fc8db;
+  --color-cyan-deep: #0d8fa0;
+  --color-lime: #c6f432;
+  --color-warm: #ff7a45;
+}
+
 @theme inline {
   --font-sans: Geist, ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;

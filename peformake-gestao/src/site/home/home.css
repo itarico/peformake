@@ -1,0 +1,40 @@
+@import '@fontsource-variable/archivo/wdth.css';
+
+/* Estilos do site público, presos em .pk-site para não vazar para o sistema. */
+.pk-site {
+  min-height: 100vh;
+  background: var(--color-night);
+  color: var(--color-paper);
+  font-family: 'Archivo Variable', system-ui, sans-serif;
+  font-variation-settings: 'wdth' 100;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+.pk-site ::selection { background: var(--color-cyan); color: var(--color-night); }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+/* Títulos expandidos: o Archivo largo conversa com o monograma PFMK. */
+.pk-site .display { font-variation-settings: 'wdth' 125; font-weight: 800; letter-spacing: -0.035em; line-height: 0.92; }
+.pk-site .wide { font-variation-settings: 'wdth' 118; }
+
+/* Linha que se desenha nos traços do logo. */
+.pk-site .draw { stroke-dasharray: 1; }
+.pk-site .intro-mark .draw, .pk-site .hero-mark .draw { stroke-dashoffset: 1; }
+
+/* Grão fino por cima de tudo: tira o "liso de computador" do fundo escuro. */
+.pk-site.grain::after {
+  content: ''; position: fixed; inset: -50%; z-index: 60; pointer-events: none; opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes pk-marquee { to { transform: translateX(-50%); } }
+.pk-site .marquee { animation: pk-marquee 48s linear infinite; }
+.pk-site .marquee:hover { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pk-site .marquee { animation: none; }
+  .pk-site .intro-mark .draw, .pk-site .hero-mark .draw { stroke-dashoffset: 0; }
+}
