@@ -116,13 +116,22 @@ function GoalBig({ r, day, days }: { r: GoalRow; day: number; days: number }) {
   const left = Math.max(1, days - day)
   const atMost = m.kind === 'atMost'
   const rem = Math.max(0, r.target - actual)
-  const big = atMost ? fmt(actual, m.money) : p.state === 'batida' ? '✓' : fmt(rem, m.money)
-  const label = atMost ? `no mês · limite ${fmt(r.target, m.money)}` : p.state === 'batida' ? 'meta batida' : `falta${rem === 1 ? '' : 'm'} em ${left} dias`
+  const wk = Math.ceil((rem / left) * 7)
+  const hit = p.state === 'batida'
+  const sizes = 'pf-rise text-[38px] leading-none tabular-nums'
+  const color = STATE[p.state].bar.replace('bg-', 'text-')
+  const note = atMost ? (actual <= r.target ? 'Segue assim: dentro do limite.' : 'Passou do limite. Vale entender o porquê.')
+    : hit ? `Feito: ${fmt(actual, m.money)} de ${fmt(r.target, m.money)}.`
+      : `${m.money ? `São uns ${fmt(wk, true)} por semana.` : wk <= 1 ? 'Basta 1 por semana para chegar lá.' : `São uns ${wk} por semana.`} Até agora: ${fmt(actual, m.money)} de ${fmt(r.target, m.money)}.`
   return (
     <div className="flex flex-col gap-1">
       <Head r={r} p={p} />
-      <span className="flex items-end gap-2 py-1"><b className={cn('pf-rise text-[38px] leading-none tabular-nums', STATE[p.state].bar.replace('bg-', 'text-'))}>{big}</b><span className="pb-1 text-[12px] text-muted">{label}</span></span>
-      <span className="text-[12px] text-muted">{atMost ? (actual <= r.target ? 'Segue assim: dentro do limite.' : 'Passou do limite. Vale entender o porquê.') : p.state === 'batida' ? `Fez ${fmt(actual, m.money)} de ${fmt(r.target, m.money)}.` : m.money ? `Uns ${fmt(Math.ceil((rem / left) * 7), true)} por semana resolvem.` : `Dá ${(rem / left * 7) < 1 ? 'menos de 1' : `uns ${Math.ceil((rem / left) * 7)}`} por semana. Feito ${fmt(actual)} de ${fmt(r.target)}.`}</span>
+      <span className="flex items-end gap-2 py-1 text-[13px] text-muted">
+        {atMost ? <><b className={cn(sizes, color)}>{fmt(actual, m.money)}</b><span className="pb-1">no mês (limite {fmt(r.target, m.money)})</span></>
+          : hit ? <><b className={cn(sizes, color)}>✓</b><span className="pb-1">Meta batida!</span></>
+            : <><span className="pb-1">{rem === 1 ? 'Falta' : 'Faltam'}</span><b className={cn(sizes, color)}>{fmt(rem, m.money)}</b><span className="pb-1">e você tem {left} dias</span></>}
+      </span>
+      <span className="text-[12px] text-muted">{note}</span>
     </div>
   )
 }
@@ -299,12 +308,12 @@ export function GoalsChat() {
         : { from: 'bot', kind: 'text', text: goalIntro(pk) }
     // Cada mensagem num formato: barra, gráfico, número grande ou tempo × meta; às vezes já vem o cliente para procurar.
     const format: GoalFormat = item.kind === 'hit' ? 'big' : formatFor(pk, m.kind)
-    const card = item.kind !== 'hit' && pk([true, true, false]) ? clientCard(g, coach.data) : null
+    const card = item.kind !== 'hit' && paceOf(g, day, days).state !== 'ok' && pk([true, true, false]) ? clientCard(g, coach.data) : null
     const sug = item.kind !== 'hit' && !card ? suggestion(pk, g, coach.data) : null
     const tail: NewMsg[] = card
       ? [{ from: 'bot', kind: 'text', text: cheer(pk, paceOf(g, day, days)) }, { from: 'bot', kind: 'client', card }]
       : [{ from: 'bot', kind: 'text', text: `${cheer(pk, paceOf(g, day, days))}${sug ? `\n\n${sug}` : ''}` }]
-    say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key, role: g.role, format }, ...tail], repliesFor(g.key, remaining), card ? [] : one(g))
+    say([...prefix, head, { from: 'bot', kind: 'goal', key: g.key, role: g.role, format }, ...tail], repliesFor(g.key, remaining), card || paceOf(g, day, days).state === 'ok' ? [] : one(g))
   }
 
   function begin() {

@@ -32,24 +32,30 @@ const WEEKDAY = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 's
 export function greeting(pick: <T>(a: readonly T[]) => T, firstName: string, day: number, days: number, monthName: string) {
   const left = days - day
   const hour = new Date().getHours()
-  const hi = hour < 12 ? pick(['Bom dia', 'Bom diaa', 'Bom dia, bom dia']) : hour < 18 ? pick(['Boa tarde', 'Oi, boa tarde']) : pick(['Boa noite', 'Oi, boa noite'])
+  const hi = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
   const wd = WEEKDAY[new Date().getDay()]!
   const who = firstName ? `, ${firstName}` : ''
-  const phase = left > 20 ? pick(['Mês começando: é a melhor hora de acelerar.', 'Início de mês: quem sai na frente chega mais tranquilo.']) : left > 10 ? pick(['Meio do mês: hora de ajustar a rota.', 'Metade do caminho. Bora ver como estamos?']) : pick(['Reta final do mês: cada dia conta.', `Só ${left} dias para fechar ${monthName}. Foco total!`])
-  const week = wd === 'segunda' ? pick(['Semana nova, energia nova! 💥', 'Segunda-feira: dia de planejar a semana.']) : wd === 'sexta' ? pick(['Sextou! Bora fechar a semana bem? 🎯', 'Sexta: ainda dá pra fazer a semana valer.']) : wd === 'sábado' || wd === 'domingo' ? 'Fim de semana, mas os números não descansam. 😄' : ''
+  const phase = left > 20
+    ? pick(['O mês está começando: é a melhor hora para sair na frente.', 'Começo de mês: quem sai na frente fecha com mais calma.'])
+    : left > 10
+      ? pick(['Estamos no meio do mês: boa hora para ajustar a rota.', 'Metade do mês já foi. Vamos ver como estamos?'])
+      : pick(['Reta final do mês: cada dia conta.', `Faltam só ${left} dias para fechar ${monthName}.`])
+  const week = wd === 'segunda' ? pick(['Semana nova começando! 💥', 'Segunda é dia de planejar a semana.'])
+    : wd === 'sexta' ? pick(['Sexta-feira! Vamos fechar bem a semana? 🎯', 'É sexta: ainda dá para fazer a semana valer.'])
+      : wd === 'sábado' || wd === 'domingo' ? 'Mesmo no fim de semana, seus números estão aqui. 😄' : ''
   return pick([
-    `${hi}${who}! ${wd[0]!.toUpperCase()}${wd.slice(1)}, dia ${day} de ${days}. Faltam ${left} dias para fechar ${monthName}.`,
-    `${hi}${who}! ☕ Dia ${day} de ${monthName}: ainda temos ${left} dias de jogo.`,
-    `E aí${who}! Passando pro nosso papo do dia. ${phase}`,
-    `${hi}${who}! Atualizei seus números agora há pouco. ${phase}`,
+    `${hi}${who}! Hoje é ${wd}, dia ${day}. Faltam ${left} dias para ${monthName} acabar.`,
+    `${hi}${who}! ☕ Estamos no dia ${day} de ${monthName}, com ${left} dias pela frente.`,
+    `${hi}${who}! ${phase}`,
+    `${hi}${who}! Acabei de atualizar seus números. ${phase}`,
     `${hi}${who}! ${week || phase}`,
-    `${hi}${who}! Já são ${Math.round((day / days) * 100)}% do mês. Bora ver se as metas estão acompanhando?`,
-    `Opa${who}! Tenho novidade sobre suas metas. ${week || ''}`.trim(),
+    `${hi}${who}! ${Math.round((day / days) * 100)}% do mês já passou. Vamos ver como estão as metas?`,
+    `Oi${who}! Tenho novidades sobre as suas metas.`,
   ])
 }
 
 export function goalIntro(pick: <T>(a: readonly T[]) => T) {
-  return pick(['Sua meta em foco hoje é esta:', 'Hoje vamos olhar para esta aqui:', 'Separei uma meta para a gente conversar hoje:', 'A meta do dia é:', 'Olha só como está esta:', 'Bora dar atenção para esta hoje:', 'Essa aqui merece seu olhar hoje:', 'Vamos ver essa?'])
+  return pick(['Sua meta em foco hoje:', 'Hoje vamos olhar esta meta:', 'Separei esta meta para hoje:', 'A meta do dia:', 'Veja como está esta meta:', 'Esta meta merece atenção hoje:', 'Bora olhar esta aqui?'])
 }
 
 /** Projeção: no ritmo de hoje, onde a meta termina o mês. */
@@ -62,7 +68,7 @@ export function projection(r: GoalRow, day: number, days: number, stock = false)
 export function cheer(pick: <T>(a: readonly T[]) => T, p: Pace) {
   const by: Record<Pace['state'], string[]> = {
     batida: ['Meta batida! 🏆 Daqui pra frente é bônus.', 'Fechou! 🎉 Que tal mirar mais alto?', 'Batida com folga. Esse é o padrão.', 'Missão cumprida. ✅ Agora é jogar pelo recorde.'],
-    ritmo: ['No ritmo. Mantém a constância que dá. 💪', 'Caminhando bem: o segredo agora é não tirar o pé.', 'Do jeito certo. Segue o plano.', 'Tá redondo. Só não deixa esfriar.'],
+    ritmo: ['No ritmo. Manter a constância é o que garante. 💪', 'Caminhando bem: o segredo agora é não tirar o pé.', 'Do jeito certo. Segue o plano.', 'Tudo certo por aqui. Só não deixe esfriar.'],
     atras: ['Dá pra virar: um bom dia resolve muito. 🚀', 'Atrás, mas longe de perdido. Bora acelerar?', 'Hora de colocar foco aqui hoje.', 'Um empurrão hoje e o gráfico já muda de cara.', 'Ainda dá tempo, mas o relógio está correndo. ⏱️'],
     estourou: ['Esse passou do limite. Vamos entender o que houve e segurar o resto do mês.', 'Aqui o sinal é vermelho: vale agir hoje para não repetir.'],
     ok: ['Dentro do limite. Continue de olho. 👀', 'Tudo sob controle por aqui.', 'Zerado como tem que ser. 👌'],
@@ -79,7 +85,8 @@ export function plain(r: GoalRow, p: Pace, day: number, days: number, money?: bo
   const rem = r.target - actual
   if (money) return `Faltam ${brl(rem)} em ${left} dias (${brl((rem / left) * 7)} por semana).`
   const perWeek = (rem / left) * 7
-  return `Falta${rem > 1 ? 'm' : ''} ${n0(rem)} em ${left} dias${perWeek >= 1 ? ` (uns ${n0(Math.ceil(perWeek))} por semana)` : ''}.`
+  const wk = Math.ceil(perWeek)
+  return `Falta${rem > 1 ? 'm' : ''} ${n0(rem)} em ${left} dias${wk <= 1 ? ' (basta 1 por semana)' : ` (uns ${n0(wk)} por semana)`}.`
 }
 
 /** Passo a passo para bater a meta, montado com os dados reais do sistema. */
@@ -131,7 +138,7 @@ export function steps(r: GoalRow, c: Coach | undefined, day: number, days: numbe
       const no = (c?.no_meeting ?? []).map((x) => x.name)
       out.push(`${no.length} ${no.length === 1 ? 'cliente ainda não tem' : 'clientes ainda não têm'} reunião este mês.`)
       if (no.length) out.push(`Comece por: ${names(no, 4)}.`)
-      out.push(`Para fechar todas até o dia 14, são umas ${Math.max(1, Math.ceil(no.length / Math.max(1, 14 - day)))} por dia útil.`)
+      if (no.length && day < 14) { const pd = Math.max(1, Math.ceil(no.length / (14 - day))); out.push(`Para marcar todas até o dia 14: ${pd === 1 ? '1 por dia' : `umas ${pd} por dia`}.`) }
       out.push('Marque pela barra de entregas do cliente: o convite sai pronto para o WhatsApp.')
       break
     }
@@ -159,16 +166,16 @@ export function steps(r: GoalRow, c: Coach | undefined, day: number, days: numbe
       break
     }
     case 'relatorios': case 'estrategias': {
-      out.push(r.key === 'relatorios' ? `Faltam ${rem} relatórios no mês.` : `Faltam ${rem} estratégias, até o dia 15.`)
+      out.push(r.key === 'relatorios' ? `Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'relatório' : 'relatórios'} no mês.` : `Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'estratégia' : 'estratégias'}, com prazo até o dia 15.`)
       out.push(r.key === 'relatorios' ? 'Ligue o envio automático em Tráfego → Configurações.' : 'Gere logo depois da reunião do mês: a conversa vira estratégia.')
       out.push('Comece pelos clientes de maior mensalidade.')
       break
     }
-    case 'videos': out.push(`${c?.videos_due ?? rem} ${c?.videos_due === 1 ? 'vídeo previsto' : 'vídeos previstos'} até o fim do mês.`, 'Bruto no mesmo dia, edição no dia seguinte.', 'Aprovação interna antes de mandar ao cliente.'); break
-    case 'orcamentos_aceitos': out.push(`${c?.open_quotes ?? 0} ${c?.open_quotes === 1 ? 'orçamento aguardando' : 'orçamentos aguardando'} resposta.`, 'Retome em 48 horas quem não respondeu.', 'Use os pacotes prontos: orçamento em 2 minutos.'); break
+    case 'videos': out.push(`Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'vídeo' : 'vídeos'} para entregar no prazo este mês.`, 'Bruto no mesmo dia, edição no dia seguinte.', 'Aprovação interna antes de mandar ao cliente.'); break
+    case 'orcamentos_aceitos': if (c?.open_quotes) out.push(`${c.open_quotes} ${c.open_quotes === 1 ? 'orçamento aguarda' : 'orçamentos aguardam'} resposta. Retome em 48 horas quem não respondeu.`); else out.push('Nenhum orçamento esperando resposta agora. Para ter aceites, primeiro é preciso enviar.'); out.push('Ofereça captação aos clientes avulsos parados: são os mais fáceis de aceitar.', 'Use os pacotes prontos: o orçamento sai em 2 minutos.'); break
     case 'fotos_extras': out.push('Toda captação com foto vira galeria para o cliente escolher.', 'Suba as fotos no mesmo dia: a emoção vende as extras.', 'Avise o parceiro que ele já tem desconto.'); break
     case 'recebido': out.push(`Faltam ${brl(rem)} para entrar no caixa.`, 'Confira as faturas que vencem esta semana.', 'Quem atrasou: ligar no primeiro dia.'); break
-    case 'planos': out.push(`Faltam ${rem} planejamentos.`, 'Feche o planejamento na primeira semana do mês.', 'Use a estratégia do mês como base.'); break
+    case 'planos': out.push(`Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'planejamento' : 'planejamentos'}.`, 'Feche o planejamento na primeira semana do mês.', 'Use a estratégia do mês como base.'); break
     default: out.push('Foque nesta meta hoje e registre o que fez.')
   }
   return out.filter(Boolean)
