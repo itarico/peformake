@@ -203,7 +203,16 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
             <Fact label="Fim" value={c?.endDate ? <span className={cn(daysLeft !== null && daysLeft <= 30 && 'text-warn-ink')}>{dateBr(c.endDate)}{daysLeft !== null && (daysLeft >= 0 ? ` · faltam ${daysLeft} dias` : ' · vencido')}</span> : 'Sem data'} />
             <Fact label="Duração" value={c?.months ? `${c.months} meses` : 'Não definida'} />
             <Fact label="Vencimento" value={c?.billingDay ? `Todo dia ${c.billingDay}` : 'Não definido'} />
-            <Fact label="Valor" value={<span className="tabular-nums">{brlValue(value.value)}{client.contract?.model === 'MRR' ? '/mês' : ''}</span>} />
+            {client.contract?.model === 'MRR' ? (
+              <>
+                <Fact label="Parcela mensal" value={<span className="tabular-nums">{brlValue(value.value)}</span>} />
+                <Fact label="Total do contrato" value={<span className="tabular-nums">{c?.months ? `${brlValue(value.value * c.months)} em ${c.months}x` : 'Defina a duração'}</span>} />
+              </>
+            ) : client.contract?.model === 'TCV' ? (
+              <Fact label="Valor total" value={<span className="tabular-nums">{brlValue(value.value)} <span className="text-[12px] font-normal text-muted">cobrado de uma vez</span></span>} />
+            ) : (
+              <Fact label="Último serviço" value={<span className="tabular-nums">{brlValue(value.value)}</span>} />
+            )}
           </dl>
         </Block>
         <Block title="Contratante">

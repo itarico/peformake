@@ -219,7 +219,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
           />
         </div>
         <p className="-mt-2 text-[12px] text-muted">
-          {kind === 'fixo' ? 'Paga todo mês enquanto o contrato durar.' : kind === 'tcv' ? 'Valor total fechado para o período do contrato.' : 'Projeto pontual, sem mensalidade.'}
+          {kind === 'fixo' ? 'Paga em parcelas mensais. O contrato mostra o total e a parcela.' : kind === 'tcv' ? 'Valor total do contrato, cobrado de uma vez.' : 'Serviço pontual, sem mensalidade. Fica na base, mas não entra na carteira recorrente.'}
         </p>
 
         <div className="flex flex-col gap-3 sm:flex-row">
