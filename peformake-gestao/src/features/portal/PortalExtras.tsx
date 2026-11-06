@@ -10,13 +10,21 @@ import { AREA_NAME } from './portalExtrasRules'
 interface Overview {
   month: string
   design: { total: number; done: number; waiting: number }
-  videos: { total: number; done: number; waiting: number }
+  videos: { total: number; done: number; waiting: number; unit?: string; promise?: string | null }
   reports: number
   invoices: { id: string; description: string; amount: number; due_date: string; status: string; payment_url: string | null }[]
   rated_this_week: boolean
   areas: string[]
 }
 interface ContractView { id: string; title: string; status: string; body: string; signer_name: string | null; signer_email: string | null; has_document: boolean; signed_at: string | null; sign_method?: string; accepted_at?: string | null; has_pdf?: boolean }
+
+/** "captação" vira "Captações"; "diária de captação" vira "Diárias de captação". */
+function plural(unit: string, n: number): string {
+  const first = unit.split(' ')[0] ?? unit
+  const rest = unit.slice(first.length)
+  const many = n === 1 ? first : first.endsWith('ão') ? `${first.slice(0, -2)}ões` : /[aeiouáéíóú]$/i.test(first) ? `${first}s` : first.endsWith('l') ? `${first.slice(0, -1)}is` : `${first}es`
+  return many.charAt(0).toUpperCase() + many.slice(1) + rest
+}
 
 const brl = (n: number) => Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const field = 'mt-1 min-h-12 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
@@ -38,8 +46,12 @@ export function PortalOverview({ token }: { token: string }) {
   const open = d.invoices.filter((i) => i.status === 'pendente' || i.status === 'vencido')
   const parts = [
     d.design.total > 0 && { label: 'Artes do mês', done: d.design.done, total: d.design.total, waiting: d.design.waiting },
-    d.videos.total > 0 && { label: 'Vídeos do mês', done: d.videos.done, total: d.videos.total, waiting: d.videos.waiting },
-  ].filter(Boolean) as { label: string; done: number; total: number; waiting: number }[]
+    d.videos.total > 0 && {
+      label: `${plural(d.videos.unit ?? 'produção', d.videos.total)} do mês`,
+      done: d.videos.done, total: d.videos.total, waiting: d.videos.waiting,
+      note: d.videos.promise ? `Seu plano: ${d.videos.promise}` : null,
+    },
+  ].filter(Boolean) as { label: string; done: number; total: number; waiting: number; note?: string | null }[]
 
   return (
     <>
@@ -55,6 +67,7 @@ export function PortalOverview({ token }: { token: string }) {
                   <p className="text-[22px] font-semibold tabular-nums">{p.done} de {p.total}</p>
                   <div className="h-1.5 overflow-hidden rounded-full bg-surface" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={p.label}><span className="block h-full rounded-full bg-ok" style={{ width: `${pct}%` }} /></div>
                   {p.waiting > 0 && <p className="text-[12px] font-medium text-warn-ink">{p.waiting} esperando sua aprovação</p>}
+                  {p.note && <p className="text-[12px] text-muted">{p.note}</p>}
                 </div>
               )
             })}

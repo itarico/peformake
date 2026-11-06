@@ -13,7 +13,7 @@ export const AREA_LABEL: Record<Area, string> = {
 }
 const UNITS = ['mês', 'projeto', 'unidade', 'hora', 'diária'] as const
 
-interface Service { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; isActive: boolean; price: number | null; clients: number }
+interface Service { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; isActive: boolean; price: number | null; clients: number; deliveryUnit: string | null }
 interface PackageItem { serviceId: string; name: string; area: Area; quantity: number; price: number | null }
 interface Pkg { id: string; name: string; description: string | null; isActive: boolean; promoPrice: number | null; promoStarts: string | null; promoEnds: string | null; items: PackageItem[] }
 interface Catalog { canEdit: boolean; services: Service[]; packages: Pkg[] }
@@ -22,8 +22,12 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 font-normal text-ink'
 
 async function loadCatalog(area: Area | null): Promise<Catalog> {
-  const { data, error } = await supabase.rpc('catalog_list', { _area: area })
+  const [{ data, error }, units] = await Promise.all([
+    supabase.rpc('catalog_list', { _area: area }),
+    (supabase.from as unknown as (t: string) => { select: (c: string) => Promise<{ data: { id: string; delivery_unit: string | null }[] | null }> })('services').select('id, delivery_unit'),
+  ])
   if (error) throw error
+  const unitById = new Map((units.data ?? []).map((u) => [u.id, u.delivery_unit]))
   const d = (data ?? { can_edit: false, services: [], packages: [] }) as {
     can_edit: boolean
     services: { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; is_active: boolean; price: number | null; clients: number }[]
@@ -31,7 +35,7 @@ async function loadCatalog(area: Area | null): Promise<Catalog> {
   }
   return {
     canEdit: d.can_edit,
-    services: d.services.map((s) => ({ id: s.id, name: s.name, area: s.area, description: s.description, deliverables: s.deliverables, unit: s.unit, isActive: s.is_active, price: s.price, clients: s.clients })),
+    services: d.services.map((s) => ({ id: s.id, name: s.name, area: s.area, description: s.description, deliverables: s.deliverables, unit: s.unit, isActive: s.is_active, price: s.price, clients: s.clients, deliveryUnit: unitById.get(s.id) ?? null })),
     packages: d.packages.map((p) => ({
       id: p.id, name: p.name, description: p.description, isActive: p.is_active, promoPrice: p.promo_price, promoStarts: p.promo_starts, promoEnds: p.promo_ends,
       items: p.items.map((i) => ({ serviceId: i.service_id, name: i.name, area: i.area, quantity: i.quantity, price: i.price })),
@@ -47,7 +51,7 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
   const queryClient = useQueryClient()
   const [d, setD] = useState({
     name: service?.name ?? '', price: service?.price != null ? String(service.price) : '', description: service?.description ?? '',
-    deliverables: service?.deliverables ?? '', unit: service?.unit ?? 'mês', isActive: service?.isActive ?? true,
+    deliverables: service?.deliverables ?? '', unit: service?.unit ?? 'mês', isActive: service?.isActive ?? true, deliveryUnit: service?.deliveryUnit ?? '',
   })
   const price = Number(d.price.replace(',', '.'))
   const valid = d.name.trim().length >= 2 && d.price.trim() !== '' && Number.isFinite(price) && price >= 0
@@ -57,6 +61,8 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
         _id: service?.id ?? null, _name: d.name, _area: service?.area ?? area, _price: price, _description: d.description, _deliverables: d.deliverables, _unit: d.unit, _is_active: d.isActive,
       })
       if (error) throw error
+      const { error: unitError } = await supabase.rpc('service_set_delivery_unit' as never, { _area: service?.area ?? area, _name: d.name, _unit: d.deliveryUnit } as never)
+      if (unitError) throw unitError
     },
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['catalog'] }); onClose() },
   })
@@ -77,6 +83,10 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
       </div>
       <label className="flex flex-col text-[13px] font-semibold">O que entrega <span className="font-normal text-muted">(vira as entregas do mês do cliente)</span>
         <input value={d.deliverables} onChange={(e) => setD({ ...d, deliverables: e.target.value })} maxLength={300} className={field} placeholder="12 artes e 4 stories por mês" />
+      </label>
+      <label className="flex flex-col text-[13px] font-semibold">Como o cliente vê a entrega <span className="font-normal text-muted">(o que o portal conta: captação, diária de captação, visita, vídeo, arte...)</span>
+        <input value={d.deliveryUnit} onChange={(e) => setD({ ...d, deliveryUnit: e.target.value })} maxLength={40} list="unidades-entrega" className={field} placeholder="captação" />
+        <datalist id="unidades-entrega">{['captação', 'diária de captação', 'visita de captação', 'vídeo', 'arte', 'evento', 'produção', 'relatório', 'transmissão ao vivo'].map((u) => <option key={u} value={u} />)}</datalist>
       </label>
       <label className="flex flex-col text-[13px] font-semibold">Descrição <span className="font-normal text-muted">(opcional, aparece na proposta)</span>
         <textarea rows={2} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={500} className={field} />

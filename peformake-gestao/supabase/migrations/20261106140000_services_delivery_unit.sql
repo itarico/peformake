@@ -1,0 +1,3 @@
+-- Aplicada pelo conector Supabase em 06/11/2026: services.delivery_unit (como o cliente vê a entrega),
+-- portal_overview contando o audiovisual pela unidade do serviço, e service_set_delivery_unit(_area, _name, _unit).
+-- O texto completo está no histórico de migrações do Supabase (services_delivery_unit, service_delivery_unit_save).
