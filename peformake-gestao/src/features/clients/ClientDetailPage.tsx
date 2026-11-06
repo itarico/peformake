@@ -107,7 +107,7 @@ export function ClientDetailPage() {
               <PartnerChip clientId={client.id} on={!!client.isPartner} />
               <span className={cn('rounded-full px-2.5 py-0.5 font-medium', client.isActive ? 'bg-ok-soft text-ok-ink' : 'bg-warn-soft text-warn-ink')}>{clientStatusLabel(client)}</span>
             </p>
-            <div className="mt-2 max-w-md"><p className="mb-1 text-[12px] font-semibold uppercase tracking-wide text-muted">Entregas do mês</p><DeliveryBar wide clientId={client.id} clientName={client.name} items={deliveries.data?.get(client.id)} /></div>
+            <div className="mt-2 max-w-lg"><DeliveryBar wide clientId={client.id} clientName={client.name} items={deliveries.data?.get(client.id)} /></div>
           </div>
           <div className="flex flex-wrap gap-2">
             {whatsapp && (

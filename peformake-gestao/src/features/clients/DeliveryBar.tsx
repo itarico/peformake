@@ -71,12 +71,16 @@ export function DeliveryBar({ clientId, clientName, items, wide = false }: { cli
   const tip = pending ? `${pending} ${pending === 1 ? 'entrega pendente' : 'entregas pendentes'}${late ? ` · ${late} ${late === 1 ? 'dia' : 'dias'} de atraso` : ''}` : 'Tudo entregue no mês'
   return (
     <>
-      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true) }} title={tip} aria-label={`Entregas do mês: ${pct}%. ${tip}`}
-        className={cn('group flex cursor-pointer items-center gap-2 text-left', wide ? 'w-full' : 'w-28')}>
+      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true) }} title={`${tip}. Clique para ver o que falta.`} aria-label={`Entregas do mês: ${pct}%. ${tip}. Ver o que falta`}
+        className={cn('group flex cursor-pointer items-center gap-2 rounded-full border border-line bg-surface text-left transition-colors hover:border-ink hover:bg-raised focus-visible:border-ink',
+          wide ? 'w-full px-3 py-2' : 'w-40 px-2 py-1')}>
+        {wide && <span className="shrink-0 text-[12px] font-semibold">Entregas do mês</span>}
         <span className={cn('relative flex-1 overflow-hidden rounded-full bg-raised', wide ? 'h-2.5' : 'h-1.5')}>
           <span className={cn('block h-full rounded-full transition-[width] duration-700', BAR[tone])} style={{ width: `${Math.max(4, pct)}%` }} />
         </span>
-        <span className={cn('shrink-0 tabular-nums text-muted group-hover:text-ink', wide ? 'text-[13px] font-semibold' : 'text-[11px]')}>{pct}%</span>
+        <span className={cn('shrink-0 tabular-nums', wide ? 'text-[13px] font-semibold' : 'text-[11px] font-semibold')}>{pct}%</span>
+        {pending > 0 && wide && <span className="shrink-0 text-[12px] text-muted">{pending} {pending === 1 ? 'pendente' : 'pendentes'}</span>}
+        <span className="flex shrink-0 items-center text-[12px] font-semibold text-accent-ink">{wide ? 'Ver o que falta' : ''}<ChevronRight size={wide ? 15 : 13} aria-hidden="true" className="transition-transform group-hover:translate-x-0.5" /></span>
       </button>
       <DeliveryDialog open={open} onClose={() => setOpen(false)} clientId={clientId} clientName={clientName} items={items} yellow={yellow} />
     </>

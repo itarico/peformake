@@ -11,6 +11,7 @@ import { cn } from '@/lib/cn'
 import { useTheme } from '@/lib/theme'
 import { getPortal, getPortalMetrics } from './portalApi'
 import { historyRange, isInvalidLink, monthlyHistory, parsePortalToken } from './portalRules'
+import { PortalDeliveries } from './PortalDeliveries'
 import { PortalApprovals } from './PortalApprovals'
 import { PortalShoots } from './PortalShoots'
 import { PortalContract, PortalOverview } from './PortalExtras'
@@ -218,6 +219,8 @@ export function PortalPage() {
       </header>
 
       <PortalOverview token={token} />
+
+      <PortalDeliveries token={token} />
 
       <PortalApprovals token={token} />
 
