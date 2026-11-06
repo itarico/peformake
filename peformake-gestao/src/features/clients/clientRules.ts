@@ -143,7 +143,7 @@ export function describeClient(client: ClientRecord, today: string): ClientView 
 }
 
 export type StatusFilter = 'active' | 'lost'
-export type KindFilter = ClientKind | 'all'
+export type KindFilter = ClientKind | 'all' | 'recorrente'
 export type EntityFilter = Exclude<Entity, 'none'> | 'all'
 export type FlagFilter = AttentionFlag | 'any' | 'all'
 export type SortKey = 'name' | 'value' | 'health' | 'contract'
@@ -162,11 +162,13 @@ export function filterClients(items: readonly ClientView[], filters: ClientFilte
   const term = normalize(filters.search)
   return items.filter((item) => {
     const { client } = item
-    if (filters.status === 'active' ? !client.isActive : client.isActive) return false
-    if (filters.kind !== 'all' && item.kind !== filters.kind) return false
+    if (filters.status === 'active' ? !isLiveClient(client) : isLiveClient(client)) return false
+    if (filters.kind === 'recorrente' ? item.kind === 'avulso' : filters.kind !== 'all' && item.kind !== filters.kind) return false
     if (filters.entity !== 'all' && item.entity !== filters.entity) return false
     if (filters.flag === 'any' && item.flags.length === 0) return false
-    if (filters.flag !== 'all' && filters.flag !== 'any' && !item.flags.includes(filters.flag)) return false
+    // "Contrato vencendo" também mostra os já vencidos (o número do atalho conta os dois).
+    if (filters.flag === 'ending' && !item.flags.includes('ending') && !item.flags.includes('expired')) return false
+    if (filters.flag !== 'all' && filters.flag !== 'any' && filters.flag !== 'ending' && !item.flags.includes(filters.flag)) return false
     if (!term) return true
     return [client.name, client.segment, client.email, client.phone, ...client.team.map((entry) => entry.name)]
       .some((value) => value && normalize(value).includes(term))
@@ -197,8 +199,11 @@ export interface PortfolioSummary {
   contractsEnding: number
 }
 
+/** Ativo de verdade: nem perdido nem desativado. Perdido ou excluído não entra em conta nenhuma. */
+export const isLiveClient = (client: Pick<ClientRecord, 'isActive' | 'isLost'>) => client.isActive && !client.isLost
+
 export function summarizePortfolio(items: readonly ClientView[]): PortfolioSummary {
-  const active = items.filter((item) => item.client.isActive)
+  const active = items.filter((item) => isLiveClient(item.client))
   return {
     active: active.length,
     recurringValue: active.filter((item) => item.kind !== 'avulso').reduce((sum, item) => sum + item.value, 0),

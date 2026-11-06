@@ -25,9 +25,10 @@ import { ATTENTION_LABEL, KIND_LABEL, clientValue, type AttentionFlag } from './
 import { brlValue } from './format'
 import { ContractCell, ErrorBox, FlagChips, HealthBadge } from './ui'
 import { useClients } from './useClients'
+import { isLiveClient } from './clientRules'
 import { ClientsSummary } from '@/features/dashboard/Summaries'
 
-const chipSelect = 'min-h-9 cursor-pointer rounded-full border border-line bg-canvas px-3 text-[13px] font-medium text-ink hover:border-line-strong'
+const chipSelect = 'min-h-9 cursor-pointer rounded-xl border border-line bg-canvas px-3 text-[13px] font-medium text-ink hover:border-line-strong'
 const activeChip = 'border-ink bg-fill text-on-fill'
 
 function Chips<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: readonly { id: T; label: string }[]; onChange: (v: T) => void }) {
@@ -35,7 +36,7 @@ function Chips<T extends string>({ label, value, options, onChange }: { label: s
     <div role="group" aria-label={label} className="flex flex-wrap gap-1">
       {options.map((o) => (
         <button key={o.id} type="button" aria-pressed={value === o.id} onClick={() => onChange(o.id)}
-          className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[13px] font-medium transition-colors', value === o.id ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>
+          className={cn('min-h-9 cursor-pointer rounded-xl border px-3 text-[13px] font-medium transition-colors', value === o.id ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:border-line-strong hover:text-ink')}>
           {o.label}
         </button>
       ))}
@@ -57,7 +58,7 @@ function readFilters(params: URLSearchParams): ClientFilters & { sort: SortKey }
   }
   return {
     status: pick<StatusFilter>('situacao', ['active', 'lost'], DEFAULT_FILTERS.status),
-    kind: pick<KindFilter>('tipo', ['all', 'fixo', 'tcv', 'avulso'], 'all'),
+    kind: pick<KindFilter>('tipo', ['all', 'fixo', 'tcv'], 'all'),
     entity: pick<EntityFilter>('empresa', ['all', 'peformake', 'ellcazo'], 'all'),
     flag: pick<FlagFilter>('atencao', ['all', 'any', ...FLAGS], 'all'),
     search: params.get('busca') ?? '',
@@ -75,12 +76,13 @@ export function ClientsPage() {
   const [params, setParams] = useSearchParams()
   const filters = readFilters(params)
   const today = todayInBrazil()
-  const tab = params.get('aba') === 'resumo' ? 'summary' : 'list'
+  // Resumo abre primeiro. Recorrentes (fixo e TCV) e avulsos ficam em listas separadas.
+  const aba = params.get('aba')
+  const tab: 'summary' | 'recorrentes' | 'avulsos' = aba === 'avulsos' ? 'avulsos' : aba === 'recorrentes' || aba === 'lista' ? 'recorrentes' : 'summary'
   const [creating, setCreating] = useState(false)
-  const setTab = (next: 'list' | 'summary') => setParams((current) => {
-    const p = new URLSearchParams(current)
-    if (next === 'summary') p.set('aba', 'resumo')
-    else p.delete('aba')
+  const setTab = (next: 'summary' | 'recorrentes' | 'avulsos') => setParams(() => {
+    const p = new URLSearchParams()
+    if (next !== 'summary') p.set('aba', next)
     return p
   }, { replace: true })
 
@@ -90,15 +92,20 @@ export function ClientsPage() {
       const name = PARAM[key]
       if (value === DEFAULTS[name]) next.delete(name)
       else next.set(name, value)
-      // Filtro escolhido no resumo leva para a lista já filtrada.
-      next.delete('aba')
+      // Filtro escolhido no resumo leva para a lista de recorrentes já filtrada.
+      if (!next.get('aba')) next.set('aba', 'recorrentes')
       return next
     }, { replace: true })
   }
 
   const views = useMemo(() => (query.data ?? []).map((client) => describeClient(client, today)), [query.data, today])
-  const summary = useMemo(() => summarizePortfolio(views), [views])
-  const visible = useMemo(() => sortClients(filterClients(views, filters), filters.sort), [views, filters])
+  const group = useMemo(() => views.filter((v) => (tab === 'avulsos' ? v.kind === 'avulso' : v.kind !== 'avulso')), [views, tab])
+  const summary = useMemo(() => summarizePortfolio(group), [group])
+  const effective = { ...filters, kind: tab === 'avulsos' ? 'avulso' as const : filters.kind === 'all' ? 'recorrente' as const : filters.kind }
+  const visible = useMemo(() => sortClients(filterClients(views, effective), filters.sort), [views, effective.kind, effective.status, effective.entity, effective.flag, effective.search, filters.sort]) // eslint-disable-line react-hooks/exhaustive-deps
+  const live = views.filter((v) => isLiveClient(v.client))
+  const liveRecurring = live.filter((v) => v.kind !== 'avulso').length
+  const liveOneOff = live.length - liveRecurring
   const hasFilters = [...params.keys()].some((key) => key !== 'ordem' && key !== 'aba')
 
   const shortcuts: { flag: FlagFilter; label: string; n: number; warn: boolean }[] = [
@@ -112,7 +119,7 @@ export function ClientsPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Clientes</h1>
-          {query.data && <p className="text-muted">{summary.active} ativos de {views.length} cadastrados</p>}
+          {query.data && <p className="text-muted">{liveRecurring} recorrentes e {liveOneOff} avulsos ativos · perdidos não entram nas contas</p>}
         </div>
         {canManage && (
           <button type="button" onClick={() => setCreating(true)} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand hover:opacity-85">
@@ -123,7 +130,7 @@ export function ClientsPage() {
       {canManage && <ClientDialog open={creating} onClose={() => setCreating(false)} />}
 
       <div role="tablist" aria-label="Clientes" className="flex gap-1 border-b border-line">
-        {([['list', 'Lista'], ['summary', 'Resumo']] as const).map(([id, label]) => (
+        {([['summary', 'Resumo'], ['recorrentes', `Recorrentes · ${liveRecurring}`], ['avulsos', `Avulsos · ${liveOneOff}`]] as const).map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
             className={cn('-mb-px min-h-11 cursor-pointer border-b-2 px-4 font-semibold', tab === id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink')}>
             {label}
@@ -136,7 +143,7 @@ export function ClientsPage() {
 
       {query.data && tab === 'summary' && <ClientsSummary />}
 
-      {query.data && tab === 'list' && (
+      {query.data && tab !== 'summary' && (
         <>
           <div className="flex flex-wrap gap-2" role="group" aria-label="Atalhos">
             {shortcuts.map((c) => {
@@ -168,9 +175,13 @@ export function ClientsPage() {
             <div className="flex flex-wrap items-center gap-2">
               <Chips label="Situação" value={filters.status} onChange={(value) => set('status', value)} options={[{ id: 'active', label: 'Ativos' }, { id: 'lost', label: 'Perdidos' }]} />
               <span aria-hidden="true" className="hidden h-6 w-px bg-line sm:block" />
-              <Chips label="Tipo" value={filters.kind} onChange={(value) => set('kind', value)}
-                options={[{ id: 'all', label: 'Todos' }, { id: 'fixo', label: 'Fixo' }, { id: 'tcv', label: 'TCV' }, { id: 'avulso', label: 'Avulso' }]} />
-              <span aria-hidden="true" className="hidden h-6 w-px bg-line sm:block" />
+              {tab === 'recorrentes' && (
+                <>
+                  <Chips label="Tipo" value={filters.kind} onChange={(value) => set('kind', value)}
+                    options={[{ id: 'all', label: 'Fixo e TCV' }, { id: 'fixo', label: 'Fixo' }, { id: 'tcv', label: 'TCV' }]} />
+                  <span aria-hidden="true" className="hidden h-6 w-px bg-line sm:block" />
+                </>
+              )}
               <label htmlFor="empresa" className="sr-only">Empresa</label>
               <select id="empresa" value={filters.entity} onChange={(event) => set('entity', event.target.value)} className={cn(chipSelect, filters.entity !== 'all' && activeChip)}>
                 <option value="all">Peformake e Ellcazo</option>
@@ -186,7 +197,7 @@ export function ClientsPage() {
               <span className="ml-auto flex items-center gap-3 text-[13px] text-muted" aria-live="polite">
                 {visible.length} {visible.length === 1 ? 'cliente' : 'clientes'}
                 {hasFilters && (
-                  <button type="button" onClick={() => setParams({}, { replace: true })} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 font-medium hover:text-ink">
+                  <button type="button" onClick={() => setParams({ aba: tab }, { replace: true })} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 font-medium hover:text-ink">
                     <X size={14} aria-hidden="true" /> Limpar
                   </button>
                 )}
