@@ -86,3 +86,26 @@ Já existe a comissão para **membros** que trazem clientes. Para **clientes** q
 3. Benefício da indicação: **desconto**, **mês grátis** ou **crédito em serviço**? Quanto?
 4. Dossiê: liberar uma chave do **Firecrawl** (ou outra ferramenta de busca) para buscar na web?
 5. Meta padrão de crescimento por mês: **5%** sobre a média de 3 meses?
+
+## 9. Melhores clientes (ranking) e o que fazer com ele
+Publicado em 06/11: nota de 0 a 100 por cliente com valor, serviços, temperatura, avaliação e notas das entregas, tempo de casa e pagamento em dia. Selos Diamante (80+), Ouro (65+) e Prata (50+); a lista abre com os melhores primeiro.
+
+Ideias para usar (estudo):
+| Ação | Para quem | Como |
+|---|---|---|
+| "Cliente do mês" no portal | Top 1 do mês | Selo no portal + post de agradecimento (se o cliente topar) |
+| Benefício do mês | Diamante | Um extra no mês seguinte: 1 criativo, 1 vídeo curto ou relatório estratégico |
+| Brinde | Diamante e Ouro no aniversário de contrato | Kit da Peformake ou presente do nicho |
+| Prioridade | Diamante | Fila prioritária no Design e Audiovisual e resposta mais rápida |
+| Desconto na renovação | Ouro e Diamante que renovam 12 meses | 5% a 10% na renovação, nunca no meio do contrato |
+| Pedido de indicação | Diamante e Ouro quentes | Convite de indicação no portal na hora certa |
+| Alerta de queda | Quem cai de selo | Aviso ao head: "caiu de Ouro para Prata, ver por quê" |
+
+## 10. Buscar a empresa pelo nome (sem saber o CNPJ)
+- **Pelo número** (CNPJ): BrasilAPI (grátis, em uso), ReceitaWS (grátis, 3 por minuto), CNPJ.ws (grátis com limite) e OpenCNPJ.
+- **Pelo nome**: não há API oficial grátis. Caminhos:
+  1. **Base aberta da Receita** (grátis): a Receita publica todas as empresas do Brasil. Dá para carregar só as de Pernambuco num índice próprio e buscar pelo nome enquanto digita. É o melhor caminho: grátis, rápido e sem limite. Custo: espaço no banco (cerca de 1 a 2 GB só para PE; o plano grátis do Supabase tem 500 MB, então seria preciso o plano pago ou um banco separado).
+  2. **Busca na web** (Firecrawl): procura "nome + cidade + CNPJ" e lê o número em sites públicos. Funciona sem banco extra, mas gasta créditos e pode errar em nomes comuns; o sistema sempre mostra a opção para confirmar.
+  3. **Serviços pagos** com busca por nome: Casa dos Dados, Econodata, CNPJá (planos mensais).
+- **CPF**: não existe consulta pública (LGPD). O sistema só confere se o número é válido; nome e endereço vêm do próprio cliente (portal) ou de serviços pagos com consentimento (ex.: Serpro).
+- **Porte para o orçamento**: com o CNPJ, a Receita dá o porte oficial na hora. Para refinar (treinar), cruzar o porte com o que cada cliente aceitou pagar em orçamentos e o faturamento que ele informa no diagnóstico.
