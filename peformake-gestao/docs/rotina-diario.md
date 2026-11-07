@@ -18,3 +18,24 @@ Pendente para a rotina:
 - Cartões compactos no Design e no Audiovisual; portal do cliente.
 - Descobrir qual função estourou `WORKER_RESOURCE_LIMIT` em 07/11 01:24 (Brasília).
 - Catálogo Will Motos → anúncios: migrar do token bloqueado para a rotina oficial da Meta (só com aprovação).
+
+## Ideias de mercado (pesquisa 07/11/2026) — fazer na ordem, uma por vez, sempre terminando
+
+1. Relatório mensal com texto de IA no portal (o que aconteceu, por quê, próximo passo) + comentário do cliente no gráfico. Ref.: AgencyAnalytics, Swydo, Reportei Studio.
+2. WhatsApp (Comercial → Conversas): resposta sugerida por IA + resumo da conversa; humano sempre aperta enviar. Ref.: Kommo Copilot, RD Station.
+3. Aprovação de peça com clique na imagem para comentar e versões (v1, v2…), começando por imagem. Ref.: Filestage, Frame.io, mLabs.
+4. Lucro por cliente (Peformake × Ellcazo): receita − custo da equipe − custos diretos, só admin; tempo estimado a partir do que a equipe já faz (cards movidos, peças aprovadas). Ref.: Productive.io, Teamwork.
+5. Caixa de "Hoje" única (aprovações, atrasos, WhatsApp sem resposta) + barra de busca rápida (Ctrl+K / lupa no celular) + atualizações otimistas. Ref.: Linear, Notion.
+6. Alerta de anúncio fora do normal (custo por resultado/ROAS mudou de repente) virando tarefa — só leitura na Meta. Ref.: Swydo Alerts.
+7. Previsão de caixa de 90 dias (contratos + orçamentos pela chance de fechar + histórico de atraso). Ref.: Productive.io.
+8. Briefing → tarefas: colar/ditar o briefing e o sistema monta a lista com datas para confirmar. Ref.: Teamwork AI Project Wizard.
+9. Checklist mensal por serviço com datas relativas ("relatório dia 5", "planejamento dia 20"). Ref.: HoneyBook.
+10. "Ver como o cliente" no portal + linha do tempo do cliente (aprovações, faturas, arquivos, contrato). Ref.: HoneyBook.
+11. Funil atualizado pela conversa: IA sugere mover o lead de etapa ("pediu orçamento"). Ref.: Kommo, SleekFlow.
+12. Lembrete de lead parado com mensagem pronta (automação nasce desligada, humano envia). Ref.: Kommo Salesbot.
+13. Pré-checagem por IA antes da peça ir ao cliente (ortografia, CTA, tom, palavras proibidas do cliente). Ref.: Filestage.
+14. Bete com ações confirmadas ("crie as tarefas do cliente X", "quais faturas atrasaram?"). Ref.: ClickUp Brain, Productive.
+15. Reunião (áudio) → resumo, decisões e tarefas no quadro. Ref.: Productive AI Notetaker.
+16. Galeria de fotos: favoritos, listas e observações de edição por foto. Ref.: Pixieset.
+17. Aviso de consumo do escopo do mês por cliente (80% usado com 50% do mês). Ref.: Teamwork.
+Já existe algo parecido (melhorar, não refazer): saúde do cliente, relatórios do tráfego, galeria, alertas de tráfego.
