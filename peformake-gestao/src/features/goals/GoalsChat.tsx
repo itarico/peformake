@@ -10,6 +10,7 @@ import { useClientDeliveries } from '@/features/clients/DeliveryBar'
 import { listNotifications, markRead } from '@/features/notifications/notificationsApi'
 import { useProduction } from '@/features/production/useProduction'
 import { noticesFrom, pendingFrom, type Notice } from './chatNotices'
+import { BeteToday, useBeteState, visibleItems, type TodayItem } from './BeteToday'
 import { brl, cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
 
 // Chat de metas: conversa diária, uma mensagem por vez, montada com os dados do sistema.
@@ -185,7 +186,7 @@ function PendingCard({ list }: { list: Pend[] }) {
   )
 }
 
-type Task = { id: string; client: string | null; title: string; status: string; due_date: string | null }
+type Task = { id: string; client: string | null; title: string; status: string; due_date: string | null; priority?: string | null }
 type Piece = { id: string; client: string; title: string; status: string; deadline: string | null }
 type Video = { id: string; client: string; title: string; status: string; shoot_at: string | null; edit_due_at: string | null; my_part: string }
 type MyDayLite = { linked: boolean; tasks?: Task[]; pieces?: Piece[]; videos?: Video[] }
@@ -338,7 +339,32 @@ export function GoalsChat() {
   const updates = useMemo(() => noticesFrom(notifs.data ?? [], Date.now(), { includeRead: true, maxAgeH: 24 }), [notifs.data])
   const tips = items.filter((i) => i.kind === 'tip')
 
+  // "Hoje": o que pede atenção agora, com o botão que resolve. Urgente = dinheiro, atraso grande ou prioridade alta.
+  const beteState = useBeteState(state.status === 'ready')
+  const todayAll: TodayItem[] = useMemo(() => {
+    const out: TodayItem[] = []
+    for (const o of overdue) out.push({ id: `inv:${o.id}:${month}`, level: 'urgente', title: `${o.name}: fatura em aberto`, sub: o.amount ? brl(o.amount) : undefined, action: { label: 'Cobrar', to: `/clientes/${o.id}?aba=contrato&acao=cobrar` } })
+    for (const p of pendAll) out.push({ id: `ent:${p.id}:${p.label}:${month}`, level: p.late > 3 ? 'urgente' : 'hoje', title: `${p.client}: ${p.label}`, sub: `${p.late} ${p.late === 1 ? 'dia' : 'dias'} de atraso`, action: { label: 'Resolver', to: p.to } })
+    for (const t of tasksOpen) {
+      const late = !!t.due_date && t.due_date < cal.iso
+      if (!late && t.due_date !== cal.iso && t.priority !== 'high') continue
+      out.push({ id: `task:${t.id}`, level: late && t.priority === 'high' ? 'urgente' : 'hoje', title: t.title, sub: [t.client, t.due_date ? (late ? `venceu ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : 'vence hoje') : null].filter(Boolean).join(' · ') || undefined, action: { label: 'Abrir', to: `/trafego/tarefas?tarefa=${t.id}` } })
+    }
+    for (const p of latePieces) out.push({ id: `piece:${p.id}`, level: 'hoje', title: `${p.client}: ${p.title}`, sub: `peça atrasada desde ${p.deadline!.slice(8)}/${p.deadline!.slice(5, 7)}`, action: { label: 'Abrir peça', to: `/conteudo/peca/${p.id}` } })
+    for (const n of noticesFrom(notifs.data ?? [])) out.push({ id: n.id, level: 'info', title: `${n.icon} ${n.title}`, sub: n.lines.slice(0, 2).join(' · ') || undefined, action: n.action ? { label: n.action.label, to: n.action.to } : undefined })
+    return out
+  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month])
+  const todayItems = visibleItems(todayAll, beteState.data)
+  const urgentCount = todayItems.filter((i) => i.level === 'urgente').length
+  const focusGoal = list.length ? list[cal.doy % list.length]! : null
+  const goalLine = focusGoal && GOAL_META[focusGoal.key] ? {
+    text: `${GOAL_META[focusGoal.key]!.title(focusGoal.info)}: ${fmt(focusGoal.actual ?? 0, GOAL_META[focusGoal.key]!.money)} de ${fmt(focusGoal.target, GOAL_META[focusGoal.key]!.money)}`,
+    to: primaryAction(focusGoal, coach.data)?.to ?? '/',
+  } : null
+
   const [open, setOpen] = useState(false)
+  // Abre na lista do dia; a conversa fica a um toque.
+  const [tab, setTab] = useState<'hoje' | 'conversa'>('hoje')
   // Celular: trava a página de trás enquanto o chat está aberto.
   useEffect(() => {
     if (!open || !window.matchMedia('(max-width: 767px)').matches) return
@@ -386,13 +412,13 @@ export function GoalsChat() {
   // Não abre sozinho: o botão "Abre aí!" e o balão chamam, a pessoa decide quando abrir.
   const talked = useRef<GoalRole | undefined>(undefined)
   useEffect(() => {
-    if (!open) return
+    if (!open || tab !== 'conversa') return
     // Abriu agora, ou mudou de tela com o chat aberto: conversa da área nova.
     if (!started.current || talked.current !== role) { started.current = true; talked.current = role; begin() }
-  }, [open, role]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, role, tab]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (state.status !== 'ready') return null
-  const newsSig = news.map((x) => x.id).join('|')
+  const newsSig = todayItems.map((x) => x.id).join('|')
   sigRef.current = newsSig
   const visible = hiddenSig !== newsSig
   // Sempre presente (mesmo sem meta ou novidade): no mínimo a setinha discreta no rodapé.
@@ -626,6 +652,18 @@ export function GoalsChat() {
             <span className="hidden text-[11px] opacity-70 sm:inline">{role ? `${ROLE_LABEL[role]} · ` : ''}dia {day}/{days}</span>
             <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Recolher" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-white/10"><ChevronDown size={18} aria-hidden="true" /></button>
           </header>
+          <div role="tablist" aria-label="Ver" className="flex shrink-0 gap-1 border-b border-line bg-surface px-2 pt-1.5">
+            {([['hoje', `Hoje${todayItems.length ? ` · ${todayItems.length}` : ''}`], ['conversa', 'Conversa']] as const).map(([k, l]) => (
+              <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+                className={cn('-mb-px min-h-9 cursor-pointer border-b-2 px-3 text-[13px] font-semibold', tab === k ? 'border-accent-ink text-ink' : 'border-transparent text-muted hover:text-ink')}>{l}</button>
+            ))}
+          </div>
+          {tab === 'hoje' && (
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-canvas px-3 py-3 [scrollbar-width:thin]">
+              <BeteToday items={todayItems} goalLine={goalLine} onGo={close} />
+            </div>
+          )}
+          {tab === 'conversa' && <>
           <div ref={box} aria-live="polite" className="wa-wallpaper flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto overscroll-contain px-3 py-3 [scrollbar-width:thin]">
             {log.map((m) => m.kind === 'divider'
               ? <span key={m.id} className="my-1 self-center rounded-full bg-raised px-2.5 py-0.5 text-[10.5px] font-semibold text-muted">{m.text}</span>
@@ -655,16 +693,17 @@ export function GoalsChat() {
             {replies.map((r) => <button key={r.label} type="button" onClick={() => act(r)} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{r.label}</button>)}
             {!replies.length && <span className="py-1 text-[12px] text-muted">{typing ? 'digitando…' : ' '}</span>}
           </div>
+          </>}
         </section>
       )}
       {/* Abinha no rodapé (estilo Messenger). Com mensagem: número piscando. Sem mensagem (ou fechada no X): só uma setinha discreta. */}
-      {!open && (visible && news.length > 0 ? (
+      {!open && (visible && todayItems.length > 0 ? (
         <span className="pointer-events-auto relative flex items-stretch overflow-hidden rounded-t-xl bg-fill text-on-fill shadow-lg shadow-black/25">
           <button type="button" onClick={() => { started.current = false; setOpen(true) }}
-            aria-label={`${BOT_NAME}: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir`}
+            aria-label={`${BOT_NAME}: ${todayItems.length} ${todayItems.length === 1 ? 'item' : 'itens'} para ver. Abrir`}
             className="flex min-h-10 cursor-pointer items-center gap-1.5 pl-3 pr-2 text-[13px] font-bold hover:bg-black/10">
             <MessageCircle size={16} aria-hidden="true" />
-            <span className="pf-blink grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1.5 text-[11px] text-white">{news.length}</span>
+            <span className={cn('grid min-w-5 place-items-center rounded-full px-1.5 text-[11px] text-white', urgentCount ? 'pf-blink bg-[#e5484d]' : 'bg-[#eda100]')}>{todayItems.length}</span>
           </button>
           <button type="button" onClick={hide} aria-label={`Recolher a ${BOT_NAME}`} title="Recolher"
             className="grid w-8 cursor-pointer place-items-center text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={13} aria-hidden="true" /></button>

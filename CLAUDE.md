@@ -17,6 +17,22 @@ O histórico completo das decisões até 06/11/2026 está em `peformake-gestao/d
 - Sempre diga o que foi publicado e o link.
 - Peça confirmação só para: excluir dados, mandar mensagem para cliente, gastar dinheiro, ou mexer em segredos.
 
+## Regra de ouro (vale acima de todas): o sistema existe para poupar tempo
+
+Tudo o que for feito tem que **facilitar o trabalho** de quem usa. Antes de publicar, passe por este teste:
+
+1. **Tempo:** a tarefa ficou mais rápida que antes? Se ficou igual ou mais lenta, não está certo: refaça.
+   Meta: o que é do dia a dia se resolve em **até 3 toques** e em **menos de 10 segundos** a partir do Início ou da Bete.
+2. **Informação:** cada tela mostra **só o que leva a uma decisão ou ação agora**. O resto fica atrás de "Ver detalhes".
+   Se a pessoa precisa ler um parágrafo para saber o que fazer, está errado.
+3. **Digitação:** se o sistema já sabe a informação (ou consegue deduzir), ele preenche sozinho. Pedir de novo é erro.
+4. **Atenção:** chamar atenção só quando importa. Só pisca/vibra/notifica o que é **urgente** (dinheiro em risco,
+   cliente insatisfeito, algo parado). Novidade comum aparece sem alarde. Nunca cobrir conteúdo nem atrapalhar o uso.
+5. **Gosto de usar:** bonito, leve e direto, para a equipe e o cliente **quererem** abrir e alimentar o sistema.
+   Visual interessante, mas nunca mais importante que o trabalho.
+
+Se uma ideia não passa nesse teste, ela não entra, por mais bonita que seja.
+
 ## Regras de interface (valem para todo o sistema)
 
 1. **Editar ou preencher abre em pop-up** (`Dialog`). Nunca expandir formulário dentro da página.

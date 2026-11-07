@@ -51,7 +51,7 @@ Abra o app de verdade no navegador do ambiente (Playwright já instalado, `requi
   toque ≥ 44 px, texto legível, pop-ups com largura certa, estados vazios e de erro com mensagem humana e botão "Tentar de novo".
 - Tire screenshot (deviceScaleFactor 1) e **olhe** a imagem antes de concluir que está bom.
 
-Checklist por tela:
+Checklist por tela (antes de tudo, a **Regra de ouro** do CLAUDE.md: ficou mais rápido? mostra só o que leva a uma ação? o sistema preenche sozinho o que já sabe? só chama atenção o que é urgente? Se não, está errado):
 - **Funciona?** Cada botão faz o que diz; cada link leva ao ponto exato da ação (não só à página); nenhum "Carregando" eterno.
 - **Dados certos?** Confira contra o banco (leitura) quando houver número na tela.
 - **Simples?** Menos abas e menos texto; o principal primeiro; editar abre em pop-up (Dialog); formulário longo em etapas;
