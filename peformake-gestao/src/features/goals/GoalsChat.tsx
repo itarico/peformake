@@ -362,6 +362,24 @@ export function GoalsChat() {
   // Sempre mostra a última mensagem, inclusive quando aparecem os botões embaixo.
   useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing, links, replies])
   useEffect(() => { store.set(LOG_KEY, JSON.stringify(log.slice(-80))) }, [log, LOG_KEY])
+  // Meia-noite (Brasília): conversa nova e limpa, mesmo com o sistema aberto. Conversas antigas saem do aparelho.
+  const [, setTick] = useState(0)
+  useEffect(() => {
+    const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }))
+    const next = new Date(now); next.setHours(24, 0, 5, 0)
+    const t = setTimeout(() => setTick((n) => n + 1), next.getTime() - now.getTime())
+    return () => clearTimeout(t)
+  }, [cal.iso])
+  const dayRef = useRef(cal.iso)
+  useEffect(() => {
+    try { for (const k of Object.keys(localStorage)) if (k.startsWith('pf-goals-log:') && k !== LOG_KEY) localStorage.removeItem(k) } catch { /* sem armazenamento */ }
+    if (dayRef.current === cal.iso) return
+    dayRef.current = cal.iso
+    genRef.current++
+    started.current = false
+    talked.current = undefined
+    setLog([]); setReplies([]); setLinks([]); setTyping(null)
+  }, [cal.iso, LOG_KEY])
   // Não abre sozinho: o botão "Abre aí!" e o balão chamam, a pessoa decide quando abrir.
   const talked = useRef<GoalRole | undefined>(undefined)
   useEffect(() => {
