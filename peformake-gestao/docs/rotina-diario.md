@@ -2,6 +2,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-07 20h · sessão da nuvem (pedido do Italo pelo celular)
+Corrigido: no iPhone o menu de baixo ficava solto no meio da tela (overflow-x hidden no html e no body fazia o body rolar). Agora só `html { overflow-x: clip }`; conferido que nada escorrega de lado em 360/390/768 px.
+Antes, nesta sessão: central de Automações (Configurações → Automações), e-mail do cliente opcional, botão "Mudar vencimento" no Financeiro do cliente (fatura em aberto sem link acompanha o dia novo), Bete numa conversa só.
+Atenção: um deploy desta sessão saiu antes do push e tirou do ar por alguns minutos as mudanças do PC (ícone e "assessoria"); refeito depois do pull. Publicado: https://peformake-gestao.vercel.app · Commits: 004e9b4
+
 ## 2026-11-07 16h30 · auditoria das tarefas automáticas (sessão do PC)
 Pausada: melhoria contínua (sem push e sem Supabase); central de Automações atualizada.
 Achados (prioridade):
