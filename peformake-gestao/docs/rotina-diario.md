@@ -2,6 +2,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-07 15h (Brasília) · sessão do PC
+Mudança de casa: o trabalho principal passa para a sessão do PC (pasta `Desktop\APP PEFORMAKE`), que o Italo usa também pelo celular pelo Controle Remoto. A nuvem fica de reserva. Regra nova no CLAUDE.md: "Onde se trabalha e como sincronizar".
+Corrigido: ícone da aba era o raio padrão do Vite; agora é a logo PFMK.
+Refeito: troca "agência" → "assessoria" (o commit 0f964c1 da nuvem foi publicado na Vercel mas nunca chegou ao GitHub).
+Publicado: https://peformake-gestao.vercel.app · Commits: 8ece613
+
 ## Fila inicial (07/11/2026)
 
 Precisa do Italo:
