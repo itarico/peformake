@@ -9,6 +9,7 @@ import { deltaTone, fillDays, pctChange } from '@/components/charts/chartRules'
 import { cn } from '@/lib/cn'
 import { AV_ROLES, COMMERCIAL_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, TRAFFIC_ROLES, hasAnyRole, type AppRole } from '@/lib/roles'
 import { MyDay } from './MyDay'
+import { LoadState } from '@/features/traffic/LoadState'
 import { describeClient } from '@/features/clients/clientRules'
 import { ATTENTION_LABEL } from '@/features/clients/portfolioRules'
 import { useClients } from '@/features/clients/useClients'
@@ -53,7 +54,7 @@ function Kpi({ label, value, format, sub, tone, i }: { label: string; value: num
 /** Visão do dono: MRR, recebido, clientes, ticket e perdas. Tudo sai do banco, mês a mês. */
 function BusinessSection({ side }: { side: React.ReactNode }) {
   const q = useQuery({ queryKey: ['dash-home-business', 12], queryFn: () => dashHomeBusiness(12) })
-  if (!q.data) return <Panel title="Negócio"><p role="status" className="text-[13px] text-muted">{q.isPending ? 'Carregando' : 'Não deu para carregar os números.'}</p></Panel>
+  if (!q.data) return <Panel title="Negócio"><LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} /></Panel>
   const d: BusinessDash = q.data
   const k = businessKpis(d)
   const months = d.months
@@ -143,7 +144,9 @@ function DeliveriesPanel({ month }: { month: string }) {
   const p = q.data ? servicesProgress(q.data) : null
   return (
     <Panel title="Entregas do mês" className="pf-rise" action={<Link to={`/operacao?mes=${month}`} className="inline-flex min-h-10 items-center gap-1 text-[13px] font-medium">Abrir <ArrowRight size={14} aria-hidden="true" /></Link>}>
-      {!p && <p role="status" className="text-[13px] text-muted">{q.isPending ? 'Carregando' : 'Sem dados.'}</p>}
+      {!p && (q.isPending || q.isError
+        ? <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
+        : <p role="status" className="text-[13px] text-muted">Sem dados.</p>)}
       {p && (
         <>
           <div className="-mt-1 flex items-baseline gap-2">

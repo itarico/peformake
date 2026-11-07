@@ -7,6 +7,8 @@ Mudança de casa: o trabalho principal passa para a sessão do PC (pasta `Deskto
 Corrigido: ícone da aba era o raio padrão do Vite; agora é a logo PFMK.
 Refeito: troca "agência" → "assessoria" (o commit 0f964c1 da nuvem foi publicado na Vercel mas nunca chegou ao GitHub).
 Publicado: https://peformake-gestao.vercel.app · Commits: 8ece613
+Recuperado: a rodada da rotina das 15:39 deixou no Início (Negócio, Entregas do mês e Meu dia) o aviso com "Tentar de novo" quando o carregamento falha. Ela publicou, mas o push foi recusado (403); a mudança foi refeita aqui e enviada.
+Problema da rotina: as rodadas de hoje não conseguem dar push (itarico/peformake fora das fontes autorizadas da rotina) e não têm o MCP do Supabase. Enquanto isso não for corrigido, a rotina não deve publicar.
 
 ## Fila inicial (07/11/2026)
 

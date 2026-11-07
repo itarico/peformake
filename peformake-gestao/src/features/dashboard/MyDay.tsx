@@ -7,6 +7,7 @@ import { Panel } from '@/components/charts/Charts'
 import { cn } from '@/lib/cn'
 import { ROLE_LABELS, type AppRole } from '@/lib/roles'
 import { supabase } from '@/lib/supabase'
+import { LoadState } from '@/features/traffic/LoadState'
 import { countdown } from '@/features/av/avRules'
 import { TONE_CLASS } from '@/features/av/AvShell'
 import { ArtRequestButton } from '@/features/content/ArtRequest'
@@ -207,7 +208,9 @@ export function MyDay({ greeting }: { greeting: string }) {
     },
   })
   const now = Date.now()
-  if (!q.data) return <p role="status" className="py-10 text-center text-muted">{q.isPending ? 'Carregando o seu dia' : 'Não deu para carregar.'}</p>
+  if (!q.data) return q.isError
+    ? <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
+    : <p role="status" className="py-10 text-center text-muted">Carregando o seu dia</p>
   const d = q.data
   if (!d.linked) {
     return (
