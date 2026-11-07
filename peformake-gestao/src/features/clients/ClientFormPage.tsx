@@ -71,7 +71,7 @@ export function ClientFormPage() {
 }
 
 /** Cadastro e edição de cliente em janela (pop-up). Fecha com Esc, no X ou em Cancelar. */
-export function ClientDialog({ open, onClose, clientId = null }: { open: boolean; onClose: () => void; clientId?: string | null }) {
+export function ClientDialog({ open, onClose, clientId = null, startTab }: { open: boolean; onClose: () => void; clientId?: string | null; startTab?: FormTab }) {
   const { isAdmin, query } = useClients()
   const client = clientId ? query.data?.find((item) => item.id === clientId) : undefined
   return (
@@ -81,13 +81,14 @@ export function ClientDialog({ open, onClose, clientId = null }: { open: boolean
       {(!clientId || client) && (
         <ClientForm key={client?.updatedAt ?? 'novo'} clientId={clientId} isAdmin={isAdmin}
           initial={client ? draftFromClient(client) : emptyDraft(todayInBrazil())} updatedAt={client?.updatedAt ?? null}
-          existingSegments={(query.data ?? []).map((c) => c.segment).filter((x): x is string => !!x)} onCancel={onClose} />
+          existingSegments={(query.data ?? []).map((c) => c.segment).filter((x): x is string => !!x)} onCancel={onClose} startTab={startTab} />
       )}
     </Dialog>
   )
 }
 
-function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, onCancel }: {
+function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, onCancel, startTab }: {
+  startTab?: FormTab
   clientId: string | null
   isAdmin: boolean
   initial: ClientDraft
@@ -106,7 +107,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
   const inDialog = !!onCancel
   // Cliente novo: passo a passo, começando pela empresa (o CNPJ preenche o resto). Editar: abas livres.
   const wizard = inDialog && !clientId
-  const [tab, setTab] = useState<FormTab>(wizard ? 'empresa' : 'dados')
+  const [tab, setTab] = useState<FormTab>(startTab ?? (wizard ? 'empresa' : 'dados'))
   const stepIndex = ORDER.indexOf(tab)
   const next = () => {
     const found = validateDraft(draft)

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { ArrowRight, Lightbulb, MessageCircle } from 'lucide-react'
+import { ArrowRight, Lightbulb, MessageCircle, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Gauge } from '@/components/charts/Charts'
 import { Dialog } from '@/components/ui/Dialog'
@@ -16,6 +16,7 @@ import { monthsIdle, SIZE_LABEL, TEMP_LABEL, TEMP_TONE, useClientIntel, useClien
 import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { ATTENTION_LABEL, HEALTH_LABEL, HEALTH_SCORE, type AttentionFlag, type HealthLevel } from './portfolioRules'
 import { HealthBadge } from './ui'
+import { ClientDialog } from './ClientFormPage'
 
 const ACTION: Record<AttentionFlag, string> = {
   risk: 'Converse com o cliente e registre o plano na avaliação.',
@@ -80,6 +81,13 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
   const intel = intelQ.data?.get(client.id) ?? null
   const [health, setHealth] = useState(false)
   const [profile, setProfile] = useState(false)
+  const [editProfile, setEditProfile] = useState(false)
+  const profileFields: [string, string | null][] = [
+    ['O que a empresa faz', client.description], ['Público-alvo', client.targetAudience], ['Diferencial', client.valueProposition],
+    ['Concorrentes', client.competitors], ['Contato', [client.phone, client.email].filter(Boolean).join(' · ') || null],
+    ['Como chegou', client.acquisitionChannel], ['Última avaliação', view.health.latest ? HEALTH_LABEL[view.health.latest] : null],
+  ]
+  const missing = profileFields.filter(([l, v]) => !v && l !== 'Última avaliação').map(([l]) => l)
   const [contactsOpen, setContactsOpen] = useState(false)
   const contacts = useClientContacts(client.id)
   const settings = useIntelSettings()
@@ -228,7 +236,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
         <span className="ml-auto flex gap-2">
           {whatsapp && <a href={whatsapp} target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-line-strong px-3 font-medium hover:border-ink"><MessageCircle size={14} aria-hidden="true" /> WhatsApp</a>}
           <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setContactsOpen(true)}>Contatos{contacts.data?.length ? ` · ${contacts.data.length + 1}` : ''}</Button>
-          <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setProfile(true)}>Perfil completo</Button>
+          <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setProfile(true)}>Perfil{missing.length ? ` · faltam ${missing.length}` : ''}</Button>
         </span>
       </section>
 
@@ -238,18 +246,34 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
 
       <ClientContactsDialog clientId={client.id} open={contactsOpen} onClose={() => setContactsOpen(false)} canManage={canManage} />
 
-      <Dialog open={profile} onClose={() => setProfile(false)} title={client.name} size="md">
-        <dl className="flex flex-col gap-3 text-[14px]">
-          {[['O que a empresa faz', client.description], ['Público-alvo', client.targetAudience], ['Diferencial', client.valueProposition], ['Concorrentes', client.competitors],
-            ['Contato', [client.phone, client.email].filter(Boolean).join(' · ') || null], ['Como chegou', client.acquisitionChannel],
-            ['Última avaliação', view.health.latest ? HEALTH_LABEL[view.health.latest] : null]].map(([label, value]) => (
-            <div key={label as string}>
-              <dt className="text-[12px] font-medium text-muted">{label}</dt>
-              <dd className="whitespace-pre-wrap">{value || <span className="text-muted">Não informado</span>}</dd>
+      <Dialog open={profile} onClose={() => setProfile(false)} title={`Perfil · ${client.name}`} size="md"
+        footer={canManage ? <Button onClick={() => { setProfile(false); setEditProfile(true) }}><Pencil size={15} aria-hidden="true" /> {missing.length ? 'Completar perfil' : 'Editar perfil'}</Button> : undefined}>
+        {(() => {
+          const filled = profileFields.filter(([, v]) => v)
+          return (
+            <div className="flex flex-col gap-4">
+              {filled.length > 0 && (
+                <dl className="grid gap-3 text-[14px] sm:grid-cols-2">
+                  {filled.map(([label, value]) => (
+                    <div key={label} className="rounded-xl bg-raised/60 px-3 py-2.5">
+                      <dt className="text-[12px] font-medium text-muted">{label}</dt>
+                      <dd className="whitespace-pre-wrap">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {missing.length > 0 && (
+                <div className="rounded-xl border border-dashed border-line-strong px-3 py-3">
+                  <p className="text-[13px] font-semibold">{filled.length ? 'Falta preencher' : 'Perfil ainda vazio'}</p>
+                  <p className="mt-0.5 text-[13px] text-muted">{missing.join(' · ')}</p>
+                  <p className="mt-1.5 text-[12px] text-muted">Com isso preenchido, estratégia, roteiros e anúncios saem mais certeiros.</p>
+                </div>
+              )}
             </div>
-          ))}
-        </dl>
+          )
+        })()}
       </Dialog>
+      {canManage && <ClientDialog open={editProfile} onClose={() => setEditProfile(false)} clientId={client.id} startTab="negocio" />}
     </div>
   )
 }

@@ -23,7 +23,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
     if (!open && dialog.open) dialog.close()
   }, [open])
 
-  const width = size === 'sm' ? 'min(480px,calc(100vw-24px))' : size === 'lg' ? 'min(960px,calc(100vw-24px))' : 'min(680px,calc(100vw-24px))'
+  const width = size === 'sm' ? 'min(480px, calc(100vw - 24px))' : size === 'lg' ? 'min(960px, calc(100vw - 24px))' : 'min(680px, calc(100vw - 24px))'
   return (
     <dialog
       ref={ref}
