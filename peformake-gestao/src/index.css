@@ -214,10 +214,12 @@ body {
   overscroll-behavior-y: none;
 }
 /* Nada pode deixar a tela mais larga que o celular: senão a página "escorrega" de lado e deixa de parecer app. */
-html,
-body {
-  overflow-x: hidden;
+/* Só "clip" (não "hidden"): com hidden no html e no body o iPhone passa a rolar o body e o menu de baixo
+   (position: fixed) fica solto no meio da tela quando a barra do Safari some. */
+html {
   overflow-x: clip;
+}
+body {
   max-width: 100%;
 }
 button,
