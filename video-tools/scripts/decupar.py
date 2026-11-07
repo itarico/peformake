@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
-"""Decupagem automática de vídeos -> planilha XLSX + XML para o Premiere.
+"""Decupagem automática de vídeos -> XML para o Premiere (planilha XLSX opcional).
 
 1) Gerar a decupagem (transcreve, detecta cenas, tira prints):
    decupar.py gerar video1.mp4 video2.mp4 ... --out pasta [--caminho-pc "D:/Projeto/Brutos"]
 
    Saída em <out>/:
-     decupagem.xlsx         planilha (1 linha por fala/cena, com print)
+     decupagem.json         trechos (fala/cena) para classificar e regerar o XML
+     decupagem.xlsx         só com --planilha
      decupagem_premiere.xml importe no Premiere: Arquivo > Importar
                             - sequência "DECUPAGEM - <video>" com marcadores em cada fala
                             - sequência "SELECTS" com os trechos marcados USAR = SIM
      <video>.srt            legenda de cada vídeo
      <video>.captions.json  legenda palavra a palavra para o Remotion
 
-2) Depois de revisar a planilha (coluna USAR = SIM/NÃO, ORDEM, observações):
-   decupar.py xml decupagem.xlsx --out pasta [--caminho-pc "D:/Projeto/Brutos"]
+2) Depois de classificar (campos usar = SIM/NÃO, ordem, classificacao, obs no JSON ou na planilha):
+   decupar.py xml decupagem.json --out pasta [--caminho-pc "D:/Projeto/Brutos"]
    -> regera o XML com a sequência SELECTS na ordem escolhida.
 
 --caminho-pc: pasta onde os vídeos originais estão no seu computador. Com ela,
@@ -186,6 +187,20 @@ def escrever_xlsx(linhas: list, infos: dict, destino: Path):
     wb.save(destino)
 
 
+def salvar_json(linhas: list, infos: dict, destino: Path):
+    dados = {"arquivos": infos, "trechos": [
+        {k: v for k, v in l.items() if k != "thumb"} | {"print": str(l["thumb"]) if l.get("thumb") else ""}
+        for l in linhas]}
+    destino.write_text(json.dumps(dados, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+
+
+def ler_json(path: Path):
+    d = json.loads(path.read_text(encoding="utf-8"))
+    for l in d["trechos"]:
+        l["usar"] = (l.get("usar") or "").strip().upper()
+    return d["trechos"], d["arquivos"]
+
+
 def ler_xlsx(path: Path):
     from openpyxl import load_workbook
 
@@ -269,7 +284,8 @@ def escrever_xml(linhas, infos, destino: Path, caminho_pc, local):
     definidos = set()
     seqs = []
     for arq, inf in infos.items():
-        mks = [(f"{l['tipo']}: {l['texto']}", f"USAR: {l.get('usar', '')} | {l.get('classificacao', '')} | {l.get('obs', '')}",
+        mks = [(f"[{l.get('classificacao') or l['tipo']}] {l['texto']}",
+                " | ".join(x for x in (f"USAR: {l['usar']}" if l.get("usar") else "", l["texto"], l.get("obs", "")) if x),
                 l["inicio"], l["fim"]) for l in linhas if l["arquivo"] == arq]
         seqs.append(sequencia_xml(f"DECUPAGEM - {Path(arq).stem}", [(arq, 0, inf["dur"])], infos, urls, definidos, mks))
     sel = [l for l in linhas if l.get("usar") == "SIM"]
@@ -291,9 +307,10 @@ def main():
     g.add_argument("--out", type=Path, required=True)
     g.add_argument("--modelo", default="small")
     g.add_argument("--caminho-pc", default=None)
+    g.add_argument("--planilha", action="store_true", help="também gera decupagem.xlsx")
     g.add_argument("--sem-fala-min", type=float, default=1.5, help="duração mínima (s) de trecho sem fala para virar linha")
     x = sub.add_parser("xml")
-    x.add_argument("planilha", type=Path)
+    x.add_argument("decupagem", type=Path, help="decupagem.json (ou decupagem.xlsx)")
     x.add_argument("--out", type=Path, required=True)
     x.add_argument("--caminho-pc", default=None)
     x.add_argument("--pasta-videos", type=Path, default=None)
@@ -308,11 +325,13 @@ def main():
             linhas, inf = linhas_do_video(v, a.modelo, a.out, tmp, a.sem_fala_min)
             todas += linhas
             infos[v.name] = inf
-        escrever_xlsx(todas, infos, a.out / "decupagem.xlsx")
+        salvar_json(todas, infos, a.out / "decupagem.json")
+        if a.planilha:
+            escrever_xlsx(todas, infos, a.out / "decupagem.xlsx")
         escrever_xml(todas, infos, a.out / "decupagem_premiere.xml", a.caminho_pc, a.videos[0].parent)
-        print(f"{len(todas)} trechos -> {a.out / 'decupagem.xlsx'} e {a.out / 'decupagem_premiere.xml'}")
+        print(f"{len(todas)} trechos -> {a.out / 'decupagem.json'} e {a.out / 'decupagem_premiere.xml'}")
     else:
-        linhas, infos = ler_xlsx(a.planilha)
+        linhas, infos = ler_xlsx(a.decupagem) if a.decupagem.suffix == ".xlsx" else ler_json(a.decupagem)
         n = escrever_xml(linhas, infos, a.out / "decupagem_premiere.xml", a.caminho_pc, a.pasta_videos)
         print(f"XML regerado com {n} trechos em SELECTS -> {a.out / 'decupagem_premiere.xml'}")
 

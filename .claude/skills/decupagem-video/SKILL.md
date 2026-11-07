@@ -1,9 +1,12 @@
 ---
 name: decupagem-video
-description: Decupagem de vídeos brutos da Performake. Transcreve (pt-BR, tempo por palavra), separa as falas em frases, detecta cortes de câmera, tira um print de cada trecho e entrega uma planilha XLSX de decupagem e um XML para importar no Adobe Premiere (sequência com marcadores e sequência SELECTS). Use quando o usuário pedir "decupa esse vídeo", "faz a decupagem", "planilha de decupagem", "transcreve a entrevista", "marca os melhores trechos", "monta os selects", "gera o XML pro Premiere" ou mandar brutos de gravação.
+description: Decupagem de vídeos brutos da Performake direto no Adobe Premiere. Transcreve (pt-BR, tempo por palavra), separa as falas em frases, detecta cortes de câmera, classifica os trechos e entrega um XML para o Premiere (sequência com marcadores classificados em cada fala + sequência SELECTS montada). Sem planilha por padrão. Use quando o usuário pedir "decupa esse vídeo", "faz a decupagem", "planilha de decupagem", "transcreve a entrevista", "marca os melhores trechos", "monta os selects", "gera o XML pro Premiere" ou mandar brutos de gravação.
 ---
 
-# Decupagem de vídeo → XLSX + XML do Premiere
+# Decupagem de vídeo → XML do Premiere
+
+Padrão da agência: **sem planilha**. A decupagem vive nos marcadores do Premiere.
+Só gere planilha (`--planilha`) se o usuário pedir.
 
 Ferramentas em `video-tools/` (raiz do repositório). Se `/opt/video-venv/bin/python` não existir,
 rode primeiro `bash video-tools/install.sh`.
@@ -32,34 +35,39 @@ rode primeiro `bash video-tools/install.sh`.
 
 `small` é rápido e bom em pt-BR. Use `medium`/`large-v3` para áudio ruim ou sotaque forte (mais lento).
 
-Saída: `decupagem.xlsx`, `decupagem_premiere.xml`, e por vídeo `.srt`, `.captions.json`
-(legenda do Remotion) e `.transcricao.json`.
+Saída: `decupagem_premiere.xml`, `decupagem.json` (trechos para classificar) e, por vídeo, `.srt`,
+`.captions.json` (legenda do Remotion) e `.transcricao.json`.
 
-## 4. Enriquecer a planilha (é aqui que você agrega valor)
+## 4. Classificar os trechos (é aqui que você agrega valor)
 
-Leia a coluna TRANSCRIÇÃO e, com openpyxl, preencha:
-- **CLASSIFICAÇÃO**: GANCHO, MELHOR FALA, CTA, DEPOIMENTO, B-ROLL, ERRO/REFAZER.
-- **USAR**: SIM / TALVEZ / NÃO. Marque como NÃO as falas repetidas, gaguejadas e os erros.
-- **ORDEM**: sugestão de montagem (1, 2, 3...) para os trechos com USAR = SIM.
-- Linhas `IMAGEM (sem fala)`: abra o print (coluna PRINT ou extraia um frame com ffmpeg)
-  e descreva a cena.
-Nunca altere as colunas ocultas INICIO_S/FIM_S: são elas que geram o XML.
+Leia `decupagem.json` e preencha em cada item de `trechos`:
+- **classificacao**: GANCHO, MELHOR FALA, CTA, DEPOIMENTO, APRESENTAÇÃO, B-ROLL ou ERRO/REFAZER.
+  Ela vira o nome do marcador no Premiere: `[GANCHO] texto da fala`.
+- **usar**: SIM / TALVEZ / NÃO. Marque como NÃO as falas repetidas, gaguejadas e os erros
+  (em takes repetidos, use SIM só no melhor).
+- **ordem**: sugestão de montagem (1, 2, 3...) para os trechos com usar = SIM.
+- **obs**: notas para o editor (ex.: "melhor take", "cortar o 'né' no fim").
+- Trechos `IMAGEM (sem fala)`: abra o arquivo do campo `print` e troque `texto` por uma descrição da cena.
+Nunca altere `inicio`, `fim` nem `arquivo`.
 
-Depois de enriquecer, regenere o XML para a sequência SELECTS refletir a escolha:
+Depois, regenere o XML para os marcadores e a sequência SELECTS refletirem a classificação:
 
 ```bash
-/opt/video-venv/bin/python video-tools/scripts/decupar.py xml <pasta_saida>/decupagem.xlsx \
+/opt/video-venv/bin/python video-tools/scripts/decupar.py xml <pasta_saida>/decupagem.json \
   --out <pasta_saida> --caminho-pc "D:/Clientes/X/Brutos"
 ```
 
 ## 5. Entregar
 
-- Suba `decupagem.xlsx`, `decupagem_premiere.xml` e os `.srt` para a pasta do cliente no Drive
+- Suba `decupagem_premiere.xml` e os `.srt` para a pasta do cliente no Drive
   (`create_file`), ou envie com SendUserFile.
 - Explique ao editor: no Premiere, **Arquivo > Importar > decupagem_premiere.xml**. Ele cria as
-  sequências "DECUPAGEM - <vídeo>" (marcadores com a transcrição em cada fala) e "SELECTS"
+  sequências "DECUPAGEM - <vídeo>" (marcador `[CLASSIFICAÇÃO] fala` em cada trecho, visível no
+  painel Marcadores) e "SELECTS"
   (só os trechos aprovados, na ordem). Se a mídia aparecer offline: clique com o botão direito >
   Vincular mídia > aponte a pasta dos brutos uma vez.
+- No chat, entregue um resumo curto: os melhores ganchos (com timecode), a duração do SELECTS e
+  ideias de cortes para reels.
 - Para Reels com legenda animada a partir dos selects, use a skill `motion-remotion`.
 
 ## Limitações a avisar

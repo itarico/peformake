@@ -5,7 +5,7 @@ Ferramentas usadas pelas skills `decupagem-video`, `motion-remotion` e `tratamen
 
 | Pasta / arquivo | O que faz |
 |---|---|
-| `scripts/decupar.py` | Decupagem → `decupagem.xlsx` + `decupagem_premiere.xml` (FCP7 XML, importável no Premiere) |
+| `scripts/decupar.py` | Decupagem → `decupagem_premiere.xml` (FCP7 XML, importável no Premiere) + `decupagem.json`; planilha só com `--planilha` |
 | `scripts/transcrever.py` | Transcrição pt-BR (faster-whisper) → `.srt`, `.captions.json` (Remotion), `.transcricao.json` |
 | `scripts/estabilizar.sh` | Estabilização com vid.stab |
 | `scripts/recortar.py` | `reframe` (16:9 → 9:16 seguindo o rosto), `fundo` (remove fundo por IA), `chroma` (chroma key) |
