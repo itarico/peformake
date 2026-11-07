@@ -33,6 +33,19 @@ Tudo o que for feito tem que **facilitar o trabalho** de quem usa. Antes de publ
 
 Se uma ideia não passa nesse teste, ela não entra, por mais bonita que seja.
 
+## Tudo é conectado: mudou um lugar, ajuste todos
+
+O sistema é um só: cliente, financeiro, tráfego, conteúdo, audiovisual, portal, Bete e avisos se alimentam uns dos outros.
+Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem que ser propagada **na mesma entrega** para tudo que depende dela:
+
+- **Caminhos e abas:** links da Bete (`features/goals/coach.ts`, `chatNotices.ts`, `GoalsChat.tsx`, `BeteToday`), atalhos do Início,
+  menu, `MovedTo` de rotas antigas, e os links gravados no banco (`notify(...)` em funções SQL, `action` de `client_deliveries`,
+  `link` em `notifications`). Rota antiga ganha `MovedTo` para nada quebrar.
+- **Campos e status:** telas, filtros, CSV, portal do cliente, relatórios, funções e gatilhos SQL, e os textos das rotinas automáticas
+  (`docs/rotina-melhoria-continua.md`, prompts das tarefas agendadas, `agent_instructions`).
+- Antes de publicar, procure (`grep`) o nome antigo no código **e** nas funções do banco, e confira que cada link da Bete abre
+  o ponto exato da ação. Se algo ficou para trás, a entrega não está pronta.
+
 ## Regras de interface (valem para todo o sistema)
 
 1. **Editar ou preencher abre em pop-up** (`Dialog`). Nunca expandir formulário dentro da página.

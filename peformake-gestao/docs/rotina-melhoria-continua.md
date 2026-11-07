@@ -58,6 +58,9 @@ Checklist por tela (antes de tudo, a **Regra de ouro** do CLAUDE.md: ficou mais 
   cartões resumidos com "Ver detalhes"; gráfico em vez de parágrafo; escolher pessoa por foto.
 - **Rápido?** Consultas desnecessárias, listas sem limite, imagens pesadas, componentes que recarregam à toa.
 - **Automático?** O que a equipe digita à mão que o sistema poderia preencher sozinho (é o objetivo do SaaS: ganhar tempo).
+- **Conexões (regra "Tudo é conectado" do CLAUDE.md):** se o Italo (ou você) mudou um caminho, aba, nome ou status, confira que
+  os links da Bete, os avisos gravados no banco (`notifications.link`, `notify(...)` nas funções SQL, `action` das entregas)
+  e os atalhos ainda abrem o ponto exato da ação. Link quebrado ou caindo na página errada é erro de prioridade 1.
 - **Conversa com o resto?** O módulo atualiza/usa os outros (cliente ↔ financeiro ↔ tráfego ↔ conteúdo ↔ audiovisual ↔ portal).
 - **Código:** duplicação, tipos frouxos, erros engolidos, textos em inglês na interface, acessibilidade (rótulos, foco, contraste).
 - **SEO (site público e páginas públicas)**: título, descrição, Open Graph, headings, imagens com alt, velocidade.
