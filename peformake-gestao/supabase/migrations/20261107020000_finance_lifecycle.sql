@@ -153,3 +153,6 @@ begin
     execute d;
   end if;
 end $$;
+
+-- 07/11: catalog_ad_notify (estoque Will Motos → anúncios) não repete o mesmo aviso em 7 dias
+-- e troca "(simulação)" por "(teste, nada foi mudado nos anúncios)". Aplicado pelo MCP.
