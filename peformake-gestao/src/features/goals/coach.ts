@@ -50,7 +50,7 @@ export function greeting(pick: <T>(a: readonly T[]) => T, firstName: string, day
     `${hi}${who}! Acabei de atualizar seus números. ${phase}`,
     `${hi}${who}! ${week || phase}`,
     `${hi}${who}! ${Math.round((day / days) * 100)}% do mês já passou. Vamos ver como estão as metas?`,
-    `Oi${who}! Tenho novidades sobre as suas metas.`,
+    `Oi${who}! Estou aqui para te ajudar no dia.`,
   ])
 }
 

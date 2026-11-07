@@ -1,4 +1,4 @@
-// Novidades do sistema no Bate Meta: avisos (vídeo pronto, cliente aprovou, venda para confirmar...) e entregas pendentes.
+// Novidades do sistema na Bete: avisos (vídeo pronto, cliente aprovou, venda para confirmar...) e entregas pendentes.
 // Avisos do mesmo tipo viram uma mensagem só ("17 números novos no WhatsApp"), para não lotar o chat.
 
 import type { AppNotification } from '@/features/notifications/notificationsApi'

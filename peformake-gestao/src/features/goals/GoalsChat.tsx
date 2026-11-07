@@ -357,14 +357,8 @@ export function GoalsChat() {
   }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month])
   const todayItems = visibleItems(todayAll, beteState.data)
   const urgentCount = todayItems.filter((i) => i.level === 'urgente').length
-  const focusGoal = list.length ? list[cal.doy % list.length]! : null
-  const goalLine = focusGoal && GOAL_META[focusGoal.key] ? {
-    text: `${GOAL_META[focusGoal.key]!.title(focusGoal.info)}: ${fmt(focusGoal.actual ?? 0, GOAL_META[focusGoal.key]!.money)} de ${fmt(focusGoal.target, GOAL_META[focusGoal.key]!.money)}`,
-    to: primaryAction(focusGoal, coach.data)?.to ?? '/',
-  } : null
 
   const [open, setOpen] = useState(false)
-  // Abre na lista do dia; a conversa fica a um toque.
   // Celular: trava a página de trás enquanto o chat está aberto.
   useEffect(() => {
     if (!open || !window.matchMedia('(max-width: 767px)').matches) return
@@ -545,7 +539,11 @@ export function GoalsChat() {
       show(news[0], [{ from: 'bot', kind: 'text', text: pick(['Voltei com novidade:', 'Chegou coisa nova desde a última vez:', 'Atualizei por aqui:']) }])
       return
     }
-    const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }
+    const n = todayItems.length
+    const dayLine = n ? ` Hoje tem ${n} ${n === 1 ? 'coisa' : 'coisas'} pedindo atenção${urgentCount ? ` (${urgentCount} ${urgentCount === 1 ? 'urgente' : 'urgentes'})` : ''}.` : ' Tudo em dia por aqui. ✅'
+    const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) + dayLine }
+    // Tem urgente: ele vem primeiro, antes de metas e novidades.
+    if (urgentCount) { say([hello, { from: 'bot', kind: 'text', text: 'Começando pelo mais urgente. Toque em ✓ quando resolver:' }, { from: 'bot', kind: 'today' }], [...(news.length ? [{ label: 'Ver novidades', act: 'next' as const }] : []), other]); return }
     if (!news.length) { say([hello, { from: 'bot', kind: 'text', text: 'Nada novo desde a última vez. O que você quer ver?' }], menu()); return }
     show(news[0] ?? tips[0], [hello])
   }
@@ -671,10 +669,10 @@ export function GoalsChat() {
     {open && <div aria-hidden="true" onClick={close} className="fixed inset-0 z-30 touch-none bg-black/30 md:hidden" />}
     <div className="pointer-events-none fixed bottom-[calc(65px+env(safe-area-inset-bottom))] right-[max(12px,env(safe-area-inset-right))] z-[41] flex flex-col items-end md:bottom-0 md:right-6">
       {open && (
-        <section role="dialog" aria-label={`${BOT_NAME}, assistente de metas`} className="pf-rise pointer-events-auto mb-2 flex h-[min(600px,calc(100dvh-150px))] md:mb-0 w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-t-3xl rounded-b-3xl border border-line bg-surface shadow-2xl shadow-black/30 md:rounded-b-none md:border-b-0">
+        <section role="dialog" aria-label={`${BOT_NAME}, sua assistente`} className="pf-rise pointer-events-auto mb-2 flex h-[min(600px,calc(100dvh-150px))] md:mb-0 w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-t-3xl rounded-b-3xl border border-line bg-surface shadow-2xl shadow-black/30 md:rounded-b-none md:border-b-0">
           <header onClick={close} title="Clique para recolher" className="flex cursor-pointer items-center gap-2.5 bg-[#075e54] px-3 py-2 text-white dark:bg-[#1f2c34]">
             <span className="relative"><Mascot size={38} /><span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-[#25d366] ring-2 ring-[#075e54] dark:ring-[#1f2c34]" /></span>
-            <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">{BOT_NAME} <span className="font-normal opacity-75">· cobra suas metas</span></b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'online'}</span></span>
+            <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">{BOT_NAME}</b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'Sua assistente · aqui para te ajudar'}</span></span>
             <span className="hidden text-[11px] opacity-70 sm:inline">{role ? `${ROLE_LABEL[role]} · ` : ''}dia {day}/{days}</span>
             <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Recolher" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-white/10"><ChevronDown size={18} aria-hidden="true" /></button>
           </header>
@@ -697,7 +695,7 @@ export function GoalsChat() {
                       <span className="flex flex-wrap gap-1.5">{rows.filter((x) => x.role === m.role).map((g) => <button key={g.key} type="button" onClick={() => act({ label: GOAL_META[g.key]!.short, act: 'goal', key: g.key, role: g.role })} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{GOAL_META[g.key]!.short}</button>)}</span>
                     </span>
                   )}
-                  {m.kind === 'today' && <div className="-mx-1 w-[300px] max-w-full"><BeteToday items={todayItems} goalLine={goalLine} onGo={close} /></div>}
+                  {m.kind === 'today' && <div className="-mx-1 w-[300px] max-w-full"><BeteToday items={todayItems} goalLine={null} onGo={close} /></div>}
                   {m.kind === 'view' && <div className="-mx-2 -my-1 w-[300px] max-w-full">{panel(m.view)}</div>}
                 </div>
               ))}
