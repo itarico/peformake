@@ -12,3 +12,7 @@
 -- 7) fin_entry_save: não apaga client_id/notes quando a tela não manda; fin_entry_set_status aceita pendente (desfazer).
 -- 8) invoice_set_paid(_id, _paid_at, _amount) e invoice_undo_paid(_id).
 -- 9) fin_recurring + fin_recurring_save + fin_recurring_generate (cron fin-recurring 09:20 UTC): contas fixas mensais.
+
+-- 07/11 (aplicado pelo MCP): traffic_scan não anexa mais "proposed_action" (agent_task_create recusa; Meta é só leitura).
+-- traffic_scan foi renomeada para traffic_scan_ads; a nova traffic_scan chama ela e cria
+-- "Conta parou de rodar: <conta>" (alerta, alta) quando a conta gastava e está há 2+ dias sem gasto.
