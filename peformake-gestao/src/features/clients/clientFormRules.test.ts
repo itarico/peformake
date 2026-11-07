@@ -69,3 +69,10 @@ describe('telefone e instagram', () => {
     expect(instagramHandle('@oticasul')).toBe('oticasul')
   })
 })
+
+describe('e-mail opcional', () => {
+  it('cliente sem e-mail pode ser salvo; e-mail errado continua barrado', () => {
+    expect(validateDraft({ ...valid, email: '' }).email).toBeUndefined()
+    expect(validateDraft({ ...valid, email: 'nome@' }).email).toBeDefined()
+  })
+})

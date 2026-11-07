@@ -69,8 +69,8 @@ export function validateDraft(draft: ClientDraft): DraftErrors {
   if (!digits) errors.phone = 'O WhatsApp é obrigatório.'
   else if (!isValidPhone(digits)) errors.phone = 'Número inválido. Use DDD e número, ex.: (81) 98888-7777.'
 
-  if (!draft.email.trim()) errors.email = 'O e-mail é obrigatório.'
-  else if (!EMAIL.test(draft.email.trim())) errors.email = 'E-mail incompleto. Exemplo: nome@empresa.com.'
+  // E-mail é opcional: só confere o formato quando preenchido.
+  if (draft.email.trim() && !EMAIL.test(draft.email.trim())) errors.email = 'E-mail incompleto. Exemplo: nome@empresa.com.'
   if (draft.instagram.trim() && !/^@?[a-z0-9._]{1,30}$/i.test(instagramHandle(draft.instagram))) errors.instagram = 'Perfil inválido. Ex.: @empresa ou o link do perfil.'
   if (draft.website.trim() && !/^(https?:\/\/)?[\w-]+(\.[\w-]+)+.*$/i.test(draft.website.trim())) errors.website = 'Site inválido. Ex.: empresa.com.br'
 

@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { CalendarClock } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { supabase } from '@/lib/supabase'
@@ -7,6 +9,7 @@ import type { ClientRecord } from './clientRules'
 import { brlValue, dateBr } from './format'
 import { clientValue, lineValue } from './portfolioRules'
 import { Block, Fact } from './ui'
+import { ClientDialog } from './ClientFormPage'
 
 interface InvoiceRow { id: string; description: string | null; amount: number; due_date: string; status: string; paid_at: string | null; payment_url: string | null; unit: string }
 
@@ -41,6 +44,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
   const day = client.contract?.billingDay ?? null
   const nextFromDay = day ? (() => { const [y, m] = today.split('-').map(Number); const pad = (n: number) => String(n).padStart(2, '0'); const thisMonth = `${y}-${pad(m!)}-${pad(day)}`; return thisMonth >= today ? thisMonth : `${m === 12 ? y! + 1 : y}-${pad(m === 12 ? 1 : m! + 1)}-${pad(day)}` })() : null
   const nextDue = nextOpen ?? (client.clientType === 'one-off' ? null : nextFromDay)
+  const [editing, setEditing] = useState(false)
 
   return (
     <div className="flex flex-col gap-3">
@@ -56,6 +60,11 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
             <p className="text-[12px] font-medium text-muted">{label}</p>
             <p className="mt-1 text-[18px] font-semibold tabular-nums">{v}</p>
             {hint && <p className="text-[12px] text-muted">{hint}</p>}
+            {i === 0 && client.clientType !== 'one-off' && (
+              <button type="button" onClick={() => setEditing(true)} className="mt-1.5 inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-full border border-line-strong px-2.5 text-[12px] font-semibold hover:border-ink">
+                <CalendarClock size={13} aria-hidden="true" /> Mudar vencimento
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -92,6 +101,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
           </dl>
         </Block>
       </div>
+      {editing && <ClientDialog open clientId={client.id} startTab="contrato" onClose={() => setEditing(false)} />}
     </div>
   )
 }

@@ -275,7 +275,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
             <Field label="WhatsApp *" error={errors.phone} hint="Com DDD. Usado para contato e para o portal.">
               {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('phone')} inputMode="tel" value={draft.phone} onChange={(e) => update('phone', e.target.value)} className={inputClass} placeholder="(81) 98888-7777" />}
             </Field>
-            <Field label="E-mail *" error={errors.email}>
+            <Field label="E-mail" error={errors.email}>
               {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('email')} type="email" inputMode="email" value={draft.email} onChange={(e) => update('email', e.target.value)} className={inputClass} placeholder="contato@empresa.com" />}
             </Field>
             <Field label="Instagram" error={errors.instagram} hint="@perfil ou o link do perfil.">
