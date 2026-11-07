@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { CalendarCheck, CircleAlert, Plus, Search } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { MonthSwitcher } from '@/features/content/ContentLayout'
@@ -61,17 +61,20 @@ export function AvBoard() {
   const now = useNow()
   const { staff, canManageAv, myStaffId } = useProduction()
   const projects = useQuery({ queryKey: ['av-projects', month], queryFn: () => listProjects(month) })
+  const [params, setParams] = useSearchParams()
+  const onlyClient = params.get('cliente')
   const [query, setQuery] = useState('')
-  const [person, setPerson] = useState(canManageAv ? '' : 'me')
+  const [person, setPerson] = useState(canManageAv || onlyClient ? '' : 'me')
   const [creating, setCreating] = useState(false)
   const { clientName, isLive } = useProduction()
 
   const list = useMemo(() => (projects.data ?? []).filter((p) => {
     if (p.status === 'cancelled' || !isLive(p.clientId)) return false
+    if (onlyClient && p.clientId !== onlyClient) return false
     if (person === 'me' && myStaffId && ![p.videomakerId, p.editorId, p.scriptwriterId].includes(myStaffId)) return false
     if (person && person !== 'me' && ![p.videomakerId, p.editorId, p.scriptwriterId].includes(person)) return false
     return !query || clientName(p.clientId).toLowerCase().includes(query.toLowerCase()) || p.title.toLowerCase().includes(query.toLowerCase())
-  }), [projects.data, person, myStaffId, query, clientName, isLive])
+  }), [projects.data, person, myStaffId, query, clientName, isLive, onlyClient])
 
   if (!projects.data) return <AvShell title="Produção"><LoadState isPending={projects.isPending} isError={projects.isError} refetch={() => void projects.refetch()} /></AvShell>
   const delivered = list.filter((p) => stageOf(p) === 'entregue' && p.month === month)
@@ -95,6 +98,12 @@ export function AvBoard() {
         <span className="ml-auto text-[13px] text-muted">{delivered.length} entregues no mês</span>
       </div>
 
+      {onlyClient && (
+        <p className="flex flex-wrap items-center gap-2 text-[13px]">
+          <span className="rounded-full bg-accent-soft px-3 py-1 font-semibold text-accent-ink">Só {clientName(onlyClient)}</span>
+          <button type="button" onClick={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('cliente'); return p }, { replace: true })} className="cursor-pointer font-medium text-muted underline hover:text-ink">Ver todos</button>
+        </p>
+      )}
       <div className="-mx-4 snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 pb-2 md:mx-0 md:snap-none md:px-0">
         <div className="grid auto-cols-[86%] grid-flow-col gap-2 md:min-w-[1180px] md:snap-none md:auto-cols-auto md:grid-flow-row md:grid-cols-6">
           {AV_STAGES.map((st) => {

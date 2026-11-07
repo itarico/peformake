@@ -74,15 +74,22 @@ export function noticesFrom(list: AppNotification[], now = Date.now(), opts: { i
 const order = (list: AppNotification[], n: Notice) => Math.max(...n.ids.map((id) => Date.parse(list.find((x) => x.id === id)?.createdAt ?? '0')))
 
 /** Entregas atrasadas dos clientes, as mais atrasadas primeiro. */
-export function pendingFrom(map: Map<string, { key: string; label: string; done: boolean; late_days?: number | null; due: string | null }[]> | undefined, name: (id: string) => string, today: string): { id: string; client: string; label: string; late: number }[] {
+export function pendingFrom(map: Map<string, { key: string; label: string; done: boolean; late_days?: number | null; due: string | null; action?: string }[]> | undefined, name: (id: string) => string, today: string): { id: string; client: string; label: string; late: number; to: string }[] {
   if (!map) return []
-  const out: { id: string; client: string; label: string; late: number }[] = []
+  const out: { id: string; client: string; label: string; late: number; to: string }[] = []
   for (const [id, items] of map) {
     for (const it of items) {
       if (it.done) continue
       const late = typeof it.late_days === 'number' ? it.late_days : it.due && it.due < today ? Math.round((Date.parse(today) - Date.parse(it.due)) / 86_400_000) : 0
-      if (late > 0) out.push({ id, client: name(id), label: it.label, late })
+      if (late > 0) out.push({ id, client: name(id), label: it.label, late, to: deliveryLink(id, it.action) })
     }
   }
   return out.sort((a, b) => b.late - a.late)
+}
+
+/** Onde se resolve cada entrega: reunião abre o "marcar reunião" do cliente; o resto vai para a tela do serviço, já no cliente. */
+export function deliveryLink(clientId: string, action?: string): string {
+  if (!action) return `/clientes/${clientId}?aba=operacao`
+  if (action === 'meeting') return `/clientes/${clientId}?abrir=reuniao`
+  return `${action}${action.includes('?') ? '&' : '?'}cliente=${clientId}`
 }

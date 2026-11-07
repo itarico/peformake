@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, Search } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
@@ -44,7 +44,9 @@ export function ContentBoard() {
   const today = todayInBrazil()
   const { clients, staff, myStaffId, clientName, staffName, isPending, isError, refetch, isDesigner, canPlan, isLive } = useProduction()
   const items = useQuery({ queryKey: ['content-items', month], queryFn: () => listItems([month]) })
-  const [picked, setFilters] = useState<ContentFilters & { designerChosen?: boolean }>(EMPTY_FILTERS)
+  const [params] = useSearchParams()
+  // Link de uma entrega pendente (?cliente=) já abre filtrado no cliente.
+  const [picked, setFilters] = useState<ContentFilters & { designerChosen?: boolean }>(() => (params.get('cliente') ? { ...EMPTY_FILTERS, clientId: params.get('cliente')!, designerChosen: true } : EMPTY_FILTERS))
   // Designer começa vendo só as dele, assim que o login dele é conhecido.
   const autoDesigner = !picked.designerChosen && isDesigner && !canPlan && myStaffId ? myStaffId : null
   const filters: ContentFilters = useMemo(() => (autoDesigner ? { ...picked, designerId: autoDesigner } : picked), [picked, autoDesigner])

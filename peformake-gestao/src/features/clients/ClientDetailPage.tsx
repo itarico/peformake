@@ -18,7 +18,7 @@ import { cn } from '@/lib/cn'
 import { ClientOverview } from './ClientOverview'
 import { monthsIdle, useClientIntel } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
-import { DeliveryBar, useClientDeliveries } from './DeliveryBar'
+import { DeliveryBar, MeetingDialog, useClientDeliveries } from './DeliveryBar'
 import { MeetingsSection } from './MeetingsSection'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
 import { ContractSummary } from '@/features/contracts/ContractSummary'
@@ -124,6 +124,7 @@ export function ClientDetailPage() {
         </div>
       </header>
       {canManage && <ClientDialog open={editing} onClose={() => setEditing(false)} clientId={client.id} />}
+      {params.get('abrir') === 'reuniao' && <MeetingDialog open onClose={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('abrir'); return p }, { replace: true })} clientId={client.id} clientName={client.name} />}
       {(() => { const acao = params.get('acao'); return isClientAction(acao) ? <ClientActionDialog key={acao} client={client} action={acao} onClose={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('acao'); return p }, { replace: true })} /> : null })()}
 
       {params.get('novo') && (

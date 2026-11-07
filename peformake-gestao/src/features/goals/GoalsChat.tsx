@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, X } from 'lucide-react'
+import { ChevronDown, MessageCircle, X } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
@@ -500,7 +500,7 @@ export function GoalsChat() {
     const first = pendAll[0]
     say([...prefix, { from: 'bot', kind: 'text', text: pick(['Seu resumo de agora:', 'Aqui está o que está com você:', 'Resumo rápido:']) }, { from: 'bot', kind: 'summary' }],
       [...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' as const }],
-      [...(first ? [{ label: `Resolver ${first.client.split(' ').slice(0, 2).join(' ')}`, to: `/clientes/${first.id}` }] : []), ...((myDay.data?.tasks?.length ?? 0) > 0 ? [{ label: 'Ver meu dia', to: '/' }] : []), ...(updates.length ? [{ label: 'Ver avisos', to: '/notificacoes' }] : [])].slice(0, 2))
+      [...(first ? [{ label: `Resolver ${first.client.split(' ').slice(0, 2).join(' ')}`, to: first.to }] : []), ...((myDay.data?.tasks?.length ?? 0) > 0 ? [{ label: 'Ver meu dia', to: '/' }] : []), ...(updates.length ? [{ label: 'Ver avisos', to: '/notificacoes' }] : [])].slice(0, 2))
   }
 
   function begin() {
@@ -586,7 +586,7 @@ export function GoalsChat() {
       return (
         <div className="flex flex-col">
           <Group title="Tarefas" empty="Nenhuma tarefa aberta com você. 👌">
-            {tasksOpen.map((t) => <Row key={t.id} to="/" onGo={go} title={t.title} sub={t.client ?? undefined} right={t.due_date ? `até ${dmy(t.due_date)}` : undefined} tone={t.due_date && t.due_date < cal.iso ? 'warn' : undefined} />)}
+            {tasksOpen.map((t) => <Row key={t.id} to={`/trafego/tarefas?tarefa=${t.id}`} onGo={go} title={t.title} sub={t.client ?? undefined} right={t.due_date ? `até ${dmy(t.due_date)}` : undefined} tone={t.due_date && t.due_date < cal.iso ? 'warn' : undefined} />)}
           </Group>
           <Group title="Peças" empty="Nenhuma peça com você agora.">
             {piecesOpen.map((p) => <Row key={p.id} to={`/conteudo/peca/${p.id}`} onGo={go} title={`${p.client} · ${p.title}`} sub={PIECE_STATUS[p.status] ?? p.status} right={p.deadline ? `até ${dmy(p.deadline)}` : undefined} tone={p.deadline && p.deadline < cal.iso ? 'warn' : undefined} />)}
@@ -601,14 +601,14 @@ export function GoalsChat() {
     return (
       <div className="flex flex-col">
         {seesDeliveries && <Group title="Entregas dos clientes" empty="Nenhuma entrega atrasada. 👏">
-          {pendAll.map((p, i) => <Row key={`${p.id}${i}`} to={`/clientes/${p.id}`} onGo={go} title={p.client} sub={p.label} right={`${p.late} ${p.late === 1 ? 'dia' : 'dias'}`} tone="warn" />)}
+          {pendAll.map((p, i) => <Row key={`${p.id}${i}`} to={p.to} onGo={go} title={p.client} sub={p.label} right={`${p.late} ${p.late === 1 ? 'dia' : 'dias'}`} tone="warn" />)}
         </Group>}
         <Group title="Suas peças e tarefas atrasadas" empty="Nada seu atrasado. 👌">
           {[...latePieces.map((p) => <Row key={p.id} to={`/conteudo/peca/${p.id}`} onGo={go} title={`${p.client} · ${p.title}`} sub="peça" right={`venceu ${dmy(p.deadline)}`} tone="warn" />),
-            ...lateTasks.map((t) => <Row key={t.id} to="/" onGo={go} title={t.title} sub={t.client ?? 'tarefa'} right={`venceu ${dmy(t.due_date)}`} tone="warn" />)]}
+            ...lateTasks.map((t) => <Row key={t.id} to={`/trafego/tarefas?tarefa=${t.id}`} onGo={go} title={t.title} sub={t.client ?? 'tarefa'} right={`venceu ${dmy(t.due_date)}`} tone="warn" />)]}
         </Group>
         {isAdmin && <Group title="Cobranças em atraso" empty="Ninguém devendo. 💚">
-          {overdue.map((o) => <Row key={o.id} to={`/clientes/${o.id}?aba=contrato`} onGo={go} title={o.name} sub="fatura em aberto" right={o.amount ? brl(o.amount) : undefined} tone="warn" />)}
+          {overdue.map((o) => <Row key={o.id} to={`/clientes/${o.id}?aba=contrato&acao=cobrar`} onGo={go} title={o.name} sub="fatura em aberto" right={o.amount ? brl(o.amount) : undefined} tone="warn" />)}
         </Group>}
       </div>
     )
@@ -618,9 +618,9 @@ export function GoalsChat() {
     <>
     {/* Celular: com o chat aberto, o fundo escurece e não rola; tocar fora recolhe. */}
     {open && <div aria-hidden="true" onClick={close} className="fixed inset-0 z-30 touch-none bg-black/30 md:hidden" />}
-    <div className="pointer-events-none fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
+    <div className="pointer-events-none fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-[max(12px,env(safe-area-inset-right))] z-40 flex flex-col items-end md:bottom-0 md:right-6">
       {open && (
-        <section role="dialog" aria-label={`${BOT_NAME}, assistente de metas`} className="pf-rise pointer-events-auto flex h-[min(600px,calc(100dvh-150px))] w-[min(380px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
+        <section role="dialog" aria-label={`${BOT_NAME}, assistente de metas`} className="pf-rise pointer-events-auto flex h-[min(600px,calc(100dvh-150px))] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-t-3xl rounded-b-3xl border border-line bg-surface shadow-2xl shadow-black/30 md:rounded-b-none md:border-b-0">
           <header onClick={close} title="Clique para recolher" className="flex cursor-pointer items-center gap-2.5 bg-[#075e54] px-3 py-2 text-white dark:bg-[#1f2c34]">
             <span className="relative"><Mascot size={38} /><span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-[#25d366] ring-2 ring-[#075e54] dark:ring-[#1f2c34]" /></span>
             <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">{BOT_NAME} <span className="font-normal opacity-75">· cobra suas metas</span></b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'online'}</span></span>
@@ -658,17 +658,17 @@ export function GoalsChat() {
           </div>
         </section>
       )}
-      {/* Barrinha da Bete (o mesmo formato de antes, com a foto dela). X fecha; volta com novidade nova ou ao recarregar. */}
-      {!open && visible && (
-        <span className={cn('pointer-events-auto relative', news.length > 0 && 'pf-hop')}>
+      {/* Abinha no rodapé (estilo chat do Messenger): só o ícone e o número de novidades. Some quando tudo foi visto; volta com novidade nova. */}
+      {!open && visible && news.length > 0 && (
+        <span className="pointer-events-auto relative flex items-stretch overflow-hidden rounded-t-xl bg-fill text-on-fill shadow-lg shadow-black/25">
           <button type="button" onClick={() => { started.current = false; setOpen(true) }}
-            aria-label={news.length ? `${BOT_NAME}: ${news.length} ${news.length === 1 ? 'mensagem nova' : 'mensagens novas'}. Abrir` : `${BOT_NAME}: abrir a conversa`}
-            className="relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill py-0 pl-1.5 pr-9 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 hover:-translate-y-0.5">
-            <Mascot size={32} /> {news.length ? 'Olha as mensagens' : 'Abre aí!'}
-            {news.length > 0 && <span className="pf-blink absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>}
+            aria-label={`${BOT_NAME}: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir`}
+            className="flex min-h-10 cursor-pointer items-center gap-1.5 pl-3 pr-2 text-[13px] font-bold hover:bg-black/10">
+            <MessageCircle size={16} aria-hidden="true" />
+            <span className="grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1.5 text-[11px] text-white">{news.length}</span>
           </button>
           <button type="button" onClick={hide} aria-label={`Fechar a ${BOT_NAME}`} title="Fechar"
-            className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 cursor-pointer place-items-center rounded-full text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={14} aria-hidden="true" /></button>
+            className="grid w-8 cursor-pointer place-items-center text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={13} aria-hidden="true" /></button>
         </span>
       )}
     </div>

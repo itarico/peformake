@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight, Clock, FileText, Loader2, Send, Sparkles } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { useClientPermissions } from '@/features/clients/useClients'
 import { cn } from '@/lib/cn'
@@ -146,6 +146,8 @@ function Row({ row, kind, canManage, asks }: { row: BoardRow; kind: 'weekly' | '
 
 export function ReportsPage() {
   const { canManage } = useClientPermissions()
+  const [params, setParams] = useSearchParams()
+  const onlyClient = params.get('cliente')
   const [kind, setKind] = useState<'weekly' | 'monthly'>('weekly')
   const [offset, setOffset] = useState(0)
   const asks = useQuery({ queryKey: ['report-asks', kind], queryFn: () => loadAsks(kind), refetchInterval: 15_000 })
@@ -186,12 +188,18 @@ export function ReportsPage() {
   )
 
   if (!board.data) return <>{head}<LoadState isPending={board.isPending} isError={board.isError} refetch={() => void board.refetch()} /></>
-  const rows = sortRows(board.data.rows)
+  const rows = sortRows(board.data.rows).filter((r) => !onlyClient || r.client_id === onlyClient)
   const counts = countStates(rows)
 
   return (
     <>
       {head}
+      {onlyClient && (
+        <p className="flex flex-wrap items-center gap-2 text-[13px]">
+          <span className="rounded-full bg-accent-soft px-3 py-1 font-semibold text-accent-ink">Só {board.data.rows.find((r) => r.client_id === onlyClient)?.name ?? 'este cliente'}</span>
+          <button type="button" onClick={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('cliente'); return p }, { replace: true })} className="cursor-pointer font-medium text-muted underline hover:text-ink">Ver todos</button>
+        </p>
+      )}
       <h2 className="text-[20px] font-semibold tracking-tight">
         Relatórios {kind === 'weekly' ? 'semanais' : 'mensais'} <span className="font-normal text-muted">· {br(board.data.period[0])} a {br(board.data.period[1])}</span>
       </h2>
