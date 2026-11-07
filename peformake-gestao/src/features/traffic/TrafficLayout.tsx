@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { cn } from '@/lib/cn'
+import { AutomationsButton } from './AutomationsDialog'
 
 const TABS = [
   { to: 'painel', label: 'Painel' },
@@ -17,7 +18,7 @@ const TABS = [
 export function TrafficLayout() {
   return (
     <>
-      <h1 className="text-3xl font-semibold tracking-tight">Tráfego</h1>
+      <div className="flex items-center gap-2"><h1 className="text-3xl font-semibold tracking-tight">Tráfego</h1><AutomationsButton /></div>
       <nav aria-label="Áreas de Tráfego" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 md:mx-0 md:px-0">
         {TABS.map((tab) => (
           <NavLink
