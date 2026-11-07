@@ -43,7 +43,7 @@ $$;
 create or replace function public.traffic_automation_set(_key text, _enabled boolean, _params jsonb default null)
 returns void language plpgsql security definer set search_path to '' as $$
 begin
-  if not public.has_role(auth.uid(), 'admin') then
+  if not public.has_role('admin') then
     raise exception 'Só administradores mudam automações' using errcode = '42501';
   end if;
   update public.traffic_automations set enabled = _enabled, params = coalesce(_params, params), updated_at = now(), updated_by = auth.uid() where key = _key;

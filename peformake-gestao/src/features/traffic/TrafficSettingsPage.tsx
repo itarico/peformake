@@ -7,7 +7,8 @@ import { useClientPermissions } from '@/features/clients/useClients'
 import { AlertSettingsSection } from './AlertSettingsSection'
 import { ReportSettingsSection } from './ReportSettingsSection'
 import { LoadState } from './LoadState'
-import { DAYS_OPTIONS, HOUR_OPTIONS, parseReais, reaisText, readsPerDay, type TrafficSettings } from './settingsRules'
+import { parseReais, reaisText, type TrafficSettings } from './settingsRules'
+import { AutomationsPanel } from './AutomationsDialog'
 
 async function loadSettings(): Promise<TrafficSettings & { lastReadAt: string | null }> {
   const [settings, last] = await Promise.all([
@@ -35,24 +36,6 @@ async function saveSettings(settings: TrafficSettings): Promise<void> {
   if (error) throw error
 }
 
-function Choice<T extends number>({ label, value, options, suffix, onChange }: { label: string; value: T; options: readonly T[]; suffix: string; onChange: (value: T) => void }) {
-  return (
-    <div role="radiogroup" aria-label={label} className="inline-flex flex-wrap rounded-full border border-line p-0.5">
-      {options.map((option) => (
-        <button
-          key={option}
-          type="button"
-          role="radio"
-          aria-checked={value === option}
-          onClick={() => onChange(option)}
-          className={cn('min-h-10 cursor-pointer rounded-full px-4 font-medium', value === option ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}
-        >
-          {option} {suffix === 'dias' && option === 1 ? 'dia' : suffix}
-        </button>
-      ))}
-    </div>
-  )
-}
 
 function Row({ title, help, children }: { title: string; help: string; children: React.ReactNode }) {
   return (
@@ -95,11 +78,6 @@ export function TrafficSettingsPage() {
 
   if (!query.data || !form) return <LoadState isPending={query.isPending} isError={query.isError} refetch={() => void query.refetch()} />
 
-  const change = (patch: Partial<TrafficSettings>) => {
-    setSaved(false)
-    setProblem(null)
-    setForm({ ...form, ...patch })
-  }
 
   const alertCents = parseReais(alertText)
   const original = query.data
@@ -123,22 +101,8 @@ export function TrafficSettingsPage() {
 
   return (
     <>
+    <AutomationsPanel />
     <section aria-label="Configurações do Tráfego" className="mx-auto w-full max-w-3xl rounded-3xl border border-line bg-surface p-6">
-      <Row title="Leitura automática" help="Busca os números das contas sozinha, no ritmo escolhido abaixo.">
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 font-medium">
-          <input type="checkbox" checked={form.autoReadEnabled} onChange={(event) => change({ autoReadEnabled: event.target.checked })} className="size-5" />
-          {form.autoReadEnabled ? 'Ligada' : 'Desligada'}
-        </label>
-      </Row>
-
-      <Row title="Frequência" help={`Lê as contas ${readsPerDay(form.readEveryHours)} ${readsPerDay(form.readEveryHours) === 1 ? 'vez' : 'vezes'} por dia. A leitura roda no servidor, mesmo com o computador desligado, e não usa IA.`}>
-        <Choice label="Frequência" value={form.readEveryHours} options={HOUR_OPTIONS} suffix="h" onChange={(value) => change({ readEveryHours: value })} />
-      </Row>
-
-      <Row title="Dias relidos" help="A Meta ajusta números dos últimos dias. Reler alguns dias evita diferenças.">
-        <Choice label="Dias relidos" value={form.daysBack} options={DAYS_OPTIONS} suffix="dias" onChange={(value) => change({ daysBack: value })} />
-      </Row>
-
       <Row title="Alerta de saldo baixo" help="Avisa quando o saldo pré-pago da conta ficar abaixo deste valor.">
         <div>
           <label htmlFor="alerta-saldo" className="sr-only">Valor do alerta em reais</label>
@@ -161,7 +125,7 @@ export function TrafficSettingsPage() {
       </Row>
 
       <div className="flex flex-wrap items-center gap-3 border-t border-line pt-5">
-        <Button onClick={save} disabled={!dirty || mutation.isPending}>{mutation.isPending ? 'Salvando' : 'Salvar configurações'}</Button>
+        <Button onClick={save} disabled={!dirty || mutation.isPending}>{mutation.isPending ? 'Salvando' : 'Salvar alerta'}</Button>
         {saved && !dirty && <span role="status" className="font-medium text-accent-ink">Configurações salvas.</span>}
         {problem && <span role="alert" className="font-medium text-warn-ink">{problem}</span>}
         <span className="ml-auto text-[13px] text-muted">Última leitura: {lastRead}</span>

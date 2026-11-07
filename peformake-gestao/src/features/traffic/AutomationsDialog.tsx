@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Info } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
-import { Dialog } from '@/components/ui/Dialog'
 import { ask } from '@/components/ui/confirm'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -18,20 +18,17 @@ const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
 const RISK = { baixo: { label: 'Seguro', tone: 'bg-ok-soft text-ok-ink' }, medio: { label: 'Mexe na Meta', tone: 'bg-raised text-ink' }, alto: { label: 'Age sozinho', tone: 'bg-warn-soft text-warn-ink' } } as const
 
+/** Atalho no título do Tráfego: leva para as automações em Configurações. */
 export function AutomationsButton() {
-  const [open, setOpen] = useState(false)
   return (
-    <>
-      <button type="button" onClick={() => setOpen(true)} aria-label="Automações do Tráfego" title="Automações do Tráfego"
-        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-line-strong text-muted hover:border-ink hover:text-ink">
-        <Info size={17} aria-hidden="true" />
-      </button>
-      {open && <AutomationsDialog onClose={() => setOpen(false)} />}
-    </>
+    <Link to="/trafego/configuracoes" aria-label="Automações do Tráfego" title="Automações do Tráfego"
+      className="inline-flex size-9 items-center justify-center rounded-full border border-line-strong text-muted no-underline hover:border-ink hover:text-ink">
+      <Info size={17} aria-hidden="true" />
+    </Link>
   )
 }
 
-function AutomationsDialog({ onClose }: { onClose: () => void }) {
+export function AutomationsPanel() {
   const { state } = useAuth()
   const isAdmin = state.status === 'ready' && state.user.roles.includes('admin')
   const qc = useQueryClient()
@@ -60,8 +57,11 @@ function AutomationsDialog({ onClose }: { onClose: () => void }) {
   const on = rows.filter((r) => r.enabled).length
 
   return (
-    <Dialog open onClose={onClose} title="Automações do Tráfego" size="md"
-      description={rows.length ? `${on} de ${rows.length} ligadas. ${isAdmin ? 'Só administradores mudam.' : 'Só administradores mudam: peça ao Italo.'}` : undefined}>
+    <section aria-labelledby="automacoes" className="mx-auto flex w-full max-w-3xl flex-col gap-2 rounded-3xl border border-line bg-surface p-5 md:p-6">
+      <div>
+        <h2 id="automacoes" className="text-[18px] font-semibold">Automações</h2>
+        <p className="text-[13px] text-muted">{rows.length ? `${on} de ${rows.length} ligadas. ` : ''}O que o sistema faz sozinho no Tráfego. {isAdmin ? 'Ligue ou desligue quando quiser.' : 'Só administradores mudam.'}</p>
+      </div>
       <div className="flex flex-col gap-2">
         {list.isPending && <p role="status" className="text-[13px] text-muted">Carregando</p>}
         {list.isError && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">Não foi possível carregar as automações agora.</p>}
@@ -86,7 +86,7 @@ function AutomationsDialog({ onClose }: { onClose: () => void }) {
         </ul>
         <p className="text-[12px] text-muted">Mensagem para cliente nunca sai sozinha: relatórios e avisos sempre passam por alguém da equipe, a menos que "Enviar relatórios ao cliente" esteja ligado.</p>
       </div>
-    </Dialog>
+    </section>
   )
 }
 
