@@ -187,21 +187,21 @@ const first = (n: string) => n.trim().split(' ').slice(0, 2).join(' ')
 /** Atalhos para agir agora: a área certa do sistema e, quando dá, um cliente específico para procurar. */
 export function actions(r: GoalRow, c: Coach | undefined): Action[] {
   const a: Action[] = []
-  const client = (x: { id: string; name: string } | undefined, verb: string, tab = '') => { if (x) a.push({ label: `${verb} ${first(x.name)}`, to: `/clientes/${x.id}${tab}` }) }
+  const client = (x: { id: string; name: string } | undefined, verb: string, acao: string) => { if (x) a.push({ label: `${verb} ${first(x.name)}`, to: `/clientes/${x.id}?acao=${acao}` }) }
   switch (r.key) {
     case 'novos': case 'novos_premium': {
       const lead = c?.hot_leads[0]
       if (lead) a.push({ label: `Chamar ${first(lead.name)}`, to: lead.to_ })
-      if (r.key === 'novos') client(c?.frequent_avulsos[0], 'Oferecer plano a')
+      if (r.key === 'novos') client(c?.frequent_avulsos[0], 'Oferecer plano a', 'plano')
       a.push({ label: lead ? 'Ver todos os leads' : 'Buscar leads', to: '/comercial/prospeccao' })
-      client(c?.happy[0], 'Pedir indicação a')
+      client(c?.happy[0], 'Pedir indicação a', 'indicacao')
       break
     }
-    case 'mrr_total': case 'upsell': client(c?.low_ticket[0], 'Propor upsell a'); client(c?.low_ticket[1], 'Propor upsell a'); a.push({ label: 'Ver clientes', to: '/clientes?aba=recorrentes&atencao=upsell' }); break
-    case 'avulsos': client(c?.idle_avulsos[0], 'Falar com'); client(c?.idle_avulsos[1], 'Falar com'); a.push({ label: 'Montar orçamento', to: '/audiovisual/orcamentos/novo' }); break
-    case 'reunioes': client(c?.no_meeting[0], 'Marcar com'); client(c?.no_meeting[1], 'Marcar com'); break
-    case 'saidas': client(c?.unhappy[0], 'Ligar para'); a.push({ label: 'Perdidos e pausados', to: '/clientes?aba=perdidos' }); break
-    case 'devendo': case 'inadimplencia': client(c?.overdue[0], 'Cobrar', '?aba=contrato'); a.push({ label: 'Abrir cobrança', to: '/financeiro/cobranca' }); break
+    case 'mrr_total': case 'upsell': client(c?.low_ticket[0], 'Propor upsell a', 'upsell'); client(c?.low_ticket[1], 'Propor upsell a', 'upsell'); a.push({ label: 'Ver clientes', to: '/clientes?aba=recorrentes&atencao=upsell' }); break
+    case 'avulsos': client(c?.idle_avulsos[0], 'Falar com', 'captacao'); client(c?.idle_avulsos[1], 'Falar com', 'captacao'); a.push({ label: 'Montar orçamento', to: '/audiovisual/orcamentos/novo' }); break
+    case 'reunioes': client(c?.no_meeting[0], 'Marcar com', 'reuniao'); client(c?.no_meeting[1], 'Marcar com', 'reuniao'); break
+    case 'saidas': client(c?.unhappy[0], 'Ligar para', 'ligar'); a.push({ label: 'Perdidos e pausados', to: '/clientes?aba=perdidos' }); break
+    case 'devendo': case 'inadimplencia': client(c?.overdue[0], 'Cobrar', 'cobrar'); a.push({ label: 'Abrir cobrança', to: '/financeiro/cobranca' }); break
     case 'artes': case 'aprovacao_parada': case 'planos': a.push({ label: 'Abrir conteúdo', to: '/conteudo' }); break
     case 'relatorios': a.push({ label: 'Abrir relatórios', to: '/trafego/relatorios' }); break
     case 'estrategias': a.push({ label: 'Abrir estratégias', to: '/trafego/estrategia' }); break
@@ -251,7 +251,8 @@ export function primaryAction(r: GoalRow, c: Coach | undefined): (Action & { hin
 /** Cartão de cliente para procurar hoje: quem, por quê e o botão. */
 export function clientCard(r: GoalRow, c: Coach | undefined): { name: string; why: string; to: string; label: string } | null {
   if (!c) return null
-  const card = (x: { id: string; name: string } | undefined, why: string, label: string) => (x ? { name: x.name.trim(), why, to: `/clientes/${x.id}`, label } : null)
+  const ACAO: Record<string, string> = { 'Oferecer plano': 'plano', 'Pedir indicação': 'indicacao', 'Propor upsell': 'upsell', 'Oferecer captação': 'captacao', 'Marcar reunião': 'reuniao', 'Ligar para o cliente': 'ligar', Cobrar: 'cobrar' }
+  const card = (x: { id: string; name: string } | undefined, why: string, label: string) => (x ? { name: x.name.trim(), why, to: `/clientes/${x.id}${ACAO[label] ? `?acao=${ACAO[label]}` : ''}`, label } : null)
   switch (r.key) {
     case 'novos': case 'novos_premium':
       if (c.frequent_avulsos[0] && r.key === 'novos') return card(c.frequent_avulsos[0], `Compra avulso há ${c.frequent_avulsos[0].months} meses seguidos. Já é cliente de rotina: falta o contrato.`, 'Oferecer plano')

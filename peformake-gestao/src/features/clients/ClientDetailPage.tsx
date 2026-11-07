@@ -7,6 +7,7 @@ import { PortalLinkCard } from '@/features/portal/PortalLinkCard'
 import { listAdAccounts } from '@/features/traffic/accountsApi'
 import { accountAlerts } from '@/features/traffic/accountRules'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
+import { ClientActionDialog, isClientAction } from './ClientActionDialog'
 import { ClientAvatar } from './ClientAvatar'
 import { setClientPartner } from './clientsApi'
 import { HistorySection, LinksSection, StatusSection } from './ClientExtras'
@@ -123,6 +124,7 @@ export function ClientDetailPage() {
         </div>
       </header>
       {canManage && <ClientDialog open={editing} onClose={() => setEditing(false)} clientId={client.id} />}
+      {(() => { const acao = params.get('acao'); return isClientAction(acao) ? <ClientActionDialog key={acao} client={client} action={acao} onClose={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('acao'); return p }, { replace: true })} /> : null })()}
 
       {params.get('novo') && (
         <p role="status" className="rounded-3xl bg-ok-soft px-5 py-3.5 text-ok-ink">

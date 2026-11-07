@@ -22,7 +22,7 @@ describe('coach', () => {
   it('ações levam ao cliente certo', () => {
     expect(actions(row({ key: 'novos', target: 5, actual: 1 }), c).map((a) => a.label)).toEqual(['Chamar Padaria Sol', 'Oferecer plano a Partem', 'Ver todos os leads'])
     expect(steps(row({ key: 'novos', target: 5, actual: 1 }), c, 6, 30).join(' ')).toContain('Partem (3 meses seguidos')
-    expect(actions(row({ key: 'avulsos', target: 3, actual: 2 }), c)[0]!.to).toBe('/clientes/n')
+    expect(actions(row({ key: 'avulsos', target: 3, actual: 2 }), c)[0]!.to).toBe('/clientes/n?acao=captacao')
   })
   it('sorteio do dia é estável e sugestões citam alguém', () => {
     const a = pickWith(seeded('2026-11-06'))(['x', 'y', 'z']), b = pickWith(seeded('2026-11-06'))(['x', 'y', 'z'])
