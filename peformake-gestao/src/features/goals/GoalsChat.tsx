@@ -346,6 +346,14 @@ export function GoalsChat() {
   const tips = items.filter((i) => i.kind === 'tip')
 
   const [open, setOpen] = useState(false)
+  // Celular: trava a página de trás enquanto o chat está aberto.
+  useEffect(() => {
+    if (!open || !window.matchMedia('(max-width: 767px)').matches) return
+    const html = document.documentElement
+    const prev = html.style.overflow
+    html.style.overflow = 'hidden'
+    return () => { html.style.overflow = prev }
+  }, [open])
   // Conversa do dia: fica guardada no aparelho até o fim do dia, para reler quando quiser.
   const LOG_KEY = `pf-goals-log:${cal.iso}`
   const [log, setLog] = useState<Msg[]>(() => { try { return JSON.parse(store.get(LOG_KEY) ?? '[]') as Msg[] } catch { return [] } })
@@ -595,6 +603,9 @@ export function GoalsChat() {
   }
 
   return (
+    <>
+    {/* Celular: com o chat aberto, o fundo escurece e não rola; tocar fora recolhe. */}
+    {open && <div aria-hidden="true" onClick={close} className="fixed inset-0 z-30 touch-none bg-black/30 md:hidden" />}
     <div className="pointer-events-none fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
       {open && (
         <section role="dialog" aria-label="Bate Meta, assistente de metas" className="pf-rise pointer-events-auto flex h-[min(600px,calc(100dvh-150px))] w-[min(380px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
@@ -604,7 +615,7 @@ export function GoalsChat() {
             <span className="hidden text-[11px] opacity-70 sm:inline">{role ? `${ROLE_LABEL[role]} · ` : ''}dia {day}/{days}</span>
             <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Recolher" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-white/10"><ChevronDown size={18} aria-hidden="true" /></button>
           </header>
-          <div ref={box} aria-live="polite" className="wa-wallpaper flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-3 [scrollbar-width:thin]">
+          <div ref={box} aria-live="polite" className="wa-wallpaper flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto overscroll-contain px-3 py-3 [scrollbar-width:thin]">
             {log.map((m) => m.kind === 'divider'
               ? <span key={m.id} className="my-1 self-center rounded-full bg-raised px-2.5 py-0.5 text-[10.5px] font-semibold text-muted">{m.text}</span>
               : m.from === 'me'
@@ -655,5 +666,6 @@ export function GoalsChat() {
         </button>
       )}
     </div>
+    </>
   )
 }
