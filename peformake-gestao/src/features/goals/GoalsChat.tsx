@@ -47,20 +47,25 @@ function useCoach() {
   })
 }
 
-/** Bate Meta: o mascote. Um alvo sorridente com uma flecha no centro. */
+/** Nome do assistente (um lugar só para trocar). */
+export const BOT_NAME = 'Cobrador'
+
+/** Avatar do assistente: robô simples nas cores da marca, de cara séria (é ele que cobra a meta). */
 function Mascot({ size = 36 }: { size?: number }) {
   return (
     <svg viewBox="0 0 40 40" width={size} height={size} aria-hidden="true" className="shrink-0">
-      <circle cx="20" cy="20" r="19" fill="#1fc8db" />
-      <circle cx="20" cy="21" r="14" fill="#fff" />
-      <circle cx="20" cy="21" r="10" fill="#e5484d" />
-      <circle cx="20" cy="21" r="6" fill="#fff" />
-      <circle cx="16.2" cy="18.6" r="1.6" fill="#061417" />
-      <circle cx="23.8" cy="18.6" r="1.6" fill="#061417" />
-      <path d="M15.8 23.2 Q20 27 24.2 23.2" fill="none" stroke="#061417" strokeWidth="1.6" strokeLinecap="round" />
-      {/* Flecha cravada no centro: penas para fora. */}
-      <path d="M23 18 L34 7" stroke="#061417" strokeWidth="2" strokeLinecap="round" />
-      <path d="M34 7 l0.5 -3.5 M34 7 l3.5 -0.5 M31.5 9.5 l0.5 -3.5 M31.5 9.5 l3.5 -0.5" stroke="#eda100" strokeWidth="1.6" strokeLinecap="round" />
+      <rect x="0" y="0" width="40" height="40" rx="12" fill="#0d3a42" />
+      <path d="M20 6.5v4" stroke="#1fc8db" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="20" cy="5.5" r="2" fill="#1fc8db" />
+      <rect x="8.5" y="11" width="23" height="18" rx="6" fill="#f4f7f8" />
+      <rect x="6" y="17" width="2.5" height="6" rx="1.2" fill="#9fb3b8" />
+      <rect x="31.5" y="17" width="2.5" height="6" rx="1.2" fill="#9fb3b8" />
+      <rect x="13" y="16.5" width="4.5" height="4.5" rx="1.4" fill="#0d3a42" />
+      <rect x="22.5" y="16.5" width="4.5" height="4.5" rx="1.4" fill="#0d3a42" />
+      <circle cx="14.6" cy="18.1" r="0.9" fill="#1fc8db" />
+      <circle cx="24.1" cy="18.1" r="0.9" fill="#1fc8db" />
+      <path d="M15.5 25h9" stroke="#0d3a42" strokeWidth="1.6" strokeLinecap="round" />
+      <rect x="14" y="31" width="12" height="4" rx="2" fill="#1fc8db" />
     </svg>
   )
 }
@@ -608,10 +613,10 @@ export function GoalsChat() {
     {open && <div aria-hidden="true" onClick={close} className="fixed inset-0 z-30 touch-none bg-black/30 md:hidden" />}
     <div className="pointer-events-none fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
       {open && (
-        <section role="dialog" aria-label="Bate Meta, assistente de metas" className="pf-rise pointer-events-auto flex h-[min(600px,calc(100dvh-150px))] w-[min(380px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
+        <section role="dialog" aria-label={`${BOT_NAME}, assistente de metas`} className="pf-rise pointer-events-auto flex h-[min(600px,calc(100dvh-150px))] w-[min(380px,calc(100vw-32px))] flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/30">
           <header onClick={close} title="Clique para recolher" className="flex cursor-pointer items-center gap-2.5 bg-[#075e54] px-3 py-2 text-white dark:bg-[#1f2c34]">
             <span className="relative"><Mascot size={38} /><span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-[#25d366] ring-2 ring-[#075e54] dark:ring-[#1f2c34]" /></span>
-            <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">Bate Meta</b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'online'}</span></span>
+            <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">{BOT_NAME} <span className="font-normal opacity-75">· cobra suas metas</span></b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'online'}</span></span>
             <span className="hidden text-[11px] opacity-70 sm:inline">{role ? `${ROLE_LABEL[role]} · ` : ''}dia {day}/{days}</span>
             <button type="button" onClick={(e) => { e.stopPropagation(); close() }} aria-label="Recolher" className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-white/10"><ChevronDown size={18} aria-hidden="true" /></button>
           </header>
@@ -648,18 +653,18 @@ export function GoalsChat() {
       )}
       {!open && showPill && (
         <span className="pf-hop pointer-events-auto relative">
-          <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Bate Meta: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir`}
+          <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`${BOT_NAME}: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir`}
             className="relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill py-0 pl-4 pr-9 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 hover:-translate-y-0.5">
             <span className="-ml-2 rounded-full bg-white/20"><Mascot size={30} /></span> Abre aí!
             <span className="pf-blink absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>
           </button>
           {/* Recolher: vira o ícone pequeno; volta a chamar quando chegar novidade nova. */}
-          <button type="button" onClick={minimize} aria-label="Recolher o Bate Meta" title="Recolher"
+          <button type="button" onClick={minimize} aria-label={`Recolher o ${BOT_NAME}`} title="Recolher"
             className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 cursor-pointer place-items-center rounded-full text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={14} aria-hidden="true" /></button>
         </span>
       )}
       {!open && !showPill && (
-        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label="Bate Meta: ver pendências, tarefas e atualizações" title="Bate Meta: pendências, tarefas e atualizações"
+        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`${BOT_NAME}: ver pendências, tarefas e atualizações`} title={`${BOT_NAME}: pendências, tarefas e atualizações`}
           className="pointer-events-auto relative inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-line bg-surface py-0 pl-1.5 pr-3.5 text-[12.5px] font-semibold text-ink shadow-lg shadow-black/20 transition-transform hover:-translate-y-0.5">
           <Mascot size={28} /> Abre aí!
           {news.length > 0 && <span className="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-[#e5484d] ring-2 ring-canvas" />}
