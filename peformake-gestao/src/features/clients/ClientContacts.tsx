@@ -6,6 +6,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { inputClass } from './ui'
+import { ask } from '@/components/ui/confirm'
 
 export type ContactRole = 'dono' | 'financeiro' | 'aprovacao' | 'gerente' | 'marketing' | 'outro'
 export interface ClientContact {
@@ -86,7 +87,7 @@ export function ClientContactsDialog({ clientId, open, onClose, canManage }: { c
               {canManage && (
                 <span className="flex shrink-0">
                   <button type="button" aria-label={`Editar ${c.name}`} onClick={() => { save.reset(); setEditing({ ...c, phone: c.phone ?? '', email: c.email ?? '' }) }} className="grid size-9 cursor-pointer place-items-center rounded-full text-muted hover:text-ink"><Pencil size={14} aria-hidden="true" /></button>
-                  <button type="button" aria-label={`Remover ${c.name}`} onClick={() => { if (window.confirm(`Remover ${c.name}?`)) remove.mutate(c.id) }} className="grid size-9 cursor-pointer place-items-center rounded-full text-muted hover:text-ink"><Trash2 size={14} aria-hidden="true" /></button>
+                  <button type="button" aria-label={`Remover ${c.name}`} onClick={() => { void ask(`Remover ${c.name}?`).then((ok) => { if (ok) remove.mutate(c.id) }) }} className="grid size-9 cursor-pointer place-items-center rounded-full text-muted hover:text-ink"><Trash2 size={14} aria-hidden="true" /></button>
                 </span>
               )}
             </li>

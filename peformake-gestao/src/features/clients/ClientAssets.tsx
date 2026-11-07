@@ -4,6 +4,7 @@ import { Download, FileImage, FileText, FileUp, Film, Folder, Trash2 } from 'luc
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
+import { ask } from '@/components/ui/confirm'
 
 type FolderId = 'design' | 'trafego' | 'audiovisual' | 'social' | 'contratos' | 'outros'
 const FOLDERS: { id: FolderId; label: string }[] = [
@@ -122,7 +123,7 @@ export function ClientAssets({ clientId }: { clientId: string }) {
               </button>
               <button type="button" aria-label={`Abrir ${a.name}`} onClick={() => void openAsset(a).catch(() => setProblem('Não foi possível abrir.'))} className="flex size-9 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink"><Download size={15} aria-hidden="true" /></button>
               <button type="button" aria-label={`Apagar ${a.name}`} disabled={remove.isPending}
-                onClick={() => { if (window.confirm(`Apagar "${a.name}" dos arquivos do cliente?`)) remove.mutate(a) }}
+                onClick={() => { void ask(`Apagar "${a.name}" dos arquivos do cliente?`).then((ok) => { if (ok) remove.mutate(a) }) }}
                 className="flex size-9 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink"><Trash2 size={15} aria-hidden="true" /></button>
             </li>
           ))}

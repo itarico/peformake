@@ -12,6 +12,7 @@ import { avComment, avErrorMessage, getProject, listAvEvents, scriptAction, setA
 import { AV_LABEL, AV_STAGES, AV_TONE, SCRIPT_LABEL, avActionsFor, countdown, missingFor, shootText, stageOf, type AvAction, type AvProject } from './avRules'
 import { EllcazoHeader, TONE_CLASS } from './AvShell'
 import { ScheduleDialog } from './ScheduleDialog'
+import { ask } from '@/components/ui/confirm'
 
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink disabled:opacity-70'
 
@@ -205,7 +206,7 @@ function EditBox({ p }: { p: AvProject }) {
             const missing = missingFor(a, p)
             return (
               <Button key={a.to + a.label} variant={a.primary ? 'primary' : a.to === 'cancelled' ? 'link' : 'secondary'} disabled={move.isPending}
-                onClick={() => { setProblem(missing); if (missing) return; if (a.to === 'cancelled' && !window.confirm('Cancelar este projeto?')) return; if (a.needsNote) setPending(a); else move.mutate(a) }}>
+                onClick={async () => { setProblem(missing); if (missing) return; if (a.to === 'cancelled' && !(await ask('Cancelar este projeto?'))) return; if (a.needsNote) setPending(a); else move.mutate(a) }}>
                 {a.to === 'approved' && p.status === 'client_review' ? 'Cliente aprovou (entregar)' : a.label}
               </Button>
             )
@@ -222,7 +223,7 @@ function CancelLink({ p }: { p: AvProject }) {
   const { canManageAv } = useProduction()
   const cancel = useMutation({ mutationFn: () => setAvStatus(p.id, 'cancelled', null), onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['av-project', p.id] }); void queryClient.invalidateQueries({ queryKey: ['av-projects'] }) } })
   if (!canManageAv) return null
-  return <button type="button" disabled={cancel.isPending} onClick={() => { if (window.confirm('Cancelar este projeto? Ele sai da produção.')) cancel.mutate() }} className="self-start text-[13px] text-muted underline hover:text-warn-ink">Cancelar projeto</button>
+  return <button type="button" disabled={cancel.isPending} onClick={() => { void ask('Cancelar este projeto? Ele sai da produção.').then((ok) => { if (ok) cancel.mutate() }) }} className="self-start text-[13px] text-muted underline hover:text-warn-ink">Cancelar projeto</button>
 }
 
 export function AvProjectPage() {

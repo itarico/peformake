@@ -18,6 +18,7 @@ import { useAuth } from '@/auth/context'
 import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
+import { ask } from '@/components/ui/confirm'
 
 type Unit = 'peformake' | 'ellcazo'
 type Kind = 'entrada' | 'saida'
@@ -217,8 +218,10 @@ export function FinancePage() {
                   onChange={(ev) => {
                     if (!ev.target.value) return
                     const hint = ruleHint(e.description)
-                    const learn = hint.length >= 3 && window.confirm(`Lembrar para os próximos extratos? Tudo com "${hint}" vai para "${catName.get(ev.target.value)}".`) ? hint : null
-                    categorize.mutate({ id: e.id, category: ev.target.value, learn })
+                    const category = ev.target.value
+                    if (hint.length < 3) { categorize.mutate({ id: e.id, category, learn: null }); return }
+                    void ask(`Lembrar para os próximos extratos? Tudo com "${hint}" vai para "${catName.get(category)}".`)
+                      .then((ok) => categorize.mutate({ id: e.id, category, learn: ok ? hint : null }))
                   }}
                   className={cn('min-h-10 max-w-[200px] rounded-xl border bg-surface px-2 text-[13px]', e.category_id ? 'border-line' : 'border-warn text-warn-ink')}>
                   <option value="">Sem categoria</option>
@@ -309,7 +312,7 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
   return (
     <Dialog open onClose={onClose} title={entry ? 'Editar lançamento' : 'Novo lançamento'} size="sm"
       footer={<div className="flex flex-wrap justify-between gap-2">
-        {entry ? <Button variant="link" onClick={() => { if (window.confirm('Cancelar este lançamento? Ele sai do caixa.')) cancel.mutate() }}>Cancelar lançamento</Button> : <span />}
+        {entry ? <Button variant="link" onClick={() => { void ask('Cancelar este lançamento? Ele sai do caixa.').then((ok) => { if (ok) cancel.mutate() }) }}>Cancelar lançamento</Button> : <span />}
         <Button disabled={save.isPending} onClick={() => { setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
       </div>}>
       <div className="flex flex-col gap-3">

@@ -18,6 +18,7 @@ import { AsaasCard } from './AsaasCard'
 import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
+import { ask } from '@/components/ui/confirm'
 
 const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-gateway`
 
@@ -225,13 +226,13 @@ export function BillingPage() {
                       }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
                     )}
                     {isAdmin && <button type="button" disabled={pay.isPending} onClick={() => setPaying(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Check size={14} aria-hidden="true" /> Marcar pago</button>}
-                    {isAdmin && <button type="button" disabled={setStatus.isPending} onClick={() => { if (window.confirm('Cancelar esta cobrança?')) setStatus.mutate({ id: i.id, status: 'cancelado' }) }} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>}
+                    {isAdmin && <button type="button" disabled={setStatus.isPending} onClick={() => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) }} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>}
                     {i.gateway_error && <span className="text-warn-ink">{i.gateway_error}</span>}
                   </div>
                 )}
                 {i.status === 'pago' && isAdmin && (
                   <div className="flex flex-wrap items-center gap-2 text-[13px]">
-                    <button type="button" disabled={undo.isPending} onClick={() => { if (window.confirm('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.')) undo.mutate(i.id) }}
+                    <button type="button" disabled={undo.isPending} onClick={() => { void ask('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.').then((ok) => { if (ok) undo.mutate(i.id) }) }}
                       className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-3 font-medium text-muted underline hover:text-ink"><Undo2 size={14} aria-hidden="true" /> Desfazer pagamento</button>
                   </div>
                 )}

@@ -4,6 +4,7 @@ import { FileSignature, Send } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
+import { ask } from '@/components/ui/confirm'
 
 const STATUS: Record<string, [string, string]> = {
   rascunho: ['Pronto para enviar', 'bg-accent-soft text-accent-ink'],
@@ -101,7 +102,7 @@ export function ClientContractBlock({ clientId, clientType }: { clientId: string
           <div className="flex flex-wrap gap-2">
             {(d.status === 'rascunho' || d.status === 'erro') && <Button disabled={send.isPending} onClick={() => send.mutate(d.id)}><Send size={15} aria-hidden="true" /> {send.isPending ? 'Enviando' : 'Enviar para assinatura'}</Button>}
             <Button variant="secondary" onClick={() => setReading((r) => !r)}>{reading ? 'Fechar texto' : 'Ver texto'}</Button>
-            {d.status !== 'assinado' && <Button variant="link" onClick={() => { if (window.confirm('Cancelar este contrato e gerar outro?')) cancel.mutate(d.id) }}>Cancelar</Button>}
+            {d.status !== 'assinado' && <Button variant="link" onClick={() => { void ask('Cancelar este contrato e gerar outro?').then((ok) => { if (ok) cancel.mutate(d.id) }) }}>Cancelar</Button>}
           </div>
           {send.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(send.error as Error).message}</p>}
           {reading && <pre className="max-h-96 overflow-auto whitespace-pre-wrap rounded-2xl bg-raised p-4 font-sans text-[13px] leading-relaxed">{d.body}</pre>}

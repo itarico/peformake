@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { EmailSettings } from './EmailSettings'
 import { ContractSettings } from '@/features/contracts/ContractSettings'
+import { ask } from '@/components/ui/confirm'
 
 interface GoogleAccount { id: string; label: string; email: string; scopes: string[]; connectedAt: string; lastError: string | null }
 
@@ -94,7 +95,7 @@ export function IntegrationsPage() {
                 </div>
                 {isAdmin && (
                   <button type="button" aria-label={`Desconectar ${a.label}`} disabled={remove.isPending}
-                    onClick={() => { if (window.confirm(`Desconectar a conta ${a.email}? O sistema deixa de ler o Drive e a Agenda dela.`)) remove.mutate(a.id) }}
+                    onClick={() => { void ask(`Desconectar a conta ${a.email}? O sistema deixa de ler o Drive e a Agenda dela.`).then((ok) => { if (ok) remove.mutate(a.id) }) }}
                     className="flex size-10 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink"><Trash2 size={16} aria-hidden="true" /></button>
                 )}
               </li>

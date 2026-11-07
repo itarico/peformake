@@ -4,6 +4,7 @@ import { AlertTriangle, CheckCircle2, MessageCircle, RefreshCw } from 'lucide-re
 import QRCode from 'qrcode'
 import { Button } from '@/components/ui/Button'
 import { supabase } from '@/lib/supabase'
+import { ask } from '@/components/ui/confirm'
 
 interface Status { enabled: boolean; has_room: boolean; account: { phone: string; status: string; status_at: string | null; error: string | null } | null }
 
@@ -65,7 +66,7 @@ export function PortalWhatsapp({ token }: { token: string }) {
       {connected ? (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-ok-soft px-4 py-3 text-ok-ink">
           <p className="flex items-center gap-2 font-medium"><CheckCircle2 size={18} aria-hidden="true" /> Conectado: +{acc?.phone}</p>
-          <button type="button" onClick={() => { if (window.confirm('Desconectar este WhatsApp? Os novos contatos deixam de chegar.')) disconnect.mutate() }} className="min-h-10 cursor-pointer text-[13px] font-medium underline">Desconectar</button>
+          <button type="button" onClick={() => { void ask('Desconectar este WhatsApp? Os novos contatos deixam de chegar.').then((ok) => { if (ok) disconnect.mutate() }) }} className="min-h-10 cursor-pointer text-[13px] font-medium underline">Desconectar</button>
         </div>
       ) : waiting ? (
         <div className="flex flex-col items-center gap-3 text-center">

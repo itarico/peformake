@@ -13,6 +13,7 @@ import { formatDocument } from '@/features/clients/clientFormRules'
 import { Block, Fact } from '@/features/clients/ui'
 import { CONTRACT_STATUS } from './contractStatus'
 import { ContractWizard } from './ContractWizard'
+import { ask } from '@/components/ui/confirm'
 
 
 const STEPS = ['Gerado', 'Dados', 'Enviado', 'Assinado'] as const
@@ -175,7 +176,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
               <Button variant="secondary" onClick={() => setReading(current)}>Ler</Button>
               <Button variant="secondary" disabled={pdf.isPending} onClick={() => pdf.mutate(current.id)}><Download size={14} aria-hidden="true" /> {pdf.isPending ? 'Gerando' : 'PDF'}</Button>
               {current.status !== 'assinado' && (
-                <Button variant="link" disabled={rpc.isPending} onClick={() => { if (window.confirm('Cancelar este contrato?')) rpc.mutate({ fn: 'contract_cancel', args: { _id: current.id } }) }}>Cancelar</Button>
+                <Button variant="link" disabled={rpc.isPending} onClick={() => { void ask('Cancelar este contrato?').then((ok) => { if (ok) rpc.mutate({ fn: 'contract_cancel', args: { _id: current.id } }) }) }}>Cancelar</Button>
               )}
             </div>
             {[send, pdf, rpc].map((m, i) => m.isError && <p key={i} role="alert" className="text-[13px] font-medium text-warn-ink">{(m.error as Error).message}</p>)}

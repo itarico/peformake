@@ -33,6 +33,7 @@ import {
 } from './taskRules'
 import { deleteTask, listTasks, moveTask, saveTask, taskErrorMessage, type TaskDraft, undoTask } from './tasksApi'
 import { useTrafficData } from './useTrafficData'
+import { ask } from '@/components/ui/confirm'
 
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink'
 const pill = 'min-h-11 rounded-full border border-line-strong bg-surface px-3.5'
@@ -179,7 +180,7 @@ function ActionBox({ task, canApprove, onUndo, undoing }: { task: Task; canAppro
         ? <p className={cn('rounded-md px-1.5 py-1 font-semibold', TONE[verdict.tone])} title={verdict.detail}>{verdict.text}</p>
         : <p className="text-muted">O efeito aparece aqui a partir de amanhã, comparando com os 7 dias antes.</p>)}
       {canApprove && canUndo(task.proposedAction, task.actionStatus) && (
-        <button type="button" disabled={undoing} onClick={() => { if (window.confirm('Criar um card para desfazer esta ação? Ele também passa pela aprovação.')) onUndo() }}
+        <button type="button" disabled={undoing} onClick={() => { void ask('Criar um card para desfazer esta ação? Ele também passa pela aprovação.').then((ok) => { if (ok) onUndo() }) }}
           className="inline-flex w-fit cursor-pointer items-center gap-1 rounded-full px-1 font-semibold text-accent-ink hover:underline disabled:opacity-50">
           <Undo2 size={13} aria-hidden="true" /> {undoing ? 'Criando' : 'Desfazer'}
         </button>
@@ -296,7 +297,7 @@ function TaskHistory({ tasks, filters, clientName, canApprove, onOpen, onUndo }:
               </span>
               <span>{verdict ? <span className={cn('inline-block rounded-md px-1.5 py-1 text-[12px] font-semibold', TONE[verdict.tone])} title={verdict.detail}>{verdict.text}</span> : <span className="text-[12px] text-muted">{t.proposedAction ? 'Efeito em breve' : '-'}</span>}</span>
               <span>{canApprove && canUndo(t.proposedAction, t.actionStatus) && (
-                <button type="button" onClick={() => { if (window.confirm('Criar um card para desfazer esta ação?')) onUndo(t.id) }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 text-[13px] font-semibold text-accent-ink hover:bg-raised">
+                <button type="button" onClick={() => { void ask('Criar um card para desfazer esta ação?').then((ok) => { if (ok) onUndo(t.id) }) }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 text-[13px] font-semibold text-accent-ink hover:bg-raised">
                   <Undo2 size={14} aria-hidden="true" /> Desfazer
                 </button>
               )}</span>
@@ -469,7 +470,7 @@ export function TasksPage() {
                 <p className="text-[12px] text-muted">{column.id === 'done' ? `Últimos ${DONE_VISIBLE_DAYS} dias. O resto fica no Histórico.` : column.hint}</p>
                 {column.id === 'review' && canApprove && items.length > 1 && (
                   <Button variant="secondary" className="mt-2 min-h-9 w-full px-3 text-[13px]" disabled={approveAll.isPending}
-                    onClick={() => { if (window.confirm(`Aprovar as ${items.length} tarefas? As ações na Meta saem em até 2 minutos.`)) approveAll.mutate(items.map((t) => t.id)) }}>
+                    onClick={() => { void ask(`Aprovar as ${items.length} tarefas? As ações na Meta saem em até 2 minutos.`).then((ok) => { if (ok) approveAll.mutate(items.map((t) => t.id)) }) }}>
                     <CheckCheck size={14} aria-hidden="true" /> {approveAll.isPending ? 'Aprovando' : `Aprovar todas (${items.length})`}
                   </Button>
                 )}

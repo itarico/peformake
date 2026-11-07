@@ -7,6 +7,7 @@ import { CommercialRoutes } from '@/features/commercial/CommercialRoutes'
 import { AV_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, NOTIFICATION_ADMIN_ROLES, TRAFFIC_ROLES } from '@/lib/roles'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { SiteGate } from '@/site/SiteGate'
+import { ConfirmHost } from '@/components/ui/confirm'
 
 // Cada tela baixa só quando é aberta (o site e o login ficam leves).
 const ClientDetailPage = lazy(() => import('@/features/clients/ClientDetailPage').then((m) => ({ default: m.ClientDetailPage })))
@@ -59,6 +60,8 @@ const NewPasswordPage = lazy(() => import('@/pages/NewPasswordPage').then((m) =>
 
 export function App() {
   return (
+    <>
+    <ConfirmHost />
     <Suspense fallback={<CenteredMessage title="Carregando" role="status" />}>
     <Routes>
       <Route index element={<SiteGate />} />
@@ -162,5 +165,6 @@ export function App() {
       </Route>
     </Routes>
     </Suspense>
+    </>
   )
 }

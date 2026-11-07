@@ -7,6 +7,7 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { GOAL_BY_ID, GOAL_METRICS, STATUS_LABEL, STATUS_TONE, goalDetail, goalSentence, type GoalMetric, type GoalProgress } from './goalsRules'
 import { parseMoney } from '@/features/finance/statement'
+import { ask } from '@/components/ui/confirm'
 
 /** Metas do mês de todos os clientes (ou de um). Mesma chave de cache em todas as telas. */
 export function useTrafficGoals(month: string, clientId?: string) {
@@ -75,7 +76,7 @@ export function TrafficGoalsPanel({ clientId, month, canEdit, compact = false }:
             <GoalBar goal={g} />
             {canEdit && (
               <button type="button" aria-label={`Tirar a meta de ${GOAL_BY_ID[g.metric].label}`} disabled={save.isPending}
-                onClick={() => { if (window.confirm(`Tirar a meta de ${GOAL_BY_ID[g.metric].label}?`)) save.mutate({ metric: g.metric, target: null }) }}
+                onClick={() => { void ask(`Tirar a meta de ${GOAL_BY_ID[g.metric].label}?`).then((ok) => { if (ok) save.mutate({ metric: g.metric, target: null }) }) }}
                 className="absolute -right-1 top-6 grid size-8 cursor-pointer place-items-center rounded-full text-muted opacity-0 transition hover:bg-raised hover:text-ink focus:opacity-100 group-hover:opacity-100">
                 <Trash2 size={14} aria-hidden="true" />
               </button>
