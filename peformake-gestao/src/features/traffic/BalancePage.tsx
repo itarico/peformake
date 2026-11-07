@@ -77,7 +77,9 @@ export function BalancePage() {
   }
 
   const last = run.data
-  const tokenMissing = last?.error?.includes('META_SYSTEM_TOKEN')
+  // Contas lidas pelo MCP oficial da Meta (rotina na nuvem a cada 6 h). "Ler agora" só existe para contas da API antiga.
+  const hasApi = enabled.some((a) => a.readSource !== 'mcp')
+  const tokenMissing = hasApi && last?.error?.includes('META_SYSTEM_TOKEN')
   const count = (state: BalanceState) => views.filter((item) => item.view.state === state).length
   const totalAvailable = views.reduce((sum, item) => sum + (item.view.state !== 'postpaid' ? item.view.remainingCents ?? 0 : 0), 0)
   const cards = [
@@ -96,10 +98,13 @@ export function BalancePage() {
           {last
             ? `Última leitura ${last.trigger === 'auto' ? 'automática' : 'manual'} em ${when(last.startedAt)}${last.finishedAt ? (last.ok ? ', sem erros.' : ', com problemas.') : ', em andamento.'}`
             : 'Nenhuma leitura feita ainda.'}
+          {' '}Leitura automática pela Meta (MCP oficial) a cada 6 horas.
         </p>
-        <Button variant="secondary" disabled={read.isPending} onClick={() => read.mutate()}>
-          <RefreshCw size={16} aria-hidden="true" className={read.isPending ? 'animate-spin' : ''} /> {read.isPending ? 'Lendo a Meta' : 'Ler agora'}
-        </Button>
+        {hasApi && (
+          <Button variant="secondary" disabled={read.isPending} onClick={() => read.mutate()}>
+            <RefreshCw size={16} aria-hidden="true" className={read.isPending ? 'animate-spin' : ''} /> {read.isPending ? 'Lendo a Meta' : 'Ler agora'}
+          </Button>
+        )}
       </div>
 
       {tokenMissing && (
