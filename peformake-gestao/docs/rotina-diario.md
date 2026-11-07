@@ -2,6 +2,17 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-07 16h30 · auditoria das tarefas automáticas (sessão do PC)
+Pausada: melhoria contínua (sem push e sem Supabase); central de Automações atualizada.
+Achados (prioridade):
+1. Leitura da Meta desligada e a leitura do servidor bloqueada ("API access blocked") desde 05/11; última leitura 06/11 22:03. Painel, Portal e análise usam dado velho; ações aprovadas não chegam à Meta.
+2. Análise diária ignora 3 de 8 contas (Disalp, MF Máquinas, Ótica CM) porque olha status_read_at, que a leitura via MCP não preenche.
+3. Relatório semanal/mensal: PDF do sistema 07:15, IA escreve 08:00 (invertido); catálogo diz 06:00. CM Prime (maior gasto) ficou sem relatório da semana 26/10–01/11. Mensal deixa o último dia do mês de fora.
+4. Comercial: segredo ROUTINE_TOKEN_COMMERCIAL faltando (64 disparos "no_token" em 48h; o cron mostra verde). 13 grupos de WhatsApp sem cliente nunca são lidos.
+5. Caixa de mensagens do Tráfego: filtro deixa passar aprovação de post, gravação e envio de vídeo como card; pedido de pausa virou tarefa comum em vez de proposta de ação.
+6. Estrategistas: período do semanal diferente do relatório; o mensal vai sobrescrever no dia 15 as 8 estratégias de dezembro em rascunho; perfis de clientes errados (Cajá Limão descreve outro negócio). Horários do catálogo divergem.
+7. Fora do sistema: Faxina do PC usa C:\Users\User (o certo é C:\Users\intal; C: 93% cheio); Aula do Professor aponta para branch e arquivos que não existem; Radar de Design sem permissão de push.
+
 ## 2026-11-07 15h (Brasília) · sessão do PC
 Mudança de casa: o trabalho principal passa para a sessão do PC (pasta `Desktop\APP PEFORMAKE`), que o Italo usa também pelo celular pelo Controle Remoto. A nuvem fica de reserva. Regra nova no CLAUDE.md: "Onde se trabalha e como sincronizar".
 Corrigido: ícone da aba era o raio padrão do Vite; agora é a logo PFMK.
