@@ -47,27 +47,12 @@ function useCoach() {
   })
 }
 
-/** Nome do assistente (um lugar só para trocar). */
-export const BOT_NAME = 'Cobrador'
+/** Nome da assistente (um lugar só para trocar). */
+export const BOT_NAME = 'Cobradora'
 
-/** Avatar do assistente: robô simples nas cores da marca, de cara séria (é ele que cobra a meta). */
+/** Foto da assistente (imagem gerada, não é pessoa real), redonda como foto de contato. */
 function Mascot({ size = 36 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 40 40" width={size} height={size} aria-hidden="true" className="shrink-0">
-      <rect x="0" y="0" width="40" height="40" rx="12" fill="#0d3a42" />
-      <path d="M20 6.5v4" stroke="#1fc8db" strokeWidth="1.8" strokeLinecap="round" />
-      <circle cx="20" cy="5.5" r="2" fill="#1fc8db" />
-      <rect x="8.5" y="11" width="23" height="18" rx="6" fill="#f4f7f8" />
-      <rect x="6" y="17" width="2.5" height="6" rx="1.2" fill="#9fb3b8" />
-      <rect x="31.5" y="17" width="2.5" height="6" rx="1.2" fill="#9fb3b8" />
-      <rect x="13" y="16.5" width="4.5" height="4.5" rx="1.4" fill="#0d3a42" />
-      <rect x="22.5" y="16.5" width="4.5" height="4.5" rx="1.4" fill="#0d3a42" />
-      <circle cx="14.6" cy="18.1" r="0.9" fill="#1fc8db" />
-      <circle cx="24.1" cy="18.1" r="0.9" fill="#1fc8db" />
-      <path d="M15.5 25h9" stroke="#0d3a42" strokeWidth="1.6" strokeLinecap="round" />
-      <rect x="14" y="31" width="12" height="4" rx="2" fill="#1fc8db" />
-    </svg>
-  )
+  return <img src="/assistente.webp" alt="" width={size} height={size} aria-hidden="true" className="shrink-0 rounded-full bg-raised object-cover" style={{ width: size, height: size }} />
 }
 
 function GoalBubble({ r, day, days }: { r: GoalRow; day: number; days: number }) {
@@ -651,24 +636,27 @@ export function GoalsChat() {
           </div>
         </section>
       )}
-      {!open && showPill && (
-        <span className="pf-hop pointer-events-auto relative">
-          <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`${BOT_NAME}: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir`}
-            className="relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill py-0 pl-4 pr-9 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 hover:-translate-y-0.5">
-            <span className="-ml-2 rounded-full bg-white/20"><Mascot size={30} /></span> Abre aí!
-            <span className="pf-blink absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>
+      {/* Um elemento só: a foto da assistente (como bolha de conversa). Com novidade, aparece um balão ao lado que dá para fechar. */}
+      {!open && (
+        <div className="pointer-events-none flex items-end gap-2">
+          {showPill && (
+            <span className="pf-rise pointer-events-auto relative mb-1 flex max-w-[230px] items-center rounded-2xl rounded-br-sm border border-line bg-surface py-2 pl-3 pr-8 text-left shadow-xl shadow-black/20">
+              <button type="button" onClick={() => { started.current = false; setOpen(true) }} className="cursor-pointer text-left">
+                <b className="block text-[12.5px] leading-tight text-ink">{BOT_NAME}</b>
+                <span className="block text-[12.5px] leading-snug text-muted">{news.length === 1 ? 'Tenho 1 novidade para você.' : `Tenho ${news.length} novidades para você.`} Abre aí!</span>
+              </button>
+              <button type="button" onClick={minimize} aria-label="Fechar o aviso" title="Fechar o aviso"
+                className="absolute right-1 top-1 grid size-7 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"><X size={14} aria-hidden="true" /></button>
+            </span>
+          )}
+          <button type="button" onClick={() => { started.current = false; setOpen(true) }}
+            aria-label={news.length ? `${BOT_NAME}: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir` : `${BOT_NAME}: ver pendências, tarefas e atualizações`}
+            className={cn('pointer-events-auto relative size-14 shrink-0 cursor-pointer rounded-full shadow-xl shadow-black/30 ring-2 ring-surface transition-transform hover:-translate-y-0.5', showPill && 'pf-hop')}>
+            <Mascot size={56} />
+            <span className="absolute bottom-0.5 right-0.5 size-3.5 rounded-full bg-[#25d366] ring-2 ring-surface" />
+            {news.length > 0 && <span className="pf-blink absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1 text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>}
           </button>
-          {/* Recolher: vira o ícone pequeno; volta a chamar quando chegar novidade nova. */}
-          <button type="button" onClick={minimize} aria-label={`Recolher o ${BOT_NAME}`} title="Recolher"
-            className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 cursor-pointer place-items-center rounded-full text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={14} aria-hidden="true" /></button>
-        </span>
-      )}
-      {!open && !showPill && (
-        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`${BOT_NAME}: ver pendências, tarefas e atualizações`} title={`${BOT_NAME}: pendências, tarefas e atualizações`}
-          className="pointer-events-auto relative inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-line bg-surface py-0 pl-1.5 pr-3.5 text-[12.5px] font-semibold text-ink shadow-lg shadow-black/20 transition-transform hover:-translate-y-0.5">
-          <Mascot size={28} /> Abre aí!
-          {news.length > 0 && <span className="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-[#e5484d] ring-2 ring-canvas" />}
-        </button>
+        </div>
       )}
     </div>
     </>
