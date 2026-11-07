@@ -658,21 +658,17 @@ export function GoalsChat() {
           </div>
         </section>
       )}
-      {/* Barrinha da Bete: foto + chamada. X fecha; volta quando chegar novidade nova ou ao recarregar a página. */}
+      {/* Barrinha da Bete (o mesmo formato de antes, com a foto dela). X fecha; volta com novidade nova ou ao recarregar. */}
       {!open && visible && (
         <span className={cn('pointer-events-auto relative', news.length > 0 && 'pf-hop')}>
           <button type="button" onClick={() => { started.current = false; setOpen(true) }}
             aria-label={news.length ? `${BOT_NAME}: ${news.length} ${news.length === 1 ? 'mensagem nova' : 'mensagens novas'}. Abrir` : `${BOT_NAME}: abrir a conversa`}
-            className="relative inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-line bg-surface py-1 pl-1 pr-10 text-[13.5px] font-semibold text-ink shadow-xl shadow-black/25 transition-transform hover:-translate-y-0.5">
-            <span className="relative"><Mascot size={40} /><span className="absolute bottom-0 right-0 size-3 rounded-full bg-[#25d366] ring-2 ring-surface" /></span>
-            <span className="flex flex-col items-start leading-tight">
-              <span>{news.length ? 'Olha as mensagens' : 'Abre aí!'}</span>
-              <span className="text-[11px] font-medium text-muted">{BOT_NAME}{news.length ? ` · ${news.length} ${news.length === 1 ? 'nova' : 'novas'}` : ''}</span>
-            </span>
-            {news.length > 0 && <span className="pf-blink absolute -left-1 -top-1 grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1 text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>}
+            className="relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-fill py-0 pl-1.5 pr-9 text-[13px] font-semibold text-on-fill shadow-xl shadow-black/30 hover:-translate-y-0.5">
+            <Mascot size={32} /> {news.length ? 'Olha as mensagens' : 'Abre aí!'}
+            {news.length > 0 && <span className="pf-blink absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#e5484d] text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>}
           </button>
           <button type="button" onClick={hide} aria-label={`Fechar a ${BOT_NAME}`} title="Fechar"
-            className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"><X size={15} aria-hidden="true" /></button>
+            className="absolute right-1.5 top-1/2 grid size-6 -translate-y-1/2 cursor-pointer place-items-center rounded-full text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={14} aria-hidden="true" /></button>
         </span>
       )}
     </div>
