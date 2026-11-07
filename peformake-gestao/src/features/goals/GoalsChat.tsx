@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, MessageCircle, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, MessageCircle, X } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
@@ -395,8 +395,7 @@ export function GoalsChat() {
   const newsSig = news.map((x) => x.id).join('|')
   sigRef.current = newsSig
   const visible = hiddenSig !== newsSig
-  // Sem metas e sem nada do sistema para mostrar: não aparece.
-  if (!role && !items.length && !pendAll.length && !updates.length && !(myDay.data?.tasks?.length)) return null
+  // Sempre presente (mesmo sem meta ou novidade): no mínimo a setinha discreta no rodapé.
 
   const goal = (key?: string) => list.find((r) => r.key === key) ?? list[0]!
   /** Mensagens antigas guardam a área: trocar de tela não muda o que já foi dito. */
@@ -658,19 +657,24 @@ export function GoalsChat() {
           </div>
         </section>
       )}
-      {/* Abinha no rodapé (estilo chat do Messenger): só o ícone e o número de novidades. Some quando tudo foi visto; volta com novidade nova. */}
-      {!open && visible && news.length > 0 && (
+      {/* Abinha no rodapé (estilo Messenger). Com mensagem: número piscando. Sem mensagem (ou fechada no X): só uma setinha discreta. */}
+      {!open && (visible && news.length > 0 ? (
         <span className="pointer-events-auto relative flex items-stretch overflow-hidden rounded-t-xl bg-fill text-on-fill shadow-lg shadow-black/25">
           <button type="button" onClick={() => { started.current = false; setOpen(true) }}
             aria-label={`${BOT_NAME}: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir`}
             className="flex min-h-10 cursor-pointer items-center gap-1.5 pl-3 pr-2 text-[13px] font-bold hover:bg-black/10">
             <MessageCircle size={16} aria-hidden="true" />
-            <span className="grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1.5 text-[11px] text-white">{news.length}</span>
+            <span className="pf-blink grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1.5 text-[11px] text-white">{news.length}</span>
           </button>
-          <button type="button" onClick={hide} aria-label={`Fechar a ${BOT_NAME}`} title="Fechar"
+          <button type="button" onClick={hide} aria-label={`Recolher a ${BOT_NAME}`} title="Recolher"
             className="grid w-8 cursor-pointer place-items-center text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={13} aria-hidden="true" /></button>
         </span>
-      )}
+      ) : (
+        <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Abrir a ${BOT_NAME}`} title={BOT_NAME}
+          className="pointer-events-auto grid h-7 w-11 cursor-pointer place-items-center rounded-t-xl border border-b-0 border-line bg-surface/90 text-muted shadow-md shadow-black/10 backdrop-blur hover:text-ink">
+          <ChevronUp size={16} aria-hidden="true" />
+        </button>
+      ))}
     </div>
     </>
   )

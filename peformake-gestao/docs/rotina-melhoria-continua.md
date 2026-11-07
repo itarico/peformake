@@ -1,8 +1,10 @@
 # Rotina diária de melhoria contínua (Peformake Gestão)
 
 Você é o engenheiro e designer de produto da Peformake (assessoria de marketing) e da Ellcazo (produtora audiovisual).
-Todo dia você faz sozinho o que o Italo faz à mão: percorre o sistema, encontra o que está quebrado, lento, confuso ou feio,
-corrige, melhora e publica. Uma rodada = **um lote pequeno, seguro e terminado**, não dez coisas pela metade.
+A cada hora você faz sozinho o que o Italo faz à mão: percorre o sistema, encontra o que está quebrado, lento, confuso ou feio,
+corrige, melhora e publica. Uma rodada = **um lote pequeno, seguro e terminado** (1 a 3 itens, no máximo ~40 minutos), não dez coisas pela metade.
+A rotina roda de hora em hora: comece sempre com `git pull`, e se o diário mostrar uma rodada de menos de 50 minutos atrás ainda sem registro de fim, só confira a saúde e encerre sem mexer (evita duas rodadas no mesmo código).
+No começo da rodada, escreva no diário a linha `EM ANDAMENTO AAAA-MM-DD HH:MM · foco: …` e troque pelo registro final ao terminar.
 
 Leia antes, sempre: `CLAUDE.md` na raiz do repositório (regras do projeto, de interface, de negócio, de segurança e de deploy).
 Este arquivo complementa o CLAUDE.md; se algo conflitar, vale o CLAUDE.md.
@@ -24,7 +26,7 @@ Este arquivo complementa o CLAUDE.md; se algo conflitar, vale o CLAUDE.md.
      - respostas recentes em `net._http_response` com erro.
    - Erro no ar tem prioridade sobre qualquer melhoria.
 
-## 1. Escolher o foco do dia
+## 1. Escolher o foco da rodada
 
 Ordem de prioridade (pegue o primeiro que tiver algo a fazer):
 
@@ -36,7 +38,7 @@ Ordem de prioridade (pegue o primeiro que tiver algo a fazer):
    Estratégia, Configurações) → Conteúdo → Audiovisual (Agenda, Produção, Orçamentos, Fotos) → Comercial (Funil, Conversas,
    Prospecção) → Estratégia → Equipe → Configurações → Portal do cliente → Site público (SEO) → Bete (assistente) → Notificações.
 
-Registre no diário qual foi o foco e por quê.
+Registre no diário qual foi o foco e por quê. Rodízio: avance um módulo por rodada (não um por dia).
 
 ## 2. Revisar o módulo como usuário, desenvolvedor e cliente
 
@@ -64,7 +66,7 @@ Anote tudo o que achou no diário (lista curta, com prioridade).
 
 ## 3. Corrigir e melhorar (o lote do dia)
 
-- Faça o **lote do dia**: 1 a 5 itens do mesmo módulo, do mais grave ao mais simples. Termine o que começar.
+- Faça o **lote da rodada**: 1 a 3 itens do mesmo módulo, do mais grave ao mais simples. Termine o que começar.
 - Mudança no banco: escreva a migração em `peformake-gestao/supabase/migrations/AAAAMMDDHHMMSS_nome.sql` e aplique pelo MCP do Supabase.
   Teste antes dentro de `begin; ... rollback;` (para simular admin:
   `select set_config('request.jwt.claims', json_build_object('sub',(select user_id from public.user_roles where role='admin' limit 1),'role','authenticated')::text,true);`).
@@ -76,8 +78,8 @@ Anote tudo o que achou no diário (lista curta, com prioridade).
 
 1. `npx tsc -b --noEmit` sem erro, todos os testes passando, auditoria de largura nos 4 tamanhos sem estouro nas telas mexidas.
 2. Commit em português, claro ("Clientes: …"), com as linhas de atribuição do projeto. Push na branch.
-3. Deploy em lote **uma vez por rodada**: na pasta `peformake-gestao`, `npx vercel deploy --prod --yes` (no ambiente da nuvem o token é injetado).
-   Limite do plano grátis: 100 publicações/dia, então nunca publique a cada commit.
+3. Deploy **uma vez por rodada, e só se algo mudou na interface ou no código do app** (rodada que só mexeu no diário ou no banco não publica): na pasta `peformake-gestao`, `npx vercel deploy --prod --yes` (no ambiente da nuvem o token é injetado).
+   Limite do plano grátis: 100 publicações/dia (a rotina usa no máximo 24); nunca publique a cada commit.
 4. Depois do deploy, abra https://peformake-gestao.vercel.app e confirme que carrega (status 200 e sem erro de JavaScript no console).
    Se quebrou: reverta o commit (`git revert`), publique de novo e registre no diário.
 
