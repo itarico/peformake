@@ -697,7 +697,12 @@ export function GoalsChat() {
                   {m.kind === 'notice' && <NoticeCard n={m.n} />}
                   {m.kind === 'pending' && <PendingCard list={m.list} />}
                   {m.kind === 'summary' && <SummaryCard pend={pendAll} tasks={(myDay.data?.tasks ?? []).filter((t) => !/done|conclu|feita/i.test(t.status))} pieces={myDay.data?.pieces ?? []} updates={updates} today={cal.iso} />}
-                  {m.kind === 'all' && <div className="-mx-2 -my-1 w-[300px] max-w-full">{panel('metas')}</div>}
+                  {m.kind === 'all' && (
+                    // Conversas salvas antes da mudança: em vez do placar inteiro, só os tópicos para escolher.
+                    <span className="flex flex-col gap-1.5">Suas metas do mês. Qual você quer ver?
+                      <span className="flex flex-wrap gap-1.5">{rows.filter((x) => x.role === m.role).map((g) => <button key={g.key} type="button" onClick={() => act({ label: GOAL_META[g.key]!.short, act: 'goal', key: g.key, role: g.role })} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{GOAL_META[g.key]!.short}</button>)}</span>
+                    </span>
+                  )}
                   {m.kind === 'view' && <div className="-mx-2 -my-1 w-[300px] max-w-full">{panel(m.view)}</div>}
                 </div>
               ))}
