@@ -27,7 +27,7 @@ type NewMsg =
   | { from: 'bot'; kind: 'divider'; text: string }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'end' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
 /** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
 type Pend = { id: string; client: string; label: string; late: number }
 type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending' | 'tasks'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
@@ -48,7 +48,7 @@ function useCoach() {
 }
 
 /** Nome da assistente (um lugar só para trocar). */
-export const BOT_NAME = 'Cobradora'
+export const BOT_NAME = 'Bete'
 
 /** Foto da assistente (imagem gerada, não é pessoa real), redonda como foto de contato. */
 function Mascot({ size = 36 }: { size?: number }) {
@@ -285,7 +285,10 @@ export function GoalsChat() {
     queryFn: async () => { const { data, error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>)('my_day', { _staff_id: null }); if (error) throw new Error(error.message); return data as MyDayLite },
   })
   // Recolhido pela pessoa: fica só o ícone pequeno até chegar novidade nova.
-  const [minimized, setMinimized] = useState(() => store.get('pf-goals-min') ?? '')
+  // Fechada pelo X ou no Finalizar: some até chegar novidade nova (ou até recarregar a página).
+  const [hiddenSig, setHiddenSig] = useState<string | null>(null)
+  const sigRef = useRef('')
+  const hide = () => setHiddenSig(sigRef.current)
 
   // Memória do que já foi mostrado (no aparelho): não repete no mesmo dia; meta batida avisa uma vez no mês.
   const [seen, setSeen] = useState<Set<string>>(() => new Set(JSON.parse(store.get('pf-goals-seen') ?? '[]') as string[]))
@@ -390,8 +393,8 @@ export function GoalsChat() {
 
   if (state.status !== 'ready') return null
   const newsSig = news.map((x) => x.id).join('|')
-  const showPill = news.length > 0 && minimized !== newsSig
-  const minimize = () => { store.set('pf-goals-min', newsSig); setMinimized(newsSig) }
+  sigRef.current = newsSig
+  const visible = hiddenSig !== newsSig
   // Sem metas e sem nada do sistema para mostrar: não aparece.
   if (!role && !items.length && !pendAll.length && !updates.length && !(myDay.data?.tasks?.length)) return null
 
@@ -439,7 +442,7 @@ export function GoalsChat() {
     const nx = remaining.find((x) => x.kind !== 'tip')
     const tipsLeft = !!key && tips.some((x) => !seen.has(x.id))
     const opts: Reply[] = [
-      ...(nx ? [{ label: nextLabel(nx, remaining), act: 'next' as const }] : [{ label: 'Finalizar ✅', act: 'next' as const }]),
+      ...(nx ? [{ label: nextLabel(nx, remaining), act: 'next' as const }] : [{ label: 'Finalizar ✅', act: 'end' as const }]),
       ...(key ? [{ label: 'Como bater?', act: 'how' as const, key }] : []),
       ...(tipsLeft ? [{ label: tipLabel(), act: 'tip' as const }] : []),
     ]
@@ -533,6 +536,7 @@ export function GoalsChat() {
     if (r.act === 'tasks') say([{ from: 'bot', kind: 'text', text: taskCount ? 'O que está com você:' : 'Nenhuma tarefa aberta com você. 👌' }, ...(taskCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'tarefas' as const }] : [])], menu())
     if (r.act === 'news') say([{ from: 'bot', kind: 'text', text: 'Novidades da semana:' }, { from: 'bot', kind: 'view', view: 'novidades' }], menu())
     if (r.act === 'bye') close()
+    if (r.act === 'end') { close(); hide() }
   }
 
   function close() {
@@ -654,27 +658,22 @@ export function GoalsChat() {
           </div>
         </section>
       )}
-      {/* Um elemento só: a foto da assistente (como bolha de conversa). Com novidade, aparece um balão ao lado que dá para fechar. */}
-      {!open && (
-        <div className="pointer-events-none flex items-end gap-2">
-          {showPill && (
-            <span className="pf-rise pointer-events-auto relative mb-1 flex max-w-[230px] items-center rounded-2xl rounded-br-sm border border-line bg-surface py-2 pl-3 pr-8 text-left shadow-xl shadow-black/20">
-              <button type="button" onClick={() => { started.current = false; setOpen(true) }} className="cursor-pointer text-left">
-                <b className="block text-[12.5px] leading-tight text-ink">{BOT_NAME}</b>
-                <span className="block text-[12.5px] leading-snug text-muted">{news.length === 1 ? 'Tenho 1 novidade para você.' : `Tenho ${news.length} novidades para você.`} Abre aí!</span>
-              </button>
-              <button type="button" onClick={minimize} aria-label="Fechar o aviso" title="Fechar o aviso"
-                className="absolute right-1 top-1 grid size-7 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"><X size={14} aria-hidden="true" /></button>
-            </span>
-          )}
+      {/* Barrinha da Bete: foto + chamada. X fecha; volta quando chegar novidade nova ou ao recarregar a página. */}
+      {!open && visible && (
+        <span className={cn('pointer-events-auto relative', news.length > 0 && 'pf-hop')}>
           <button type="button" onClick={() => { started.current = false; setOpen(true) }}
-            aria-label={news.length ? `${BOT_NAME}: ${news.length} ${news.length === 1 ? 'novidade' : 'novidades'}. Abrir` : `${BOT_NAME}: ver pendências, tarefas e atualizações`}
-            className={cn('pointer-events-auto relative size-14 shrink-0 cursor-pointer rounded-full shadow-xl shadow-black/30 ring-2 ring-surface transition-transform hover:-translate-y-0.5', showPill && 'pf-hop')}>
-            <Mascot size={56} />
-            <span className="absolute bottom-0.5 right-0.5 size-3.5 rounded-full bg-[#25d366] ring-2 ring-surface" />
-            {news.length > 0 && <span className="pf-blink absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1 text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>}
+            aria-label={news.length ? `${BOT_NAME}: ${news.length} ${news.length === 1 ? 'mensagem nova' : 'mensagens novas'}. Abrir` : `${BOT_NAME}: abrir a conversa`}
+            className="relative inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-line bg-surface py-1 pl-1 pr-10 text-[13.5px] font-semibold text-ink shadow-xl shadow-black/25 transition-transform hover:-translate-y-0.5">
+            <span className="relative"><Mascot size={40} /><span className="absolute bottom-0 right-0 size-3 rounded-full bg-[#25d366] ring-2 ring-surface" /></span>
+            <span className="flex flex-col items-start leading-tight">
+              <span>{news.length ? 'Olha as mensagens' : 'Abre aí!'}</span>
+              <span className="text-[11px] font-medium text-muted">{BOT_NAME}{news.length ? ` · ${news.length} ${news.length === 1 ? 'nova' : 'novas'}` : ''}</span>
+            </span>
+            {news.length > 0 && <span className="pf-blink absolute -left-1 -top-1 grid min-w-5 place-items-center rounded-full bg-[#e5484d] px-1 text-[11px] font-bold text-white ring-2 ring-canvas">{news.length}</span>}
           </button>
-        </div>
+          <button type="button" onClick={hide} aria-label={`Fechar a ${BOT_NAME}`} title="Fechar"
+            className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"><X size={15} aria-hidden="true" /></button>
+        </span>
       )}
     </div>
     </>
