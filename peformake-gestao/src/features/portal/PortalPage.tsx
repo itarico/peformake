@@ -144,13 +144,13 @@ function Results({ token }: { token: string }) {
       {history.length > 0 && (
         <Card title="Mês a mês">
           <div className="mt-2 overflow-x-auto">
-            <table className="w-full min-w-[420px] text-left">
+            <table className="w-full text-left text-[13px] sm:text-[15px]">
               <thead className="text-[12px] text-muted">
                 <tr>
                   <th className="py-2 font-medium">Mês</th>
                   <th className="py-2 text-right font-medium">Investido</th>
                   <th className="py-2 text-right font-medium">Conversas</th>
-                  <th className="py-2 text-right font-medium">Custo por conversa</th>
+                  <th className="py-2 text-right font-medium"><span className="sm:hidden">Por conversa</span><span className="hidden sm:inline">Custo por conversa</span></th>
                 </tr>
               </thead>
               <tbody className="tabular-nums">

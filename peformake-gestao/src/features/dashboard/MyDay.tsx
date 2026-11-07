@@ -98,7 +98,27 @@ function DesignerView({ d, now }: { d: Day; now: number }) {
 function ClientsTable({ d, social }: { d: Day; social: boolean }) {
   return (
     <Panel title={social ? 'Meus clientes no mês' : 'Clientes que eu atendo'} className="pf-rise">
-      <div className="-mx-2 overflow-x-auto">
+      {/* Celular: um cartão por cliente com o que importa (pendências em destaque). */}
+      <ul className="flex flex-col divide-y divide-line md:hidden">
+        {d.clients.map((c) => (
+          <li key={c.id} className="flex flex-col gap-1.5 py-3">
+            <span className="flex items-center gap-2">
+              <Link to={`/clientes/${c.id}`} className="min-w-0 flex-1 truncate font-semibold text-ink">{c.name}</Link>
+              {social && <ArtRequestButton clientId={c.id} className="min-h-9 px-3 text-[12px]" />}
+            </span>
+            <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-[12px] tabular-nums text-muted">
+              <span>{c.pieces_month} peças</span>
+              {c.no_brief > 0 && <span className="font-semibold text-warn-ink">{c.no_brief} sem briefing</span>}
+              {c.to_review > 0 && <span className="font-semibold text-accent-ink">{c.to_review} para revisar</span>}
+              {c.with_client > 0 && <span>{c.with_client} com o cliente</span>}
+              <span className="text-ok-ink">{c.approved_month} aprovadas</span>
+              {c.next_shoot && <span>Gravação {when(c.next_shoot)}</span>}
+            </span>
+          </li>
+        ))}
+        {d.clients.length === 0 && <li className="py-6 text-center text-muted">Nenhum cliente ligado a você no cadastro.</li>}
+      </ul>
+      <div className="-mx-2 hidden overflow-x-auto md:block">
         <table className="w-full min-w-[640px] text-left text-[13px]">
           <thead className="text-[12px] text-muted"><tr className="[&>th]:px-2 [&>th]:py-2 [&>th]:font-medium">
             <th>Cliente</th><th className="text-right">Peças</th><th className="text-right">Sem briefing</th><th className="text-right">Para revisar</th><th className="text-right">Com o cliente</th><th className="text-right">Aprovadas</th><th>Próxima gravação</th>{social && <th />}

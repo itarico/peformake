@@ -199,7 +199,23 @@ export function TrafficDashboard() {
 
       <section aria-labelledby="contas-gasto" className="rounded-3xl border border-line bg-surface p-5">
         <h2 id="contas-gasto" className="mb-3 text-[15px] font-semibold">Contas com gasto</h2>
-        <div className="overflow-x-auto">
+        {/* Celular: um cartão por conta, sem arrastar de lado. */}
+        <ul className="flex flex-col divide-y divide-line md:hidden">
+          {byAccount.map(({ account, client, totals: item }) => (
+            <li key={account.id} className="flex items-center gap-3 py-2.5">
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[14px] font-medium">{account.name}</span>
+                <span className={cn('block truncate text-[12px]', 'text-muted')}>{client}</span>
+              </span>
+              <span className="shrink-0 text-right tabular-nums">
+                <span className="block text-[14px] font-semibold">{brl(item.spendCents)}</span>
+                <span className="block text-[12px] text-muted">{NUMBER.format(item.conversations)} conv. · {perResult(item.spendCents, item.conversations)}</span>
+              </span>
+            </li>
+          ))}
+          {byAccount.length === 0 && <li className="py-6 text-center text-[13px] text-muted">Nenhuma conta com gasto neste período.</li>}
+        </ul>
+        <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[560px] border-collapse">
             <thead>
               <tr className="border-b border-line text-left text-[13px] text-muted">

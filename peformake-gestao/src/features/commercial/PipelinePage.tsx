@@ -198,7 +198,7 @@ export function PipelinePage() {
       {editing && <DealEditor key={`${editing.id}-${editing.updatedAt}`} deal={editing} data={data} services={services.data} canManage={canManage} userId={userId} onClose={() => setEditing(null)} />}
       {move.isError && <p role="alert" className="font-medium text-warn-ink">{commercialErrorMessage(move.error)}</p>}
 
-      <div className="flex gap-3 overflow-x-auto pb-2">
+      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:snap-none">
         {STAGES.map((stage) => {
           const items = visible.filter((d) => d.stage === stage.id)
           const total = items.reduce((sum, d) => sum + (d.valueCents ?? 0), 0)
@@ -209,7 +209,7 @@ export function PipelinePage() {
               onDragOver={(e) => { e.preventDefault(); setOverStage(stage.id) }}
               onDragLeave={() => setOverStage((current) => (current === stage.id ? null : current))}
               onDrop={(e) => drop(e, stage.id)}
-              className={cn('flex min-h-40 w-[260px] shrink-0 flex-col gap-2 rounded-3xl border bg-raised/50 p-3 transition-colors', overStage === stage.id ? 'border-accent' : 'border-line')}
+              className={cn('flex min-h-40 w-[86%] shrink-0 snap-start flex-col gap-2 sm:w-[260px] rounded-3xl border bg-raised/50 p-3 transition-colors', overStage === stage.id ? 'border-accent' : 'border-line')}
             >
               <header className="px-1">
                 <h2 className="flex items-center justify-between font-semibold">{stage.label}<span className="text-[13px] text-muted tabular-nums">{items.length}</span></h2>

@@ -91,11 +91,11 @@ export function ContentBoard() {
           <p className="text-muted">Abra a aba Planejamento, escolha o cliente e crie as peças do mês.</p>
         </div>
       ) : (
-        <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0">
+        <div className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:snap-none md:px-0">
           {columns.map((status: ContentStatus) => {
             const col = visible.filter((i) => i.status === status)
             return (
-              <section key={status} aria-label={STATUS_LABEL[status]} className="flex w-[264px] shrink-0 flex-col gap-2 rounded-3xl bg-raised p-2.5">
+              <section key={status} aria-label={STATUS_LABEL[status]} className="flex w-[86%] shrink-0 snap-start flex-col gap-2 rounded-3xl bg-raised p-2.5 sm:w-[264px]">
                 <h2 className="flex items-center justify-between px-1.5 text-[13px] font-semibold">
                   {STATUS_LABEL[status]} <span className="font-normal text-muted">{col.length}</span>
                 </h2>

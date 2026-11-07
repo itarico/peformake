@@ -95,12 +95,12 @@ export function AvBoard() {
         <span className="ml-auto text-[13px] text-muted">{delivered.length} entregues no mês</span>
       </div>
 
-      <div className="-mx-4 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0">
-        <div className="grid min-w-[1180px] grid-cols-6 gap-2">
+      <div className="-mx-4 snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 pb-2 md:mx-0 md:snap-none md:px-0">
+        <div className="grid auto-cols-[86%] grid-flow-col gap-2 md:min-w-[1180px] md:snap-none md:auto-cols-auto md:grid-flow-row md:grid-cols-6">
           {AV_STAGES.map((st) => {
             const items = list.filter((p) => stageOf(p) === st.key).sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
             return (
-              <section key={st.key} aria-label={st.label} className="flex min-h-[420px] flex-col gap-2 rounded-3xl bg-raised/60 p-2.5">
+              <section key={st.key} aria-label={st.label} className="flex min-h-[420px] snap-start flex-col gap-2 rounded-3xl bg-raised/60 p-2.5">
                 <div className="px-1">
                   <h2 className="flex items-center justify-between text-[13px] font-semibold">{st.label}<span className="tabular-nums text-muted">{items.length}</span></h2>
                   <p className="text-[11px] text-muted">{st.hint}</p>
