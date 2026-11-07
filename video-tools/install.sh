@@ -7,7 +7,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV="${VIDEO_VENV:-/opt/video-venv}"
 
 command -v ffmpeg >/dev/null || { echo "ffmpeg não encontrado: instale (apt install ffmpeg / brew install ffmpeg)"; exit 1; }
-ffmpeg -hide_banner -filters 2>/dev/null | grep -q vidstabdetect || echo "Aviso: ffmpeg sem vid.stab; a estabilização não vai funcionar."
+FILTROS="$(ffmpeg -hide_banner -filters 2>/dev/null)"
+grep -q vidstabdetect <<<"$FILTROS" || echo "Aviso: ffmpeg sem vid.stab; a estabilização não vai funcionar."
 
 if [ ! -x "$VENV/bin/python" ]; then python3 -m venv "$VENV"; fi
 "$VENV/bin/pip" install -q --upgrade pip
