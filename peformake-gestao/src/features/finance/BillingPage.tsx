@@ -15,7 +15,7 @@ import { monthLabel } from '@/features/traffic/planRules'
 import { GATEWAY_LABEL, SOURCE_LABEL, reminderStage, validDocument } from './billingRules'
 import { parseMoney } from './statement'
 import { AsaasCard } from './AsaasCard'
-import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
+import { addDays, brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { ask } from '@/components/ui/confirm'
@@ -126,7 +126,9 @@ export function BillingPage() {
   const open = byUnit.filter((i) => i.status === 'pendente' || i.status === 'vencido')
   const late = open.filter((i) => i.due_date < today)
   const paid = byUnit.filter((i) => i.status === 'pago')
-  const ready = open.filter((i) => !i.payment_url && i.due_date <= today)
+  const ready = open.filter((i) => !i.payment_url && i.due_date <= addDays(today, 5))
+  // Sem CPF/CNPJ o Asaas não emite a cobrança: avisar antes do dia.
+  const noDoc = [...new Map(open.filter((i) => !i.payment_url && !(clientById.get(i.client_id)?.document ?? '').replace(/\D/g, '')).map((i) => [i.client_id, { id: i.client_id, name: nameOf(i) }])).values()]
   const q = fold(query.trim())
   const list = byUnit
     .filter((i) => status === 'todas' ? i.status !== 'cancelado' : status === 'aberto' ? open.includes(i) : status === 'vencido' ? late.includes(i) : i.status === 'pago')
@@ -139,7 +141,7 @@ export function BillingPage() {
     <>
       <SectionHeader
         title="Financeiro"
-        sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto. O link sai sozinho no dia do vencimento.`}
+        sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto. O link sai sozinho 5 dias antes do vencimento.`}
         tabs={FINANCE_TABS}
         actions={<>
           <div role="group" aria-label="Empresa" className="inline-flex rounded-full border border-line p-0.5">
@@ -154,13 +156,20 @@ export function BillingPage() {
       />
 
       {isAdmin && <AsaasCard />}
+      {isAdmin && noDoc.length > 0 && (
+        <div role="alert" className="flex flex-col gap-1.5 rounded-2xl border border-warn/40 bg-warn-soft/60 px-4 py-3">
+          <p className="font-semibold text-warn-ink">{noDoc.length} {noDoc.length === 1 ? 'cliente sem CPF/CNPJ' : 'clientes sem CPF/CNPJ'}: o Asaas não gera a cobrança sem esse dado.</p>
+          <p className="text-[13px] text-muted">Preencha no cadastro (Editar → Contratante) antes do vencimento.</p>
+          <p className="flex flex-wrap gap-1.5">{noDoc.slice(0, 24).map((c) => <a key={c.id} href={`/clientes/${c.id}`} className="rounded-full border border-line bg-surface px-2.5 py-0.5 text-[12px] font-medium text-ink no-underline hover:border-ink">{c.name}</a>)}</p>
+        </div>
+      )}
 
       <section aria-label="Resumo" className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {[
           { label: 'A receber', value: brl(open.reduce((a, i) => a + Number(i.amount), 0)), hint: `${open.length} faturas`, f: 'aberto' as const },
           { label: 'Vencido', value: brl(late.reduce((a, i) => a + Number(i.amount), 0)), hint: `${late.length} faturas`, warn: late.length > 0, f: 'vencido' as const },
           { label: 'Recebido', value: brl(paid.reduce((a, i) => a + Number((i as Invoice & { paid_amount?: number }).paid_amount ?? i.amount), 0)), hint: `${paid.length} faturas`, f: 'pago' as const },
-          { label: 'Prontas para cobrar', value: String(ready.length), hint: ready.length ? 'Venceram e ainda estão sem link' : 'O link sai no dia do vencimento', warn: ready.length > 0, f: 'aberto' as const },
+          { label: 'Sem link ainda', value: String(ready.length), hint: ready.length ? 'Vencem em até 5 dias' : 'O link sai 5 dias antes', warn: ready.length > 0 && noDoc.length > 0, f: 'aberto' as const },
         ].map((t) => (
           <div key={t.label} onClick={() => setStatusFilter(t.f)} className="cursor-pointer rounded-2xl border border-line bg-surface px-4 py-3 hover:border-line-strong">
             <p className="text-[12px] font-medium text-muted">{t.label}</p>
@@ -383,8 +392,8 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
           <p className="text-[12px] text-muted">As chaves ficam no servidor (Supabase): ASAAS_API_KEY e ASAAS_WEBHOOK_TOKEN, ou MP_ACCESS_TOKEN. A Cora exige o plano CoraPro e certificado; por enquanto a cobrança dela é manual.</p>
           <fieldset className="flex flex-col">
             <legend className="mb-1 text-[13px] font-semibold">Automático</legend>
-            {toggle('monthly_generate', 'Gerar mensalidades sozinho', 'Todo dia confere os contratos e cria a mensalidade do mês, com vencimento no dia do contrato.')}
-            {toggle('auto_charge', 'Criar o link no gateway sozinho', 'De hora em hora, as faturas pendentes ganham link de pagamento (Pix, boleto ou cartão).')}
+            {toggle('monthly_generate', 'Gerar mensalidades sozinho', 'Todo dia confere os clientes fixos e cria a mensalidade do mês, com vencimento no dia 30, respeitando início e fim do contrato.')}
+            {toggle('auto_charge', 'Criar o link no gateway sozinho', '5 dias antes do vencimento a fatura ganha o link de pagamento (Pix, boleto ou cartão). Cancelar ou dar baixa aqui também fecha a cobrança no Asaas.')}
             <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova com link e lembretes de vencimento) ligam e desligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, no grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>
           </fieldset>
           <fieldset className="flex flex-col gap-2 rounded-2xl border border-line p-4">
