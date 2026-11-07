@@ -87,7 +87,7 @@ export function MonthStackBars({ data, series, line, format, height = 220, label
                 className="relative flex h-full min-w-0 flex-1 cursor-default flex-col items-center justify-end"
               >
                 {i === last && (totals[i] ?? 0) > 0 && (
-                  <span className="pf-fade mb-1 whitespace-nowrap text-[12px] font-semibold tabular-nums text-ink">{format(totals[i] ?? 0)}</span>
+                  <span className="pf-fade mb-1 self-end whitespace-nowrap text-[12px] font-semibold tabular-nums text-ink">{format(totals[i] ?? 0)}</span>
                 )}
                 <span
                   className={cn('pf-grow-y flex w-full max-w-9 flex-col-reverse gap-[2px] transition-opacity duration-200', hover !== null && hover !== i && 'opacity-35')}

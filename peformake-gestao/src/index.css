@@ -213,6 +213,13 @@ html {
 body {
   overscroll-behavior-y: none;
 }
+/* Nada pode deixar a tela mais larga que o celular: senão a página "escorrega" de lado e deixa de parecer app. */
+html,
+body {
+  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
+}
 button,
 a,
 [role='button'] {
