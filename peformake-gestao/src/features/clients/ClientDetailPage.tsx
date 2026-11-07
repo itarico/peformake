@@ -99,7 +99,7 @@ export function ClientDetailPage() {
         <div className="flex flex-wrap items-center gap-4">
           <ClientAvatar name={client.name} url={client.logoUrl} size="lg" />
           <div className="min-w-0 flex-1">
-            <h1 className="text-[28px] font-semibold leading-tight tracking-tight">{client.name}</h1>
+            <h1 className="break-words text-[clamp(22px,6.5vw,28px)] font-semibold leading-tight tracking-tight">{client.name}</h1>
             <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[13px]">
               <span className="rounded-full bg-raised px-2.5 py-0.5 font-medium">{KIND_LABEL[view.kind]}</span>
               {view.entity === 'ellcazo' && <span className="rounded-full bg-raised px-2.5 py-0.5 font-medium">Ellcazo</span>}
@@ -107,8 +107,9 @@ export function ClientDetailPage() {
               <PartnerChip clientId={client.id} on={!!client.isPartner} />
               <span className={cn('rounded-full px-2.5 py-0.5 font-medium', client.isActive ? 'bg-ok-soft text-ok-ink' : 'bg-warn-soft text-warn-ink')}>{clientStatusLabel(client)}</span>
             </p>
-            <div className="mt-2 max-w-lg"><DeliveryBar wide clientId={client.id} clientName={client.name} items={deliveries.data?.get(client.id)} /></div>
+            <div className="mt-2 hidden max-w-lg md:block"><DeliveryBar wide clientId={client.id} clientName={client.name} items={deliveries.data?.get(client.id)} /></div>
           </div>
+          <div className="w-full md:hidden"><DeliveryBar wide clientId={client.id} clientName={client.name} items={deliveries.data?.get(client.id)} /></div>
           <div className="flex flex-wrap gap-2">
             {whatsapp && (
               <a href={whatsapp} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 font-medium hover:border-ink">
@@ -132,7 +133,7 @@ export function ClientDetailPage() {
       )}
 
 
-      <div role="tablist" aria-label="Seções do cliente" className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div role="tablist" aria-label="Seções do cliente" className="flex gap-1 overflow-x-auto max-md:[mask-image:linear-gradient(to_right,#000_calc(100%-36px),transparent)] overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((t) => (
           <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}
             className={cn('-mb-px min-h-11 shrink-0 cursor-pointer border-b-2 px-4 text-[14px] font-semibold', tab === t.id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink')}>

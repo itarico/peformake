@@ -136,7 +136,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
       <div className="grid grid-cols-2 gap-2 @3xl:grid-cols-4">
         <Tile label="Temperatura" footer={intel?.label === 'sem_dados' ? 'Ligue o grupo de WhatsApp do cliente para medir.' : contactDays !== null ? `Último contato há ${contactDays} ${contactDays === 1 ? 'dia' : 'dias'}` : 'Sem contato registrado'}>
           {intel ? (
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               {intel.label !== 'sem_dados' && <Gauge value={intel.temperature} warm={settings.data?.temp_warm} hot={settings.data?.temp_hot} label="Temperatura" />}
               <p className="flex flex-col items-start gap-0.5">
                 <span className={cn('rounded-full px-2.5 py-0.5 text-[13px] font-semibold', TEMP_TONE[intel.label])}>{TEMP_LABEL[intel.label]}</span>
@@ -162,7 +162,7 @@ export function ClientOverview({ view, isAdmin, canManage, whatsapp, onOpenTab }
               : nextInv ? `Vence ${nextInv.due_date.slice(8)}/${nextInv.due_date.slice(5, 7)}`
               : client.contract?.billingDay && view.kind !== 'avulso' ? <span className="font-medium text-ok-ink">Cliente em dia · vence todo dia {client.contract.billingDay}</span>
               : ltv ? `${brlValue(ltv)} em ${months} ${months === 1 ? 'mês' : 'meses'} de casa` : undefined}>
-            <button type="button" onClick={() => onOpenTab('financeiro')} className="cursor-pointer text-left text-[22px] font-semibold tabular-nums hover:underline">{brlValue(view.value)}<span className="text-[13px] font-normal text-muted">{view.kind === 'fixo' ? '/mês' : ''}</span></button>
+            <button type="button" onClick={() => onOpenTab('financeiro')} className="cursor-pointer text-left text-[clamp(17px,4.8vw,22px)] font-semibold leading-tight tabular-nums hover:underline">{brlValue(view.value)}<span className="text-[13px] font-normal text-muted">{view.kind === 'fixo' ? '/mês' : ''}</span></button>
             {ltv && (lateInv || nextInv || client.contract?.billingDay) ? <p className="text-[12px] text-muted">{brlValue(ltv)} em {months} {months === 1 ? 'mês' : 'meses'} de casa</p> : null}
           </Tile>
         ) : (
