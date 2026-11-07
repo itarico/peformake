@@ -19,6 +19,16 @@ Pendente para a rotina:
 - Descobrir qual função estourou `WORKER_RESOURCE_LIMIT` em 07/11 01:24 (Brasília).
 - Catálogo Will Motos → anúncios: migrar do token bloqueado para a rotina oficial da Meta (só com aprovação).
 
+## Bete (prioridade alta, nesta ordem)
+1. Atualização ao vivo: aviso urgente novo muda a abinha sem recarregar (ligar a Bete ao tempo real que o sistema já tem).
+2. Resumo das 8h: "Bom dia. Hoje: X urgentes, Y para hoje. O mais importante: …" (no sino; push só quando existir).
+3. Horário de silêncio (20h–7h) para o que não for urgente; agrupar avisos parecidos ("3 peças aprovadas hoje").
+4. "Pergunte à Bete": campo no fim da aba Hoje com respostas do sistema (quem está devendo, quanto entrou, como está a meta).
+5. Ações sem sair da Bete: aprovar peça, mudar status de tarefa, aprovar pausa de anúncio (aprovação já existe).
+6. Arrastar para o lado no celular: direita = feito, esquerda = adiar para amanhã.
+7. Medir uso (resolvido, adiado, ignorado) e cortar o que todo mundo ignora.
+8. Push no celular pelo app instalado (precisa de chave VAPID: o Italo cola no Supabase; peça no diário).
+
 ## Ideias de mercado (pesquisa 07/11/2026) — fazer na ordem, uma por vez, sempre terminando
 
 1. Relatório mensal com texto de IA no portal (o que aconteceu, por quê, próximo passo) + comentário do cliente no gráfico. Ref.: AgencyAnalytics, Swydo, Reportei Studio.
