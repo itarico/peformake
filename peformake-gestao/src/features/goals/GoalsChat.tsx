@@ -28,7 +28,7 @@ type NewMsg =
   | { from: 'bot'; kind: 'divider'; text: string }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'how' | 'next' | 'all' | 'tip' | 'bye' | 'end' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'goal' | 'tip' | 'bye' | 'end' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
 /** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
 type Pend = { id: string; client: string; label: string; late: number }
 type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending' | 'tasks'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
@@ -383,6 +383,8 @@ export function GoalsChat() {
   const idRef = useRef(Math.max(0, ...log.map((m) => m.id)) + 1)
   const genRef = useRef(0)
   const lastFormat = useRef<GoalFormat | undefined>(undefined)
+  /** Metas já abertas na conversa "Ver metas" (para oferecer a próxima). */
+  const viewed = useRef<Set<string>>(new Set())
   const box = useRef<HTMLDivElement>(null)
   const rnd = useMemo(() => seeded(`${cal.iso}-${role}`), [cal.iso, role])
   const pick = useMemo(() => pickWith(rnd), [rnd])
@@ -462,6 +464,8 @@ export function GoalsChat() {
     { label: pendCount ? `Pendências (${pendCount})` : 'Pendências', act: 'pend' as const },
     { label: taskCount ? `Tarefas (${taskCount})` : 'Tarefas', act: 'tasks' as const },
   ]
+  /** Botões para escolher a meta (pelo nome curto). */
+  const goalPicks = (goals: GoalRow[], max = 3): Reply[] => goals.slice(0, max).map((g) => ({ label: max === 1 ? `Próxima: ${GOAL_META[g.key]!.short}` : GOAL_META[g.key]!.short, act: 'goal' as const, key: g.key, role: g.role }))
   /** No máximo 3 botões: o próximo passo primeiro, depois a ajuda da meta, e sempre uma saída. */
   const repliesFor = (key: string | undefined, remaining: Item[]): Reply[] => {
     const nx = remaining.find((x) => x.kind !== 'tip')
@@ -524,7 +528,7 @@ export function GoalsChat() {
   function summary(prefix: NewMsg[] = []) {
     const first = pendAll[0]
     say([...prefix, { from: 'bot', kind: 'text', text: pick(['Seu resumo de agora:', 'Aqui está o que está com você:', 'Resumo rápido:']) }, { from: 'bot', kind: 'summary' }],
-      [...(role ? [{ label: 'Ver todas as metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' as const }],
+      [...(role ? [{ label: 'Ver metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' as const }],
       [...(first ? [{ label: `Resolver ${first.client.split(' ').slice(0, 2).join(' ')}`, to: first.to }] : []), ...((myDay.data?.tasks?.length ?? 0) > 0 ? [{ label: 'Ver meu dia', to: '/' }] : []), ...(updates.length ? [{ label: 'Ver avisos', to: '/notificacoes' }] : [])].slice(0, 2))
   }
 
@@ -549,12 +553,28 @@ export function GoalsChat() {
       const all = steps(g, coach.data, day, days)
       const remaining = news.filter((x) => !seen.has(x.id))
       say([{ from: 'bot', kind: 'text', text: `${pick(['Fiz as contas:', 'O caminho é este:', 'Passo a passo:'])}\n\n${all.map((t, i) => `${i + 1}. ${t}`).join('\n\n')}` }],
-        [...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), { label: 'Ver todas as metas', act: 'all' as const }, { label: 'Bora fazer', act: 'bye' as const }].slice(0, 3), one(g))
+        [...goalPicks(rows.filter((x) => x.role === g.role && viewed.current.size > 0 && !viewed.current.has(x.key)), 1), ...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), { label: 'Ver metas', act: 'all' as const }, { label: 'Bora fazer', act: 'bye' as const }].slice(0, 3), one(g))
     }
     if (r.act === 'next') show(news.find((x) => !seen.has(x.id)))
     if (r.act === 'tip') show(tips.find((x) => !seen.has(x.id)))
     if (r.act === 'all') {
-      say([{ from: 'bot', kind: 'text', text: pick(['Suas metas do mês:', 'O placar completo:']) }, { from: 'bot', kind: 'all', role: role! }], menu().filter((x) => x.act !== 'all').concat([{ label: 'Fechar', act: 'bye' }]))
+      // Uma meta por vez: primeiro só os tópicos, a pessoa escolhe qual abrir.
+      viewed.current = new Set()
+      const goals = rows.filter((x) => x.role === role)
+      const icon = (g: GoalRow) => { const s = paceOf(g, day, days).state; return s === 'batida' || s === 'ok' ? '🟢' : s === 'ritmo' ? '🔵' : s === 'atras' ? '🟡' : '🔴' }
+      const lines = goals.map((g) => `${icon(g)} ${GOAL_META[g.key]!.short}`).join('\n')
+      say([{ from: 'bot', kind: 'text', text: `${firstName ? `${firstName}, aqui` : 'Aqui'} estão suas ${goals.length} metas do mês:\n\n${lines}\n\nQual você quer ver primeiro?` }], goalPicks(goals))
+    }
+    if (r.act === 'goal') {
+      const g = (r.role ? rowOf(r.role, r.key ?? '') : undefined) ?? goal(r.key)
+      viewed.current.add(g.key)
+      const p = paceOf(g, day, days)
+      const format: GoalFormat = formatFor(GOAL_META[g.key]!.kind, cal.doy, Math.max(0, list.indexOf(g)), lastFormat.current)
+      lastFormat.current = format
+      const rest = rows.filter((x) => x.role === g.role && !viewed.current.has(x.key))
+      say([{ from: 'bot', kind: 'goal', key: g.key, role: g.role, format }, { from: 'bot', kind: 'text', text: cheer(pick, p) }],
+        [...(p.state !== 'batida' && p.state !== 'ok' ? [{ label: 'Como bater?', act: 'how' as const, key: g.key, role: g.role }] : []), ...goalPicks(rest, 1), ...(rest.length ? [] : [{ label: 'Pronto ✅', act: 'bye' as const }])].slice(0, 3),
+        p.state === 'ok' || p.state === 'batida' ? [] : one(g))
     }
     if (r.act === 'summary') summary()
     if (r.act === 'pend') say([{ from: 'bot', kind: 'text', text: pendCount ? 'Suas pendências agora:' : 'Nada atrasado agora. 👌' }, ...(pendCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'pendencias' as const }] : [])], menu())
@@ -643,9 +663,9 @@ export function GoalsChat() {
     <>
     {/* Celular: com o chat aberto, o fundo escurece e não rola; tocar fora recolhe. */}
     {open && <div aria-hidden="true" onClick={close} className="fixed inset-0 z-30 touch-none bg-black/30 md:hidden" />}
-    <div className="pointer-events-none fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-[max(12px,env(safe-area-inset-right))] z-40 flex flex-col items-end md:bottom-0 md:right-6">
+    <div className="pointer-events-none fixed bottom-[calc(65px+env(safe-area-inset-bottom))] right-[max(12px,env(safe-area-inset-right))] z-[41] flex flex-col items-end md:bottom-0 md:right-6">
       {open && (
-        <section role="dialog" aria-label={`${BOT_NAME}, assistente de metas`} className="pf-rise pointer-events-auto flex h-[min(600px,calc(100dvh-150px))] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-t-3xl rounded-b-3xl border border-line bg-surface shadow-2xl shadow-black/30 md:rounded-b-none md:border-b-0">
+        <section role="dialog" aria-label={`${BOT_NAME}, assistente de metas`} className="pf-rise pointer-events-auto mb-2 flex h-[min(600px,calc(100dvh-150px))] md:mb-0 w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-t-3xl rounded-b-3xl border border-line bg-surface shadow-2xl shadow-black/30 md:rounded-b-none md:border-b-0">
           <header onClick={close} title="Clique para recolher" className="flex cursor-pointer items-center gap-2.5 bg-[#075e54] px-3 py-2 text-white dark:bg-[#1f2c34]">
             <span className="relative"><Mascot size={38} /><span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-[#25d366] ring-2 ring-[#075e54] dark:ring-[#1f2c34]" /></span>
             <span className="min-w-0 flex-1"><b className="block text-[14.5px] leading-tight">{BOT_NAME} <span className="font-normal opacity-75">· cobra suas metas</span></b><span className={cn('text-[12px]', typing ? 'text-[#b6f5c9]' : 'opacity-80')}>{typing ? 'digitando…' : 'online'}</span></span>
@@ -698,20 +718,23 @@ export function GoalsChat() {
       )}
       {/* Abinha no rodapé (estilo Messenger). Com mensagem: número piscando. Sem mensagem (ou fechada no X): só uma setinha discreta. */}
       {!open && (visible && todayItems.length > 0 ? (
-        <span className="pointer-events-auto relative flex items-stretch overflow-hidden rounded-t-xl bg-fill text-on-fill shadow-lg shadow-black/25">
+        <span className="pointer-events-auto relative flex items-stretch rounded-t-2xl border border-b-0 border-line bg-surface text-ink shadow-[0_-4px_12px_-6px_rgb(0_0_0/0.18)]">
           <button type="button" onClick={() => { started.current = false; setOpen(true) }}
             aria-label={`${BOT_NAME}: ${todayItems.length} ${todayItems.length === 1 ? 'item' : 'itens'} para ver. Abrir`}
-            className="flex min-h-10 cursor-pointer items-center gap-1.5 pl-3 pr-2 text-[13px] font-bold hover:bg-black/10">
-            <MessageCircle size={16} aria-hidden="true" />
-            <span className={cn('grid min-w-5 place-items-center rounded-full px-1.5 text-[11px] text-white', urgentCount ? 'pf-blink bg-[#e5484d]' : 'bg-[#eda100]')}>{todayItems.length}</span>
+            className="flex min-h-10 cursor-pointer items-center gap-2 rounded-tl-2xl pl-3 pr-1.5 text-[12.5px] font-semibold hover:bg-raised">
+            <MessageCircle size={17} aria-hidden="true" className="text-accent-ink" />
+            <span className="relative grid">
+              {urgentCount > 0 && <span aria-hidden="true" className="absolute inset-0 animate-ping rounded-full bg-[#e5484d]/40 [animation-duration:2.4s]" />}
+              <span className={cn('relative grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] font-bold text-white', urgentCount ? 'bg-[#e5484d]' : 'bg-accent-ink')}>{todayItems.length}</span>
+            </span>
           </button>
           <button type="button" onClick={hide} aria-label={`Recolher a ${BOT_NAME}`} title="Recolher"
-            className="grid w-8 cursor-pointer place-items-center text-on-fill/70 hover:bg-black/10 hover:text-on-fill"><X size={13} aria-hidden="true" /></button>
+            className="grid w-8 cursor-pointer place-items-center rounded-tr-2xl text-muted hover:bg-raised hover:text-ink"><X size={13} aria-hidden="true" /></button>
         </span>
       ) : (
         <button type="button" onClick={() => { started.current = false; setOpen(true) }} aria-label={`Abrir a ${BOT_NAME}`} title={BOT_NAME}
-          className="pointer-events-auto grid h-7 w-11 cursor-pointer place-items-center rounded-t-xl border border-b-0 border-line bg-surface/90 text-muted shadow-md shadow-black/10 backdrop-blur hover:text-ink">
-          <ChevronUp size={16} aria-hidden="true" />
+          className="pointer-events-auto grid h-6 w-11 cursor-pointer place-items-center rounded-t-xl border border-b-0 border-line bg-surface text-muted shadow-[0_-4px_10px_-6px_rgb(0_0_0/0.15)] hover:text-ink">
+          <ChevronUp size={15} aria-hidden="true" />
         </button>
       ))}
     </div>
