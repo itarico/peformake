@@ -1,3 +1,4 @@
+import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 import { useMemo, useState } from 'react'
 import { Gauge, LiveValue } from '@/components/charts/Charts'
 import { MessageCircle, Plus, Search, Star, X } from 'lucide-react'
@@ -134,7 +135,7 @@ export function ClientsPage() {
     <>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Clientes</h1>
+          <h1 className="flex flex-wrap items-center gap-3 text-3xl font-semibold tracking-tight">Clientes <AutomationsLink module="clientes" /></h1>
           {query.data && <p className="text-muted"><LiveValue value={String(liveRecurring)} /> recorrentes e <LiveValue value={String(liveOneOff)} /> avulsos ativos · perdidos não entram nas contas</p>}
         </div>
         {canManage && (

@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
 import { AV_MANAGER_ROLES, hasAnyRole } from '@/lib/roles'
+import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 
 export function EllcazoHeader({ children, sub, actions }: { children: ReactNode; sub?: ReactNode; actions?: ReactNode }) {
   return (
@@ -35,6 +36,7 @@ export function AvTabs() {
       {tabs.map((t) => (
         <NavLink key={t.to} to={t.to} end={t.end} className={({ isActive }) => cn('-mb-px flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3.5 py-2 font-medium text-muted no-underline hover:text-ink', isActive && 'border-accent-ink font-semibold text-ink hover:text-ink')}>{t.label}</NavLink>
       ))}
+      <span className="ml-auto flex shrink-0 items-center pl-2"><AutomationsLink module="audiovisual" /></span>
     </nav>
   )
 }

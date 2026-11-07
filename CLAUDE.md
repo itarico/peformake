@@ -41,6 +41,7 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
 - **Caminhos e abas:** links da Bete (`features/goals/coach.ts`, `chatNotices.ts`, `GoalsChat.tsx`, `BeteToday`), atalhos do Início,
   menu, `MovedTo` de rotas antigas, e os links gravados no banco (`notify(...)` em funções SQL, `action` de `client_deliveries`,
   `link` em `notifications`). Rota antiga ganha `MovedTo` para nada quebrar.
+- **Automações:** rotina nova, removida ou com horário novo (pg_cron, tarefa da IA ou chave de configuração) entra em `automation_catalog` (central em Configurações → Automações).
 - **Campos e status:** telas, filtros, CSV, portal do cliente, relatórios, funções e gatilhos SQL, e os textos das rotinas automáticas
   (`docs/rotina-melhoria-continua.md`, prompts das tarefas agendadas, `agent_instructions`).
 - Antes de publicar, procure (`grep`) o nome antigo no código **e** nas funções do banco, e confira que cada link da Bete abre

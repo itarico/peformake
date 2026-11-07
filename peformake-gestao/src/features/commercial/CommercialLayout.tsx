@@ -1,3 +1,4 @@
+import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 import { Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { cn } from '@/lib/cn'
@@ -16,7 +17,7 @@ const TABS = [
 export function CommercialLayout() {
   return (
     <>
-      <h1 className="text-3xl font-semibold tracking-tight">Comercial</h1>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Comercial</h1><AutomationsLink module="comercial" /></div>
       <nav aria-label="Áreas do Comercial" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0">
         {TABS.map((tab) => (
           <NavLink

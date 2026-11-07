@@ -23,7 +23,9 @@ Este arquivo complementa o CLAUDE.md; se algo conflitar, vale o CLAUDE.md.
      - `cron.job_run_details` das últimas 24 h: alguma rotina falhou?
      - logs das edge functions (status ≥ 400, `WORKER_RESOURCE_LIMIT`);
      - `get_advisors` (segurança e performance): algo novo de nível ERROR?
-     - respostas recentes em `net._http_response` com erro.
+     - respostas recentes em `net._http_response` com erro;
+     - a central de automações: `select public.automation_overview()` (simulando admin). Item com `status = 'erro'` é prioridade 1.
+     - confira as tarefas da IA (`list_triggers`) e atualize `automation_catalog.routine_on`/`routine_checked_at` se alguma foi ligada ou desligada.
    - Erro no ar tem prioridade sobre qualquer melhoria.
 
 ## 1. Escolher o foco da rodada

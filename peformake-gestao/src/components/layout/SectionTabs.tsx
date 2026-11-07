@@ -3,6 +3,7 @@ import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
 import type { AppRole } from '@/lib/roles'
+import { AutomationsLink, type AutoModule } from '@/features/settings/AutomationsCenter'
 
 export interface SectionTab {
   /** Caminho absoluto (ex.: /estrategia/frameworks). */
@@ -11,6 +12,10 @@ export interface SectionTab {
   /** Sem roles: todo mundo que abre a área vê a aba. */
   roles?: readonly AppRole[]
 }
+
+/** Módulo da tela, para o atalho das automações dele no cabeçalho. */
+const moduleOf = (path: string): AutoModule | null =>
+  path.startsWith('/financeiro') ? 'financeiro' : path.startsWith('/conteudo') || path.startsWith('/design') ? 'conteudo' : null
 
 /** Cabeçalho padrão de uma área: título, uma linha de explicação, ações à direita e abas. Mantém o ?mes= ao trocar de aba. */
 export function SectionHeader({ title, sub, actions, tabs, label }: { title: string; sub?: string; actions?: ReactNode; tabs?: SectionTab[]; label?: string }) {
@@ -35,7 +40,7 @@ export function SectionHeader({ title, sub, actions, tabs, label }: { title: str
           <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
           {sub && <p className="mt-0.5 max-w-[70ch] text-[13px] text-muted">{sub}</p>}
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+        {(actions || moduleOf(pathname)) && <div className="flex flex-wrap items-center gap-2">{actions}{moduleOf(pathname) && <AutomationsLink module={moduleOf(pathname)!} />}</div>}
       </div>
       {visible.length > 1 && (
         <nav ref={navRef} aria-label={label ?? `Áreas de ${title}`} className="-mx-4 flex max-md:[mask-image:linear-gradient(to_right,#000_calc(100%-36px),transparent)] gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">

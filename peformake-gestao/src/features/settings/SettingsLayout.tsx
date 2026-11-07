@@ -14,8 +14,10 @@ import { PackagesPage } from '@/features/commercial/PackagesPage'
 import { WhatsappAccountsPage } from '@/features/commercial/WhatsappAccountsPage'
 import { IntegrationsPage } from '@/features/integrations/IntegrationsPage'
 import { NotificationSettingsPanel } from '@/features/notifications/NotificationsPage'
+import { AutomationsCenter } from './AutomationsCenter'
 
 const TABS: SectionTab[] = [
+  { to: '/configuracoes/automacoes', label: 'Automações' },
   { to: '/configuracoes/integracoes', label: 'Integrações' },
   { to: '/configuracoes/whatsapp', label: 'WhatsApp e comercial' },
   { to: '/configuracoes/servicos', label: 'Serviços e pacotes' },
@@ -31,10 +33,11 @@ const TABS: SectionTab[] = [
 export function SettingsLayout() {
   return (
     <>
-      <SectionHeader title="Configurações" sub="Contas ligadas, WhatsApp, avisos automáticos, o que a Peformake e a Ellcazo vendem e quem acessa o sistema." tabs={TABS} />
+      <SectionHeader title="Configurações" sub="Automações, contas ligadas, WhatsApp, avisos, o que a Peformake e a Ellcazo vendem e quem acessa o sistema." tabs={TABS} />
       <Routes>
         <Route element={<RequireRole roles={NOTIFICATION_ADMIN_ROLES} />}>
           <Route index element={<Navigate to="/configuracoes/integracoes" replace />} />
+          <Route path="automacoes" element={<AutomationsCenter />} />
           <Route path="integracoes" element={<IntegrationsPage />} />
           <Route path="whatsapp" element={<WhatsappSettings />} />
           <Route path="servicos" element={<CatalogSettings />} />

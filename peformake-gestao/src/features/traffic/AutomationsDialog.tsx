@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Info } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { ask } from '@/components/ui/confirm'
 import { cn } from '@/lib/cn'
@@ -17,16 +15,6 @@ const from = supabase.from.bind(supabase) as unknown as From
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
 const RISK = { baixo: { label: 'Seguro', tone: 'bg-ok-soft text-ok-ink' }, medio: { label: 'Mexe na Meta', tone: 'bg-raised text-ink' }, alto: { label: 'Age sozinho', tone: 'bg-warn-soft text-warn-ink' } } as const
-
-/** Atalho no título do Tráfego: leva para as automações em Configurações. */
-export function AutomationsButton() {
-  return (
-    <Link to="/trafego/configuracoes" aria-label="Automações do Tráfego" title="Automações do Tráfego"
-      className="inline-flex size-9 items-center justify-center rounded-full border border-line-strong text-muted no-underline hover:border-ink hover:text-ink">
-      <Info size={17} aria-hidden="true" />
-    </Link>
-  )
-}
 
 export function AutomationsPanel() {
   const { state } = useAuth()
