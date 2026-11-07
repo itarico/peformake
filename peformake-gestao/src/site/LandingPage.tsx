@@ -45,7 +45,7 @@ function useSeo() {
       if (!el) { el = document.createElement('meta'); el.setAttribute(attr, name); document.head.appendChild(el) }
       el.content = content
     }
-    const desc = 'Agência de marketing focada em venda: tráfego pago, social media, design, vídeo com a Ellcazo, WhatsApp com IA e sites. Peça um diagnóstico gratuito.'
+    const desc = 'Assessoria de marketing focada em venda: tráfego pago, social media, design, vídeo com a Ellcazo, WhatsApp com IA e sites. Peça um diagnóstico gratuito.'
     set('description', desc)
     set('og:title', 'Peformake | Marketing que vira venda', 'property')
     set('og:description', desc, 'property')

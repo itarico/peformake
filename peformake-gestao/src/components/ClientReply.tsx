@@ -79,7 +79,7 @@ export function ClientReply({ clientId, clientName, source, sourceId, suggestion
             <textarea rows={5} maxLength={1500} value={text} onChange={(e) => setText(e.target.value)}
               className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 font-normal text-ink" />
           </label>
-          <p className="text-[12px] text-muted">Sai pelo WhatsApp da agência, respeitando o horário e o limite por cliente de Notificações.</p>
+          <p className="text-[12px] text-muted">Sai pelo WhatsApp da Peformake, respeitando o horário e o limite por cliente de Notificações.</p>
           {send.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">Não foi possível mandar. Confira o WhatsApp do cliente no cadastro.</p>}
           <div className="flex justify-end gap-2">
             <Button variant="secondary" onClick={() => setOpen(false)}>Cancelar</Button>

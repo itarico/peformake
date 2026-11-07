@@ -55,7 +55,7 @@ export function AccountPage() {
       </section>
 
       <section aria-labelledby="tv" className="overflow-hidden rounded-3xl border border-line bg-surface">
-        <h2 id="tv" className="px-5 pt-4 pb-2 text-[13px] font-semibold uppercase tracking-wide text-muted">Tela da agência</h2>
+        <h2 id="tv" className="px-5 pt-4 pb-2 text-[13px] font-semibold uppercase tracking-wide text-muted">Tela da Peformake</h2>
         <Link to="/tv" className={cn(row, 'border-t border-line')}>
           <Monitor size={18} aria-hidden="true" />
           <span className="flex-1"><span className="block font-medium">Modo TV</span><span className="block text-[13px] text-muted">Painel com letra grande que passa sozinho pelas áreas que você acessa.</span></span>

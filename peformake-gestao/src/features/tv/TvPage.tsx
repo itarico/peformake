@@ -13,7 +13,7 @@ const SLIDE_SECONDS = 20
 const REFRESH_MS = 5 * 60_000
 
 /**
- * Modo TV: painel para deixar numa tela da agência. Sem rolagem, letra grande,
+ * Modo TV: painel para deixar numa tela da Peformake. Sem rolagem, letra grande,
  * passa sozinho entre as áreas e atualiza os números a cada 5 minutos.
  * Controle remoto: setas trocam de área, OK/Enter pausa, Voltar/Esc sai.
  */

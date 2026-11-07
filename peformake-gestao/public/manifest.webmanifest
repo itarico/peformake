@@ -1,7 +1,7 @@
 {
   "name": "Peformake Gestão",
   "short_name": "Peformake",
-  "description": "Gestão da agência Peformake: clientes, tráfego, design, audiovisual e WhatsApp.",
+  "description": "Gestão da assessoria Peformake: clientes, tráfego, design, audiovisual e WhatsApp.",
   "lang": "pt-BR",
   "start_url": "/inicio",
   "scope": "/",
