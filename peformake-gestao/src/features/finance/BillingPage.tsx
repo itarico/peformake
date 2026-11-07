@@ -393,7 +393,7 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
           <fieldset className="flex flex-col">
             <legend className="mb-1 text-[13px] font-semibold">Automático</legend>
             {toggle('monthly_generate', 'Gerar mensalidades sozinho', 'Todo dia confere os clientes fixos e cria a mensalidade do mês, com vencimento no dia 30, respeitando início e fim do contrato.')}
-            {toggle('auto_charge', 'Criar o link no gateway sozinho', '5 dias antes do vencimento a fatura ganha o link de pagamento (Pix, boleto ou cartão).')}
+            {toggle('auto_charge', 'Criar o link no gateway sozinho', '5 dias antes do vencimento a fatura ganha o link de pagamento (Pix, boleto ou cartão). Cancelar ou dar baixa aqui também fecha a cobrança no Asaas.')}
             <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova com link e lembretes de vencimento) ligam e desligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, no grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>
           </fieldset>
           <fieldset className="flex flex-col gap-2 rounded-2xl border border-line p-4">
