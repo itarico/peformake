@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import { NavLink, useSearchParams } from 'react-router-dom'
+import { useEffect, useRef, type ReactNode } from 'react'
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
 import type { AppRole } from '@/lib/roles'
@@ -19,6 +19,15 @@ export function SectionHeader({ title, sub, actions, tabs, label }: { title: str
   const roles = state.status === 'ready' ? state.user.roles : []
   const visible = (tabs ?? []).filter((t) => !t.roles || t.roles.some((r) => roles.includes(r)))
   const mes = params.get('mes')
+  const navRef = useRef<HTMLElement>(null)
+  const { pathname } = useLocation()
+  // No celular as abas deslizam de lado: a aba aberta sempre aparece na tela.
+  useEffect(() => {
+    const nav = navRef.current
+    const active = nav?.querySelector<HTMLElement>('[aria-current="page"]')
+    if (!nav || !active || nav.scrollWidth <= nav.clientWidth) return
+    nav.scrollTo({ left: active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2 })
+  }, [pathname])
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -29,7 +38,7 @@ export function SectionHeader({ title, sub, actions, tabs, label }: { title: str
         {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
       {visible.length > 1 && (
-        <nav aria-label={label ?? `Áreas de ${title}`} className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
+        <nav ref={navRef} aria-label={label ?? `Áreas de ${title}`} className="-mx-4 flex max-md:[mask-image:linear-gradient(to_right,#000_calc(100%-36px),transparent)] gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
           {visible.map((t) => (
             <NavLink
               key={t.to}
