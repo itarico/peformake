@@ -20,7 +20,7 @@ import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { DeliveryBar, useClientDeliveries } from './DeliveryBar'
 import { MeetingsSection } from './MeetingsSection'
 import { ClientOperationBlock } from '@/features/operation/OperationSummaries'
-import { ClientContractTab } from '@/features/contracts/ClientContractTab'
+import { ContractSummary } from '@/features/contracts/ContractSummary'
 import { ClientFinanceTab } from './ClientFinanceTab'
 import { monthStart } from '@/features/traffic/planRules'
 import { KIND_LABEL } from './portfolioRules'
@@ -37,7 +37,7 @@ type AnyTab = Tab | 'entregas' | 'servicos' | 'financeiro' | 'historico' | 'aces
 const TABS: { id: Tab; label: string; admin?: boolean }[] = [
   { id: 'geral', label: 'Visão geral' },
   { id: 'operacao', label: 'Entregas e equipe' },
-  { id: 'contrato', label: 'Contrato e financeiro', admin: true },
+  { id: 'contrato', label: 'Financeiro', admin: true },
   { id: 'arquivos', label: 'Arquivos e histórico' },
 ]
 // Links antigos e atalhos continuam funcionando.
@@ -61,7 +61,6 @@ export function ClientDetailPage() {
   const raw = params.get('aba') ?? 'geral'
   const asked = ALIAS[raw]?.tab ?? raw
   const tab = (tabs.some((t) => t.id === asked) ? asked : 'geral') as Tab
-  const money = params.get('ver') === 'financeiro' || ALIAS[raw]?.sub === 'financeiro' ? 'financeiro' : 'contrato'
   const [month, setMonth] = useState(0)
   const setTab = (next: AnyTab) => setParams((current) => {
     const p = new URLSearchParams(current)
@@ -72,7 +71,6 @@ export function ClientDetailPage() {
     p.delete('novo')
     return p
   }, { replace: true })
-  const setMoney = (v: 'contrato' | 'financeiro') => setParams((current) => { const p = new URLSearchParams(current); p.set('ver', v); return p }, { replace: true })
 
   if (query.isPending) return <p role="status" className="text-muted">Carregando</p>
   if (query.isError) return <ErrorBox text="Não foi possível carregar o cliente." onRetry={() => void query.refetch()} />
@@ -145,15 +143,8 @@ export function ClientDetailPage() {
       <div className="@container">
         {tab === 'contrato' && isAdmin && (
           <div className="flex flex-col gap-3">
-            <div role="group" aria-label="Ver" className="inline-flex w-fit rounded-xl border border-line p-0.5">
-              {(['contrato', 'financeiro'] as const).map((v) => (
-                <button key={v} type="button" aria-pressed={money === v} onClick={() => setMoney(v)}
-                  className={cn('min-h-9 cursor-pointer rounded-lg px-4 text-[13px] font-semibold', money === v ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
-                  {v === 'contrato' ? 'Contrato' : 'Financeiro'}
-                </button>
-              ))}
-            </div>
-            {money === 'contrato' ? <ClientContractTab client={client} kindLabel={KIND_LABEL[view.kind]} /> : <ClientFinanceTab client={client} />}
+            <ContractSummary client={client} />
+            <ClientFinanceTab client={client} />
           </div>
         )}
         {tab === 'geral' && (

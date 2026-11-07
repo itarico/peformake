@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
+import { ContractDialog } from './ContractDialog'
 import { SectionHeader } from '@/components/layout/SectionTabs'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -53,6 +57,10 @@ export function ContractsPage() {
     },
   })
   const [filter, setFilter] = useState<Situation | 'todos'>('todos')
+  const [params, setParams] = useSearchParams()
+  const openId = params.get('cliente')
+  const [picking, setPicking] = useState(false)
+  const openClient = (id: string | null) => setParams((cur) => { const p = new URLSearchParams(cur); if (id) p.set('cliente', id); else p.delete('cliente'); return p }, { replace: true })
   const today = todayInBrazil()
   // Avulso fecha pelo aceite da proposta e não entra na carteira de contratos.
   const rows = useMemo(() => (q.data ?? []).filter((r) => r.client_type !== 'one-off').map((r) => ({ ...r, situation: situationOf(r, today) })), [q.data, today])
@@ -63,7 +71,8 @@ export function ContractsPage() {
 
   return (
     <>
-      <SectionHeader title="Financeiro" sub="Contrato de cada cliente fixo e TCV: quem já assinou, quem falta e o que vence. Avulso fecha pelo aceite da proposta." tabs={FINANCE_TABS} />
+      <SectionHeader title="Financeiro" sub="Contrato de cada cliente fixo e TCV: quem já assinou, quem falta e o que vence. Avulso fecha pelo aceite da proposta." tabs={FINANCE_TABS}
+        actions={<Button onClick={() => setPicking(true)}><Plus size={16} aria-hidden="true" /> Novo contrato</Button>} />
 
       <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
         {[
@@ -99,7 +108,7 @@ export function ContractsPage() {
               <div className="flex min-w-0 items-center gap-3">
                 <ClientAvatar name={r.client_name} url={logoPublicUrl(r.logo_path)} />
                 <div className="min-w-0">
-                  <Link to={`/clientes/${r.client_id}?aba=contrato`} className="block truncate font-semibold after:absolute after:inset-0">{r.client_name}</Link>
+                  <button type="button" onClick={() => openClient(r.client_id)} className="block max-w-full cursor-pointer truncate text-left font-semibold after:absolute after:inset-0">{r.client_name}</button>
                   <p className="truncate text-[12px] text-muted">
                     {r.doc_status ? (CONTRACT_STATUS[r.doc_status]?.[0] ?? r.doc_status) : 'Nenhum gerado'}
                     {r.sign_method && r.doc_status && ` · ${r.sign_method === 'aceite' ? 'aceite no portal' : 'Assinafy'}`}
@@ -118,6 +127,21 @@ export function ContractsPage() {
         })}
         {!q.isPending && shown.length === 0 && <li className="p-6 text-center text-muted">Nenhum cliente nesta situação.</li>}
       </ul>
+      {openId && <ContractDialog clientId={openId} onClose={() => openClient(null)} />}
+      <Dialog open={picking} onClose={() => setPicking(false)} title="Novo contrato" description="Escolha o cliente. Os que já têm contrato assinado ficam por último." size="md">
+        <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+          {[...rows].sort((a, b) => Number(a.situation === 'assinado') - Number(b.situation === 'assinado') || a.client_name.localeCompare(b.client_name, 'pt-BR')).map((r) => (
+            <li key={r.client_id}>
+              <button type="button" onClick={() => { setPicking(false); openClient(r.client_id) }}
+                className="flex w-full cursor-pointer flex-col items-center gap-1.5 rounded-2xl border border-line p-2.5 text-center hover:border-ink">
+                <ClientAvatar name={r.client_name} url={logoPublicUrl(r.logo_path)} />
+                <span className="line-clamp-2 text-[12px] font-medium leading-tight">{r.client_name}</span>
+                <span className={cn('rounded-full px-1.5 text-[10px] font-semibold', SITUATION[r.situation][1])}>{SITUATION[r.situation][0]}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </Dialog>
     </>
   )
 }
