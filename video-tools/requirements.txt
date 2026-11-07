@@ -1,0 +1,9 @@
+# Ferramentas Python de vídeo (instaladas por video-tools/install.sh)
+faster-whisper==1.2.1
+av>=13,<17
+scenedetect==0.7.2
+opencv-python-headless>=4.10,<5
+rembg[cpu]==2.0.87
+openpyxl>=3.1
+pillow>=10
+numpy>=1.26
