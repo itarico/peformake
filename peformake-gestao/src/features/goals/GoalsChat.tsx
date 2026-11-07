@@ -29,7 +29,7 @@ type NewMsg =
   | { from: 'bot'; kind: 'divider'; text: string }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'how' | 'next' | 'all' | 'goal' | 'today' | 'tip' | 'bye' | 'end' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'goal' | 'today' | 'menu' | 'tip' | 'bye' | 'end' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
 /** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
 type Pend = { id: string; client: string; label: string; late: number }
 type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending' | 'tasks'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
@@ -459,8 +459,15 @@ export function GoalsChat() {
     return 'Próxima meta'
   }
   /** Menu do fim (ou quando não há nada novo): metas, pendências e tarefas, no máximo 3 botões. */
-  // Metas, pendências, tarefas e novidades ficam na barra de atalhos fixa: aqui só a saída.
-  const menu = (): Reply[] => [{ label: 'Fechar', act: 'bye' as const }]
+  /** O que dá para ver, escolhido dentro da própria conversa (sem barra de atalhos). */
+  const menu = (skip?: Reply['act']): Reply[] => ([
+    { label: todayItems.length ? `O que pede atenção (${todayItems.length})` : 'O que pede atenção', act: 'today' as const },
+    ...(role ? [{ label: 'Metas', act: 'all' as const }] : []),
+    { label: pendCount ? `Pendências (${pendCount})` : 'Pendências', act: 'pend' as const },
+    { label: taskCount ? `Tarefas (${taskCount})` : 'Tarefas', act: 'tasks' as const },
+    { label: 'Avisos', act: 'news' as const },
+  ] as Reply[]).filter((x) => x.act !== skip)
+  const other: Reply = { label: 'Ver outra coisa', act: 'menu' }
   /** Botões para escolher a meta (pelo nome curto). */
   const goalPicks = (goals: GoalRow[], max = 3): Reply[] => goals.slice(0, max).map((g) => ({ label: max === 1 ? `Próxima: ${GOAL_META[g.key]!.short}` : GOAL_META[g.key]!.short, act: 'goal' as const, key: g.key, role: g.role }))
   /** No máximo 3 botões: o próximo passo primeiro, depois a ajuda da meta, e sempre uma saída. */
@@ -472,7 +479,7 @@ export function GoalsChat() {
       ...(key ? [{ label: 'Como bater?', act: 'how' as const, key }] : []),
       ...(tipsLeft ? [{ label: tipLabel(), act: 'tip' as const }] : []),
     ]
-    return [...opts.slice(0, 2), { label: 'Depois eu vejo', act: 'bye' as const }]
+    return [...opts.slice(0, 2), other]
   }
 
   /** Mostra um item novo e já marca como visto. */
@@ -525,7 +532,7 @@ export function GoalsChat() {
   function summary(prefix: NewMsg[] = []) {
     const first = pendAll[0]
     say([...prefix, { from: 'bot', kind: 'text', text: pick(['Seu resumo de agora:', 'Aqui está o que está com você:', 'Resumo rápido:']) }, { from: 'bot', kind: 'summary' }],
-      [...(role ? [{ label: 'Ver metas', act: 'all' as const }] : []), { label: 'Fechar', act: 'bye' as const }],
+      [...(role ? [{ label: 'Metas', act: 'all' as const }] : []), other],
       [...(first ? [{ label: `Resolver ${first.client.split(' ').slice(0, 2).join(' ')}`, to: first.to }] : []), ...((myDay.data?.tasks?.length ?? 0) > 0 ? [{ label: 'Ver meu dia', to: '/' }] : []), ...(updates.length ? [{ label: 'Ver avisos', to: '/notificacoes' }] : [])].slice(0, 2))
   }
 
@@ -539,7 +546,7 @@ export function GoalsChat() {
       return
     }
     const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) }
-    if (!news.length) { say([hello, { from: 'bot', kind: 'text', text: 'Nada novo desde a última vez. Escolha embaixo o que quer ver: hoje, metas, pendências ou tarefas.' }], menu()); return }
+    if (!news.length) { say([hello, { from: 'bot', kind: 'text', text: 'Nada novo desde a última vez. O que você quer ver?' }], menu()); return }
     show(news[0] ?? tips[0], [hello])
   }
 
@@ -550,7 +557,7 @@ export function GoalsChat() {
       const all = steps(g, coach.data, day, days)
       const remaining = news.filter((x) => !seen.has(x.id))
       say([{ from: 'bot', kind: 'text', text: `${pick(['Fiz as contas:', 'O caminho é este:', 'Passo a passo:'])}\n\n${all.map((t, i) => `${i + 1}. ${t}`).join('\n\n')}` }],
-        [...goalPicks(rows.filter((x) => x.role === g.role && viewed.current.size > 0 && !viewed.current.has(x.key)), 1), ...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), { label: 'Ver metas', act: 'all' as const }, { label: 'Bora fazer', act: 'bye' as const }].slice(0, 3), one(g))
+        [...goalPicks(rows.filter((x) => x.role === g.role && viewed.current.size > 0 && !viewed.current.has(x.key)), 1), ...(remaining.length ? [{ label: 'Próxima novidade', act: 'next' as const }] : []), other].slice(0, 3), one(g))
     }
     if (r.act === 'next') show(news.find((x) => !seen.has(x.id)))
     if (r.act === 'tip') show(tips.find((x) => !seen.has(x.id)))
@@ -560,7 +567,7 @@ export function GoalsChat() {
       const goals = rows.filter((x) => x.role === role)
       const icon = (g: GoalRow) => { const s = paceOf(g, day, days).state; return s === 'batida' || s === 'ok' ? '🟢' : s === 'ritmo' ? '🔵' : s === 'atras' ? '🟡' : '🔴' }
       const lines = goals.map((g) => { const m = GOAL_META[g.key]!; return `${icon(g)} ${m.title(g.info)}: ${fmt(g.actual ?? 0, m.money)} ${m.kind === 'atMost' ? `(limite ${fmt(g.target, m.money)})` : `de ${fmt(g.target, m.money)}`}` }).join('\n\n')
-      say([{ from: 'bot', kind: 'text', text: `${firstName ? `${firstName}, aqui` : 'Aqui'} estão suas ${goals.length} metas do mês:\n\n${lines}\n\nQual você quer ver primeiro?` }], goalPicks(goals))
+      say([{ from: 'bot', kind: 'text', text: `${firstName ? `${firstName}, aqui` : 'Aqui'} estão suas ${goals.length} metas do mês:\n\n${lines}\n\nQual você quer ver primeiro?` }], [...goalPicks(goals), other])
     }
     if (r.act === 'goal') {
       const g = (r.role ? rowOf(r.role, r.key ?? '') : undefined) ?? goal(r.key)
@@ -570,14 +577,15 @@ export function GoalsChat() {
       lastFormat.current = format
       const rest = rows.filter((x) => x.role === g.role && !viewed.current.has(x.key))
       say([{ from: 'bot', kind: 'goal', key: g.key, role: g.role, format }, { from: 'bot', kind: 'text', text: cheer(pick, p) }],
-        [...(p.state !== 'batida' && p.state !== 'ok' ? [{ label: 'Como bater?', act: 'how' as const, key: g.key, role: g.role }] : []), ...goalPicks(rest, 1), ...(rest.length ? [] : [{ label: 'Pronto ✅', act: 'bye' as const }])].slice(0, 3),
+        [...(p.state !== 'batida' && p.state !== 'ok' ? [{ label: 'Como bater?', act: 'how' as const, key: g.key, role: g.role }] : []), ...goalPicks(rest, 1), other].slice(0, 3),
         p.state === 'ok' || p.state === 'batida' ? [] : one(g))
     }
     if (r.act === 'summary') summary()
-    if (r.act === 'today') say([{ from: 'bot', kind: 'text', text: todayItems.length ? `O que pede atenção agora (${todayItems.length}). Toque em ✓ quando resolver:` : 'Nada pedindo atenção agora. ✅' }, ...(todayItems.length ? [{ from: 'bot' as const, kind: 'today' as const }] : [])], menu())
-    if (r.act === 'pend') say([{ from: 'bot', kind: 'text', text: pendCount ? 'Suas pendências agora:' : 'Nada atrasado agora. 👌' }, ...(pendCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'pendencias' as const }] : [])], menu())
-    if (r.act === 'tasks') say([{ from: 'bot', kind: 'text', text: taskCount ? 'O que está com você:' : 'Nenhuma tarefa aberta com você. 👌' }, ...(taskCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'tarefas' as const }] : [])], menu())
-    if (r.act === 'news') say([{ from: 'bot', kind: 'text', text: 'Novidades da semana:' }, { from: 'bot', kind: 'view', view: 'novidades' }], menu())
+    if (r.act === 'menu') say([{ from: 'bot', kind: 'text', text: pick(['O que você quer ver agora?', 'Claro! O que eu te mostro?']) }], menu())
+    if (r.act === 'today') say([{ from: 'bot', kind: 'text', text: todayItems.length ? `O que pede atenção agora (${todayItems.length}). Toque em ✓ quando resolver:` : 'Nada pedindo atenção agora. ✅' }, ...(todayItems.length ? [{ from: 'bot' as const, kind: 'today' as const }] : []), { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('today'))
+    if (r.act === 'pend') say([{ from: 'bot', kind: 'text', text: pendCount ? 'Suas pendências agora:' : 'Nada atrasado agora. 👌' }, ...(pendCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'pendencias' as const }] : []), { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('pend'))
+    if (r.act === 'tasks') say([{ from: 'bot', kind: 'text', text: taskCount ? 'O que está com você:' : 'Nenhuma tarefa aberta com você. 👌' }, ...(taskCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'tarefas' as const }] : []), { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('tasks'))
+    if (r.act === 'news') say([{ from: 'bot', kind: 'text', text: 'Novidades da semana:' }, { from: 'bot', kind: 'view', view: 'novidades' }, { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('news'))
     if (r.act === 'bye') close()
     if (r.act === 'end') { close(); hide() }
   }
@@ -705,21 +713,6 @@ export function GoalsChat() {
             {replies.map((r) => <button key={r.label} type="button" onClick={() => act(r)} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{r.label}</button>)}
             {!replies.length && <span className="py-1 text-[12px] text-muted">{typing ? 'digitando…' : ' '}</span>}
           </div>
-          {/* Atalhos fixos: troca de assunto a qualquer momento, na mesma conversa. */}
-          <nav aria-label="Ver na conversa" className="flex shrink-0 justify-between gap-0.5 overflow-x-auto border-t border-line bg-raised/50 px-1.5 py-1 [scrollbar-width:none]">
-            {([
-              ['today', 'Hoje', todayItems.length],
-              ...(role ? [['all', 'Metas', 0] as const] : []),
-              ['pend', 'Pendências', pendCount],
-              ['tasks', 'Tarefas', taskCount],
-              ['news', 'Avisos', 0],
-            ] as const).map(([k, l, n]) => (
-              <button key={k} type="button" disabled={!!typing} onClick={() => act({ label: l, act: k })}
-                className="inline-flex min-h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full px-2 text-[12px] font-semibold text-muted hover:bg-surface hover:text-ink disabled:opacity-50">
-                {l}{n > 0 && <span className={cn('grid h-4 min-w-4 place-items-center rounded-full px-1 text-[10px] text-white', k === 'today' && urgentCount ? 'bg-[#e5484d]' : 'bg-accent-ink')}>{n}</span>}
-              </button>
-            ))}
-          </nav>
         </section>
       )}
       {/* Abinha no rodapé (estilo Messenger). Com mensagem: número piscando. Sem mensagem (ou fechada no X): só uma setinha discreta. */}
