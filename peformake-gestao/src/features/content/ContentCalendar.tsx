@@ -55,7 +55,22 @@ export function ContentCalendar() {
         <p className="w-full text-[12px] text-muted">A data de publicação se define dentro da peça.</p>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Celular: lista dos dias com peça, sem calendário para arrastar. */}
+      <ol aria-label="Dias com publicação" className="flex flex-col gap-2 md:hidden">
+        {[...byDay.keys()].filter((d) => d.slice(0, 7) === month.slice(0, 7)).sort().map((d) => (
+          <li key={d} className={cn('flex gap-3 rounded-2xl border border-line bg-surface p-3', d < today && 'opacity-70')}>
+            <span className={cn('flex w-11 shrink-0 flex-col items-center leading-tight', d === today ? 'text-accent-ink' : 'text-muted')}>
+              <span className="text-[11px] font-semibold uppercase">{new Intl.DateTimeFormat('pt-BR', { weekday: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`)).replace('.', '')}</span>
+              <span className="text-[22px] font-semibold tabular-nums">{Number(d.slice(8))}</span>
+            </span>
+            <span className="flex min-w-0 flex-1 flex-col gap-1">
+              {(byDay.get(d) ?? []).map((i) => <Chip key={i.id} item={i} clientName={clientName(i.clientId)} showClient={!clientId} />)}
+            </span>
+          </li>
+        ))}
+        {byDay.size === 0 && <li className="rounded-2xl border border-dashed border-line p-6 text-center text-[13px] text-muted">Nenhuma peça com data neste mês.</li>}
+      </ol>
+      <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[720px] table-fixed border-separate border-spacing-1">
           <thead>
             <tr>{WEEKDAYS.map((d) => <th key={d} scope="col" className="pb-1 text-[12px] font-semibold text-muted">{d}</th>)}</tr>

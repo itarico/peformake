@@ -63,6 +63,7 @@ export function AvAgenda() {
   const slot = (d: string) => { if (!byDay.has(d)) byDay.set(d, { shoots: [], events: [] }); return byDay.get(d)! }
   for (const p of shoots) slot(dayOf(p.shootAt as string)).shoots.push(p)
   for (const e of googleEvents) slot(e.all_day ? e.start.slice(0, 10) : dayOf(e.start)).events.push(e)
+  const agendaDays = [...byDay.keys()].filter((d) => d.slice(0, 7) === month.slice(0, 7) && (d >= today || month.slice(0, 7) !== today.slice(0, 7))).sort()
   const active = settings.data?.calendar_account_ids?.length ? settings.data.calendar_account_ids : (accounts.data ?? []).map((a) => a.id)
 
   return (
@@ -84,7 +85,36 @@ export function AvAgenda() {
       {calendar.data?.problems?.map((p) => <p key={p} className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[13px] text-warn-ink">{p}</p>)}
 
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_280px]">
-        <div className="overflow-x-auto">
+        {/* Celular: lista dos dias com algo marcado, de hoje em diante (sem calendário para arrastar). */}
+        <ol aria-label="Dias com compromisso" className="flex flex-col gap-2 md:hidden">
+          {agendaDays.map((d) => {
+            const s = byDay.get(d)!
+            const wd = new Intl.DateTimeFormat('pt-BR', { weekday: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`)).replace('.', '')
+            return (
+              <li key={d} className="flex gap-3 rounded-2xl border border-line bg-surface p-3">
+                <span className={cn('flex w-11 shrink-0 flex-col items-center leading-tight', d === today ? 'text-accent-ink' : 'text-muted')}>
+                  <span className="text-[11px] font-semibold uppercase">{wd}</span>
+                  <span className="text-[22px] font-semibold tabular-nums">{Number(d.slice(8))}</span>
+                </span>
+                <span className="flex min-w-0 flex-1 flex-col gap-1">
+                  {s.shoots.map((p) => (
+                    <Link key={p.id} to={`/audiovisual/projeto/${p.id}`} className="block rounded-lg bg-accent px-2 py-1.5 text-[13px] leading-tight text-[var(--ellcazo-band)] no-underline">
+                      <span className="block truncate font-semibold">{hourOf(p.shootAt as string)} · {clientName(p.clientId)}</span>
+                      <span className="block truncate opacity-80">{p.shootConfirmedAt ? 'Confirmado' : 'Esperando o cliente'}{p.location ? ` · ${p.location}` : ''}</span>
+                    </Link>
+                  ))}
+                  {s.events.map((e) => (
+                    <a key={e.account_id + e.id} href={e.link ?? undefined} target="_blank" rel="noreferrer" className="block truncate rounded-lg bg-raised px-2 py-1.5 text-[13px] text-muted no-underline">
+                      {e.all_day ? '' : `${hourOf(e.start)} `}{e.summary}
+                    </a>
+                  ))}
+                </span>
+              </li>
+            )
+          })}
+          {agendaDays.length === 0 && <li className="rounded-2xl border border-dashed border-line p-6 text-center text-[13px] text-muted">Nada marcado daqui para frente neste mês. Use "Agendar gravação".</li>}
+        </ol>
+        <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[700px] table-fixed border-separate border-spacing-1">
             <thead><tr>{WEEKDAYS.map((d) => <th key={d} scope="col" className="pb-1 text-[12px] font-semibold text-muted">{d}</th>)}</tr></thead>
             <tbody>
