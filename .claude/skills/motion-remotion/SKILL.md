@@ -23,7 +23,7 @@ cliente ou extraia do logo; o padrão fica em `src/brand.ts`.
 ## Fluxo: Reel com legenda animada
 
 1. Copie o vídeo (já cortado ou o bruto) para `video-tools/remotion/public/`.
-2. Gere as legendas: `/opt/video-venv/bin/python video-tools/scripts/transcrever.py public/video.mp4 --out public`
+2. Gere as legendas: `bash video-tools/bin/vpy video-tools/scripts/transcrever.py public/video.mp4 --out public`
    → `public/video.captions.json`. Se o vídeo veio da decupagem, reaproveite o `.captions.json` dela
    e use `startFromSec` para começar no trecho escolhido (subtraia o início das legendas).
 3. Renderize (rode dentro de `video-tools/remotion`):

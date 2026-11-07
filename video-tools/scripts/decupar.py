@@ -223,14 +223,24 @@ def ler_xlsx(path: Path):
 
 
 # ---------------------------------------------------------- XML (FCP 7 xmeml)
+def url_arquivo(caminho: str) -> str:
+    """Caminho (Windows ou Unix) -> pathurl do Premiere."""
+    c = caminho.replace("\\", "/")
+    if len(c) > 1 and c[1] == ":":  # Windows: C:/...
+        return "file://localhost/" + quote(c, safe="/:")
+    return "file://localhost" + quote(c, safe="/:")
+
+
 def pathurl(nome: str, caminho_pc: str | None, local: Path | None) -> str:
     if caminho_pc:
-        base = caminho_pc.replace("\\", "/").rstrip("/")
-        if len(base) > 1 and base[1] == ":":  # Windows: D:/...
-            return "file://localhost/" + quote(f"{base}/{nome}", safe="/:")
-        return "file://localhost" + quote(f"{base}/{nome}", safe="/:")
+        return url_arquivo(caminho_pc.replace("\\", "/").rstrip("/") + "/" + nome)
     p = (local / nome) if local else Path(nome)
-    return "file://localhost" + quote(str(p.resolve()), safe="/:")
+    return url_arquivo(str(p.resolve()))
+
+
+def validar_xml(destino: Path):
+    from xml.dom import minidom
+    minidom.parse(str(destino))  # levanta erro se o XML estiver quebrado
 
 
 def rate_xml(fps):
@@ -295,6 +305,7 @@ def escrever_xml(linhas, infos, destino: Path, caminho_pc, local):
     xml = ('<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE xmeml>\n<xmeml version="4"><project><name>Decupagem</name>'
            f"<children>{''.join(seqs)}</children></project></xmeml>\n")
     destino.write_text(xml, encoding="utf-8")
+    validar_xml(destino)
     return len(sel)
 
 

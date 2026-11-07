@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Executa o Python do ambiente de vídeo, em Linux, macOS ou Windows (Git Bash).
+# Uso: bash video-tools/bin/vpy video-tools/scripts/decupar.py ...
+candidatos=()
+if [ -n "${VIDEO_VENV:-}" ]; then candidatos+=("$VIDEO_VENV/bin/python" "$VIDEO_VENV/Scripts/python.exe"); fi
+candidatos+=(/opt/video-venv/bin/python "$HOME/.video-venv/Scripts/python.exe" "$HOME/.video-venv/bin/python")
+for c in "${candidatos[@]}"; do
+  if [ -x "$c" ]; then
+    PYTHONUTF8=1 PYTHONIOENCODING=utf-8 exec "$c" "$@"
+  fi
+done
+echo "Ambiente de vídeo não instalado. Windows: powershell -ExecutionPolicy Bypass -File video-tools\\install.ps1 | Linux/macOS: bash video-tools/install.sh" >&2
+exit 1

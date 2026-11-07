@@ -5,13 +5,13 @@ description: Tratamento técnico de vídeo na Performake. Estabilização de ima
 
 # Tratamento de vídeo
 
-Scripts em `video-tools/scripts/`. Python: `/opt/video-venv/bin/python` (se não existir: `bash video-tools/install.sh`).
+Scripts em `video-tools/scripts/`. Python: `bash video-tools/bin/vpy` (se acusar que não está instalado: Windows `powershell -ExecutionPolicy Bypass -File video-tools\install.ps1`; Linux/macOS `bash video-tools/install.sh`).
 Trabalhe sempre em cópias: nunca sobrescreva o bruto original.
 
 ## Estabilização (vid.stab, 2 passadas)
 
 ```bash
-bash video-tools/scripts/estabilizar.sh entrada.mp4 saida.mp4 [suavidade=15] [zoom=0]
+bash video-tools/bin/vpy video-tools/scripts/estabilizar.py entrada.mp4 saida.mp4 [--suavidade 15] [--zoom 0] [--inicio S --dur S]
 ```
 Suavidade 10 = leve, 30 a 40 = bem travado. Se aparecerem bordas pretas, use zoom 3 a 6.
 Gere um comparativo lado a lado para o usuário aprovar:
@@ -20,15 +20,15 @@ Gere um comparativo lado a lado para o usuário aprovar:
 ## Reenquadrar para 9:16 (segue o rosto)
 
 ```bash
-/opt/video-venv/bin/python video-tools/scripts/recortar.py reframe entrada.mp4 vertical.mp4 [--formato 9:16|4:5|1:1] [--suavidade 0.08]
+bash video-tools/bin/vpy video-tools/scripts/recortar.py reframe entrada.mp4 vertical.mp4 [--formato 9:16|4:5|1:1] [--suavidade 0.08]
 ```
 Saída em 1080 px de largura. Sem rosto detectado, mantém o centro. Suavidade menor = câmera mais lenta.
 
 ## Recorte / remover fundo
 
-- **Fundo comum (IA):** `recortar.py fundo entrada.mp4 saida.mov [--modelo u2net_human_seg]`.
-  É lento na nuvem (sem GPU, cerca de 1 a 2 quadros por segundo): use em trechos curtos.
-- **Fundo verde/azul:** `recortar.py chroma entrada.mp4 saida.mov [--cor 0x00FF00] [--similaridade 0.15]`.
+- **Fundo comum (IA):** `bash video-tools/bin/vpy video-tools/scripts/recortar.py fundo entrada.mp4 saida.mov [--modelo u2net_human_seg]`.
+  É lento sem placa de vídeo (cerca de 1 a 2 quadros por segundo): use em trechos curtos.
+- **Fundo verde/azul:** `bash video-tools/bin/vpy video-tools/scripts/recortar.py chroma entrada.mp4 saida.mov [--cor 0x00FF00] [--similaridade 0.15]`.
 Ambos geram `.mov` ProRes 4444 com transparência, para usar como camada no Premiere ou After Effects.
 Confira a máscara: `ffmpeg -i saida.mov -vf alphaextract -frames:v 1 mascara.png`.
 

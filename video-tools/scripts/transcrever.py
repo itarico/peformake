@@ -11,6 +11,7 @@ Uso:
 """
 import argparse
 import json
+import os
 from pathlib import Path
 
 
@@ -22,13 +23,22 @@ def fmt_srt(t: float) -> str:
     return f"{h:02}:{m:02}:{s:02},{ms:03}"
 
 
-def transcrever(arquivo: Path, modelo: str = "small", idioma: str = "pt", device: str = "auto"):
+def transcrever(arquivo: Path, modelo: str = "small", idioma: str = "pt", device: str | None = None):
     from faster_whisper import WhisperModel
 
-    model = WhisperModel(modelo, device=device, compute_type="int8")
-    segments, info = model.transcribe(
-        str(arquivo), language=idioma, word_timestamps=True, vad_filter=True
-    )
+    # CPU por padrão (seguro em qualquer PC). Para usar placa NVIDIA com CUDA/cuDNN instalados:
+    # defina VIDEO_WHISPER_DEVICE=cuda.
+    device = device or os.environ.get("VIDEO_WHISPER_DEVICE", "cpu")
+    try:
+        model = WhisperModel(modelo, device=device, compute_type="int8")
+        segments, info = model.transcribe(str(arquivo), language=idioma, word_timestamps=True, vad_filter=True)
+        segments = list(segments)
+    except (RuntimeError, OSError, ValueError) as e:
+        if device == "cpu":
+            raise
+        print(f"GPU indisponível ({e.__class__.__name__}); transcrevendo na CPU.")
+        model = WhisperModel(modelo, device="cpu", compute_type="int8")
+        segments, info = model.transcribe(str(arquivo), language=idioma, word_timestamps=True, vad_filter=True)
     segs = []
     for s in segments:
         segs.append(

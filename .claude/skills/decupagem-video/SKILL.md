@@ -8,8 +8,9 @@ description: Decupagem de vídeos brutos da Performake direto no Adobe Premiere.
 Padrão da agência: **sem planilha**. A decupagem vive nos marcadores do Premiere.
 Só gere planilha (`--planilha`) se o usuário pedir.
 
-Ferramentas em `video-tools/` (raiz do repositório). Se `/opt/video-venv/bin/python` não existir,
-rode primeiro `bash video-tools/install.sh`.
+Ferramentas em `video-tools/` (raiz do repositório). O Python roda via `bash video-tools/bin/vpy`
+(funciona no Windows com Git Bash, no Linux e no macOS). Se acusar que não está instalado: Windows
+`powershell -ExecutionPolicy Bypass -File video-tools\install.ps1`; Linux/macOS `bash video-tools/install.sh`.
 
 ## 1. Trazer os vídeos
 
@@ -29,7 +30,7 @@ rode primeiro `bash video-tools/install.sh`.
 ## 3. Gerar
 
 ```bash
-/opt/video-venv/bin/python video-tools/scripts/decupar.py gerar <brutos>/*.mp4 \
+bash video-tools/bin/vpy video-tools/scripts/decupar.py gerar <brutos>/*.mp4 \
   --out <pasta_saida> --caminho-pc "D:/Clientes/X/Brutos" [--modelo small|medium|large-v3]
 ```
 
@@ -53,7 +54,7 @@ Nunca altere `inicio`, `fim` nem `arquivo`.
 Depois, regenere o XML para os marcadores e a sequência SELECTS refletirem a classificação:
 
 ```bash
-/opt/video-venv/bin/python video-tools/scripts/decupar.py xml <pasta_saida>/decupagem.json \
+bash video-tools/bin/vpy video-tools/scripts/decupar.py xml <pasta_saida>/decupagem.json \
   --out <pasta_saida> --caminho-pc "D:/Clientes/X/Brutos"
 ```
 

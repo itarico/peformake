@@ -33,7 +33,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
-from decupar import file_xml, info_video, pathurl, rate_xml, tc  # noqa: E402
+from decupar import file_xml, info_video, pathurl, rate_xml, tc, validar_xml  # noqa: E402
 from transcrever import fmt_srt  # noqa: E402
 
 
@@ -155,6 +155,7 @@ def main():
            f"<height>{H}</height><pixelaspectratio>square</pixelaspectratio></samplecharacteristics></format>"
            f"{trilha(v1)}{trilha(v2)}</video><audio>{trilha(a1)}{trilha(a2)}</audio></media></sequence></xmeml>\n")
     (a.out / "montagem_premiere.xml").write_text(xml, encoding="utf-8")
+    validar_xml(a.out / "montagem_premiere.xml")
 
     if srt:
         linhas = []

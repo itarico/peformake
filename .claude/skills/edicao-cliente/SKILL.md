@@ -5,7 +5,7 @@ description: Editor de vídeo da Performake que entende o cliente. A partir dos 
 
 # Edição com contexto do cliente → timeline única no Premiere
 
-Ferramentas: `video-tools/scripts/` (Python em `/opt/video-venv/bin/python`; se não existir, `bash video-tools/install.sh`).
+Ferramentas: `video-tools/scripts/` (Python via `bash video-tools/bin/vpy`; se acusar que não está instalado: Windows `powershell -ExecutionPolicy Bypass -File video-tools\install.ps1`, Linux/macOS `bash video-tools/install.sh`).
 Regras por cliente: `video-tools/clientes/<cliente>.md`. **Leia antes de tudo.** Se não existir, crie a partir
 da Base de Conhecimento/CRM do cliente no Drive e confirme com o usuário antes de editar.
 
@@ -22,7 +22,7 @@ entrevistas, fidelidade ao roteiro, formato da legenda e o caminho dos brutos no
 - `ffprobe` em tudo: separe **falas** (com voz) e **apoio** (sem fala).
 
 ## 3. Decupar
-`decupar.py gerar <brutos>/* --out <trabalho> --caminho-pc "<caminho no PC>"` → `decupagem.json` e transcrições.
+`bash video-tools/bin/vpy video-tools/scripts/decupar.py gerar <brutos>/* --out <trabalho> --caminho-pc "<caminho no PC>"` → `decupagem.json` e transcrições.
 
 ## 4. Editar como editor (o trabalho de verdade)
 Para cada roteiro do banco:
@@ -41,13 +41,14 @@ Para cada roteiro do banco:
 - Escolha pelo assunto da fala (veja os prints e os frames). 2 a 4 s cada; cubra 30 a 50% do vídeo;
   nunca sobre o gancho nem o CTA; não repita a mesma cena em sequência.
 - Estabilize só os trechos usados (o arquivo inteiro se for curto):
-  `bash video-tools/scripts/estabilizar.sh <bruto> <trabalho>/ESTABILIZADOS/<nome>_estab.mp4 20 4`
+  `bash video-tools/bin/vpy video-tools/scripts/estabilizar.py <bruto> <trabalho>/ESTABILIZADOS/<nome>_estab.mp4 --suavidade 20 --zoom 4 [--inicio S --dur S]`
+  (com `--inicio/--dur` estabiliza só o trecho usado, bem mais rápido)
 - Confira um frame de cada cena estabilizada antes de usar.
 
 ## 6. Montar
 Escreva `<trabalho>/plano.json` (formato em `montar.py --help`) e rode:
-`montar.py plano.json --midia <pasta com brutos e ESTABILIZADOS> --out <entrega> --transcricoes <trabalho>`
-Verifique: `xmllint --noout`, e cada vídeo dentro da duração (o resumo aponta "FORA DE").
+`bash video-tools/bin/vpy video-tools/scripts/montar.py plano.json --midia <pasta com brutos e ESTABILIZADOS> --out <entrega> --transcricoes <trabalho>`
+O script já valida o XML. Verifique cada vídeo dentro da duração (o resumo aponta "FORA DE").
 
 ## 7. Entregar (pasta do cliente no Drive)
 - `montagem_premiere.xml`, `montagem.srt`, pasta `ESTABILIZADOS/` e o relatório
