@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, Copy, Download, ExternalLink, Link2, Plus, RefreshCw, Search, Settings, Undo2 } from 'lucide-react'
+import { Check, Copy, Download, ExternalLink, Layers, Link2, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -25,8 +25,15 @@ const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-gateway`
 interface Invoice {
   id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string
   source: string; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null
+  group_id: string | null
   clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
+  invoice_groups?: { description: string; due_date: string } | null
 }
+// Cobrança única: faturas do mesmo grupo aparecem como um cartão só (um link, um pagamento).
+type Row = { kind: 'one'; inv: Invoice } | { kind: 'group'; id: string; items: Invoice[] }
+const isOpen = (i: Invoice) => i.status === 'pendente' || i.status === 'vencido'
+const canJoin = (i: Invoice) => isOpen(i) && !i.group_id && !i.payment_url && !i.gateway_id
+type Rpc = (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 type Unit = 'todas' | 'peformake' | 'ellcazo'
 type StatusFilter = 'todas' | 'aberto' | 'vencido' | 'pago'
 interface ClientRow { id: string; name: string; document: string | null; billing_email: string | null; email: string | null }
@@ -51,7 +58,7 @@ export function BillingPage() {
     queryKey: ['invoices', month],
     queryFn: async () => {
       const { data, error } = await supabase.from('invoices')
-        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, clients(name, logo_path, legacy_logo_url)')
+        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date)')
         // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
         .or(`and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`)
         .order('due_date').limit(1000)
@@ -121,6 +128,33 @@ export function BillingPage() {
     onError: (e) => { setNotice((e as Error).message); refresh() },
   })
 
+  const join = useMutation({
+    mutationFn: async (ids: string[]) => {
+      const { error } = await (supabase.rpc as unknown as Rpc)('invoice_group', { _ids: ids })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => { setNotice('Faturas juntas: o cliente recebe uma cobrança só. Por dentro cada empresa continua com a sua parte.'); refresh() },
+    onError: (e) => setNotice(`Não foi possível juntar: ${(e as Error).message}`),
+  })
+  const split = useMutation({
+    mutationFn: async (group: string) => {
+      const { error } = await (supabase.rpc as unknown as Rpc)('invoice_ungroup', { _group: group })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => { setNotice('Cobrança separada. Cada fatura volta a ter o seu link.'); refresh() },
+    onError: (e) => setNotice(`Não foi possível separar: ${(e as Error).message}`),
+  })
+  const cancelGroup = useMutation({
+    mutationFn: async (items: Invoice[]) => {
+      for (const i of items.filter(isOpen)) {
+        const { error } = await supabase.rpc('invoice_set_status', { _id: i.id, _status: 'cancelado' })
+        if (error) throw error
+      }
+    },
+    onSuccess: refresh,
+    onError: (e) => setNotice(`Não foi possível cancelar: ${(e as Error).message}`),
+  })
+
   const nameOf = (i: Invoice) => i.clients?.name?.trim() ?? clientById.get(i.client_id)?.name ?? 'Cliente'
   const byUnit = (invoices.data ?? []).filter((i) => unit === 'todas' || i.unit === unit)
   const open = byUnit.filter((i) => i.status === 'pendente' || i.status === 'vencido')
@@ -136,6 +170,24 @@ export function BillingPage() {
   const exportCsv = () => downloadCsv(`cobranca-${unit}-${month.slice(0, 7)}.csv`, ['Vencimento', 'Cliente', 'Empresa', 'Descrição', 'Situação', 'Pago em', 'Valor', 'Link'],
     list.map((i) => [dayLabel(i.due_date), nameOf(i), i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake', i.description,
       i.status === 'pago' ? 'Pago' : i.due_date < today ? 'Vencido' : 'Em aberto', i.paid_at ? dayLabel(i.paid_at.slice(0, 10)) : '', Number(i.amount), i.payment_url ?? '']))
+
+  const all = invoices.data ?? []
+  const groupItems = (g: string) => all.filter((x) => x.group_id === g && x.status !== 'cancelado')
+  const seen = new Set<string>()
+  const rows: Row[] = []
+  for (const i of list) {
+    if (!i.group_id) { rows.push({ kind: 'one', inv: i }); continue }
+    if (seen.has(i.group_id)) continue
+    seen.add(i.group_id)
+    rows.push({ kind: 'group', id: i.group_id, items: groupItems(i.group_id) })
+  }
+  const joinable = (i: Invoice) => all.filter((x) => x.client_id === i.client_id && canJoin(x))
+  const askJoin = (i: Invoice) => {
+    const items = joinable(i)
+    const total = items.reduce((a, x) => a + Number(x.amount), 0)
+    void ask(`Juntar ${items.length} faturas de ${nameOf(i)} numa cobrança só de ${brl(total)}?\n\n${items.map((x) => `• ${x.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}: ${x.description} (${brl(x.amount)})`).join('\n')}\n\nO vencimento fica o da mensalidade. Por dentro cada empresa continua com a sua parte.`)
+      .then((ok) => { if (ok) join.mutate(items.map((x) => x.id)) })
+  }
 
   return (
     <>
@@ -205,7 +257,27 @@ export function BillingPage() {
 
       {!invoices.data ? <LoadState isPending={invoices.isPending} isError={invoices.isError} refetch={() => void invoices.refetch()} /> : (
         <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
-          {list.map((i) => {
+          {rows.map((row) => {
+            if (row.kind === 'group') {
+              const first = row.items[0]
+              if (!first) return null
+              return (
+                <GroupCard key={row.id} id={row.id} items={row.items} name={nameOf(first)} today={today} isAdmin={isAdmin}
+                  logo={logoPublicUrl(first.clients?.logo_path ?? null) ?? first.clients?.legacy_logo_url ?? null}
+                  busy={chargeNow.isPending || split.isPending || cancelGroup.isPending || pay.isPending || undo.isPending}
+                  onCopy={(url) => { void navigator.clipboard.writeText(url); setNotice('Link copiado.') }}
+                  onCharge={() => {
+                    const client = clientById.get(first.client_id)
+                    if (client && !client.document) { setBillingFor(client); return }
+                    chargeNow.mutate(row.id)
+                  }}
+                  onPay={() => setPaying({ ...first, amount: row.items.reduce((a, x) => a + Number(x.amount), 0), description: first.invoice_groups?.description ?? 'Cobrança única' })}
+                  onUndo={() => { void ask('Desfazer o pagamento da cobrança junta? Todas as faturas dela voltam para em aberto.').then((ok) => { if (ok) undo.mutate(first.id) }) }}
+                  onSplit={() => { void ask('Separar a cobrança? Cada fatura volta a ter o seu próprio link e não é juntada de novo sozinha.').then((ok) => { if (ok) split.mutate(row.id) }) }}
+                  onCancel={() => { void ask('Cancelar a cobrança junta inteira (todas as faturas dela)?').then((ok) => { if (ok) cancelGroup.mutate(row.items) }) }} />
+              )
+            }
+            const i = row.inv
             const st = reminderStage(i.due_date, today, i.status)
             const client = clientById.get(i.client_id)
             const clientName = nameOf(i)
@@ -233,6 +305,9 @@ export function BillingPage() {
                         if (client && !client.document) { setBillingFor(client); return }
                         chargeNow.mutate(i.id)
                       }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
+                    )}
+                    {isAdmin && canJoin(i) && joinable(i).length >= 2 && (
+                      <button type="button" disabled={join.isPending} onClick={() => askJoin(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-accent/40 bg-accent-soft px-3 font-semibold text-accent-ink hover:border-accent"><Layers size={14} aria-hidden="true" /> Juntar com as outras ({joinable(i).length})</button>
                     )}
                     {isAdmin && <button type="button" disabled={pay.isPending} onClick={() => setPaying(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Check size={14} aria-hidden="true" /> Marcar pago</button>}
                     {isAdmin && <button type="button" disabled={setStatus.isPending} onClick={() => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) }} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>}
@@ -262,6 +337,66 @@ export function BillingPage() {
 }
 
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
+const pill = 'inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink'
+
+/** Cobrança única: várias faturas (de cada empresa) com um link e um pagamento só. */
+function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onCharge, onPay, onUndo, onSplit, onCancel }: {
+  id: string; items: Invoice[]; name: string; logo: string | null; today: string; isAdmin: boolean; busy: boolean
+  onCopy: (url: string) => void; onCharge: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
+}) {
+  const first = items[0]
+  if (!first) return null
+  const total = items.reduce((a, i) => a + Number(i.amount), 0)
+  const status = items.every((i) => i.status === 'pago') ? 'pago' : items.some((i) => i.status === 'vencido') ? 'vencido' : 'pendente'
+  const due = first.invoice_groups?.due_date ?? first.due_date
+  const st = reminderStage(due, today, status)
+  const url = items.find((i) => i.payment_url)?.payment_url ?? null
+  const error = items.find((i) => i.gateway_error)?.gateway_error ?? null
+  const units = [...new Set(items.map((i) => (i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake')))].join(' + ')
+  return (
+    <li data-group={id} className="flex flex-col gap-2 border-b border-l-4 border-b-line border-l-accent bg-accent-soft/20 px-4 py-3 last:border-b-0">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <ClientAvatar name={name} url={logo} size="sm" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-semibold">{name} <span className="font-normal text-muted">· Cobrança única · {units}</span></p>
+          <p className="truncate text-[13px] text-muted">{items.length} faturas juntas · vence {dayLabel(due)}{first.paid_at && status === 'pago' ? ` · pago ${dayLabel(first.paid_at.slice(0, 10))}` : ''}</p>
+        </div>
+        <span className="font-semibold tabular-nums">{brl(total)}</span>
+        <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
+          st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
+      </div>
+      <ul className="ml-11 flex flex-col gap-0.5 text-[13px]">
+        {items.map((i) => (
+          <li key={i.id} className="flex items-baseline justify-between gap-3">
+            <span className="min-w-0 truncate"><b className={cn('font-semibold', i.unit === 'ellcazo' ? 'text-accent-ink' : 'text-ink')}>{i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}</b> <span className="text-muted">· {i.description.replace(/^Mensalidade \d{2}\/\d{4} · /, 'Mensalidade · ')}</span></span>
+            <span className="tabular-nums text-muted">{brl(i.amount)}</span>
+          </li>
+        ))}
+      </ul>
+      {isAdmin && status !== 'pago' && (
+        <div className="flex flex-wrap items-center gap-2 text-[13px]">
+          {url ? (
+            <>
+              <a href={url} target="_blank" rel="noreferrer" className={pill}><ExternalLink size={14} aria-hidden="true" /> Abrir link</a>
+              <button type="button" onClick={() => onCopy(url)} className={pill}><Copy size={14} aria-hidden="true" /> Copiar link</button>
+            </>
+          ) : (
+            <button type="button" disabled={busy} onClick={onCharge} className={pill}><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
+          )}
+          <button type="button" disabled={busy} onClick={onPay} className={pill}><Check size={14} aria-hidden="true" /> Marcar pago</button>
+          {!url && <button type="button" disabled={busy} onClick={onSplit} className={pill}><Split size={14} aria-hidden="true" /> Separar</button>}
+          <button type="button" disabled={busy} onClick={onCancel} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>
+          {error && <span className="text-warn-ink">{error}</span>}
+        </div>
+      )}
+      {isAdmin && status === 'pago' && (
+        <div className="flex flex-wrap items-center gap-2 text-[13px]">
+          <button type="button" disabled={busy} onClick={onUndo} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-3 font-medium text-muted underline hover:text-ink"><Undo2 size={14} aria-hidden="true" /> Desfazer pagamento</button>
+        </div>
+      )}
+    </li>
+  )
+}
 
 /** Pagamento feito fora do link: escolhe a data em que o dinheiro entrou. */
 function PayInvoiceDialog({ invoice, name, onClose, onPay }: { invoice: Invoice; name: string; onClose: () => void; onPay: (date: string) => void }) {
@@ -393,6 +528,7 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
           <fieldset className="flex flex-col">
             <legend className="mb-1 text-[13px] font-semibold">Automático</legend>
             {toggle('monthly_generate', 'Gerar mensalidades sozinho', 'Todo dia confere os clientes fixos e cria a mensalidade do mês, com vencimento no dia 30, respeitando início e fim do contrato.')}
+            {toggle('merge_monthly', 'Cobrança única do mês', 'Junta as faturas do mesmo cliente no mês (Peformake, Ellcazo e avulsos) numa cobrança só, com um link. Por dentro cada empresa continua com a sua parte. Sinal de orçamento e fotos não entram.')}
             {toggle('auto_charge', 'Criar o link no gateway sozinho', '5 dias antes do vencimento a fatura ganha o link de pagamento (Pix, boleto ou cartão). Cancelar ou dar baixa aqui também fecha a cobrança no Asaas.')}
             <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova com link e lembretes de vencimento) ligam e desligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, no grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>
           </fieldset>
