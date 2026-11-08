@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, Copy, Download, ExternalLink, Layers, Link2, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
+import { CalendarClock, Check, Copy, Download, ExternalLink, Layers, Link2, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -47,6 +47,7 @@ export function BillingPage() {
   const [month] = useMonthParam()
   const [creating, setCreating] = useState(false)
   const [jobOpen, setJobOpen] = useState(false)
+  const [dueFor, setDueFor] = useState<{ id: string; label: string; due: string; monthly: boolean } | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [billingFor, setBillingFor] = useState<ClientRow | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
@@ -274,6 +275,7 @@ export function BillingPage() {
                     if (client && !client.document) { setBillingFor(client); return }
                     chargeNow.mutate(row.id)
                   }}
+                  onDue={() => setDueFor({ id: first.id, label: `${nameOf(first)} · cobrança única`, due: first.invoice_groups?.due_date ?? first.due_date, monthly: true })}
                   onPay={() => setPaying({ ...first, amount: row.items.reduce((a, x) => a + Number(x.amount), 0), description: first.invoice_groups?.description ?? 'Cobrança única' })}
                   onUndo={() => { void ask('Desfazer o pagamento da cobrança junta? Todas as faturas dela voltam para em aberto.').then((ok) => { if (ok) undo.mutate(first.id) }) }}
                   onSplit={() => { void ask('Separar a cobrança? Cada fatura volta a ter o seu próprio link e não é juntada de novo sozinha.').then((ok) => { if (ok) split.mutate(row.id) }) }}
@@ -312,6 +314,7 @@ export function BillingPage() {
                     {isAdmin && canJoin(i) && joinable(i).length >= 2 && (
                       <button type="button" disabled={join.isPending} onClick={() => askJoin(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-accent/40 bg-accent-soft px-3 font-semibold text-accent-ink hover:border-accent"><Layers size={14} aria-hidden="true" /> Juntar com as outras ({joinable(i).length})</button>
                     )}
+                    {isAdmin && !i.payment_url && <button type="button" onClick={() => setDueFor({ id: i.id, label: `${clientName} · ${i.description}`, due: i.due_date, monthly: i.source === 'mensalidade' })} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><CalendarClock size={14} aria-hidden="true" /> Vencimento</button>}
                     {isAdmin && <button type="button" disabled={pay.isPending} onClick={() => setPaying(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Check size={14} aria-hidden="true" /> Marcar pago</button>}
                     {isAdmin && <button type="button" disabled={setStatus.isPending} onClick={() => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) }} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>}
                     {i.gateway_error && <span className="text-warn-ink">{i.gateway_error}</span>}
@@ -332,6 +335,7 @@ export function BillingPage() {
       )}
 
       {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} onClose={() => setPaying(null)} onPay={(date) => { pay.mutate({ id: paying.id, date }); setPaying(null) }} />}
+      {dueFor && <DueDialog target={dueFor} onClose={() => setDueFor(null)} onSaved={(msg) => { setNotice(msg); refresh() }} />}
       {jobOpen && <ServiceJobDialog clients={clients.data ?? []} onClose={() => setJobOpen(false)} onSaved={() => { setNotice('Serviço lançado: a fatura do cliente e a conta a pagar de quem fez já estão no sistema.'); refresh() }} />}
       {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
       {settingsOpen && <BillingSettingsDialog onClose={() => setSettingsOpen(false)} />}
@@ -344,9 +348,9 @@ const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surf
 const pill = 'inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink'
 
 /** Cobrança única: várias faturas (de cada empresa) com um link e um pagamento só. */
-function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onCharge, onPay, onUndo, onSplit, onCancel }: {
+function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onCharge, onDue, onPay, onUndo, onSplit, onCancel }: {
   id: string; items: Invoice[]; name: string; logo: string | null; today: string; isAdmin: boolean; busy: boolean
-  onCopy: (url: string) => void; onCharge: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
+  onCopy: (url: string) => void; onCharge: () => void; onDue: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
 }) {
   const first = items[0]
   if (!first) return null
@@ -387,6 +391,7 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
           ) : (
             <button type="button" disabled={busy} onClick={onCharge} className={pill}><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
           )}
+          {!url && <button type="button" disabled={busy} onClick={onDue} className={pill}><CalendarClock size={14} aria-hidden="true" /> Vencimento</button>}
           <button type="button" disabled={busy} onClick={onPay} className={pill}><Check size={14} aria-hidden="true" /> Marcar pago</button>
           {!url && <button type="button" disabled={busy} onClick={onSplit} className={pill}><Split size={14} aria-hidden="true" /> Separar</button>}
           <button type="button" disabled={busy} onClick={onCancel} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>
@@ -399,6 +404,36 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
         </div>
       )}
     </li>
+  )
+}
+
+/** Mudar vencimento: só esta cobrança ou o dia de todo mês do cliente. */
+function DueDialog({ target, onClose, onSaved }: { target: { id: string; label: string; due: string; monthly: boolean }; onClose: () => void; onSaved: (msg: string) => void }) {
+  const [date, setDate] = useState(target.due)
+  const [every, setEvery] = useState(false)
+  const [problem, setProblem] = useState<string | null>(null)
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await (supabase.rpc as unknown as Rpc)('invoice_set_due', { _id: target.id, _due: date, _every_month: every })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => { onSaved(every ? `Vencimento mudado. A partir de agora o cliente vence todo dia ${Number(date.slice(8, 10))}.` : 'Vencimento mudado.'); onClose() },
+    onError: (e) => setProblem((e as Error).message),
+  })
+  return (
+    <Dialog open onClose={onClose} title="Mudar vencimento" description={target.label} size="sm"
+      footer={<Button disabled={save.isPending || !date} onClick={() => { setProblem(null); save.mutate() }}><CalendarClock size={15} aria-hidden="true" /> Salvar vencimento</Button>}>
+      <div className="flex flex-col gap-3">
+        <label className="flex flex-col text-[13px] font-semibold">Nova data<input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={field} /></label>
+        {target.monthly && (
+          <label className="flex min-h-11 cursor-pointer items-start gap-2 text-[13px]">
+            <input type="checkbox" checked={every} onChange={(e) => setEvery(e.target.checked)} className="mt-1 size-4" />
+            <span><b className="font-semibold">Mudar também os próximos meses</b><span className="block text-muted">O cliente passa a vencer todo dia {date ? Number(date.slice(8, 10)) : '…'}. As mensalidades em aberto acompanham.</span></span>
+          </label>
+        )}
+        {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
+      </div>
+    </Dialog>
   )
 }
 

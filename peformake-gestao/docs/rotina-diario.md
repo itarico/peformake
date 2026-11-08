@@ -2,6 +2,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-08 tarde · sessão do PC
+Feito: Configurações com menu lateral em grupos (celular: lista), Ellcazo · Audiovisual com destaque (Produção, Orçamento, Serviços e pacotes), resumo de cada automação. Equipe → Membros (substitui Acessos): adicionar/editar em pop-up, convite por e-mail, master (profiles.is_master) protegido. Cobrança: botão Vencimento (só esta ou todo mês).
+Fila do Italo (ordem combinada): 1) Equipe → Configurações com perfil de cada membro (salário, OTE, metas da variável) e regras gerais; leads da equipe vão para Comercial (Kanban de todos, cada um vê os seus, admin vê todos). 2) Resumos com gráficos (pizza, velocímetro) em Financeiro, Conteúdo, Audiovisual, Comercial e Equipe (produtividade). 3) Metas mais fácil. 4) Inteligência com outro visual. 5) Login novo (frases animadas, personagens que seguem o mouse, Google só se já estiver ligado).
+
 ## 2026-11-08 · sessão do PC (pedidos do Italo)
 Feito: cobrança única do mês (Financeiro → Cobrança: botão "Juntar com as outras", cartão da cobrança única, Separar; chave "Cobrança única do mês" em Configurar cobrança, começa DESLIGADA). Grupo divide o mesmo link do Asaas; pago, todas as faturas viram pagas e cada empresa segue com a sua parte.
 Feito: serviço avulso com quem executa (ficha do cliente → Financeiro → "Serviço avulso" e Cobrança): cria a fatura do cliente + conta a pagar da pessoa (Caixa, categoria Equipe) + cartão "Você tem para receber" no Início dela. staff_members.skills aprende a função.
