@@ -38,7 +38,7 @@ export function AvQuotesPage() {
           ))}
         </div>
         <div className="flex gap-2">
-          <Link to="/configuracoes/orcamento" className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline hover:border-ink"><Settings2 size={16} aria-hidden="true" /> Serviços e regras</Link>
+          <Link to="/configuracoes/audiovisual/orcamento" className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline hover:border-ink"><Settings2 size={16} aria-hidden="true" /> Serviços e regras</Link>
           <Link to="/audiovisual/orcamentos/novo" className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-fill px-4 font-semibold text-on-fill no-underline"><Plus size={16} aria-hidden="true" /> Novo orçamento</Link>
         </div>
       </div>

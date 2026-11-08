@@ -108,9 +108,8 @@ export function AutomationsCenter() {
   const groups = MODULES.filter((m) => rows.some((r) => r.module === m))
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+    <div className="flex w-full max-w-3xl flex-col gap-4">
       <div>
-        <h2 className="text-[20px] font-semibold tracking-tight">Automações</h2>
         <p className="text-[13px] text-muted">Tudo o que o sistema faz sozinho, o que está funcionando e o que está parado. {isAdmin ? 'Toque na chave para ligar ou desligar.' : 'Só administradores ligam e desligam.'}</p>
       </div>
 
@@ -125,7 +124,7 @@ export function AutomationsCenter() {
         ))}
       </div>
 
-      <div role="group" aria-label="Módulo" className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
+      <div role="group" aria-label="Módulo" className="flex flex-wrap gap-1.5">
         {[null, ...MODULES].map((m) => (
           <button key={m ?? 'todos'} type="button" aria-pressed={mod === m} onClick={() => set('modulo', m)}
             className={cn('min-h-9 shrink-0 cursor-pointer rounded-full border px-3 text-[12.5px] font-semibold', mod === m ? 'border-ink bg-ink text-surface' : 'border-line-strong text-ink hover:border-ink')}>
@@ -159,7 +158,8 @@ export function AutomationsCenter() {
                         {a.title}
                         {a.uses_ai && <span className="inline-flex items-center gap-0.5 rounded-full bg-accent-soft px-1.5 py-px text-[10.5px] font-semibold text-accent-ink"><Sparkles size={10} aria-hidden="true" />IA</span>}
                       </span>
-                      <span className="block text-[12px] text-muted">{a.schedule}{when ? ` · última: ${when}` : ''}</span>
+                      {a.what && <span className="mt-0.5 line-clamp-2 block text-[12.5px] leading-snug text-ink/80">{a.what}</span>}
+                      <span className="mt-0.5 block text-[12px] text-muted">{a.schedule}{when ? ` · última: ${when}` : ''}</span>
                       {a.problem && <span className="mt-0.5 block text-[12px] font-medium text-[#c4373b] dark:text-[#ff8589]">{a.problem}</span>}
                     </span>
                   </button>

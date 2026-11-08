@@ -120,7 +120,7 @@ export function App() {
             <Route path="audiovisual" element={<AvHome />} />
             <Route path="audiovisual/producao" element={<AvBoard />} />
             <Route path="audiovisual/projeto/:id" element={<AvProjectPage />} />
-            <Route path="audiovisual/servicos" element={<MovedTo to="/configuracoes/servicos?area=audiovisual" />} />
+            <Route path="audiovisual/servicos" element={<MovedTo to="/configuracoes/audiovisual/servicos" />} />
             <Route path="audiovisual/orcamentos" element={<AvQuotesPage />} />
             <Route path="audiovisual/fotos" element={<AvPhotosPage />} />
             <Route path="audiovisual/fotos/:id" element={<AvGalleryPage />} />
