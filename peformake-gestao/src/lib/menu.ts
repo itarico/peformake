@@ -19,7 +19,7 @@ export interface MenuGroup {
 const ANY_MODULE: readonly AppRole[] = [...new Set([...TRAFFIC_ROLES, ...CONTENT_ROLES, ...AV_ROLES, ...COMMERCIAL_ROLES])]
 
 // Menu enxuto: 10 entradas. Operação abre pelo Início; Social Media está dentro de Conteúdo; Metodologia dentro de Estratégia;
-// Integrações, Acessos, WhatsApp e o catálogo de serviços dentro de Configurações.
+// Integrações, WhatsApp e o catálogo de serviços dentro de Configurações.
 const MENU: MenuGroup[] = [
   {
     label: 'Principal',
@@ -65,7 +65,7 @@ export function tabsForRoles(userRoles: readonly AppRole[]): { tabs: MenuItem[];
 /** Primeira tela que a pessoa pode abrir. */
 export function homePathForRoles(userRoles: readonly AppRole[]): string {
   if (hasAnyRole(userRoles, ANY_MODULE)) return '/inicio'
-  if (hasAnyRole(userRoles, ADMIN_ROLES)) return '/acessos'
+  if (hasAnyRole(userRoles, ADMIN_ROLES)) return '/equipe/membros'
   if (hasAnyRole(userRoles, ['ellcazo'])) return '/financeiro'
   if (userRoles.length > 0) return '/equipe'
   return '/sem-modulo'

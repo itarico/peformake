@@ -117,7 +117,7 @@ export function FinancePage() {
     return (
       <>
         <h1 className="text-3xl font-semibold tracking-tight">Financeiro</h1>
-        <p className="rounded-2xl bg-raised px-4 py-3">Você ainda não é administrador do financeiro de nenhuma empresa. Peça ao administrador para liberar em Acessos.</p>
+        <p className="rounded-2xl bg-raised px-4 py-3">Você ainda não é administrador do financeiro de nenhuma empresa. Peça ao administrador para liberar em Equipe → Membros.</p>
       </>
     )
   }

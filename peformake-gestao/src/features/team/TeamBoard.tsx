@@ -172,7 +172,7 @@ export function TeamBoard({ isAdmin }: { isAdmin: boolean }) {
         <p className="pf-rise flex flex-wrap items-center gap-2 rounded-2xl bg-accent-soft px-4 py-3 text-[14px]">
           <UserPlus size={16} aria-hidden="true" />
           <span><b>{noLogin} de {rows.length}</b> pessoas ainda não têm login: a pontuação já conta, mas elas não veem o próprio placar.</span>
-          <Link to="/configuracoes/acessos" className="font-semibold">Convidar em Acessos</Link>
+          <Link to="/equipe/membros" className="font-semibold">Convidar em Membros</Link>
         </p>
       )}
 

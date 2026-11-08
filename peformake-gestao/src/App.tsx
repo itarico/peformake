@@ -158,7 +158,7 @@ export function App() {
           <Route element={<RequireRole roles={NOTIFICATION_ADMIN_ROLES} />}>
             <Route path="configuracoes/*" element={<SettingsLayout />} />
           </Route>
-          <Route path="acessos" element={<MovedTo to="/configuracoes/acessos" />} />
+          <Route path="acessos" element={<MovedTo to="/equipe/membros" />} />
           <Route path="integracoes" element={<MovedTo to="/configuracoes/integracoes" />} />
           <Route path="*" element={<CenteredMessage title="Página não encontrada" />} />
         </Route>

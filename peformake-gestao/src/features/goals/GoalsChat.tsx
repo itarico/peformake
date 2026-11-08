@@ -631,7 +631,7 @@ export function GoalsChat() {
       )
     }
     if (tab === 'tarefas') {
-      if (myDay.data && !myDay.data.linked) return <p className="px-3 py-4 text-[12.5px] text-muted">Seu login ainda não está ligado ao seu cadastro na equipe. Peça ao administrador em Configurações → Acessos para ver suas tarefas aqui.</p>
+      if (myDay.data && !myDay.data.linked) return <p className="px-3 py-4 text-[12.5px] text-muted">Seu login ainda não está ligado ao seu cadastro na equipe. Peça ao administrador em Equipe → Membros para ver suas tarefas aqui.</p>
       return (
         <div className="flex flex-col">
           <Group title="Tarefas" empty="Nenhuma tarefa aberta com você. 👌">

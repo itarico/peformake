@@ -7,7 +7,6 @@ import { RequireRole } from '@/auth/guards'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { cn } from '@/lib/cn'
 import { ADMIN_ROLES, NOTIFICATION_ADMIN_ROLES, type AppRole } from '@/lib/roles'
-import { AccessPage } from '@/features/access/AccessPage'
 import { AvSettingsForm } from '@/features/av/AvSettingsForm'
 import { QuoteSettings } from '@/features/av/QuoteSettings'
 import { AREA_LABEL, ServiceCatalog, type Area } from '@/features/catalog/ServiceCatalog'
@@ -40,9 +39,6 @@ const GROUPS: Group[] = [
     { to: 'audiovisual', label: 'Produção', hint: 'Agenda, prazos e equipe de gravação' },
     { to: 'audiovisual/orcamento', label: 'Orçamento', hint: 'Modelo, sinal e condições' },
     { to: 'audiovisual/servicos', label: 'Serviços e pacotes', hint: 'O que a Ellcazo vende e por quanto' },
-  ] },
-  { id: 'equipe', label: 'Equipe', items: [
-    { to: 'acessos', label: 'Acessos', hint: 'Quem entra no sistema e o que vê', roles: ADMIN_ROLES },
   ] },
 ]
 const BASE = '/configuracoes/'
@@ -150,7 +146,7 @@ export function SettingsLayout() {
               <Route path="metas" element={<GoalsSettings />} />
             </Route>
             <Route element={<RequireRole roles={ADMIN_ROLES} />}>
-              <Route path="acessos" element={<AccessPage />} />
+              <Route path="acessos" element={<MovedTo to="/equipe/membros" />} />
             </Route>
             <Route path="*" element={<Navigate to="/configuracoes" replace />} />
           </Routes>

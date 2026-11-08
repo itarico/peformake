@@ -15,6 +15,7 @@ import { useMonthParam } from '@/features/content/useMonthParam'
 import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
 import { TeamOverview } from './TeamOverview'
+import { MembersPage } from './MembersPage'
 import { LEAD_STAGES, LEAD_STAGE_LABEL, METRIC_LABEL, goalValue, partnershipProgress, type LeadStage, type MemberDashboard } from './teamRules'
 
 const brl = (n: number) => Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -35,6 +36,7 @@ export function TeamPage() {
   const isAdmin = useIsAdmin()
   const isLead = useIsLead()
   const tabs = [
+    { to: '/equipe/membros', label: 'Membros', roles: ['admin'] as const },
     { to: '/equipe/placar', label: 'Placar' },
     { to: '/equipe/resumo', label: 'Metas e destaque', roles: ['admin', 'head_marketing'] as const },
     { to: '/equipe/minha-area', label: 'Minha área' },
@@ -56,6 +58,7 @@ export function TeamPage() {
         <Route path="minha-area" element={<MemberArea />} />
         <Route path="leads" element={<LeadsTab />} />
         {isAdmin && <Route path="configuracoes" element={<TeamSettings />} />}
+        {isAdmin && <Route path="membros" element={<MembersPage />} />}
         <Route path="*" element={<Navigate to="/equipe/placar" replace />} />
       </Routes>
     </>

@@ -215,7 +215,7 @@ export function MyDay({ greeting }: { greeting: string }) {
   if (!d.linked) {
     return (
       <Panel title="Seu login ainda não está ligado a você na equipe">
-        <p className="text-muted">Peça ao administrador para ligar o seu login ao seu cadastro em Configurações &gt; Acessos. Depois disso, aqui aparecem os seus clientes, peças, vídeos e pontos.</p>
+        <p className="text-muted">Peça ao administrador para ligar o seu login ao seu cadastro em Equipe &gt; Membros. Depois disso, aqui aparecem os seus clientes, peças, vídeos e pontos.</p>
       </Panel>
     )
   }
