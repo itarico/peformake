@@ -176,7 +176,7 @@ export function AppShell() {
   useEffect(() => { document.title = 'Peformake Gestão' }, [])
 
   return (
-    <div className="min-h-dvh md:grid md:h-dvh md:grid-cols-[84px_minmax(0,1fr)] md:overflow-hidden lg:grid-cols-[232px_minmax(0,1fr)]">
+    <div className="min-h-dvh w-full max-w-full overflow-x-clip md:grid md:h-dvh md:grid-cols-[84px_minmax(0,1fr)] md:overflow-hidden lg:grid-cols-[232px_minmax(0,1fr)]">
       {/* Celular: topo fino */}
       <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-line bg-surface/95 px-4 pt-[env(safe-area-inset-top)] backdrop-blur md:hidden">
         <span className="flex min-h-14 items-center"><Brand /></span>
@@ -200,7 +200,7 @@ export function AppShell() {
         <AccountLink />
       </aside>
 
-      <main key={location.pathname.split('/')[1]} className="relative min-w-0 pb-[calc(76px+env(safe-area-inset-bottom))] md:h-dvh md:overflow-y-auto md:pb-0">
+      <main key={location.pathname.split('/')[1]} className="relative min-w-0 max-w-full overflow-x-clip pb-[calc(76px+env(safe-area-inset-bottom))] md:h-dvh md:overflow-y-auto md:pb-0">
         <ViewAsBar />
         <div className="pointer-events-none sticky top-0 z-20 hidden justify-end px-7 pt-3 md:flex">
           <div className="pointer-events-auto"><NotificationBell /></div>

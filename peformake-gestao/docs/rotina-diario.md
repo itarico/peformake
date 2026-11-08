@@ -2,6 +2,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-08 · celular sem escorregar de lado + decisões do Financeiro
+
+- Celular: o app inteiro e a área de conteúdo agora cortam o que passar da largura da tela (overflow-x: clip no contêiner, não só no html, que o iPhone ignorava); itens de grade não empurram a coluna; números grandes do Início menores no celular.
+- Financeiro, decisões do Italo (ainda NÃO construir nada, só definir): (1) todas as entregas do mês ficam prontas até o dia 25 do mesmo mês; (2) audiovisual sem sinal, como já é hoje com todos os clientes (cobra 100% na produção, captação confirmada); (3) parceiros com clientes próprios: é protótipo, sem contador; o sistema calcula o repasse e o admin paga no dia 30.
+- Pendente: ver no iPhone se o Início ficou travado; aguardar o ok para começar a Fase 0 do Financeiro.
+
 ## 2026-11-08 · desenho do Financeiro (estudo, nada construído)
 Questionário com 64 decisões (respondido com as recomendações; o Italo pode mudar): https://claude.ai/artifact/LYgE7bU9eMBzuYHQ7EQKG3
 Desenho final com 39 conflitos e solução, e fases 0 a 5: https://claude.ai/artifact/BrnawfeK3mAjtEj3RykjyC

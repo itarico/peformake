@@ -222,6 +222,12 @@ html {
 body {
   max-width: 100%;
 }
+/* Item de grade nunca empurra a coluna além da tela (o padrão do navegador é "min-width: auto"). */
+@layer base {
+  main .grid > * {
+    min-width: 0;
+  }
+}
 button,
 a,
 [role='button'] {

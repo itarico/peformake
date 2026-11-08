@@ -43,7 +43,7 @@ function Kpi({ label, value, format, sub, tone, i }: { label: string; value: num
   return (
     <div className="pf-rise flex min-w-0 flex-col gap-0.5 px-4 py-3" style={{ '--i': i } as React.CSSProperties}>
       <p className="text-[12px] font-medium text-muted">{label}</p>
-      <p className={cn('text-[24px] font-semibold leading-tight tracking-tight tabular-nums', tone === 'warn' && 'text-warn-ink', tone === 'ok' && 'text-ok-ink')}>
+      <p className={cn('break-words text-[19px] font-semibold leading-tight tracking-tight tabular-nums sm:text-[24px]', tone === 'warn' && 'text-warn-ink', tone === 'ok' && 'text-ok-ink')}>
         {value === null ? '—' : <CountUp value={value} format={format} />}
       </p>
       <p className="truncate text-[12px] text-muted">{sub}</p>
