@@ -2,6 +2,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-08 noite (2) · sessão do PC
+Feito: automações em pop-up por área (AutomationsLink = ícone ⚡ com contador de problemas; Configurações mostra só sistema+WhatsApp; Comercial mostra comercial+WhatsApp); central saiu do menu de Configurações (rota /configuracoes/automacoes continua). Correções da revisão por função: can_finance(ellcazo) aceita a função ellcazo; can_access_av/can_manage_av e AV_ROLES incluem ellcazo; services legível por todos; my_day.leads lê crm_deals; social_from_request → /conteudo/redes; 6 avisos cadastrados em notification_rules; Configurações do head sem Integrações/Serviços/Orçamento.
+Esperando o Italo decidir: quem vê valores (comercial: negociações e vendas; vídeo: orçamentos e fotos; tráfego: gasto com anúncios; cada um: os próprios ganhos). Sugestão: liberar tráfego e próprios ganhos; comercial e vídeo só admin.
+Pendente de convite: 9 membros sem login.
+
 ## 2026-11-08 noite · sessão do PC
 Feito: remuneração por membro (member_pay, member_pay_goals, member_ote, team_pay_overview; gatilho/teto em team_settings) em Equipe → Membros (aba Remuneração) e Equipe → Configurações. Leads da equipe no Funil do Comercial (crm_deals com lead manual; RLS deal_visible: dono, admin/head veem todos). Ellcazo com o verde da logo (#72B52F) e marca em blocos. Logos de clientes coloridas no site.
 Limite conhecido: metas da variável medem o resultado da área toda, não só o da pessoa.
