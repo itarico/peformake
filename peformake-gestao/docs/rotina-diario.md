@@ -2,6 +2,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-08 · sessão do PC (pedidos do Italo)
+Feito: cobrança única do mês (Financeiro → Cobrança: botão "Juntar com as outras", cartão da cobrança única, Separar; chave "Cobrança única do mês" em Configurar cobrança, começa DESLIGADA). Grupo divide o mesmo link do Asaas; pago, todas as faturas viram pagas e cada empresa segue com a sua parte.
+Feito: serviço avulso com quem executa (ficha do cliente → Financeiro → "Serviço avulso" e Cobrança): cria a fatura do cliente + conta a pagar da pessoa (Caixa, categoria Equipe) + cartão "Você tem para receber" no Início dela. staff_members.skills aprende a função.
+Corrigido: Configurações → Notificações caía com mensagem da fila sem telefone. Ícone da aba arredondado.
+Fila do Italo (próximo): Configurações sem rolagem lateral + resumo em cada automação + Audiovisual (Ellcazo) agrupado com destaque; Acessos (botão Adicionar/pop-up, master e admins em destaque, sem desmarcar admin); Metas mais fácil; Inteligência com outro visual; marcar funções (apresentadora) no cadastro do membro.
+
 ## 2026-11-07 20h · sessão da nuvem (pedido do Italo pelo celular)
 Corrigido: no iPhone o menu de baixo ficava solto no meio da tela (overflow-x hidden no html e no body fazia o body rolar). Agora só `html { overflow-x: clip }`; conferido que nada escorrega de lado em 360/390/768 px.
 Antes, nesta sessão: central de Automações (Configurações → Automações), e-mail do cliente opcional, botão "Mudar vencimento" no Financeiro do cliente (fatura em aberto sem link acompanha o dia novo), Bete numa conversa só.

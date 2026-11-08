@@ -237,6 +237,7 @@ export function MyDay({ greeting }: { greeting: string }) {
         </div>
         <Points d={d} />
       </header>
+      <MyPayables staffId={viewAs?.staffId ?? null} />
 
       <section aria-label="Resumo" className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {isDesigner && <>
@@ -287,5 +288,43 @@ export function MyDay({ greeting }: { greeting: string }) {
         </Panel>
       )}
     </>
+  )
+}
+
+interface Payables { pending: number; paid_month: number; items: { id: string; description: string; amount: number; due_date: string; status: string; paid_at: string | null }[] }
+const money = (n: number) => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+const dayMonth = (d: string) => d.slice(8, 10) + '/' + d.slice(5, 7)
+
+/** O que a pessoa tem para receber por serviços avulsos (só dela). Some quando não há nada. */
+function MyPayables({ staffId }: { staffId: string | null }) {
+  const q = useQuery({
+    queryKey: ['my-payables', staffId ?? 'me'],
+    queryFn: async () => {
+      const { data, error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>)('my_payables', { _staff_id: staffId })
+      if (error) throw error
+      return data as Payables
+    },
+  })
+  const p = q.data
+  if (!p || (Number(p.pending) <= 0 && Number(p.paid_month) <= 0)) return null
+  const open = p.items.filter((i) => i.status === 'pendente')
+  return (
+    <section aria-label="A receber" className="flex flex-col gap-2 rounded-3xl border border-ok/30 bg-ok-soft/40 px-5 py-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="text-[13px] font-medium text-muted">Você tem para receber</p>
+        {Number(p.paid_month) > 0 && <p className="text-[12px] text-muted">Recebido no mês: {money(p.paid_month)}</p>}
+      </div>
+      <p className="text-[26px] font-semibold tabular-nums text-ok-ink">{money(p.pending)}</p>
+      {open.length > 0 && (
+        <ul className="flex flex-col text-[13px]">
+          {open.slice(0, 4).map((i) => (
+            <li key={i.id} className="flex justify-between gap-3 border-t border-ok/20 py-1.5 first:border-t-0">
+              <span className="min-w-0 truncate">{i.description.split(' · ').slice(1).join(' · ') || i.description}</span>
+              <span className="shrink-0 tabular-nums text-muted">{money(i.amount)} · {dayMonth(i.due_date)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   )
 }

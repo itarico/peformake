@@ -15,6 +15,7 @@ import { monthLabel } from '@/features/traffic/planRules'
 import { GATEWAY_LABEL, SOURCE_LABEL, reminderStage, validDocument } from './billingRules'
 import { parseMoney } from './statement'
 import { AsaasCard } from './AsaasCard'
+import { ServiceJobDialog } from './ServiceJobDialog'
 import { addDays, brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
@@ -45,6 +46,7 @@ export function BillingPage() {
   const isAdmin = state.status === 'ready' && state.user.roles.includes('admin')
   const [month] = useMonthParam()
   const [creating, setCreating] = useState(false)
+  const [jobOpen, setJobOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [billingFor, setBillingFor] = useState<ClientRow | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
@@ -249,6 +251,7 @@ export function BillingPage() {
         {isAdmin && (
           <>
             <Button variant="secondary" disabled={generate.isPending} onClick={() => generate.mutate()}><RefreshCw size={15} aria-hidden="true" /> Gerar mensalidades do mês</Button>
+            <Button variant="secondary" onClick={() => setJobOpen(true)}><Plus size={15} aria-hidden="true" /> Serviço avulso</Button>
             <Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button>
           </>
         )}
@@ -329,6 +332,7 @@ export function BillingPage() {
       )}
 
       {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} onClose={() => setPaying(null)} onPay={(date) => { pay.mutate({ id: paying.id, date }); setPaying(null) }} />}
+      {jobOpen && <ServiceJobDialog clients={clients.data ?? []} onClose={() => setJobOpen(false)} onSaved={() => { setNotice('Serviço lançado: a fatura do cliente e a conta a pagar de quem fez já estão no sistema.'); refresh() }} />}
       {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
       {settingsOpen && <BillingSettingsDialog onClose={() => setSettingsOpen(false)} />}
       {billingFor && <ClientBillingDialog client={billingFor} onClose={() => setBillingFor(null)} onSaved={() => { void queryClient.invalidateQueries({ queryKey: ['billing-clients'] }); setNotice('Dados de cobrança salvos. Agora crie o link.') }} />}

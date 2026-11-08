@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { CalendarClock } from 'lucide-react'
+import { CalendarClock, Plus } from 'lucide-react'
+import { ServiceJobDialog } from '@/features/finance/ServiceJobDialog'
 import { cn } from '@/lib/cn'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { supabase } from '@/lib/supabase'
@@ -45,6 +46,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
   const nextFromDay = day ? (() => { const [y, m] = today.split('-').map(Number); const pad = (n: number) => String(n).padStart(2, '0'); const thisMonth = `${y}-${pad(m!)}-${pad(day)}`; return thisMonth >= today ? thisMonth : `${m === 12 ? y! + 1 : y}-${pad(m === 12 ? 1 : m! + 1)}-${pad(day)}` })() : null
   const nextDue = nextOpen ?? (client.clientType === 'one-off' ? null : nextFromDay)
   const [editing, setEditing] = useState(false)
+  const [job, setJob] = useState(false)
 
   return (
     <div className="flex flex-col gap-3">
@@ -70,7 +72,11 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
       </div>
 
       <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-        <Block title="Faturas">
+        <Block title="Faturas" action={
+          <button type="button" onClick={() => setJob(true)} className="inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-full border border-line-strong px-2.5 text-[12px] font-semibold hover:border-ink">
+            <Plus size={13} aria-hidden="true" /> Serviço avulso
+          </button>
+        }>
           {invoices.isPending && <p role="status" className="text-muted">Carregando</p>}
           {invoices.isError && <p role="alert" className="text-warn-ink">Não foi possível carregar as faturas.</p>}
           {!invoices.isPending && rows.length === 0 && <p className="text-muted">Nenhuma fatura ainda. Elas aparecem aqui quando a cobrança do mês é gerada no Financeiro.</p>}
@@ -102,6 +108,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
         </Block>
       </div>
       {editing && <ClientDialog open clientId={client.id} startTab="contrato" onClose={() => setEditing(false)} />}
+      {job && <ServiceJobDialog clientId={client.id} onClose={() => setJob(false)} />}
     </div>
   )
 }
