@@ -2,6 +2,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-08 · desenho do Financeiro (estudo, nada construído)
+Questionário com 64 decisões (respondido com as recomendações; o Italo pode mudar): https://claude.ai/artifact/LYgE7bU9eMBzuYHQ7EQKG3
+Desenho final com 39 conflitos e solução, e fases 0 a 5: https://claude.ai/artifact/BrnawfeK3mAjtEj3RykjyC
+Fase 0 (correções urgentes): fuso/data real do Asaas; conciliação Asaas e extrato com faturas; travar edição de lançamento inv:; baixa do grupo inteiro; multa/juros/CPF no link; preço AV oculto da produção; sinal_pct; avulso de membro só libera quando o cliente paga, com 25% da empresa.
+
 ## 2026-11-08 noite (2) · sessão do PC
 Feito: automações em pop-up por área (AutomationsLink = ícone ⚡ com contador de problemas; Configurações mostra só sistema+WhatsApp; Comercial mostra comercial+WhatsApp); central saiu do menu de Configurações (rota /configuracoes/automacoes continua). Correções da revisão por função: can_finance(ellcazo) aceita a função ellcazo; can_access_av/can_manage_av e AV_ROLES incluem ellcazo; services legível por todos; my_day.leads lê crm_deals; social_from_request → /conteudo/redes; 6 avisos cadastrados em notification_rules; Configurações do head sem Integrações/Serviços/Orçamento.
 Esperando o Italo decidir: quem vê valores (comercial: negociações e vendas; vídeo: orçamentos e fotos; tráfego: gasto com anúncios; cada um: os próprios ganhos). Sugestão: liberar tráfego e próprios ganhos; comercial e vídeo só admin.
