@@ -141,7 +141,7 @@ export function LandingPage() {
                 <ul className={logos.length > 6 ? 'site-marquee-track' : 'flex flex-wrap justify-center gap-10'}>
                   {[...logos, ...(logos.length > 6 ? logos : [])].map((c, n) => (
                     <li key={`${c.name}-${n}`} className="flex h-14 w-36 shrink-0 items-center justify-center">
-                      <img src={c.url} alt={c.name} loading="lazy" decoding="async" className="max-h-12 max-w-[128px] object-contain opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0" />
+                      <img src={c.url} alt={c.name} loading="lazy" decoding="async" className="max-h-12 max-w-[128px] object-contain transition hover:scale-105" />
                     </li>
                   ))}
                 </ul>

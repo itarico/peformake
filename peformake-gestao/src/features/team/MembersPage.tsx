@@ -10,6 +10,7 @@ import { ROLES, ROLE_LABELS, type AppRole } from '@/lib/roles'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { ADMIN_AREAS } from '@/features/access/InviteSection'
+import { MemberPayTab } from './MemberPay'
 
 // Membros da equipe: cadastro, login e convite numa lista só. Adicionar e editar abrem o mesmo pop-up.
 type Level = 'none' | 'user' | 'area' | 'total'
@@ -79,10 +80,10 @@ function MemberCard({ m, isMe, onOpen }: { m: Member; isMe: boolean; onOpen: () 
   )
 }
 
-function MemberDialog({ member, isMe, onClose }: { member: Member | null; isMe: boolean; onClose: () => void }) {
+export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { member: Member | null; isMe: boolean; onClose: () => void; startTab?: 'dados' | 'acesso' | 'pagamento' }) {
   const queryClient = useQueryClient()
   const isNew = !member
-  const [tab, setTab] = useState<'dados' | 'acesso'>('dados')
+  const [tab, setTab] = useState<'dados' | 'acesso' | 'pagamento'>(startTab)
   const [name, setName] = useState(member?.name ?? '')
   const [email, setEmail] = useState(member?.email ?? '')
   const [phone, setPhone] = useState(member?.phone ?? '')
@@ -136,18 +137,18 @@ function MemberDialog({ member, isMe, onClose }: { member: Member | null; isMe: 
             ? <button type="button" disabled={remove.isPending} onClick={() => { void ask(`Remover ${member!.name} da equipe? A pessoa perde o acesso ao sistema. O histórico dela continua salvo.`).then((ok) => { if (ok) remove.mutate() }) }}
                 className="inline-flex min-h-10 cursor-pointer items-center gap-1 rounded-full px-3 text-[13px] font-medium text-warn-ink hover:underline"><UserMinus size={15} aria-hidden="true" /> Remover da equipe</button>
             : <span />}
-          <Button disabled={save.isPending} onClick={submit}>{save.isPending ? 'Salvando' : label}</Button>
+          {tab !== 'pagamento' && <Button disabled={save.isPending} onClick={submit}>{save.isPending ? 'Salvando' : label}</Button>}
         </div>
       }>
       <div className="flex flex-col gap-4">
         <div role="tablist" aria-label="Partes do cadastro" className="inline-flex self-start rounded-full border border-line p-0.5">
-          {([['dados', 'Dados'], ['acesso', 'Acesso']] as const).map(([k, l]) => (
+          {([['dados', 'Dados'], ['acesso', 'Acesso'], ...(member?.id ? [['pagamento', 'Remuneração'] as const] : [])] as const).map(([k, l]) => (
             <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
               className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', tab === k ? 'bg-fill text-on-fill' : 'text-muted')}>{l}</button>
           ))}
         </div>
 
-        {tab === 'dados' ? (
+        {tab === 'pagamento' && member?.id ? <MemberPayTab staffId={member.id} /> : tab === 'dados' ? (
           <div className="flex flex-col gap-3">
             <label className="flex flex-col text-[13px] font-semibold">Nome<input value={name} onChange={(e) => setName(e.target.value)} className={field} autoFocus={isNew} /></label>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -205,6 +206,9 @@ function MemberDialog({ member, isMe, onClose }: { member: Member | null; isMe: 
 }
 
 /** Equipe → Membros (só administrador). */
+export type { Member }
+export { listMembers }
+
 export function MembersPage() {
   const { state } = useAuth()
   const me = state.status === 'ready' ? state.user.id : ''

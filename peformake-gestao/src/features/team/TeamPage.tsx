@@ -16,6 +16,7 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
 import { TeamOverview } from './TeamOverview'
 import { MembersPage } from './MembersPage'
+import { TeamPayOverview } from './TeamPayOverview'
 import { LEAD_STAGES, LEAD_STAGE_LABEL, METRIC_LABEL, goalValue, partnershipProgress, type LeadStage, type MemberDashboard } from './teamRules'
 
 const brl = (n: number) => Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -41,7 +42,7 @@ export function TeamPage() {
     { to: '/equipe/resumo', label: 'Metas e destaque', roles: ['admin', 'head_marketing'] as const },
     { to: '/equipe/minha-area', label: 'Minha área' },
     { to: '/equipe/leads', label: isAdmin ? 'Leads da equipe' : 'Meus leads' },
-    { to: '/equipe/configuracoes', label: 'Regras do time', roles: ['admin'] as const },
+    { to: '/equipe/configuracoes', label: 'Configurações', roles: ['admin'] as const },
   ]
   return (
     <>
@@ -349,8 +350,9 @@ function TeamSettings() {
   )
   return (
     <div className="flex flex-col gap-4">
+      <TeamPayOverview />
       <section aria-labelledby="regras" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
-        <h2 id="regras" className="text-[17px] font-semibold">Regras do time</h2>
+        <h2 id="regras" className="text-[17px] font-semibold">Regras gerais do time</h2>
         <div className="flex flex-col gap-3 rounded-2xl border border-line p-4">
           {toggle('sourcing_enabled', 'Comissão por trazer cliente', 'A pessoa ganha um percentual do que o cliente pagar nos primeiros meses.')}
           <div className="flex flex-wrap gap-3">{num('sourcing_pct', 'Percentual (%)')}{num('sourcing_months', 'Por quantos meses')}</div>

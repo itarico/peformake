@@ -110,7 +110,7 @@ function Clients() {
       <div className="overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
         <ul className="marquee flex w-max gap-10">
           {row.map((c, i) => (
-            <li key={i} className="flex items-center gap-3 grayscale transition duration-300 hover:grayscale-0" aria-hidden={i >= CLIENTS.length}>
+            <li key={i} className="flex items-center gap-3 transition duration-300 hover:scale-105" aria-hidden={i >= CLIENTS.length}>
               <img src={c.src} alt={c.name} loading="lazy" className="size-14 rounded-full bg-white object-cover" />
               <span className="whitespace-nowrap text-[14px] font-medium text-fog">{c.name}</span>
             </li>
