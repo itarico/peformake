@@ -23,7 +23,7 @@ export interface OutboxRow {
   id: string
   kind: string
   clientId: string | null
-  toPhone: string
+  toPhone: string | null
   message: string
   status: 'pending' | 'sent' | 'failed' | 'skipped'
   attempts: number
@@ -90,6 +90,8 @@ export function subscribeNotifications(profileId: string, onChange: () => void):
 }
 
 // Telefone mostrado só com o final, para não expor o número inteiro na tela.
-export function maskPhone(phone: string): string {
+// Mensagem na fila sem número (cliente sem WhatsApp no cadastro) não pode derrubar a tela.
+export function maskPhone(phone: string | null | undefined): string {
+  if (!phone) return 'cliente sem WhatsApp no cadastro'
   return phone.length > 4 ? `${'*'.repeat(Math.max(0, phone.length - 4))}${phone.slice(-4)}` : phone
 }
