@@ -2,6 +2,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-08 noite · sessão do PC
+Feito: remuneração por membro (member_pay, member_pay_goals, member_ote, team_pay_overview; gatilho/teto em team_settings) em Equipe → Membros (aba Remuneração) e Equipe → Configurações. Leads da equipe no Funil do Comercial (crm_deals com lead manual; RLS deal_visible: dono, admin/head veem todos). Ellcazo com o verde da logo (#72B52F) e marca em blocos. Logos de clientes coloridas no site.
+Limite conhecido: metas da variável medem o resultado da área toda, não só o da pessoa.
+Fila: auditoria de permissões por função (em andamento); Minha conta (telefone, e-mail, senha, foto, Pix/conta/CPF protegidos; Modo TV para Configurações; tirar Ver site); resumos com gráficos por área; Operação no menu; Metas; Inteligência; Login novo; botão Planilha com opção PDF.
+
 ## 2026-11-08 tarde · sessão do PC
 Feito: Configurações com menu lateral em grupos (celular: lista), Ellcazo · Audiovisual com destaque (Produção, Orçamento, Serviços e pacotes), resumo de cada automação. Equipe → Membros (substitui Acessos): adicionar/editar em pop-up, convite por e-mail, master (profiles.is_master) protegido. Cobrança: botão Vencimento (só esta ou todo mês).
 Fila do Italo (ordem combinada): 1) Equipe → Configurações com perfil de cada membro (salário, OTE, metas da variável) e regras gerais; leads da equipe vão para Comercial (Kanban de todos, cada um vê os seus, admin vê todos). 2) Resumos com gráficos (pizza, velocímetro) em Financeiro, Conteúdo, Audiovisual, Comercial e Equipe (produtividade). 3) Metas mais fácil. 4) Inteligência com outro visual. 5) Login novo (frases animadas, personagens que seguem o mouse, Google só se já estiver ligado).
