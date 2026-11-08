@@ -36,7 +36,7 @@ const MENU: MenuGroup[] = [
       { label: 'Tráfego', to: '/trafego', icon: 'traffic', roles: TRAFFIC_ROLES },
       { label: 'Conteúdo', to: '/conteudo', icon: 'design', roles: CONTENT_ROLES },
       { label: 'Audiovisual', short: 'Vídeo', to: '/audiovisual', icon: 'video', roles: AV_ROLES },
-      { label: 'Comercial', to: '/comercial', icon: 'whatsapp', roles: COMMERCIAL_ROLES },
+      { label: 'Comercial', to: '/comercial', icon: 'whatsapp', roles: TEAM_ROLES },
     ],
   },
   {

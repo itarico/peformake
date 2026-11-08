@@ -1,6 +1,8 @@
 import { useMemo, useState, type DragEvent } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { DollarSign, Trash2, X } from 'lucide-react'
+import { DollarSign, Plus, Trash2, X } from 'lucide-react'
+import { Dialog } from '@/components/ui/Dialog'
+import { COMMERCIAL_ROLES, hasAnyRole } from '@/lib/roles'
 import { Button } from '@/components/ui/Button'
 import { useClientPermissions } from '@/features/clients/useClients'
 import { LoadState } from '@/features/traffic/LoadState'
@@ -25,12 +27,13 @@ const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface p
 const CLOSED_VISIBLE_DAYS = 30
 const DAY = 86_400_000
 
-function DealEditor({ deal, data, services, canManage, userId, onClose }: {
+function DealEditor({ deal, data, services, canManage, userId, seesAll, onClose }: {
   deal: Deal
   data: ReturnType<typeof useCommercialData>
   services: { id: string; name: string }[]
   canManage: boolean
   userId: string | null
+  seesAll: boolean
   onClose: () => void
 }) {
   const queryClient = useQueryClient()
@@ -62,7 +65,7 @@ function DealEditor({ deal, data, services, canManage, userId, onClose }: {
         <h2 className="text-[17px] font-semibold tracking-tight">Oportunidade</h2>
         <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-10 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink"><X size={18} aria-hidden="true" /></button>
       </div>
-      {contact && <p className="-mt-2 text-[13px] text-muted">Contato: {contactName(contact)}{deal.lostReason && ` | Motivo da perda: ${deal.lostReason}`}</p>}
+      {(contact || deal.leadName) && <p className="-mt-2 text-[13px] text-muted">{contact ? `Contato: ${contactName(contact)}` : `Lead: ${deal.leadName}${deal.leadCompany ? ` · ${deal.leadCompany}` : ''}${deal.leadPhone ? ` · ${deal.leadPhone}` : ''}`}{deal.lostReason && ` | Motivo da perda: ${deal.lostReason}`}</p>}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
         <label className="flex flex-col text-[13px] font-semibold md:col-span-4">Nome *
           <input value={draft.title} maxLength={200} onChange={(e) => set('title', e.target.value)} aria-invalid={titleError ? true : undefined} className={cn(field, 'mt-1 font-normal', titleError && 'border-2 border-warn')} />
@@ -77,12 +80,12 @@ function DealEditor({ deal, data, services, canManage, userId, onClose }: {
         <label className="flex flex-col text-[13px] font-semibold">Valor estimado (R$)
           <input inputMode="decimal" value={draft.value} onChange={(e) => set('value', e.target.value)} className={cn(field, 'mt-1 font-normal')} placeholder="1.500,00" />
         </label>
-        <label className="flex flex-col text-[13px] font-semibold">Responsável
+        {seesAll && <label className="flex flex-col text-[13px] font-semibold">Responsável
           <select value={draft.ownerId} onChange={(e) => set('ownerId', e.target.value)} className={cn(field, 'mt-1 font-normal')}>
             <option value="">Ninguém ainda</option>
             {(data.staff ?? []).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
-        </label>
+        </label>}
         <label className="flex flex-col text-[13px] font-semibold">Data do próximo passo
           <input type="date" value={draft.nextStepAt} onChange={(e) => set('nextStepAt', e.target.value)} className={cn(field, 'mt-1 font-normal')} />
         </label>
@@ -116,6 +119,11 @@ export function PipelinePage() {
   const { state } = useAuth()
   const userId = state.status === 'ready' ? state.user.id : null
   const { canManage } = useClientPermissions()
+  const roles = state.status === 'ready' ? state.user.roles : []
+  const seesAll = roles.includes('admin') || roles.includes('head_marketing')
+  const isCommercial = hasAnyRole(roles, COMMERCIAL_ROLES)
+  const [creating, setCreating] = useState(false)
+  const [owner, setOwner] = useState<string>('todos')
   const data = useCommercialData()
   const deals = useDeals()
   const services = useServices()
@@ -146,21 +154,22 @@ export function PipelinePage() {
     const term = search.trim().toLowerCase()
     return (deals.data ?? []).filter((d) => {
       if ((d.stage === 'ganho' || d.stage === 'perdido') && d.closedAt && now - Date.parse(d.closedAt) > CLOSED_VISIBLE_DAYS * DAY) return false
+      if (owner !== 'todos' && (owner === 'sem' ? d.ownerId : d.ownerId !== owner)) return false
       if (!term) return true
       const contact = data.contactById.get(d.contactId)
-      return `${d.title} ${contact ? contactName(contact) : ''}`.toLowerCase().includes(term)
+      return `${d.title} ${contact ? contactName(contact) : ''} ${d.leadName ?? ''} ${d.leadCompany ?? ''}`.toLowerCase().includes(term)
     })
-  }, [deals.data, search, now, data.contactById])
+  }, [deals.data, search, now, data.contactById, owner])
 
-  if (!deals.data || !data.contacts || !data.staff || !services.data) {
-    return <LoadState isPending={deals.isPending || data.isPending || services.isPending} isError={deals.isError || data.isError || services.isError} refetch={() => { void deals.refetch(); void services.refetch(); data.refetch() }} />
+  if (!deals.data || !services.data || (isCommercial && (!data.contacts || !data.staff))) {
+    return <LoadState isPending={deals.isPending || (isCommercial && data.isPending) || services.isPending} isError={deals.isError || (isCommercial && data.isError) || services.isError} refetch={() => { void deals.refetch(); void services.refetch(); data.refetch() }} />
   }
 
   const tryMove = (deal: Deal, stage: DealStage) => {
     if (deal.stage === stage) return
     if (stage === 'perdido') return setLosing({ deal, reason: '' })
     move.mutate({ id: deal.id, stage, reason: null })
-    if (stage === 'ganho') setSelling(deal)
+    if (stage === 'ganho' && deal.contactId && isCommercial) setSelling(deal)
   }
   const drop = (event: DragEvent, stage: DealStage) => {
     event.preventDefault()
@@ -179,8 +188,16 @@ export function PipelinePage() {
           <label htmlFor="funil-busca" className="sr-only">Buscar oportunidade</label>
           <input id="funil-busca" type="search" placeholder="Buscar oportunidade ou contato" value={search} onChange={(e) => setSearch(e.target.value)} className="min-h-11 w-full rounded-full border border-line-strong bg-surface px-4" />
         </div>
-        <p className="text-[13px] text-muted">Abra oportunidades pela aba Conversas: marque o contato como Lead ou use "Abrir oportunidade".</p>
+        {seesAll && (data.staff ?? []).length > 0 && (
+          <select aria-label="De quem" value={owner} onChange={(e) => setOwner(e.target.value)} className="min-h-11 rounded-full border border-line-strong bg-surface px-3 text-[13px]">
+            <option value="todos">Todos os leads</option>
+            <option value="sem">Sem responsável</option>
+            {(data.staff ?? []).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        )}
+        <Button onClick={() => setCreating(true)}><Plus size={16} aria-hidden="true" /> Novo lead</Button>
       </div>
+      {!seesAll && <p className="text-[12.5px] text-muted">Aqui ficam só os seus leads. Quem você trouxer e virar cliente conta para a sua comissão.</p>}
       {late > 0 && <p className="rounded-3xl bg-warn-soft px-5 py-3 text-warn-ink"><b>{late}</b> {late === 1 ? 'oportunidade está' : 'oportunidades estão'} com o próximo passo atrasado.</p>}
 
       {losing && (
@@ -194,8 +211,9 @@ export function PipelinePage() {
           </div>
         </section>
       )}
-      {selling && <SaleForm deal={selling} contacts={data.contacts} canConfirm={canManage} onClose={() => setSelling(null)} />}
-      {editing && <DealEditor key={`${editing.id}-${editing.updatedAt}`} deal={editing} data={data} services={services.data} canManage={canManage} userId={userId} onClose={() => setEditing(null)} />}
+      {selling && <SaleForm deal={selling} contacts={data.contacts ?? []} canConfirm={canManage} onClose={() => setSelling(null)} />}
+      {editing && <DealEditor key={`${editing.id}-${editing.updatedAt}`} deal={editing} data={data} services={services.data} canManage={canManage} userId={userId} seesAll={seesAll} onClose={() => setEditing(null)} />}
+      {creating && <NewLeadDialog services={services.data} staff={seesAll ? data.staff ?? [] : []} onClose={() => setCreating(false)} />}
       {move.isError && <p role="alert" className="font-medium text-warn-ink">{commercialErrorMessage(move.error)}</p>}
 
       <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:snap-none">
@@ -230,12 +248,12 @@ export function PipelinePage() {
                   >
                     <button type="button" onClick={() => setEditing(deal)} className="cursor-pointer text-left font-medium leading-snug hover:underline">{deal.title}</button>
                     <p className="text-[12px] text-muted">
-                      {contact ? contactName(contact) : 'Contato'}
+                      {contact ? contactName(contact) : deal.leadName ? `${deal.leadName}${deal.leadCompany ? ` · ${deal.leadCompany}` : ''}` : 'Contato'}
                       {deal.ownerId && ` | ${data.staffName.get(deal.ownerId) ?? ''}`}
                     </p>
                     {deal.valueCents !== null && <p className="text-[13px] font-semibold">{formatBRL(deal.valueCents)}</p>}
                     {deal.nextStep && <p className={cn('text-[12px]', overdue ? 'font-semibold text-warn-ink' : 'text-muted')}>{deal.nextStepAt && `${deal.nextStepAt.split('-').reverse().slice(0, 2).join('/')}: `}{deal.nextStep}</p>}
-                    {deal.stage === 'ganho' && (
+                    {deal.stage === 'ganho' && deal.contactId && isCommercial && (
                       <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setSelling(deal)}><DollarSign size={14} aria-hidden="true" /> Lançar venda</Button>
                     )}
                     <label className="sr-only" htmlFor={`mover-${deal.id}`}>Mover {deal.title}</label>
@@ -252,5 +270,47 @@ export function PipelinePage() {
       </div>
       <p className="text-[12px] text-muted">Arraste os cartões ou use "Mover para". Ganhos e perdidos somem do quadro depois de {CLOSED_VISIBLE_DAYS} dias.</p>
     </>
+  )
+}
+
+/** Lead lançado à mão: quem não é admin fica como responsável automaticamente. */
+function NewLeadDialog({ services, staff, onClose }: { services: { id: string; name: string }[]; staff: { id: string; name: string }[]; onClose: () => void }) {
+  const queryClient = useQueryClient()
+  const [f, setF] = useState({ leadName: '', leadCompany: '', leadPhone: '', title: '', serviceId: '', value: '', ownerId: '', nextStep: '', nextStepAt: '' })
+  const set = (k: keyof typeof f, v: string) => setF((c) => ({ ...c, [k]: v }))
+  const title = f.title.trim() || f.leadCompany.trim() || f.leadName.trim()
+  const save = useMutation({
+    mutationFn: () => saveDeal(null, null, { contactId: '', leadName: f.leadName, leadCompany: f.leadCompany, leadPhone: f.leadPhone, title, serviceId: f.serviceId, valueCents: parseBRL(f.value), ownerId: f.ownerId, nextStep: f.nextStep, nextStepAt: f.nextStepAt }),
+    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: commercialKeys.deals }); onClose() },
+  })
+  const ok = f.leadName.trim().length >= 2 && title.length >= 3
+  return (
+    <Dialog open onClose={onClose} title="Novo lead" description="Alguém interessado nos serviços? Lance aqui e acompanhe no funil." size="md"
+      footer={<Button disabled={!ok || save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar lead'}</Button>}>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <label className="flex flex-col text-[13px] font-semibold">Nome da pessoa *<input value={f.leadName} onChange={(e) => set('leadName', e.target.value)} className={cn(field, 'mt-1 font-normal')} autoFocus /></label>
+        <label className="flex flex-col text-[13px] font-semibold">Empresa<input value={f.leadCompany} onChange={(e) => set('leadCompany', e.target.value)} className={cn(field, 'mt-1 font-normal')} /></label>
+        <label className="flex flex-col text-[13px] font-semibold">WhatsApp<input inputMode="tel" value={f.leadPhone} onChange={(e) => set('leadPhone', e.target.value)} placeholder="(81) 9…" className={cn(field, 'mt-1 font-normal')} /></label>
+        <label className="flex flex-col text-[13px] font-semibold">Interesse
+          <select value={f.serviceId} onChange={(e) => set('serviceId', e.target.value)} className={cn(field, 'mt-1 font-normal')}>
+            <option value="">Ainda não sei</option>
+            {services.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+        </label>
+        <label className="flex flex-col text-[13px] font-semibold sm:col-span-2">Resumo<input value={f.title} maxLength={200} onChange={(e) => set('title', e.target.value)} placeholder="Ex.: Quer tráfego e social para a loja" className={cn(field, 'mt-1 font-normal')} /></label>
+        <label className="flex flex-col text-[13px] font-semibold">Valor estimado (R$)<input inputMode="decimal" value={f.value} onChange={(e) => set('value', e.target.value)} className={cn(field, 'mt-1 font-normal')} /></label>
+        {staff.length > 0 && (
+          <label className="flex flex-col text-[13px] font-semibold">Responsável
+            <select value={f.ownerId} onChange={(e) => set('ownerId', e.target.value)} className={cn(field, 'mt-1 font-normal')}>
+              <option value="">Ninguém ainda</option>
+              {staff.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
+          </label>
+        )}
+        <label className="flex flex-col text-[13px] font-semibold">Próximo passo<input value={f.nextStep} maxLength={500} onChange={(e) => set('nextStep', e.target.value)} placeholder="Ex.: Ligar amanhã" className={cn(field, 'mt-1 font-normal')} /></label>
+        <label className="flex flex-col text-[13px] font-semibold">Quando<input type="date" value={f.nextStepAt} onChange={(e) => set('nextStepAt', e.target.value)} className={cn(field, 'mt-1 font-normal')} /></label>
+        {save.isError && <p role="alert" className="font-medium text-warn-ink sm:col-span-2">{commercialErrorMessage(save.error)}</p>}
+      </div>
+    </Dialog>
   )
 }

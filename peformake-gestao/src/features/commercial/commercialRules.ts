@@ -96,6 +96,10 @@ export function suggestionText(s: Suggestion): string {
 export interface Deal {
   id: string
   contactId: string
+  /** Lead lançado à mão (sem conversa de WhatsApp). */
+  leadName: string | null
+  leadCompany: string | null
+  leadPhone: string | null
   title: string
   stage: DealStage
   serviceId: string | null

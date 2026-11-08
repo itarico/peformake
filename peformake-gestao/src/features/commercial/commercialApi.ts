@@ -137,13 +137,17 @@ export async function listTags(): Promise<Tag[]> {
 export async function listDeals(): Promise<Deal[]> {
   const { data, error } = await supabase
     .from('crm_deals')
-    .select('id, contact_id, title, stage, service_id, value_cents, owner_id, next_step, next_step_at, lost_reason, position, created_by, created_at, updated_at, closed_at')
+    .select('id, contact_id, lead_name, lead_company, lead_phone, title, stage, service_id, value_cents, owner_id, next_step, next_step_at, lost_reason, position, created_by, created_at, updated_at, closed_at')
     .order('position')
     .limit(2000)
   if (error) throw error
-  return (data ?? []).map((row) => ({
+  type DealRow = { id: string; contact_id: string | null; lead_name: string | null; lead_company: string | null; lead_phone: string | null; title: string; stage: string; service_id: string | null; value_cents: number | null; owner_id: string | null; next_step: string | null; next_step_at: string | null; lost_reason: string | null; position: number; created_by: string | null; created_at: string; updated_at: string; closed_at: string | null }
+  return ((data ?? []) as unknown as DealRow[]).map((row) => ({
     id: row.id,
-    contactId: row.contact_id,
+    contactId: row.contact_id ?? '',
+    leadName: row.lead_name,
+    leadCompany: row.lead_company,
+    leadPhone: row.lead_phone,
     title: row.title,
     stage: row.stage as DealStage,
     serviceId: row.service_id,
@@ -247,6 +251,9 @@ export async function deleteTag(id: string): Promise<void> {
 
 export interface DealDraft {
   contactId: string
+  leadName?: string
+  leadCompany?: string
+  leadPhone?: string
   title: string
   serviceId: string
   valueCents: number | null
@@ -261,6 +268,7 @@ export async function saveDeal(id: string | null, expectedUpdatedAt: string | nu
     _expected_updated_at: expectedUpdatedAt,
     _data: {
       contact_id: draft.contactId,
+      ...(draft.leadName !== undefined ? { lead_name: draft.leadName, lead_company: draft.leadCompany ?? '', lead_phone: draft.leadPhone ?? '' } : {}),
       title: draft.title,
       service_id: draft.serviceId,
       value_cents: draft.valueCents === null ? '' : String(draft.valueCents),

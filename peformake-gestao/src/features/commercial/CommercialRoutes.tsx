@@ -1,7 +1,8 @@
 import { lazy } from 'react'
-import { Navigate, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import { RequireRole } from '@/auth/guards'
-import { COMMERCIAL_ROLES } from '@/lib/roles'
+import { COMMERCIAL_ROLES, TEAM_ROLES } from '@/lib/roles'
+import { CommercialIndex } from './CommercialLayout'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { CommercialLayout } from './CommercialLayout'
 
@@ -18,20 +19,22 @@ const HubRequestsPage = lazy(() => import('./HubRequestsPage').then((m) => ({ de
 /** Rotas do Comercial. Ficam aqui para o App.tsx mudar só uma linha. Chamar como função dentro de <Routes>. */
 export function CommercialRoutes() {
   return (
-    <Route element={<RequireRole roles={COMMERCIAL_ROLES} />}>
+    <Route element={<RequireRole roles={TEAM_ROLES} />}>
       <Route path="comercial" element={<CommercialLayout />}>
-        <Route index element={<Navigate to="conversas" replace />} />
+        <Route index element={<CommercialIndex />} />
+        <Route path="funil" element={<PipelinePage />} />
+        <Route element={<RequireRole roles={COMMERCIAL_ROLES} />}>
         <Route path="resumo" element={<CommercialSummaryPage />} />
         <Route path="pedidos" element={<HubRequestsPage />} />
         <Route path="conversas" element={<ConversationsPage />} />
         <Route path="sugestoes" element={<SuggestionsPage />} />
-        <Route path="funil" element={<PipelinePage />} />
         <Route path="prospeccao" element={<ProspectingPage />} />
         <Route path="vendas" element={<SalesPage />} />
         <Route path="pacotes" element={<MovedTo to="/configuracoes/servicos?area=pacotes" />} />
         <Route path="satisfacao" element={<SatisfactionPage />} />
         <Route path="contas" element={<MovedTo to="/configuracoes/whatsapp" />} />
         <Route path="configuracoes" element={<MovedTo to="/configuracoes/whatsapp" />} />
+        </Route>
       </Route>
     </Route>
   )

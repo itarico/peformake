@@ -108,7 +108,7 @@ describe('totais', () => {
   })
   it('conversão conta ganhos e pós-venda sobre os fechados no mês', () => {
     const deal = (stage: Deal['stage'], closedAt: string | null): Deal => ({
-      id: stage, contactId: 'c', title: 't', stage, serviceId: null, valueCents: null, ownerId: null, nextStep: null,
+      id: stage, contactId: 'c', leadName: null, leadCompany: null, leadPhone: null, title: 't', stage, serviceId: null, valueCents: null, ownerId: null, nextStep: null,
       nextStepAt: null, lostReason: null, position: 0, createdBy: null, createdAt: '', updatedAt: '', closedAt,
     })
     expect(conversionRate([deal('ganho', '2026-11-01T10:00:00Z'), deal('perdido', '2026-11-02T10:00:00Z'), deal('negociacao', null)], '2026-11')).toBe(0.5)

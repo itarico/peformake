@@ -1,6 +1,8 @@
 import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 import { Suspense } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Navigate, NavLink, Outlet } from 'react-router-dom'
+import { useAuth } from '@/auth/context'
+import { COMMERCIAL_ROLES, hasAnyRole } from '@/lib/roles'
 import { cn } from '@/lib/cn'
 
 const TABS = [
@@ -14,12 +16,24 @@ const TABS = [
   { to: 'resumo', label: 'Resumo' },
 ]
 
+function useIsCommercial() {
+  const { state } = useAuth()
+  return hasAnyRole(state.status === 'ready' ? state.user.roles : [], COMMERCIAL_ROLES)
+}
+
+/** Entrada do Comercial: o time comercial cai nas Conversas; o resto da equipe nos próprios leads. */
+export function CommercialIndex() {
+  return <Navigate to={useIsCommercial() ? 'conversas' : 'funil'} replace />
+}
+
 export function CommercialLayout() {
+  const isCommercial = useIsCommercial()
+  const tabs = isCommercial ? TABS : [{ to: 'funil', label: 'Meus leads' }]
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Comercial</h1><AutomationsLink module="comercial" /></div>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Comercial</h1>{isCommercial && <AutomationsLink module="comercial" />}</div>
       <nav aria-label="Áreas do Comercial" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <NavLink
             key={tab.to}
             to={tab.to}
