@@ -1,5 +1,6 @@
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Clapperboard } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { EllcazoBadge } from '@/components/ui/EllcazoMark'
 import { IntelSettingsPanel } from './IntelSettings'
 import { GoalsSettings } from '@/features/goals/goals'
 import { useAuth } from '@/auth/context'
@@ -51,7 +52,7 @@ function useVisibleGroups() {
 
 function GroupTitle({ g }: { g: Group }) {
   return g.ellcazo
-    ? <p className="mb-1 inline-flex items-center gap-1.5 self-start rounded-full bg-accent-soft px-2.5 py-0.5 text-[11.5px] font-semibold uppercase tracking-wide text-accent-ink"><Clapperboard size={12} aria-hidden="true" />{g.label}</p>
+    ? <EllcazoBadge label={g.label} className="mb-1 self-start uppercase tracking-wide" />
     : <p className="mb-1 px-2.5 text-[11.5px] font-semibold uppercase tracking-wide text-muted">{g.label}</p>
 }
 
@@ -61,12 +62,12 @@ function SideNav() {
   return (
     <nav aria-label="Configurações" className="sticky top-4 hidden flex-col gap-4 self-start md:flex">
       {groups.map((g) => (
-        <div key={g.id} className={cn('flex flex-col', g.ellcazo && 'rounded-2xl border border-accent/25 bg-accent-soft/30 p-1.5')}>
+        <div key={g.id} className={cn('flex flex-col', g.ellcazo && 'theme-ellcazo rounded-2xl border border-accent/30 bg-accent-soft/40 p-1.5')}>
           <GroupTitle g={g} />
           {g.items.map((i) => (
             <NavLink key={i.to} to={BASE + i.to} end
               className={({ isActive }) => cn('flex min-h-10 items-center rounded-xl px-2.5 text-[14px] font-medium no-underline',
-                isActive ? (g.ellcazo ? 'bg-accent text-white' : 'bg-fill text-on-fill') : 'text-ink hover:bg-raised')}>
+                isActive ? 'bg-fill text-on-fill' : 'text-ink hover:bg-raised')}>
               {i.label}
             </NavLink>
           ))}
@@ -84,7 +85,7 @@ function SettingsHome() {
   return (
     <div className="flex flex-col gap-5">
       {groups.map((g) => (
-        <section key={g.id} aria-label={g.label} className="flex flex-col gap-1.5">
+        <section key={g.id} aria-label={g.label} className={cn('flex flex-col gap-1.5', g.ellcazo && 'theme-ellcazo')}>
           <GroupTitle g={g} />
           <ul className={cn('flex flex-col divide-y divide-line overflow-hidden rounded-2xl border bg-surface', g.ellcazo ? 'border-accent/40' : 'border-line')}>
             {g.items.map((i) => (
@@ -114,7 +115,7 @@ function PageHead() {
       <Link to="/configuracoes" className="inline-flex min-h-9 items-center gap-1 self-start text-[13px] font-medium text-muted no-underline md:hidden"><ChevronLeft size={16} aria-hidden="true" /> Configurações</Link>
       <div className="flex flex-wrap items-center gap-2">
         <h2 className="text-[22px] font-semibold tracking-tight">{item.label}</h2>
-        {group.ellcazo && <span className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 text-[11.5px] font-semibold text-accent-ink"><Clapperboard size={12} aria-hidden="true" />Ellcazo · Audiovisual</span>}
+        {group.ellcazo && <EllcazoBadge />}
       </div>
       <p className="text-[13px] text-muted">{item.hint}</p>
     </div>

@@ -376,7 +376,7 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
       <ul className="ml-11 flex flex-col gap-0.5 text-[13px]">
         {items.map((i) => (
           <li key={i.id} className="flex items-baseline justify-between gap-3">
-            <span className="min-w-0 truncate"><b className={cn('font-semibold', i.unit === 'ellcazo' ? 'text-accent-ink' : 'text-ink')}>{i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}</b> <span className="text-muted">· {i.description.replace(/^Mensalidade \d{2}\/\d{4} · /, 'Mensalidade · ')}</span></span>
+            <span className="min-w-0 truncate"><b className={cn('font-semibold', i.unit === 'ellcazo' ? 'theme-ellcazo text-accent-ink' : 'text-ink')}>{i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}</b> <span className="text-muted">· {i.description.replace(/^Mensalidade \d{2}\/\d{4} · /, 'Mensalidade · ')}</span></span>
             <span className="tabular-nums text-muted">{brl(i.amount)}</span>
           </li>
         ))}

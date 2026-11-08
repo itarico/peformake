@@ -98,7 +98,7 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
         <div role="group" aria-label="Empresa" className="inline-flex self-start rounded-full border border-line p-0.5">
           {(['ellcazo', 'peformake'] as const).map((u) => (
             <button key={u} type="button" aria-pressed={unit === u} onClick={() => setUnit(u)}
-              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', unit === u ? (u === 'ellcazo' ? 'bg-accent text-white' : 'bg-fill text-on-fill') : 'text-muted')}>{u === 'ellcazo' ? 'Ellcazo · Audiovisual' : 'Peformake'}</button>
+              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', u === 'ellcazo' && 'theme-ellcazo', unit === u ? 'bg-fill text-on-fill' : 'text-muted')}>{u === 'ellcazo' ? 'Ellcazo · Audiovisual' : 'Peformake'}</button>
           ))}
         </div>
 

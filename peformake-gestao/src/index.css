@@ -113,22 +113,22 @@
   --series-6: #008300;
 }
 
-/* Ellcazo (produtora audiovisual): verde-limão sobre preto. Vale só dentro da área Audiovisual.
+/* Ellcazo (produtora audiovisual): verde da logo (#72B52F). Vale só dentro da área Audiovisual.
    O limão é cor de preenchimento; texto em destaque usa o verde escuro para ter contraste no claro. */
 .theme-ellcazo {
-  --accent: oklch(0.86 0.2 128);
-  --accent-ink: oklch(0.43 0.12 132);
-  --accent-soft: oklch(0.86 0.2 128 / 0.2);
-  --fill: oklch(0.86 0.2 128);
+  --accent: #72b52f;
+  --accent-ink: #3f6e14;
+  --accent-soft: rgb(114 181 47 / 0.16);
+  --fill: #72b52f;
   --on-fill: oklch(0.17 0.01 130);
   --ellcazo-band: oklch(0.17 0.01 130);
   --ellcazo-band-ink: oklch(0.96 0.02 128);
 }
 [data-theme='dark'] .theme-ellcazo {
-  --accent: oklch(0.88 0.2 128);
-  --accent-ink: oklch(0.88 0.2 128);
-  --accent-soft: oklch(0.88 0.2 128 / 0.16);
-  --fill: oklch(0.88 0.2 128);
+  --accent: #85c943;
+  --accent-ink: #a6dd6e;
+  --accent-soft: rgb(133 201 67 / 0.18);
+  --fill: #85c943;
   --on-fill: oklch(0.17 0.01 130);
   --ellcazo-band: oklch(0.12 0.005 130);
   --ellcazo-band-ink: oklch(0.96 0.02 128);
