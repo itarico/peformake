@@ -16,7 +16,7 @@ import { PackagesPage } from '@/features/commercial/PackagesPage'
 import { WhatsappAccountsPage } from '@/features/commercial/WhatsappAccountsPage'
 import { IntegrationsPage } from '@/features/integrations/IntegrationsPage'
 import { NotificationSettingsPanel } from '@/features/notifications/NotificationsPage'
-import { AutomationsCenter } from './AutomationsCenter'
+import { AutomationsCenter, AutomationsLink } from './AutomationsCenter'
 
 // Menu das Configurações em grupos. Computador: menu na lateral. Celular: lista que abre cada página (sem barra de lado).
 // A Ellcazo (audiovisual) é a produtora dentro da Peformake: grupo próprio, sempre com o destaque de cor.
@@ -24,22 +24,21 @@ interface Item { to: string; label: string; hint: string; roles?: readonly AppRo
 interface Group { id: string; label: string; ellcazo?: boolean; items: Item[] }
 const GROUPS: Group[] = [
   { id: 'sistema', label: 'Sistema', items: [
-    { to: 'automacoes', label: 'Automações', hint: 'O que roda sozinho e o que está parado' },
     { to: 'notificacoes', label: 'Notificações', hint: 'Avisos da equipe e mensagens ao cliente' },
     { to: 'inteligencia', label: 'Inteligência', hint: 'Quando o sistema avisa e sugere' },
     { to: 'metas', label: 'Metas', hint: 'Metas da empresa e de cada área' },
   ] },
   { id: 'conexoes', label: 'Conexões', items: [
-    { to: 'integracoes', label: 'Integrações', hint: 'Meta, Google, Asaas, contratos e e-mail' },
+    { to: 'integracoes', label: 'Integrações', hint: 'Meta, Google, Asaas, contratos e e-mail', roles: ADMIN_ROLES },
     { to: 'whatsapp', label: 'WhatsApp e comercial', hint: 'Números, prazos e etiquetas' },
   ] },
   { id: 'peformake', label: 'Peformake', items: [
-    { to: 'servicos', label: 'Serviços e pacotes', hint: 'O que a assessoria vende e por quanto' },
+    { to: 'servicos', label: 'Serviços e pacotes', hint: 'O que a assessoria vende e por quanto', roles: ADMIN_ROLES },
   ] },
   { id: 'ellcazo', label: 'Ellcazo · Audiovisual', ellcazo: true, items: [
     { to: 'audiovisual', label: 'Produção', hint: 'Agenda, prazos e equipe de gravação' },
-    { to: 'audiovisual/orcamento', label: 'Orçamento', hint: 'Modelo, sinal e condições' },
-    { to: 'audiovisual/servicos', label: 'Serviços e pacotes', hint: 'O que a Ellcazo vende e por quanto' },
+    { to: 'audiovisual/orcamento', label: 'Orçamento', hint: 'Modelo, sinal e condições', roles: ADMIN_ROLES },
+    { to: 'audiovisual/servicos', label: 'Serviços e pacotes', hint: 'O que a Ellcazo vende e por quanto', roles: ADMIN_ROLES },
   ] },
 ]
 const BASE = '/configuracoes/'
@@ -81,7 +80,7 @@ function SideNav() {
 function SettingsHome() {
   const groups = useVisibleGroups()
   const wide = typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
-  if (wide) return <Navigate to={BASE + 'automacoes'} replace />
+  if (wide) return <Navigate to={BASE + 'notificacoes'} replace />
   return (
     <div className="flex flex-col gap-5">
       {groups.map((g) => (
@@ -126,7 +125,7 @@ function PageHead() {
 export function SettingsLayout() {
   return (
     <>
-      <h1 className="text-3xl font-semibold tracking-tight">Configurações</h1>
+      <div className="flex items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Configurações</h1><AutomationsLink modules={['sistema', 'whatsapp']} /></div>
       <div className="grid min-w-0 grid-cols-1 gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
         <SideNav />
         <div className="flex min-w-0 flex-col gap-4">

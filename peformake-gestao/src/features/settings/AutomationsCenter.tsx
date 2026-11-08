@@ -58,28 +58,49 @@ export function ago(iso: string | null, now = Date.now()): string | null {
 
 const routineUrl = (id: string) => `https://claude.ai/code/routines/${id}`
 
-/** Atalho para as automações de um módulo (vai no título de cada área). */
-export function AutomationsLink({ module }: { module: AutoModule }) {
+/** Ícone ⚡ no título de cada área: abre um pop-up com as automações só daquela área. Ponto vermelho = alguma com problema. */
+export function AutomationsLink({ module, modules }: { module?: AutoModule; modules?: AutoModule[] }) {
   const { state } = useAuth()
   const roles = state.status === 'ready' ? state.user.roles : []
-  if (!roles.includes('admin') && !roles.includes('head_marketing')) return null
+  const allowed = roles.includes('admin') || roles.includes('head_marketing')
+  const mods = modules ?? (module ? [module] : [])
+  const list = useAutomations()
+  const [open, setOpen] = useState(false)
+  if (!allowed || !mods.length) return null
+  const mine = (list.data ?? []).filter((r) => mods.includes(r.module))
+  const bad = mine.filter((r) => r.status === 'erro').length
+  const label = mods.map((m) => MODULE_LABEL[m]).join(' e ')
   return (
-    <Link to={`/configuracoes/automacoes?modulo=${module}`} title={`Automações de ${MODULE_LABEL[module]}`}
-      className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-line-strong px-3 text-[12.5px] font-semibold text-muted no-underline hover:border-ink hover:text-ink">
-      <Zap size={14} aria-hidden="true" /> Automações
-    </Link>
+    <>
+      <button type="button" onClick={() => setOpen(true)} aria-label={`Automações de ${label}${bad ? ` (${bad} com problema)` : ''}`} title={`Automações de ${label}`}
+        className="relative inline-grid size-10 shrink-0 cursor-pointer place-items-center rounded-full border border-line-strong text-muted hover:border-ink hover:text-ink">
+        <Zap size={17} aria-hidden="true" />
+        {bad > 0 && <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-[#e5484d] px-1 text-[10px] font-bold leading-4 text-white">{bad}</span>}
+      </button>
+      {open && (
+        <Dialog open onClose={() => setOpen(false)} title={`Automações · ${label}`} description="O que roda sozinho nesta área, se está funcionando e a chave de ligar e desligar." size="lg">
+          <AutomationsCenter modules={mods} />
+        </Dialog>
+      )}
+    </>
   )
 }
 
-export function AutomationsCenter() {
+export function AutomationsCenter({ modules }: { modules?: AutoModule[] } = {}) {
   const { state } = useAuth()
   const isAdmin = state.status === 'ready' && state.user.roles.includes('admin')
   const qc = useQueryClient()
   const [params, setParams] = useSearchParams()
+  const [localView, setLocalView] = useState<string | null>(null)
+  const embedded = !!modules
   const raw = params.get('modulo')
-  const mod = MODULES.includes(raw as AutoModule) ? raw as AutoModule : null
-  const view = params.get('ver') === 'problema' || params.get('ver') === 'desligadas' ? params.get('ver') : null
-  const set = (k: string, v: string | null) => setParams((c) => { const n = new URLSearchParams(c); if (v) n.set(k, v); else n.delete(k); return n }, { replace: true })
+  const mod = embedded ? null : MODULES.includes(raw as AutoModule) ? raw as AutoModule : null
+  const urlView = params.get('ver') === 'problema' || params.get('ver') === 'desligadas' ? params.get('ver') : null
+  const view = embedded ? localView : urlView
+  const set = (k: string, v: string | null) => {
+    if (embedded) { if (k === 'ver') setLocalView(v); return }
+    setParams((c) => { const n = new URLSearchParams(c); if (v) n.set(k, v); else n.delete(k); return n }, { replace: true })
+  }
   const list = useAutomations()
   const [open, setOpen] = useState<AutomationRow | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
@@ -102,7 +123,7 @@ export function AutomationsCenter() {
   }
 
   const all = list.data ?? []
-  const inMod = mod ? all.filter((r) => r.module === mod) : all
+  const inMod = modules ? all.filter((r) => modules.includes(r.module)) : mod ? all.filter((r) => r.module === mod) : all
   const rows = inMod.filter((r) => view === 'problema' ? r.status === 'erro' : view === 'desligadas' ? r.status === 'desligada' : true)
   const count = (s: AutomationRow['status']) => inMod.filter((r) => r.status === s).length
   const groups = MODULES.filter((m) => rows.some((r) => r.module === m))
@@ -124,14 +145,14 @@ export function AutomationsCenter() {
         ))}
       </div>
 
-      <div role="group" aria-label="Módulo" className="flex flex-wrap gap-1.5">
+      {!embedded && <div role="group" aria-label="Módulo" className="flex flex-wrap gap-1.5">
         {[null, ...MODULES].map((m) => (
           <button key={m ?? 'todos'} type="button" aria-pressed={mod === m} onClick={() => set('modulo', m)}
             className={cn('min-h-9 shrink-0 cursor-pointer rounded-full border px-3 text-[12.5px] font-semibold', mod === m ? 'border-ink bg-ink text-surface' : 'border-line-strong text-ink hover:border-ink')}>
             {m ? MODULE_LABEL[m] : 'Todos'}
           </button>
         ))}
-      </div>
+      </div>}
 
       {list.isPending && <p role="status" className="text-[13px] text-muted">Conferindo as automações…</p>}
       {list.isError && (
@@ -145,7 +166,7 @@ export function AutomationsCenter() {
 
       {groups.map((m) => (
         <section key={m} aria-label={MODULE_LABEL[m]} className="flex flex-col gap-1.5">
-          {!mod && <h3 className="px-1 text-[12px] font-semibold uppercase tracking-wide text-muted">{MODULE_LABEL[m]}</h3>}
+          {!mod && groups.length > 1 && <h3 className="px-1 text-[12px] font-semibold uppercase tracking-wide text-muted">{MODULE_LABEL[m]}</h3>}
           <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
             {rows.filter((r) => r.module === m).map((a) => {
               const when = ago(a.last_at ?? a.activity_at)

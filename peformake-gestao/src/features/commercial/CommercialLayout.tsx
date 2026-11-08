@@ -31,7 +31,7 @@ export function CommercialLayout() {
   const tabs = isCommercial ? TABS : [{ to: 'funil', label: 'Meus leads' }]
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Comercial</h1>{isCommercial && <AutomationsLink module="comercial" />}</div>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Comercial</h1>{isCommercial && <AutomationsLink modules={['comercial', 'whatsapp']} />}</div>
       <nav aria-label="Áreas do Comercial" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0">
         {tabs.map((tab) => (
           <NavLink

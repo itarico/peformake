@@ -283,13 +283,15 @@ export function MyDay({ greeting }: { greeting: string }) {
         <p className="flex items-center gap-2 text-[13px] text-muted"><CheckCircle2 size={14} aria-hidden="true" /> Também há {d.pieces.length} peças de design com você. <Link to="/conteudo/quadro">Abrir quadro</Link></p>
       )}
       {d.leads.length > 0 && (
-        <Panel title="Leads que eu trouxe" className="pf-rise" action={<Link to="/equipe/leads" className="inline-flex min-h-10 items-center gap-1 text-[13px] font-medium">Abrir <ArrowRight size={14} aria-hidden="true" /></Link>}>
-          <ul className="flex flex-wrap gap-2">{d.leads.map((l) => <li key={l.id} className="flex items-center gap-1.5 rounded-full bg-raised px-3 py-1 text-[13px]"><Users size={12} aria-hidden="true" />{l.name}<span className="text-muted">· {l.stage}</span></li>)}</ul>
+        <Panel title="Leads que eu trouxe" className="pf-rise" action={<Link to="/comercial/funil" className="inline-flex min-h-10 items-center gap-1 text-[13px] font-medium">Abrir <ArrowRight size={14} aria-hidden="true" /></Link>}>
+          <ul className="flex flex-wrap gap-2">{d.leads.map((l) => <li key={l.id} className="flex items-center gap-1.5 rounded-full bg-raised px-3 py-1 text-[13px]"><Users size={12} aria-hidden="true" />{l.name}<span className="text-muted">· {STAGE_NAME[l.stage] ?? l.stage}</span></li>)}</ul>
         </Panel>
       )}
     </>
   )
 }
+
+const STAGE_NAME: Record<string, string> = { novo: 'Novo', qualificacao: 'Qualificação', negociacao: 'Negociação', aguardando: 'Aguardando', pos_venda: 'Pós-venda' }
 
 interface Payables { pending: number; paid_month: number; items: { id: string; description: string; amount: number; due_date: string; status: string; paid_at: string | null }[] }
 const money = (n: number) => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })

@@ -39,7 +39,7 @@ describe('menu', () => {
     expect(homePathForRoles(['traffic_manager'])).toBe('/inicio')
     expect(homePathForRoles(['designer'])).toBe('/inicio')
     expect(homePathForRoles(['videomaker'])).toBe('/inicio')
-    expect(homePathForRoles(['ellcazo'])).toBe('/financeiro')
+    expect(homePathForRoles(['ellcazo'])).toBe('/inicio')
     expect(homePathForRoles(['parceiro'])).toBe('/equipe')
     expect(homePathForRoles([])).toBe('/sem-modulo')
     expect(homePathForRoles(['closer'])).toBe('/inicio')
