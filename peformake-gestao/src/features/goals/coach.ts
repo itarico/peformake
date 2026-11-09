@@ -202,7 +202,7 @@ export function actions(r: GoalRow, c: Coach | undefined): Action[] {
     case 'reunioes': client(c?.no_meeting[0], 'Marcar com', 'reuniao'); client(c?.no_meeting[1], 'Marcar com', 'reuniao'); break
     case 'saidas': client(c?.unhappy[0], 'Ligar para', 'ligar'); a.push({ label: 'Perdidos e pausados', to: '/clientes?aba=perdidos' }); break
     case 'devendo': case 'inadimplencia': client(c?.overdue[0], 'Cobrar', 'cobrar'); a.push({ label: 'Abrir cobrança', to: '/financeiro/cobranca' }); break
-    case 'artes': case 'aprovacao_parada': case 'planos': a.push({ label: 'Abrir conteúdo', to: '/conteudo' }); break
+    case 'artes': case 'aprovacao_parada': case 'planos': a.push({ label: 'Abrir Social Media', to: '/conteudo' }); break
     case 'relatorios': a.push({ label: 'Abrir relatórios', to: '/trafego/relatorios' }); break
     case 'estrategias': a.push({ label: 'Abrir estratégias', to: '/trafego/estrategia' }); break
     case 'videos': a.push({ label: 'Abrir produção', to: '/audiovisual/producao' }); break

@@ -36,7 +36,7 @@ export function ContentLayout() {
   return (
     <>
       <SectionHeader
-        title="Conteúdo"
+        title="Social Media"
         sub="Social media planeja e cuida das redes, o designer produz, o cliente aprova no portal."
         actions={<><MonthSwitcher /><ArtRequestButton /></>}
         tabs={TABS}

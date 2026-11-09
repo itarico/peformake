@@ -9,12 +9,9 @@ import { CommercialLayout } from './CommercialLayout'
 // Cada tela baixa só quando é aberta (o site e o login ficam leves).
 const ProspectingPage = lazy(() => import('./ProspectingPage').then((m) => ({ default: m.ProspectingPage })))
 const CommercialSummaryPage = lazy(() => import('./CommercialSummaryPage').then((m) => ({ default: m.CommercialSummaryPage })))
-const ConversationsPage = lazy(() => import('./ConversationsPage').then((m) => ({ default: m.ConversationsPage })))
 const PipelinePage = lazy(() => import('./PipelinePage').then((m) => ({ default: m.PipelinePage })))
 const SalesPage = lazy(() => import('./SalesPage').then((m) => ({ default: m.SalesPage })))
-const SatisfactionPage = lazy(() => import('./SatisfactionPage').then((m) => ({ default: m.SatisfactionPage })))
-const SuggestionsPage = lazy(() => import('./SuggestionsPage').then((m) => ({ default: m.SuggestionsPage })))
-const HubRequestsPage = lazy(() => import('./HubRequestsPage').then((m) => ({ default: m.HubRequestsPage })))
+const CatalogSettings = lazy(() => import('@/features/settings/SettingsLayout').then((m) => ({ default: m.CatalogSettings })))
 
 /** Rotas do Comercial. Ficam aqui para o App.tsx mudar só uma linha. Chamar como função dentro de <Routes>. */
 export function CommercialRoutes() {
@@ -25,13 +22,14 @@ export function CommercialRoutes() {
         <Route path="funil" element={<PipelinePage />} />
         <Route element={<RequireRole roles={COMMERCIAL_ROLES} />}>
         <Route path="resumo" element={<CommercialSummaryPage />} />
-        <Route path="pedidos" element={<HubRequestsPage />} />
-        <Route path="conversas" element={<ConversationsPage />} />
-        <Route path="sugestoes" element={<SuggestionsPage />} />
+        <Route path="pedidos" element={<MovedTo to="/whatsapp/pedidos" />} />
+        <Route path="conversas" element={<MovedTo to="/whatsapp/conversas" />} />
+        <Route path="sugestoes" element={<MovedTo to="/whatsapp/sugestoes" />} />
+        <Route path="servicos" element={<CatalogSettings />} />
         <Route path="prospeccao" element={<ProspectingPage />} />
         <Route path="vendas" element={<SalesPage />} />
-        <Route path="pacotes" element={<MovedTo to="/configuracoes/servicos?area=pacotes" />} />
-        <Route path="satisfacao" element={<SatisfactionPage />} />
+        <Route path="pacotes" element={<MovedTo to="/comercial/servicos?area=pacotes" />} />
+        <Route path="satisfacao" element={<MovedTo to="/whatsapp/satisfacao" />} />
         <Route path="contas" element={<MovedTo to="/configuracoes/whatsapp" />} />
         <Route path="configuracoes" element={<MovedTo to="/configuracoes/whatsapp" />} />
         </Route>

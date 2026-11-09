@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense } from 'react'
-import { AtSign, BookOpen, Clapperboard, Compass, Gauge, Home, Megaphone, MessageCircle, MoreHorizontal, Palette, Plug, Settings, ShieldCheck, Users, UsersRound, Wallet, X, type LucideIcon } from 'lucide-react'
+import { AtSign, BookOpen, Handshake, Clapperboard, Compass, Gauge, Home, Megaphone, MessageCircle, MoreHorizontal, Palette, Plug, Settings, ShieldCheck, Users, UsersRound, Wallet, X, type LucideIcon } from 'lucide-react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
@@ -11,7 +11,7 @@ import { Avatar } from '@/features/account/AccountPage'
 import { ROLE_LABELS } from '@/lib/roles'
 
 export const MENU_ICONS: Record<MenuIcon, LucideIcon> = {
-  home: Home, clients: Users, whatsapp: MessageCircle, traffic: Megaphone, design: Palette, video: Clapperboard, plug: Plug, shield: ShieldCheck, gauge: Gauge, wallet: Wallet, team: UsersRound, social: AtSign, compass: Compass, book: BookOpen, settings: Settings,
+  home: Home, clients: Users, whatsapp: MessageCircle, sales: Handshake, traffic: Megaphone, design: Palette, video: Clapperboard, plug: Plug, shield: ShieldCheck, gauge: Gauge, wallet: Wallet, team: UsersRound, social: AtSign, compass: Compass, book: BookOpen, settings: Settings,
 }
 
 /**

@@ -139,8 +139,8 @@ export function CommercialSummary({ days = 30, compact = false }: { days?: numbe
   const nps = d.nps.responses ? Math.round(((d.nps.promoters - d.nps.detractors) / d.nps.responses) * 100) : null
   const tiles = (
     <KpiRow label="Comercial em números">
-      <StatTile label={`Novos contatos em ${days} dias`} value={fmt.int(d.new_contacts)} delta={{ pct: pctChange(d.new_contacts, d.new_contacts_prev), goodWhenUp: true }} spark={contacts.map((c) => c.value)} to="/comercial/conversas" />
-      <StatTile label="Sem resposta" value={fmt.int(d.unanswered)} tone={d.unanswered > 0 ? 'warn' : 'ok'} hint="Conversas esperando a equipe" to="/comercial/conversas" />
+      <StatTile label={`Novos contatos em ${days} dias`} value={fmt.int(d.new_contacts)} delta={{ pct: pctChange(d.new_contacts, d.new_contacts_prev), goodWhenUp: true }} spark={contacts.map((c) => c.value)} to="/whatsapp/conversas" />
+      <StatTile label="Sem resposta" value={fmt.int(d.unanswered)} tone={d.unanswered > 0 ? 'warn' : 'ok'} hint="Conversas esperando a equipe" to="/whatsapp/conversas" />
       <StatTile label="Vendas confirmadas" value={fmt.money(d.sales_cents)} delta={{ pct: pctChange(d.sales_cents, d.sales_cents_prev), goodWhenUp: true }} hint={d.sales_pending ? `${d.sales_pending} para confirmar` : undefined} to="/comercial/vendas" />
       <StatTile label="Conversão" value={closed ? fmt.pct((d.won / closed) * 100) : 'Sem fechamento'} hint={`${d.won} ganhas | ${d.lost} perdidas | NPS ${nps ?? 'sem dados'}`} to="/comercial/funil" />
     </KpiRow>

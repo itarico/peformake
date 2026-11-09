@@ -21,14 +21,14 @@ describe('menu', () => {
   })
 
   it('mostra só os módulos deste sistema', () => {
-    expect(labels(['admin'])).toEqual(['Início', 'Clientes', 'Estratégia', 'Tráfego', 'Conteúdo', 'Audiovisual', 'Comercial', 'Financeiro', 'Equipe', 'Configurações'])
-    expect(labels(['designer'])).toEqual(['Início', 'Conteúdo', 'Comercial', 'Equipe'])
+    expect(labels(['admin'])).toEqual(['Início', 'Clientes', 'Estratégia', 'Tráfego', 'Social Media', 'Audiovisual', 'Comercial', 'WhatsApp', 'Financeiro', 'Equipe', 'Configurações'])
+    expect(labels(['designer'])).toEqual(['Início', 'Social Media', 'Comercial', 'Equipe'])
     expect(labels(['editor'])).toEqual(['Início', 'Audiovisual', 'Comercial', 'Equipe'])
     expect(labels(['traffic_manager'])).toEqual(['Início', 'Clientes', 'Estratégia', 'Tráfego', 'Comercial', 'Equipe'])
     expect(labels(['head_marketing'])).not.toContain('Clientes')
     expect(labels(['head_marketing'])).not.toContain('Financeiro')
     expect(labels(['parceiro'])).toEqual(['Comercial', 'Equipe'])
-    expect(labels(['sdr'])).toEqual(['Início', 'Comercial', 'Equipe'])
+    expect(labels(['sdr'])).toEqual(['Início', 'Comercial', 'WhatsApp', 'Equipe'])
   })
 
   it('sem cargo não mostra nada', () => {

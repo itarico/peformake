@@ -4,6 +4,7 @@ import { RequireAuth, RequireRole } from '@/auth/guards'
 import { AppShell } from '@/components/layout/AppShell'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
 import { CommercialRoutes } from '@/features/commercial/CommercialRoutes'
+import { WhatsAppRoutes } from '@/features/commercial/WhatsAppRoutes'
 import { AV_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, NOTIFICATION_ADMIN_ROLES, TRAFFIC_ROLES } from '@/lib/roles'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { SiteGate } from '@/site/SiteGate'
@@ -93,7 +94,7 @@ export function App() {
               <Route path="estrategia" element={<StrategyPage />} />
               <Route path="relatorios" element={<ReportsPage />} />
               <Route path="configuracoes" element={<TrafficSettingsPage />} />
-              <Route path="servicos" element={<MovedTo to="/configuracoes/servicos?area=trafego" />} />
+              <Route path="servicos" element={<MovedTo to="/comercial/servicos?area=trafego" />} />
             </Route>
           </Route>
           <Route element={<RequireRole roles={TRAFFIC_ROLES} />}>
@@ -110,7 +111,7 @@ export function App() {
               <Route path="planejamento" element={<ContentPlanPage />} />
               <Route path="datas" element={<SeasonalPage />} />
               <Route path="automatico" element={<AutoCreativePage />} />
-              <Route path="servicos" element={<MovedTo to="/configuracoes/servicos?area=design" />} />
+              <Route path="servicos" element={<MovedTo to="/comercial/servicos?area=design" />} />
               <Route element={<RequireRole roles={CONTENT_PLANNER_ROLES} />}>
                 <Route path="redes" element={<NetworksPage />} />
                 <Route path="novidades" element={<SocialAgent />} />
@@ -157,6 +158,7 @@ export function App() {
           <Route path="metodologia/estudos" element={<MovedTo to="/estrategia/estudos" />} />
           <Route path="inicio" element={<HomePage />} />
           {CommercialRoutes()}
+          {WhatsAppRoutes()}
           <Route element={<RequireRole roles={NOTIFICATION_ADMIN_ROLES} />}>
             <Route path="configuracoes/*" element={<SettingsLayout />} />
           </Route>

@@ -33,7 +33,6 @@ const GROUPS: Group[] = [
     { to: 'whatsapp', label: 'WhatsApp e comercial', hint: 'Números, prazos e etiquetas' },
   ] },
   { id: 'peformake', label: 'Peformake', items: [
-    { to: 'servicos', label: 'Serviços e pacotes', hint: 'O que a assessoria vende e por quanto', roles: ADMIN_ROLES },
   ] },
   { id: 'ellcazo', label: 'Ellcazo · Audiovisual', ellcazo: true, items: [
     { to: 'audiovisual', label: 'Produção', hint: 'Agenda, prazos e equipe de gravação' },
@@ -136,7 +135,7 @@ export function SettingsLayout() {
               <Route path="automacoes" element={<AutomationsCenter />} />
               <Route path="integracoes" element={<IntegrationsPage />} />
               <Route path="whatsapp" element={<WhatsappSettings />} />
-              <Route path="servicos" element={<CatalogSettings />} />
+              <Route path="servicos" element={<MovedTo to="/comercial/servicos" />} />
               <Route path="notificacoes" element={<NotificationSettingsPanel />} />
               <Route path="audiovisual" element={<AvSettingsForm />} />
               <Route path="audiovisual/orcamento" element={<QuoteSettings />} />
@@ -187,7 +186,7 @@ function AreaChips({ items, value, onPick }: { items: readonly (readonly [string
   )
 }
 
-function CatalogSettings() {
+export function CatalogSettings() {
   const [params, setParams] = useSearchParams()
   const raw = params.get('area')
   if (raw === 'audiovisual') return <Navigate to={BASE + 'audiovisual/servicos'} replace />

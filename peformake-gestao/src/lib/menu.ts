@@ -1,6 +1,6 @@
 import { ADMIN_ROLES, AV_ROLES, COMMERCIAL_ROLES, CONTENT_ROLES, TEAM_ROLES, TRAFFIC_ROLES, hasAnyRole, type AppRole } from './roles'
 
-export type MenuIcon = 'home' | 'clients' | 'whatsapp' | 'traffic' | 'design' | 'video' | 'plug' | 'shield' | 'gauge' | 'wallet' | 'team' | 'social' | 'compass' | 'book' | 'settings'
+export type MenuIcon = 'home' | 'clients' | 'whatsapp' | 'sales' | 'traffic' | 'design' | 'video' | 'plug' | 'shield' | 'gauge' | 'wallet' | 'team' | 'social' | 'compass' | 'book' | 'settings'
 
 export interface MenuItem {
   label: string
@@ -18,8 +18,8 @@ export interface MenuGroup {
 
 const ANY_MODULE: readonly AppRole[] = [...new Set([...TRAFFIC_ROLES, ...CONTENT_ROLES, ...AV_ROLES, ...COMMERCIAL_ROLES])]
 
-// Menu enxuto: 10 entradas. Operação abre pelo Início; Social Media está dentro de Conteúdo; Metodologia dentro de Estratégia;
-// Integrações, WhatsApp e o catálogo de serviços dentro de Configurações.
+// Menu enxuto. Operação abre pelo Início; Metodologia dentro de Estratégia; Integrações e contas de WhatsApp em Configurações.
+// Comercial é só vendas (com Serviços e pacotes); conversas, pedidos, sugestões e satisfação ficam em WhatsApp.
 const MENU: MenuGroup[] = [
   {
     label: 'Principal',
@@ -34,9 +34,10 @@ const MENU: MenuGroup[] = [
     label: 'Serviços',
     items: [
       { label: 'Tráfego', to: '/trafego', icon: 'traffic', roles: TRAFFIC_ROLES },
-      { label: 'Conteúdo', to: '/conteudo', icon: 'design', roles: CONTENT_ROLES },
+      { label: 'Social Media', short: 'Social', to: '/conteudo', icon: 'design', roles: CONTENT_ROLES },
       { label: 'Audiovisual', short: 'Vídeo', to: '/audiovisual', icon: 'video', roles: AV_ROLES },
-      { label: 'Comercial', to: '/comercial', icon: 'whatsapp', roles: TEAM_ROLES },
+      { label: 'Comercial', to: '/comercial', icon: 'sales', roles: TEAM_ROLES },
+      { label: 'WhatsApp', to: '/whatsapp', icon: 'whatsapp', roles: COMMERCIAL_ROLES },
     ],
   },
   {

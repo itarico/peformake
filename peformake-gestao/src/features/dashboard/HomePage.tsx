@@ -251,7 +251,7 @@ function BusinessHome() {
       { key: 'avlate', label: 'Edições atrasadas', count: a.late, to: '/audiovisual/producao', urgent: true },
     ] : []),
     ...(m ? [
-      { key: 'unanswered', label: 'Conversas sem resposta', count: m.unanswered, to: '/comercial/conversas', urgent: true },
+      { key: 'unanswered', label: 'Conversas sem resposta', count: m.unanswered, to: '/whatsapp/conversas', urgent: true },
       { key: 'sales', label: 'Vendas para confirmar', count: m.sales_pending, to: '/comercial/vendas' },
     ] : []),
   ])
@@ -259,10 +259,10 @@ function BusinessHome() {
 
   const sumStatus = (by: Record<string, number> | undefined, done: string[]) => Object.entries(by ?? {}).reduce((s, [k, n]) => (done.includes(k) ? s : s + n), 0)
   const demands = [
-    ...(c ? [{ label: 'Conteúdo', open: sumStatus(c.by_status, CONTENT_DONE), late: Math.min(c.late, sumStatus(c.by_status, CONTENT_DONE)), to: `/conteudo/quadro?mes=${month}`, unit: 'peças' }] : []),
+    ...(c ? [{ label: 'Social Media', open: sumStatus(c.by_status, CONTENT_DONE), late: Math.min(c.late, sumStatus(c.by_status, CONTENT_DONE)), to: `/conteudo/quadro?mes=${month}`, unit: 'peças' }] : []),
     ...(a ? [{ label: 'Audiovisual', open: sumStatus(a.by_status, AV_DONE), late: Math.min(a.late, sumStatus(a.by_status, AV_DONE)), to: '/audiovisual/producao', unit: 'vídeos' }] : []),
     ...(t ? [{ label: 'Tráfego', open: t.tasks.todo + t.tasks.doing + t.tasks.review, late: 0, to: '/trafego/tarefas', unit: 'tarefas' }] : []),
-    ...(m ? [{ label: 'Comercial', open: m.unanswered, late: m.unanswered, to: '/comercial/conversas', unit: 'conversas', lateLabel: 'sem resposta' }] : []),
+    ...(m ? [{ label: 'Comercial', open: m.unanswered, late: m.unanswered, to: '/whatsapp/conversas', unit: 'conversas', lateLabel: 'sem resposta' }] : []),
   ]
 
   const spend = t ? fillDays(t.period[0], t.period[1], t.daily.map((d) => ({ day: d.day, value: d.spend_cents / 100 }))) : []
@@ -287,7 +287,7 @@ function BusinessHome() {
       <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
         {can.admin && demands.length > 0 && <Panel title="Demandas abertas" className="pf-rise"><DemandBars rows={demands} /></Panel>}
         {t && <TrendPanel title="Investimento em anúncios" to="/trafego/painel" total={brl.format(t.totals.spend_cents / 100)} pct={pctChange(t.totals.spend_cents, t.previous.spend_cents)} goodWhenUp data={spend} format={(n) => brl.format(n)} />}
-        {m && <TrendPanel title="Novos contatos no WhatsApp" to="/comercial/conversas" total={String(m.new_contacts)} pct={pctChange(m.new_contacts, m.new_contacts_prev)} goodWhenUp data={contacts} format={(n) => `${n} contato${n === 1 ? '' : 's'}`} />}
+        {m && <TrendPanel title="Novos contatos no WhatsApp" to="/whatsapp/conversas" total={String(m.new_contacts)} pct={pctChange(m.new_contacts, m.new_contacts_prev)} goodWhenUp data={contacts} format={(n) => `${n} contato${n === 1 ? '' : 's'}`} />}
       </div>
 
       <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-2">
