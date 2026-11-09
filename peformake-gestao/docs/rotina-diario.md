@@ -14,6 +14,12 @@ Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao ter
      5) Acessos: Instagram, site, contas de anúncio, portal do cliente;
      6) Sobre o negócio (opcional): segmento, como chegou, objetivos.
    - Passo pendente aparece no Início e na Bete com link direto para o pop-up daquele passo. Ajustar tudo que depende (Bete, CSV, portal, funções SQL).
+2. Tempo de trabalho por cliente (soma do mês):
+   - Automático: card de conteúdo, vídeo ou tarefa de tráfego que entra em "fazendo" liga o cronômetro daquela pessoa; sai de "fazendo" (revisão, pausa, pronto) e ele para. Um cronômetro por pessoa: começar outro pausa o anterior.
+   - Botão play/pause no próprio card e um botão rápido "+ tempo" (15, 30, 60 min) para reunião, ligação e captação, já com o cliente escolhido.
+   - Proteção: cronômetro esquecido para sozinho no fim do expediente (ex.: 19h) e às 2h de inatividade; a pessoa pode corrigir o tempo do dia.
+   - Onde aparece: na página do cliente (horas do mês por área e por pessoa, gráfico); no Resumo da Equipe (horas por pessoa); para admin, custo das horas × mensalidade = cliente que dá lucro ou prejuízo (valores só admin).
+   - Entra no automation_catalog (parada automática) e na Bete ("você esqueceu o cronômetro ligado").
 
 
 ## 2026-11-08 · celular sem escorregar de lado + decisões do Financeiro
