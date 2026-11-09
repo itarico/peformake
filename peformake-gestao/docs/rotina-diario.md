@@ -2,6 +2,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 · Novo cliente em 4 campos + Próximos passos (item 1 e 3 da lista)
+Feito: "Novo cliente" na lista abre pop-up curto (NewClientDialog.tsx): Nome da empresa (opcional; vazio = pessoa física, cliente fica com o nome do responsável e a razão social também), Nome do responsável, WhatsApp, E-mail. O responsável vira contato principal (dono, recebe tudo). Datas e dia de cobrança ficam vazios até o passo Cobrança. Na ficha, "Próximos passos" (ClientSetupSteps.tsx) com barra de progresso e 6 passos, cada um abre seu pop-up: Empresa, Serviços e valores (abre Entregas e equipe), Contrato (ContractWizard, só admin, liberado depois de Empresa e Serviços), Cobrança, Acessos, Sobre o negócio (opcional). Aparece para cliente com até 60 dias e passo aberto, ou com ?novo=1 / ?passo=empresa|cobranca|acessos|negocio|contrato (link direto). Testado: validação do pop-up no Chrome (sem criar), painel e passos Empresa/Serviços na Sn Distribuidora, criação completa no banco com rollback.
+Falta deste item: passo pendente aparecer no Início e na Bete (links ?passo= já funcionam); diagnóstico no passo 6 (depende do prompt com o Italo).
+
 ## 2026-11-10 · Lançar serviço com variações (fecha o item 6)
 Feito: botão "Lançar serviço" no topo do Comercial (LaunchServiceDialog.tsx): cliente, área, serviço, variação, quantidade, extras, desconto e vencimento, com total ao vivo; o banco recalcula o valor pelo catálogo (sale_service_launch) e cria fatura avulsa com uma linha por parte (serviço, extras, desconto). Catálogo ganhou Variações e Extras por serviço (service_options, service_options_save). Regra do Italo: só o admin cria/edita serviço (can_edit_catalog = admin); SDR e closer veem preços e vendem (can_see_prices). Testado no banco (400 × 3 + 2 × 50 − 10% = R$ 1.170) e no Chrome (Tráfego × 2 = R$ 1.200, fechado sem lançar; editor mostra Variações/Extras). Migração 20261110040000.
 Próximo da lista: novo cliente em 4 campos com passos guiados.
