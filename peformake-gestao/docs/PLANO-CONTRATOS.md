@@ -2,6 +2,24 @@
 
 Objetivo: fechou o cliente, o contrato nasce sozinho, montado com os serviços que ele contratou, e a Peformake acompanha cada contrato do rascunho à renovação num lugar só.
 
+## Atualização 09/11/2026 (pedido do Italo): contrato montado por blocos, sem subir arquivo
+
+"O próprio sistema gera o contrato automaticamente; eu só habilito ou desabilito o que quero, ou preencho os campos com as regras já predefinidas."
+
+**Como fica:**
+1. **Biblioteca de blocos** (`contract_clauses`), cada bloco com título, texto e campos `{{...}}`:
+   - **Base (sempre ligados):** partes, objeto, valor e pagamento, prazo, rescisão, LGPD, foro.
+   - **Por serviço (ligam sozinhos quando o cliente tem o serviço):** Tráfego (verba paga direto às plataformas), Social Mídia, Design (revisões), Audiovisual (gravação, remarcação, uso de imagem), Consultoria, Site, CRM.
+   - **Opcionais (chave liga/desliga):** multa e juros, fidelidade com multa de saída, reajuste anual, desconto por pagar antes, uso de imagem do cliente no portfólio, exclusividade.
+2. **Campos já preenchidos pelas regras do sistema** (ninguém digita): dados do cliente (CNPJ busca na Receita), serviços, quantidade de entregas por mês e valores (itens da fatura e o passo 2 da Fase 1), dia de cobrança (10/20/30), meses de contrato, multa 2% e juros 1% ao mês (Configurar cobrança), entregas até o dia 25, crédito por erro nosso, aviso prévio de 30 dias, reajuste pelo IPCA no aniversário, verba de anúncios fora do valor.
+3. **Uma tela só:** pop-up com a prévia do contrato ao lado e a lista de blocos com chave e os poucos campos editáveis (já com o padrão). Botão Enviar: Assinafy (recorrente) ou aceite no portal (avulso).
+4. **Contrato e sistema falam a mesma língua:** o que está no contrato vira regra do Financeiro (vencimento, multa, aviso prévio, reajuste). Mudou serviço ou preço depois de assinado: aditivo gerado sozinho.
+
+**Achados na leitura (09/11):**
+- O modelo atual diz "atraso superior a 7 dias permite suspender os serviços", e a decisão de 08/11 é "nunca pausa sozinho, só avisa": o texto tem que mudar.
+- Os dados das empresas (Peformake e Ellcazo: CNPJ, endereço, representante) estão vazios em `company_profiles`: sem isso nenhum contrato sai.
+- Nenhum contrato foi gerado ainda; o modelo atual tem cerca de 1.700 caracteres, sem cláusula por serviço.
+
 ## O que já existe (e fica)
 
 - Assinafy ligado em produção (10 documentos/mês grátis, R$ 1 cada extra). Funções `contract-sign` e `contract-webhook` no ar.
