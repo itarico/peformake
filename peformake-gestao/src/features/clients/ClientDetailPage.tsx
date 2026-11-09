@@ -13,6 +13,7 @@ import { setClientPartner } from './clientsApi'
 import { HistorySection, LinksSection, StatusSection } from './ClientExtras'
 import { clientStatusLabel, describeClient, whatsappLink } from './clientRules'
 import { ClientDialog } from './ClientFormPage'
+import { ClientSetupSteps } from './ClientSetupSteps'
 import { ClientAssets } from './ClientAssets'
 import { cn } from '@/lib/cn'
 import { ClientOverview } from './ClientOverview'
@@ -127,12 +128,9 @@ export function ClientDetailPage() {
       {params.get('abrir') === 'reuniao' && <MeetingDialog open onClose={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('abrir'); return p }, { replace: true })} clientId={client.id} clientName={client.name} />}
       {(() => { const acao = params.get('acao'); return isClientAction(acao) ? <ClientActionDialog key={acao} client={client} action={acao} onClose={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('acao'); return p }, { replace: true })} /> : null })()}
 
-      {params.get('novo') && (
-        <p role="status" className="rounded-3xl bg-ok-soft px-5 py-3.5 text-ok-ink">
-          <b>Cliente cadastrado.</b> Próximo passo: defina a equipe e adicione os serviços em <button type="button" className="cursor-pointer font-semibold underline" onClick={() => setTab('operacao')}>Entregas e equipe</button>.
-        </p>
-      )}
-
+      <ClientSetupSteps key={client.updatedAt} client={client} isAdmin={isAdmin} canManage={canManage} force={!!params.get('novo') || !!params.get('passo')}
+        initialStep={params.get('passo')} onOpenServices={() => setTab('operacao')}
+        onStepClosed={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('passo'); return p }, { replace: true })} />
 
       <div role="tablist" aria-label="Seções do cliente" className="flex gap-1 overflow-x-auto max-md:[mask-image:linear-gradient(to_right,#000_calc(100%-36px),transparent)] overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((t) => (

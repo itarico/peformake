@@ -6,7 +6,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { ClientAvatar } from './ClientAvatar'
-import { ClientDialog } from './ClientFormPage'
+import { NewClientDialog } from './NewClientDialog'
 import {
   DEFAULT_FILTERS,
   describeClient,
@@ -144,7 +144,7 @@ export function ClientsPage() {
           </button>
         )}
       </div>
-      {canManage && <ClientDialog open={creating} onClose={() => setCreating(false)} />}
+      {canManage && <NewClientDialog open={creating} onClose={() => setCreating(false)} />}
 
       <div role="tablist" aria-label="Clientes" className="flex gap-1 overflow-x-auto border-b border-line [scrollbar-width:none]">
         {([['summary', 'Resumo'], ['recorrentes', `Recorrentes · ${liveRecurring}`], ['avulsos', `Avulsos · ${liveOneOff}`], ['perdidos', 'Perdidos e pausados']] as const).map(([id, label]) => (
