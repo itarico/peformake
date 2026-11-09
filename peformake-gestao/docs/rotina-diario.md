@@ -37,6 +37,8 @@ Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao ter
    - Primeiro passo amanhã: montar o prompt com o Italo (estrutura proposta no chat de 09/11).
 
 
+6. Menu (estudar): Conteúdo passa a se chamar Social Media. Comercial vira só VENDAS: Resumo (dashboard), Funil, Vendas, Prospecção e Serviços e pacotes (sai de Configurações; Ellcazo continua no Audiovisual). Nova aba WhatsApp (agente): Conversas, Pedidos dos clientes, Sugestões da IA, Satisfação. Propagar rotas antigas com MovedTo, links da Bete, notificações e funções SQL.
+
 ## 2026-11-08 · celular sem escorregar de lado + decisões do Financeiro
 
 - Celular: o app inteiro e a área de conteúdo agora cortam o que passar da largura da tela (overflow-x: clip no contêiner, não só no html, que o iPhone ignorava); itens de grade não empurram a coluna; números grandes do Início menores no celular.
