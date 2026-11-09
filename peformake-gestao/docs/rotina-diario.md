@@ -2,6 +2,20 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## FAZER AMANHÃ (10/11) · lista do Italo, só anotado, nada executado
+
+1. Novo cliente mais rápido (hoje: pop-up com 4 etapas e rolagem; a etapa Contato tem ~10 campos). Novo desenho:
+   - Pop-up curto, sem rolagem, só 4 campos: Nome da empresa, Nome do responsável, WhatsApp do responsável, E-mail. Botão "Criar cliente".
+   - Depois de criar, abre a página do cliente com "Próximos passos" (barra de progresso) e o sistema guia cada etapa, cada uma no seu pop-up curto:
+     1) Empresa: CPF/CNPJ (CNPJ preenche o resto pela Receita), e-mail de cobrança, endereço;
+     2) Serviços e valores: tipo (fixo, TCV, avulso), pacote, parte da Ellcazo;
+     3) Contrato: Assinafy (recorrente) ou aceite no portal (avulso);
+     4) Cobrança: dia (10/20/30), primeira cobrança;
+     5) Acessos: Instagram, site, contas de anúncio, portal do cliente;
+     6) Sobre o negócio (opcional): segmento, como chegou, objetivos.
+   - Passo pendente aparece no Início e na Bete com link direto para o pop-up daquele passo. Ajustar tudo que depende (Bete, CSV, portal, funções SQL).
+
+
 ## 2026-11-08 · celular sem escorregar de lado + decisões do Financeiro
 
 - Celular: o app inteiro e a área de conteúdo agora cortam o que passar da largura da tela (overflow-x: clip no contêiner, não só no html, que o iPhone ignorava); itens de grade não empurram a coluna; números grandes do Início menores no celular.
