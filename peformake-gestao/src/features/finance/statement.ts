@@ -128,3 +128,17 @@ export function parseStatement(fileName: string, text: string): StatementRow[] {
 export function ruleHint(description: string): string {
   return norm(description).replace(/[\d/.:*-]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 40)
 }
+
+/** Resultado do extrato: o que entrou, o que já existia e o que casou com faturas (nada em dobro). */
+export interface ImportResult { added: number; skipped: number; uncategorized: number; matched?: number; invoices_paid?: number; transfers?: number }
+export function importSummary(r: ImportResult): string {
+  const parts = [
+    `${r.added} ${r.added === 1 ? 'lançamento novo' : 'lançamentos novos'}`,
+    r.invoices_paid ? `${r.invoices_paid} ${r.invoices_paid === 1 ? 'fatura quitada' : 'faturas quitadas'} pelo extrato` : '',
+    r.matched ? `${r.matched} já ${r.matched === 1 ? 'estava' : 'estavam'} no Caixa (conferido${r.matched === 1 ? '' : 's'}, sem duplicar)` : '',
+    r.transfers ? `${r.transfers} ${r.transfers === 1 ? 'transferência' : 'transferências'} do Asaas (não é receita nova)` : '',
+    r.skipped ? `${r.skipped} já ${r.skipped === 1 ? 'importado' : 'importados'} antes` : '',
+  ].filter(Boolean)
+  const cat = r.uncategorized > 0 ? ` ${r.uncategorized} sem categoria: classifique na lista e o sistema aprende.` : ''
+  return `${parts.join(' · ')}.${cat}`
+}

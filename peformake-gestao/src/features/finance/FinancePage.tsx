@@ -1,3 +1,4 @@
+import { importSummary, type ImportResult } from './statement'
 import { useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarClock, Check, Download, FileUp, Plus, Search } from 'lucide-react'
@@ -361,19 +362,19 @@ function ImportDialog({ unit, onClose, onDone }: { unit: Unit; onClose: () => vo
   const input = useRef<HTMLInputElement>(null)
   const [rows, setRows] = useState<StatementRow[] | null>(null)
   const [fileName, setFileName] = useState('')
-  const [result, setResult] = useState<{ added: number; skipped: number; uncategorized: number } | null>(null)
+  const [result, setResult] = useState<ImportResult | null>(null)
   const run = useMutation({
     mutationFn: async () => {
       const { data, error } = await supabase.rpc('fin_import', { _unit: unit, _rows: rows })
       if (error) throw error
-      return data as unknown as { added: number; skipped: number; uncategorized: number }
+      return data as unknown as ImportResult
     },
     onSuccess: (r) => { setResult(r); onDone() },
   })
   const inSum = rows?.filter((r) => r.amount > 0).reduce((a, r) => a + r.amount, 0) ?? 0
   const outSum = rows?.filter((r) => r.amount < 0).reduce((a, r) => a - r.amount, 0) ?? 0
   return (
-    <Dialog open onClose={onClose} title={`Importar extrato · ${UNIT_LABEL[unit]}`} description="Arquivo OFX ou CSV exportado do banco. Lançamentos repetidos são ignorados." size="sm"
+    <Dialog open onClose={onClose} title={`Importar extrato · ${UNIT_LABEL[unit]}`} description="Arquivo OFX ou CSV exportado do banco. O que já entrou pela cobrança ou pelo Asaas é conferido e não duplica." size="sm"
       footer={result ? <Button onClick={onClose}>Fechar</Button> : <Button disabled={!rows?.length || run.isPending} onClick={() => run.mutate()}>{run.isPending ? 'Importando' : `Importar ${rows?.length ?? 0} lançamentos`}</Button>}>
       <div className="flex flex-col gap-3">
         <input ref={input} type="file" accept=".ofx,.csv,.txt" className="sr-only" onChange={async (e) => {
@@ -385,7 +386,7 @@ function ImportDialog({ unit, onClose, onDone }: { unit: Unit; onClose: () => vo
         <Button variant="secondary" onClick={() => input.current?.click()}><FileUp size={15} aria-hidden="true" /> {fileName || 'Escolher arquivo'}</Button>
         {rows && rows.length === 0 && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">Não achei lançamentos neste arquivo. Confira se é OFX ou CSV com colunas de data, descrição e valor.</p>}
         {rows && rows.length > 0 && !result && <p className="text-[14px]">{rows.length} lançamentos: entradas {brl(inSum)}, saídas {brl(outSum)}.</p>}
-        {result && <p role="status" className="rounded-lg bg-ok-soft px-3 py-2 font-medium text-ok-ink">{result.added} importados, {result.skipped} já existiam. {result.uncategorized > 0 ? `${result.uncategorized} ficaram sem categoria: classifique na lista e o sistema aprende.` : 'Tudo categorizado pelas regras.'}</p>}
+        {result && <p role="status" className="rounded-lg bg-ok-soft px-3 py-2 font-medium text-ok-ink">{importSummary(result)}</p>}
         {run.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível importar.</p>}
       </div>
     </Dialog>

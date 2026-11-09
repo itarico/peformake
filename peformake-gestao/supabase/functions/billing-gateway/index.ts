@@ -47,7 +47,7 @@ async function asaasCharge(env: string, key: string, item: QueueItem) {
     })
     customer = created.id
   }
-  const today = new Date().toISOString().slice(0, 10)
+  const today = todayBrt()
   const payment = await asaas(env, key, '/payments', {
     method: 'POST',
     body: JSON.stringify({ customer, billingType: 'UNDEFINED', value: Number(item.amount), dueDate: item.due_date < today ? today : item.due_date, description: item.description, externalReference: item.id }),
@@ -91,6 +91,8 @@ async function closeQueue(db: ReturnType<typeof createClient>, env: string, key:
 }
 
 const digits = (v: string | null | undefined) => (v ?? '').replace(/\D/g, '')
+/** Hoje em Brasília (AAAA-MM-DD). */
+const todayBrt = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10)
 
 interface AsaasPayment { id: string; customer: string; value: number; netValue?: number; dueDate: string; paymentDate?: string; clientPaymentDate?: string; confirmedDate?: string; description?: string; externalReference?: string; status: string; billingType?: string }
 
@@ -117,9 +119,11 @@ async function asaasSync(db: ReturnType<typeof createClient>, env: string, key: 
   let invoices = 0, imported = 0, skipped = 0
   const unmatched: string[] = []
   for (const p of all) {
-    const { data: inv } = await db.rpc('invoice_paid_by_gateway', { _gateway: 'asaas', _gateway_id: p.id, _value: Number(p.value) || null })
+    // Data real do pagamento (não a do aviso).
+    const paidOn = (p.clientPaymentDate ?? p.paymentDate ?? p.confirmedDate ?? null)?.slice(0, 10) ?? null
+    const { data: inv } = await db.rpc('invoice_paid_by_gateway', { _gateway: 'asaas', _gateway_id: p.id, _value: Number(p.value) || null, _paid_on: paidOn })
     if (inv) { invoices++; continue }
-    const { data: linked } = await db.from('invoices').select('id').eq('gateway', 'asaas').eq('gateway_id', p.id).maybeSingle()
+    const { data: linked } = await db.from('invoices').select('id').or(`and(gateway.eq.asaas,gateway_id.eq.${p.id}),paid_ref.eq.asaas:${p.id}`).limit(1).maybeSingle()
     if (linked || known.has(p.id)) { skipped++; continue }
     if (!customers.has(p.customer)) {
       try {
@@ -130,6 +134,14 @@ async function asaasSync(db: ReturnType<typeof createClient>, env: string, key: 
     const cust = customers.get(p.customer)!
     const client = byDoc.get(cust.doc)
     if (!client) unmatched.push(cust.name || p.customer)
+    // Pago direto no Asaas, mas é a mensalidade em aberto do cliente: quita a fatura em vez de criar entrada nova (nada em dobro).
+    if (client) {
+      const { data: match } = await db.rpc('fin_match_open_invoice', { _client: client.id, _unit: null, _amount: Number(p.value), _dates: [p.dueDate, paidOn].filter(Boolean) })
+      if (match) {
+        const { data: ok } = await db.rpc('invoice_paid_matched', { _inv: match, _ref: `asaas:${p.id}`, _paid_on: paidOn, _value: Number(p.value), _how: 'pago direto no Asaas' })
+        if (ok) { invoices++; continue }
+      }
+    }
     // Empresa certa: a da última fatura do cliente; sem cliente, pelo texto (foto/vídeo = Ellcazo).
     let unit = 'peformake'
     if (client) {
@@ -143,7 +155,7 @@ async function asaasSync(db: ReturnType<typeof createClient>, env: string, key: 
       const { data: guess } = await db.rpc('crm_sale_unit', { _desc: p.description ?? '' })
       if (guess === 'ellcazo' || guess === 'peformake') unit = guess
     }
-    const paid = p.clientPaymentDate ?? p.paymentDate ?? p.confirmedDate ?? p.dueDate
+    const paid = paidOn ?? p.dueDate
     const { error } = await db.from('fin_entries').insert({
       unit, kind: 'entrada', source: 'asaas', external_id: p.id, status: 'pago',
       amount: Number(p.value), due_date: p.dueDate, paid_at: paid, client_id: client?.id ?? null,

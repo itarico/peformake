@@ -2,6 +2,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-09 · Financeiro Fase 0, itens 1 e 2 (sessão da nuvem, com o Italo)
+Feito: (1) datas em Brasília e data real do pagamento: fatura paga pelo Asaas grava a data em que o cliente pagou (clientPaymentDate), não a do aviso; lançamento no Caixa usa a data de Brasília (antes, depois das 21h caía no dia seguinte); baixa no Caixa marca a fatura com meio-dia de Brasília; vencimento enviado ao Asaas usa o dia de Brasília. (2) nada em dobro: pagamento feito direto no Asaas que casa com a mensalidade em aberto do cliente (mesmo valor, vencimento até 3 dias) quita a fatura em vez de virar entrada nova, e a cobrança antiga é cancelada no Asaas; extrato do banco confere antes de criar (já recebido no Caixa = só marca; casa com uma fatura em aberto = quita; "Asaas" na descrição = transferência, não é receita). Funções novas: brt_noon, fin_match_open_invoice, invoice_paid_matched, invoice_paid_by_gateway com _paid_on; coluna invoices.paid_ref. billing-gateway v9 e billing-webhook v7.
+Testado em simulação desfeita: extrato quita a fatura com a data certa; linha repetida ignorada; segundo crédito igual vira lançamento novo; Asaas com data real.
+Próximo da Fase 0: (3) travar edição de lançamento vindo de fatura e baixa do grupo inteiro; (4) multa/juros e link que pede CPF/CNPJ; (5) preço do audiovisual escondido da produção e sinal configurado; (6) avulso de membro só libera quando o cliente paga, com 25% da empresa.
+
 ## FAZER AMANHÃ (10/11) · lista do Italo, só anotado, nada executado
 
 1. Novo cliente mais rápido (hoje: pop-up com 4 etapas e rolagem; a etapa Contato tem ~10 campos). Novo desenho:

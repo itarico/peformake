@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseCsv, parseDate, parseMoney, parseOfx, parseStatement, ruleHint } from './statement'
+import { parseCsv, parseDate, parseMoney, parseOfx, parseStatement, ruleHint, importSummary } from './statement'
 
 describe('parseMoney', () => {
   it('lê formato brasileiro', () => expect(parseMoney('R$ 1.234,56')).toBe(1234.56))
@@ -54,4 +54,14 @@ describe('parseCsv', () => {
 
 describe('ruleHint', () => {
   it('tira números e acentos', () => expect(ruleHint('PIX RECEBIDO 03/11 Brió 123')).toBe('pix recebido brio'))
+})
+
+describe('importSummary (extrato sem duplicar)', () => {
+  it('mostra o que foi conciliado', () => {
+    expect(importSummary({ added: 2, skipped: 1, uncategorized: 0, matched: 1, invoices_paid: 1, transfers: 1 }))
+      .toBe('2 lançamentos novos · 1 fatura quitada pelo extrato · 1 já estava no Caixa (conferido, sem duplicar) · 1 transferência do Asaas (não é receita nova) · 1 já importado antes.')
+  })
+  it('funciona com o retorno antigo', () => {
+    expect(importSummary({ added: 1, skipped: 0, uncategorized: 1 })).toBe('1 lançamento novo. 1 sem categoria: classifique na lista e o sistema aprende.')
+  })
 })
