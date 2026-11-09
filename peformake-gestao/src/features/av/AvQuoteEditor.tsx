@@ -374,7 +374,7 @@ function Editor({ pricing, quote }: { pricing: AvPricing; quote: AvQuote | null 
             <span className="flex justify-between"><span className="opacity-70">Subtotal</span><span className="tabular-nums">{brl(result.subtotal)}</span></span>
             {result.adjustmentLabel && <span className="flex justify-between"><span className="opacity-70">{result.adjustmentLabel}</span><span className="tabular-nums">{brl(result.adjustment)}</span></span>}
             <span className="mt-1 flex items-baseline justify-between"><span className="font-semibold">Total{meta.kind === 'plano' ? ' por mês' : ''}</span><span className="text-[28px] font-semibold tabular-nums text-accent">{brl(result.total)}</span></span>
-            {meta.kind !== 'plano' && result.total > 0 && <span className="text-[12px] opacity-70">Sinal de {pricing.sinal_pct}% na reserva: {brl(result.deposit)}</span>}
+            {meta.kind !== 'plano' && result.total > 0 && pricing.sinal_pct > 0 && <span className="text-[12px] opacity-70">Sinal de {pricing.sinal_pct}% na reserva: {brl(result.deposit)}</span>}
           </div>
           {save.isError && <p role="alert" className="text-[13px] font-medium text-warn">Não foi possível salvar.</p>}
           {locked ? <p className="text-[13px] opacity-80">Este orçamento já foi {quote?.status} e não pode mais ser editado.</p> : (

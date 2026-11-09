@@ -78,7 +78,7 @@ export function PublicQuotePage() {
             )}
             <span className="flex items-baseline justify-between border-t border-line pt-2"><span className="font-semibold">Total{d.kind === 'plano' ? ' por mês' : ''}</span><span className="text-[26px] font-semibold tabular-nums">{brl(d.total)}</span></span>
             {d.kind === 'plano' && d.months && <span className="text-right text-[13px] text-muted">Contrato de {d.months} meses</span>}
-            {d.kind !== 'plano' && <span className="text-right text-[13px] text-muted">{d.sinal_pct}% na reserva e o restante na entrega</span>}
+            {d.kind !== 'plano' && <span className="text-right text-[13px] text-muted">{Number(d.sinal_pct) > 0 ? `${d.sinal_pct}% na reserva e o restante na entrega` : 'Pagamento único quando a produção começa'}</span>}
           </div>
         </section>
 
