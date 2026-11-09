@@ -2,6 +2,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 · Lançar serviço com variações (fecha o item 6)
+Feito: botão "Lançar serviço" no topo do Comercial (LaunchServiceDialog.tsx): cliente, área, serviço, variação, quantidade, extras, desconto e vencimento, com total ao vivo; o banco recalcula o valor pelo catálogo (sale_service_launch) e cria fatura avulsa com uma linha por parte (serviço, extras, desconto). Catálogo ganhou Variações e Extras por serviço (service_options, service_options_save). Regra do Italo: só o admin cria/edita serviço (can_edit_catalog = admin); SDR e closer veem preços e vendem (can_see_prices). Testado no banco (400 × 3 + 2 × 50 − 10% = R$ 1.170) e no Chrome (Tráfego × 2 = R$ 1.200, fechado sem lançar; editor mostra Variações/Extras). Migração 20261110040000.
+Próximo da lista: novo cliente em 4 campos com passos guiados.
+
 ## 2026-11-10 · Menu (item 6 da lista do Italo): WhatsApp área própria, Comercial só vendas, Social Media
 Feito: área WhatsApp (/whatsapp: Conversas, Pedidos dos clientes, Sugestões da IA, Satisfação; WhatsAppRoutes.tsx; papéis COMMERCIAL_ROLES). Comercial (/comercial): Resumo, Funil, Vendas, Prospecção, Serviços e pacotes (CatalogSettings saiu de Configurações; /configuracoes/servicos e /comercial/pacotes redirecionam; Ellcazo segue em Configurações → Audiovisual). Conteúdo passa a se chamar Social Media (rota /conteudo mantida). Rotas antigas /comercial/conversas|pedidos|sugestoes|satisfacao com MovedTo; links do Início, Resumos e das funções do banco (commercial_notify_on_suggestion/contact, nps_on_message, client_requests_history/feed) foram para /whatsapp. Ícone novo do Comercial (Handshake). Testado no Chrome: redirecionamentos, menu e Serviços e pacotes.
 Ainda do item 6: "Lançar serviço" no Comercial com variações, quantidade, extras e desconto (valor pelo catálogo) não foi feito.
