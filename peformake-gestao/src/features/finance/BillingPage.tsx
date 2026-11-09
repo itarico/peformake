@@ -259,6 +259,8 @@ export function BillingPage() {
         </details>
       )}
 
+      {isAdmin && <ReviewQueue onDone={(msg) => { setNotice(msg); refresh() }} />}
+
       <section aria-label="Resumo" className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {[
           { label: 'A receber', value: brl(open.reduce((a, i) => a + Number(i.amount), 0)), hint: `${open.length} faturas`, f: 'aberto' as const },
@@ -508,6 +510,64 @@ function InvoiceDialog({ clients, onClose, onSaved }: { clients: ClientRow[]; on
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
       </div>
     </Dialog>
+  )
+}
+
+interface Credit { id: string; client_id: string; service: string; measure: string | null; month: string; qty: number; status: string; discount: number | null; clients?: { name: string } | null }
+
+/** Fechamento do mês (dia 26): o que faltou por erro nosso. Crédito vai para o mês seguinte; o que vence vira desconto sugerido. */
+function ReviewQueue({ onDone }: { onDone: (msg: string) => void }) {
+  const queryClient = useQueryClient()
+  const q = useQuery({
+    queryKey: ['delivery-credits'],
+    queryFn: async () => {
+      const { data, error } = await (supabase.from as unknown as (t: string) => { select: (c: string) => { in: (k: string, v: string[]) => { order: (c: string) => Promise<{ data: unknown; error: unknown }> } } })('delivery_credits')
+        .select('id, client_id, service, measure, month, qty, status, discount, clients(name)').in('status', ['sugerido', 'credito', 'aprovado']).order('month')
+      if (error) throw error
+      return (data ?? []) as Credit[]
+    },
+  })
+  const decide = useMutation({
+    mutationFn: async ({ id, action }: { id: string; action: 'aprovar' | 'dispensar' | 'entregue' }) => {
+      const { data, error } = await (supabase.rpc as unknown as Rpc)('delivery_credit_decide', { _id: id, _action: action })
+      if (error) throw new Error(error.message)
+      return data as string
+    },
+    onSuccess: (r) => {
+      void queryClient.invalidateQueries({ queryKey: ['delivery-credits'] })
+      onDone(r === 'aplicado' ? 'Desconto aplicado na mensalidade em aberto do cliente.' : r === 'aprovado' ? 'Desconto aprovado: entra na próxima mensalidade sem link.' : r === 'entregue' ? 'Marcado como entregue.' : 'Dispensado.')
+    },
+    onError: (e) => onDone((e as Error).message),
+  })
+  const rows = q.data ?? []
+  if (!rows.length) return null
+  const sug = rows.filter((r) => r.status === 'sugerido')
+  const mm = (d: string) => `${d.slice(5, 7)}/${d.slice(0, 4)}`
+  const what = (r: Credit) => `${r.clients?.name?.trim() ?? 'Cliente'} · ${r.service}: ${Number(r.qty)} ${r.measure ?? 'entregas'} de ${mm(r.month)}`
+  return (
+    <section aria-label="Para revisar" className="flex flex-col gap-2 rounded-2xl border border-accent/40 bg-accent-soft/20 px-4 py-3">
+      <p className="text-[13px]"><b>Para revisar</b> <span className="text-muted">· fechamento do mês: o que faltou por erro nosso. Nada é descontado sem a sua aprovação.</span></p>
+      <ul className="flex flex-col divide-y divide-line text-[13px]">
+        {sug.map((r) => (
+          <li key={r.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
+            <span className="min-w-0">{what(r)} <span className="text-muted">não entregues nem no mês seguinte.</span></span>
+            <span className="flex gap-1.5">
+              <Button className="min-h-9 px-3 text-[13px]" disabled={decide.isPending} onClick={() => decide.mutate({ id: r.id, action: 'aprovar' })}>Descontar {brl(Number(r.discount ?? 0))}</Button>
+              <Button variant="secondary" className="min-h-9 px-3 text-[13px]" disabled={decide.isPending} onClick={() => decide.mutate({ id: r.id, action: 'dispensar' })}>Dispensar</Button>
+            </span>
+          </li>
+        ))}
+        {rows.filter((r) => r.status !== 'sugerido').map((r) => (
+          <li key={r.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-muted">
+            <span className="min-w-0">{what(r)} {r.status === 'aprovado' ? `· desconto de ${brl(Number(r.discount ?? 0))} aprovado, entra na próxima mensalidade` : '· crédito: entregar no mês seguinte'}</span>
+            {r.status === 'credito' && <ActionMenu label="Ações do crédito" actions={[
+              { label: 'Já foi entregue', icon: <Check size={15} aria-hidden="true" />, onClick: () => decide.mutate({ id: r.id, action: 'entregue' }) },
+              { label: 'Dispensar', danger: true, onClick: () => decide.mutate({ id: r.id, action: 'dispensar' }) },
+            ]} />}
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
