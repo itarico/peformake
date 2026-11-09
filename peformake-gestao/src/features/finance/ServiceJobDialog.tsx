@@ -47,12 +47,19 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
   const [clientAmount, setClientAmount] = useState('')
   const [staffAmount, setStaffAmount] = useState('')
   const [problem, setProblem] = useState<string | null>(null)
+  // Parte da empresa nos avulsos (Equipe → Configurações). Sem valor para quem fez, vale o do cliente menos essa parte.
+  const share = useQuery({ queryKey: ['job-company-pct'], staleTime: 300_000, queryFn: async () => {
+    const { data } = await supabase.from('team_settings').select('job_company_pct').maybeSingle()
+    return Number((data as { job_company_pct?: number } | null)?.job_company_pct ?? 25)
+  } })
+  const pct = share.data ?? 25
 
   const pick = (s: Skill) => { setSkill(s); setTitle(s.title); setUnit(s.unit) }
   // Quem já fez esta função aparece primeiro.
   const list = [...(people.data ?? [])].sort((a, b) => Number(b.skills.includes(skill.key)) - Number(a.skills.includes(skill.key)) || a.name.localeCompare(b.name))
   const cv = parseMoney(clientAmount) ?? 0
-  const sv = parseMoney(staffAmount) ?? 0
+  const typedSv = parseMoney(staffAmount) ?? 0
+  const sv = typedSv > 0 ? typedSv : staff && cv > 0 ? Math.round(cv * (100 - pct)) / 100 : 0
 
   const save = useMutation({
     mutationFn: async () => {
@@ -74,7 +81,7 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
   })
 
   return (
-    <Dialog open onClose={onClose} title="Serviço avulso" description="Cria a fatura do cliente e a conta a pagar de quem fez, de uma vez." size="md"
+    <Dialog open onClose={onClose} title="Serviço avulso" description="Cria a fatura do cliente. Quem fez recebe depois que o cliente pagar, já sem a parte da empresa." size="md"
       footer={<Button disabled={save.isPending} onClick={() => { setProblem(null); save.mutate() }}><Check size={15} aria-hidden="true" /> {save.isPending ? 'Lançando' : 'Lançar serviço'}</Button>}>
       <div className="flex flex-col gap-4">
         {!clientId && (
@@ -126,12 +133,12 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
 
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col text-[13px] font-semibold">Cobrar do cliente (R$)<input inputMode="decimal" value={clientAmount} onChange={(e) => setClientAmount(e.target.value)} placeholder="0,00" className={field} /></label>
-          <label className="flex flex-col text-[13px] font-semibold">Pagar para quem fez (R$)<input inputMode="decimal" value={staffAmount} onChange={(e) => setStaffAmount(e.target.value)} placeholder="0,00" className={field} /></label>
+          <label className="flex flex-col text-[13px] font-semibold">Pagar para quem fez (R$)<input inputMode="decimal" value={staffAmount} onChange={(e) => setStaffAmount(e.target.value)} placeholder={staff && cv > 0 ? `${(cv * (100 - pct) / 100).toFixed(2).replace('.', ',')} (${100 - pct}%)` : '0,00'} className={field} /></label>
         </div>
         {(cv > 0 || sv > 0) && (
           <p className="rounded-xl bg-raised px-3 py-2 text-[13px]">
             {cv > 0 && <>Fatura de <b>{brl(cv)}</b> no fechamento do mês do cliente{sv > 0 ? '; ' : '.'}</>}
-            {sv > 0 && <>conta a pagar de <b>{brl(sv)}</b> no Caixa, no mesmo dia{cv > 0 && sv < cv ? <>. Sobra <b>{brl(cv - sv)}</b></> : ''}.</>}
+            {sv > 0 && <>{cv > 0 ? <>quem fez recebe <b>{brl(sv)}</b> no dia 30 depois que o cliente pagar</> : <>conta a pagar de <b>{brl(sv)}</b> no Caixa, no próximo dia 30</>}{cv > 0 && sv < cv ? <>; fica <b>{brl(cv - sv)}</b> para a empresa</> : ''}.</>}
           </p>
         )}
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}

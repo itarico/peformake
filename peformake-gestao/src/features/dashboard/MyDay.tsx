@@ -293,7 +293,7 @@ export function MyDay({ greeting }: { greeting: string }) {
 
 const STAGE_NAME: Record<string, string> = { novo: 'Novo', qualificacao: 'Qualificação', negociacao: 'Negociação', aguardando: 'Aguardando', pos_venda: 'Pós-venda' }
 
-interface Payables { pending: number; paid_month: number; items: { id: string; description: string; amount: number; due_date: string; status: string; paid_at: string | null }[] }
+interface Payables { pending: number; paid_month: number; waiting?: number; waiting_items?: { id: string; title: string; client: string; amount: number; due_date: string }[]; items: { id: string; description: string; amount: number; due_date: string; status: string; paid_at: string | null }[] }
 const money = (n: number) => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const dayMonth = (d: string) => d.slice(8, 10) + '/' + d.slice(5, 7)
 
@@ -308,7 +308,7 @@ function MyPayables({ staffId }: { staffId: string | null }) {
     },
   })
   const p = q.data
-  if (!p || (Number(p.pending) <= 0 && Number(p.paid_month) <= 0)) return null
+  if (!p || (Number(p.pending) <= 0 && Number(p.paid_month) <= 0 && Number(p.waiting ?? 0) <= 0)) return null
   const open = p.items.filter((i) => i.status === 'pendente')
   return (
     <section aria-label="A receber" className="flex flex-col gap-2 rounded-3xl border border-ok/30 bg-ok-soft/40 px-5 py-4">
@@ -317,6 +317,11 @@ function MyPayables({ staffId }: { staffId: string | null }) {
         {Number(p.paid_month) > 0 && <p className="text-[12px] text-muted">Recebido no mês: {money(p.paid_month)}</p>}
       </div>
       <p className="text-[26px] font-semibold tabular-nums text-ok-ink">{money(p.pending)}</p>
+      {Number(p.waiting ?? 0) > 0 && (
+        <p className="text-[13px] text-muted" title={(p.waiting_items ?? []).map((w) => `${w.title} · ${w.client}`).join(' / ')}>
+          + {money(p.waiting ?? 0)} aguardando o cliente pagar ({(p.waiting_items ?? []).length} {(p.waiting_items ?? []).length === 1 ? 'serviço' : 'serviços'}). Entra no dia 30 depois que ele pagar.
+        </p>
+      )}
       {open.length > 0 && (
         <ul className="flex flex-col text-[13px]">
           {open.slice(0, 4).map((i) => (
