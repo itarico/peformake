@@ -287,6 +287,8 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
   const [category, setCategory] = useState(entry?.category_id ?? '')
   const [paid, setPaid] = useState(entry ? entry.status === 'pago' : true)
   const [problem, setProblem] = useState<string | null>(null)
+  // Lançamento que veio de fatura: valor e tipo só mudam pela Cobrança (a fatura não acompanharia).
+  const fromInvoice = entry?.source === 'contrato'
   const save = useMutation({
     mutationFn: async () => {
       const value = parseMoney(amount)
@@ -319,13 +321,13 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
       <div className="flex flex-col gap-3">
         <div role="group" aria-label="Tipo" className="inline-flex self-start rounded-full border border-line p-0.5">
           {(['entrada', 'saida'] as Kind[]).map((k) => (
-            <button key={k} type="button" aria-pressed={kind === k} onClick={() => { setKind(k); setCategory('') }}
-              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', kind === k ? 'bg-fill text-on-fill' : 'text-muted')}>{k === 'entrada' ? 'Entrada' : 'Saída'}</button>
+            <button key={k} type="button" aria-pressed={kind === k} disabled={fromInvoice} onClick={() => { setKind(k); setCategory('') }}
+              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold disabled:cursor-not-allowed', kind === k ? 'bg-fill text-on-fill' : 'text-muted')}>{k === 'entrada' ? 'Entrada' : 'Saída'}</button>
           ))}
         </div>
         <label className="flex flex-col text-[13px] font-semibold">Descrição<input value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} className={field} /></label>
         <div className="grid grid-cols-2 gap-3">
-          <label className="flex flex-col text-[13px] font-semibold">Valor (R$)<input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" className={field} /></label>
+          <label className="flex flex-col text-[13px] font-semibold">Valor (R$)<input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" readOnly={fromInvoice} title={fromInvoice ? 'Mude o valor pela Cobrança' : undefined} className={cn(field, fromInvoice && 'cursor-not-allowed bg-raised text-muted')} /></label>
           <label className="flex flex-col text-[13px] font-semibold">Vence em<input type="date" value={due} onChange={(e) => setDue(e.target.value)} className={field} /></label>
         </div>
         <label className="flex flex-col text-[13px] font-semibold">Categoria
@@ -338,7 +340,7 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
           <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="size-4" /> {entry?.status === 'pago' ? 'Pago (desmarque para desfazer o pagamento)' : 'Já foi pago'}</label>
           {paid && <label className="flex flex-col text-[13px] font-semibold">Pago em<input type="date" value={paidAt} max={todayBR()} onChange={(e) => setPaidAt(e.target.value)} className={field} /></label>}
         </div>
-        {entry?.source === 'contrato' && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">Vem da Cobrança. Marcar pago, desfazer ou cancelar aqui também atualiza a fatura do cliente.</p>}
+        {fromInvoice && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">Vem da Cobrança: valor e tipo só mudam lá. Marcar pago, desfazer ou cancelar aqui também atualiza a fatura do cliente; se ela faz parte de uma cobrança junta, o grupo inteiro fica pago.</p>}
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
       </div>
     </Dialog>
