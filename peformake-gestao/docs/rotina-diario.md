@@ -6,6 +6,7 @@ Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao ter
 
 - Celular: o app inteiro e a área de conteúdo agora cortam o que passar da largura da tela (overflow-x: clip no contêiner, não só no html, que o iPhone ignorava); itens de grade não empurram a coluna; números grandes do Início menores no celular.
 - Financeiro, decisões do Italo (ainda NÃO construir nada, só definir): (1) todas as entregas do mês ficam prontas até o dia 25 do mesmo mês; (2) audiovisual sem sinal, como já é hoje com todos os clientes (cobra 100% na produção, captação confirmada); (3) parceiros com clientes próprios: é protótipo, sem contador; o sistema calcula o repasse e o admin paga no dia 30.
+- Financeiro, mais 2 decisões (desenho FECHADO): (4) cliente que paga depois do dia 30: a comissão do membro entra sozinha na folha do mês seguinte; no painel do membro aparece "aguardando o cliente pagar"; (5) crédito por erro nosso (entrega que faltou) passa para o mês seguinte; se de novo não for entregue, vence e o sistema SUGERE desconto com o valor calculado na revisão do dia 26, e o admin aprova com um toque (nunca desconta sozinho).
 - Pendente: ver no iPhone se o Início ficou travado; aguardar o ok para começar a Fase 0 do Financeiro.
 
 ## 2026-11-08 · desenho do Financeiro (estudo, nada construído)
