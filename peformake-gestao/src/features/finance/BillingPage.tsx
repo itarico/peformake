@@ -12,9 +12,10 @@ import { MonthSwitcher } from '@/features/content/ContentLayout'
 import { useMonthParam } from '@/features/content/useMonthParam'
 import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
-import { GATEWAY_LABEL, SOURCE_LABEL, reminderStage, validDocument } from './billingRules'
+import { GATEWAY_LABEL, reminderStage, validDocument } from './billingRules'
 import { parseMoney } from './statement'
-import { AsaasCard } from './AsaasCard'
+import { AsaasCard, asaasCall } from './AsaasCard'
+import { ActionMenu } from '@/components/ui/ActionMenu'
 import { ServiceJobDialog } from './ServiceJobDialog'
 import { addDays, brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
@@ -179,6 +180,11 @@ export function BillingPage() {
     onError: (e) => setNotice(`Não foi possível cancelar: ${(e as Error).message}`),
   })
 
+  const importAsaas = useMutation({
+    mutationFn: () => asaasCall<{ found: number; invoices: number; imported: number; skipped: number }>({ action: 'sync', days: 90 }),
+    onSuccess: (r) => { setNotice(`Asaas, últimos 3 meses: ${r.found} pagamentos, ${r.invoices} faturas baixadas, ${r.imported} lançados no caixa, ${r.skipped} já estavam lá.`); refresh() },
+    onError: (e) => setNotice((e as Error).message),
+  })
   const nameOf = (i: Invoice) => i.clients?.name?.trim() ?? clientById.get(i.client_id)?.name ?? 'Cliente'
   const byUnit = (invoices.data ?? []).filter((i) => unit === 'todas' || i.unit === unit)
   const open = byUnit.filter((i) => i.status === 'pendente' || i.status === 'vencido')
@@ -205,6 +211,10 @@ export function BillingPage() {
     seen.add(i.group_id)
     rows.push({ kind: 'group', id: i.group_id, items: groupItems(i.group_id) })
   }
+  const isOpen = (i: Invoice) => i.status === 'pendente' || i.status === 'vencido'
+  // O link do cliente serve sempre: abre o Asaas se já existe, ou pede o CPF/CNPJ e cria na hora.
+  const copyPay = (token: string) => { void navigator.clipboard.writeText(`${window.location.origin}/pagar/${token}`); setNotice('Link copiado. É só colar na conversa com o cliente.') }
+  const shortDesc = (i: Invoice) => i.description.replace(/^Mensalidade (\d{2}\/\d{4}) · .*/, 'Mensalidade $1')
   const joinable = (i: Invoice) => all.filter((x) => x.client_id === i.client_id && canJoin(x))
   const askJoin = (i: Invoice) => {
     const items = joinable(i)
@@ -217,7 +227,7 @@ export function BillingPage() {
     <>
       <SectionHeader
         title="Financeiro"
-        sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto. O link sai sozinho 5 dias antes do vencimento.`}
+        sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto.`}
         tabs={FINANCE_TABS}
         actions={<>
           <div role="group" aria-label="Empresa" className="inline-flex rounded-full border border-line p-0.5">
@@ -233,11 +243,12 @@ export function BillingPage() {
 
       {isAdmin && <AsaasCard />}
       {isAdmin && noDoc.length > 0 && (
-        <div role="alert" className="flex flex-col gap-1.5 rounded-2xl border border-warn/40 bg-warn-soft/60 px-4 py-3">
-          <p className="font-semibold text-warn-ink">{noDoc.length} {noDoc.length === 1 ? 'cliente sem CPF/CNPJ' : 'clientes sem CPF/CNPJ'}: o Asaas não gera a cobrança sem esse dado.</p>
-          <p className="text-[13px] text-muted">Preencha no cadastro (Editar → Contratante) antes do vencimento.</p>
-          <p className="flex flex-wrap gap-1.5">{noDoc.slice(0, 24).map((c) => <a key={c.id} href={`/clientes/${c.id}`} className="rounded-full border border-line bg-surface px-2.5 py-0.5 text-[12px] font-medium text-ink no-underline hover:border-ink">{c.name}</a>)}</p>
-        </div>
+        <details className="group rounded-2xl border border-line bg-surface px-4 py-2.5 text-[13px]">
+          <summary className="cursor-pointer list-none">
+            <b>{noDoc.length} {noDoc.length === 1 ? 'cliente sem CPF/CNPJ' : 'clientes sem CPF/CNPJ'}.</b> <span className="text-muted">Mande o "Copiar link": o cliente informa o documento ao abrir.</span> <span className="font-medium text-accent-ink">Ver quais</span>
+          </summary>
+          <p className="mt-2 flex flex-wrap gap-1.5">{noDoc.map((c) => <a key={c.id} href={`/clientes/${c.id}`} className="rounded-full border border-line px-2.5 py-0.5 text-[12px] font-medium text-ink no-underline hover:border-ink">{c.name}</a>)}</p>
+        </details>
       )}
 
       <section aria-label="Resumo" className="grid grid-cols-2 gap-2 md:grid-cols-4">
@@ -269,14 +280,13 @@ export function BillingPage() {
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" aria-label="Buscar cobrança"
               className="min-h-10 w-44 rounded-full border border-line bg-surface pl-9 pr-3 text-[13px]" />
           </label>
-          <Button variant="secondary" onClick={exportCsv} disabled={!list.length}><Download size={15} aria-hidden="true" /> Planilha</Button>
-        {isAdmin && (
-          <>
-            <Button variant="secondary" disabled={generate.isPending} onClick={() => generate.mutate()}><RefreshCw size={15} aria-hidden="true" /> Gerar mensalidades do mês</Button>
-            <Button variant="secondary" onClick={() => setJobOpen(true)}><Plus size={15} aria-hidden="true" /> Serviço avulso</Button>
-            <Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button>
-          </>
-        )}
+          {isAdmin && <Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button>}
+          <ActionMenu label="Mais ações da cobrança" actions={[
+            { label: 'Serviço avulso', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setJobOpen(true), hidden: !isAdmin },
+            { label: 'Gerar mensalidades do mês', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => generate.mutate(), disabled: generate.isPending, hidden: !isAdmin },
+            { label: 'Importar recebimentos do Asaas', icon: <Download size={15} aria-hidden="true" />, onClick: () => importAsaas.mutate(), disabled: importAsaas.isPending, hidden: !isAdmin },
+            { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
+          ]} />
         </div>
       </div>
 
@@ -290,7 +300,7 @@ export function BillingPage() {
                 <GroupCard key={row.id} id={row.id} items={row.items} name={nameOf(first)} today={today} isAdmin={isAdmin}
                   logo={logoPublicUrl(first.clients?.logo_path ?? null) ?? first.clients?.legacy_logo_url ?? null}
                   busy={chargeNow.isPending || split.isPending || cancelGroup.isPending || pay.isPending || undo.isPending}
-                  onCopy={(url) => { void navigator.clipboard.writeText(url); setNotice('Link copiado.') }}
+                  onCopy={() => copyPay(first.pay_token)}
                   onCharge={() => {
                     const client = clientById.get(first.client_id)
                     if (client && !client.document) { setBillingFor(client); return }
@@ -308,51 +318,31 @@ export function BillingPage() {
             const client = clientById.get(i.client_id)
             const clientName = nameOf(i)
             return (
-              <li key={i.id} className="flex flex-col gap-2 border-b border-line px-4 py-3 last:border-b-0">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <li key={i.id} className="flex flex-col gap-1.5 border-b border-line px-4 py-3 last:border-b-0">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <ClientAvatar name={clientName} url={logoPublicUrl(i.clients?.logo_path ?? null) ?? i.clients?.legacy_logo_url ?? null} size="sm" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold">{clientName} <span className="font-normal text-muted">· {i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'} · {SOURCE_LABEL[i.source] ?? i.source}</span></p>
-                    <p className="truncate text-[13px] text-muted">{i.description} · vence {dayLabel(i.due_date)}{i.paid_at ? ` · pago ${dayLabel(i.paid_at.slice(0, 10))}` : ''}</p>
+                    <p className="truncate font-semibold">{clientName} <span className="font-normal text-muted">· {i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}</span></p>
+                    <p className="truncate text-[13px] text-muted">{shortDesc(i)} · vence {dayLabel(i.due_date)}{i.paid_at ? ` · pago ${dayLabel(i.paid_at.slice(0, 10))}` : ''}</p>
+                    {i.gateway_error && !/CPF|CNPJ/.test(i.gateway_error) && <p className="text-[12px] text-warn-ink">{i.gateway_error}</p>}
                   </div>
                   <span className="font-semibold tabular-nums">{brl(i.amount)}</span>
                   <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
                     st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
+                  {isOpen(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
+                    className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 text-[13px] font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>}
+                  {isAdmin && <ActionMenu label={`Mais ações de ${clientName}`} actions={i.status === 'pago' ? [
+                    { label: 'Desfazer pagamento', icon: <Undo2 size={15} aria-hidden="true" />, disabled: undo.isPending, onClick: () => { void ask('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.').then((ok) => { if (ok) undo.mutate(i.id) }) } },
+                  ] : i.status === 'cancelado' ? [] : [
+                    { label: 'Abrir link no Asaas', icon: <ExternalLink size={15} aria-hidden="true" />, href: i.payment_url ?? undefined, hidden: !i.payment_url },
+                    { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!i.payment_url, disabled: chargeNow.isPending, onClick: () => { if (client && !client.document) { setBillingFor(client); return } chargeNow.mutate(i.id) } },
+                    { label: `Juntar com as outras (${joinable(i).length})`, icon: <Layers size={15} aria-hidden="true" />, hidden: !(canJoin(i) && joinable(i).length >= 2), disabled: join.isPending, onClick: () => askJoin(i) },
+                    { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!i.payment_url, onClick: () => setDueFor({ id: i.id, label: `${clientName} · ${i.description}`, due: i.due_date, monthly: i.source === 'mensalidade' }) },
+                    { label: 'Marcar pago', icon: <Check size={15} aria-hidden="true" />, disabled: pay.isPending, onClick: () => setPaying(i) },
+                    { label: 'Cancelar cobrança', danger: true, disabled: setStatus.isPending, onClick: () => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) } },
+                  ]} />}
                 </div>
                 {i.invoice_items && <InvoiceItems items={i.invoice_items} />}
-                {i.status !== 'pago' && i.status !== 'cancelado' && (
-                  <div className="flex flex-wrap items-center gap-2 text-[13px]">
-                    {i.payment_url ? (
-                      <>
-                        <a href={i.payment_url} target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><ExternalLink size={14} aria-hidden="true" /> Abrir link</a>
-                        <button type="button" onClick={() => { void navigator.clipboard.writeText(i.payment_url!); setNotice('Link copiado.') }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>
-                      </>
-                    ) : isAdmin && (
-                      <>
-                        <button type="button" disabled={chargeNow.isPending} onClick={() => {
-                          if (client && !client.document) { setBillingFor(client); return }
-                          chargeNow.mutate(i.id)
-                        }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
-                        <button type="button" title="O cliente abre, informa o CPF/CNPJ se faltar e paga. O link do Asaas é criado na hora."
-                          onClick={() => { void navigator.clipboard.writeText(`${window.location.origin}/pagar/${i.pay_token}`); setNotice('Link copiado. Se faltar CPF/CNPJ, o cliente informa ao abrir.') }}
-                          className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link do cliente</button>
-                      </>
-                    )}
-                    {isAdmin && canJoin(i) && joinable(i).length >= 2 && (
-                      <button type="button" disabled={join.isPending} onClick={() => askJoin(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-accent/40 bg-accent-soft px-3 font-semibold text-accent-ink hover:border-accent"><Layers size={14} aria-hidden="true" /> Juntar com as outras ({joinable(i).length})</button>
-                    )}
-                    {isAdmin && !i.payment_url && <button type="button" onClick={() => setDueFor({ id: i.id, label: `${clientName} · ${i.description}`, due: i.due_date, monthly: i.source === 'mensalidade' })} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><CalendarClock size={14} aria-hidden="true" /> Vencimento</button>}
-                    {isAdmin && <button type="button" disabled={pay.isPending} onClick={() => setPaying(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Check size={14} aria-hidden="true" /> Marcar pago</button>}
-                    {isAdmin && <button type="button" disabled={setStatus.isPending} onClick={() => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) }} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>}
-                    {i.gateway_error && <span className="text-warn-ink">{i.gateway_error}</span>}
-                  </div>
-                )}
-                {i.status === 'pago' && isAdmin && (
-                  <div className="flex flex-wrap items-center gap-2 text-[13px]">
-                    <button type="button" disabled={undo.isPending} onClick={() => { void ask('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.').then((ok) => { if (ok) undo.mutate(i.id) }) }}
-                      className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-3 font-medium text-muted underline hover:text-ink"><Undo2 size={14} aria-hidden="true" /> Desfazer pagamento</button>
-                  </div>
-                )}
               </li>
             )
           })}
@@ -372,12 +362,11 @@ export function BillingPage() {
 }
 
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
-const pill = 'inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink'
 
 /** Cobrança única: várias faturas (de cada empresa) com um link e um pagamento só. */
 function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onCharge, onDue, onPay, onUndo, onSplit, onCancel }: {
   id: string; items: Invoice[]; name: string; logo: string | null; today: string; isAdmin: boolean; busy: boolean
-  onCopy: (url: string) => void; onCharge: () => void; onDue: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
+  onCopy: () => void; onCharge: () => void; onDue: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
 }) {
   const first = items[0]
   if (!first) return null
@@ -399,6 +388,17 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
         <span className="font-semibold tabular-nums">{brl(total)}</span>
         <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
           st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
+        {status !== 'pago' && <button type="button" onClick={onCopy} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 text-[13px] font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>}
+        {isAdmin && <ActionMenu label={`Mais ações de ${name}`} actions={status === 'pago' ? [
+          { label: 'Desfazer pagamento', icon: <Undo2 size={15} aria-hidden="true" />, disabled: busy, onClick: onUndo },
+        ] : [
+          { label: 'Abrir link no Asaas', icon: <ExternalLink size={15} aria-hidden="true" />, href: url ?? undefined, hidden: !url },
+          { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onCharge },
+          { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onDue },
+          { label: 'Marcar pago', icon: <Check size={15} aria-hidden="true" />, disabled: busy, onClick: onPay },
+          { label: 'Separar', icon: <Split size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onSplit },
+          { label: 'Cancelar cobrança junta', danger: true, disabled: busy, onClick: onCancel },
+        ]} />}
       </div>
       <ul className="ml-11 flex flex-col gap-0.5 text-[13px]">
         {items.map((i) => (
@@ -408,28 +408,7 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
           </li>
         ))}
       </ul>
-      {isAdmin && status !== 'pago' && (
-        <div className="flex flex-wrap items-center gap-2 text-[13px]">
-          {url ? (
-            <>
-              <a href={url} target="_blank" rel="noreferrer" className={pill}><ExternalLink size={14} aria-hidden="true" /> Abrir link</a>
-              <button type="button" onClick={() => onCopy(url)} className={pill}><Copy size={14} aria-hidden="true" /> Copiar link</button>
-            </>
-          ) : (
-            <button type="button" disabled={busy} onClick={onCharge} className={pill}><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
-          )}
-          {!url && <button type="button" disabled={busy} onClick={onDue} className={pill}><CalendarClock size={14} aria-hidden="true" /> Vencimento</button>}
-          <button type="button" disabled={busy} onClick={onPay} className={pill}><Check size={14} aria-hidden="true" /> Marcar pago</button>
-          {!url && <button type="button" disabled={busy} onClick={onSplit} className={pill}><Split size={14} aria-hidden="true" /> Separar</button>}
-          <button type="button" disabled={busy} onClick={onCancel} className="min-h-9 cursor-pointer rounded-full px-3 font-medium text-muted underline hover:text-ink">Cancelar</button>
-          {error && <span className="text-warn-ink">{error}</span>}
-        </div>
-      )}
-      {isAdmin && status === 'pago' && (
-        <div className="flex flex-wrap items-center gap-2 text-[13px]">
-          <button type="button" disabled={busy} onClick={onUndo} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-3 font-medium text-muted underline hover:text-ink"><Undo2 size={14} aria-hidden="true" /> Desfazer pagamento</button>
-        </div>
-      )}
+      {error && !/CPF|CNPJ/.test(error) && <p className="ml-11 text-[12px] text-warn-ink">{error}</p>}
     </li>
   )
 }

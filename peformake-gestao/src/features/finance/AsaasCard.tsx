@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 
 const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-gateway`
 
-async function call<T>(body: Record<string, unknown>): Promise<T> {
+export async function asaasCall<T>(body: Record<string, unknown>): Promise<T> {
   const { data: s } = await supabase.auth.getSession()
   const res = await fetch(FN, {
     method: 'POST',
@@ -24,10 +24,10 @@ interface SyncResult { found: number; invoices: number; imported: number; skippe
 /** Conexão com o Asaas: mostra se está ligado, de qual conta, e traz os recebimentos para o caixa. */
 export function AsaasCard() {
   const queryClient = useQueryClient()
-  const status = useQuery({ queryKey: ['asaas-status'], queryFn: () => call<Status>({ action: 'status' }), staleTime: 300_000 })
+  const status = useQuery({ queryKey: ['asaas-status'], queryFn: () => asaasCall<Status>({ action: 'status' }), staleTime: 300_000 })
   const [days, setDays] = useState(90)
   const sync = useMutation({
-    mutationFn: () => call<SyncResult>({ action: 'sync', days }),
+    mutationFn: () => asaasCall<SyncResult>({ action: 'sync', days }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['invoices'] })
       void queryClient.invalidateQueries({ queryKey: ['dash-home-business'] })
@@ -38,6 +38,8 @@ export function AsaasCard() {
   if (status.isPending) return <section className="rounded-2xl border border-line bg-surface px-4 py-3 text-[13px] text-muted" role="status">Conferindo o Asaas</section>
   if (!s || s.gateway !== 'asaas') return null
   const ok = s.configured
+  // Tudo certo (produção e aviso automático ligados): não ocupa espaço. Importar fica no menu ⋯ da Cobrança.
+  if (ok && s.webhook && s.env !== 'sandbox' && !sync.data && !sync.isError) return null
   return (
     <section aria-label="Asaas" className="pf-rise flex flex-col gap-3 rounded-2xl border border-line bg-surface px-4 py-3 md:flex-row md:items-center md:justify-between">
       <div className="flex items-start gap-2.5">
