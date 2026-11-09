@@ -2,6 +2,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-09 noite (3) · Financeiro Fase 1, passo 1: itens por serviço na fatura
+Feito: tabela invoice_items (um item por serviço contratado na mensalidade, com quantidade, preço, desconto e valor do mês gravados; avulso/sinal/extra nascem com um item pelo gatilho invoice_single_item). Estado do item segue a fatura (invoice_items_follow): confirmado → cobrado (com link) → pago, ou cancelado; "previsto" reservado para orçamento/meses futuros. Índice único serviço do cliente + mês (não cobra duas vezes). invoice_generate_month agora grava os itens e soma o valor por eles (client_month_items, só pelo banco). Backfill: 52 itens nas 32 faturas abertas, todas as somas batem. Cobrança mostra "Ver os N serviços" (fechado por padrão).
+Testado em simulação desfeita: dezembro gerou 32 faturas/53 itens, segunda rodada 0, sem duplicado, estados com link/pago/cancelado, avulso com item. Visto no Chrome (Sn Distribuidora: Social Mídia 100 + Design ×4 200 + Consultoria 50 = 350).
+Próximo da Fase 1: (2) quantidade e formato por serviço (hoje texto livre no cadastro); (3) regra única de "entregue" por área, com culpa do cliente separada; (4) fechamento dias 26-28 com fila "Para revisar" e crédito/desconto sugerido.
+Também: Relatórios do Tráfego mostravam o aviso de token antigo; agora só olham o pedido mais recente. Envios de relatório que falharam (F5: WhatsApp 429; Ótica CM Prime: chave faltando antes) não foram reenviados: Italo preferiu seguir a Fase 1.
+
 ## 2026-11-09 noite (2) · Financeiro Fase 0 item 6 (Fase 0 concluída) + tokens das rotinas
 Feito: avulso feito por membro só vira conta a pagar quando a fatura do cliente fica paga (gatilho service_job_on_invoice → service_job_release), com vencimento no próximo dia 30 (team_payday; fevereiro = último dia). Pagamento desfeito cancela a conta ainda não paga; pagar de novo reabre a mesma. Serviço interno (sem cobrar o cliente) libera na hora. Parte da empresa ajustável em Equipe → Configurações (team_settings.job_company_pct, padrão 25%); sem valor para quem fez, o sistema usa o do cliente menos essa parte. "Você tem para receber" mostra também o que está aguardando o cliente pagar (my_payables.waiting). service_job_release só roda pelo banco (sem execute para authenticated).
 Testado em simulação desfeita: R$ 1.000 do cliente → R$ 750 para o membro, nada antes de pagar, libera para 30/11, desfazer cancela, pagar de novo reabre, interno libera R$ 200 na hora.
