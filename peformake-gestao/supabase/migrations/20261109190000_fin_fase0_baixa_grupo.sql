@@ -1,4 +1,5 @@
 -- Financeiro · Fase 0, item 3: baixa no Caixa vale para a cobrança junta inteira.
+-- (Aplicada depois de 20261109180000: mesma regra da baixa do grupo, mais o bloqueio de cancelar pelo Caixa e a conciliação por grupo.)
 -- (A trava de valor/empresa em lançamento que veio de fatura já existe em fin_entry_save.)
 -- Antes: dar baixa no Caixa numa fatura que faz parte de uma cobrança junta pagava só aquela parte,
 -- e o Asaas recebia a baixa com valor parcial. Agora a baixa quita o grupo todo, com a mesma data;

@@ -2,6 +2,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-09 noite · aviso: duas sessões no Financeiro ao mesmo tempo
+A sessão da nuvem e a do PC fizeram a Fase 0 em paralelo. Item 3 (baixa do grupo) foi feito nas duas: no banco vale a versão da nuvem (migração 20261109190000, aplicada por último), que inclui a regra do PC e ainda bloqueia cancelar pelo Caixa parte de cobrança junta com link e concilia extrato/Asaas pela soma do grupo. Item 4 (multa/juros e link que pede CPF/CNPJ) foi feito só pelo PC. billing-gateway no ar (v14, do PC) já tem as mudanças das duas sessões. Nuvem parou o Financeiro aqui para não haver conflito; itens 5 e 6 ficam com a sessão que o Italo escolher.
+
 ## 2026-11-10 · Novo cliente em 4 campos + Próximos passos (item 1 e 3 da lista)
 Feito: "Novo cliente" na lista abre pop-up curto (NewClientDialog.tsx): Nome da empresa (opcional; vazio = pessoa física, cliente fica com o nome do responsável e a razão social também), Nome do responsável, WhatsApp, E-mail. O responsável vira contato principal (dono, recebe tudo). Datas e dia de cobrança ficam vazios até o passo Cobrança. Na ficha, "Próximos passos" (ClientSetupSteps.tsx) com barra de progresso e 6 passos, cada um abre seu pop-up: Empresa, Serviços e valores (abre Entregas e equipe), Contrato (ContractWizard, só admin, liberado depois de Empresa e Serviços), Cobrança, Acessos, Sobre o negócio (opcional). Aparece para cliente com até 60 dias e passo aberto, ou com ?novo=1 / ?passo=empresa|cobranca|acessos|negocio|contrato (link direto). Testado: validação do pop-up no Chrome (sem criar), painel e passos Empresa/Serviços na Sn Distribuidora, criação completa no banco com rollback.
 Falta deste item: passo pendente aparecer no Início e na Bete (links ?passo= já funcionam); diagnóstico no passo 6 (depende do prompt com o Italo).
