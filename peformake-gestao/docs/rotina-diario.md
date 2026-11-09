@@ -20,6 +20,12 @@ Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao ter
    - Proteção: cronômetro esquecido para sozinho no fim do expediente (ex.: 19h) e às 2h de inatividade; a pessoa pode corrigir o tempo do dia.
    - Onde aparece: na página do cliente (horas do mês por área e por pessoa, gráfico); no Resumo da Equipe (horas por pessoa); para admin, custo das horas × mensalidade = cliente que dá lucro ou prejuízo (valores só admin).
    - Entra no automation_catalog (parada automática) e na Bete ("você esqueceu o cronômetro ligado").
+   - ATUALIZAÇÃO (Italo): tem que ser 100% automático, sem play/pause nem "+ tempo" (é ideia, estudar antes). Três fontes somadas, um relógio por pessoa (nunca conta em dobro):
+     a) Pelo quadro (status do card): Edição = vídeo em edição; Design = peça em produção; Roteiro = peça/roteiro em escrita; Social media = briefing, revisão, aprovação e agendamento.
+     b) Pela agenda: Gravação = captação confirmada (início e fim da agenda; sem fim, duração padrão do pacote); Reunião = evento da agenda ligado ao cliente (Google Agenda).
+     c) Pela tela aberta: Estratégia e Relatório = tempo com a página do cliente aberta e em uso; parado 5 min, pausa.
+     - Painel: horas do mês por cliente separadas nas 8 categorias (edição, gravação, roteiro, design, estratégia, social media, reunião, relatório), por pessoa; admin vê custo × mensalidade.
+     - Estudar: precisão de cada fonte, o que fazer com card esquecido em "fazendo" (teto por dia), e se a pessoa pode corrigir.
 3. Novo cliente sem empresa (pessoa física): "Nome da empresa" é opcional; vazio = cliente registrado com o nome da pessoa (vale em listas, cobrança, contrato e portal).
 4. Contrato: já funciona assim (só confirmar no passo guiado): recorrente vai pela Assinafy (cliente assina por e-mail, depois a Peformake); avulso/regularização aparece no portal com "Ler e aceitar"; depois de assinado fica "Ler o contrato" e o PDF salvo. Melhoria: no passo 3 mostrar a prévia do contrato para a equipe ler antes de enviar.
 5. Botão "Gerar diagnóstico completo" no passo 6 (Sobre o negócio):
