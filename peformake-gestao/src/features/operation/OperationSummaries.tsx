@@ -73,8 +73,51 @@ export function ClientOperationBlock({ clientId, month }: { clientId: string; mo
         <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold', t.chip)}>{row.pct == null ? t.label : `${row.pct}% · ${t.label}`}</span>
       </div>
       <OperationBar row={row} />
-      <OperationChips row={row} />
+      <ServiceStatusList clientId={clientId} month={month} />
     </section>
+  )
+}
+
+interface ServiceStatus { client_service_id: string; service: string; measure: string | null; contracted: number | null; delivered: number | null; with_client: number; client_late: number; ours_missing: number | null; state: string }
+const STATE: Record<string, { label: string; tone: string }> = {
+  entregue: { label: 'Entregue', tone: 'bg-ok-soft text-ok-ink' },
+  em_andamento: { label: 'Em andamento', tone: 'bg-raised text-muted' },
+  esperando_cliente: { label: 'Esperando o cliente', tone: 'bg-accent-soft text-accent-ink' },
+  faltou: { label: 'Faltou (nosso)', tone: 'bg-warn-soft text-warn-ink' },
+  sem_planejamento: { label: 'Sem planejamento', tone: 'bg-warn-soft text-warn-ink' },
+}
+
+/** Contratado × entregue por serviço, com a culpa do cliente separada (mesma regra da Operação e do fechamento). */
+function ServiceStatusList({ clientId, month }: { clientId: string; month: string }) {
+  const q = useQuery({
+    queryKey: ['service-status', clientId, month],
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>)('client_service_status', { _month: month, _client: clientId })
+      if (error) throw error
+      return ((data ?? []) as ServiceStatus[]).filter((r) => r.state !== 'sem_medicao')
+    },
+  })
+  const rows = q.data ?? []
+  if (!rows.length) return null
+  return (
+    <ul className="flex flex-col divide-y divide-line text-[13px]">
+      {rows.map((r) => {
+        const st = STATE[r.state] ?? { label: r.state, tone: 'bg-raised text-muted' }
+        return (
+          <li key={r.client_service_id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-1.5">
+            <span className="min-w-0">
+              <b className="font-semibold">{r.service}</b>{' '}
+              <span className="text-muted">
+                {r.state === 'sem_planejamento' ? 'planejamento do mês não feito' : `${Number(r.delivered ?? 0)} de ${Number(r.contracted ?? 0)} ${r.measure ?? ''}`}
+                {r.with_client > 0 && ` · ${r.with_client} com o cliente${r.client_late > 0 ? ` (${r.client_late} há mais de 2 dias)` : ''}`}
+              </span>
+            </span>
+            <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-semibold', st.tone)}>{st.label}</span>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 
