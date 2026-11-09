@@ -26,6 +26,7 @@ Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao ter
      c) Pela tela aberta: Estratégia e Relatório = tempo com a página do cliente aberta e em uso; parado 5 min, pausa.
      - Painel: horas do mês por cliente separadas nas 8 categorias (edição, gravação, roteiro, design, estratégia, social media, reunião, relatório), por pessoa; admin vê custo × mensalidade.
      - Estudar: precisão de cada fonte, o que fazer com card esquecido em "fazendo" (teto por dia), e se a pessoa pode corrigir.
+   - Tempo e diagnóstico: NUNCA aparecem para o cliente (nem portal). Só na aba Clientes, para o Italo/admin analisar.
 3. Novo cliente sem empresa (pessoa física): "Nome da empresa" é opcional; vazio = cliente registrado com o nome da pessoa (vale em listas, cobrança, contrato e portal).
 4. Contrato: já funciona assim (só confirmar no passo guiado): recorrente vai pela Assinafy (cliente assina por e-mail, depois a Peformake); avulso/regularização aparece no portal com "Ler e aceitar"; depois de assinado fica "Ler o contrato" e o PDF salvo. Melhoria: no passo 3 mostrar a prévia do contrato para a equipe ler antes de enviar.
 5. Botão "Gerar diagnóstico completo" no passo 6 (Sobre o negócio):
