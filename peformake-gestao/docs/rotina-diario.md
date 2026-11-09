@@ -20,6 +20,14 @@ Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao ter
    - Proteção: cronômetro esquecido para sozinho no fim do expediente (ex.: 19h) e às 2h de inatividade; a pessoa pode corrigir o tempo do dia.
    - Onde aparece: na página do cliente (horas do mês por área e por pessoa, gráfico); no Resumo da Equipe (horas por pessoa); para admin, custo das horas × mensalidade = cliente que dá lucro ou prejuízo (valores só admin).
    - Entra no automation_catalog (parada automática) e na Bete ("você esqueceu o cronômetro ligado").
+3. Novo cliente sem empresa (pessoa física): "Nome da empresa" é opcional; vazio = cliente registrado com o nome da pessoa (vale em listas, cobrança, contrato e portal).
+4. Contrato: já funciona assim (só confirmar no passo guiado): recorrente vai pela Assinafy (cliente assina por e-mail, depois a Peformake); avulso/regularização aparece no portal com "Ler e aceitar"; depois de assinado fica "Ler o contrato" e o PDF salvo. Melhoria: no passo 3 mostrar a prévia do contrato para a equipe ler antes de enviar.
+5. Botão "Gerar diagnóstico completo" no passo 6 (Sobre o negócio):
+   - Reaproveitar o que já existe: fila framework_requests + framework_agent_fill (Estratégia, 47 frameworks), agent_context_client/agent_client_snapshot (dados do cliente), niche_agent_study (nicho), agent_instructions (prompts dos agentes) e as skills diagnostico-cliente-agencia e crm-clientes-agencia.
+   - Novo: agent_instructions "diagnostico-cliente" (prompt escrito ANTES com o Italo) + pedido na fila (tipo diagnostico) que só roda quando alguém aperta o botão (sem cron).
+   - O agente lê os dados do cadastro, Instagram, site, Meta Ad Library, Google/Reclame Aqui e concorrentes; preenche o CRM do cliente (campos do Sobre o negócio) e os frameworks iniciais (SWOT, persona, ICP, proposta de valor, concorrentes, pesquisa de nicho); gera Score de maturidade digital, red flags e pacote sugerido; salva como diagnóstico com PDF.
+   - Aviso na Bete/notificação quando ficar pronto; status "gerando" no card. Entra no automation_catalog (sob demanda).
+   - Primeiro passo amanhã: montar o prompt com o Italo (estrutura proposta no chat de 09/11).
 
 
 ## 2026-11-08 · celular sem escorregar de lado + decisões do Financeiro
