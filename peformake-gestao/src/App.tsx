@@ -43,6 +43,7 @@ const AvQuoteEditor = lazy(() => import('@/features/av/AvQuoteEditor').then((m) 
 const AvPhotosPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) => ({ default: m.AvPhotosPage })))
 const AvGalleryPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) => ({ default: m.AvGalleryPage })))
 const PublicGalleryPage = lazy(() => import('@/features/av/PublicGalleryPage').then((m) => ({ default: m.PublicGalleryPage })))
+const PayPage = lazy(() => import('@/features/finance/PayPage').then((m) => ({ default: m.PayPage })))
 const PublicQuotePage = lazy(() => import('@/features/av/PublicQuotePage').then((m) => ({ default: m.PublicQuotePage })))
 const AvHome = lazy(() => import('@/features/av/AvHome').then((m) => ({ default: m.AvHome })))
 const StaffCapturePage = lazy(() => import('@/features/av/StaffCapturePage').then((m) => ({ default: m.StaffCapturePage })))
@@ -70,6 +71,7 @@ export function App() {
       <Route path="/nova-senha" element={<NewPasswordPage />} />
       <Route path="/portal" element={<PortalPage />} />
       <Route path="/orcamento/:token" element={<PublicQuotePage />} />
+      <Route path="/pagar/:token" element={<PayPage />} />
       <Route path="/galeria/:token" element={<PublicGalleryPage />} />
       <Route path="/captacao/:token" element={<StaffCapturePage />} />
       <Route element={<RequireAuth />}>

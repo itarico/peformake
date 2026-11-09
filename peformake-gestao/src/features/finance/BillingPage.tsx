@@ -25,7 +25,7 @@ const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-gateway`
 
 interface Invoice {
   id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string
-  source: string; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null
+  source: string; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null; pay_token: string
   group_id: string | null
   clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
   invoice_groups?: { description: string; due_date: string } | null
@@ -61,7 +61,7 @@ export function BillingPage() {
     queryKey: ['invoices', month],
     queryFn: async () => {
       const { data, error } = await supabase.from('invoices')
-        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date)')
+        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date)')
         // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
         .or(`and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`)
         .order('due_date').limit(1000)
@@ -306,10 +306,15 @@ export function BillingPage() {
                         <button type="button" onClick={() => { void navigator.clipboard.writeText(i.payment_url!); setNotice('Link copiado.') }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>
                       </>
                     ) : isAdmin && (
-                      <button type="button" disabled={chargeNow.isPending} onClick={() => {
-                        if (client && !client.document) { setBillingFor(client); return }
-                        chargeNow.mutate(i.id)
-                      }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
+                      <>
+                        <button type="button" disabled={chargeNow.isPending} onClick={() => {
+                          if (client && !client.document) { setBillingFor(client); return }
+                          chargeNow.mutate(i.id)
+                        }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Link2 size={14} aria-hidden="true" /> Criar link de pagamento</button>
+                        <button type="button" title="O cliente abre, informa o CPF/CNPJ se faltar e paga. O link do Asaas é criado na hora."
+                          onClick={() => { void navigator.clipboard.writeText(`${window.location.origin}/pagar/${i.pay_token}`); setNotice('Link copiado. Se faltar CPF/CNPJ, o cliente informa ao abrir.') }}
+                          className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link do cliente</button>
+                      </>
                     )}
                     {isAdmin && canJoin(i) && joinable(i).length >= 2 && (
                       <button type="button" disabled={join.isPending} onClick={() => askJoin(i)} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-accent/40 bg-accent-soft px-3 font-semibold text-accent-ink hover:border-accent"><Layers size={14} aria-hidden="true" /> Juntar com as outras ({joinable(i).length})</button>
@@ -569,6 +574,13 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
             {toggle('monthly_generate', 'Gerar mensalidades sozinho', 'Todo dia confere os clientes fixos e cria a mensalidade do mês, com vencimento no dia 30, respeitando início e fim do contrato.')}
             {toggle('merge_monthly', 'Cobrança única do mês', 'Junta as faturas do mesmo cliente no mês (Peformake, Ellcazo e avulsos) numa cobrança só, com um link. Por dentro cada empresa continua com a sua parte. Sinal de orçamento e fotos não entram.')}
             {toggle('auto_charge', 'Criar o link no gateway sozinho', '5 dias antes do vencimento a fatura ganha o link de pagamento (Pix, boleto ou cartão). Cancelar ou dar baixa aqui também fecha a cobrança no Asaas.')}
+            {toggle('fine_enabled', 'Multa e juros por atraso', 'Vale para os links criados daqui em diante. O Asaas soma sozinho depois do vencimento.')}
+            {!!v.fine_enabled && (
+              <div className="flex flex-wrap gap-3 pb-1 pl-6">
+                <label className="flex flex-col text-[13px] font-semibold">Multa (% única, até 2)<input inputMode="decimal" value={String(v.fine_pct ?? 2)} onChange={(e) => set('fine_pct', Math.min(2, Math.max(0, Number(e.target.value.replace(',', '.')) || 0)))} className={cn(field, 'w-28')} /></label>
+                <label className="flex flex-col text-[13px] font-semibold">Juros (% ao mês, até 1)<input inputMode="decimal" value={String(v.interest_pct ?? 1)} onChange={(e) => set('interest_pct', Math.min(1, Math.max(0, Number(e.target.value.replace(',', '.')) || 0)))} className={cn(field, 'w-28')} /></label>
+              </div>
+            )}
             <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova com link e lembretes de vencimento) ligam e desligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, no grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>
           </fieldset>
           <fieldset className="flex flex-col gap-2 rounded-2xl border border-line p-4">

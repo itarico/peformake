@@ -6,6 +6,7 @@
 //   charge_one (admin logado): cria o link de uma fatura agora.
 //   status  (admin logado): diz se a chave está no servidor e de qual conta é (sem expor a chave).
 //   sync    (admin logado ou cron): traz os pagamentos recebidos no Asaas para o caixa (sem duplicar), na empresa certa.
+//   pay_link (público, pelo token da fatura): página /pagar/<token> gera a cobrança na hora (depois que o cliente informa CPF/CNPJ).
 // Segredos: ASAAS_API_KEY, MP_ACCESS_TOKEN. Nenhum valor de chave sai desta função.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
 
@@ -35,7 +36,9 @@ async function asaas(env: string, key: string, path: string, init?: RequestInit)
   return body
 }
 
-async function asaasCharge(env: string, key: string, item: QueueItem) {
+interface Penalty { fine: number; interest: number }
+
+async function asaasCharge(env: string, key: string, item: QueueItem, penalty?: Penalty) {
   if (!item.client.document) throw new Error('Cliente sem CPF/CNPJ cadastrado')
   const found = await asaas(env, key, `/customers?cpfCnpj=${item.client.document}`)
   let customer = found?.data?.[0]?.id as string | undefined
@@ -50,7 +53,12 @@ async function asaasCharge(env: string, key: string, item: QueueItem) {
   const today = todayBrt()
   const payment = await asaas(env, key, '/payments', {
     method: 'POST',
-    body: JSON.stringify({ customer, billingType: 'UNDEFINED', value: Number(item.amount), dueDate: item.due_date < today ? today : item.due_date, description: item.description, externalReference: item.id }),
+    body: JSON.stringify({
+      customer, billingType: 'UNDEFINED', value: Number(item.amount), dueDate: item.due_date < today ? today : item.due_date, description: item.description, externalReference: item.id,
+      // Multa (% única) e juros (% ao mês) só quando ligados em Configurar cobrança.
+      ...(penalty && penalty.fine > 0 ? { fine: { value: penalty.fine, type: 'PERCENTAGE' } } : {}),
+      ...(penalty && penalty.interest > 0 ? { interest: { value: penalty.interest } } : {}),
+    }),
   })
   return { id: payment.id as string, url: (payment.invoiceUrl as string) ?? null }
 }
@@ -187,7 +195,7 @@ Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: CORS })
   if (request.method !== 'POST') return json({ error: 'Use POST' }, 405)
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } })
-  const body = await request.json().catch(() => ({})) as { action?: string; invoice_id?: string; days?: number }
+  const body = await request.json().catch(() => ({})) as { action?: string; invoice_id?: string; days?: number; token?: string }
 
   // Quem pode chamar: o cron (segredo) ou um admin logado (só charge_one).
   const secret = request.headers.get('x-cron-secret')
@@ -196,7 +204,18 @@ Deno.serve(async (request) => {
     const { data } = await db.rpc('traffic_cron_secret_ok', { _secret: secret })
     isCron = data === true
   }
-  if (!isCron) {
+  // Link público da fatura: quem tem o token só consegue gerar a cobrança daquela fatura.
+  let payInvoice: string | null = null
+  if (!isCron && body.action === 'pay_link') {
+    if (!/^[0-9a-f-]{36}$/i.test(body.token ?? '')) return json({ error: 'Link inválido' }, 400)
+    const { data: inv } = await db.from('invoices').select('id, group_id, payment_url, status').eq('pay_token', body.token!).maybeSingle()
+    if (!inv) return json({ error: 'Fatura não encontrada' }, 404)
+    if (!['pendente', 'vencido'].includes(inv.status)) return json({ error: 'Esta fatura não está em aberto' }, 409)
+    if (inv.payment_url) return json({ url: inv.payment_url })
+    // Na fila, a cobrança junta aparece pelo id do grupo.
+    payInvoice = inv.group_id ?? inv.id
+  }
+  if (!isCron && !payInvoice) {
     if (!['charge_one', 'status', 'sync'].includes(body.action ?? '')) return json({ error: 'Não autorizado' }, 401)
     const jwt = (request.headers.get('authorization') ?? '').replace(/^Bearer /i, '')
     const { data: user } = await db.auth.getUser(jwt)
@@ -255,23 +274,24 @@ Deno.serve(async (request) => {
   }
 
   let items: QueueItem[] = []
-  if (body.action === 'charge_one') {
+  if (body.action === 'charge_one' || payInvoice) {
+    const target = payInvoice ?? body.invoice_id
     const { data } = await db.rpc('billing_gateway_queue', { _limit: 500 })
-    items = ((data ?? []) as QueueItem[]).filter((i) => i.id === body.invoice_id)
+    items = ((data ?? []) as QueueItem[]).filter((i) => i.id === target)
     if (!items.length) return json({ error: 'Fatura não está pendente ou já tem link' }, 409)
   } else {
     const { data } = await db.rpc('billing_gateway_queue', { _limit: 20 })
     items = (data ?? []) as QueueItem[]
   }
 
-  const results: { id: string; ok: boolean; error?: string }[] = []
+  const results: { id: string; ok: boolean; error?: string; url?: string | null }[] = []
   for (const item of items) {
     try {
       let r: { id: string; url: string | null }
       if (gateway === 'asaas') {
         const key = Deno.env.get('ASAAS_API_KEY')
         if (!key) throw new Error('Falta ASAAS_API_KEY no servidor')
-        r = await asaasCharge(settings.gateway_env, key, item)
+        r = await asaasCharge(settings.gateway_env, key, item, settings.fine_enabled ? { fine: Number(settings.fine_pct), interest: Number(settings.interest_pct) } : undefined)
       } else if (gateway === 'mercadopago') {
         const token = Deno.env.get('MP_ACCESS_TOKEN')
         if (!token) throw new Error('Falta MP_ACCESS_TOKEN no servidor')
@@ -282,11 +302,17 @@ Deno.serve(async (request) => {
         throw new Error('Cobrança manual: sem gateway')
       }
       await db.rpc('invoice_gateway_set', { _id: item.id, _gateway: gateway, _gateway_id: r.id, _url: r.url, _error: null })
-      results.push({ id: item.id, ok: true })
+      results.push({ id: item.id, ok: true, url: r.url })
     } catch (e) {
       await db.rpc('invoice_gateway_set', { _id: item.id, _gateway: gateway, _gateway_id: null, _url: null, _error: (e as Error).message })
       results.push({ id: item.id, ok: false, error: (e as Error).message })
     }
+  }
+
+  if (payInvoice) {
+    const r = results[0]
+    if (r?.ok && r.url) return json({ url: r.url })
+    return json({ error: r?.error?.includes('CPF') ? 'Falta o CPF ou CNPJ' : 'Não deu para gerar a cobrança agora. Tente de novo em alguns minutos.' }, 502)
   }
 
   // Na rodada do cron: fecha no Asaas o que foi cancelado ou pago à mão no sistema.

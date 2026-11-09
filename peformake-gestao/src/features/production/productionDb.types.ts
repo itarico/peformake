@@ -30,8 +30,8 @@ service_ratings: ReadOnly<{ id: string; client_id: string; area: string; week: s
 team_settings: ReadOnly<{ id: boolean; sourcing_enabled: boolean; sourcing_pct: number; sourcing_months: number; partnership_enabled: boolean; partnership_min_revenue: number; partnership_min_months: number; head_commission_enabled: boolean; head_commission_pct: number; goals_enabled: boolean; updated_at: string; updated_by: string | null }>
 member_leads: ReadOnly<{ id: string; profile_id: string; name: string; company: string | null; phone: string | null; interest: string | null; notes: string | null; stage: string; client_id: string | null; created_at: string; updated_at: string }>
 member_goals: ReadOnly<{ id: string; role: AppRole | null; profile_id: string | null; metric: string; target: number; created_at: string }>
-billing_settings: ReadOnly<{ id: boolean; gateway: string; gateway_env: string; auto_charge: boolean; reminders_enabled: boolean; monthly_generate: boolean; sweep_enabled: boolean; sweep_pix_key: string | null; sweep_pix_key_type: string | null; sweep_share_pct: number; updated_at: string; updated_by: string | null }>
-invoices: ReadOnly<{ id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string; source: string; ref: string | null; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null; paid_amount: number | null; swept_at: string | null; fin_entry_id: string | null; created_by: string | null; created_at: string; updated_at: string }>
+billing_settings: ReadOnly<{ id: boolean; gateway: string; gateway_env: string; auto_charge: boolean; reminders_enabled: boolean; monthly_generate: boolean; sweep_enabled: boolean; sweep_pix_key: string | null; sweep_pix_key_type: string | null; sweep_share_pct: number; fine_enabled: boolean; fine_pct: number; interest_pct: number; updated_at: string; updated_by: string | null }>
+invoices: ReadOnly<{ id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string; source: string; ref: string | null; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null; paid_amount: number | null; swept_at: string | null; fin_entry_id: string | null; created_by: string | null; created_at: string; updated_at: string; pay_token: string }>
 billing_events: ReadOnly<{ id: number; invoice_id: string | null; kind: string; detail: string | null; created_at: string }>
 fin_sweeps: ReadOnly<{ id: string; day: string; amount: number; invoice_ids: string[]; status: string; gateway_id: string | null; error: string | null; created_at: string }>
 fin_categories: ReadOnly<{ id: string; unit: string; kind: string; name: string; is_active: boolean }>
@@ -308,6 +308,8 @@ export type ProductionFunctions = {
   av_quote_save: { Args: { _id: string | null; _data: unknown }; Returns: string }
   av_quote_mark_sent: { Args: { _id: string }; Returns: string }
   av_quote_public: { Args: { _token: string }; Returns: unknown }
+  invoice_pay_info: { Args: { _token: string }; Returns: unknown }
+  invoice_pay_set_document: { Args: { _token: string; _doc: string }; Returns: boolean }
   av_quote_accept: { Args: { _token: string; _name: string }; Returns: unknown }
   client_script_save: { Args: { _id: string | null; _client_id: string; _title: string; _body: string; _status: string }; Returns: string }
   portal_whatsapp_status: { Args: { _token: string }; Returns: unknown }
