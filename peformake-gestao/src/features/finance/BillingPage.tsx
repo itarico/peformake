@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarClock, Check, Copy, Download, ExternalLink, Layers, Link2, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
+import { CalendarClock, Check, Copy, Download, ExternalLink, Layers, Link2, Percent, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -55,7 +55,7 @@ function InvoiceItems({ items }: { items: NonNullable<Invoice['invoice_items']> 
 // Cobrança única: faturas do mesmo grupo aparecem como um cartão só (um link, um pagamento).
 type Row = { kind: 'one'; inv: Invoice } | { kind: 'group'; id: string; items: Invoice[] }
 const isOpen = (i: Invoice) => i.status === 'pendente' || i.status === 'vencido'
-const canJoin = (i: Invoice) => isOpen(i) && !i.group_id && !i.payment_url && !i.gateway_id
+const canJoin = (i: Invoice) => isOpen(i) && !i.group_id
 type Rpc = (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 type Unit = 'todas' | 'peformake' | 'ellcazo'
 type StatusFilter = 'todas' | 'aberto' | 'vencido' | 'pago'
@@ -78,6 +78,7 @@ export function BillingPage() {
   const [status, setStatusFilter] = useState<StatusFilter>('todas')
   const [query, setQuery] = useState('')
   const [paying, setPaying] = useState<Invoice | null>(null)
+  const [discountFor, setDiscountFor] = useState<{ id: string; name: string } | null>(null)
 
   const invoices = useQuery({
     queryKey: ['invoices', month],
@@ -154,11 +155,17 @@ export function BillingPage() {
   })
 
   const join = useMutation({
-    mutationFn: async (ids: string[]) => {
-      const { error } = await (supabase.rpc as unknown as Rpc)('invoice_group', { _ids: ids })
+    mutationFn: async ({ ids }: { ids: string[]; hadLink: boolean }) => {
+      const { data, error } = await (supabase.rpc as unknown as Rpc)('invoice_group', { _ids: ids })
       if (error) throw new Error(error.message)
+      return data as string
     },
-    onSuccess: () => { setNotice('Faturas juntas: o cliente recebe uma cobrança só. Por dentro cada empresa continua com a sua parte.'); refresh() },
+    onSuccess: (groupId, { hadLink }) => {
+      // Já tinha link: cria o link novo da cobrança junta agora (os antigos são apagados no Asaas na mesma chamada).
+      if (hadLink && groupId) chargeNow.mutate(groupId)
+      setNotice(hadLink ? 'Faturas juntas. Os links antigos foram apagados no Asaas e sai um link novo com o total.' : 'Faturas juntas: o cliente recebe uma cobrança só. Por dentro cada empresa continua com a sua parte.')
+      refresh()
+    },
     onError: (e) => setNotice(`Não foi possível juntar: ${(e as Error).message}`),
   })
   const split = useMutation({
@@ -219,8 +226,9 @@ export function BillingPage() {
   const askJoin = (i: Invoice) => {
     const items = joinable(i)
     const total = items.reduce((a, x) => a + Number(x.amount), 0)
-    void ask(`Juntar ${items.length} faturas de ${nameOf(i)} numa cobrança só de ${brl(total)}?\n\n${items.map((x) => `• ${x.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}: ${x.description} (${brl(x.amount)})`).join('\n')}\n\nO vencimento fica o da mensalidade. Por dentro cada empresa continua com a sua parte.`)
-      .then((ok) => { if (ok) join.mutate(items.map((x) => x.id)) })
+    const hadLink = items.some((x) => x.payment_url || x.gateway_id)
+    void ask(`Juntar ${items.length} faturas de ${nameOf(i)} numa cobrança só de ${brl(total)}?\n\n${items.map((x) => `• ${x.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}: ${x.description} (${brl(x.amount)})`).join('\n')}\n\n${hadLink ? 'Os links que já existem são apagados no Asaas e sai um link novo com o total. ' : ''}O vencimento fica o da mensalidade. Por dentro cada empresa continua com a sua parte.`)
+      .then((ok) => { if (ok) join.mutate({ ids: items.map((x) => x.id), hadLink }) })
   }
 
   return (
@@ -339,6 +347,7 @@ export function BillingPage() {
                     { label: `Juntar com as outras (${joinable(i).length})`, icon: <Layers size={15} aria-hidden="true" />, hidden: !(canJoin(i) && joinable(i).length >= 2), disabled: join.isPending, onClick: () => askJoin(i) },
                     { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!i.payment_url, onClick: () => setDueFor({ id: i.id, label: `${clientName} · ${i.description}`, due: i.due_date, monthly: i.source === 'mensalidade' }) },
                     { label: 'Marcar pago', icon: <Check size={15} aria-hidden="true" />, disabled: pay.isPending, onClick: () => setPaying(i) },
+                    { label: 'Desconto do cliente', icon: <Percent size={15} aria-hidden="true" />, onClick: () => setDiscountFor({ id: i.client_id, name: clientName }) },
                     { label: 'Cancelar cobrança', danger: true, disabled: setStatus.isPending, onClick: () => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) } },
                   ]} />}
                 </div>
@@ -356,6 +365,7 @@ export function BillingPage() {
       {jobOpen && <ServiceJobDialog clients={clients.data ?? []} onClose={() => setJobOpen(false)} onSaved={() => { setNotice('Serviço lançado: a fatura do cliente e a conta a pagar de quem fez já estão no sistema.'); refresh() }} />}
       {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
       {settingsOpen && <BillingSettingsDialog onClose={() => setSettingsOpen(false)} />}
+      {discountFor && <ClientDiscountDialog client={discountFor} onClose={() => setDiscountFor(null)} onSaved={(msg) => setNotice(msg)} />}
       {billingFor && <ClientBillingDialog client={billingFor} onClose={() => setBillingFor(null)} onSaved={() => { void queryClient.invalidateQueries({ queryKey: ['billing-clients'] }); setNotice('Dados de cobrança salvos. Agora crie o link.') }} />}
     </>
   )
@@ -501,6 +511,50 @@ function InvoiceDialog({ clients, onClose, onSaved }: { clients: ClientRow[]; on
   )
 }
 
+/** Desconto por pagar antes, só deste cliente: segue o padrão, nenhum, ou um percentual próprio. */
+function ClientDiscountDialog({ client, onClose, onSaved }: { client: { id: string; name: string }; onClose: () => void; onSaved: (msg: string) => void }) {
+  const current = useQuery({
+    queryKey: ['client-discount', client.id],
+    queryFn: async () => {
+      const { data } = await (supabase.from as unknown as (t: string) => { select: (c: string) => { eq: (k: string, v: string) => { maybeSingle: () => Promise<{ data: { billing_discount_pct: number | null } | null }> } } })('clients').select('billing_discount_pct').eq('id', client.id).maybeSingle()
+      return data?.billing_discount_pct ?? null
+    },
+  })
+  const [mode, setMode] = useState<'padrao' | 'nenhum' | 'proprio' | null>(null)
+  const [pct, setPct] = useState('')
+  const cur = current.data
+  const m = mode ?? (cur === null || cur === undefined ? 'padrao' : Number(cur) === 0 ? 'nenhum' : 'proprio')
+  const value = pct || (cur && Number(cur) > 0 ? String(cur).replace('.', ',') : '')
+  const save = useMutation({
+    mutationFn: async () => {
+      const n = m === 'padrao' ? null : m === 'nenhum' ? 0 : Number(value.replace(',', '.'))
+      if (m === 'proprio' && (!n || n <= 0 || n > 3)) throw new Error('Desconto de 0,5% a 3%.')
+      const { error } = await (supabase.rpc as unknown as Rpc)('client_discount_save', { _client: client.id, _pct: n })
+      if (error) throw new Error('Não foi possível salvar.')
+      return n
+    },
+    onSuccess: (n) => { onSaved(n === null ? `${client.name}: segue o desconto padrão.` : n === 0 ? `${client.name}: sem desconto.` : `${client.name}: desconto de ${String(n).replace('.', ',')}% por pagar antes.`); onClose() },
+  })
+  const opt = (k: 'padrao' | 'nenhum' | 'proprio', label: string, hint: string) => (
+    <label className="flex cursor-pointer items-start gap-2 py-1">
+      <input type="radio" name="desconto" checked={m === k} onChange={() => setMode(k)} className="mt-1 size-4" />
+      <span><span className="font-medium">{label}</span><span className="block text-[12px] text-muted">{hint}</span></span>
+    </label>
+  )
+  return (
+    <Dialog open onClose={onClose} title={`Desconto · ${client.name}`} description="Desconto por pagar antes do vencimento. Vale para os próximos links." size="sm"
+      footer={<Button disabled={save.isPending || current.isPending} onClick={() => save.mutate()}>Salvar</Button>}>
+      <div className="flex flex-col gap-1">
+        {opt('padrao', 'Seguir o padrão', 'O que estiver em Configurar cobrança.')}
+        {opt('nenhum', 'Sem desconto', 'Este cliente nunca recebe desconto.')}
+        {opt('proprio', 'Desconto próprio', 'Um percentual só para este cliente, até 3%.')}
+        {m === 'proprio' && <label className="ml-6 flex flex-col text-[13px] font-semibold">Desconto (%)<input inputMode="decimal" value={value} onChange={(e) => setPct(e.target.value)} placeholder="2" className={cn(field, 'w-28')} /></label>}
+        {save.isError && <p role="alert" className="mt-2 rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{(save.error as Error).message}</p>}
+      </div>
+    </Dialog>
+  )
+}
+
 function ClientBillingDialog({ client, onClose, onSaved }: { client: ClientRow; onClose: () => void; onSaved: () => void }) {
   const [doc, setDoc] = useState(client.document ?? '')
   const [email, setEmail] = useState(client.billing_email ?? client.email ?? '')
@@ -580,6 +634,13 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
               <div className="flex flex-wrap gap-3 pb-1 pl-6">
                 <label className="flex flex-col text-[13px] font-semibold">Multa (% única, até 2)<input inputMode="decimal" value={String(v.fine_pct ?? 2)} onChange={(e) => set('fine_pct', Math.min(2, Math.max(0, Number(e.target.value.replace(',', '.')) || 0)))} className={cn(field, 'w-28')} /></label>
                 <label className="flex flex-col text-[13px] font-semibold">Juros (% ao mês, até 1)<input inputMode="decimal" value={String(v.interest_pct ?? 1)} onChange={(e) => set('interest_pct', Math.min(1, Math.max(0, Number(e.target.value.replace(',', '.')) || 0)))} className={cn(field, 'w-28')} /></label>
+              </div>
+            )}
+            {toggle('discount_enabled', 'Desconto por pagar antes', 'Vale para os links criados daqui em diante. Cada cliente pode ter o próprio desconto ou nenhum (menu ⋯ da fatura → Desconto do cliente).')}
+            {!!v.discount_enabled && (
+              <div className="flex flex-wrap gap-3 pb-1 pl-6">
+                <label className="flex flex-col text-[13px] font-semibold">Desconto (%, até 3)<input inputMode="decimal" value={String(v.discount_pct ?? 2)} onChange={(e) => set('discount_pct', Math.min(3, Math.max(0, Number(e.target.value.replace(',', '.')) || 0)))} className={cn(field, 'w-28')} /></label>
+                <label className="flex flex-col text-[13px] font-semibold">Pagando até (dias antes)<input inputMode="numeric" value={String(v.discount_days ?? 0)} onChange={(e) => set('discount_days', Math.min(30, Math.max(0, Number(e.target.value.replace(/\D/g, '')) || 0)))} className={cn(field, 'w-28')} /></label>
               </div>
             )}
             <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova com link e lembretes de vencimento) ligam e desligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, no grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>

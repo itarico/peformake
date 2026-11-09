@@ -36,7 +36,7 @@ async function asaas(env: string, key: string, path: string, init?: RequestInit)
   return body
 }
 
-interface Penalty { fine: number; interest: number }
+interface Penalty { fine: number; interest: number; discount: number; discountDays: number }
 
 async function asaasCharge(env: string, key: string, item: QueueItem, penalty?: Penalty) {
   if (!item.client.document) throw new Error('Cliente sem CPF/CNPJ cadastrado')
@@ -58,6 +58,8 @@ async function asaasCharge(env: string, key: string, item: QueueItem, penalty?: 
       // Multa (% única) e juros (% ao mês) só quando ligados em Configurar cobrança.
       ...(penalty && penalty.fine > 0 ? { fine: { value: penalty.fine, type: 'PERCENTAGE' } } : {}),
       ...(penalty && penalty.interest > 0 ? { interest: { value: penalty.interest } } : {}),
+      // Desconto por pagar até X dias antes do vencimento (Configurar cobrança, ou o do cliente).
+      ...(penalty && penalty.discount > 0 ? { discount: { value: penalty.discount, dueDateLimitDays: penalty.discountDays, type: 'PERCENTAGE' } } : {}),
     }),
   })
   return { id: payment.id as string, url: (payment.invoiceUrl as string) ?? null }
@@ -96,6 +98,26 @@ async function closeQueue(db: ReturnType<typeof createClient>, env: string, key:
     }
   }
   return { closed, failed }
+}
+
+// Links antigos de faturas que foram juntadas: apaga no Asaas para o cliente não pagar o link velho.
+async function cancelQueue(db: ReturnType<typeof createClient>, env: string, key: string) {
+  const { data } = await db.rpc('billing_gateway_cancel_queue')
+  let done = 0
+  for (const row of (data ?? []) as { id: string; gateway: string; gateway_id: string }[]) {
+    if (row.gateway !== 'asaas') { await db.rpc('billing_gateway_cancel_done', { _id: row.id, _ok: true, _error: null }); continue }
+    try {
+      await asaas(env, key, `/payments/${row.gateway_id}`, { method: 'DELETE' })
+      await db.rpc('billing_gateway_cancel_done', { _id: row.id, _ok: true, _error: null })
+      done++
+    } catch (e) {
+      const msg = (e as Error).message
+      const gone = /removid|not found|HTTP 404/i.test(msg)
+      await db.rpc('billing_gateway_cancel_done', { _id: row.id, _ok: gone, _error: msg })
+      if (gone) done++
+    }
+  }
+  return done
 }
 
 const digits = (v: string | null | undefined) => (v ?? '').replace(/\D/g, '')
@@ -284,6 +306,26 @@ Deno.serve(async (request) => {
     items = (data ?? []) as QueueItem[]
   }
 
+  // Desconto do cliente: nulo = padrão da configuração, 0 = sem desconto.
+  const discountOf = new Map<string, number | null>()
+  if (gateway === 'asaas' && items.length) {
+    const { data: cl } = await db.from('clients').select('id, billing_discount_pct').in('id', items.map((i) => i.client.id))
+    for (const c of (cl ?? []) as { id: string; billing_discount_pct: number | null }[]) discountOf.set(c.id, c.billing_discount_pct === null ? null : Number(c.billing_discount_pct))
+  }
+  const penaltyFor = (clientId: string): Penalty => {
+    const own = discountOf.get(clientId)
+    return {
+      fine: settings.fine_enabled ? Number(settings.fine_pct) : 0,
+      interest: settings.fine_enabled ? Number(settings.interest_pct) : 0,
+      discount: own !== null && own !== undefined ? own : settings.discount_enabled ? Number(settings.discount_pct) : 0,
+      discountDays: Number(settings.discount_days ?? 0),
+    }
+  }
+  // Antes de criar links novos, apaga no Asaas os links velhos de faturas juntadas.
+  if (gateway === 'asaas' && (isCron || body.action === 'charge_one' || payInvoice)) {
+    const key = Deno.env.get('ASAAS_API_KEY')
+    if (key) await cancelQueue(db, settings.gateway_env, key)
+  }
   const results: { id: string; ok: boolean; error?: string; url?: string | null }[] = []
   for (const item of items) {
     try {
@@ -291,7 +333,7 @@ Deno.serve(async (request) => {
       if (gateway === 'asaas') {
         const key = Deno.env.get('ASAAS_API_KEY')
         if (!key) throw new Error('Falta ASAAS_API_KEY no servidor')
-        r = await asaasCharge(settings.gateway_env, key, item, settings.fine_enabled ? { fine: Number(settings.fine_pct), interest: Number(settings.interest_pct) } : undefined)
+        r = await asaasCharge(settings.gateway_env, key, item, penaltyFor(item.client.id))
       } else if (gateway === 'mercadopago') {
         const token = Deno.env.get('MP_ACCESS_TOKEN')
         if (!token) throw new Error('Falta MP_ACCESS_TOKEN no servidor')
