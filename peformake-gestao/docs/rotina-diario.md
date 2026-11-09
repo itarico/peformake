@@ -37,7 +37,7 @@ Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao ter
    - Primeiro passo amanhã: montar o prompt com o Italo (estrutura proposta no chat de 09/11).
 
 
-6. Menu (estudar): "Lançar serviço" (serviço avulso, hoje no Financeiro → Cobrança e na ficha do cliente) passa a ficar no Comercial, junto de Vendas.  Conteúdo passa a se chamar Social Media. Comercial vira só VENDAS: Resumo (dashboard), Funil, Vendas, Prospecção e Serviços e pacotes (sai de Configurações; Ellcazo continua no Audiovisual). Nova aba WhatsApp (agente): Conversas, Pedidos dos clientes, Sugestões da IA, Satisfação. Propagar rotas antigas com MovedTo, links da Bete, notificações e funções SQL.
+6. Menu (estudar): "Lançar serviço" (serviço avulso, hoje no Financeiro → Cobrança e na ficha do cliente) passa a ficar no Comercial, junto de Vendas. No pop-up de lançar/adicionar serviço: escolher variações do serviço (ex.: tipo, duração, formato), quantidade, extras, e o valor calcula sozinho pelo cadastro de Serviços e pacotes (total = preço da variação × quantidade + extras), com desconto opcional.  Conteúdo passa a se chamar Social Media. Comercial vira só VENDAS: Resumo (dashboard), Funil, Vendas, Prospecção e Serviços e pacotes (sai de Configurações; Ellcazo continua no Audiovisual). Nova aba WhatsApp (agente): Conversas, Pedidos dos clientes, Sugestões da IA, Satisfação. Propagar rotas antigas com MovedTo, links da Bete, notificações e funções SQL.
 
 ## 2026-11-08 · celular sem escorregar de lado + decisões do Financeiro
 
