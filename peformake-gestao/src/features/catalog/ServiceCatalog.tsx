@@ -168,7 +168,7 @@ export function ServiceCatalog({ area }: { area: Area }) {
               )
             })}
           </ul>
-          <p className="text-[12px] text-muted">Pacotes com várias áreas e promoções se montam em Configurações → Serviços e pacotes → Pacotes.</p>
+          <p className="text-[12px] text-muted">Pacotes com várias áreas e promoções se montam na aba Pacotes, aqui ao lado.</p>
         </section>
       )}
 
