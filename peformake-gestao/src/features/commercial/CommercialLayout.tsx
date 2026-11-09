@@ -1,5 +1,8 @@
 import { AutomationsLink } from '@/features/settings/AutomationsCenter'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
+import { LaunchServiceDialog } from './LaunchServiceDialog'
 import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { COMMERCIAL_ROLES, hasAnyRole } from '@/lib/roles'
@@ -27,9 +30,13 @@ export function CommercialIndex() {
 export function CommercialLayout() {
   const isCommercial = useIsCommercial()
   const tabs = isCommercial ? TABS : [{ to: 'funil', label: 'Meus leads' }]
+  const [launching, setLaunching] = useState(false)
+  const [notice, setNotice] = useState<string | null>(null)
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Comercial</h1>{isCommercial && <AutomationsLink modules={['comercial']} />}</div>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Comercial</h1>{isCommercial && <div className="flex items-center gap-2"><Button onClick={() => setLaunching(true)}><Plus size={16} aria-hidden="true" /> Lançar serviço</Button><AutomationsLink modules={['comercial']} /></div>}</div>
+      {notice && <p role="status" className="rounded-xl bg-raised px-4 py-2.5 text-[14px] font-medium">{notice}</p>}
+      {launching && <LaunchServiceDialog onClose={() => setLaunching(false)} onDone={setNotice} />}
       <nav aria-label="Áreas do Comercial" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0">
         {tabs.map((tab) => (
           <NavLink

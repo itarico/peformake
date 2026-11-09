@@ -13,7 +13,8 @@ export const AREA_LABEL: Record<Area, string> = {
 }
 const UNITS = ['mês', 'projeto', 'unidade', 'hora', 'diária'] as const
 
-interface Service { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; isActive: boolean; price: number | null; clients: number; deliveryUnit: string | null }
+export interface ServiceOption { id: string; kind: 'variacao' | 'extra'; name: string; price: number | null }
+export interface Service { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; isActive: boolean; price: number | null; clients: number; deliveryUnit: string | null; options: ServiceOption[] }
 interface PackageItem { serviceId: string; name: string; area: Area; quantity: number; price: number | null }
 interface Pkg { id: string; name: string; description: string | null; isActive: boolean; promoPrice: number | null; promoStarts: string | null; promoEnds: string | null; items: PackageItem[] }
 interface Catalog { canEdit: boolean; services: Service[]; packages: Pkg[] }
@@ -30,12 +31,12 @@ async function loadCatalog(area: Area | null): Promise<Catalog> {
   const unitById = new Map((units.data ?? []).map((u) => [u.id, u.delivery_unit]))
   const d = (data ?? { can_edit: false, services: [], packages: [] }) as {
     can_edit: boolean
-    services: { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; is_active: boolean; price: number | null; clients: number }[]
+    services: { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; is_active: boolean; price: number | null; clients: number; options?: ServiceOption[] }[]
     packages: { id: string; name: string; description: string | null; is_active: boolean; promo_price: number | null; promo_starts: string | null; promo_ends: string | null; items: { service_id: string; name: string; area: Area; quantity: number; price: number | null }[] }[]
   }
   return {
     canEdit: d.can_edit,
-    services: d.services.map((s) => ({ id: s.id, name: s.name, area: s.area, description: s.description, deliverables: s.deliverables, unit: s.unit, isActive: s.is_active, price: s.price, clients: s.clients, deliveryUnit: unitById.get(s.id) ?? null })),
+    services: d.services.map((s) => ({ id: s.id, name: s.name, area: s.area, description: s.description, deliverables: s.deliverables, unit: s.unit, isActive: s.is_active, price: s.price, clients: s.clients, deliveryUnit: unitById.get(s.id) ?? null, options: s.options ?? [] })),
     packages: d.packages.map((p) => ({
       id: p.id, name: p.name, description: p.description, isActive: p.is_active, promoPrice: p.promo_price, promoStarts: p.promo_starts, promoEnds: p.promo_ends,
       items: p.items.map((i) => ({ serviceId: i.service_id, name: i.name, area: i.area, quantity: i.quantity, price: i.price })),
@@ -53,14 +54,25 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
     name: service?.name ?? '', price: service?.price != null ? String(service.price) : '', description: service?.description ?? '',
     deliverables: service?.deliverables ?? '', unit: service?.unit ?? 'mês', isActive: service?.isActive ?? true, deliveryUnit: service?.deliveryUnit ?? '',
   })
+  // Variações (o cliente escolhe uma) e extras (soma ao valor). Vazio = só o preço base.
+  const [opts, setOpts] = useState<{ id?: string; kind: 'variacao' | 'extra'; name: string; price: string }[]>(
+    (service?.options ?? []).map((o) => ({ id: o.id, kind: o.kind, name: o.name, price: o.price != null ? String(o.price).replace('.', ',') : '' })))
+  const setOpt = (i: number, patch: Partial<{ name: string; price: string }>) => setOpts((cur) => cur.map((o, k) => (k === i ? { ...o, ...patch } : o)))
   const price = Number(d.price.replace(',', '.'))
   const valid = d.name.trim().length >= 2 && d.price.trim() !== '' && Number.isFinite(price) && price >= 0
   const save = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.rpc('service_save', {
+      const { data, error } = await supabase.rpc('service_save', {
         _id: service?.id ?? null, _name: d.name, _area: service?.area ?? area, _price: price, _description: d.description, _deliverables: d.deliverables, _unit: d.unit, _is_active: d.isActive,
       })
       if (error) throw error
+      const id = service?.id ?? (data as unknown as string | null)
+      if (id) {
+        const { error: optError } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ error: unknown }>)('service_options_save', {
+          _service: id, _items: opts.filter((o) => o.name.trim()).map((o) => ({ id: o.id ?? null, kind: o.kind, name: o.name.trim(), price: Number(o.price.replace(',', '.')) || 0 })),
+        })
+        if (optError) throw optError
+      }
       const { error: unitError } = await supabase.rpc('service_set_delivery_unit' as never, { _area: service?.area ?? area, _name: d.name, _unit: d.deliveryUnit } as never)
       if (unitError) throw unitError
     },
@@ -91,8 +103,21 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
       <label className="flex flex-col text-[13px] font-semibold">Descrição <span className="font-normal text-muted">(opcional, aparece na proposta)</span>
         <textarea rows={2} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={500} className={field} />
       </label>
+      {(['variacao', 'extra'] as const).map((kind) => (
+        <fieldset key={kind} className="flex flex-col gap-1.5">
+          <legend className="text-[13px] font-semibold">{kind === 'variacao' ? 'Variações' : 'Extras'} <span className="font-normal text-muted">{kind === 'variacao' ? '(opcional: ex. vídeo 30s ou 60s, story ou reels; cada uma com o seu preço)' : '(opcional: somam ao valor, ex. legenda animada)'}</span></legend>
+          {opts.map((o, i) => o.kind !== kind ? null : (
+            <div key={i} className="grid grid-cols-[1fr_8rem_auto] gap-2">
+              <input aria-label="Nome" value={o.name} onChange={(e) => setOpt(i, { name: e.target.value })} maxLength={80} placeholder={kind === 'variacao' ? 'Vídeo 60s' : 'Legenda animada'} className={cn(field, 'mt-0')} />
+              <input aria-label="Preço" inputMode="decimal" value={o.price} onChange={(e) => setOpt(i, { price: e.target.value })} placeholder="0,00" className={cn(field, 'mt-0')} />
+              <button type="button" aria-label="Tirar" onClick={() => setOpts((cur) => cur.filter((_, k) => k !== i))} className="grid size-11 cursor-pointer place-items-center rounded-xl text-muted hover:bg-raised hover:text-ink">×</button>
+            </div>
+          ))}
+          <button type="button" onClick={() => setOpts((cur) => [...cur, { kind, name: '', price: '' }])} className="w-fit cursor-pointer text-[13px] font-medium text-accent-ink hover:underline">+ {kind === 'variacao' ? 'Variação' : 'Extra'}</button>
+        </fieldset>
+      ))}
       <label className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={d.isActive} onChange={(e) => setD({ ...d, isActive: e.target.checked })} className="size-4" /> Disponível para vender</label>
-      {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">Não foi possível salvar. Só admin e head editam o catálogo.</p>}
+      {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">Não foi possível salvar. Só o admin edita o catálogo.</p>}
       <div className="flex justify-end gap-2 border-t border-line pt-3">
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
         <Button type="submit" disabled={!valid || save.isPending}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
@@ -137,6 +162,7 @@ export function ServiceCatalog({ area }: { area: Area }) {
             </div>
             <div className="mt-auto flex flex-wrap items-center gap-2 text-[13px]">
               {s.price != null && <span className="font-semibold tabular-nums">{brl(s.price)} <span className="font-normal text-muted">por {s.unit}</span></span>}
+              {s.options.some((o) => o.kind === 'variacao') && <span className="w-full text-[12px] text-muted">{s.options.filter((o) => o.kind === 'variacao').map((o) => `${o.name}${o.price != null ? ` ${brl(o.price)}` : ''}`).join(' · ')}</span>}
               <span className="rounded-full bg-raised px-2.5 py-0.5 text-[12px] font-medium">{s.clients} {s.clients === 1 ? 'cliente ativo' : 'clientes ativos'}</span>
               {!s.isActive && <span className="rounded-full bg-warn-soft px-2.5 py-0.5 text-[12px] font-medium text-warn-ink">Fora de venda</span>}
             </div>
