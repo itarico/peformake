@@ -15,7 +15,7 @@ export interface Ote {
   attainment: number | null; variable_earned: number; total_month: number
 }
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
-const rpc = supabase.rpc as unknown as Rpc
+const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
 export const brl = (n: number) => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'

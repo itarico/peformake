@@ -10,7 +10,7 @@ import { MemberDialog, listMembers } from './MembersPage'
 // Equipe → Configurações: regras da variável para todos e a remuneração de cada membro.
 type Row = Ote & { staff_id: string; name: string; avatar_path: string | null; job_title: string | null; has_pay: boolean }
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
-const rpc = supabase.rpc as unknown as Rpc
+const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 const initials = (n: string) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
 const field = 'mt-1 min-h-11 w-24 rounded-xl border border-line-strong bg-surface px-3 font-normal'
 

@@ -20,7 +20,7 @@ interface Member {
   roles: string[]; area_admin: string[]; invited: boolean; level: Level
 }
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
-const rpc = supabase.rpc as unknown as Rpc
+const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
 const LEVELS: { id: Level; label: string; hint: string }[] = [
   { id: 'none', label: 'Sem acesso', hint: 'Está na equipe, mas não entra no sistema.' },
