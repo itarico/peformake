@@ -64,8 +64,17 @@ export function OperationHomeSummary({ month }: { month: string }) {
 export function ClientOperationBlock({ clientId, month }: { clientId: string; month: string }) {
   const q = useOperation(month)
   const row = q.data?.find((r) => r.client_id === clientId)
+  const status = useServiceStatus(clientId, month)
   if (!row) return null
-  const t = operationTone(row.pct)
+  // Selo pela situação dos serviços (mesma regra do fechamento): atraso só depois do dia 25, e o que está com o cliente não é atraso nosso.
+  const rows = status.data ?? []
+  const open = rows.filter((r) => r.state !== 'entregue')
+  const base = operationTone(row.pct)
+  const t = !rows.length ? base
+    : rows.some((r) => r.state === 'faltou' || r.state === 'sem_planejamento') ? { ...base, label: 'Atrasado', chip: 'bg-warn-soft text-warn-ink' }
+    : !open.length ? { ...base, label: 'Em dia', chip: 'bg-ok-soft text-ok-ink' }
+    : open.every((r) => r.state === 'esperando_cliente') ? { ...base, label: 'Esperando o cliente', chip: 'bg-accent-soft text-accent-ink' }
+    : { ...base, label: `No prazo até 25/${month.slice(5, 7)}`, chip: 'bg-raised text-muted' }
   return (
     <section aria-labelledby="entregas-mes" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -88,8 +97,8 @@ const STATE: Record<string, { label: string; tone: string }> = {
 }
 
 /** Contratado × entregue por serviço, com a culpa do cliente separada (mesma regra da Operação e do fechamento). */
-function ServiceStatusList({ clientId, month }: { clientId: string; month: string }) {
-  const q = useQuery({
+function useServiceStatus(clientId: string, month: string) {
+  return useQuery({
     queryKey: ['service-status', clientId, month],
     retry: false,
     queryFn: async () => {
@@ -98,6 +107,10 @@ function ServiceStatusList({ clientId, month }: { clientId: string; month: strin
       return ((data ?? []) as ServiceStatus[]).filter((r) => r.state !== 'sem_medicao')
     },
   })
+}
+
+function ServiceStatusList({ clientId, month }: { clientId: string; month: string }) {
+  const q = useServiceStatus(clientId, month)
   const rows = q.data ?? []
   if (!rows.length) return null
   return (
