@@ -158,7 +158,8 @@ export function ReportsPage() {
     mutationFn: () => askAgent(kind, null),
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['report-asks'] }),
   })
-  const noToken = (asks.data ?? []).find((a) => a.status === 'no_token')
+  // Só o pedido mais recente diz se falta o token (um pedido antigo sem token não vale depois que o token foi colado).
+  const noToken = asks.data?.[0]?.status === 'no_token'
 
   const head = (
     <div className="flex flex-wrap items-center justify-between gap-3">
