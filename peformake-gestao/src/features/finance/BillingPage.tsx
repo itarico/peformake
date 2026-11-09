@@ -29,6 +29,27 @@ interface Invoice {
   group_id: string | null
   clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
   invoice_groups?: { description: string; due_date: string } | null
+  invoice_items?: { id: string; description: string; quantity: number; amount: number; state: string }[]
+}
+
+const ITEM_STATE: Record<string, string> = { previsto: 'Previsto', confirmado: 'Confirmado', cobrado: 'Cobrado', pago: 'Pago', cancelado: 'Cancelado' }
+
+/** Serviços dentro da fatura (um por serviço contratado). Fechado por padrão para não poluir a lista. */
+function InvoiceItems({ items }: { items: NonNullable<Invoice['invoice_items']> }) {
+  if (items.length < 2) return null
+  return (
+    <details className="group ml-11 text-[13px]">
+      <summary className="w-fit cursor-pointer list-none font-medium text-muted hover:text-ink">Ver os {items.length} serviços <span aria-hidden="true" className="inline-block transition-transform group-open:rotate-180">▾</span></summary>
+      <ul className="mt-1 flex flex-col gap-0.5">
+        {items.map((it) => (
+          <li key={it.id} className="flex items-baseline justify-between gap-3">
+            <span className="min-w-0 truncate">{it.description}{Number(it.quantity) > 1 ? ` × ${Number(it.quantity)}` : ''} <span className="text-[12px] text-muted">· {ITEM_STATE[it.state] ?? it.state}</span></span>
+            <span className="tabular-nums text-muted">{brl(it.amount)}</span>
+          </li>
+        ))}
+      </ul>
+    </details>
+  )
 }
 // Cobrança única: faturas do mesmo grupo aparecem como um cartão só (um link, um pagamento).
 type Row = { kind: 'one'; inv: Invoice } | { kind: 'group'; id: string; items: Invoice[] }
@@ -61,7 +82,7 @@ export function BillingPage() {
     queryKey: ['invoices', month],
     queryFn: async () => {
       const { data, error } = await supabase.from('invoices')
-        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date)')
+        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date), invoice_items(id, description, quantity, amount, state)')
         // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
         .or(`and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`)
         .order('due_date').limit(1000)
@@ -298,6 +319,7 @@ export function BillingPage() {
                   <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
                     st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
                 </div>
+                {i.invoice_items && <InvoiceItems items={i.invoice_items} />}
                 {i.status !== 'pago' && i.status !== 'cancelado' && (
                   <div className="flex flex-wrap items-center gap-2 text-[13px]">
                     {i.payment_url ? (
