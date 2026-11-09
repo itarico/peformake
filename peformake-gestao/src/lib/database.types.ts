@@ -84,7 +84,7 @@ export interface Database {
         Relationships: []
       }
       services: {
-        Row: { id: string; name: string; category: string | null; is_active: boolean; is_audiovisual: boolean }
+        Row: { id: string; name: string; category: string | null; is_active: boolean; is_audiovisual: boolean; delivery_qty: number | null; delivery_format: string | null; delivery_unit: string | null }
         Insert: never
         Update: never
         Relationships: []
@@ -100,6 +100,8 @@ export interface Database {
           notes: string | null
           legacy_created_at: string | null
           package_id: string | null
+          deliver_qty: number | null
+          deliver_format: string | null
         }
         Insert: never
         Update: never

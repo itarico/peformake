@@ -41,6 +41,11 @@ export interface ClientServiceItem {
   isActive: boolean
   isAudiovisual: boolean
   quantity: number | null
+  /** Entregas por mês (combinado do cliente ou padrão do catálogo); nulo = não medido. */
+  deliverQty?: number | null
+  deliverFormat?: string | null
+  /** O cliente tem combinado próprio (diferente do padrão). */
+  deliverCustom?: boolean
   notes: string | null
   packageId: string | null
   /** Mês do serviço (avulso) ou data de entrada, para achar o último serviço. */

@@ -84,8 +84,8 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
       .from('clients')
       .select('id, name, segment, client_type, is_active, is_lost, email, phone, logo_path, description, target_audience, competitors, value_proposition, acquisition_channel, lost_reason, lost_at, legacy_created_at, nps, updated_at, show_on_site, squad_id, document, legal_name, address, billing_email, instagram, website, is_partner')
       .order('name'),
-    supabase.from('client_services').select('id, client_id, service_id, is_active, quantity, notes, package_id, billing_month, legacy_created_at'),
-    supabase.from('services').select('id, name, is_audiovisual'),
+    supabase.from('client_services').select('id, client_id, service_id, is_active, quantity, notes, package_id, billing_month, legacy_created_at, deliver_qty, deliver_format'),
+    supabase.from('services').select('id, name, is_audiovisual, delivery_qty, delivery_format, delivery_unit'),
     supabase.from('client_contracts').select('client_id, contract_model, start_date, end_date, months, billing_day'),
     supabase.from('client_team').select('client_id, staff_id, role_in_client'),
     supabase.from('staff_members').select('id, full_name, avatar_path'),
@@ -158,6 +158,10 @@ export async function listClients(isAdmin: boolean): Promise<ClientRecord[]> {
             isActive: link.is_active,
             isAudiovisual: service.is_audiovisual,
             quantity: link.quantity,
+            // Entregas do mês: o combinado com o cliente, ou quantidade × padrão do catálogo.
+            deliverQty: link.deliver_qty ?? (service.delivery_qty != null ? (link.quantity ?? 1) * Number(service.delivery_qty) : null),
+            deliverFormat: link.deliver_format || service.delivery_format || service.delivery_unit || null,
+            deliverCustom: link.deliver_qty != null || !!link.deliver_format,
             notes: link.notes,
             packageId: link.package_id,
             date: link.billing_month ?? link.legacy_created_at,
@@ -315,6 +319,11 @@ export async function updateService(clientServiceId: string, change: ServiceChan
     _discount_type: change.discountType,
     _discount_value: change.discountValue,
   })
+  if (error) throw error
+}
+
+export async function setServiceDelivery(clientServiceId: string, qty: number | null, format: string | null): Promise<void> {
+  const { error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ error: unknown }>)('client_service_set_delivery', { _client_service_id: clientServiceId, _qty: qty, _format: format })
   if (error) throw error
 }
 

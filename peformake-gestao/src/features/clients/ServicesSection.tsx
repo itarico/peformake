@@ -5,11 +5,19 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { moneyText, parseMoney } from './clientFormRules'
-import { addServices, clientErrorMessage, listCatalog, removeService, updateService } from './clientsApi'
+import { addServices, clientErrorMessage, listCatalog, removeService, setServiceDelivery, updateService } from './clientsApi'
 import type { ClientServiceItem } from './clientRules'
 import { clientValue, lineValue, type ClientKind, type DiscountType } from './portfolioRules'
 import { brlValue } from './format'
 import { Block, inputClass, selectClass } from './ui'
+
+const PLURAL: Record<string, string> = { arte: 'artes', 'relatório semanal': 'relatórios semanais', 'vídeo editado': 'vídeos editados', 'produção': 'produções', 'estratégia': 'estratégias', 'vídeo': 'vídeos' }
+/** "4 artes por mês"; sem número (Social Mídia), só o texto do combinado. */
+export function deliveryText(qty: number | null | undefined, format: string | null | undefined) {
+  if (qty == null) return format ?? ''
+  const f = format ?? ''
+  return `${Number(qty)} ${Number(qty) === 1 ? f : PLURAL[f] ?? f} por mês`.replace(/\s+/g, ' ')
+}
 
 function ServiceRow({ item, isAdmin, canManage, isMonthly }: { item: ClientServiceItem; isAdmin: boolean; canManage: boolean; isMonthly: boolean }) {
   const queryClient = useQueryClient()
@@ -21,6 +29,9 @@ function ServiceRow({ item, isAdmin, canManage, isMonthly }: { item: ClientServi
   const [price, setPrice] = useState(moneyText(item.price))
   const [discountType, setDiscountType] = useState<DiscountType | ''>(item.discountType ?? '')
   const [discount, setDiscount] = useState(moneyText(item.discountValue))
+  // Entregas por mês: vazio = segue o padrão do catálogo.
+  const [deliverQty, setDeliverQty] = useState(item.deliverCustom && item.deliverQty != null ? String(item.deliverQty) : '')
+  const [deliverFormat, setDeliverFormat] = useState(item.deliverCustom ? item.deliverFormat ?? '' : '')
 
   const refresh = () => void queryClient.invalidateQueries({ queryKey: ['clients'] })
   const qty = Number(quantity)
@@ -31,15 +42,19 @@ function ServiceRow({ item, isAdmin, canManage, isMonthly }: { item: ClientServi
     (isAdmin && price.trim() !== '' && priceValue === null) ||
     (isAdmin && discountType !== '' && (discountValue === null || (discountType === 'percent' && discountValue > 100)))
 
+  const deliveryChanged = deliverQty !== (item.deliverCustom && item.deliverQty != null ? String(item.deliverQty) : '') || deliverFormat !== (item.deliverCustom ? item.deliverFormat ?? '' : '')
   const save = useMutation({
-    mutationFn: () => updateService(item.id, {
+    mutationFn: async () => {
+      if (deliveryChanged) await setServiceDelivery(item.id, deliverQty === '' ? null : Number(deliverQty), deliverFormat.trim() || null)
+      await updateService(item.id, {
       quantity: qty,
       isActive: active,
       notes: notes.trim(),
       price: isAdmin ? priceValue : null,
       discountType: isAdmin && discountType ? discountType : null,
       discountValue: isAdmin && discountType ? discountValue : null,
-    }),
+      })
+    },
     onSuccess: () => {
       setEditing(false)
       refresh()
@@ -53,6 +68,9 @@ function ServiceRow({ item, isAdmin, canManage, isMonthly }: { item: ClientServi
         <span className="min-w-0">
           <span className="font-medium">{item.name}</span>
           {item.quantity && item.quantity > 1 ? <span className="text-muted"> | {item.quantity} unidades</span> : null}
+          {item.isActive && (item.deliverQty != null || item.deliverFormat) && (
+            <span className="block text-[13px] text-muted">Entrega: {deliveryText(item.deliverQty, item.deliverFormat)}</span>
+          )}
           {!item.isActive && <span className="text-muted"> | encerrado</span>}
           {isAdmin && (item.price === null || item.price === undefined
             ? <span className="block text-[13px] text-warn-ink">Sem preço definido</span>
@@ -105,6 +123,12 @@ function ServiceRow({ item, isAdmin, canManage, isMonthly }: { item: ClientServi
               )}
             </>
           )}
+          <label className="col-span-1 flex flex-col text-[13px] font-semibold sm:col-span-2">Entregas por mês
+            <input inputMode="numeric" value={deliverQty} onChange={(e) => setDeliverQty(e.target.value.replace(/\D/g, '').slice(0, 4))} placeholder={!item.deliverCustom && item.deliverQty != null ? `${Number(item.deliverQty)} (padrão)` : 'Padrão do catálogo'} className={cn(inputClass, 'mt-1 font-normal')} />
+          </label>
+          <label className="col-span-1 flex flex-col text-[13px] font-semibold sm:col-span-2">Formato
+            <input value={deliverFormat} maxLength={60} onChange={(e) => setDeliverFormat(e.target.value)} placeholder={!item.deliverCustom && item.deliverFormat ? `${item.deliverFormat} (padrão)` : 'Ex.: arte de feed'} className={cn(inputClass, 'mt-1 font-normal')} />
+          </label>
           <label className="col-span-2 text-[13px] font-semibold sm:col-span-4">Observação
             <input value={notes} maxLength={500} onChange={(e) => setNotes(e.target.value)} className={cn(inputClass, 'mt-1 font-normal')} />
           </label>
