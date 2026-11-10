@@ -50,3 +50,28 @@ Antes do primeiro cliente apareciam título, subtítulo, botão grande, abas, 4 
 10. 3 números do dia no Início, cada um abrindo a lista certa.
 
 Capturas em scratchpad/mobile-audit (da sessão da nuvem, temporárias).
+
+## Medição: onde termina cabeçalho e filtros (iPhone 13, tela de 664px, sem dados)
+Meta: o primeiro item aparece antes de 35% da tela (~230px). Sem dados, os números são o mínimo; com dados, sobem.
+Na meta: Início 20%, Notificações 25%, Orçamentos AV 23%.
+Fora da meta:
+- Clientes, WhatsApp e Tráfego: 43%.
+- Funil: 50%.
+- Produção AV: 51%.
+- Placar: 57%.
+- Quadro e Calendário do Social: 64%.
+- Operação: 64%.
+- Agenda AV: 75%.
+- Automações: 83%.
+- Prospecção: 89%.
+- **Cobrança e Contratos: a tela inteira (100% ou mais).**
+
+## Padrão único no celular (aplicar em todas)
+1. Uma linha de topo de ~48px: título pequeno, "+" e "Filtros (n)". Subtítulo escondido (hidden md:block no SectionHeader).
+2. Uma só busca, de 44px.
+3. Filtros, ordenação, empresa e situação numa folha que sobe de baixo, aberta por "Filtros (n)".
+4. Alertas: uma linha rolável só com os maiores que zero.
+5. Abas coladas no topo. Com mais de 4, mostrar 3 e "Mais".
+6. Financeiro: empresa e mês numa linha; Configurar, Planilha, Contas fixas e Importar no menu "⋯"; "+" fixo.
+7. Bete: não cobre conteúdo. Bolha de 48px só quando houver algo urgente; +64px de espaço no fim das listas.
+8. Teste que mede esses números a cada entrega (script head.js da auditoria; levar para o repositório no autoteste).
