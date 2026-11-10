@@ -37,6 +37,17 @@ Capturas: `/tmp/claude-0/-home-user-peformake/aee204d9-a263-5dcb-b721-376614d4cc
 | Avulso de membro (25%) | 7 | Cálculo certo (1000 → membro 750, paga dia 30). Aceita membro ganhando mais que o cliente paga. |
 | Automações do financeiro | 6 | Central diz "Lembretes desligado", mas a rotina roda (alerta D+3, marca vencido D+7). "Mensalidade" promete atualizar valor e não atualiza. Falta "Aplicar descontos aprovados" na central. |
 
+## Situação das correções (10/11, madrugada)
+Código das correções pronto em `supabase/migrations/20261110200000` a `20261110200400`, mas **ainda não aplicado no banco** (a ferramenta do Supabase pede a confirmação do Italo). Legenda: **[código pronto, banco pendente]** · **[no ar]** (interface publicada).
+- 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14: corrigidos no banco [código pronto, banco pendente]; tela do 5 ("A conferir" no Caixa) [no ar].
+- 3: banco [pendente]; "Recebi outro valor" e "Parcial: falta R$ X" [no ar, aparecem quando o banco for aplicado].
+- 7: junta só a mesma empresa, vencimentos até 5 dias (vale o mais cedo, registrado); com "Quem recebe" junta as duas na conta de quem recebe [pendente]; separação das 12 cobranças juntas sem link está na 200200.
+- 13: banco [pendente]; confirmação na tela [no ar].
+- 15, 16, 17: tela [no ar] (bloqueio de excluir, aviso do contato, pergunta ao marcar perdido); funções client_delete, client_create e client_cancel_open_invoices [pendente].
+- 18 a 23: [pendente] (revoga acesso de fora, trava de admin, lembrete ao cliente respeita a chave). 22 na tela [no ar] (campos travados para não admin).
+- 24, 25, 26, 27 (+64px no fim das listas), 28, 29, 30 (tela abre ?fatura=; links novos no banco [pendente]), 31: [no ar]. 32: [pendente].
+- 33: depende do Italo (CPF/CNPJ dos clientes).
+
 ## Erros encontrados (do mais grave para o menos grave)
 
 Legenda: **[T]** = testado de verdade no banco/navegador; **[C]** = visto lendo o código.
