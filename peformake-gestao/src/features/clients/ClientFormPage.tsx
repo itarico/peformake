@@ -344,27 +344,27 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         </div>
       </Section>
 
-      <Section flat={inDialog} hidden={inDialog && tab !== 'contrato'} title={kind === 'avulso' ? 'Projeto' : 'Contrato'} text={kind === 'avulso' ? 'Datas do projeto, se houver.' : 'O fim é calculado pelo início e pela duração. Você pode ajustar.'}>
+      <Section flat={inDialog} hidden={inDialog && tab !== 'contrato'} title={kind === 'avulso' ? 'Projeto' : 'Contrato'} text={!isAdmin ? 'Só o administrador muda o dia de cobrança e as datas do contrato.' : kind === 'avulso' ? 'Datas do projeto, se houver.' : 'O fim é calculado pelo início e pela duração. Você pode ajustar.'}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-4">
           <Field label="Início" error={errors.startDate}>
-            {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('startDate')} type="date" value={draft.startDate} onChange={(e) => (kind === 'avulso' ? update('startDate', e.target.value) : setStartOrMonths(e.target.value, draft.months))} className={inputClass} />}
+            {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('startDate')} disabled={!isAdmin} type="date" value={draft.startDate} onChange={(e) => (kind === 'avulso' ? update('startDate', e.target.value) : setStartOrMonths(e.target.value, draft.months))} className={inputClass} />}
           </Field>
           {kind !== 'avulso' && (
             <Field label="Duração em meses" error={errors.months}>
               {(fid, by) => (
                 <>
-                  <input id={fid} aria-describedby={by} aria-invalid={invalid('months')} inputMode="numeric" list={`${fid}-lista`} value={draft.months} onChange={(e) => setStartOrMonths(draft.startDate, e.target.value.replace(/\D/g, ''))} className={inputClass} />
+                  <input id={fid} aria-describedby={by} aria-invalid={invalid('months')} disabled={!isAdmin} inputMode="numeric" list={`${fid}-lista`} value={draft.months} onChange={(e) => setStartOrMonths(draft.startDate, e.target.value.replace(/\D/g, ''))} className={inputClass} />
                   <datalist id={`${fid}-lista`}>{['3', '6', '12', '24'].map((m) => <option key={m} value={m} />)}</datalist>
                 </>
               )}
             </Field>
           )}
           <Field label="Fim" error={errors.endDate}>
-            {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('endDate')} type="date" value={draft.endDate} min={draft.startDate || undefined} onChange={(e) => update('endDate', e.target.value)} className={inputClass} />}
+            {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('endDate')} disabled={!isAdmin} type="date" value={draft.endDate} min={draft.startDate || undefined} onChange={(e) => update('endDate', e.target.value)} className={inputClass} />}
           </Field>
           {kind !== 'avulso' && (
             <Field label="Dia de cobrança" error={errors.billingDay}>
-              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('billingDay')} inputMode="numeric" value={draft.billingDay} onChange={(e) => update('billingDay', e.target.value.replace(/\D/g, '').slice(0, 2))} className={inputClass} placeholder="10" />}
+              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('billingDay')} disabled={!isAdmin} inputMode="numeric" value={draft.billingDay} onChange={(e) => update('billingDay', e.target.value.replace(/\D/g, '').slice(0, 2))} className={inputClass} placeholder="10" />}
             </Field>
           )}
           {isAdmin && draft.setupFee !== undefined && (

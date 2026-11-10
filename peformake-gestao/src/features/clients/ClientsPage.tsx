@@ -7,6 +7,7 @@ import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { ClientAvatar } from './ClientAvatar'
 import { NewClientDialog } from './NewClientDialog'
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import {
   DEFAULT_FILTERS,
   describeClient,
@@ -133,14 +134,14 @@ export function ClientsPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="flex flex-wrap items-center gap-3 text-3xl font-semibold tracking-tight">Clientes <AutomationsLink module="clientes" /></h1>
-          {query.data && <p className="text-muted"><LiveValue value={String(liveRecurring)} /> recorrentes e <LiveValue value={String(liveOneOff)} /> avulsos ativos · perdidos não entram nas contas</p>}
+      <div className="flex items-center justify-between gap-2 md:flex-wrap md:items-end md:gap-3">
+        <div className="min-w-0">
+          <h1 className="flex flex-wrap items-center gap-3 text-2xl font-semibold tracking-tight md:text-3xl">Clientes <AutomationsLink module="clientes" /></h1>
+          {query.data && <p className="hidden text-muted md:block"><LiveValue value={String(liveRecurring)} /> recorrentes e <LiveValue value={String(liveOneOff)} /> avulsos ativos · perdidos não entram nas contas</p>}
         </div>
         {canManage && (
-          <button type="button" onClick={() => setCreating(true)} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand hover:opacity-85">
-            <Plus size={18} aria-hidden="true" /> Novo cliente
+          <button type="button" onClick={() => setCreating(true)} aria-label="Novo cliente" className="inline-flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-brand px-3 font-semibold text-on-brand hover:opacity-85 md:px-4">
+            <Plus size={18} aria-hidden="true" /> <span className="hidden md:inline">Novo cliente</span>
           </button>
         )}
       </div>
@@ -164,12 +165,12 @@ export function ClientsPage() {
 
       {query.data && tab !== 'summary' && tab !== 'perdidos' && (
         <>
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Atalhos">
+          <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] md:flex-wrap" role="group" aria-label="Atalhos">
             {shortcuts.map((c) => {
               const active = filters.flag === c.flag
               return (
                 <button key={c.flag} type="button" aria-pressed={active} onClick={() => set('flag', active ? 'all' : c.flag)}
-                  className={cn('inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-[13px] font-medium transition-colors',
+                  className={cn('inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-full border px-3.5 text-[13px] font-medium transition-colors md:min-h-10', !c.n && !active && 'max-md:hidden',
                     active ? 'border-ink bg-fill text-on-fill' : 'border-line bg-surface hover:border-line-strong')}>
                   <span className={cn('min-w-6 rounded-full px-1.5 text-center text-[12px] font-semibold tabular-nums', active ? 'bg-on-fill/20' : c.warn ? 'bg-warn-soft text-warn-ink' : 'bg-raised text-muted')}>{c.n}</span>
                   {c.label}
@@ -178,7 +179,7 @@ export function ClientsPage() {
             })}
           </div>
 
-          <div className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-3">
+          <div className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-3 max-md:gap-0 max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0">
             <div className="flex flex-wrap items-center gap-2">
               <div className="relative min-w-[220px] flex-1">
                 <Search size={16} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
@@ -186,12 +187,25 @@ export function ClientsPage() {
                 <input id="busca" type="search" placeholder="Buscar cliente, segmento, contato ou equipe" value={filters.search}
                   onChange={(event) => set('search', event.target.value)} className="min-h-11 w-full rounded-full border border-line bg-canvas pl-10 pr-4" />
               </div>
+              <FilterSheet count={(filters.sort !== 'best' ? 1 : 0) + (filters.entity !== 'all' ? 1 : 0) + (filters.flag !== 'all' ? 1 : 0) + (filters.status !== 'active' ? 1 : 0) + (filters.kind !== 'all' ? 1 : 0)}>
               <label htmlFor="ordem" className="sr-only">Ordenar</label>
               <select id="ordem" value={filters.sort} onChange={(event) => set('sort', event.target.value)} className={chipSelect}>
                 {SORTS.map((item) => <option key={item.id} value={item.id}>Ordenar: {item.label}</option>)}
               </select>
+              <div className="flex flex-wrap items-center gap-2 md:hidden">
+                <Chips label="Situação" value={filters.status} onChange={(value) => set('status', value)} options={[{ id: 'active', label: 'Ativos' }, { id: 'lost', label: 'Perdidos' }]} />
+                {tab === 'recorrentes' && <Chips label="Tipo" value={filters.kind} onChange={(value) => set('kind', value)} options={[{ id: 'all', label: 'Todos' }, { id: 'fixo', label: 'Fixo' }, { id: 'tcv', label: 'TCV' }]} />}
+                <select aria-label="Empresa" value={filters.entity} onChange={(event) => set('entity', event.target.value)} className={cn(chipSelect, filters.entity !== 'all' && activeChip)}>
+                  <option value="all">Peformake e Ellcazo</option><option value="peformake">Só Peformake</option><option value="ellcazo">Só Ellcazo</option>
+                </select>
+                <select aria-label="Pontos de atenção" value={filters.flag} onChange={(event) => set('flag', event.target.value)} className={cn(chipSelect, filters.flag !== 'all' && activeChip)}>
+                  <option value="all">Qualquer situação</option><option value="any">Pedem atenção</option>
+                  {FLAGS.map((flag) => <option key={flag} value={flag}>{ATTENTION_LABEL[flag]}</option>)}
+                </select>
+              </div>
+              </FilterSheet>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="hidden flex-wrap items-center gap-2 md:flex">
               <Chips label="Situação" value={filters.status} onChange={(value) => set('status', value)} options={[{ id: 'active', label: 'Ativos' }, { id: 'lost', label: 'Perdidos' }]} />
               <span aria-hidden="true" className="hidden h-6 w-px bg-line sm:block" />
               {tab === 'recorrentes' && (

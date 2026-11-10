@@ -35,12 +35,12 @@ export function SectionHeader({ title, sub, actions, tabs, label }: { title: str
   }, [pathname])
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2 md:items-end md:gap-3">
+      <div className="flex items-center justify-between gap-2 md:flex-wrap md:items-end md:gap-3">
         <div className="min-w-0">
           <h1 className="truncate text-2xl font-semibold tracking-tight md:text-3xl">{title}</h1>
           {sub && <p className="mt-0.5 hidden max-w-[70ch] text-[13px] text-muted md:block">{sub}</p>}
         </div>
-        {(actions || moduleOf(pathname)) && <div className="flex flex-wrap items-center gap-2">{actions}{moduleOf(pathname) && <AutomationsLink module={moduleOf(pathname)!} />}</div>}
+        {(actions || moduleOf(pathname)) && <div className="flex shrink-0 items-center gap-1.5 md:flex-wrap md:gap-2">{actions}{moduleOf(pathname) && <span className="hidden md:contents"><AutomationsLink module={moduleOf(pathname)!} /></span>}</div>}
       </div>
       {visible.length > 1 && (
         <nav ref={navRef} aria-label={label ?? `Áreas de ${title}`} className="-mx-4 flex max-md:[mask-image:linear-gradient(to_right,#000_calc(100%-36px),transparent)] gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">

@@ -270,7 +270,7 @@ export function whatsappLink(phone: string | null): string | null {
 
 export function initials(name: string): string {
   // Só palavras com letra ou número: "João Silva (PF)" vira "JS", não "J(".
-  const parts = name.trim().split(/\s+/).map((w) => w.replace(/[^\p{L}\p{N}]/gu, '')).filter(Boolean)
+  const parts = name.replace(/\([^)]*\)/g, ' ').trim().split(/\s+/).map((w) => w.replace(/[^\p{L}\p{N}]/gu, '')).filter(Boolean)
   const first = parts[0]?.[0] ?? '?'
   const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? '') : ''
   return (first + last).toUpperCase()

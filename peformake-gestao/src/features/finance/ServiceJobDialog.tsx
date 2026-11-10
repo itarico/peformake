@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
+import { ask } from '@/components/ui/confirm'
 import { parseMoney } from './statement'
 import { brl, todayBR } from './money'
 
@@ -67,10 +68,13 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
       if (title.trim().length < 2) throw new Error('Escreva o serviço.')
       if (cv <= 0 && sv <= 0) throw new Error('Informe o valor.')
       if (sv > 0 && !staff) throw new Error('Escolha quem faz o serviço.')
+      // Membro ganhando mais do que o cliente paga: só de propósito, com confirmação.
+      const over = cv > 0 && sv > cv
+      if (over && !(await ask(`O membro vai receber ${brl(sv)} e o cliente paga ${brl(cv)}. Confirmar mesmo assim?`))) throw new Error('Confira os valores: o membro receberia mais do que o cliente paga.')
       const { error } = await (supabase.rpc as unknown as Rpc)('service_job_save', {
-        _data: { client_id: client, unit, skill: skill.key, title: title.trim(), job_date: date, client_amount: cv, staff_id: staff, staff_amount: sv },
+        _data: { client_id: client, unit, skill: skill.key, title: title.trim(), job_date: date, client_amount: cv, staff_id: staff, staff_amount: sv, confirm_over: over },
       })
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(/PF014|mais do que o cliente/.test(error.message) ? 'Só o administrador confirma o membro ganhando mais do que o cliente paga.' : error.message)
     },
     onSuccess: () => {
       for (const k of ['invoices', 'client-invoices', 'fin-entries', 'fin-summary', 'job-people', 'my-payables']) void queryClient.invalidateQueries({ queryKey: [k] })

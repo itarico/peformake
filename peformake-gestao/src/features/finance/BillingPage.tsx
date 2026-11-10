@@ -87,6 +87,7 @@ export function BillingPage() {
   const target = params.get('fatura')
   const [, setMonth] = useMonthParam()
   const [limit, setLimit] = useState(40)
+  const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [paying, setPaying] = useState<Invoice | null>(null)
   const [discountFor, setDiscountFor] = useState<{ id: string; name: string } | null>(null)
@@ -268,13 +269,29 @@ export function BillingPage() {
       .then((ok) => { if (ok) join.mutate({ ids: items.map((x) => x.id), hadLink }) })
   }
 
+  const menu = [
+            { label: 'Serviço avulso', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setJobOpen(true), hidden: !isAdmin },
+            { label: 'Gerar mensalidades do mês', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => generate.mutate(), disabled: generate.isPending, hidden: !isAdmin },
+            { label: 'Importar recebimentos do Asaas', icon: <Download size={15} aria-hidden="true" />, onClick: () => importAsaas.mutate(), disabled: importAsaas.isPending, hidden: !isAdmin },
+            { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
+            { label: 'Configurar cobrança', icon: <Settings size={15} aria-hidden="true" />, onClick: () => setSettingsOpen(true), hidden: !isAdmin },
+  ]
+  // Celular: título numa linha com os ícones (busca, +, ⋯); filtros na folha de baixo.
+  const mobileIcons = (
+    <span className="flex items-center gap-1.5 md:hidden">
+      <button type="button" aria-label="Buscar cobrança" onClick={() => setSearchOpen((v) => !v)} className="grid size-11 cursor-pointer place-items-center rounded-full border border-line"><Search size={17} aria-hidden="true" /></button>
+      {isAdmin && <button type="button" aria-label="Nova cobrança" onClick={() => setCreating(true)} className="grid size-11 cursor-pointer place-items-center rounded-full bg-fill text-on-fill"><Plus size={18} aria-hidden="true" /></button>}
+      <ActionMenu label="Mais ações da cobrança" actions={menu} />
+    </span>
+  )
+
   return (
     <>
       <SectionHeader
         title="Financeiro"
         sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto.`}
         tabs={FINANCE_TABS}
-        actions={<FilterSheet count={(unit !== 'todas' ? 1 : 0) + (status !== 'aberto' ? 1 : 0)}>
+        actions={<>{mobileIcons}<FilterSheet count={(unit !== 'todas' ? 1 : 0) + (status !== 'aberto' ? 1 : 0)}>
           <div role="group" aria-label="Situação" className="flex flex-wrap gap-1 md:hidden">
             {([['aberto', 'Quem deve'], ['vencido', 'Vencidas'], ['pago', 'Pagas'], ['todas', 'Tudo']] as const).map(([k, l]) => (
               <button key={k} type="button" aria-pressed={status === k} onClick={() => setStatusFilter(k)}
@@ -289,12 +306,12 @@ export function BillingPage() {
           </div>
           <MonthSwitcher />
           {isAdmin && <span className="hidden md:contents"><Button variant="secondary" onClick={() => setSettingsOpen(true)}><Settings size={15} aria-hidden="true" /> Configurar cobrança</Button></span>}
-        </FilterSheet>}
+        </FilterSheet></>}
       />
 
-      {isAdmin && <AsaasCard />}
+      {isAdmin && <div className="max-md:order-last"><AsaasCard /></div>}
       {isAdmin && noDoc.length > 0 && (
-        <details className="group rounded-2xl border border-line bg-surface px-4 py-2.5 text-[13px]">
+        <details className="group rounded-2xl border border-line bg-surface px-4 py-2.5 text-[13px] max-md:order-last">
           <summary className="cursor-pointer list-none">
             <b>{noDoc.length} {noDoc.length === 1 ? 'cliente sem CPF/CNPJ' : 'clientes sem CPF/CNPJ'}.</b> <span className="text-muted">Mande o "Copiar link": o cliente informa o documento ao abrir.</span> <span className="font-medium text-accent-ink">Ver quais</span>
           </summary>
@@ -302,7 +319,7 @@ export function BillingPage() {
         </details>
       )}
 
-      {isAdmin && <ReviewQueue onDone={(msg) => { setNotice(msg); refresh() }} />}
+      {isAdmin && <div className="max-md:order-last"><ReviewQueue onDone={(msg) => { setNotice(msg); refresh() }} /></div>}
 
       {/* Celular: uma linha só, e só o que é maior que zero. */}
       <section aria-label="Resumo" className="flex gap-2 overflow-x-auto [scrollbar-width:none] md:grid md:grid-cols-4 md:overflow-visible">
@@ -312,16 +329,16 @@ export function BillingPage() {
           { label: 'Recebido', value: brl(paid.reduce((a, i) => a + Number((i as Invoice & { paid_amount?: number }).paid_amount ?? i.amount), 0)), hint: `${paid.length} faturas`, f: 'pago' as const, n: paid.length },
           { label: 'Sem link ainda', value: String(ready.length), hint: ready.length ? 'Vencem em até 5 dias' : 'O link sai 5 dias antes', warn: ready.length > 0 && noDoc.length > 0, f: 'aberto' as const, n: ready.length },
         ].map((t) => (
-          <div key={t.label} onClick={() => setStatusFilter(t.f)} className={cn('shrink-0 cursor-pointer rounded-2xl border border-line bg-surface px-4 py-3 hover:border-line-strong max-md:min-w-[42%] max-md:py-2', !t.n && 'max-md:hidden')}>
+          <div key={t.label} onClick={() => setStatusFilter(t.f)} className={cn('shrink-0 cursor-pointer rounded-2xl border border-line bg-surface px-4 py-3 hover:border-line-strong max-md:flex max-md:items-baseline max-md:gap-1.5 max-md:rounded-full max-md:px-3 max-md:py-1.5', !t.n && 'max-md:hidden')}>
             <p className="text-[12px] font-medium text-muted">{t.label}</p>
-            <p className={cn('text-[18px] font-semibold tabular-nums md:text-[22px]', t.warn && 'text-warn-ink')}>{t.value}</p>
+            <p className={cn('text-[15px] font-semibold tabular-nums md:text-[22px]', t.warn && 'text-warn-ink')}>{t.value}</p>
             {t.hint && <p className="hidden text-[12px] text-muted md:block">{t.hint}</p>}
           </div>
         ))}
       </section>
 
       {notice && <p role="status" className="rounded-xl bg-raised px-4 py-2.5 text-[14px] font-medium">{notice}</p>}
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className={cn('flex-wrap items-center justify-between gap-2', searchOpen || query ? 'flex' : 'hidden md:flex')}>
         <div role="group" aria-label="Situação" className="hidden flex-wrap gap-1 md:flex">
           {([['aberto', 'Quem deve'], ['vencido', 'Vencidas'], ['pago', 'Pagas'], ['todas', 'Tudo']] as const).map(([k, l]) => (
             <button key={k} type="button" aria-pressed={status === k} onClick={() => setStatusFilter(k)}
@@ -331,17 +348,11 @@ export function BillingPage() {
         <div className="flex w-full flex-wrap gap-2 md:w-auto">
           <label className="relative flex flex-1 items-center md:flex-none">
             <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 text-muted" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" aria-label="Buscar cobrança"
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" aria-label="Buscar cobrança" autoFocus={searchOpen}
               className="min-h-11 w-full rounded-full border border-line bg-surface pl-9 pr-3 text-[13px] md:min-h-10 md:w-44" />
           </label>
-          {isAdmin && <Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button>}
-          <ActionMenu label="Mais ações da cobrança" actions={[
-            { label: 'Serviço avulso', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setJobOpen(true), hidden: !isAdmin },
-            { label: 'Gerar mensalidades do mês', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => generate.mutate(), disabled: generate.isPending, hidden: !isAdmin },
-            { label: 'Importar recebimentos do Asaas', icon: <Download size={15} aria-hidden="true" />, onClick: () => importAsaas.mutate(), disabled: importAsaas.isPending, hidden: !isAdmin },
-            { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
-            { label: 'Configurar cobrança', icon: <Settings size={15} aria-hidden="true" />, onClick: () => setSettingsOpen(true), hidden: !isAdmin },
-          ]} />
+          {isAdmin && <span className="hidden md:contents"><Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button></span>}
+          <span className="hidden md:contents"><ActionMenu label="Mais ações da cobrança" actions={menu} /></span>
         </div>
       </div>
 
@@ -486,7 +497,7 @@ export function dueWarning(date: string, everyMonth: boolean, today: string): st
 }
 
 /** Mudar vencimento: só esta cobrança ou o dia de todo mês do cliente. */
-function DueDialog({ target, onClose, onSaved }: { target: { id: string; label: string; due: string; monthly: boolean }; onClose: () => void; onSaved: (msg: string) => void }) {
+export function DueDialog({ target, onClose, onSaved }: { target: { id: string; label: string; due: string; monthly: boolean }; onClose: () => void; onSaved: (msg: string) => void }) {
   const [date, setDate] = useState(target.due)
   const [every, setEvery] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
@@ -518,7 +529,7 @@ function DueDialog({ target, onClose, onSaved }: { target: { id: string; label: 
 }
 
 /** Pagamento feito fora do link: a data em que o dinheiro entrou e, se veio diferente, quanto veio (parcial deixa saldo aberto). */
-function PayInvoiceDialog({ invoice, name, single, onClose, onPay }: { invoice: Invoice; name: string; single: boolean; onClose: () => void; onPay: (date: string, amount: number | null) => void }) {
+export function PayInvoiceDialog({ invoice, name, single, onClose, onPay }: { invoice: Pick<Invoice, 'amount' | 'partial_paid' | 'description'>; name: string; single: boolean; onClose: () => void; onPay: (date: string, amount: number | null) => void }) {
   const [date, setDate] = useState(todayBR())
   const [other, setOther] = useState(false)
   const [value, setValue] = useState('')

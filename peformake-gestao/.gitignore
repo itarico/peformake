@@ -6,3 +6,4 @@ dist
 *.local.sql
 .code-review-graph
 .vercel
+e2e/capturas

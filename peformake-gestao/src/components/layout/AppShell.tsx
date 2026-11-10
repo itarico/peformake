@@ -206,7 +206,7 @@ export function AppShell() {
         <div className="pointer-events-none sticky top-0 z-20 hidden justify-end px-7 pt-3 md:flex">
           <div className="pointer-events-auto"><NotificationBell /></div>
         </div>
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-4 py-5 md:-mt-11 md:px-7 md:py-6 md:pr-20">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-4 py-3 md:-mt-11 md:gap-4 md:px-7 md:py-6 md:pr-20">
           <ErrorBoundary resetKey={location.pathname}><Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense></ErrorBoundary>
         </div>
       </main>

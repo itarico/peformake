@@ -152,6 +152,8 @@ export function FinancePage() {
   const [fixed, setFixed] = useState(false)
   const [query, setQuery] = useState('')
   const [problem, setProblem] = useState<string | null>(null)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [limit, setLimit] = useState(60)
 
   const entries = useQuery({
     queryKey: ['fin-entries', unit, month],
@@ -233,7 +235,14 @@ export function FinancePage() {
         title="Financeiro"
         sub={`Caixa de ${monthLabel(month).toLowerCase()}. Mesmo CNPJ, contas separadas por empresa.`}
         tabs={FINANCE_TABS}
-        actions={<FilterSheet count={(filter !== 'todos' ? 1 : 0)}>
+        actions={<><span className="flex items-center gap-1.5 md:hidden">
+          <button type="button" aria-label="Buscar no caixa" onClick={() => setSearchOpen((v) => !v)} className="grid size-11 cursor-pointer place-items-center rounded-full border border-line"><Search size={17} aria-hidden="true" /></button>
+          <ActionMenu label="Mais ações do caixa" actions={[
+            { label: 'Importar extrato', icon: <FileUp size={15} aria-hidden="true" />, onClick: () => setImporting(true) },
+            { label: 'Contas fixas', icon: <CalendarClock size={15} aria-hidden="true" />, onClick: () => setFixed(true) },
+            { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
+          ]} />
+        </span><FilterSheet count={(filter !== 'todos' ? 1 : 0)}>
           <div role="group" aria-label="Filtro" className="flex flex-wrap gap-1 md:hidden">
             {FILTERS.map(([k, l]) => (
               <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}
@@ -249,7 +258,7 @@ export function FinancePage() {
             </div>
           )}
           <MonthSwitcher />
-        </FilterSheet>}
+        </FilterSheet></>}
       />
       {isAdmin && <ToReview onDone={refresh} />}
       {isAdmin && <Transfers onDone={refresh} />}
@@ -263,21 +272,21 @@ export function FinancePage() {
           { label: 'Vencido', value: s ? brl(s.vencido_receber ?? 0) : '—', warn: !!s && (s.vencido_receber_qtd ?? 0) > 0, onClick: () => setFilter('vencido'),
             hint: s ? `${s.vencido_receber_qtd ?? 0} a receber atrasados${(s.vencido_pagar_qtd ?? 0) > 0 ? ` · ${s.vencido_pagar_qtd} contas a pagar (${brl(s.vencido_pagar ?? 0)})` : ''}${s.sem_categoria ? ` · ${s.sem_categoria} sem categoria` : ''}` : undefined },
         ].map((t) => (
-          <div key={t.label} onClick={t.onClick} className={cn('shrink-0 rounded-2xl border border-line bg-surface px-4 py-3 max-md:min-w-[42%] max-md:py-2', t.onClick && 'cursor-pointer hover:border-line-strong', t.label === 'Vencido' && !(s?.vencido_receber_qtd) && 'max-md:hidden')}>
+          <div key={t.label} onClick={t.onClick} className={cn('shrink-0 rounded-2xl border border-line bg-surface px-4 py-3 max-md:flex max-md:items-baseline max-md:gap-1.5 max-md:rounded-full max-md:px-3 max-md:py-1.5', t.onClick && 'cursor-pointer hover:border-line-strong', t.label === 'Vencido' && !(s?.vencido_receber_qtd) && 'max-md:hidden')}>
             <p className="text-[12px] font-medium text-muted">{t.label}</p>
-            <p className={cn('text-[18px] font-semibold tabular-nums md:text-[22px]', t.warn && 'text-warn-ink')}>{t.value}</p>
+            <p className={cn('text-[15px] font-semibold tabular-nums md:text-[22px]', t.warn && 'text-warn-ink')}>{t.value}</p>
             {t.hint && <p className="hidden text-[12px] text-muted md:block">{t.hint}</p>}
           </div>
         ))}
       </section>
       {isAdmin && (() => {
         const n = (entries.data ?? []).filter((e) => e.review_status === 'a_revisar').length
-        return n > 0 ? <Link to="/financeiro/whatsapp" className="self-start rounded-full bg-raised px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:bg-line">{n} lançamento{n === 1 ? '' : 's'} do WhatsApp a revisar →</Link> : null
+        return n > 0 ? <Link to="/financeiro/whatsapp" className="self-start rounded-full max-md:order-last bg-raised px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:bg-line">{n} lançamento{n === 1 ? '' : 's'} do WhatsApp a revisar →</Link> : null
       })()}
       {summary.isError && <LoadState isPending={false} isError refetch={() => void summary.refetch()} />}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-4 py-2.5 font-medium text-warn-ink">{problem}</p>}
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className={cn('flex-wrap items-center justify-between gap-2', searchOpen || query ? 'flex' : 'hidden md:flex')}>
         <div role="group" aria-label="Filtro" className="hidden flex-wrap gap-1 md:flex">
           {FILTERS.map(([k, l]) => (
             <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}
@@ -296,19 +305,12 @@ export function FinancePage() {
             <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={15} aria-hidden="true" /> Importar extrato</Button>
             <Button onClick={() => setEditing('new')}><Plus size={15} aria-hidden="true" /> Lançamento</Button>
           </span>
-          <span className="md:hidden">
-            <ActionMenu label="Mais ações do caixa" actions={[
-              { label: 'Importar extrato', icon: <FileUp size={15} aria-hidden="true" />, onClick: () => setImporting(true) },
-              { label: 'Contas fixas', icon: <CalendarClock size={15} aria-hidden="true" />, onClick: () => setFixed(true) },
-              { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
-            ]} />
-          </span>
         </div>
       </div>
 
       {!entries.data ? <LoadState isPending={entries.isPending} isError={entries.isError} refetch={() => void entries.refetch()} /> : (
         <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
-          {list.map((e) => {
+          {list.slice(0, limit).map((e) => {
             const late = e.status === 'pendente' && e.due_date < today
             return (
               <li key={e.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-line px-4 py-3 last:border-b-0">
@@ -334,19 +336,20 @@ export function FinancePage() {
                     void ask(`Lembrar para os próximos extratos? Tudo com "${hint}" vai para "${catName.get(category)}".`)
                       .then((ok) => categorize.mutate({ id: e.id, category, learn: ok ? hint : null }))
                   }}
-                  className={cn('min-h-10 max-w-[200px] rounded-xl border bg-surface px-2 text-[13px]', e.category_id ? 'border-line' : 'border-warn text-warn-ink')}>
+                  className={cn('min-h-11 max-w-[200px] rounded-xl border bg-surface px-2 text-[13px] max-md:order-last max-md:ml-[88px] md:min-h-10', e.category_id ? 'border-line max-md:hidden' : 'border-warn text-warn-ink')}>
                   <option value="">Sem categoria</option>
                   {unitCats.filter((c) => c.kind === e.kind).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
-                <span className={cn('w-28 text-right font-semibold tabular-nums', e.kind === 'entrada' ? 'text-ok-ink' : 'text-ink')}>{e.kind === 'saida' ? '−' : '+'} {brl(e.amount)}</span>
+                <span className={cn('text-right font-semibold tabular-nums md:w-28', e.kind === 'entrada' ? 'text-ok-ink' : 'text-ink')}>{e.kind === 'saida' ? '−' : '+'} {brl(e.amount)}</span>
                 {e.status === 'pendente' && (
                   <button type="button" title="Marcar como pago" aria-label={`Marcar ${e.description} como pago`} disabled={setStatus.isPending}
                     onClick={() => setPaying(e)}
-                    className="grid size-10 cursor-pointer place-items-center rounded-full border border-line hover:border-ink"><Check size={16} aria-hidden="true" /></button>
+                    className="grid size-11 cursor-pointer place-items-center rounded-full border border-line hover:border-ink"><Check size={16} aria-hidden="true" /></button>
                 )}
               </li>
             )
           })}
+          {list.length > limit && <li className="p-3 text-center"><Button variant="secondary" onClick={() => setLimit((n) => n + 60)}>Ver mais ({list.length - limit})</Button></li>}
           {list.length === 0 && (q || filter !== 'todos') && <li className="p-8 text-center text-muted">Nada encontrado com esse filtro.</li>}
           {list.length === 0 && !q && filter === 'todos' && <li className="p-8 text-center text-muted">Nada lançado neste mês. Use <b className="text-ink">Lançamento</b> para uma entrada ou saída, ou <b className="text-ink">Importar extrato</b> com o arquivo OFX ou CSV do banco: o sistema separa e categoriza sozinho.</li>}
         </ul>
