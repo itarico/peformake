@@ -2,6 +2,21 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 noite · PAINEL DOS ASSUNTOS EM ABERTO (nuvem)
+1. Sincronização PC/nuvem: gancho de início pronto. No PC, dar git pull uma vez.
+2. Economia de créditos: um chat por assunto; Meta 2x/dia.
+3. Cobranças: mensagens prontas (MD, CM, Will, Fuctura). Pendente: o Italo decidir se lança os atrasados da CM (R$ 2.550) e da Fuctura (R$ 4.200).
+4. Fases do Financeiro: 0 e 1 feitas; 2, 3, 4 (Resumo) e 5 não.
+5. Resumo do Financeiro: estudo em docs/ESTUDO-FINANCEIRO-RESUMO.md; antes, colocar os dados em dia.
+6. Lançamentos pelo WhatsApp: em construção por agente (sem crédito por lançamento, revisão, reembolso Pix com OK). Depende de: número no grupo, WASENDER_API_KEY, telefone e Pix dos membros.
+7. Áudio do WhatsApp sem transcrição (0 de 387): conserto junto do item 6.
+8. Avaliação geral: 6/10. O sistema está em fase de testes (só vai ao ar com domínio próprio).
+9. Avaliação e estresse de Clientes e Financeiro: agente rodando; relatório em docs/AVALIACAO-CLIENTES-FINANCEIRO.md.
+10. Autoteste semanal sem IA: desenho vem com o item 9.
+11. Celular: docs/AUDITORIA-MOBILE.md; aplicar o padrão minimalista começando por Clientes e Financeiro.
+12. Antigos: passo pendente no Início e na Bete; prévia do contrato; diagnóstico (roteiro com o Italo); tempo por cliente (estudar).
+Ordem: terminar 6 e 9 → corrigir os erros do 9 e o celular de Clientes e Financeiro → autoteste → dados em dia → Resumo.
+
 ## 2026-11-10 noite · Financeiro → WhatsApp (nuvem): construído, falta aplicar 1 migração no banco
 Feito: aba /financeiro/whatsapp (só admin) com Revisar · Canais · Pessoas (edição em pop-up). Leitura 100% no banco, sem IA (custo em créditos do Claude por lançamento = 0): fin_wa_parse entende texto livre ("paguei 89,90 no canva", "gastei 250 de gasolina na captação da transpetro", "R$ 1.200 recebido da will motos", "uber 32,50 ellcazo", "paguei do meu bolso 60 estacionamento", "ontem", "dia 08", "1,5 mil"); o que não entende fica "não entendi: completar" com o texto original. Gatilho fin_wa_on_message em whatsapp_messages → fin_inbox (chave única por mensagem) → atribuição (cliente por nome/apelido clients.aliases/nome parecido via pg_trgm; captação av_projects ou avulso service_jobs ±3 dias; senão despesa geral), categoria por fin_rules + dicionário, conta fixa do mês, impressão digital (valor+data±2+descrição parecida/categoria/cliente; extrato) = "confirmado também por X", entrada de cliente sugere fatura (nunca dá baixa sozinha), "do meu bolso" = reembolso (só vira conta a pagar do dia 30 após a revisão), comandos "cancela", "corrige 230", "outro" respondendo à mensagem (stanzaId ou "ref xxxxxx"). Resposta no grupo via notification_outbox (to_jid). Lançamento manual avisa repetido (fin_entry_dupe_check: "É o mesmo"/"É outro"); fin_import casa extrato com o WhatsApp (bank_ref, "conferido no banco"). Caixa marca "via WhatsApp · a revisar". Bete: 1 linha semanal (fin_wa_pending_count); fechamento do mês avisa (notify fin_wa_review). Cartão antigo WhatsappSenders removido; gatilho antigo fin_from_whatsapp virou função vazia (fin_whatsapp_senders fica guardada). Edge functions: whatsapp-media v12 (baixa comprovante e áudio dos canais do financeiro para a pasta privada fin-whatsapp), billing-gateway v16 (ação nova 'reimburse', só admin logado, nunca cron, com dry_run; parti da v15).
 No banco: migrações 20261110190000 (tabelas), 20261110190100 (leitor) e 20261110190200 (fluxo/gatilhos) aplicadas via execute_sql. **FALTA aplicar 20261110190300_fin_whatsapp_revisao.sql** (RPCs da aba, revisão, reembolso, fin_import novo, fechamento, automation_catalog): a ferramenta do Supabase pediu confirmação (o arquivo tem DELETE de configuração dentro de funções) e ninguém respondeu. Até aplicar, a aba mostra "ainda está sendo ligada". Aplicar com apply_migration (o Italo confirma).
