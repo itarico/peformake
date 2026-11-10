@@ -2,6 +2,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 · estudo: lançamentos do Financeiro pelo WhatsApp (nuvem, só estudo)
+Estudo completo em docs/ESTUDO-FINANCEIRO-WHATSAPP.md: aba Financeiro → Lançamentos WhatsApp (canais por link de grupo ou número, quem pode lançar por foto, revisão), texto/áudio/foto, atribuição a cliente/serviço/projeto ou despesa geral com quem gastou, anti-duplicidade (impressão digital valor+data±2+fornecedor; aviso no lançamento manual; casa com extrato e recorrentes), revisão antes do fechamento com "Confirmar todos os conferidos no banco", margem por projeto. Grupo do Italo: link chat.whatsapp.com/LgTKlshaAVj71nK8Pg24FM (ele e Vinícius); o grupo ainda não aparece em wa_groups (número da Peformake precisa estar nele). Depende de WASENDER_API_KEY e do conserto da transcrição. Aguardando 5 decisões (seção 11).
+
 ## 2026-11-10 · lançar no Financeiro pelo WhatsApp: o que existe e o que falta (nuvem, só análise)
 Existe: Caixa → cartão "Lançar pelo WhatsApp" (WhatsappSenders.tsx, fin_whatsapp_senders, gatilho fin_from_whatsapp em whatsapp_messages). Limites: ignora grupo (is_group), só formato fixo "gasto 89,90 canva", lança direto como pago (sem confirmação), 0 números cadastrados e 0 lançamentos; a resposta "anotado" depende do WASENDER_API_KEY.
 Italo quer: um grupo financeiro do WhatsApp; agente leve (Haiku) lê texto livre e comprovante (foto/Pix), entende despesa/entrada, empresa, categoria e se é pagamento de cliente (liga à fatura); entra como "A confirmar" no topo do Caixa com Confirmar/Editar/Descartar; só confirmado vale para saldo e Resumo; Bete avisa sem alarde; nada em dobro com extrato/Asaas. O número da Peformake precisa estar no grupo. Próximo: construir (faz parte da Fase A do Resumo).
