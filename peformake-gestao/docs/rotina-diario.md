@@ -2,6 +2,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 · estudo: aba Resumo do Financeiro (nuvem, só estudo)
+Estudo completo em docs/ESTUDO-FINANCEIRO-RESUMO.md: tela (4 cartões, "O que fazer agora", gráficos), dicionário de métricas (MRR, inadimplência, churn, concentração, fôlego de caixa etc.), cruzamentos, automação (fin_dashboard + fotografia mensal) e fases A/B/C. Bloqueio: histórico do Caixa só desde 06/11; importar extratos jan–out e rodar sync do Asaas 400 dias. Aguardando as 5 decisões do Italo (seção 8) para começar a Fase A.
+
 ## 2026-11-10 · análise de gasto de créditos (nuvem)
 Custo real por sessão (get_session, usage.cost_usd): esta sessão da nuvem (Opus, ~316 mil tokens de contexto) US$ 308 desde 06/11 (~US$ 65/dia); sessão da rotina da Meta (Opus, ~307 mil de contexto, o Italo também conversou nela) US$ 90 desde 09/11 (~US$ 60/dia); Hipertrofia US$ 9 em um dia; rotinas Haiku (WhatsApp, caixa de mensagens) ~US$ 0,01 por rodada (desprezível).
 Feito: leitura da Meta de 4 para 2 vezes por dia (05:30 e 17:30) e modelo da tarefa Sonnet (só vale quando a sessão da rotina for recriada; a sessão atual segue Opus). automation_catalog trf_leitura atualizado. WhatsApp ficou como estava (10 min), porque a economia seria quase zero.
