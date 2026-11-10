@@ -2,6 +2,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 · cobrança sem desconto (nuvem)
+Italo não quer desconto por pagar antes. Configuração já estava com desconto desligado e nenhum cliente com desconto próprio, mas a cobrança da Will Motos (R$ 1.900, vence 10/11) tinha sido criada no Asaas com desconto de 1%. billing-gateway v15: nova ação clear_discount (admin ou cron) tira o desconto das cobranças em aberto já criadas no Asaas; rodada agora: 1 verificada, 1 corrigida. Mensagens de cobrança da MD Prime, CM Prime e Will Motos geradas no chat para o Italo enviar (Pix dele). CM Prime tem atraso fora do sistema (tráfego ago/set/out, 1 apresentação R$ 150, 1 audiovisual): perguntei se lanço essas cobranças antigas na ficha; aguardando.
+
 ## 2026-11-10 · nuvem assume enquanto o PC está desligado (até o fim de semana)
 Combinado com o Italo: o PC fica desligado e o trabalho segue na sessão da nuvem. Quando o PC voltar, antes de qualquer coisa: git pull e ler este diário do topo até a última entrada do PC, para não refazer nada.
 Conferido agora: Fase 0 completa no banco (baixa do grupo com trava PF008, conciliação, can_see_av_price, service_job_release) e Fase 1 (passos 1 a 4) do PC também. Migração da nuvem renomeada para 20261109185000_fin_fase0_baixa_grupo.sql (tinha o mesmo número de 20261109190000_fin_fase0_multa_cpf.sql); já estava aplicada, nada mudou no banco.

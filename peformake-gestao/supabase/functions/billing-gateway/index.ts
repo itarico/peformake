@@ -6,6 +6,7 @@
 //   charge_one (admin logado): cria o link de uma fatura agora.
 //   status  (admin logado): diz se a chave está no servidor e de qual conta é (sem expor a chave).
 //   sync    (admin logado ou cron): traz os pagamentos recebidos no Asaas para o caixa (sem duplicar), na empresa certa.
+//   clear_discount (admin ou cron): tira o desconto das cobranças em aberto já criadas no Asaas.
 //   pay_link (público, pelo token da fatura): página /pagar/<token> gera a cobrança na hora (depois que o cliente informa CPF/CNPJ).
 // Segredos: ASAAS_API_KEY, MP_ACCESS_TOKEN. Nenhum valor de chave sai desta função.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
@@ -238,7 +239,7 @@ Deno.serve(async (request) => {
     payInvoice = inv.group_id ?? inv.id
   }
   if (!isCron && !payInvoice) {
-    if (!['charge_one', 'status', 'sync'].includes(body.action ?? '')) return json({ error: 'Não autorizado' }, 401)
+    if (!['charge_one', 'status', 'sync', 'clear_discount'].includes(body.action ?? '')) return json({ error: 'Não autorizado' }, 401)
     const jwt = (request.headers.get('authorization') ?? '').replace(/^Bearer /i, '')
     const { data: user } = await db.auth.getUser(jwt)
     if (!user?.user) return json({ error: 'Não autorizado' }, 401)
@@ -273,6 +274,35 @@ Deno.serve(async (request) => {
     } catch (e) {
       return json({ error: (e as Error).message }, 502)
     }
+  }
+
+  // Tira o desconto das cobranças em aberto que já estão no Asaas (criadas quando o desconto estava ligado).
+  if (body.action === 'clear_discount') {
+    if (gateway !== 'asaas') return json({ skipped: 'Gateway escolhido não é o Asaas' })
+    const key = Deno.env.get('ASAAS_API_KEY')
+    if (!key) return json({ error: 'Falta a chave ASAAS_API_KEY nos segredos do Supabase' }, 400)
+    const { data: open } = await db.from('invoices').select('id, gateway_id').eq('gateway', 'asaas').in('status', ['pendente', 'vencido']).not('gateway_id', 'is', null)
+    const ids = [...new Set(((open ?? []) as { gateway_id: string }[]).map((r) => r.gateway_id))]
+    let cleared = 0, kept = 0
+    const failed: { id: string; error: string }[] = []
+    for (const id of ids) {
+      try {
+        const p = await asaas(settings.gateway_env, key, `/payments/${id}`)
+        if (!p?.discount || !(Number(p.discount.value) > 0) || !['PENDING', 'OVERDUE'].includes(p.status)) { kept++; continue }
+        await asaas(settings.gateway_env, key, `/payments/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            billingType: p.billingType, value: p.value, dueDate: p.dueDate, description: p.description,
+            ...(p.fine ? { fine: p.fine } : {}), ...(p.interest ? { interest: p.interest } : {}),
+            discount: { value: 0, dueDateLimitDays: 0, type: 'PERCENTAGE' },
+          }),
+        })
+        cleared++
+      } catch (e) {
+        failed.push({ id, error: (e as Error).message })
+      }
+    }
+    return json({ checked: ids.length, cleared, kept, failed })
   }
 
   if (body.action === 'sweep') {
