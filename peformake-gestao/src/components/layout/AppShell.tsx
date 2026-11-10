@@ -6,6 +6,7 @@ import { cn } from '@/lib/cn'
 import { NotificationBell } from '@/features/notifications/NotificationBell'
 import { useRealtimeSync } from '@/lib/realtime'
 import { GoalsChat } from '@/features/goals/GoalsChat'
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import { menuForRoles, tabsForRoles, type MenuIcon } from '@/lib/menu'
 import { Avatar } from '@/features/account/AccountPage'
 import { ROLE_LABELS } from '@/lib/roles'
@@ -200,13 +201,13 @@ export function AppShell() {
         <AccountLink />
       </aside>
 
-      <main key={location.pathname.split('/')[1]} className="relative min-w-0 max-w-full overflow-x-clip pb-[calc(76px+env(safe-area-inset-bottom))] md:h-dvh md:overflow-y-auto md:pb-0">
+      <main key={location.pathname.split('/')[1]} className="relative min-w-0 max-w-full overflow-x-clip pb-[calc(140px+env(safe-area-inset-bottom))] md:h-dvh md:overflow-y-auto md:pb-0">
         <ViewAsBar />
         <div className="pointer-events-none sticky top-0 z-20 hidden justify-end px-7 pt-3 md:flex">
           <div className="pointer-events-auto"><NotificationBell /></div>
         </div>
         <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-4 py-5 md:-mt-11 md:px-7 md:py-6 md:pr-20">
-          <Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense>
+          <ErrorBoundary resetKey={location.pathname}><Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense></ErrorBoundary>
         </div>
       </main>
 

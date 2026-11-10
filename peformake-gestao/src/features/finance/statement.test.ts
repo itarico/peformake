@@ -61,6 +61,10 @@ describe('importSummary (extrato sem duplicar)', () => {
     expect(importSummary({ added: 2, skipped: 1, uncategorized: 0, matched: 1, invoices_paid: 1, transfers: 1 }))
       .toBe('2 lançamentos novos · 1 fatura quitada pelo extrato · 1 já estava no Caixa (conferido, sem duplicar) · 1 transferência do Asaas (não é receita nova) · 1 já importado antes.')
   })
+  it('mostra conta fixa conferida e o que ficou a conferir', () => {
+    expect(importSummary({ added: 0, skipped: 0, uncategorized: 0, manual_matched: 1, to_review: 2 }))
+      .toBe('0 lançamentos novos · 1 conta fixa ou lançamento manual conferido no banco (sem duplicar) · 2 pagamentos parecem de fatura: confira em "A conferir" no topo do Caixa.')
+  })
   it('funciona com o retorno antigo', () => {
     expect(importSummary({ added: 1, skipped: 0, uncategorized: 1 })).toBe('1 lançamento novo. 1 sem categoria: classifique na lista e o sistema aprende.')
   })

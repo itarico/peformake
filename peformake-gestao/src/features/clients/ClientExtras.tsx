@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
-import { addLink, clientErrorMessage, deleteClient, listEvents, listLinks, removeLink, setClientStatus } from './clientsApi'
+import { addLink, cancelOpenInvoices, clientErrorMessage, deleteClient, listEvents, listLinks, openInvoicesFromToday, removeLink, setClientStatus } from './clientsApi'
+import { todayBR } from '@/features/finance/money'
 import type { ClientRecord } from './clientRules'
 import { dateBr } from './format'
 import { Block, inputClass, selectClass } from './ui'
@@ -88,7 +89,7 @@ export function HistorySection({ clientId }: { clientId: string }) {
   )
 }
 
-const REASONS = ['Cancelou por preço', 'Insatisfação com resultado', 'Fim do contrato', 'Mudou de agência', 'Internalizou o marketing', 'Inadimplência', 'Outro']
+const REASONS = ['Cancelou por preço', 'Insatisfação com resultado', 'Fim de contrato', 'Mudou de agência', 'Internalizou o marketing', 'Inadimplência', 'Outro']
 
 export function StatusSection({ client, canManage, isAdmin }: { client: ClientRecord; canManage: boolean; isAdmin: boolean }) {
   const queryClient = useQueryClient()
@@ -104,9 +105,29 @@ export function StatusSection({ client, canManage, isAdmin }: { client: ClientRe
     void queryClient.invalidateQueries({ queryKey: ['ad-accounts'] })
   }
   const fullReason = [reason, detail.trim()].filter(Boolean).join(': ')
+  const [cancelInvoices, setCancelInvoices] = useState(true)
+  const [cancelNote, setCancelNote] = useState<string | null>(null)
+  // Faturas do cliente: perguntar ao marcar perdido e impedir excluir quem tem histórico financeiro.
+  const invoiceCount = useQuery({
+    queryKey: ['client-open-invoices', client.id],
+    queryFn: () => openInvoicesFromToday(client.id, todayBR()),
+    enabled: isAdmin && (mode === 'lose' || mode === 'delete'),
+  })
+  const openCount = invoiceCount.data?.open ?? 0
   const status = useMutation({
-    mutationFn: (lost: boolean) => setClientStatus(client.id, lost, lost ? fullReason : null),
+    mutationFn: async (lost: boolean) => {
+      await setClientStatus(client.id, lost, lost ? fullReason : null)
+      if (lost && isAdmin && cancelInvoices && openCount > 0) {
+        try {
+          const n = await cancelOpenInvoices(client.id)
+          setCancelNote(`${n} ${n === 1 ? 'fatura em aberto cancelada' : 'faturas em aberto canceladas'}.`)
+        } catch {
+          setCancelNote('O cliente foi marcado como perdido, mas as faturas não foram canceladas: cancele pela Cobrança.')
+        }
+      }
+    },
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['invoices'] })
       setMode('idle')
       setReason('')
       setDetail('')
@@ -151,6 +172,13 @@ export function StatusSection({ client, canManage, isAdmin }: { client: ClientRe
           <label htmlFor={`detalhe-${client.id}`} className="text-[13px] font-semibold">Detalhe {reason === 'Outro' ? '*' : '(opcional)'}</label>
           <textarea id={`detalhe-${client.id}`} rows={2} maxLength={500} value={detail} onChange={(e) => setDetail(e.target.value)} className={cn(inputClass, 'resize-y')} />
           <p className="text-[12px] text-muted">O motivo alimenta a análise de perdas. Seja específico.</p>
+          {isAdmin && openCount > 0 && (
+            <label className="flex min-h-11 cursor-pointer items-start gap-2 rounded-xl bg-warn-soft/60 px-3 py-2 text-[13px]">
+              <input type="checkbox" checked={cancelInvoices} onChange={(e) => setCancelInvoices(e.target.checked)} className="mt-1 size-4" />
+              <span><b className="font-semibold">Cancelar {openCount === 1 ? 'a fatura em aberto' : `as ${openCount} faturas em aberto`} a partir de hoje</b>
+                <span className="block text-muted">Assim o Asaas não cobra quem saiu. O que já venceu continua aberto para receber.</span></span>
+            </label>
+          )}
           <div className="flex gap-2">
             <Button disabled={!reason || (reason === 'Outro' && detail.trim().length < 5) || status.isPending} onClick={() => status.mutate(true)}>Confirmar saída</Button>
             <Button variant="secondary" onClick={() => setMode('idle')}>Cancelar</Button>
@@ -161,18 +189,22 @@ export function StatusSection({ client, canManage, isAdmin }: { client: ClientRe
 
       <Dialog open={mode === 'delete'} onClose={() => setMode('idle')} title="Excluir cliente de vez" size="sm">
         <div className="flex flex-col gap-2">
-          <p className="font-semibold text-warn-ink">Excluir apaga o cliente, serviços, equipe, avaliações, links e histórico. Não tem volta.</p>
+          {(invoiceCount.data?.any ?? 0) > 0 ? (
+            <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 font-semibold text-warn-ink">Este cliente tem {invoiceCount.data?.any} fatura(s) no histórico. Para não apagar o financeiro, marque como Perdido em vez de excluir.</p>
+          ) : <p className="font-semibold text-warn-ink">Excluir apaga o cliente, serviços, equipe, avaliações, links e histórico. Não tem volta.</p>}
           <p className="text-[13px]">Na maioria dos casos, marcar como perdido é melhor: guarda o histórico para análise.</p>
           <label htmlFor={`confirmar-${client.id}`} className="text-[13px] font-semibold">Digite <b>{client.name}</b> para confirmar</label>
           <input id={`confirmar-${client.id}`} value={confirmName} onChange={(e) => setConfirmName(e.target.value)} className={inputClass} autoComplete="off" />
           {remove.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{clientErrorMessage(remove.error)}</p>}
           <div className="flex gap-2">
-            <Button disabled={confirmName.trim().toLowerCase() !== client.name.trim().toLowerCase() || remove.isPending} onClick={() => remove.mutate()}>Excluir de vez</Button>
+            <Button disabled={confirmName.trim().toLowerCase() !== client.name.trim().toLowerCase() || remove.isPending || (invoiceCount.data?.any ?? 0) > 0 || invoiceCount.isPending} onClick={() => remove.mutate()}>Excluir de vez</Button>
+            {(invoiceCount.data?.any ?? 0) > 0 && client.isActive && <Button variant="secondary" onClick={() => { status.reset(); setMode('lose') }}>Marcar como perdido</Button>}
             <Button variant="secondary" onClick={() => setMode('idle')}>Cancelar</Button>
           </div>
         </div>
       </Dialog>
       {status.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{clientErrorMessage(status.error)}</p>}
+      {cancelNote && <p role="status" className="text-[13px] font-medium">{cancelNote}</p>}
     </Block>
   )
 }

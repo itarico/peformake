@@ -1,5 +1,7 @@
 // Aviso de pagamento dos gateways. A fatura só vira "paga" por aqui ou à mão no Financeiro.
-//   Asaas:        ?g=asaas        cabeçalho asaas-access-token = ASAAS_WEBHOOK_TOKEN; eventos PAYMENT_RECEIVED / PAYMENT_CONFIRMED.
+//   Asaas:        ?g=asaas        cabeçalho asaas-access-token = ASAAS_WEBHOOK_TOKEN (conta da Peformake)
+//                                 ou ASAAS_WEBHOOK_TOKEN_ELLCAZO (conta da Ellcazo, quando ligada); eventos PAYMENT_RECEIVED / PAYMENT_CONFIRMED.
+//                                 A fatura é achada pelo id da cobrança (único no Asaas), então serve para as duas contas.
 //   Mercado Pago: ?g=mercadopago  não confia no corpo: busca o pagamento na API com MP_ACCESS_TOKEN e só aceita "approved".
 // A data gravada é a data real do pagamento (horário de Brasília), não a do aviso.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
@@ -31,8 +33,9 @@ Deno.serve(async (request) => {
   if (!payload) return json({ error: 'invalid json' }, 400)
 
   if (g === 'asaas') {
-    const token = Deno.env.get('ASAAS_WEBHOOK_TOKEN') ?? ''
-    if (!same(request.headers.get('asaas-access-token') ?? '', token)) return json({ error: 'unauthorized' }, 401)
+    const got = request.headers.get('asaas-access-token') ?? ''
+    const ok = same(got, Deno.env.get('ASAAS_WEBHOOK_TOKEN') ?? '') || same(got, Deno.env.get('ASAAS_WEBHOOK_TOKEN_ELLCAZO') ?? '')
+    if (!ok) return json({ error: 'unauthorized' }, 401)
     if (payload.event === 'PAYMENT_RECEIVED' || payload.event === 'PAYMENT_CONFIRMED') {
       const p = payload.payment ?? {}
       const paidOn = brtDate(p.clientPaymentDate) ?? brtDate(p.paymentDate) ?? brtDate(p.confirmedDate)

@@ -10,7 +10,9 @@
 //   reimburse (SÓ admin logado, nunca cron): paga por Pix o reembolso confirmado de um membro (Financeiro → WhatsApp).
 //           { entry_id, dry_run? }: com dry_run só monta o pedido (teste), sem transferir.
 //   pay_link (público, pelo token da fatura): página /pagar/<token> gera a cobrança na hora (depois que o cliente informa CPF/CNPJ).
-// Segredos: ASAAS_API_KEY, MP_ACCESS_TOKEN. Nenhum valor de chave sai desta função.
+//   interco (SÓ admin logado, nunca cron): Pix do repasse entre empresas ("Quem recebe" no cliente), só com a chave ligada.
+// Segredos: ASAAS_API_KEY (Peformake), ASAAS_API_KEY_ELLCAZO (Ellcazo, quando ligar o Asaas dela), MP_ACCESS_TOKEN.
+// A cobrança sai da conta de quem recebe (unit do item da fila). Nenhum valor de chave sai desta função.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' }
@@ -80,7 +82,7 @@ async function asaasClose(env: string, key: string, item: CloseItem) {
   }
 }
 
-async function closeQueue(db: ReturnType<typeof createClient>, env: string, key: string) {
+async function closeQueue(db: ReturnType<typeof createClient>, env: string, _key: string) {
   const { data } = await db.rpc('billing_gateway_close_queue')
   const items = (data ?? []) as CloseItem[]
   let closed = 0
@@ -88,7 +90,15 @@ async function closeQueue(db: ReturnType<typeof createClient>, env: string, key:
   for (const item of items) {
     if (item.gateway !== 'asaas') { await db.rpc('billing_gateway_close_done', { _id: item.id, _ok: true, _error: 'Sem gateway para fechar' }); continue }
     try {
-      await asaasClose(env, key, item)
+      const { data: acc } = await db.from('invoices').select('gateway_account').eq('id', item.id).maybeSingle()
+      const unit = (acc as { gateway_account?: string } | null)?.gateway_account ?? 'peformake'
+      const key = keyFor(unit)
+      if (!key) throw new Error(unit === 'ellcazo' ? 'Conta do Asaas da Ellcazo não conectada' : 'Falta ASAAS_API_KEY')
+      try { await asaasClose(env, key, item) } catch (e) {
+        const alt = otherKey(unit)
+        if (!alt || !/not found|HTTP 404/i.test((e as Error).message)) throw e
+        await asaasClose(env, alt, item)
+      }
       await db.rpc('billing_gateway_close_done', { _id: item.id, _ok: true, _error: null })
       closed++
     } catch (e) {
@@ -110,7 +120,11 @@ async function cancelQueue(db: ReturnType<typeof createClient>, env: string, key
   for (const row of (data ?? []) as { id: string; gateway: string; gateway_id: string }[]) {
     if (row.gateway !== 'asaas') { await db.rpc('billing_gateway_cancel_done', { _id: row.id, _ok: true, _error: null }); continue }
     try {
-      await asaas(env, key, `/payments/${row.gateway_id}`, { method: 'DELETE' })
+      try { await asaas(env, key, `/payments/${row.gateway_id}`, { method: 'DELETE' }) } catch (e) {
+        const alt = keyFor('ellcazo')
+        if (!alt || alt === key || !/not found|HTTP 404/i.test((e as Error).message)) throw e
+        await asaas(env, alt, `/payments/${row.gateway_id}`, { method: 'DELETE' })
+      }
       await db.rpc('billing_gateway_cancel_done', { _id: row.id, _ok: true, _error: null })
       done++
     } catch (e) {
@@ -122,6 +136,10 @@ async function cancelQueue(db: ReturnType<typeof createClient>, env: string, key
   }
   return done
 }
+
+/** Chave do Asaas da empresa que recebe (Peformake ou Ellcazo). */
+const keyFor = (unit: string | null | undefined) => unit === 'ellcazo' ? Deno.env.get('ASAAS_API_KEY_ELLCAZO') : Deno.env.get('ASAAS_API_KEY')
+const otherKey = (unit: string | null | undefined) => keyFor(unit === 'ellcazo' ? 'peformake' : 'ellcazo')
 
 const digits = (v: string | null | undefined) => (v ?? '').replace(/\D/g, '')
 /** Hoje em Brasília (AAAA-MM-DD). */
@@ -220,7 +238,7 @@ Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: CORS })
   if (request.method !== 'POST') return json({ error: 'Use POST' }, 405)
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } })
-  const body = await request.json().catch(() => ({})) as { action?: string; invoice_id?: string; days?: number; token?: string; entry_id?: string; dry_run?: boolean }
+  const body = await request.json().catch(() => ({})) as { action?: string; invoice_id?: string; days?: number; token?: string; entry_id?: string; transfer_id?: string; dry_run?: boolean }
 
   // Quem pode chamar: o cron (segredo) ou um admin logado (só charge_one).
   const secret = request.headers.get('x-cron-secret')
@@ -230,7 +248,7 @@ Deno.serve(async (request) => {
     isCron = data === true
   }
   // Reembolso por Pix: nunca pela rotina, só por um administrador logado que confirmou na tela.
-  if (body.action === 'reimburse' && isCron) return json({ error: 'Reembolso só com um administrador logado' }, 403)
+  if ((body.action === 'reimburse' || body.action === 'interco') && isCron) return json({ error: 'Reembolso só com um administrador logado' }, 403)
   // Link público da fatura: quem tem o token só consegue gerar a cobrança daquela fatura.
   let payInvoice: string | null = null
   if (!isCron && body.action === 'pay_link') {
@@ -244,7 +262,7 @@ Deno.serve(async (request) => {
   }
   let adminId: string | null = null
   if (!isCron && !payInvoice) {
-    if (!['charge_one', 'status', 'sync', 'clear_discount', 'reimburse'].includes(body.action ?? '')) return json({ error: 'Não autorizado' }, 401)
+    if (!['charge_one', 'status', 'sync', 'clear_discount', 'reimburse', 'interco'].includes(body.action ?? '')) return json({ error: 'Não autorizado' }, 401)
     const jwt = (request.headers.get('authorization') ?? '').replace(/^Bearer /i, '')
     const { data: user } = await db.auth.getUser(jwt)
     if (!user?.user) return json({ error: 'Não autorizado' }, 401)
@@ -278,13 +296,41 @@ Deno.serve(async (request) => {
     }
   }
 
+  // Pix do repasse entre empresas: sai da conta de quem recebeu, para a chave Pix da outra. Só admin, só com a chave ligada.
+  if (body.action === 'interco') {
+    if (!adminId) return json({ error: 'Não autorizado' }, 401)
+    const id = (body as { transfer_id?: string }).transfer_id ?? ''
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return json({ error: 'Repasse inválido' }, 400)
+    const { data: prep, error: prepError } = await db.rpc('interco_prepare', { _id: id, _by: adminId, _dry: !!body.dry_run })
+    if (prepError || !prep) return json({ error: prepError?.message ?? 'Repasse não está em aberto' }, 409)
+    const key = keyFor(prep.from_unit)
+    if (!key && !body.dry_run) return json({ error: prep.from_unit === 'ellcazo' ? 'Conta do Asaas da Ellcazo não conectada' : 'Falta a chave ASAAS_API_KEY' }, 400)
+    const transfer = { value: Number(prep.amount), operationType: 'PIX', pixAddressKey: String(prep.pix_key), pixAddressKeyType: String(prep.pix_key_type), description: String(prep.description).slice(0, 100) }
+    if (body.dry_run) return json({ dry_run: true, transfer: { ...transfer, pixAddressKey: `…${transfer.pixAddressKey.slice(-4)}` } })
+    try {
+      const t = await asaas(settings.gateway_env, key!, '/transfers', { method: 'POST', body: JSON.stringify(transfer) })
+      await db.rpc('interco_finish', { _id: id, _ok: true, _ref: t.id ?? null, _error: null })
+      return json({ ok: true, paid: transfer.value })
+    } catch (e) {
+      await db.rpc('interco_finish', { _id: id, _ok: false, _ref: null, _error: (e as Error).message })
+      return json({ error: (e as Error).message }, 502)
+    }
+  }
+
   if (body.action === 'status') {
     const key = Deno.env.get('ASAAS_API_KEY')
     if (gateway !== 'asaas') return json({ gateway, configured: false, message: 'Gateway escolhido não é o Asaas' })
     if (!key) return json({ gateway, env: settings.gateway_env, configured: false, message: 'Falta a chave ASAAS_API_KEY nos segredos do Supabase' })
     try {
       const acc = await asaas(settings.gateway_env, key, '/myAccount')
-      return json({ gateway, env: settings.gateway_env, configured: true, account: acc?.name ?? acc?.companyName ?? null, webhook: !!Deno.env.get('ASAAS_WEBHOOK_TOKEN') })
+      const keyE = Deno.env.get('ASAAS_API_KEY_ELLCAZO')
+      let ellcazo: { configured: boolean; account?: string | null; message?: string } = { configured: false, message: 'Conta do Asaas da Ellcazo não conectada' }
+      if (keyE) {
+        try { const a = await asaas(settings.gateway_env, keyE, '/myAccount'); ellcazo = { configured: true, account: a?.name ?? a?.companyName ?? null } }
+        catch (e) { ellcazo = { configured: false, message: (e as Error).message } }
+      }
+      return json({ gateway, env: settings.gateway_env, configured: true, account: acc?.name ?? acc?.companyName ?? null, webhook: !!Deno.env.get('ASAAS_WEBHOOK_TOKEN'),
+        ellcazo: { ...ellcazo, mode: settings.ellcazo_gateway ?? 'manual', webhook: !!Deno.env.get('ASAAS_WEBHOOK_TOKEN_ELLCAZO') } })
     } catch (e) {
       return json({ gateway, env: settings.gateway_env, configured: false, message: (e as Error).message })
     }
@@ -297,7 +343,10 @@ Deno.serve(async (request) => {
     const days = Math.min(Math.max(Number((body as { days?: number }).days) || 40, 1), 400)
     const since = new Date(Date.now() - days * 86400_000).toISOString().slice(0, 10)
     try {
-      return json(await asaasSync(db, settings.gateway_env, key, since))
+      const main = await asaasSync(db, settings.gateway_env, key, since)
+      const keyE = Deno.env.get('ASAAS_API_KEY_ELLCAZO')
+      const ell = keyE && settings.ellcazo_gateway === 'asaas' ? await asaasSync(db, settings.gateway_env, keyE, since).catch((e) => ({ error: (e as Error).message })) : null
+      return json({ ...main, ellcazo: ell })
     } catch (e) {
       return json({ error: (e as Error).message }, 502)
     }
@@ -388,8 +437,8 @@ Deno.serve(async (request) => {
     try {
       let r: { id: string; url: string | null }
       if (gateway === 'asaas') {
-        const key = Deno.env.get('ASAAS_API_KEY')
-        if (!key) throw new Error('Falta ASAAS_API_KEY no servidor')
+        const key = keyFor(item.unit)
+        if (!key) throw new Error(item.unit === 'ellcazo' ? 'Conta do Asaas da Ellcazo não conectada (falta ASAAS_API_KEY_ELLCAZO)' : 'Falta ASAAS_API_KEY no servidor')
         r = await asaasCharge(settings.gateway_env, key, item, penaltyFor(item.client.id))
       } else if (gateway === 'mercadopago') {
         const token = Deno.env.get('MP_ACCESS_TOKEN')
@@ -401,6 +450,8 @@ Deno.serve(async (request) => {
         throw new Error('Cobrança manual: sem gateway')
       }
       await db.rpc('invoice_gateway_set', { _id: item.id, _gateway: gateway, _gateway_id: r.id, _url: r.url, _error: null })
+      // Guarda qual conta emitiu (para cancelar, conferir e saber se nasce repasse entre empresas).
+      if (gateway === 'asaas') await db.from('invoices').update({ gateway_account: item.unit === 'ellcazo' ? 'ellcazo' : 'peformake' }).or(`id.eq.${item.id},group_id.eq.${item.id}`)
       results.push({ id: item.id, ok: true, url: r.url })
     } catch (e) {
       await db.rpc('invoice_gateway_set', { _id: item.id, _gateway: gateway, _gateway_id: null, _url: null, _error: (e as Error).message })

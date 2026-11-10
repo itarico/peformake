@@ -255,6 +255,39 @@ export async function listEvents(clientId: string): Promise<ClientEvent[]> {
 }
 
 export async function saveClient(id: string | null, expectedUpdatedAt: string | null, draft: ClientDraft): Promise<string> {
+  const data = clientSaveData(draft)
+  const { data: savedId, error } = await supabase.rpc('client_save', { _client_id: id, _expected_updated_at: expectedUpdatedAt, _data: data })
+  if (error) throw error
+  await saveLegal(savedId as string, draft)
+  return savedId as string
+}
+
+async function saveLegal(savedId: string, draft: ClientDraft) {
+  const { error: legalError } = await supabase.rpc('client_save_legal', {
+    _client_id: savedId,
+    _data: { document: draft.document, legal_name: draft.legalName, address: draft.address, billing_email: draft.billingEmail, company_size: draft.companySize ?? '', company_capital: draft.companyCapital ?? '', instagram: draft.instagram, website: draft.website },
+  })
+  if (legalError) throw legalError
+}
+
+/**
+ * Cliente novo e contato principal gravados numa função só (client_create): se um falhar, nada é gravado.
+ * Enquanto a função não estiver no banco, grava em duas etapas e avisa se o contato falhar.
+ */
+export async function createClientWithContact(draft: ClientDraft, contact: Record<string, unknown>): Promise<{ id: string; contactError: string | null }> {
+  const rpc = supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
+  const { data, error } = await rpc('client_create', { _data: clientSaveData(draft), _contact: contact })
+  if (!error) {
+    await saveLegal(data as string, draft)
+    return { id: data as string, contactError: null }
+  }
+  if (error.code !== 'PGRST202' && error.code !== '42883') throw error
+  const id = await saveClient(null, null, draft)
+  const { error: contactError } = await rpc('client_contact_save', { _id: null, _client: id, _data: contact })
+  return { id, contactError: contactError ? contactError.message : null }
+}
+
+function clientSaveData(draft: ClientDraft): Record<string, unknown> {
   const data: Record<string, unknown> = {
     name: draft.name,
     segment: draft.segment,
@@ -275,14 +308,7 @@ export async function saveClient(id: string | null, expectedUpdatedAt: string | 
     billing_day: draft.billingDay,
   }
   if (draft.setupFee !== undefined) data.setup_fee = draft.setupFee
-  const { data: savedId, error } = await supabase.rpc('client_save', { _client_id: id, _expected_updated_at: expectedUpdatedAt, _data: data })
-  if (error) throw error
-  const { error: legalError } = await supabase.rpc('client_save_legal', {
-    _client_id: savedId,
-    _data: { document: draft.document, legal_name: draft.legalName, address: draft.address, billing_email: draft.billingEmail, company_size: draft.companySize ?? '', company_capital: draft.companyCapital ?? '', instagram: draft.instagram, website: draft.website },
-  })
-  if (legalError) throw legalError
-  return savedId
+  return data
 }
 
 export async function setTeam(clientId: string, squadId: string | null, team: { staffId: string; role: TeamRole }[]): Promise<void> {
@@ -352,6 +378,22 @@ export async function removeLink(linkId: string): Promise<void> {
   if (error) throw error
 }
 
+/** Faturas em aberto do cliente a partir de hoje (para perguntar ao marcar como perdido). Só admin vê. */
+export async function openInvoicesFromToday(clientId: string, today: string): Promise<{ open: number; any: number }> {
+  const [open, any] = await Promise.all([
+    supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('client_id', clientId).in('status', ['pendente', 'vencido']).gte('due_date', today).not('ref', 'like', 'atraso:%'),
+    supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
+  ])
+  return { open: open.count ?? 0, any: any.count ?? 0 }
+}
+
+/** Cancela as faturas em aberto do cliente daqui para frente (cliente perdido). */
+export async function cancelOpenInvoices(clientId: string): Promise<number> {
+  const { data, error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>)('client_cancel_open_invoices', { _client: clientId })
+  if (error) throw error
+  return Number(data ?? 0)
+}
+
 export async function deleteClient(clientId: string, confirmName: string): Promise<void> {
   const { error } = await supabase.rpc('client_delete', { _client_id: clientId, _confirm_name: confirmName })
   if (error) throw error
@@ -377,7 +419,9 @@ export function clientErrorMessage(error: unknown): string {
   if (code === 'PF006') return 'Confira os campos destacados. Algum valor está fora do formato.'
   if (code === 'PF009') return 'Já existe um cliente ativo com este nome.'
   if (code === 'PF010') return 'O nome digitado não confere. Nada foi excluído.'
-  if (code === '23503') return 'Este cliente tem conta de anúncios vinculada. Desvincule a conta antes de excluir.'
+  if (code === 'PF011') return 'Só o administrador muda o dia de cobrança e as datas do contrato.'
+  if (code === 'PF015') return 'Este cliente tem histórico financeiro: marque como Perdido em vez de excluir.'
+  if (code === '23503') return 'Este cliente tem conta de anúncios ou histórico financeiro ligado. Marque como Perdido em vez de excluir.'
   return 'Não foi possível salvar. Nada foi alterado. Tente de novo.'
 }
 

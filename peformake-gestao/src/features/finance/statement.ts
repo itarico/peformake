@@ -130,13 +130,15 @@ export function ruleHint(description: string): string {
 }
 
 /** Resultado do extrato: o que entrou, o que já existia e o que casou com faturas (nada em dobro). */
-export interface ImportResult { added: number; skipped: number; uncategorized: number; matched?: number; invoices_paid?: number; transfers?: number; whatsapp_matched?: number }
+export interface ImportResult { added: number; skipped: number; uncategorized: number; matched?: number; invoices_paid?: number; transfers?: number; whatsapp_matched?: number; manual_matched?: number; to_review?: number }
 export function importSummary(r: ImportResult): string {
   const parts = [
     `${r.added} ${r.added === 1 ? 'lançamento novo' : 'lançamentos novos'}`,
     r.invoices_paid ? `${r.invoices_paid} ${r.invoices_paid === 1 ? 'fatura quitada' : 'faturas quitadas'} pelo extrato` : '',
     r.matched ? `${r.matched} já ${r.matched === 1 ? 'estava' : 'estavam'} no Caixa (conferido${r.matched === 1 ? '' : 's'}, sem duplicar)` : '',
     r.whatsapp_matched ? `${r.whatsapp_matched} já ${r.whatsapp_matched === 1 ? 'tinha sido lançado' : 'tinham sido lançados'} pelo WhatsApp (conferido${r.whatsapp_matched === 1 ? '' : 's'} no banco, sem duplicar)` : '',
+    r.manual_matched ? `${r.manual_matched} ${r.manual_matched === 1 ? 'conta fixa ou lançamento manual conferido' : 'contas fixas ou lançamentos manuais conferidos'} no banco (sem duplicar)` : '',
+    r.to_review ? `${r.to_review} ${r.to_review === 1 ? 'pagamento parece' : 'pagamentos parecem'} de fatura: confira em "A conferir" no topo do Caixa` : '',
     r.transfers ? `${r.transfers} ${r.transfers === 1 ? 'transferência' : 'transferências'} do Asaas (não é receita nova)` : '',
     r.skipped ? `${r.skipped} já ${r.skipped === 1 ? 'importado' : 'importados'} antes` : '',
   ].filter(Boolean)

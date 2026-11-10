@@ -25,7 +25,7 @@ export function setupSteps(client: ClientRecord, contractStatus: string | null):
     { id: 'servicos', label: 'Serviços e valores', hint: 'O que foi contratado e por quanto.', done: servicos },
     { id: 'contrato', label: 'Contrato', hint: kind === 'avulso' ? 'Aceite eletrônico no portal.' : 'Assinatura pela Assinafy. Você lê a prévia antes de enviar.', done: !!contractStatus && SENT.includes(contractStatus), adminOnly: true,
       blockedBy: !empresa ? 'Empresa' : !servicos ? 'Serviços e valores' : undefined },
-    { id: 'cobranca', label: 'Cobrança', hint: kind === 'avulso' ? 'Data do projeto.' : 'Início, duração e dia da cobrança (10, 20 ou 30).', done: kind === 'avulso' ? !!client.contract?.startDate : !!client.contract?.startDate && !!client.contract?.billingDay },
+    { id: 'cobranca', label: 'Cobrança', hint: kind === 'avulso' ? 'Data do projeto.' : 'Início, duração e dia da cobrança (de 1 a 31).', done: kind === 'avulso' ? !!client.contract?.startDate : !!client.contract?.startDate && !!client.contract?.billingDay },
     { id: 'acessos', label: 'Acessos', hint: 'Instagram e site. Contas de anúncio e portal ficam na ficha.', done: !!client.instagram || !!client.website },
     { id: 'negocio', label: 'Sobre o negócio', hint: 'Segmento, como chegou e o que a empresa faz.', done: !!client.description || !!client.segment, optional: true },
   ]

@@ -35,10 +35,10 @@ export function SectionHeader({ title, sub, actions, tabs, label }: { title: str
   }, [pathname])
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 md:items-end md:gap-3">
         <div className="min-w-0">
-          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-          {sub && <p className="mt-0.5 max-w-[70ch] text-[13px] text-muted">{sub}</p>}
+          <h1 className="truncate text-2xl font-semibold tracking-tight md:text-3xl">{title}</h1>
+          {sub && <p className="mt-0.5 hidden max-w-[70ch] text-[13px] text-muted md:block">{sub}</p>}
         </div>
         {(actions || moduleOf(pathname)) && <div className="flex flex-wrap items-center gap-2">{actions}{moduleOf(pathname) && <AutomationsLink module={moduleOf(pathname)!} />}</div>}
       </div>
@@ -48,6 +48,8 @@ export function SectionHeader({ title, sub, actions, tabs, label }: { title: str
             <NavLink
               key={t.to}
               to={mes ? `${t.to}?mes=${mes}` : t.to}
+              // Caixa (/financeiro) não fica ativa junto com Cobrança (/financeiro/cobranca).
+              end={visible.some((o) => o.to !== t.to && o.to.startsWith(`${t.to}/`))}
               className={({ isActive }) => cn(
                 '-mb-px flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3.5 py-2 font-medium text-muted no-underline hover:text-ink',
                 isActive && 'border-accent-ink font-semibold text-ink hover:text-ink',

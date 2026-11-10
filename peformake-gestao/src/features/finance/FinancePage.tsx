@@ -1,7 +1,9 @@
 import { importSummary, type ImportResult } from './statement'
 import { useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarClock, Check, Download, FileUp, Plus, Search } from 'lucide-react'
+import { ArrowLeftRight, CalendarClock, Check, Download, FileUp, Plus, Search } from 'lucide-react'
+import { ActionMenu } from '@/components/ui/ActionMenu'
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { SectionHeader } from '@/components/layout/SectionTabs'
@@ -42,6 +44,89 @@ interface Summary {
 }
 
 type Filter = 'todos' | 'entrada' | 'saida' | 'pendente' | 'vencido' | 'sem_categoria'
+const FILTERS = [['todos', 'Tudo'], ['entrada', 'Entradas'], ['saida', 'Saídas'], ['pendente', 'Em aberto'], ['vencido', 'Vencidos'], ['sem_categoria', 'Sem categoria']] as const
+type Rpc = (f: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
+const rpc = (f: string, a?: Record<string, unknown>) => (supabase.rpc as unknown as Rpc)(f, a)
+
+interface ReviewEntry { id: string; unit: string; amount: number; paid_at: string | null; description: string; notes: string | null; suggest_invoice: string }
+/** "A conferir": pagamento do extrato que parece de uma fatura. Um toque liga à fatura (sem contar em dobro). */
+function ToReview({ onDone }: { onDone: () => void }) {
+  const q = useQuery({
+    queryKey: ['fin-to-review'],
+    queryFn: async () => {
+      // Colunas novas ainda fora dos tipos gerados: consulta sem tipagem.
+      const from = supabase.from as unknown as (t: string) => { select: (c: string) => { eq: (k: string, v: string) => { not: (k: string, op: string, v: null) => { neq: (k: string, v: string) => { order: (k: string) => { limit: (n: number) => Promise<{ data: unknown; error: unknown }> } } } } } }
+      const { data, error } = await from('fin_entries').select('id, unit, amount, paid_at, description, notes, suggest_invoice')
+        .eq('review_status', 'a_revisar').not('suggest_invoice', 'is', null).neq('status', 'cancelado').order('paid_at').limit(50)
+      // Antes da coluna existir no banco: nada a mostrar.
+      if (error) return [] as ReviewEntry[]
+      return (data ?? []) as unknown as ReviewEntry[]
+    },
+  })
+  const [msg, setMsg] = useState<string | null>(null)
+  const act = useMutation({
+    mutationFn: async (v: { id: string; yes: boolean }) => {
+      const { error } = await rpc(v.yes ? 'fin_entry_invoice_confirm' : 'fin_entry_review_dismiss', { _entry: v.id })
+      if (error) throw new Error(error.message)
+      return v.yes
+    },
+    onSuccess: (yes) => { setMsg(yes ? 'Ligado à fatura: ela ficou paga e nada conta em dobro.' : 'Certo: ficou como entrada normal no Caixa.'); void q.refetch(); onDone() },
+    onError: (e) => setMsg((e as Error).message),
+  })
+  const items = q.data ?? []
+  if (!items.length && !msg) return null
+  return (
+    <section aria-label="A conferir" className="flex flex-col gap-2 rounded-2xl border border-warn bg-warn-soft/40 px-4 py-3">
+      {items.length > 0 && <p className="text-[14px] font-semibold">A conferir · {items.length} {items.length === 1 ? 'pagamento parece' : 'pagamentos parecem'} de fatura</p>}
+      <ul className="flex flex-col gap-1.5">
+        {items.slice(0, 5).map((e) => (
+          <li key={e.id} className="flex flex-wrap items-center gap-2 text-[13px]">
+            <span className="min-w-0 flex-1"><b className="tabular-nums">{brl(e.amount)}</b> em {dayLabel(e.paid_at ?? '')} · {(e.notes ?? '').replace(/^A conferir:\s*/, '').replace(/\s*\[extrato[^\]]*\]/g, '')}</span>
+            <Button disabled={act.isPending} onClick={() => act.mutate({ id: e.id, yes: true })}><Check size={15} aria-hidden="true" /> É essa</Button>
+            <Button variant="secondary" disabled={act.isPending} onClick={() => act.mutate({ id: e.id, yes: false })}>Não é</Button>
+          </li>
+        ))}
+      </ul>
+      {items.length > 5 && <p className="text-[12px] text-muted">E mais {items.length - 5}.</p>}
+      {msg && <p role="status" className="text-[13px] font-medium">{msg}</p>}
+    </section>
+  )
+}
+
+interface Transfer { id: string; client: string | null; from_unit: string; to_unit: string; amount: number; days: number; note: string | null }
+/** Repasse entre empresas ("Quem recebe" no cliente): fora de receita e despesa; marcado como feito com 1 toque. */
+function Transfers({ onDone }: { onDone: () => void }) {
+  const q = useQuery({
+    queryKey: ['interco'],
+    queryFn: async () => {
+      const { data, error } = await rpc('interco_overview')
+      return error || !Array.isArray(data) ? [] as Transfer[] : (data as Transfer[])
+    },
+  })
+  const done = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await rpc('interco_mark_done', { _id: id })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => { void q.refetch(); onDone() },
+  })
+  const items = q.data ?? []
+  if (!items.length) return null
+  const name = (u: string) => (u === 'ellcazo' ? 'Ellcazo' : 'Peformake')
+  return (
+    <section aria-label="Repasses entre empresas" className="flex flex-col gap-2 rounded-2xl border border-line bg-surface px-4 py-3">
+      <p className="flex items-center gap-1.5 text-[14px] font-semibold"><ArrowLeftRight size={15} aria-hidden="true" /> A repassar entre as empresas · {brl(items.reduce((a, t) => a + Number(t.amount), 0))}</p>
+      <ul className="flex flex-col gap-1.5">
+        {items.map((t) => (
+          <li key={t.id} className="flex flex-wrap items-center gap-2 text-[13px]">
+            <span className={cn('min-w-0 flex-1', t.days > 7 && 'font-semibold text-warn-ink')}>{name(t.from_unit)} → {name(t.to_unit)}: <b className="tabular-nums">{brl(t.amount)}</b>{t.client ? ` · ${t.client}` : ''}{t.days > 0 ? ` · há ${t.days} ${t.days === 1 ? 'dia' : 'dias'}` : ''}</span>
+            <Button variant="secondary" disabled={done.isPending} onClick={() => { void ask(`Confirmar que ${name(t.from_unit)} já repassou ${brl(t.amount)} para ${name(t.to_unit)}?`).then((ok) => { if (ok) done.mutate(t.id) }) }}><Check size={15} aria-hidden="true" /> Repasse feito</Button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
 
 /** Financeiro: dia a dia do caixa de cada empresa, importação de extrato e fechamento do mês. */
 export function FinancePage() {
@@ -148,7 +233,13 @@ export function FinancePage() {
         title="Financeiro"
         sub={`Caixa de ${monthLabel(month).toLowerCase()}. Mesmo CNPJ, contas separadas por empresa.`}
         tabs={FINANCE_TABS}
-        actions={<>
+        actions={<FilterSheet count={(filter !== 'todos' ? 1 : 0)}>
+          <div role="group" aria-label="Filtro" className="flex flex-wrap gap-1 md:hidden">
+            {FILTERS.map(([k, l]) => (
+              <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}
+                className={cn('min-h-11 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', filter === k ? 'bg-fill text-on-fill' : 'border border-line text-muted')}>{l}</button>
+            ))}
+          </div>
           {units.length > 1 && (
             <div role="group" aria-label="Empresa" className="inline-flex rounded-full border border-line p-0.5">
               {units.map((u) => (
@@ -158,10 +249,13 @@ export function FinancePage() {
             </div>
           )}
           <MonthSwitcher />
-        </>}
+        </FilterSheet>}
       />
+      {isAdmin && <ToReview onDone={refresh} />}
+      {isAdmin && <Transfers onDone={refresh} />}
 
-      <section aria-label="Resumo do mês" className="grid grid-cols-2 gap-2 md:grid-cols-4">
+      {/* Celular: uma linha só, e só o que é maior que zero. */}
+      <section aria-label="Resumo do mês" className="flex gap-2 overflow-x-auto [scrollbar-width:none] md:grid md:grid-cols-4 md:overflow-visible">
         {[
           { label: 'Entrou', value: s ? brl(s.entradas_pagas) : '—', hint: s && s.entradas_previstas > 0 ? `+ ${brl(s.entradas_previstas)} a receber` : undefined },
           { label: 'Saiu', value: s ? brl(s.saidas_pagas) : '—', hint: s && s.saidas_previstas > 0 ? `+ ${brl(s.saidas_previstas)} a pagar` : undefined },
@@ -169,10 +263,10 @@ export function FinancePage() {
           { label: 'Vencido', value: s ? brl(s.vencido_receber ?? 0) : '—', warn: !!s && (s.vencido_receber_qtd ?? 0) > 0, onClick: () => setFilter('vencido'),
             hint: s ? `${s.vencido_receber_qtd ?? 0} a receber atrasados${(s.vencido_pagar_qtd ?? 0) > 0 ? ` · ${s.vencido_pagar_qtd} contas a pagar (${brl(s.vencido_pagar ?? 0)})` : ''}${s.sem_categoria ? ` · ${s.sem_categoria} sem categoria` : ''}` : undefined },
         ].map((t) => (
-          <div key={t.label} onClick={t.onClick} className={cn('rounded-2xl border border-line bg-surface px-4 py-3', t.onClick && 'cursor-pointer hover:border-line-strong')}>
+          <div key={t.label} onClick={t.onClick} className={cn('shrink-0 rounded-2xl border border-line bg-surface px-4 py-3 max-md:min-w-[42%] max-md:py-2', t.onClick && 'cursor-pointer hover:border-line-strong', t.label === 'Vencido' && !(s?.vencido_receber_qtd) && 'max-md:hidden')}>
             <p className="text-[12px] font-medium text-muted">{t.label}</p>
-            <p className={cn('text-[22px] font-semibold tabular-nums', t.warn && 'text-warn-ink')}>{t.value}</p>
-            {t.hint && <p className="text-[12px] text-muted">{t.hint}</p>}
+            <p className={cn('text-[18px] font-semibold tabular-nums md:text-[22px]', t.warn && 'text-warn-ink')}>{t.value}</p>
+            {t.hint && <p className="hidden text-[12px] text-muted md:block">{t.hint}</p>}
           </div>
         ))}
       </section>
@@ -184,22 +278,31 @@ export function FinancePage() {
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-4 py-2.5 font-medium text-warn-ink">{problem}</p>}
 
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div role="group" aria-label="Filtro" className="flex flex-wrap gap-1">
-          {([['todos', 'Tudo'], ['entrada', 'Entradas'], ['saida', 'Saídas'], ['pendente', 'Em aberto'], ['vencido', 'Vencidos'], ['sem_categoria', 'Sem categoria']] as const).map(([k, l]) => (
+        <div role="group" aria-label="Filtro" className="hidden flex-wrap gap-1 md:flex">
+          {FILTERS.map(([k, l]) => (
             <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}
               className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', filter === k ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>{l}</button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-2">
-          <label className="relative flex items-center">
+        <div className="flex w-full flex-wrap gap-2 md:w-auto">
+          <label className="relative flex flex-1 items-center md:flex-none">
             <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 text-muted" />
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar" aria-label="Buscar no caixa"
-              className="min-h-10 w-40 rounded-full border border-line bg-surface pl-9 pr-3 text-[13px] focus:w-56" />
+              className="min-h-11 w-full rounded-full border border-line bg-surface pl-9 pr-3 text-[13px] md:min-h-10 md:w-40 md:focus:w-56" />
           </label>
-          <Button variant="secondary" onClick={exportCsv} disabled={!list.length} title="Baixar planilha"><Download size={15} aria-hidden="true" /> Planilha</Button>
-          <Button variant="secondary" onClick={() => setFixed(true)}><CalendarClock size={15} aria-hidden="true" /> Contas fixas</Button>
-          <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={15} aria-hidden="true" /> Importar extrato</Button>
-          <Button onClick={() => setEditing('new')}><Plus size={15} aria-hidden="true" /> Lançamento</Button>
+          <span className="hidden md:contents">
+            <Button variant="secondary" onClick={exportCsv} disabled={!list.length} title="Baixar planilha"><Download size={15} aria-hidden="true" /> Planilha</Button>
+            <Button variant="secondary" onClick={() => setFixed(true)}><CalendarClock size={15} aria-hidden="true" /> Contas fixas</Button>
+            <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={15} aria-hidden="true" /> Importar extrato</Button>
+            <Button onClick={() => setEditing('new')}><Plus size={15} aria-hidden="true" /> Lançamento</Button>
+          </span>
+          <span className="md:hidden">
+            <ActionMenu label="Mais ações do caixa" actions={[
+              { label: 'Importar extrato', icon: <FileUp size={15} aria-hidden="true" />, onClick: () => setImporting(true) },
+              { label: 'Contas fixas', icon: <CalendarClock size={15} aria-hidden="true" />, onClick: () => setFixed(true) },
+              { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
+            ]} />
+          </span>
         </div>
       </div>
 
@@ -276,6 +379,11 @@ export function FinancePage() {
       )}
 
 
+      {/* Celular: ação principal sempre à mão, acima da barra de abas e longe da Bete. */}
+      <button type="button" onClick={() => setEditing('new')} aria-label="Novo lançamento"
+        className="fixed bottom-[calc(84px+env(safe-area-inset-bottom))] left-4 z-30 inline-flex min-h-12 cursor-pointer items-center gap-1.5 rounded-full bg-fill px-5 font-semibold text-on-fill shadow-lg md:hidden">
+        <Plus size={17} aria-hidden="true" /> Lançamento
+      </button>
       {fixed && <RecurringDialog unit={unit} unitLabel={UNIT_LABEL[unit]} categories={unitCats} onClose={() => setFixed(false)} />}
       {paying && <PayDialog entry={paying} onClose={() => setPaying(null)} onPay={(d) => { setStatus.mutate({ id: paying.id, status: 'pago', paidAt: d }); setPaying(null) }} />}
       {editing && <EntryDialog unit={unit} categories={unitCats} entry={editing === 'new' ? null : editing} onClose={() => setEditing(null)} onSaved={refresh} />}
@@ -349,7 +457,7 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
         <label className="flex flex-col text-[13px] font-semibold">Descrição<input value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} className={field} /></label>
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col text-[13px] font-semibold">Valor (R$)<input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" readOnly={fromInvoice} title={fromInvoice ? 'Mude o valor pela Cobrança' : undefined} className={cn(field, fromInvoice && 'cursor-not-allowed bg-raised text-muted')} /></label>
-          <label className="flex flex-col text-[13px] font-semibold">Vence em<input type="date" value={due} onChange={(e) => setDue(e.target.value)} className={field} /></label>
+          <label className="flex flex-col text-[13px] font-semibold">Vence em<input type="date" value={due} onChange={(e) => setDue(e.target.value)} readOnly={fromInvoice} title={fromInvoice ? 'Mude a data pela Cobrança' : undefined} className={cn(field, fromInvoice && 'cursor-not-allowed bg-raised text-muted')} /></label>
         </div>
         <label className="flex flex-col text-[13px] font-semibold">Categoria
           <select value={category} onChange={(e) => setCategory(e.target.value)} className={field}>
@@ -361,7 +469,7 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
           <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="size-4" /> {entry?.status === 'pago' ? 'Pago (desmarque para desfazer o pagamento)' : 'Já foi pago'}</label>
           {paid && <label className="flex flex-col text-[13px] font-semibold">Pago em<input type="date" value={paidAt} max={todayBR()} onChange={(e) => setPaidAt(e.target.value)} className={field} /></label>}
         </div>
-        {fromInvoice && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">Vem da Cobrança: valor e tipo só mudam lá. Marcar pago, desfazer ou cancelar aqui também atualiza a fatura do cliente; se ela faz parte de uma cobrança junta, o grupo inteiro fica pago.</p>}
+        {fromInvoice && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">Vem da Cobrança: valor, data e tipo só mudam lá. Marcar pago, desfazer ou cancelar aqui também atualiza a fatura do cliente; se ela faz parte de uma cobrança junta, o grupo inteiro fica pago.</p>}
         {dupes && dupes.length > 0 && (
           <div role="alert" className="flex flex-col gap-2 rounded-xl bg-warn-soft px-3 py-2.5 text-warn-ink">
             <p className="font-semibold">Parece que já foi lançado:</p>

@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarClock, Check, Copy, Download, ExternalLink, Layers, Link2, Percent, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
 import { useAuth } from '@/auth/context'
@@ -28,6 +30,8 @@ interface Invoice {
   id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string
   source: string; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null; pay_token: string
   group_id: string | null
+  /** Já recebido de pagamento parcial (a fatura segue aberta com o saldo). */
+  partial_paid?: number | null
   clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
   invoice_groups?: { description: string; due_date: string } | null
   invoice_items?: { id: string; description: string; quantity: number; amount: number; state: string }[]
@@ -55,6 +59,8 @@ function InvoiceItems({ items }: { items: NonNullable<Invoice['invoice_items']> 
 // Cobrança única: faturas do mesmo grupo aparecem como um cartão só (um link, um pagamento).
 type Row = { kind: 'one'; inv: Invoice } | { kind: 'group'; id: string; items: Invoice[] }
 const isOpen = (i: Invoice) => i.status === 'pendente' || i.status === 'vencido'
+/** Saldo em aberto da fatura (valor menos o parcial já recebido). */
+export const openAmount = (i: Pick<Invoice, 'amount' | 'partial_paid'>) => Math.round((Number(i.amount) - Number(i.partial_paid ?? 0)) * 100) / 100
 const canJoin = (i: Invoice) => isOpen(i) && !i.group_id
 type Rpc = (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 type Unit = 'todas' | 'peformake' | 'ellcazo'
@@ -75,7 +81,12 @@ export function BillingPage() {
   const [notice, setNotice] = useState<string | null>(null)
   const today = todayBR()
   const [unit, setUnit] = useState<Unit>('todas')
-  const [status, setStatusFilter] = useState<StatusFilter>('todas')
+  // Cobrança abre em "quem está devendo".
+  const [status, setStatusFilter] = useState<StatusFilter>('aberto')
+  const [params] = useSearchParams()
+  const target = params.get('fatura')
+  const [, setMonth] = useMonthParam()
+  const [limit, setLimit] = useState(40)
   const [query, setQuery] = useState('')
   const [paying, setPaying] = useState<Invoice | null>(null)
   const [discountFor, setDiscountFor] = useState<{ id: string; name: string } | null>(null)
@@ -83,11 +94,12 @@ export function BillingPage() {
   const invoices = useQuery({
     queryKey: ['invoices', month],
     queryFn: async () => {
-      const { data, error } = await supabase.from('invoices')
-        .select('id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date), invoice_items(id, description, quantity, amount, state)')
-        // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
-        .or(`and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`)
-        .order('due_date').limit(1000)
+      const cols = 'id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date), invoice_items(id, description, quantity, amount, state)'
+      // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
+      const range = `and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`
+      const first = await supabase.from('invoices').select(`${cols}, partial_paid`).or(range).order('due_date').limit(1000)
+      // Antes da coluna do parcial existir no banco, a tela continua abrindo.
+      const { data, error } = first.error?.code === '42703' ? await supabase.from('invoices').select(cols).or(range).order('due_date').limit(1000) : first
       if (error) throw error
       return (data ?? []) as unknown as Invoice[]
     },
@@ -123,11 +135,16 @@ export function BillingPage() {
     onError: (e) => setNotice(`Não foi possível mudar a cobrança: ${(e as Error).message}`),
   })
   const pay = useMutation({
-    mutationFn: async (v: { id: string; date: string }) => {
-      const { error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>)('invoice_set_paid', { _id: v.id, _paid_at: v.date })
+    mutationFn: async (v: { id: string; date: string; amount?: number | null; due?: number }) => {
+      const { error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>)('invoice_set_paid', { _id: v.id, _paid_at: v.date, _amount: v.amount ?? null })
       if (error) throw new Error(error.message)
     },
-    onSuccess: () => { setNotice('Pagamento registrado. O Caixa já foi atualizado.'); refresh() },
+    onSuccess: (_, v) => {
+      setNotice(v.amount && v.due && v.amount < v.due - 0.009
+        ? `Parcial registrado: ${brl(v.amount)}. A fatura segue aberta com o saldo de ${brl(v.due - v.amount)}.`
+        : 'Pagamento registrado. O Caixa já foi atualizado.')
+      refresh()
+    },
     onError: (e) => setNotice(`Não foi possível registrar o pagamento: ${(e as Error).message}`),
   })
   const undo = useMutation({
@@ -192,6 +209,26 @@ export function BillingPage() {
     onSuccess: (r) => { setNotice(`Asaas, últimos 3 meses: ${r.found} pagamentos, ${r.invoices} faturas baixadas, ${r.imported} lançados no caixa, ${r.skipped} já estavam lá.`); refresh() },
     onError: (e) => setNotice((e as Error).message),
   })
+  // Aviso com ?fatura=<id>: abre o mês da fatura, mostra ela (qualquer situação) e rola até ela.
+  useEffect(() => {
+    if (!target || !invoices.data) return
+    const hit = invoices.data.find((x) => x.id === target)
+    if (!hit) {
+      void supabase.from('invoices').select('due_date').eq('id', target).maybeSingle().then(({ data }) => {
+        const due = (data as { due_date?: string } | null)?.due_date
+        if (due && `${due.slice(0, 7)}-01` !== month) setMonth(`${due.slice(0, 7)}-01`)
+      })
+      return
+    }
+    setStatusFilter('todas')
+    setUnit('todas')
+    setQuery('')
+    const t = window.setTimeout(() => {
+      const el = document.getElementById(`fatura-${target}`) ?? document.querySelector(`[data-items~="${target}"]`)
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 150)
+    return () => window.clearTimeout(t)
+  }, [target, invoices.data, month, setMonth])
   const nameOf = (i: Invoice) => i.clients?.name?.trim() ?? clientById.get(i.client_id)?.name ?? 'Cliente'
   const byUnit = (invoices.data ?? []).filter((i) => unit === 'todas' || i.unit === unit)
   const open = byUnit.filter((i) => i.status === 'pendente' || i.status === 'vencido')
@@ -237,7 +274,13 @@ export function BillingPage() {
         title="Financeiro"
         sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto.`}
         tabs={FINANCE_TABS}
-        actions={<>
+        actions={<FilterSheet count={(unit !== 'todas' ? 1 : 0) + (status !== 'aberto' ? 1 : 0)}>
+          <div role="group" aria-label="Situação" className="flex flex-wrap gap-1 md:hidden">
+            {([['aberto', 'Quem deve'], ['vencido', 'Vencidas'], ['pago', 'Pagas'], ['todas', 'Tudo']] as const).map(([k, l]) => (
+              <button key={k} type="button" aria-pressed={status === k} onClick={() => setStatusFilter(k)}
+                className={cn('min-h-11 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', status === k ? 'bg-fill text-on-fill' : 'border border-line text-muted')}>{l}</button>
+            ))}
+          </div>
           <div role="group" aria-label="Empresa" className="inline-flex rounded-full border border-line p-0.5">
             {(['todas', 'peformake', 'ellcazo'] as Unit[]).map((u) => (
               <button key={u} type="button" aria-pressed={u === unit} onClick={() => setUnit(u)}
@@ -245,8 +288,8 @@ export function BillingPage() {
             ))}
           </div>
           <MonthSwitcher />
-          {isAdmin && <Button variant="secondary" onClick={() => setSettingsOpen(true)}><Settings size={15} aria-hidden="true" /> Configurar cobrança</Button>}
-        </>}
+          {isAdmin && <span className="hidden md:contents"><Button variant="secondary" onClick={() => setSettingsOpen(true)}><Settings size={15} aria-hidden="true" /> Configurar cobrança</Button></span>}
+        </FilterSheet>}
       />
 
       {isAdmin && <AsaasCard />}
@@ -261,34 +304,35 @@ export function BillingPage() {
 
       {isAdmin && <ReviewQueue onDone={(msg) => { setNotice(msg); refresh() }} />}
 
-      <section aria-label="Resumo" className="grid grid-cols-2 gap-2 md:grid-cols-4">
+      {/* Celular: uma linha só, e só o que é maior que zero. */}
+      <section aria-label="Resumo" className="flex gap-2 overflow-x-auto [scrollbar-width:none] md:grid md:grid-cols-4 md:overflow-visible">
         {[
-          { label: 'A receber', value: brl(open.reduce((a, i) => a + Number(i.amount), 0)), hint: `${open.length} faturas`, f: 'aberto' as const },
-          { label: 'Vencido', value: brl(late.reduce((a, i) => a + Number(i.amount), 0)), hint: `${late.length} faturas`, warn: late.length > 0, f: 'vencido' as const },
-          { label: 'Recebido', value: brl(paid.reduce((a, i) => a + Number((i as Invoice & { paid_amount?: number }).paid_amount ?? i.amount), 0)), hint: `${paid.length} faturas`, f: 'pago' as const },
-          { label: 'Sem link ainda', value: String(ready.length), hint: ready.length ? 'Vencem em até 5 dias' : 'O link sai 5 dias antes', warn: ready.length > 0 && noDoc.length > 0, f: 'aberto' as const },
+          { label: 'A receber', value: brl(open.reduce((a, i) => a + openAmount(i), 0)), hint: `${open.length} faturas`, f: 'aberto' as const, n: open.length },
+          { label: 'Vencido', value: brl(late.reduce((a, i) => a + openAmount(i), 0)), hint: `${late.length} faturas`, warn: late.length > 0, f: 'vencido' as const, n: late.length },
+          { label: 'Recebido', value: brl(paid.reduce((a, i) => a + Number((i as Invoice & { paid_amount?: number }).paid_amount ?? i.amount), 0)), hint: `${paid.length} faturas`, f: 'pago' as const, n: paid.length },
+          { label: 'Sem link ainda', value: String(ready.length), hint: ready.length ? 'Vencem em até 5 dias' : 'O link sai 5 dias antes', warn: ready.length > 0 && noDoc.length > 0, f: 'aberto' as const, n: ready.length },
         ].map((t) => (
-          <div key={t.label} onClick={() => setStatusFilter(t.f)} className="cursor-pointer rounded-2xl border border-line bg-surface px-4 py-3 hover:border-line-strong">
+          <div key={t.label} onClick={() => setStatusFilter(t.f)} className={cn('shrink-0 cursor-pointer rounded-2xl border border-line bg-surface px-4 py-3 hover:border-line-strong max-md:min-w-[42%] max-md:py-2', !t.n && 'max-md:hidden')}>
             <p className="text-[12px] font-medium text-muted">{t.label}</p>
-            <p className={cn('text-[22px] font-semibold tabular-nums', t.warn && 'text-warn-ink')}>{t.value}</p>
-            {t.hint && <p className="text-[12px] text-muted">{t.hint}</p>}
+            <p className={cn('text-[18px] font-semibold tabular-nums md:text-[22px]', t.warn && 'text-warn-ink')}>{t.value}</p>
+            {t.hint && <p className="hidden text-[12px] text-muted md:block">{t.hint}</p>}
           </div>
         ))}
       </section>
 
       {notice && <p role="status" className="rounded-xl bg-raised px-4 py-2.5 text-[14px] font-medium">{notice}</p>}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div role="group" aria-label="Situação" className="flex flex-wrap gap-1">
-          {([['todas', 'Tudo'], ['aberto', 'Em aberto'], ['vencido', 'Vencidas'], ['pago', 'Pagas']] as const).map(([k, l]) => (
+        <div role="group" aria-label="Situação" className="hidden flex-wrap gap-1 md:flex">
+          {([['aberto', 'Quem deve'], ['vencido', 'Vencidas'], ['pago', 'Pagas'], ['todas', 'Tudo']] as const).map(([k, l]) => (
             <button key={k} type="button" aria-pressed={status === k} onClick={() => setStatusFilter(k)}
               className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', status === k ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>{l}</button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-2">
-          <label className="relative flex items-center">
+        <div className="flex w-full flex-wrap gap-2 md:w-auto">
+          <label className="relative flex flex-1 items-center md:flex-none">
             <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 text-muted" />
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" aria-label="Buscar cobrança"
-              className="min-h-10 w-44 rounded-full border border-line bg-surface pl-9 pr-3 text-[13px]" />
+              className="min-h-11 w-full rounded-full border border-line bg-surface pl-9 pr-3 text-[13px] md:min-h-10 md:w-44" />
           </label>
           {isAdmin && <Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button>}
           <ActionMenu label="Mais ações da cobrança" actions={[
@@ -296,13 +340,14 @@ export function BillingPage() {
             { label: 'Gerar mensalidades do mês', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => generate.mutate(), disabled: generate.isPending, hidden: !isAdmin },
             { label: 'Importar recebimentos do Asaas', icon: <Download size={15} aria-hidden="true" />, onClick: () => importAsaas.mutate(), disabled: importAsaas.isPending, hidden: !isAdmin },
             { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
+            { label: 'Configurar cobrança', icon: <Settings size={15} aria-hidden="true" />, onClick: () => setSettingsOpen(true), hidden: !isAdmin },
           ]} />
         </div>
       </div>
 
       {!invoices.data ? <LoadState isPending={invoices.isPending} isError={invoices.isError} refetch={() => void invoices.refetch()} /> : (
         <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
-          {rows.map((row) => {
+          {rows.slice(0, limit).map((row) => {
             if (row.kind === 'group') {
               const first = row.items[0]
               if (!first) return null
@@ -317,7 +362,7 @@ export function BillingPage() {
                     chargeNow.mutate(row.id)
                   }}
                   onDue={() => setDueFor({ id: first.id, label: `${nameOf(first)} · cobrança única`, due: first.invoice_groups?.due_date ?? first.due_date, monthly: true })}
-                  onPay={() => setPaying({ ...first, amount: row.items.reduce((a, x) => a + Number(x.amount), 0), description: first.invoice_groups?.description ?? 'Cobrança única' })}
+                  onPay={() => setPaying({ ...first, amount: row.items.reduce((a, x) => a + openAmount(x), 0), partial_paid: 0, description: first.invoice_groups?.description ?? 'Cobrança única' })}
                   onUndo={() => { void ask('Desfazer o pagamento da cobrança junta? Todas as faturas dela voltam para em aberto.').then((ok) => { if (ok) undo.mutate(first.id) }) }}
                   onSplit={() => { void ask('Separar a cobrança? Cada fatura volta a ter o seu próprio link e não é juntada de novo sozinha.').then((ok) => { if (ok) split.mutate(row.id) }) }}
                   onCancel={() => { void ask('Cancelar a cobrança junta inteira (todas as faturas dela)?').then((ok) => { if (ok) cancelGroup.mutate(row.items) }) }} />
@@ -328,7 +373,7 @@ export function BillingPage() {
             const client = clientById.get(i.client_id)
             const clientName = nameOf(i)
             return (
-              <li key={i.id} className="flex flex-col gap-1.5 border-b border-line px-4 py-3 last:border-b-0">
+              <li key={i.id} id={`fatura-${i.id}`} className={cn('flex flex-col gap-1.5 border-b border-line px-4 py-3 last:border-b-0', target === i.id && 'bg-accent-soft/40 ring-2 ring-inset ring-accent')}>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <ClientAvatar name={clientName} url={logoPublicUrl(i.clients?.logo_path ?? null) ?? i.clients?.legacy_logo_url ?? null} size="sm" />
                   <div className="min-w-0 flex-1">
@@ -337,6 +382,7 @@ export function BillingPage() {
                     {i.gateway_error && !/CPF|CNPJ/.test(i.gateway_error) && <p className="text-[12px] text-warn-ink">{i.gateway_error}</p>}
                   </div>
                   <span className="font-semibold tabular-nums">{brl(i.amount)}</span>
+                  {isOpen(i) && Number(i.partial_paid ?? 0) > 0 && <span className="rounded-full bg-warn-soft px-2.5 py-0.5 text-[12px] font-semibold text-warn-ink">Parcial: falta {brl(openAmount(i))}</span>}
                   <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
                     st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
                   {isOpen(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
@@ -348,7 +394,7 @@ export function BillingPage() {
                     { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!i.payment_url, disabled: chargeNow.isPending, onClick: () => { if (client && !client.document) { setBillingFor(client); return } chargeNow.mutate(i.id) } },
                     { label: `Juntar com as outras (${joinable(i).length})`, icon: <Layers size={15} aria-hidden="true" />, hidden: !(canJoin(i) && joinable(i).length >= 2), disabled: join.isPending, onClick: () => askJoin(i) },
                     { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!i.payment_url, onClick: () => setDueFor({ id: i.id, label: `${clientName} · ${i.description}`, due: i.due_date, monthly: i.source === 'mensalidade' }) },
-                    { label: 'Marcar pago', icon: <Check size={15} aria-hidden="true" />, disabled: pay.isPending, onClick: () => setPaying(i) },
+                    { label: 'Recebi (marcar pago)', icon: <Check size={15} aria-hidden="true" />, disabled: pay.isPending, onClick: () => setPaying(i) },
                     { label: 'Desconto do cliente', icon: <Percent size={15} aria-hidden="true" />, onClick: () => setDiscountFor({ id: i.client_id, name: clientName }) },
                     { label: 'Cancelar cobrança', danger: true, disabled: setStatus.isPending, onClick: () => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) } },
                   ]} />}
@@ -357,12 +403,13 @@ export function BillingPage() {
               </li>
             )
           })}
+          {rows.length > limit && <li className="p-3 text-center"><Button variant="secondary" onClick={() => setLimit((n) => n + 40)}>Ver mais ({rows.length - limit})</Button></li>}
           {list.length === 0 && (q || status !== 'todas' || unit !== 'todas') && <li className="p-8 text-center text-muted">Nada encontrado com esse filtro.</li>}
           {list.length === 0 && !q && status === 'todas' && unit === 'todas' && <li className="p-8 text-center text-muted">Nenhuma cobrança neste mês.{isAdmin ? ' Use "Gerar mensalidades do mês" para criar as dos contratos.' : ''}</li>}
         </ul>
       )}
 
-      {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} onClose={() => setPaying(null)} onPay={(date) => { pay.mutate({ id: paying.id, date }); setPaying(null) }} />}
+      {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} single={!paying.group_id} onClose={() => setPaying(null)} onPay={(date, amount) => { pay.mutate({ id: paying.id, date, amount, due: openAmount(paying) }); setPaying(null) }} />}
       {dueFor && <DueDialog target={dueFor} onClose={() => setDueFor(null)} onSaved={(msg) => { setNotice(msg); refresh() }} />}
       {jobOpen && <ServiceJobDialog clients={clients.data ?? []} onClose={() => setJobOpen(false)} onSaved={() => { setNotice('Serviço lançado: a fatura do cliente e a conta a pagar de quem fez já estão no sistema.'); refresh() }} />}
       {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
@@ -390,7 +437,7 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
   const error = items.find((i) => i.gateway_error)?.gateway_error ?? null
   const units = [...new Set(items.map((i) => (i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake')))].join(' + ')
   return (
-    <li data-group={id} className="flex flex-col gap-2 border-b border-l-4 border-b-line border-l-accent bg-accent-soft/20 px-4 py-3 last:border-b-0">
+    <li data-group={id} data-items={items.map((i) => i.id).join(' ')} className="flex flex-col gap-2 border-b border-l-4 border-b-line border-l-accent bg-accent-soft/20 px-4 py-3 last:border-b-0">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <ClientAvatar name={name} url={logo} size="sm" />
         <div className="min-w-0 flex-1">
@@ -425,11 +472,25 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
   )
 }
 
+/** Aviso do pop-up de vencimento: data no passado ou dia novo que já passou neste mês (vale a partir do próximo). */
+export function dueWarning(date: string, everyMonth: boolean, today: string): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null
+  if (date < today) return 'Essa data já passou: a fatura fica vencida na hora. Confira se é isso mesmo.'
+  if (everyMonth && Number(date.slice(8, 10)) < Number(today.slice(8, 10))) {
+    const next = new Date(`${today.slice(0, 7)}-01T12:00:00`)
+    next.setMonth(next.getMonth() + 1)
+    const mes = next.toLocaleDateString('pt-BR', { month: 'long' })
+    return `O dia ${Number(date.slice(8, 10))} deste mês já passou: as outras mensalidades deste mês continuam como estão e o dia novo vale a partir de ${mes}.`
+  }
+  return null
+}
+
 /** Mudar vencimento: só esta cobrança ou o dia de todo mês do cliente. */
 function DueDialog({ target, onClose, onSaved }: { target: { id: string; label: string; due: string; monthly: boolean }; onClose: () => void; onSaved: (msg: string) => void }) {
   const [date, setDate] = useState(target.due)
   const [every, setEvery] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
+  const warn = dueWarning(date, every, todayBR())
   const save = useMutation({
     mutationFn: async () => {
       const { error } = await (supabase.rpc as unknown as Rpc)('invoice_set_due', { _id: target.id, _due: date, _every_month: every })
@@ -449,20 +510,38 @@ function DueDialog({ target, onClose, onSaved }: { target: { id: string; label: 
             <span><b className="font-semibold">Mudar também os próximos meses</b><span className="block text-muted">O cliente passa a vencer todo dia {date ? Number(date.slice(8, 10)) : '…'}. As mensalidades em aberto acompanham.</span></span>
           </label>
         )}
+        {warn && <p className="rounded-lg bg-warn-soft px-3 py-2 text-[13px] font-medium text-warn-ink">{warn}</p>}
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
       </div>
     </Dialog>
   )
 }
 
-/** Pagamento feito fora do link: escolhe a data em que o dinheiro entrou. */
-function PayInvoiceDialog({ invoice, name, onClose, onPay }: { invoice: Invoice; name: string; onClose: () => void; onPay: (date: string) => void }) {
+/** Pagamento feito fora do link: a data em que o dinheiro entrou e, se veio diferente, quanto veio (parcial deixa saldo aberto). */
+function PayInvoiceDialog({ invoice, name, single, onClose, onPay }: { invoice: Invoice; name: string; single: boolean; onClose: () => void; onPay: (date: string, amount: number | null) => void }) {
   const [date, setDate] = useState(todayBR())
+  const [other, setOther] = useState(false)
+  const [value, setValue] = useState('')
+  const due = openAmount(invoice)
+  const amount = other ? parseMoney(value) : null
+  const partial = amount !== null && amount > 0 && amount < due - 0.009
+  const invalid = other && (!amount || amount <= 0)
   return (
-    <Dialog open onClose={onClose} title="Marcar como pago" description={`${name} · ${invoice.description} · ${brl(invoice.amount)}`} size="sm"
-      footer={<Button onClick={() => onPay(date)}><Check size={15} aria-hidden="true" /> Confirmar pagamento</Button>}>
-      <div className="flex flex-col gap-2">
+    <Dialog open onClose={onClose} title="Recebi o pagamento" description={`${name} · ${invoice.description} · ${brl(due)}`} size="sm"
+      footer={<Button disabled={invalid} onClick={() => onPay(date, amount)}><Check size={15} aria-hidden="true" /> {partial ? `Registrar ${brl(amount ?? 0)} (parcial)` : 'Confirmar pagamento'}</Button>}>
+      <div className="flex flex-col gap-3">
         <label className="flex flex-col text-[13px] font-semibold">Pago em<input type="date" value={date} max={todayBR()} onChange={(e) => setDate(e.target.value)} className={field} /></label>
+        {single ? (
+          <label className="flex min-h-11 cursor-pointer items-center gap-2 text-[13px] font-semibold">
+            <input type="checkbox" checked={other} onChange={(e) => setOther(e.target.checked)} className="size-4" /> Recebi outro valor
+          </label>
+        ) : <p className="text-[12.5px] text-muted">Cobrança junta: para receber só uma parte, separe as faturas primeiro.</p>}
+        {other && (
+          <label className="flex flex-col text-[13px] font-semibold">Quanto entrou (R$)
+            <input inputMode="decimal" autoFocus value={value} onChange={(e) => setValue(e.target.value)} placeholder="0,00" className={field} />
+          </label>
+        )}
+        {partial && <p className="rounded-lg bg-warn-soft px-3 py-2 text-[13px] font-medium text-warn-ink">Parcial: a fatura continua aberta com o saldo de {brl(due - (amount ?? 0))}.</p>}
         <p className="text-[12.5px] text-muted">Use quando o cliente pagou fora do link. O Caixa é atualizado junto e a fatura não é cobrada de novo.</p>
       </div>
     </Dialog>
@@ -705,8 +784,9 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
             )}
             <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova com link e lembretes de vencimento) ligam e desligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, no grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>
           </fieldset>
+          <EllcazoBilling />
           <fieldset className="flex flex-col gap-2 rounded-2xl border border-line p-4">
-            <legend className="px-1 text-[13px] font-semibold">Repasse diário da Ellcazo (Pix)</legend>
+            <legend className="px-1 text-[13px] font-semibold">Repasse diário da Ellcazo (Pix, antigo)</legend>
             {toggle('sweep_enabled', 'Fazer o Pix todo dia às 18h', 'Soma o que a Ellcazo recebeu pelo Asaas no dia e transfere para a conta da Ellcazo. Só com a chave Pix abaixo.')}
             <div className="grid grid-cols-[1fr_auto] gap-3">
               <label className="flex flex-col text-[13px] font-semibold">Chave Pix da Ellcazo<input value={String(v.sweep_pix_key ?? '')} onChange={(e) => set('sweep_pix_key', e.target.value)} className={field} /></label>
@@ -723,5 +803,42 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
         </div>
       )}
     </Dialog>
+  )
+}
+
+/** Cobrança por empresa: Peformake no Asaas; Ellcazo manual (Cora) ou Asaas com a chave dela. */
+function EllcazoBilling() {
+  const queryClient = useQueryClient()
+  const status = useQuery({ queryKey: ['asaas-status'], queryFn: () => asaasCall<{ ellcazo?: { configured: boolean; message?: string; account?: string | null } }>({ action: 'status' }), staleTime: 300_000 })
+  const settings = useQuery({
+    queryKey: ['billing-settings'],
+    queryFn: async () => (await supabase.from('billing_settings').select('*').eq('id', true).maybeSingle()).data as Record<string, unknown> | null,
+  })
+  const mode = String(settings.data?.ellcazo_gateway ?? 'manual')
+  const save = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const { error } = await (supabase.rpc as unknown as Rpc)('billing_units_save', { _data: data })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['billing-settings'] }),
+  })
+  const ell = status.data?.ellcazo
+  return (
+    <fieldset className="flex flex-col gap-2 rounded-2xl border border-line p-4">
+      <legend className="px-1 text-[13px] font-semibold">Quem cobra cada empresa</legend>
+      <p className="text-[13px]"><b>Peformake:</b> Asaas (conta principal).</p>
+      <div className="flex flex-wrap items-center gap-2 text-[13px]"><b>Ellcazo:</b>
+        <div role="group" aria-label="Cobrança da Ellcazo" className="inline-flex rounded-full border border-line p-0.5">
+          {([['manual', 'Manual / Cora (sem link automático)'], ['asaas', 'Asaas']] as const).map(([k, l]) => (
+            <button key={k} type="button" aria-pressed={mode === k} disabled={save.isPending || !settings.data || !('ellcazo_gateway' in (settings.data ?? {}))} onClick={() => save.mutate({ ellcazo_gateway: k })}
+              className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[12.5px] font-semibold disabled:cursor-not-allowed', mode === k ? 'bg-fill text-on-fill' : 'text-muted')}>{l}</button>
+          ))}
+        </div>
+      </div>
+      {mode === 'asaas' && ell && !ell.configured && <p className="rounded-lg bg-warn-soft px-3 py-2 text-[12.5px] font-medium text-warn-ink">Conta do Asaas da Ellcazo não conectada. Cole a chave em Supabase → Edge Functions → Secrets com o nome ASAAS_API_KEY_ELLCAZO (e o aviso de pagamento em ASAAS_WEBHOOK_TOKEN_ELLCAZO).</p>}
+      {mode === 'asaas' && ell?.configured && <p className="text-[12.5px] text-ok-ink">Asaas da Ellcazo conectado{ell.account ? ` · ${ell.account}` : ''}.</p>}
+      <p className="text-[12px] text-muted">Cliente que paga tudo para uma empresa só: escolha em "Quem recebe" na ficha do cliente (aba Financeiro). A parte da outra empresa vira "a repassar" no Caixa.</p>
+      {save.isError && <p role="alert" className="text-[12.5px] font-medium text-warn-ink">{(save.error as Error).message}</p>}
+    </fieldset>
   )
 }

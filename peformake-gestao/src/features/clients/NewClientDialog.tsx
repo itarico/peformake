@@ -3,14 +3,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
-import { supabase } from '@/lib/supabase'
 import { emptyDraft, isValidPhone } from './clientFormRules'
-import { clientErrorMessage, saveClient } from './clientsApi'
+import { clientErrorMessage, createClientWithContact } from './clientsApi'
 import { inputClass } from './ui'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 
-type Rpc = (fn: string, args?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
-const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
 /**
@@ -26,6 +23,7 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [contactFail, setContactFail] = useState<{ id: string; message: string } | null>(null)
 
   const create = useMutation({
     mutationFn: async () => {
@@ -38,16 +36,16 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
         legalName: company.trim() ? '' : person.trim(),
         billingEmail: email.trim(),
       }
-      const id = await saveClient(null, null, draft)
       // O responsável vira o contato principal: recebe contrato e relatórios.
-      await rpc('client_contact_save', { _id: null, _client: id, _data: {
+      const r = await createClientWithContact(draft, {
         name: person.trim(), role: 'dono', phone, email: email.trim(),
         gets_billing: true, gets_approvals: true, gets_reports: true, gets_contract: true,
-      } })
-      return id
+      })
+      return r
     },
-    onSuccess: (id) => {
+    onSuccess: ({ id, contactError }) => {
       void queryClient.invalidateQueries({ queryKey: ['clients'] })
+      if (contactError) { setContactFail({ id, message: contactError }); return }
       onClose()
       navigate(`/clientes/${id}?novo=1`)
     },
@@ -80,6 +78,12 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
         {field('person', 'Nome do responsável *', person, setPerson, { autoComplete: 'off' })}
         {field('phone', 'WhatsApp do responsável *', phone, setPhone, { inputMode: 'tel', placeholder: '(81) 98888-7777' })}
         {field('email', 'E-mail', email, setEmail, { type: 'email', inputMode: 'email', placeholder: 'nome@empresa.com' })}
+        {contactFail && (
+          <div role="alert" className="flex flex-col gap-2 rounded-xl bg-warn-soft px-3 py-2 font-medium text-warn-ink">
+            <p>O cliente foi criado, mas o contato do responsável não foi salvo ({contactFail.message}). Sem contato não sai lembrete nem contrato por WhatsApp.</p>
+            <Button type="button" variant="secondary" onClick={() => { onClose(); navigate(`/clientes/${contactFail.id}?novo=1`) }}>Abrir a ficha e cadastrar o contato</Button>
+          </div>
+        )}
         {create.isError && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 font-medium text-warn-ink">{clientErrorMessage(create.error)}</p>}
         <div className="flex justify-end gap-2 pt-1">
           <Button type="button" variant="secondary" onClick={onClose}>Cancelar</Button>

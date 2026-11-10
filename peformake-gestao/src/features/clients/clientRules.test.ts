@@ -111,6 +111,8 @@ describe('auxiliares', () => {
   it('gera iniciais e situação', () => {
     expect(initials('Ótica Sul Prime')).toBe('ÓP')
     expect(initials('  ')).toBe('?')
+    expect(initials('João Silva (PF)')).toBe('JS')
+    expect(initials('- Maria')).toBe('M')
     expect(clientStatusLabel({ isActive: true, isLost: false })).toBe('Ativo')
     expect(clientStatusLabel({ isActive: false, isLost: true })).toBe('Perdido')
     expect(clientStatusLabel({ isActive: false, isLost: false })).toBe('Inativo')
