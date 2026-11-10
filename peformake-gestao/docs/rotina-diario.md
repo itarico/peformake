@@ -2,6 +2,26 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 noite · avaliação de Clientes e Financeiro (nuvem, agente) + WhatsApp parado na parte 4
+Relatório: docs/AVALIACAO-CLIENTES-FINANCEIRO.md. Notas: Clientes 7,5 e Financeiro 5,5. Foram 13 erros de dinheiro testados em rollback. Prioridade:
+1. invoice_undo_paid não limpa paid_ref;
+2. desfazer no Caixa a cobrança junta desfaz metade;
+4. fin_import duplica recorrente e manual;
+5. pagamento com mais de 3 dias de atraso ou ambíguo vira receita solta;
+6. troca do dia de cobrança joga o vencimento para o passado;
+3. pagamento parcial vira pago.
+O item 7 (juntar automático mistura Peformake e Ellcazo) depende de decisão do Italo.
+Permissões:
+- fin_wa_command, fin_wa_undo, fin_wa_reply e fin_wa_process podem ser chamadas sem login (corrigir ANTES de ligar o WhatsApp);
+- contract_reminders_run pode ser disparada sem login;
+- fin_recurring_generate é aberta a qualquer logado;
+- client_intel mostra a dívida para quem não é admin;
+- reminders_enabled não desliga o cron.
+Dados: 28 de 31 clientes ativos sem CPF/CNPJ válido.
+Autoteste semanal desenhado (selftest_run com 19 cenários + Playwright no GitHub Actions).
+Lançamentos pelo WhatsApp: tela no ar e partes 1 a 3 do banco aplicadas. A parte 4 (20261110190300_fin_whatsapp_revisao.sql) ainda NÃO foi aplicada: o banco pede confirmação do Italo e ela expirou. Aplicar só junto com a correção de permissão acima.
+Incidente: uma publicação saiu sem rootDirectory (404 por cerca de 1 minuto) e foi revertida e republicada.
+
 ## 2026-11-10 noite · atrasados lançados + transcrição (nuvem)
 Lançadas 10 faturas em atraso (source manual, ref atraso:*, status vencido, no_merge=true para não juntar nem gerar cobrança no Asaas sozinhas; caixa e itens criados pelos gatilhos):
 - Fuctura: jun R$ 600 (restante), jul/ago/set/out R$ 900 (total R$ 4.200), vencimento dia 30.
