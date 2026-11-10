@@ -91,7 +91,69 @@ O Caixa só tem lançamentos desde 06/11 (36 lançamentos e 34 faturas). Sem his
 3. Lançar os atrasados que estão fora do sistema: CM Prime (R$ 2.550) e Fuctura (R$ 4.200).
 4. Cadastrar as despesas fixas como recorrentes (aluguel, ferramentas, pró-labore etc.).
 
-## 7. Fases
+## 9. Inteligência: previsão, gargalos e dicas (pedido do Italo, 10/11)
+
+Regra: **os números vêm sempre do banco** (funções SQL). A IA só escreve a frase em cima de números prontos, nunca calcula. Cada aviso mostra: o número, de onde veio, e um botão de ação. No máximo 3 aparecem de uma vez, os de mais dinheiro em jogo.
+
+**Previsão de crescimento (3 cenários para os próximos 3 meses)**
+- Base: tendência da receita recorrente dos últimos 6 meses (e sazonalidade quando houver 12 meses).
+- Soma: funil do Comercial ponderado (valor × chance da etapa) e renovações de contrato.
+- Subtrai: churn esperado = mensalidade dos clientes em risco (atraso + NPS baixo + entrega atrasada).
+- Mostra pessimista / realista / otimista e "para bater a meta de R$ X faltam N clientes do ticket médio".
+
+**Gargalos (onde trava o crescimento)**
+- Operação: área com mais serviços "faltou" ou "em andamento" depois do dia 25 (`client_service_status`) = falta gente ou processo ali.
+- Capacidade: entregas contratadas × entregues por área nos últimos 3 meses; acima de 90% de ocupação = não dá para vender mais daquela área sem contratar.
+- Comercial: etapa do funil onde mais negócios param (conversão por etapa).
+- Cobrança: prazo médio de recebimento subindo, ou o mesmo cliente atrasando 2 meses seguidos.
+- Risco: maior cliente acima de 20% da receita.
+
+**"Gastando muito com…"**
+- Categoria de despesa 30% acima da média dos últimos 3 meses.
+- Custo de equipe acima de 50% do recebido.
+- Descontos e créditos por erro nosso, por área (custo de qualidade).
+- Ferramenta recorrente sem cliente ou área ligada.
+
+**"Lucrando muito com…"**
+- Área/serviço com maior sobra (receita da área − custo da equipe da área).
+- Serviço que mais cresceu em receita no trimestre.
+- Cliente mais rentável (precisa do tempo por cliente; até lá, usa receita × entregas).
+
+**"Faturamento bom ou ruim?"**
+- Ritmo do mês: recebido até hoje × o esperado até hoje pelo calendário de vencimentos.
+- Comparação com a meta, com o mês passado e com o mesmo mês do ano anterior.
+
+**Dicas (cada uma vira um botão)**
+- Contrato com mais de 12 meses sem reajuste → "sugerir IPCA" (já previsto no desenho).
+- Cliente com bom NPS que só tem 1 área → oferta de outra área (upsell) no Comercial.
+- Cliente que atrasa todo mês → passar para pré-pago ou cartão recorrente.
+- Preço abaixo da tabela de Serviços e pacotes → revisar na renovação.
+- Receita concentrada → prospectar o segmento dos melhores clientes.
+- Caixa projetado negativo → antecipar cobranças ou adiar despesa.
+
+Resumo semanal na Bete (segunda) e resumo mensal escrito pela IA (Haiku, dia 1), ambos a partir desses mesmos números.
+
+## 10. Anti-falha (para os números serem confiáveis)
+
+1. **Uma fonte de verdade:** tela, Bete, IA e PDF leem a mesma função (`fin_dashboard`). Nada recalcula por conta própria.
+2. **Conferência automática todo dia:** recebido no Resumo = entradas do extrato; faturas pagas = pagamentos do Asaas; receita recorrente = soma dos itens. Diferença acima de R$ 1 → selo "conferir" com o motivo, e o lucro não é mostrado até resolver.
+3. **Selo de confiança dos dados:** "Dados 92% completos: falta importar o extrato desde 03/11" (extrato em dia, despesas fixas cadastradas, todo cliente ativo com fatura, nenhum pagamento sem cliente). Abaixo de 80%, os gráficos ficam cinza com o aviso.
+4. **Nunca em dobro:** chave única cliente + serviço + mês (já existe), importações idempotentes, fotografia mensal que não muda depois de gravada.
+5. **IA vigiada:** o texto da IA é conferido; se citar um número que não está no resultado do banco, o texto é descartado.
+6. **Testes automáticos:** cada fórmula com um teste de dados fictícios (vitest + SQL desfeito com rollback). A rotina de melhoria contínua roda a conferência e anota no diário.
+7. **Histórico de mudanças:** quem alterou valor, data ou status de um lançamento ou fatura fica registrado.
+8. **Rotina que falha aparece:** fotografia mensal e conferência entram no `automation_catalog`; falhou, fica vermelho na central e avisa o admin.
+9. **Regras únicas:** horário de Brasília, centavos exatos (numeric), atraso pela data de vencimento.
+10. **Cópia de segurança:** exportar CSV do mês e a fotografia mensal guardada.
+
+## 11. Fases atualizadas
+
+- **Fase A:** dados em dia (lista de clientes sem fatura, extratos, despesas fixas, atrasados) + selo de confiança + conferência automática.
+- **Fase B:** aba Resumo (cartões, "O que fazer agora", receita 12 meses, caixa 90 dias) + fotografia mensal.
+- **Fase C:** inteligência (previsão em 3 cenários, gargalos, "gastando/lucrando com", dicas) + Bete.
+- **Fase D:** margem por cliente com o tempo por cliente + resumo mensal da IA.
+
+## 7. Fases (primeira versão, substituída pela seção 11)
 
 - **Fase A (rápida):** aba Resumo com os 4 cartões, "O que fazer agora", receita 12 meses e caixa 90 dias; mais a importação do histórico.
 - **Fase B:** dicionário completo, tabela por cliente, fotografia mensal, receita por área e concentração.
