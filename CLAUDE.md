@@ -29,6 +29,11 @@ O histórico completo das decisões até 06/11/2026 está em `peformake-gestao/d
 - **Economia de créditos:** um chat novo por assunto (conversa longa relê tudo a cada resposta e custa muito mais). Não usar a sessão da rotina da Meta para conversar. Rotinas leves no modelo Haiku.
 - Publicação no PC: a CLI da Vercel não tem login; publique pela integração da Vercel (deploy do commit já enviado ao GitHub, `rootDirectory` = `peformake-gestao`).
 
+## Fase atual: testes antes do lançamento
+
+- O sistema ainda **não está em uso real**: está em teste até ir ao ar com domínio próprio (a Vercel é só ambiente de teste). Dados incompletos e equipe sem login são esperados agora; o foco é achar e corrigir erros e gargalos.
+- Módulos mais perto de concluídos: **Clientes** e **Financeiro** (revisar e testar primeiro).
+
 ## Regra de ouro (vale acima de todas): o sistema existe para poupar tempo
 
 Tudo o que for feito tem que **facilitar o trabalho** de quem usa. Antes de publicar, passe por este teste:
