@@ -7,6 +7,8 @@
 //   status  (admin logado): diz se a chave está no servidor e de qual conta é (sem expor a chave).
 //   sync    (admin logado ou cron): traz os pagamentos recebidos no Asaas para o caixa (sem duplicar), na empresa certa.
 //   clear_discount (admin ou cron): tira o desconto das cobranças em aberto já criadas no Asaas.
+//   reimburse (SÓ admin logado, nunca cron): paga por Pix o reembolso confirmado de um membro (Financeiro → WhatsApp).
+//           { entry_id, dry_run? }: com dry_run só monta o pedido (teste), sem transferir.
 //   pay_link (público, pelo token da fatura): página /pagar/<token> gera a cobrança na hora (depois que o cliente informa CPF/CNPJ).
 // Segredos: ASAAS_API_KEY, MP_ACCESS_TOKEN. Nenhum valor de chave sai desta função.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
@@ -218,7 +220,7 @@ Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: CORS })
   if (request.method !== 'POST') return json({ error: 'Use POST' }, 405)
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } })
-  const body = await request.json().catch(() => ({})) as { action?: string; invoice_id?: string; days?: number; token?: string }
+  const body = await request.json().catch(() => ({})) as { action?: string; invoice_id?: string; days?: number; token?: string; entry_id?: string; dry_run?: boolean }
 
   // Quem pode chamar: o cron (segredo) ou um admin logado (só charge_one).
   const secret = request.headers.get('x-cron-secret')
@@ -227,6 +229,8 @@ Deno.serve(async (request) => {
     const { data } = await db.rpc('traffic_cron_secret_ok', { _secret: secret })
     isCron = data === true
   }
+  // Reembolso por Pix: nunca pela rotina, só por um administrador logado que confirmou na tela.
+  if (body.action === 'reimburse' && isCron) return json({ error: 'Reembolso só com um administrador logado' }, 403)
   // Link público da fatura: quem tem o token só consegue gerar a cobrança daquela fatura.
   let payInvoice: string | null = null
   if (!isCron && body.action === 'pay_link') {
@@ -238,18 +242,41 @@ Deno.serve(async (request) => {
     // Na fila, a cobrança junta aparece pelo id do grupo.
     payInvoice = inv.group_id ?? inv.id
   }
+  let adminId: string | null = null
   if (!isCron && !payInvoice) {
-    if (!['charge_one', 'status', 'sync', 'clear_discount'].includes(body.action ?? '')) return json({ error: 'Não autorizado' }, 401)
+    if (!['charge_one', 'status', 'sync', 'clear_discount', 'reimburse'].includes(body.action ?? '')) return json({ error: 'Não autorizado' }, 401)
     const jwt = (request.headers.get('authorization') ?? '').replace(/^Bearer /i, '')
     const { data: user } = await db.auth.getUser(jwt)
     if (!user?.user) return json({ error: 'Não autorizado' }, 401)
     const { data: role } = await db.from('user_roles').select('role').eq('user_id', user.user.id).eq('role', 'admin').maybeSingle()
     if (!role) return json({ error: 'Só o administrador cria cobranças' }, 403)
+    adminId = user.user.id
   }
 
   const { data: settings } = await db.from('billing_settings').select('*').eq('id', true).single()
   if (!settings) return json({ error: 'Configuração ausente' }, 500)
   const gateway: string = settings.gateway
+
+  // Reembolso de quem pagou do bolso (Financeiro → WhatsApp), mesmo caminho do repasse: POST /transfers do Asaas.
+  if (body.action === 'reimburse') {
+    if (!adminId) return json({ error: 'Não autorizado' }, 401)
+    if (!/^[0-9a-f-]{36}$/i.test(body.entry_id ?? '')) return json({ error: 'Reembolso inválido' }, 400)
+    if (gateway !== 'asaas') return json({ error: 'O Pix de reembolso só sai pelo Asaas' }, 400)
+    const key = Deno.env.get('ASAAS_API_KEY')
+    if (!key && !body.dry_run) return json({ error: 'Falta a chave ASAAS_API_KEY nos segredos do Supabase' }, 400)
+    const { data: prep, error: prepError } = await db.rpc('fin_reimburse_prepare', { _entry: body.entry_id, _by: adminId, _dry: !!body.dry_run })
+    if (prepError || !prep) return json({ error: prepError?.message ?? 'Reembolso não está em aberto' }, 409)
+    const transfer = { value: Number(prep.amount), operationType: 'PIX', pixAddressKey: String(prep.pix_key), pixAddressKeyType: String(prep.pix_key_type), description: String(prep.description).slice(0, 100) }
+    if (body.dry_run) return json({ dry_run: true, transfer: { ...transfer, pixAddressKey: `…${transfer.pixAddressKey.slice(-4)}` }, to: prep.name })
+    try {
+      const t = await asaas(settings.gateway_env, key!, '/transfers', { method: 'POST', body: JSON.stringify(transfer) })
+      await db.rpc('fin_reimburse_finish', { _entry: body.entry_id, _ok: true, _ref: t.id ?? null, _error: null })
+      return json({ ok: true, paid: transfer.value, to: prep.name })
+    } catch (e) {
+      await db.rpc('fin_reimburse_finish', { _entry: body.entry_id, _ok: false, _ref: null, _error: (e as Error).message })
+      return json({ error: (e as Error).message }, 502)
+    }
+  }
 
   if (body.action === 'status') {
     const key = Deno.env.get('ASAAS_API_KEY')
