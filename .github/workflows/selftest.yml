@@ -1,0 +1,38 @@
+# Autoteste semanal sem IA (domingo): tipos, testes automáticos e telas de Clientes e Financeiro com dados falsos.
+# Nada toca o banco de verdade e não precisa de segredo. Falhou: o GitHub manda e-mail ao dono do repositório.
+name: Autoteste semanal
+on:
+  schedule:
+    - cron: '30 9 * * 0'   # domingo 06:30 de Brasília
+  workflow_dispatch: {}
+jobs:
+  autoteste:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: peformake-gestao
+    env:
+      VITE_SUPABASE_URL: https://wkkzcjnxyylrqoolmmhi.supabase.co
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_t1g3kHG-weQdyGcG9jJHYg_l1hkYcYn
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: peformake-gestao/package-lock.json
+      - run: npm ci
+      - run: npx tsc -b --noEmit
+      - run: npx vitest run
+      - run: npm i --no-save playwright@1.48.2 && npx playwright install --with-deps chromium
+      - name: Telas com dados falsos (computador e iPhone 13)
+        run: |
+          npx vite --config e2e/shell/vite.config.ts --port 5200 --strictPort &
+          npx wait-on -t 60000 http://localhost:5200 || sleep 15
+          OUT=e2e/capturas node e2e/telas.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas
+          path: peformake-gestao/e2e/capturas
