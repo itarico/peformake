@@ -22,6 +22,7 @@ O histórico completo das decisões até 06/11/2026 está em `peformake-gestao/d
 - **Sessão principal: a do PC do Italo**, pasta `C:\Users\intal\Desktop\APP PEFORMAKE`. Pelo celular ele usa **essa mesma sessão** pelo Controle Remoto (roda no PC).
 - **Sessão na nuvem: só reserva**, para quando o PC estiver desligado. A rotina de melhoria contínua também roda na nuvem.
 - Nunca duas sessões mexendo no código ao mesmo tempo. Ao voltar para uma, a outra para.
+- **Automático:** ao abrir qualquer sessão, o gancho `.claude/hooks/session-start.sh` já faz o `git pull` e mostra as últimas entradas do diário. Se ele avisar que o pull falhou, resolva antes de mexer.
 - **Ao começar qualquer pedido:** `git pull` na branch `claude/performig-app-data-hxl4zh` (outra sessão ou a rotina pode ter enviado algo).
 - **Ao terminar:** commit, **push** (nunca publicar na Vercel sem antes enviar o código ao GitHub, senão a próxima publicação de outro lugar apaga a mudança) e uma linha no topo de `peformake-gestao/docs/rotina-diario.md` com o que foi feito e o que ficou pela metade.
 - Decisão combinada com o Italo numa conversa e que não está aqui nem nos docs: anote no diário (ou neste arquivo, se for regra), porque a outra sessão não vê a conversa.
