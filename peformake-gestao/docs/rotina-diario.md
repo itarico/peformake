@@ -2,6 +2,14 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 noite · atrasados lançados + transcrição (nuvem)
+Lançadas 10 faturas em atraso (source manual, ref atraso:*, status vencido, no_merge=true para não juntar nem gerar cobrança no Asaas sozinhas; caixa e itens criados pelos gatilhos):
+- Fuctura: jun R$ 600 (restante), jul/ago/set/out R$ 900 (total R$ 4.200), vencimento dia 30.
+- CM Prime: tráfego ago/set/out R$ 600, apresentação R$ 150 e audiovisual R$ 600 (Ellcazo) em out (total R$ 2.550). O mês do audiovisual e da apresentação foi suposto (outubro); o Italo pode ajustar.
+Novembro segue como já estava.
+Transcrição: edge function whatsapp-transcribe (cron a cada 5 min) usa Groq Whisper (ou OpenAI), não o Claude. Está pulando porque falta o segredo TRANSCRIBE_API_KEY (TRANSCRIBE_PROVIDER padrão groq). Com a chave, funciona sozinha para os áudios dos últimos 7 dias.
+Resumo do Financeiro: NÃO implementado (5 decisões pendentes e dados incompletos; aguardando também a avaliação de Clientes e Financeiro).
+
 ## 2026-11-10 noite · PAINEL DOS ASSUNTOS EM ABERTO (nuvem)
 1. Sincronização PC/nuvem: gancho de início pronto. No PC, dar git pull uma vez.
 2. Economia de créditos: um chat por assunto; Meta 2x/dia.
