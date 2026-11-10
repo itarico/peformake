@@ -168,7 +168,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
         </div>
       </div>
       {editing && <ClientDialog open clientId={client.id} startTab="contrato" onClose={() => setEditing(false)} />}
-      {paying && <PayInvoiceDialog invoice={{ ...paying, description: paying.description ?? 'Mensalidade' }} name={client.name} single={!paying.group_id} onClose={() => setPaying(null)}
+      {paying && <PayInvoiceDialog invoice={{ ...paying, description: paying.description ?? 'Mensalidade' }} name={client.name} single={!paying.group_id && 'partial_paid' in paying} onClose={() => setPaying(null)}
         onPay={(date, amount) => { pay.mutate({ id: paying.id, date, amount }); setPaying(null) }} />}
       {dueFor && <DueDialog target={{ id: dueFor.id, label: `${client.name} · ${dueFor.description ?? 'Fatura'}`, due: dueFor.due_date, monthly: dueFor.source === 'mensalidade' }} onClose={() => setDueFor(null)} onSaved={(msg) => { setNotice(msg); refresh() }} />}
       {job && <ServiceJobDialog clientId={client.id} onClose={() => setJob(false)} />}

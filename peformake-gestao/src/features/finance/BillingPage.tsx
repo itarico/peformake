@@ -420,7 +420,7 @@ export function BillingPage() {
         </ul>
       )}
 
-      {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} single={!paying.group_id} onClose={() => setPaying(null)} onPay={(date, amount) => { pay.mutate({ id: paying.id, date, amount, due: openAmount(paying) }); setPaying(null) }} />}
+      {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} single={!paying.group_id && 'partial_paid' in paying} onClose={() => setPaying(null)} onPay={(date, amount) => { pay.mutate({ id: paying.id, date, amount, due: openAmount(paying) }); setPaying(null) }} />}
       {dueFor && <DueDialog target={dueFor} onClose={() => setDueFor(null)} onSaved={(msg) => { setNotice(msg); refresh() }} />}
       {jobOpen && <ServiceJobDialog clients={clients.data ?? []} onClose={() => setJobOpen(false)} onSaved={() => { setNotice('Serviço lançado: a fatura do cliente e a conta a pagar de quem fez já estão no sistema.'); refresh() }} />}
       {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
@@ -546,7 +546,7 @@ export function PayInvoiceDialog({ invoice, name, single, onClose, onPay }: { in
           <label className="flex min-h-11 cursor-pointer items-center gap-2 text-[13px] font-semibold">
             <input type="checkbox" checked={other} onChange={(e) => setOther(e.target.checked)} className="size-4" /> Recebi outro valor
           </label>
-        ) : <p className="text-[12.5px] text-muted">Cobrança junta: para receber só uma parte, separe as faturas primeiro.</p>}
+        ) : <p className="text-[12.5px] text-muted">Para registrar só uma parte: cobrança junta precisa ser separada antes.</p>}
         {other && (
           <label className="flex flex-col text-[13px] font-semibold">Quanto entrou (R$)
             <input inputMode="decimal" autoFocus value={value} onChange={(e) => setValue(e.target.value)} placeholder="0,00" className={field} />
