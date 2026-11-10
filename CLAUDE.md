@@ -26,6 +26,7 @@ O histórico completo das decisões até 06/11/2026 está em `peformake-gestao/d
 - **Ao começar qualquer pedido:** `git pull` na branch `claude/performig-app-data-hxl4zh` (outra sessão ou a rotina pode ter enviado algo).
 - **Ao terminar:** commit, **push** (nunca publicar na Vercel sem antes enviar o código ao GitHub, senão a próxima publicação de outro lugar apaga a mudança) e uma linha no topo de `peformake-gestao/docs/rotina-diario.md` com o que foi feito e o que ficou pela metade.
 - Decisão combinada com o Italo numa conversa e que não está aqui nem nos docs: anote no diário (ou neste arquivo, se for regra), porque a outra sessão não vê a conversa.
+- **Economia de créditos:** um chat novo por assunto (conversa longa relê tudo a cada resposta e custa muito mais). Não usar a sessão da rotina da Meta para conversar. Rotinas leves no modelo Haiku.
 - Publicação no PC: a CLI da Vercel não tem login; publique pela integração da Vercel (deploy do commit já enviado ao GitHub, `rootDirectory` = `peformake-gestao`).
 
 ## Regra de ouro (vale acima de todas): o sistema existe para poupar tempo

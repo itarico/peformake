@@ -2,6 +2,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 · análise de gasto de créditos (nuvem)
+Custo real por sessão (get_session, usage.cost_usd): esta sessão da nuvem (Opus, ~316 mil tokens de contexto) US$ 308 desde 06/11 (~US$ 65/dia); sessão da rotina da Meta (Opus, ~307 mil de contexto, o Italo também conversou nela) US$ 90 desde 09/11 (~US$ 60/dia); Hipertrofia US$ 9 em um dia; rotinas Haiku (WhatsApp, caixa de mensagens) ~US$ 0,01 por rodada (desprezível).
+Feito: leitura da Meta de 4 para 2 vezes por dia (05:30 e 17:30) e modelo da tarefa Sonnet (só vale quando a sessão da rotina for recriada; a sessão atual segue Opus). automation_catalog trf_leitura atualizado. WhatsApp ficou como estava (10 min), porque a economia seria quase zero.
+Regra combinada: um chat novo por assunto (o gancho de início já traz o diário) e não conversar dentro da sessão da rotina da Meta.
+
 ## 2026-11-10 · cobrança sem desconto (nuvem)
 Italo não quer desconto por pagar antes. Configuração já estava com desconto desligado e nenhum cliente com desconto próprio, mas a cobrança da Will Motos (R$ 1.900, vence 10/11) tinha sido criada no Asaas com desconto de 1%. billing-gateway v15: nova ação clear_discount (admin ou cron) tira o desconto das cobranças em aberto já criadas no Asaas; rodada agora: 1 verificada, 1 corrigida. Mensagens de cobrança da MD Prime, CM Prime e Will Motos geradas no chat para o Italo enviar (Pix dele). CM Prime tem atraso fora do sistema (tráfego ago/set/out, 1 apresentação R$ 150, 1 audiovisual): perguntei se lanço essas cobranças antigas na ficha; aguardando.
 
