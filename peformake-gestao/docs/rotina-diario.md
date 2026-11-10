@@ -2,6 +2,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-10 · lançar no Financeiro pelo WhatsApp: o que existe e o que falta (nuvem, só análise)
+Existe: Caixa → cartão "Lançar pelo WhatsApp" (WhatsappSenders.tsx, fin_whatsapp_senders, gatilho fin_from_whatsapp em whatsapp_messages). Limites: ignora grupo (is_group), só formato fixo "gasto 89,90 canva", lança direto como pago (sem confirmação), 0 números cadastrados e 0 lançamentos; a resposta "anotado" depende do WASENDER_API_KEY.
+Italo quer: um grupo financeiro do WhatsApp; agente leve (Haiku) lê texto livre e comprovante (foto/Pix), entende despesa/entrada, empresa, categoria e se é pagamento de cliente (liga à fatura); entra como "A confirmar" no topo do Caixa com Confirmar/Editar/Descartar; só confirmado vale para saldo e Resumo; Bete avisa sem alarde; nada em dobro com extrato/Asaas. O número da Peformake precisa estar no grupo. Próximo: construir (faz parte da Fase A do Resumo).
+
 ## 2026-11-10 · estudo: aba Resumo do Financeiro (nuvem, só estudo)
 Estudo completo em docs/ESTUDO-FINANCEIRO-RESUMO.md: tela (4 cartões, "O que fazer agora", gráficos), dicionário de métricas (MRR, inadimplência, churn, concentração, fôlego de caixa etc.), cruzamentos, automação (fin_dashboard + fotografia mensal) e fases A/B/C. Bloqueio: histórico do Caixa só desde 06/11; importar extratos jan–out e rodar sync do Asaas 400 dias. Aguardando as 5 decisões do Italo (seção 8) para começar a Fase A.
 
