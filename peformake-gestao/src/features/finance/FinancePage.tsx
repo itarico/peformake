@@ -13,7 +13,7 @@ import { useMonthParam } from '@/features/content/useMonthParam'
 import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
 import { parseMoney, parseStatement, ruleHint, type StatementRow } from './statement'
-import { WhatsappSenders } from './WhatsappSenders'
+import { Link } from 'react-router-dom'
 import { RecurringDialog } from './RecurringDialog'
 import { useAuth } from '@/auth/context'
 import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
@@ -28,6 +28,7 @@ const UNIT_LABEL: Record<Unit, string> = { peformake: 'Peformake', ellcazo: 'Ell
 interface Category { id: string; unit: string; kind: string; name: string }
 interface Entry {
   id: string; kind: string; category_id: string | null; description: string; amount: number; due_date: string; paid_at: string | null; status: string; source: string
+  review_status?: string | null; bank_ref?: string | null
   client_id?: string | null; clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
 }
 /** "Mensalidade 11/2026 · Design, Tráfego" vira "Mensalidade · Design, Tráfego": o mês já está no topo da tela. */
@@ -73,7 +74,7 @@ export function FinancePage() {
     queryFn: async () => {
       const end = nextMonth(month)
       const { data, error } = await supabase.from('fin_entries')
-        .select('id, kind, category_id, description, amount, due_date, paid_at, status, source, client_id, clients(name, logo_path, legacy_logo_url)')
+        .select('id, kind, category_id, description, amount, due_date, paid_at, status, source, review_status, bank_ref, client_id, clients(name, logo_path, legacy_logo_url)')
         .eq('unit', unit!).neq('status', 'cancelado')
         .or(`and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${end}),and(status.eq.pendente,due_date.lt.${end})`)
         .order('due_date', { ascending: false }).limit(1000)
@@ -175,6 +176,10 @@ export function FinancePage() {
           </div>
         ))}
       </section>
+      {isAdmin && (() => {
+        const n = (entries.data ?? []).filter((e) => e.review_status === 'a_revisar').length
+        return n > 0 ? <Link to="/financeiro/whatsapp" className="self-start rounded-full bg-raised px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:bg-line">{n} lançamento{n === 1 ? '' : 's'} do WhatsApp a revisar →</Link> : null
+      })()}
       {summary.isError && <LoadState isPending={false} isError refetch={() => void summary.refetch()} />}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-4 py-2.5 font-medium text-warn-ink">{problem}</p>}
 
@@ -213,6 +218,8 @@ export function FinancePage() {
                     : <span className="block truncate font-medium">{e.description}</span>}
                   <span className={cn('text-[12px]', late ? 'font-semibold text-warn-ink' : 'text-muted')}>
                     {e.status === 'pendente' ? (late ? 'Atrasado' : 'Em aberto') : 'Pago'}{e.source === 'extrato' ? ' · do extrato' : ''}
+                    {e.source === 'whatsapp' && (e.review_status === 'a_revisar' ? <b className="font-semibold text-warn-ink"> · via WhatsApp · a revisar</b> : ' · via WhatsApp')}
+                    {e.source !== 'extrato' && e.bank_ref ? ' · conferido no banco ✓' : ''}
                   </span>
                 </button>
                 <select aria-label={`Categoria de ${e.description}`} value={e.category_id ?? ''} disabled={categorize.isPending}
@@ -268,7 +275,6 @@ export function FinancePage() {
         </section>
       )}
 
-      {isAdmin && <WhatsappSenders />}
 
       {fixed && <RecurringDialog unit={unit} unitLabel={UNIT_LABEL[unit]} categories={unitCats} onClose={() => setFixed(false)} />}
       {paying && <PayDialog entry={paying} onClose={() => setPaying(null)} onPay={(d) => { setStatus.mutate({ id: paying.id, status: 'pago', paidAt: d }); setPaying(null) }} />}
@@ -287,21 +293,36 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
   const [category, setCategory] = useState(entry?.category_id ?? '')
   const [paid, setPaid] = useState(entry ? entry.status === 'pago' : true)
   const [problem, setProblem] = useState<string | null>(null)
+  const [dupes, setDupes] = useState<Dupe[] | null>(null)
   // Lançamento que veio de fatura: valor e tipo só mudam pela Cobrança (a fatura não acompanharia).
   const fromInvoice = entry?.source === 'contrato'
   const save = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (force: boolean) => {
       const value = parseMoney(amount)
       if (!description.trim()) throw new Error('Escreva uma descrição.')
       if (!value || value <= 0) throw new Error('Valor inválido.')
+      // Nada em dobro: antes de criar, confere se o mesmo gasto já entrou (WhatsApp, extrato, outra pessoa).
+      if (!entry && !force) {
+        const found = await checkDupes({ unit, kind, amount: value, date: paid ? paidAt : due, description })
+        if (found.length) { setDupes(found); return false }
+      }
       const { error } = await supabase.rpc('fin_entry_save', {
         _id: entry?.id ?? null,
         _data: { unit, kind, description, amount: value, due_date: due, category_id: category || null, status: paid ? 'pago' : 'pendente', paid_at: paid ? paidAt : null },
       })
       if (error) throw new Error(`Não foi possível salvar (${error.message}).`)
+      return true
+    },
+    onSuccess: (done) => { if (done) { onSaved(); onClose() } },
+    onError: (e) => setProblem((e as Error).message),
+  })
+  const same = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>)('fin_entry_same', { _id: id })
+      if (error) throw new Error(error.message)
     },
     onSuccess: () => { onSaved(); onClose() },
-    onError: (e) => setProblem((e as Error).message),
+    onError: (e) => setProblem(`Não foi possível marcar (${(e as Error).message}).`),
   })
   const cancel = useMutation({
     mutationFn: async () => {
@@ -316,7 +337,7 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
     <Dialog open onClose={onClose} title={entry ? 'Editar lançamento' : 'Novo lançamento'} size="sm"
       footer={<div className="flex flex-wrap justify-between gap-2">
         {entry ? <Button variant="link" onClick={() => { void ask('Cancelar este lançamento? Ele sai do caixa.').then((ok) => { if (ok) cancel.mutate() }) }}>Cancelar lançamento</Button> : <span />}
-        <Button disabled={save.isPending} onClick={() => { setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
+        <Button disabled={save.isPending} onClick={() => { setProblem(null); setDupes(null); save.mutate(false) }}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
       </div>}>
       <div className="flex flex-col gap-3">
         <div role="group" aria-label="Tipo" className="inline-flex self-start rounded-full border border-line p-0.5">
@@ -341,10 +362,29 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
           {paid && <label className="flex flex-col text-[13px] font-semibold">Pago em<input type="date" value={paidAt} max={todayBR()} onChange={(e) => setPaidAt(e.target.value)} className={field} /></label>}
         </div>
         {fromInvoice && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">Vem da Cobrança: valor e tipo só mudam lá. Marcar pago, desfazer ou cancelar aqui também atualiza a fatura do cliente; se ela faz parte de uma cobrança junta, o grupo inteiro fica pago.</p>}
+        {dupes && dupes.length > 0 && (
+          <div role="alert" className="flex flex-col gap-2 rounded-xl bg-warn-soft px-3 py-2.5 text-warn-ink">
+            <p className="font-semibold">Parece que já foi lançado:</p>
+            {dupes.map((d) => (
+              <div key={d.id} className="flex flex-wrap items-center gap-2 text-[13px]">
+                <span className="min-w-0 flex-1">{dayLabel(d.date)} · {d.description} · {brl(d.amount)} <span className="opacity-80">({d.via})</span></span>
+                <Button variant="secondary" disabled={same.isPending} onClick={() => same.mutate(d.id)}>É o mesmo</Button>
+              </div>
+            ))}
+            <Button variant="secondary" className="self-start" disabled={save.isPending} onClick={() => { setDupes(null); save.mutate(true) }}>É outro: salvar mesmo assim</Button>
+          </div>
+        )}
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
       </div>
     </Dialog>
   )
+}
+
+interface Dupe { id: string; description: string; amount: number; date: string; via: string }
+/** Lançamentos com o mesmo valor e data perto (até 2 dias). Se a checagem falhar, não atrapalha o lançamento. */
+async function checkDupes(d: { unit: string; kind: string; amount: number; date: string; description: string }): Promise<Dupe[]> {
+  const { data, error } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>)('fin_entry_dupe_check', { _data: d })
+  return error || !Array.isArray(data) ? [] : (data as Dupe[])
 }
 
 /** Marcar como pago escolhendo a data (o cliente pode ter pago ontem). */

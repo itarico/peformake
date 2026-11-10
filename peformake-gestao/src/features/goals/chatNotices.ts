@@ -30,6 +30,7 @@ const KIND: Record<string, { icon: string; label: string; many: (n: number) => s
   contract_signed: { icon: '✍️', label: 'Ver contrato', many: (n) => `${n} contratos assinados` },
   contract_waiting: { icon: '✍️', label: 'Ver contrato', many: (n) => `${n} contratos esperando assinatura` },
   billing_paid: { icon: '💸', label: 'Ver financeiro', many: (n) => `${n} pagamentos recebidos` },
+  fin_wa_review: { icon: '🧾', label: 'Revisar', many: (n) => `${n} avisos de lançamentos do WhatsApp para revisar` },
   billing_late: { icon: '⏰', label: 'Cobrar', many: (n) => `${n} faturas atrasadas` },
   site_lead: { icon: '🔥', label: 'Ver lead', many: (n) => `${n} contatos novos pelo site` },
   social_request: { icon: '📣', label: 'Ver pedido', many: (n) => `${n} pedidos de conteúdo` },

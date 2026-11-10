@@ -11,6 +11,7 @@ import { listNotifications, markRead } from '@/features/notifications/notificati
 import { useProduction } from '@/features/production/useProduction'
 import { noticesFrom, pendingFrom, type Notice } from './chatNotices'
 import { BeteToday, useBeteState, visibleItems, type TodayItem } from './BeteToday'
+import { isoWeek } from '@/features/finance/whatsapp/waRules'
 import { brl, cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
 
 // Chat de metas: conversa diária, uma mensagem por vez, montada com os dados do sistema.
@@ -270,6 +271,14 @@ export function GoalsChat() {
   const cal = calendar()
   const roles = state.status === 'ready' ? state.user.roles : []
   const isAdmin = roles.includes('admin')
+  // Lançamentos do WhatsApp para revisar: uma linha sem alarde, uma vez por semana (Feito esconde até a semana que vem).
+  const finWa = useQuery({
+    queryKey: ['fin-wa-count'], enabled: isAdmin, staleTime: 300_000,
+    queryFn: async () => {
+      const { data, error } = await (supabase.rpc as unknown as (f: string) => Promise<{ data: unknown; error: unknown }>)('fin_wa_pending_count')
+      return error ? 0 : Number(data ?? 0)
+    },
+  })
   const firstName = state.status === 'ready' ? (state.user.fullName ?? '').split(' ')[0] ?? '' : ''
   const mine = useMemo<GoalRole[]>(() => (isAdmin ? ['gestao', 'comercial', 'relacionamento', 'financeiro', 'trafego', 'conteudo', 'audiovisual'] : [...new Set(roles.map((r) => APP_ROLE[r]).filter(Boolean) as GoalRole[])]), [isAdmin, roles])
   const rows = (board.data ?? []).filter((r) => mine.includes(r.role) && GOAL_META[r.key])
@@ -353,8 +362,10 @@ export function GoalsChat() {
     }
     for (const p of latePieces) out.push({ id: `piece:${p.id}`, level: 'hoje', title: `${p.client}: ${p.title}`, sub: `peça atrasada desde ${p.deadline!.slice(8)}/${p.deadline!.slice(5, 7)}`, action: { label: 'Abrir peça', to: `/conteudo/peca/${p.id}` } })
     for (const n of noticesFrom(notifs.data ?? [])) out.push({ id: n.id, level: 'info', title: `${n.icon} ${n.title}`, sub: n.lines.slice(0, 2).join(' · ') || undefined, action: n.action ? { label: n.action.label, to: n.action.to } : undefined })
+    const wa = finWa.data ?? 0
+    if (wa > 0) out.push({ id: `finwa:${isoWeek()}`, level: 'info', title: `🧾 ${wa} ${wa === 1 ? 'lançamento' : 'lançamentos'} do WhatsApp para revisar`, sub: 'Antes do fechamento do mês', action: { label: 'Revisar', to: '/financeiro/whatsapp' } })
     return out
-  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month])
+  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month, finWa.data])
   const todayItems = visibleItems(todayAll, beteState.data)
   const urgentCount = todayItems.filter((i) => i.level === 'urgente').length
 
