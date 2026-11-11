@@ -224,12 +224,17 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
       )}
 
       {inDialog && !wizard && (
-        <Segmented label="Parte do cadastro" value={tab} onChange={setTab}
-          options={[{ id: 'empresa', label: 'Empresa' }, { id: 'dados', label: 'Contato' }, { id: 'perfil', label: 'Perfil' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Condições' }, { id: 'negocio', label: 'Sobre' }]} />
+        // 5 abas que cabem na largura do celular (sem rolar para o lado).
+        <div role="group" aria-label="Parte do cadastro" className="grid grid-cols-5 rounded-full border border-line p-0.5">
+          {([{ id: 'empresa', label: 'Empresa' }, { id: 'dados', label: 'Contato' }, { id: 'perfil', label: 'Perfil' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Contrato' }, { id: 'negocio', label: 'Sobre' }] as const).map((o) => (
+            <button key={o.id} type="button" aria-pressed={tab === o.id} onClick={() => setTab(o.id)}
+              className={cn('min-h-11 min-w-0 cursor-pointer truncate rounded-full px-0.5 text-[12.5px] font-medium md:min-h-10 md:text-[15px]', tab === o.id ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{o.label}</button>
+          ))}
+        </div>
       )}
       {wizard && (
         <ol aria-label="Etapas do cadastro" className="grid grid-cols-5 gap-1.5">
-          {['Empresa', 'Contato', 'Perfil', kind === 'avulso' ? 'Projeto' : 'Condições', 'Sobre'].map((label, i) => (
+          {['Empresa', 'Contato', 'Perfil', kind === 'avulso' ? 'Projeto' : 'Contrato', 'Sobre'].map((label, i) => (
             <li key={label} className="flex flex-col gap-1">
               <span className={cn('h-1.5 rounded-full', i <= stepIndex ? 'bg-accent' : 'bg-raised')} />
               <span className={cn('truncate text-[12px]', i === stepIndex ? 'font-semibold' : 'text-muted')}>{i + 1}. {label}</span>
