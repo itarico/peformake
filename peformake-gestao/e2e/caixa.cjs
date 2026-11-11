@@ -37,6 +37,15 @@ const scroll = (p) => p.evaluate(() => { const d = [...document.querySelectorAll
     if (!m || m.sh > m.ch + 1 || !msg.startsWith('Oi, Maria')) bad++;
     await p.screenshot({ path: `e2e/capturas/cobrar-${dev}.png` });
     const sys = await p.getByRole('button', { name: 'Enviar pelo sistema' }).count(); console.log(dev, 'botão sistema:', sys);
+    await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+    await p.goto(`http://localhost:${PORTN}/financeiro/contratos`); await p.waitForLoadState('networkidle'); await p.waitForTimeout(800);
+    await p.getByRole('button', { name: 'Novo contrato' }).first().click(); await p.waitForTimeout(500);
+    m = await scroll(p); console.log(dev, 'Novo contrato:', m); if (!m || m.sh > m.ch + 1) bad++;
+    await p.locator('dialog[open] ul button').first().click(); await p.waitForTimeout(800);
+    for (const t of ['Documento', 'Vigência e valores', 'Contratante']) {
+      await p.locator('dialog[open] [role=tab]').filter({ hasText: t }).first().click().catch(() => {}); await p.waitForTimeout(250);
+      m = await scroll(p); console.log(dev, 'Contrato ·', t, m); if (!m || m.sh > m.ch + 1) bad++;
+    }
     await ctx.close();
   }
   await b.close(); console.log(bad ? `FALHOU ${bad}` : 'OK'); process.exit(bad ? 1 : 0);

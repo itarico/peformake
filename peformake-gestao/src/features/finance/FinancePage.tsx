@@ -297,7 +297,7 @@ export function FinancePage() {
       />
 
       {/* Lançar primeiro: escrever como fala, ou + Entrada / + Saída. Sempre abre o pop-up para confirmar. */}
-      <section aria-label="Lançar" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-2.5 md:flex-row md:items-center md:p-3">
+      <section aria-label="Lançar" data-conteudo className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-2.5 md:flex-row md:items-center md:p-3">
         <form onSubmit={submitQuick} className="relative flex min-w-0 flex-1 items-center">
           <Sparkles size={16} aria-hidden="true" className="pointer-events-none absolute left-3.5 text-muted" />
           <input value={quick} onChange={(e) => setQuick(e.target.value)} aria-label="Lançamento rápido" autoComplete="off" enterKeyHint="go"

@@ -94,8 +94,8 @@ export function ChargeDialog({ clientId, items, onClose, onDone }: { clientId: s
   return (
     <Dialog open onClose={onClose} title={`Cobrar · ${info.data?.client ?? 'cliente'}`} description={chosen.length > 1 ? `${chosen.length} cobranças · ${brl(total)}` : undefined} size="sm"
       footer={<div className="grid w-full grid-cols-2 gap-2 md:flex md:justify-end">
-        <Button variant="secondary" disabled={!ready || mark.isPending} onClick={copy}><Copy size={15} aria-hidden="true" /> Copiar<span className="hidden md:inline">&nbsp;cobrança</span></Button>
-        <Button disabled={!ready || mark.isPending} onClick={openWa}><MessageCircle size={15} aria-hidden="true" /> <span className="hidden md:inline">Enviar pelo&nbsp;</span>WhatsApp</Button>
+        <Button variant="secondary" disabled={!ready || mark.isPending} onClick={copy}><Copy size={15} aria-hidden="true" /> <span className="md:hidden">Copiar</span><span className="hidden md:inline">Copiar cobrança</span></Button>
+        <Button disabled={!ready || mark.isPending} onClick={openWa}><MessageCircle size={15} aria-hidden="true" /> <span className="md:hidden">WhatsApp</span><span className="hidden md:inline">Enviar pelo WhatsApp</span></Button>
       </div>}>
       <div className="flex flex-col gap-2.5">
         {items.length > 1 && (

@@ -132,7 +132,7 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-1 text-[13px] font-semibold">Quem faz</legend>
           {people.isPending && <p role="status" className="text-[13px] text-muted">Carregando a equipe</p>}
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+          <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-5 sm:gap-2">
             {list.map((p) => {
               const on = staff === p.id
               const has = p.skills.includes(skill.key)
@@ -140,15 +140,15 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
                 <button key={p.id} type="button" aria-pressed={on} onClick={() => setStaff(on ? null : p.id)}
                   className={cn('flex min-h-11 cursor-pointer flex-col items-center gap-1 rounded-2xl border p-2 text-center', on ? 'border-ink bg-raised' : 'border-line hover:border-line-strong')}>
                   {p.photo
-                    ? <img src={p.photo} alt="" className={cn('size-11 rounded-full object-cover', on && 'ring-2 ring-ink ring-offset-2 ring-offset-surface')} />
-                    : <span className={cn('grid size-11 place-items-center rounded-full bg-raised text-[13px] font-semibold', on && 'ring-2 ring-ink ring-offset-2 ring-offset-surface')}>{initials(p.name)}</span>}
+                    ? <img src={p.photo} alt="" className={cn('size-9 rounded-full object-cover sm:size-11', on && 'ring-2 ring-ink ring-offset-2 ring-offset-surface')} />
+                    : <span className={cn('grid size-9 place-items-center rounded-full bg-raised text-[13px] font-semibold sm:size-11', on && 'ring-2 ring-ink ring-offset-2 ring-offset-surface')}>{initials(p.name)}</span>}
                   <span className="w-full truncate text-[12px] font-medium">{p.name.split(' ')[0]}</span>
                   {has && <span className="rounded-full bg-accent-soft px-1.5 text-[10.5px] font-semibold text-accent-ink">{skill.label}</span>}
                 </button>
               )
             })}
           </div>
-          <p className="text-[12px] text-muted">Quem você escolher fica marcado nesta função e aparece primeiro da próxima vez.</p>
+          <p className="hidden text-[12px] text-muted sm:block">Quem você escolher fica marcado nesta função e aparece primeiro da próxima vez.</p>
         </fieldset>
 
         <div className="grid grid-cols-2 gap-3">
