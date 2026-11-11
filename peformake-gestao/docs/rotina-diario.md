@@ -11,6 +11,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · login sempre claro (nuvem)
+- /login ignora o tema escuro (index.html não aplica dark em /login; LoginPage tira o tema ao abrir e devolve o da pessoa ao sair, via preferredTheme em lib/theme.ts). Italo achou os personagens pouco profissionais: opções propostas (foto real da Ellcazo, prévia do sistema, ou só marca); aguardando a escolha.
+
 ## 2026-11-11 fim do dia · Fuctura (acordo com Jorge) e Chef Leandro (nuvem)
 - Fuctura: 5 faturas em atraso ajustadas para só tráfego (jun R$300 restante, jul–out R$600 cada; total R$2.700, antes R$4.200), com caixa e itens. Contraproposta enviada ao Jorge em 4 mensagens pelo sistema (Italo autorizou). Falta: ele responder e pagar.
 - Chef Leandro: cobrança criada por engano e DESFEITA (fatura e lançamentos cancelados); venda voltou para pendente. Italo ainda vai confirmar.

@@ -7,6 +7,7 @@ import { isValidEmail } from '@/auth/messages'
 import { Button } from '@/components/ui/Button'
 import { Field } from '@/components/ui/Field'
 import { safeRedirect } from '@/lib/redirect'
+import { preferredTheme } from '@/lib/theme'
 import { supabase } from '@/lib/supabase'
 import { LoginCharacters, type Mood } from './login/LoginCharacters'
 import { LoginPhrase } from './login/LoginPhrase'
@@ -36,6 +37,14 @@ export function LoginPage() {
   const [holding, setHolding] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const google = useGoogleEnabled()
+
+  // A tela de entrada tem cor fixa (clara), seja qual for o tema escolhido no sistema.
+  // O tema da pessoa volta quando ela sai daqui.
+  useEffect(() => {
+    const root = document.documentElement
+    delete root.dataset.theme
+    return () => { if (preferredTheme() === 'dark') root.dataset.theme = 'dark' }
+  }, [])
 
   // Começam olhando para o campo de e-mail.
   useEffect(() => { lookAtField(gaze, formRef.current?.querySelector('input') ?? null) }, [gaze])

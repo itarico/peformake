@@ -33,7 +33,8 @@
       try {
         var saved = localStorage.getItem('peformake-theme')
         var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
-        if (dark) document.documentElement.dataset.theme = 'dark'
+        // A tela de entrada (/login) é sempre clara.
+        if (dark && location.pathname !== '/login') document.documentElement.dataset.theme = 'dark'
       } catch (e) {}
     </script>
   </head>
