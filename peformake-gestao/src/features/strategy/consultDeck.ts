@@ -1,10 +1,14 @@
-// Apresentação (deck) do diagnóstico: 1 ideia por slide, capa, cards, gráficos e rodapé com página.
-// O mesmo HTML serve para: PDF (impressão do navegador, @page por orientação), link público vivo e portal do cliente.
-// Medidas em cqw (largura do slide): o slide escala igual na tela e no papel, sem quebrar no meio.
-import { effortData, forcesSvg, funnelData, funnelSvg, gaugeSvg, hbarsSvg, positioningData, positioningSvg, presenceData, radarSvg, ratingsData, ratingsSvg, SERIES, timelineSvg } from './consultCharts'
+// Apresentação do diagnóstico, estilo apresentação de verdade: cada slide tem UMA mensagem (título grande)
+// e só uma coisa embaixo: até 4 tópicos curtos, OU um gráfico, OU cards com números grandes. Nada de parágrafo.
+// O texto completo fica na tela, atrás de "Ver detalhes" (details), nunca no PDF.
+// O mesmo HTML serve para: tela (um slide por vez), PDF (impressão do navegador, @page por orientação), link público e portal.
+// Slides "internos" (decisões da Peformake, alertas) só aparecem na tela da equipe; nunca no PDF, link ou portal.
+// Medidas em cqw (largura do slide): o slide escala igual na tela e no papel.
+import { comparisonSvg, funnelData, funnelSvg, maturitySvg, positioningData, positioningSvg, presenceData, radarSvg, ratingsData, ratingsSvg, riskMatrixSvg, SERIES, timelineSvg } from './consultCharts'
 
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 export type Orientation = 'vertical' | 'paisagem'
+export type SlideSection = 'resumo' | 'inteligencia' | 'diagnostico' | 'comunicacao' | 'plano' | 'riscos' | 'do_cliente'
 export interface DeckInput {
   name: string
   doc: Doc
@@ -13,221 +17,293 @@ export interface DeckInput {
   peformakeLogoUrl?: string | null
   updatedAt?: string | null
 }
+export interface SlideDetail { title: string; items: { k?: string; v: string; url?: string }[] }
+export interface Slide {
+  kind?: 'cover' | 'statement'
+  kicker?: string
+  title?: string
+  body: string
+  section?: SlideSection
+  internal?: boolean
+  details?: SlideDetail
+}
 
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
-const chunk = <T,>(a: T[], n: number): T[][] => { const out: T[][] = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out.length ? out : [[]] }
 const arr = (v: unknown): Doc[] => (Array.isArray(v) ? v as Doc[] : [])
 const strs = (v: unknown): string[] => (Array.isArray(v) ? (v as unknown[]).map(String).filter((s) => s.trim()) : [])
+const chunk = <T,>(a: T[], n: number): T[][] => { const out: T[][] = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out }
 const initials = (n: string) => n.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
-const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, '') } catch { return '' } }
-const isUrl = (s: unknown) => typeof s === 'string' && /^https?:\/\//.test(s)
+const isUrl = (s: unknown): s is string => typeof s === 'string' && /^https?:\/\//.test(s)
+/** Corta em palavras (nunca no meio): o PDF não leva texto longo. */
+export const words = (s: unknown, n: number) => { const w = String(s ?? '').trim().split(/\s+/).filter(Boolean); return w.length > n ? `${w.slice(0, n).join(' ').replace(/[,;:.]$/, '')}…` : w.join(' ') }
+const pos = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v > 0
+const fmt = (n: number) => n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })
 const WHO: Record<string, string> = { cliente: 'Cliente', peformake: 'Peformake', juntos: 'Juntos' }
 const EFFORT: Record<string, string> = { baixo: 'Rápido', medio: 'Médio', alto: 'Grande' }
-const IMPACT: Record<string, string> = { alto: 'Impacto alto', medio: 'Impacto médio', baixo: 'Impacto baixo' }
+const LEVEL: Record<string, string> = { alto: 'alto', medio: 'médio', baixo: 'baixo' }
+const TIPO: Record<string, [string, string]> = { gargalo: ['Gargalo', SERIES[1]], oportunidade: ['Oportunidade', SERIES[2]], risco: ['Risco', SERIES[3]], forca: ['Força', SERIES[0]] }
 
-// Ícones simples (traço), para dar ritmo visual aos cards.
+// Ícones simples (traço), para dar ritmo visual.
 const ICON: Record<string, string> = {
   alvo: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
-  loja: '<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/>',
+  lupa: '<circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/>',
   grafico: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
   pessoas: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.3.2 4 1.8 4.5 4.5"/>',
   fala: '<path d="M4 5h16v11H9l-5 4z"/>',
   raio: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
   alerta: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',
   pergunta: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17v.5"/>',
-  mapa: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
   check: '<path d="M4 12l5 5L20 6"/>',
+  teste: '<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/>',
+  moeda: '<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .9-3 2s1 1.7 3 2 3 1 3 2.1-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/>',
 }
 const icon = (k: keyof typeof ICON) => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`
+const bullets = (items: string[], n = 4, w = 14) => `<ul class="bul">${items.slice(0, n).map((t) => `<li>${esc(words(t, w))}</li>`).join('')}</ul>`
 
-interface Slide { kind?: 'cover' | 'statement'; title?: string; kicker?: string; body: string }
-
-function slides(input: DeckInput, o: Orientation): Slide[] {
+/** Lista de slides (o modelo). `internal` inclui os slides só da equipe (tela). */
+export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?: boolean } = {}): Slide[] {
   const { doc, name } = input
-  const r = doc.resumo ?? {}, d = doc.diagnostico ?? {}, c = doc.comunicacao ?? {}, p = doc.plano ?? {}
+  const r = doc.resumo ?? {}, d = doc.diagnostico ?? {}, c = doc.comunicacao ?? {}, p = doc.plano ?? {}, intel = doc.inteligencia ?? {}
   const land = o === 'paisagem'
   const out: Slide[] = []
-  const add = (s: Slide) => out.push(s)
+  const add = (s: Slide) => { if (s.internal && !opts.internal) return; out.push(s) }
   const date = new Date(doc.gerado_em ?? input.updatedAt ?? Date.now()).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+  const brand = `<div class="cover-top">${input.peformakeLogoUrl ? `<img class="pf-logo" src="${esc(input.peformakeLogoUrl)}" alt="Peformake">` : ''}<span class="brand">Peformake</span></div>`
 
-  // Capa
-  add({ kind: 'cover', body: `
-    <div class="cover-top">${input.peformakeLogoUrl ? `<img class="pf-logo" src="${esc(input.peformakeLogoUrl)}" alt="Peformake">` : ''}<span class="brand">Peformake</span></div>
+  add({ kind: 'cover', section: 'resumo', body: `${brand}
     <div class="cover-mid">
       ${input.clientLogoUrl ? `<img class="cli-logo" src="${esc(input.clientLogoUrl)}" alt="">` : `<span class="cli-mono">${esc(initials(name))}</span>`}
       <p class="kicker">Diagnóstico e plano de ação</p>
       <h1>${esc(name)}</h1>
-      ${r.titulo ? `<p class="lead">${esc(r.titulo)}</p>` : ''}
     </div>
     <p class="cover-foot">${esc(date)} · Consultoria Peformake</p>` })
 
-  if (r.situacao) add({ title: 'Onde a empresa está hoje', kicker: 'Resumo', body: `<div class="split"><p class="para clamp-12">${esc(r.situacao)}</p><div class="card center">${gaugeSvg(r.nota_maturidade)}<p class="muted small">Maturidade digital</p></div></div>` })
-  const dec = strs(r.decisoes)
-  if (dec.length) add({ title: 'As decisões que importam', kicker: 'Resumo', body: `<ol class="steps">${dec.slice(0, 5).map((t, i) => `<li><span class="num">${i + 1}</span><span>${esc(t)}</span></li>`).join('')}</ol>` })
-  if (r.primeiro_passo) add({ kind: 'statement', kicker: 'Primeiro passo desta semana', body: `<p class="big">${esc(r.primeiro_passo)}</p>` })
-
-  // Diagnóstico
-  if (d.negocio?.texto) add({ title: 'O negócio hoje', kicker: 'Diagnóstico', body: `<div class="split"><p class="para clamp-10">${esc(d.negocio.texto)}</p><div class="card">${icon('loja')}<ul class="bul">${strs(d.negocio.pontos).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div></div>` })
-  if (d.swot) {
-    const q = (k: string, l: string, cls: string) => `<div class="sw ${cls}"><h3>${l}</h3><ul class="bul">${strs(d.swot[k]).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>`
-    add({ title: 'Forças, fraquezas, oportunidades e ameaças', kicker: 'Diagnóstico', body: `<div class="swot">${q('forcas', 'Forças', 'ok')}${q('fraquezas', 'Fraquezas', 'warn')}${q('oportunidades', 'Oportunidades', 'acc')}${q('ameacas', 'Ameaças', 'gray')}</div>` })
-  }
-  const forces = arr(d.mercado?.cinco_forcas)
-  if (d.mercado?.texto || forces.length) add({ title: 'O mercado e a pressão da concorrência', kicker: 'Mercado', body: `<div class="split"><p class="para clamp-10">${esc(d.mercado?.texto)}</p>${forces.length ? `<div class="card chart">${forcesSvg(forces)}</div>` : ''}</div>` })
+  // 1. A tese + 3 números
+  const mat = arr(intel.maturidade).filter((m) => typeof m.nota === 'number')
+  const score = mat.length ? Math.round(mat.reduce((a, m) => a + m.nota, 0) / mat.length) : (typeof r.nota_maturidade === 'number' ? r.nota_maturidade * 10 : null)
+  const me = d.presenca_digital?.cliente ?? {}
   const rivals = arr(d.mercado?.concorrentes)
-  chunk(rivals, land ? 3 : 4).forEach((g, i, all) => {
-    if (!g.length) return
-    add({ title: all.length > 1 ? `Concorrentes (${i + 1}/${all.length})` : 'Concorrentes', kicker: 'Mercado', body: `<div class="grid ${land ? 'g3' : 'g2'}">${g.map((x) => {
-      const links = [['Site', x.site], ['Instagram', x.instagram && !isUrl(x.instagram) ? `https://instagram.com/${String(x.instagram).replace(/^@/, '')}` : x.instagram], ['Google Maps', x.google_maps], ['Anúncios', x.biblioteca_anuncios]].filter(([, u]) => isUrl(u))
-      const meta = [typeof x.nota === 'number' && x.nota > 0 ? `★ ${x.nota.toLocaleString('pt-BR')}${typeof x.avaliacoes === 'number' && x.avaliacoes > 0 ? ` (${x.avaliacoes})` : ''}` : '', x.preco && !/n[aã]o encontrad/i.test(String(x.preco)) ? `Preço: ${x.preco}` : ''].filter(Boolean)
-      return `<div class="card"><h3>${esc(x.nome)}</h3><p class="clamp-4">${esc(x.diferencial || x.o_que_fazem)}</p>${meta.length ? `<p class="meta">${meta.map(esc).join(' · ')}</p>` : ''}${x.como_anunciam && !/^n[aã]o encontrad/i.test(String(x.como_anunciam)) ? `<p class="muted small clamp-2">${esc(x.como_anunciam)}</p>` : ''}${links.length ? `<p class="links">${links.map(([l, u]) => `<a href="${esc(u)}">${l}</a>`).join('')}</p>` : isUrl(x.fonte) ? `<p class="links"><a href="${esc(x.fonte)}">${esc(host(x.fonte))}</a></p>` : ''}</div>`
-    }).join('')}</div>` })
-  })
-  const pres = presenceData(d, name)
-  if (pres) add({ title: 'Presença digital: você × concorrentes', kicker: 'Mercado', body: `<div class="chart-only">${radarSvg(pres)}</div><p class="muted small center">Nota de 0 a 10 por canal, pelo que está público hoje.</p>` })
-  const rat = ratingsData(d, name)
-  if (rat) add({ title: 'Reputação: nota e avaliações', kicker: 'Mercado', body: `<div class="chart-only">${ratingsSvg(rat)}</div><p class="muted small center">Nota no Google (número de avaliações entre parênteses).</p>` })
-  const pos = positioningData(d, name)
-  if (pos) add({ title: 'Onde cada um se posiciona', kicker: 'Mercado', body: `<div class="chart-only">${positioningSvg(pos)}</div>` })
+  const kpis = [
+    score !== null ? [`${score}<small>/100</small>`, 'Maturidade digital'] : null,
+    pos(me.nota_google) ? [`${fmt(me.nota_google)}<small>★</small>`, pos(me.avaliacoes) ? `${me.avaliacoes} avaliações` : 'Nota no Google'] : null,
+    pos(me.seguidores) ? [fmt(me.seguidores), 'Seguidores no Instagram'] : null,
+    rivals.length ? [String(rivals.length), 'Concorrentes analisados'] : null,
+  ].filter(Boolean).slice(0, 3) as [string, string][]
+  const tese = intel.tese || r.titulo
+  if (tese) add({ kind: 'statement', kicker: 'Em uma frase', section: 'resumo', body: `<p class="big">${esc(words(tese, 24))}</p>${kpis.length ? `<div class="kpis">${kpis.map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${esc(l)}</span></div>`).join('')}</div>` : ''}`,
+    details: r.situacao ? { title: 'A situação', items: [{ v: r.situacao }, ...strs(r.decisoes).map((t) => ({ k: 'Decisão', v: t }))] } : undefined })
 
-  const per = d.publico?.persona
-  if (per?.nome) add({ title: 'Para quem vender', kicker: 'Público', body: `<div class="split"><div class="card">${icon('pessoas')}<h3>${esc(per.nome)}${per.idade ? `, ${esc(per.idade)}` : ''}</h3><p class="clamp-4">${esc(per.quem_e)}</p><div class="three"><div><b>Dores</b><ul class="bul">${strs(per.dores).slice(0, 3).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div><div><b>Desejos</b><ul class="bul">${strs(per.desejos).slice(0, 3).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div></div></div><div class="card soft">${icon('alvo')}<h3>Cliente ideal</h3><p class="clamp-10">${esc(d.publico?.icp)}</p></div></div>` })
-  const jor = arr(d.publico?.jornada)
-  if (jor.length) add({ title: 'A jornada de compra', kicker: 'Público', body: `<ol class="journey">${jor.slice(0, 5).map((j, i) => `<li style="--c:${SERIES[i % SERIES.length]}"><span class="num">${i + 1}</span><b>${esc(j.etapa)}</b><p class="clamp-4">${esc(j.o_que_acontece)}</p><p class="muted small clamp-3">Fazer: ${esc(j.o_que_fazer)}</p></li>`).join('')}</ol>` })
-  if (d.proposta_valor?.texto) add({ title: 'Por que comprar de você', kicker: 'Proposta de valor', body: `<div class="split"><div><p class="para clamp-8">${esc(d.proposta_valor.texto)}</p>${d.proposta_valor.equacao ? `<p class="callout">${esc(d.proposta_valor.equacao)}</p>` : ''}</div><div class="card">${icon('check')}<ul class="bul">${strs(d.proposta_valor.diferenciais).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div></div>` })
-  const itens = arr(d.presenca_digital?.itens)
-  if (itens.length) {
-    const dot = { bom: SERIES[2], atencao: SERIES[3], ruim: SERIES[1], nao_encontrado: '#9aa5ab' } as Record<string, string>
-    add({ title: `Presença digital · ${esc(d.presenca_digital?.nota ?? '–')}/10`, kicker: 'Diagnóstico', body: `<ul class="rows">${itens.slice(0, 6).map((x) => `<li><span class="dot" style="background:${dot[x.situacao] ?? '#9aa5ab'}"></span><b>${esc(x.canal)}</b><span class="clamp-2">${esc(x.observacao)}</span></li>`).join('')}</ul>` })
-  }
+  // 2. Descobertas (cards com número grande)
+  const desc = arr(intel.descobertas)
+  chunk(desc, land ? 3 : 3).forEach((g, i, all) => add({
+    title: all.length > 1 ? `O que descobrimos (${i + 1}/${all.length})` : 'O que descobrimos', kicker: 'Descobertas', section: 'inteligencia',
+    body: `<div class="${land ? 'grid g3' : 'stack'}">${g.map((x) => { const [lab, col] = TIPO[x.tipo] ?? ['Achado', SERIES[0]]; return `<div class="card find" style="--c:${col}"><p class="tag">${esc(lab)}</p><p class="num-big clamp-1">${esc(words(x.numero, 5))}</p><h3 class="clamp-3">${esc(words(x.titulo, 14))}</h3></div>` }).join('')}</div>`,
+    details: { title: 'O que descobrimos', items: g.map((x) => ({ k: x.titulo, v: `${x.explicacao}${x.evidencia ? ` (Fonte: ${x.evidencia})` : ''}`, url: isUrl(x.evidencia) ? x.evidencia : undefined })) },
+  }))
+  if (!desc.length && strs(r.decisoes).length) add({ title: 'As decisões que importam', kicker: 'Resumo', section: 'resumo', body: bullets(strs(r.decisoes), 3) })
+
+  // 3. Números: você × referência
+  const comp = arr(intel.comparativos).filter((x) => pos(x.cliente) || pos(x.referencia))
+  if (comp.length >= 2) add({ title: 'Você × mercado, em números', kicker: 'Comparativo', section: 'inteligencia', body: `<div class="chart-only">${comparisonSvg(comp.slice(0, 5), name)}</div>`,
+    details: { title: 'De onde vêm os números', items: comp.map((x) => ({ k: x.metrica, v: `${name}: ${fmt(x.cliente)} ${x.unidade} · ${x.referencia_nome}: ${fmt(x.referencia)} ${x.unidade}`, url: isUrl(x.fonte) ? x.fonte : undefined })) } })
+  if (mat.length) add({ title: `Maturidade digital: ${score}/100`, kicker: 'Diagnóstico', section: 'inteligencia', body: `<div class="chart-only">${maturitySvg(mat)}</div>`,
+    details: { title: 'Por que cada nota', items: mat.map((m) => ({ k: `${m.dimensao}: ${m.nota}`, v: m.porque })) } })
+
   const fun = funnelData(d)
-  if (fun || d.funil?.texto) add({ title: 'Do anúncio à venda', kicker: 'Números', body: `<div class="split">${fun ? `<div class="chart">${funnelSvg(fun)}</div>` : ''}<p class="para clamp-10">${esc(d.funil?.texto)}</p></div>` })
+  if (fun) add({ title: d.funil?.titulo || 'Do anúncio à venda', kicker: 'Números dos anúncios', section: 'diagnostico', body: `<div class="chart-only">${funnelSvg(fun)}</div>${d.funil?.texto ? `<p class="caption clamp-2">${esc(words(d.funil.texto, 22))}</p>` : ''}`,
+    details: d.funil?.texto ? { title: 'Funil', items: [{ v: d.funil.texto }] } : undefined })
 
-  // Sugestão de comunicação
-  if (c.essencia) add({ kind: 'statement', kicker: 'Sugestão de comunicação', body: `<p class="big">${esc(c.essencia)}</p>${c.proposito ? `<p class="lead">${esc(c.proposito)}</p>` : ''}${c.arquetipo ? `<p class="muted">Arquétipo: <b>${esc(c.arquetipo)}</b></p>` : ''}` })
+  // 4. Mercado e concorrentes
+  const pres = presenceData(d, name)
+  if (pres) add({ title: 'Presença digital: você × concorrentes', kicker: 'Mercado', section: 'diagnostico', body: `<div class="chart-only">${radarSvg(pres)}</div>`,
+    details: { title: 'Presença por canal', items: arr(d.presenca_digital?.itens).map((x) => ({ k: x.canal, v: x.observacao, url: isUrl(x.fonte) ? x.fonte : undefined })) } })
+  const rat = ratingsData(d, name)
+  if (rat) add({ title: 'Reputação no Google', kicker: 'Mercado', section: 'diagnostico', body: `<div class="chart-only">${ratingsSvg(rat)}</div><p class="caption">Nota no Google (nº de avaliações).</p>` })
+  if (rivals.length) {
+    const lvl = (n: unknown) => (pos(n) ? '$'.repeat(Math.min(5, n as number)) : '–')
+    add({ title: 'Quem disputa o mesmo cliente', kicker: 'Concorrentes', section: 'diagnostico',
+      body: `<table class="tbl"><thead><tr><th>Concorrente</th><th>Google</th><th>Instagram</th><th>Preço</th></tr></thead><tbody>${[{ nome: name, nota: me.nota_google, avaliacoes: me.avaliacoes, seguidores: me.seguidores, preco_nivel: me.preco_nivel, me: true }, ...rivals.slice(0, land ? 4 : 5)].map((x: Doc) => `<tr${x.me ? ' class="me"' : ''}><td><b>${esc(words(x.nome, 4))}</b></td><td>${pos(x.nota) ? `${fmt(x.nota)}★${pos(x.avaliacoes) ? ` <small>(${x.avaliacoes})</small>` : ''}` : '–'}</td><td>${pos(x.seguidores) ? fmt(x.seguidores) : '–'}</td><td>${lvl(x.preco_nivel)}</td></tr>`).join('')}</tbody></table>`,
+      details: { title: 'Concorrentes', items: rivals.map((x) => ({ k: x.nome, v: [x.diferencial || x.o_que_fazem, x.como_anunciam && !/n[aã]o encontrad/i.test(x.como_anunciam) ? `Comunicação: ${x.como_anunciam}` : '', x.preco && !/n[aã]o encontrad/i.test(x.preco) ? `Preço: ${x.preco}` : ''].filter(Boolean).join(' · '), url: [x.site, x.google_maps, x.fonte].find(isUrl) })) } })
+  }
+  const posi = positioningData(d, name)
+  if (posi) add({ title: 'Onde cada um se posiciona', kicker: 'Mercado', section: 'diagnostico', body: `<div class="chart-only">${positioningSvg(posi)}</div>` })
+  if (d.swot) {
+    const q = (k: string, l: string, cls: string) => `<div class="sw ${cls}"><h3>${l}</h3>${bullets(strs(d.swot[k]), 3, 8)}</div>`
+    add({ title: 'Forças, fraquezas, oportunidades e ameaças', kicker: 'Diagnóstico', section: 'diagnostico', body: `<div class="swot">${q('forcas', 'Forças', 'ok')}${q('fraquezas', 'Fraquezas', 'warn')}${q('oportunidades', 'Oportunidades', 'acc')}${q('ameacas', 'Ameaças', 'gray')}</div>`,
+      details: { title: 'SWOT completo', items: (['forcas', 'fraquezas', 'oportunidades', 'ameacas'] as const).flatMap((k) => strs(d.swot[k]).map((t) => ({ k: { forcas: 'Força', fraquezas: 'Fraqueza', oportunidades: 'Oportunidade', ameacas: 'Ameaça' }[k], v: t }))) } })
+  }
+
+  // 5. Público
+  const per = d.publico?.persona
+  if (per?.nome) add({ title: `Para quem vender: ${String(per.nome).split(/[\s(,]/)[0]}${/^\d/.test(String(per.idade ?? '')) ? `, ${words(per.idade, 3)}` : ''}`, kicker: 'Público', section: 'diagnostico',
+    body: `<div class="cols2"><div class="card">${icon('pessoas')}<h3>O que tira o sono</h3>${bullets(strs(per.dores), 3, 10)}</div><div class="card soft">${icon('fala')}<h3>O que faz desistir</h3>${bullets(strs(per.objecoes).length ? strs(per.objecoes) : strs(per.desejos), 3, 10)}</div></div>`,
+    details: { title: 'Persona e cliente ideal', items: [{ k: 'Quem é', v: per.quem_e }, ...strs(per.desejos).map((t) => ({ k: 'Desejo', v: t })), { k: 'Cliente ideal', v: d.publico?.icp ?? '' }].filter((x) => x.v) } })
+  const jor = arr(d.publico?.jornada)
+  if (jor.length) add({ title: 'A jornada de compra', kicker: 'Público', section: 'diagnostico', body: `<ol class="journey">${jor.slice(0, 5).map((j, i) => `<li style="--c:${SERIES[i % SERIES.length]}"><span class="num">${i + 1}</span><b class="clamp-2">${esc(words(j.etapa, 4))}</b><p class="clamp-3">${esc(words(j.o_que_fazer, 12))}</p></li>`).join('')}</ol>`,
+    details: { title: 'Jornada', items: jor.map((j) => ({ k: j.etapa, v: `Hoje: ${j.o_que_acontece} · Fazer: ${j.o_que_fazer}` })) } })
+  if (d.proposta_valor?.equacao || strs(d.proposta_valor?.diferenciais).length) add({ title: 'Por que comprar de você', kicker: 'Proposta de valor', section: 'diagnostico',
+    body: `${d.proposta_valor?.equacao ? `<p class="callout">${esc(words(d.proposta_valor.equacao, 22))}</p>` : ''}${bullets(strs(d.proposta_valor?.diferenciais), 3, 12)}`,
+    details: d.proposta_valor?.texto ? { title: 'Proposta de valor', items: [{ v: d.proposta_valor.texto }] } : undefined })
+
+  // 6. Oportunidades e testes
+  const ops = arr(intel.oportunidades)
+  if (ops.length) add({ title: 'Oportunidades com maior retorno', kicker: 'Oportunidades', section: 'inteligencia',
+    body: `<div class="grid ${land ? 'g4' : 'g2'}">${ops.slice(0, 4).map((x, i) => `<div class="card op" style="--c:${SERIES[i % SERIES.length]}">${icon('moeda')}<h3 class="clamp-3">${esc(words(x.titulo, 10))}</h3><p class="est clamp-2">${esc(words(x.estimativa, 9))}</p><p class="tags"><span>Impacto ${esc(LEVEL[x.impacto] ?? x.impacto)}</span><span>Esforço ${esc(LEVEL[x.esforco] ?? x.esforco)}</span></p></div>`).join('')}</div>`,
+    details: { title: 'Como fazer', items: ops.map((x) => ({ k: x.titulo, v: `${x.como} · Estimativa: ${x.estimativa}` })) } })
+  const hip = arr(intel.hipoteses)
+  if (hip.length) add({ title: 'O que vamos testar primeiro', kicker: 'Hipóteses', section: 'inteligencia',
+    body: `<ol class="steps">${hip.slice(0, 3).map((x, i) => `<li><span class="num">${i + 1}</span><span><b class="clamp-2">${esc(words(x.hipotese, 16))}</b><small class="clamp-1">Sinal: ${esc(words(x.sinal, 12))}</small></span></li>`).join('')}</ol>`,
+    details: { title: 'Como testar', items: hip.map((x) => ({ k: x.hipotese, v: `Teste: ${x.como_testar} · Sinal de sucesso: ${x.sinal}` })) } })
+
+  // 7. Internos (só na tela da equipe)
+  arr(intel.decisoes_peformake).forEach((x, i, all) => add({ internal: true, title: words(x.decisao, 14), kicker: `Decisão para a Peformake ${i + 1}/${all.length} · interno`, section: 'inteligencia',
+    body: `<div class="grid ${land ? 'g3' : 'stack'}">${arr(x.opcoes).slice(0, 3).map((op) => `<div class="card"><h3 class="clamp-2">${esc(words(op.opcao, 10))}</h3><p class="pro clamp-2">+ ${esc(words(op.pros, 12))}</p><p class="con clamp-2">− ${esc(words(op.contras, 12))}</p></div>`).join('')}</div><p class="callout"><b>Recomendação:</b> ${esc(words(x.recomendacao, 18))}</p>`,
+    details: { title: 'Por quê', items: [{ v: x.porque }, ...arr(x.opcoes).map((op) => ({ k: op.opcao, v: `Prós: ${op.pros} · Contras: ${op.contras}` }))] } }))
+  if (intel.red_flags?.alertas?.length) add({ internal: true, title: `Alertas para a Peformake: ${({ verde: 'cliente saudável', amarelo: 'atenção', vermelho: 'risco alto' } as Record<string, string>)[intel.red_flags.veredicto] ?? ''}`, kicker: 'Interno', section: 'inteligencia', body: bullets(strs(intel.red_flags.alertas), 4, 14) })
+  if (arr(doc.confirmar).length) add({ internal: true, title: 'Só confirmar com o cliente', kicker: 'Interno', section: 'do_cliente', body: `<ul class="rows">${arr(doc.confirmar).slice(0, 6).map((x) => `<li><b>${esc(words(x.item, 5))}</b><span class="clamp-1">${esc(words(x.encontrado, 14))}</span></li>`).join('')}</ul>` })
+
+  // 8. Comunicação
+  if (c.essencia) add({ kind: 'statement', kicker: 'Sugestão de comunicação', section: 'comunicacao', body: `<p class="big">${esc(words(c.essencia, 22))}</p>${c.arquetipo ? `<p class="lead">Arquétipo: <b>${esc(words(c.arquetipo, 8))}</b></p>` : ''}`,
+    details: { title: 'Essência e propósito', items: [{ k: 'Propósito', v: c.proposito }, { k: 'Arquétipo', v: c.arquetipo }, { k: 'Papel da Peformake', v: c.papel_peformake }].filter((x) => x.v) } })
   const tom = arr(c.tom)
-  if (tom.length) add({ title: 'Tom de voz', kicker: 'Sugestão de comunicação', body: `<div class="grid g2">${tom.slice(0, 4).map((t, i) => `<div class="card"><h3 style="color:${SERIES[i % SERIES.length]}">${esc(t.adjetivo)}</h3><p class="quote clamp-4">“${esc(t.exemplo)}”</p></div>`).join('')}</div>` })
-  if (strs(c.evitar).length || c.regra_teste) add({ title: 'O que evitar', kicker: 'Sugestão de comunicação', body: `<div class="split"><div class="card">${icon('alerta')}<ul class="bul">${strs(c.evitar).slice(0, 5).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>${c.regra_teste ? `<div class="card accent"><p class="small up">Regra-teste</p><p class="big2">${esc(c.regra_teste)}</p></div>` : ''}</div>` })
-  if (c.expressao) add({ title: 'Expressão da marca', kicker: 'Sugestão de comunicação', body: `<div class="grid g3">${[['Paleta', c.expressao.paleta], ['Ambiente', c.expressao.ambiente], ['Presença', c.expressao.presenca]].filter(([, v]) => v).map(([k, v]) => `<div class="card"><h3>${k}</h3><p class="clamp-8">${esc(v)}</p></div>`).join('')}</div>` })
+  if (tom.length) add({ title: 'Tom de voz', kicker: 'Sugestão de comunicação', section: 'comunicacao', body: `<div class="grid ${land ? 'g4' : 'g2'}">${tom.slice(0, 4).map((t, i) => `<div class="card"><h3 style="color:${SERIES[i % SERIES.length]}">${esc(words(t.adjetivo, 3))}</h3><p class="quote clamp-4">“${esc(words(t.exemplo, 20))}”</p></div>`).join('')}</div>` })
+  if (strs(c.evitar).length || c.regra_teste) add({ title: 'O que a marca não faz', kicker: 'Sugestão de comunicação', section: 'comunicacao', body: `<div class="cols2"><div class="card">${icon('alerta')}${bullets(strs(c.evitar), 4, 10)}</div>${c.regra_teste ? `<div class="card accent"><p class="up">Regra-teste</p><p class="big2">${esc(words(c.regra_teste, 20))}</p></div>` : ''}</div>`,
+    details: c.expressao ? { title: 'Expressão da marca', items: [{ k: 'Paleta', v: c.expressao.paleta }, { k: 'Ambiente', v: c.expressao.ambiente }, { k: 'Presença', v: c.expressao.presenca }].filter((x) => x.v) } : undefined })
   const pil = arr(c.pilares)
-  if (pil.length) add({ title: 'Pilares de conteúdo', kicker: 'Sugestão de comunicação', body: `<div class="grid ${land ? 'g3' : 'g2'}">${pil.slice(0, 6).map((x, i) => `<div class="card"><h3 style="color:${SERIES[i % SERIES.length]}">${esc(x.nome)}</h3><p class="clamp-5">${esc(x.descricao)}</p></div>`).join('')}</div>` })
-  if (c.papel_peformake) add({ kind: 'statement', kicker: 'O papel da Peformake', body: `<p class="big2">${esc(c.papel_peformake)}</p>` })
+  if (pil.length) add({ title: 'Pilares de conteúdo', kicker: 'Sugestão de comunicação', section: 'comunicacao', body: `<div class="grid ${land ? (pil.length > 4 ? 'g3' : 'g4') : 'g2'}">${pil.slice(0, land ? 6 : 4).map((x, i) => `<div class="card"><h3 style="color:${SERIES[i % SERIES.length]}" class="clamp-2">${esc(words(x.nome, 5))}</h3><p class="clamp-3">${esc(words(x.descricao, 14))}</p></div>`).join('')}</div>` })
   const exp = arr(doc.experiencia)
-  if (exp.length) add({ title: 'Experiência do cliente (fora do digital)', kicker: 'Experiência', body: `<div class="grid g2">${exp.slice(0, 4).map((m) => `<div class="card"><h3>${esc(m.momento)}</h3><p class="clamp-3">${esc(m.como_deve_ser)}</p><ul class="bul small">${strs(m.acoes).slice(0, 2).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('')}</div>` })
+  if (exp.length) add({ title: 'Experiência fora do digital', kicker: 'Experiência do cliente', section: 'comunicacao', body: `<div class="grid ${land ? 'g4' : 'g2'}">${exp.slice(0, 4).map((m) => `<div class="card"><h3>${esc(m.momento)}</h3><p class="clamp-4">${esc(words(strs(m.acoes)[0] ?? m.como_deve_ser, 14))}</p></div>`).join('')}</div>`,
+    details: { title: 'Experiência do cliente', items: exp.map((m) => ({ k: m.momento, v: `Hoje: ${m.hoje} · Como deve ser: ${m.como_deve_ser} · Ações: ${strs(m.acoes).join('; ')}` })) } })
 
-  // Plano
+  // 9. Plano
   const fases = arr(p.fases)
-  if (p.prioridade || fases.length) add({ title: 'O plano dos próximos 90 dias', kicker: 'Plano de ação', body: `${p.prioridade ? `<p class="callout">${esc(p.prioridade)}</p>` : ''}${fases.length ? `<div class="chart-wide">${timelineSvg(fases)}</div><div class="grid g3">${fases.map((f, i) => `<div class="card" style="border-top:0.5cqw solid ${SERIES[i % SERIES.length]}"><h3>${esc(f.periodo)}</h3><p class="clamp-4">${esc(f.objetivo)}</p></div>`).join('')}</div>` : ''}` })
+  if (fases.length) add({ title: 'O plano dos próximos 90 dias', kicker: 'Plano de ação', section: 'plano', body: `${p.prioridade ? `<p class="callout clamp-2">${esc(words(p.prioridade, 20))}</p>` : ''}<div class="chart-wide">${timelineSvg(fases)}</div><div class="grid g3">${fases.map((f, i) => `<div class="card" style="border-top:0.5cqw solid ${SERIES[i % SERIES.length]}"><h3>${esc(f.periodo)}</h3><p class="clamp-3">${esc(words(f.objetivo, 12))}</p></div>`).join('')}</div>` })
   fases.forEach((f, fi) => {
-    chunk(arr(f.passos), land ? 3 : 4).forEach((g, i, all) => {
-      if (!g.length) return
-      add({ title: `Plano de ação · ${esc(f.periodo)}${all.length > 1 ? ` (${i + 1}/${all.length})` : ''}`, kicker: `Fase ${fi + 1} de ${fases.length}`, body: `${i === 0 ? `<p class="callout">${esc(f.objetivo)}</p>` : ''}<div class="grid ${land ? 'g3' : 'g2'}">${g.map((s) => `<div class="card" style="border-left:0.6cqw solid ${SERIES[fi % SERIES.length]}"><h3 class="clamp-3">${esc(s.acao)}</h3><p class="small clamp-6">${esc(s.como)}</p><p class="tags"><span>${esc(s.area)}</span><span class="acc">${esc(WHO[s.quem] ?? s.quem)}</span><span>${esc(EFFORT[s.esforco] ?? s.esforco)}</span></p></div>`).join('')}</div>` })
-    })
+    const steps = arr(f.passos)
+    if (!steps.length) return
+    add({ title: words(f.objetivo, 12) || f.periodo, kicker: `Plano · ${f.periodo}`, section: 'plano',
+      body: `<ol class="steps">${steps.slice(0, 4).map((s, i) => `<li><span class="num" style="background:${SERIES[fi % SERIES.length]};color:#fff">${i + 1}</span><span><b class="clamp-2">${esc(words(s.acao, 12))}</b><span class="tags"><span class="acc">${esc(WHO[s.quem] ?? s.quem)}</span><span>${esc(EFFORT[s.esforco] ?? s.esforco)}</span><span>${esc(s.area)}</span></span></span></li>`).join('')}</ol>`,
+      details: { title: `Como fazer · ${f.periodo}`, items: steps.map((s) => ({ k: s.acao, v: `${s.como} (${WHO[s.quem] ?? s.quem}, esforço ${EFFORT[s.esforco] ?? s.esforco})` })) } })
   })
-  const eff = effortData(p)
-  if (eff) add({ title: 'Onde está o esforço', kicker: 'Plano de ação', body: `<div class="split"><div class="chart">${hbarsSvg(eff)}</div><ul class="rows">${arr(p.por_area).slice(0, 5).map((a) => `<li><b>${esc(a.area)}</b><span class="clamp-2">${esc(a.foco)}</span></li>`).join('')}</ul></div><p class="muted small">Peso pelo tamanho de cada passo (rápido 1, médio 2, grande 3).</p>` })
   const ind = arr(p.indicadores)
-  if (ind.length) add({ title: 'Números para acompanhar', kicker: 'Plano de ação', body: `<table><thead><tr><th>Indicador</th><th>Meta</th><th>Como medir</th></tr></thead><tbody>${ind.slice(0, 6).map((n) => `<tr><td><b>${esc(n.nome)}</b></td><td>${esc(n.meta)}</td><td>${esc(n.como_medir)}</td></tr>`).join('')}</tbody></table>` })
+  if (ind.length) add({ title: 'Números que vamos acompanhar', kicker: 'Plano de ação', section: 'plano', body: `<div class="grid ${land ? 'g4' : 'g2'}">${ind.slice(0, 4).map((n, i) => `<div class="card ind" style="--c:${SERIES[i % SERIES.length]}">${icon('grafico')}<p class="meta-big clamp-2">${esc(words(n.meta, 7))}</p><h3 class="clamp-2">${esc(words(n.nome, 6))}</h3></div>`).join('')}</div>`,
+    details: { title: 'Como medir', items: ind.map((n) => ({ k: n.nome, v: `Meta: ${n.meta} · ${n.como_medir}` })) } })
 
+  // 10. Riscos (1 slide: matriz) e perguntas (1 slide, máx. 7)
   const ord = { alto: 0, medio: 1, baixo: 2 } as Record<string, number>
-  const risks = arr(doc.riscos).sort((a, b) => (ord[a.impacto] ?? 3) - (ord[b.impacto] ?? 3))
-  chunk(risks, 4).forEach((g, i, all) => {
-    if (!g.length) return
-    add({ title: all.length > 1 ? `Riscos e como evitar (${i + 1}/${all.length})` : 'Riscos e como evitar', kicker: 'Riscos', body: `<div class="grid g2">${g.map((x) => `<div class="card ${x.impacto === 'alto' ? 'warnb' : ''}"><p class="small up">${esc(IMPACT[x.impacto] ?? '')}</p><h3 class="clamp-3">${esc(x.risco)}</h3><p class="small clamp-4">Como evitar: ${esc(x.como_evitar)}</p></div>`).join('')}</div>` })
-  })
-  const qs = (input.questions ?? []).filter((q) => q.question?.trim())
-  chunk(qs, land ? 6 : 8).forEach((g, i, all) => {
-    if (!g.length) return
-    add({ title: all.length > 1 ? `O que precisamos de você (${i + 1}/${all.length})` : 'O que precisamos de você', kicker: 'Próximos passos', body: `<ol class="qs">${g.map((q, k) => `<li><span class="num">${i * (land ? 6 : 8) + k + 1}</span><div><b class="clamp-2">${esc(q.question)}</b>${q.answer ? `<p class="ans clamp-2">✓ ${esc(q.answer)}</p>` : ''}</div></li>`).join('')}</ol>` })
-  })
-  add({ kind: 'cover', body: `<div class="cover-top">${input.peformakeLogoUrl ? `<img class="pf-logo" src="${esc(input.peformakeLogoUrl)}" alt="Peformake">` : ''}<span class="brand">Peformake</span></div><div class="cover-mid"><p class="kicker">Vamos juntos</p><h1>Próximo passo: 30 minutos para passar o plano</h1><p class="lead">${r.primeiro_passo ? esc(r.primeiro_passo) : 'Marcamos uma conversa para tirar dúvidas e começar.'}</p></div><p class="cover-foot">Peformake · assessoria de marketing</p>` })
+  const risks = arr(doc.riscos).sort((a, b) => (ord[a.impacto] ?? 3) - (ord[b.impacto] ?? 3) || (ord[a.probabilidade] ?? 3) - (ord[b.probabilidade] ?? 3)).slice(0, 5)
+  if (risks.length) add({ title: 'Riscos para ficar de olho', kicker: 'Riscos', section: 'riscos',
+    body: `<div class="split-r"><div class="chart">${riskMatrixSvg(risks)}</div><ol class="legend">${risks.map((x, i) => `<li><span class="num">${i + 1}</span><span class="clamp-2">${esc(words(x.risco, 10))}</span></li>`).join('')}</ol></div>`,
+    details: { title: 'Como evitar', items: risks.map((x) => ({ k: x.risco, v: `Probabilidade ${LEVEL[x.probabilidade] ?? '–'}, impacto ${LEVEL[x.impacto] ?? '–'}. ${x.como_evitar}` })) } })
+  const qs = (input.questions ?? []).filter((q) => q.question?.trim()).slice(0, 7)
+  if (qs.length) add({ title: qs.length > 2 ? `${qs.length} perguntas que mudam o plano` : 'O que precisamos de você', kicker: 'Próximos passos', section: 'do_cliente',
+    body: `<ol class="qs">${qs.map((q, k) => `<li><span class="num">${k + 1}</span><div><b class="clamp-2">${esc(words(q.question, 16))}</b>${q.answer ? `<p class="ans clamp-1">✓ ${esc(words(q.answer, 14))}</p>` : ''}</div></li>`).join('')}</ol>`,
+    details: { title: 'Por que perguntamos', items: qs.map((q) => ({ k: q.question, v: q.why ?? '' })) } })
+
+  add({ kind: 'cover', section: 'resumo', body: `${brand}<div class="cover-mid"><p class="kicker">Próximo passo</p><h1>${esc(words(r.primeiro_passo || 'Uma conversa de 30 minutos para passar o plano', 14))}</h1></div><p class="cover-foot">Peformake · assessoria de marketing</p>` })
   return out
 }
 
 export function deckCss(o: Orientation): string {
   const land = o === 'paisagem'
   // Escala por orientação: no retrato o slide é mais estreito, então as letras ocupam mais da largura.
-  const k = land ? 1 : 1.45
+  const k = land ? 1 : 1.5
   const f = (n: number) => `${(n * k).toFixed(2)}cqw`
   return `
   .pfd{--ink:#16262c;--muted:#5d6c73;--acc:#007a8a;--fill:#1fc8db;--soft:#e6f6f8;--line:#d9e2e5;--canvas:#f3f7f8;color:var(--ink);font-family:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .pfd *{box-sizing:border-box;margin:0;padding:0}
   .pfd .slide{container-type:inline-size;position:relative;width:100%;aspect-ratio:${land ? '16 / 9' : '210 / 297'};background:#fff;overflow:hidden;break-after:page;break-inside:avoid;page-break-after:always}
-  .pfd .slide>.in{position:absolute;inset:0;display:flex;flex-direction:column;padding:${land ? '4.2cqw 5cqw 5cqw' : '7cqw 7cqw 8cqw'}}
+  .pfd .slide>.in{position:absolute;inset:0;display:flex;flex-direction:column;padding:${land ? '5cqw 6cqw 6cqw' : '9cqw 8cqw 11cqw'}}
   .pfd .slide:last-child{break-after:auto;page-break-after:auto}
-  .pfd .head{margin-bottom:${f(2)}}
-  .pfd .kick{color:var(--acc);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.15)}}
-  .pfd h2{font-size:${f(3.3)};line-height:1.12;font-weight:700;letter-spacing:-.02em;margin-top:${f(.5)}}
-  .pfd .content{flex:1;min-height:0;display:flex;flex-direction:column;gap:${f(1.4)};font-size:${f(1.55)};line-height:1.42}
-  .pfd .foot{position:absolute;left:${land ? '5cqw' : '7cqw'};right:${land ? '5cqw' : '7cqw'};bottom:${land ? '1.6cqw' : '2.6cqw'};display:flex;justify-content:space-between;color:var(--muted);font-size:${f(1)};border-top:1px solid var(--line);padding-top:${f(.6)}}
+  .pfd .head{margin-bottom:${f(2.6)}}
+  .pfd .kick{color:var(--acc);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:${f(1.2)}}
+  .pfd h2{font-size:${f(3.9)};line-height:1.08;font-weight:750;letter-spacing:-.025em;margin-top:${f(.7)};display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+  .pfd .content{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:${f(2)};font-size:${f(1.8)};line-height:1.35}
+  .pfd .foot{position:absolute;left:${land ? '6cqw' : '8cqw'};right:${land ? '6cqw' : '8cqw'};bottom:${land ? '2cqw' : '3.6cqw'};display:flex;justify-content:space-between;color:var(--muted);font-size:${f(1)}}
   .pfd .foot b{color:var(--acc)}
-  .pfd .cover{background:linear-gradient(135deg,#062a31 0%,#0b4a55 55%,#0e7180 100%);color:#fff} .pfd .cover>.in{justify-content:space-between;padding-bottom:${land ? '4cqw' : '7cqw'}}
+  .pfd .slide.internal{background:#fffaf0} .pfd .slide.internal .kick{color:#b06a00}
+  .pfd .cover{background:linear-gradient(135deg,#062a31 0%,#0b4a55 55%,#0e7180 100%);color:#fff} .pfd .cover>.in{justify-content:space-between;padding-bottom:${land ? '5cqw' : '9cqw'}}
   .pfd .cover .cover-top{display:flex;align-items:center;gap:${f(1)}}
   .pfd .cover .pf-logo{height:${f(4.2)};width:auto;filter:brightness(0) invert(1)}
   .pfd .cover .brand{font-weight:700;font-size:${f(2.2)};letter-spacing:-.01em}
-  .pfd .cover .cli-logo{height:${f(7)};width:auto;max-width:40cqw;background:#fff;border-radius:${f(1.2)};padding:${f(.8)};margin-bottom:${f(1.6)}}
-  .pfd .cover .cli-mono{display:inline-grid;place-items:center;width:${f(7)};height:${f(7)};border-radius:${f(1.8)};background:var(--fill);color:#062a31;font-weight:800;font-size:${f(2.8)};margin-bottom:${f(1.6)}}
-  .pfd .cover .kicker{color:var(--fill);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:${f(1.4)}}
-  .pfd .cover h1{font-size:${f(5.4)};line-height:1.05;font-weight:800;letter-spacing:-.03em;margin:${f(.6)} 0 ${f(1.2)}}
-  .pfd .cover .lead{font-size:${f(2)};opacity:.92;max-width:${land ? '70cqw' : '86cqw'};line-height:1.3}
+  .pfd .cover .cli-logo{height:${f(7)};width:auto;max-width:40cqw;background:#fff;border-radius:${f(1.2)};padding:${f(.8)};margin-bottom:${f(1.8)}}
+  .pfd .cover .cli-mono{display:inline-grid;place-items:center;width:${f(7)};height:${f(7)};border-radius:${f(1.8)};background:var(--fill);color:#062a31;font-weight:800;font-size:${f(2.8)};margin-bottom:${f(1.8)}}
+  .pfd .cover .kicker{color:var(--fill);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:${f(1.4)}}
+  .pfd .cover .cover-mid{padding-bottom:${f(1)}} .pfd .cover h1{font-size:${f(5.6)};line-height:1.08;font-weight:800;letter-spacing:-.03em;margin-top:${f(.8)};max-width:${land ? '78cqw' : '84cqw'}}
   .pfd .cover .cover-foot{opacity:.75;font-size:${f(1.2)}}
   .pfd .statement{background:var(--canvas)} .pfd .statement>.in{justify-content:center}
-  .pfd .statement .content{justify-content:center}
-  .pfd .big{font-size:${f(3.6)};line-height:1.18;font-weight:700;letter-spacing:-.02em}
-  .pfd .big2{font-size:${f(2.4)};line-height:1.25;font-weight:600}
-  .pfd .lead{font-size:${f(1.9)};line-height:1.35}
-  .pfd .para{font-size:${f(1.75)};line-height:1.5}
-  .pfd .muted{color:var(--muted)} .pfd .small{font-size:${f(1.25)}} .pfd .center{text-align:center}
-  .pfd .up{text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--muted)}
-  .pfd .split{display:grid;grid-template-columns:${land ? '1.15fr 1fr' : '1fr'};gap:${f(2)};align-items:start;min-height:0}
-  .pfd .grid{display:grid;gap:${f(1.4)};min-height:0} .pfd .g2{grid-template-columns:1fr 1fr} .pfd .g3{grid-template-columns:repeat(${land ? 3 : 2},1fr)}
-  .pfd .card{background:#fff;border:1px solid var(--line);border-radius:${f(1.4)};padding:${f(1.6)};display:flex;flex-direction:column;gap:${f(.6)};min-height:0;overflow:hidden}
-  .pfd .card.soft{background:var(--soft);border-color:transparent} .pfd .card.accent{background:var(--acc);color:#fff;border-color:transparent} .pfd .card.accent .up{color:#cdeff3}
-  .pfd .card.warnb{border-color:#eb6834;border-width:2px}
-  .pfd .card h3{font-size:${f(1.8)};line-height:1.2;font-weight:700}
-  .pfd .card.center{align-items:center} .pfd .card.center svg{max-width:${land ? '100%' : '55%'}}
-  .pfd .ic{width:${f(2.6)};height:${f(2.6)};color:var(--acc)}
-  .pfd .bul{list-style:none;display:flex;flex-direction:column;gap:${f(.5)}} .pfd .card .bul{font-size:${f(1.35)}} .pfd .card .bul li{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden} .pfd .bul li{position:relative;padding-left:${f(1.4)}} .pfd .bul li:before{content:"";position:absolute;left:0;top:.6em;width:${f(.55)};height:${f(.55)};border-radius:50%;background:var(--acc)}
-  .pfd .steps,.pfd .qs{list-style:none;display:flex;flex-direction:column;gap:${f(1.1)}}
-  .pfd .steps li,.pfd .qs li{display:flex;gap:${f(1.2)};align-items:flex-start;font-size:${f(1.8)};line-height:1.35}
-  .pfd .qs li{font-size:${f(1.45)}}
-  .pfd .num{flex:none;display:inline-grid;place-items:center;width:${f(3)};height:${f(3)};border-radius:50%;background:var(--soft);color:var(--acc);font-weight:800;font-size:${f(1.4)}}
-  .pfd .ans{color:#1a7f55;font-size:${f(1.25)};margin-top:${f(.3)}}
-  .pfd .swot{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:${f(1.2)};flex:1;min-height:0}
-  .pfd .sw{border-radius:${f(1.4)};padding:${f(1.5)};overflow:hidden} .pfd .sw .bul{font-size:${f(1.35)}} .pfd .sw .bul li{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:${land ? 3 : 4};overflow:hidden} .pfd .sw h3{font-size:${f(1.9)};margin-bottom:${f(.6)}}
+  .pfd .statement .content{justify-content:center;gap:${f(3)}}
+  .pfd .big{font-size:${f(4.2)};line-height:1.14;font-weight:750;letter-spacing:-.025em}
+  .pfd .big2{font-size:${f(2.6)};line-height:1.22;font-weight:650}
+  .pfd .lead{font-size:${f(2)};color:var(--muted)}
+  .pfd .caption{font-size:${f(1.4)};color:var(--muted);text-align:center}
+  .pfd .up{text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:${f(1.2)};opacity:.85}
+  .pfd .kpis{display:grid;grid-template-columns:repeat(${land ? 3 : 1},1fr);gap:${f(1.6)}}
+  .pfd .kpi{background:#fff;border-radius:${f(1.6)};padding:${f(1.6)} ${f(2)};display:flex;${land ? 'flex-direction:column' : 'align-items:baseline;gap:' + f(1.4)}}
+  .pfd .kpi b{font-size:${f(4.4)};line-height:1;font-weight:800;color:var(--acc);letter-spacing:-.03em} .pfd .kpi b small{font-size:.45em;font-weight:700;color:var(--muted);margin-left:.1em}
+  .pfd .kpi span{font-size:${f(1.4)};color:var(--muted);margin-top:${f(.6)}}
+  .pfd .grid{display:grid;gap:${f(1.6)}} .pfd .g2{grid-template-columns:1fr 1fr} .pfd .g3{grid-template-columns:repeat(3,1fr)} .pfd .g4{grid-template-columns:repeat(4,1fr)}
+  .pfd .stack{display:flex;flex-direction:column;gap:${f(1.6)}}
+  .pfd .cols2{display:grid;grid-template-columns:${land ? '1fr 1fr' : '1fr'};gap:${f(1.8)}}
+  .pfd .card{background:#fff;border:1px solid var(--line);border-radius:${f(1.6)};padding:${f(2)};display:flex;flex-direction:column;gap:${f(.8)};min-height:0;overflow:hidden}
+  .pfd .card.soft{background:var(--soft);border-color:transparent} .pfd .card.accent{background:var(--acc);color:#fff;border-color:transparent;justify-content:center}
+  .pfd .card h3{font-size:${f(2)};line-height:1.2;font-weight:700}
+  .pfd .card p{font-size:${f(1.6)}}
+  .pfd .find{border-top:${f(.6)} solid var(--c)} .pfd .card.find .tag{color:var(--c);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)}}
+  .pfd .card .num-big{font-size:${f(4.6)};line-height:1;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+  .pfd .stack .find{display:grid;grid-template-columns:${f(26)} 1fr;align-items:center;column-gap:${f(2)}} .pfd .stack .find .tag{grid-column:1/-1}
+  .pfd .op{border-top:${f(.6)} solid var(--c)} .pfd .card.op .est{font-weight:800;color:var(--acc);font-size:${f(1.9)};line-height:1.15}
+  .pfd .card.ind .meta-big{font-size:${f(2.8)};line-height:1.05;font-weight:800;color:var(--c)}
+  .pfd .card .pro{color:#1a7f55} .pfd .card .con{color:#b5432a}
+  .pfd .ic{width:${f(2.8)};height:${f(2.8)};color:var(--acc)}
+  .pfd .bul{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .bul li{position:relative;padding-left:${f(1.8)};font-size:${f(2)};line-height:1.3}
+  .pfd .card .bul li{font-size:${f(1.7)}} .pfd .sw .bul{gap:${f(.7)}} .pfd .sw .bul li{font-size:${f(1.5)}}
+  .pfd .bul li:before{content:"";position:absolute;left:0;top:.5em;width:${f(.7)};height:${f(.7)};border-radius:50%;background:var(--acc)}
+  .pfd .steps,.pfd .qs{list-style:none;display:flex;flex-direction:column;gap:${f(1.6)}}
+  .pfd .steps li,.pfd .qs li{display:flex;gap:${f(1.6)};align-items:flex-start;font-size:${f(2)};line-height:1.3}
+  .pfd .steps li>span:last-child{display:flex;flex-direction:column;gap:${f(.5)}} .pfd .steps small{font-size:${f(1.4)};color:var(--muted)}
+  .pfd .qs{gap:${f(1.2)}} .pfd .qs li{font-size:${f(1.75)}}
+  .pfd .num{flex:none;display:inline-grid;place-items:center;width:${f(3.2)};height:${f(3.2)};border-radius:50%;background:var(--soft);color:var(--acc);font-weight:800;font-size:${f(1.5)}}
+  .pfd .ans{color:#1a7f55;font-size:${f(1.4)};margin-top:${f(.3)}}
+  .pfd .swot{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:${f(1.4)};flex:1;min-height:0}
+  .pfd .sw{border-radius:${f(1.6)};padding:${f(1.5)} ${f(1.8)};overflow:hidden} .pfd .sw h3{font-size:${f(1.9)};margin-bottom:${f(.7)}}
+  .pfd .sw .bul li{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
   .pfd .sw.ok{background:#e3f4ec} .pfd .sw.warn{background:#fbe9e0} .pfd .sw.acc{background:var(--soft)} .pfd .sw.gray{background:#eef1f2}
-  .pfd .journey{list-style:none;display:grid;grid-template-columns:repeat(${land ? 5 : 2},1fr);gap:${f(1.2)}} .pfd .journey li{font-size:${f(1.35)}}
-  .pfd .journey li{border-top:${f(.5)} solid var(--c);background:var(--canvas);border-radius:${f(1)};padding:${f(1.3)};display:flex;flex-direction:column;gap:${f(.4)}}
+  .pfd .journey{list-style:none;display:grid;grid-template-columns:repeat(${land ? 5 : 1},1fr);gap:${f(1.4)}}
+  .pfd .journey li{border-${land ? 'top' : 'left'}:${f(.6)} solid var(--c);background:var(--canvas);border-radius:${f(1.2)};padding:${f(1.6)};display:flex;flex-direction:${land ? 'column' : 'row'};gap:${f(.8)};align-items:${land ? 'flex-start' : 'center'};font-size:${f(1.6)}}
+  .pfd .journey b{font-size:${f(1.9)}} ${land ? '' : `.pfd .journey b{flex:0 0 ${f(18)}}`}
   .pfd .journey .num{background:var(--c);color:#fff}
-  .pfd .callout{background:var(--soft);border-left:${f(.6)} solid var(--acc);border-radius:${f(1)};padding:${f(1.3)} ${f(1.6)};font-size:${f(1.8)};font-weight:600;line-height:1.3}
-  .pfd .quote{font-style:italic;font-size:${f(1.6)}}
-  .pfd .rows{list-style:none;display:flex;flex-direction:column;gap:${f(.9)}} .pfd .rows li{display:grid;grid-template-columns:auto ${land ? '12cqw' : '22cqw'} 1fr;gap:${f(1)};align-items:start}
-  .pfd .rows li:not(:has(.dot)){grid-template-columns:${land ? '14cqw' : '26cqw'} 1fr}
-  .pfd .dot{width:${f(1.2)};height:${f(1.2)};border-radius:50%;margin-top:.35em}
-  .pfd .meta{font-weight:700;color:var(--acc);font-size:${f(1.3)}}
-  .pfd .links{display:flex;flex-wrap:wrap;gap:${f(.6)};margin-top:auto} .pfd .links a{font-size:${f(1.1)};color:var(--acc);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:${f(.25)} ${f(.8)}}
-  .pfd .tags{display:flex;flex-wrap:wrap;gap:${f(.5)};margin-top:auto} .pfd .tags span{font-size:${f(1.05)};font-weight:700;background:var(--canvas);border-radius:999px;padding:${f(.25)} ${f(.8)}} .pfd .tags .acc{background:var(--soft);color:var(--acc)}
-  .pfd .three{display:grid;grid-template-columns:1fr 1fr;gap:${f(1)};font-size:${f(1.3)}}
-  .pfd table{width:100%;border-collapse:collapse;font-size:${f(1.45)}} .pfd th{text-align:left;color:var(--muted);font-weight:700;border-bottom:2px solid var(--line);padding:${f(.6)} ${f(.8)}} .pfd td{border-bottom:1px solid var(--line);padding:${f(.8)};vertical-align:top}
-  .pfd .chart,.pfd .chart-only,.pfd .chart-wide{color:var(--ink)} .pfd .chart-only{flex:1;min-height:0;display:flex;justify-content:center;align-items:center} .pfd .chart-only svg{max-height:${land ? '36cqw' : '80cqw'};width:auto!important;max-width:100%}
-  .pfd .clamp-2,.pfd .clamp-3,.pfd .clamp-4,.pfd .clamp-5,.pfd .clamp-6,.pfd .clamp-8,.pfd .clamp-10,.pfd .clamp-12{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
-  ${[2, 3, 4, 5, 6, 8, 10, 12].map((n) => `.pfd .clamp-${n}{-webkit-line-clamp:${n}}`).join('')}
+  .pfd .callout{background:var(--soft);border-left:${f(.7)} solid var(--acc);border-radius:${f(1.2)};padding:${f(1.6)} ${f(2)};font-size:${f(2.1)};font-weight:650;line-height:1.25}
+  .pfd .card .quote{font-style:italic;font-size:${f(1.7)}}
+  .pfd .rows{list-style:none;display:flex;flex-direction:column;gap:${f(1.2)}} .pfd .rows li{display:grid;grid-template-columns:${land ? '22cqw' : '30cqw'} 1fr;gap:${f(1.4)};font-size:${f(1.8)}}
+  .pfd .tags{display:flex;flex-wrap:wrap;gap:${f(.6)}} .pfd .tags span{font-size:${f(1.2)};font-weight:700;background:var(--canvas);border-radius:999px;padding:${f(.3)} ${f(1)};color:var(--muted)} .pfd .tags .acc{background:var(--soft);color:var(--acc)}
+  .pfd .card .tags{margin-top:auto}
+  .pfd .tbl{width:100%;border-collapse:collapse;font-size:${f(1.9)}} .pfd .tbl th{text-align:left;color:var(--muted);font-weight:700;font-size:${f(1.3)};text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--line);padding:${f(.8)} ${f(1)}}
+  .pfd .tbl td{border-bottom:1px solid var(--line);padding:${f(1.3)} ${f(1)};vertical-align:middle} .pfd .tbl td small{color:var(--muted);font-size:.75em} .pfd .tbl tr.me td{background:var(--soft)} .pfd .tbl tr.me td:first-child b{color:var(--acc)}
+  .pfd .chart-only{flex:1;min-height:0;display:flex;justify-content:center;align-items:center;color:var(--ink)} .pfd .chart-only svg{height:100%;max-height:${land ? '36cqw' : '95cqw'};width:auto!important;max-width:100%}
+  .pfd .chart-wide svg{max-height:${land ? '9cqw' : '22cqw'}}
+  .pfd .split-r{display:grid;grid-template-columns:${land ? '1fr 1fr' : '1fr'};gap:${f(2)};align-items:center} .pfd .split-r svg{max-height:${land ? '32cqw' : '62cqw'};width:auto!important;margin:0 auto}
+  .pfd .legend{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .legend li{display:flex;gap:${f(1.2)};align-items:center;font-size:${f(1.8)};line-height:1.25} .pfd .legend .num{background:var(--ink);color:#fff;width:${f(2.8)};height:${f(2.8)}}
+  .pfd .clamp-1,.pfd .clamp-2,.pfd .clamp-3,.pfd .clamp-4{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+  .pfd .clamp-1{-webkit-line-clamp:1} .pfd .clamp-2{-webkit-line-clamp:2} .pfd .clamp-3{-webkit-line-clamp:3} .pfd .clamp-4{-webkit-line-clamp:4}
   `
 }
 
-/** Slides em HTML (sem <html>): para a tela (apresentação web e portal) e para o PDF. */
-export function deckSlidesHtml(input: DeckInput, o: Orientation): string {
-  const list = slides(input, o)
-  const total = list.length
-  return list.map((s, i) => {
-    const cls = s.kind === 'cover' ? 'slide cover' : s.kind === 'statement' ? 'slide statement' : 'slide'
-    const head = s.title || (s.kicker && s.kind !== 'cover') ? `<div class="head">${s.kicker ? `<p class="kick">${esc(s.kicker)}</p>` : ''}${s.title ? `<h2>${s.title.includes('<') ? s.title : esc(s.title)}</h2>` : ''}</div>` : ''
-    const foot = s.kind === 'cover' ? '' : `<div class="foot"><span><b>Peformake</b> · Diagnóstico de ${esc(input.name)}</span><span>${i + 1} / ${total}</span></div>`
-    return `<section class="${cls}" aria-label="Slide ${i + 1} de ${total}"><div class="in">${s.kind === 'cover' ? s.body : `${head}<div class="content">${s.body}</div>`}${foot}</div></section>`
-  }).join('')
+/** Um slide em HTML (sem <html>). */
+export function slideHtml(s: Slide, i: number, total: number, name: string): string {
+  const cls = ['slide', s.kind === 'cover' ? 'cover' : s.kind === 'statement' ? 'statement' : '', s.internal ? 'internal' : ''].filter(Boolean).join(' ')
+  const head = s.title || (s.kicker && s.kind !== 'cover') ? `<div class="head">${s.kicker ? `<p class="kick">${esc(s.kicker)}</p>` : ''}${s.title ? `<h2>${esc(s.title)}</h2>` : ''}</div>` : ''
+  const foot = s.kind === 'cover' ? '' : `<div class="foot"><span><b>Peformake</b> · ${esc(name)}</span><span>${i + 1} / ${total}</span></div>`
+  return `<section class="${cls}" aria-label="Slide ${i + 1} de ${total}"><div class="in">${s.kind === 'cover' ? s.body : `${head}<div class="content">${s.body}</div>`}${foot}</div></section>`
 }
 
-export function deckSlideCount(input: DeckInput, o: Orientation): number { return slides(input, o).length }
+/** Slides em HTML (para o PDF, o link público e o portal: nunca os internos). */
+export function deckSlidesHtml(input: DeckInput, o: Orientation): string {
+  const list = buildSlides(input, o)
+  return list.map((s, i) => slideHtml(s, i, list.length, input.name)).join('')
+}
+
+export function deckSlideCount(input: DeckInput, o: Orientation): number { return buildSlides(input, o).length }
 
 /** Documento completo para imprimir/salvar em PDF: uma página por slide, no tamanho certo. */
 export function deckHtml(input: DeckInput, o: Orientation): string {

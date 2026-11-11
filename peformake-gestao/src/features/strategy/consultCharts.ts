@@ -185,3 +185,55 @@ export function gaugeSvg(value: number | null | undefined, label = 'Maturidade d
     + `<text x="${cx}" y="${cy + 34}" text-anchor="middle" font-size="30" font-weight="700" fill="${INK}">${isNum(value) ? v : '–'}/10</text>`
   return svg(W, 170, body, label)
 }
+
+/** Você × referência por métrica (cada linha na sua escala: unidades diferentes). */
+export function comparisonSvg(rows: Doc[], clientName: string): string {
+  const W = 600, rowH = 74, H = rows.length * rowH + 34, x0 = 210, bw = W - x0 - 80
+  let body = `<g transform="translate(${x0},8)"><rect width="12" height="12" rx="3" fill="${SERIES[0]}"/><text x="18" y="11" font-size="13" fill="${INK}">${esc(cut(clientName, 22))}</text><rect x="190" width="12" height="12" rx="3" fill="${SERIES[3]}"/><text x="208" y="11" font-size="13" fill="${INK}">Referência</text></g>`
+  rows.forEach((r, i) => {
+    const y = 34 + i * rowH, a = isNum(r.cliente) ? Math.max(0, r.cliente) : 0, b = isNum(r.referencia) ? Math.max(0, r.referencia) : 0, max = Math.max(a, b, 1e-9)
+    const val = (v: number) => `${v.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}${r.unidade && String(r.unidade).length <= 4 ? ` ${esc(r.unidade)}` : ''}`
+    body += `<text x="${x0 - 12}" y="${y + 22}" text-anchor="end" font-size="14" font-weight="700" fill="${INK}">${esc(cut(String(r.metrica), 26))}</text>`
+    body += `<text x="${x0 - 12}" y="${y + 40}" text-anchor="end" font-size="11.5" fill="${INK}" fill-opacity="0.6">vs ${esc(cut(String(r.referencia_nome ?? ''), 28))}</text>`
+    body += `<rect x="${x0}" y="${y + 8}" width="${Math.max(3, (a / max) * bw)}" height="20" rx="6" fill="${SERIES[0]}"/><text x="${x0 + Math.max(3, (a / max) * bw) + 8}" y="${y + 23}" font-size="14" font-weight="700" fill="${INK}">${val(a)}</text>`
+    body += `<rect x="${x0}" y="${y + 32}" width="${Math.max(3, (b / max) * bw)}" height="20" rx="6" fill="${SERIES[3]}"/><text x="${x0 + Math.max(3, (b / max) * bw) + 8}" y="${y + 47}" font-size="14" font-weight="700" fill="${INK}">${val(b)}</text>`
+  })
+  return svg(W, H, body, 'Comparativo com o mercado')
+}
+
+/** Maturidade por dimensão (0 a 100), cor pela faixa. */
+export function maturitySvg(rows: Doc[]): string {
+  const W = 600, rowH = 40, H = rows.length * rowH + 6, x0 = 230, bw = W - x0 - 60
+  const col = (v: number) => (v < 40 ? SERIES[1] : v < 70 ? SERIES[3] : SERIES[2])
+  const body = rows.map((r, i) => {
+    const y = 3 + i * rowH, v = Math.max(0, Math.min(100, Number(r.nota) || 0))
+    return `<text x="${x0 - 12}" y="${y + 22}" text-anchor="end" font-size="14" fill="${INK}">${esc(cut(String(r.dimensao), 28))}</text>`
+      + `<rect x="${x0}" y="${y + 8}" width="${bw}" height="20" rx="10" fill="${INK}" fill-opacity="0.08"/>`
+      + `<rect x="${x0}" y="${y + 8}" width="${Math.max(4, (v / 100) * bw)}" height="20" rx="10" fill="${col(v)}"/>`
+      + `<text x="${x0 + bw + 10}" y="${y + 23}" font-size="14" font-weight="700" fill="${INK}">${v}</text>`
+  }).join('')
+  return svg(W, H, body, 'Maturidade digital por dimensão')
+}
+
+/** Matriz probabilidade × impacto (3 × 3) com os riscos numerados. */
+export function riskMatrixSvg(rows: Doc[]): string {
+  const W = 420, H = 380, L = 70, T = 16, S = 100
+  const ix = (v: string) => ({ baixo: 0, medio: 1, alto: 2 } as Record<string, number>)[v] ?? 1
+  const heat = (x: number, y: number) => { const s = x + y; return s >= 3 ? SERIES[1] : s === 2 ? SERIES[3] : SERIES[2] }
+  let body = ''
+  for (let x = 0; x < 3; x++) for (let y = 0; y < 3; y++) body += `<rect x="${L + x * S + 2}" y="${T + (2 - y) * S + 2}" width="${S - 4}" height="${S - 4}" rx="10" fill="${heat(x, y)}" fill-opacity="0.16"/>`
+  const labels = ['baixa', 'média', 'alta']
+  labels.forEach((l, i) => {
+    body += `<text x="${L + i * S + S / 2}" y="${T + 3 * S + 22}" text-anchor="middle" font-size="13" fill="${INK}">${l}</text>`
+    body += `<text x="${L - 10}" y="${T + (2 - i) * S + S / 2 + 4}" text-anchor="end" font-size="13" fill="${INK}">${['baixo', 'médio', 'alto'][i]}</text>`
+  })
+  body += `<text x="${L + 1.5 * S}" y="${H - 4}" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">Probabilidade</text>`
+  body += `<text transform="translate(14 ${T + 1.5 * S}) rotate(-90)" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">Impacto</text>`
+  const seen = new Map<string, number>()
+  rows.forEach((r, i) => {
+    const x = ix(r.probabilidade), y = ix(r.impacto), key = `${x}:${y}`, n = seen.get(key) ?? 0; seen.set(key, n + 1)
+    const cx = L + x * S + S / 2 + (n % 2 ? 22 : n ? -22 : 0), cy = T + (2 - y) * S + S / 2 + (n > 1 ? 22 : 0)
+    body += `<circle cx="${cx}" cy="${cy}" r="17" fill="${INK}"/><text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">${i + 1}</text>`
+  })
+  return svg(W, H, body, 'Matriz de riscos: probabilidade e impacto')
+}

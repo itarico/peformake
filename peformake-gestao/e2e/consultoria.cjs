@@ -26,8 +26,19 @@ const doc = {
   comunicacao: { essencia: L('Essência', 1)[0], proposito: L('Propósito', 1)[0], papel_peformake: L('Papel', 2).join('. '), arquetipo: 'Cara comum: próximo e sem frescura.', tom: ['Direto', 'Animado', 'Confiável', 'Acessível'].map((a) => ({ adjetivo: a, exemplo: L('Exemplo', 1)[0] })), evitar: L('Evitar', 5), expressao: { paleta: L('Paleta', 1)[0], ambiente: L('Ambiente', 1)[0], presenca: L('Presença', 1)[0] }, regra_teste: 'Se a peça não mostra a moto e a parcela em 3 segundos, não é Will Motos.' },
   experiencia: ['Recepção', 'Atendimento e venda', 'Ambiente', 'Pós-venda e despedida'].map((m) => ({ momento: m, hoje: L('Hoje', 1)[0], como_deve_ser: L('Deve', 1)[0], acoes: L('Ação', 3) })),
   plano: { prioridade: L('Prioridade', 1)[0], fases: ['30 dias', '60 dias', '90 dias'].map((p) => ({ periodo: p, objetivo: L('Objetivo', 1)[0], passos: [1, 2, 3, 4, 5].map(() => ({ area: 'Presença digital', acao: L('Ação', 1)[0], como: L('Como', 3).join(' '), quem: 'juntos', esforco: 'baixo' })) })), por_area: [{ area: 'Tráfego pago', foco: L('Foco', 1)[0] }], indicadores: L('Indicador', 4).map((n) => ({ nome: n, meta: 'Meta realista', como_medir: 'Planilha semanal' })) },
-  riscos: ['alto', 'medio', 'baixo', 'alto'].map((i) => ({ risco: L('Risco', 1)[0], impacto: i, como_evitar: L('Evitar', 1)[0] })),
-  do_cliente: L('Pergunta', 14).map((q) => ({ pergunta: q, por_que: L('Porque', 1)[0] })),
+  riscos: ['alto', 'medio', 'baixo', 'alto'].map((i) => ({ risco: L('Risco', 1)[0], impacto: i, probabilidade: 'medio', como_evitar: L('Evitar', 1)[0] })),
+  inteligencia: {
+    tese: 'O anúncio funciona; o que trava a venda é o caminho até a conversa.',
+    descobertas: ['gargalo', 'oportunidade', 'risco', 'forca', 'gargalo'].map((t, k) => ({ titulo: L('Descoberta', 1)[0], numero: ['0 de 3.996', '4,3★', '21', '48x', '1 de 5'][k], explicacao: L('Explica', 2).join('. '), evidencia: 'https://www.facebook.com/ads/library/?id=1', tipo: t })),
+    comparativos: [{ metrica: 'Avaliações no Google', unidade: '', cliente: 199, referencia: 820, referencia_nome: 'Concorrente 1', fonte: 'Google' }, { metrica: 'Anúncios ativos', unidade: '', cliente: 21, referencia: 24, referencia_nome: 'Shineray', fonte: 'Biblioteca de Anúncios' }],
+    oportunidades: [1, 2, 3, 4].map(() => ({ titulo: L('Oportunidade', 1)[0], impacto: 'alto', esforco: 'baixo', estimativa: '+20 a 40 conversas/mês (estimativa)', como: L('Como', 1)[0] })),
+    hipoteses: [1, 2].map(() => ({ hipotese: L('Hipótese', 1)[0], como_testar: L('Teste', 1)[0], sinal: L('Sinal', 1)[0] })),
+    maturidade: ['Redes sociais', 'Qualidade de conteúdo', 'Google', 'Site e experiência digital', 'Tráfego pago', 'Reputação', 'Posicionamento e marca'].map((d, k) => ({ dimensao: d, nota: 20 + k * 10, porque: L('Porque', 1)[0] })),
+    decisoes_peformake: [1, 2].map(() => ({ decisao: L('Decisão interna', 1)[0], opcoes: [1, 2].map(() => ({ opcao: L('Opção', 1)[0], pros: L('Pró', 1)[0], contras: L('Contra', 1)[0] })), recomendacao: L('Recomendo', 1)[0], porque: L('Porque', 1)[0] })),
+    red_flags: { veredicto: 'amarelo', alertas: L('Alerta', 3) },
+  },
+  confirmar: [{ item: 'Endereço', encontrado: 'Av. Caxangá, 2083' }],
+  do_cliente: L('Pergunta', 6).map((q) => ({ pergunta: q, por_que: L('Porque', 1)[0] })),
   frameworks: ['SWOT', 'Pesquisa de nicho', 'Concorrentes', '5 Forças', 'Persona', 'ICP', 'Jornada', 'Proposta de valor', 'Equação de valor', 'Arquétipo'].map((n) => ({ nome: n, como_usou: L('Usou', 1)[0] })),
   fontes: Array.from({ length: 19 }, (_, k) => ({ url: `https://site-${k}.com.br/pagina/${k}`, title: k % 2 ? `Página ${k} com um título longo de fonte pública` : '' })),
 };
@@ -84,21 +95,32 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       // Documento
       await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1), { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
-      for (const t of ['Resumo', 'Diagnóstico', 'Comunicação', 'Plano', 'Riscos', 'Do cliente']) {
-        const tab = p.getByRole('tab', { name: t, exact: true });
-        if (!(await tab.count())) { fails.push(`${tag}: aba ${t} não existe`); continue }
-        await tab.click(); await p.waitForTimeout(200);
-        if (await sideScroll(p)) fails.push(`${tag}: aba ${t} com rolagem de lado`);
-        if (t === 'Diagnóstico' && !(await p.getByText('Forças', { exact: true }).count())) fails.push(`${tag}: SWOT não apareceu`);
-        if (t === 'Comunicação' && !(await p.getByText('Experiência do cliente (fora do digital)').count())) fails.push(`${tag}: experiência do cliente não apareceu`);
-        await p.screenshot({ path: `${OUT}/consultoria-${t.replace(/\W/g, '')}-${tag}.png`, fullPage: true });
+      // Slides: um por vez, setas, índice e "Ver detalhes" (sem rolagem no pop-up).
+      const counter = p.getByRole('button', { name: /^\d+ \/ \d+/ }).first();
+      const total = Number(((await counter.textContent()) ?? '').match(/\/ (\d+)/)?.[1] ?? 0);
+      if (total < 15) fails.push(`${tag}: só ${total} slides`);
+      if (await sideScroll(p)) fails.push(`${tag}: slide com rolagem de lado`);
+      let detailsSeen = 0, internalSeen = 0
+      for (let i = 0; i < total; i++) {
+        if (await p.getByText('Só a equipe vê').count()) internalSeen++;
+        const det = p.getByRole('button', { name: 'Ver detalhes' });
+        if (detailsSeen < 4 && await det.isEnabled()) {
+          await det.click(); await p.waitForTimeout(200);
+          m = await popup(p); if (!m) fails.push(`${tag}: detalhes do slide ${i + 1} não abriu`); else if (m.sh > m.ch + 1) fails.push(`${tag}: detalhes do slide ${i + 1} rola (${m.sh}/${m.ch})`);
+          await p.keyboard.press('Escape'); await p.waitForTimeout(150); detailsSeen++;
+        }
+        if (i < 3 || i === total - 1) await p.screenshot({ path: `${OUT}/consultoria-slide${i + 1}-${tag}.png`, fullPage: true });
+        if (i < total - 1) { await p.getByRole('button', { name: 'Próximo slide' }).click(); await p.waitForTimeout(80) }
       }
-      await p.getByRole('tab', { name: 'Resumo', exact: true }).click();
+      if (!internalSeen) fails.push(`${tag}: nenhum slide interno (decisões da Peformake) na tela da equipe`);
+      await counter.click(); await p.waitForTimeout(200);
+      m = await popup(p); if (!m) fails.push(`${tag}: índice não abriu`); else if (m.sh > m.ch + 1) fails.push(`${tag}: índice rola (${m.sh}/${m.ch})`);
+      await p.getByRole('button', { name: /Capa/ }).first().click().catch(() => fails.push(`${tag}: índice sem Capa`)); await p.waitForTimeout(150);
       // Antes de aprovar, a apresentação fica travada com a dica.
       const deckBtn = p.getByRole('button', { name: 'Baixar apresentação' }).first();
       if (!(await deckBtn.isDisabled())) fails.push(`${tag}: Baixar apresentação liberado antes de aprovar`);
       if (!(await p.getByText('Aprove para gerar a apresentação').count())) fails.push(`${tag}: sem a dica "Aprove para gerar a apresentação"`);
-      for (const [btn, name] of [['Ver detalhes (frameworks usados e fontes)', 'Ver detalhes'], ['Direcionamento', 'Direcionamento'], ['Enviar ao cliente', 'Enviar']]) {
+      for (const [btn, name] of [['Fontes e frameworks', 'Ver detalhes'], ['Direcionamento', 'Direcionamento'], ['Enviar ao cliente', 'Enviar']]) {
         await p.getByRole('button', { name: btn }).first().click(); await p.waitForTimeout(300);
         m = await popup(p); if (!m) { fails.push(`${tag}: pop-up ${name} não abriu`); continue }
         if (m.sh > m.ch + 1) fails.push(`${tag}: pop-up "${m.title}" rola (${m.sh}/${m.ch})`);

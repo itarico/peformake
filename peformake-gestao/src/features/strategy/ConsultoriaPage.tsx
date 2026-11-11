@@ -1,8 +1,7 @@
-import { useState, type ReactNode } from 'react'
+import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, RefreshCw, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, Search, Send, Sparkles } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { ScoreGauge, type ScoreBand } from '@/components/charts/Charts'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
@@ -16,9 +15,9 @@ import { ago } from '@/features/settings/AutomationsCenter'
 import {
   approveConsult, consultKey, kickConsult, markSent, redoSection, requestConsult, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
 } from './consultApi'
-import { effortData, funnelData, funnelSvg, hbarsSvg, positioningData, positioningSvg, presenceData, radarSvg, ratingsData, ratingsSvg, timelineSvg } from './consultCharts'
-import { printDeck, type Orientation } from './consultDeck'
-import { CONSULT_PATH, SECTIONS, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow, type ConsultSection } from './consultRules'
+import { printDeck, type DeckInput, type Orientation } from './consultDeck'
+import { Paged, SlideViewer } from './SlideViewer'
+import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow, type ConsultSection } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 
 const TONE = {
@@ -149,7 +148,6 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
     queryKey: ['client-phone', clientId],
     queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null },
   })
-  const [tab, setTab] = useState<ConsultSection>('resumo')
   const [dirOpen, setDirOpen] = useState(false)
   const [sendOpen, setSendOpen] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
@@ -170,6 +168,12 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const status = (d?.status ?? row?.status ?? 'na_fila') as ConsultRow['status']
 
   const redo = (s: ConsultSection) => act.mutate(() => redoSection(clientId, s))
+  const [sources, setSources] = useState(false)
+  const logo = logoPublicUrl(row?.logo_path ?? null)
+  const deckInput = useMemo<DeckInput>(() => ({
+    name, doc, clientLogoUrl: logo, peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png`, updatedAt: d?.finished_at ?? null,
+    questions: ((doc.do_cliente ?? []) as Doc[]).map((x) => ({ question: x.pergunta, why: x.por_que })),
+  }), [name, doc, logo, d?.finished_at])
   return (
     <section aria-label={`Diagnóstico de ${name}`} className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
@@ -204,102 +208,25 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       )}
 
       {ready && (
-        <>
-          <div role="tablist" aria-label="Partes do diagnóstico" className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
-            {SECTIONS.map((s) => (
-              <button key={s.id} type="button" role="tab" aria-selected={tab === s.id} onClick={() => setTab(s.id)}
-                className={cn('min-h-10 shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-3.5 text-[13px] font-semibold', tab === s.id ? 'border-ink bg-ink text-surface' : 'border-line-strong text-ink hover:border-ink')}>
-                {s.label}
-              </button>
-            ))}
-          </div>
-          <div data-conteudo className="flex flex-col gap-3">
-            {tab === 'resumo' && <ResumoSection doc={doc} />}
-            {tab === 'diagnostico' && <DiagnosticoSection d={doc.diagnostico ?? {}} name={name} />}
-            {tab === 'comunicacao' && <ComunicacaoSection c={doc.comunicacao ?? {}} e={doc.experiencia ?? []} />}
-            {tab === 'plano' && <PlanoSection p={doc.plano ?? {}} />}
-            {tab === 'riscos' && <RiscosSection r={doc.riscos ?? []} />}
-            {tab === 'do_cliente' && <DoClienteSection items={doc.do_cliente ?? []} />}
-          </div>
-          <div className="flex flex-wrap items-center gap-2 border-t border-line pt-3">
-            <Button variant="secondary" disabled={!canGen || act.isPending || status === 'gerando'} onClick={async () => { if (await ask(`Refazer a parte "${SECTIONS.find((s) => s.id === tab)?.label}"? Conta como a geração do dia deste cliente.`)) redo(tab) }}>
-              <RefreshCw size={15} aria-hidden="true" /> Refazer esta seção
-            </Button>
-            <span className="text-[12px] text-muted">{canGen ? `Gerado ${ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}. 1 geração por dia por cliente.` : 'Próxima geração liberada amanhã.'}</span>
-          </div>
-        </>
+        <div data-conteudo>
+          {((doc.avisos ?? []) as string[]).map((a) => <p key={a} className="mb-2 rounded-xl bg-raised px-3 py-2 text-[12.5px] text-muted">{a} A análise usou a pesquisa na web no lugar.</p>)}
+          <SlideViewer input={deckInput} canRedo={canGen && !act.isPending && status !== 'gerando'}
+            onRedo={async (sec, label) => { if (await ask(`Refazer "${label}"? Conta como a geração do dia deste cliente.`)) redo(sec === 'inteligencia' ? 'do_cliente' : sec) }}
+            footer={<Button variant="link" onClick={() => setSources(true)}>Fontes e frameworks</Button>} />
+          <p className="mt-1 text-[12px] text-muted">{canGen ? `Gerado ${ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}. 1 geração por dia por cliente.` : 'Próxima geração liberada amanhã.'}</p>
+        </div>
       )}
+      {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}
 
       {dirOpen && <DirectionDialog clientId={clientId} name={name} initial={row?.direction ?? ''} links={nicheLinks(row?.segment, name)} onClose={() => setDirOpen(false)} />}
       {sendOpen && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSendOpen(false)} onSent={refresh} />}
-      {deckOpen && <DeckDialog name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck({ name, doc, questions: (doc.do_cliente ?? []).map((x: Doc) => ({ question: x.pergunta, why: x.por_que })), clientLogoUrl: logoPublicUrl(row?.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }, o); setDeckOpen(false) }} />}
+      {deckOpen && <DeckDialog name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(deckInput, o); setDeckOpen(false) }} />}
       {info && <InfoDialog row={info} onClose={closeInfo} />}
     </section>
   )
 }
 
-function Card({ title, children, className }: { title?: string; children: ReactNode; className?: string }) {
-  return (
-    <div className={cn('rounded-3xl border border-line bg-surface p-4', className)}>
-      {title && <h3 className="mb-2 text-[13px] font-semibold uppercase tracking-wide text-muted">{title}</h3>}
-      {children}
-    </div>
-  )
-}
-const Bullets = ({ items, className }: { items?: string[]; className?: string }) => (
-  <ul className={cn('flex flex-col gap-1 text-[14px] leading-snug', className)}>{(items ?? []).map((t, i) => <li key={i} className="flex gap-2"><span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-current opacity-50" />{t}</li>)}</ul>
-)
-const isUrl = (s?: string) => !!s && /^https?:\/\//.test(s)
 const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, '') } catch { return u } }
-
-const MATURITY: ScoreBand[] = [
-  { from: 0, label: 'Começando', color: 'var(--warn)', ink: 'text-warn-ink' },
-  { from: 40, label: 'Em construção', color: '#eda100', ink: 'text-ink' },
-  { from: 70, label: 'Madura', color: 'var(--ok)', ink: 'text-ok-ink' },
-]
-
-function ResumoSection({ doc }: { doc: Doc }) {
-  const r = doc.resumo ?? {}
-  const [details, setDetails] = useState(false)
-  return (
-    <>
-      <div className="grid gap-3 md:grid-cols-[1fr_240px]">
-        <Card>
-          <h2 className="text-[19px] font-semibold leading-snug">{r.titulo}</h2>
-          <p className="mt-2 text-[14.5px] leading-relaxed">{r.situacao}</p>
-        </Card>
-        <Card className="flex flex-col items-center justify-center">
-          <ScoreGauge label="Maturidade digital" value={typeof r.nota_maturidade === 'number' ? r.nota_maturidade * 10 : null} bands={MATURITY} />
-          <p className="text-center text-[12.5px] text-muted">Maturidade digital: <b className="text-ink">{r.nota_maturidade ?? '–'}/10</b></p>
-        </Card>
-      </div>
-      <Card title="Decisões">
-        <ol className="flex flex-col gap-2 text-[14px]">{(r.decisoes ?? []).map((t: string, i: number) => <li key={i} className="flex gap-2.5"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-accent-soft text-[12px] font-bold text-accent-ink">{i + 1}</span><span className="pt-0.5">{t}</span></li>)}</ol>
-      </Card>
-      {r.primeiro_passo && <div className="rounded-3xl bg-accent-soft p-4 text-[14.5px]"><b className="text-accent-ink">Primeiro passo desta semana:</b> {r.primeiro_passo}</div>}
-      <div><Button variant="link" onClick={() => setDetails(true)}>Ver detalhes (frameworks usados e fontes)</Button></div>
-      {details && <DetailsDialog doc={doc} onClose={() => setDetails(false)} />}
-    </>
-  )
-}
-
-/** Lista paginada dentro do pop-up (pop-up nunca rola). */
-function Paged<T>({ items, per, render }: { items: T[]; per: number; render: (t: T, i: number) => ReactNode }) {
-  const [page, setPage] = useState(0)
-  const pages = Math.max(1, Math.ceil(items.length / per))
-  return (
-    <div className="flex flex-col gap-2">
-      <ul className="flex flex-col gap-1.5">{items.slice(page * per, page * per + per).map((t, i) => <li key={page * per + i}>{render(t, page * per + i)}</li>)}</ul>
-      {pages > 1 && (
-        <div className="flex items-center justify-between text-[12.5px]">
-          <button type="button" disabled={page === 0} onClick={() => setPage(page - 1)} className="min-h-10 cursor-pointer px-2 font-semibold disabled:opacity-40">‹ Anteriores</button>
-          <span className="text-muted">{page + 1} de {pages}</span>
-          <button type="button" disabled={page >= pages - 1} onClick={() => setPage(page + 1)} className="min-h-10 cursor-pointer px-2 font-semibold disabled:opacity-40">Próximas ›</button>
-        </div>
-      )}
-    </div>
-  )
-}
 
 function DetailsDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
   const [tab, setTab] = useState<'fw' | 'fontes'>('fw')
@@ -315,230 +242,6 @@ function DetailsDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
         )} /> : <p className="text-[13px] text-muted">Sem fontes públicas registradas.</p>)}
       </div>
     </Dialog>
-  )
-}
-
-const LEVEL = { baixa: 33, media: 66, alta: 100 } as Record<string, number>
-const SIT = { bom: ['bg-ok', 'Bom'], atencao: ['bg-[#eda100]', 'Atenção'], ruim: ['bg-warn', 'Ruim'], nao_encontrado: ['bg-line-strong', 'Não encontrado'] } as Record<string, [string, string]>
-
-/** Gráfico em SVG pronto (gerado por consultCharts, com texto escapado). */
-function Chart({ svg, title, note }: { svg: string; title: string; note?: string }) {
-  return (
-    <Card title={title}>
-      <div className="mx-auto max-w-[560px] text-ink" dangerouslySetInnerHTML={{ __html: svg }} />
-      {note && <p className="mt-1 text-center text-[12px] text-muted">{note}</p>}
-    </Card>
-  )
-}
-
-function DiagnosticoSection({ d, name }: { d: Doc; name: string }) {
-  const pres = presenceData(d, name), rat = ratingsData(d, name), pos = positioningData(d, name), fun = funnelData(d)
-  const sw = d.swot ?? {}
-  const pub = d.publico ?? {}
-  const per = pub.persona ?? {}
-  return (
-    <>
-      <Card title="O negócio hoje"><p className="text-[14.5px] leading-relaxed">{d.negocio?.texto}</p><Bullets items={d.negocio?.pontos} className="mt-2" /></Card>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" aria-label="SWOT">
-        {([['forcas', 'Forças', 'bg-ok-soft'], ['fraquezas', 'Fraquezas', 'bg-warn-soft'], ['oportunidades', 'Oportunidades', 'bg-accent-soft'], ['ameacas', 'Ameaças', 'bg-raised']] as const).map(([k, l, bg]) => (
-          <div key={k} className={cn('rounded-3xl p-4', bg)}><h3 className="mb-1.5 text-[13px] font-bold">{l}</h3><Bullets items={sw[k]} className="text-[13.5px]" /></div>
-        ))}
-      </div>
-      <Card title="Mercado e concorrentes">
-        <p className="text-[14px] leading-relaxed">{d.mercado?.texto}</p>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2">
-          {(d.mercado?.concorrentes ?? []).map((c: Doc, i: number) => (
-            <div key={i} className="rounded-2xl border border-line p-3 text-[13px]">
-              <b className="text-[14px]">{c.nome}</b>
-              <p className="mt-0.5">{c.o_que_fazem}</p>
-              {c.diferencial && <p className="mt-0.5"><b>Diferencial:</b> {c.diferencial}</p>}
-              {(c.nota > 0 || c.preco) && <p className="mt-0.5 font-semibold text-accent-ink">{[c.nota > 0 ? `★ ${Number(c.nota).toLocaleString('pt-BR')}${c.avaliacoes > 0 ? ` (${c.avaliacoes})` : ''}` : '', c.preco && !/n[aã]o encontrad/i.test(String(c.preco)) ? `Preço: ${c.preco}` : ''].filter(Boolean).join(' · ')}</p>}
-              {c.como_anunciam && <p className="mt-0.5 text-muted">Comunicação: {c.como_anunciam}</p>}
-              <p className="mt-1 flex flex-wrap gap-1.5">
-                {([['Site', c.site], ['Instagram', c.instagram && !isUrl(c.instagram) ? `https://instagram.com/${String(c.instagram).replace(/^@/, '')}` : c.instagram], ['Google Maps', c.google_maps], ['Anúncios', c.biblioteca_anuncios], [host(String(c.fonte ?? '')), c.fonte]] as [string, string][])
-                  .filter(([, u], i, a) => isUrl(u) && a.findIndex(([, v]) => v === u) === i).map(([l, u]) => <a key={u} href={u} target="_blank" rel="noreferrer" className="inline-flex min-h-8 items-center gap-1 rounded-full border border-line px-2 text-[12px] text-accent-ink no-underline"><ExternalLink size={11} aria-hidden="true" /> {l}</a>)}
-              </p>
-            </div>
-          ))}
-        </div>
-        {(d.mercado?.cinco_forcas ?? []).length > 0 && (
-          <div className="mt-3 flex flex-col gap-2">
-            <h4 className="text-[12.5px] font-semibold text-muted">Pressão do mercado (5 forças)</h4>
-            {d.mercado.cinco_forcas.map((f: Doc, i: number) => (
-              <div key={i} className="grid grid-cols-[minmax(0,9rem)_1fr] items-center gap-2 text-[12.5px] sm:grid-cols-[12rem_8rem_1fr]">
-                <span className="font-semibold">{f.forca}</span>
-                <span className="h-2 overflow-hidden rounded-full bg-raised"><span className={cn('block h-full rounded-full', f.nivel === 'alta' ? 'bg-warn' : f.nivel === 'media' ? 'bg-[#eda100]' : 'bg-ok')} style={{ width: `${LEVEL[f.nivel] ?? 0}%` }} /></span>
-                <span className="col-span-2 text-muted sm:col-span-1">{f.porque}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </Card>
-      {(pres || rat || pos) && (
-        <div className="grid gap-3 lg:grid-cols-2">
-          {pres && <Chart title="Presença digital: você × concorrentes" svg={radarSvg(pres)} note="Nota de 0 a 10 por canal, pelo que está público." />}
-          {rat && <Chart title="Reputação no Google" svg={ratingsSvg(rat)} note="Nota (número de avaliações)." />}
-          {pos && <Chart title="Onde cada um se posiciona" svg={positioningSvg(pos)} />}
-        </div>
-      )}
-      <div className="grid gap-3 md:grid-cols-2">
-        <Card title="Persona">
-          <p className="text-[15px] font-semibold">{per.nome}{per.idade ? `, ${per.idade}` : ''}</p>
-          <p className="mt-1 text-[13.5px]">{per.quem_e}</p>
-          <div className="mt-2 grid gap-2 text-[13px] sm:grid-cols-3">
-            <div><b>Dores</b><Bullets items={per.dores} className="text-[13px]" /></div>
-            <div><b>Desejos</b><Bullets items={per.desejos} className="text-[13px]" /></div>
-            <div><b>Objeções</b><Bullets items={per.objecoes} className="text-[13px]" /></div>
-          </div>
-        </Card>
-        <Card title="Cliente ideal"><p className="text-[14px] leading-relaxed">{pub.icp}</p></Card>
-      </div>
-      {(pub.jornada ?? []).length > 0 && (
-        <Card title="Jornada de compra">
-          <ol className="grid gap-2 md:grid-cols-5">
-            {pub.jornada.map((j: Doc, i: number) => (
-              <li key={i} className="rounded-2xl bg-raised p-3 text-[13px]"><b className="text-accent-ink">{i + 1}. {j.etapa}</b><p className="mt-1">{j.o_que_acontece}</p><p className="mt-1 text-muted">Fazer: {j.o_que_fazer}</p></li>
-            ))}
-          </ol>
-        </Card>
-      )}
-      <Card title="Proposta de valor"><p className="text-[14px] leading-relaxed">{d.proposta_valor?.texto}</p><Bullets items={d.proposta_valor?.diferenciais} className="mt-2" />{d.proposta_valor?.equacao && <p className="mt-2 rounded-2xl bg-raised px-3 py-2 text-[13.5px]"><b>Equação de valor:</b> {d.proposta_valor.equacao}</p>}</Card>
-      <Card title={`Presença digital · ${d.presenca_digital?.nota ?? '–'}/10`}>
-        <ul className="flex flex-col divide-y divide-line">
-          {(d.presenca_digital?.itens ?? []).map((it: Doc, i: number) => {
-            const [dot, lab] = SIT[it.situacao] ?? SIT.nao_encontrado!
-            return (
-              <li key={i} className="flex items-start gap-2.5 py-2 text-[13.5px]">
-                <span className={cn('mt-1.5 size-2.5 shrink-0 rounded-full', dot)} title={lab} />
-                <span className="min-w-0 flex-1"><b>{it.canal}</b> <span className="text-muted">· {lab}</span><span className="block">{it.observacao}</span>{isUrl(it.fonte) && <a href={it.fonte} target="_blank" rel="noreferrer" className="text-[12px] text-accent-ink">{host(it.fonte)}</a>}</span>
-              </li>
-            )
-          })}
-        </ul>
-      </Card>
-      <Card title="Funil e números">
-        {fun && <div className="mx-auto mb-2 max-w-[520px] text-ink" dangerouslySetInnerHTML={{ __html: funnelSvg(fun) }} />}
-        {!fun && d.funil?.tem_dados && (d.funil?.numeros ?? []).length > 0 && <div className="mb-2 grid grid-cols-2 gap-2 sm:grid-cols-4">{d.funil.numeros.map((n: Doc, i: number) => <div key={i} className="rounded-2xl bg-raised p-3"><p className="text-[18px] font-semibold tabular-nums">{n.valor}</p><p className="text-[12px] text-muted">{n.rotulo}</p></div>)}</div>}
-        <p className="text-[14px] leading-relaxed">{d.funil?.texto}</p>
-      </Card>
-    </>
-  )
-}
-
-function ComunicacaoSection({ c, e }: { c: Doc; e: Doc[] }) {
-  return (
-    <>
-      <p className="rounded-2xl bg-raised px-3 py-2 text-[13px]"><b>Sugestão de comunicação:</b> como a marca deve falar e aparecer. Tráfego, Social e Audiovisual vão usar isto como base.</p>
-      <Card title="Essência e propósito">
-        <p className="text-[17px] font-semibold leading-snug">{c.essencia}</p>
-        <p className="mt-1.5 text-[14px]">{c.proposito}</p>
-        {c.arquetipo && <p className="mt-2 text-[13px] text-muted">Arquétipo: <b className="text-ink">{c.arquetipo}</b></p>}
-        {c.papel_peformake && <p className="mt-2 rounded-2xl bg-raised px-3 py-2 text-[13.5px]"><b>Papel da Peformake:</b> {c.papel_peformake}</p>}
-      </Card>
-      <div className="grid gap-2 sm:grid-cols-2">
-        {(c.tom ?? []).map((t: Doc, i: number) => (
-          <div key={i} className="rounded-3xl border border-line bg-surface p-4"><p className="text-[15px] font-bold text-accent-ink">{t.adjetivo}</p><p className="mt-1 text-[13.5px] italic">“{t.exemplo}”</p></div>
-        ))}
-      </div>
-      <div className="grid gap-3 md:grid-cols-2">
-        <Card title="O que evitar"><Bullets items={c.evitar} /></Card>
-        <Card title="Expressão da marca">
-          <dl className="grid gap-1.5 text-[13.5px]">
-            {([['Paleta', c.expressao?.paleta], ['Ambiente', c.expressao?.ambiente], ['Presença', c.expressao?.presenca]] as const).map(([k, v]) => v ? <div key={k}><dt className="font-semibold">{k}</dt><dd>{v}</dd></div> : null)}
-          </dl>
-        </Card>
-      </div>
-      {c.regra_teste && <div className="rounded-3xl bg-accent-soft p-4 text-[15px] font-semibold text-accent-ink">{c.regra_teste}</div>}
-      {(c.pilares ?? []).length > 0 && (
-        <Card title="Pilares de conteúdo">
-          <div className="grid gap-2 sm:grid-cols-2">{c.pilares.map((x: Doc, i: number) => <div key={i} className="rounded-2xl bg-raised p-3 text-[13.5px]"><b>{x.nome}</b><p className="mt-0.5">{x.descricao}</p></div>)}</div>
-        </Card>
-      )}
-      {e.length > 0 && (
-        <Card title="Experiência do cliente (fora do digital)">
-          <div className="grid gap-2 md:grid-cols-2">
-            {e.map((m, i) => (
-              <div key={i} className="rounded-2xl bg-raised p-3 text-[13.5px]">
-                <b className="text-[14px]">{m.momento}</b>
-                <p className="mt-1 text-muted">Hoje: {m.hoje}</p>
-                <p className="mt-1">Como deve ser: {m.como_deve_ser}</p>
-                <Bullets items={m.acoes} className="mt-1.5 text-[13px]" />
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
-    </>
-  )
-}
-
-const WHO = { cliente: 'Cliente', peformake: 'Peformake', juntos: 'Juntos' } as Record<string, string>
-const EFFORT = { baixo: 'Rápido', medio: 'Médio', alto: 'Grande' } as Record<string, string>
-
-function PlanoSection({ p }: { p: Doc }) {
-  const eff = effortData(p)
-  return (
-    <>
-      {p.prioridade && <div className="rounded-3xl bg-accent-soft p-4 text-[15px]"><b className="text-accent-ink">Prioridade dos 90 dias:</b> {p.prioridade}</div>}
-      {(p.fases ?? []).length > 0 && (
-        <div className="grid gap-3 lg:grid-cols-2">
-          <Chart title="Linha do tempo" svg={timelineSvg(p.fases)} />
-          {eff && <Chart title="Onde está o esforço" svg={hbarsSvg(eff)} note="Peso pelo tamanho do passo (rápido 1, médio 2, grande 3)." />}
-        </div>
-      )}
-      <div className="grid gap-3 lg:grid-cols-3">
-        {(p.fases ?? []).map((f: Doc, i: number) => (
-          <Card key={i}>
-            <p className="text-[12px] font-bold uppercase tracking-wide text-accent-ink">{f.periodo}</p>
-            <p className="mt-0.5 text-[14.5px] font-semibold leading-snug">{f.objetivo}</p>
-            <ol className="mt-2 flex flex-col gap-2">
-              {(f.passos ?? []).map((s: Doc, j: number) => (
-                <li key={j} className="rounded-2xl border border-line p-3 text-[13px]">
-                  <p className="font-semibold leading-snug">{s.acao}</p>
-                  <p className="mt-0.5 text-ink/80">{s.como}</p>
-                  <p className="mt-1.5 flex flex-wrap gap-1 text-[11px] font-semibold">
-                    <span className="rounded-full bg-raised px-2 py-0.5">{s.area}</span>
-                    <span className="rounded-full bg-accent-soft px-2 py-0.5 text-accent-ink">{WHO[s.quem] ?? s.quem}</span>
-                    <span className="rounded-full bg-raised px-2 py-0.5 text-muted">{EFFORT[s.esforco] ?? s.esforco}</span>
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </Card>
-        ))}
-      </div>
-      {(p.indicadores ?? []).length > 0 && (
-        <Card title="Números para acompanhar">
-          <ul className="grid gap-2 sm:grid-cols-2">{p.indicadores.map((n: Doc, i: number) => <li key={i} className="rounded-2xl bg-raised p-3 text-[13px]"><b className="text-[14px]">{n.nome}</b><p>Meta: {n.meta}</p><p className="text-muted">{n.como_medir}</p></li>)}</ul>
-        </Card>
-      )}
-      {(p.por_area ?? []).length > 0 && <Card title="Foco por área"><ul className="flex flex-col gap-1 text-[13.5px]">{p.por_area.map((a: Doc, i: number) => <li key={i}><b>{a.area}:</b> {a.foco}</li>)}</ul></Card>}
-    </>
-  )
-}
-
-function RiscosSection({ r }: { r: Doc[] }) {
-  const order = { alto: 0, medio: 1, baixo: 2 } as Record<string, number>
-  return (
-    <ul className="flex flex-col gap-2">
-      {[...r].sort((a, b) => (order[a.impacto] ?? 3) - (order[b.impacto] ?? 3)).map((x, i) => (
-        <li key={i} className="rounded-3xl border border-line bg-surface p-4 text-[14px]">
-          <span className={cn('mb-1 inline-block rounded-full px-2 py-0.5 text-[11px] font-bold', x.impacto === 'alto' ? 'bg-warn-soft text-warn-ink' : x.impacto === 'medio' ? 'bg-[#eda100]/15 text-ink' : 'bg-raised text-muted')}>Impacto {x.impacto === 'medio' ? 'médio' : x.impacto}</span>
-          <p className="font-semibold">{x.risco}</p>
-          <p className="mt-1 text-[13.5px] text-ink/80">Como evitar: {x.como_evitar}</p>
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-function DoClienteSection({ items }: { items: Doc[] }) {
-  return (
-    <Card title="O que precisamos do cliente">
-      <ol className="flex flex-col gap-2.5">
-        {items.map((x, i) => <li key={i} className="flex gap-2.5 text-[14px]"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-raised text-[12px] font-bold">{i + 1}</span><span><b>{x.pergunta}</b><span className="block text-[13px] text-muted">{x.por_que}</span></span></li>)}
-      </ol>
-    </Card>
   )
 }
 

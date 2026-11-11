@@ -24,7 +24,9 @@ const input = { name, doc: raw.doc ?? raw, questions: raw.questions ?? (raw.doc 
     // Conteúdo que não cabe no slide = corte. Mede cada bloco de conteúdo contra a área útil do slide.
     const cut = await p.evaluate(() => [...document.querySelectorAll('.slide')].map((s, i) => {
       const box = s.getBoundingClientRect(); const foot = s.querySelector('.foot'); const limit = foot ? foot.getBoundingClientRect().top : box.bottom;
-      const over = [...s.querySelectorAll('.content > *, .cover-mid')].some((e) => e.getBoundingClientRect().bottom > limit + 2 || e.scrollHeight > e.clientHeight + 4);
+      const clamped = (e) => getComputedStyle(e).webkitLineClamp && getComputedStyle(e).webkitLineClamp !== 'none';
+      const boxes = [...s.querySelectorAll('.content > *, .cover-mid, .card, .sw, .kpi, .journey li, .content li')].filter((e) => !clamped(e));
+      const over = boxes.some((e) => e.getBoundingClientRect().bottom > limit + 2 || e.scrollHeight > e.clientHeight + 4);
       return over ? i + 1 : 0
     }).filter(Boolean));
     if (cut.length) fails.push(`${o}: conteúdo cortado nos slides ${cut.join(', ')}`);
