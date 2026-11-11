@@ -9,7 +9,8 @@ import { APP_ROLE, calendar, fmt, GOAL_META, monthStartOf, paceOf, ROLE_LABEL, S
 import { useClientDeliveries } from '@/features/clients/DeliveryBar'
 import { listNotifications, markRead } from '@/features/notifications/notificationsApi'
 import { useProduction } from '@/features/production/useProduction'
-import { noticesFrom, pendingFrom, type Notice } from './chatNotices'
+import { noticesFrom, pendingFrom, setupNotice, type Notice } from './chatNotices'
+import { useSetupPending } from '@/features/clients/useSetupPending'
 import { BeteToday, useBeteState, visibleItems, type TodayItem } from './BeteToday'
 import { isoWeek } from '@/features/finance/whatsapp/waRules'
 import { brl, cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
@@ -351,6 +352,7 @@ export function GoalsChat() {
 
   // "Hoje": o que pede atenção agora, com o botão que resolve. Urgente = dinheiro, atraso grande ou prioridade alta.
   const beteState = useBeteState(state.status === 'ready')
+  const setupPending = useSetupPending(state.status === 'ready')
   const todayAll: TodayItem[] = useMemo(() => {
     const out: TodayItem[] = []
     for (const o of overdue) out.push({ id: `inv:${o.id}:${month}`, level: 'urgente', title: `${o.name}: fatura em aberto`, sub: o.amount ? brl(o.amount) : undefined, action: { label: 'Cobrar', to: `/clientes/${o.id}?aba=contrato&acao=cobrar` } })
@@ -362,10 +364,12 @@ export function GoalsChat() {
     }
     for (const p of latePieces) out.push({ id: `piece:${p.id}`, level: 'hoje', title: `${p.client}: ${p.title}`, sub: `peça atrasada desde ${p.deadline!.slice(8)}/${p.deadline!.slice(5, 7)}`, action: { label: 'Abrir peça', to: `/conteudo/peca/${p.id}` } })
     for (const n of noticesFrom(notifs.data ?? [])) out.push({ id: n.id, level: 'info', title: `${n.icon} ${n.title}`, sub: n.lines.slice(0, 2).join(' · ') || undefined, action: n.action ? { label: n.action.label, to: n.action.to } : undefined })
+    const setup = setupNotice(setupPending)
+    if (setup) out.push({ id: setup.id, level: 'info', title: setup.title, sub: setup.sub, action: { label: 'Resolver', to: setup.to } })
     const wa = finWa.data ?? 0
     if (wa > 0) out.push({ id: `finwa:${isoWeek()}`, level: 'info', title: `🧾 ${wa} ${wa === 1 ? 'lançamento' : 'lançamentos'} do WhatsApp para revisar`, sub: 'Antes do fechamento do mês', action: { label: 'Revisar', to: '/financeiro/whatsapp' } })
     return out
-  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month, finWa.data])
+  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month, finWa.data, setupPending])
   const todayItems = visibleItems(todayAll, beteState.data)
   const urgentCount = todayItems.filter((i) => i.level === 'urgente').length
 

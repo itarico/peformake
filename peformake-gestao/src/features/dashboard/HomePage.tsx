@@ -9,6 +9,7 @@ import { deltaTone, fillDays, pctChange } from '@/components/charts/chartRules'
 import { cn } from '@/lib/cn'
 import { AV_ROLES, COMMERCIAL_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, TRAFFIC_ROLES, hasAnyRole, type AppRole } from '@/lib/roles'
 import { MyDay } from './MyDay'
+import { SetupPendingCard } from '@/features/clients/SetupPendingCard'
 import { LoadState } from '@/features/traffic/LoadState'
 import { describeClient } from '@/features/clients/clientRules'
 import { ATTENTION_LABEL } from '@/features/clients/portfolioRules'
@@ -276,6 +277,8 @@ function BusinessHome() {
         <h1 className="text-3xl font-semibold tracking-tight">{greeting(hour)}{name ? `, ${name}` : ''}</h1>
         <p className="text-muted first-letter:uppercase">{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' })}</p>
       </header>
+
+      <SetupPendingCard />
 
       {can.admin ? <BusinessSection side={actionList} /> : (
         <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">

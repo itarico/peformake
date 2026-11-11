@@ -94,3 +94,16 @@ export function deliveryLink(clientId: string, action?: string): string {
   if (action === 'meeting') return `/clientes/${clientId}?abrir=reuniao`
   return `${action}${action.includes('?') ? '&' : '?'}cliente=${clientId}`
 }
+
+/** Bete: uma linha só (não urgente) para os clientes novos com passo do cadastro em aberto. */
+export function setupNotice(pending: { clientId: string; client: string; step: { id: string; label: string }; to: string }[]): { id: string; title: string; sub?: string; to: string } | null {
+  if (!pending.length) return null
+  const [first] = pending
+  if (pending.length === 1) return { id: `setup:${first!.clientId}:${first!.step.id}`, title: `🧩 ${first!.client}: falta ${first!.step.label}`, sub: 'Cliente novo com o cadastro pela metade', to: first!.to }
+  return {
+    id: `setup:${pending.map((p) => `${p.clientId}:${p.step.id}`).join(',')}`,
+    title: `🧩 ${pending.length} clientes novos com o cadastro pela metade`,
+    sub: pending.slice(0, 2).map((p) => `${p.client}: falta ${p.step.label}`).join(' · '),
+    to: first!.to,
+  }
+}

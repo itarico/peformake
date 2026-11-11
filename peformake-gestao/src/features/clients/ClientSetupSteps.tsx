@@ -5,31 +5,11 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { ContractWizard } from '@/features/contracts/ContractWizard'
 import { CONTRACT_STATUS } from '@/features/contracts/contractStatus'
-import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { ClientDialog } from './ClientFormPage'
 import type { ClientRecord } from './clientRules'
-import { clientKind } from './portfolioRules'
+import { isNewClient, setupSteps, type SetupStep, type StepId } from './setupRules'
 
-type StepId = 'empresa' | 'servicos' | 'contrato' | 'cobranca' | 'acessos' | 'negocio'
-export interface SetupStep { id: StepId; label: string; hint: string; done: boolean; optional?: boolean; adminOnly?: boolean; blockedBy?: string }
-
-const SENT = ['enviado', 'aguardando_aceite', 'assinado_cliente', 'assinado']
-
-/** Os 6 passos do cliente novo, calculados pelo que já está cadastrado. */
-export function setupSteps(client: ClientRecord, contractStatus: string | null): SetupStep[] {
-  const kind = clientKind(client.clientType, client.contract?.model ?? null)
-  const empresa = !!client.document && !!(client.billingEmail ?? client.email) && !!client.address
-  const servicos = client.services.some((s) => s.isActive)
-  return [
-    { id: 'empresa', label: 'Empresa', hint: 'CPF/CNPJ, e-mail de cobrança e endereço. Com CNPJ, a Receita preenche o resto.', done: empresa },
-    { id: 'servicos', label: 'Serviços e valores', hint: 'O que foi contratado e por quanto.', done: servicos },
-    { id: 'contrato', label: 'Contrato', hint: kind === 'avulso' ? 'Aceite eletrônico no portal.' : 'Assinatura pela Assinafy. Você lê a prévia antes de enviar.', done: !!contractStatus && SENT.includes(contractStatus), adminOnly: true,
-      blockedBy: !empresa ? 'Empresa' : !servicos ? 'Serviços e valores' : undefined },
-    { id: 'cobranca', label: 'Cobrança', hint: kind === 'avulso' ? 'Data do projeto.' : 'Início, duração e dia da cobrança (de 1 a 31).', done: kind === 'avulso' ? !!client.contract?.startDate : !!client.contract?.startDate && !!client.contract?.billingDay },
-    { id: 'acessos', label: 'Acessos', hint: 'Instagram e site. Contas de anúncio e portal ficam na ficha.', done: !!client.instagram || !!client.website },
-    { id: 'negocio', label: 'Sobre o negócio', hint: 'Segmento, como chegou e o que a empresa faz.', done: !!client.description || !!client.segment, optional: true },
-  ]
-}
+export { setupSteps, isNewClient, type SetupStep } from './setupRules'
 
 export function useContractStatus(clientId: string) {
   return useQuery({
@@ -40,13 +20,6 @@ export function useContractStatus(clientId: string) {
       return (data?.[0] ?? null) as { status: string; signed_at: string | null; sent_at: string | null } | null
     },
   })
-}
-
-/** Cliente cadastrado há até 60 dias (ou acabado de criar) ainda com passo obrigatório aberto. */
-export function isNewClient(client: ClientRecord): boolean {
-  if (!client.since) return false
-  const days = (Date.parse(`${todayInBrazil()}T12:00:00Z`) - Date.parse(client.since)) / 86_400_000
-  return days <= 60
 }
 
 const DIALOG_TAB = { empresa: 'empresa', cobranca: 'contrato', acessos: 'dados', negocio: 'negocio' } as const
