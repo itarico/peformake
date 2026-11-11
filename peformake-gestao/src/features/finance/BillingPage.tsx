@@ -805,7 +805,7 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
               </div>
             )}
           </fieldset>
-          <fieldset hidden={tab !== 'mais'} className="flex flex-col gap-2 rounded-2xl border border-line p-4">
+          <fieldset hidden={tab !== 'mais'} className="flex flex-col gap-2 rounded-2xl border border-line p-4 max-md:border-0 max-md:p-0">
             <legend className="px-1 text-[13px] font-semibold">Repasse diário da Ellcazo (Pix, antigo)</legend>
             {toggle('sweep_enabled', 'Fazer o Pix todo dia às 18h', 'Soma o que a Ellcazo recebeu pelo Asaas no dia e transfere para a conta da Ellcazo. Só com a chave Pix abaixo.')}
             <div className="grid grid-cols-[1fr_auto] gap-3">

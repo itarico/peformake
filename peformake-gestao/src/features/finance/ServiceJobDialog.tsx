@@ -116,15 +116,10 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
               className={cn('min-h-9 cursor-pointer rounded-full border px-3.5 text-[13px] font-semibold', skill.key === s.key ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:border-line-strong hover:text-ink')}>{s.label}</button>
           ))}
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
+        <div className="grid grid-cols-[1fr_auto] gap-3">
           <label className="flex flex-col text-[13px] font-semibold">Serviço<input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={160} placeholder="Ex.: Apresentadora no vídeo do feirão" className={field} /></label>
           <label className="flex flex-col text-[13px] font-semibold">Data<input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={field} /></label>
         </div>
-        <div role="group" aria-label="Empresa" className="inline-flex self-start rounded-full border border-line p-0.5">
-          {(['ellcazo', 'peformake'] as const).map((u) => (
-            <button key={u} type="button" aria-pressed={unit === u} onClick={() => setUnit(u)}
-              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', u === 'ellcazo' && 'theme-ellcazo', unit === u ? 'bg-fill text-on-fill' : 'text-muted')}>{u === 'ellcazo' ? 'Ellcazo · Audiovisual' : 'Peformake'}</button>
-          ))}
         </div>
         </div>
 
@@ -155,6 +150,11 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
           <label className="flex flex-col text-[13px] font-semibold">Cobrar do cliente (R$)<input inputMode="decimal" value={clientAmount} onChange={(e) => setClientAmount(e.target.value)} placeholder="0,00" className={field} /></label>
           <label className="flex flex-col text-[13px] font-semibold">Pagar para quem fez (R$)<input inputMode="decimal" value={staffAmount} onChange={(e) => setStaffAmount(e.target.value)} placeholder={rated ? `${rated.toFixed(2).replace('.', ',')} (tabela da pessoa)` : staff && cv > 0 ? `${(cv * (100 - pct) / 100).toFixed(2).replace('.', ',')} (${100 - pct}%)` : '0,00'} className={field} /></label>
         </div>
+        <div role="group" aria-label="Empresa" className="inline-flex self-start rounded-full border border-line p-0.5">
+          {(['ellcazo', 'peformake'] as const).map((u) => (
+            <button key={u} type="button" aria-pressed={unit === u} onClick={() => setUnit(u)}
+              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', u === 'ellcazo' && 'theme-ellcazo', unit === u ? 'bg-fill text-on-fill' : 'text-muted')}>{u === 'ellcazo' ? 'Ellcazo · Audiovisual' : 'Peformake'}</button>
+          ))}
         {(cv > 0 || sv > 0) && (
           <p className="rounded-xl bg-raised px-3 py-2 text-[13px]">
             {cv > 0 && <>Fatura de <b>{brl(cv)}</b> no fechamento do mês do cliente{sv > 0 ? '; ' : '.'}</>}

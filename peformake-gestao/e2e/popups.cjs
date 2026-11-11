@@ -110,6 +110,13 @@ const tabsOf = (p) => p.evaluate(() => {
             await tb.click({ timeout: 1000 }).catch(() => {}); await p.waitForTimeout(250);
             const mm = await measure(p); if (mm) states.push([t, mm]);
           }
+          // Passo a passo: aperta "Continuar"/"Próximo" e mede cada etapa (se a etapa pedir dado obrigatório, para ali).
+          for (let k = 1; k <= 4; k++) {
+            const next = p.locator('dialog[open]').last().getByRole('button', { name: /^(Continuar|Próximo)$/ }).first();
+            if (!(await next.count()) || !(await next.isEnabled().catch(() => false))) break;
+            const before = await measure(p); await next.click({ timeout: 1000 }).catch(() => {}); await p.waitForTimeout(300);
+            const mm = await measure(p); if (!mm || (mm.sh === before.sh && mm.title === before.title)) break; states.push(['etapa ' + (k + 1), mm]);
+          }
           for (const [tab, s] of states) {
             const key = `${url.replace(C0, ':id')} › ${s.title}${tab ? ' · ' + tab : ''}`;
             const row = rows.get(key) || { key, via }; row[dev] = s; rows.set(key, row);
