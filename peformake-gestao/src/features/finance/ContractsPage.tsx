@@ -143,13 +143,14 @@ export function ContractsPage() {
 
 type PickRow = { client_id: string; client_name: string; logo_path: string | null; situation: Situation }
 const fold = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
-/** Novo contrato: busca o cliente pelo nome. Mostra só 8 de cada vez (sem rolagem); os sem contrato assinado vêm primeiro. */
+/** Novo contrato: busca o cliente pelo nome. Mostra só 8 (6 no celular) de cada vez (sem rolagem); os sem contrato assinado vêm primeiro. */
 function PickClient({ rows, onClose, onPick }: { rows: PickRow[]; onClose: () => void; onPick: (id: string) => void }) {
   const [text, setText] = useState('')
   const q = fold(text.trim())
   const all = [...rows].filter((r) => !q || fold(r.client_name).includes(q))
     .sort((a, b) => Number(a.situation === 'assinado') - Number(b.situation === 'assinado') || a.client_name.localeCompare(b.client_name, 'pt-BR'))
-  const shown = all.slice(0, 8)
+  const mobile = useIsMobile()
+  const shown = all.slice(0, mobile ? 6 : 8)
   return (
     <Dialog open onClose={onClose} title="Novo contrato" description="Escolha o cliente. Os que ainda não têm contrato assinado vêm primeiro." size="md">
       <div className="flex flex-col gap-3">
