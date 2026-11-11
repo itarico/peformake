@@ -77,3 +77,25 @@ Cada geração vem para **revisão** (aprovar, refazer, editar). Nada vai ao cli
 2. Os campos obrigatórios do mês estão bons (objetivo, oferta em foco, datas; + verba no tráfego)?
 3. O direcionamento fica na ficha do cliente e aparece no topo de cada área. Ok?
 4. Ordem: roteiro antes do tráfego/social?
+
+## 9. Referência: plano tático da Benitius (docs/referencias/benitius-plano-tatico-de-conteudo.pdf)
+Modelo de entrega que o Italo quer no diagnóstico e nos planos (tom e comunicação). Blocos a reaproveitar:
+- **Essência e propósito** em 2 linhas, e o "papel" da Peformake no projeto em 1 página.
+- **Tom de voz**: 4 adjetivos, cada um com uma frase de exemplo real + lista do que evitar.
+- **Expressão de marca**: paleta, ambiente, presença (dono como rosto, equipe com nome).
+- **Linguagem de vídeo**: regras simples de gravação (câmera parada, planos longos, luz) e uma regra-teste
+  ("Se o vídeo te deixa ansioso, não é Benitius").
+- **Experiência do cliente fora do digital** (recepção, venda consultiva, ambiente, despedida): é consultoria de verdade.
+- **Linha editorial**: pilares com frequência semanal; **calendário dia a dia**; **banco de pautas** para nunca travar.
+- **Roteiros** no formato "Quem fala / Quem grava", com referência.
+Destino: Consultoria (seção "Tom e comunicação" + "Experiência do cliente"), Social (linha editorial, calendário,
+banco de pautas) e Audiovisual (roteiros "Quem fala / Quem grava", linguagem de vídeo).
+
+## 10. Medir o trabalho da social media (pedido do Italo, a decidir)
+Hoje a entrega de social conta "peças planejadas aprovadas". Proposta de medida em 3 partes, sem trabalho extra:
+1. **Entrega** (o que foi combinado): pauta do mês feita até o dia X, peças aprovadas / planejadas, publicadas no dia certo
+   (lido do Instagram pela conta ligada), stories por semana.
+2. **Agilidade**: tempo do briefing até a peça pronta, ajustes pedidos por peça, peças atrasadas.
+3. **Resultado** (do perfil, sem culpar só a social): alcance, engajamento por post, seguidores ganhos, mensagens
+   recebidas pelo Instagram, comparado com o mês anterior; nota do cliente no portal.
+Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver detalhes".
