@@ -87,7 +87,7 @@ export function ClientOperationBlock({ clientId, month }: { clientId: string; mo
   )
 }
 
-interface ServiceStatus { client_service_id: string; service: string; measure: string | null; contracted: number | null; delivered: number | null; with_client: number; client_late: number; ours_missing: number | null; state: string }
+interface ServiceStatus { client_service_id: string; service: string; measure: string | null; contracted: number | null; delivered: number | null; with_client: number; client_late: number; ours_missing: number | null; state: string; videos?: number | null; min_videos?: number | null }
 const STATE: Record<string, { label: string; tone: string }> = {
   entregue: { label: 'Entregue', tone: 'bg-ok-soft text-ok-ink' },
   em_andamento: { label: 'Em andamento', tone: 'bg-raised text-muted' },
@@ -123,6 +123,7 @@ function ServiceStatusList({ clientId, month }: { clientId: string; month: strin
               <b className="font-semibold">{r.service}</b>{' '}
               <span className="text-muted">
                 {r.state === 'sem_planejamento' ? 'planejamento do mês não feito' : `${Number(r.delivered ?? 0)} de ${Number(r.contracted ?? 0)} ${r.measure ?? ''}`}
+                {r.measure === 'visitas' && r.videos != null && ` · ${Number(r.videos)} ${Number(r.videos) === 1 ? 'vídeo' : 'vídeos'}${r.min_videos ? ` (mín. ${Number(r.min_videos)} por visita)` : ''}`}
                 {r.with_client > 0 && ` · ${r.with_client} com o cliente${r.client_late > 0 ? ` (${r.client_late} há mais de 2 dias)` : ''}`}
               </span>
             </span>

@@ -15,7 +15,7 @@ export const AREA_LABEL: Record<Area, string> = {
 const UNITS = ['mês', 'projeto', 'unidade', 'hora', 'diária'] as const
 
 export interface ServiceOption { id: string; kind: 'variacao' | 'extra'; name: string; price: number | null }
-export interface Service { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; isActive: boolean; price: number | null; clients: number; deliveryUnit: string | null; options: ServiceOption[] }
+export interface Service { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; isActive: boolean; price: number | null; clients: number; deliveryUnit: string | null; visits?: number | null; options: ServiceOption[] }
 export interface PackageItem { serviceId: string; name: string; area: Area; quantity: number; price: number | null }
 export interface Pkg { id: string; name: string; description: string | null; isActive: boolean; promoPrice: number | null; promoStarts: string | null; promoEnds: string | null; items: PackageItem[] }
 interface Catalog { canEdit: boolean; canSeePrices: boolean; services: Service[]; packages: Pkg[] }
@@ -26,10 +26,11 @@ const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surf
 async function loadCatalog(area: Area | null): Promise<Catalog> {
   const [{ data, error }, units] = await Promise.all([
     supabase.rpc('catalog_list', { _area: area }),
-    (supabase.from as unknown as (t: string) => { select: (c: string) => Promise<{ data: { id: string; delivery_unit: string | null }[] | null }> })('services').select('id, delivery_unit'),
+    (supabase.from as unknown as (t: string) => { select: (c: string) => Promise<{ data: { id: string; delivery_unit: string | null; visits_per_month: number | null }[] | null }> })('services').select('id, delivery_unit, visits_per_month'),
   ])
   if (error) throw error
   const unitById = new Map((units.data ?? []).map((u) => [u.id, u.delivery_unit]))
+  const visitsById = new Map((units.data ?? []).map((u) => [u.id, u.visits_per_month]))
   const d = (data ?? { can_edit: false, services: [], packages: [] }) as {
     can_edit: boolean
     can_see_prices?: boolean
@@ -39,7 +40,7 @@ async function loadCatalog(area: Area | null): Promise<Catalog> {
   return {
     canEdit: d.can_edit,
     canSeePrices: d.can_see_prices ?? d.can_edit,
-    services: d.services.map((s) => ({ id: s.id, name: s.name, area: s.area, description: s.description, deliverables: s.deliverables, unit: s.unit, isActive: s.is_active, price: s.price, clients: s.clients, deliveryUnit: unitById.get(s.id) ?? null, options: s.options ?? [] })),
+    services: d.services.map((s) => ({ id: s.id, name: s.name, area: s.area, description: s.description, deliverables: s.deliverables, unit: s.unit, isActive: s.is_active, price: s.price, clients: s.clients, deliveryUnit: unitById.get(s.id) ?? null, visits: visitsById.get(s.id) ?? null, options: s.options ?? [] })),
     packages: d.packages.map((p) => ({
       id: p.id, name: p.name, description: p.description, isActive: p.is_active, promoPrice: p.promo_price, promoStarts: p.promo_starts, promoEnds: p.promo_ends,
       items: p.items.map((i) => ({ serviceId: i.service_id, name: i.name, area: i.area, quantity: i.quantity, price: i.price })),
@@ -55,14 +56,15 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
   const queryClient = useQueryClient()
   const [d, setD] = useState({
     name: service?.name ?? '', price: service?.price != null ? String(service.price) : '', description: service?.description ?? '',
-    deliverables: service?.deliverables ?? '', unit: service?.unit ?? 'mês', isActive: service?.isActive ?? true, deliveryUnit: service?.deliveryUnit ?? '',
+    deliverables: service?.deliverables ?? '', unit: service?.unit ?? 'mês', isActive: service?.isActive ?? true, deliveryUnit: service?.deliveryUnit ?? '', visits: service?.visits != null ? String(service.visits) : '',
   })
   // Variações (o cliente escolhe uma) e extras (soma ao valor). Vazio = só o preço base.
   const [opts, setOpts] = useState<{ id?: string; kind: 'variacao' | 'extra'; name: string; price: string }[]>(
     (service?.options ?? []).map((o) => ({ id: o.id, kind: o.kind, name: o.name, price: o.price != null ? String(o.price).replace('.', ',') : '' })))
   const setOpt = (i: number, patch: Partial<{ name: string; price: string }>) => setOpts((cur) => cur.map((o, k) => (k === i ? { ...o, ...patch } : o)))
   const price = Number(d.price.replace(',', '.'))
-  const valid = d.name.trim().length >= 2 && d.price.trim() !== '' && Number.isFinite(price) && price >= 0
+  const visitsOk = d.visits.trim() === '' || (Number.isInteger(Number(d.visits)) && Number(d.visits) >= 1 && Number(d.visits) <= 60)
+  const valid = visitsOk && d.name.trim().length >= 2 && d.price.trim() !== '' && Number.isFinite(price) && price >= 0
   const save = useMutation({
     mutationFn: async () => {
       const { data, error } = await supabase.rpc('service_save', {
@@ -78,6 +80,11 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
       }
       const { error: unitError } = await supabase.rpc('service_set_delivery_unit' as never, { _area: service?.area ?? area, _name: d.name, _unit: d.deliveryUnit } as never)
       if (unitError) throw unitError
+      if ((service?.area ?? area) === 'audiovisual' && id) {
+        const v = d.visits.trim() === '' ? null : Number(d.visits)
+        const { error: vErr } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ error: unknown }>)('service_set_visits', { _id: id, _visits: v })
+        if (vErr) throw vErr
+      }
     },
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['catalog'] }); onClose() },
   })
@@ -99,10 +106,17 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
       <label className="flex flex-col text-[13px] font-semibold">O que entrega <span className="font-normal text-muted">(vira as entregas do mês do cliente)</span>
         <input value={d.deliverables} onChange={(e) => setD({ ...d, deliverables: e.target.value })} maxLength={300} className={field} placeholder="12 artes e 4 stories por mês" />
       </label>
-      <label className="flex flex-col text-[13px] font-semibold">Como o cliente vê a entrega <span className="font-normal text-muted">(o que o portal conta: captação, diária de captação, visita, vídeo, arte...)</span>
+      <div className={(service?.area ?? area) === 'audiovisual' ? 'grid grid-cols-[1fr_7.5rem] gap-3' : undefined}>
+      <label className="flex flex-col text-[13px] font-semibold">Como o cliente vê a entrega
         <SearchSelect name="pf-servico-unidade" value={d.deliveryUnit} onChange={(v) => setD({ ...d, deliveryUnit: v.slice(0, 40) })} tidy={false} className="mt-1 font-normal" placeholder="captação"
           options={['captação', 'diária de captação', 'visita de captação', 'vídeo', 'arte', 'evento', 'produção', 'relatório', 'transmissão ao vivo']} />
       </label>
+        {(service?.area ?? area) === 'audiovisual' && (
+          <label className="flex flex-col text-[13px] font-semibold">Visitas por mês
+            <input type="number" inputMode="numeric" min={1} max={60} value={d.visits} onChange={(e) => setD({ ...d, visits: e.target.value })} className={field} placeholder="vazio" title="Preenchido: as entregas do mês contam visitas, e o mínimo de vídeos é o total dividido pelas visitas." />
+          </label>
+        )}
+      </div>
       <label className="flex flex-col text-[13px] font-semibold">Descrição <span className="font-normal text-muted">(opcional, aparece na proposta)</span>
         <textarea rows={2} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={500} className={field} />
       </label>

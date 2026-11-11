@@ -133,3 +133,18 @@ export async function setFinalLink(projectId: string, link: string): Promise<voi
   const { error } = await supabase.rpc('av_set_final_link', { _project_id: projectId, _link: link })
   if (error) throw error
 }
+
+/** Vídeos entregues nesta visita (projeto). A equipe informa na entrega; conta nas entregas do mês do cliente. */
+export async function setDeliveredVideos(projectId: string, count: number): Promise<void> {
+  const { error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ error: unknown }>)('av_set_delivered_videos', { _project_id: projectId, _count: count })
+  if (error) throw error
+}
+
+/** Mínimo de vídeos por visita do cliente (serviço de audiovisual medido por visita), ou null. */
+export async function minVideosPerVisit(clientId: string): Promise<number | null> {
+  const { data, error } = await (supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>)('client_service_status', { _month: null, _client: clientId })
+  if (error) return null
+  const rows = (data ?? []) as { measure: string | null; min_videos: number | null }[]
+  const mins = rows.filter((r) => r.measure === 'visitas' && r.min_videos != null).map((r) => Number(r.min_videos))
+  return mins.length ? Math.max(...mins) : null
+}

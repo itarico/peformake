@@ -13,6 +13,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · Audiovisual contado por visita (nuvem)
+- services.visits_per_month (Visita mobile 1, Captação com câmera 1, Mobile Semanal 4, Quinzenal 2, Premium 4, Câmera Mensal 1, Quinzenal 2, Diária 1, Diárias 1). client_service_status agora devolve, para esses serviços, "X de Y visitas" (visita = projeto de vídeo entregue no mês) + videos e min_videos (vídeos do contrato / visitas). Fechamento do mês (crédito) passa a ser por visita. Migração 20261114120000 aplicada.
+- Projeto de vídeo → Edição: campo "Vídeos entregues nesta visita" (obrigatório para entregar/mandar ao cliente; avisa "Abaixo do mínimo"). RPC av_set_delivered_videos.
+- Catálogo (audiovisual): campo "Visitas por mês" (service_set_visits, admin/head). Vazio = conta vídeos como antes.
+- Pedido novo do Italo (a estudar): medir o trabalho da social media.
+
 ## 2026-11-11 noite · PRIORIDADE TOTAL: Estratégia = Consultoria (pedido do Italo)
 - Fase 1 da Estratégia, prioridade acima de tudo (menos edição de vídeos): só clientes com o serviço **Consultoria** ativo (hoje 8). Ao entrar com consultoria ativa, o sistema gera SOZINHO o **diagnóstico completo + plano de ação** didático (como consultoria de verdade, para o cliente entender o negócio e implementar), usando os frameworks como receita interna (SWOT etc.) e não como formulários. A equipe só informa o obrigatório (ex.: CNPJ; Instagram/site); o resto o sistema busca. Nada de vários campos por cliente; nada de "selecionar todos os clientes".
 - Base já registrada: ESTUDO-WHATSAPP-E-DIAGNOSTICO.md (seção B, 10/11), PLANO-CLIENTE-360.md (dossiê, 06/11), ESTUDO-HUB-ESTRATEGIA-E-CICLO.md (10/11). Os áudios de outros chats não ficaram registrados além disso.

@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { EventLog } from '@/features/production/EventLog'
 import { useProduction } from '@/features/production/useProduction'
-import { avComment, avErrorMessage, getProject, listAvEvents, scriptAction, setAvStatus, setFinalLink as saveFinalLink } from './avApi'
+import { avComment, avErrorMessage, getProject, listAvEvents, scriptAction, setAvStatus, setFinalLink as saveFinalLink, setDeliveredVideos, minVideosPerVisit } from './avApi'
 import { AV_LABEL, AV_STAGES, AV_TONE, SCRIPT_LABEL, avActionsFor, countdown, missingFor, shootText, stageOf, type AvAction, type AvProject } from './avRules'
 import { EllcazoHeader, TONE_CLASS } from './AvShell'
 import { ScheduleDialog } from './ScheduleDialog'
@@ -166,13 +166,22 @@ function EditBox({ p }: { p: AvProject }) {
   const queryClient = useQueryClient()
   const { canManageAv, isVideomaker, isEditor } = useProduction()
   const [finalLink, setFinalLink] = useState(p.finalLink ?? '')
+  const [videos, setVideos] = useState(String(p.videoCount || ''))
+  const minQ = useQuery({ queryKey: ['av-min-videos', p.clientId], queryFn: () => minVideosPerVisit(p.clientId), staleTime: 300_000 })
+  const min = minQ.data ?? null
+  const videosN = Number(videos)
+  const videosOk = Number.isInteger(videosN) && videosN >= 1 && videosN <= 200
   const [pending, setPending] = useState<AvAction | null>(null)
   const [note, setNote] = useState('')
   const [problem, setProblem] = useState<string | null>(null)
   const refresh = () => { void queryClient.invalidateQueries({ queryKey: ['av-project', p.id] }); void queryClient.invalidateQueries({ queryKey: ['av-projects'] }); void queryClient.invalidateQueries({ queryKey: ['av-events', p.id] }) }
   const saveLink = useMutation({ mutationFn: () => saveFinalLink(p.id, finalLink), onSuccess: () => { setProblem(null); refresh() }, onError: (e) => setProblem(avErrorMessage(e)) })
   const move = useMutation({
-    mutationFn: (a: AvAction) => setAvStatus(p.id, a.to, a.needsNote ? note : null),
+    mutationFn: async (a: AvAction) => {
+      // Na entrega, grava antes quantos vídeos saíram desta visita (conta nas entregas do mês do cliente).
+      if ((a.to === 'approved' || a.to === 'delivered' || a.to === 'client_review') && videosOk && videosN !== p.videoCount) await setDeliveredVideos(p.id, videosN)
+      return setAvStatus(p.id, a.to, a.needsNote ? note : null)
+    },
     onSuccess: () => { setPending(null); setNote(''); setProblem(null); refresh() },
     onError: (e) => setProblem(avErrorMessage(e)),
   })
@@ -190,6 +199,13 @@ function EditBox({ p }: { p: AvProject }) {
         </div>
       </label>
       {!linkOk && <p className="text-[12px] font-medium text-warn-ink">O link precisa começar com https://</p>}
+      <label className="flex flex-col text-[13px] font-semibold">Vídeos entregues nesta visita
+        <input type="number" inputMode="numeric" min={1} max={200} value={videos} onChange={(e) => setVideos(e.target.value)} disabled={!(canManageAv || isEditor)} className={cn(field, 'mt-1 max-w-32')} />
+        <span className="mt-1 font-normal text-[12px] text-muted">
+          {min ? `Mínimo do contrato: ${min} por visita.` : 'Conta nas entregas do mês do cliente.'}
+          {min && videosOk && videosN < min && <b className="ml-1 font-semibold text-warn-ink">Abaixo do mínimo.</b>}
+        </span>
+      </label>
       {problem && <p role="alert" className="text-[13px] font-medium text-warn-ink">{problem}</p>}
       {pending ? (
         <div className="flex flex-col gap-2">
@@ -206,7 +222,7 @@ function EditBox({ p }: { p: AvProject }) {
             const missing = missingFor(a, p)
             return (
               <Button key={a.to + a.label} variant={a.primary ? 'primary' : a.to === 'cancelled' ? 'link' : 'secondary'} disabled={move.isPending}
-                onClick={async () => { setProblem(missing); if (missing) return; if (a.to === 'cancelled' && !(await ask('Cancelar este projeto?'))) return; if (a.needsNote) setPending(a); else move.mutate(a) }}>
+                onClick={async () => { const need = (a.to === 'approved' || a.to === 'delivered' || a.to === 'client_review') && !videosOk ? 'Informe quantos vídeos saíram desta visita.' : null; setProblem(missing ?? need); if (missing || need) return; if (a.to === 'cancelled' && !(await ask('Cancelar este projeto?'))) return; if (a.needsNote) setPending(a); else move.mutate(a) }}>
                 {a.to === 'approved' && p.status === 'client_review' ? 'Cliente aprovou (entregar)' : a.label}
               </Button>
             )
