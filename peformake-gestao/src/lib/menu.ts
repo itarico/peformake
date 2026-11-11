@@ -67,7 +67,7 @@ export function tabsForRoles(userRoles: readonly AppRole[]): { tabs: MenuItem[];
 export function homePathForRoles(userRoles: readonly AppRole[]): string {
   if (hasAnyRole(userRoles, ANY_MODULE)) return '/inicio'
   if (hasAnyRole(userRoles, ADMIN_ROLES)) return '/equipe/membros'
-  if (hasAnyRole(userRoles, ['ellcazo'])) return '/financeiro'
+  if (hasAnyRole(userRoles, ['ellcazo'])) return '/financeiro/caixa'
   if (userRoles.length > 0) return '/equipe'
   return '/sem-modulo'
 }

@@ -50,6 +50,7 @@ const AvHome = lazy(() => import('@/features/av/AvHome').then((m) => ({ default:
 const StaffCapturePage = lazy(() => import('@/features/av/StaffCapturePage').then((m) => ({ default: m.StaffCapturePage })))
 const OperationPage = lazy(() => import('@/features/operation/OperationPage').then((m) => ({ default: m.OperationPage })))
 const FinancePage = lazy(() => import('@/features/finance/FinancePage').then((m) => ({ default: m.FinancePage })))
+const FinanceHome = lazy(() => import('@/features/finance/FinanceSummary').then((m) => ({ default: m.FinanceHome })))
 const ContractsPage = lazy(() => import('@/features/finance/ContractsPage').then((m) => ({ default: m.ContractsPage })))
 const FinanceWhatsappPage = lazy(() => import('@/features/finance/whatsapp/FinanceWhatsappPage').then((m) => ({ default: m.FinanceWhatsappPage })))
 const BillingPage = lazy(() => import('@/features/finance/BillingPage').then((m) => ({ default: m.BillingPage })))
@@ -138,7 +139,8 @@ export function App() {
             <Route path="operacao" element={<OperationPage />} />
           </Route>
           <Route element={<RequireRole roles={['admin', 'ellcazo']} />}>
-            <Route path="financeiro" element={<FinancePage />} />
+            <Route path="financeiro" element={<FinanceHome />} />
+            <Route path="financeiro/caixa" element={<FinancePage />} />
             <Route path="financeiro/cobranca" element={<BillingPage />} />
             <Route path="financeiro/contratos" element={<ContractsPage />} />
           </Route>

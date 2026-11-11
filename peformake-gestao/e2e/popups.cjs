@@ -59,7 +59,7 @@ async function mock(route) {
 
 const C0 = T.clients[0].id;
 const PAGES0 = ['/clientes?aba=recorrentes', '/clientes/' + C0, '/clientes/' + C0 + '?aba=financeiro', '/clientes/' + C0 + '?aba=equipe', '/clientes/' + C0 + '?aba=servicos',
-  '/financeiro', '/financeiro/cobranca', '/financeiro/contratos', '/financeiro/whatsapp',
+  '/financeiro', '/financeiro/caixa', '/financeiro/cobranca', '/financeiro/contratos', '/financeiro/whatsapp',
   '/audiovisual', '/audiovisual/producao', '/audiovisual/orcamentos', '/audiovisual/orcamentos/novo', '/audiovisual/fotos', '/audiovisual/roteiros', '/audiovisual/servicos',
   '/social', '/social/quadro', '/social/briefings', '/social/contas', '/conteudo', '/datas', '/automatico',
   '/trafego', '/contas', '/tarefas', '/campanhas', '/estrategia', '/metodologia/nichos', '/servicos', '/integracoes',

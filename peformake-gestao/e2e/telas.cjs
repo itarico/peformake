@@ -51,7 +51,7 @@ async function mock(route) {
   if (p.startsWith('/storage/')) return route.fulfill({ status: 404, body: '' });
   return json({});
 }
-const pages0 = [['clientes','/clientes?aba=recorrentes'],['ficha','/clientes/' + T.clients[0].id],['ficha-financeiro','/clientes/' + T.clients[0].id + '?aba=financeiro'],['ficha-pf','/clientes/' + T.clients[10].id + '?novo=1'],['caixa','/financeiro'],['cobranca','/financeiro/cobranca'],['contratos','/financeiro/contratos'],['cobranca-fatura','/financeiro/cobranca?fatura=' + T.invoices[1].id]];
+const pages0 = [['clientes','/clientes?aba=recorrentes'],['ficha','/clientes/' + T.clients[0].id],['ficha-financeiro','/clientes/' + T.clients[0].id + '?aba=financeiro'],['ficha-pf','/clientes/' + T.clients[10].id + '?novo=1'],['caixa','/financeiro/caixa'],['cobranca','/financeiro/cobranca'],['contratos','/financeiro/contratos'],['cobranca-fatura','/financeiro/cobranca?fatura=' + T.invoices[1].id]];
 const pages = process.env.ONLY ? pages0.filter(x => x[0] === process.env.ONLY) : pages0;
 (async () => {
   const b = await chromium.launch();

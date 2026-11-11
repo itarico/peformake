@@ -1666,7 +1666,7 @@ begin
   where status in ('pendente', 'erro') and created_at < now() - interval '7 days';
   if _n > 0 and not exists (select 1 from public.notifications where kind = 'interco_late' and created_at > now() - interval '7 days') then
     perform public.notify(array(select r.user_id from public.user_roles r where r.role = 'admin'), 'interco_late',
-      _n || ' repasse(s) entre empresas há mais de 7 dias', 'Total ' || public.brl(_sum) || '. Marque como feito no Caixa.', '/financeiro?repasses=1', null);
+      _n || ' repasse(s) entre empresas há mais de 7 dias', 'Total ' || public.brl(_sum) || '. Marque como feito no Caixa.', '/financeiro/caixa?repasses=1', null);
   end if;
   return _n;
 end $function$;
