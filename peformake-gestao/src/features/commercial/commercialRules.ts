@@ -131,6 +131,10 @@ export interface Sale {
   kind?: 'avulso' | 'recorrente' | null
   unit?: 'peformake' | 'ellcazo' | null
   sellerId?: string | null
+  /** false = venda sem serviço/empresa/tipo (sugerida pelo agente ou antiga): precisa completar. */
+  hasItems?: boolean
+  /** Já gerou cobrança (fatura avulsa ou serviços mensais). */
+  billed?: boolean
 }
 
 export interface CommercialSettings {

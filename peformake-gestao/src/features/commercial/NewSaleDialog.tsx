@@ -388,7 +388,7 @@ function formatPhone(p: string): string {
 }
 
 /** Catálogo com busca: até 6 resultados (pacotes primeiro quando a busca acha). Sem rolagem. */
-function ServiceList({ services, packages, q, canSeePrices, onService, onPackage }: {
+export function ServiceList({ services, packages, q, canSeePrices, onService, onPackage }: {
   services: Service[]; packages: Pkg[]; q: string; canSeePrices: boolean; onService: (s: Service) => void; onPackage: (p: Pkg) => void
 }) {
   const t = fold(q.trim())

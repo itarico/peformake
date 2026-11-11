@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, Search, X } from 'lucide-react'
+import { Bot, Check, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useClientPermissions } from '@/features/clients/useClients'
@@ -10,7 +10,8 @@ import { cn } from '@/lib/cn'
 import { commercialErrorMessage, reviewSale } from './commercialApi'
 import { contactName, conversionRate, formatBRL, SALE_STATUS_LABEL, saleTotals, type Sale, type SaleStatus } from './commercialRules'
 import { listSellers } from './saleApi'
-import { filterSales, type SaleListFilters } from './saleRules'
+import { CompleteSaleDialog } from './CompleteSaleDialog'
+import { confirmedWithoutBilling, filterSales, needsCompletion, type SaleListFilters } from './saleRules'
 import { commercialKeys, useCommercialData, useDeals, useSales } from './useCommercial'
 
 const STATUS_TONE: Record<SaleStatus, string> = {
@@ -29,6 +30,7 @@ export function SalesPage() {
   const deals = useDeals()
   const sellers = useQuery({ queryKey: ['sale-sellers'], queryFn: listSellers, staleTime: 300_000 })
   const [f, setF] = useState<SaleListFilters>(NO_FILTER)
+  const [completing, setCompleting] = useState<Sale | null>(null)
   const month = todayInBrazil().slice(0, 7)
 
   const review = useMutation({
@@ -80,12 +82,12 @@ export function SalesPage() {
             <div key={sale.id} className="flex items-center gap-2 rounded-2xl border border-line px-3 py-2">
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{label(sale)} · {formatBRL(sale.valueCents)}{sale.kind === 'recorrente' ? '/mês' : ''}</p>
-                <p className="truncate text-[12px] text-muted">{sale.description} · {sale.saleDate.split('-').reverse().join('/')}{sale.sellerId && sellerName.get(sale.sellerId) ? ` · ${sellerName.get(sale.sellerId)}` : ''}{sale.source === 'agente' ? ' · Detectada pelo agente' : ''}</p>
+                <p className="truncate text-[12px] text-muted">{sale.source === 'agente' && <AgentTag />}{sale.description} · {sale.saleDate.split('-').reverse().join('/')}{sale.sellerId && sellerName.get(sale.sellerId) ? ` · ${sellerName.get(sale.sellerId)}` : ''}</p>
                 {sale.excerpt && <p className="mt-1 rounded-xl bg-raised px-2.5 py-1.5 text-[12px]">"{sale.excerpt}"</p>}
               </div>
               {canManage ? (
                 <div className="flex shrink-0 gap-1">
-                  <Button aria-label="Confirmar" className="min-h-10 px-3 text-[13px] max-md:size-11 max-md:px-0" disabled={review.isPending} onClick={() => review.mutate({ id: sale.id, confirm: true })}><Check size={15} aria-hidden="true" /><span className="max-md:hidden">Confirmar</span></Button>
+                  <Button aria-label="Confirmar" className="min-h-10 px-3 text-[13px] max-md:size-11 max-md:px-0" disabled={review.isPending} onClick={() => (needsCompletion(sale) ? setCompleting(sale) : review.mutate({ id: sale.id, confirm: true }))}><Check size={15} aria-hidden="true" /><span className="max-md:hidden">Confirmar</span></Button>
                   <Button aria-label="Recusar" variant="secondary" className="min-h-10 px-3 text-[13px] max-md:size-11 max-md:px-0" disabled={review.isPending} onClick={() => review.mutate({ id: sale.id, confirm: false })}><X size={15} aria-hidden="true" /><span className="max-md:hidden">Recusar</span></Button>
                 </div>
               ) : (
@@ -124,18 +126,27 @@ export function SalesPage() {
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{label(sale)}</p>
                 <p className="truncate text-[12px] text-muted">
-                  {sale.saleDate.split('-').reverse().slice(0, 2).join('/')} · {sale.description}
+                  {sale.source === 'agente' && <AgentTag />}{sale.saleDate.split('-').reverse().slice(0, 2).join('/')} · {sale.description}
                   {sale.unit === 'ellcazo' ? ' · Ellcazo' : ''}{sale.sellerId && sellerName.get(sale.sellerId) ? ` · ${sellerName.get(sale.sellerId)}` : ''}
                 </p>
               </div>
               <span className="shrink-0 text-right">
                 <span className="block font-semibold tabular-nums">{formatBRL(sale.valueCents)}{sale.kind === 'recorrente' ? <span className="text-[12px] font-medium text-muted">/mês</span> : ''}</span>
-                <span className={cn('inline-block rounded-full px-2 py-0.5 text-[11.5px] font-semibold', STATUS_TONE[sale.status])}>{SALE_STATUS_LABEL[sale.status]}</span>
+                {confirmedWithoutBilling(sale) && canManage
+                  ? <button type="button" onClick={() => setCompleting(sale)} className="inline-block min-h-8 cursor-pointer rounded-full bg-warn-soft px-2 py-0.5 text-[11.5px] font-semibold text-warn-ink hover:underline">Sem cobrança — completar</button>
+                  : confirmedWithoutBilling(sale)
+                    ? <span className="inline-block rounded-full bg-warn-soft px-2 py-0.5 text-[11.5px] font-semibold text-warn-ink">Sem cobrança</span>
+                    : <span className={cn('inline-block rounded-full px-2 py-0.5 text-[11.5px] font-semibold', STATUS_TONE[sale.status])}>{SALE_STATUS_LABEL[sale.status]}</span>}
               </span>
             </div>
           ))}
         </div>
       </section>
+      {completing && <CompleteSaleDialog sale={completing} clientName={label(completing)} onClose={() => setCompleting(null)} />}
     </>
   )
+}
+
+function AgentTag() {
+  return <span className="mr-1 inline-flex items-center gap-0.5 rounded-full bg-accent-soft px-1.5 py-px align-[1px] text-[11px] font-semibold text-accent-ink"><Bot size={11} aria-hidden="true" />Sugerida pelo agente</span>
 }

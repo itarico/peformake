@@ -113,3 +113,43 @@ export function filterSales(sales: readonly Sale[], f: SaleListFilters, label: (
     && (!f.unit || s.unit === f.unit)
     && (!q || fold(`${label(s)} ${s.description}`).includes(q)))
 }
+
+// ---------- Completar venda (sugerida pelo agente ou antiga, sem serviço/empresa/tipo) ----------
+
+/** Venda sem itens: precisa escolher o serviço antes de confirmar (ou, se já confirmada, para gerar a cobrança). */
+export function needsCompletion(s: Pick<Sale, 'status' | 'hasItems' | 'billed'>): boolean {
+  return (s.status === 'pendente' || s.status === 'confirmada') && s.hasItems === false && !s.billed
+}
+
+/** Já confirmada e nada foi para o Financeiro: selo "Sem cobrança — completar". */
+export function confirmedWithoutBilling(s: Pick<Sale, 'status' | 'hasItems' | 'billed'>): boolean {
+  return s.status === 'confirmada' && needsCompletion(s)
+}
+
+const AUDIOVISUAL = /(foto|fotogr|video|capta|filmag|drone|cobertura|edica|grava|ensaio|making|reels?)/
+
+/**
+ * Sugere o serviço do catálogo pelo texto da venda ("Cobertura fotográfica..." → serviço de foto da Ellcazo).
+ * Conta as palavras da descrição que aparecem no nome do serviço (pelo começo da palavra);
+ * texto de foto/vídeo dá preferência ao audiovisual (Ellcazo). Sem nada parecido: null.
+ */
+export function suggestService<S extends Pick<Service, 'id' | 'name' | 'area'>>(description: string, services: readonly S[]): S | null {
+  const text = fold(description)
+  const words = text.split(/[^a-z0-9]+/).filter((w) => w.length >= 4).map((w) => w.slice(0, 5))
+  const av = AUDIOVISUAL.test(text)
+  let best: S | null = null
+  let bestScore = 0
+  for (const s of services) {
+    const name = fold(s.name)
+    let score = words.reduce((a, w) => a + (name.includes(w) ? 2 : 0), 0)
+    if (score > 0 && av && s.area === 'audiovisual') score += 1
+    if (score > bestScore) { best = s; bestScore = score }
+  }
+  if (!best && av) best = services.find((s) => s.area === 'audiovisual') ?? null
+  return best
+}
+
+/** Centavos viram "600,00" para o campo de valor. */
+export function centsToInput(cents: number): string {
+  return (cents / 100).toFixed(2).replace('.', ',')
+}

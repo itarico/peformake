@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Service } from '@/features/catalog/ServiceCatalog'
 import type { Sale } from './commercialRules'
-import { addDays, defaultKind, filterSales, firstBillingMonth, itemTotals, newItem, parseMoney, unitOf, validateNewClient } from './saleRules'
+import { addDays, centsToInput, confirmedWithoutBilling, defaultKind, filterSales, needsCompletion, suggestService, firstBillingMonth, itemTotals, newItem, parseMoney, unitOf, validateNewClient } from './saleRules'
 
 const svc = (over: Partial<Service> = {}): Service => ({
   id: 's1', name: 'Vídeo', area: 'audiovisual', description: null, deliverables: null, unit: 'unidade', isActive: true, price: 150, clients: 0, deliveryUnit: null,
@@ -58,5 +58,23 @@ describe('filterSales', () => {
     expect(filterSales(list, { q: '', status: 'confirmada', kind: '', unit: '' }, () => '').map((s) => s.id)).toEqual(['1'])
     expect(filterSales(list, { q: '', status: '', kind: 'avulso', unit: '' }, () => '').map((s) => s.id)).toEqual(['1'])
     expect(filterSales(list, { q: 'joão', status: '', kind: '', unit: '' }, (s) => (s.id === '1' ? 'Joao Silva' : 'X')).map((s) => s.id)).toEqual(['1'])
+  })
+})
+
+describe('completar venda do agente', () => {
+  const foto = svc({ id: 'f', name: 'Fotografia de evento', area: 'audiovisual', options: [] })
+  const trafego = svc({ id: 't', name: 'Gestão de tráfego', area: 'trafego', unit: 'mês', options: [] })
+  it('sugere o serviço de foto da Ellcazo pelo texto', () => {
+    expect(suggestService('Cobertura fotográfica TRANSPETRO, 10/11, 8h às 16h', [trafego, foto])?.id).toBe('f')
+    expect(suggestService('Gestão de tráfego pago', [foto, trafego])?.id).toBe('t')
+    expect(suggestService('Consultoria', [foto, trafego])).toBeNull()
+  })
+  it('venda sem itens precisa completar; confirmada sem cobrança ganha selo', () => {
+    expect(needsCompletion({ status: 'pendente', hasItems: false, billed: false })).toBe(true)
+    expect(needsCompletion({ status: 'pendente', hasItems: true, billed: false })).toBe(false)
+    expect(needsCompletion({ status: 'recusada', hasItems: false, billed: false })).toBe(false)
+    expect(confirmedWithoutBilling({ status: 'confirmada', hasItems: false, billed: false })).toBe(true)
+    expect(confirmedWithoutBilling({ status: 'confirmada', hasItems: true, billed: true })).toBe(false)
+    expect(centsToInput(60000)).toBe('600,00')
   })
 })

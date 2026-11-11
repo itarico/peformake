@@ -74,6 +74,28 @@ export async function createSale(i: SaleCreateInput): Promise<SaleCreateResult> 
   return { clientId: d.client_id, clientCreated: d.client_created, status: d.status, total: d.total == null ? null : Number(d.total), recurring: d.recurring }
 }
 
+const itemPayload = (it: SaleItemDraft, canPrice: boolean) => ({
+  service_id: it.serviceId, variant_id: it.variantId || null, package_id: it.packageId ?? null, quantity: it.quantity, kind: it.kind,
+  extras: Object.entries(it.extras).filter(([, n]) => n > 0).map(([id, quantity]) => ({ id, quantity })),
+  discount_type: it.discountType || null, discount_value: it.discountType ? it.discount.replace(',', '.') : null,
+  price: canPrice && it.price.trim() ? it.price.replace(/\./g, '').replace(',', '.') : null,
+})
+
+export interface SaleCompleteResult { kind: 'avulso' | 'recorrente'; unit: 'peformake' | 'ellcazo'; invoiceId: string | null; total: number | null }
+
+/** Completa a venda sem serviço (sugerida pelo agente) e confirma pelo mesmo caminho da Nova venda (sale_complete → sale_apply). */
+export async function completeSale(saleId: string, item: SaleItemDraft, dates: { dueDate: string; startDate: string }, canPrice: boolean): Promise<SaleCompleteResult> {
+  const { data, error } = await rpc('sale_complete', { _sale_id: saleId, _data: { item: itemPayload(item, canPrice), due_date: dates.dueDate, start_date: dates.startDate } })
+  if (error) {
+    if (error.code === 'PF001') throw new Error('Esta venda já foi completada. Atualize a página.')
+    if (/sem cliente/i.test(error.message)) throw new Error('Esta venda não tem cliente. Lance pela Nova venda (que cadastra o cliente) e recuse esta.')
+    if (error.code === '42501') throw new Error('Só administrador ou head confirma vendas.')
+    throw new Error(saleErrorMessage(error))
+  }
+  const d = data as { kind: 'avulso' | 'recorrente'; unit: 'peformake' | 'ellcazo'; result: { invoice_id?: string } | null; total: number | null }
+  return { kind: d.kind, unit: d.unit, invoiceId: d.result?.invoice_id ?? null, total: d.total == null ? null : Number(d.total) }
+}
+
 export function saleErrorMessage(error: { message: string; code?: string }): string {
   if (error.code === 'PF009') return 'Já existe um cliente com esse nome. Busque por ele no passo Cliente.'
   if (error.code === '42501') return 'Você não tem permissão para lançar vendas.'

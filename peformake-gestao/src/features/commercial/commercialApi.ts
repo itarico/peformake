@@ -167,13 +167,15 @@ export async function listDeals(): Promise<Deal[]> {
 export async function listSales(): Promise<Sale[]> {
   const { data, error } = await supabase
     .from('crm_sales')
-    .select('id, deal_id, contact_id, client_id, description, value_cents, sale_date, status, source, excerpt, created_at, kind, unit, seller_id' as 'id, deal_id, contact_id, client_id, description, value_cents, sale_date, status, source, excerpt, created_at')
+    .select('id, deal_id, contact_id, client_id, description, value_cents, sale_date, status, source, excerpt, created_at, kind, unit, seller_id, items, result' as 'id, deal_id, contact_id, client_id, description, value_cents, sale_date, status, source, excerpt, created_at')
     .order('sale_date', { ascending: false })
     .order('created_at', { ascending: false })
     .limit(1000)
   if (error) throw error
-  type Extra = { kind?: 'avulso' | 'recorrente' | null; unit?: 'peformake' | 'ellcazo' | null; seller_id?: string | null }
+  type Extra = { kind?: 'avulso' | 'recorrente' | null; unit?: 'peformake' | 'ellcazo' | null; seller_id?: string | null; items?: unknown; result?: { invoice_id?: string | null; client_services?: unknown } | null }
   return (data ?? []).map((row) => ({
+    hasItems: (row as Extra).items != null,
+    billed: !!((row as Extra).result?.invoice_id || (row as Extra).result?.client_services),
     kind: (row as Extra).kind ?? null,
     unit: (row as Extra).unit ?? null,
     sellerId: (row as Extra).seller_id ?? null,
@@ -341,5 +343,6 @@ export function commercialErrorMessage(error: unknown): string {
   if (code === 'PF002') return 'Já existe uma etiqueta com esse nome.'
   if (code === 'PF004') return 'Isto não existe mais. Atualize a página.'
   if (code === 'PF006') return 'Confira os campos preenchidos.'
+  if (code === 'PF010') return 'Complete a venda antes de confirmar: escolha o serviço, a empresa e se é avulso ou mensal.'
   return 'Não foi possível salvar. Nada foi alterado. Tente de novo.'
 }

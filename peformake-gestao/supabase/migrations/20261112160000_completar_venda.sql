@@ -92,8 +92,7 @@ begin
   return new;
 end $function$;
 
-drop trigger if exists crm_sale_require_items on public.crm_sales;
-create trigger crm_sale_require_items before insert or update of status on public.crm_sales
+create or replace trigger crm_sale_require_items before insert or update of status on public.crm_sales
   for each row execute function public.crm_sale_require_items();
 
 create or replace function public.sale_save(_data jsonb)
