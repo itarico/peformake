@@ -11,6 +11,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 fim do dia · Fuctura (acordo com Jorge) e Chef Leandro (nuvem)
+- Fuctura: 5 faturas em atraso ajustadas para só tráfego (jun R$300 restante, jul–out R$600 cada; total R$2.700, antes R$4.200), com caixa e itens. Contraproposta enviada ao Jorge em 4 mensagens pelo sistema (Italo autorizou). Falta: ele responder e pagar.
+- Chef Leandro: cobrança criada por engano e DESFEITA (fatura e lançamentos cancelados); venda voltou para pendente. Italo ainda vai confirmar.
+- Publicado 1a4d547 (Resumo do Financeiro, Caixa/Cobrança, gráficos de Clientes, regra de inativo).
+
 ## 2026-11-11 tarde · Login novo (/login) (nuvem, agente)
 - Fila do Italo item 5 feito: computador com tela dividida (painel da marca com 4 personagens em SVG nas cores da Peformake + verde Ellcazo; os olhos seguem o mouse e o texto digitado no e-mail; fecham os olhos com a senha escondida, olham para o lado com a senha à mostra; balançam ao errar e sorriem rápido ao acertar) e frase que troca a cada 4 s. Celular: personagens pequenos no topo, frase e formulário, sem rolagem no iPhone 13.
 - Senha com Mostrar/Ocultar; Enter envia; autoComplete email/current-password; movimento reduzido = tudo parado. Lógica de entrada intocada (equipe, cliente do portal, Esqueci a senha). Só segura 0,35 s o sorriso depois do acerto.
