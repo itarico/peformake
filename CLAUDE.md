@@ -84,6 +84,7 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
 - Nunca vilanizar o tráfego pago (o vilão é o marketing "no automático").
 - Meta Ads: só leitura, salvo aprovação. Vínculo conta↔cliente é só sugestão.
 - Envios de WhatsApp para cliente: sempre confirmados por um humano; automações nascem desligadas.
+- IA no sistema (Claude pela API, funções do Supabase): no máximo 1 geração por dia por cliente e área (ai_generations), teto de gasto do mês em Configurações → Automações (ai_settings, padrão US$ 90) e cada chamada registrada em ai_usage_log. Direcionamento da equipe por cliente/área fica em client_directions e tem prioridade sobre a pesquisa automática.
 
 ## Segurança
 

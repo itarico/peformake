@@ -5,7 +5,7 @@
 // Uso: npx vite --config e2e/shell/vite.config.ts & node e2e/celular.cjs   (STRICT=1 falha se alguma tela passar da meta)
 const { chromium, devices } = require('playwright');
 const BASE = process.env.BASE || 'http://localhost:5200';
-const routes = (process.env.ROUTES || '/inicio /notificacoes /clientes /financeiro /financeiro/cobranca /financeiro/contratos /financeiro/whatsapp /comercial/funil /comercial/prospeccao /comercial/vendas /comercial/resumo /whatsapp/conversas /whatsapp/pedidos /whatsapp/sugestoes /trafego/painel /trafego/campanhas /trafego/saldo /estrategia/frameworks /estrategia/trafego /conteudo/quadro /conteudo/calendario /conteudo/planejamento /audiovisual /audiovisual/producao /audiovisual/orcamentos /audiovisual/fotos /equipe/placar /operacao /configuracoes/automacoes').split(' ');
+const routes = (process.env.ROUTES || '/inicio /notificacoes /clientes /financeiro /financeiro/cobranca /financeiro/contratos /financeiro/whatsapp /comercial/funil /comercial/prospeccao /comercial/vendas /comercial/resumo /whatsapp/conversas /whatsapp/pedidos /whatsapp/sugestoes /trafego/painel /trafego/campanhas /trafego/saldo /estrategia/consultoria /estrategia/trafego /conteudo/quadro /conteudo/calendario /conteudo/planejamento /audiovisual /audiovisual/producao /audiovisual/orcamentos /audiovisual/fotos /equipe/placar /operacao /configuracoes/automacoes').split(' ');
 const META = 35;
 async function empty(route) {
   const req = route.request(); const u = new URL(req.url());
