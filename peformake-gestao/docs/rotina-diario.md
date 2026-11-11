@@ -15,6 +15,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · Nova venda: avulso de cliente recorrente vence com a mensalidade (nuvem)
+- RPC sale_next_due(_client,_unit): próxima mensalidade em aberto da MESMA empresa (ou o próximo dia de cobrança do contrato). Nova venda com item avulso já preenche esse vencimento e mostra "Junto com a mensalidade: sai na mesma cobrança" (se a pessoa mudar a data, respeita). Disalp → 30/11. Migração 20261114140000.
+
 ## 2026-11-11 noite · Ellcazo: permissões (decisões do Italo)
 - Auditoria do papel 'ellcazo': Audiovisual e Equipe ok; Financeiro sem nome de cliente (clients sem política p/ ellcazo), aba Contratos com "Sem permissão", Comercial vazio, Cobrança só "Copiar link", Início genérico; vazamentos: production_clients mostra os 47 clientes, services_select_all mostra preços da Peformake, team_settings (comissões) legível.
 - Italo aprovou TUDO: (a) nome dos clientes da Ellcazo no Financeiro; (b) esconder Contratos e Comercial do menu da Ellcazo; (c) fechar vazamentos (clientes/catálogo só da Ellcazo; comissões só admin); (d) ficha resumida de cliente para a Ellcazo a partir dos projetos; (2) Ellcazo cria cobrança e dá baixa nas faturas DELA; (3) Comercial some do menu por agora (funil Ellcazo fica para o espaço Ellcazo).

@@ -13,7 +13,7 @@ import { AREA_LABEL, useCatalog, type Pkg, type Service } from '@/features/catal
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { avatarOf } from './commercialRules'
 import { brl, SaleItemEditor } from './SaleItemEditor'
-import { createSale, findForSale, listSellers, type SaleCreateResult, type SaleMatch } from './saleApi'
+import { createSale, findForSale, listSellers, nextDueForClient, type SaleCreateResult, type SaleMatch } from './saleApi'
 import {
   addDays, firstBillingMonth, itemLabel, itemTotals, newItem, SALE_TAG_LABEL, unitOf, validateNewClient,
   type NewClientDraft, type SaleItemDraft, type SaleTag,
@@ -77,6 +77,7 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
   const [saleDate, setSaleDate] = useState(today)
   const [startDate, setStartDate] = useState(today)
   const [dueDate, setDueDate] = useState(addDays(today, 3))
+  const dueTouched = useRef(false)
   const [seller, setSeller] = useState<string | null>(me?.id ?? null)
   const [done, setDone] = useState<SaleCreateResult | null>(null)
   const prefilled = useRef(false)
@@ -132,6 +133,15 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
   const total = totals.reduce((a, t) => a + t.total, 0)
   const hasRecurring = items.some((i) => i.kind === 'recorrente')
   const hasOneOff = items.some((i) => i.kind === 'avulso')
+  // Avulso de cliente recorrente: vence no mesmo dia da mensalidade da mesma empresa, para sair na mesma cobrança.
+  const oneOffUnit = (() => { const it = items.find((i) => i.kind === 'avulso'); const s = it ? byId.get(it.serviceId) : null; return s ? unitOf(s) : null })()
+  const nextDue = useQuery({
+    queryKey: ['sale-next-due', chosen?.type === 'client' ? chosen.id : null, oneOffUnit],
+    queryFn: () => nextDueForClient((chosen as { id: string }).id, oneOffUnit as 'peformake' | 'ellcazo'),
+    enabled: hasOneOff && chosen?.type === 'client' && !!oneOffUnit, staleTime: 60_000,
+  })
+  useEffect(() => { if (nextDue.data?.due && !dueTouched.current) setDueDate(nextDue.data.due) }, [nextDue.data])
+  const dueJoined = !!nextDue.data?.due && nextDue.data.due === dueDate
   const itemsOk = items.length > 0 && totals.every((t) => !t.needsVariant && (!canSeePrices || t.total > 0))
   const clientOk = !!chosen || !!draft
 
@@ -347,7 +357,8 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
             <div className="grid grid-cols-2 gap-2">
               <label className="flex flex-col gap-1 text-[13px] font-semibold">Data da venda<input type="date" value={saleDate} max={addDays(today, 1)} onChange={(e) => setSaleDate(e.target.value)} className={cn(input, 'font-normal')} /></label>
               {hasRecurring && <label className="flex flex-col gap-1 text-[13px] font-semibold">Início<input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className={cn(input, 'font-normal')} /></label>}
-              {hasOneOff && <label className="flex flex-col gap-1 text-[13px] font-semibold">Vencimento<input type="date" value={dueDate} min={today} onChange={(e) => setDueDate(e.target.value)} className={cn(input, 'font-normal')} /></label>}
+              {hasOneOff && <label className="flex flex-col gap-1 text-[13px] font-semibold">Vencimento<input type="date" value={dueDate} min={today} onChange={(e) => { dueTouched.current = true; setDueDate(e.target.value) }} className={cn(input, 'font-normal')} />
+                {dueJoined && <span className="text-[12px] font-normal text-muted">Junto com a mensalidade: sai na mesma cobrança.</span>}</label>}
             </div>
             {hasRecurring && <p className="-mt-1 text-[12px] text-muted">1ª mensalidade em {firstBillingMonth(startDate)} (mês seguinte ao início).</p>}
             <fieldset className="flex flex-col gap-1.5">

@@ -104,3 +104,10 @@ export function saleErrorMessage(error: { message: string; code?: string }): str
   if (error.code === 'PF006') return error.message.includes('cliente') ? 'Confira os dados do cliente.' : error.message
   return 'Não foi possível lançar a venda. Nada foi gravado. Tente de novo.'
 }
+
+/** Próximo vencimento da mensalidade do cliente na mesma empresa (para o avulso sair junto). Null se não houver. */
+export async function nextDueForClient(clientId: string, unit: 'peformake' | 'ellcazo'): Promise<{ due: string; from: 'fatura' | 'contrato' } | null> {
+  const { data, error } = await rpc('sale_next_due', { _client: clientId, _unit: unit })
+  if (error) return null
+  return (data as { due: string; from: 'fatura' | 'contrato' } | null) ?? null
+}
