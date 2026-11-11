@@ -17,6 +17,7 @@ Regras:
 - Se a página pedir login (Instagram, Facebook), anote "não abriu sem login" e siga em frente.
 - Seja econômico: poucas buscas, bem escolhidas. Prefira a cidade/estado da empresa nas buscas.
 - Os dados internos que a equipe passou (cadastro e direcionamento) são verdade: não precisa confirmar, use para guiar a busca.
+- Abra PRIMEIRO os links_do_cliente (iFood, cardápio, estoque, Google Maps, agenda etc.) com a ferramenta de abrir página: foram passados pela equipe.
 
 O que levantar (nesta ordem de prioridade):
 1. Site da empresa: o que vende, preços se houver, diferenciais que ela mesma diz, contato, cidade.
@@ -24,7 +25,7 @@ O que levantar (nesta ordem de prioridade):
 3. Google (Perfil da empresa / Maps): nota, número de avaliações, elogios e reclamações comuns.
 4. Reclame Aqui: se existe página, nota e tipo de reclamação.
 5. Anúncios: se aparece anunciando (Biblioteca de Anúncios da Meta, Google). Se não abrir, anote.
-6. Concorrentes: 3 a 5 concorrentes diretos na mesma região, com o que oferecem e como se comunicam.
+6. Concorrentes: 3 a 5 concorrentes diretos na mesma região. Para cada um, o que achar: site, @ do Instagram, link do Google Maps, nota e nº de avaliações no Google, faixa de preço ou exemplos de preço, diferencial e como se comunicam/anunciam.
 7. Mercado/nicho: tendências, sazonalidade e notícias relevantes para esse tipo de negócio na região.
 
 Formato da resposta (texto simples, sem tabelas):
@@ -60,22 +61,29 @@ Receita interna (frameworks). Use para pensar; no documento escreva em linguagem
 ${recipe}`
 }
 
-export const STAGE_TASK: Record<'diagnostico' | 'comunicacao' | 'plano' | 'resumo', string> = {
-  diagnostico: `Escreva a parte "Diagnóstico" (o negócio hoje). Preencha o JSON pedido:
+export const STAGE_TASK: Record<'diagnostico' | 'mercado' | 'comunicacao' | 'plano' | 'resumo', string> = {
+  diagnostico: `Escreva a parte "Diagnóstico" (o negócio hoje). Preencha o JSON pedido (mercado e presença digital são escritos à parte, ao mesmo tempo):
 - negocio: o que a empresa é e como ganha dinheiro hoje, em 3 a 5 frases, e os pontos-chave.
 - swot: 3 a 5 itens em cada quadrante, curtos e específicos.
-- mercado: o nicho na região, concorrentes reais (só os que aparecem na pesquisa, com fonte) e as 5 forças de forma simples.
 - publico: persona (com nome fictício), ICP (cliente ideal para empresa ou pessoa) e jornada de compra em 4 a 5 etapas.
 - proposta_valor: por que comprar desta empresa e não da concorrente; diferenciais; a equação de valor em uma frase.
+- funil: só com números reais (dos dados internos). Sem números, tem_dados=false e explique o que medir. funil.etapas: as etapas em número (ex.: Investido em R$, Cliques, Contatos, Vendas), só as que existem nos dados.`,
+  mercado: `Escreva as partes "Mercado e concorrentes" e "Presença digital" do diagnóstico. Preencha o JSON pedido:
+- mercado: o nicho na região, concorrentes reais (só os que aparecem na pesquisa, com fonte) e as 5 forças de forma simples.
+  Em cada concorrente preencha os links (site, instagram, google_maps) e números (nota, avaliacoes) SÓ se estiverem na pesquisa; senão "" ou 0.
+  biblioteca_anuncios = https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=BR&q=<nome do concorrente codificado>.
+  preco_nivel e proposta_nivel (1 a 5) são a sua leitura para o mapa de posicionamento: preço 1 = barato, 5 = caro; proposta 1 = foco em preço/volume, 5 = foco em valor/experiência. 0 se não der para dizer.
+  presenca (0 a 10 por canal: site, instagram, google, avaliacoes, anuncios) é a sua nota da presença do concorrente com base no que a pesquisa achou (0 = não existe).
 - presenca_digital: nota de 0 a 10 e um item por canal (site, Instagram, Google, Reclame Aqui, anúncios, WhatsApp), com a fonte.
-- funil: só com números reais (dos dados internos). Sem números, tem_dados=false e explique o que medir.`,
-  comunicacao: `Escreva as partes "Tom e comunicação" e "Experiência do cliente" a partir do diagnóstico já escrito (abaixo). Preencha o JSON pedido:
+  presenca_digital.cliente: os mesmos números do cliente para comparar com os concorrentes (nota_google, avaliacoes, preco_nivel, proposta_nivel e presenca 0 a 10 por canal); 0 quando não se sabe.`,
+  comunicacao: `Escreva a "Sugestão de comunicação" (como o cliente deve se comunicar) e a "Experiência do cliente" a partir do diagnóstico já escrito (abaixo). Preencha o JSON pedido:
 - comunicacao.essencia: a essência da marca em no máximo 2 linhas. comunicacao.proposito: por que a empresa existe, em 1 frase.
 - comunicacao.papel_peformake: o papel da Peformake neste projeto, em 2 a 3 frases (o que fazemos junto com o cliente).
 - comunicacao.arquetipo: o arquétipo de marca em 1 palavra e o porquê em 1 frase.
 - comunicacao.tom: exatamente 4 adjetivos do tom de voz; cada um com uma frase de exemplo REAL, do jeito que a marca falaria num post, legenda ou atendimento deste negócio.
 - comunicacao.evitar: 4 a 6 coisas que a marca não deve fazer ou dizer.
 - comunicacao.expressao: paleta (cores e sensação; use o estilo da marca do cadastro se existir), ambiente (como o lugar/foto/vídeo deve parecer) e presença (quem aparece: dono como rosto, equipe com nome etc.).
+- comunicacao.pilares: 3 a 5 pilares de conteúdo (nome curto e o que entra em cada um), para Social e Audiovisual usarem depois.
 - comunicacao.regra_teste: uma regra curta para conferir qualquer peça, no estilo "Se o vídeo te deixa ansioso, não é <marca>".
 - experiencia: a experiência do cliente FORA do digital, um item por momento (recepção, atendimento e venda, ambiente, pós-venda e despedida): como parece ser hoje (só com base nos dados/avaliações; senão diga que não se sabe), como deveria ser e 2 a 4 ações simples.`,
   plano: `Escreva o "Plano de ação" a partir do diagnóstico e do tom e comunicação já escritos (abaixo). Inclua passos de comunicação e de experiência do cliente quando fizer sentido. Preencha o JSON pedido:
@@ -94,28 +102,40 @@ export const STAGE_TASK: Record<'diagnostico' | 'comunicacao' | 'plano' | 'resum
 const s = (description?: string) => (description ? { type: 'string', description } : { type: 'string' })
 const list = (items: unknown) => ({ type: 'array', items })
 const obj = (properties: Record<string, unknown>) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false })
+// Sem anyOf/null (a gramática fica grande demais): 0 = não se sabe.
+const num = { type: 'number' }
+const int = { type: 'integer' }
+const PRESENCA = { type: 'object', properties: { site: { type: 'integer' }, instagram: { type: 'integer' }, google: { type: 'integer' }, avaliacoes: { type: 'integer' }, anuncios: { type: 'integer' } }, required: ['site', 'instagram', 'google', 'avaliacoes', 'anuncios'], additionalProperties: false }
 const AREAS = ['Marketing e conteúdo', 'Tráfego pago', 'Vendas e atendimento', 'Oferta e preço', 'Presença digital', 'Operação', 'Gestão']
 
 export const SCHEMAS = {
   diagnostico: obj({
     negocio: obj({ texto: s(), pontos: list(s()) }),
     swot: obj({ forcas: list(s()), fraquezas: list(s()), oportunidades: list(s()), ameacas: list(s()) }),
-    mercado: obj({
-      texto: s(),
-      concorrentes: list(obj({ nome: s(), o_que_fazem: s(), como_anunciam: s(), fonte: s('URL ou "dados internos"') })),
-      cinco_forcas: list(obj({ forca: s(), nivel: { type: 'string', enum: ['baixa', 'media', 'alta'] }, porque: s() })),
-    }),
     publico: obj({
       persona: obj({ nome: s(), idade: s(), quem_e: s(), dores: list(s()), desejos: list(s()), objecoes: list(s()) }),
       icp: s(),
       jornada: list(obj({ etapa: s(), o_que_acontece: s(), o_que_fazer: s() })),
     }),
     proposta_valor: obj({ texto: s(), diferenciais: list(s()), equacao: s() }),
+    funil: obj({ tem_dados: { type: 'boolean' }, texto: s(), numeros: list(obj({ rotulo: s(), valor: s() })), etapas: list(obj({ rotulo: s(), valor: { type: 'number' } })) }),
+  }),
+  mercado: obj({
+    mercado: obj({
+      texto: s(),
+      concorrentes: list(obj({
+        nome: s(), o_que_fazem: s(), diferencial: s(), preco: s(), como_anunciam: s(),
+        site: s(), instagram: s(), google_maps: s(), biblioteca_anuncios: s(),
+        nota: num, avaliacoes: int, preco_nivel: int, proposta_nivel: int, presenca: PRESENCA,
+        fonte: s('URL ou "dados internos"'),
+      })),
+      cinco_forcas: list(obj({ forca: s(), nivel: { type: 'string', enum: ['baixa', 'media', 'alta'] }, porque: s() })),
+    }),
     presenca_digital: obj({
       nota: { type: 'integer' },
       itens: list(obj({ canal: s(), situacao: { type: 'string', enum: ['bom', 'atencao', 'ruim', 'nao_encontrado'] }, observacao: s(), fonte: s() })),
+      cliente: obj({ nota_google: num, avaliacoes: int, preco_nivel: int, proposta_nivel: int, presenca: PRESENCA }),
     }),
-    funil: obj({ tem_dados: { type: 'boolean' }, texto: s(), numeros: list(obj({ rotulo: s(), valor: s() })) }),
   }),
   comunicacao: obj({
     comunicacao: obj({
@@ -124,6 +144,7 @@ export const SCHEMAS = {
       evitar: list(s()),
       expressao: obj({ paleta: s(), ambiente: s(), presenca: s() }),
       regra_teste: s(),
+      pilares: list(obj({ nome: s(), descricao: s() })),
     }),
     experiencia: list(obj({
       momento: { type: 'string', enum: ['Recepção', 'Atendimento e venda', 'Ambiente', 'Pós-venda e despedida'] },

@@ -17,9 +17,10 @@ const MODEL = 'claude-opus-5-5'
 const FN = 'consult-diagnosis'
 const STREAM_LIMIT_MS = 138_000
 type Section = 'resumo' | 'diagnostico' | 'comunicacao' | 'plano' | 'riscos' | 'do_cliente'
-type WriteStage = 'diagnostico' | 'comunicacao' | 'plano' | 'resumo'
+type WriteStage = 'diagnostico' | 'mercado' | 'comunicacao' | 'plano' | 'resumo'
 
 interface Job {
+  human_edits?: Record<string, unknown> | null
   id: string; client_id: string; status: string; stage: string; redo_section: Section | null; attempts: number
   receita: Record<string, unknown> | null; research: Research | null; doc: Record<string, unknown>; cost_usd: number
 }
@@ -96,12 +97,16 @@ async function clientContext(db: SupabaseClient, job: Job): Promise<string> {
     db.rpc('client_direction_context', { _client: job.client_id, _area: 'consultoria' }),
     db.rpc('agent_context_client', { _client_id: job.client_id, _from: from, _to: yesterday }).then((r) => r.data, () => null),
   ])
+  const answers = await db.rpc('client_answers_context', { _client: job.client_id, _area: 'consultoria' }).then((r) => r.data, () => null)
+  const { data: links } = await db.from('client_links').select('name, url').eq('client_id', job.client_id).order('created_at', { ascending: false }).limit(12)
   const cli = (c ?? {}) as Record<string, unknown>
   const doc = String(cli.document ?? '').replace(/\D/g, '')
   delete cli.document
   const t = (traffic ?? {}) as Record<string, unknown>
   const ctx = {
     direcionamento_da_equipe: direction ?? null,
+    respostas_do_cliente: Array.isArray(answers) && answers.length ? answers : 'nenhuma ainda',
+    links_do_cliente: links?.length ? links : 'nenhum',
     cadastro: cli,
     tipo_documento: doc.length === 14 ? 'CNPJ' : doc.length === 11 ? 'CPF (pessoa física)' : 'sem documento',
     receita_federal: job.receita ?? null,
@@ -236,7 +241,7 @@ async function write(db: SupabaseClient, ai: Anthropic, job: Job, stage: WriteSt
     system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
     output_config: { effort: job.attempts >= 2 ? 'medium' : 'high', format: { type: 'json_schema', schema: SCHEMAS[stage] as unknown as Record<string, unknown> } },
     messages: [{ role: 'user', content: [
-      { type: 'text', text: context, cache_control: { type: 'ephemeral' } },
+      { type: 'text', text: context },
       { type: 'text', text: `${STAGE_TASK[stage]}${extra ? `\n\n${extra}` : ''}` },
     ] }],
   })
@@ -246,18 +251,39 @@ async function write(db: SupabaseClient, ai: Anthropic, job: Job, stage: WriteSt
   return JSON.parse(textOf(msg)) as Record<string, unknown>
 }
 
+// O diagnóstico vai em 2 pedidos ao mesmo tempo (um só ficaria grande demais para a saída em JSON): o negócio e o mercado.
+async function writeDiag(db: SupabaseClient, ai: Anthropic, job: Job, extra: string): Promise<Record<string, unknown>> {
+  const [a, b] = await Promise.all([write(db, ai, job, 'diagnostico', extra), write(db, ai, job, 'mercado', extra)])
+  return { ...a, ...b }
+}
+
+// Edição humana (consult_edit) vale mais que a IA: ao gravar uma parte nova, os blocos editados à mão continuam como estavam.
+function keepEdits(job: Job, doc: Record<string, unknown>): Record<string, unknown> {
+  const out = structuredClone(doc)
+  for (const path of Object.keys(job.human_edits ?? {})) {
+    const keys = path.split('.')
+    let src: unknown = job.doc
+    for (const k of keys) src = (src as Record<string, unknown> | undefined)?.[k]
+    if (src === undefined) continue
+    let dst = out as Record<string, unknown>
+    for (const k of keys.slice(0, -1)) { if (typeof dst[k] !== 'object' || dst[k] === null) dst[k] = {}; dst = dst[k] as Record<string, unknown> }
+    dst[keys[keys.length - 1]!] = structuredClone(src)
+  }
+  return out
+}
+
 const prev = (job: Job, keys: string[]) => keys.filter((k) => job.doc?.[k]).map((k) => `${k.toUpperCase()} JÁ ESCRITO:\n${JSON.stringify(job.doc[k])}`).join('\n\n')
 
 async function stageWrite(db: SupabaseClient, ai: Anthropic, job: Job, stage: WriteStage) {
   if (stage === 'diagnostico') {
-    const d = await write(db, ai, job, 'diagnostico', '')
-    await db.from('consult_docs').update({ doc: { ...job.doc, diagnostico: d }, stage: 'comunicacao', attempts: 0, busy_until: null, error: null }).eq('id', job.id)
+    const d = await writeDiag(db, ai, job, '')
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d }), stage: 'comunicacao', attempts: 0, busy_until: null, error: null }).eq('id', job.id)
   } else if (stage === 'comunicacao') {
     const c = await write(db, ai, job, 'comunicacao', prev(job, ['diagnostico']))
-    await db.from('consult_docs').update({ doc: { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia }, stage: 'plano', attempts: 0, busy_until: null, error: null }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia }), stage: 'plano', attempts: 0, busy_until: null, error: null }).eq('id', job.id)
   } else if (stage === 'plano') {
     const p = await write(db, ai, job, 'plano', prev(job, ['diagnostico', 'comunicacao', 'experiencia']))
-    await db.from('consult_docs').update({ doc: { ...job.doc, plano: p }, stage: 'resumo', attempts: 0, busy_until: null, error: null }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, plano: p }), stage: 'resumo', attempts: 0, busy_until: null, error: null }).eq('id', job.id)
   } else {
     const r = await write(db, ai, job, 'resumo', prev(job, ['diagnostico', 'comunicacao', 'plano']))
     await saveResumo(db, job, r, null)
@@ -271,7 +297,7 @@ async function saveResumo(db: SupabaseClient, job: Job, r: Record<string, unknow
   if (!only || only === 'do_cliente') doc.do_cliente = r.do_cliente
   if (!only) doc.frameworks = r.frameworks
   doc.gerado_em = new Date().toISOString()
-  await db.from('consult_docs').update({ doc, stage: 'done', status: 'pronto', attempts: 0, busy_until: null, error: null, redo_section: null, finished_at: new Date().toISOString() }).eq('id', job.id)
+  await db.from('consult_docs').update({ doc: keepEdits(job, doc), stage: 'done', status: 'pronto', attempts: 0, busy_until: null, error: null, redo_section: null, finished_at: new Date().toISOString() }).eq('id', job.id)
   if (!only) await saveSuggestions(db, job.client_id, (r.crm ?? {}) as Record<string, string>)
 }
 
@@ -280,14 +306,14 @@ async function stageRedo(db: SupabaseClient, ai: Anthropic, job: Job) {
   const done = { stage: 'done', status: 'pronto', attempts: 0, busy_until: null, error: null, redo_section: null }
   const note = 'Reescreva esta parte com outro olhar: mais específica e prática que a versão anterior (abaixo).'
   if (section === 'diagnostico') {
-    const d = await write(db, ai, job, 'diagnostico', `${note}\n\n${prev(job, ['diagnostico'])}`)
-    await db.from('consult_docs').update({ doc: { ...job.doc, diagnostico: d, gerado_em: new Date().toISOString() }, ...done }).eq('id', job.id)
+    const d = await writeDiag(db, ai, job, `${note}\n\n${prev(job, ['diagnostico'])}`)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d, gerado_em: new Date().toISOString() }), ...done }).eq('id', job.id)
   } else if (section === 'comunicacao') {
     const c = await write(db, ai, job, 'comunicacao', `${note}\n\n${prev(job, ['diagnostico', 'comunicacao', 'experiencia'])}`)
-    await db.from('consult_docs').update({ doc: { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia, gerado_em: new Date().toISOString() }, ...done }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia, gerado_em: new Date().toISOString() }), ...done }).eq('id', job.id)
   } else if (section === 'plano') {
     const p = await write(db, ai, job, 'plano', `${note}\n\n${prev(job, ['diagnostico', 'comunicacao', 'plano'])}`)
-    await db.from('consult_docs').update({ doc: { ...job.doc, plano: p, gerado_em: new Date().toISOString() }, ...done }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, plano: p, gerado_em: new Date().toISOString() }), ...done }).eq('id', job.id)
   } else {
     const r = await write(db, ai, job, 'resumo', `${note} Foque na parte "${section}"; o resto pode repetir.\n\n${prev(job, ['diagnostico', 'plano', section])}`)
     await saveResumo(db, job, r, section)

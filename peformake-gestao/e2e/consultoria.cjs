@@ -78,6 +78,9 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       // Falta CNPJ → pop-up de 1 passo
       await p.getByRole('button', { name: 'Informar CNPJ' }).first().click(); await p.waitForTimeout(300);
       let m = await popup(p); if (!m) fails.push(`${tag}: pop-up Falta pouco não abriu`); else if (m.sh > m.ch + 1) fails.push(`${tag}: pop-up "${m.title}" rola (${m.sh}/${m.ch})`);
+      await p.getByRole('tab', { name: /Links/ }).click().catch(() => fails.push(`${tag}: pop-up sem a aba Links`)); await p.waitForTimeout(150);
+      m = await popup(p); if (m && m.sh > m.ch + 1) fails.push(`${tag}: aba Links do pop-up rola (${m.sh}/${m.ch})`);
+      if (!(await p.getByText('Google Maps').count())) fails.push(`${tag}: campo de link do nicho não apareceu`);
       await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       // Documento
       await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1), { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
@@ -91,6 +94,10 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
         await p.screenshot({ path: `${OUT}/consultoria-${t.replace(/\W/g, '')}-${tag}.png`, fullPage: true });
       }
       await p.getByRole('tab', { name: 'Resumo', exact: true }).click();
+      // Antes de aprovar, a apresentação fica travada com a dica.
+      const deckBtn = p.getByRole('button', { name: 'Baixar apresentação' }).first();
+      if (!(await deckBtn.isDisabled())) fails.push(`${tag}: Baixar apresentação liberado antes de aprovar`);
+      if (!(await p.getByText('Aprove para gerar a apresentação').count())) fails.push(`${tag}: sem a dica "Aprove para gerar a apresentação"`);
       for (const [btn, name] of [['Ver detalhes (frameworks usados e fontes)', 'Ver detalhes'], ['Direcionamento', 'Direcionamento'], ['Enviar ao cliente', 'Enviar']]) {
         await p.getByRole('button', { name: btn }).first().click(); await p.waitForTimeout(300);
         m = await popup(p); if (!m) { fails.push(`${tag}: pop-up ${name} não abriu`); continue }

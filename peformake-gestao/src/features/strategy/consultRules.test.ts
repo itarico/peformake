@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { clientMessage, consultLink, readyNotices, rowAction, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
-import { consultHtml } from './consultPrint'
+import { clientMessage, consultLink, nicheLinks, readyNotices, rowAction, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
+import { deckHtml, deckSlideCount } from './consultDeck'
+import { effortData, funnelData, positioningData, presenceData, ratingsData } from './consultCharts'
 
 const row = (p: Partial<ConsultRow>): ConsultRow => ({
   client_id: 'c1', name: 'Will motos', logo_path: null, segment: null, document: null, instagram: null, website: null,
@@ -60,10 +61,49 @@ describe('envio (sempre por uma pessoa)', () => {
     expect(waLink('(81) 98712-2050', 'oi')).toBe('https://wa.me/5581987122050?text=oi')
     expect(waLink(null, 'oi')).toBeNull()
   })
-  it('PDF escapa HTML do texto da IA', () => {
-    const html = consultHtml('<b>X</b>', { resumo: { titulo: 'A & B', decisoes: ['<script>'] } })
+  it('apresentação escapa o texto da IA e tem capa, slides e fechamento nos dois formatos', () => {
+    const doc = { resumo: { titulo: 'A & B', situacao: '<script>x</script>', decisoes: ['<b>1</b>'] } }
+    const html = deckHtml({ name: '<b>X</b>', doc }, 'vertical')
     expect(html).toContain('&lt;b&gt;X&lt;/b&gt;')
     expect(html).toContain('A &amp; B')
-    expect(html).not.toContain('<script>')
+    expect(html).not.toContain('<script>x')
+    expect(html).toContain('size:210mm 297mm')
+    expect(deckHtml({ name: 'X', doc }, 'paisagem')).toContain('size:338.67mm 190.5mm')
+    expect(deckSlideCount({ name: 'X', doc }, 'paisagem')).toBe(4) // capa, situação, decisões, fechamento
+  })
+})
+
+describe('links por nicho (máximo 2, todos opcionais)', () => {
+  it('comida pede delivery e cardápio', () => {
+    expect(nicheLinks('Gastronomia', null, 'Fornario').map((l) => l.name)).toEqual(['iFood ou delivery', 'Cardápio'])
+    expect(nicheLinks(null, null, 'CIA COFFE').map((l) => l.name)).toContain('Cardápio')
+  })
+  it('motos pede estoque; saúde pede agenda; imóvel pede portal', () => {
+    expect(nicheLinks('Automotivo')[0]!.name).toBe('Estoque')
+    expect(nicheLinks('Saúde', 'Dra. Silvia Campos')[0]!.name).toBe('Agenda online')
+    expect(nicheLinks('Comércio varejista de artigos de óptica')[0]!.name).toBe('Loja online ou catálogo')
+    expect(nicheLinks('Imobiliária')[0]!.name).toBe('Portal de imóveis')
+  })
+  it('qualquer outro negócio: só o Google Maps', () => {
+    expect(nicheLinks('Educação', 'APM')).toEqual([{ name: 'Google Maps', placeholder: expect.any(String) }])
+    for (const s of ['Gastronomia', 'Automotivo', 'Saúde', 'Varejo', 'xyz']) expect(nicheLinks(s).length).toBeLessThanOrEqual(2)
+  })
+})
+
+describe('gráficos só com dado de verdade', () => {
+  const pres = { site: 5, instagram: 0, google: 6, avaliacoes: 4, anuncios: 2 }
+  it('teia e mapa precisam do cliente e de concorrentes; 0 = não se sabe', () => {
+    const d = { presenca_digital: { cliente: { nota_google: 0, avaliacoes: 0, preco_nivel: 2, proposta_nivel: 3, presenca: pres } }, mercado: { concorrentes: [{ nome: 'A', presenca: pres, nota: 4.5, avaliacoes: 10, preco_nivel: 0, proposta_nivel: 0 }, { nome: 'B', presenca: pres, nota: 0, preco_nivel: 4, proposta_nivel: 2 }] } }
+    expect(presenceData(d, 'Eu')?.length).toBe(3)
+    expect(ratingsData(d, 'Eu')?.map((r) => r.name)).toEqual(['A'])
+    expect(positioningData(d, 'Eu')?.map((p) => p.name)).toEqual(['Eu', 'B'])
+    expect(presenceData({}, 'Eu')).toBeNull()
+  })
+  it('funil lê os números escritos dos documentos antigos', () => {
+    expect(funnelData({ funil: { numeros: [{ rotulo: 'Investido', valor: 'R$ 1.581,43' }, { rotulo: 'Cliques', valor: '3.996' }] } })).toEqual([{ label: 'Investido', value: 1581.43 }, { label: 'Cliques', value: 3996 }])
+    expect(funnelData({ funil: { numeros: [{ rotulo: 'x', valor: 'n/d' }] } })).toBeNull()
+  })
+  it('esforço por área pesa o tamanho do passo', () => {
+    expect(effortData({ fases: [{ passos: [{ area: 'Vendas', esforco: 'alto' }, { area: 'Vendas', esforco: 'baixo' }, { area: 'Tráfego', esforco: 'medio' }] }] })).toEqual([{ label: 'Vendas', value: 4 }, { label: 'Tráfego', value: 2 }])
   })
 })

@@ -87,3 +87,25 @@ export const FIELD_LABEL: Record<string, string> = {
   segment: 'Segmento', description: 'O que a empresa faz', target_audience: 'Público-alvo', competitors: 'Concorrentes',
   value_proposition: 'Proposta de valor', acquisition_channel: 'Como chegou', instagram: 'Instagram', website: 'Site',
 }
+
+export interface NicheLink { name: string; placeholder: string }
+const MAPS: NicheLink = { name: 'Google Maps', placeholder: 'Link do Perfil da Empresa no Google Maps' }
+
+/**
+ * Links extras que ajudam a IA, conforme o nicho (atividade da Receita, segmento da ficha ou nome). No máximo 2.
+ * Não são perguntas: tudo opcional. Ficam em client_links com este nome e a pesquisa abre primeiro.
+ */
+export function nicheLinks(...hints: (string | null | undefined)[]): NicheLink[] {
+  const t = hints.filter(Boolean).join(' ').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+  if (/gastronom|aliment|restaur|lanch|burg|pizz|cafe|coff|padar|\bbar\b|delivery|comida|doce|confeit|acai|sorvet|petisc/.test(t))
+    return [{ name: 'iFood ou delivery', placeholder: 'ifood.com.br/delivery/…' }, { name: 'Cardápio', placeholder: 'Link do cardápio' }]
+  if (/automo|moto|carro|veicul|auto ?pec|oficina|concession/.test(t))
+    return [{ name: 'Estoque', placeholder: 'OLX, Webmotors ou Mercado Livre' }, MAPS]
+  if (/saude|clinic|odonto|dent|estetic|beleza|medic|\bdra?\b|fisio|psic|nutri|salao|barbear/.test(t))
+    return [{ name: 'Agenda online', placeholder: 'Doctoralia ou outro link de agendamento' }, MAPS]
+  if (/imobili|imove|corretor|loteament/.test(t))
+    return [{ name: 'Portal de imóveis', placeholder: 'Zap, VivaReal ou OLX' }, MAPS]
+  if (/varejo|loja|otica|moda|roupa|calcad|distribu|comercio|material|construc|maquin|industr|atacad|presente|joia/.test(t))
+    return [{ name: 'Loja online ou catálogo', placeholder: 'Site, Shopee, Mercado Livre ou catálogo do WhatsApp' }, MAPS]
+  return [MAPS]
+}
