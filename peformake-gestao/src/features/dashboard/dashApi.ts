@@ -59,10 +59,12 @@ export interface ClientsDash {
   unassessed: number
   services: { name: string; n: number }[]
   flow: { month: string; at_start: number; joined: number; left: number }[]
-  tenure: { avg_months: number | null; lost_avg_months: number | null; buckets: { lt3: number; '3to6': number; '6to12': number; gt12: number; unknown: number } }
+  tenure: { avg_months: number | null; lost_avg_months: number | null; buckets: { lt3: number; '3to6': number; '6to12': number; '12to24'?: number; gt24?: number; gt12: number; unknown: number } }
   renewals_60d: number
   nps: { answers: number; promoters: number; neutral: number; detractors: number }
   lost_reasons: { reason: string; n: number }[]
+  /** Recorrentes há 60+ dias sem serviço ativo: sugestão de marcar como perdido (nunca automático). */
+  lost_suggested?: { id: string; name: string; since: string }[]
 }
 
 export interface AvulsosDash {
@@ -72,6 +74,14 @@ export interface AvulsosDash {
   buyers: number
   repeat: number
   new_by_month: { month: string; n: number }[]
+  /** Situação calculada todo dia: ativo (compra em 90 dias), esfriando (91 a 180), inativo (mais de 180). */
+  activity?: { ativo: number; esfriando: number; inativo: number }
+  /** Quantas vezes cada avulso comprou (dias distintos). */
+  frequency?: { f1: number; f2: number; f3: number; f4: number; none: number }
+  /** Há quanto tempo foi a última compra. */
+  recency?: { le90: number; d91to180: number; gt180: number; none: number }
+  /** Avulsos esfriando: oportunidade de recompra. */
+  cooling?: { id: string; name: string; last: string | null; n: number }[]
   revenue_12m: number | null
   paid_count_12m: number | null
   ticket: number | null
@@ -89,4 +99,5 @@ export const dashAv = async (month: string) => unwrap<AvDash>(await supabase.rpc
 export const dashCommercial = async (days: number) => unwrap<CommercialDash>(await supabase.rpc('dash_commercial', { _days: days }))
 export const dashClients = async () => unwrap<ClientsDash>(await supabase.rpc('dash_clients', {} as Record<string, never>))
 export const dashHomeBusiness = async (months: number) => unwrap<BusinessDash>(await supabase.rpc('dash_home_business', { _months: months }))
+export const dismissLostSuggestion = async (clientId: string) => unwrap<null>(await (supabase.rpc.bind(supabase) as unknown as (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>)('client_lost_suggest_dismiss', { _client_id: clientId }))
 export const dashClientsAvulsos = async () => unwrap<AvulsosDash>(await supabase.rpc('dash_clients_avulsos', {} as Record<string, never>))

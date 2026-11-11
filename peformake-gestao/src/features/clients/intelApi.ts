@@ -34,6 +34,15 @@ export const TEMP_TONE: Record<Temperature, string> = {
   frio: 'bg-warn-soft text-warn-ink',
   sem_dados: 'bg-raised text-muted',
 }
+/**
+ * Situação do avulso pela última compra (calculada no banco todo dia por client_activity_refresh):
+ * ativo até 90 dias, esfriando de 91 a 180, inativo depois de 180 (vira pausado e volta sozinho se comprar).
+ * Não confundir com a temperatura (conversa e aprovações), que também tem um "Esfriando".
+ */
+export type ActivityStatus = 'ativo' | 'esfriando' | 'inativo'
+export const ACTIVITY_LABEL: Record<ActivityStatus, string> = { ativo: 'Ativo', esfriando: 'Esfriando', inativo: 'Inativo' }
+export const ACTIVITY_DAYS = { esfriando: 91, inativo: 181 } as const
+
 export const SIZE_LABEL: Record<CompanySize, string> = { micro: 'Micro', pequena: 'Pequena', media: 'Média', grande: 'Grande' }
 
 type Rpc = (fn: string, args?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>

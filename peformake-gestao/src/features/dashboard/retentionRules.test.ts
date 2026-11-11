@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { monthlyChurn, monthsText, npsLabel, npsScore, retentionRate, type FlowMonth } from './retentionRules'
+import { daysSince, funnelSteps, healthBand, healthScore, monthlyChurn, monthsText, npsLabel, npsScore, retentionRate, type FlowMonth } from './retentionRules'
 
 const m = (at_start: number, joined: number, left: number): FlowMonth => ({ month: '2026-01-01', at_start, joined, left })
 
@@ -28,5 +28,28 @@ describe('NPS', () => {
     expect(monthsText(3.6)).toBe('3,6 meses')
     expect(monthsText(1)).toBe('1 mês')
     expect(monthsText(null)).toBe('Sem dado')
+  })
+})
+
+describe('saúde da carteira, funil e dias', () => {
+  it('média ponderada das avaliações', () => {
+    expect(healthScore({})).toBeNull()
+    expect(healthScore({ muito_bom: 1, ruim: 1 })).toBe(63)
+    expect(healthScore({ bom: 2, neutro: 1, ruim: 1, outro: 9 })).toBe(56)
+  })
+  it('faixas do velocímetro', () => {
+    expect(healthBand(39)).toBe('ruim')
+    expect(healthBand(40)).toBe('atencao')
+    expect(healthBand(57)).toBe('atencao')
+    expect(healthBand(70)).toBe('boa')
+  })
+  it('funil fica decrescente e mostra a passagem entre etapas', () => {
+    const s = funnelSteps([{ label: 'A', value: 5 }, { label: 'B', value: 3 }, { label: 'C', value: 2 }])
+    expect(s.map((x) => x.value)).toEqual([10, 5, 2])
+    expect(s.map((x) => x.conversion)).toEqual([null, 50, 40])
+    expect(funnelSteps([{ label: 'A', value: 0 }, { label: 'B', value: 0 }])[1]!.conversion).toBe(0)
+  })
+  it('dias desde a data', () => {
+    expect(daysSince('2026-11-01', '2026-11-11')).toBe(10)
   })
 })

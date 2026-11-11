@@ -11,7 +11,7 @@ import { setClientStatus } from './clientsApi'
 // Perdidos e pausados: recuperação em 3 etapas pelo tempo desde a saída. Depois de 6 meses, arquivado (nada é apagado).
 
 interface Lost {
-  id: string; name: string; client_type: string | null; is_lost: boolean; is_active: boolean; lost_at: string | null; lost_reason: string | null
+  id: string; name: string; client_type: string | null; is_lost: boolean; is_active: boolean; lost_at: string | null; lost_reason: string | null; activity_status?: string | null
   recovery_at: string | null; recovery_result: 'sem_resposta' | 'interessado' | 'nao_quer' | 'proposta' | null; recovery_note: string | null; phone: string | null
 }
 type Stage = 'motivo' | 'oferta' | 'ultima' | 'arquivado'
@@ -33,7 +33,7 @@ export function LostPanel({ canManage }: { canManage: boolean }) {
   const q = useQuery({
     queryKey: ['clients-lost'],
     queryFn: async () => {
-      const { data, error } = await db.from('clients').select('id, name, client_type, is_lost, is_active, lost_at, lost_reason, recovery_at, recovery_result, recovery_note, phone').or('is_lost.eq.true,is_active.eq.false').order('lost_at', { ascending: false, nullsFirst: false })
+      const { data, error } = await db.from('clients').select('id, name, client_type, is_lost, is_active, lost_at, lost_reason, recovery_at, recovery_result, recovery_note, phone, activity_status').or('is_lost.eq.true,is_active.eq.false').order('lost_at', { ascending: false, nullsFirst: false })
       if (error) throw new Error(error.message)
       return (data ?? []) as Lost[]
     },
@@ -71,7 +71,7 @@ export function LostPanel({ canManage }: { canManage: boolean }) {
               <span className="min-w-0 flex-1">
                 <Link to={`/clientes/${c.id}`} className="block truncate font-semibold text-ink no-underline hover:underline">{c.name}</Link>
                 <span className="block truncate text-[12px] text-muted">
-                  {c.client_type === 'one-off' ? 'Avulso' : 'Recorrente'}{c.lost_at ? ` · saiu em ${dm(c.lost_at)}` : ''}{c.lost_reason ? ` · ${c.lost_reason}` : ''}
+                  {c.client_type === 'one-off' ? 'Avulso' : 'Recorrente'}{c.lost_at ? ` · saiu em ${dm(c.lost_at)}` : ''}{c.lost_reason ? ` · ${c.lost_reason}` : ''}{!c.is_lost && c.activity_status === 'inativo' ? ' · sem compra há mais de 180 dias (volta sozinho se comprar)' : ''}
                 </span>
                 {c.recovery_at && <span className="block truncate text-[12px]"><b>{RESULT[c.recovery_result ?? 'sem_resposta']}</b> em {dm(c.recovery_at)}{c.recovery_note ? ` · ${c.recovery_note}` : ''}</span>}
               </span>

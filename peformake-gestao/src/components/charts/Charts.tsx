@@ -260,3 +260,125 @@ export function Gauge({ value, warm = 35, hot = 60, label, className }: { value:
     </svg>
   )
 }
+
+// ===== Velocímetro de nota (0 a 100): faixas, ponteiro e o número com o rótulo no centro =====
+export interface ScoreBand { from: number; label: string; color: string; ink: string }
+
+export function ScoreGauge({ value, bands, label }: { value: number | null; bands: readonly ScoreBand[]; label: string }) {
+  const v = value === null ? 0 : Math.max(0, Math.min(100, value))
+  const band = [...bands].reverse().find((b) => v >= b.from) ?? bands[0]!
+  const r = 80, cx = 100, cy = 92, sw = 14
+  const pt = (pct: number, rad = r) => {
+    const a = Math.PI * (1 - pct / 100)
+    return [cx + rad * Math.cos(a), cy - rad * Math.sin(a)] as const
+  }
+  const arc = (from: number, to: number) => {
+    const [x1, y1] = pt(from)
+    const [x2, y2] = pt(to)
+    return `M${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 0 1 ${x2.toFixed(2)},${y2.toFixed(2)}`
+  }
+  // 2px de folga entre as faixas (em % do arco: 2 / comprimento do arco * 100).
+  const gap = (2 / (Math.PI * r)) * 100
+  const [nx, ny] = pt(v, r - sw - 4)
+  return (
+    <figure className="m-0 flex flex-col items-center">
+      <svg viewBox="0 0 200 104" role="img" aria-label={value === null ? `${label}: sem avaliação` : `${label}: ${v} de 100, ${band.label}`} className="w-full max-w-[260px] overflow-visible">
+        {bands.map((b, i) => {
+          const to = bands[i + 1]?.from ?? 100
+          const active = value !== null && b === band
+          return <path key={b.label} d={arc(b.from + (i ? gap / 2 : 0), to - (i < bands.length - 1 ? gap / 2 : 0))} fill="none" stroke={b.color} strokeWidth={sw} opacity={active ? 1 : 0.28}><title>{`${b.label}: ${b.from} a ${to}`}</title></path>
+        })}
+        {value !== null && (
+          <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
+        )}
+        <circle cx={cx} cy={cy} r="5" fill="var(--ink)" />
+        <text x={pt(0)[0]} y={cy + 12} textAnchor="middle" fontSize="10" fill="var(--muted)">0</text>
+        <text x={pt(100)[0]} y={cy + 12} textAnchor="middle" fontSize="10" fill="var(--muted)">100</text>
+      </svg>
+      <p className="-mt-1 text-[32px] font-semibold leading-none tracking-tight tabular-nums">{value === null ? '-' : <LiveValue value={String(v)} />}</p>
+      <p className={cn('mt-1 text-[13px] font-semibold', value === null ? 'text-muted' : band.ink)}>{value === null ? 'Sem avaliação' : band.label}</p>
+      <figcaption className="sr-only">{label}</figcaption>
+    </figure>
+  )
+}
+
+// ===== Barras horizontais por faixa: rótulo, barra e quantidade na mesma linha =====
+export function BucketBars({ rows, label, empty = 'Nada para mostrar.', unit }: {
+  rows: readonly { label: string; value: number; note?: string; highlight?: boolean; to?: string }[]
+  label: string
+  empty?: string
+  unit?: (n: number) => string
+}) {
+  const max = Math.max(...rows.map((r) => r.value), 0)
+  const total = rows.reduce((s, r) => s + r.value, 0)
+  return (
+    <figure className="m-0">
+      <figcaption className="mb-2 flex items-baseline justify-between gap-2 text-[13px] font-semibold">
+        {label} <span className="font-normal tabular-nums text-muted">{total}</span>
+      </figcaption>
+      {total === 0 ? <p className="text-[13px] text-muted">{empty}</p> : (
+        <ul className="flex flex-col gap-1.5">
+          {rows.map((r) => {
+            const text = `${r.label}: ${unit ? unit(r.value) : r.value}${r.note ? ` (${r.note})` : ''}`
+            const body = (
+              <>
+                <span className={cn('w-[34%] min-w-0 shrink-0 truncate text-[13px]', r.highlight ? 'font-semibold text-ink' : 'text-muted')}>{r.label}</span>
+                <span className="relative h-3 min-w-0 flex-1 rounded-r-[4px]" aria-hidden="true">
+                  <span className={cn('absolute inset-y-0 left-0 rounded-r-[4px]', r.highlight ? 'bg-series-4' : 'bg-series-1')} style={{ width: r.value ? `${Math.max(3, (r.value / (max || 1)) * 100)}%` : 0 }} />
+                </span>
+                <span className="w-8 shrink-0 text-right text-[13px] font-semibold tabular-nums">{r.value}</span>
+              </>
+            )
+            return (
+              <li key={r.label} title={text}>
+                {r.to ? <Link to={r.to} aria-label={text} className="flex items-center gap-2 text-ink no-underline hover:opacity-80">{body}</Link> : <span className="flex items-center gap-2" aria-label={text}>{body}</span>}
+                {r.note && <span className="block pl-[calc(34%+0.5rem)] text-[12px] text-muted">{r.note}</span>}
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </figure>
+  )
+}
+
+// ===== Funil em barras decrescentes, com a passagem (%) entre uma etapa e outra =====
+export function FunnelBars({ steps, label, empty = 'Nada no funil.', to }: {
+  steps: readonly { label: string; value: number; conversion: number | null }[]
+  label: string
+  empty?: string
+  to?: string
+}) {
+  const top = steps[0]?.value ?? 0
+  return (
+    <figure className="m-0">
+      <figcaption className="mb-2 flex items-baseline justify-between gap-2 text-[13px] font-semibold">
+        {label} <span className="font-normal tabular-nums text-muted">{top}</span>
+      </figcaption>
+      {top === 0 ? <p className="text-[13px] text-muted">{empty}</p> : (
+        <ol className="flex flex-col">
+          {steps.map((s) => {
+            const text = `${s.label}: ${s.value}${s.conversion !== null ? `, ${s.conversion}% da etapa anterior` : ''}`
+            const row = (
+              <span className="flex items-center gap-2">
+                <span className="w-[34%] min-w-0 shrink-0 truncate text-[13px]">{s.label}</span>
+                <span className="flex h-5 min-w-0 flex-1 justify-start" aria-hidden="true">
+                  <span className="h-full rounded-r-[4px] bg-series-1" style={{ width: s.value ? `${Math.max(3, (s.value / top) * 100)}%` : 0 }} />
+                </span>
+                <span className="w-8 shrink-0 text-right text-[13px] font-semibold tabular-nums">{s.value}</span>
+              </span>
+            )
+            return (
+              <li key={s.label} title={text} aria-label={text}>
+                {s.conversion !== null && (
+                  <span className="block py-0.5 pl-[calc(34%+0.5rem)] text-[11px] tabular-nums text-muted" aria-hidden="true">↓ {s.conversion}% passaram</span>
+                )}
+                {to ? <Link to={to} className="block text-ink no-underline hover:opacity-80">{row}</Link> : row}
+              </li>
+            )
+          })}
+        </ol>
+      )}
+    </figure>
+  )
+}

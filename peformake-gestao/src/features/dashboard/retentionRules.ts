@@ -49,3 +49,50 @@ export function monthsText(n: number | null): string {
   const rounded = Math.round(n * 10) / 10
   return `${String(rounded).replace('.', ',')} ${rounded === 1 ? 'mês' : 'meses'}`
 }
+
+// ===== Saúde da carteira em um número só (0 a 100) =====
+// Média da última avaliação de cada cliente ativo: muito bom 100, bom 75, neutro 50, ruim 25, muito ruim 0.
+const HEALTH_POINTS: Record<string, number> = { muito_bom: 100, bom: 75, neutro: 50, ruim: 25, muito_ruim: 0 }
+
+export function healthScore(health: Readonly<Record<string, number>>): number | null {
+  let n = 0
+  let sum = 0
+  for (const [level, count] of Object.entries(health)) {
+    const p = HEALTH_POINTS[level]
+    if (p === undefined || !count) continue
+    n += count
+    sum += p * count
+  }
+  return n ? Math.round(sum / n) : null
+}
+
+export type HealthBand = 'ruim' | 'atencao' | 'boa'
+export const HEALTH_BAND_LABEL: Record<HealthBand, string> = { ruim: 'Ruim', atencao: 'Atenção', boa: 'Boa' }
+/** Faixas do velocímetro: até 39 ruim, 40 a 69 atenção, 70 ou mais boa. */
+export const HEALTH_BANDS = { atencao: 40, boa: 70 } as const
+export function healthBand(score: number): HealthBand {
+  if (score >= HEALTH_BANDS.boa) return 'boa'
+  if (score >= HEALTH_BANDS.atencao) return 'atencao'
+  return 'ruim'
+}
+
+// ===== Funil: quantos chegaram até cada etapa e quanto passou de uma para a outra =====
+export interface FunnelStep { label: string; value: number; conversion: number | null }
+
+/**
+ * Recebe quantos estão parados em cada etapa (na ordem do funil) e devolve quantos chegaram
+ * pelo menos até ela (a etapa e todas as seguintes). Fica sempre decrescente.
+ * conversion = % que passou da etapa anterior para esta (a primeira não tem).
+ */
+export function funnelSteps(stages: readonly { label: string; value: number }[]): FunnelStep[] {
+  const reached = stages.map((_, i) => stages.slice(i).reduce((s, x) => s + Math.max(0, x.value), 0))
+  return stages.map((s, i) => {
+    const prev = i > 0 ? reached[i - 1]! : null
+    return { label: s.label, value: reached[i]!, conversion: prev === null ? null : prev > 0 ? Math.round((reached[i]! / prev) * 100) : 0 }
+  })
+}
+
+/** Dias desde uma data (AAAA-MM-DD) até hoje. */
+export function daysSince(date: string, today: string): number {
+  return Math.round((Date.parse(today) - Date.parse(date)) / 86_400_000)
+}

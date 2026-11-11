@@ -1,10 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
-import { DailyBars, KpiRow, Panel, RankBars, SegmentedBar, StatTile, type Part } from '@/components/charts/Charts'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { BucketBars, DailyBars, FunnelBars, KpiRow, Panel, RankBars, ScoreGauge, SegmentedBar, StatTile, type Part, type ScoreBand } from '@/components/charts/Charts'
 import { fillDays, fmt, pctChange } from '@/components/charts/chartRules'
+import { Dialog } from '@/components/ui/Dialog'
 import { useAuth } from '@/auth/context'
+import { ACTIVITY_LABEL } from '@/features/clients/intelApi'
+import { todayBR } from '@/features/finance/money'
 import { LoadState } from '@/features/traffic/LoadState'
-import { dashAv, dashClients, dashClientsAvulsos, dashCommercial, dashContent, dashTraffic, type ClientsDash } from './dashApi'
-import { monthlyChurn, monthsText, npsLabel, npsScore, retentionRate } from './retentionRules'
+import { dashAv, dashClients, dashClientsAvulsos, dashCommercial, dashContent, dashTraffic, dismissLostSuggestion, type AvulsosDash, type ClientsDash } from './dashApi'
+import { daysSince, funnelSteps, HEALTH_BAND_LABEL, HEALTH_BANDS, healthScore, monthlyChurn, monthsText, npsLabel, npsScore, retentionRate } from './retentionRules'
 
 const cpr = (spend: number, results: number) => (results > 0 ? spend / results : null)
 
@@ -121,13 +126,13 @@ export function AvSummary({ month, compact = false }: { month: string; compact?:
 }
 
 // ===== Comercial =====
-const STAGES: { key: string; label: string; slot: Part['slot'] }[] = [
-  { key: 'novo', label: 'Novo', slot: 0 },
-  { key: 'qualificacao', label: 'Qualificação', slot: 1 },
-  { key: 'negociacao', label: 'Negociação', slot: 2 },
-  { key: 'aguardando', label: 'Aguardando', slot: 3 },
-  { key: 'ganho', label: 'Ganho', slot: 5 },
-  { key: 'pos_venda', label: 'Pós-venda', slot: 4 },
+// Ordem do funil. Pós-venda conta como ganho (já fechou).
+const STAGES: { keys: string[]; label: string }[] = [
+  { keys: ['novo'], label: 'Novo' },
+  { keys: ['qualificacao'], label: 'Qualificação' },
+  { keys: ['negociacao'], label: 'Negociação' },
+  { keys: ['aguardando'], label: 'Aguardando' },
+  { keys: ['ganho', 'pos_venda'], label: 'Ganho' },
 ]
 
 export function CommercialSummary({ days = 30, compact = false }: { days?: number; compact?: boolean }) {
@@ -153,7 +158,8 @@ export function CommercialSummary({ days = 30, compact = false }: { days?: numbe
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Novos contatos por dia"><DailyBars data={contacts} format={fmt.int} label={`Últimos ${days} dias`} /></Panel>
         <Panel title="Funil">
-          <SegmentedBar label="Oportunidades" parts={STAGES.map((s) => ({ label: s.label, value: d.deals_by_stage[s.key] ?? 0, slot: s.slot, to: '/comercial/funil' }))} empty="Nenhuma oportunidade aberta." />
+          <FunnelBars label="Chegaram até a etapa" to="/comercial/funil" empty="Nenhuma oportunidade aberta."
+            steps={funnelSteps(STAGES.map((st) => ({ label: st.label, value: st.keys.reduce((n, k) => n + (d.deals_by_stage[k] ?? 0), 0) })))} />
           <p className="text-[13px] text-muted">Em negociação: <b className="font-semibold text-ink">{fmt.money(d.pipeline_cents)}</b></p>
         </Panel>
       </div>
@@ -162,14 +168,13 @@ export function CommercialSummary({ days = 30, compact = false }: { days?: numbe
 }
 
 // ===== Carteira de clientes =====
-// Situação usa cor de status (verde, cinza, laranja), não a paleta de categorias.
-const HEALTH: { key: string; label: string; color: string }[] = [
-  { key: 'muito_bom', label: 'Muito bom', color: 'bg-ok' },
-  { key: 'bom', label: 'Bom', color: 'bg-ok/55' },
-  { key: 'neutro', label: 'Neutro', color: 'bg-line-strong' },
-  { key: 'ruim', label: 'Ruim', color: 'bg-warn/60' },
-  { key: 'muito_ruim', label: 'Muito ruim', color: 'bg-warn' },
+// Velocímetro usa cor de status (laranja, âmbar, verde) com o nome da faixa escrito: nunca só a cor.
+const HEALTH_GAUGE: ScoreBand[] = [
+  { from: 0, label: HEALTH_BAND_LABEL.ruim, color: 'var(--warn)', ink: 'text-warn-ink' },
+  { from: HEALTH_BANDS.atencao, label: HEALTH_BAND_LABEL.atencao, color: '#eda100', ink: 'text-ink' },
+  { from: HEALTH_BANDS.boa, label: HEALTH_BAND_LABEL.boa, color: 'var(--ok)', ink: 'text-ok-ink' },
 ]
+const dm = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}`
 
 const MONTH_SHORT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
 
@@ -230,19 +235,20 @@ export function ClientsSummary() {
           <FlowChart flow={d.flow} />
         </Panel>
         <Panel title="Saúde da carteira" action={<span className="text-[12px] text-muted">{atRisk > 0 ? `${atRisk} em risco` : 'Ninguém em risco'}</span>}>
-          <SegmentedBar label="Última avaliação de cada cliente" parts={HEALTH.map((h) => ({ label: h.label, value: d.health[h.key] ?? 0, color: h.color }))} />
-          <p className="text-[13px] text-muted">
+          <ScoreGauge label="Nota da carteira pela última avaliação de cada cliente" value={healthScore(d.health)} bands={HEALTH_GAUGE} />
+          <p className="text-center text-[13px] text-muted">
             {d.unassessed > 0 ? `${d.unassessed} sem avaliação nos últimos 45 dias.` : 'Todos avaliados.'}
             {d.renewals_60d > 0 && ` ${d.renewals_60d} ${d.renewals_60d === 1 ? 'contrato vence' : 'contratos vencem'} em 60 dias.`}
           </p>
         </Panel>
         <Panel title="Tempo de casa" action={<span className="text-[12px] text-muted">Clientes ativos</span>}>
-          <SegmentedBar label="Há quanto tempo cada cliente está com a gente" parts={[
-            { label: 'Até 3 meses', value: b.lt3, slot: 2 },
-            { label: '3 a 6 meses', value: b['3to6'], slot: 4 },
-            { label: '6 a 12 meses', value: b['6to12'], slot: 1 },
-            { label: 'Mais de 1 ano', value: b.gt12, slot: 3 },
-            ...(b.unknown ? [{ label: 'Sem data', value: b.unknown, color: 'bg-line-strong' }] : []),
+          <BucketBars label="Clientes por tempo com a gente" rows={[
+            { label: 'Até 3 meses', value: b.lt3 },
+            { label: '3 a 6 meses', value: b['3to6'] },
+            { label: '6 a 12 meses', value: b['6to12'] },
+            { label: '1 a 2 anos', value: b['12to24'] ?? b.gt12 },
+            { label: '2 anos ou mais', value: b.gt24 ?? 0 },
+            ...(b.unknown ? [{ label: 'Sem data', value: b.unknown }] : []),
           ]} />
         </Panel>
         <Panel title="NPS" action={<span className="text-[12px] text-muted">{d.nps.answers} respostas</span>}>
@@ -258,9 +264,36 @@ export function ClientsSummary() {
         <Panel title="Por que os clientes saíram" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
           <RankBars label="Motivos de saída" format={fmt.int} empty="Nenhuma saída no período." rows={d.lost_reasons.slice(0, 4).map((r) => ({ label: r.reason, value: r.n, tone: 'warn' as const }))} />
         </Panel>
+        {(d.lost_suggested?.length ?? 0) > 0 && <LostSuggestions rows={d.lost_suggested!} />}
       </div>
       <AvulsosBlock />
     </>
+  )
+}
+
+// Recorrente 60 dias sem serviço ativo: o sistema só sugere. Perdido é marcado à mão, com motivo.
+function LostSuggestions({ rows }: { rows: NonNullable<ClientsDash['lost_suggested']> }) {
+  const { state } = useAuth()
+  const canDismiss = state.status === 'ready' && (state.user.roles.includes('admin') || state.user.roles.includes('head_marketing'))
+  const qc = useQueryClient()
+  const dismiss = useMutation({ mutationFn: dismissLostSuggestion, onSuccess: () => void qc.invalidateQueries({ queryKey: ['dash-clients'] }) })
+  return (
+    <Panel title="Saíram sem avisar?" action={<span className="text-[12px] text-muted">60+ dias sem serviço</span>}>
+      <ul className="flex flex-col gap-2">
+        {rows.slice(0, 4).map((r) => (
+          <li key={r.id} className="flex items-center gap-2 text-[13px]">
+            <span className="min-w-0 flex-1">
+              <Link to={`/clientes/${r.id}?aba=arquivos`} className="block truncate font-medium text-ink no-underline hover:underline">{r.name}</Link>
+              <span className="text-[12px] text-muted">Sem serviço desde {dm(r.since)}</span>
+            </span>
+            {canDismiss && (
+              <button type="button" disabled={dismiss.isPending} onClick={() => dismiss.mutate(r.id)} className="min-h-9 shrink-0 cursor-pointer rounded-full border border-line px-3 text-[12px] font-medium hover:border-ink">Não saiu</button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <p className="text-[12px] text-muted">Se saiu, abra e marque como perdido com o motivo.{rows.length > 4 ? ` E mais ${rows.length - 4}.` : ''}</p>
+    </Panel>
   )
 }
 
@@ -273,6 +306,8 @@ function AvulsosBlock() {
   if (!d) return null
   const repeatPct = d.buyers > 0 ? Math.round((d.repeat / d.buyers) * 100) : null
   const to = '/clientes?aba=avulsos'
+  const f = d.frequency
+  const r = d.recency
   return (
     <section aria-label="Clientes avulsos" className="flex flex-col gap-2">
       <h2 className="m-0 text-[15px] font-semibold">Clientes avulsos</h2>
@@ -284,9 +319,59 @@ function AvulsosBlock() {
         {isAdmin && d.revenue_12m !== null && <StatTile label="Receita avulsa em 12 meses" value={fmt.money(d.revenue_12m * 100)} hint={`${d.paid_count_12m ?? 0} pagamentos`} />}
         {isAdmin && d.ticket !== null && <StatTile label="Ticket médio" value={fmt.money(d.ticket * 100)} hint="Por compra paga" />}
       </KpiRow>
-      <Panel title="Avulsos novos por mês" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
-        <DailyBars label="Clientes avulsos novos por mês" format={fmt.int} data={d.new_by_month.map((m) => ({ day: m.month, value: m.n }))} height={100} />
-      </Panel>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {f && (
+          <Panel title="Quantas vezes compraram" action={<span className="text-[12px] text-muted">Avulsos não perdidos</span>}>
+            <BucketBars label="Clientes por número de compras" empty="Nenhuma compra registrada." rows={[
+              { label: '1 vez', value: f.f1 },
+              { label: '2 vezes', value: f.f2 },
+              { label: '3 vezes', value: f.f3 },
+              { label: '4 ou mais', value: f.f4 },
+              ...(f.none ? [{ label: 'Nenhuma ainda', value: f.none }] : []),
+            ]} />
+          </Panel>
+        )}
+        {r && (
+          <Panel title="Última compra" action={<span className="text-[12px] text-muted">Há quanto tempo</span>}>
+            <BucketBars label="Clientes pela última compra" empty="Nenhuma compra registrada." rows={[
+              { label: 'Até 90 dias', value: r.le90 },
+              { label: '91 a 180 dias', value: r.d91to180, highlight: r.d91to180 > 0 },
+              { label: 'Mais de 180', value: r.gt180 },
+              ...(r.none ? [{ label: 'Sem compra', value: r.none }] : []),
+            ]} />
+            <p className="text-[12px] text-muted">91 a 180 dias: esfriando. Mais de 180: pausado sozinho, volta se comprar.</p>
+          </Panel>
+        )}
+        <CoolingPanel rows={d.cooling ?? []} />
+        <Panel title="Avulsos novos por mês" className={d.cooling?.length ? 'md:col-span-2 xl:col-span-3' : undefined} action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
+          <DailyBars label="Clientes avulsos novos por mês" format={fmt.int} data={d.new_by_month.map((m) => ({ day: m.month, value: m.n }))} height={100} />
+        </Panel>
+      </div>
     </section>
+  )
+}
+
+// Esfriando (91 a 180 dias sem comprar): oportunidade de recompra. Destaque discreto, lista curta.
+function CoolingPanel({ rows }: { rows: NonNullable<AvulsosDash['cooling']> }) {
+  const [open, setOpen] = useState(false)
+  if (!rows.length) return null
+  const today = todayBR()
+  const line = (c: (typeof rows)[number]) => (
+    <li key={c.id} className="flex items-baseline justify-between gap-2 text-[13px]">
+      <Link to={`/clientes/${c.id}`} className="min-w-0 truncate font-medium text-ink no-underline hover:underline">{c.name}</Link>
+      <span className="shrink-0 text-[12px] tabular-nums text-muted">{c.last ? `${daysSince(c.last, today)} dias` : 'sem compra'} · {c.n}x</span>
+    </li>
+  )
+  return (
+    <Panel title={ACTIVITY_LABEL.esfriando} action={<span className="rounded-full bg-accent-soft px-2 py-0.5 text-[12px] font-medium text-accent-ink">{rows.length} para oferecer de novo</span>}>
+      <ul className="flex flex-col gap-1.5">{rows.slice(0, 3).map(line)}</ul>
+      {rows.length > 3 && (
+        <button type="button" onClick={() => setOpen(true)} className="min-h-9 cursor-pointer self-start text-[13px] font-medium text-ink underline-offset-2 hover:underline">Ver detalhes</button>
+      )}
+      <Dialog open={open} onClose={() => setOpen(false)} title="Avulsos esfriando" description="Sem comprar há 91 a 180 dias. Bom momento para oferecer de novo." size="sm">
+        <ul className="flex flex-col gap-2">{rows.slice(0, 10).map(line)}</ul>
+        {rows.length > 10 && <p className="mt-2 text-[12px] text-muted">E mais {rows.length - 10}. Veja na aba Avulsos.</p>}
+      </Dialog>
+    </Panel>
   )
 }
