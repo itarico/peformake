@@ -27,7 +27,8 @@ export function Dialog({ open, onClose, title, description, children, footer, si
   return (
     <dialog
       ref={ref}
-      onClose={onClose}
+      // O close de um pop-up aberto dentro de outro sobe pela árvore do React: só fecha o próprio.
+      onClose={(e) => { if (e.target === e.currentTarget) onClose() }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       aria-label={title}
       style={{ width }}
