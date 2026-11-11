@@ -12,6 +12,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 21h · Cia Coffee: cobrança no sistema e mensagem enviada (nuvem)
+- Italo mudou: boleto pelo ASAAS (não Cora). Lançadas 3 faturas Peformake (08, 09, 10/2026 · Marketing, R$ 600 cada, venc. 20/11, ref atraso:AAAA-MM) juntas numa cobrança só de R$ 1.800 (grupo d0986e0a…). CNPJ 54993876000105 salvo na ficha. Aviso automático de cobrança ao cliente está desligado (billing_new), então criar o link não manda mensagem sozinho.
+- Enviada à Magaly (558191662454, pelo sistema, com OK do Italo): resumo ago/set/out R$ 900 cada = R$ 2.700; acordo até 20/11 = R$ 1.800; "já te mando o link do boleto".
+- FALTA: Italo criar o link no Asaas (Cobrança → fatura → "Criar link no Asaas agora"; só admin logado) e mandar o link a ela. Se não pagar até 20/11: subir as 3 para R$ 900 (total R$ 2.700) e gerar novo link.
+
 ## 2026-11-11 noite · Cia Coffee (Magaly): acordo combinado com o Italo (nuvem)
 - Em aberto ago, set e out/2026, só marketing (sem captação/vídeo): R$ 900 cada = R$ 2.700. Acordo: pagando até 20/11, R$ 600/mês = R$ 1.800 (desconto R$ 900). Depois de 20/11 volta a R$ 2.700, vencimento 30/11.
 - Boleto na Cora (Italo emite): Magaly Cia Coffee, CNPJ 54.993.876/0001-05, R$ 2.700, venc. 30/11/2026, desconto R$ 900 até 20/11. Se a Cora não tiver desconto por data: boleto de R$ 1.800 venc. 20/11 e o aviso de que depois volta a R$ 2.700.
