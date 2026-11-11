@@ -2,6 +2,16 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 tarde · Equipe → Membros: telefone, membros antigos editáveis e tipo de contrato (nuvem, agente)
+- Erro "staff_members_phone_check" corrigido na raiz: gatilho no banco tira a máscara, vazio vira nulo e 10/11 dígitos ganham 55; inválido dá "Telefone com DDD". Tela com máscara (81) 99999-0000.
+- Membros do sistema antigo = membros normais: coluna staff_members.edited_at (todos marcados). team_ingest (sincronização antiga, sem rotina agendada: não entra no automation_catalog) não sobrescreve quem foi editado e nunca reativa quem saiu; a parte da equipe por cliente dela estava quebrada e foi corrigida. "Remover" = member_deactivate (is_active=false, linha fica). Com login: pergunta "remover o acesso também?" (Voltar = mantém).
+- DECISÃO DO ITALO: tipo de contrato por membro. CLT (salário; Mensal ou Quinzenal com adiantamento no dia 15, padrão 40%; variável só se ligar), PJ (fixo + variável + avulsos; Mensal/Quinzenal 50/50; "pedir nota fiscal" vira aviso na conta), Freela (sem fixo; tabela de valor por produção que preenche o avulso; libera quando o cliente paga), Sócio (pró-labore opcional no dia 30 + % do lucro mensal/trimestral = entradas pagas − saídas pagas da empresa; SÓ vira conta com "Aprovar e lançar"). Membros atuais ficam "Contrato: definir" (não chutei).
+- Vencimentos: staff_payday() = próximo 15 ou 30 da pessoa (fevereiro: último dia). Avulsos (service_job_save/release) e reembolsos (gatilho fin_entries_staff_payday) seguem a pessoa. Botão "Gerar contas do mês" em Equipe → Configurações (team_pay_generate, não duplica): fixo (ou 2 parcelas), variável do mês anterior e pró-labore. Não é automático.
+- REGRA DO ITALO (pop-ups): sem rolagem dentro do pop-up; muitos campos = etapas. Medido no iPhone 13 e 1366x800 (scrollHeight <= clientHeight do corpo): membro em Dados · Função · Acesso · Pagamento (1 Tipo · 2 Valores · 3 Metas). Teste: e2e/membros.cjs.
+- Dados das empresas: company_profiles da Peformake já estava preenchida; completei só o CPF do representante (do contrato que o Italo mandou). Nome fantasia ficou "Peformake" (o contrato dizia "Performake Agência"; Italo confirmar o oficial). Ellcazo vazia.
+- FICOU PARA A PRÓXIMA ENTREGA: cartão "Dados das empresas" em Configurações (etapas, busca por CNPJ, documentos em bucket privado), modelos de contrato por blocos com a estrutura do contrato de referência, e envio do contrato do membro pela Assinafy (prévia, confirmação, status pelo webhook, PDF salvo).
+- Migrações aplicadas: 20261111200000, 200100, 200200. Pendentes do Financeiro intocadas. Testes: vitest 49/326 ok, tsc ok, e2e/membros.cjs ok, e2e/telas.cjs ok, rollback no banco (fones, sincronização, um membro de cada tipo, fevereiro, reembolso, lucro do sócio).
+
 ## 2026-11-11 noite · guia de comandos em PDF refeito com acentos (nuvem)
 - docs/GUIA-COMANDOS-WHATSAPP.pdf refeito a partir do .md (acentos ok, 1 página). Nada no código do sistema nem no banco.
 - Conferido no banco: as 6 migrações do Financeiro AINDA não foram aplicadas (sem selftest_run, auto_charge ligado). Prazo 25/11; lembrete agendado para 23/11.
