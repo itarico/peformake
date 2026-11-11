@@ -9,7 +9,7 @@ import { bestMatches, sameOption, tidyLabel } from './searchMatch'
  * seta ou toque escolhe; "+ Adicionar" quando não existe igual. A lista flutua sobre a tela, sem aumentar o pop-up.
  * autoComplete desligado: o navegador não sugere dados pessoais salvos (CPF, endereço) aqui.
  */
-export function SearchSelect({ id, value, onChange, options, placeholder = 'Digite para buscar', allowNew = true, limit = 6, className, invalid, describedBy, name, disabled, tidy = true, filter = true, renderOption, onTextChange, format, addLabel, inputMode }: {
+export function SearchSelect({ id, value, onChange, options, placeholder = 'Digite para buscar', allowNew = true, limit = 6, className, invalid, describedBy, name, disabled, tidy = true, filter = true, renderOption, onTextChange, format, liveFormat, addLabel, inputMode }: {
   id?: string
   value: string
   onChange: (value: string) => void
@@ -34,6 +34,8 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
   onTextChange?: (text: string) => void
   /** Ajusta o texto digitado ao usar/adicionar (ex.: máscara de telefone). */
   format?: (text: string) => string
+  /** Ajusta enquanto digita (ex.: máscara do telefone só quando a pessoa digita número). */
+  liveFormat?: (text: string) => string
   /** Texto do item de adicionar (padrão: Adicionar “texto”). */
   addLabel?: (text: string) => string
   inputMode?: HTMLAttributes<HTMLInputElement>['inputMode']
@@ -113,7 +115,7 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
         inputMode={inputMode}
         value={text}
         placeholder={placeholder}
-        onChange={(e) => { setText(e.target.value); setTyped(true); setOpen(true); setActive(0); onTextChange?.(e.target.value) }}
+        onChange={(e) => { const t = liveFormat ? liveFormat(e.target.value) : e.target.value; setText(t); setTyped(true); setOpen(true); setActive(0); onTextChange?.(t) }}
         onFocus={() => { setOpen(true); setTyped(false); setActive(0) }}
         onClick={() => setOpen(true)}
         onBlur={() => { setOpen(false); if (typed) commitTyped(); setTyped(false) }}

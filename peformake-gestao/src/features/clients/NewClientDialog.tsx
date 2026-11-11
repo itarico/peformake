@@ -6,6 +6,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { emptyDraft, isValidPhone } from './clientFormRules'
 import { clientErrorMessage, createClientWithContact } from './clientsApi'
 import { inputClass } from './ui'
+import { WhatsappContactField } from './WhatsappContactField'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
@@ -74,10 +75,16 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
   return (
     <Dialog open={open} onClose={onClose} size="sm" title="Novo cliente" description="Só o essencial. O resto o sistema guia na ficha do cliente.">
       <form onSubmit={submit} noValidate className="flex flex-col gap-3">
-        {field('company', 'Nome da empresa', company, setCompany, { autoFocus: true, autoComplete: 'off', placeholder: 'Vazio se for pessoa física' })}
-        {field('person', 'Nome do responsável *', person, setPerson, { autoComplete: 'off' })}
-        {field('phone', 'WhatsApp do responsável *', phone, setPhone, { inputMode: 'tel', placeholder: '(81) 98888-7777' })}
-        {field('email', 'E-mail', email, setEmail, { type: 'email', inputMode: 'email', placeholder: 'nome@empresa.com' })}
+        {field('company', 'Nome da empresa', company, setCompany, { autoFocus: true, autoComplete: 'off', name: 'pf-novo-cliente-empresa', placeholder: 'Vazio se for pessoa física' })}
+        {field('person', 'Nome do responsável *', person, setPerson, { autoComplete: 'off', name: 'pf-novo-cliente-responsavel' })}
+        <div className="flex flex-col gap-1 text-[13px] font-semibold">
+          <label htmlFor="novo-cliente-whatsapp">WhatsApp do responsável * <span className="font-normal text-muted">(busque nos contatos ou digite)</span></label>
+          <WhatsappContactField id="novo-cliente-whatsapp" value={phone} invalid={!!errors.phone} describedBy={errors.phone ? 'novo-cliente-whatsapp-erro' : undefined}
+            onChange={(v) => { setPhone(v); setErrors((c) => ({ ...c, phone: '' })) }}
+            onPick={(h) => { if (!person.trim() && h.name) { setPerson(h.name); setErrors((c) => ({ ...c, person: '' })) } }} />
+          {errors.phone && <span id="novo-cliente-whatsapp-erro" role="alert" className="font-medium text-warn-ink">{errors.phone}</span>}
+        </div>
+        {field('email', 'E-mail', email, setEmail, { type: 'email', inputMode: 'email', placeholder: 'nome@empresa.com', autoComplete: 'off', name: 'pf-novo-cliente-email' })}
         {contactFail && (
           <div role="alert" className="flex flex-col gap-2 rounded-xl bg-warn-soft px-3 py-2 font-medium text-warn-ink">
             <p>O cliente foi criado, mas o contato do responsável não foi salvo ({contactFail.message}). Sem contato não sai lembrete nem contrato por WhatsApp.</p>
