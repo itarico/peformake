@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Package, Pencil, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -99,8 +100,8 @@ function ServiceForm({ service, area, onClose }: { service: Service | null; area
         <input value={d.deliverables} onChange={(e) => setD({ ...d, deliverables: e.target.value })} maxLength={300} className={field} placeholder="12 artes e 4 stories por mês" />
       </label>
       <label className="flex flex-col text-[13px] font-semibold">Como o cliente vê a entrega <span className="font-normal text-muted">(o que o portal conta: captação, diária de captação, visita, vídeo, arte...)</span>
-        <input value={d.deliveryUnit} onChange={(e) => setD({ ...d, deliveryUnit: e.target.value })} maxLength={40} list="unidades-entrega" className={field} placeholder="captação" />
-        <datalist id="unidades-entrega">{['captação', 'diária de captação', 'visita de captação', 'vídeo', 'arte', 'evento', 'produção', 'relatório', 'transmissão ao vivo'].map((u) => <option key={u} value={u} />)}</datalist>
+        <SearchSelect name="pf-servico-unidade" value={d.deliveryUnit} onChange={(v) => setD({ ...d, deliveryUnit: v.slice(0, 40) })} tidy={false} className="mt-1 font-normal" placeholder="captação"
+          options={['captação', 'diária de captação', 'visita de captação', 'vídeo', 'arte', 'evento', 'produção', 'relatório', 'transmissão ao vivo']} />
       </label>
       <label className="flex flex-col text-[13px] font-semibold">Descrição <span className="font-normal text-muted">(opcional, aparece na proposta)</span>
         <textarea rows={2} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={500} className={field} />

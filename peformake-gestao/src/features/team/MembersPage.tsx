@@ -172,7 +172,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <label className="flex flex-col text-[13px] font-semibold">E-mail{needsEmail && <span className="font-normal text-muted"> (para o convite)</span>}
                 <input type="email" inputMode="email" value={email} disabled={!!member?.profile_id} onChange={(e) => setEmail(e.target.value)} className={field} /></label>
-              <label className="flex flex-col text-[13px] font-semibold">WhatsApp<input inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(maskPhone(e.target.value))} placeholder="(81) 99999-0000" className={field} /></label>
+              <label className="flex flex-col text-[13px] font-semibold">WhatsApp<input inputMode="tel" autoComplete="off" name="pf-membro-whatsapp" value={phone} onChange={(e) => setPhone(maskPhone(e.target.value))} placeholder="(81) 99999-0000" className={field} /></label>
             </div>
             <label className="flex flex-col text-[13px] font-semibold">Cargo que aparece<input value={job} onChange={(e) => setJob(e.target.value)} placeholder="Ex.: Social Media, CEO Ellcazo" className={field} /></label>
           </div>

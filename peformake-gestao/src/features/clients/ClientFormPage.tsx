@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { ClientAvatar } from './ClientAvatar'
@@ -16,13 +17,15 @@ import { useClients } from './useClients'
 
 const SEGMENTS = [
   'Advocacia', 'Automotivo', 'Construção civil', 'Contabilidade', 'E-commerce', 'Educação', 'Estética e beleza', 'Fitness',
-  'Gastronomia', 'Imobiliário', 'Moda', 'Odontologia', 'Pet', 'Saúde', 'Serviços', 'Tecnologia', 'Varejo',
+  'Gastronomia', 'Imobiliário', 'Indústria', 'Moda', 'Odontologia', 'Ótica', 'Pet', 'Saúde', 'Serviços', 'Tecnologia', 'Varejo',
 ]
-type FormTab = 'dados' | 'empresa' | 'contrato' | 'negocio'
+// Pop-up sem rolagem: cada aba cabe na tela (computador e celular). "perfil" = presença on-line e origem; "negocio" = textos opcionais.
+type FormTab = 'dados' | 'empresa' | 'perfil' | 'contrato' | 'negocio'
 const COMPANY_KEYS: readonly (keyof ClientDraft)[] = ['document', 'legalName', 'address', 'billingEmail']
-const ORDER: FormTab[] = ['empresa', 'dados', 'contrato', 'negocio']
+const PROFILE_KEYS: readonly (keyof ClientDraft)[] = ['instagram', 'website']
+const ORDER: FormTab[] = ['empresa', 'dados', 'perfil', 'contrato', 'negocio']
 const STEP_KEYS: Record<FormTab, readonly (keyof ClientDraft)[]> = {
-  empresa: COMPANY_KEYS, dados: ['name', 'phone', 'email', 'instagram', 'website'], contrato: ['startDate', 'months', 'endDate', 'billingDay', 'setupFee'], negocio: [],
+  empresa: COMPANY_KEYS, dados: ['name', 'phone', 'email'], perfil: PROFILE_KEYS, contrato: ['startDate', 'months', 'endDate', 'billingDay', 'setupFee'], negocio: [],
 }
 const CONTRACT_KEYS: readonly (keyof ClientDraft)[] = ['startDate', 'months', 'endDate', 'billingDay', 'setupFee']
 const CHANNELS = ['Indicação', 'Instagram', 'Tráfego pago', 'Google', 'Prospecção ativa', 'Evento', 'Site']
@@ -182,7 +185,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
     const keys = Object.keys(found) as (keyof ClientDraft)[]
     if (keys.length > 0) {
       // No pop-up, abre a aba do primeiro erro antes de focar o campo.
-      if (inDialog) setTab(CONTRACT_KEYS.includes(keys[0]!) ? 'contrato' : COMPANY_KEYS.includes(keys[0]!) ? 'empresa' : 'dados')
+      if (inDialog) setTab(CONTRACT_KEYS.includes(keys[0]!) ? 'contrato' : COMPANY_KEYS.includes(keys[0]!) ? 'empresa' : PROFILE_KEYS.includes(keys[0]!) ? 'perfil' : 'dados')
       setTimeout(() => document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(), 0)
       return
     }
@@ -222,20 +225,111 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
 
       {inDialog && !wizard && (
         <Segmented label="Parte do cadastro" value={tab} onChange={setTab}
-          options={[{ id: 'empresa', label: 'Empresa' }, { id: 'dados', label: 'Contato' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Condições' }, { id: 'negocio', label: 'Negócio' }]} />
+          options={[{ id: 'empresa', label: 'Empresa' }, { id: 'dados', label: 'Contato' }, { id: 'perfil', label: 'Perfil' }, { id: 'contrato', label: kind === 'avulso' ? 'Projeto' : 'Condições' }, { id: 'negocio', label: 'Sobre' }]} />
       )}
       {wizard && (
-        <ol aria-label="Etapas do cadastro" className="grid grid-cols-4 gap-1.5">
-          {['Empresa', 'Contato', kind === 'avulso' ? 'Projeto' : 'Condições', 'Negócio'].map((label, i) => (
+        <ol aria-label="Etapas do cadastro" className="grid grid-cols-5 gap-1.5">
+          {['Empresa', 'Contato', 'Perfil', kind === 'avulso' ? 'Projeto' : 'Condições', 'Sobre'].map((label, i) => (
             <li key={label} className="flex flex-col gap-1">
               <span className={cn('h-1.5 rounded-full', i <= stepIndex ? 'bg-accent' : 'bg-raised')} />
-              <span className={cn('text-[12px]', i === stepIndex ? 'font-semibold' : 'text-muted')}>{i + 1}. {label}</span>
+              <span className={cn('truncate text-[12px]', i === stepIndex ? 'font-semibold' : 'text-muted')}>{i + 1}. {label}</span>
             </li>
           ))}
         </ol>
       )}
 
       <Section title="Identificação" flat={inDialog} hidden={inDialog && tab !== 'dados'}>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:gap-2">
+            <ClientAvatar name={draft.name || '?'} url={logoPublicUrl(draft.logoPath)} size="lg" />
+            <input ref={fileRef} type="file" accept={LOGO_TYPES.join(',')} className="sr-only" id="foto" onChange={(event) => void pickLogo(event.target.files?.[0])} />
+            <div className="flex gap-1">
+              <label htmlFor="foto" className={cn('inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-medium hover:border-ink', uploading && 'pointer-events-none opacity-50')}>
+                <ImagePlus size={15} aria-hidden="true" /> {uploading ? 'Enviando' : draft.logoPath ? 'Trocar' : 'Foto'}
+              </label>
+              {draft.logoPath && (
+                <button type="button" onClick={() => update('logoPath', null)} aria-label="Remover foto" className="flex size-11 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink">
+                  <Trash2 size={15} aria-hidden="true" />
+                </button>
+              )}
+            </div>
+            {logoError && <p role="alert" className="max-w-[160px] text-center text-[12px] font-medium text-warn-ink">{logoError}</p>}
+          </div>
+
+          <div className="grid flex-1 grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <Field label="Nome do cliente *" error={errors.name}>
+                {(fid, by) => <input id={fid} name="pf-cliente-nome" aria-describedby={by} aria-invalid={invalid('name')} value={draft.name} onChange={(e) => update('name', e.target.value)} className={inputClass} autoComplete="off" />}
+              </Field>
+            </div>
+            <Field label="WhatsApp *" error={errors.phone} hint="Com DDD. Usado para contato e para o portal.">
+              {(fid, by) => <input id={fid} name="pf-cliente-whatsapp" aria-describedby={by} aria-invalid={invalid('phone')} inputMode="tel" value={draft.phone} onChange={(e) => update('phone', e.target.value)} className={inputClass} placeholder="(81) 98888-7777" autoComplete="off" />}
+            </Field>
+            <Field label="E-mail" error={errors.email}>
+              {(fid, by) => <input id={fid} name="pf-cliente-email" aria-describedby={by} aria-invalid={invalid('email')} type="email" inputMode="email" value={draft.email} onChange={(e) => update('email', e.target.value)} className={inputClass} placeholder="contato@empresa.com" autoComplete="off" />}
+            </Field>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Perfil" flat={inDialog} hidden={inDialog && tab !== 'perfil'}>
+        <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
+          <Field label="Instagram" error={errors.instagram} hint="@perfil ou o link do perfil.">
+            {(fid, by) => <input id={fid} name="pf-cliente-instagram" aria-describedby={by} aria-invalid={invalid('instagram')} value={draft.instagram} onChange={(e) => update('instagram', e.target.value)} onBlur={(e) => e.target.value.trim() && update('instagram', `@${instagramHandle(e.target.value)}`)} className={inputClass} placeholder="@empresa" autoComplete="off" />}
+          </Field>
+          <Field label="Site" error={errors.website}>
+            {(fid, by) => <input id={fid} name="pf-cliente-site" aria-describedby={by} aria-invalid={invalid('website')} inputMode="url" value={draft.website} onChange={(e) => update('website', e.target.value)} className={inputClass} placeholder="empresa.com.br" autoComplete="off" />}
+          </Field>
+          <Field label="Segmento" hint="Digite e escolha, ou adicione um novo.">
+            {(fid, by) => <SearchSelect id={fid} name="pf-cliente-segmento" describedBy={by} value={draft.segment} onChange={(v) => update('segment', v)} options={segments} placeholder="Ex.: Estética e beleza" />}
+          </Field>
+          <Field label="Como chegou">
+            {(fid) => <SearchSelect id={fid} name="pf-cliente-origem" value={draft.acquisitionChannel} onChange={(v) => update('acquisitionChannel', v)} options={CHANNELS} placeholder="Ex.: Indicação" />}
+          </Field>
+          <label className="flex min-h-11 cursor-pointer items-center gap-2 sm:col-span-2">
+            <input type="checkbox" checked={draft.showOnSite} onChange={(e) => update('showOnSite', e.target.checked)} className="size-5 accent-[var(--accent)]" />
+            <span><b className="font-semibold">Mostrar no site</b> <span className="text-muted">na lista de clientes da página inicial</span></span>
+          </label>
+        </div>
+      </Section>
+
+      <Section flat={inDialog} hidden={inDialog && tab !== 'empresa'} title="Empresa" text="Dados que vão no contrato e na cobrança. Com CNPJ, a busca preenche o resto pela Receita.">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
+          <Field label="CPF ou CNPJ" error={errors.document ?? lookup.error?.message}>
+            {(fid, by) => (
+              <div className="flex gap-2">
+                <input id={fid} name="pf-cliente-documento" autoComplete="off" aria-describedby={by} aria-invalid={invalid('document')} inputMode="numeric" value={draft.document}
+                  onChange={(e) => update('document', e.target.value)} onBlur={(e) => update('document', formatDocument(e.target.value))}
+                  className={inputClass} placeholder="00.000.000/0000-00" />
+                <Button type="button" variant="secondary" className="shrink-0" disabled={draft.document.replace(/\D/g, '').length !== 14 || lookup.isPending}
+                  onClick={() => lookup.mutate(draft.document)}>
+                  <Search size={15} aria-hidden="true" /> {lookup.isPending ? 'Buscando' : 'Buscar'}
+                </Button>
+              </div>
+            )}
+          </Field>
+          <Field label="E-mail de cobrança" error={errors.billingEmail} hint="Recebe o contrato e as faturas.">
+            {(fid, by) => <input id={fid} name="pf-cliente-email-cobranca" autoComplete="off" aria-describedby={by} aria-invalid={invalid('billingEmail')} type="email" inputMode="email" value={draft.billingEmail} onChange={(e) => update('billingEmail', e.target.value)} className={inputClass} placeholder="financeiro@empresa.com" />}
+          </Field>
+          <div className="sm:col-span-2">
+            <Field label="Razão social (ou nome completo, se for CPF)">
+              {(fid) => <input id={fid} name="pf-cliente-razao" autoComplete="off" value={draft.legalName} onChange={(e) => update('legalName', e.target.value)} className={inputClass} />}
+            </Field>
+          </div>
+          <div className="sm:col-span-2">
+            <Field label="Endereço completo">
+              {(fid) => <input id={fid} value={draft.address} onChange={(e) => update('address', e.target.value)} className={inputClass} name="pf-cliente-endereco" autoComplete="off" />}
+            </Field>
+          </div>
+          {lookup.data && (
+            <p role="status" className="rounded-xl bg-ok-soft px-3 py-2 text-[13px] text-ok-ink sm:col-span-2">
+              Achamos na Receita: <b>{lookup.data.legalName}</b>{lookup.data.status && ` · situação ${lookup.data.status.toLowerCase()}`}{lookup.data.size && ` · porte ${lookup.data.size === 'media' ? 'médio' : lookup.data.size === 'pequena' ? 'pequeno' : lookup.data.size}`}{lookup.data.activity && ` · ${lookup.data.activity}`}. Confira e ajuste se precisar.
+            </p>
+          )}
+        </div>
+      </Section>
+
+      <Section flat={inDialog} hidden={inDialog && tab !== 'contrato'} title={kind === 'avulso' ? 'Projeto' : 'Contrato'} text={!isAdmin ? 'Só o administrador muda o dia de cobrança e as datas do contrato.' : kind === 'avulso' ? 'Datas do projeto, se houver.' : 'O fim é calculado pelo início e pela duração. Você pode ajustar.'}>
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-[13px] font-semibold">Tipo de cliente</span>
           <Segmented
@@ -248,103 +342,6 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         <p className="-mt-2 text-[12px] text-muted">
           {kind === 'fixo' ? 'Paga em parcelas mensais. O contrato mostra o total e a parcela.' : kind === 'tcv' ? 'Valor total do contrato, cobrado de uma vez.' : 'Serviço pontual, sem mensalidade. Fica na base, mas não entra na carteira recorrente.'}
         </p>
-
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <div className="flex shrink-0 flex-col items-center gap-2">
-            <ClientAvatar name={draft.name || '?'} url={logoPublicUrl(draft.logoPath)} size="lg" />
-            <input ref={fileRef} type="file" accept={LOGO_TYPES.join(',')} className="sr-only" id="foto" onChange={(event) => void pickLogo(event.target.files?.[0])} />
-            <div className="flex gap-1">
-              <label htmlFor="foto" className={cn('inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-medium hover:border-ink', uploading && 'pointer-events-none opacity-50')}>
-                <ImagePlus size={15} aria-hidden="true" /> {uploading ? 'Enviando' : draft.logoPath ? 'Trocar' : 'Foto'}
-              </label>
-              {draft.logoPath && (
-                <button type="button" onClick={() => update('logoPath', null)} aria-label="Remover foto" className="flex size-10 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink">
-                  <Trash2 size={15} aria-hidden="true" />
-                </button>
-              )}
-            </div>
-            {logoError && <p role="alert" className="max-w-[160px] text-center text-[12px] font-medium text-warn-ink">{logoError}</p>}
-          </div>
-
-          <div className="grid flex-1 grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <Field label="Nome do cliente *" error={errors.name}>
-                {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('name')} value={draft.name} onChange={(e) => update('name', e.target.value)} className={inputClass} autoComplete="off" />}
-              </Field>
-            </div>
-            <Field label="WhatsApp *" error={errors.phone} hint="Com DDD. Usado para contato e para o portal.">
-              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('phone')} inputMode="tel" value={draft.phone} onChange={(e) => update('phone', e.target.value)} className={inputClass} placeholder="(81) 98888-7777" />}
-            </Field>
-            <Field label="E-mail" error={errors.email}>
-              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('email')} type="email" inputMode="email" value={draft.email} onChange={(e) => update('email', e.target.value)} className={inputClass} placeholder="contato@empresa.com" />}
-            </Field>
-            <Field label="Instagram" error={errors.instagram} hint="@perfil ou o link do perfil.">
-              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('instagram')} value={draft.instagram} onChange={(e) => update('instagram', e.target.value)} onBlur={(e) => e.target.value.trim() && update('instagram', `@${instagramHandle(e.target.value)}`)} className={inputClass} placeholder="@empresa" autoComplete="off" />}
-            </Field>
-            <Field label="Site" error={errors.website}>
-              {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('website')} inputMode="url" value={draft.website} onChange={(e) => update('website', e.target.value)} className={inputClass} placeholder="empresa.com.br" autoComplete="off" />}
-            </Field>
-            <Field label="Segmento" hint="Escolha da lista ou digite um novo.">
-              {(fid, by) => (
-                <>
-                  <input id={fid} aria-describedby={by} list={`${fid}-lista`} value={draft.segment} onChange={(e) => update('segment', e.target.value)} className={inputClass} />
-                  <datalist id={`${fid}-lista`}>{segments.map((s) => <option key={s} value={s} />)}</datalist>
-                </>
-              )}
-            </Field>
-            <Field label="Como chegou">
-              {(fid) => (
-                <>
-                  <input id={fid} list={`${fid}-lista`} value={draft.acquisitionChannel} onChange={(e) => update('acquisitionChannel', e.target.value)} className={inputClass} />
-                  <datalist id={`${fid}-lista`}>{CHANNELS.map((s) => <option key={s} value={s} />)}</datalist>
-                </>
-              )}
-            </Field>
-            <label className="flex min-h-11 cursor-pointer items-center gap-2 sm:col-span-2">
-              <input type="checkbox" checked={draft.showOnSite} onChange={(e) => update('showOnSite', e.target.checked)} className="size-5 accent-[var(--accent)]" />
-              <span><b className="font-semibold">Mostrar no site</b> <span className="text-muted">na lista de clientes da página inicial</span></span>
-            </label>
-          </div>
-        </div>
-      </Section>
-
-      <Section flat={inDialog} hidden={inDialog && tab !== 'empresa'} title="Empresa" text="Dados que vão no contrato e na cobrança. Com CNPJ, a busca preenche o resto pela Receita.">
-        <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
-          <Field label="CPF ou CNPJ" error={errors.document ?? lookup.error?.message}>
-            {(fid, by) => (
-              <div className="flex gap-2">
-                <input id={fid} aria-describedby={by} aria-invalid={invalid('document')} inputMode="numeric" value={draft.document}
-                  onChange={(e) => update('document', e.target.value)} onBlur={(e) => update('document', formatDocument(e.target.value))}
-                  className={inputClass} placeholder="00.000.000/0000-00" />
-                <Button type="button" variant="secondary" className="shrink-0" disabled={draft.document.replace(/\D/g, '').length !== 14 || lookup.isPending}
-                  onClick={() => lookup.mutate(draft.document)}>
-                  <Search size={15} aria-hidden="true" /> {lookup.isPending ? 'Buscando' : 'Buscar'}
-                </Button>
-              </div>
-            )}
-          </Field>
-          <Field label="E-mail de cobrança" error={errors.billingEmail} hint="Recebe o contrato e as faturas.">
-            {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('billingEmail')} type="email" inputMode="email" value={draft.billingEmail} onChange={(e) => update('billingEmail', e.target.value)} className={inputClass} placeholder="financeiro@empresa.com" />}
-          </Field>
-          <div className="sm:col-span-2">
-            <Field label="Razão social (ou nome completo, se for CPF)">
-              {(fid) => <input id={fid} value={draft.legalName} onChange={(e) => update('legalName', e.target.value)} className={inputClass} />}
-            </Field>
-          </div>
-          <div className="sm:col-span-2">
-            <Field label="Endereço completo">
-              {(fid) => <input id={fid} value={draft.address} onChange={(e) => update('address', e.target.value)} className={inputClass} autoComplete="street-address" />}
-            </Field>
-          </div>
-          {lookup.data && (
-            <p role="status" className="rounded-xl bg-ok-soft px-3 py-2 text-[13px] text-ok-ink sm:col-span-2">
-              Achamos na Receita: <b>{lookup.data.legalName}</b>{lookup.data.status && ` · situação ${lookup.data.status.toLowerCase()}`}{lookup.data.size && ` · porte ${lookup.data.size === 'media' ? 'médio' : lookup.data.size === 'pequena' ? 'pequeno' : lookup.data.size}`}{lookup.data.activity && ` · ${lookup.data.activity}`}. Confira e ajuste se precisar.
-            </p>
-          )}
-        </div>
-      </Section>
-
-      <Section flat={inDialog} hidden={inDialog && tab !== 'contrato'} title={kind === 'avulso' ? 'Projeto' : 'Contrato'} text={!isAdmin ? 'Só o administrador muda o dia de cobrança e as datas do contrato.' : kind === 'avulso' ? 'Datas do projeto, se houver.' : 'O fim é calculado pelo início e pela duração. Você pode ajustar.'}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-4">
           <Field label="Início" error={errors.startDate}>
             {(fid, by) => <input id={fid} aria-describedby={by} aria-invalid={invalid('startDate')} disabled={!isAdmin} type="date" value={draft.startDate} onChange={(e) => (kind === 'avulso' ? update('startDate', e.target.value) : setStartOrMonths(e.target.value, draft.months))} className={inputClass} />}
@@ -353,7 +350,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
             <Field label="Duração em meses" error={errors.months}>
               {(fid, by) => (
                 <>
-                  <input id={fid} aria-describedby={by} aria-invalid={invalid('months')} disabled={!isAdmin} inputMode="numeric" list={`${fid}-lista`} value={draft.months} onChange={(e) => setStartOrMonths(draft.startDate, e.target.value.replace(/\D/g, ''))} className={inputClass} />
+                  <input id={fid} name="pf-contrato-meses" autoComplete="off" aria-describedby={by} aria-invalid={invalid('months')} disabled={!isAdmin} inputMode="numeric" list={`${fid}-lista`} value={draft.months} onChange={(e) => setStartOrMonths(draft.startDate, e.target.value.replace(/\D/g, ''))} className={inputClass} />
                   <datalist id={`${fid}-lista`}>{['3', '6', '12', '24'].map((m) => <option key={m} value={m} />)}</datalist>
                 </>
               )}
@@ -375,7 +372,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
         </div>
       </Section>
 
-      <Section flat={inDialog} hidden={inDialog && tab !== 'negocio'} title="Sobre o negócio" text="Ajuda a equipe a planejar. Tudo opcional.">
+      <Section flat={inDialog} hidden={inDialog && tab !== 'negocio'} title="Sobre o negócio" text="Opcional: ajuda a equipe a planejar.">
         <div className="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
           {([
             ['description', 'O que a empresa faz'],

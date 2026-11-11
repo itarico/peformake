@@ -5,6 +5,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { App } from './App'
 import { AuthProvider } from './auth/AuthProvider'
 import './index.css'
+import { installNoAutofill } from './lib/noAutofill'
+
+installNoAutofill()
 
 const queryClient = new QueryClient({
   // Dados ficam "frescos" por 1 minuto: trocar de tela não recarrega tudo de novo (o tempo real atualiza o que muda).

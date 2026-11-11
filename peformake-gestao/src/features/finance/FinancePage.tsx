@@ -5,6 +5,7 @@ import { ArrowLeftRight, CalendarClock, Check, Download, FileUp, Plus, Search } 
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { FilterSheet } from '@/components/ui/FilterSheet'
 import { Button } from '@/components/ui/Button'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { Dialog } from '@/components/ui/Dialog'
 import { SectionHeader } from '@/components/layout/SectionTabs'
 import { FINANCE_TABS } from './financeTabs'
@@ -463,10 +464,10 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
           <label className="flex flex-col text-[13px] font-semibold">Vence em<input type="date" value={due} onChange={(e) => setDue(e.target.value)} readOnly={fromInvoice} title={fromInvoice ? 'Mude a data pela Cobrança' : undefined} className={cn(field, fromInvoice && 'cursor-not-allowed bg-raised text-muted')} /></label>
         </div>
         <label className="flex flex-col text-[13px] font-semibold">Categoria
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className={field}>
-            <option value="">Sem categoria</option>
-            {categories.filter((c) => c.kind === kind).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+          <SearchSelect name="pf-caixa-categoria" className="mt-1 font-normal" allowNew={false} placeholder="Sem categoria (digite para buscar)"
+            value={categories.find((c) => c.id === category)?.name ?? ''}
+            onChange={(name) => setCategory(categories.find((c) => c.kind === kind && c.name === name)?.id ?? '')}
+            options={categories.filter((c) => c.kind === kind).map((c) => c.name)} />
         </label>
         <div className="flex flex-wrap items-end gap-3">
           <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="size-4" /> {entry?.status === 'pago' ? 'Pago (desmarque para desfazer o pagamento)' : 'Já foi pago'}</label>
