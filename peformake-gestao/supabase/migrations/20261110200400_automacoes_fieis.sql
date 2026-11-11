@@ -34,7 +34,7 @@ insert into public.automation_catalog (key, module, position, title, what, how, 
     'Só o que o admin aprovou em Cobrança → Para revisar.', 'Todo dia, 09:20', false, 'medio', 'delivery-credits-apply', null, null),
   ('fin_repasse', 'financeiro', 22, 'Repasse entre empresas', 'Quando uma empresa recebe a parte da outra ("Quem recebe" no cliente), anota "a repassar R$ X" no Caixa e avisa só se passar de 7 dias.',
     'Nada sai sozinho: o repasse é marcado como feito com 1 toque. Pix automático só com a chave ligada e o OK do admin.', 'Na hora do pagamento; aviso todo dia, 08:50', false, 'medio', 'interco-overdue', 'billing_settings', 'interco_pix_enabled'),
-  ('cfg_autoteste', 'configuracoes', 90, 'Autoteste semanal', 'Testa as regras de cobrança, Caixa, extrato e permissões com dados de teste que se desfazem sozinhos. Só o resultado fica guardado.',
-    'Sem IA e sem serviço externo (custo zero). Falhou algo: um aviso normal para o admin.', 'Domingo, 06:00', false, 'baixo', 'selftest-weekly', null, null)
-on conflict (key) do update set what = excluded.what, how = excluded.how, schedule = excluded.schedule, cron_job = excluded.cron_job,
+  ('cfg_autoteste', 'configuracoes', 90, 'Autoteste (sob demanda)', 'Testa as regras de cobrança, Caixa, extrato e permissões com dados de teste que se desfazem sozinhos. Só o resultado fica guardado.',
+    'Sem IA e sem serviço externo (custo zero). Falhou algo: um aviso normal para o admin.', 'Sob demanda (quando o Italo pedir)', false, 'baixo', null, null, null)
+on conflict (key) do update set title = excluded.title, what = excluded.what, how = excluded.how, schedule = excluded.schedule, cron_job = excluded.cron_job,
   flag_table = excluded.flag_table, flag_column = excluded.flag_column;

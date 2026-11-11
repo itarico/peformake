@@ -1,4 +1,4 @@
--- Autoteste semanal sem IA (desenho do relatório). Cada cenário roda numa subtransação que se desfaz
+-- Autoteste SOB DEMANDA sem IA (roda quando o Italo pedir: select public.selftest_run();). Sem agendamento. Cada cenário roda numa subtransação que se desfaz
 -- (raise 'selftest_rollback'): só o resultado fica gravado em selftest_runs. Nenhum serviço externo é chamado.
 
 create table if not exists public.selftest_runs (
@@ -209,7 +209,7 @@ begin
   end loop;
   if _fail > 0 then
     perform public.notify(array(select r.user_id from public.user_roles r where r.role = 'admin'), 'selftest_fail',
-      'Autoteste: ' || _fail || ' de ' || _total || ' falharam', 'Veja em Configurações → Automações → Autoteste semanal.', '/configuracoes/automacoes', null);
+      'Autoteste: ' || _fail || ' de ' || _total || ' falharam', 'Veja em Configurações → Automações → Autoteste.', '/configuracoes/automacoes', null);
   end if;
   return jsonb_build_object('run_id', _run, 'total', _total, 'falhas', _fail);
 end $function$;
@@ -228,5 +228,7 @@ grant execute on function public.selftest_run() to service_role;
 revoke execute on function public.selftest_last() from public, anon;
 grant execute on function public.selftest_last() to authenticated;
 
--- Domingo 06:00 de Brasília (09:00 UTC).
-select cron.schedule('selftest-weekly', '0 9 * * 0', $$ select public.selftest_run(); $$);
+-- Sem agendamento (decisão do Italo, 10/11): roda só sob demanda. Se existir um agendamento antigo, desliga.
+do $$ begin
+  if exists (select 1 from cron.job where jobname = 'selftest-weekly') then perform cron.unschedule('selftest-weekly'); end if;
+end $$;
