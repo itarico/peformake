@@ -67,7 +67,10 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
 ## Regras de interface (valem para todo o sistema)
 
 1. **Editar ou preencher abre em pop-up** (`Dialog`). Nunca expandir formulário dentro da página.
-2. **Formulário com muita informação é por etapas** (abas ou passo a passo com progresso), sem barra de rolagem.
+2. **Nenhum pop-up pode ter rolagem interna (computador e celular).** Formulário com muita informação é por etapas
+   (abas ou passo a passo com barra de progresso, `components/ui/DialogTabs`); o opcional fica em "Mais opções", noutra etapa.
+   Medir antes de publicar: `PORT=5199 node e2e/popups.cjs` (iPhone 13 e 1366x800; corpo do pop-up com scrollHeight <= clientHeight).
+   Campo de escolha com lista longa usa `components/ui/SearchSelect` (busca sem acento, + Adicionar), nunca `<datalist>`.
 3. Compacto, poucos cliques, sem poluição visual, cartões resumidos com "Ver detalhes", gráficos em vez de blocos de texto.
 4. 100% responsivo; nada de barra de rolagem dupla; o menu lateral cabe na tela.
 5. Escolha de pessoas por foto (como em Editar equipe), não por lista seca.

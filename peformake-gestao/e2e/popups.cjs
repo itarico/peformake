@@ -58,7 +58,7 @@ async function mock(route) {
 }
 
 const C0 = T.clients[0].id;
-const PAGES0 = ['/clientes', '/clientes/' + C0, '/clientes/' + C0 + '?aba=financeiro', '/clientes/' + C0 + '?aba=equipe', '/clientes/' + C0 + '?aba=servicos',
+const PAGES0 = ['/clientes?aba=recorrentes', '/clientes/' + C0, '/clientes/' + C0 + '?aba=financeiro', '/clientes/' + C0 + '?aba=equipe', '/clientes/' + C0 + '?aba=servicos',
   '/financeiro', '/financeiro/cobranca', '/financeiro/contratos', '/financeiro/whatsapp',
   '/audiovisual', '/audiovisual/producao', '/audiovisual/orcamentos', '/audiovisual/orcamentos/novo', '/audiovisual/fotos', '/audiovisual/roteiros', '/audiovisual/servicos',
   '/social', '/social/quadro', '/social/briefings', '/social/contas', '/conteudo', '/datas', '/automatico',
@@ -101,10 +101,9 @@ const tabsOf = (p) => p.evaluate(() => {
         const byAria = p.locator(`main [aria-label="${label.replace(/"/g, '\\"')}"], header [aria-label="${label.replace(/"/g, '\\"')}"]`).first();
         const target = (await byAria.count()) ? byAria : btn;
         if (!(await target.count())) continue;
-        await target.click({ timeout: 1500 }).catch(() => {});
-        await p.waitForTimeout(450);
-        const m = await measure(p);
-        if (m) {
+        const record = async (via) => {
+          const m = await measure(p);
+          if (!m) return false;
           const states = [['', m]];
           for (const t of await tabsOf(p)) {
             const tb = p.locator('dialog[open]').last().locator(`[role=tab], [role=group] > button[aria-pressed]`).filter({ hasText: t }).first();
@@ -113,10 +112,25 @@ const tabsOf = (p) => p.evaluate(() => {
           }
           for (const [tab, s] of states) {
             const key = `${url.replace(C0, ':id')} › ${s.title}${tab ? ' · ' + tab : ''}`;
-            const row = rows.get(key) || { key, via: label }; row[dev] = s; rows.set(key, row);
+            const row = rows.get(key) || { key, via }; row[dev] = s; rows.set(key, row);
             if (s.sh > s.ch + 1) await p.screenshot({ path: `${OUT}/popup-${dev}-${key.replace(/[^\w]+/g, '_').slice(0, 80)}.png` }).catch(() => {});
           }
           for (let k = 0; k < 3 && (await p.locator('dialog[open]').count()); k++) { await p.keyboard.press('Escape'); await p.waitForTimeout(150) }
+          return true;
+        };
+        await target.click({ timeout: 1500 }).catch(() => {});
+        await p.waitForTimeout(450);
+        if (!(await record(label))) {
+          // Menu de ações (⋯ ou "Mais" no celular): abre cada item do menu.
+          const items = await p.locator('[role=menu] [role=menuitem]:visible').allInnerTexts().catch(() => []);
+          for (const it of items.map((x) => x.trim()).filter(Boolean).slice(0, 12)) {
+            if (!(await p.locator('[role=menu]:visible').count())) { await target.click({ timeout: 1500 }).catch(() => {}); await p.waitForTimeout(250) }
+            await p.locator('[role=menu] [role=menuitem]:visible').filter({ hasText: it }).first().click({ timeout: 1000 }).catch(() => {});
+            await p.waitForTimeout(450);
+            await record(label + ' › ' + it);
+            if (p.url() !== here) { await p.goto(here).catch(() => {}); await p.waitForTimeout(600) }
+          }
+          await p.keyboard.press('Escape').catch(() => {});
         }
         if (p.url() !== here) { await p.goto(here).catch(() => {}); await p.waitForLoadState('networkidle').catch(() => {}); await p.waitForTimeout(600) }
       }

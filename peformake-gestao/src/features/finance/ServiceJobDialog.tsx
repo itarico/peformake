@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { DialogTabs } from '@/components/ui/DialogTabs'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { ask } from '@/components/ui/confirm'
@@ -48,6 +50,8 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
   const [clientAmount, setClientAmount] = useState('')
   const [staffAmount, setStaffAmount] = useState('')
   const [problem, setProblem] = useState<string | null>(null)
+  // Sem rolagem: 1 Serviço · 2 Quem e quanto.
+  const [step, setStep] = useState<'servico' | 'quem'>('servico')
   // Parte da empresa nos avulsos (Equipe → Configurações). Sem valor para quem fez, vale o do cliente menos essa parte.
   const share = useQuery({ queryKey: ['job-company-pct'], staleTime: 300_000, queryFn: async () => {
     const { data } = await supabase.from('team_settings').select('job_company_pct').maybeSingle()
@@ -91,16 +95,20 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
   })
 
   return (
-    <Dialog open onClose={onClose} title="Serviço avulso" description="Cria a fatura do cliente. Quem fez recebe depois que o cliente pagar, já sem a parte da empresa." size="md"
-      footer={<Button disabled={save.isPending} onClick={() => { setProblem(null); save.mutate() }}><Check size={15} aria-hidden="true" /> {save.isPending ? 'Lançando' : 'Lançar serviço'}</Button>}>
+    <Dialog open onClose={onClose} title="Serviço avulso" description="Cria a fatura do cliente. Quem fez recebe depois que o cliente pagar." size="md"
+      footer={step === 'servico'
+        ? <Button onClick={() => { setProblem(null); if (!client) return setProblem('Escolha o cliente.'); if (title.trim().length < 2) return setProblem('Escreva o serviço.'); setStep('quem') }}>Continuar</Button>
+        : <><Button variant="secondary" onClick={() => setStep('servico')}>Voltar</Button><Button disabled={save.isPending} onClick={() => { setProblem(null); save.mutate() }}><Check size={15} aria-hidden="true" /> {save.isPending ? 'Lançando' : 'Lançar serviço'}</Button></>}>
       <div className="flex flex-col gap-4">
+        <DialogTabs steps label="Etapas do serviço avulso" value={step} onChange={setStep} options={[{ id: 'servico', label: 'Serviço' }, { id: 'quem', label: 'Quem e quanto' }]} />
+        <div hidden={step !== 'servico'} className="flex flex-col gap-4">
         {!clientId && (
-          <label className="flex flex-col text-[13px] font-semibold">Cliente
-            <select value={client} onChange={(e) => setClient(e.target.value)} className={field}>
-              <option value="">Escolha</option>
-              {(clients ?? []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </label>
+          <div className="flex flex-col text-[13px] font-semibold">
+            <label htmlFor="avulso-cliente">Cliente</label>
+            <SearchSelect id="avulso-cliente" name="pf-avulso-cliente" allowNew={false} className="mt-1 font-normal" placeholder="Digite o nome do cliente"
+              value={(clients ?? []).find((c) => c.id === client)?.name ?? ''} onChange={(n) => setClient((clients ?? []).find((c) => c.name === n)?.id ?? '')}
+              options={(clients ?? []).map((c) => c.name)} />
+          </div>
         )}
         <div role="group" aria-label="O que foi feito" className="flex flex-wrap gap-1.5">
           {SKILLS.map((s) => (
@@ -118,7 +126,9 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
               className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', u === 'ellcazo' && 'theme-ellcazo', unit === u ? 'bg-fill text-on-fill' : 'text-muted')}>{u === 'ellcazo' ? 'Ellcazo · Audiovisual' : 'Peformake'}</button>
           ))}
         </div>
+        </div>
 
+        <div hidden={step !== 'quem'} className="flex flex-col gap-4">
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-1 text-[13px] font-semibold">Quem faz</legend>
           {people.isPending && <p role="status" className="text-[13px] text-muted">Carregando a equipe</p>}
@@ -151,6 +161,7 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
             {sv > 0 && <>{cv > 0 ? <>quem fez recebe <b>{brl(sv)}</b> no próximo dia de pagamento dela depois que o cliente pagar</> : <>conta a pagar de <b>{brl(sv)}</b> no Caixa, no próximo dia de pagamento dela</>}{cv > 0 && sv < cv ? <>; fica <b>{brl(cv - sv)}</b> para a empresa</> : ''}.</>}
           </p>
         )}
+        </div>
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
       </div>
     </Dialog>

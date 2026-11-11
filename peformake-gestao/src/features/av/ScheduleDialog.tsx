@@ -4,6 +4,7 @@ import { MapPin, Wand2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { AV_AREAS, inAreas, useProduction } from '@/features/production/useProduction'
 import { autoAssign, avErrorMessage, calendarCall, scheduleShoot } from './avApi'
 import { coordsFromMapsLink, type AvProject } from './avRules'
@@ -82,12 +83,12 @@ export function ScheduleDialog({ project, clientId, day, onClose, onSaved }: {
       <DialogTabs label="Partes do agendamento" value={tab} onChange={setTab} options={[{ id: 'quando', label: 'Quando e onde' }, { id: 'equipe', label: 'Equipe' }]} />
       <div hidden={tab !== 'quando'} className="grid gap-3 sm:grid-cols-2">
         {!project && (
-          <label className="flex flex-col text-[13px] font-semibold sm:col-span-2">Cliente
-            <select value={f.client} onChange={(e) => setF({ ...f, client: e.target.value })} className={field}>
-              <option value="">Escolha</option>
-              {avClients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </label>
+          <div className="flex flex-col text-[13px] font-semibold sm:col-span-2">
+            <label htmlFor="gravacao-cliente">Cliente</label>
+            <SearchSelect id="gravacao-cliente" name="pf-gravacao-cliente" allowNew={false} className="mt-1 font-normal" placeholder="Digite o nome do cliente"
+              value={avClients.find((c) => c.id === f.client)?.name ?? ''} onChange={(n) => setF((cur) => ({ ...cur, client: avClients.find((c) => c.name === n)?.id ?? '' }))}
+              options={avClients.map((c) => c.name)} />
+          </div>
         )}
         <label className="flex flex-col text-[13px] font-semibold">Dia<input type="date" value={f.day} onChange={(e) => setF({ ...f, day: e.target.value })} className={field} /></label>
         <div className="grid grid-cols-2 gap-2">
