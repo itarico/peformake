@@ -22,7 +22,7 @@ const scroll = (p) => p.evaluate(() => { const d = [...document.querySelectorAll
     await p.screenshot({ path: `e2e/capturas/caixa-${dev}.png` });
     await p.getByLabel('Lançamento rápido').fill('gasto 89,90 canva'); await p.keyboard.press('Enter'); await p.waitForTimeout(700);
     const v = await p.locator('dialog[open] input[inputmode=decimal]').inputValue().catch(() => '');
-    let m = await scroll(p); console.log(dev, 'pop-up da frase:', m, 'valor', v); if (!m || m.sh > m.ch + 1 || v !== '89,9') bad++;
+    let m = await scroll(p); console.log(dev, 'pop-up da frase:', m, 'valor', v); if (!m || m.sh > m.ch + 1 || v !== '89,90') bad++;
     await p.screenshot({ path: `e2e/capturas/caixa-frase-${dev}.png` });
     await p.keyboard.press('Escape'); await p.waitForTimeout(200);
     await p.locator('main ul li button').first().click(); await p.waitForTimeout(500);

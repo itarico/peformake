@@ -93,10 +93,9 @@ export function ChargeDialog({ clientId, items, onClose, onDone }: { clientId: s
 
   return (
     <Dialog open onClose={onClose} title={`Cobrar · ${info.data?.client ?? 'cliente'}`} description={chosen.length > 1 ? `${chosen.length} cobranças · ${brl(total)}` : undefined} size="sm"
-      footer={<div className="flex w-full flex-wrap items-center justify-end gap-2">
-        {info.data?.system && <Button variant="link" disabled={!ready || sendSystem.isPending} onClick={() => { void ask(`Enviar a cobrança para ${name} (${number}) pelo WhatsApp do sistema?`).then((ok) => { if (ok) sendSystem.mutate() }) }}><Send size={14} aria-hidden="true" /> Enviar pelo sistema</Button>}
-        <Button variant="secondary" disabled={!ready || mark.isPending} onClick={copy}><Copy size={15} aria-hidden="true" /> Copiar cobrança</Button>
-        <Button disabled={!ready || mark.isPending} onClick={openWa}><MessageCircle size={15} aria-hidden="true" /> Enviar pelo WhatsApp</Button>
+      footer={<div className="grid w-full grid-cols-2 gap-2 md:flex md:justify-end">
+        <Button variant="secondary" disabled={!ready || mark.isPending} onClick={copy}><Copy size={15} aria-hidden="true" /> Copiar<span className="hidden md:inline">&nbsp;cobrança</span></Button>
+        <Button disabled={!ready || mark.isPending} onClick={openWa}><MessageCircle size={15} aria-hidden="true" /> <span className="hidden md:inline">Enviar pelo&nbsp;</span>WhatsApp</Button>
       </div>}>
       <div className="flex flex-col gap-2.5">
         {items.length > 1 && (
@@ -135,8 +134,9 @@ export function ChargeDialog({ clientId, items, onClose, onDone }: { clientId: s
           </div>
         )}
         <label className="flex flex-col gap-1 text-[13px] font-semibold">Mensagem
-          <textarea value={message} onChange={(e) => setText(e.target.value)} rows={needPix ? 7 : 9} className="w-full resize-none rounded-xl border border-line-strong bg-surface p-3 text-[13.5px] font-normal leading-relaxed" />
+          <textarea value={message} onChange={(e) => setText(e.target.value)} rows={needPix ? 7 : 9} className="h-40 w-full resize-none md:h-auto rounded-xl border border-line-strong bg-surface p-3 text-[13.5px] font-normal leading-relaxed" />
         </label>
+        {info.data?.system && <Button variant="link" className="self-start" disabled={!ready || sendSystem.isPending} onClick={() => { void ask(`Enviar a cobrança para ${name} (${number}) pelo WhatsApp do sistema?`).then((ok) => { if (ok) sendSystem.mutate() }) }}><Send size={14} aria-hidden="true" /> Enviar pelo sistema</Button>}
         {info.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">Não consegui ler o contato do cliente. Escreva o número.</p>}
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 text-[13px] font-medium text-warn-ink">{problem}</p>}
       </div>

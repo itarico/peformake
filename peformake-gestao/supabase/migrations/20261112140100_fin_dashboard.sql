@@ -1,4 +1,4 @@
--- ===== O painel =====
+-- ===== O painel: fin_dashboard(_unit juntas|peformake|ellcazo, _month) — só admin, tudo numa chamada =====
 create or replace function public.fin_dashboard(_unit text default 'juntas', _month date default null)
 returns jsonb language plpgsql stable security definer set search_path to '' as $$
 declare
@@ -232,7 +232,7 @@ begin
   if _cnt > 0 then _actions := _actions || jsonb_build_object('key', 'equipe', 'title', 'Pagamentos da equipe até ' || to_char(_last, 'DD/MM') || ': ' || public.brl(_a),
       'amount', _a, 'to', '/equipe/membros', 'label', 'Ver equipe', 'source', 'Contas a pagar da equipe'); end if;
   select count(distinct c.id), coalesce(sum(f.amount), 0) into _cnt, _a from public.fin_entries f join public.clients c on c.id = f.client_id
-    where f.unit = any(_units) and f.kind = 'entrada' and f.status = 'pendente' and f.due_date <= _today + 10 and nullif(trim(coalesce(c.document, '')), '') is null;
+    where f.unit = any(_units) and f.kind = 'entrada' and f.status = 'pendente' and f.due_date >= _today and f.due_date <= _today + 10 and nullif(trim(coalesce(c.document, '')), '') is null;
   if _cnt > 0 then _actions := _actions || jsonb_build_object('key', 'sem_doc', 'title', _cnt || case when _cnt = 1 then ' cliente sem CPF/CNPJ' else ' clientes sem CPF/CNPJ' end || ' com fatura perto de vencer',
       'amount', _a, 'to', '/financeiro/cobranca', 'label', 'Completar', 'source', 'Sem documento o boleto/Pix não sai'); end if;
   if _neg_day is not null then _actions := _actions || jsonb_build_object('key', 'caixa', 'title', 'Caixa fica negativo em ' || to_char(_neg_day, 'DD/MM') || ' (mínimo ' || public.brl(_min) || ')',

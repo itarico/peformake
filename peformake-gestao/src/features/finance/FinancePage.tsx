@@ -301,7 +301,7 @@ export function FinancePage() {
         <form onSubmit={submitQuick} className="relative flex min-w-0 flex-1 items-center">
           <Sparkles size={16} aria-hidden="true" className="pointer-events-none absolute left-3.5 text-muted" />
           <input value={quick} onChange={(e) => setQuick(e.target.value)} aria-label="Lançamento rápido" autoComplete="off" enterKeyHint="go"
-            placeholder='Escreva como fala: "gasto 89,90 canva"'
+            placeholder='Ex.: gasto 89,90 canva'
             className="min-h-12 w-full rounded-full border border-line-strong bg-canvas pl-10 pr-24 text-[15px]" />
           <button type="submit" disabled={quick.trim().length < 2 || read.isPending}
             className="absolute right-1.5 min-h-9 cursor-pointer rounded-full bg-fill px-3.5 text-[13px] font-semibold text-on-fill disabled:cursor-not-allowed disabled:opacity-40">{read.isPending ? 'Lendo' : 'Lançar'}</button>
@@ -313,18 +313,17 @@ export function FinancePage() {
       </section>
 
       {/* Resumo numa linha. Quem deve fica na Cobrança: aqui são só atalhos. */}
-      <section aria-label="Resumo do mês" className="flex flex-wrap items-center gap-x-4 gap-y-2 px-1 text-[14px]">
+      <section aria-label="Resumo do mês" className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[13px] md:gap-x-4 md:text-[14px]">
         <span>Entrou <b className="tabular-nums text-ok-ink">{s ? brl(s.entradas_pagas) : '—'}</b></span>
         <span>Saiu <b className="tabular-nums">{s ? brl(s.saidas_pagas) : '—'}</b></span>
         <span>Saldo <b className={cn('tabular-nums', saldo < 0 && 'text-warn-ink')}>{s ? brl(saldo) : '—'}</b></span>
-        <span className="flex flex-wrap gap-1.5 md:ml-auto">
-          {s && s.entradas_previstas > 0 && <Link to="/financeiro/cobranca" className={cn(pill, 'bg-raised text-ink hover:bg-line')}>A receber {brl(s.entradas_previstas)} →</Link>}
-          {s && (s.vencido_receber_qtd ?? 0) > 0 && <Link to="/financeiro/cobranca?situacao=vencido" className={cn(pill, 'bg-warn-soft text-warn-ink')}>Vencido {brl(s.vencido_receber ?? 0)} →</Link>}
-        </span>
       </section>
 
-      {alerts && (
-        <div className="flex flex-wrap gap-1.5 empty:hidden">
+      {/* Atalhos e avisos numa faixa só (no celular, uma linha que desliza). Só aparece o que tem item. */}
+      {(alerts || s) && (
+        <div className="-mt-1 flex gap-1.5 empty:hidden max-md:-mx-4 max-md:overflow-x-auto max-md:px-4 max-md:[scrollbar-width:none] md:flex-wrap [&>*]:shrink-0 [&>*]:whitespace-nowrap">
+          {s && s.entradas_previstas > 0 && <Link to="/financeiro/cobranca" className={cn(pill, 'bg-raised text-ink hover:bg-line')}>A receber {brl(s.entradas_previstas)} →</Link>}
+          {s && (s.vencido_receber_qtd ?? 0) > 0 && <Link to="/financeiro/cobranca?situacao=vencido" className={cn(pill, 'bg-warn-soft text-warn-ink')}>Vencido {brl(s.vencido_receber ?? 0)} →</Link>}
           {toPay.length > 0 && <button type="button" onClick={() => setFilter('a_pagar')} className={cn(pill, toPay.some((e) => e.due_date < today) ? 'border border-warn text-warn-ink' : 'bg-raised text-ink')}>A pagar {brl(toPayTotal)} · {toPay.length}</button>}
           {isAdmin && <ToReview onDone={refresh} />}
           {isAdmin && <Transfers onDone={refresh} />}
@@ -426,7 +425,7 @@ async function uploadAttachment(unit: string, id: string, file: File): Promise<v
 function EntryDialog({ unit, categories, entry, prefill, onClose, onSaved }: { unit: Unit; categories: Category[]; entry: Entry | null; prefill: Prefill | null; onClose: () => void; onSaved: () => void }) {
   const [kind, setKind] = useState<Kind>((entry?.kind as Kind) ?? prefill?.kind ?? 'saida')
   const [description, setDescription] = useState(entry?.description ?? prefill?.description ?? '')
-  const [amount, setAmount] = useState(entry ? String(entry.amount).replace('.', ',') : prefill?.amount ? String(prefill.amount).replace('.', ',') : '')
+  const [amount, setAmount] = useState(entry ? String(entry.amount).replace('.', ',') : prefill?.amount ? prefill.amount.toFixed(2).replace('.', ',') : '')
   const [paid, setPaid] = useState(entry ? entry.status === 'pago' : true)
   const [date, setDate] = useState(entry ? (entry.status === 'pago' ? entry.paid_at ?? todayBR() : entry.due_date) : prefill?.date ?? todayBR())
   const initialCat = entry?.category_id ?? categories.find((c) => c.kind === kind && fold(c.name) === fold(prefill?.category ?? ''))?.id ?? ''

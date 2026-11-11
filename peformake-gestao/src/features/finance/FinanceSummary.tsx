@@ -82,7 +82,7 @@ export function FinanceSummary() {
         <div role="group" aria-label="Empresa" className="inline-flex shrink-0 rounded-full border border-line p-0.5">
           {SUMMARY_UNITS.map((u) => (
             <button key={u.id} type="button" aria-pressed={u.id === unit} onClick={() => setUnit(u.id)}
-              className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[13px] font-semibold md:min-h-10 md:px-3.5', u.id === unit ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{u.label}</button>
+              className={cn('min-h-9 cursor-pointer rounded-full px-2.5 text-[13px] font-semibold md:min-h-10 md:px-3.5', u.id === unit ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{u.label}</button>
           ))}
         </div>
         {d && <TrustSeal d={d} />}
