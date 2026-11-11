@@ -4,6 +4,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 tarde · Login novo (/login) (nuvem, agente)
+- Fila do Italo item 5 feito: computador com tela dividida (painel da marca com 4 personagens em SVG nas cores da Peformake + verde Ellcazo; os olhos seguem o mouse e o texto digitado no e-mail; fecham os olhos com a senha escondida, olham para o lado com a senha à mostra; balançam ao errar e sorriem rápido ao acertar) e frase que troca a cada 4 s. Celular: personagens pequenos no topo, frase e formulário, sem rolagem no iPhone 13.
+- Senha com Mostrar/Ocultar; Enter envia; autoComplete email/current-password; movimento reduzido = tudo parado. Lógica de entrada intocada (equipe, cliente do portal, Esqueci a senha). Só segura 0,35 s o sorriso depois do acerto.
+- Botão "Entrar com Google" aparece sozinho quando o Google for ligado no Supabase (lê /auth/v1/settings; hoje está desligado, então não aparece). Para ligar: Supabase → Authentication → Providers → Google (precisa das chaves do Google Cloud).
+- Arquivos: src/pages/LoginPage.tsx e src/pages/login/ (LoginCharacters, LoginPhrase, gaze, login.css). Testes: vitest 54/354 ok, tsc ok, Playwright 1366x800 e iPhone 13, claro e escuro, erro com e-mail falso (banco interceptado).
+
 ## 2026-11-11 fim da tarde · Dados das empresas, contrato por blocos e contrato do membro pela Assinafy (nuvem, agente)
 - Configurações → Peformake → Dados das empresas (só admin): abas Peformake/Ellcazo, pop-up em 3 etapas (Empresa com "Buscar pelo CNPJ" · Representante com CPF · Documentos: cartão CNPJ/CCMEI e contrato social em PDF no bucket privado company-docs, com Ver/Trocar). Link direto: /configuracoes/empresas?empresa=ellcazo&editar=1. company_profile_save agora só mexe no que veio (antes apagava o resto).
 - Contrato do cliente por blocos (contract_compose, usado por contract_create e portal_contract_data): título + subtítulo dos serviços, partes com qualificação completa, Objeto com a), b)..., UMA cláusula por serviço ativo da empresa (textos em contract_service_texts, editáveis em Integrações → Contratos → "Cláusula de cada serviço", ou texto próprio por serviço), avulsos somados na mensalidade seguinte, valor/vencimento/Pix-boleto, multa 2% + juros 1% + suspensão após 10 dias, 30 dias de aviso, uso de imagem, sem vínculo, LGPD, foro Recife/PE, local/data e assinaturas. Numeração "CLÁUSULA #"/"#.1." automática. Valor mensal agora só da empresa do modelo (antes somava Peformake+Ellcazo).
