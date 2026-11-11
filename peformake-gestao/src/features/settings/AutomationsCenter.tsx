@@ -7,11 +7,12 @@ import { Dialog } from '@/components/ui/Dialog'
 import { ask } from '@/components/ui/confirm'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
+import { AiSpendCard } from './AiSpendCard'
 
 // Central de automações: tudo o que roda sozinho, por módulo, com o estado de verdade
 // (funcionando, com problema, desligada), a última vez que rodou e a chave de ligar/desligar.
 
-export type AutoModule = 'financeiro' | 'trafego' | 'comercial' | 'whatsapp' | 'conteudo' | 'audiovisual' | 'clientes' | 'sistema'
+export type AutoModule = 'financeiro' | 'trafego' | 'comercial' | 'whatsapp' | 'conteudo' | 'audiovisual' | 'clientes' | 'estrategia' | 'sistema'
 export interface AutomationRow {
   key: string; module: AutoModule; title: string; what: string; how: string | null; schedule: string
   uses_ai: boolean; risk: 'baixo' | 'medio' | 'alto'; routine_id: string | null; routine_on: boolean | null
@@ -21,7 +22,7 @@ export interface AutomationRow {
 
 export const MODULE_LABEL: Record<AutoModule, string> = {
   financeiro: 'Financeiro', trafego: 'Tráfego', comercial: 'Comercial', whatsapp: 'WhatsApp e avisos',
-  conteudo: 'Conteúdo e design', audiovisual: 'Audiovisual', clientes: 'Clientes', sistema: 'Sistema',
+  conteudo: 'Conteúdo e design', audiovisual: 'Audiovisual', clientes: 'Clientes', estrategia: 'Estratégia', sistema: 'Sistema',
 }
 const MODULES = Object.keys(MODULE_LABEL) as AutoModule[]
 const STATUS = {
@@ -133,6 +134,8 @@ export function AutomationsCenter({ modules }: { modules?: AutoModule[] } = {}) 
       <div className="hidden md:block">
         <p className="text-[13px] text-muted">Tudo o que o sistema faz sozinho, o que está funcionando e o que está parado. {isAdmin ? 'Toque na chave para ligar ou desligar.' : 'Só administradores ligam e desligam.'}</p>
       </div>
+
+      {isAdmin && !embedded && <AiSpendCard />}
 
       {/* Resumo que também filtra */}
       <div role="group" aria-label="Situação" className="grid grid-cols-3 gap-2">

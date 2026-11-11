@@ -14,8 +14,10 @@ export function setupSteps(client: ClientRecord, contractStatus: string | null):
   const kind = clientKind(client.clientType, client.contract?.model ?? null)
   const empresa = !!client.document && !!(client.billingEmail ?? client.email) && !!client.address
   const servicos = client.services.some((s) => s.isActive)
+  // Com Consultoria ativa, o CPF/CNPJ é o que libera o diagnóstico automático (Estratégia → Consultoria).
+  const consult = client.services.some((s) => s.isActive && s.name.trim().toLowerCase() === 'consultoria')
   return [
-    { id: 'empresa', label: 'Empresa', hint: 'CPF/CNPJ, e-mail de cobrança e endereço. Com CNPJ, a Receita preenche o resto.', done: empresa },
+    { id: 'empresa', label: 'Empresa', hint: !client.document && consult ? 'Com o CNPJ, a IA começa o diagnóstico da consultoria. A Receita preenche o resto.' : 'CPF/CNPJ, e-mail de cobrança e endereço. Com CNPJ, a Receita preenche o resto.', done: empresa },
     { id: 'servicos', label: 'Serviços e valores', hint: 'O que foi contratado e por quanto.', done: servicos },
     { id: 'contrato', label: 'Contrato', hint: kind === 'avulso' ? 'Aceite eletrônico no portal.' : 'Assinatura pela Assinafy. Você lê a prévia antes de enviar.', done: !!contractStatus && SENT.includes(contractStatus), adminOnly: true,
       blockedBy: !empresa ? 'Empresa' : !servicos ? 'Serviços e valores' : undefined },

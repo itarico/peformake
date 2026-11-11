@@ -13,6 +13,7 @@ import { setClientPartner } from './clientsApi'
 import { HistorySection, LinksSection, StatusSection } from './ClientExtras'
 import { clientStatusLabel, describeClient, whatsappLink } from './clientRules'
 import { ClientDialog } from './ClientFormPage'
+import { AiSuggestions } from './AiSuggestions'
 import { ClientSetupSteps } from './ClientSetupSteps'
 import { ClientAssets } from './ClientAssets'
 import { cn } from '@/lib/cn'
@@ -131,6 +132,7 @@ export function ClientDetailPage() {
       <ClientSetupSteps key={client.updatedAt} client={client} isAdmin={isAdmin} canManage={canManage} force={!!params.get('novo') || !!params.get('passo')}
         initialStep={params.get('passo')} onOpenServices={() => setTab('operacao')}
         onStepClosed={() => setParams((cur) => { const p = new URLSearchParams(cur); p.delete('passo'); return p }, { replace: true })} />
+      {canManage && <AiSuggestions clientId={client.id} />}
 
       <div role="tablist" aria-label="Seções do cliente" className="flex gap-1 overflow-x-auto max-md:[mask-image:linear-gradient(to_right,#000_calc(100%-36px),transparent)] overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((t) => (

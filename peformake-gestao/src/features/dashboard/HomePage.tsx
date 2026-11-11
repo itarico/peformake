@@ -22,6 +22,8 @@ import { monthStart } from '@/features/traffic/planRules'
 import { dashAv, dashCommercial, dashContent, dashHomeBusiness, dashTraffic } from './dashApi'
 import { businessKpis, clientsInsight, concentrationInsight, mrrOf, revenueInsight, serviceInsight, type BusinessDash } from './businessRules'
 import { clientsToCall, greeting, pendingActions, type ActionItem } from './homeRules'
+import { useConsultList } from '@/features/strategy/consultApi'
+import { CONSULT_PATH, readyNotices } from '@/features/strategy/consultRules'
 
 const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
 const brlShort = (n: number) => (n >= 1000 ? `R$ ${(n / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mil` : brl.format(n))
@@ -233,6 +235,7 @@ function BusinessHome() {
   const content = useQuery({ queryKey: ['dash-content', month], queryFn: () => dashContent(month), enabled: can.content })
   const av = useQuery({ queryKey: ['dash-av', month], queryFn: () => dashAv(month), enabled: can.av })
   const commercial = useQuery({ queryKey: ['dash-commercial', 30], queryFn: () => dashCommercial(30), enabled: can.commercial })
+  const consultReady = readyNotices(useConsultList(can.operation).data)
 
   const t = traffic.data
   const c = content.data
@@ -259,6 +262,8 @@ function BusinessHome() {
       { key: 'unanswered', label: 'Conversas sem resposta', count: m.unanswered, to: '/whatsapp/conversas', urgent: true },
       { key: 'sales', label: 'Vendas para confirmar', count: m.sales_pending, to: '/comercial/vendas' },
     ] : []),
+    // Consultoria: um item só, sem alarde; com 1 cliente abre direto o diagnóstico dele.
+    ...(consultReady.length ? [{ key: 'consult', label: consultReady.length === 1 ? consultReady[0]!.title : 'Diagnósticos prontos para revisar', count: consultReady.length, to: consultReady.length === 1 ? consultReady[0]!.to : CONSULT_PATH }] : []),
   ])
   const loading = [traffic, content, av, commercial].some((q) => q.isLoading)
 
