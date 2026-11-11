@@ -12,6 +12,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · Cia Coffee (Magaly): acordo combinado com o Italo (nuvem)
+- Em aberto ago, set e out/2026, só marketing (sem captação/vídeo): R$ 900 cada = R$ 2.700. Acordo: pagando até 20/11, R$ 600/mês = R$ 1.800 (desconto R$ 900). Depois de 20/11 volta a R$ 2.700, vencimento 30/11.
+- Boleto na Cora (Italo emite): Magaly Cia Coffee, CNPJ 54.993.876/0001-05, R$ 2.700, venc. 30/11/2026, desconto R$ 900 até 20/11. Se a Cora não tiver desconto por data: boleto de R$ 1.800 venc. 20/11 e o aviso de que depois volta a R$ 2.700.
+- 6 mensagens no WhatsApp (1 a 3 vieram de outro chat e não estão aqui; 4 a 6 = valores, acordo, boleto). Em 11/11 à noite: nenhum e-mail da Cora no Gmail e nenhuma mensagem nossa enviada à Magaly. Ficha sem CNPJ e sem faturas no sistema.
+- Troca da Bete pelo mascote "Performático" (personagem alto do login): PAUSADA a pedido (Italo passou para a Cia Coffee). Escopo: BOT_NAME em features/goals/GoalsChat.tsx, avatar /assistente.webp (Mascot), textos no feminino ("sua assistente", "a Bete"), e textos do banco.
+
 ## 2026-11-11 noite · excluir cliente e Fixo/Avulso no cadastro (nuvem)
 - Excluir cliente: fatura CANCELADA não bloqueia mais (openInvoicesFromToday conta só faturas não canceladas). Ex.: "vinicius" (só 1 fatura cancelada) agora pode ser excluído. Ao excluir, faturas somem em cascata; lançamento cancelado e venda ficam sem cliente (set null).
 - Novo cliente: escolha "Fixo (mensal)" ou "Avulso" no topo do pop-up (padrão Fixo; avulso grava client_type one-off e contrato One-off). Testado iPhone 13 e computador, sem rolagem.
