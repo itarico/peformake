@@ -40,7 +40,8 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
   useEffect(() => { if (!open) setText(value) }, [value, open])
 
   const query = typed ? text : ''
-  const matches = useMemo(() => bestMatches(query, options, limit), [query, options, limit])
+  // Lista curta (até 8) aparece inteira ao abrir; lista longa mostra só as mais próximas do que foi digitado.
+  const matches = useMemo(() => bestMatches(query, options, !query && options.length <= 8 ? 8 : limit), [query, options, limit])
   const exact = sameOption(text, options)
   const canAdd = allowNew && typed && !!text.trim() && !exact
   const clean = (t: string) => (tidy ? tidyLabel(t) : t.replace(/\s+/g, ' ').trim())

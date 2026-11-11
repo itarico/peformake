@@ -5,6 +5,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { App } from '@/App'
 import { AuthContext, type AuthContextValue } from '@/auth/context'
 import './shell.css'
+import { installNoAutofill } from '@/lib/noAutofill'
+
+installNoAutofill()
 
 // Teste de layout no celular: sistema inteiro com login falso de admin. Sem sessão, o banco devolve vazio.
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } } })

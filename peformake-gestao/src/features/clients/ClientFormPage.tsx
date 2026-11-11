@@ -373,7 +373,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
       </Section>
 
       <Section flat={inDialog} hidden={inDialog && tab !== 'negocio'} title="Sobre o negócio" text="Opcional: ajuda a equipe a planejar.">
-        <div className="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 md:gap-y-3">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-3 md:gap-x-4">
           {([
             ['description', 'O que a empresa faz'],
             ['targetAudience', 'Público-alvo'],
@@ -381,7 +381,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
             ['competitors', 'Concorrentes'],
           ] as const).map(([key, label]) => (
             <Field key={key} label={label}>
-              {(fid) => <textarea id={fid} rows={inDialog ? 2 : 3} maxLength={2000} value={draft[key]} onChange={(e) => update(key, e.target.value)} className={cn(inputClass, 'resize-y')} />}
+              {(fid) => <textarea id={fid} rows={3} maxLength={2000} value={draft[key]} onChange={(e) => update(key, e.target.value)} className={cn(inputClass, 'resize-y')} />}
             </Field>
           ))}
         </div>
