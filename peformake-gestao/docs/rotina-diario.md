@@ -2,6 +2,13 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 tarde · celular minimalista, passo do cliente novo no Início/Bete e prévia do contrato (nuvem, agente)
+- Celular: "Padrão único" em todas as telas fora da meta (Clientes, Contratos, Comercial, WhatsApp, Tráfego, Social, Audiovisual, Operação, Automações, Notificações). Novo `AreaTabs` (3 abas + "Mais"), filtros na `FilterSheet`, alertas só > 0, ações em ícone, folha "Mais" do menu em grade com "Minha conta" visível. Todas as 27 telas medidas ≤ 35% no iPhone 13 (`e2e/celular.cjs`, tabela em docs/AUDITORIA-MOBILE.md). Barra de baixo NÃO mudou (abas por perfil ficam para depois).
+- Início e Bete: "Cliente X: falta Cobrança" (só admin/head, nível novidade, some quando o passo é feito). Regra única em `clients/setupRules.ts`.
+- Contrato: "Ver prévia" (só leitura) no assistente, na aba Contrato e no bloco de assinatura, antes de Enviar/Liberar.
+- Banco: nada alterado (só uma leitura). As 6 migrações do Financeiro continuam pendentes (APLICAR-AGORA.sql, prazo 25/11).
+- Testes: vitest 49 arquivos / 321 ok; tsc ok; e2e/telas.cjs ok; e2e/celular.cjs ok.
+
 ## 2026-11-11 · aplicar migrações do Financeiro: PARADO na confirmação do Supabase (nuvem, agente)
 - Feito: autoteste agora é só sob demanda (sem cron no banco e sem schedule no GitHub; catálogo "Sob demanda (quando o Italo pedir)"), commit 4d1d9d5 enviado. billing-webhook do repositório publicado (v11: aceita também ASAAS_WEBHOOK_TOKEN_ELLCAZO; resto igual ao que estava no ar). tsc ok; vitest 47 arquivos / 313 ok.
 - NÃO aplicado: nenhuma das 6 migrações (190300, 200000, 200100, 200200, 200300, 200400). A 1ª (190300) pediu confirmação ao Italo e expirou em 60 s; a ferramenta mandou não chamar de novo nesta vez. Por isso os testes em rollback e o selftest_run NÃO rodaram, e o billing-gateway do repositório NÃO foi publicado (depende da 200200).
