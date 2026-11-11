@@ -120,13 +120,14 @@ export function positioningSvg(pts: { name: string; x: number; y: number; me: bo
 }
 
 export function funnelSvg(rows: { label: string; value: number }[]): string {
-  const W = 520, rowH = 54, H = rows.length * rowH + 6, max = Math.max(...rows.map((r) => r.value), 1)
+  // Escala log: R$, impressões e cliques têm tamanhos muito diferentes e todos precisam aparecer.
+  const W = 540, rowH = 40, H = rows.length * rowH + 6, x0 = 190, bw = W - x0 - 90
+  const lg = (v: number) => Math.log10(Math.max(1, v) + 1), max = Math.max(...rows.map((r) => lg(r.value)), 1)
   const body = rows.map((r, i) => {
-    // Escala por raiz: números de tamanhos muito diferentes (R$ e cliques) continuam visíveis.
-    const w = Math.max(70, Math.sqrt(r.value / max) * (W - 20)), x = (W - w) / 2, y = 3 + i * rowH
-    return `<rect x="${x}" y="${y}" width="${w}" height="${rowH - 8}" rx="10" fill="${SERIES[i % SERIES.length]}" fill-opacity="${1 - i * 0.12}"/>`
-      + `<text x="${W / 2}" y="${y + 20}" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">${r.value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}</text>`
-      + `<text x="${W / 2}" y="${y + 37}" text-anchor="middle" font-size="12" fill="#fff">${esc(cut(r.label, 40))}</text>`
+    const y = 3 + i * rowH, w = r.value > 0 ? Math.max(8, (lg(r.value) / max) * bw) : 4
+    return `<text x="${x0 - 10}" y="${y + 22}" text-anchor="end" font-size="13" fill="${INK}">${esc(cut(r.label, 26))}</text>`
+      + `<rect x="${x0}" y="${y + 6}" width="${w}" height="24" rx="8" fill="${r.value > 0 ? SERIES[i % SERIES.length] : SERIES[1]}"/>`
+      + `<text x="${x0 + w + 8}" y="${y + 23}" font-size="14" font-weight="700" fill="${r.value > 0 ? INK : SERIES[1]}">${r.value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}</text>`
   }).join('')
   return svg(W, H, body, 'Funil do tráfego')
 }

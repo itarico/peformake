@@ -79,8 +79,8 @@ function slides(input: DeckInput, o: Orientation): Slide[] {
     if (!g.length) return
     add({ title: all.length > 1 ? `Concorrentes (${i + 1}/${all.length})` : 'Concorrentes', kicker: 'Mercado', body: `<div class="grid ${land ? 'g3' : 'g2'}">${g.map((x) => {
       const links = [['Site', x.site], ['Instagram', x.instagram && !isUrl(x.instagram) ? `https://instagram.com/${String(x.instagram).replace(/^@/, '')}` : x.instagram], ['Google Maps', x.google_maps], ['Anúncios', x.biblioteca_anuncios]].filter(([, u]) => isUrl(u))
-      const meta = [typeof x.nota === 'number' && x.nota > 0 ? `★ ${x.nota.toLocaleString('pt-BR')}${typeof x.avaliacoes === 'number' && x.avaliacoes > 0 ? ` (${x.avaliacoes})` : ''}` : '', x.preco ? `Preço: ${x.preco}` : ''].filter(Boolean)
-      return `<div class="card"><h3>${esc(x.nome)}</h3><p class="clamp-4">${esc(x.diferencial || x.o_que_fazem)}</p>${meta.length ? `<p class="meta">${meta.map(esc).join(' · ')}</p>` : ''}${x.como_anunciam ? `<p class="muted small clamp-2">${esc(x.como_anunciam)}</p>` : ''}${links.length ? `<p class="links">${links.map(([l, u]) => `<a href="${esc(u)}">${l}</a>`).join('')}</p>` : isUrl(x.fonte) ? `<p class="links"><a href="${esc(x.fonte)}">${esc(host(x.fonte))}</a></p>` : ''}</div>`
+      const meta = [typeof x.nota === 'number' && x.nota > 0 ? `★ ${x.nota.toLocaleString('pt-BR')}${typeof x.avaliacoes === 'number' && x.avaliacoes > 0 ? ` (${x.avaliacoes})` : ''}` : '', x.preco && !/n[aã]o encontrad/i.test(String(x.preco)) ? `Preço: ${x.preco}` : ''].filter(Boolean)
+      return `<div class="card"><h3>${esc(x.nome)}</h3><p class="clamp-4">${esc(x.diferencial || x.o_que_fazem)}</p>${meta.length ? `<p class="meta">${meta.map(esc).join(' · ')}</p>` : ''}${x.como_anunciam && !/^n[aã]o encontrad/i.test(String(x.como_anunciam)) ? `<p class="muted small clamp-2">${esc(x.como_anunciam)}</p>` : ''}${links.length ? `<p class="links">${links.map(([l, u]) => `<a href="${esc(u)}">${l}</a>`).join('')}</p>` : isUrl(x.fonte) ? `<p class="links"><a href="${esc(x.fonte)}">${esc(host(x.fonte))}</a></p>` : ''}</div>`
     }).join('')}</div>` })
   })
   const pres = presenceData(d, name)
@@ -194,7 +194,7 @@ export function deckCss(o: Orientation): string {
   .pfd .num{flex:none;display:inline-grid;place-items:center;width:${f(3)};height:${f(3)};border-radius:50%;background:var(--soft);color:var(--acc);font-weight:800;font-size:${f(1.4)}}
   .pfd .ans{color:#1a7f55;font-size:${f(1.25)};margin-top:${f(.3)}}
   .pfd .swot{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:${f(1.2)};flex:1;min-height:0}
-  .pfd .sw{border-radius:${f(1.4)};padding:${f(1.5)};overflow:hidden} .pfd .sw h3{font-size:${f(1.9)};margin-bottom:${f(.6)}}
+  .pfd .sw{border-radius:${f(1.4)};padding:${f(1.5)};overflow:hidden} .pfd .sw .bul{font-size:${f(1.35)}} .pfd .sw .bul li{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:${land ? 3 : 4};overflow:hidden} .pfd .sw h3{font-size:${f(1.9)};margin-bottom:${f(.6)}}
   .pfd .sw.ok{background:#e3f4ec} .pfd .sw.warn{background:#fbe9e0} .pfd .sw.acc{background:var(--soft)} .pfd .sw.gray{background:#eef1f2}
   .pfd .journey{list-style:none;display:grid;grid-template-columns:repeat(${land ? 5 : 2},1fr);gap:${f(1.2)}} .pfd .journey li{font-size:${f(1.35)}}
   .pfd .journey li{border-top:${f(.5)} solid var(--c);background:var(--canvas);border-radius:${f(1)};padding:${f(1.3)};display:flex;flex-direction:column;gap:${f(.4)}}

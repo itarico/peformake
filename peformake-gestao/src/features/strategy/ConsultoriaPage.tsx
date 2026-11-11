@@ -352,7 +352,7 @@ function DiagnosticoSection({ d, name }: { d: Doc; name: string }) {
               <b className="text-[14px]">{c.nome}</b>
               <p className="mt-0.5">{c.o_que_fazem}</p>
               {c.diferencial && <p className="mt-0.5"><b>Diferencial:</b> {c.diferencial}</p>}
-              {(c.nota > 0 || c.preco) && <p className="mt-0.5 font-semibold text-accent-ink">{[c.nota > 0 ? `★ ${Number(c.nota).toLocaleString('pt-BR')}${c.avaliacoes > 0 ? ` (${c.avaliacoes})` : ''}` : '', c.preco ? `Preço: ${c.preco}` : ''].filter(Boolean).join(' · ')}</p>}
+              {(c.nota > 0 || c.preco) && <p className="mt-0.5 font-semibold text-accent-ink">{[c.nota > 0 ? `★ ${Number(c.nota).toLocaleString('pt-BR')}${c.avaliacoes > 0 ? ` (${c.avaliacoes})` : ''}` : '', c.preco && !/n[aã]o encontrad/i.test(String(c.preco)) ? `Preço: ${c.preco}` : ''].filter(Boolean).join(' · ')}</p>}
               {c.como_anunciam && <p className="mt-0.5 text-muted">Comunicação: {c.como_anunciam}</p>}
               <p className="mt-1 flex flex-wrap gap-1.5">
                 {([['Site', c.site], ['Instagram', c.instagram && !isUrl(c.instagram) ? `https://instagram.com/${String(c.instagram).replace(/^@/, '')}` : c.instagram], ['Google Maps', c.google_maps], ['Anúncios', c.biblioteca_anuncios], [host(String(c.fonte ?? '')), c.fonte]] as [string, string][])
