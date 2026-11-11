@@ -2,6 +2,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · guia de comandos em PDF refeito com acentos (nuvem)
+- docs/GUIA-COMANDOS-WHATSAPP.pdf refeito a partir do .md (acentos ok, 1 página). Nada no código do sistema nem no banco.
+- Conferido no banco: as 6 migrações do Financeiro AINDA não foram aplicadas (sem selftest_run, auto_charge ligado). Prazo 25/11; lembrete agendado para 23/11.
+
 ## 2026-11-11 tarde · celular minimalista, passo do cliente novo no Início/Bete e prévia do contrato (nuvem, agente)
 - Celular: "Padrão único" em todas as telas fora da meta (Clientes, Contratos, Comercial, WhatsApp, Tráfego, Social, Audiovisual, Operação, Automações, Notificações). Novo `AreaTabs` (3 abas + "Mais"), filtros na `FilterSheet`, alertas só > 0, ações em ícone, folha "Mais" do menu em grade com "Minha conta" visível. Todas as 27 telas medidas ≤ 35% no iPhone 13 (`e2e/celular.cjs`, tabela em docs/AUDITORIA-MOBILE.md). Barra de baixo NÃO mudou (abas por perfil ficam para depois).
 - Início e Bete: "Cliente X: falta Cobrança" (só admin/head, nível novidade, some quando o passo é feito). Regra única em `clients/setupRules.ts`.
