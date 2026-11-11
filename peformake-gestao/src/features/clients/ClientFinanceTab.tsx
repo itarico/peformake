@@ -13,8 +13,11 @@ import { brlValue, dateBr } from './format'
 import { clientValue, lineValue } from './portfolioRules'
 import { Block, Fact } from './ui'
 import { ClientDialog } from './ClientFormPage'
+import { BidsSection } from '@/features/bids/BidsSection'
+import { isBidInvoice } from '@/features/bids/bidRules'
+import { useSearchParams } from 'react-router-dom'
 
-interface InvoiceRow { id: string; description: string | null; amount: number; due_date: string; status: string; paid_at: string | null; payment_url: string | null; unit: string; pay_token: string; group_id: string | null; source: string; partial_paid?: number | null }
+interface InvoiceRow { id: string; description: string | null; amount: number; due_date: string; status: string; paid_at: string | null; payment_url: string | null; unit: string; pay_token: string; group_id: string | null; source: string; ref?: string | null; partial_paid?: number | null }
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 const rpc = (fn: string, a?: Record<string, unknown>) => (supabase.rpc as unknown as Rpc)(fn, a)
 const RECEIVER = [['', 'Cada empresa cobra a sua'], ['peformake', 'Peformake recebe tudo e repassa à Ellcazo'], ['ellcazo', 'Ellcazo recebe tudo e repassa à Peformake']] as const
@@ -32,7 +35,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
   const invoices = useQuery({
     queryKey: ['client-invoices', client.id],
     queryFn: async () => {
-      const cols = 'id, description, amount, due_date, status, paid_at, payment_url, unit, pay_token, group_id, source'
+      const cols = 'id, description, amount, due_date, status, paid_at, payment_url, unit, pay_token, group_id, source, ref'
       const first = await supabase.from('invoices').select(`${cols}, partial_paid`).eq('client_id', client.id).order('due_date', { ascending: false })
       const { data, error } = first.error?.code === '42703' ? await supabase.from('invoices').select(cols).eq('client_id', client.id).order('due_date', { ascending: false }) : first
       if (error) throw error
@@ -58,6 +61,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
   const [dueFor, setDueFor] = useState<InvoiceRow | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const queryClient = useQueryClient()
+  const [, setParams] = useSearchParams()
   const refresh = () => { for (const k of ['client-invoices', 'invoices', 'fin-entries', 'fin-summary']) void queryClient.invalidateQueries({ queryKey: [k] }) }
   const pay = useMutation({
     mutationFn: async (v: { id: string; date: string; amount: number | null }) => {
@@ -87,6 +91,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
 
   return (
     <div className="flex flex-col gap-3">
+      <BidsSection clientId={client.id} />
       <div className="grid grid-cols-2 gap-2 @3xl:grid-cols-5">
         {[
           ['Vencimento', client.contract?.billingDay ? `Todo dia ${client.contract.billingDay}` : 'Não definido', nextDue ? `Próximo: ${dateBr(nextDue)}` : ''],
@@ -109,11 +114,14 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
       </div>
 
       <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-        <Block title="Faturas" action={
+        <Block title="Faturas" action={<span className="flex flex-wrap gap-1.5">
+          <button type="button" onClick={() => setParams((c) => { const p = new URLSearchParams(c); p.set('licitacao', 'nova'); return p }, { replace: true })} className="inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-full border border-line-strong px-2.5 text-[12px] font-semibold hover:border-ink">
+            <Plus size={13} aria-hidden="true" /> Licitação
+          </button>
           <button type="button" onClick={() => setJob(true)} className="inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-full border border-line-strong px-2.5 text-[12px] font-semibold hover:border-ink">
             <Plus size={13} aria-hidden="true" /> Serviço avulso
           </button>
-        }>
+        </span>}>
           {invoices.isPending && <p role="status" className="text-muted">Carregando</p>}
           {invoices.isError && <p role="alert" className="text-warn-ink">Não foi possível carregar as faturas.</p>}
           {!invoices.isPending && rows.length === 0 && <p className="text-muted">Nenhuma fatura ainda. Elas aparecem aqui quando a cobrança do mês é gerada no Financeiro.</p>}
@@ -133,7 +141,7 @@ export function ClientFinanceTab({ client }: { client: ClientRecord }) {
                     <span className="font-semibold tabular-nums">{brlValue(Number(r.amount))}</span>
                     {isOpenRow && Number(r.partial_paid ?? 0) > 0 && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-[12px] font-semibold text-warn-ink">Parcial: falta {brlValue(openAmount(r))}</span>}
                     <span className={cn('rounded-full px-2 py-0.5 text-[12px] font-semibold', tone)}>{label}</span>
-                    {isOpenRow && <button type="button" onClick={() => copyPay(r.pay_token)} aria-label="Copiar link de pagamento" title="Copiar link de pagamento"
+                    {isOpenRow && !isBidInvoice(r) && <button type="button" onClick={() => copyPay(r.pay_token)} aria-label="Copiar link de pagamento" title="Copiar link de pagamento"
                       className="grid size-11 cursor-pointer place-items-center rounded-full border border-line hover:border-ink"><Copy size={15} aria-hidden="true" /></button>}
                     <ActionMenu label={`Ações da fatura ${r.description ?? ''}`} actions={[
                       { label: 'Recebi (marcar pago)', icon: <Check size={15} aria-hidden="true" />, hidden: !isOpenRow, disabled: pay.isPending, onClick: () => setPaying(r) },

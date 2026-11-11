@@ -24,6 +24,7 @@ import { addDays, brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from '.
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { ask } from '@/components/ui/confirm'
+import { isBidInvoice } from '@/features/bids/bidRules'
 
 const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-gateway`
 
@@ -31,6 +32,8 @@ interface Invoice {
   id: string; client_id: string; unit: string; description: string; amount: number; due_date: string; status: string
   source: string; gateway: string | null; gateway_id: string | null; payment_url: string | null; gateway_error: string | null; paid_at: string | null; pay_token: string
   group_id: string | null
+  /** Fatura de licitação: ref 'licitacao:<os>'. */
+  ref?: string | null
   /** Já recebido de pagamento parcial (a fatura segue aberta com o saldo). */
   partial_paid?: number | null
   clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
@@ -62,7 +65,7 @@ type Row = { kind: 'one'; inv: Invoice } | { kind: 'group'; id: string; items: I
 const isOpen = (i: Invoice) => i.status === 'pendente' || i.status === 'vencido'
 /** Saldo em aberto da fatura (valor menos o parcial já recebido). */
 export const openAmount = (i: Pick<Invoice, 'amount' | 'partial_paid'>) => Math.round((Number(i.amount) - Number(i.partial_paid ?? 0)) * 100) / 100
-const canJoin = (i: Invoice) => isOpen(i) && !i.group_id
+const canJoin = (i: Invoice) => isOpen(i) && !i.group_id && !isBidInvoice(i)
 type Rpc = (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 type Unit = 'todas' | 'peformake' | 'ellcazo'
 type StatusFilter = 'todas' | 'aberto' | 'vencido' | 'pago'
@@ -86,6 +89,7 @@ export function BillingPage() {
   const [status, setStatusFilter] = useState<StatusFilter>('aberto')
   const [params] = useSearchParams()
   const target = params.get('fatura')
+  const [onlyBids, setOnlyBids] = useState(params.get('tipo') === 'licitacao')
   const [, setMonth] = useMonthParam()
   const [limit, setLimit] = useState(40)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -96,7 +100,7 @@ export function BillingPage() {
   const invoices = useQuery({
     queryKey: ['invoices', month],
     queryFn: async () => {
-      const cols = 'id, client_id, unit, description, amount, due_date, status, source, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date), invoice_items(id, description, quantity, amount, state)'
+      const cols = 'id, client_id, unit, description, amount, due_date, status, source, ref, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date), invoice_items(id, description, quantity, amount, state)'
       // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
       const range = `and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`
       const first = await supabase.from('invoices').select(`${cols}, partial_paid`).or(range).order('due_date').limit(1000)
@@ -232,7 +236,7 @@ export function BillingPage() {
     return () => window.clearTimeout(t)
   }, [target, invoices.data, month, setMonth])
   const nameOf = (i: Invoice) => i.clients?.name?.trim() ?? clientById.get(i.client_id)?.name ?? 'Cliente'
-  const byUnit = (invoices.data ?? []).filter((i) => unit === 'todas' || i.unit === unit)
+  const byUnit = (invoices.data ?? []).filter((i) => (unit === 'todas' || i.unit === unit) && (!onlyBids || isBidInvoice(i)))
   const open = byUnit.filter((i) => i.status === 'pendente' || i.status === 'vencido')
   const late = open.filter((i) => i.due_date < today)
   const paid = byUnit.filter((i) => i.status === 'pago')
@@ -292,7 +296,7 @@ export function BillingPage() {
         title="Financeiro"
         sub={`Cobrança de ${monthLabel(month).toLowerCase()} e o que ficou em aberto.`}
         tabs={FINANCE_TABS}
-        actions={<>{mobileIcons}<FilterSheet count={(unit !== 'todas' ? 1 : 0) + (status !== 'aberto' ? 1 : 0)}>
+        actions={<>{mobileIcons}<FilterSheet count={(unit !== 'todas' ? 1 : 0) + (status !== 'aberto' ? 1 : 0) + (onlyBids ? 1 : 0)}>
           <div role="group" aria-label="Situação" className="flex flex-wrap gap-1 md:hidden">
             {([['aberto', 'Quem deve'], ['vencido', 'Vencidas'], ['pago', 'Pagas'], ['todas', 'Tudo']] as const).map(([k, l]) => (
               <button key={k} type="button" aria-pressed={status === k} onClick={() => setStatusFilter(k)}
@@ -305,6 +309,8 @@ export function BillingPage() {
                 className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-semibold', u === unit ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{u === 'todas' ? 'Todas' : u === 'peformake' ? 'Peformake' : 'Ellcazo'}</button>
             ))}
           </div>
+          <button type="button" aria-pressed={onlyBids} onClick={() => setOnlyBids((v) => !v)} title="Só as faturas das ordens de serviço de licitação"
+            className={cn('min-h-9 cursor-pointer rounded-full border px-3.5 text-[13px] font-semibold', onlyBids ? 'border-ink bg-fill text-on-fill' : 'border-line text-muted hover:text-ink')}>Licitação</button>
           <MonthSwitcher />
           {isAdmin && <span className="hidden md:contents"><Button variant="secondary" onClick={() => setSettingsOpen(true)}><Settings size={15} aria-hidden="true" /> Configurar cobrança</Button></span>}
         </FilterSheet></>}
@@ -397,14 +403,15 @@ export function BillingPage() {
                   {isOpen(i) && Number(i.partial_paid ?? 0) > 0 && <span className="rounded-full bg-warn-soft px-2.5 py-0.5 text-[12px] font-semibold text-warn-ink">Parcial: falta {brl(openAmount(i))}</span>}
                   <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
                     st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
-                  {isOpen(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
+                  {isOpen(i) && !isBidInvoice(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
                     className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 text-[13px] font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>}
                   {isAdmin && <ActionMenu label={`Mais ações de ${clientName}`} actions={i.status === 'pago' ? [
                     { label: 'Desfazer pagamento', icon: <Undo2 size={15} aria-hidden="true" />, disabled: undo.isPending, onClick: () => { void ask('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.').then((ok) => { if (ok) undo.mutate(i.id) }) } },
                   ] : i.status === 'cancelado' ? [] : [
+                    { label: 'Ver licitação', icon: <ExternalLink size={15} aria-hidden="true" />, href: `/clientes/${i.client_id}?aba=contrato`, hidden: !isBidInvoice(i) },
                     { label: 'Abrir link no Asaas', icon: <ExternalLink size={15} aria-hidden="true" />, href: i.payment_url ?? undefined, hidden: !i.payment_url },
-                    { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!i.payment_url, disabled: chargeNow.isPending, onClick: () => { if (client && !client.document) { setBillingFor(client); return } chargeNow.mutate(i.id) } },
-                    { label: `Juntar com as outras (${joinable(i).length})`, icon: <Layers size={15} aria-hidden="true" />, hidden: !(canJoin(i) && joinable(i).length >= 2), disabled: join.isPending, onClick: () => askJoin(i) },
+                    { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!i.payment_url || isBidInvoice(i), disabled: chargeNow.isPending, onClick: () => { if (client && !client.document) { setBillingFor(client); return } chargeNow.mutate(i.id) } },
+                    { label: `Juntar com as outras (${joinable(i).length})`, icon: <Layers size={15} aria-hidden="true" />, hidden: isBidInvoice(i) || !(canJoin(i) && joinable(i).length >= 2), disabled: join.isPending, onClick: () => askJoin(i) },
                     { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!i.payment_url, onClick: () => setDueFor({ id: i.id, label: `${clientName} · ${i.description}`, due: i.due_date, monthly: i.source === 'mensalidade' }) },
                     { label: 'Recebi (marcar pago)', icon: <Check size={15} aria-hidden="true" />, disabled: pay.isPending, onClick: () => setPaying(i) },
                     { label: 'Desconto do cliente', icon: <Percent size={15} aria-hidden="true" />, onClick: () => setDiscountFor({ id: i.client_id, name: clientName }) },

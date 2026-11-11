@@ -10,6 +10,7 @@ import { useClientDeliveries } from '@/features/clients/DeliveryBar'
 import { listNotifications, markRead } from '@/features/notifications/notificationsApi'
 import { useProduction } from '@/features/production/useProduction'
 import { noticesFrom, pendingFrom, setupNotice, type Notice } from './chatNotices'
+import { bidAlerts, bidKeys } from '@/features/bids/bidsApi'
 import { useSetupPending } from '@/features/clients/useSetupPending'
 import { BeteToday, useBeteState, visibleItems, type TodayItem } from './BeteToday'
 import { isoWeek } from '@/features/finance/whatsapp/waRules'
@@ -280,6 +281,8 @@ export function GoalsChat() {
       return error ? 0 : Number(data ?? 0)
     },
   })
+  // Licitações: crédito 80% usado, vigência acabando, OS sem nota fiscal (sem alarde); fatura vencida = urgente.
+  const bids = useQuery({ queryKey: bidKeys.alerts, enabled: isAdmin, staleTime: 300_000, queryFn: () => bidAlerts().catch(() => []) })
   const firstName = state.status === 'ready' ? (state.user.fullName ?? '').split(' ')[0] ?? '' : ''
   const mine = useMemo<GoalRole[]>(() => (isAdmin ? ['gestao', 'comercial', 'relacionamento', 'financeiro', 'trafego', 'conteudo', 'audiovisual'] : [...new Set(roles.map((r) => APP_ROLE[r]).filter(Boolean) as GoalRole[])]), [isAdmin, roles])
   const rows = (board.data ?? []).filter((r) => mine.includes(r.role) && GOAL_META[r.key])
@@ -367,9 +370,14 @@ export function GoalsChat() {
     const setup = setupNotice(setupPending)
     if (setup) out.push({ id: setup.id, level: 'info', title: setup.title, sub: setup.sub, action: { label: 'Resolver', to: setup.to } })
     const wa = finWa.data ?? 0
+    for (const b of bids.data ?? []) {
+      // Fatura vencida do cliente já aparece como "fatura em aberto": não repete.
+      if (b.level === 'urgente' && overdue.some((o) => o.id === b.client_id)) continue
+      out.push({ id: b.id, level: b.level, title: b.title, sub: b.sub, action: { label: b.level === 'hoje' ? 'Anexar NF' : 'Abrir', to: b.to } })
+    }
     if (wa > 0) out.push({ id: `finwa:${isoWeek()}`, level: 'info', title: `🧾 ${wa} ${wa === 1 ? 'lançamento' : 'lançamentos'} do WhatsApp para revisar`, sub: 'Antes do fechamento do mês', action: { label: 'Revisar', to: '/financeiro/whatsapp' } })
     return out
-  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month, finWa.data, setupPending])
+  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month, finWa.data, setupPending, bids.data])
   const todayItems = visibleItems(todayAll, beteState.data)
   const urgentCount = todayItems.filter((i) => i.level === 'urgente').length
 
