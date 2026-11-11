@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BucketBars, DailyBars, FunnelBars, KpiRow, Panel, RankBars, ScoreGauge, SegmentedBar, StatTile, type Part, type ScoreBand } from '@/components/charts/Charts'
 import { fillDays, fmt, pctChange } from '@/components/charts/chartRules'
@@ -297,7 +298,7 @@ function LostSuggestions({ rows }: { rows: NonNullable<ClientsDash['lost_suggest
   )
 }
 
-// Base de clientes avulsos: separada dos recorrentes. Dinheiro só para administrador.
+// Base de clientes avulsos: um cartão só, separado dos recorrentes. Dinheiro só para administrador.
 function AvulsosBlock() {
   const { state } = useAuth()
   const isAdmin = state.status === 'ready' && state.user.roles.includes('admin')
@@ -308,70 +309,69 @@ function AvulsosBlock() {
   const to = '/clientes?aba=avulsos'
   const f = d.frequency
   const r = d.recency
+  const once = f ? f.f1 : 0
+  const bought = f ? f.f1 + f.f2 + f.f3 + f.f4 : 0
+  const nums: [string, string, string?][] = [
+    ['Cadastrados', fmt.int(d.total)],
+    ['Ativos', fmt.int(d.bought_90d), 'compraram em 90 dias'],
+    ['Novos no mês', fmt.int(d.new_month)],
+    ['Voltaram a comprar', repeatPct === null ? '—' : `${repeatPct}%`, `${d.repeat} de ${d.buyers}`],
+  ]
   return (
-    <section aria-label="Clientes avulsos" className="flex flex-col gap-2">
-      <h2 className="m-0 text-[15px] font-semibold">Clientes avulsos</h2>
-      <KpiRow label="Clientes avulsos em números">
-        <StatTile label="Avulsos cadastrados" value={fmt.int(d.total)} to={to} />
-        <StatTile label="Compraram em 90 dias" value={fmt.int(d.bought_90d)} hint="Estão ativos" to={to} />
-        <StatTile label="Novos no mês" value={fmt.int(d.new_month)} to={to} />
-        <StatTile label="Voltaram a comprar" value={repeatPct === null ? 'Sem base' : `${repeatPct}%`} hint={`${d.repeat} de ${d.buyers} que já compraram`} to={to} />
-        {isAdmin && d.revenue_12m !== null && <StatTile label="Receita avulsa em 12 meses" value={fmt.money(d.revenue_12m * 100)} hint={`${d.paid_count_12m ?? 0} pagamentos`} />}
-        {isAdmin && d.ticket !== null && <StatTile label="Ticket médio" value={fmt.money(d.ticket * 100)} hint="Por compra paga" />}
-      </KpiRow>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {f && (
-          <Panel title="Quantas vezes compraram" action={<span className="text-[12px] text-muted">Avulsos não perdidos</span>}>
-            <BucketBars label="Clientes por número de compras" empty="Nenhuma compra registrada." rows={[
-              { label: '1 vez', value: f.f1 },
-              { label: '2 vezes', value: f.f2 },
-              { label: '3 vezes', value: f.f3 },
-              { label: '4 ou mais', value: f.f4 },
-              ...(f.none ? [{ label: 'Nenhuma ainda', value: f.none }] : []),
+    <Panel title="Clientes avulsos" className="pf-rise" action={<Link to={to} className="inline-flex min-h-10 items-center gap-1 text-[13px] font-medium">Ver avulsos <ArrowRight size={14} aria-hidden="true" /></Link>}>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_1fr]">
+        <div className="flex flex-col gap-4">
+          <dl className="m-0 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {nums.map(([label, value, hint]) => (
+              <div key={label}>
+                <dt className="text-[12px] text-muted">{label}</dt>
+                <dd className="m-0 text-[22px] font-semibold leading-tight tabular-nums">{value}</dd>
+                {hint && <dd className="m-0 text-[11.5px] text-muted">{hint}</dd>}
+              </div>
+            ))}
+          </dl>
+          {r && (
+            <SegmentedBar label="Pela última compra" empty="Nenhuma compra registrada." parts={[
+              { label: 'Até 90 dias', value: r.le90, slot: 0 },
+              { label: 'Esfriando', value: r.d91to180, slot: 1 },
+              { label: 'Pausados', value: r.gt180, slot: 3 },
+              { label: 'Sem compra', value: r.none, slot: 5 },
             ]} />
-          </Panel>
-        )}
-        {r && (
-          <Panel title="Última compra" action={<span className="text-[12px] text-muted">Há quanto tempo</span>}>
-            <BucketBars label="Clientes pela última compra" empty="Nenhuma compra registrada." rows={[
-              { label: 'Até 90 dias', value: r.le90 },
-              { label: '91 a 180 dias', value: r.d91to180, highlight: r.d91to180 > 0 },
-              { label: 'Mais de 180', value: r.gt180 },
-              ...(r.none ? [{ label: 'Sem compra', value: r.none }] : []),
-            ]} />
-            <p className="text-[12px] text-muted">91 a 180 dias: esfriando. Mais de 180: pausado sozinho, volta se comprar.</p>
-          </Panel>
-        )}
-        <CoolingPanel rows={d.cooling ?? []} />
-        <Panel title="Avulsos novos por mês" className={d.cooling?.length ? 'md:col-span-2 xl:col-span-3' : undefined} action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
-          <DailyBars label="Clientes avulsos novos por mês" format={fmt.int} data={d.new_by_month.map((m) => ({ day: m.month, value: m.n }))} height={100} />
-        </Panel>
+          )}
+          <p className="m-0 text-[13px] text-muted">
+            {bought > 0 ? `${once} de ${bought} compraram só uma vez.` : 'Nenhuma compra registrada ainda.'}
+            {' Esfriando: 91 a 180 dias sem comprar. Pausado: mais de 180, volta se comprar.'}
+            {isAdmin && d.revenue_12m !== null && ` Receita em 12 meses: ${fmt.money(d.revenue_12m * 100)} (${d.paid_count_12m ?? 0} pagamentos${d.ticket !== null ? `, ticket ${fmt.money(d.ticket * 100)}` : ''}).`}
+          </p>
+          <CoolingButton rows={d.cooling ?? []} />
+        </div>
+        <DailyBars label="Novos por mês (12 meses)" format={fmt.int} data={d.new_by_month.map((m) => ({ day: m.month, value: m.n }))} height={100} />
       </div>
-    </section>
+    </Panel>
   )
 }
 
-// Esfriando (91 a 180 dias sem comprar): oportunidade de recompra. Destaque discreto, lista curta.
-function CoolingPanel({ rows }: { rows: NonNullable<AvulsosDash['cooling']> }) {
+// Esfriando (91 a 180 dias sem comprar): oportunidade de recompra. Discreto; um toque abre a lista.
+function CoolingButton({ rows }: { rows: NonNullable<AvulsosDash['cooling']> }) {
   const [open, setOpen] = useState(false)
   if (!rows.length) return null
   const today = todayBR()
-  const line = (c: (typeof rows)[number]) => (
-    <li key={c.id} className="flex items-baseline justify-between gap-2 text-[13px]">
-      <Link to={`/clientes/${c.id}`} className="min-w-0 truncate font-medium text-ink no-underline hover:underline">{c.name}</Link>
-      <span className="shrink-0 text-[12px] tabular-nums text-muted">{c.last ? `${daysSince(c.last, today)} dias` : 'sem compra'} · {c.n}x</span>
-    </li>
-  )
   return (
-    <Panel title={ACTIVITY_LABEL.esfriando} action={<span className="rounded-full bg-accent-soft px-2 py-0.5 text-[12px] font-medium text-accent-ink">{rows.length} para oferecer de novo</span>}>
-      <ul className="flex flex-col gap-1.5">{rows.slice(0, 3).map(line)}</ul>
-      {rows.length > 3 && (
-        <button type="button" onClick={() => setOpen(true)} className="min-h-9 cursor-pointer self-start text-[13px] font-medium text-ink underline-offset-2 hover:underline">Ver detalhes</button>
-      )}
-      <Dialog open={open} onClose={() => setOpen(false)} title="Avulsos esfriando" description="Sem comprar há 91 a 180 dias. Bom momento para oferecer de novo." size="sm">
-        <ul className="flex flex-col gap-2">{rows.slice(0, 10).map(line)}</ul>
+    <>
+      <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 cursor-pointer items-center gap-2 self-start rounded-full bg-accent-soft px-3 text-[13px] font-medium text-accent-ink">
+        {rows.length} {rows.length === 1 ? 'esfriando' : 'esfriando'}: oferecer de novo <ArrowRight size={14} aria-hidden="true" />
+      </button>
+      <Dialog open={open} onClose={() => setOpen(false)} title={ACTIVITY_LABEL.esfriando} description="Sem comprar há 91 a 180 dias. Bom momento para oferecer de novo." size="sm">
+        <ul className="flex flex-col gap-2">
+          {rows.slice(0, 10).map((c) => (
+            <li key={c.id} className="flex items-baseline justify-between gap-2 text-[13px]">
+              <Link to={`/clientes/${c.id}`} onClick={() => setOpen(false)} className="min-w-0 truncate font-medium text-ink no-underline hover:underline">{c.name}</Link>
+              <span className="shrink-0 text-[12px] tabular-nums text-muted">{c.last ? `${daysSince(c.last, today)} dias` : 'sem compra'} · {c.n}x</span>
+            </li>
+          ))}
+        </ul>
         {rows.length > 10 && <p className="mt-2 text-[12px] text-muted">E mais {rows.length - 10}. Veja na aba Avulsos.</p>}
       </Dialog>
-    </Panel>
+    </>
   )
 }

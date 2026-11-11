@@ -58,8 +58,7 @@ async function mock(route) {
         const gauge = document.querySelector('svg[aria-label^="Nota da carteira"]')?.getAttribute('aria-label');
         return { sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth, nested, over, gauge,
           tenure: [...document.querySelectorAll('section[aria-label="Tempo de casa"] li')].map((l) => l.textContent),
-          freq: document.querySelectorAll('section[aria-label="Quantas vezes compraram"] li').length,
-          cooling: document.querySelectorAll('section[aria-label="Esfriando"] li').length,
+          avulsos: document.querySelector('section[aria-label="Clientes avulsos"]')?.innerText || '',
           lost: document.querySelectorAll('section[aria-label="Saíram sem avisar?"] li').length };
       });
       console.log(JSON.stringify({ dev, theme, ...m }));
@@ -69,11 +68,12 @@ async function mock(route) {
       if (m.over.length) fails.push(`${dev}/${theme}: algo sai do cartão: ${m.over.join(' | ')}`);
       if (!/: 68 de 100, Atenção/.test(m.gauge || '')) fails.push(`${dev}/${theme}: velocímetro errado (${m.gauge})`);
       if (m.tenure.length !== 6) fails.push(`${dev}/${theme}: tempo de casa com ${m.tenure.length} faixas`);
-      if (m.freq !== 5) fails.push(`${dev}/${theme}: frequência com ${m.freq} linhas`);
-      if (m.cooling !== 3) fails.push(`${dev}/${theme}: esfriando deveria mostrar 3 (mostra ${m.cooling})`);
+      // Avulsos: um cartão só, com os números, a última compra e "5 de 9 compraram só uma vez".
+      if (!/5 de 9 compraram só uma vez/.test(m.avulsos)) fails.push(`${dev}/${theme}: avulsos sem a frase de recompra`);
+      if (!/Pela última compra/.test(m.avulsos)) fails.push(`${dev}/${theme}: avulsos sem a barra da última compra`);
       if (m.lost !== 2) fails.push(`${dev}/${theme}: sugestões de perdido: ${m.lost}`);
-      // Ver detalhes do esfriando: pop-up sem rolagem interna.
-      await p.getByRole('button', { name: 'Ver detalhes' }).click(); await p.waitForTimeout(400);
+      // Esfriando: botão abre o pop-up sem rolagem interna.
+      await p.getByRole('button', { name: /esfriando: oferecer de novo/ }).click(); await p.waitForTimeout(400);
       const dlg = await p.evaluate(() => { const d = document.querySelector('dialog[open]'); if (!d) return null; const bad = [d, ...d.querySelectorAll('*')].filter((e) => e.scrollHeight > e.clientHeight + 2 && /auto|scroll/.test(getComputedStyle(e).overflowY)).length; return { items: d.querySelectorAll('li').length, bad } });
       if (!dlg || dlg.items !== 5 || dlg.bad) fails.push(`${dev}/${theme}: Ver detalhes errado ${JSON.stringify(dlg)}`);
       if (theme === 'light') await p.screenshot({ path: `${OUT}/clientes-resumo-${dev}-detalhes.png` });

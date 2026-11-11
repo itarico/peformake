@@ -11,6 +11,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · Clientes → Resumo: avulsos num cartão só (nuvem)
+- "Clientes avulsos" virou um único cartão: 4 números (cadastrados, ativos, novos no mês, voltaram a comprar), barra "Pela última compra" (até 90 dias / esfriando / pausados / sem compra), frase "X de Y compraram só uma vez" (+ receita e ticket só para admin), botão "N esfriando: oferecer de novo" (pop-up) e gráfico de novos por mês. Saíram os 5 blocos soltos. e2e/clientes-resumo.cjs atualizado e ok.
+- Magaly (CIA COFFE): Italo perguntou o combinado; NADA registrado no sistema/diário. Fatos: perdida por inadimplência 05/11, reativada 11/11, sem faturas no sistema; ela pediu em 09/11 para pagar o boleto de 22/08 e saber o saldo do mês anterior. Aguardando o Italo dizer o acordo.
+
 ## 2026-11-11 noite · Início e login (nuvem)
 - Início: "Cliente X: falta Y" saiu do topo e virou UM item em "Precisa de você" ("N clientes novos com cadastro pela metade"); o toque abre pop-up com até 8 clientes (link ao passo na ficha) e "Ver os outros em Clientes". Teste novo SetupPendingCard.test.tsx. Tela do Início não foi vista com dados falsos (o mock de e2e/telas.cjs não cobre dash_home_business).
 - Login: personagens nos tons do ciano do sistema (o escuro com traço claro) e só 2 frases do Italo: "Marketing que não fica no automático." e "Tudo que seu marketing precisa.".
