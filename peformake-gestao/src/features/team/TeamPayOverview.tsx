@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { Attainment, brl, type Ote } from './MemberPay'
 import { MemberDialog, listMembers } from './MembersPage'
+import { payTag } from './teamRules'
+import { ask } from '@/components/ui/confirm'
 
 // Equipe → Configurações: regras da variável para todos e a remuneração de cada membro.
 type Row = Ote & { staff_id: string; name: string; avatar_path: string | null; job_title: string | null; has_pay: boolean }
@@ -29,6 +31,9 @@ export function TeamPayOverview() {
     },
     onSuccess: () => { setMin(null); setCap(null); for (const k of ['team-pay', 'member-ote']) void queryClient.invalidateQueries({ queryKey: [k] }) },
   })
+  const gen = useMutation({
+    mutationFn: async () => { const { data, error } = await rpc('team_pay_generate'); if (error) throw new Error(error.message); return data as { created: number } },
+  })
   if (!q.data) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
   const rows = q.data
   const fixed = rows.reduce((a, r) => a + Number(r.base_salary), 0)
@@ -50,7 +55,14 @@ export function TeamPayOverview() {
       </section>
 
       <section aria-labelledby="por-membro" className="flex flex-col gap-2">
-        <h3 id="por-membro" className="px-1 text-[12px] font-semibold uppercase tracking-wide text-muted">Por membro</h3>
+        <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+          <h3 id="por-membro" className="text-[12px] font-semibold uppercase tracking-wide text-muted">Por membro</h3>
+          <span className="flex items-center gap-2">
+            {gen.isSuccess && <span role="status" className="text-[12.5px] text-ok-ink">{gen.data.created ? `${gen.data.created} conta(s) criada(s) no Caixa.` : 'Já estava tudo lançado.'}</span>}
+            {gen.isError && <span role="alert" className="text-[12.5px] text-warn-ink">{(gen.error as Error).message}</span>}
+            <Button variant="secondary" disabled={gen.isPending} onClick={() => { void ask('Criar as contas a pagar da equipe deste mês (fixo, adiantamento do dia 15, variável e pró-labore)? Quem já tem não duplica.').then((ok) => { if (ok) gen.mutate() }) }}>{gen.isPending ? 'Gerando' : 'Gerar contas do mês'}</Button>
+          </span>
+        </div>
         <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
           {rows.map((r) => {
             const photo = r.avatar_path ? supabase.storage.from('team-photos').getPublicUrl(r.avatar_path).data.publicUrl : null
@@ -59,7 +71,7 @@ export function TeamPayOverview() {
                 <button type="button" onClick={() => setOpenId(r.staff_id)} className={cn('flex w-full cursor-pointer flex-col gap-2 rounded-2xl border bg-surface p-3 text-left hover:border-line-strong', r.has_pay ? 'border-line' : 'border-dashed border-line-strong')}>
                   <span className="flex items-center gap-3">
                     {photo ? <img src={photo} alt="" className="size-10 rounded-full object-cover" /> : <span className="grid size-10 place-items-center rounded-full bg-raised text-[13px] font-semibold">{initials(r.name)}</span>}
-                    <span className="min-w-0 flex-1"><b className="block truncate font-semibold">{r.name}</b><span className="block truncate text-[12px] text-muted">{r.job_title ?? r.contract.toUpperCase()}</span></span>
+                    <span className="min-w-0 flex-1"><b className="block truncate font-semibold">{r.name}</b><span className="block truncate text-[12px] text-muted">{payTag(r.contract, r.pay_schedule) ?? 'Contrato: definir'}{r.job_title ? ` · ${r.job_title}` : ''}</span></span>
                     <span className="text-right"><b className="block tabular-nums">{r.has_pay ? brl(r.ote) : 'Preencher'}</b><span className="block text-[11.5px] text-muted">{r.has_pay ? `OTE · recebe ${brl(r.total_month)}` : 'sem fixo e variável'}</span></span>
                   </span>
                   {r.has_pay && r.variable_target > 0 && <Attainment pct={r.attainment} min={r.min_pct} cap={r.cap_pct} />}

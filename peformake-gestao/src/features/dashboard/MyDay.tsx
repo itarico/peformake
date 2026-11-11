@@ -319,7 +319,7 @@ function MyPayables({ staffId }: { staffId: string | null }) {
       <p className="text-[26px] font-semibold tabular-nums text-ok-ink">{money(p.pending)}</p>
       {Number(p.waiting ?? 0) > 0 && (
         <p className="text-[13px] text-muted" title={(p.waiting_items ?? []).map((w) => `${w.title} · ${w.client}`).join(' / ')}>
-          + {money(p.waiting ?? 0)} aguardando o cliente pagar ({(p.waiting_items ?? []).length} {(p.waiting_items ?? []).length === 1 ? 'serviço' : 'serviços'}). Entra no dia 30 depois que ele pagar.
+          + {money(p.waiting ?? 0)} aguardando o cliente pagar ({(p.waiting_items ?? []).length} {(p.waiting_items ?? []).length === 1 ? 'serviço' : 'serviços'}). Entra no seu próximo dia de pagamento depois que ele pagar.
         </p>
       )}
       {open.length > 0 && (

@@ -53,7 +53,7 @@ export function ChannelsPart({ data }: { data: WaOverview }) {
       <section aria-label="Chaves" className="grid gap-x-6 rounded-3xl border border-line bg-surface p-4 sm:grid-cols-2">
         <Toggle on={s.enabled} label="Ler os canais ligados" hint="Leitor por regras, sem IA: custo zero." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { enabled: v } } })} />
         <Toggle on={s.reply_enabled} label="Responder no grupo" hint={h.wasender_missing ? 'Falta a chave do Wasender no servidor: a resposta fica na fila.' : 'Uma linha curta: "Anotado ✓ ...". Só mensagem interna.'} onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { reply_enabled: v } } })} />
-        <Toggle on={s.reimburse_enabled} label={'"Do meu bolso" vira reembolso'} hint="Só vira conta a pagar (dia 30) depois do OK na revisão." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { reimburse_enabled: v } } })} />
+        <Toggle on={s.reimburse_enabled} label={'"Do meu bolso" vira reembolso'} hint="Só vira conta a pagar (próximo dia de pagamento da pessoa) depois do OK na revisão." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { reimburse_enabled: v } } })} />
         <Toggle on={s.pix_enabled} label="Botão Pagar reembolso por Pix" hint="Pelo Asaas, sempre com a sua confirmação." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { pix_enabled: v } } })} />
       </section>
       {save.problem && <p role="alert" className="rounded-xl bg-warn-soft px-4 py-2.5 font-medium text-warn-ink">{save.problem}</p>}

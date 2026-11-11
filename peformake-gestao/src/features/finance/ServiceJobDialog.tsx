@@ -60,7 +60,13 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
   const list = [...(people.data ?? [])].sort((a, b) => Number(b.skills.includes(skill.key)) - Number(a.skills.includes(skill.key)) || a.name.localeCompare(b.name))
   const cv = parseMoney(clientAmount) ?? 0
   const typedSv = parseMoney(staffAmount) ?? 0
-  const sv = typedSv > 0 ? typedSv : staff && cv > 0 ? Math.round(cv * (100 - pct)) / 100 : 0
+  // Freela com tabela de valores (Equipe → Membros → Pagamento): o valor da produção vem dela.
+  const rate = useQuery({ queryKey: ['staff-job-rate', staff, skill.key], enabled: !!staff, staleTime: 60_000, queryFn: async () => {
+    const { data } = await (supabase.rpc as unknown as Rpc)('staff_job_rate', { _staff: staff, _skill: skill.key })
+    return data == null ? null : Number(data)
+  } })
+  const rated = rate.data ?? null
+  const sv = typedSv > 0 ? typedSv : rated ? rated : staff && cv > 0 ? Math.round(cv * (100 - pct)) / 100 : 0
 
   const save = useMutation({
     mutationFn: async () => {
@@ -137,12 +143,12 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
 
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col text-[13px] font-semibold">Cobrar do cliente (R$)<input inputMode="decimal" value={clientAmount} onChange={(e) => setClientAmount(e.target.value)} placeholder="0,00" className={field} /></label>
-          <label className="flex flex-col text-[13px] font-semibold">Pagar para quem fez (R$)<input inputMode="decimal" value={staffAmount} onChange={(e) => setStaffAmount(e.target.value)} placeholder={staff && cv > 0 ? `${(cv * (100 - pct) / 100).toFixed(2).replace('.', ',')} (${100 - pct}%)` : '0,00'} className={field} /></label>
+          <label className="flex flex-col text-[13px] font-semibold">Pagar para quem fez (R$)<input inputMode="decimal" value={staffAmount} onChange={(e) => setStaffAmount(e.target.value)} placeholder={rated ? `${rated.toFixed(2).replace('.', ',')} (tabela da pessoa)` : staff && cv > 0 ? `${(cv * (100 - pct) / 100).toFixed(2).replace('.', ',')} (${100 - pct}%)` : '0,00'} className={field} /></label>
         </div>
         {(cv > 0 || sv > 0) && (
           <p className="rounded-xl bg-raised px-3 py-2 text-[13px]">
             {cv > 0 && <>Fatura de <b>{brl(cv)}</b> no fechamento do mês do cliente{sv > 0 ? '; ' : '.'}</>}
-            {sv > 0 && <>{cv > 0 ? <>quem fez recebe <b>{brl(sv)}</b> no dia 30 depois que o cliente pagar</> : <>conta a pagar de <b>{brl(sv)}</b> no Caixa, no próximo dia 30</>}{cv > 0 && sv < cv ? <>; fica <b>{brl(cv - sv)}</b> para a empresa</> : ''}.</>}
+            {sv > 0 && <>{cv > 0 ? <>quem fez recebe <b>{brl(sv)}</b> no próximo dia de pagamento dela depois que o cliente pagar</> : <>conta a pagar de <b>{brl(sv)}</b> no Caixa, no próximo dia de pagamento dela</>}{cv > 0 && sv < cv ? <>; fica <b>{brl(cv - sv)}</b> para a empresa</> : ''}.</>}
           </p>
         )}
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}

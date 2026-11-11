@@ -231,7 +231,7 @@ function TeamSettings() {
           {num('head_commission_pct', 'Percentual do head (%)')}
         </div>
         <div className="flex flex-col gap-2 rounded-2xl border border-line p-4">
-          <p><span className="font-medium">Serviço avulso feito por alguém do time</span><span className="block text-[12px] text-muted">A pessoa recebe o valor do cliente menos a parte da empresa, no dia 30 depois que o cliente pagar.</span></p>
+          <p><span className="font-medium">Serviço avulso feito por alguém do time</span><span className="block text-[12px] text-muted">A pessoa recebe o valor do cliente menos a parte da empresa, no próximo dia de pagamento dela (30, ou 15 e 30 se for quinzenal) depois que o cliente pagar.</span></p>
           {num('job_company_pct', 'Parte da empresa (%)')}
         </div>
         <div className="rounded-2xl border border-line p-4">{toggle('goals_enabled', 'Metas por cargo', 'Cada pessoa vê as metas do cargo dela na área dela.')}</div>

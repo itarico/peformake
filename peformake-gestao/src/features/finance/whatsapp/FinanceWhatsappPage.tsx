@@ -303,7 +303,7 @@ function Reimbursements({ list, pix, onDone }: { list: Reimbursement[]; pix: boo
   return (
     <section aria-labelledby="reemb" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4">
       <h2 id="reemb" className="text-[16px] font-semibold">Reembolsos confirmados</h2>
-      <p className="text-[12.5px] text-muted">Entram no pagamento do dia 30 da equipe.{pix ? ' Ou pague agora por Pix.' : ''}</p>
+      <p className="text-[12.5px] text-muted">Entram no próximo dia de pagamento de cada pessoa (15 ou 30).{pix ? ' Ou pague agora por Pix.' : ''}</p>
       {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 text-[13px] font-medium text-warn-ink">{problem}</p>}
       <ul className="flex flex-col divide-y divide-line">
         {list.map((r) => (

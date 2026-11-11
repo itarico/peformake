@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { goalValue, partnershipProgress, type MemberDashboard } from './teamRules'
+import { fixedInstallments, goalValue, maskPhone, nextPayday, partnershipProgress, payTag, phoneProblem, type MemberDashboard } from './teamRules'
 
 const base: MemberDashboard = {
   settings: { sourcing_enabled: true, sourcing_pct: 10, sourcing_months: 3, partnership_enabled: true, partnership_min_revenue: 10000, partnership_min_months: 6, goals_enabled: true },
@@ -21,4 +21,39 @@ describe('partnershipProgress', () => {
   it('meio caminho', () => expect(partnershipProgress(base)).toEqual({ pctRevenue: 50, months: 2, needed: 6, ready: false }))
   it('pronto quando bate receita e meses', () =>
     expect(partnershipProgress({ ...base, revenue_brought: 12000, months_with_revenue: 6 }).ready).toBe(true))
+})
+
+describe('telefone do membro', () => {
+  it('máscara com e sem 55', () => {
+    expect(maskPhone('5581999990000')).toBe('(81) 99999-0000')
+    expect(maskPhone('81999990000')).toBe('(81) 99999-0000')
+    expect(maskPhone('8133334444')).toBe('(81) 3333-4444')
+    expect(maskPhone('')).toBe('')
+  })
+  it('valida DDD', () => {
+    expect(phoneProblem('(81) 99999-0000')).toBeNull()
+    expect(phoneProblem('5581999990000')).toBeNull()
+    expect(phoneProblem('')).toBeNull()
+    expect(phoneProblem('99999-0000')).toMatch(/DDD/)
+  })
+})
+
+describe('forma de pagamento', () => {
+  it('etiqueta', () => {
+    expect(payTag('pj', 'quinzenal')).toBe('PJ · Quinzenal')
+    expect(payTag('socio', 'mensal')).toBe('Sócio')
+    expect(payTag(null, null)).toBeNull()
+  })
+  it('parcelas do fixo', () => {
+    expect(fixedInstallments(2000, 'quinzenal', 40)).toEqual([{ day: 15, amount: 800 }, { day: 30, amount: 1200 }])
+    expect(fixedInstallments(3001, 'quinzenal', 50)).toEqual([{ day: 15, amount: 1500.5 }, { day: 30, amount: 1500.5 }])
+    expect(fixedInstallments(3000, 'mensal', 50)).toEqual([{ day: 30, amount: 3000 }])
+  })
+  it('próximo dia de pagamento (fevereiro: último dia)', () => {
+    expect(nextPayday('2027-02-16', 'quinzenal')).toBe('2027-02-28')
+    expect(nextPayday('2027-02-03', 'quinzenal')).toBe('2027-02-15')
+    expect(nextPayday('2026-12-31', 'quinzenal')).toBe('2027-01-15')
+    expect(nextPayday('2026-12-31', 'mensal')).toBe('2027-01-30')
+    expect(nextPayday('2027-02-03', 'mensal')).toBe('2027-02-28')
+  })
 })
