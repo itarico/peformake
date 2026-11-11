@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { DailyBars, KpiRow, Panel, RankBars, SegmentedBar, StatTile, type Part } from '@/components/charts/Charts'
 import { fillDays, fmt, pctChange } from '@/components/charts/chartRules'
+import { useAuth } from '@/auth/context'
 import { LoadState } from '@/features/traffic/LoadState'
-import { dashAv, dashClients, dashCommercial, dashContent, dashTraffic, type ClientsDash } from './dashApi'
+import { dashAv, dashClients, dashClientsAvulsos, dashCommercial, dashContent, dashTraffic, type ClientsDash } from './dashApi'
 import { monthlyChurn, monthsText, npsLabel, npsScore, retentionRate } from './retentionRules'
 
 const cpr = (spend: number, results: number) => (results > 0 ? spend / results : null)
@@ -258,6 +259,34 @@ export function ClientsSummary() {
           <RankBars label="Motivos de saída" format={fmt.int} empty="Nenhuma saída no período." rows={d.lost_reasons.slice(0, 4).map((r) => ({ label: r.reason, value: r.n, tone: 'warn' as const }))} />
         </Panel>
       </div>
+      <AvulsosBlock />
     </>
+  )
+}
+
+// Base de clientes avulsos: separada dos recorrentes. Dinheiro só para administrador.
+function AvulsosBlock() {
+  const { state } = useAuth()
+  const isAdmin = state.status === 'ready' && state.user.roles.includes('admin')
+  const q = useQuery({ queryKey: ['dash-clients-avulsos'], queryFn: dashClientsAvulsos })
+  const d = q.data
+  if (!d) return null
+  const repeatPct = d.buyers > 0 ? Math.round((d.repeat / d.buyers) * 100) : null
+  const to = '/clientes?aba=avulsos'
+  return (
+    <section aria-label="Clientes avulsos" className="flex flex-col gap-2">
+      <h2 className="m-0 text-[15px] font-semibold">Clientes avulsos</h2>
+      <KpiRow label="Clientes avulsos em números">
+        <StatTile label="Avulsos cadastrados" value={fmt.int(d.total)} to={to} />
+        <StatTile label="Compraram em 90 dias" value={fmt.int(d.bought_90d)} hint="Estão ativos" to={to} />
+        <StatTile label="Novos no mês" value={fmt.int(d.new_month)} to={to} />
+        <StatTile label="Voltaram a comprar" value={repeatPct === null ? 'Sem base' : `${repeatPct}%`} hint={`${d.repeat} de ${d.buyers} que já compraram`} to={to} />
+        {isAdmin && d.revenue_12m !== null && <StatTile label="Receita avulsa em 12 meses" value={fmt.money(d.revenue_12m * 100)} hint={`${d.paid_count_12m ?? 0} pagamentos`} />}
+        {isAdmin && d.ticket !== null && <StatTile label="Ticket médio" value={fmt.money(d.ticket * 100)} hint="Por compra paga" />}
+      </KpiRow>
+      <Panel title="Avulsos novos por mês" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
+        <DailyBars label="Clientes avulsos novos por mês" format={fmt.int} data={d.new_by_month.map((m) => ({ day: m.month, value: m.n }))} height={100} />
+      </Panel>
+    </section>
   )
 }

@@ -271,6 +271,7 @@ export type ProductionFunctions = {
   team_people: { Args: Record<string, never>; Returns: unknown }
   dash_commercial: { Args: { _days: number }; Returns: unknown }
   dash_clients: { Args: Record<string, never>; Returns: unknown }
+  dash_clients_avulsos: { Args: Record<string, never>; Returns: unknown }
   my_staff_id: { Args: Record<string, never>; Returns: string | null }
   production_clients: { Args: Record<string, never>; Returns: { id: string; name: string; is_active: boolean; areas: string[] }[] }
   production_staff: { Args: Record<string, never>; Returns: { id: string; full_name: string; main_role: string | null }[] }

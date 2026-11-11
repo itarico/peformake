@@ -1,5 +1,7 @@
 # Diário da rotina de melhoria contínua
 
+- 12/11 Clientes → Resumo: novo bloco "Clientes avulsos" (cadastrados, compraram em 90 dias, novos no mês, recompra %, e só para admin receita 12 meses e ticket médio; gráfico de novos por mês). Função `dash_clients_avulsos` (migração 20261112000000). Pronto para publicar.
+
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
 ## 2026-11-11 fim da tarde · Dados das empresas, contrato por blocos e contrato do membro pela Assinafy (nuvem, agente)

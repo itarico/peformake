@@ -65,6 +65,18 @@ export interface ClientsDash {
   lost_reasons: { reason: string; n: number }[]
 }
 
+export interface AvulsosDash {
+  total: number
+  bought_90d: number
+  new_month: number
+  buyers: number
+  repeat: number
+  new_by_month: { month: string; n: number }[]
+  revenue_12m: number | null
+  paid_count_12m: number | null
+  ticket: number | null
+}
+
 // Os resumos vêm prontos do banco: cada função confere o cargo e devolve só números.
 function unwrap<T>({ data, error }: { data: unknown; error: unknown }): T {
   if (error) throw error
@@ -77,3 +89,4 @@ export const dashAv = async (month: string) => unwrap<AvDash>(await supabase.rpc
 export const dashCommercial = async (days: number) => unwrap<CommercialDash>(await supabase.rpc('dash_commercial', { _days: days }))
 export const dashClients = async () => unwrap<ClientsDash>(await supabase.rpc('dash_clients', {} as Record<string, never>))
 export const dashHomeBusiness = async (months: number) => unwrap<BusinessDash>(await supabase.rpc('dash_home_business', { _months: months }))
+export const dashClientsAvulsos = async () => unwrap<AvulsosDash>(await supabase.rpc('dash_clients_avulsos', {} as Record<string, never>))
