@@ -1,6 +1,6 @@
 # Estudo: aba Resumo do Financeiro (10/11/2026)
 
-Só estudo, nada construído. Pedido do Italo: uma aba **Resumo** no Financeiro, como nos outros módulos, com métricas, KPIs e gráficos para ver a saúde financeira. Ela tem de cruzar dados com o resto do sistema, ser inteligente e funcionar sozinha.
+**Construído em 12/11 (Fases A, B e parte da C):** ver o topo de `rotina-diario.md`. Status por fase na seção 11. Pedido do Italo: uma aba **Resumo** no Financeiro, como nos outros módulos, com métricas, KPIs e gráficos para ver a saúde financeira. Ela tem de cruzar dados com o resto do sistema, ser inteligente e funcionar sozinha.
 
 ## 1. Onde fica e quem vê
 
@@ -148,9 +148,9 @@ Resumo semanal na Bete (segunda) e resumo mensal escrito pela IA (Haiku, dia 1),
 
 ## 11. Fases atualizadas
 
-- **Fase A:** dados em dia (lista de clientes sem fatura, extratos, despesas fixas, atrasados) + selo de confiança + conferência automática.
-- **Fase B:** aba Resumo (cartões, "O que fazer agora", receita 12 meses, caixa 90 dias) + fotografia mensal.
-- **Fase C:** inteligência (previsão em 3 cenários, gargalos, "gastando/lucrando com", dicas) + Bete.
+- **Fase A:** dados em dia (lista de clientes sem fatura, extratos, despesas fixas, atrasados) + selo de confiança + conferência automática. ✅ FEITO 12/11 (selo com 6 pontos: extrato, contas fixas, pró-labore/impostos, cliente ativo com fatura, entrada identificada, faturas pagas = baixas no Caixa; diferença > R$ 1 esconde o lucro). Falta: importar os extratos e cadastrar as fixas (Italo).
+- **Fase B:** aba Resumo (cartões, "O que fazer agora", receita 12 meses, caixa 90 dias) + fotografia mensal. ✅ FEITO 12/11 (+ receita por área, concentração, inadimplência, despesas por categoria, tabela por cliente, meta por empresa). Tabela por cliente ainda sem coluna de entregas do mês.
+- **Fase C:** inteligência (previsão em 3 cenários, gargalos, "gastando/lucrando com", dicas) + Bete. 🟡 PARTE FEITA 12/11: ritmo do mês, meta, gastando muito com (categoria +30%, equipe > 50%, créditos), lucrando com (área de maior receita, sem custo por área), gargalos simples (concentração, prazo médio, cliente que atrasa sempre), dicas (pré-pago/cartão, prospectar, caixa negativo, IPCA). FALTA: previsão em 3 cenários, gargalos de operação/capacidade/funil, upsell por NPS, preço abaixo da tabela, avisos na Bete.
 - **Fase D:** margem por cliente com o tempo por cliente + resumo mensal da IA.
 
 ## 7. Fases (primeira versão, substituída pela seção 11)
@@ -160,6 +160,8 @@ Resumo semanal na Bete (segunda) e resumo mensal escrito pela IA (Haiku, dia 1),
 - **Fase C:** alertas na Bete, resumo mensal da IA, margem por cliente (depende do tempo por cliente).
 
 ## 8. Decisões do Italo
+
+Decididas em 12/11: filtro padrão Juntas; meta opcional por empresa editável na aba; saldo só pelo extrato importado; pró-labore e impostos como Contas fixas (sem elas o selo avisa); só admin vê.
 
 1. Meta de faturamento por mês (para a barra de progresso no "Recebido")? Um valor por empresa?
 2. Padrão do filtro: Juntas, ou Peformake primeiro?
