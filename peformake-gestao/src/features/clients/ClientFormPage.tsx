@@ -40,7 +40,7 @@ function Field({ label, error, hint, children }: { label: string; error?: string
       {error ? (
         <p id={`${id}-erro`} role="alert" className="mt-1 text-[13px] font-medium text-warn-ink">{error}</p>
       ) : hint ? (
-        <p id={`${id}-dica`} className="mt-1 text-[12px] text-muted">{hint}</p>
+        <p id={`${id}-dica`} className="mt-1 text-[12px] text-muted max-md:sr-only">{hint}</p>
       ) : null}
     </div>
   )
@@ -53,7 +53,7 @@ function Section({ title, text, children, flat = false, hidden = false }: { titl
       {(!flat || text) && (
         <div>
           {!flat && <h2 className="text-[17px] font-semibold tracking-tight">{title}</h2>}
-          {text && <p className="text-[13px] text-muted">{text}</p>}
+          {text && <p className={cn('text-[13px] text-muted', flat && 'max-md:sr-only')}>{text}</p>}
         </div>
       )}
       {children}
@@ -373,7 +373,7 @@ function ClientForm({ clientId, isAdmin, initial, updatedAt, existingSegments, o
       </Section>
 
       <Section flat={inDialog} hidden={inDialog && tab !== 'negocio'} title="Sobre o negócio" text="Opcional: ajuda a equipe a planejar.">
-        <div className="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 md:gap-y-3">
           {([
             ['description', 'O que a empresa faz'],
             ['targetAudience', 'Público-alvo'],
