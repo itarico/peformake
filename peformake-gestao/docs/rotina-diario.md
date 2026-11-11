@@ -11,6 +11,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · Início e login (nuvem)
+- Início: "Cliente X: falta Y" saiu do topo e virou UM item em "Precisa de você" ("N clientes novos com cadastro pela metade"); o toque abre pop-up com até 8 clientes (link ao passo na ficha) e "Ver os outros em Clientes". Teste novo SetupPendingCard.test.tsx. Tela do Início não foi vista com dados falsos (o mock de e2e/telas.cjs não cobre dash_home_business).
+- Login: personagens nos tons do ciano do sistema (o escuro com traço claro) e só 2 frases do Italo: "Marketing que não fica no automático." e "Tudo que seu marketing precisa.".
+- Pedido do Italo, AGUARDANDO confirmação do nome: a Bete vira um dos personagens, chamado "Performático" (ou "Peformático"?).
+
 ## 2026-11-11 noite · login sempre claro (nuvem)
 - /login ignora o tema escuro (index.html não aplica dark em /login; LoginPage tira o tema ao abrir e devolve o da pessoa ao sair, via preferredTheme em lib/theme.ts). Italo achou os personagens pouco profissionais: opções propostas (foto real da Ellcazo, prévia do sistema, ou só marca); aguardando a escolha.
 

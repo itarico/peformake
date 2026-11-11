@@ -17,14 +17,16 @@ interface Character {
   fy: number
   gap: number
   r: number
+  /** cor da boca e dos olhos fechados (personagem escuro usa traço claro) */
+  line?: string
 }
 
-// Cores da Peformake (ciano, ciano escuro, laranja) e o verde da Ellcazo.
+// Tons do ciano do sistema, do mais claro ao mais escuro.
 const CAST: Character[] = [
-  { body: 'rect', x: 70, y: 40, w: 120, h: 260, color: '#0d8fa0', fx: 136, fy: 104, gap: 21, r: 10 },
-  { body: 'rect', x: 168, y: 128, w: 112, h: 172, color: '#ff7a45', fx: 226, fy: 178, gap: 19, r: 9.5 },
-  { body: 'dome', x: 232, y: 214, w: 172, h: 86, color: '#72b52f', fx: 312, fy: 254, gap: 18, r: 9 },
-  { body: 'rect', x: 18, y: 196, w: 72, h: 104, color: '#1fc8db', fx: 56, fy: 234, gap: 14, r: 7.5 },
+  { body: 'rect', x: 70, y: 40, w: 120, h: 260, color: '#056f84', fx: 136, fy: 104, gap: 21, r: 10 },
+  { body: 'rect', x: 168, y: 128, w: 112, h: 172, color: '#0b3c44', line: '#d7f1f5', fx: 226, fy: 178, gap: 19, r: 9.5 },
+  { body: 'dome', x: 232, y: 214, w: 172, h: 86, color: '#3aa9bd', fx: 312, fy: 254, gap: 18, r: 9 },
+  { body: 'rect', x: 18, y: 196, w: 72, h: 104, color: '#9fd9e3', fx: 56, fy: 234, gap: 14, r: 7.5 },
 ]
 
 const INK = '#061417'
@@ -131,10 +133,10 @@ export function LoginCharacters({ mood, gaze, className, shakeKey = 0 }: { mood:
             {[-1, 1].map((side) => {
               const ex = c.fx + side * c.gap
               if (mood === 'closed') {
-                return <path key={side} d={`M ${ex - c.r} ${c.fy + 1} Q ${ex} ${c.fy + c.r * 0.7} ${ex + c.r} ${c.fy + 1}`} stroke={INK} strokeWidth={3} strokeLinecap="round" fill="none" />
+                return <path key={side} d={`M ${ex - c.r} ${c.fy + 1} Q ${ex} ${c.fy + c.r * 0.7} ${ex + c.r} ${c.fy + 1}`} stroke={c.line ?? INK} strokeWidth={3} strokeLinecap="round" fill="none" />
               }
               if (mood === 'success') {
-                return <path key={side} d={`M ${ex - c.r} ${c.fy + 3} Q ${ex} ${c.fy - c.r} ${ex + c.r} ${c.fy + 3}`} stroke={INK} strokeWidth={3} strokeLinecap="round" fill="none" />
+                return <path key={side} d={`M ${ex - c.r} ${c.fy + 3} Q ${ex} ${c.fy - c.r} ${ex + c.r} ${c.fy + 3}`} stroke={c.line ?? INK} strokeWidth={3} strokeLinecap="round" fill="none" />
               }
               return (
                 <g key={side} className="pf-login-blink" style={{ animationDelay: `${1.2 + i * 0.9}s` }}>
@@ -145,7 +147,7 @@ export function LoginCharacters({ mood, gaze, className, shakeKey = 0 }: { mood:
                 </g>
               )
             })}
-            <path d={mouthPath(c, mood)} stroke={INK} strokeWidth={3} strokeLinecap="round" fill="none" />
+            <path d={mouthPath(c, mood)} stroke={c.line ?? INK} strokeWidth={3} strokeLinecap="round" fill="none" />
           </g>
         </g>
       ))}

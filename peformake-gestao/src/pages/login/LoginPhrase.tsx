@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 
 export const LOGIN_PHRASES = [
-  'Menos planilha, mais resultado.',
-  'Tudo do cliente num lugar só.',
   'Marketing que não fica no automático.',
-  'Cada entrega no prazo, sem correria.',
+  'Tudo que seu marketing precisa.',
 ]
 
 /** Frase curta que troca a cada 4 segundos. Com movimento reduzido, fica parada na primeira. */
