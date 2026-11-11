@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
-import { emptyDraft, isValidPhone } from './clientFormRules'
+import { emptyDraft, isValidPhone, kindToDraft } from './clientFormRules'
 import { clientErrorMessage, createClientWithContact } from './clientsApi'
 import { inputClass } from './ui'
 import { WhatsappContactField } from './WhatsappContactField'
@@ -23,6 +23,7 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
   const [person, setPerson] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [kind, setKind] = useState<'recurring' | 'one-off'>('recurring')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [contactFail, setContactFail] = useState<{ id: string; message: string } | null>(null)
 
@@ -31,7 +32,7 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
       const name = (company.trim() || person.trim()).replace(/\s+/g, ' ')
       const draft = {
         ...emptyDraft(todayInBrazil()),
-        name, phone, email: email.trim(),
+        name, phone, email: email.trim(), ...kindToDraft(kind === 'one-off' ? 'avulso' : 'fixo'),
         // Datas e dia de cobrança ficam para o passo "Cobrança".
         startDate: '', endDate: '', months: '', billingDay: '',
         legalName: company.trim() ? '' : person.trim(),
@@ -75,7 +76,13 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
   return (
     <Dialog open={open} onClose={onClose} size="sm" title="Novo cliente" description="Só o essencial. O resto o sistema guia na ficha do cliente.">
       <form onSubmit={submit} noValidate className="flex flex-col gap-3">
-        {field('company', 'Nome da empresa', company, setCompany, { autoFocus: true, autoComplete: 'off', name: 'pf-novo-cliente-empresa', placeholder: 'Vazio se for pessoa física' })}
+        <div role="radiogroup" aria-label="Tipo de cliente" className="grid grid-cols-2 gap-1 rounded-xl bg-raised p-1">
+          {([['recurring', 'Fixo (mensal)'], ['one-off', 'Avulso']] as const).map(([v, label]) => (
+            <button key={v} type="button" role="radio" aria-checked={kind === v} onClick={() => setKind(v)}
+              className={`min-h-10 cursor-pointer rounded-lg text-[13.5px] font-semibold ${kind === v ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink'}`}>{label}</button>
+          ))}
+        </div>
+        {field('company', 'Nome da empresa', company, setCompany, { autoComplete: 'off', name: 'pf-novo-cliente-empresa', placeholder: 'Vazio se for pessoa física' })}
         {field('person', 'Nome do responsável *', person, setPerson, { autoComplete: 'off', name: 'pf-novo-cliente-responsavel' })}
         <div className="flex flex-col gap-1 text-[13px] font-semibold">
           <label htmlFor="novo-cliente-whatsapp">WhatsApp do responsável * <span className="font-normal text-muted">(busque nos contatos ou digite)</span></label>

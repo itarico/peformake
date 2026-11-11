@@ -383,7 +383,8 @@ export async function removeLink(linkId: string): Promise<void> {
 export async function openInvoicesFromToday(clientId: string, today: string): Promise<{ open: number; any: number }> {
   const [open, any] = await Promise.all([
     supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('client_id', clientId).in('status', ['pendente', 'vencido']).gte('due_date', today).not('ref', 'like', 'atraso:%'),
-    supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
+    // Fatura cancelada não é histórico de dinheiro: não impede excluir o cliente.
+    supabase.from('invoices').select('id', { count: 'exact', head: true }).eq('client_id', clientId).neq('status', 'cancelado'),
   ])
   return { open: open.count ?? 0, any: any.count ?? 0 }
 }

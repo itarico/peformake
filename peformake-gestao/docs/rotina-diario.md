@@ -11,6 +11,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · excluir cliente e Fixo/Avulso no cadastro (nuvem)
+- Excluir cliente: fatura CANCELADA não bloqueia mais (openInvoicesFromToday conta só faturas não canceladas). Ex.: "vinicius" (só 1 fatura cancelada) agora pode ser excluído. Ao excluir, faturas somem em cascata; lançamento cancelado e venda ficam sem cliente (set null).
+- Novo cliente: escolha "Fixo (mensal)" ou "Avulso" no topo do pop-up (padrão Fixo; avulso grava client_type one-off e contrato One-off). Testado iPhone 13 e computador, sem rolagem.
+
 ## 2026-11-11 noite · Clientes → Resumo: avulsos num cartão só (nuvem)
 - "Clientes avulsos" virou um único cartão: 4 números (cadastrados, ativos, novos no mês, voltaram a comprar), barra "Pela última compra" (até 90 dias / esfriando / pausados / sem compra), frase "X de Y compraram só uma vez" (+ receita e ticket só para admin), botão "N esfriando: oferecer de novo" (pop-up) e gráfico de novos por mês. Saíram os 5 blocos soltos. e2e/clientes-resumo.cjs atualizado e ok.
 - Magaly (CIA COFFE): Italo perguntou o combinado; NADA registrado no sistema/diário. Fatos: perdida por inadimplência 05/11, reativada 11/11, sem faturas no sistema; ela pediu em 09/11 para pagar o boleto de 22/08 e saber o saldo do mês anterior. Aguardando o Italo dizer o acordo.
