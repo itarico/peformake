@@ -15,6 +15,7 @@ import { Block, Fact } from '@/features/clients/ui'
 import { CONTRACT_STATUS } from './contractStatus'
 import { ContractWizard } from './ContractWizard'
 import { ask } from '@/components/ui/confirm'
+import { DialogTabs } from '@/components/ui/DialogTabs'
 
 
 const STEPS = ['Gerado', 'Dados', 'Enviado', 'Assinado'] as const
@@ -56,7 +57,9 @@ async function callFn(name: string, body: Record<string, unknown>): Promise<{ ur
 }
 
 /** Tudo sobre o contrato do cliente num lugar: vigência, valores, contratante, documento atual e histórico. Só administrador. */
-export function ClientContractTab({ client, kindLabel }: { client: ClientRecord; kindLabel: string }) {
+/** Com `tabs` (dentro de um pop-up): Documento · Vigência e valores · Contratante, uma parte por vez, sem rolagem. */
+export function ClientContractTab({ client, kindLabel, tabs = false }: { client: ClientRecord; kindLabel: string; tabs?: boolean }) {
+  const [part, setPart] = useState<'doc' | 'valores' | 'contratante'>('doc')
   const queryClient = useQueryClient()
   const key = ['contract-docs-all', client.id]
   const docs = useQuery({
@@ -111,9 +114,10 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
   const missing = [!client.document && 'CPF/CNPJ', !client.legalName && 'razão social', !client.address && 'endereço', !(client.billingEmail || client.email) && 'e-mail'].filter(Boolean) as string[]
 
   return (
-    <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+    <div className={cn('grid grid-cols-1 gap-3', !tabs && '@3xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]')}>
+      {tabs && <DialogTabs value={part} onChange={setPart} label="Partes do contrato" options={[{ id: 'doc', label: 'Documento' }, { id: 'valores', label: 'Vigência e valores' }, { id: 'contratante', label: missing.length ? `Contratante (${missing.length})` : 'Contratante' }]} />}
       {/* Documento atual */}
-      <Block
+      {(!tabs || part === 'doc') && <Block
         title="Documento"
         action={<Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setWizard(true)}><FilePlus2 size={14} aria-hidden="true" /> {current ? 'Gerar novo' : 'Gerar contrato'}</Button>}
       >
@@ -198,10 +202,10 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
             </ul>
           </details>
         )}
-      </Block>
+      </Block>}
 
-      <div className="flex flex-col gap-3">
-        <Block title="Vigência e valores">
+      <div className={cn('flex flex-col gap-3', tabs && part === 'doc' && 'hidden')}>
+        {(!tabs || part === 'valores') && <Block title="Vigência e valores">
           <dl className="flex flex-col gap-2">
             <Fact label="Tipo" value={kindLabel} />
             <Fact label="Início" value={dateBr(c?.startDate ?? null)} />
@@ -219,8 +223,8 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
               <Fact label="Último serviço" value={<span className="tabular-nums">{brlValue(value.value)}</span>} />
             )}
           </dl>
-        </Block>
-        <Block title="Contratante">
+        </Block>}
+        {(!tabs || part === 'contratante') && <Block title="Contratante">
           <dl className="flex flex-col gap-2">
             <Fact label="Razão social" value={client.legalName ?? <span className="text-warn-ink">Falta</span>} />
             <Fact label="CPF/CNPJ" value={client.document ? formatDocument(client.document) : <span className="text-warn-ink">Falta</span>} />
@@ -228,7 +232,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
             <Fact label="Endereço" value={client.address ? <span className="text-[13px]">{client.address}</span> : <span className="text-warn-ink">Falta</span>} />
           </dl>
           {missing.length > 0 && <p className="text-[12px] text-muted">Complete em <b>Editar → Empresa</b>. Com o CNPJ, o botão Buscar preenche o resto.</p>}
-        </Block>
+        </Block>}
       </div>
 
       <ContractWizard client={client} open={wizard} onClose={() => setWizard(false)} onSent={refresh} />

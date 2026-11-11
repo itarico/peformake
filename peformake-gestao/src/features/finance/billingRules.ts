@@ -7,7 +7,7 @@ export function reminderStage(dueDate: string, today: string, status: string): {
   if (status === 'pago') return { label: 'Pago', tone: 'ok' }
   if (status === 'cancelado') return { label: 'Cancelado', tone: 'muted' }
   const d = Math.round((Date.parse(`${today}T12:00:00Z`) - Date.parse(`${dueDate}T12:00:00Z`)) / 86_400_000)
-  if (status === 'vencido' || d >= 7) return { label: 'Parou de cobrar: falar com o cliente', tone: 'warn' }
+  if (status === 'vencido' || d >= 7) return { label: d > 0 ? `Atrasado ${d} ${d === 1 ? 'dia' : 'dias'} · falar com o cliente` : 'Vencido · falar com o cliente', tone: 'warn' }
   if (d >= 3) return { label: `Atrasado ${d} dias · gestor avisado`, tone: 'warn' }
   if (d >= 1) return { label: `Atrasado ${d} ${d === 1 ? 'dia' : 'dias'}`, tone: 'warn' }
   if (d === 0) return { label: 'Vence hoje', tone: 'info' }

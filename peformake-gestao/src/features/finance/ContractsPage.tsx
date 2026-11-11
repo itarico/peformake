@@ -3,7 +3,7 @@ import { useIsMobile } from '@/lib/useIsMobile'
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { ContractDialog } from './ContractDialog'
@@ -136,20 +136,43 @@ export function ContractsPage() {
         {!q.isPending && shown.length === 0 && <li className="p-6 text-center text-muted">Nenhum cliente nesta situação.</li>}
       </ul>
       {openId && <ContractDialog clientId={openId} onClose={() => openClient(null)} />}
-      <Dialog open={picking} onClose={() => setPicking(false)} title="Novo contrato" description="Escolha o cliente. Os que já têm contrato assinado ficam por último." size="md">
-        <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-          {[...rows].sort((a, b) => Number(a.situation === 'assinado') - Number(b.situation === 'assinado') || a.client_name.localeCompare(b.client_name, 'pt-BR')).map((r) => (
+      {picking && <PickClient rows={rows} onClose={() => setPicking(false)} onPick={(id) => { setPicking(false); openClient(id) }} />}
+    </>
+  )
+}
+
+type PickRow = { client_id: string; client_name: string; logo_path: string | null; situation: Situation }
+const fold = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+/** Novo contrato: busca o cliente pelo nome. Mostra só 8 de cada vez (sem rolagem); os sem contrato assinado vêm primeiro. */
+function PickClient({ rows, onClose, onPick }: { rows: PickRow[]; onClose: () => void; onPick: (id: string) => void }) {
+  const [text, setText] = useState('')
+  const q = fold(text.trim())
+  const all = [...rows].filter((r) => !q || fold(r.client_name).includes(q))
+    .sort((a, b) => Number(a.situation === 'assinado') - Number(b.situation === 'assinado') || a.client_name.localeCompare(b.client_name, 'pt-BR'))
+  const shown = all.slice(0, 8)
+  return (
+    <Dialog open onClose={onClose} title="Novo contrato" description="Escolha o cliente. Os que ainda não têm contrato assinado vêm primeiro." size="md">
+      <div className="flex flex-col gap-3">
+        <label className="relative flex items-center">
+          <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 text-muted" />
+          <input autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="Digite o nome do cliente" aria-label="Buscar cliente" autoComplete="off"
+            className="min-h-11 w-full rounded-full border border-line-strong bg-surface pl-9 pr-3" />
+        </label>
+        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {shown.map((r) => (
             <li key={r.client_id}>
-              <button type="button" onClick={() => { setPicking(false); openClient(r.client_id) }}
+              <button type="button" onClick={() => onPick(r.client_id)}
                 className="flex w-full cursor-pointer flex-col items-center gap-1.5 rounded-2xl border border-line p-2.5 text-center hover:border-ink">
                 <ClientAvatar name={r.client_name} url={logoPublicUrl(r.logo_path)} />
-                <span className="line-clamp-2 text-[12px] font-medium leading-tight">{r.client_name}</span>
+                <span className="line-clamp-1 text-[12px] font-medium leading-tight">{r.client_name}</span>
                 <span className={cn('rounded-full px-1.5 text-[10px] font-semibold', SITUATION[r.situation][1])}>{SITUATION[r.situation][0]}</span>
               </button>
             </li>
           ))}
         </ul>
-      </Dialog>
-    </>
+        {all.length > shown.length && <p className="text-center text-[12.5px] text-muted">E mais {all.length - shown.length}. Digite para achar.</p>}
+        {all.length === 0 && <p className="text-center text-muted">Nenhum cliente com esse nome.</p>}
+      </div>
+    </Dialog>
   )
 }

@@ -11,10 +11,10 @@ export function ContractDialog({ clientId, onClose }: { clientId: string; onClos
   const client = query.data?.find((c) => c.id === clientId)
   const view = client ? describeClient(client, todayInBrazil()) : null
   return (
-    <Dialog open onClose={onClose} title={client ? `Contrato · ${client.name}` : 'Contrato'} size="lg">
+    <Dialog open onClose={onClose} title={client ? `Contrato · ${client.name}` : 'Contrato'} size="md">
       {query.isPending && <p role="status" className="text-muted">Carregando</p>}
       {query.isError && <p role="alert" className="text-warn-ink">Não foi possível carregar o cliente.</p>}
-      {client && view && <ClientContractTab client={client} kindLabel={KIND_LABEL[view.kind]} />}
+      {client && view && <ClientContractTab client={client} kindLabel={KIND_LABEL[view.kind]} tabs />}
     </Dialog>
   )
 }

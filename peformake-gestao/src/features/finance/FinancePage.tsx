@@ -1,8 +1,8 @@
 import { BidForecastLine } from '@/features/bids/BidsSection'
 import { importSummary, type ImportResult } from './statement'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, type FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeftRight, CalendarClock, Check, Download, FileUp, Plus, Search } from 'lucide-react'
+import { ArrowLeftRight, BarChart3, CalendarClock, Check, Download, FileUp, Minus, Paperclip, Plus, Search, Sparkles } from 'lucide-react'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { FilterSheet } from '@/components/ui/FilterSheet'
 import { Button } from '@/components/ui/Button'
@@ -21,9 +21,8 @@ import { Link } from 'react-router-dom'
 import { RecurringDialog } from './RecurringDialog'
 import { useAuth } from '@/auth/context'
 import { brl, dayLabel, downloadCsv, fold, nextMonth, todayBR } from './money'
-import { ClientAvatar } from '@/features/clients/ClientAvatar'
-import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { ask } from '@/components/ui/confirm'
+import { cashRows, type CashFilter } from './cashRules'
 
 type Unit = 'peformake' | 'ellcazo'
 type Kind = 'entrada' | 'saida'
@@ -32,26 +31,27 @@ const UNIT_LABEL: Record<Unit, string> = { peformake: 'Peformake', ellcazo: 'Ell
 interface Category { id: string; unit: string; kind: string; name: string }
 interface Entry {
   id: string; kind: string; category_id: string | null; description: string; amount: number; due_date: string; paid_at: string | null; status: string; source: string
-  review_status?: string | null; bank_ref?: string | null
+  review_status?: string | null; bank_ref?: string | null; external_id?: string | null; attachment_path?: string | null
   client_id?: string | null; clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
 }
+/** O que o leitor de frases (fin_wa_parse, por regras, sem IA) conseguiu tirar do texto. Só pré-preenche: nada é gravado sem confirmar. */
+interface Prefill { kind: Kind; description?: string; amount?: number | null; date?: string; category?: string | null; clientId?: string | null; clientName?: string | null }
 /** "Mensalidade 11/2026 · Design, Tráfego" vira "Mensalidade · Design, Tráfego": o mês já está no topo da tela. */
 const shortDesc = (d: string) => d.replace(/^Mensalidade \d{2}\/\d{4}\s*·\s*/, 'Mensalidade · ')
 const clientName = (e: Entry) => e.clients?.name?.trim() ?? null
-const clientLogo = (e: Entry) => logoPublicUrl(e.clients?.logo_path ?? null) ?? e.clients?.legacy_logo_url ?? null
 interface Summary {
   entradas_pagas: number; saidas_pagas: number; entradas_previstas: number; saidas_previstas: number
   atrasadas: number; sem_categoria: number; categorias: { kind: string; category: string; total: number }[]
   vencido_receber?: number; vencido_receber_qtd?: number; vencido_pagar?: number; vencido_pagar_qtd?: number
 }
 
-type Filter = 'todos' | 'entrada' | 'saida' | 'pendente' | 'vencido' | 'sem_categoria'
-const FILTERS = [['todos', 'Tudo'], ['entrada', 'Entradas'], ['saida', 'Saídas'], ['pendente', 'Em aberto'], ['vencido', 'Vencidos'], ['sem_categoria', 'Sem categoria']] as const
+const FILTERS = [['todos', 'Tudo'], ['entrada', 'Entradas'], ['saida', 'Saídas'], ['a_pagar', 'A pagar'], ['sem_categoria', 'Sem categoria']] as const
 type Rpc = (f: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 const rpc = (f: string, a?: Record<string, unknown>) => (supabase.rpc as unknown as Rpc)(f, a)
+const pill = 'inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold no-underline'
 
 interface ReviewEntry { id: string; unit: string; amount: number; paid_at: string | null; description: string; notes: string | null; suggest_invoice: string }
-/** "A conferir": pagamento do extrato que parece de uma fatura. Um toque liga à fatura (sem contar em dobro). */
+/** "A conferir": pagamento do extrato que parece de uma fatura. Fica numa etiqueta; tocar abre a lista e um toque liga à fatura. */
 function ToReview({ onDone }: { onDone: () => void }) {
   const q = useQuery({
     queryKey: ['fin-to-review'],
@@ -65,6 +65,7 @@ function ToReview({ onDone }: { onDone: () => void }) {
       return (data ?? []) as unknown as ReviewEntry[]
     },
   })
+  const [open, setOpen] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
   const act = useMutation({
     mutationFn: async (v: { id: string; yes: boolean }) => {
@@ -76,27 +77,30 @@ function ToReview({ onDone }: { onDone: () => void }) {
     onError: (e) => setMsg((e as Error).message),
   })
   const items = q.data ?? []
-  if (!items.length && !msg) return null
+  if (!items.length && !open) return null
   return (
-    <section aria-label="A conferir" className="flex flex-col gap-2 rounded-2xl border border-warn bg-warn-soft/40 px-4 py-3">
-      {items.length > 0 && <p className="text-[14px] font-semibold">A conferir · {items.length} {items.length === 1 ? 'pagamento parece' : 'pagamentos parecem'} de fatura</p>}
-      <ul className="flex flex-col gap-1.5">
-        {items.slice(0, 5).map((e) => (
-          <li key={e.id} className="flex flex-wrap items-center gap-2 text-[13px]">
-            <span className="min-w-0 flex-1"><b className="tabular-nums">{brl(e.amount)}</b> em {dayLabel(e.paid_at ?? '')} · {(e.notes ?? '').replace(/^A conferir:\s*/, '').replace(/\s*\[extrato[^\]]*\]/g, '')}</span>
-            <Button disabled={act.isPending} onClick={() => act.mutate({ id: e.id, yes: true })}><Check size={15} aria-hidden="true" /> É essa</Button>
-            <Button variant="secondary" disabled={act.isPending} onClick={() => act.mutate({ id: e.id, yes: false })}>Não é</Button>
-          </li>
-        ))}
-      </ul>
-      {items.length > 5 && <p className="text-[12px] text-muted">E mais {items.length - 5}.</p>}
-      {msg && <p role="status" className="text-[13px] font-medium">{msg}</p>}
-    </section>
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={cn(pill, 'border border-warn bg-warn-soft/50 text-warn-ink')}>A conferir · {items.length} {items.length === 1 ? 'pagamento' : 'pagamentos'} de fatura</button>
+      <Dialog open={open} onClose={() => { setOpen(false); setMsg(null) }} title="A conferir" description="Pagamentos do extrato que parecem de uma fatura. Ligar à fatura evita contar em dobro." size="sm">
+        <ul className="flex flex-col gap-2">
+          {items.slice(0, 6).map((e) => (
+            <li key={e.id} className="flex flex-wrap items-center gap-2 text-[13px]">
+              <span className="min-w-0 flex-1"><b className="tabular-nums">{brl(e.amount)}</b> em {dayLabel(e.paid_at ?? '')} · {(e.notes ?? '').replace(/^A conferir:\s*/, '').replace(/\s*\[extrato[^\]]*\]/g, '')}</span>
+              <Button disabled={act.isPending} onClick={() => act.mutate({ id: e.id, yes: true })}><Check size={15} aria-hidden="true" /> É essa</Button>
+              <Button variant="secondary" disabled={act.isPending} onClick={() => act.mutate({ id: e.id, yes: false })}>Não é</Button>
+            </li>
+          ))}
+          {items.length === 0 && <li className="text-muted">Tudo conferido.</li>}
+        </ul>
+        {items.length > 6 && <p className="mt-2 text-[12px] text-muted">E mais {items.length - 6} depois destes.</p>}
+        {msg && <p role="status" className="mt-2 text-[13px] font-medium">{msg}</p>}
+      </Dialog>
+    </>
   )
 }
 
 interface Transfer { id: string; client: string | null; from_unit: string; to_unit: string; amount: number; days: number; note: string | null }
-/** Repasse entre empresas ("Quem recebe" no cliente): fora de receita e despesa; marcado como feito com 1 toque. */
+/** Repasse entre empresas ("Quem recebe" no cliente): fora de receita e despesa. Etiqueta no topo; tocar abre e marca como feito. */
 function Transfers({ onDone }: { onDone: () => void }) {
   const q = useQuery({
     queryKey: ['interco'],
@@ -105,6 +109,7 @@ function Transfers({ onDone }: { onDone: () => void }) {
       return error || !Array.isArray(data) ? [] as Transfer[] : (data as Transfer[])
     },
   })
+  const [open, setOpen] = useState(false)
   const done = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await rpc('interco_mark_done', { _id: id })
@@ -113,24 +118,29 @@ function Transfers({ onDone }: { onDone: () => void }) {
     onSuccess: () => { void q.refetch(); onDone() },
   })
   const items = q.data ?? []
-  if (!items.length) return null
+  if (!items.length && !open) return null
   const name = (u: string) => (u === 'ellcazo' ? 'Ellcazo' : 'Peformake')
+  const late = items.some((t) => t.days > 7)
   return (
-    <section aria-label="Repasses entre empresas" className="flex flex-col gap-2 rounded-2xl border border-line bg-surface px-4 py-3">
-      <p className="flex items-center gap-1.5 text-[14px] font-semibold"><ArrowLeftRight size={15} aria-hidden="true" /> A repassar entre as empresas · {brl(items.reduce((a, t) => a + Number(t.amount), 0))}</p>
-      <ul className="flex flex-col gap-1.5">
-        {items.map((t) => (
-          <li key={t.id} className="flex flex-wrap items-center gap-2 text-[13px]">
-            <span className={cn('min-w-0 flex-1', t.days > 7 && 'font-semibold text-warn-ink')}>{name(t.from_unit)} → {name(t.to_unit)}: <b className="tabular-nums">{brl(t.amount)}</b>{t.client ? ` · ${t.client}` : ''}{t.days > 0 ? ` · há ${t.days} ${t.days === 1 ? 'dia' : 'dias'}` : ''}</span>
-            <Button variant="secondary" disabled={done.isPending} onClick={() => { void ask(`Confirmar que ${name(t.from_unit)} já repassou ${brl(t.amount)} para ${name(t.to_unit)}?`).then((ok) => { if (ok) done.mutate(t.id) }) }}><Check size={15} aria-hidden="true" /> Repasse feito</Button>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={cn(pill, late ? 'border border-warn text-warn-ink' : 'bg-raised text-ink')}><ArrowLeftRight size={14} aria-hidden="true" /> A repassar entre as empresas · {brl(items.reduce((a, t) => a + Number(t.amount), 0))}</button>
+      <Dialog open={open} onClose={() => setOpen(false)} title="A repassar entre as empresas" description="Fica fora de receita e despesa. Marque quando o Pix entre as contas for feito." size="sm">
+        <ul className="flex flex-col gap-2">
+          {items.slice(0, 6).map((t) => (
+            <li key={t.id} className="flex flex-wrap items-center gap-2 text-[13px]">
+              <span className={cn('min-w-0 flex-1', t.days > 7 && 'font-semibold text-warn-ink')}>{name(t.from_unit)} → {name(t.to_unit)}: <b className="tabular-nums">{brl(t.amount)}</b>{t.client ? ` · ${t.client}` : ''}{t.days > 0 ? ` · há ${t.days} ${t.days === 1 ? 'dia' : 'dias'}` : ''}</span>
+              <Button variant="secondary" disabled={done.isPending} onClick={() => { void ask(`Confirmar que ${name(t.from_unit)} já repassou ${brl(t.amount)} para ${name(t.to_unit)}?`).then((ok) => { if (ok) done.mutate(t.id) }) }}><Check size={15} aria-hidden="true" /> Repasse feito</Button>
+            </li>
+          ))}
+          {items.length === 0 && <li className="text-muted">Nada a repassar.</li>}
+        </ul>
+        {items.length > 6 && <p className="mt-2 text-[12px] text-muted">E mais {items.length - 6}.</p>}
+      </Dialog>
+    </>
   )
 }
 
-/** Financeiro: dia a dia do caixa de cada empresa, importação de extrato e fechamento do mês. */
+/** Financeiro → Caixa: o dinheiro que entrou e saiu. Lançar vem primeiro; quem deve fica na Cobrança. */
 export function FinancePage() {
   const queryClient = useQueryClient()
   const { state } = useAuth()
@@ -147,15 +157,16 @@ export function FinancePage() {
   const units = useMemo(() => (['peformake', 'ellcazo'] as Unit[]).filter((u) => cats.data?.some((c) => c.unit === u)), [cats.data])
   const [picked, setPicked] = useState<Unit | null>(null)
   const unit = picked && units.includes(picked) ? picked : units[0]
-  const [filter, setFilter] = useState<Filter>('todos')
-  const [editing, setEditing] = useState<Entry | 'new' | null>(null)
+  const [filter, setFilter] = useState<CashFilter>('todos')
+  const [editing, setEditing] = useState<Entry | Prefill | null>(null)
   const [importing, setImporting] = useState(false)
   const [paying, setPaying] = useState<Entry | null>(null)
   const [fixed, setFixed] = useState(false)
+  const [closing, setClosing] = useState(false)
   const [query, setQuery] = useState('')
   const [problem, setProblem] = useState<string | null>(null)
-  const [searchOpen, setSearchOpen] = useState(false)
   const [limit, setLimit] = useState(60)
+  const [quick, setQuick] = useState('')
 
   const entries = useQuery({
     queryKey: ['fin-entries', unit, month],
@@ -163,9 +174,9 @@ export function FinancePage() {
     queryFn: async () => {
       const end = nextMonth(month)
       const { data, error } = await supabase.from('fin_entries')
-        .select('id, kind, category_id, description, amount, due_date, paid_at, status, source, review_status, bank_ref, client_id, clients(name, logo_path, legacy_logo_url)')
+        .select('id, kind, category_id, description, amount, due_date, paid_at, status, source, review_status, bank_ref, external_id, attachment_path, client_id, clients(name, logo_path, legacy_logo_url)')
         .eq('unit', unit!).neq('status', 'cancelado')
-        .or(`and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${end}),and(status.eq.pendente,due_date.lt.${end})`)
+        .or(`and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${end}),and(status.eq.pendente,kind.eq.saida,due_date.lt.${end})`)
         .order('due_date', { ascending: false }).limit(1000)
       if (error) throw error
       return (data ?? []) as unknown as Entry[]
@@ -194,14 +205,26 @@ export function FinancePage() {
     onSuccess: () => { setProblem(null); refresh() },
     onError: fail,
   })
-  const categorize = useMutation({
-    mutationFn: async (v: { id: string; category: string; learn: string | null }) => {
-      const { error } = await supabase.rpc('fin_categorize', { _id: v.id, _category: v.category, _learn: v.learn })
-      if (error) throw error
+  // Lançamento rápido: lê a frase pelas regras do banco e abre o pop-up já preenchido para confirmar.
+  const read = useMutation({
+    mutationFn: async (text: string): Promise<Prefill> => {
+      const { data, error } = await rpc('fin_wa_parse', { _text: text })
+      if (error) throw new Error(error.message)
+      const p = (data ?? {}) as { kind?: string; amount?: number | null; description?: string | null; date?: string | null; category?: string | null; norm?: string }
+      const kind: Kind = p.kind === 'entrada' ? 'entrada' : 'saida'
+      let clientId: string | null = null
+      let clientNameFound: string | null = null
+      if (kind === 'entrada' && p.norm) {
+        const m = await rpc('fin_wa_match_client', { _norm: p.norm })
+        const hit = m.data as { id?: string; name?: string; score?: number } | null
+        if (!m.error && hit?.id && (hit.score ?? 0) >= 60) { clientId = hit.id; clientNameFound = hit.name ?? null }
+      }
+      return { kind, amount: p.amount ?? null, description: p.description ?? text, date: p.date ?? undefined, category: p.category ?? null, clientId, clientName: clientNameFound }
     },
-    onSuccess: () => { setProblem(null); refresh() },
-    onError: fail,
+    onSuccess: (p) => { setEditing(p); setQuick('') },
+    onError: () => setEditing({ kind: 'saida', description: quick }),
   })
+  const submitQuick = (ev: FormEvent) => { ev.preventDefault(); if (quick.trim().length >= 2) read.mutate(quick.trim()) }
 
   if (!cats.data) return <LoadState isPending={cats.isPending} isError={cats.isError} refetch={() => void cats.refetch()} />
   if (!unit) {
@@ -217,199 +240,204 @@ export function FinancePage() {
   const catName = new Map(unitCats.map((c) => [c.id, c.name]))
   const today = todayBR()
   const q = fold(query.trim())
-  const list = (entries.data ?? [])
-    .filter((e) => filter === 'todos' ? true : filter === 'pendente' ? e.status === 'pendente' : filter === 'vencido' ? e.status === 'pendente' && e.due_date < today
-      : filter === 'sem_categoria' ? !e.category_id : e.kind === filter)
+  const list = cashRows(entries.data ?? [], filter)
     .filter((e) => !q || fold(e.description).includes(q) || fold(clientName(e) ?? '').includes(q) || fold(catName.get(e.category_id ?? '') ?? '').includes(q))
-    // Ordena pela data que aparece na linha (pago em, ou vence em).
-    .sort((a, b) => (b.paid_at ?? b.due_date).localeCompare(a.paid_at ?? a.due_date))
   const s = summary.data
   const saldo = s ? s.entradas_pagas - s.saidas_pagas : 0
-  const previsto = s ? saldo + s.entradas_previstas - s.saidas_previstas : 0
+  const toPay = (entries.data ?? []).filter((e) => e.status === 'pendente' && e.kind === 'saida')
+  const toPayTotal = toPay.reduce((a, e) => a + Number(e.amount), 0)
+  const waReview = (entries.data ?? []).filter((e) => e.review_status === 'a_revisar').length
   const exportCsv = () => downloadCsv(`caixa-${UNIT_LABEL[unit].toLowerCase()}-${month.slice(0, 7)}.csv`,
     ['Data', 'Situação', 'Tipo', 'Cliente', 'Descrição', 'Categoria', 'Valor'],
-    list.map((e) => [dayLabel(e.paid_at ?? e.due_date), e.status === 'pago' ? 'Pago' : e.due_date < today ? 'Atrasado' : 'Em aberto', e.kind === 'entrada' ? 'Entrada' : 'Saída',
+    list.map((e) => [dayLabel(e.paid_at ?? e.due_date), e.status === 'pago' ? 'Pago' : e.due_date < today ? 'Atrasado' : 'A pagar', e.kind === 'entrada' ? 'Entrada' : 'Saída',
       clientName(e) ?? '', e.description, catName.get(e.category_id ?? '') ?? 'Sem categoria', e.kind === 'saida' ? -e.amount : e.amount]))
+  const chips = (
+    <div role="group" aria-label="Filtro" className="flex flex-wrap gap-1">
+      {FILTERS.map(([k, l]) => (
+        <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}
+          className={cn('min-h-11 cursor-pointer rounded-full px-3.5 text-[13px] font-medium md:min-h-9', filter === k ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink max-md:border max-md:border-line')}>{l}</button>
+      ))}
+    </div>
+  )
+  const search = (
+    <label className="relative flex w-full items-center md:w-auto">
+      <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 text-muted" />
+      <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar" aria-label="Buscar no caixa" autoComplete="off"
+        className="min-h-11 w-full rounded-full border border-line bg-surface pl-9 pr-3 text-[13px] md:min-h-9 md:w-44 md:focus:w-56" />
+    </label>
+  )
+  const alerts = isAdmin || toPay.length > 0
 
   return (
     <>
       <SectionHeader
         title="Financeiro"
-        sub={`Caixa de ${monthLabel(month).toLowerCase()}. Mesmo CNPJ, contas separadas por empresa.`}
+        sub={`Caixa de ${monthLabel(month).toLowerCase()}: o que entrou e saiu.`}
         tabs={FINANCE_TABS}
-        actions={<><span className="flex items-center gap-1.5 md:hidden">
-          <button type="button" aria-label="Buscar no caixa" onClick={() => setSearchOpen((v) => !v)} className="grid size-11 cursor-pointer place-items-center rounded-full border border-line"><Search size={17} aria-hidden="true" /></button>
+        actions={<>
+          <FilterSheet count={(filter !== 'todos' ? 1 : 0) + (q ? 1 : 0)}>
+            <div className="contents md:hidden">{chips}{search}</div>
+            {units.length > 1 && (
+              <div role="group" aria-label="Empresa" className="inline-flex rounded-full border border-line p-0.5">
+                {units.map((u) => (
+                  <button key={u} type="button" aria-pressed={u === unit} onClick={() => setPicked(u)}
+                    className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-semibold', u === unit ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{UNIT_LABEL[u]}</button>
+                ))}
+              </div>
+            )}
+            <MonthSwitcher />
+          </FilterSheet>
           <ActionMenu label="Mais ações do caixa" actions={[
             { label: 'Importar extrato', icon: <FileUp size={15} aria-hidden="true" />, onClick: () => setImporting(true) },
             { label: 'Contas fixas', icon: <CalendarClock size={15} aria-hidden="true" />, onClick: () => setFixed(true) },
+            { label: 'Fechamento do mês', icon: <BarChart3 size={15} aria-hidden="true" />, onClick: () => setClosing(true), disabled: !s?.categorias.length },
             { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, onClick: exportCsv, disabled: !list.length },
           ]} />
-        </span><FilterSheet count={(filter !== 'todos' ? 1 : 0)}>
-          <div role="group" aria-label="Filtro" className="flex flex-wrap gap-1 md:hidden">
-            {FILTERS.map(([k, l]) => (
-              <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}
-                className={cn('min-h-11 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', filter === k ? 'bg-fill text-on-fill' : 'border border-line text-muted')}>{l}</button>
-            ))}
-          </div>
-          {units.length > 1 && (
-            <div role="group" aria-label="Empresa" className="inline-flex rounded-full border border-line p-0.5">
-              {units.map((u) => (
-                <button key={u} type="button" aria-pressed={u === unit} onClick={() => setPicked(u)}
-                  className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-semibold', u === unit ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{UNIT_LABEL[u]}</button>
-              ))}
-            </div>
-          )}
-          <MonthSwitcher />
-        </FilterSheet></>}
+        </>}
       />
-      {isAdmin && <ToReview onDone={refresh} />}
-      {isAdmin && <Transfers onDone={refresh} />}
 
-      {/* Celular: uma linha só, e só o que é maior que zero. */}
-      <section aria-label="Resumo do mês" className="flex gap-2 overflow-x-auto [scrollbar-width:none] md:grid md:grid-cols-4 md:overflow-visible">
-        {[
-          { label: 'Entrou', value: s ? brl(s.entradas_pagas) : '—', hint: s && s.entradas_previstas > 0 ? `+ ${brl(s.entradas_previstas)} a receber` : undefined },
-          { label: 'Saiu', value: s ? brl(s.saidas_pagas) : '—', hint: s && s.saidas_previstas > 0 ? `+ ${brl(s.saidas_previstas)} a pagar` : undefined },
-          { label: 'Saldo do mês', value: s ? brl(saldo) : '—', warn: saldo < 0, hint: s ? `Previsto no fim do mês: ${brl(previsto)}` : undefined },
-          { label: 'Vencido', value: s ? brl(s.vencido_receber ?? 0) : '—', warn: !!s && (s.vencido_receber_qtd ?? 0) > 0, onClick: () => setFilter('vencido'),
-            hint: s ? `${s.vencido_receber_qtd ?? 0} a receber atrasados${(s.vencido_pagar_qtd ?? 0) > 0 ? ` · ${s.vencido_pagar_qtd} contas a pagar (${brl(s.vencido_pagar ?? 0)})` : ''}${s.sem_categoria ? ` · ${s.sem_categoria} sem categoria` : ''}` : undefined },
-        ].map((t) => (
-          <div key={t.label} onClick={t.onClick} className={cn('shrink-0 rounded-2xl border border-line bg-surface px-4 py-3 max-md:flex max-md:items-baseline max-md:gap-1.5 max-md:rounded-full max-md:px-3 max-md:py-1.5', t.onClick && 'cursor-pointer hover:border-line-strong', t.label === 'Vencido' && !(s?.vencido_receber_qtd) && 'max-md:hidden')}>
-            <p className="text-[12px] font-medium text-muted">{t.label}</p>
-            <p className={cn('text-[15px] font-semibold tabular-nums md:text-[22px]', t.warn && 'text-warn-ink')}>{t.value}</p>
-            {t.hint && <p className="hidden text-[12px] text-muted md:block">{t.hint}</p>}
-          </div>
-        ))}
+      {/* Lançar primeiro: escrever como fala, ou + Entrada / + Saída. Sempre abre o pop-up para confirmar. */}
+      <section aria-label="Lançar" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-2.5 md:flex-row md:items-center md:p-3">
+        <form onSubmit={submitQuick} className="relative flex min-w-0 flex-1 items-center">
+          <Sparkles size={16} aria-hidden="true" className="pointer-events-none absolute left-3.5 text-muted" />
+          <input value={quick} onChange={(e) => setQuick(e.target.value)} aria-label="Lançamento rápido" autoComplete="off" enterKeyHint="go"
+            placeholder='Escreva como fala: "gasto 89,90 canva"'
+            className="min-h-12 w-full rounded-full border border-line-strong bg-canvas pl-10 pr-24 text-[15px]" />
+          <button type="submit" disabled={quick.trim().length < 2 || read.isPending}
+            className="absolute right-1.5 min-h-9 cursor-pointer rounded-full bg-fill px-3.5 text-[13px] font-semibold text-on-fill disabled:cursor-not-allowed disabled:opacity-40">{read.isPending ? 'Lendo' : 'Lançar'}</button>
+        </form>
+        <div className="grid grid-cols-2 gap-2 md:flex">
+          <Button onClick={() => setEditing({ kind: 'entrada' })} className="min-h-12 bg-ok text-white hover:bg-ok/90"><Plus size={16} aria-hidden="true" /> Entrada</Button>
+          <Button onClick={() => setEditing({ kind: 'saida' })} className="min-h-12"><Minus size={16} aria-hidden="true" /> Saída</Button>
+        </div>
       </section>
-      {isAdmin && <BidForecastLine unit={unit} />}
-      {isAdmin && (() => {
-        const n = (entries.data ?? []).filter((e) => e.review_status === 'a_revisar').length
-        return n > 0 ? <Link to="/financeiro/whatsapp" className="self-start rounded-full max-md:order-last bg-raised px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:bg-line">{n} lançamento{n === 1 ? '' : 's'} do WhatsApp a revisar →</Link> : null
-      })()}
+
+      {/* Resumo numa linha. Quem deve fica na Cobrança: aqui são só atalhos. */}
+      <section aria-label="Resumo do mês" className="flex flex-wrap items-center gap-x-4 gap-y-2 px-1 text-[14px]">
+        <span>Entrou <b className="tabular-nums text-ok-ink">{s ? brl(s.entradas_pagas) : '—'}</b></span>
+        <span>Saiu <b className="tabular-nums">{s ? brl(s.saidas_pagas) : '—'}</b></span>
+        <span>Saldo <b className={cn('tabular-nums', saldo < 0 && 'text-warn-ink')}>{s ? brl(saldo) : '—'}</b></span>
+        <span className="flex flex-wrap gap-1.5 md:ml-auto">
+          {s && s.entradas_previstas > 0 && <Link to="/financeiro/cobranca" className={cn(pill, 'bg-raised text-ink hover:bg-line')}>A receber {brl(s.entradas_previstas)} →</Link>}
+          {s && (s.vencido_receber_qtd ?? 0) > 0 && <Link to="/financeiro/cobranca?situacao=vencido" className={cn(pill, 'bg-warn-soft text-warn-ink')}>Vencido {brl(s.vencido_receber ?? 0)} →</Link>}
+        </span>
+      </section>
+
+      {alerts && (
+        <div className="flex flex-wrap gap-1.5 empty:hidden">
+          {toPay.length > 0 && <button type="button" onClick={() => setFilter('a_pagar')} className={cn(pill, toPay.some((e) => e.due_date < today) ? 'border border-warn text-warn-ink' : 'bg-raised text-ink')}>A pagar {brl(toPayTotal)} · {toPay.length}</button>}
+          {isAdmin && <ToReview onDone={refresh} />}
+          {isAdmin && <Transfers onDone={refresh} />}
+          {isAdmin && waReview > 0 && <Link to="/financeiro/whatsapp" className={cn(pill, 'bg-raised text-ink hover:bg-line')}>{waReview} do WhatsApp a revisar →</Link>}
+          {isAdmin && <BidForecastLine unit={unit} />}
+        </div>
+      )}
       {summary.isError && <LoadState isPending={false} isError refetch={() => void summary.refetch()} />}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-4 py-2.5 font-medium text-warn-ink">{problem}</p>}
 
-      <div className={cn('flex-wrap items-center justify-between gap-2', searchOpen || query ? 'flex' : 'hidden md:flex')}>
-        <div role="group" aria-label="Filtro" className="hidden flex-wrap gap-1 md:flex">
-          {FILTERS.map(([k, l]) => (
-            <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}
-              className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', filter === k ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>{l}</button>
-          ))}
-        </div>
-        <div className="flex w-full flex-wrap gap-2 md:w-auto">
-          <label className="relative flex flex-1 items-center md:flex-none">
-            <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 text-muted" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar" aria-label="Buscar no caixa"
-              className="min-h-11 w-full rounded-full border border-line bg-surface pl-9 pr-3 text-[13px] md:min-h-10 md:w-40 md:focus:w-56" />
-          </label>
-          <span className="hidden md:contents">
-            <Button variant="secondary" onClick={exportCsv} disabled={!list.length} title="Baixar planilha"><Download size={15} aria-hidden="true" /> Planilha</Button>
-            <Button variant="secondary" onClick={() => setFixed(true)}><CalendarClock size={15} aria-hidden="true" /> Contas fixas</Button>
-            <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={15} aria-hidden="true" /> Importar extrato</Button>
-            <Button onClick={() => setEditing('new')}><Plus size={15} aria-hidden="true" /> Lançamento</Button>
-          </span>
-        </div>
-      </div>
+      <div className="hidden items-center justify-between gap-2 md:flex">{chips}{search}</div>
 
       {!entries.data ? <LoadState isPending={entries.isPending} isError={entries.isError} refetch={() => void entries.refetch()} /> : (
         <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
           {list.slice(0, limit).map((e) => {
-            const late = e.status === 'pendente' && e.due_date < today
+            const pending = e.status === 'pendente'
+            const late = pending && e.due_date < today
+            const cat = catName.get(e.category_id ?? '')
             return (
-              <li key={e.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-line px-4 py-3 last:border-b-0">
-                <span className="w-12 shrink-0 text-[13px] tabular-nums text-muted">{dayLabel(e.paid_at ?? e.due_date)}</span>
-                {clientName(e) ? <ClientAvatar name={clientName(e)!} url={clientLogo(e)} size="sm" />
-                  : <span aria-hidden="true" className={cn('grid size-7 shrink-0 place-items-center rounded-full text-[13px] font-bold', e.kind === 'entrada' ? 'bg-ok-soft text-ok-ink' : 'bg-raised text-muted')}>{e.kind === 'entrada' ? '+' : '−'}</span>}
+              <li key={e.id} className="flex items-center gap-3 border-b border-line px-4 py-2.5 last:border-b-0 hover:bg-raised/40">
+                <span className="w-11 shrink-0 text-[13px] tabular-nums text-muted">{dayLabel(e.paid_at ?? e.due_date)}</span>
                 <button type="button" onClick={() => setEditing(e)} className="min-w-0 flex-1 cursor-pointer text-left">
-                  {clientName(e)
-                    ? <><span className="block truncate font-semibold">{clientName(e)}</span><span className="block truncate text-[13px] text-ink/80">{shortDesc(e.description)}</span></>
-                    : <span className="block truncate font-medium">{e.description}</span>}
-                  <span className={cn('text-[12px]', late ? 'font-semibold text-warn-ink' : 'text-muted')}>
-                    {e.status === 'pendente' ? (late ? 'Atrasado' : 'Em aberto') : 'Pago'}{e.source === 'extrato' ? ' · do extrato' : ''}
-                    {e.source === 'whatsapp' && (e.review_status === 'a_revisar' ? <b className="font-semibold text-warn-ink"> · via WhatsApp · a revisar</b> : ' · via WhatsApp')}
-                    {e.source !== 'extrato' && e.bank_ref ? ' · conferido no banco ✓' : ''}
+                  <span className="block truncate font-medium">{clientName(e) ? <>{clientName(e)} <span className="font-normal text-muted">· {shortDesc(e.description)}</span></> : e.description}</span>
+                  <span className={cn('block truncate text-[12px]', late ? 'font-semibold text-warn-ink' : 'text-muted')}>
+                    {pending ? (late ? 'Atrasada · ' : 'A pagar · ') : ''}
+                    {cat ?? <b className="font-semibold text-warn-ink">Sem categoria</b>}
+                    {e.attachment_path ? ' · com anexo' : ''}
+                    {e.source === 'whatsapp' && e.review_status === 'a_revisar' ? <b className="font-semibold text-warn-ink"> · WhatsApp a revisar</b> : ''}
                   </span>
                 </button>
-                <select aria-label={`Categoria de ${e.description}`} value={e.category_id ?? ''} disabled={categorize.isPending}
-                  onChange={(ev) => {
-                    if (!ev.target.value) return
-                    const hint = ruleHint(e.description)
-                    const category = ev.target.value
-                    if (hint.length < 3) { categorize.mutate({ id: e.id, category, learn: null }); return }
-                    void ask(`Lembrar para os próximos extratos? Tudo com "${hint}" vai para "${catName.get(category)}".`)
-                      .then((ok) => categorize.mutate({ id: e.id, category, learn: ok ? hint : null }))
-                  }}
-                  className={cn('min-h-11 max-w-[200px] rounded-xl border bg-surface px-2 text-[13px] max-md:order-last max-md:ml-[88px] md:min-h-10', e.category_id ? 'border-line max-md:hidden' : 'border-warn text-warn-ink')}>
-                  <option value="">Sem categoria</option>
-                  {unitCats.filter((c) => c.kind === e.kind).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-                <span className={cn('text-right font-semibold tabular-nums md:w-28', e.kind === 'entrada' ? 'text-ok-ink' : 'text-ink')}>{e.kind === 'saida' ? '−' : '+'} {brl(e.amount)}</span>
-                {e.status === 'pendente' && (
+                <span className={cn('shrink-0 text-right font-semibold tabular-nums', e.kind === 'entrada' ? 'text-ok-ink' : 'text-ink')}>{e.kind === 'saida' ? '−' : '+'} {brl(e.amount)}</span>
+                {pending && (
                   <button type="button" title="Marcar como pago" aria-label={`Marcar ${e.description} como pago`} disabled={setStatus.isPending}
                     onClick={() => setPaying(e)}
-                    className="grid size-11 cursor-pointer place-items-center rounded-full border border-line hover:border-ink"><Check size={16} aria-hidden="true" /></button>
+                    className="grid size-10 shrink-0 cursor-pointer place-items-center rounded-full border border-line hover:border-ink"><Check size={16} aria-hidden="true" /></button>
                 )}
               </li>
             )
           })}
           {list.length > limit && <li className="p-3 text-center"><Button variant="secondary" onClick={() => setLimit((n) => n + 60)}>Ver mais ({list.length - limit})</Button></li>}
           {list.length === 0 && (q || filter !== 'todos') && <li className="p-8 text-center text-muted">Nada encontrado com esse filtro.</li>}
-          {list.length === 0 && !q && filter === 'todos' && <li className="p-8 text-center text-muted">Nada lançado neste mês. Use <b className="text-ink">Lançamento</b> para uma entrada ou saída, ou <b className="text-ink">Importar extrato</b> com o arquivo OFX ou CSV do banco: o sistema separa e categoriza sozinho.</li>}
+          {list.length === 0 && !q && filter === 'todos' && <li className="p-8 text-center text-muted">Nada lançado neste mês. Escreva no campo acima ("gasto 50 uber") ou use <b className="text-ink">⋯ → Importar extrato</b>.</li>}
         </ul>
       )}
 
-      {s && s.categorias.length > 0 && (
-        <section aria-labelledby="fechamento" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
-          <h2 id="fechamento" className="text-[17px] font-semibold">Fechamento de {monthLabel(month).toLowerCase()} · {UNIT_LABEL[unit]}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {(['entrada', 'saida'] as Kind[]).map((k) => {
-              const rows = s.categorias.filter((c) => c.kind === k)
-              const total = rows.reduce((a, r) => a + Number(r.total), 0)
-              return (
-                <div key={k}>
-                  <h3 className="mb-1 text-[13px] font-semibold text-muted">{k === 'entrada' ? 'Entradas' : 'Saídas'} · {brl(total)}</h3>
-                  <ul className="flex flex-col gap-1.5">
-                    {rows.map((r) => (
-                      <li key={r.category} className="flex flex-col gap-1">
-                        <div className="flex justify-between text-[14px]"><span>{r.category}</span><span className="tabular-nums">{brl(Number(r.total))}</span></div>
-                        <div className="h-1.5 overflow-hidden rounded-full bg-raised"><span className={cn('block h-full rounded-full', k === 'entrada' ? 'bg-ok' : 'bg-accent')} style={{ width: `${total ? (Number(r.total) / total) * 100 : 0}%` }} /></div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )
-            })}
-          </div>
-          {s.sem_categoria > 0 && <p className="text-[13px] font-medium text-warn-ink">{s.sem_categoria} lançamentos sem categoria. Classifique para o fechamento ficar certo.</p>}
-        </section>
-      )}
-
-
-      {/* Celular: ação principal sempre à mão, acima da barra de abas e longe da Bete. */}
-      <button type="button" onClick={() => setEditing('new')} aria-label="Novo lançamento"
-        className="fixed bottom-[calc(84px+env(safe-area-inset-bottom))] left-4 z-30 inline-flex min-h-12 cursor-pointer items-center gap-1.5 rounded-full bg-fill px-5 font-semibold text-on-fill shadow-lg md:hidden">
-        <Plus size={17} aria-hidden="true" /> Lançamento
-      </button>
+      {closing && s && <ClosingDialog s={s} title={`Fechamento de ${monthLabel(month).toLowerCase()} · ${UNIT_LABEL[unit]}`} onClose={() => setClosing(false)} onUncategorized={() => { setClosing(false); setFilter('sem_categoria') }} />}
       {fixed && <RecurringDialog unit={unit} unitLabel={UNIT_LABEL[unit]} categories={unitCats} onClose={() => setFixed(false)} />}
       {paying && <PayDialog entry={paying} onClose={() => setPaying(null)} onPay={(d) => { setStatus.mutate({ id: paying.id, status: 'pago', paidAt: d }); setPaying(null) }} />}
-      {editing && <EntryDialog unit={unit} categories={unitCats} entry={editing === 'new' ? null : editing} onClose={() => setEditing(null)} onSaved={refresh} />}
+      {editing && <EntryDialog unit={unit} categories={unitCats} entry={'id' in editing ? editing : null} prefill={'id' in editing ? null : editing} onClose={() => setEditing(null)} onSaved={refresh} />}
       {importing && <ImportDialog unit={unit} onClose={() => setImporting(false)} onDone={refresh} />}
     </>
   )
 }
 
-function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit; categories: Category[]; entry: Entry | null; onClose: () => void; onSaved: () => void }) {
-  const [kind, setKind] = useState<Kind>((entry?.kind as Kind) ?? 'saida')
-  const [description, setDescription] = useState(entry?.description ?? '')
-  const [amount, setAmount] = useState(entry ? String(entry.amount).replace('.', ',') : '')
-  const [due, setDue] = useState(entry?.due_date ?? todayBR())
-  const [paidAt, setPaidAt] = useState(entry?.paid_at ?? todayBR())
-  const [category, setCategory] = useState(entry?.category_id ?? '')
+/** Fechamento do mês por categoria (antes ficava embaixo da lista). */
+function ClosingDialog({ s, title, onClose, onUncategorized }: { s: Summary; title: string; onClose: () => void; onUncategorized: () => void }) {
+  return (
+    <Dialog open onClose={onClose} title={title} size="md">
+      <div className="grid gap-4 md:grid-cols-2">
+        {(['entrada', 'saida'] as Kind[]).map((k) => {
+          const rows = s.categorias.filter((c) => c.kind === k).slice(0, 8)
+          const total = s.categorias.filter((c) => c.kind === k).reduce((a, r) => a + Number(r.total), 0)
+          return (
+            <div key={k}>
+              <h3 className="mb-1 text-[13px] font-semibold text-muted">{k === 'entrada' ? 'Entradas' : 'Saídas'} · {brl(total)}</h3>
+              <ul className="flex flex-col gap-1.5">
+                {rows.map((r) => (
+                  <li key={r.category} className="flex flex-col gap-1">
+                    <div className="flex justify-between text-[14px]"><span className="truncate">{r.category}</span><span className="tabular-nums">{brl(Number(r.total))}</span></div>
+                    <div className="h-1.5 overflow-hidden rounded-full bg-raised"><span className={cn('block h-full rounded-full', k === 'entrada' ? 'bg-ok' : 'bg-accent')} style={{ width: `${total ? (Number(r.total) / total) * 100 : 0}%` }} /></div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        })}
+      </div>
+      {s.sem_categoria > 0 && <button type="button" onClick={onUncategorized} className="mt-3 cursor-pointer text-[13px] font-semibold text-warn-ink underline">{s.sem_categoria} lançamentos sem categoria: classificar →</button>}
+    </Dialog>
+  )
+}
+
+const BUCKET = 'fin-docs'
+/** Abre o anexo do lançamento (pasta privada; endereço vale 10 minutos). */
+async function openAttachment(path: string) {
+  const { data } = await supabase.storage.from(BUCKET).createSignedUrl(path, 600)
+  if (data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener')
+}
+async function uploadAttachment(unit: string, id: string, file: File): Promise<void> {
+  const safe = file.name.normalize('NFD').replace(/[^\w.-]+/g, '-').slice(-60)
+  const path = `${unit}/${id}/${Date.now()}-${safe}`
+  const up = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true, contentType: file.type || undefined })
+  if (up.error) throw new Error(`não consegui enviar o anexo (${up.error.message})`)
+  const { error } = await rpc('fin_entry_attach', { _id: id, _path: path })
+  if (error) throw new Error(error.message)
+}
+
+/** Pop-up de lançamento: novo (já preenchido pela frase) ou detalhes de um que existe. Nada é gravado sem tocar em Salvar. */
+function EntryDialog({ unit, categories, entry, prefill, onClose, onSaved }: { unit: Unit; categories: Category[]; entry: Entry | null; prefill: Prefill | null; onClose: () => void; onSaved: () => void }) {
+  const [kind, setKind] = useState<Kind>((entry?.kind as Kind) ?? prefill?.kind ?? 'saida')
+  const [description, setDescription] = useState(entry?.description ?? prefill?.description ?? '')
+  const [amount, setAmount] = useState(entry ? String(entry.amount).replace('.', ',') : prefill?.amount ? String(prefill.amount).replace('.', ',') : '')
   const [paid, setPaid] = useState(entry ? entry.status === 'pago' : true)
+  const [date, setDate] = useState(entry ? (entry.status === 'pago' ? entry.paid_at ?? todayBR() : entry.due_date) : prefill?.date ?? todayBR())
+  const initialCat = entry?.category_id ?? categories.find((c) => c.kind === kind && fold(c.name) === fold(prefill?.category ?? ''))?.id ?? ''
+  const [category, setCategory] = useState(initialCat)
+  const [file, setFile] = useState<File | null>(null)
+  const fileInput = useRef<HTMLInputElement>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const [dupes, setDupes] = useState<Dupe[] | null>(null)
-  // Lançamento que veio de fatura: valor e tipo só mudam pela Cobrança (a fatura não acompanharia).
-  const fromInvoice = entry?.source === 'contrato'
+  // Lançamento que veio de fatura: valor e tipo só mudam pela Cobrança (a fatura não acompanharia). Trava PF010 no banco.
+  const fromInvoice = entry?.source === 'contrato' || (entry?.external_id ?? '').startsWith('inv:')
+  const client = entry ? clientName(entry) : prefill?.clientName ?? null
   const save = useMutation({
     mutationFn: async (force: boolean) => {
       const value = parseMoney(amount)
@@ -417,14 +445,24 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
       if (!value || value <= 0) throw new Error('Valor inválido.')
       // Nada em dobro: antes de criar, confere se o mesmo gasto já entrou (WhatsApp, extrato, outra pessoa).
       if (!entry && !force) {
-        const found = await checkDupes({ unit, kind, amount: value, date: paid ? paidAt : due, description })
+        const found = await checkDupes({ unit, kind, amount: value, date, description })
         if (found.length) { setDupes(found); return false }
       }
-      const { error } = await supabase.rpc('fin_entry_save', {
+      const due = paid ? (entry?.due_date ?? date) : date
+      const { data, error } = await supabase.rpc('fin_entry_save', {
         _id: entry?.id ?? null,
-        _data: { unit, kind, description, amount: value, due_date: due, category_id: category || null, status: paid ? 'pago' : 'pendente', paid_at: paid ? paidAt : null },
+        _data: { unit, kind, description, amount: value, due_date: due, category_id: category || null, status: paid ? 'pago' : 'pendente', paid_at: paid ? date : null,
+          ...(!entry && prefill?.clientId ? { client_id: prefill.clientId } : {}) },
       })
-      if (error) throw new Error(`Não foi possível salvar (${error.message}).`)
+      if (error) throw new Error(error.message.includes('fatura') ? 'Este lançamento vem de uma fatura: valor e tipo mudam pela Cobrança.' : `Não foi possível salvar (${error.message}).`)
+      const id = (entry?.id ?? data) as string
+      if (file && id) await uploadAttachment(unit, id, file)
+      // Categoria nova: oferece lembrar a regra para os próximos extratos (como antes, na linha).
+      const hint = ruleHint(description)
+      if (category && category !== initialCat && hint.length >= 3 && id) {
+        const ok = await ask(`Lembrar para os próximos extratos? Tudo com "${hint}" vai para "${categories.find((c) => c.id === category)?.name}".`)
+        if (ok) await supabase.rpc('fin_categorize', { _id: id, _category: category, _learn: hint })
+      }
       return true
     },
     onSuccess: (done) => { if (done) { onSaved(); onClose() } },
@@ -432,7 +470,7 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
   })
   const same = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>)('fin_entry_same', { _id: id })
+      const { error } = await rpc('fin_entry_same', { _id: id })
       if (error) throw new Error(error.message)
     },
     onSuccess: () => { onSaved(); onClose() },
@@ -447,23 +485,25 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
     onError: (e) => setProblem(`Não foi possível cancelar (${(e as Error).message}).`),
   })
   const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
+  const lock = fromInvoice ? 'cursor-not-allowed bg-raised text-muted' : ''
+  const origin = entry ? [entry.source === 'extrato' && 'do extrato', entry.source === 'whatsapp' && 'via WhatsApp', fromInvoice && 'da Cobrança', entry.bank_ref && 'conferido no banco ✓'].filter(Boolean).join(' · ') : ''
+  const title = entry ? (client ?? 'Lançamento') : kind === 'entrada' ? 'Nova entrada' : 'Nova saída'
   return (
-    <Dialog open onClose={onClose} title={entry ? 'Editar lançamento' : 'Novo lançamento'} size="sm"
-      footer={<div className="flex flex-wrap justify-between gap-2">
-        {entry ? <Button variant="link" onClick={() => { void ask('Cancelar este lançamento? Ele sai do caixa.').then((ok) => { if (ok) cancel.mutate() }) }}>Cancelar lançamento</Button> : <span />}
-        <Button disabled={save.isPending} onClick={() => { setProblem(null); setDupes(null); save.mutate(false) }}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
+    <Dialog open onClose={onClose} title={title} description={entry ? (client ? shortDesc(entry.description) : undefined) : client ? `Cliente: ${client}` : undefined} size="sm"
+      footer={<div className="flex w-full flex-wrap items-center justify-between gap-2">
+        {entry ? <Button variant="link" onClick={() => { void ask(fromInvoice ? 'Cancelar este lançamento? A fatura do cliente também é cancelada.' : 'Excluir este lançamento? Ele sai do caixa.').then((ok) => { if (ok) cancel.mutate() }) }}>{fromInvoice ? 'Cancelar' : 'Excluir'}</Button> : <span />}
+        <Button disabled={save.isPending} onClick={() => { setProblem(null); setDupes(null); save.mutate(false) }}>{save.isPending ? 'Salvando' : entry ? 'Salvar' : 'Confirmar lançamento'}</Button>
       </div>}>
       <div className="flex flex-col gap-3">
-        <div role="group" aria-label="Tipo" className="inline-flex self-start rounded-full border border-line p-0.5">
+        <div role="group" aria-label="Tipo" className="grid grid-cols-2 rounded-full border border-line p-0.5">
           {(['entrada', 'saida'] as Kind[]).map((k) => (
             <button key={k} type="button" aria-pressed={kind === k} disabled={fromInvoice} onClick={() => { setKind(k); setCategory('') }}
-              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold disabled:cursor-not-allowed', kind === k ? 'bg-fill text-on-fill' : 'text-muted')}>{k === 'entrada' ? 'Entrada' : 'Saída'}</button>
+              className={cn('min-h-10 cursor-pointer rounded-full px-4 text-[14px] font-semibold disabled:cursor-not-allowed', kind === k ? (k === 'entrada' ? 'bg-ok text-white' : 'bg-fill text-on-fill') : 'text-muted')}>{k === 'entrada' ? '+ Entrada' : '− Saída'}</button>
           ))}
         </div>
-        <label className="flex flex-col text-[13px] font-semibold">Descrição<input value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} className={field} /></label>
-        <div className="grid grid-cols-2 gap-3">
-          <label className="flex flex-col text-[13px] font-semibold">Valor (R$)<input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" readOnly={fromInvoice} title={fromInvoice ? 'Mude o valor pela Cobrança' : undefined} className={cn(field, fromInvoice && 'cursor-not-allowed bg-raised text-muted')} /></label>
-          <label className="flex flex-col text-[13px] font-semibold">Vence em<input type="date" value={due} onChange={(e) => setDue(e.target.value)} readOnly={fromInvoice} title={fromInvoice ? 'Mude a data pela Cobrança' : undefined} className={cn(field, fromInvoice && 'cursor-not-allowed bg-raised text-muted')} /></label>
+        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] gap-3">
+          <label className="flex flex-col text-[13px] font-semibold">Valor (R$)<input inputMode="decimal" autoFocus={!entry && !prefill?.amount} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" readOnly={fromInvoice} title={fromInvoice ? 'Mude o valor pela Cobrança' : undefined} className={cn(field, 'text-[17px] font-semibold tabular-nums', lock)} /></label>
+          <label className="flex flex-col text-[13px] font-semibold">Descrição<input value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} autoComplete="off" className={field} /></label>
         </div>
         <label className="flex flex-col text-[13px] font-semibold">Categoria
           <SearchSelect name="pf-caixa-categoria" className="mt-1 font-normal" allowNew={false} placeholder="Sem categoria (digite para buscar)"
@@ -471,15 +511,28 @@ function EntryDialog({ unit, categories, entry, onClose, onSaved }: { unit: Unit
             onChange={(name) => setCategory(categories.find((c) => c.kind === kind && c.name === name)?.id ?? '')}
             options={categories.filter((c) => c.kind === kind).map((c) => c.name)} />
         </label>
-        <div className="flex flex-wrap items-end gap-3">
-          <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="size-4" /> {entry?.status === 'pago' ? 'Pago (desmarque para desfazer o pagamento)' : 'Já foi pago'}</label>
-          {paid && <label className="flex flex-col text-[13px] font-semibold">Pago em<input type="date" value={paidAt} max={todayBR()} onChange={(e) => setPaidAt(e.target.value)} className={field} /></label>}
+        <div className="grid grid-cols-2 items-end gap-3">
+          <div role="group" aria-label="Situação" className="grid grid-cols-2 rounded-xl border border-line p-0.5">
+            {([[true, kind === 'entrada' ? 'Recebido' : 'Pago'], [false, kind === 'entrada' ? 'A receber' : 'A pagar']] as const).map(([v, l]) => (
+              <button key={l} type="button" aria-pressed={paid === v} onClick={() => setPaid(v)}
+                className={cn('min-h-10 cursor-pointer rounded-lg px-2 text-[13px] font-semibold', paid === v ? 'bg-fill text-on-fill' : 'text-muted')}>{l}</button>
+            ))}
+          </div>
+          <label className="flex flex-col text-[13px] font-semibold">{paid ? (kind === 'entrada' ? 'Recebido em' : 'Pago em') : 'Vence em'}
+            <input type="date" value={date} max={paid ? todayBR() : undefined} onChange={(e) => setDate(e.target.value)} readOnly={fromInvoice && !paid} className={cn(field, fromInvoice && !paid && lock)} />
+          </label>
         </div>
-        {fromInvoice && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">Vem da Cobrança: valor, data e tipo só mudam lá. Marcar pago, desfazer ou cancelar aqui também atualiza a fatura do cliente; se ela faz parte de uma cobrança junta, o grupo inteiro fica pago.</p>}
+        <div className="flex flex-wrap items-center gap-2 text-[13px]">
+          <input ref={fileInput} type="file" accept="image/*,application/pdf,.xml" className="sr-only" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+          <Button variant="secondary" className="min-h-10" onClick={() => fileInput.current?.click()}><Paperclip size={14} aria-hidden="true" /> {file ? file.name.slice(0, 28) : entry?.attachment_path ? 'Trocar anexo' : 'Anexar comprovante'}</Button>
+          {entry?.attachment_path && !file && <Button variant="link" onClick={() => void openAttachment(entry.attachment_path!)}>Ver anexo</Button>}
+          {origin && <span className="text-[12px] text-muted">{origin}</span>}
+        </div>
+        {fromInvoice && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">Vem da Cobrança: valor e tipo só mudam lá. Marcar pago ou cancelar aqui também atualiza a fatura.</p>}
         {dupes && dupes.length > 0 && (
           <div role="alert" className="flex flex-col gap-2 rounded-xl bg-warn-soft px-3 py-2.5 text-warn-ink">
             <p className="font-semibold">Parece que já foi lançado:</p>
-            {dupes.map((d) => (
+            {dupes.slice(0, 3).map((d) => (
               <div key={d.id} className="flex flex-wrap items-center gap-2 text-[13px]">
                 <span className="min-w-0 flex-1">{dayLabel(d.date)} · {d.description} · {brl(d.amount)} <span className="opacity-80">({d.via})</span></span>
                 <Button variant="secondary" disabled={same.isPending} onClick={() => same.mutate(d.id)}>É o mesmo</Button>

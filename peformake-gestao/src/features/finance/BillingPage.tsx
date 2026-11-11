@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarClock, Check, Copy, Download, ExternalLink, Layers, Link2, Percent, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
+import { CalendarClock, Check, Copy, Download, ExternalLink, Layers, Link2, MessageCircle, Percent, Plus, RefreshCw, Search, Settings, Split, Undo2 } from 'lucide-react'
+import { ChargeDialog, sentLabel, type Chargeable } from './ChargeDialog'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -36,6 +37,9 @@ interface Invoice {
   ref?: string | null
   /** Já recebido de pagamento parcial (a fatura segue aberta com o saldo). */
   partial_paid?: number | null
+  /** Última vez que a cobrança foi enviada/copiada (Cobrar). */
+  charge_sent_at?: string | null
+  charge_sent_how?: string | null
   clients?: { name: string; logo_path: string | null; legacy_logo_url: string | null } | null
   invoice_groups?: { description: string; due_date: string } | null
   invoice_items?: { id: string; description: string; quantity: number; amount: number; state: string }[]
@@ -86,8 +90,8 @@ export function BillingPage() {
   const today = todayBR()
   const [unit, setUnit] = useState<Unit>('todas')
   // Cobrança abre em "quem está devendo".
-  const [status, setStatusFilter] = useState<StatusFilter>('aberto')
   const [params] = useSearchParams()
+  const [status, setStatusFilter] = useState<StatusFilter>(() => (['vencido', 'pago', 'todas'].includes(params.get('situacao') ?? '') ? params.get('situacao') as StatusFilter : 'aberto'))
   const target = params.get('fatura')
   const [onlyBids, setOnlyBids] = useState(params.get('tipo') === 'licitacao')
   const [, setMonth] = useMonthParam()
@@ -96,11 +100,12 @@ export function BillingPage() {
   const [query, setQuery] = useState('')
   const [paying, setPaying] = useState<Invoice | null>(null)
   const [discountFor, setDiscountFor] = useState<{ id: string; name: string } | null>(null)
+  const [charging, setCharging] = useState<string | null>(null)
 
   const invoices = useQuery({
     queryKey: ['invoices', month],
     queryFn: async () => {
-      const cols = 'id, client_id, unit, description, amount, due_date, status, source, ref, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date), invoice_items(id, description, quantity, amount, state)'
+      const cols = 'id, client_id, unit, description, amount, due_date, status, source, ref, gateway, gateway_id, payment_url, gateway_error, paid_at, paid_amount, group_id, pay_token, charge_sent_at, charge_sent_how, clients(name, logo_path, legacy_logo_url), invoice_groups(description, due_date), invoice_items(id, description, quantity, amount, state)'
       // Do mês + o que ficou em aberto de antes + o que foi pago neste mês (mesmo vencendo em outro).
       const range = `and(due_date.gte.${month},due_date.lt.${nextMonth(month)}),and(status.in.(pendente,vencido),due_date.lt.${month}),and(status.eq.pago,paid_at.gte.${month},paid_at.lt.${nextMonth(month)})`
       const first = await supabase.from('invoices').select(`${cols}, partial_paid`).or(range).order('due_date').limit(1000)
@@ -264,6 +269,22 @@ export function BillingPage() {
   const isOpen = (i: Invoice) => i.status === 'pendente' || i.status === 'vencido'
   // O link do cliente serve sempre: abre o Asaas se já existe, ou pede o CPF/CNPJ e cria na hora.
   const copyPay = (token: string) => { void navigator.clipboard.writeText(`${window.location.origin}/pagar/${token}`); setNotice('Link copiado. É só colar na conversa com o cliente.') }
+  // Tudo que o cliente deve (faturas soltas e cobranças juntas), para a mensagem de cobrança.
+  const payLink = (i: Invoice) => (isBidInvoice(i) ? null : `${window.location.origin}/pagar/${i.pay_token}`)
+  const chargeablesOf = (clientId: string): Chargeable[] => {
+    const out: Chargeable[] = []
+    const groups = new Map<string, Invoice[]>()
+    for (const i of all.filter((x) => x.client_id === clientId && isOpen(x))) {
+      if (i.group_id) { groups.set(i.group_id, [...(groups.get(i.group_id) ?? []), i]); continue }
+      out.push({ key: i.id, ids: [i.id], unit: i.unit, description: i.description, amount: openAmount(i), due_date: i.due_date, link: payLink(i), sent_at: i.charge_sent_at ?? null, sent_how: i.charge_sent_how ?? null })
+    }
+    for (const [g, items] of groups) {
+      const first = items[0]!
+      out.push({ key: g, ids: items.map((x) => x.id), unit: first.unit, description: first.invoice_groups?.description ?? first.description, amount: items.reduce((a, x) => a + openAmount(x), 0),
+        due_date: first.invoice_groups?.due_date ?? first.due_date, link: payLink(first), sent_at: items.map((x) => x.charge_sent_at ?? null).filter(Boolean).sort().pop() ?? null, sent_how: first.charge_sent_how ?? null })
+    }
+    return out.sort((a, b) => a.due_date.localeCompare(b.due_date))
+  }
   const shortDesc = (i: Invoice) => i.description.replace(/^Mensalidade (\d{2}\/\d{4}) · .*/, 'Mensalidade $1')
   const joinable = (i: Invoice) => all.filter((x) => x.client_id === i.client_id && canJoin(x))
   const askJoin = (i: Invoice) => {
@@ -374,6 +395,7 @@ export function BillingPage() {
                   logo={logoPublicUrl(first.clients?.logo_path ?? null) ?? first.clients?.legacy_logo_url ?? null}
                   busy={chargeNow.isPending || split.isPending || cancelGroup.isPending || pay.isPending || undo.isPending}
                   onCopy={() => copyPay(first.pay_token)}
+                  onBill={() => setCharging(first.client_id)}
                   onCharge={() => {
                     const client = clientById.get(first.client_id)
                     if (client && !client.document) { setBillingFor(client); return }
@@ -397,17 +419,21 @@ export function BillingPage() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold">{clientName} <span className="font-normal text-muted">· {i.unit === 'ellcazo' ? 'Ellcazo' : 'Peformake'}</span></p>
                     <p className="truncate text-[13px] text-muted">{shortDesc(i)} · vence {dayLabel(i.due_date)}{i.paid_at ? ` · pago ${dayLabel(i.paid_at.slice(0, 10))}` : ''}</p>
+                    {isOpen(i) && i.charge_sent_at && <p className="truncate text-[12px] text-muted">{sentLabel(i.charge_sent_at, i.charge_sent_how ?? null)}</p>}
                     {i.gateway_error && !/CPF|CNPJ/.test(i.gateway_error) && <p className="text-[12px] text-warn-ink">{i.gateway_error}</p>}
                   </div>
                   <span className="font-semibold tabular-nums">{brl(i.amount)}</span>
                   {isOpen(i) && Number(i.partial_paid ?? 0) > 0 && <span className="rounded-full bg-warn-soft px-2.5 py-0.5 text-[12px] font-semibold text-warn-ink">Parcial: falta {brl(openAmount(i))}</span>}
                   <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
                     st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
-                  {isOpen(i) && !isBidInvoice(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
+                  {isOpen(i) && isAdmin && <button type="button" onClick={() => setCharging(i.client_id)} title="Mensagem pronta para mandar no WhatsApp ou copiar"
+                    className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full bg-fill px-3 text-[13px] font-semibold text-on-fill"><MessageCircle size={14} aria-hidden="true" /> Cobrar</button>}
+                  {isOpen(i) && !isAdmin && !isBidInvoice(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
                     className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 text-[13px] font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>}
                   {isAdmin && <ActionMenu label={`Mais ações de ${clientName}`} actions={i.status === 'pago' ? [
                     { label: 'Desfazer pagamento', icon: <Undo2 size={15} aria-hidden="true" />, disabled: undo.isPending, onClick: () => { void ask('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.').then((ok) => { if (ok) undo.mutate(i.id) }) } },
                   ] : i.status === 'cancelado' ? [] : [
+                    { label: 'Copiar link de pagamento', icon: <Copy size={15} aria-hidden="true" />, hidden: isBidInvoice(i), onClick: () => copyPay(i.pay_token) },
                     { label: 'Ver licitação', icon: <ExternalLink size={15} aria-hidden="true" />, href: `/clientes/${i.client_id}?aba=contrato`, hidden: !isBidInvoice(i) },
                     { label: 'Abrir link no Asaas', icon: <ExternalLink size={15} aria-hidden="true" />, href: i.payment_url ?? undefined, hidden: !i.payment_url },
                     { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!i.payment_url || isBidInvoice(i), disabled: chargeNow.isPending, onClick: () => { if (client && !client.document) { setBillingFor(client); return } chargeNow.mutate(i.id) } },
@@ -433,6 +459,7 @@ export function BillingPage() {
       {jobOpen && <ServiceJobDialog clients={clients.data ?? []} onClose={() => setJobOpen(false)} onSaved={() => { setNotice('Serviço lançado: a fatura do cliente e a conta a pagar de quem fez já estão no sistema.'); refresh() }} />}
       {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
       {settingsOpen && <BillingSettingsDialog onClose={() => setSettingsOpen(false)} />}
+      {charging && <ChargeDialog clientId={charging} items={chargeablesOf(charging)} onClose={() => setCharging(null)} onDone={(msg) => { setNotice(msg); refresh() }} />}
       {discountFor && <ClientDiscountDialog client={discountFor} onClose={() => setDiscountFor(null)} onSaved={(msg) => setNotice(msg)} />}
       {billingFor && <ClientBillingDialog client={billingFor} onClose={() => setBillingFor(null)} onSaved={() => { void queryClient.invalidateQueries({ queryKey: ['billing-clients'] }); setNotice('Dados de cobrança salvos. Agora crie o link.') }} />}
     </>
@@ -442,9 +469,9 @@ export function BillingPage() {
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
 
 /** Cobrança única: várias faturas (de cada empresa) com um link e um pagamento só. */
-function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onCharge, onDue, onPay, onUndo, onSplit, onCancel }: {
+function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onBill, onCharge, onDue, onPay, onUndo, onSplit, onCancel }: {
   id: string; items: Invoice[]; name: string; logo: string | null; today: string; isAdmin: boolean; busy: boolean
-  onCopy: () => void; onCharge: () => void; onDue: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
+  onCopy: () => void; onBill: () => void; onCharge: () => void; onDue: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
 }) {
   const first = items[0]
   if (!first) return null
@@ -466,10 +493,12 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onChar
         <span className="font-semibold tabular-nums">{brl(total)}</span>
         <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
           st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
-        {status !== 'pago' && <button type="button" onClick={onCopy} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 text-[13px] font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>}
+        {status !== 'pago' && isAdmin && <button type="button" onClick={onBill} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full bg-fill px-3 text-[13px] font-semibold text-on-fill"><MessageCircle size={14} aria-hidden="true" /> Cobrar</button>}
+        {status !== 'pago' && !isAdmin && <button type="button" onClick={onCopy} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 text-[13px] font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>}
         {isAdmin && <ActionMenu label={`Mais ações de ${name}`} actions={status === 'pago' ? [
           { label: 'Desfazer pagamento', icon: <Undo2 size={15} aria-hidden="true" />, disabled: busy, onClick: onUndo },
         ] : [
+          { label: 'Copiar link de pagamento', icon: <Copy size={15} aria-hidden="true" />, onClick: onCopy },
           { label: 'Abrir link no Asaas', icon: <ExternalLink size={15} aria-hidden="true" />, href: url ?? undefined, hidden: !url },
           { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onCharge },
           { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onDue },
