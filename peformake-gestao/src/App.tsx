@@ -30,7 +30,6 @@ const AgentPage = lazy(() => import('@/features/traffic/AgentPage').then((m) => 
 const BalancePage = lazy(() => import('@/features/traffic/BalancePage').then((m) => ({ default: m.BalancePage })))
 const CampaignsPage = lazy(() => import('@/features/traffic/CampaignsPage').then((m) => ({ default: m.CampaignsPage })))
 const ReportsPage = lazy(() => import('@/features/traffic/ReportsPage').then((m) => ({ default: m.ReportsPage })))
-const StrategyPage = lazy(() => import('@/features/traffic/StrategyPage').then((m) => ({ default: m.StrategyPage })))
 const TasksPage = lazy(() => import('@/features/traffic/TasksPage').then((m) => ({ default: m.TasksPage })))
 const TrafficDashboard = lazy(() => import('@/features/traffic/TrafficDashboard').then((m) => ({ default: m.TrafficDashboard })))
 const TrafficLayout = lazy(() => import('@/features/traffic/TrafficLayout').then((m) => ({ default: m.TrafficLayout })))
@@ -93,7 +92,7 @@ export function App() {
               <Route path="campanhas" element={<CampaignsPage />} />
               <Route path="tarefas" element={<TasksPage />} />
               <Route path="contas" element={<AccountsPage />} />
-              <Route path="estrategia" element={<StrategyPage />} />
+              <Route path="estrategia" element={<MovedTo to="/estrategia/trafego" />} />
               <Route path="relatorios" element={<ReportsPage />} />
               <Route path="configuracoes" element={<TrafficSettingsPage />} />
               <Route path="servicos" element={<MovedTo to="/comercial/servicos?area=trafego" />} />

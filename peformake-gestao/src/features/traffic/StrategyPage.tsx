@@ -612,7 +612,7 @@ export function StrategyPage() {
         <select id="estrategia-mes" value={month} onChange={(e) => setParam('mes', e.target.value)} className={pill}>
           {months.map((m) => <option key={m} value={m}>Estratégia de {monthLabel(m)}</option>)}
         </select>
-        {!clientId && <p className="text-[13px] text-muted">Direcionamento até o dia 14. O agente gera no dia 15 às 8h. A equipe revisa e envia.</p>}
+        {!clientId && <p className="text-[13px] text-muted max-md:hidden">Direcionamento até o dia 14. O agente gera no dia 15 às 8h. A equipe revisa e envia.</p>}
       </div>
       {client
         ? <ClientStrategy key={`${clientId}-${month}`} clientId={clientId} clientName={client.name} month={month} today={today} canManage={canManage} />

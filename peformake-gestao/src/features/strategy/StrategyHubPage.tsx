@@ -108,7 +108,7 @@ export function StrategyHubPage() {
           {clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         {clientId && (
-          <Link to={`/trafego/estrategia?cliente=${clientId}`} className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong px-4 text-[13px] font-semibold text-ink no-underline hover:border-ink">
+          <Link to={`/estrategia/trafego?cliente=${clientId}`} className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong px-4 text-[13px] font-semibold text-ink no-underline hover:border-ink">
             Estratégia de tráfego deste cliente <ArrowUpRight size={15} aria-hidden="true" />
           </Link>
         )}

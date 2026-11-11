@@ -97,7 +97,7 @@ export function OperationPage() {
                   <Link to={`/clientes/${r.client_id}`} className="font-semibold text-ink hover:underline">{r.name}</Link>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {g.total > 0 && g.worst && (
-                      <Link to={`/trafego/estrategia?cliente=${r.client_id}`} className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold no-underline', STATUS_TONE[g.worst].chip)}>
+                      <Link to={`/estrategia/trafego?cliente=${r.client_id}`} className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold no-underline', STATUS_TONE[g.worst].chip)}>
                         Metas {g.hit}/{g.total}
                       </Link>
                     )}

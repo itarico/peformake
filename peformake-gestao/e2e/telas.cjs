@@ -51,7 +51,7 @@ async function mock(route) {
   if (p.startsWith('/storage/')) return route.fulfill({ status: 404, body: '' });
   return json({});
 }
-const pages0 = [['clientes','/clientes?aba=recorrentes'],['ficha','/clientes/' + T.clients[0].id],['ficha-financeiro','/clientes/' + T.clients[0].id + '?aba=financeiro'],['ficha-pf','/clientes/' + T.clients[10].id + '?novo=1'],['caixa','/financeiro/caixa'],['cobranca','/financeiro/cobranca'],['contratos','/financeiro/contratos'],['cobranca-fatura','/financeiro/cobranca?fatura=' + T.invoices[1].id]];
+const pages0 = [['clientes','/clientes?aba=recorrentes'],['ficha','/clientes/' + T.clients[0].id],['ficha-financeiro','/clientes/' + T.clients[0].id + '?aba=financeiro'],['ficha-pf','/clientes/' + T.clients[10].id + '?novo=1'],['caixa','/financeiro/caixa'],['cobranca','/financeiro/cobranca'],['contratos','/financeiro/contratos'],['cobranca-fatura','/financeiro/cobranca?fatura=' + T.invoices[1].id],['estrategia-trafego','/estrategia/trafego'],['estrategia-antiga','/trafego/estrategia?cliente=' + T.clients[0].id]];
 const pages = process.env.ONLY ? pages0.filter(x => x[0] === process.env.ONLY) : pages0;
 (async () => {
   const b = await chromium.launch();
@@ -69,6 +69,7 @@ const pages = process.env.ONLY ? pages0.filter(x => x[0] === process.env.ONLY) :
       await p.screenshot({ path: `${OUT}/n-${dev}-${name}.png`, fullPage: false });
       const hit = name === 'cobranca-fatura' ? await p.evaluate((id) => !!document.getElementById('fatura-' + id)?.className.includes('ring-2'), T.invoices[1].id) : true;
       if (!hit) fails.push(`${dev} ${name}: o aviso não abriu a fatura exata`);
+      if (name === 'estrategia-antiga' && !p.url().includes('/estrategia/trafego?cliente=' + T.clients[0].id)) fails.push(`${dev} ${name}: endereço antigo não levou para /estrategia/trafego (${p.url()})`);
       const r = { dev, name, ms: Date.now()-t0, ...m, errs: [...new Set(errs)].slice(0,3) };
       console.log(JSON.stringify(r));
       // Regras: sem erro na tela, sem rolagem de lado, sem tela branca e, no celular, o 1º item da lista antes de metade da tela.
