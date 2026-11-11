@@ -99,3 +99,34 @@ Hoje a entrega de social conta "peças planejadas aprovadas". Proposta de medida
 3. **Resultado** (do perfil, sem culpar só a social): alcance, engajamento por post, seguidores ganhos, mensagens
    recebidas pelo Instagram, comparado com o mês anterior; nota do cliente no portal.
 Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver detalhes".
+
+## 11. Perguntas inteligentes ao cliente (ideia do Italo, 11/11 noite, por áudio)
+- **Link progressivo para o cliente**: uma pergunta por vez, no celular, sem login (como o link de pagamento). Usado:
+  - **na entrada** (Consultoria/diagnóstico): empresa, objetivo, público, oferta etc. O que ele responde soma com a busca automática;
+  - **todo mês** (estratégia mensal de Consultoria, Tráfego, Social, Audiovisual, Vendas): perguntas do mês.
+- **Perguntas inteligentes e retroalimentadas**: não são fixas. O sistema gera as perguntas do mês a partir do que ele
+  respondeu antes, da estratégia aplicada, dos resultados (o que deu certo/errado), da sazonalidade e de tudo que já sabe.
+  Não pergunta o que já sabe.
+- **Fila de perguntas por cliente** (uma "basinha"): sempre que o sistema identificar que precisa de 1, 2 ou 3 informações,
+  cria a linha na fila. A equipe toca em "Enviar" e o cliente recebe o link (envio confirmado por humano, regra do WhatsApp).
+  Respondeu: alimenta a ficha, o diagnóstico e as próximas gerações. Pacotes ("packs") por mês e por área.
+- **Antes do PDF**: a apresentação aparece na interface para ajustar o que a IA errou, ver de onde veio cada dado e
+  responder dúvidas; depois de aprovar, PDF e link público vivo (em construção na Fase 1.1).
+- Base já pedida ao agente: tabela genérica de perguntas/respostas por cliente e área.
+
+## 12. Acompanhamento da consultoria (histórico e evolução)
+- A aba Consultoria guarda, por cliente e por mês: diagnóstico, estratégia do mês, o que foi feito, respostas do cliente.
+- **Linha do tempo da evolução** (indicadores antes/depois) e o sistema verificando **se o plano foi aplicado ou não**
+  (passos do plano com situação: feito, em andamento, não feito, e por quê), usando entregas, tráfego, conversas e respostas.
+- O que não foi aplicado volta como ponto da próxima estratégia ou pergunta ao cliente.
+
+## 13. Aba Vendas (nova área de estratégia)
+- Estratégia de vendas para o cliente: funil comercial, roteiro de atendimento no WhatsApp, oferta e objeções,
+  follow-up, metas e conversão (cruza com os contatos que o tráfego gera e com as conversas).
+- Mesmo padrão: direcionamento + perguntas do mês + geração 1/dia + revisão + apresentação.
+
+## Ordem sugerida (atualizada)
+1. Consultoria 1.1 (em construção: edição, apresentação vertical/paisagem, PDF só após aprovar, link público vivo, portal).
+2. Fila de perguntas + link progressivo do cliente (base para todas as áreas).
+3. Acompanhamento mensal da consultoria (histórico, plano aplicado ou não).
+4. Roteiro (Audiovisual) → Tráfego → Social → Vendas, todos com perguntas do mês.
