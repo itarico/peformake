@@ -143,13 +143,15 @@ function ArtRequestForm({ onDone, clientId: fixedClient, initialText, seasonKey 
 }
 
 /** Botão que abre o pedido de arte de qualquer tela do Conteúdo. */
-export function ArtRequestButton({ clientId, className, initialText, seasonKey, label = 'Pedir arte', variant, title = 'Pedir arte ao agente' }: {
+export function ArtRequestButton({ clientId, className, initialText, seasonKey, label = 'Pedir arte', variant, title = 'Pedir arte ao agente', iconOnMobile = false }: {
   clientId?: string; className?: string; initialText?: string; seasonKey?: string; label?: string; variant?: 'primary' | 'secondary'; title?: string
+  /** No celular mostra só o ícone (cabeçalho de uma linha). */
+  iconOnMobile?: boolean
 }) {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <Button variant={variant} onClick={() => setOpen(true)} className={className}><Sparkles size={16} aria-hidden="true" /> {label}</Button>
+      <Button variant={variant} onClick={() => setOpen(true)} aria-label={iconOnMobile ? label : undefined} className={cn(iconOnMobile && 'max-md:size-11 max-md:px-0', className)}><Sparkles size={16} aria-hidden="true" />{iconOnMobile ? <span className="hidden md:inline">{label}</span> : ` ${label}`}</Button>
       <Dialog open={open} onClose={() => setOpen(false)} title={title} description="Ele entende o pedido, escolhe a foto, olha os concorrentes, escreve a copy e cria a arte. Ajuste a ideia se quiser.">
         {open && <ArtRequestForm clientId={clientId} initialText={initialText} seasonKey={seasonKey} onDone={() => setOpen(false)} />}
       </Dialog>

@@ -93,15 +93,15 @@ export function BalancePage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[13px] text-muted">
+      <div className="flex items-center justify-between gap-3 md:flex-wrap">
+        <p className="min-w-0 text-[13px] text-muted max-md:truncate">
           {last
             ? `Última leitura ${last.trigger === 'auto' ? 'automática' : 'manual'} em ${when(last.startedAt)}${last.finishedAt ? (last.ok ? ', sem erros.' : ', com problemas.') : ', em andamento.'}`
             : 'Nenhuma leitura feita ainda.'}
-          {' '}Leitura automática pela Meta (MCP oficial) a cada 6 horas.
+          <span className="hidden md:inline">{' '}Leitura automática pela Meta (MCP oficial) a cada 6 horas.</span>
         </p>
         {hasApi && (
-          <Button variant="secondary" disabled={read.isPending} onClick={() => read.mutate()}>
+          <Button variant="secondary" className="shrink-0" disabled={read.isPending} onClick={() => read.mutate()}>
             <RefreshCw size={16} aria-hidden="true" className={read.isPending ? 'animate-spin' : ''} /> {read.isPending ? 'Lendo a Meta' : 'Ler agora'}
           </Button>
         )}
@@ -121,7 +121,7 @@ export function BalancePage() {
         </p>
       )}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div data-conteudo className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {cards.map((card) => (
           <section key={card.label} aria-label={card.label} className="rounded-3xl border border-line bg-surface p-4">
             <h2 className="text-[13px] font-medium text-muted">{card.label}</h2>

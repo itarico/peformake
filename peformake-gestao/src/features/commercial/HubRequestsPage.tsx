@@ -52,18 +52,18 @@ export function HubRequestsPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[14px] text-muted">{open} {open === 1 ? 'pedido em andamento' : 'pedidos em andamento'} nos últimos 60 dias. O agente lê as conversas e os grupos e manda cada pedido para a área certa.</p>
-        <div role="group" aria-label="Área" className="flex flex-wrap gap-1">
+      <div className="flex items-center justify-between gap-3 md:flex-wrap">
+        <p className="hidden text-[14px] text-muted md:block">{open} {open === 1 ? 'pedido em andamento' : 'pedidos em andamento'} nos últimos 60 dias. O agente lê as conversas e os grupos e manda cada pedido para a área certa.</p>
+        <div role="group" aria-label="Área" className="-mx-4 flex min-w-0 gap-1 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0 [&::-webkit-scrollbar]:hidden">
           {(['all', 'design', 'social', 'trafego', 'audiovisual', 'comercial'] as const).map((a) => (
             <button key={a} type="button" aria-pressed={area === a} onClick={() => setArea(a)}
-              className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[13px] font-medium', area === a ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>
-              {a === 'all' ? 'Todos' : AREA[a].label}
+              className={cn('min-h-11 shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 text-[13px] font-medium md:min-h-9', area === a ? 'bg-fill text-on-fill' : 'text-muted hover:bg-raised hover:text-ink')}>
+              {a === 'all' ? <>Todos<span className="md:hidden"> · {open} em andamento</span></> : AREA[a].label}
             </button>
           ))}
         </div>
       </div>
-      <ol className="overflow-hidden rounded-3xl border border-line bg-surface">
+      <ol data-conteudo className="overflow-hidden rounded-3xl border border-line bg-surface">
         {rows.map((r) => (
           <li key={r.id} className="flex flex-col gap-1 border-b border-line px-5 py-3.5 last:border-b-0">
             <div className="flex flex-wrap items-center justify-between gap-2">

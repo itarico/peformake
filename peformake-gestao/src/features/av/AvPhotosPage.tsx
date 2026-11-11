@@ -35,8 +35,8 @@ export function AvPhotosPage() {
   const q = useQuery({ queryKey: ['galleries'], queryFn: listGalleries })
   const [creating, setCreating] = useState(false)
   return (
-    <div className="theme-ellcazo flex flex-col gap-4">
-      <EllcazoHeader sub="Suba as fotos, o cliente escolhe pelo link, paga as extras e baixa em boa resolução." actions={<Button onClick={() => setCreating(true)}><Plus size={16} aria-hidden="true" /> Nova galeria</Button>}>Fotos</EllcazoHeader>
+    <div className="theme-ellcazo flex flex-col gap-2 md:gap-4">
+      <EllcazoHeader sub="Suba as fotos, o cliente escolhe pelo link, paga as extras e baixa em boa resolução." actions={<Button onClick={() => setCreating(true)} aria-label="Nova galeria" className="max-md:size-11 max-md:px-0"><Plus size={16} aria-hidden="true" /><span className="hidden md:inline">Nova galeria</span></Button>}>Fotos</EllcazoHeader>
       <AvTabs />
       <R2Notice />
       {!q.data ? <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} /> : (

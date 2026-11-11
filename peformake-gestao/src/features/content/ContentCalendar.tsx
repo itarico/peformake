@@ -1,3 +1,4 @@
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
@@ -41,22 +42,24 @@ export function ContentCalendar() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex items-center gap-2 md:flex-wrap">
+        <FilterSheet title="Cliente" count={clientId ? 1 : 0}>
         <label htmlFor="cal-cliente" className="sr-only">Cliente</label>
         <select id="cal-cliente" value={clientId} onChange={(e) => setClientId(e.target.value)} className="min-h-11 max-w-[260px] rounded-full border border-line-strong bg-surface px-3.5">
           <option value="">Todos os clientes</option>
           {clientsInMonth.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
-        <ul aria-label="Cor de cada etapa" className="flex flex-wrap gap-1.5">
+        </FilterSheet>
+        <ul aria-label="Cor de cada etapa" className="flex min-w-0 gap-1.5 overflow-x-auto [scrollbar-width:none] md:flex-wrap">
           {[...new Set(filtered.map((i) => i.status))].map((st) => (
-            <li key={st} className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-medium', STATUS_TONE[st])}>{STATUS_LABEL[st]}</li>
+            <li key={st} className={cn('shrink-0 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[12px] font-medium', STATUS_TONE[st])}>{STATUS_LABEL[st]}</li>
           ))}
         </ul>
-        <p className="w-full text-[12px] text-muted">A data de publicação se define dentro da peça.</p>
+        <p className="hidden w-full text-[12px] text-muted md:block">A data de publicação se define dentro da peça.</p>
       </div>
 
       {/* Celular: lista dos dias com peça, sem calendário para arrastar. */}
-      <ol aria-label="Dias com publicação" className="flex flex-col gap-2 md:hidden">
+      <ol aria-label="Dias com publicação" data-conteudo className="flex flex-col gap-2 md:hidden">
         {[...byDay.keys()].filter((d) => d.slice(0, 7) === month.slice(0, 7)).sort().map((d) => (
           <li key={d} className={cn('flex gap-3 rounded-2xl border border-line bg-surface p-3', d < today && 'opacity-70')}>
             <span className={cn('flex w-11 shrink-0 flex-col items-center leading-tight', d === today ? 'text-accent-ink' : 'text-muted')}>

@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Download, MapPin, Play, Plus, Star, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { ActionMenu } from '@/components/ui/ActionMenu'
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -109,8 +111,8 @@ export function ProspectingPage() {
 
   if (searches.isError) return <p className="rounded-2xl bg-raised px-4 py-3">A prospecção ainda não foi ligada no servidor.</p>
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <div className="flex flex-col gap-2.5 md:gap-4">
+      <div className="hidden flex-wrap items-start justify-between gap-3 md:flex">
         <p className="max-w-[70ch] text-[13px] text-muted">Empresas do Google Maps (dados públicos de empresa). Cada busca pode rodar todo dia às 7h e ganha etiquetas. A nota de oportunidade sobe quando a empresa não tem site, tem poucas avaliações ou nota baixa. Pode ser para a Peformake ou como serviço para um cliente.</p>
         <Button onClick={() => setEditing('new')}><Plus size={15} aria-hidden="true" /> Nova busca</Button>
       </div>
@@ -118,7 +120,7 @@ export function ProspectingPage() {
       <SiteLeads />
 
       {!searches.data ? <LoadState isPending={searches.isPending} isError={searches.isError} refetch={() => void searches.refetch()} /> : searches.data.length > 0 && (
-        <ul className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        <ul data-conteudo className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
           {searches.data.map((s) => (
             <li key={s.id} className={cn('flex flex-col gap-1.5 rounded-2xl border bg-surface p-4', searchFilter === s.id ? 'border-ink' : 'border-line')}>
               <div className="flex items-start justify-between gap-2">
@@ -136,15 +138,16 @@ export function ProspectingPage() {
         </ul>
       )}
 
-      <div className="flex flex-wrap items-end justify-between gap-2">
-        <div className="flex flex-wrap items-end gap-2">
-          <div role="group" aria-label="Temperatura" className="flex rounded-full border border-line-strong p-0.5">
+      <div className="flex items-center justify-between gap-2 max-md:order-first md:flex-wrap md:items-end">
+        <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-wrap md:items-end">
+          <div role="group" aria-label="Temperatura" className="flex min-w-0 overflow-x-auto rounded-full border border-line-strong p-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {([['', 'Todos'], ['quente', 'Quentes'], ['morno', 'Mornos'], ['frio', 'Frios']] as const).map(([k, l]) => (
-              <button key={k} type="button" aria-pressed={heat === k} onClick={() => setHeat(k)} className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[13px] font-medium', heat === k ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
+              <button key={k} type="button" aria-pressed={heat === k} onClick={() => setHeat(k)} className={cn('min-h-10 shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 text-[13px] font-medium md:min-h-9', heat === k ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
                 {l}{k ? ` ${(prospects.data ?? []).filter((p) => p.heat === k).length}` : ''}
               </button>
             ))}
           </div>
+          <FilterSheet count={(status !== 'novo' ? 1 : 0) + (tag ? 1 : 0)}>
           <label className="flex flex-col text-[13px] font-semibold">Situação
             <select value={status} onChange={(e) => setStatus(e.target.value)} className={cn(field, 'w-auto')}>
               <option value="todos">Todas</option>
@@ -159,8 +162,15 @@ export function ProspectingPage() {
               </select>
             </label>
           )}
+          </FilterSheet>
         </div>
-        <div className="flex items-center gap-2">
+        <ActionMenu label="Mais ações da prospecção" className="md:hidden" actions={[
+          { label: 'Nova busca', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setEditing('new') },
+          { label: enrich.isPending ? 'Completando' : 'Completar dados agora', disabled: enrich.isPending, onClick: () => enrich.mutate() },
+          { label: 'Baixar planilha', icon: <Download size={15} aria-hidden="true" />, disabled: !list.length, onClick: exportCsv },
+        ]} />
+        {notice && <p role="status" className="text-[13px] font-medium md:hidden">{notice}</p>}
+        <div className="hidden items-center gap-2 md:flex">
           {notice && <p role="status" className="text-[13px] font-medium">{notice}</p>}
           <Button variant="secondary" disabled={enrich.isPending} onClick={() => enrich.mutate()}>{enrich.isPending ? 'Completando' : 'Completar dados agora'}</Button>
           <Button variant="secondary" disabled={!list.length} onClick={exportCsv}><Download size={15} aria-hidden="true" /> Baixar planilha</Button>
@@ -168,7 +178,7 @@ export function ProspectingPage() {
       </div>
 
       {!prospects.data ? <LoadState isPending={prospects.isPending} isError={prospects.isError} refetch={() => void prospects.refetch()} /> : (
-        <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
+        <ul data-conteudo className="overflow-hidden rounded-3xl border border-line bg-surface">
           {list.slice(0, 300).map((p) => (
             <li key={p.id} className="flex flex-col gap-2 border-b border-line px-4 py-3 last:border-b-0 md:flex-row md:items-center">
               <div className="min-w-0 flex-1">

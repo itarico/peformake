@@ -1,22 +1,21 @@
 import type { ReactNode } from 'react'
 import { Clapperboard } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { AreaTabs } from '@/components/layout/SectionTabs'
 import { useAuth } from '@/auth/context'
-import { cn } from '@/lib/cn'
 import { AV_MANAGER_ROLES, hasAnyRole } from '@/lib/roles'
 import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 
 export function EllcazoHeader({ children, sub, actions }: { children: ReactNode; sub?: ReactNode; actions?: ReactNode }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-4 rounded-3xl bg-[var(--ellcazo-band)] px-5 py-5 text-[var(--ellcazo-band-ink)] md:px-7">
+    <header className="flex items-center justify-between gap-1.5 rounded-full bg-[var(--ellcazo-band)] py-0.5 pl-4 pr-0.5 text-[var(--ellcazo-band-ink)] md:flex-wrap md:items-end md:gap-4 md:rounded-3xl md:px-7 md:py-5">
       <div className="min-w-0">
-        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-accent">
+        <p className="hidden items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-accent md:flex">
           <Clapperboard size={14} aria-hidden="true" /> Ellcazo · Produtora audiovisual
         </p>
-        <h1 className="mt-1 text-[28px] font-semibold leading-tight tracking-tight">{children}</h1>
-        {sub && <div className="mt-1 text-[13px] opacity-75">{sub}</div>}
+        <h1 className="truncate text-[20px] font-semibold leading-tight tracking-tight md:mt-1 md:text-[28px]">{children}</h1>
+        {sub && <div className="mt-1 hidden text-[13px] opacity-75 md:block">{sub}</div>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      {actions && <div className="flex shrink-0 items-center gap-2 md:flex-wrap">{actions}</div>}
     </header>
   )
 }
@@ -32,18 +31,16 @@ export function AvTabs() {
   ]
   if (tabs.length < 2) return null
   return (
-    <nav aria-label="Áreas do Audiovisual" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
-      {tabs.map((t) => (
-        <NavLink key={t.to} to={t.to} end={t.end} className={({ isActive }) => cn('-mb-px flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3.5 py-2 font-medium text-muted no-underline hover:text-ink', isActive && 'border-accent-ink font-semibold text-ink hover:text-ink')}>{t.label}</NavLink>
-      ))}
-      <span className="ml-auto flex shrink-0 items-center pl-2"><AutomationsLink module="audiovisual" /></span>
-    </nav>
+    <div className="relative">
+      <AreaTabs tabs={tabs} label="Áreas do Audiovisual" />
+      <span className="absolute right-0 top-1/2 hidden -translate-y-1/2 md:flex"><AutomationsLink module="audiovisual" /></span>
+    </div>
   )
 }
 
 export function AvShell({ title, sub, actions, children }: { title: ReactNode; sub?: ReactNode; actions?: ReactNode; children: ReactNode }) {
   return (
-    <div className="theme-ellcazo flex flex-col gap-4">
+    <div className="theme-ellcazo flex flex-col gap-2 md:gap-4">
       <EllcazoHeader sub={sub} actions={actions}>{title}</EllcazoHeader>
       <AvTabs />
       {children}

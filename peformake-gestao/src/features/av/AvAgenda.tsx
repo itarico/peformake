@@ -67,9 +67,9 @@ export function AvAgenda() {
   const active = settings.data?.calendar_account_ids?.length ? settings.data.calendar_account_ids : (accounts.data ?? []).map((a) => a.id)
 
   return (
-    <AvShell title={`Agenda de ${monthLabel(month).split(' ')[0]?.toLowerCase() ?? ''}`} sub="Marque a gravação no dia: ela entra no Google Agenda e o cliente confirma pelo portal."
-      actions={<Button onClick={() => setDialog({})}><Plus size={16} aria-hidden="true" /> Agendar gravação</Button>}>
-      <div className="flex flex-wrap items-center gap-2">
+    <AvShell title={<>Agenda<span className="hidden md:inline"> de {monthLabel(month).split(' ')[0]?.toLowerCase() ?? ''}</span></>} sub="Marque a gravação no dia: ela entra no Google Agenda e o cliente confirma pelo portal."
+      actions={<><span className="contents md:hidden"><MonthSwitcher /></span><Button onClick={() => setDialog({})} aria-label="Agendar gravação" className="max-md:size-11 max-md:px-0"><Plus size={16} aria-hidden="true" /><span className="hidden md:inline">Agendar gravação</span></Button></>}>
+      <div className="flex flex-wrap items-center gap-2 max-md:hidden">
         <MonthSwitcher />
         <span className="text-[13px] font-semibold text-muted">Agendas:</span>
         {(accounts.data ?? []).map((a) => (
@@ -81,12 +81,12 @@ export function AvAgenda() {
         <Link to="/configuracoes/integracoes" className="inline-flex min-h-9 items-center gap-1 rounded-full border border-dashed border-line-strong px-3 text-[13px] font-medium text-ink no-underline hover:border-ink"><CalendarPlus size={13} aria-hidden="true" /> Conectar outra conta</Link>
         <button type="button" onClick={() => void calendar.refetch()} className="ml-auto inline-flex min-h-9 cursor-pointer items-center gap-1 text-[13px] font-medium text-muted hover:text-ink"><RefreshCw size={13} aria-hidden="true" className={cn(calendar.isFetching && 'animate-spin')} /> Atualizar</button>
       </div>
-      {calendar.isError && <p className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[13px] text-warn-ink">{(calendar.error as Error).message}</p>}
-      {calendar.data?.problems?.map((p) => <p key={p} className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[13px] text-warn-ink">{p}</p>)}
+      {calendar.isError && <p className="max-md:order-last rounded-2xl bg-warn-soft px-4 py-2.5 text-[13px] text-warn-ink">{(calendar.error as Error).message}</p>}
+      {calendar.data?.problems?.map((p) => <p key={p} className="max-md:order-last rounded-2xl bg-warn-soft px-4 py-2.5 text-[13px] text-warn-ink">{p}</p>)}
 
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_280px]">
         {/* Celular: lista dos dias com algo marcado, de hoje em diante (sem calendário para arrastar). */}
-        <ol aria-label="Dias com compromisso" className="flex flex-col gap-2 md:hidden">
+        <ol aria-label="Dias com compromisso" data-conteudo className="flex flex-col gap-2 md:hidden">
           {agendaDays.map((d) => {
             const s = byDay.get(d)!
             const wd = new Intl.DateTimeFormat('pt-BR', { weekday: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`)).replace('.', '')

@@ -5,6 +5,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { MonthSwitcher } from '@/features/content/ContentLayout'
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useMonthParam } from '@/features/content/useMonthParam'
 import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
@@ -81,21 +82,23 @@ export function AvBoard() {
   const sortKey = (p: AvProject) => countdownTarget(p) ?? '9999'
 
   return (
-    <AvShell title={`Produção de ${monthLabel(month).split(' ')[0]?.toLowerCase() ?? ''}`} sub="Cada card mostra quanto falta: vermelho é perto ou atrasado, amarelo no meio, verde com folga."
-      actions={canManageAv ? <Button onClick={() => setCreating(true)}><Plus size={16} aria-hidden="true" /> Novo projeto</Button> : undefined}>
-      <div className="flex flex-wrap items-center gap-2">
-        <MonthSwitcher />
-        <label className="relative">
+    <AvShell title={<>Produção<span className="hidden md:inline"> de {monthLabel(month).split(' ')[0]?.toLowerCase() ?? ''}</span></>} sub="Cada card mostra quanto falta: vermelho é perto ou atrasado, amarelo no meio, verde com folga."
+      actions={<><span className="contents md:hidden"><MonthSwitcher /></span>{canManageAv && <Button onClick={() => setCreating(true)} aria-label="Novo projeto" className="max-md:size-11 max-md:px-0"><Plus size={16} aria-hidden="true" /><span className="hidden md:inline">Novo projeto</span></Button>}</>}>
+      <div className="flex items-center gap-2 md:flex-wrap">
+        <span className="hidden md:contents"><MonthSwitcher /></span>
+        <label className="relative min-w-0 flex-1 md:flex-none">
           <span className="sr-only">Buscar</span>
           <Search size={15} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" className="min-h-10 w-52 rounded-full border border-line-strong bg-surface pl-9 pr-3 text-[14px]" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" className="min-h-11 w-full rounded-full border border-line-strong bg-surface pl-9 pr-3 text-[14px] md:min-h-10 md:w-52" />
         </label>
+        <FilterSheet count={person ? 1 : 0}>
         <select aria-label="Pessoa" value={person} onChange={(e) => setPerson(e.target.value)} className="min-h-10 rounded-full border border-line-strong bg-surface px-3 text-[14px]">
           <option value="">Toda a equipe</option>
           {myStaffId && <option value="me">Só os meus</option>}
           {(staff ?? []).filter((s) => ['videomaker', 'editor'].includes(s.mainRole ?? '')).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
-        <span className="ml-auto text-[13px] text-muted">{delivered.length} entregues no mês</span>
+        </FilterSheet>
+        <span className="ml-auto hidden text-[13px] text-muted md:inline">{delivered.length} entregues no mês</span>
       </div>
 
       {onlyClient && (
@@ -109,7 +112,7 @@ export function AvBoard() {
           {AV_STAGES.map((st) => {
             const items = list.filter((p) => stageOf(p) === st.key).sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
             return (
-              <section key={st.key} aria-label={st.label} className="flex min-h-[420px] snap-start flex-col gap-2 rounded-3xl bg-raised/60 p-2.5">
+              <section key={st.key} aria-label={st.label} data-conteudo className="flex min-h-[420px] snap-start flex-col gap-2 rounded-3xl bg-raised/60 p-2.5">
                 <div className="px-1">
                   <h2 className="flex items-center justify-between text-[13px] font-semibold">{st.label}<span className="tabular-nums text-muted">{items.length}</span></h2>
                   <p className="text-[11px] text-muted">{st.hint}</p>

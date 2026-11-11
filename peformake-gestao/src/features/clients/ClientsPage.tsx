@@ -8,6 +8,7 @@ import { cn } from '@/lib/cn'
 import { ClientAvatar } from './ClientAvatar'
 import { NewClientDialog } from './NewClientDialog'
 import { FilterSheet } from '@/components/ui/FilterSheet'
+import { useIsMobile } from '@/lib/useIsMobile'
 import {
   DEFAULT_FILTERS,
   describeClient,
@@ -92,6 +93,8 @@ export function ClientsPage() {
   const aba = params.get('aba')
   const tab: 'summary' | 'recorrentes' | 'avulsos' | 'perdidos' = aba === 'avulsos' ? 'avulsos' : aba === 'perdidos' ? 'perdidos' : aba === 'recorrentes' || aba === 'lista' ? 'recorrentes' : 'summary'
   const [creating, setCreating] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const mobile = useIsMobile()
   const setTab = (next: 'summary' | 'recorrentes' | 'avulsos' | 'perdidos') => setParams(() => {
     const p = new URLSearchParams()
     if (next !== 'summary') p.set('aba', next)
@@ -132,18 +135,46 @@ export function ClientsPage() {
     { flag: 'upsell', label: 'Hora de oferecer mais', n: summary.upsell, warn: false },
   ]
 
+  const filterSheet = (
+              <FilterSheet count={(filters.sort !== 'best' ? 1 : 0) + (filters.entity !== 'all' ? 1 : 0) + (filters.flag !== 'all' ? 1 : 0) + (filters.status !== 'active' ? 1 : 0) + (filters.kind !== 'all' ? 1 : 0)}>
+              <label htmlFor="ordem" className="sr-only">Ordenar</label>
+              <select id="ordem" value={filters.sort} onChange={(event) => set('sort', event.target.value)} className={chipSelect}>
+                {SORTS.map((item) => <option key={item.id} value={item.id}>Ordenar: {item.label}</option>)}
+              </select>
+              <div className="flex flex-wrap items-center gap-2 md:hidden">
+                <Chips label="Situação" value={filters.status} onChange={(value) => set('status', value)} options={[{ id: 'active', label: 'Ativos' }, { id: 'lost', label: 'Perdidos' }]} />
+                {tab === 'recorrentes' && <Chips label="Tipo" value={filters.kind} onChange={(value) => set('kind', value)} options={[{ id: 'all', label: 'Todos' }, { id: 'fixo', label: 'Fixo' }, { id: 'tcv', label: 'TCV' }]} />}
+                <select aria-label="Empresa" value={filters.entity} onChange={(event) => set('entity', event.target.value)} className={cn(chipSelect, filters.entity !== 'all' && activeChip)}>
+                  <option value="all">Peformake e Ellcazo</option><option value="peformake">Só Peformake</option><option value="ellcazo">Só Ellcazo</option>
+                </select>
+                <select aria-label="Pontos de atenção" value={filters.flag} onChange={(event) => set('flag', event.target.value)} className={cn(chipSelect, filters.flag !== 'all' && activeChip)}>
+                  <option value="all">Qualquer situação</option><option value="any">Pedem atenção</option>
+                  {FLAGS.map((flag) => <option key={flag} value={flag}>{ATTENTION_LABEL[flag]}</option>)}
+                </select>
+              </div>
+              </FilterSheet>
+  )
+
   return (
     <>
       <div className="flex items-center justify-between gap-2 md:flex-wrap md:items-end md:gap-3">
         <div className="min-w-0">
-          <h1 className="flex flex-wrap items-center gap-3 text-2xl font-semibold tracking-tight md:text-3xl">Clientes <AutomationsLink module="clientes" /></h1>
+          <h1 className="flex flex-wrap items-center gap-3 text-[22px] font-semibold tracking-tight md:text-3xl">Clientes <span className="hidden md:contents"><AutomationsLink module="clientes" /></span></h1>
           {query.data && <p className="hidden text-muted md:block"><LiveValue value={String(liveRecurring)} /> recorrentes e <LiveValue value={String(liveOneOff)} /> avulsos ativos · perdidos não entram nas contas</p>}
         </div>
+        <span className="flex shrink-0 items-center gap-1.5">
+        {mobile && query.data && tab !== 'summary' && tab !== 'perdidos' && (
+          <>
+            <button type="button" aria-label="Buscar cliente" aria-pressed={searchOpen} onClick={() => setSearchOpen((v) => !v)} className="grid size-11 cursor-pointer place-items-center rounded-full border border-line"><Search size={17} aria-hidden="true" /></button>
+            {filterSheet}
+          </>
+        )}
         {canManage && (
           <button type="button" onClick={() => setCreating(true)} aria-label="Novo cliente" className="inline-flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-brand px-3 font-semibold text-on-brand hover:opacity-85 md:px-4">
             <Plus size={18} aria-hidden="true" /> <span className="hidden md:inline">Novo cliente</span>
           </button>
         )}
+        </span>
       </div>
       {canManage && <NewClientDialog open={creating} onClose={() => setCreating(false)} />}
 
@@ -179,31 +210,15 @@ export function ClientsPage() {
             })}
           </div>
 
-          <div className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-3 max-md:gap-0 max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0">
+          <div className={cn('flex-col gap-3 rounded-3xl border border-line bg-surface p-3 max-md:gap-0 max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0', mobile && !searchOpen && !filters.search ? 'hidden' : 'flex')}>
             <div className="flex flex-wrap items-center gap-2">
               <div className="relative min-w-[220px] flex-1">
                 <Search size={16} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
                 <label htmlFor="busca" className="sr-only">Buscar por nome, segmento, contato ou pessoa da equipe</label>
-                <input id="busca" type="search" placeholder="Buscar cliente, segmento, contato ou equipe" value={filters.search}
+                <input id="busca" type="search" placeholder="Buscar cliente, segmento, contato ou equipe" value={filters.search} autoFocus={mobile && searchOpen}
                   onChange={(event) => set('search', event.target.value)} className="min-h-11 w-full rounded-full border border-line bg-canvas pl-10 pr-4" />
               </div>
-              <FilterSheet count={(filters.sort !== 'best' ? 1 : 0) + (filters.entity !== 'all' ? 1 : 0) + (filters.flag !== 'all' ? 1 : 0) + (filters.status !== 'active' ? 1 : 0) + (filters.kind !== 'all' ? 1 : 0)}>
-              <label htmlFor="ordem" className="sr-only">Ordenar</label>
-              <select id="ordem" value={filters.sort} onChange={(event) => set('sort', event.target.value)} className={chipSelect}>
-                {SORTS.map((item) => <option key={item.id} value={item.id}>Ordenar: {item.label}</option>)}
-              </select>
-              <div className="flex flex-wrap items-center gap-2 md:hidden">
-                <Chips label="Situação" value={filters.status} onChange={(value) => set('status', value)} options={[{ id: 'active', label: 'Ativos' }, { id: 'lost', label: 'Perdidos' }]} />
-                {tab === 'recorrentes' && <Chips label="Tipo" value={filters.kind} onChange={(value) => set('kind', value)} options={[{ id: 'all', label: 'Todos' }, { id: 'fixo', label: 'Fixo' }, { id: 'tcv', label: 'TCV' }]} />}
-                <select aria-label="Empresa" value={filters.entity} onChange={(event) => set('entity', event.target.value)} className={cn(chipSelect, filters.entity !== 'all' && activeChip)}>
-                  <option value="all">Peformake e Ellcazo</option><option value="peformake">Só Peformake</option><option value="ellcazo">Só Ellcazo</option>
-                </select>
-                <select aria-label="Pontos de atenção" value={filters.flag} onChange={(event) => set('flag', event.target.value)} className={cn(chipSelect, filters.flag !== 'all' && activeChip)}>
-                  <option value="all">Qualquer situação</option><option value="any">Pedem atenção</option>
-                  {FLAGS.map((flag) => <option key={flag} value={flag}>{ATTENTION_LABEL[flag]}</option>)}
-                </select>
-              </div>
-              </FilterSheet>
+              {!mobile && filterSheet}
             </div>
             <div className="hidden flex-wrap items-center gap-2 md:flex">
               <Chips label="Situação" value={filters.status} onChange={(value) => set('status', value)} options={[{ id: 'active', label: 'Ativos' }, { id: 'lost', label: 'Perdidos' }]} />
@@ -238,7 +253,7 @@ export function ClientsPage() {
             </div>
           </div>
 
-          <div className="@container">
+          <div className="@container" data-conteudo>
             <ul className="flex flex-col overflow-hidden rounded-3xl border border-line bg-surface">
               <li aria-hidden="true" className="hidden grid-cols-[minmax(0,2.4fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.3fr)_40px] gap-4 border-b border-line bg-raised/50 px-5 py-2.5 text-[12px] font-medium text-muted @4xl:grid">
                 <span>Cliente</span><span>Equipe</span><span>Contrato</span><span>Saúde e temperatura</span><span>Atenção</span><span />

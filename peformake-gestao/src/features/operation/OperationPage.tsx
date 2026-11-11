@@ -40,16 +40,16 @@ export function OperationPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Operação</h1>
-          <p className="text-[13px] text-muted">Entregas de {monthLabel(month).toLowerCase()}. O sistema conta sozinho: peças aprovadas, vídeos entregues, relatórios enviados e estratégia revisada.</p>
+      <div className="flex items-center justify-between gap-2 md:flex-wrap md:items-end md:gap-3">
+        <div className="min-w-0">
+          <h1 className="truncate text-[22px] font-semibold tracking-tight md:text-3xl">Operação</h1>
+          <p className="hidden text-[13px] text-muted md:block">Entregas de {monthLabel(month).toLowerCase()}. O sistema conta sozinho: peças aprovadas, vídeos entregues, relatórios enviados e estratégia revisada.</p>
         </div>
         <MonthSwitcher />
       </div>
 
       {data.data && (
-        <section aria-labelledby="progresso-geral" className="grid gap-3 lg:grid-cols-[1.1fr_1.6fr]">
+        <section aria-labelledby="progresso-geral" data-conteudo className="grid gap-3 lg:grid-cols-[1.1fr_1.6fr]">
           <div className="flex flex-col justify-between gap-4 rounded-3xl border border-line bg-surface p-5">
             <div>
               <h2 id="progresso-geral" className="text-[13px] font-semibold uppercase tracking-wide text-muted">Entregue no mês</h2>

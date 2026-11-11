@@ -115,7 +115,7 @@ function PageHead() {
         <h2 className="text-[22px] font-semibold tracking-tight">{item.label}</h2>
         {group.ellcazo && <EllcazoBadge />}
       </div>
-      <p className="text-[13px] text-muted">{item.hint}</p>
+      <p className="hidden text-[13px] text-muted md:block">{item.hint}</p>
     </div>
   )
 }
@@ -124,10 +124,10 @@ function PageHead() {
 export function SettingsLayout() {
   return (
     <>
-      <div className="flex items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Configurações</h1><AutomationsLink modules={['sistema', 'whatsapp']} /></div>
+      <div className="flex items-center justify-between gap-2"><h1 className="truncate text-[22px] font-semibold tracking-tight md:text-3xl">Configurações</h1><span className="hidden md:contents"><AutomationsLink modules={['sistema', 'whatsapp']} /></span></div>
       <div className="grid min-w-0 grid-cols-1 gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
         <SideNav />
-        <div className="flex min-w-0 flex-col gap-4">
+        <div className="flex min-w-0 flex-col gap-2.5 md:gap-4">
           <PageHead />
           <Routes>
             <Route element={<RequireRole roles={NOTIFICATION_ADMIN_ROLES} />}>

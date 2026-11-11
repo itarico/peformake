@@ -114,8 +114,8 @@ export function NotificationsPage() {
   return (
     <>
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Notificações</h1>
-        <p className="text-[13px] text-muted">Avisos de todas as áreas e o que sai pelo WhatsApp.</p>
+        <h1 className="text-[22px] font-semibold tracking-tight md:text-3xl">Notificações</h1>
+        <p className="hidden text-[13px] text-muted md:block">Avisos de todas as áreas e o que sai pelo WhatsApp.</p>
       </div>
       <div role="tablist" aria-label="Notificações" className="flex gap-1 border-b border-line">
         {([['inbox', `Caixa de entrada${unread.length ? ` (${unread.length})` : ''}`], ['config', 'Meus avisos']] as const).map(([id, label]) => (

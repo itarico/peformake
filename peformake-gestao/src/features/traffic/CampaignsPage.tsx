@@ -1,3 +1,4 @@
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, ChevronRight, Pause, Play, Wallet, CalendarDays } from 'lucide-react'
@@ -160,7 +161,7 @@ export function CampaignsPage() {
   if (!clients || !accounts) return <LoadState isPending={isPending} isError={isError} refetch={refetch} />
   if (clientOptions.length === 0) {
     return (
-      <p className="rounded-3xl border border-line bg-surface p-6 text-center text-muted">
+      <p data-conteudo className="rounded-3xl border border-line bg-surface p-6 text-center text-muted">
         Nenhum cliente com leitura ligada. <Link to="/trafego/contas" className="font-medium text-accent-ink underline underline-offset-2">Vincule e ligue a leitura de uma conta</Link>.
       </p>
     )
@@ -176,20 +177,25 @@ export function CampaignsPage() {
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
+        <FilterSheet title="Conta e filtros" count={showPaused ? 1 : 0}>
         <label htmlFor="camp-cliente" className="sr-only">Cliente</label>
         <select id="camp-cliente" value={clientId} onChange={(e) => set('cliente', e.target.value)} className="min-h-11 max-w-[260px] rounded-full border border-line-strong bg-surface px-3.5">
           {clientOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
-        <div role="group" aria-label="Período" className="inline-flex rounded-full border border-line p-0.5">
+        <label className="flex min-h-11 cursor-pointer items-center gap-2 text-[14px] md:hidden">
+          <input type="checkbox" checked={showPaused} onChange={(e) => setShowPaused(e.target.checked)} className="size-5" /> Mostrar pausados sem gasto
+        </label>
+        </FilterSheet>
+        <div role="group" aria-label="Período" className="inline-flex min-w-0 max-md:flex-1 max-md:overflow-x-auto rounded-full border border-line p-0.5 [scrollbar-width:none]">
           {PERIODS.map((p) => (
             <button key={p} type="button" aria-pressed={!custom && period === p}
               onClick={() => setParams((current) => { const next = new URLSearchParams(current); next.set('dias', String(p)); next.delete('de'); next.delete('ate'); return next }, { replace: true })}
-              className={cn('min-h-10 cursor-pointer rounded-full px-3.5 font-medium', !custom && period === p ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
+              className={cn('min-h-10 shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 font-medium md:px-3.5', !custom && period === p ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
               {p} dias
             </button>
           ))}
           <button type="button" aria-pressed={custom} aria-expanded={picking} onClick={() => setPicking((v) => !v)}
-            className={cn('inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full px-3.5 font-medium', custom ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
+            className={cn('inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full px-3 font-medium md:px-3.5', custom ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
             <CalendarDays size={15} aria-hidden="true" />
             {custom ? `${customFrom!.slice(8)}/${customFrom!.slice(5, 7)} a ${customTo!.slice(8)}/${customTo!.slice(5, 7)}` : 'Datas'}
           </button>
@@ -211,10 +217,10 @@ export function CampaignsPage() {
             <button type="submit" disabled={draftFrom > draftTo} className="min-h-10 cursor-pointer rounded-full bg-brand px-4 font-semibold text-on-brand disabled:opacity-45">Aplicar</button>
           </form>
         )}
-        <label className="flex min-h-11 cursor-pointer items-center gap-2 text-[14px]">
+        <label className="hidden min-h-11 cursor-pointer items-center gap-2 text-[14px] md:flex">
           <input type="checkbox" checked={showPaused} onChange={(e) => setShowPaused(e.target.checked)} className="size-5" /> Mostrar pausados sem gasto
         </label>
-        <span className="ml-auto text-[13px] text-muted">
+        <span className="ml-auto hidden text-[13px] text-muted md:inline">
           {datasets.data && (datasets.data.length === 0 ? 'Nenhum pixel lido nesta conta' : `Pixel: ${lastPixel ? `último evento em ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Recife' }).format(new Date(lastPixel))}` : 'sem eventos'}`)}
         </span>
       </div>
@@ -224,7 +230,7 @@ export function CampaignsPage() {
       {loading && !entities.isError && <p role="status" className="text-muted">Carregando campanhas</p>}
 
       {!loading && (
-        <div className="@container">
+        <div className="@container" data-conteudo>
           <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
             <li aria-hidden="true" className="hidden grid-cols-[minmax(0,2.4fr)_110px_100px_90px_100px_70px_70px_88px] gap-x-3 border-b border-line px-4 py-2.5 text-[12px] font-medium text-muted @4xl:grid">
               <span>Nome</span><span className="text-right">Orçamento/dia</span><span className="text-right">Investido</span><span className="text-right">Resultados</span><span className="text-right">Custo/result.</span><span className="text-right">CTR</span><span className="text-right">Freq.</span><span />
@@ -234,7 +240,7 @@ export function CampaignsPage() {
           </ul>
         </div>
       )}
-      <p className="text-[12px] text-muted">
+      <p className="hidden text-[12px] text-muted md:block">
         {canApprove ? 'Pausar, ativar e mudar orçamento vão para a Meta em até 2 minutos e ficam registrados no kanban.' : 'Seus pedidos de pausar, ativar ou mudar orçamento vão para o kanban e esperam aprovação.'} Frequência acima de 3,5 aparece em destaque: sinal de criativo cansado.
       </p>
     </>

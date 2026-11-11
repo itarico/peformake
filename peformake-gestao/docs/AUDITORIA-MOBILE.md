@@ -75,3 +75,27 @@ Fora da meta:
 6. Financeiro: empresa e mês numa linha; Configurar, Planilha, Contas fixas e Importar no menu "⋯"; "+" fixo.
 7. Bete: não cobre conteúdo. Bolha de 48px só quando houver algo urgente; +64px de espaço no fim das listas.
 8. Teste que mede esses números a cada entrega (script head.js da auditoria; levar para o repositório no autoteste).
+
+## Padrão aplicado (11/11/2026) e medição antes/depois
+Teste reutilizável: `e2e/celular.cjs` (iPhone 13, banco vazio interceptado no navegador). Uso: `npx vite --config e2e/shell/vite.config.ts &` e `node e2e/celular.cjs` (`STRICT=1` falha se alguma tela passar de 35%; `SHOTS=pasta` salva as capturas). Listas, quadros e calendários marcam o começo do conteúdo com `data-conteudo`.
+Com dados falsos (`e2e/telas.cjs`): Clientes 44% → 34%, Contratos 86% → 33%, Caixa e Cobrança 35% → 33%.
+
+| Tela | Antes | Depois |
+|---|---|---|
+| Notificações | 35% | 31% |
+| Contratos | 84% | 33% |
+| Comercial · Funil | 75% | 34% |
+| Comercial · Prospecção | 87% | 34% |
+| Comercial · Resumo | 40% | 33% |
+| WhatsApp · Conversas | 40% | 24% |
+| WhatsApp · Pedidos | 49% | 32% |
+| WhatsApp · Sugestões | 45% | 24% |
+| Tráfego · Painel / Campanhas / Saldo | 41% / 41% / 40% | 33% / 24% / 24% |
+| Social · Peças / Calendário | 56% / 38% | 35% / 35% |
+| Audiovisual · Agenda / Produção / Fotos | 65% / 88% / 49% | 27% / 35% / 25% |
+| Audiovisual · Orçamentos | 52% (com filtros) | 34% |
+| Operação | 52% | 19% |
+| Configurações · Automações | 82% | 32% |
+| Início, Caixa, Cobrança, Vendas, Placar, Planejamento | já na meta | iguais ou menores |
+
+O que mudou em todas: título de uma linha (22px) com ações em ícone; subtítulos só no computador; abas com mais de 4 mostram 3 e "Mais" (`AreaTabs` em SectionTabs.tsx, usado em Comercial, WhatsApp, Tráfego, Social e Audiovisual); filtros, conta, cliente, pessoa e situação na folha "Filtros" (`FilterSheet`); alertas em uma linha só com o que é maior que zero; ações raras no "⋯" (`ActionMenu`, agora 44px); Automações (raio) só no computador; folha "Mais" do menu em grade de ícones com "Minha conta" sempre visível; seta do mês 44px no celular.

@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react'
-import { NavLink, Navigate, Outlet, Route } from 'react-router-dom'
+import { Navigate, Outlet, Route } from 'react-router-dom'
+import { SectionHeader } from '@/components/layout/SectionTabs'
 import { RequireRole } from '@/auth/guards'
 import { COMMERCIAL_ROLES } from '@/lib/roles'
-import { cn } from '@/lib/cn'
 import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 
 // WhatsApp (agente): conversas, pedidos que os clientes mandam, sugestões da IA e satisfação.
@@ -13,24 +13,16 @@ const SuggestionsPage = lazy(() => import('./SuggestionsPage').then((m) => ({ de
 const SatisfactionPage = lazy(() => import('./SatisfactionPage').then((m) => ({ default: m.SatisfactionPage })))
 
 const TABS = [
-  { to: 'conversas', label: 'Conversas' },
-  { to: 'pedidos', label: 'Pedidos dos clientes' },
-  { to: 'sugestoes', label: 'Sugestões da IA' },
-  { to: 'satisfacao', label: 'Satisfação' },
+  { to: '/whatsapp/conversas', label: 'Conversas' },
+  { to: '/whatsapp/pedidos', label: 'Pedidos' },
+  { to: '/whatsapp/sugestoes', label: 'Sugestões' },
+  { to: '/whatsapp/satisfacao', label: 'Satisfação' },
 ]
 
 function WhatsAppLayout() {
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">WhatsApp</h1><AutomationsLink modules={['whatsapp']} /></div>
-      <nav aria-label="Áreas do WhatsApp" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0">
-        {TABS.map((tab) => (
-          <NavLink key={tab.to} to={tab.to}
-            className={({ isActive }) => cn('-mb-px flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3.5 py-2 font-medium text-muted no-underline hover:text-ink', isActive && 'border-accent-ink font-semibold text-ink hover:text-ink')}>
-            {tab.label}
-          </NavLink>
-        ))}
-      </nav>
+      <SectionHeader title="WhatsApp" tabs={TABS} label="Áreas do WhatsApp" actions={<span className="hidden md:contents"><AutomationsLink modules={['whatsapp']} /></span>} />
       <Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense>
     </>
   )

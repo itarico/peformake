@@ -1,40 +1,24 @@
 import { Suspense } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import { cn } from '@/lib/cn'
+import { Outlet } from 'react-router-dom'
+import { SectionHeader } from '@/components/layout/SectionTabs'
 import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 
 const TABS = [
-  { to: 'painel', label: 'Painel' },
-  { to: 'agente', label: 'Agente' },
-  { to: 'campanhas', label: 'Campanhas' },
-  { to: 'tarefas', label: 'Tarefas' },
-  { to: 'saldo', label: 'Saldo' },
-  { to: 'relatorios', label: 'Relatórios' },
-  { to: 'estrategia', label: 'Estratégia' },
-  { to: 'contas', label: 'Contas' },
-  { to: 'configuracoes', label: 'Configurações' },
+  { to: '/trafego/painel', label: 'Painel' },
+  { to: '/trafego/campanhas', label: 'Campanhas' },
+  { to: '/trafego/saldo', label: 'Saldo' },
+  { to: '/trafego/agente', label: 'Agente' },
+  { to: '/trafego/tarefas', label: 'Tarefas' },
+  { to: '/trafego/relatorios', label: 'Relatórios' },
+  { to: '/trafego/estrategia', label: 'Estratégia' },
+  { to: '/trafego/contas', label: 'Contas' },
+  { to: '/trafego/configuracoes', label: 'Configurações' },
 ]
 
 export function TrafficLayout() {
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-3xl font-semibold tracking-tight">Tráfego</h1><AutomationsLink module="trafego" /></div>
-      <nav aria-label="Áreas de Tráfego" className="-mx-4 flex gap-0.5 overflow-x-auto overflow-y-hidden border-b border-line [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 md:mx-0 md:px-0">
-        {TABS.map((tab) => (
-          <NavLink
-            key={tab.to}
-            to={tab.to}
-            className={({ isActive }) =>
-              cn(
-                '-mb-px flex min-h-11 shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3.5 py-2 font-medium text-muted no-underline hover:text-ink',
-                isActive && "border-accent-ink font-semibold text-ink hover:text-ink",
-              )
-            }
-          >
-            {tab.label}
-          </NavLink>
-        ))}
-      </nav>
+      <SectionHeader title="Tráfego" tabs={TABS} label="Áreas de Tráfego" actions={<span className="hidden md:contents"><AutomationsLink module="trafego" /></span>} />
       <Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense>
     </>
   )

@@ -1,5 +1,6 @@
 // Mede, no iPhone 13, onde termina o cabeçalho (título, abas, filtros e alertas) de cada tela.
 // Meta do "Padrão único" (docs/AUDITORIA-MOBILE.md): o primeiro item de conteúdo antes de 35% da altura.
+// Listas, quadros e calendários marcam o começo do conteúdo com data-conteudo.
 // Banco interceptado no navegador e vazio (nada vai ao Supabase), igual à medição da auditoria.
 // Uso: npx vite --config e2e/shell/vite.config.ts & node e2e/celular.cjs   (STRICT=1 falha se alguma tela passar da meta)
 const { chromium, devices } = require('playwright');
@@ -25,12 +26,14 @@ async function empty(route) {
     await p.goto(BASE + r, { waitUntil: 'networkidle' }).catch(() => {}); await p.waitForTimeout(1200);
     const m = await p.evaluate(() => {
       const main = document.querySelector('main'); const H = innerHeight; if (!main) return { end: 0, H, sw: 0, cw: 0, small: 0 };
-      const els = [...main.querySelectorAll('h1,p,button,input,select,a,[role=tab]')].map((e) => e.getBoundingClientRect())
-        .filter((r) => r.height > 0 && r.width > 0 && r.top > 0 && r.top < H).sort((a, b) => a.top - b.top);
-      let end = 56; for (const r of els) { if (r.top <= end + 70) end = Math.max(end, r.bottom); else break }
+      // Junta o que está colado no topo (até 70px de distância). Para no 1º elemento marcado como conteúdo (data-conteudo).
+      const els = [...main.querySelectorAll('h1,p,button,input,select,a,[role=tab],[data-conteudo]')].map((e) => [e, e.getBoundingClientRect()])
+        .filter(([, r]) => r.height > 0 && r.width > 0 && r.top > 0 && r.top < H).sort((a, b) => a[1].top - b[1].top);
+      let end = 56; for (const [e, r] of els) { if (e.closest('[data-conteudo]')) { end = Math.max(end, Math.min(r.top, end + 70)); break } if (r.top <= end + 70) end = Math.max(end, r.bottom); else break }
       const small = [...main.querySelectorAll('button,a,input,select,[role=tab]')].filter((e) => { const q = e.getBoundingClientRect(); return q.top < H && q.width > 0 && q.height > 0 && q.height < 36 }).length;
       return { end: Math.round(end), H, sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth, small };
     });
+    if (process.env.SHOTS) await p.screenshot({ path: `${process.env.SHOTS}/${r.replace(/\//g, '_')}.png` });
     const pct = Math.round((m.end / m.H) * 100);
     out.push({ rota: r, pct, px: m.end, toquesPequenos: m.small, rolagemLado: m.sw > m.cw + 2, erros: errs.length });
     if (pct > META) fails.push(`${r}: ${pct}%`);

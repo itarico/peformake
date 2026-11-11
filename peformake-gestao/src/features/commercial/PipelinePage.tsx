@@ -4,6 +4,7 @@ import { DollarSign, Plus, Trash2, X } from 'lucide-react'
 import { Dialog } from '@/components/ui/Dialog'
 import { COMMERCIAL_ROLES, hasAnyRole } from '@/lib/roles'
 import { Button } from '@/components/ui/Button'
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useClientPermissions } from '@/features/clients/useClients'
 import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
@@ -183,21 +184,23 @@ export function PipelinePage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="min-w-[200px] flex-1">
+      <div className="flex items-center gap-2 md:flex-wrap">
+        <div className="min-w-0 flex-1 md:min-w-[200px]">
           <label htmlFor="funil-busca" className="sr-only">Buscar oportunidade</label>
           <input id="funil-busca" type="search" placeholder="Buscar oportunidade ou contato" value={search} onChange={(e) => setSearch(e.target.value)} className="min-h-11 w-full rounded-full border border-line-strong bg-surface px-4" />
         </div>
         {seesAll && (data.staff ?? []).length > 0 && (
+          <FilterSheet count={owner !== 'todos' ? 1 : 0}>
           <select aria-label="De quem" value={owner} onChange={(e) => setOwner(e.target.value)} className="min-h-11 rounded-full border border-line-strong bg-surface px-3 text-[13px]">
             <option value="todos">Todos os leads</option>
             <option value="sem">Sem responsável</option>
             {(data.staff ?? []).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
+          </FilterSheet>
         )}
-        <Button onClick={() => setCreating(true)}><Plus size={16} aria-hidden="true" /> Novo lead</Button>
+        <Button onClick={() => setCreating(true)} aria-label="Novo lead" className="max-md:size-11 max-md:px-0"><Plus size={16} aria-hidden="true" /><span className="hidden md:inline">Novo lead</span></Button>
       </div>
-      {!seesAll && <p className="text-[12.5px] text-muted">Aqui ficam só os seus leads. Quem você trouxer e virar cliente conta para a sua comissão.</p>}
+      {!seesAll && <p className="hidden text-[12.5px] text-muted md:block">Aqui ficam só os seus leads. Quem você trouxer e virar cliente conta para a sua comissão.</p>}
       {late > 0 && <p className="rounded-3xl bg-warn-soft px-5 py-3 text-warn-ink"><b>{late}</b> {late === 1 ? 'oportunidade está' : 'oportunidades estão'} com o próximo passo atrasado.</p>}
 
       {losing && (
@@ -216,7 +219,7 @@ export function PipelinePage() {
       {creating && <NewLeadDialog services={services.data} staff={seesAll ? data.staff ?? [] : []} onClose={() => setCreating(false)} />}
       {move.isError && <p role="alert" className="font-medium text-warn-ink">{commercialErrorMessage(move.error)}</p>}
 
-      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:snap-none">
+      <div data-conteudo className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 md:snap-none">
         {STAGES.map((stage) => {
           const items = visible.filter((d) => d.stage === stage.id)
           const total = items.reduce((sum, d) => sum + (d.valueCents ?? 0), 0)

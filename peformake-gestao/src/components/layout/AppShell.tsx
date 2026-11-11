@@ -120,6 +120,27 @@ function TabBar({ onMore, moreOpen }: { onMore: () => void; moreOpen: boolean })
   )
 }
 
+/** Menu completo do celular em grade de ícones: cabe na tela sem rolar e "Minha conta" nunca fica cortada. */
+function MoreGrid({ onNavigate }: { onNavigate: () => void }) {
+  const { state } = useAuth()
+  if (state.status !== 'ready') return null
+  const items = menuForRoles(state.user.roles).flatMap((g) => g.items)
+  return (
+    <nav aria-label="Menu" className="grid grid-cols-4 gap-1">
+      {items.map((item) => {
+        const Icon = MENU_ICONS[item.icon]
+        return (
+          <NavLink key={item.label} to={item.to} onClick={onNavigate}
+            className={({ isActive }) => cn('flex min-h-[68px] flex-col items-center justify-center gap-1 rounded-2xl px-1 text-center text-[11.5px] font-medium leading-tight text-ink no-underline', isActive ? 'bg-fill text-on-fill' : 'hover:bg-raised')}>
+            <Icon size={21} aria-hidden="true" />
+            <span className="line-clamp-2 max-w-full">{item.short ?? item.label}</span>
+          </NavLink>
+        )
+      })}
+    </nav>
+  )
+}
+
 /** Folha que sobe de baixo no celular com o menu completo. */
 function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
@@ -135,9 +156,9 @@ function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
       <div className="absolute inset-x-0 bottom-0 flex max-h-[85dvh] flex-col gap-4 overflow-y-auto rounded-t-3xl border-t border-line bg-surface px-3 pt-3 pb-[calc(16px+env(safe-area-inset-bottom))] shadow-2xl">
         <div className="flex items-center justify-between px-2">
           <span aria-hidden="true" className="mx-auto h-1.5 w-10 rounded-full bg-line-strong" />
-          <button type="button" onClick={onClose} aria-label="Fechar" className="absolute right-4 flex size-10 cursor-pointer items-center justify-center rounded-full hover:bg-raised"><X size={20} aria-hidden="true" /></button>
+          <button type="button" onClick={onClose} aria-label="Fechar" className="absolute right-4 flex size-11 cursor-pointer items-center justify-center rounded-full hover:bg-raised"><X size={20} aria-hidden="true" /></button>
         </div>
-        <NavList onNavigate={onClose} />
+        <MoreGrid onNavigate={onClose} />
         <AccountLink onNavigate={onClose} />
       </div>
     </div>
@@ -206,7 +227,7 @@ export function AppShell() {
         <div className="pointer-events-none sticky top-0 z-20 hidden justify-end px-7 pt-3 md:flex">
           <div className="pointer-events-auto"><NotificationBell /></div>
         </div>
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-4 py-3 md:-mt-11 md:gap-4 md:px-7 md:py-6 md:pr-20">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-2.5 px-4 py-2 md:-mt-11 md:gap-4 md:px-7 md:py-6 md:pr-20">
           <ErrorBoundary resetKey={location.pathname}><Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense></ErrorBoundary>
         </div>
       </main>

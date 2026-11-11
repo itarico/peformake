@@ -129,8 +129,8 @@ export function AutomationsCenter({ modules }: { modules?: AutoModule[] } = {}) 
   const groups = MODULES.filter((m) => rows.some((r) => r.module === m))
 
   return (
-    <div className="flex w-full max-w-3xl flex-col gap-4">
-      <div>
+    <div className="flex w-full max-w-3xl flex-col gap-2.5 md:gap-4">
+      <div className="hidden md:block">
         <p className="text-[13px] text-muted">Tudo o que o sistema faz sozinho, o que está funcionando e o que está parado. {isAdmin ? 'Toque na chave para ligar ou desligar.' : 'Só administradores ligam e desligam.'}</p>
       </div>
 
@@ -138,17 +138,17 @@ export function AutomationsCenter({ modules }: { modules?: AutoModule[] } = {}) 
       <div role="group" aria-label="Situação" className="grid grid-cols-3 gap-2">
         {([[null, 'Funcionando', count('ok'), 'text-ok-ink'], ['problema', 'Com problema', count('erro'), 'text-[#e5484d]'], ['desligadas', 'Desligadas', count('desligada'), 'text-muted']] as const).map(([v, l, n, tone]) => (
           <button key={l} type="button" aria-pressed={view === v} onClick={() => set('ver', view === v ? null : v)}
-            className={cn('flex cursor-pointer flex-col items-start rounded-2xl border px-3 py-2 text-left', view === v && v ? 'border-ink bg-raised' : 'border-line bg-surface hover:border-line-strong')}>
-            <span className={cn('text-[22px] font-semibold tabular-nums leading-tight', tone)}>{list.isPending ? '–' : n}</span>
-            <span className="text-[12px] text-muted">{l}</span>
+            className={cn('flex min-h-11 cursor-pointer items-baseline gap-1.5 rounded-2xl border px-3 py-1.5 text-left md:flex-col md:items-start md:gap-0 md:py-2', view === v && v ? 'border-ink bg-raised' : 'border-line bg-surface hover:border-line-strong')}>
+            <span className={cn('text-[18px] font-semibold tabular-nums leading-tight md:text-[22px]', tone)}>{list.isPending ? '–' : n}</span>
+            <span className="truncate text-[12px] text-muted">{l}</span>
           </button>
         ))}
       </div>
 
-      {!embedded && <div role="group" aria-label="Módulo" className="flex flex-wrap gap-1.5">
+      {!embedded && <div role="group" aria-label="Módulo" className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0 [&::-webkit-scrollbar]:hidden">
         {[null, ...MODULES].map((m) => (
           <button key={m ?? 'todos'} type="button" aria-pressed={mod === m} onClick={() => set('modulo', m)}
-            className={cn('min-h-9 shrink-0 cursor-pointer rounded-full border px-3 text-[12.5px] font-semibold', mod === m ? 'border-ink bg-ink text-surface' : 'border-line-strong text-ink hover:border-ink')}>
+            className={cn('min-h-11 shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-3 text-[12.5px] font-semibold md:min-h-9', mod === m ? 'border-ink bg-ink text-surface' : 'border-line-strong text-ink hover:border-ink')}>
             {m ? MODULE_LABEL[m] : 'Todos'}
           </button>
         ))}
@@ -162,10 +162,10 @@ export function AutomationsCenter({ modules }: { modules?: AutoModule[] } = {}) 
         </p>
       )}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
-      {list.isSuccess && rows.length === 0 && <p className="rounded-2xl border border-dashed border-line px-3 py-6 text-center text-[13px] text-muted">{view === 'problema' ? 'Nenhuma automação com problema. ✅' : 'Nada por aqui.'}</p>}
+      {list.isSuccess && rows.length === 0 && <p data-conteudo className="rounded-2xl border border-dashed border-line px-3 py-6 text-center text-[13px] text-muted">{view === 'problema' ? 'Nenhuma automação com problema. ✅' : 'Nada por aqui.'}</p>}
 
       {groups.map((m) => (
-        <section key={m} aria-label={MODULE_LABEL[m]} className="flex flex-col gap-1.5">
+        <section key={m} aria-label={MODULE_LABEL[m]} data-conteudo className="flex flex-col gap-1.5">
           {!mod && groups.length > 1 && <h3 className="px-1 text-[12px] font-semibold uppercase tracking-wide text-muted">{MODULE_LABEL[m]}</h3>}
           <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
             {rows.filter((r) => r.module === m).map((a) => {

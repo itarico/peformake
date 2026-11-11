@@ -1,3 +1,4 @@
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, Search } from 'lucide-react'
@@ -62,14 +63,15 @@ export function ContentBoard() {
 
   return (
     <>
-      <ContentSummary month={month} />
+      <div className="flex flex-col gap-3 max-md:order-last"><ContentSummary month={month} /></div>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <label className="relative">
+      <div className="flex items-center gap-2 md:flex-wrap">
+        <label className="relative min-w-0 flex-1 md:flex-none">
           <span className="sr-only">Buscar</span>
           <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden="true" />
-          <input value={filters.query} onChange={(e) => set({ query: e.target.value })} placeholder="Buscar peça ou cliente" className={cn(pill, 'w-56 pl-9')} />
+          <input value={filters.query} onChange={(e) => set({ query: e.target.value })} placeholder="Buscar peça ou cliente" className={cn(pill, 'w-full pl-9 md:w-56')} />
         </label>
+        <FilterSheet count={(filters.clientId ? 1 : 0) + (filters.designerId ? 1 : 0) + (showDone ? 1 : 0)}>
         <label htmlFor="cb-cliente" className="sr-only">Cliente</label>
         <select id="cb-cliente" value={filters.clientId} onChange={(e) => set({ clientId: e.target.value })} className={cn(pill, 'max-w-[220px]')}>
           <option value="">Todos os clientes</option>
@@ -85,15 +87,16 @@ export function ContentBoard() {
         <label className="flex min-h-11 cursor-pointer items-center gap-2 px-2 text-[14px]">
           <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} className="size-4" /> Mostrar aprovadas
         </label>
+        </FilterSheet>
       </div>
 
       {items.data.length === 0 ? (
-        <div className="rounded-3xl border border-line bg-surface p-6">
+        <div data-conteudo className="rounded-3xl border border-line bg-surface p-6">
           <h2 className="font-semibold">Nenhuma peça neste mês</h2>
           <p className="text-muted">Abra a aba Planejamento, escolha o cliente e crie as peças do mês.</p>
         </div>
       ) : (
-        <div className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:snap-none md:px-0">
+        <div data-conteudo className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:snap-none md:px-0">
           {columns.map((status: ContentStatus) => {
             const col = visible.filter((i) => i.status === status)
             return (

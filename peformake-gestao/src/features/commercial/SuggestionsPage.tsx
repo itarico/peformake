@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
 import { contactName, type SuggestionKind } from './commercialRules'
 import { SuggestionCard } from './SuggestionCard'
@@ -27,16 +28,16 @@ export function SuggestionsPage() {
 
   return (
     <>
-      <p className="text-[13px] text-muted">
-        A IA lê as conversas com mensagem nova a cada 15 minutos e sugere. Nada muda sem o seu clique.
-        {pendingSales > 0 && <> Há <Link to="../vendas" className="font-semibold text-ink underline">{pendingSales} {pendingSales === 1 ? 'venda detectada' : 'vendas detectadas'}</Link> esperando confirmação.</>}
+      <p className={cn('text-[13px] text-muted', !pendingSales && 'max-md:hidden')}>
+        <span className="hidden md:inline">A IA lê as conversas com mensagem nova a cada 15 minutos e sugere. Nada muda sem o seu clique.</span>
+        {pendingSales > 0 && <> Há <Link to="/comercial/vendas" className="font-semibold text-ink underline">{pendingSales} {pendingSales === 1 ? 'venda detectada' : 'vendas detectadas'}</Link> esperando confirmação.</>}
       </p>
-      {suggestions.data.length === 0 && <p className="rounded-3xl border border-line p-6 text-center text-muted">Nenhuma sugestão pendente agora.</p>}
+      {suggestions.data.length === 0 && <p data-conteudo className="rounded-3xl border border-line p-6 text-center text-muted">Nenhuma sugestão pendente agora.</p>}
       {GROUPS.map((group) => {
         const items = suggestions.data.filter((s) => s.kind === group.kind)
         if (items.length === 0) return null
         return (
-          <section key={group.kind} aria-label={group.title} className="flex flex-col gap-2">
+          <section key={group.kind} aria-label={group.title} data-conteudo className="flex flex-col gap-2">
             <div>
               <h2 className="font-semibold">{group.title} ({items.length})</h2>
               <p className="text-[12px] text-muted">{group.hint}</p>

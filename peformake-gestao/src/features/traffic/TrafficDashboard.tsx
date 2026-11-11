@@ -1,3 +1,4 @@
+import { FilterSheet } from '@/components/ui/FilterSheet'
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
@@ -97,7 +98,7 @@ export function TrafficDashboard() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex items-center gap-2 md:flex-wrap">
         <div role="group" aria-label="Período" className="inline-flex rounded-full border border-line p-0.5">
           {([['current', 'Este mês'], ['last', 'Mês passado']] as const).map(([id, label]) => (
             <button
@@ -105,25 +106,27 @@ export function TrafficDashboard() {
               type="button"
               aria-pressed={view === id}
               onClick={() => setView(id)}
-              className={cn('min-h-10 cursor-pointer rounded-full px-4 font-medium', view === id ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}
+              className={cn('min-h-11 cursor-pointer rounded-full px-4 font-medium md:min-h-10', view === id ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}
             >
               {label}
             </button>
           ))}
         </div>
+        <FilterSheet title="Conta" count={clientId ? 1 : 0}>
         <label htmlFor="painel-cliente" className="sr-only">Cliente</label>
         <select id="painel-cliente" value={clientId} onChange={(event) => setClientId(event.target.value)} className="min-h-11 max-w-[260px] rounded-full border border-line-strong bg-surface px-3.5">
           <option value="">Todos os clientes</option>
           {clients.filter((client) => client.isActive && client.hasTraffic).map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}
         </select>
+        </FilterSheet>
         {readAt && Date.now() - new Date(readAt).getTime() > 12 * 3600_000 ? (
           <Link to="/trafego/saldo" className="ml-auto inline-flex min-h-9 items-center gap-1.5 rounded-full bg-warn-soft px-3 text-[13px] font-semibold text-warn-ink no-underline">
             {readAtLabel(readAt)} · leitura parada, ver motivo
           </Link>
-        ) : <span className="ml-auto text-[13px] text-muted">{readAtLabel(readAt)}</span>}
+        ) : <span className="ml-auto hidden text-[13px] text-muted md:inline">{readAtLabel(readAt)}</span>}
       </div>
 
-      <div className="@container">
+      <div className="@container" data-conteudo>
         <div className="grid grid-cols-1 gap-3 @4xl:grid-cols-4">
           <section aria-label="Investido" className="flex min-w-0 flex-col rounded-3xl border border-line bg-surface p-6 @4xl:col-span-3">
             <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">

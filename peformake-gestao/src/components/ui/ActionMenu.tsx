@@ -27,11 +27,11 @@ export function ActionMenu({ label, actions, className }: { label: string; actio
     return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', close) }
   }, [open])
   if (!visible.length) return null
-  const item = 'flex min-h-10 w-full cursor-pointer items-center gap-2 rounded-xl px-3 text-left text-[13px] font-medium hover:bg-raised disabled:cursor-not-allowed disabled:opacity-45'
+  const item = 'flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-xl px-3 text-left text-[13px] font-medium hover:bg-raised disabled:cursor-not-allowed disabled:opacity-45'
   return (
     <div ref={box} className={cn('relative', className)}>
       <button type="button" aria-label={label} aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}
-        className="grid size-9 cursor-pointer place-items-center rounded-full border border-line text-muted hover:border-ink hover:text-ink">
+        className="grid size-11 cursor-pointer place-items-center rounded-full border md:size-9 border-line text-muted hover:border-ink hover:text-ink">
         <MoreHorizontal size={16} aria-hidden="true" />
       </button>
       {open && (

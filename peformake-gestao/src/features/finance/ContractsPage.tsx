@@ -1,3 +1,5 @@
+import { FilterSheet } from '@/components/ui/FilterSheet'
+import { useIsMobile } from '@/lib/useIsMobile'
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'react-router-dom'
@@ -62,6 +64,7 @@ export function ContractsPage() {
   const [picking, setPicking] = useState(false)
   const openClient = (id: string | null) => setParams((cur) => { const p = new URLSearchParams(cur); if (id) p.set('cliente', id); else p.delete('cliente'); return p }, { replace: true })
   const today = todayInBrazil()
+  const mobile = useIsMobile()
   // Avulso fecha pelo aceite da proposta e não entra na carteira de contratos.
   const rows = useMemo(() => (q.data ?? []).filter((r) => r.client_type !== 'one-off').map((r) => ({ ...r, situation: situationOf(r, today) })), [q.data, today])
   const counts = rows.reduce<Record<string, number>>((acc, r) => ({ ...acc, [r.situation]: (acc[r.situation] ?? 0) + 1 }), {})
@@ -69,37 +72,42 @@ export function ContractsPage() {
   const signedValue = rows.filter((r) => r.situation === 'assinado' || r.situation === 'vencendo').reduce((s, r) => s + Number(r.monthly ?? 0), 0)
   const uncovered = rows.filter((r) => r.situation !== 'assinado' && r.situation !== 'vencendo').reduce((s, r) => s + Number(r.monthly ?? 0), 0)
 
+  const filterChips = (
+    <div role="group" aria-label="Filtrar" className="flex flex-wrap gap-1.5">
+      {(['todos', 'sem', 'dados', 'revisar', 'esperando', 'vencendo', 'vencido', 'assinado'] as const).map((id) => (
+        <button key={id} type="button" aria-pressed={filter === id} onClick={() => setFilter(id)}
+          className={cn('min-h-11 cursor-pointer rounded-full px-3 text-[13px] font-medium md:min-h-9', filter === id ? 'bg-fill text-on-fill' : 'border border-line text-muted hover:text-ink')}>
+          {id === 'todos' ? 'Todos' : SITUATION[id][0]} <span className="tabular-nums opacity-70">{id === 'todos' ? rows.length : counts[id] ?? 0}</span>
+        </button>
+      ))}
+    </div>
+  )
+
   return (
     <>
       <SectionHeader title="Financeiro" sub="Contrato de cada cliente fixo e TCV: quem já assinou, quem falta e o que vence. Avulso fecha pelo aceite da proposta." tabs={FINANCE_TABS}
-        actions={<Button onClick={() => setPicking(true)}><Plus size={16} aria-hidden="true" /> Novo contrato</Button>} />
+        actions={<>{mobile && <FilterSheet title="Situação" count={filter !== 'todos' ? 1 : 0}>{filterChips}</FilterSheet>}<Button onClick={() => setPicking(true)} aria-label="Novo contrato" className="max-md:size-11 max-md:px-0"><Plus size={16} aria-hidden="true" /><span className="hidden md:inline">Novo contrato</span></Button></>} />
 
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+      {/* Celular: uma linha só, e só o que importa (maior que zero). */}
+      <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] md:grid md:grid-cols-2 md:overflow-visible lg:grid-cols-4">
         {[
           ['Clientes recorrentes', String(rows.length)],
           ['Com contrato assinado', `${(counts.assinado ?? 0) + (counts.vencendo ?? 0)} de ${rows.length}`],
           ['Valor coberto por contrato', `${brlValue(signedValue)}/mês`],
           ['Valor sem contrato assinado', `${brlValue(uncovered)}/mês`],
         ].map(([label, value], i) => (
-          <div key={label} className={cn('rounded-3xl border border-line bg-surface px-5 py-4', i === 3 && uncovered > 0 && 'border-warn/40 bg-warn-soft/50')}>
+          <div key={label} className={cn('shrink-0 rounded-3xl border border-line bg-surface px-5 py-4 max-md:flex max-md:items-baseline max-md:gap-1.5 max-md:rounded-full max-md:px-3 max-md:py-1.5', i === 3 && uncovered > 0 && 'border-warn/40 bg-warn-soft/50', (i === 0 || (i === 2 && !signedValue) || (i === 3 && !uncovered)) && 'max-md:hidden')}>
             <p className="text-[12px] font-medium text-muted">{label}</p>
-            <p className="mt-1 text-[22px] font-semibold tabular-nums">{value}</p>
+            <p className="text-[15px] font-semibold tabular-nums md:mt-1 md:text-[22px]">{value}</p>
           </div>
         ))}
       </div>
 
-      <div role="group" aria-label="Filtrar" className="flex flex-wrap gap-1.5">
-        {(['todos', 'sem', 'dados', 'revisar', 'esperando', 'vencendo', 'vencido', 'assinado'] as const).map((id) => (
-          <button key={id} type="button" aria-pressed={filter === id} onClick={() => setFilter(id)}
-            className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[13px] font-medium', filter === id ? 'bg-fill text-on-fill' : 'border border-line text-muted hover:text-ink')}>
-            {id === 'todos' ? 'Todos' : SITUATION[id][0]} <span className="tabular-nums opacity-70">{id === 'todos' ? rows.length : counts[id] ?? 0}</span>
-          </button>
-        ))}
-      </div>
+      {!mobile && filterChips}
 
       {q.isPending && <p role="status" className="text-muted">Carregando</p>}
       {q.isError && <p role="alert" className="text-warn-ink">Não foi possível carregar os contratos.</p>}
-      <ul className="flex flex-col overflow-hidden rounded-3xl border border-line bg-surface">
+      <ul data-conteudo className="flex flex-col overflow-hidden rounded-3xl border border-line bg-surface">
         {shown.map((r) => {
           const days = r.end_date ? Math.round((Date.parse(r.end_date) - Date.parse(today)) / 86_400_000) : null
           const [label, tone] = SITUATION[r.situation]

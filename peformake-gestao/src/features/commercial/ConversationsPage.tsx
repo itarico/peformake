@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 import { BadgeCheck, Search, SlidersHorizontal } from 'lucide-react'
 import { LoadState } from '@/features/traffic/LoadState'
+import { FilterSheet } from '@/components/ui/FilterSheet'
+import { useIsMobile } from '@/lib/useIsMobile'
 import { cn } from '@/lib/cn'
 import {
   conversationStatus,
@@ -40,6 +42,7 @@ export function ConversationsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [moreFilters, setMoreFilters] = useState(false)
   const [now] = useState(() => Date.now())
+  const mobile = useIsMobile()
 
   const { contacts, settings, clientName } = data
   const scoped = useMemo(
@@ -60,59 +63,67 @@ export function ConversationsPage() {
   const set = <K extends keyof ContactFilters>(key: K, value: ContactFilters[K]) => setFilters((current) => ({ ...current, [key]: value }))
   const extraFilters = (filters.kind ? 1 : 0) + (filters.tagId ? 1 : 0) + (filters.showHidden ? 1 : 0)
 
+  const audienceGroup = (
+    <div role="group" aria-label="Tipo de conversa" className="flex shrink-0 rounded-full border border-line-strong p-0.5">
+      {(['conversas', 'grupos', 'todos'] as const).map((audience) => (
+        <button key={audience} type="button" aria-pressed={filters.audience === audience} onClick={() => set('audience', audience)}
+          className={cn('min-h-10 cursor-pointer rounded-full px-3 text-[13px] font-medium capitalize md:min-h-9', filters.audience === audience ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
+          {audience}
+        </button>
+      ))}
+    </div>
+  )
+  const moreFiltersBox = (
+    <div className="flex flex-wrap items-center gap-2 rounded-2xl bg-raised p-2">
+      <label htmlFor="com-tipo" className="sr-only">Tipo de contato</label>
+      <select id="com-tipo" value={filters.kind} onChange={(e) => set('kind', e.target.value as ContactKind | '')} className={pill}>
+        <option value="">Todo tipo</option>
+        {Object.entries(KIND_LABEL).map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+      </select>
+      <label htmlFor="com-etiqueta" className="sr-only">Etiqueta</label>
+      <select id="com-etiqueta" value={filters.tagId} onChange={(e) => set('tagId', e.target.value)} className={pill}>
+        <option value="">Toda etiqueta</option>
+        {data.tags.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+      </select>
+      <label className="flex min-h-11 cursor-pointer items-center gap-2 text-[13px]">
+        <input type="checkbox" checked={filters.showHidden} onChange={(e) => set('showHidden', e.target.checked)} className="size-4" />
+        Pessoais e ocultas
+      </label>
+    </div>
+  )
+
   return (
     <>
       <div className="grid grid-cols-1 overflow-hidden rounded-3xl border border-line bg-surface lg:h-[calc(100dvh-220px)] lg:min-h-[560px] lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
         <div className={cn('flex min-h-0 flex-col border-line lg:border-r', selected && 'hidden lg:flex')}>
           <div className="flex flex-col gap-2 border-b border-line p-3">
-            <div className="relative">
+            <div className="flex items-center gap-2">
+            <div className="relative min-w-0 flex-1">
               <Search size={16} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
               <label htmlFor="com-busca" className="sr-only">Buscar conversa</label>
               <input id="com-busca" type="search" placeholder="Buscar nome, telefone, cliente ou mensagem" value={filters.search} onChange={(e) => set('search', e.target.value)}
                 className="min-h-11 w-full rounded-full bg-raised pl-10 pr-4 text-[14px] outline-none focus:ring-2 focus:ring-accent" />
             </div>
-            <div className="flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none]">
-              <div role="group" aria-label="Tipo de conversa" className="flex shrink-0 rounded-full border border-line-strong p-0.5">
-                {(['conversas', 'grupos', 'todos'] as const).map((audience) => (
-                  <button key={audience} type="button" aria-pressed={filters.audience === audience} onClick={() => set('audience', audience)}
-                    className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[13px] font-medium capitalize', filters.audience === audience ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
-                    {audience}
-                  </button>
-                ))}
-              </div>
+            {mobile && <FilterSheet count={extraFilters + (filters.audience !== 'conversas' ? 1 : 0)}>{audienceGroup}{moreFiltersBox}</FilterSheet>}
+            </div>
+            {!mobile && <div className="flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none]">
+              {audienceGroup}
               <button type="button" aria-expanded={moreFilters} onClick={() => setMoreFilters((v) => !v)} className={cn(pill, 'inline-flex shrink-0 cursor-pointer items-center gap-1.5', extraFilters > 0 && 'border-ink')}>
                 <SlidersHorizontal size={14} aria-hidden="true" /> Filtros{extraFilters > 0 ? ` (${extraFilters})` : ''}
               </button>
-            </div>
-            <div role="group" aria-label="Situação" className="flex flex-wrap gap-1">
+            </div>}
+            <div role="group" aria-label="Situação" className="-mx-3 flex gap-1 overflow-x-auto px-3 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0 [&::-webkit-scrollbar]:hidden">
               {STATUS_ORDER.map((status) => (
                 <button key={status} type="button" title={STATUS_HINT[status]} aria-pressed={filters.status === status} onClick={() => set('status', filters.status === status ? '' : status)}
-                  className={cn('inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-full px-2.5 text-[12px] font-semibold', filters.status === status ? 'bg-fill text-on-fill' : STATUS_TONE[status])}>
+                  className={cn('inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap rounded-full px-2.5 text-[12px] font-semibold md:min-h-8', filters.status === status ? 'bg-fill text-on-fill' : STATUS_TONE[status], !counts[status] && filters.status !== status && 'max-md:hidden')}>
                   {STATUS_LABEL[status]} <span className="tabular-nums">{counts[status]}</span>
                 </button>
               ))}
             </div>
-            {moreFilters && (
-              <div className="flex flex-wrap items-center gap-2 rounded-2xl bg-raised p-2">
-                <label htmlFor="com-tipo" className="sr-only">Tipo de contato</label>
-                <select id="com-tipo" value={filters.kind} onChange={(e) => set('kind', e.target.value as ContactKind | '')} className={pill}>
-                  <option value="">Todo tipo</option>
-                  {Object.entries(KIND_LABEL).map(([id, label]) => <option key={id} value={id}>{label}</option>)}
-                </select>
-                <label htmlFor="com-etiqueta" className="sr-only">Etiqueta</label>
-                <select id="com-etiqueta" value={filters.tagId} onChange={(e) => set('tagId', e.target.value)} className={pill}>
-                  <option value="">Toda etiqueta</option>
-                  {data.tags.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-                </select>
-                <label className="flex min-h-10 cursor-pointer items-center gap-2 text-[13px]">
-                  <input type="checkbox" checked={filters.showHidden} onChange={(e) => set('showHidden', e.target.checked)} className="size-4" />
-                  Pessoais e ocultas
-                </label>
-              </div>
-            )}
+            {moreFilters && !mobile && moreFiltersBox}
           </div>
 
-          <section aria-label="Conversas" className="min-h-0 flex-1 overflow-y-auto">
+          <section aria-label="Conversas" data-conteudo className="min-h-0 flex-1 overflow-y-auto">
             {visible.length === 0 && <p className="p-8 text-center text-muted">Nenhuma conversa com esses filtros.</p>}
             {visible.map((contact) => {
               const status = conversationStatus(contact, settings, now)
