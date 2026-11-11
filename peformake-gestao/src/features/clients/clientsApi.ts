@@ -275,7 +275,8 @@ async function saveLegal(savedId: string, draft: ClientDraft) {
  * Enquanto a função não estiver no banco, grava em duas etapas e avisa se o contato falhar.
  */
 export async function createClientWithContact(draft: ClientDraft, contact: Record<string, unknown>): Promise<{ id: string; contactError: string | null }> {
-  const rpc = supabase.rpc as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
+  // bind: sem ele o supabase.rpc perde o "this" e quebra antes de chegar ao banco ("Não foi possível salvar").
+  const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
   const { data, error } = await rpc('client_create', { _data: clientSaveData(draft), _contact: contact })
   if (!error) {
     await saveLegal(data as string, draft)
