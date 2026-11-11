@@ -9,7 +9,9 @@ import { deltaTone, fillDays, pctChange } from '@/components/charts/chartRules'
 import { cn } from '@/lib/cn'
 import { AV_ROLES, COMMERCIAL_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, TRAFFIC_ROLES, hasAnyRole, type AppRole } from '@/lib/roles'
 import { MyDay } from './MyDay'
-import { SetupPendingCard } from '@/features/clients/SetupPendingCard'
+import { SetupPendingAction } from '@/features/clients/SetupPendingCard'
+import { useSetupPending } from '@/features/clients/useSetupPending'
+import type { PendingSetup } from '@/features/clients/setupRules'
 import { LoadState } from '@/features/traffic/LoadState'
 import { describeClient } from '@/features/clients/clientRules'
 import { ATTENTION_LABEL } from '@/features/clients/portfolioRules'
@@ -103,12 +105,13 @@ function BusinessSection({ side }: { side: React.ReactNode }) {
   )
 }
 
-function ActionList({ actions, loading }: { actions: ActionItem[]; loading: boolean }) {
+function ActionList({ actions, loading, setup }: { actions: ActionItem[]; loading: boolean; setup: PendingSetup[] }) {
   const sorted = [...actions].sort((a, b) => Number(!!b.urgent) - Number(!!a.urgent))
+  const total = actions.length + (setup.length > 0 ? 1 : 0)
   return (
-    <Panel title="Precisa de você" className="pf-rise" action={actions.length > 0 ? <span className="text-[13px] tabular-nums text-muted">{actions.length} {actions.length === 1 ? 'item' : 'itens'}</span> : undefined}>
-      {loading && actions.length === 0 && <p role="status" className="text-[13px] text-muted">Carregando</p>}
-      {!loading && actions.length === 0 && <p className="flex items-center gap-2 text-[14px] text-ok-ink"><CheckCircle2 size={16} aria-hidden="true" /> Tudo em dia.</p>}
+    <Panel title="Precisa de você" className="pf-rise" action={total > 0 ? <span className="text-[13px] tabular-nums text-muted">{total} {total === 1 ? 'item' : 'itens'}</span> : undefined}>
+      {loading && total === 0 && <p role="status" className="text-[13px] text-muted">Carregando</p>}
+      {!loading && total === 0 && <p className="flex items-center gap-2 text-[14px] text-ok-ink"><CheckCircle2 size={16} aria-hidden="true" /> Tudo em dia.</p>}
       <ul className="-mx-2 flex flex-col">
         {sorted.map((x) => (
           <li key={x.key}>
@@ -120,6 +123,7 @@ function ActionList({ actions, loading }: { actions: ActionItem[]; loading: bool
             </Link>
           </li>
         ))}
+        <SetupPendingAction pending={setup} />
       </ul>
     </Panel>
   )
@@ -269,7 +273,8 @@ function BusinessHome() {
   const spend = t ? fillDays(t.period[0], t.period[1], t.daily.map((d) => ({ day: d.day, value: d.spend_cents / 100 }))) : []
   const contacts = m ? fillDays(m.period[0], m.period[1], m.new_contacts_daily.map((d) => ({ day: d.day, value: d.n }))) : []
 
-  const actionList = <ActionList actions={actions} loading={loading} />
+  const setup = useSetupPending()
+  const actionList = <ActionList actions={actions} loading={loading} setup={setup} />
 
   return (
     <>
@@ -278,7 +283,6 @@ function BusinessHome() {
         <p className="text-muted first-letter:uppercase">{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' })}</p>
       </header>
 
-      <SetupPendingCard />
 
       {can.admin ? <BusinessSection side={actionList} /> : (
         <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
