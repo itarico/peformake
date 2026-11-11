@@ -15,6 +15,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · Ellcazo: permissões (decisões do Italo)
+- Auditoria do papel 'ellcazo': Audiovisual e Equipe ok; Financeiro sem nome de cliente (clients sem política p/ ellcazo), aba Contratos com "Sem permissão", Comercial vazio, Cobrança só "Copiar link", Início genérico; vazamentos: production_clients mostra os 47 clientes, services_select_all mostra preços da Peformake, team_settings (comissões) legível.
+- Italo aprovou TUDO: (a) nome dos clientes da Ellcazo no Financeiro; (b) esconder Contratos e Comercial do menu da Ellcazo; (c) fechar vazamentos (clientes/catálogo só da Ellcazo; comissões só admin); (d) ficha resumida de cliente para a Ellcazo a partir dos projetos; (2) Ellcazo cria cobrança e dá baixa nas faturas DELA; (3) Comercial some do menu por agora (funil Ellcazo fica para o espaço Ellcazo).
+- Firecrawl: chave ok, créditos esgotados (-5). Google Places não cadastrada.
+
 ## 2026-11-11 noite · Audiovisual contado por visita (nuvem)
 - services.visits_per_month (Visita mobile 1, Captação com câmera 1, Mobile Semanal 4, Quinzenal 2, Premium 4, Câmera Mensal 1, Quinzenal 2, Diária 1, Diárias 1). client_service_status agora devolve, para esses serviços, "X de Y visitas" (visita = projeto de vídeo entregue no mês) + videos e min_videos (vídeos do contrato / visitas). Fechamento do mês (crédito) passa a ser por visita. Migração 20261114120000 aplicada.
 - Projeto de vídeo → Edição: campo "Vídeos entregues nesta visita" (obrigatório para entregar/mandar ao cliente; avisa "Abaixo do mínimo"). RPC av_set_delivered_videos.
