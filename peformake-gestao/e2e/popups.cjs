@@ -64,7 +64,7 @@ const PAGES0 = ['/clientes', '/clientes/' + C0, '/clientes/' + C0 + '?aba=financ
   '/social', '/social/quadro', '/social/briefings', '/social/contas', '/conteudo', '/datas', '/automatico',
   '/trafego', '/contas', '/tarefas', '/campanhas', '/estrategia', '/metodologia/nichos', '/servicos', '/integracoes',
   '/equipe/membros', '/configuracoes', '/configuracoes/automacoes', '/configuracoes/inteligencia', '/comercial/pacotes', '/comercial/funil', '/comercial/prospeccao', '/comercial/whatsapp'];
-const PAGES = process.env.ONLY ? process.env.ONLY.split(',') : PAGES0;
+const PAGES = process.env.ONLY ? process.env.ONLY.split(',').map((u) => u.replace(':id', C0)) : PAGES0;
 const SKIP_TEXT = /^(sair|entrar|menu|fechar|mais|voltar|anterior|próximo|hoje|\d+)$/i;
 
 const measure = (p) => p.evaluate(() => {
