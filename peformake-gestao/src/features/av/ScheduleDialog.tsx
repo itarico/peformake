@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { MapPin, Wand2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { DialogTabs } from '@/components/ui/DialogTabs'
 import { AV_AREAS, inAreas, useProduction } from '@/features/production/useProduction'
 import { autoAssign, avErrorMessage, calendarCall, scheduleShoot } from './avApi'
 import { coordsFromMapsLink, type AvProject } from './avRules'
@@ -41,6 +42,8 @@ export function ScheduleDialog({ project, clientId, day, onClose, onSaved }: {
     auto: !project,
   })
   const [problem, setProblem] = useState<string | null>(null)
+  // Sem rolagem: 1 Quando e onde · 2 Equipe.
+  const [tab, setTab] = useState<'quando' | 'equipe'>('quando')
   const coords = coordsFromMapsLink(f.point)
   const save = useMutation({
     mutationFn: async () => {
@@ -71,9 +74,13 @@ export function ScheduleDialog({ project, clientId, day, onClose, onSaved }: {
 
   return (
     <Dialog open onClose={onClose} title={project ? 'Reagendar gravação' : 'Agendar gravação'} size="md"
-      description="Ao salvar, a gravação entra no Google Agenda e o cliente recebe no WhatsApp o dia, a hora e o local para confirmar no portal."
-      footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button disabled={save.isPending} onClick={() => { setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar e avisar'}</Button></>}>
-      <div className="grid gap-3 sm:grid-cols-2">
+      description="Entra no Google Agenda e o cliente confirma pelo WhatsApp."
+      footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button>
+        {tab === 'quando' ? <Button variant="secondary" onClick={() => setTab('equipe')}>Equipe</Button> : null}
+        <Button disabled={save.isPending} onClick={() => { setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar e avisar'}</Button></>}>
+      <div className="flex flex-col gap-3">
+      <DialogTabs label="Partes do agendamento" value={tab} onChange={setTab} options={[{ id: 'quando', label: 'Quando e onde' }, { id: 'equipe', label: 'Equipe' }]} />
+      <div hidden={tab !== 'quando'} className="grid gap-3 sm:grid-cols-2">
         {!project && (
           <label className="flex flex-col text-[13px] font-semibold sm:col-span-2">Cliente
             <select value={f.client} onChange={(e) => setF({ ...f, client: e.target.value })} className={field}>
@@ -101,6 +108,8 @@ export function ScheduleDialog({ project, clientId, day, onClose, onSaved }: {
             <button type="button" onClick={usePhone} className="inline-flex min-h-8 cursor-pointer items-center gap-1 font-semibold text-accent-ink hover:underline"><MapPin size={13} aria-hidden="true" /> Estou no local agora</button>
           </p>
         </div>
+      </div>
+      <div hidden={tab !== 'equipe'} className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col text-[13px] font-semibold">Videomaker
           <select value={f.videomaker} onChange={(e) => setF({ ...f, videomaker: e.target.value })} className={field}>
             <option value="">{f.auto ? 'Distribuir sozinho' : 'Ninguém'}</option>
@@ -124,6 +133,7 @@ export function ScheduleDialog({ project, clientId, day, onClose, onSaved }: {
           <span className="inline-flex items-center gap-1"><Wand2 size={14} aria-hidden="true" /> Distribuir quem faltar para quem tem menos projetos</span>
         </label>
         <label className="flex flex-col text-[13px] font-semibold sm:col-span-2">Observações para quem grava<textarea rows={2} value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 font-normal" /></label>
+      </div>
       </div>
       {problem && <p role="alert" className="mt-3 text-[13px] font-medium text-warn-ink">{problem}</p>}
     </Dialog>

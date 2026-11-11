@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { FilterSheet } from '@/components/ui/FilterSheet'
 import { Dialog } from '@/components/ui/Dialog'
+import { DialogTabs } from '@/components/ui/DialogTabs'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
@@ -235,11 +236,14 @@ function SearchDialog({ search, clients, onClose, onSaved }: { search: Search | 
   return (
     <Dialog open onClose={onClose} title={search ? 'Editar busca' : 'Nova busca no Google Maps'} size="sm"
       footer={<Button disabled={d.name.trim().length < 2 || d.query.trim().length < 3 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar busca'}</Button>}>
-      <div className="flex flex-col gap-3">
+      <BuscaTabs>{(tab) => (<>
+      <div hidden={tab !== 'busca'} className="flex flex-col gap-3">
         <label className="flex flex-col text-[13px] font-semibold">Nome da busca<input value={d.name} onChange={(e) => setD({ ...d, name: e.target.value })} placeholder="Óticas de Recife" className={field} /></label>
         <label className="flex flex-col text-[13px] font-semibold">O que buscar no Maps<input value={d.query} onChange={(e) => setD({ ...d, query: e.target.value })} placeholder="ótica em Recife PE" className={field} /></label>
         <label className="flex flex-col text-[13px] font-semibold">Etiquetas (separe por vírgula)<input value={d.tags} onChange={(e) => setD({ ...d, tags: e.target.value })} placeholder="ótica, recife, varejo" className={field} /></label>
         <label className="flex flex-col text-[13px] font-semibold">Interesse provável<input value={d.interest} onChange={(e) => setD({ ...d, interest: e.target.value })} placeholder="Tráfego para vender óculos de grau" className={field} /></label>
+      </div>
+      <div hidden={tab !== 'mais'} className="flex flex-col gap-3">
         <label className="flex flex-col text-[13px] font-semibold">Para quem
           <select value={d.client_id} onChange={(e) => setD({ ...d, client_id: e.target.value })} className={field} disabled={!!search}>
             <option value="">Peformake (nossos leads)</option>
@@ -262,9 +266,21 @@ function SearchDialog({ search, clients, onClose, onSaved }: { search: Search | 
         </div>
         <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={d.daily} onChange={(e) => setD({ ...d, daily: e.target.checked })} className="size-4" /> Rodar todo dia às 7h</label>
         {search && <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={d.is_active} onChange={(e) => setD({ ...d, is_active: e.target.checked })} className="size-4" /> Busca ativa</label>}
-        {save.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível salvar.</p>}
       </div>
+      {save.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível salvar.</p>}
+      </>)}</BuscaTabs>
     </Dialog>
+  )
+}
+
+/** Sem rolagem: o essencial da busca numa aba e o resto em "Mais opções". */
+function BuscaTabs({ children }: { children: (tab: 'busca' | 'mais') => React.ReactNode }) {
+  const [tab, setTab] = useState<'busca' | 'mais'>('busca')
+  return (
+    <div className="flex flex-col gap-3">
+      <DialogTabs label="Partes da busca" value={tab} onChange={setTab} options={[{ id: 'busca', label: 'Busca' }, { id: 'mais', label: 'Mais opções' }]} />
+      {children(tab)}
+    </div>
   )
 }
 

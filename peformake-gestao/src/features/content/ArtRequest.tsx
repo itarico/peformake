@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, Check, ImagePlus, Loader2, RotateCcw, Sparkles, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
+import { DialogTabs } from '@/components/ui/DialogTabs'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -55,6 +57,8 @@ function ArtRequestForm({ onDone, clientId: fixedClient, initialText, seasonKey 
   const [preview, setPreview] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const textRef = useRef<HTMLTextAreaElement>(null)
+  // Sem rolagem: 1 Pedido · 2 Formato e foto.
+  const [step, setStep] = useState<'pedido' | 'formato'>('pedido')
   useEffect(() => { if (!photo) { setPreview(null); return } const u = URL.createObjectURL(photo); setPreview(u); return () => URL.revokeObjectURL(u) }, [photo])
 
   const send = useMutation({
@@ -76,14 +80,17 @@ function ArtRequestForm({ onDone, clientId: fixedClient, initialText, seasonKey 
   const toggle = (f: string) => setFormats((cur) => (cur.includes(f) ? cur.filter((x) => x !== f) : [...cur, f]))
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); if (ok) send.mutate() }}>
+    <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); if (step === 'pedido') { if (clientId && text.trim().length >= 5) setStep('formato'); return } if (ok) send.mutate() }}>
+      <DialogTabs steps label="Etapas do pedido" value={step} onChange={setStep} options={[{ id: 'pedido', label: 'Pedido' }, { id: 'formato', label: 'Formato e foto' }]} />
+      <div hidden={step !== 'pedido'} className="flex flex-col gap-4">
       {!fixedClient && (
-        <label className="flex flex-col gap-1 text-[13px] font-semibold">Cliente
-          <select required value={clientId} onChange={(e) => setClientId(e.target.value)} className="min-h-12 rounded-xl border border-line-strong bg-surface px-3 text-[15px] font-normal">
-            <option value="">{clients.isPending ? 'Carregando' : 'Escolha o cliente'}</option>
-            {(clients.data ?? []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-        </label>
+        <div className="flex flex-col gap-1 text-[13px] font-semibold">
+          <label htmlFor="art-cliente">Cliente</label>
+          <SearchSelect id="art-cliente" name="pf-arte-cliente" allowNew={false} className="text-[15px] font-normal" placeholder={clients.isPending ? 'Carregando' : 'Digite o nome do cliente'}
+            value={(clients.data ?? []).find((c) => c.id === clientId)?.name ?? ''}
+            onChange={(name) => setClientId((clients.data ?? []).find((c) => c.name === name)?.id ?? '')}
+            options={(clients.data ?? []).map((c) => c.name)} />
+        </div>
       )}
 
       <div className="flex flex-col gap-1.5">
@@ -97,8 +104,12 @@ function ArtRequestForm({ onDone, clientId: fixedClient, initialText, seasonKey 
         <textarea id="art-text" ref={textRef} required rows={4} value={text} onChange={(e) => setText(e.target.value)} maxLength={1500}
           placeholder="Ex.: Promoção de terça: 2 smash burgers por R$ 39, só no balcão, até 22h. Destacar o preço."
           className="rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-[15px] leading-relaxed" />
-        <p className="text-[12px] text-muted">Escreva como falaria com o designer: o que é, preço ou condição, data e o que precisa aparecer. O agente não inventa preço.</p>
+        <p className="text-[12px] text-muted">Como falaria com o designer: o que é, preço, data e o que precisa aparecer. O agente não inventa preço.</p>
       </div>
+      <Button type="submit" disabled={!clientId || text.trim().length < 5} className="min-h-12 text-[15px]">Continuar</Button>
+      </div>
+
+      <div hidden={step !== 'formato'} className="flex flex-col gap-4">
 
       <fieldset className="flex flex-col gap-1.5">
         <legend className="mb-1 text-[13px] font-semibold">Formato</legend>
@@ -134,10 +145,14 @@ function ArtRequestForm({ onDone, clientId: fixedClient, initialText, seasonKey 
       </div>
 
       {send.isError && <p role="alert" className="font-medium text-warn-ink">{(send.error as Error).message}</p>}
-      <Button type="submit" disabled={!ok || send.isPending} className="min-h-12 text-[15px]">
-        {send.isPending ? <><Loader2 size={16} className="animate-spin" aria-hidden="true" /> Enviando</> : <><Sparkles size={16} aria-hidden="true" /> Pedir ao agente de design</>}
-      </Button>
+      <div className="flex gap-2">
+        <Button type="button" variant="secondary" className="min-h-12" onClick={() => setStep('pedido')}>Voltar</Button>
+        <Button type="submit" disabled={!ok || send.isPending} className="min-h-12 flex-1 text-[15px]">
+          {send.isPending ? <><Loader2 size={16} className="animate-spin" aria-hidden="true" /> Enviando</> : <><Sparkles size={16} aria-hidden="true" /> Pedir ao agente de design</>}
+        </Button>
+      </div>
       <p className="-mt-2 text-center text-[12px] text-muted">A arte aparece aqui e no quadro de Peças, para revisar antes de ir ao cliente.</p>
+      </div>
     </form>
   )
 }
@@ -152,7 +167,7 @@ export function ArtRequestButton({ clientId, className, initialText, seasonKey, 
   return (
     <>
       <Button variant={variant} onClick={() => setOpen(true)} aria-label={iconOnMobile ? label : undefined} className={cn(iconOnMobile && 'max-md:size-11 max-md:px-0', className)}><Sparkles size={16} aria-hidden="true" />{iconOnMobile ? <span className="hidden md:inline">{label}</span> : ` ${label}`}</Button>
-      <Dialog open={open} onClose={() => setOpen(false)} title={title} description="Ele entende o pedido, escolhe a foto, olha os concorrentes, escreve a copy e cria a arte. Ajuste a ideia se quiser.">
+      <Dialog open={open} onClose={() => setOpen(false)} title={title} description="Ele escolhe a foto, olha os concorrentes, escreve a copy e cria a arte.">
         {open && <ArtRequestForm clientId={clientId} initialText={initialText} seasonKey={seasonKey} onDone={() => setOpen(false)} />}
       </Dialog>
     </>

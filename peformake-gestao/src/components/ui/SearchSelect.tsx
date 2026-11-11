@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from 'react'
 import { ChevronDown, Plus } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { bestMatches, sameOption, tidyLabel } from './searchMatch'
@@ -9,7 +9,7 @@ import { bestMatches, sameOption, tidyLabel } from './searchMatch'
  * seta ou toque escolhe; "+ Adicionar" quando não existe igual. A lista flutua sobre a tela, sem aumentar o pop-up.
  * autoComplete desligado: o navegador não sugere dados pessoais salvos (CPF, endereço) aqui.
  */
-export function SearchSelect({ id, value, onChange, options, placeholder = 'Digite para buscar', allowNew = true, limit = 6, className, invalid, describedBy, name, disabled, tidy = true }: {
+export function SearchSelect({ id, value, onChange, options, placeholder = 'Digite para buscar', allowNew = true, limit = 6, className, invalid, describedBy, name, disabled, tidy = true, filter = true, renderOption, onTextChange, format, addLabel, inputMode }: {
   id?: string
   value: string
   onChange: (value: string) => void
@@ -26,6 +26,17 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
   disabled?: boolean
   /** Padroniza a primeira letra maiúscula do que for adicionado (desligue para valores em minúsculas). */
   tidy?: boolean
+  /** false: as opções já vêm filtradas de fora (busca no banco); o campo só mostra até `limit`. */
+  filter?: boolean
+  /** Desenho de cada opção (foto, etiqueta). O valor escolhido continua sendo o texto da opção. */
+  renderOption?: (label: string) => ReactNode
+  /** Avisa o que está sendo digitado (para buscar no banco). */
+  onTextChange?: (text: string) => void
+  /** Ajusta o texto digitado ao usar/adicionar (ex.: máscara de telefone). */
+  format?: (text: string) => string
+  /** Texto do item de adicionar (padrão: Adicionar “texto”). */
+  addLabel?: (text: string) => string
+  inputMode?: HTMLAttributes<HTMLInputElement>['inputMode']
 }) {
   const auto = useId()
   const inputId = id ?? auto
@@ -41,10 +52,10 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
 
   const query = typed ? text : ''
   // Lista curta (até 8) aparece inteira ao abrir; lista longa mostra só as mais próximas do que foi digitado.
-  const matches = useMemo(() => bestMatches(query, options, !query && options.length <= 8 ? 8 : limit), [query, options, limit])
+  const matches = useMemo(() => (filter ? bestMatches(query, options, !query && options.length <= 8 ? 8 : limit) : options.slice(0, limit)), [filter, query, options, limit])
   const exact = sameOption(text, options)
   const canAdd = allowNew && typed && !!text.trim() && !exact
-  const clean = (t: string) => (tidy ? tidyLabel(t) : t.replace(/\s+/g, ' ').trim())
+  const clean = (t: string) => (format ? format(t) : tidy ? tidyLabel(t) : t.replace(/\s+/g, ' ').trim())
   const items: { label: string; add?: boolean }[] = [...matches.map((label) => ({ label })), ...(canAdd ? [{ label: clean(text), add: true }] : [])]
 
   // Lista flutuante presa à tela: abre para baixo ou, sem espaço, para cima.
@@ -69,7 +80,6 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
 
   const choose = (label: string) => {
     onChange(label)
-    setText(label)
     setOpen(false)
     setTyped(false)
   }
@@ -100,9 +110,10 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
         data-1p-ignore=""
         data-lpignore="true"
         disabled={disabled}
+        inputMode={inputMode}
         value={text}
         placeholder={placeholder}
-        onChange={(e) => { setText(e.target.value); setTyped(true); setOpen(true); setActive(0) }}
+        onChange={(e) => { setText(e.target.value); setTyped(true); setOpen(true); setActive(0); onTextChange?.(e.target.value) }}
         onFocus={() => { setOpen(true); setTyped(false); setActive(0) }}
         onClick={() => setOpen(true)}
         onBlur={() => { setOpen(false); if (typed) commitTyped(); setTyped(false) }}
@@ -134,7 +145,7 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
               onClick={(e) => { e.preventDefault(); choose(item.label) }}
               className={cn('flex min-h-11 cursor-pointer items-center gap-2 rounded-xl px-3 text-[15px]', i === active ? 'bg-raised' : '', item.add && 'font-semibold text-accent-ink')}
             >
-              {item.add ? <><Plus size={15} aria-hidden="true" /> Adicionar “{item.label}”</> : item.label}
+              {item.add ? <><Plus size={15} aria-hidden="true" /> {addLabel ? addLabel(item.label) : <>Adicionar “{item.label}”</>}</> : renderOption ? renderOption(item.label) : item.label}
             </li>
           ))}
         </ul>
