@@ -6,6 +6,8 @@ export interface AuthUser {
   email: string
   fullName: string
   isActive: boolean
+  /** Login criado com senha temporária: troca obrigatória antes de usar o sistema. */
+  mustChangePassword?: boolean
   roles: AppRole[]
   /** Cargos de verdade do login (diferem de roles só durante o "Ver como"). */
   realRoles: AppRole[]

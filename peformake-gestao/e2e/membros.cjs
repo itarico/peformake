@@ -10,7 +10,7 @@ const MEMBERS = [
   member(1, 'Italo', { profile_id: id(101), login_active: true, is_master: true, level: 'total', contract: 'socio', pay_schedule: 'mensal' }),
   member(2, 'Almeida', { phone: '5581999990000', contract: 'pj', pay_schedule: 'quinzenal' }),
   member(3, 'Thyfany Rayane', { profile_id: id(103), login_active: true, level: 'user' }),
-  member(4, 'Lucas'), member(5, 'Ingrid Rayane'), member(6, 'Aleffer', { contract: 'freela', pay_schedule: 'mensal' }),
+  member(4, 'Lucas'), member(5, 'Ingrid Rayane'), member(7, 'Teste Falso', { email: 'teste+peformake@example.com', invited: true, level: 'user', main_role: 'ellcazo' }), member(6, 'Aleffer', { contract: 'freela', pay_schedule: 'mensal' }),
 ];
 const ote = (contract, extra = {}) => ({ month: '2026-11-01', goal_role: 'conteudo', min_pct: 70, cap_pct: 120, contract, base_salary: 3000, variable_target: 500, ote: 3500, pay_day: null, unit: 'peformake', notes: null, pay_schedule: 'quinzenal', advance_pct: 50, variable_enabled: false, require_invoice: false, profit_share_pct: contract === 'socio' ? 10 : null, profit_period: 'trimestral', job_rates: {}, has_own_goals: false, goals: [{ key: 'artes', target: 22, actual: 5, pct: 23, weight: 1, origem: 'area' }, { key: 'planos', target: 13, actual: 1, pct: 8, weight: 1, origem: 'area' }], attainment: 15, variable_earned: 0, total_month: 3000, ...extra });
 let currentOte = ote(null);
@@ -29,6 +29,7 @@ async function mock(route) {
     if (fn === 'team_pay_overview') return json(MEMBERS.map((m) => ({ ...currentOte, staff_id: m.id, name: m.name, avatar_path: null, job_title: null, has_pay: !!m.contract, contract: m.contract, pay_schedule: m.pay_schedule })));
     return json(null);
   }
+  if (p === '/functions/v1/member-access') { calls.push(['member-access', req.postData()]); return json({ ok: true, email: 'teste+peformake@example.com', password: 'Abcd2345Efgh67' }); }
   if (p.startsWith('/rest/v1/')) return json([]);
   if (p.startsWith('/storage/')) return route.fulfill({ status: 404, body: '' });
   return json({});
@@ -52,6 +53,16 @@ async function check(p, dev, label) {
     if (!/Contrato: definir/.test(text)) fails.push(`${dev}: lista sem o aviso "Contrato: definir"`);
     if (!/PJ · Quinzenal/.test(text)) fails.push(`${dev}: lista sem o tipo "PJ · Quinzenal"`);
     if (!/sem contrato definido/.test(text)) fails.push(`${dev}: resumo sem "sem contrato definido"`);
+    // Selo honesto: só linha de acesso (nenhum e-mail saiu) não diz "Convite enviado".
+    if (/Convite enviado/.test(text)) fails.push(`${dev}: lista diz "Convite enviado" sem e-mail enviado`);
+    if (!/Acesso liberado · falta entrar/.test(text)) fails.push(`${dev}: lista sem "Acesso liberado · falta entrar"`);
+    await p.getByRole('button', { name: /Teste Falso/ }).first().click(); await p.waitForTimeout(300);
+    await p.locator('dialog[open]').getByRole('tab', { name: 'Acesso' }).click(); await p.waitForTimeout(200); await check(p, dev, 'acesso-botoes');
+    await p.locator('dialog[open]').getByRole('button', { name: /Criar login agora/ }).click(); await p.waitForTimeout(400);
+    if (!(await p.getByText('Abcd2345Efgh67').count())) fails.push(`${dev}: senha temporária não apareceu`);
+    if (!(await p.getByRole('button', { name: /Copiar mensagem para WhatsApp/ }).count())) fails.push(`${dev}: sem "Copiar mensagem para WhatsApp"`);
+    await check(p, dev, 'acesso-senha');
+    await p.keyboard.press('Escape'); await p.waitForTimeout(200);
     // Membro vindo do sistema antigo: abre, edita e tem Remover.
     await p.getByRole('button', { name: /Almeida/ }).first().click(); await p.waitForTimeout(300);
     const phone = await p.locator('dialog[open] input[inputmode="tel"]').inputValue();

@@ -90,7 +90,7 @@ const tabsOf = (p) => p.evaluate(() => {
     p.on('dialog', (x) => x.dismiss().catch(() => {}));
     for (const url of PAGES) {
       await p.goto('http://localhost:' + PORT + url).catch(() => {}); await p.waitForLoadState('networkidle').catch(() => {}); await p.waitForTimeout(900);
-      const labels = await p.evaluate((skip) => [...document.querySelectorAll('main button, main [role=button], header button')]
+      const labels = await p.evaluate((skip) => [...document.querySelectorAll('main button, main [role=button], header button, body > div button[aria-label^="Novo"], button[aria-label^="Novo"]')]
         .filter((e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && !e.disabled && !e.closest('nav, aside, dialog') })
         .map((e) => (e.getAttribute('aria-label') || e.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 50))
         .filter((t) => t && !new RegExp(skip, 'i').test(t)), SKIP_TEXT.source);
@@ -98,7 +98,7 @@ const tabsOf = (p) => p.evaluate(() => {
       for (const label of uniq) {
         const here = p.url();
         const btn = p.locator('main button, main [role=button], header button').filter({ hasNot: p.locator('dialog') }).and(p.locator(`:is(button,[role=button])`)).filter({ hasText: label }).first();
-        const byAria = p.locator(`main [aria-label="${label.replace(/"/g, '\\"')}"], header [aria-label="${label.replace(/"/g, '\\"')}"]`).first();
+        const byAria = p.locator(`main [aria-label="${label.replace(/"/g, '\\"')}"], header [aria-label="${label.replace(/"/g, '\\"')}"], button[aria-label="${label.replace(/"/g, '\\"')}"]:visible`).first();
         const target = (await byAria.count()) ? byAria : btn;
         if (!(await target.count())) continue;
         const record = async (via) => {

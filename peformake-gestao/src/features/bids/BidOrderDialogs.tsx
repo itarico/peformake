@@ -9,9 +9,8 @@ import { cn } from '@/lib/cn'
 import { brl, dayLabel, todayBR } from '@/features/finance/money'
 import { dueFor, itemLeft, num, overLimit, round2, type Bid, type BidFile, type BidOrder } from './bidRules'
 import { OverLimitError, createOrder, markDone, saveNf, uploadBidFile } from './bidsApi'
-import { FileLink } from './BidDialog'
+import { FileLink, pageSize } from './BidDialog'
 
-const PAGE = 7
 const useRefresh = () => {
   const qc = useQueryClient()
   return () => { for (const k of ['bids', 'bid-alerts', 'invoices', 'client-invoices', 'fin-entries', 'fin-summary']) void qc.invalidateQueries({ queryKey: [k] }) }
@@ -25,6 +24,7 @@ export function NewOrderDialog({ bid, onClose, onDone }: { bid: Bid; onClose: ()
   const [planned, setPlanned] = useState(todayBR())
   const [notes, setNotes] = useState('')
   const [page, setPage] = useState(0)
+  const [PAGE] = useState(pageSize)
   const [problem, setProblem] = useState<string | null>(null)
   const total = round2(items.reduce((a, i) => a + (qty[i.id!] ?? 0) * Number(i.unit_price), 0))
   const chosen = Object.values(qty).filter((n) => n > 0).length
@@ -57,7 +57,7 @@ export function NewOrderDialog({ bid, onClose, onDone }: { bid: Bid; onClose: ()
             const left = itemLeft(i)
             const q = qty[i.id!] ?? 0
             return (
-              <li key={i.id} className={cn('flex min-h-12 items-center gap-2 border-t border-line px-3 py-1 first:border-t-0', q > left && 'bg-warn-soft/50')}>
+              <li key={i.id} className={cn('flex min-h-11 items-center gap-2 border-t border-line px-3 py-0.5 first:border-t-0', q > left && 'bg-warn-soft/50')}>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[13px] font-medium">{i.description}</span>
                   <span className={cn('text-[12px] tabular-nums', left === 0 || q > left ? 'text-warn-ink' : 'text-muted')}>resta {left} de {Number(i.max_qty)} · {brl(Number(i.unit_price))}</span>

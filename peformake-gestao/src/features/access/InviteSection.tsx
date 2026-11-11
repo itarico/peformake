@@ -53,7 +53,7 @@ export function InviteSection() {
       return data
     },
     onSuccess: (r) => {
-      setDone(r === 'aplicado' ? 'Essa pessoa já tinha conta: acesso liberado agora.' : 'Convite enviado. O acesso libera quando a pessoa entrar com esse e-mail.')
+      setDone(r === 'aplicado' ? 'Essa pessoa já tinha conta: acesso liberado agora.' : 'Acesso liberado para esse e-mail. Nenhum e-mail foi enviado: crie o login em Equipe → Membros.')
       setEmail(''); setRoles([]); setAreas([])
       void queryClient.invalidateQueries({ queryKey: ['access-invites'] })
       void queryClient.invalidateQueries({ queryKey: ['access-users'] })
@@ -111,11 +111,11 @@ export function InviteSection() {
         </fieldset>
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
         {done && <p role="status" className="font-medium text-accent-ink">{done}</p>}
-        <div><Button type="submit" disabled={save.isPending}>{save.isPending ? 'Enviando' : 'Enviar convite'}</Button></div>
+        <div><Button type="submit" disabled={save.isPending}>{save.isPending ? 'Salvando' : 'Liberar acesso'}</Button></div>
       </form>
       {(invites.data?.length ?? 0) > 0 && (
         <div className="border-t border-line pt-3">
-          <h3 className="mb-1 text-[13px] font-semibold">Convites esperando</h3>
+          <h3 className="mb-1 text-[13px] font-semibold">Acessos liberados · falta entrar</h3>
           <ul className="flex flex-col">
             {invites.data!.map((i) => (
               <li key={i.email} className="flex flex-wrap items-center justify-between gap-2 border-b border-line py-2 text-[14px] last:border-b-0">

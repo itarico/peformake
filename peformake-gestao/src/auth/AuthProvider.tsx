@@ -7,7 +7,7 @@ import { loginErrorMessage } from './messages'
 
 async function loadUser(session: Session): Promise<AuthState> {
   const [profile, roles] = await Promise.all([
-    supabase.from('profiles').select('id, email, full_name, is_active').eq('id', session.user.id).maybeSingle(),
+    supabase.from('profiles').select('id, email, full_name, is_active, must_change_password').eq('id', session.user.id).maybeSingle(),
     supabase.from('user_roles').select('role').eq('user_id', session.user.id),
   ])
 
@@ -32,6 +32,7 @@ async function loadUser(session: Session): Promise<AuthState> {
       email: profile.data.email,
       fullName: profile.data.full_name,
       isActive: profile.data.is_active,
+      mustChangePassword: !!profile.data.must_change_password,
       roles: (roles.data ?? []).map((row: { role: AppRole }) => row.role),
       realRoles: (roles.data ?? []).map((row: { role: AppRole }) => row.role),
       viewAs: null,
@@ -101,7 +102,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       updatePassword: async (password) => {
         const { error } = await supabase.auth.updateUser({ password })
-        return error ? 'Não foi possível salvar a senha. Abra o link do e-mail de novo.' : null
+        if (error) return /different|same/i.test(error.message) ? 'Escolha uma senha diferente da temporária.' : 'Não foi possível salvar a senha. Abra o link do e-mail de novo.'
+        // Tira a marca de "trocar no primeiro acesso" e recarrega o perfil antes de liberar o sistema.
+        await (supabase.rpc as unknown as (fn: string) => Promise<unknown>)('my_password_changed')
+        const { data } = await supabase.auth.getSession()
+        await refresh(data.session)
+        return null
       },
       retry: () => {
         setState({ status: 'loading' })

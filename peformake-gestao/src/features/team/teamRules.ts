@@ -102,3 +102,34 @@ export function nextPayday(fromIso: string, schedule: Schedule): string {
   const nm = m === 12 ? 1 : m + 1
   return iso(ny, nm, days[0] ?? 30)
 }
+
+// Selo de acesso do membro: só diz "Convite enviado" quando um e-mail saiu de verdade (sent_at gravado).
+export interface AccessInfo {
+  active: boolean; profile_id: string | null; login_active: boolean; invited: boolean
+  invite_sent_at?: string | null; never_signed_in?: boolean
+}
+export type AccessTone = 'ok' | 'wait' | 'off'
+export function accessStatus(m: AccessInfo): { label: string; tone: AccessTone } {
+  if (!m.active) return { label: 'Fora da equipe', tone: 'off' }
+  const sent = m.invite_sent_at ? `Convite enviado em ${new Date(m.invite_sent_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', timeZone: 'America/Recife' })}` : null
+  if (m.profile_id && m.login_active) {
+    if (!m.never_signed_in) return { label: 'Com acesso', tone: 'ok' }
+    return { label: sent ?? 'Login criado · falta entrar', tone: 'wait' }
+  }
+  if (!m.profile_id && m.invited) return { label: sent ?? 'Acesso liberado · falta entrar', tone: 'wait' }
+  return { label: 'Sem acesso', tone: 'off' }
+}
+
+/** Mensagem pronta para o admin colar no WhatsApp (o envio é sempre manual). */
+export function loginMessage(name: string, email: string, password: string): string {
+  const first = name.trim().split(/\s+/)[0] || ''
+  return [
+    `Oi${first ? `, ${first}` : ''}! Seu acesso ao sistema da Peformake está pronto.`,
+    '',
+    'Entre em: https://peformake-gestao.vercel.app/login',
+    `E-mail: ${email}`,
+    `Senha temporária: ${password}`,
+    '',
+    'No primeiro acesso o sistema pede para você trocar a senha por uma só sua.',
+  ].join('\n')
+}

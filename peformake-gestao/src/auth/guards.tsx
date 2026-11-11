@@ -29,6 +29,7 @@ export function RequireAuth() {
       </CenteredMessage>
     )
   }
+  if (state.user.mustChangePassword) return <Navigate to="/nova-senha" replace />
   return <Outlet />
 }
 

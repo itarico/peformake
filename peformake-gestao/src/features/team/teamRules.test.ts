@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fixedInstallments, goalValue, maskPhone, nextPayday, partnershipProgress, payTag, phoneProblem, type MemberDashboard } from './teamRules'
+import { fixedInstallments, goalValue, maskPhone, nextPayday, partnershipProgress, payTag, phoneProblem, accessStatus, loginMessage, type MemberDashboard } from './teamRules'
 
 const base: MemberDashboard = {
   settings: { sourcing_enabled: true, sourcing_pct: 10, sourcing_months: 3, partnership_enabled: true, partnership_min_revenue: 10000, partnership_min_months: 6, goals_enabled: true },
@@ -55,5 +55,36 @@ describe('forma de pagamento', () => {
     expect(nextPayday('2026-12-31', 'quinzenal')).toBe('2027-01-15')
     expect(nextPayday('2026-12-31', 'mensal')).toBe('2027-01-30')
     expect(nextPayday('2027-02-03', 'mensal')).toBe('2027-02-28')
+  })
+})
+
+describe('accessStatus', () => {
+  const m = { active: true, profile_id: null, login_active: false, invited: false }
+  it('só linha de acesso, sem e-mail: não diz que mandou convite', () => {
+    expect(accessStatus({ ...m, invited: true }).label).toBe('Acesso liberado · falta entrar')
+  })
+  it('e-mail saiu de verdade: mostra a data', () => {
+    expect(accessStatus({ ...m, invited: true, invite_sent_at: '2026-11-12T15:00:00Z' }).label).toBe('Convite enviado em 12/11')
+  })
+  it('login criado e nunca entrou', () => {
+    expect(accessStatus({ ...m, profile_id: 'p', login_active: true, never_signed_in: true }).label).toBe('Login criado · falta entrar')
+  })
+  it('já entrou: com acesso', () => {
+    expect(accessStatus({ ...m, profile_id: 'p', login_active: true, never_signed_in: false })).toEqual({ label: 'Com acesso', tone: 'ok' })
+  })
+  it('fora e sem acesso', () => {
+    expect(accessStatus({ ...m, active: false }).label).toBe('Fora da equipe')
+    expect(accessStatus(m).label).toBe('Sem acesso')
+  })
+})
+
+describe('loginMessage', () => {
+  it('tem link, e-mail, senha e o aviso de troca', () => {
+    const t = loginMessage('Ana Souza', 'ana@x.com', 'Abc23456789xyz')
+    expect(t).toContain('Oi, Ana!')
+    expect(t).toContain('https://peformake-gestao.vercel.app/login')
+    expect(t).toContain('ana@x.com')
+    expect(t).toContain('Abc23456789xyz')
+    expect(t).toMatch(/trocar a senha/)
   })
 })

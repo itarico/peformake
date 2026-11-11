@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Crown, MailCheck, Plus, ShieldCheck, UserMinus, UserPlus } from 'lucide-react'
+import { Crown, Plus, ShieldCheck, UserMinus, UserPlus } from 'lucide-react'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -12,7 +12,8 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { ADMIN_AREAS } from '@/features/access/InviteSection'
 import { MemberPayTab } from './MemberPay'
-import { maskPhone, payTag, phoneProblem, type Contract, type Schedule } from './teamRules'
+import { accessStatus, maskPhone, payTag, phoneProblem, type Contract, type Schedule } from './teamRules'
+import { MemberAccess } from './MemberAccess'
 
 // Membros da equipe: cadastro, login e convite numa lista só. Adicionar e editar abrem o mesmo pop-up.
 type Level = 'none' | 'user' | 'area' | 'total'
@@ -20,6 +21,7 @@ interface Member {
   id: string | null; name: string; job_title: string | null; main_role: string | null; email: string | null; phone: string | null
   skills: string[]; avatar_path: string | null; active: boolean; profile_id: string | null; login_active: boolean; is_master: boolean
   roles: string[]; area_admin: string[]; invited: boolean; level: Level
+  invite_sent_at?: string | null; never_signed_in?: boolean; must_change_password?: boolean
   contract?: Contract | null; pay_schedule?: Schedule | null
 }
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
@@ -53,10 +55,8 @@ function Avatar({ m, size = 'size-12' }: { m: Member; size?: string }) {
 }
 
 function Status({ m }: { m: Member }) {
-  if (!m.active) return <span className="rounded-full bg-raised px-2 py-0.5 text-[11.5px] font-semibold text-muted">Fora da equipe</span>
-  if (m.profile_id && m.login_active) return <span className="rounded-full bg-ok-soft px-2 py-0.5 text-[11.5px] font-semibold text-ok-ink">Com acesso</span>
-  if (m.invited) return <span className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 text-[11.5px] font-semibold text-accent-ink"><MailCheck size={11} aria-hidden="true" />Convite enviado</span>
-  return <span className="rounded-full bg-raised px-2 py-0.5 text-[11.5px] font-semibold text-muted">Sem acesso</span>
+  const s = accessStatus(m)
+  return <span className={cn('rounded-full px-2 py-0.5 text-[11.5px] font-semibold', s.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : s.tone === 'wait' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{s.label}</span>
 }
 
 function MemberCard({ m, isMe, onOpen }: { m: Member; isMe: boolean; onOpen: () => void }) {
@@ -106,6 +106,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
   const [areas, setAreas] = useState<string[]>(member?.area_admin ?? [])
   const [skills, setSkills] = useState<string[]>(member?.skills ?? [])
   const [problem, setProblem] = useState<string | null>(null)
+  const [reveal, setReveal] = useState(false)
   const locked = !!member?.is_master
   const refresh = () => { for (const k of ['access-members', 'job-people', 'staff-links', 'my-staff-id']) void queryClient.invalidateQueries({ queryKey: [k] }) }
 
@@ -143,12 +144,12 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
     if (phoneBad) { setTab('dados'); setProblem(phoneBad); return }
     save.mutate()
   }
-  const label = isNew ? (level === 'none' ? 'Adicionar' : 'Adicionar e enviar convite')
-    : member && !member.profile_id && level !== 'none' && !member.invited ? 'Salvar e enviar convite' : member && !member.active ? 'Trazer de volta' : 'Salvar'
+  const label = isNew ? (level === 'none' ? 'Adicionar' : 'Adicionar e liberar acesso')
+    : member && !member.profile_id && level !== 'none' && !member.invited ? 'Salvar e liberar acesso' : member && !member.active ? 'Trazer de volta' : 'Salvar'
 
   return (
     <Dialog open onClose={onClose} title={isNew ? 'Adicionar membro' : member!.name} size="md"
-      description={isNew ? 'Com acesso, a pessoa recebe o convite por e-mail e entra já liberada.' : locked ? 'Master: acesso total sempre.' : undefined}
+      description={isNew ? 'Com acesso: depois de salvar, crie o login (senha temporária) ou envie o convite por e-mail.' : locked ? 'Master: acesso total sempre.' : undefined}
       footer={
         <div className="flex w-full flex-wrap items-center justify-between gap-2">
           {!isNew && !locked && !isMe && member!.active
@@ -193,7 +194,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            <div className="grid grid-cols-2 gap-2">
+            <div className={cn('grid grid-cols-2 gap-2', reveal && 'hidden')}>
               {LEVELS.map((l) => {
                 const on = level === l.id
                 const disabled = locked && l.id !== 'total'
@@ -216,7 +217,8 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
                 </div>
               </fieldset>
             )}
-            {member?.invited && !member.profile_id && <p className="rounded-xl bg-accent-soft/50 px-3 py-2 text-[13px]">Convite enviado para {member.email}. O acesso libera quando a pessoa entrar com esse e-mail.</p>}
+            {member && !locked && !isMe && level !== 'none' && <MemberAccess m={member} onReveal={setReveal}
+              unsaved={level !== member.level || (level === 'area' && areas.join() !== member.area_admin.join()) || role !== (member.main_role ?? '')} />}
           </div>
         )}
         {problem && <p role="alert" className="rounded-lg bg-warn-soft px-3 py-2 font-medium text-warn-ink">{problem}</p>}
@@ -244,14 +246,14 @@ export function MembersPage() {
   const out = q.data.filter((m) => !m.active)
   const leaders = active.filter((m) => m.is_master || m.level === 'total')
   const team = active.filter((m) => !(m.is_master || m.level === 'total'))
-  const withAccess = active.filter((m) => m.profile_id && m.login_active).length
-  const invited = active.filter((m) => m.invited && !m.profile_id).length
+  const withAccess = active.filter((m) => accessStatus(m).tone === 'ok').length
+  const invited = active.filter((m) => accessStatus(m).tone === 'wait').length
   const undefinedPay = active.filter((m) => m.id && !m.contract).length
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[13px] text-muted">{active.length} na equipe · {withAccess} com acesso{invited ? ` · ${invited} convite${invited > 1 ? 's' : ''} esperando` : ''}{undefinedPay ? ` · ${undefinedPay} sem contrato definido` : ''}</p>
+        <p className="text-[13px] text-muted">{active.length} na equipe · {withAccess} com acesso{invited ? ` · ${invited} falta entrar` : ''}{undefinedPay ? ` · ${undefinedPay} sem contrato definido` : ''}</p>
         <Button onClick={() => setOpen('new')}><UserPlus size={16} aria-hidden="true" /> Adicionar membro</Button>
       </div>
       {leaders.length > 0 && (

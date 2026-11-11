@@ -288,7 +288,8 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
         {/* ---------- 2. Serviço ---------- */}
         {step === 1 && (
           <div className="flex flex-col gap-2">
-            {!editing && <p className="truncate text-[13px] text-muted">Para <b className="text-ink">{clientName}</b></p>}
+            {!editing && <p className="flex flex-wrap items-baseline justify-between gap-x-3 text-[13px] text-muted"><span className="min-w-0 truncate">Para <b className="text-ink">{clientName}</b></span>
+              {chosen && me?.roles.includes('admin') && <Link to={`/clientes/${chosen.id}?aba=contrato&licitacao=nova`} onClick={onClose} className="font-semibold text-accent-ink">É licitação? Cadastrar o pedido</Link>}</p>}
             {editing && byId.get(items.find((i) => i.key === editing)?.serviceId ?? '') ? (
               <div className="flex flex-col gap-2.5">
                 <SaleItemEditor item={items.find((i) => i.key === editing)!} service={byId.get(items.find((i) => i.key === editing)!.serviceId)!}

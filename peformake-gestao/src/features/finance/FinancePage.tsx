@@ -1,3 +1,4 @@
+import { BidForecastLine } from '@/features/bids/BidsSection'
 import { importSummary, type ImportResult } from './statement'
 import { useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -280,6 +281,7 @@ export function FinancePage() {
           </div>
         ))}
       </section>
+      {isAdmin && <BidForecastLine unit={unit} />}
       {isAdmin && (() => {
         const n = (entries.data ?? []).filter((e) => e.review_status === 'a_revisar').length
         return n > 0 ? <Link to="/financeiro/whatsapp" className="self-start rounded-full max-md:order-last bg-raised px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:bg-line">{n} lançamento{n === 1 ? '' : 's'} do WhatsApp a revisar →</Link> : null

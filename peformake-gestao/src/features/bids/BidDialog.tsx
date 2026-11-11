@@ -13,9 +13,10 @@ import { openBidFile, saveBid, uploadBidFile, type BidDraft } from './bidsApi'
 type Step = 'pedido' | 'itens' | 'pagamento' | 'anexos'
 const STEPS = [{ id: 'pedido', label: 'Pedido' }, { id: 'itens', label: 'Itens' }, { id: 'pagamento', label: 'Pagamento e NF' }, { id: 'anexos', label: 'Anexos' }] as const
 const ORDER: Step[] = ['pedido', 'itens', 'pagamento', 'anexos']
-const PAGE = 7
+/** Itens por página: o pop-up nunca rola (celular mostra menos de cada vez). */
+export const pageSize = () => (typeof window === 'undefined' ? 7 : window.innerHeight < 700 ? 3 : window.innerHeight < 780 ? 5 : 7)
 const FILE_KINDS = [['pedido', 'Pedido de compras'], ['edital', 'Edital'], ['et', 'Especificação técnica (E.T.)'], ['outro', 'Outro']] as const
-const TIPS = ['Constar obrigatoriamente o nº do pedido na nota fiscal.', 'Enviar o arquivo .XML da nota para o e-mail: ']
+const TIPS = [['Nº do pedido na NF', 'Constar obrigatoriamente o nº do pedido na nota fiscal.'], ['Enviar o XML por e-mail', 'Enviar o arquivo .XML da nota para o e-mail: ']] as const
 
 const inputCls = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink'
 
@@ -35,6 +36,7 @@ export function BidDialog({ clientId, bid, onClose, onSaved }: { clientId: strin
   const [skipped, setSkipped] = useState<string[]>([])
   const [editing, setEditing] = useState<number | null>(null)
   const [page, setPage] = useState(0)
+  const [PAGE] = useState(pageSize)
   const [problem, setProblem] = useState<string | null>(null)
   const set = (patch: Partial<BidDraft>) => setD((c) => ({ ...c, ...patch }))
   const total = itemsTotal(d.items)
@@ -67,7 +69,7 @@ export function BidDialog({ clientId, bid, onClose, onSaved }: { clientId: strin
   const canNext = step === 'pedido' ? okPedido : step === 'itens' ? (pasting ? paste.trim().length > 0 : okItens && editing === null) : true
 
   return (
-    <Dialog open onClose={onClose} title={bid ? `Licitação ${bid.number}` : 'Nova licitação'} description="Crédito do cliente: itens, quantidades e preços do pedido." size="md"
+    <Dialog open onClose={onClose} title={bid ? `Licitação ${bid.number}` : 'Nova licitação'} size="md"
       footer={<>
         {at > 0 && <Button variant="secondary" onClick={() => { setProblem(null); setStep(ORDER[at - 1]!) }}>Voltar</Button>}
         <Button onClick={next} disabled={!canNext || save.isPending || upload.isPending}>
@@ -83,19 +85,10 @@ export function BidDialog({ clientId, bid, onClose, onSaved }: { clientId: strin
             <div className="col-span-2"><Field label="Órgão ou empresa compradora" value={d.buyer} onChange={(e) => set({ buyer: e.target.value })} placeholder="Ex.: Transpetro" autoComplete="off" /></div>
             <Field label="Nº do pedido" value={d.number} onChange={(e) => set({ number: e.target.value })} placeholder="Ex.: 4501891429" autoComplete="off" inputMode="numeric" />
             <Field label="Nº do processo (opcional)" value={d.process} onChange={(e) => set({ process: e.target.value })} autoComplete="off" />
-            <Field label="Emissão" type="date" value={d.issued_on} onChange={(e) => set({ issued_on: e.target.value, starts_on: d.starts_on || e.target.value })} />
+            <Field label="Emissão" type="date" value={d.issued_on} onChange={(e) => set({ issued_on: e.target.value, starts_on: !d.starts_on || d.starts_on === d.issued_on ? e.target.value : d.starts_on })} />
             <Field label="Valor do pedido (conferir)" value={expected} onChange={(e) => setExpected(e.target.value)} placeholder="34.650,00" inputMode="decimal" autoComplete="off" />
             <Field label="Vigência: início" type="date" value={d.starts_on} onChange={(e) => set({ starts_on: e.target.value })} />
             <Field label="Fim (data de entrega)" type="date" value={d.ends_on} onChange={(e) => set({ ends_on: e.target.value })} error={d.ends_on && d.starts_on && d.ends_on < d.starts_on ? 'Antes do início' : null} />
-            <div className="col-span-2">
-              <p className="mb-1 text-[13px] font-semibold">Quem fatura</p>
-              <div role="group" aria-label="Empresa que fatura" className="grid grid-cols-2 gap-1 rounded-full border border-line p-0.5">
-                {(['peformake', 'ellcazo'] as const).map((u) => (
-                  <button key={u} type="button" aria-pressed={d.unit === u} onClick={() => set({ unit: u })}
-                    className={cn('min-h-10 cursor-pointer rounded-full text-[14px] font-semibold', d.unit === u ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{u === 'peformake' ? 'Peformake' : 'Ellcazo'}</button>
-                ))}
-              </div>
-            </div>
           </div>
         )}
 
@@ -172,7 +165,16 @@ export function BidDialog({ clientId, bid, onClose, onSaved }: { clientId: strin
 
         {step === 'pagamento' && (
           <div className="flex flex-col gap-2.5">
-            <div className="grid grid-cols-[110px_minmax(0,1fr)] gap-3">
+            <div>
+              <p className="mb-1 text-[13px] font-semibold">Quem fatura</p>
+              <div role="group" aria-label="Empresa que fatura" className="grid grid-cols-2 gap-1 rounded-full border border-line p-0.5">
+                {(['peformake', 'ellcazo'] as const).map((u) => (
+                  <button key={u} type="button" aria-pressed={d.unit === u} onClick={() => set({ unit: u })}
+                    className={cn('min-h-10 cursor-pointer rounded-full text-[14px] font-semibold', d.unit === u ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{u === 'peformake' ? 'Peformake' : 'Ellcazo'}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-3">
               <Field label="Prazo (dias)" value={String(d.payment_days)} onChange={(e) => set({ payment_days: Math.min(180, Math.max(0, Number(e.target.value.replace(/\D/g, '')) || 0)) })} inputMode="numeric" />
               <div>
                 <p className="mb-1 text-[13px] font-semibold">Contar a partir</p>
@@ -185,20 +187,19 @@ export function BidDialog({ clientId, bid, onClose, onSaved }: { clientId: strin
               </div>
             </div>
             <p className="text-[12.5px] text-muted">{d.due_from === 'realizacao'
-              ? `Ao marcar a OS como realizada, a fatura nasce vencendo ${d.payment_days} dias depois.`
-              : `A fatura fica "aguardando NF" e vence ${d.payment_days} dias depois da data da nota.`}</p>
+              ? `OS realizada = fatura vencendo em ${d.payment_days} dias.`
+              : `Fatura espera a NF e vence ${d.payment_days} dias após a nota.`}</p>
             <div>
               <label htmlFor="bid-nf" className="mb-1 block text-[13px] font-semibold">Instruções da nota fiscal</label>
-              <textarea id="bid-nf" rows={3} value={d.nf_instructions} onChange={(e) => set({ nf_instructions: e.target.value })} placeholder="Ex.: Constar o nº do pedido na NF. Enviar o XML para nfe@empresa.com.br"
+              <textarea id="bid-nf" rows={2} value={d.nf_instructions} onChange={(e) => set({ nf_instructions: e.target.value })} placeholder="Ex.: Constar o nº do pedido na NF. Enviar o XML para nfe@empresa.com.br"
                 className={cn(inputCls, 'resize-none text-[14px]')} />
               <div className="mt-1.5 flex flex-wrap gap-1.5">
-                {TIPS.filter((t) => !d.nf_instructions.includes(t.slice(0, 20))).map((t) => (
-                  <button key={t} type="button" onClick={() => set({ nf_instructions: `${d.nf_instructions.trim() ? `${d.nf_instructions.trim()}\n` : ''}${t}` })}
-                    className="min-h-9 cursor-pointer rounded-full border border-line px-3 text-[12px] font-medium hover:border-ink">+ {t.length > 40 ? `${t.slice(0, 38)}…` : t}</button>
+                {TIPS.filter(([, t]) => !d.nf_instructions.includes(t.slice(0, 20))).map(([label, t]) => (
+                  <button key={label} type="button" onClick={() => set({ nf_instructions: `${d.nf_instructions.trim() ? `${d.nf_instructions.trim()}\n` : ''}${t}` })}
+                    className="min-h-9 cursor-pointer rounded-full border border-line px-3 text-[12px] font-medium hover:border-ink">+ {label}</button>
                 ))}
               </div>
             </div>
-            <Field label="Observação (opcional)" value={d.notes} onChange={(e) => set({ notes: e.target.value })} autoComplete="off" />
           </div>
         )}
 

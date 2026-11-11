@@ -39,10 +39,13 @@ export function BidsSection({ clientId }: { clientId: string }) {
   const [notice, setNotice] = useState<string | null>(null)
   const queryClient = useQueryClient()
   const today = todayBR()
+  useEffect(() => { if (want === 'nova') setEditing('nova') }, [want])
+  const loaded = !!bids.data
   useEffect(() => {
-    if (want === 'nova') setEditing('nova')
-    else if (want) window.setTimeout(() => document.getElementById(`licitacao-${want}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200)
-  }, [want, bids.data])
+    if (!want || want === 'nova' || !loaded) return
+    const t = window.setTimeout(() => document.getElementById(`licitacao-${want}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200)
+    return () => window.clearTimeout(t)
+  }, [want, loaded])
   const clearParam = () => setParams((c) => { const p = new URLSearchParams(c); if (p.get('licitacao') === 'nova') p.delete('licitacao'); return p }, { replace: true })
   const refresh = () => { for (const k of ['bids', 'bid-alerts', 'invoices', 'client-invoices', 'fin-entries']) void queryClient.invalidateQueries({ queryKey: [k] }) }
   const cancel = useMutation({ mutationFn: cancelOrder, onSuccess: () => { setNotice('OS cancelada. O crédito voltou para o saldo.'); refresh() }, onError: (e) => setNotice((e as Error).message) })
@@ -127,5 +130,20 @@ function OrderRow({ o, today, onDone, onNf, onCancel }: { o: BidOrder; today: st
         ]} />
       )}
     </li>
+  )
+}
+
+/** Caixa: o crédito de licitação ainda não usado, como receita prevista (sem alarde; some quando é zero). */
+export function BidForecastLine({ unit }: { unit: 'peformake' | 'ellcazo' }) {
+  const bids = useQuery({ queryKey: bidKeys.list(null), queryFn: () => listBids(null), staleTime: 300_000 })
+  const today = todayBR()
+  const mine = (bids.data ?? []).filter((b) => b.status === 'ativa' && b.unit === unit && (!b.ends_on || b.ends_on >= today))
+  const left = mine.reduce((a, b) => a + balance(b, today).left, 0)
+  if (left < 0.01) return null
+  const end = mine.map((b) => b.ends_on).filter(Boolean).sort()[0]
+  return (
+    <a href="/financeiro/cobranca?tipo=licitacao" className="self-start rounded-full bg-raised px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:bg-line max-md:order-last">
+      Licitações: {brl(left)} de crédito a usar{mine.length > 1 ? ` em ${mine.length} pedidos` : ''}{end ? ` · até ${dayLabel(end)}/${end.slice(0, 4)}` : ''} →
+    </a>
   )
 }
