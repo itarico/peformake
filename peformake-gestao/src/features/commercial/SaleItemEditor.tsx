@@ -1,7 +1,7 @@
 import { Minus, Plus } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { AREA_LABEL, type Service } from '@/features/catalog/ServiceCatalog'
-import { itemTotals, unitOf, type DiscountType, type SaleItemDraft, type SaleKind } from './saleRules'
+import { itemTotals, parseMoney, unitOf, type DiscountType, type SaleItemDraft, type SaleKind } from './saleRules'
 
 export const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 export const chip = (on: boolean) => cn('min-h-10 cursor-pointer rounded-full border px-3 text-[13px] font-semibold', on ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:border-line-strong hover:text-ink')
@@ -24,6 +24,9 @@ export function SaleItemEditor({ item, service, onChange, canSeePrices, canEditP
   const set = (patch: Partial<SaleItemDraft>) => onChange({ ...item, ...patch })
   const money = (n: number | null | undefined) => (canSeePrices && n != null ? ` · ${brl(Number(n))}` : '')
   const ellcazo = unitOf(service) === 'ellcazo'
+  const variant = variants.find((v) => v.id === item.variantId)
+  const catalogPrice = variant ? Number(variant.price ?? 0) : variants.length > 0 ? 0 : Number(service.price ?? 0)
+  const priceDiff = item.price.trim() && catalogPrice > 0 ? Math.round((parseMoney(item.price) - catalogPrice) * 100) / 100 : 0
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -67,8 +70,22 @@ export function SaleItemEditor({ item, service, onChange, canSeePrices, canEditP
           <option value="">Sem desconto</option><option value="percent">Desconto %</option><option value="fixed">Desconto R$</option>
         </select>
         {item.discountType && <input aria-label={item.discountType === 'percent' ? 'Percentual de desconto' : 'Desconto em reais'} inputMode="decimal" value={item.discount} onChange={(e) => set({ discount: e.target.value })} placeholder={item.discountType === 'percent' ? '10' : '100,00'} className={cn(field, 'w-24')} />}
-        {canEditPrice && <input inputMode="decimal" value={item.price} placeholder={`Preço ${t.base > 0 && !item.price ? String(t.base).replace('.', ',') : ''}`.trim()} onChange={(e) => set({ price: e.target.value })} className={cn(field, 'w-28')} aria-label="Preço unitário (deixe vazio para usar o do catálogo)" />}
+        {canEditPrice && (
+          <label className="inline-flex items-center gap-1.5 rounded-xl border border-line-strong bg-surface pl-3 text-[13px] font-semibold text-muted">
+            Valor R$
+            <input inputMode="decimal" value={item.price} placeholder={catalogPrice > 0 ? String(catalogPrice).replace('.', ',') : '0,00'}
+              onChange={(e) => set({ price: e.target.value })} autoComplete="off"
+              className="min-h-10 w-24 rounded-r-xl bg-transparent pr-3 font-normal text-ink outline-none"
+              aria-label="Valor da unidade (vazio = preço do catálogo)" />
+          </label>
+        )}
       </div>
+      {canEditPrice && priceDiff !== 0 && (
+        <p className={cn('text-[13px] font-semibold', priceDiff > 0 ? 'text-ok-ink' : 'text-warn-ink')}>
+          {priceDiff > 0 ? '+' : '−'}{brl(Math.abs(priceDiff))} {priceDiff > 0 ? 'acima' : 'abaixo'} do catálogo ({brl(catalogPrice)})
+          <button type="button" onClick={() => set({ price: '' })} className="ml-2 cursor-pointer font-normal text-muted underline">voltar ao catálogo</button>
+        </p>
+      )}
       {t.needsVariant && <p className="text-[13px] text-muted">Escolha uma variação.</p>}
       {canSeePrices && !t.needsVariant && t.base <= 0 && <p className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">Este serviço não tem preço no catálogo. O admin define em Comercial → Serviços e pacotes.</p>}
     </div>
