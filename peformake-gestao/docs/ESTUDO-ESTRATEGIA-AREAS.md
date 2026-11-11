@@ -165,3 +165,18 @@ Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver deta
 - **Limites honestos:** só ~6 semanas de histórico (melhora a cada mês), sem Google Ads e sem vendas reais; para ligar o
   Google Ads é preciso o developer token (ESTUDO-MCPS-APIS.md) ou um conector (ex.: Windsor).
 - **Custo estimado:** ~US$ 1,5 por cliente/mês (Opus) → ~US$ 15 a 20/mês para os clientes de tráfego.
+
+### 14.1 Reforço do Italo: estrategista digital de verdade, 100% voltado a resultado
+- O tráfego também cobre **criativo e vídeo, mas voltados ao anúncio**: melhor forma de comunicação no nicho, estilos de
+  vídeo que estão performando (gancho, duração, formato, UGC, depoimento, oferta direta), tipos de venda que dão certo no
+  nicho (ex.: WhatsApp direto, agendamento, cupom, oferta relâmpago), referências de anúncios vencedores (Biblioteca de
+  Anúncios) com link. Os pedidos de criativo saem para Design/Audiovisual já com esse briefing de performance.
+
+## 15. Portal do cliente com código no WhatsApp (pedido do Italo)
+- Hoje: o portal abre por um link pessoal (#token); quem tiver o link entra.
+- Proposta: o cliente abre o portal → toca "Receber código" → o sistema manda no WhatsApp dele (número do cadastro) um
+  **código de 4 dígitos** numa mensagem curta só com o código (fácil de copiar com toque longo; botão "copiar código" só
+  existe na API oficial do WhatsApp, não na Wasender) → ele digita → **acesso liberado por 24 horas naquele aparelho**.
+- Segurança: código vale 10 minutos, no máximo 5 tentativas, guardado só como hash; novo código no máximo a cada 1 minuto;
+  registro de acessos.
+- Exceção à regra "envio ao cliente sempre confirmado por humano": o código é pedido pelo próprio cliente. Precisa do OK do Italo.
