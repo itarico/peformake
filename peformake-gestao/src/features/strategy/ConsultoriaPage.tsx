@@ -20,6 +20,9 @@ import { Paged, SlideViewer } from './SlideViewer'
 import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow, type ConsultSection } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 
+// Custo aproximado de refazer cada parte com a IA (Fable 5.2), para a confirmação.
+const REDO_USD: Record<string, string> = { inteligencia: '1,00', do_cliente: '1,00', diagnostico: '1,10', comunicacao: '0,70', plano: '0,60', resumo: '0,50', riscos: '0,50' }
+
 const TONE = {
   warn: 'bg-warn-soft text-warn-ink', info: 'bg-accent-soft text-accent-ink', ok: 'bg-ok-soft text-ok-ink',
   muted: 'bg-raised text-muted', bad: 'bg-[#e5484d]/10 text-[#c4373b] dark:text-[#ff8589]',
@@ -78,7 +81,6 @@ export function ConsultoriaPage() {
                 {a.kind === 'dados' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setInfo(r)}>{a.label}</Button>}
                 {a.kind === 'abrir' && <Button variant={r.status === 'pronto' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => open(r.client_id)}>{a.label}</Button>}
                 {a.kind === 'gerar' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={gen.isPending} onClick={() => gen.mutate(r)}>{a.label}</Button>}
-                {a.kind === 'aguardar' && <span className="shrink-0 px-1 text-[12px] text-muted" title={a.label === 'Amanhã' ? 'Próxima geração liberada amanhã' : undefined}>{a.label === 'Amanhã' ? 'Libera amanhã' : ''}</span>}
                 <ChevronRight size={16} aria-hidden="true" className="shrink-0 text-muted max-sm:hidden" />
               </li>
             )
@@ -164,7 +166,6 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const ready = !!doc.resumo && !!d && ['pronto', 'aprovado', 'enviado'].includes(d.status)
   const approved = !!d && ['aprovado', 'enviado'].includes(d.status)
   const [deckOpen, setDeckOpen] = useState(false)
-  const canGen = row?.can_generate ?? false
   const status = (d?.status ?? row?.status ?? 'na_fila') as ConsultRow['status']
 
   const redo = (s: ConsultSection) => act.mutate(() => redoSection(clientId, s))
@@ -200,20 +201,20 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         <div data-conteudo className="rounded-3xl border border-line bg-surface p-5 text-[14px]">
           {status === 'gerando' && <p className="flex items-center gap-2"><Sparkles size={16} aria-hidden="true" className="text-accent-ink" /> A IA está {statusChip({ status, document: null, stage: d?.stage ?? null }).sub ?? 'trabalhando'}. Leva uns 10 minutos; pode sair da tela.</p>}
           {status === 'falta_dados' && <p>Falta o CPF ou CNPJ. Com ele, a Receita preenche a empresa e a IA começa o diagnóstico.</p>}
-          {status === 'na_fila' && <p>Na fila. {canGen ? 'Começa em instantes (ou toque em Gerar agora).' : 'Próxima geração liberada amanhã.'}</p>}
+          {status === 'na_fila' && <p>Na fila. Começa em instantes (ou toque em Gerar agora).</p>}
           {status === 'limite' && <p>Limite do mês com IA atingido. Volta sozinho no mês que vem (ou o administrador aumenta o limite em Configurações → Automações).</p>}
-          {status === 'erro' && <p>Não deu certo: {d?.error ?? 'erro desconhecido'}. {canGen ? '' : 'Próxima geração liberada amanhã.'}</p>}
-          {(status === 'na_fila' || status === 'erro') && canGen && <Button className="mt-3" disabled={act.isPending} onClick={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}>Gerar agora</Button>}
+          {status === 'erro' && <p>Não deu certo: {d?.error ?? 'erro desconhecido'} Toque em Gerar agora para tentar de novo.</p>}
+          {(status === 'na_fila' || status === 'erro') && <Button className="mt-3" disabled={act.isPending} onClick={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}>Gerar agora</Button>}
         </div>
       )}
 
       {ready && (
         <div data-conteudo>
           {((doc.avisos ?? []) as string[]).map((a) => <p key={a} className="mb-2 rounded-xl bg-raised px-3 py-2 text-[12.5px] text-muted">{a} A análise usou a pesquisa na web no lugar.</p>)}
-          <SlideViewer input={deckInput} canRedo={canGen && !act.isPending && status !== 'gerando'}
-            onRedo={async (sec, label) => { if (await ask(`Refazer "${label}"? Conta como a geração do dia deste cliente.`)) redo(sec === 'inteligencia' ? 'do_cliente' : sec) }}
+          <SlideViewer input={deckInput} canRedo={!act.isPending && status !== 'gerando'}
+            onRedo={async (sec, label) => { if (await ask(`Refazer "${label}"? Isso usa a IA de novo (≈US$ ${REDO_USD[sec] ?? '1'}).`)) redo(sec === 'inteligencia' ? 'do_cliente' : sec) }}
             footer={<Button variant="link" onClick={() => setSources(true)}>Fontes e frameworks</Button>} />
-          <p className="mt-1 text-[12px] text-muted">{canGen ? `Gerado ${ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}. 1 geração por dia por cliente.` : 'Próxima geração liberada amanhã.'}</p>
+          <p className="mt-1 text-[12px] text-muted">Gerado {ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}.</p>
         </div>
       )}
       {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}

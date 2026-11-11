@@ -30,8 +30,8 @@ describe('ação de 1 toque', () => {
     expect(rowAction(row({ status: 'aprovado' })).kind).toBe('abrir')
   })
   it('já gerou hoje: espera até amanhã (1 por dia)', () => {
-    expect(rowAction(row({ status: 'na_fila', can_generate: false })).label).toBe('Amanhã')
-    expect(rowAction(row({ status: 'erro', can_generate: false })).kind).toBe('aguardar')
+    expect(rowAction(row({ status: 'na_fila', can_generate: false })).label).toBe('Gerar agora') // sem limite por dia
+    expect(rowAction(row({ status: 'erro', can_generate: false })).kind).toBe('gerar')
     expect(rowAction(row({ status: 'erro', can_generate: true })).kind).toBe('gerar')
   })
 })

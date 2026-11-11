@@ -188,13 +188,13 @@ export function gaugeSvg(value: number | null | undefined, label = 'Maturidade d
 
 /** Você × referência por métrica (cada linha na sua escala: unidades diferentes). */
 export function comparisonSvg(rows: Doc[], clientName: string): string {
-  const W = 600, rowH = 74, H = rows.length * rowH + 34, x0 = 210, bw = W - x0 - 80
+  const W = 640, rowH = 74, H = rows.length * rowH + 34, x0 = 270, bw = W - x0 - 90
   let body = `<g transform="translate(${x0},8)"><rect width="12" height="12" rx="3" fill="${SERIES[0]}"/><text x="18" y="11" font-size="13" fill="${INK}">${esc(cut(clientName, 22))}</text><rect x="190" width="12" height="12" rx="3" fill="${SERIES[3]}"/><text x="208" y="11" font-size="13" fill="${INK}">Referência</text></g>`
   rows.forEach((r, i) => {
     const y = 34 + i * rowH, a = isNum(r.cliente) ? Math.max(0, r.cliente) : 0, b = isNum(r.referencia) ? Math.max(0, r.referencia) : 0, max = Math.max(a, b, 1e-9)
     const val = (v: number) => `${v.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}${r.unidade && String(r.unidade).length <= 4 ? ` ${esc(r.unidade)}` : ''}`
-    body += `<text x="${x0 - 12}" y="${y + 22}" text-anchor="end" font-size="14" font-weight="700" fill="${INK}">${esc(cut(String(r.metrica), 26))}</text>`
-    body += `<text x="${x0 - 12}" y="${y + 40}" text-anchor="end" font-size="11.5" fill="${INK}" fill-opacity="0.6">vs ${esc(cut(String(r.referencia_nome ?? ''), 28))}</text>`
+    body += `<text x="${x0 - 12}" y="${y + 22}" text-anchor="end" font-size="14" font-weight="700" fill="${INK}">${esc(cut(String(r.metrica), 34))}</text>`
+    body += `<text x="${x0 - 12}" y="${y + 40}" text-anchor="end" font-size="11.5" fill="${INK}" fill-opacity="0.6">vs ${esc(cut(String(r.referencia_nome ?? ''), 38))}</text>`
     body += `<rect x="${x0}" y="${y + 8}" width="${Math.max(3, (a / max) * bw)}" height="20" rx="6" fill="${SERIES[0]}"/><text x="${x0 + Math.max(3, (a / max) * bw) + 8}" y="${y + 23}" font-size="14" font-weight="700" fill="${INK}">${val(a)}</text>`
     body += `<rect x="${x0}" y="${y + 32}" width="${Math.max(3, (b / max) * bw)}" height="20" rx="6" fill="${SERIES[3]}"/><text x="${x0 + Math.max(3, (b / max) * bw) + 8}" y="${y + 47}" font-size="14" font-weight="700" fill="${INK}">${val(b)}</text>`
   })
@@ -229,11 +229,16 @@ export function riskMatrixSvg(rows: Doc[]): string {
   })
   body += `<text x="${L + 1.5 * S}" y="${H - 4}" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">Probabilidade</text>`
   body += `<text transform="translate(14 ${T + 1.5 * S}) rotate(-90)" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">Impacto</text>`
-  const seen = new Map<string, number>()
-  rows.forEach((r, i) => {
-    const x = ix(r.probabilidade), y = ix(r.impacto), key = `${x}:${y}`, n = seen.get(key) ?? 0; seen.set(key, n + 1)
-    const cx = L + x * S + S / 2 + (n % 2 ? 22 : n ? -22 : 0), cy = T + (2 - y) * S + S / 2 + (n > 1 ? 22 : 0)
-    body += `<circle cx="${cx}" cy="${cy}" r="17" fill="${INK}"/><text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">${i + 1}</text>`
-  })
+  const cells = new Map<string, number[]>()
+  rows.forEach((r, i) => { const k = `${ix(r.probabilidade)}:${ix(r.impacto)}`; cells.set(k, [...(cells.get(k) ?? []), i]) })
+  const OFF: Record<number, [number, number][]> = { 1: [[0, 0]], 2: [[-18, 0], [18, 0]], 3: [[-18, -16], [18, -16], [0, 18]], 4: [[-18, -18], [18, -18], [-18, 18], [18, 18]] }
+  for (const [k, idx] of cells) {
+    const [x, y] = k.split(':').map(Number) as [number, number]
+    idx.slice(0, 4).forEach((i, n) => {
+      const [dx, dy] = OFF[Math.min(4, idx.length)]![n]!
+      const cx = L + x * S + S / 2 + dx, cy = T + (2 - y) * S + S / 2 + dy
+      body += `<circle cx="${cx}" cy="${cy}" r="15" fill="${INK}"/><text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">${i + 1}</text>`
+    })
+  }
   return svg(W, H, body, 'Matriz de riscos: probabilidade e impacto')
 }

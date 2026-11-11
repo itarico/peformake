@@ -46,8 +46,9 @@ export function rowAction(r: Pick<ConsultRow, 'status' | 'can_generate'>): { kin
   if (r.status === 'falta_dados') return { kind: 'dados', label: 'Informar CNPJ' }
   if (r.status === 'pronto') return { kind: 'abrir', label: 'Revisar' }
   if (r.status === 'aprovado' || r.status === 'enviado') return { kind: 'abrir', label: 'Abrir' }
-  if (r.status === 'erro') return r.can_generate ? { kind: 'gerar', label: 'Tentar de novo' } : { kind: 'aguardar', label: 'Amanhã' }
-  if (r.status === 'na_fila') return r.can_generate ? { kind: 'gerar', label: 'Gerar agora' } : { kind: 'aguardar', label: 'Amanhã' }
+  // Sem limite por dia: o que segura o gasto é o teto do mês (ai_settings.monthly_cap_usd).
+  if (r.status === 'erro') return { kind: 'gerar', label: 'Tentar de novo' }
+  if (r.status === 'na_fila') return { kind: 'gerar', label: 'Gerar agora' }
   return { kind: 'aguardar', label: r.status === 'limite' ? 'Limite' : 'Gerando' }
 }
 

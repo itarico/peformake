@@ -58,6 +58,8 @@ const ICON: Record<string, string> = {
   moeda: '<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .9-3 2s1 1.7 3 2 3 1 3 2.1-1.3 2-3 2c-1.4 0-2.6-.6-3-1.6M12 6v2M12 16v2"/>',
 }
 const icon = (k: keyof typeof ICON) => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`
+/** "Assimilação (descobre a loja)" → "Descobre a loja": o nome do dia a dia fica no slide. */
+const stage = (e: unknown) => { const t = String(e ?? ''); const m = t.match(/\(([^)]+)\)/); const v = m ? m[1]! : t; return v.charAt(0).toUpperCase() + v.slice(1) }
 const bullets = (items: string[], n = 4, w = 14) => `<ul class="bul">${items.slice(0, n).map((t) => `<li>${esc(words(t, w))}</li>`).join('')}</ul>`
 
 /** Lista de slides (o modelo). `internal` inclui os slides só da equipe (tela). */
@@ -97,7 +99,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
   const desc = arr(intel.descobertas)
   chunk(desc, land ? 3 : 3).forEach((g, i, all) => add({
     title: all.length > 1 ? `O que descobrimos (${i + 1}/${all.length})` : 'O que descobrimos', kicker: 'Descobertas', section: 'inteligencia',
-    body: `<div class="${land ? 'grid g3' : 'stack'}">${g.map((x) => { const [lab, col] = TIPO[x.tipo] ?? ['Achado', SERIES[0]]; return `<div class="card find" style="--c:${col}"><p class="tag">${esc(lab)}</p><p class="num-big clamp-1">${esc(words(x.numero, 5))}</p><h3 class="clamp-3">${esc(words(x.titulo, 14))}</h3></div>` }).join('')}</div>`,
+    body: `<div class="${land ? 'grid g3' : 'stack'}">${g.map((x) => { const [lab, col] = TIPO[x.tipo] ?? ['Achado', SERIES[0]]; return `<div class="card find" style="--c:${col}"><p class="tag">${esc(lab)}</p><p class="num-big${String(x.numero ?? '').length > 12 ? ' long' : ''} clamp-2">${esc(words(x.numero, 6))}</p><h3 class="clamp-3">${esc(words(x.titulo, 14))}</h3></div>` }).join('')}</div>`,
     details: { title: 'O que descobrimos', items: g.map((x) => ({ k: x.titulo, v: `${x.explicacao}${x.evidencia ? ` (Fonte: ${x.evidencia})` : ''}`, url: isUrl(x.evidencia) ? x.evidencia : undefined })) },
   }))
   if (!desc.length && strs(r.decisoes).length) add({ title: 'As decisões que importam', kicker: 'Resumo', section: 'resumo', body: bullets(strs(r.decisoes), 3) })
@@ -135,11 +137,11 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
 
   // 5. Público
   const per = d.publico?.persona
-  if (per?.nome) add({ title: `Para quem vender: ${String(per.nome).split(/[\s(,]/)[0]}${/^\d/.test(String(per.idade ?? '')) ? `, ${words(per.idade, 3)}` : ''}`, kicker: 'Público', section: 'diagnostico',
+  if (per?.nome) add({ title: `Para quem vender: ${String(per.nome).split(/[\s(,]/)[0]}${/^\d/.test(String(per.idade ?? '')) && String(per.idade).length <= 10 ? `, ${per.idade}` : ''}`, kicker: 'Público', section: 'diagnostico',
     body: `<div class="cols2"><div class="card">${icon('pessoas')}<h3>O que tira o sono</h3>${bullets(strs(per.dores), 3, 10)}</div><div class="card soft">${icon('fala')}<h3>O que faz desistir</h3>${bullets(strs(per.objecoes).length ? strs(per.objecoes) : strs(per.desejos), 3, 10)}</div></div>`,
     details: { title: 'Persona e cliente ideal', items: [{ k: 'Quem é', v: per.quem_e }, ...strs(per.desejos).map((t) => ({ k: 'Desejo', v: t })), { k: 'Cliente ideal', v: d.publico?.icp ?? '' }].filter((x) => x.v) } })
   const jor = arr(d.publico?.jornada)
-  if (jor.length) add({ title: 'A jornada de compra', kicker: 'Público', section: 'diagnostico', body: `<ol class="journey">${jor.slice(0, 5).map((j, i) => `<li style="--c:${SERIES[i % SERIES.length]}"><span class="num">${i + 1}</span><b class="clamp-2">${esc(words(j.etapa, 4))}</b><p class="clamp-3">${esc(words(j.o_que_fazer, 12))}</p></li>`).join('')}</ol>`,
+  if (jor.length) add({ title: 'A jornada de compra', kicker: 'Público', section: 'diagnostico', body: `<ol class="journey">${jor.slice(0, 5).map((j, i) => `<li style="--c:${SERIES[i % SERIES.length]}"><span class="num">${i + 1}</span><b class="clamp-2">${esc(words(stage(j.etapa), 4))}</b><p class="clamp-3">${esc(words(j.o_que_fazer, 12))}</p></li>`).join('')}</ol>`,
     details: { title: 'Jornada', items: jor.map((j) => ({ k: j.etapa, v: `Hoje: ${j.o_que_acontece} · Fazer: ${j.o_que_fazer}` })) } })
   if (d.proposta_valor?.equacao || strs(d.proposta_valor?.diferenciais).length) add({ title: 'Por que comprar de você', kicker: 'Proposta de valor', section: 'diagnostico',
     body: `${d.proposta_valor?.equacao ? `<p class="callout">${esc(words(d.proposta_valor.equacao, 22))}</p>` : ''}${bullets(strs(d.proposta_valor?.diferenciais), 3, 12)}`,
@@ -148,7 +150,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
   // 6. Oportunidades e testes
   const ops = arr(intel.oportunidades)
   if (ops.length) add({ title: 'Oportunidades com maior retorno', kicker: 'Oportunidades', section: 'inteligencia',
-    body: `<div class="grid ${land ? 'g4' : 'g2'}">${ops.slice(0, 4).map((x, i) => `<div class="card op" style="--c:${SERIES[i % SERIES.length]}">${icon('moeda')}<h3 class="clamp-3">${esc(words(x.titulo, 10))}</h3><p class="est clamp-2">${esc(words(x.estimativa, 9))}</p><p class="tags"><span>Impacto ${esc(LEVEL[x.impacto] ?? x.impacto)}</span><span>Esforço ${esc(LEVEL[x.esforco] ?? x.esforco)}</span></p></div>`).join('')}</div>`,
+    body: `<div class="grid ${land ? 'g4' : 'g2'}">${ops.slice(0, 4).map((x, i) => `<div class="card op" style="--c:${SERIES[i % SERIES.length]}">${icon('moeda')}<h3 class="clamp-3">${esc(words(x.titulo, 10))}</h3><p class="clamp-3">${esc(words(String(x.estimativa ?? '').replace(/^estimativa:\s*/i, ''), 14))}</p><p class="tags"><span>Impacto ${esc(LEVEL[x.impacto] ?? x.impacto)}</span><span>Esforço ${esc(LEVEL[x.esforco] ?? x.esforco)}</span></p></div>`).join('')}</div>`,
     details: { title: 'Como fazer', items: ops.map((x) => ({ k: x.titulo, v: `${x.como} · Estimativa: ${x.estimativa}` })) } })
   const hip = arr(intel.hipoteses)
   if (hip.length) add({ title: 'O que vamos testar primeiro', kicker: 'Hipóteses', section: 'inteligencia',
@@ -181,12 +183,13 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
   fases.forEach((f, fi) => {
     const steps = arr(f.passos)
     if (!steps.length) return
-    add({ title: words(f.objetivo, 12) || f.periodo, kicker: `Plano · ${f.periodo}`, section: 'plano',
+    const head = String(f.objetivo ?? '').split(/[:.]/)[0]!.trim()
+    add({ title: head && head.split(/\s+/).length <= 7 ? `${f.periodo}: ${head.charAt(0).toLowerCase()}${head.slice(1)}` : `Os primeiros passos: ${f.periodo}`, kicker: `Plano de ação · fase ${fi + 1} de ${fases.length}`, section: 'plano',
       body: `<ol class="steps">${steps.slice(0, 4).map((s, i) => `<li><span class="num" style="background:${SERIES[fi % SERIES.length]};color:#fff">${i + 1}</span><span><b class="clamp-2">${esc(words(s.acao, 12))}</b><span class="tags"><span class="acc">${esc(WHO[s.quem] ?? s.quem)}</span><span>${esc(EFFORT[s.esforco] ?? s.esforco)}</span><span>${esc(s.area)}</span></span></span></li>`).join('')}</ol>`,
       details: { title: `Como fazer · ${f.periodo}`, items: steps.map((s) => ({ k: s.acao, v: `${s.como} (${WHO[s.quem] ?? s.quem}, esforço ${EFFORT[s.esforco] ?? s.esforco})` })) } })
   })
   const ind = arr(p.indicadores)
-  if (ind.length) add({ title: 'Números que vamos acompanhar', kicker: 'Plano de ação', section: 'plano', body: `<div class="grid ${land ? 'g4' : 'g2'}">${ind.slice(0, 4).map((n, i) => `<div class="card ind" style="--c:${SERIES[i % SERIES.length]}">${icon('grafico')}<p class="meta-big clamp-2">${esc(words(n.meta, 7))}</p><h3 class="clamp-2">${esc(words(n.nome, 6))}</h3></div>`).join('')}</div>`,
+  if (ind.length) add({ title: 'Números que vamos acompanhar', kicker: 'Plano de ação', section: 'plano', body: `<div class="grid ${land ? 'g4' : 'g2'}">${ind.slice(0, 4).map((n, i) => `<div class="card ind" style="--c:${SERIES[i % SERIES.length]}">${icon('grafico')}<h3 class="clamp-3">${esc(words(n.nome, 8))}</h3><p class="clamp-3">Meta: ${esc(words(n.meta, 12))}</p></div>`).join('')}</div>`,
     details: { title: 'Como medir', items: ind.map((n) => ({ k: n.nome, v: `Meta: ${n.meta} · ${n.como_medir}` })) } })
 
   // 10. Riscos (1 slide: matriz) e perguntas (1 slide, máx. 7)
@@ -200,7 +203,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
     body: `<ol class="qs">${qs.map((q, k) => `<li><span class="num">${k + 1}</span><div><b class="clamp-2">${esc(words(q.question, 16))}</b>${q.answer ? `<p class="ans clamp-1">✓ ${esc(words(q.answer, 14))}</p>` : ''}</div></li>`).join('')}</ol>`,
     details: { title: 'Por que perguntamos', items: qs.map((q) => ({ k: q.question, v: q.why ?? '' })) } })
 
-  add({ kind: 'cover', section: 'resumo', body: `${brand}<div class="cover-mid"><p class="kicker">Próximo passo</p><h1>${esc(words(r.primeiro_passo || 'Uma conversa de 30 minutos para passar o plano', 14))}</h1></div><p class="cover-foot">Peformake · assessoria de marketing</p>` })
+  add({ kind: 'cover', section: 'resumo', body: `${brand}<div class="cover-mid"><p class="kicker">Próximo passo</p><h1>${r.primeiro_passo && String(r.primeiro_passo).split(/\s+/).length <= 10 ? esc(r.primeiro_passo) : 'Começar esta semana'}</h1>${r.primeiro_passo && String(r.primeiro_passo).split(/\s+/).length > 10 ? `<p class="lead">${esc(words(r.primeiro_passo, 26))}</p>` : ''}</div><p class="cover-foot">Peformake · assessoria de marketing</p>` })
   return out
 }
 
@@ -230,7 +233,7 @@ export function deckCss(o: Orientation): string {
   .pfd .cover .cli-mono{display:inline-grid;place-items:center;width:${f(7)};height:${f(7)};border-radius:${f(1.8)};background:var(--fill);color:#062a31;font-weight:800;font-size:${f(2.8)};margin-bottom:${f(1.8)}}
   .pfd .cover .kicker{color:var(--fill);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:${f(1.4)}}
   .pfd .cover .cover-mid{padding-bottom:${f(1)}} .pfd .cover h1{font-size:${f(5.6)};line-height:1.08;font-weight:800;letter-spacing:-.03em;margin-top:${f(.8)};max-width:${land ? '78cqw' : '84cqw'}}
-  .pfd .cover .cover-foot{opacity:.75;font-size:${f(1.2)}}
+  .pfd .cover .cover-foot{opacity:.75;font-size:${f(1.2)}} .pfd .cover .lead{color:#fff;opacity:.9;margin-top:${f(1.4)};max-width:${land ? '70cqw' : '84cqw'}}
   .pfd .statement{background:var(--canvas)} .pfd .statement>.in{justify-content:center}
   .pfd .statement .content{justify-content:center;gap:${f(3)}}
   .pfd .big{font-size:${f(4.2)};line-height:1.14;font-weight:750;letter-spacing:-.025em}
@@ -250,7 +253,7 @@ export function deckCss(o: Orientation): string {
   .pfd .card h3{font-size:${f(2)};line-height:1.2;font-weight:700}
   .pfd .card p{font-size:${f(1.6)}}
   .pfd .find{border-top:${f(.6)} solid var(--c)} .pfd .card.find .tag{color:var(--c);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)}}
-  .pfd .card .num-big{font-size:${f(4.6)};line-height:1;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+  .pfd .card .num-big.long{font-size:${f(3)}} .pfd .card .num-big{font-size:${f(4.6)};line-height:1;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
   .pfd .stack .find{display:grid;grid-template-columns:${f(26)} 1fr;align-items:center;column-gap:${f(2)}} .pfd .stack .find .tag{grid-column:1/-1}
   .pfd .op{border-top:${f(.6)} solid var(--c)} .pfd .card.op .est{font-weight:800;color:var(--acc);font-size:${f(1.9)};line-height:1.15}
   .pfd .card.ind .meta-big{font-size:${f(2.8)};line-height:1.05;font-weight:800;color:var(--c)}
@@ -280,7 +283,7 @@ export function deckCss(o: Orientation): string {
   .pfd .card .tags{margin-top:auto}
   .pfd .tbl{width:100%;border-collapse:collapse;font-size:${f(1.9)}} .pfd .tbl th{text-align:left;color:var(--muted);font-weight:700;font-size:${f(1.3)};text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--line);padding:${f(.8)} ${f(1)}}
   .pfd .tbl td{border-bottom:1px solid var(--line);padding:${f(1.3)} ${f(1)};vertical-align:middle} .pfd .tbl td small{color:var(--muted);font-size:.75em} .pfd .tbl tr.me td{background:var(--soft)} .pfd .tbl tr.me td:first-child b{color:var(--acc)}
-  .pfd .chart-only{flex:1;min-height:0;display:flex;justify-content:center;align-items:center;color:var(--ink)} .pfd .chart-only svg{height:100%;max-height:${land ? '36cqw' : '95cqw'};width:auto!important;max-width:100%}
+  .pfd .chart-only{flex:1;min-height:0;display:flex;justify-content:center;align-items:center;color:var(--ink)} .pfd .chart-only svg{${land ? 'height:100%;max-height:36cqw;width:auto!important;max-width:100%' : 'width:100%!important;height:auto;max-height:110cqw'}}
   .pfd .chart-wide svg{max-height:${land ? '9cqw' : '22cqw'}}
   .pfd .split-r{display:grid;grid-template-columns:${land ? '1fr 1fr' : '1fr'};gap:${f(2)};align-items:center} .pfd .split-r svg{max-height:${land ? '32cqw' : '62cqw'};width:auto!important;margin:0 auto}
   .pfd .legend{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .legend li{display:flex;gap:${f(1.2)};align-items:center;font-size:${f(1.8)};line-height:1.25} .pfd .legend .num{background:var(--ink);color:#fff;width:${f(2.8)};height:${f(2.8)}}

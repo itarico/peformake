@@ -2,7 +2,7 @@
 
 Pedido do Italo: cada área separada, mas todas conversando; cada uma pede o obrigatório do cliente antes de gerar;
 o sistema não se baseia só nos dados automáticos, existe uma área de **direcionamento do cliente**; área para
-**gerar roteiro**; **1 geração por dia por cliente**. Gerado pela API do Claude (não por rotinas).
+**gerar roteiro**; sem limite diário, só o teto mensal de gasto. Gerado pela API do Claude (não por rotinas).
 
 ## 1. Como as áreas conversam: o "contexto do cliente"
 Cada área tem o seu gerador, mas todas leem a mesma base, montada pelo sistema a cada geração:
@@ -53,11 +53,9 @@ Cada geração vem para **revisão** (aprovar, refazer, editar). Nada vai ao cli
 - Usa: tom de voz, oferta do tráfego, pauta do social, referências do nicho, o que já funcionou com o cliente.
 - Sai pronto para o fluxo atual: Roteiro → aprovação (equipe ou cliente no portal) → Aguardando captação.
 
-## 5. Limite: 1 geração por dia por cliente
-- Gravado no banco, não só na tela. Ao bater o limite: "Próxima geração liberada amanhã".
-- Conta tudo: gerar, refazer seção, refazer roteiro.
-- **Dúvida para o Italo:** o limite é **por cliente em cada área** (ex.: no mesmo dia, 1 roteiro + 1 plano de tráfego)
-  ou **1 por cliente no dia somando todas as áreas**? Recomendação: por área, senão um roteiro trava o plano do mês.
+## 5. Limite: sem trava diária; teto mensal de gasto (decisão do Italo, 11/11)
+- Não há mais limite de gerações por dia: gerar e refazer seção ficam sempre liberados, com confirmação do custo aproximado ("Refazer? Isso usa a IA de novo (≈US$ X).").
+- Cada geração continua registrada (ai_generations) e cada chamada em ai_usage_log.
 - Trava de gasto geral: US$ 90 por mês (já na Fase 1).
 
 ## 6. Custo estimado (preços de 11/11/2026)
@@ -123,7 +121,7 @@ Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver deta
 ## 13. Aba Vendas (nova área de estratégia)
 - Estratégia de vendas para o cliente: funil comercial, roteiro de atendimento no WhatsApp, oferta e objeções,
   follow-up, metas e conversão (cruza com os contatos que o tráfego gera e com as conversas).
-- Mesmo padrão: direcionamento + perguntas do mês + geração 1/dia + revisão + apresentação.
+- Mesmo padrão: direcionamento + perguntas do mês + geração (teto mensal) + revisão + apresentação.
 
 ## Ordem sugerida (atualizada)
 1. Consultoria 1.1 (em construção: edição, apresentação vertical/paisagem, PDF só após aprovar, link público vivo, portal).
@@ -147,7 +145,7 @@ Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver deta
 - **Só tráfego pago.** Itens de outras áreas viram **pedidos** automáticos para Design/Audiovisual/Social/Consultoria
   (com a quantidade e o motivo), e não itens para o gestor de tráfego revisar.
 - **Entradas:** direcionamento do mês (o mesmo de todas as áreas + verba) e perguntas do mês ao cliente (fila/link).
-- **Motor (edge function, Opus, 1/dia, custo registrado), em etapas:**
+- **Motor (edge function, Fable 5.2, sem limite diário, custo registrado), em etapas:**
   1. Leitura do histórico: o que deu certo e errado por campanha, público, posicionamento e **criativo** (miniatura, gasto,
      resultado, custo por resultado), quantos criativos subimos e quanto duraram.
   2. Concorrentes e mercado: Biblioteca de Anúncios dos concorrentes, ofertas e ganchos que eles repetem.

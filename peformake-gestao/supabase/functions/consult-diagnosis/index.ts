@@ -91,7 +91,7 @@ async function runStage(db: SupabaseClient, job: Job) {
       ? 'Demorou mais que o limite; tentando de novo mais curto.'
       : err.message === 'refusal' ? 'A IA recusou o pedido.' : permanent ? `A IA recusou o pedido (${err.status}).` : 'Falha temporária; tentando de novo.'
     console.error('consult error', job.id, job.stage, err.status ?? '', String(err.message ?? e).slice(0, 300))
-    await db.from('consult_docs').update(permanent ? { status: 'erro', error: msg, busy_until: null } : { error: msg, busy_until: null }).eq('id', job.id)
+    await db.from('consult_docs').update(permanent ? { status: 'erro', error: msg, busy_until: null } : { error: msg, busy_until: null }).eq('id', job.id).eq('stage', job.stage)
     next = !permanent
   }
   if (next) await db.rpc('consult_kick')
@@ -291,11 +291,11 @@ async function stageResearch(db: SupabaseClient, ai: Anthropic, job: Job) {
   if (roundDone) research.round = round + 1
   if (roundDone && research.round! >= RESEARCH_ROUNDS.length) {
     // A coleta do Instagram (Firecrawl) vai na próxima chamada, para caber no tempo.
-    await db.from('consult_docs').update({ research, busy_until: null, error: null, attempts: 0 }).eq('id', job.id)
+    await db.from('consult_docs').update({ research, busy_until: null, error: null, attempts: 0 }).eq('id', job.id).eq('stage', job.stage)
     return
   }
   if (!progress && !roundDone) throw new Error('nenhuma parte da pesquisa terminou')
-  await db.from('consult_docs').update({ research, busy_until: null, error: null, ...(roundDone || progress ? { attempts: 0 } : {}) }).eq('id', job.id)
+  await db.from('consult_docs').update({ research, busy_until: null, error: null, ...(roundDone || progress ? { attempts: 0 } : {}) }).eq('id', job.id).eq('stage', job.stage)
 }
 
 const COLLECT_WAIT_MS = 30 * 60_000
@@ -304,7 +304,7 @@ async function finishResearch(db: SupabaseClient, job: Job, research: Research) 
   const { data: cs } = await db.from('consult_docs').select('collect_status, collect_requested_at').eq('id', job.id).maybeSingle()
   if (cs && ['pendente', 'coletando'].includes(String(cs.collect_status))) {
     if (Date.now() - Date.parse(String(cs.collect_requested_at)) < COLLECT_WAIT_MS) {
-      await db.from('consult_docs').update({ research, attempts: 0, error: null, busy_until: new Date(Date.now() + 120_000).toISOString() }).eq('id', job.id)
+      await db.from('consult_docs').update({ research, attempts: 0, error: null, busy_until: new Date(Date.now() + 120_000).toISOString() }).eq('id', job.id).eq('stage', job.stage)
       return
     }
     await db.from('consult_docs').update({ collect_status: 'expirado' }).eq('id', job.id)
@@ -315,7 +315,7 @@ async function finishResearch(db: SupabaseClient, job: Job, research: Research) 
   research.sources = all
   research.done_at = new Date().toISOString()
   const avisos = research.coleta.aviso ? [research.coleta.aviso] : []
-  await db.from('consult_docs').update({ research, stage: 'diagnostico', attempts: 0, busy_until: null, error: null, doc: { ...(job.doc ?? {}), fontes: all, avisos } }).eq('id', job.id)
+  await db.from('consult_docs').update({ research, stage: 'diagnostico', attempts: 0, busy_until: null, error: null, doc: { ...(job.doc ?? {}), fontes: all, avisos } }).eq('id', job.id).eq('stage', job.stage)
 }
 
 async function runPart(db: SupabaseClient, ai: Anthropic, job: Job, part: ResearchPart, state: Part, ctx: string, niche: string): Promise<Part> {
@@ -530,16 +530,16 @@ async function stageWrite(db: SupabaseClient, ai: Anthropic, job: Job, stage: 'd
   const ok = { attempts: 0, busy_until: null, error: null }
   if (stage === 'diagnostico' && !job.research?.intel) {
     const i = await writeIntel(db, ai, job, '')
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i) }), research: { ...(job.research ?? {}), intel: true }, ...ok }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i) }), research: { ...(job.research ?? {}), intel: true }, ...ok }).eq('id', job.id).eq('stage', job.stage)
   } else if (stage === 'diagnostico') {
     const d = await writeDiag(db, ai, job, '')
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d }), stage: 'comunicacao', ...ok }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d }), stage: 'comunicacao', ...ok }).eq('id', job.id).eq('stage', job.stage)
   } else if (stage === 'comunicacao') {
     const c = await write(db, ai, job, 'comunicacao', prev(job, ['inteligencia', 'diagnostico']))
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia }), stage: 'plano', ...ok }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia }), stage: 'plano', ...ok }).eq('id', job.id).eq('stage', job.stage)
   } else if (stage === 'plano') {
     const p = await write(db, ai, job, 'plano', prev(job, ['inteligencia', 'diagnostico', 'comunicacao', 'experiencia']))
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, plano: p }), stage: 'resumo', ...ok }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, plano: p }), stage: 'resumo', ...ok }).eq('id', job.id).eq('stage', job.stage)
   } else {
     const r = await write(db, ai, job, 'resumo', prev(job, ['inteligencia', 'diagnostico', 'comunicacao', 'plano']), 'medium')
     await saveResumo(db, job, r, null)
@@ -552,7 +552,7 @@ async function saveResumo(db: SupabaseClient, job: Job, r: Record<string, unknow
   if (!only || only === 'riscos') doc.riscos = r.riscos
   if (!only) doc.frameworks = r.frameworks
   doc.gerado_em = new Date().toISOString()
-  await db.from('consult_docs').update({ doc: keepEdits(job, doc), stage: 'done', status: 'pronto', attempts: 0, busy_until: null, error: null, redo_section: null, finished_at: new Date().toISOString() }).eq('id', job.id)
+  await db.from('consult_docs').update({ doc: keepEdits(job, doc), stage: 'done', status: 'pronto', attempts: 0, busy_until: null, error: null, redo_section: null, finished_at: new Date().toISOString() }).eq('id', job.id).eq('stage', job.stage)
   if (!only) await saveSuggestions(db, job.client_id, (r.crm ?? {}) as Record<string, string>)
 }
 
@@ -563,16 +563,16 @@ async function stageRedo(db: SupabaseClient, ai: Anthropic, job: Job) {
   const at = new Date().toISOString()
   if (section === 'diagnostico') {
     const d = await writeDiag(db, ai, job, `${note}\n\n${prev(job, ['diagnostico'])}`)
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d, gerado_em: at }), ...done }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d, gerado_em: at }), ...done }).eq('id', job.id).eq('stage', job.stage)
   } else if (section === 'do_cliente') {
     const i = await writeIntel(db, ai, job, `${note}\n\n${prev(job, ['inteligencia'])}`)
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i), gerado_em: at }), ...done }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i), gerado_em: at }), ...done }).eq('id', job.id).eq('stage', job.stage)
   } else if (section === 'comunicacao') {
     const c = await write(db, ai, job, 'comunicacao', `${note}\n\n${prev(job, ['inteligencia', 'diagnostico', 'comunicacao', 'experiencia'])}`)
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia, gerado_em: at }), ...done }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia, gerado_em: at }), ...done }).eq('id', job.id).eq('stage', job.stage)
   } else if (section === 'plano') {
     const p = await write(db, ai, job, 'plano', `${note}\n\n${prev(job, ['inteligencia', 'diagnostico', 'comunicacao', 'plano'])}`)
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, plano: p, gerado_em: at }), ...done }).eq('id', job.id)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, plano: p, gerado_em: at }), ...done }).eq('id', job.id).eq('stage', job.stage)
   } else {
     const r = await write(db, ai, job, 'resumo', `${note} Foque na parte "${section}"; o resto pode repetir.\n\n${prev(job, ['inteligencia', 'diagnostico', 'plano', section])}`, 'medium')
     await saveResumo(db, job, r, section)

@@ -10,7 +10,7 @@ const db = supabase as unknown as { from: (t: string) => any } // eslint-disable
 export const consultKey = ['consult-list'] as const
 
 function fail(e: { message: string; code?: string }): never {
-  if (e.code === 'PF012') throw new Error('Próxima geração liberada amanhã.')
+  if (e.code === 'PF012') throw new Error('Não deu para gerar agora. Tente de novo em instantes.')
   if (e.code === 'PF006') throw new Error('Confira o CPF ou CNPJ.')
   if (e.code === 'PF005') throw new Error('O diagnóstico ainda não está pronto.')
   if (e.code === '42501') throw new Error('Só administrador ou head de marketing.')
