@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Service } from '@/features/catalog/ServiceCatalog'
 import type { Sale } from './commercialRules'
-import { addDays, centsToInput, confirmedWithoutBilling, defaultKind, filterSales, needsCompletion, suggestService, firstBillingMonth, itemTotals, newItem, parseMoney, unitOf, validateNewClient } from './saleRules'
+import { addDays, centsToInput, confirmedWithoutBilling, defaultKind, filterSales, needsCompletion, suggestKind, suggestService, firstBillingMonth, itemTotals, newItem, parseMoney, unitOf, validateNewClient } from './saleRules'
 
 const svc = (over: Partial<Service> = {}): Service => ({
   id: 's1', name: 'Vídeo', area: 'audiovisual', description: null, deliverables: null, unit: 'unidade', isActive: true, price: 150, clients: 0, deliveryUnit: null,
@@ -76,5 +76,7 @@ describe('completar venda do agente', () => {
     expect(confirmedWithoutBilling({ status: 'confirmada', hasItems: false, billed: false })).toBe(true)
     expect(confirmedWithoutBilling({ status: 'confirmada', hasItems: true, billed: true })).toBe(false)
     expect(centsToInput(60000)).toBe('600,00')
+    expect(suggestKind('Cobertura fotográfica 10/11')).toBe('avulso')
+    expect(suggestKind('Plano mensal de fotos')).toBe('recorrente')
   })
 })

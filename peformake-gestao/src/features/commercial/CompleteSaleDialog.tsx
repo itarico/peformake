@@ -10,7 +10,7 @@ import type { Sale } from './commercialRules'
 import { ServiceList } from './NewSaleDialog'
 import { brl, SaleItemEditor } from './SaleItemEditor'
 import { completeSale, type SaleCompleteResult } from './saleApi'
-import { addDays, centsToInput, firstBillingMonth, itemTotals, newItem, suggestService, type SaleItemDraft } from './saleRules'
+import { addDays, centsToInput, firstBillingMonth, itemTotals, newItem, suggestKind, suggestService, type SaleItemDraft } from './saleRules'
 import { commercialKeys } from './useCommercial'
 
 const input = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink'
@@ -36,7 +36,7 @@ export function CompleteSaleDialog({ sale, clientName, onClose }: { sale: Sale; 
 
   const choose = (s: Service) => {
     // Valor combinado pelo agente já vem preenchido (só quem edita o catálogo troca o preço).
-    setItem({ ...newItem(s, 'c1'), price: canEditPrice && s.options.every((o) => o.kind !== 'variacao') ? centsToInput(sale.valueCents) : '' })
+    setItem({ ...newItem(s, 'c1'), kind: suggestKind(sale.description), price: canEditPrice && s.options.every((o) => o.kind !== 'variacao') ? centsToInput(sale.valueCents) : '' })
     setPicking(false); setSq('')
   }
   useEffect(() => {

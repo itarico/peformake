@@ -149,6 +149,11 @@ export function suggestService<S extends Pick<Service, 'id' | 'name' | 'area'>>(
   return best
 }
 
+/** Venda do agente nasce Avulso, salvo quando o texto fala em mensal. */
+export function suggestKind(description: string): SaleKind {
+  return /(mensal|por mes|\/mes|todo mes|mensalidade)/.test(fold(description)) ? 'recorrente' : 'avulso'
+}
+
 /** Centavos viram "600,00" para o campo de valor. */
 export function centsToInput(cents: number): string {
   return (cents / 100).toFixed(2).replace('.', ',')
