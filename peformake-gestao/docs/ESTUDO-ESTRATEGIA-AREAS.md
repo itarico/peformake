@@ -180,3 +180,18 @@ Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver deta
 - Segurança: código vale 10 minutos, no máximo 5 tentativas, guardado só como hash; novo código no máximo a cada 1 minuto;
   registro de acessos.
 - Exceção à regra "envio ao cliente sempre confirmado por humano": o código é pedido pelo próprio cliente. Precisa do OK do Italo.
+
+## 16. Ferramentas para a pesquisa profunda da consultoria (11/11 noite)
+| Precisa | Ferramenta | Observação |
+|---|---|---|
+| Instagram do cliente e concorrentes (perfil, posts, reels, comentários, hashtags) | **Firecrawl** (catálogo Alexandria → ScrapeCreators) | ~2 créditos por chamada; precisa FIRECRAWL_API_KEY no Supabase |
+| Instagram oficial (seguidores, curtidas, posts de contas comerciais) | Meta Graph "Business Discovery" | grátis e oficial, mas a Graph API está bloqueada desde 04/11 |
+| Público REAL do cliente (idade, gênero, cidade dos seguidores) | Instagram Insights da conta do cliente (Meta/Windsor) | só com a conta do cliente ligada |
+| Voz do cliente | Conversas do WhatsApp (já no sistema) + comentários do Instagram/Google | sem guardar nome de pessoa (LGPD): só padrões |
+| Quem converte nos anúncios | Leitura do tráfego com quebra por idade, gênero, região, posicionamento | ajustar a leitura de anúncios |
+| Google (nota, avaliações, Maps) e demanda de busca na cidade | Google Places API ou DataForSEO (SERP, volume de palavras-chave) | chave do Google Cloud ou DataForSEO |
+| Anúncios dos concorrentes | Biblioteca de Anúncios (conector Meta) ou Adyntel (Firecrawl) | |
+| Região e renda | IBGE (API pública grátis) | população, renda por município/bairro |
+| Tendências | Google Trends / Firecrawl trends | |
+| Análise de público de perfil grande (opcional) | influencers.club analytics (Firecrawl) | caro (~264 créditos por perfil): só em caso especial |
+Arquitetura: a função primeiro COLETA (Firecrawl, internos, Places, IBGE) e guarda os dados brutos; depois o Claude (Fable 5.2) ANALISA e cruza. Coleta barata, análise cara só uma vez.
