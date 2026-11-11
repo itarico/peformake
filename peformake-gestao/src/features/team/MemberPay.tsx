@@ -90,7 +90,8 @@ function PayForm({ staffId, name, ote, startStep }: { staffId: string; name: str
   const [nf, setNf] = useState(ote.require_invoice)
   const [unit, setUnit] = useState(ote.unit)
   const [profitPct, setProfitPct] = useState(str(ote.profit_share_pct))
-  const [period, setPeriod] = useState(ote.profit_period ?? 'mensal')
+  // Sócio: o lucro é apurado por trimestre por padrão (decisão do Italo); nunca quinzenal.
+  const [period, setPeriod] = useState(ote.profit_period ?? 'trimestral')
   const [rates, setRates] = useState<Record<string, string>>(Object.fromEntries(Object.entries(ote.job_rates ?? {}).map(([k, v]) => [k, String(v)])))
   const [role, setRole] = useState<GoalRole>(ote.goal_role)
   const [own, setOwn] = useState(ote.has_own_goals)
@@ -154,7 +155,7 @@ function PayForm({ staffId, name, ote, startStep }: { staffId: string; name: str
                   <input inputMode="numeric" aria-label="Percentual pago no dia 15" value={advance} onChange={(e) => setAdvance(e.target.value.replace(/\D/g, '').slice(0, 2))} className="min-h-10 w-16 rounded-xl border border-line-strong bg-surface px-3 font-normal" />% do fixo
                 </label>
               )}
-              {contract === 'socio' && <Chips label="Lucro apurado" items={[['mensal', 'Por mês'], ['trimestral', 'Por trimestre']] as const} value={period} onPick={setPeriod} />}
+              {contract === 'socio' && <Chips label="Lucro apurado" items={[['trimestral', 'Por trimestre'], ['mensal', 'Por mês']] as const} value={period} onPick={setPeriod} />}
               {contract === 'clt' && (
                 <label className="flex items-center gap-2 text-[13px]"><input type="checkbox" checked={varOn} onChange={(e) => setVarOn(e.target.checked)} className="size-4" /><span className="font-medium">Também tem variável por metas</span></label>
               )}
