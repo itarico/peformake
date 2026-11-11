@@ -13,6 +13,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-11 noite · PRIORIDADE TOTAL: Estratégia = Consultoria (pedido do Italo)
+- Fase 1 da Estratégia, prioridade acima de tudo (menos edição de vídeos): só clientes com o serviço **Consultoria** ativo (hoje 8). Ao entrar com consultoria ativa, o sistema gera SOZINHO o **diagnóstico completo + plano de ação** didático (como consultoria de verdade, para o cliente entender o negócio e implementar), usando os frameworks como receita interna (SWOT etc.) e não como formulários. A equipe só informa o obrigatório (ex.: CNPJ; Instagram/site); o resto o sistema busca. Nada de vários campos por cliente; nada de "selecionar todos os clientes".
+- Base já registrada: ESTUDO-WHATSAPP-E-DIAGNOSTICO.md (seção B, 10/11), PLANO-CLIENTE-360.md (dossiê, 06/11), ESTUDO-HUB-ESTRATEGIA-E-CICLO.md (10/11). Os áudios de outros chats não ficaram registrados além disso.
+
 ## 2026-11-11 21h · Cia Coffee: cobrança no sistema e mensagem enviada (nuvem)
 - Italo mudou: boleto pelo ASAAS (não Cora). Lançadas 3 faturas Peformake (08, 09, 10/2026 · Marketing, R$ 600 cada, venc. 20/11, ref atraso:AAAA-MM) juntas numa cobrança só de R$ 1.800 (grupo d0986e0a…). CNPJ 54993876000105 salvo na ficha. Aviso automático de cobrança ao cliente está desligado (billing_new), então criar o link não manda mensagem sozinho.
 - Enviada à Magaly (558191662454, pelo sistema, com OK do Italo): resumo ago/set/out R$ 900 cada = R$ 2.700; acordo até 20/11 = R$ 1.800; "já te mando o link do boleto".
