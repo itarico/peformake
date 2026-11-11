@@ -92,10 +92,10 @@ async function confirmRemove(m: Member): Promise<boolean | null> {
   return ask(`${m.name} tem acesso ao sistema: remover o acesso também? (Voltar = mantém o acesso)`)
 }
 
-export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { member: Member | null; isMe: boolean; onClose: () => void; startTab?: 'dados' | 'acesso' | 'pagamento' }) {
+export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { member: Member | null; isMe: boolean; onClose: () => void; startTab?: 'dados' | 'funcao' | 'acesso' | 'pagamento' }) {
   const queryClient = useQueryClient()
   const isNew = !member
-  const [tab, setTab] = useState<'dados' | 'acesso' | 'pagamento'>(startTab)
+  const [tab, setTab] = useState<'dados' | 'funcao' | 'acesso' | 'pagamento'>(startTab)
   const [name, setName] = useState(member?.name ?? '')
   const [email, setEmail] = useState(member?.email ?? '')
   const [phone, setPhone] = useState(maskPhone(member?.phone))
@@ -136,7 +136,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { me
   const submit = () => {
     setProblem(null)
     if (name.trim().length < 2) { setTab('dados'); setProblem('Escreva o nome.'); return }
-    if (level !== 'none' && !role) { setTab('dados'); setProblem('Escolha a função da pessoa.'); return }
+    if (level !== 'none' && !role) { setTab('funcao'); setProblem('Escolha a função da pessoa.'); return }
     if (needsEmail && !email.trim()) { setTab('dados'); setProblem('Para dar acesso, informe o e-mail.'); return }
     const phoneBad = phoneProblem(phone)
     if (phoneBad) { setTab('dados'); setProblem(phoneBad); return }
@@ -159,9 +159,9 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { me
       }>
       <div className="flex flex-col gap-4">
         <div role="tablist" aria-label="Partes do cadastro" className="inline-flex self-start rounded-full border border-line p-0.5">
-          {([['dados', 'Dados'], ['acesso', 'Acesso'], ...(member?.id ? [['pagamento', 'Pagamento'] as const] : [])] as const).map(([k, l]) => (
+          {([['dados', 'Dados'], ['funcao', 'Função'], ['acesso', 'Acesso'], ...(member?.id ? [['pagamento', 'Pagamento'] as const] : [])] as const).map(([k, l]) => (
             <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
-              className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', tab === k ? 'bg-fill text-on-fill' : 'text-muted')}>{l}</button>
+              className={cn('min-h-9 cursor-pointer rounded-full px-3 text-[13px] font-semibold sm:px-4', tab === k ? 'bg-fill text-on-fill' : 'text-muted')}>{l}</button>
           ))}
         </div>
 
@@ -174,6 +174,9 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { me
               <label className="flex flex-col text-[13px] font-semibold">WhatsApp<input inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(maskPhone(e.target.value))} placeholder="(81) 99999-0000" className={field} /></label>
             </div>
             <label className="flex flex-col text-[13px] font-semibold">Cargo que aparece<input value={job} onChange={(e) => setJob(e.target.value)} placeholder="Ex.: Social Media, CEO Ellcazo" className={field} /></label>
+          </div>
+        ) : tab === 'funcao' ? (
+          <div className="flex flex-col gap-3">
             <fieldset>
               <legend className="mb-1.5 text-[13px] font-semibold">Função no sistema</legend>
               <div className="flex flex-wrap gap-1.5">
@@ -181,22 +184,21 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { me
               </div>
             </fieldset>
             <fieldset>
-              <legend className="mb-1.5 text-[13px] font-semibold">Também faz</legend>
+              <legend className="mb-1.5 text-[13px] font-semibold">Também faz <span className="font-normal text-muted">· aparece primeiro no avulso</span></legend>
               <div className="flex flex-wrap gap-1.5">
                 {SKILLS.map(([k, l]) => <button key={k} type="button" aria-pressed={skills.includes(k)} onClick={() => setSkills((c) => tog(c, k))} className={chip(skills.includes(k))}>{l}</button>)}
               </div>
-              <p className="mt-1 text-[12px] text-muted">Aparece primeiro ao lançar um serviço avulso (ex.: apresentação).</p>
             </fieldset>
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2">
               {LEVELS.map((l) => {
                 const on = level === l.id
                 const disabled = locked && l.id !== 'total'
                 return (
                   <button key={l.id} type="button" aria-pressed={on} disabled={disabled} onClick={() => setLevel(l.id)}
-                    className={cn('flex cursor-pointer flex-col items-start rounded-2xl border p-3 text-left disabled:cursor-not-allowed disabled:opacity-40',
+                    className={cn('flex cursor-pointer flex-col items-start rounded-2xl border p-2.5 text-left disabled:cursor-not-allowed disabled:opacity-40',
                       on ? (l.id === 'total' ? 'border-accent bg-accent-soft/40' : 'border-ink bg-raised') : 'border-line hover:border-line-strong')}>
                     <span className="font-semibold">{l.label}</span>
                     <span className="text-[12px] text-muted">{l.hint}</span>

@@ -79,7 +79,7 @@ function Chips<T extends string>({ label, items, value, onPick }: { label: strin
 
 function PayForm({ staffId, name, ote }: { staffId: string; name: string; ote: Ote }) {
   const queryClient = useQueryClient()
-  const [step, setStep] = useState<'contrato' | 'metas'>('contrato')
+  const [step, setStep] = useState<'tipo' | 'valores' | 'metas'>(ote.contract ? 'valores' : 'tipo')
   const [contract, setContract] = useState<Contract | null>(ote.contract)
   const [schedule, setSchedule] = useState<Schedule>(ote.pay_schedule ?? 'mensal')
   const [advance, setAdvance] = useState(String(ote.advance_pct ?? ''))
@@ -119,42 +119,39 @@ function PayForm({ staffId, name, ote }: { staffId: string; name: string; ote: O
   const parts = canSchedule && contract !== 'freela' ? fixedInstallments(num(base), schedule, advPct) : []
   const keys = Object.keys(GOAL_META)
 
+  const steps = [['tipo', '1 Tipo'], ['valores', '2 Valores'], ...(hasVariable ? [['metas', '3 Metas'] as const] : [])] as const
+  const cur = step === 'metas' && !hasVariable ? 'valores' : step
+
   return (
     <div className="flex flex-col gap-3">
-      {hasVariable && (
-        <div role="tablist" aria-label="Partes da remuneração" className="inline-flex self-start rounded-full bg-raised p-0.5 text-[12.5px]">
-          {([['contrato', 'Contrato e pagamento'], ['metas', 'Metas da variável']] as const).map(([k, l]) => (
-            <button key={k} type="button" role="tab" aria-selected={step === k} onClick={() => setStep(k)} className={cn('min-h-8 cursor-pointer rounded-full px-3 font-semibold', step === k ? 'bg-surface text-ink shadow-sm' : 'text-muted')}>{l}</button>
+      <div className="flex items-center justify-between gap-2">
+        <div role="tablist" aria-label="Etapas do pagamento" className="inline-flex rounded-full bg-raised p-0.5 text-[12.5px]">
+          {steps.map(([k, l]) => (
+            <button key={k} type="button" role="tab" aria-selected={cur === k} disabled={!contract && k !== 'tipo'} onClick={() => setStep(k)}
+              className={cn('min-h-8 cursor-pointer rounded-full px-3 font-semibold disabled:cursor-not-allowed disabled:opacity-40', cur === k ? 'bg-surface text-ink shadow-sm' : 'text-muted')}>{l}</button>
           ))}
         </div>
-      )}
+        <Button disabled={save.isPending || !contract} onClick={() => { setSaved(false); setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
+      </div>
+      {(saved || problem) && <p role={problem ? 'alert' : 'status'} className={cn('text-[12.5px] font-medium', problem ? 'text-warn-ink' : 'text-ok-ink')}>{problem ?? 'Salvo.'}</p>}
 
-      {step === 'contrato' || !hasVariable ? (
+      {cur === 'tipo' ? (
         <>
           <fieldset>
             <legend className="mb-1.5 text-[13px] font-semibold">Tipo de contrato{!contract && <span className="ml-1.5 rounded-full bg-warn-soft px-2 py-0.5 text-[11px] text-warn-ink">definir</span>}</legend>
             <div className="flex flex-wrap gap-1.5">{CONTRACTS.map(([k, l]) => <button key={k} type="button" aria-pressed={contract === k} onClick={() => { setContract(k); if (!advance) setAdvance(k === 'clt' ? '40' : '50') }} className={chip(contract === k)}>{l}</button>)}</div>
             <p className="mt-1 text-[12px] text-muted">{contract ? CONTRACT_HINT[contract] : 'Escolha para ver os campos certos.'}</p>
           </fieldset>
-
           {contract && (
             <>
-              <div className="grid grid-cols-2 gap-3">
-                {contract !== 'freela' && <label className="flex flex-col text-[13px] font-semibold">{contract === 'clt' ? 'Salário (R$)' : contract === 'socio' ? 'Pró-labore (R$, opcional)' : 'Fixo (R$)'}<input inputMode="decimal" value={base} onChange={(e) => setBase(e.target.value)} placeholder="0" className={field} /></label>}
-                {hasVariable && <label className="flex flex-col text-[13px] font-semibold">Variável cheia (R$)<input inputMode="decimal" value={variable} onChange={(e) => setVariable(e.target.value)} placeholder="0" className={field} /></label>}
-                {contract === 'socio' && <label className="flex flex-col text-[13px] font-semibold">Parte do lucro (%)<input inputMode="decimal" value={profitPct} onChange={(e) => setProfitPct(e.target.value)} placeholder="0" className={field} /></label>}
-                <label className="flex flex-col text-[13px] font-semibold">Paga por
-                  <select value={unit} onChange={(e) => setUnit(e.target.value as Ote['unit'])} className={field}><option value="peformake">Peformake</option><option value="ellcazo">Ellcazo</option></select>
+              <label className="flex flex-col text-[13px] font-semibold">Paga por
+                <select value={unit} onChange={(e) => setUnit(e.target.value as Ote['unit'])} className={cn(field, 'sm:w-64')}><option value="peformake">Peformake</option><option value="ellcazo">Ellcazo</option></select>
+              </label>
+              {canSchedule && <Chips label="Quando recebe" items={[['mensal', 'Mensal (dia 30)'], ['quinzenal', 'Quinzenal (15 e 30)']] as const} value={schedule} onPick={setSchedule} />}
+              {canSchedule && schedule === 'quinzenal' && contract !== 'freela' && (
+                <label className="flex items-center gap-2 text-[13px] font-semibold">Pago no dia 15
+                  <input inputMode="numeric" aria-label="Percentual pago no dia 15" value={advance} onChange={(e) => setAdvance(e.target.value.replace(/\D/g, '').slice(0, 2))} className="min-h-10 w-16 rounded-xl border border-line-strong bg-surface px-3 font-normal" />% do fixo
                 </label>
-              </div>
-
-              {canSchedule && (
-                <div className="flex flex-wrap items-end gap-3">
-                  <Chips label="Quando recebe" items={[['mensal', 'Mensal (dia 30)'], ['quinzenal', 'Quinzenal (15 e 30)']] as const} value={schedule} onPick={setSchedule} />
-                  {schedule === 'quinzenal' && contract !== 'freela' && (
-                    <label className="flex flex-col text-[13px] font-semibold">No dia 15 (%)<input inputMode="numeric" value={advance} onChange={(e) => setAdvance(e.target.value.replace(/\D/g, '').slice(0, 2))} className={cn(field, 'w-24')} /></label>
-                  )}
-                </div>
               )}
               {contract === 'socio' && <Chips label="Lucro apurado" items={[['mensal', 'Por mês'], ['trimestral', 'Por trimestre']] as const} value={period} onPick={setPeriod} />}
               {contract === 'clt' && (
@@ -163,31 +160,41 @@ function PayForm({ staffId, name, ote }: { staffId: string; name: string; ote: O
               {contract === 'pj' && (
                 <label className="flex items-center gap-2 text-[13px]"><input type="checkbox" checked={nf} onChange={(e) => setNf(e.target.checked)} className="size-4" /><span className="font-medium">Pedir nota fiscal antes de pagar</span></label>
               )}
-              {contract === 'freela' && (
-                <fieldset>
-                  <legend className="mb-1 text-[13px] font-semibold">Valor por produção (R$) <span className="font-normal text-muted">· opcional, já vem preenchido no avulso</span></legend>
-                  <div className="grid grid-cols-3 gap-2">
-                    {JOB_KINDS.map(([k, l]) => (
-                      <label key={k} className="flex flex-col text-[12px] font-medium text-muted">{l}
-                        <input inputMode="decimal" value={rates[k] ?? ''} onChange={(e) => setRates((r) => ({ ...r, [k]: e.target.value }))} placeholder="—" className={cn(field, 'mt-0.5 min-h-10 text-ink')} />
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-              )}
-
-              <p className="rounded-xl bg-raised px-3 py-2 text-[12.5px] text-muted">
-                {contract === 'freela'
-                  ? `Cada produção vira conta a pagar quando o cliente paga, no próximo dia ${schedule === 'quinzenal' ? '15 ou 30' : '30'}.`
-                  : contract === 'socio'
-                    ? `${num(base) > 0 ? `Pró-labore no dia 30. ` : ''}A parte do lucro só vira conta a pagar depois que você aprovar.`
-                    : parts.length
-                      ? `Contas a pagar: ${parts.map((p) => `dia ${p.day} ${brl(p.amount)}`).join(' + ')}.${hasVariable ? ' Variável do mês anterior no dia 30.' : ''} Avulsos e reembolsos no próximo dia ${schedule === 'quinzenal' ? '15 ou 30' : '30'}.`
-                      : 'Informe o valor para ver as contas a pagar.'}
-              </p>
-              {contract === 'socio' && ote.contract === 'socio' && (ote.profit_share_pct ?? 0) > 0 && <ProfitBox staffId={staffId} name={name} />}
             </>
           )}
+        </>
+      ) : cur === 'valores' ? (
+        <>
+          {contract !== 'freela' && (
+            <div className="grid grid-cols-2 gap-3">
+              <label className="flex flex-col text-[13px] font-semibold">{contract === 'clt' ? 'Salário (R$)' : contract === 'socio' ? 'Pró-labore (R$)' : 'Fixo (R$)'}<input inputMode="decimal" value={base} onChange={(e) => setBase(e.target.value)} placeholder={contract === 'socio' ? 'opcional' : '0'} className={field} /></label>
+              {hasVariable && <label className="flex flex-col text-[13px] font-semibold">Variável cheia (R$)<input inputMode="decimal" value={variable} onChange={(e) => setVariable(e.target.value)} placeholder="0" className={field} /></label>}
+              {contract === 'socio' && <label className="flex flex-col text-[13px] font-semibold">Parte do lucro (%)<input inputMode="decimal" value={profitPct} onChange={(e) => setProfitPct(e.target.value)} placeholder="0" className={field} /></label>}
+            </div>
+          )}
+          {contract === 'freela' && (
+            <fieldset>
+              <legend className="mb-1 text-[13px] font-semibold">Valor por produção (R$)</legend>
+              <div className="grid grid-cols-3 gap-2">
+                {JOB_KINDS.map(([k, l]) => (
+                  <label key={k} className="flex flex-col text-[12px] font-medium text-muted">{l}
+                    <input inputMode="decimal" value={rates[k] ?? ''} onChange={(e) => setRates((r) => ({ ...r, [k]: e.target.value }))} placeholder="—" className={cn(field, 'mt-0.5 min-h-10 text-ink')} />
+                  </label>
+                ))}
+              </div>
+              <p className="mt-1 text-[12px] text-muted">Opcional: já vem preenchido ao lançar o avulso.</p>
+            </fieldset>
+          )}
+          <p className="rounded-xl bg-raised px-3 py-2 text-[12.5px] text-muted">
+            {contract === 'freela'
+              ? `Cada produção vira conta a pagar quando o cliente paga, no próximo dia ${schedule === 'quinzenal' ? '15 ou 30' : '30'}.`
+              : contract === 'socio'
+                ? `${num(base) > 0 ? 'Pró-labore no dia 30. ' : ''}A parte do lucro só vira conta a pagar depois que você aprovar.`
+                : parts.length
+                  ? `Contas a pagar: ${parts.map((p) => `dia ${p.day} ${brl(p.amount)}`).join(' + ')}.${hasVariable ? ' Variável do mês anterior no dia 30.' : ''} Avulsos e reembolsos no próximo dia ${schedule === 'quinzenal' ? '15 ou 30' : '30'}.`
+                  : 'Informe o valor para ver as contas a pagar.'}
+          </p>
+          {contract === 'socio' && ote.contract === 'socio' && (ote.profit_share_pct ?? 0) > 0 && <ProfitBox staffId={staffId} name={name} />}
         </>
       ) : (
         <fieldset className="flex flex-col gap-2">
@@ -228,11 +235,6 @@ function PayForm({ staffId, name, ote }: { staffId: string; name: string; ote: O
         </fieldset>
       )}
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Button disabled={save.isPending} onClick={() => { setSaved(false); setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar remuneração'}</Button>
-        {saved && <span role="status" className="text-[13px] font-medium text-ok-ink">Salvo.</span>}
-        {problem && <span role="alert" className="text-[13px] font-medium text-warn-ink">{problem}</span>}
-      </div>
     </div>
   )
 }

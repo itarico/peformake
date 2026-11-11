@@ -57,6 +57,8 @@ async function check(p, dev, label) {
     const phone = await p.locator('dialog[open] input[inputmode="tel"]').inputValue();
     if (phone !== '(81) 99999-0000') fails.push(`${dev}: telefone sem máscara (${phone})`);
     await check(p, dev, 'dados');
+    await p.locator('dialog[open]').getByRole('tab', { name: 'Função' }).click(); await p.waitForTimeout(200); await check(p, dev, 'funcao');
+    await p.locator('dialog[open]').getByRole('tab', { name: 'Dados' }).click();
     if (!(await p.locator('dialog[open]').getByRole('button', { name: 'Remover' }).count())) fails.push(`${dev}: sem botão Remover`);
     await p.locator('dialog[open] input[inputmode="tel"]').fill('99999');
     await p.locator('dialog[open]').getByRole('button', { name: /^Salvar/ }).click(); await p.waitForTimeout(200);
@@ -69,18 +71,17 @@ async function check(p, dev, label) {
       await p.getByRole('button', { name: /Almeida/ }).first().click(); await p.waitForTimeout(200);
       await p.locator('dialog[open]').getByRole('tab', { name: 'Pagamento' }).click(); await p.waitForTimeout(500);
       await check(p, dev, 'pagamento-' + (c ?? 'definir'));
-      if (c === 'pj' || c === 'clt') { await p.locator('dialog[open]').getByRole('tab', { name: 'Metas da variável' }).click(); await p.waitForTimeout(200); await check(p, dev, 'metas-' + c); }
+      if (c) { await p.locator('dialog[open]').getByRole('tab', { name: '1 Tipo' }).click(); await p.waitForTimeout(200); await check(p, dev, 'tipo-' + c); }
+      if (c === 'pj' || c === 'clt') { await p.locator('dialog[open]').getByRole('tab', { name: '3 Metas' }).click(); await p.waitForTimeout(200); await check(p, dev, 'metas-' + c); }
     }
     // Remover quem tem login: duas perguntas.
     await p.keyboard.press('Escape'); await p.waitForTimeout(200);
     await p.getByRole('button', { name: /Thyfany/ }).first().click(); await p.waitForTimeout(200);
     await p.locator('dialog[open]').getByRole('button', { name: 'Remover' }).click(); await p.waitForTimeout(200);
-    const q1 = await p.locator('dialog[open]').last().innerText();
-    if (!/Remover Thyfany Rayane da equipe\?/.test(q1)) fails.push(`${dev}: confirmação de remover errada`);
+    if (!(await p.getByText(/Remover Thyfany Rayane da equipe\?/).count())) fails.push(`${dev}: confirmação de remover errada`);
     await p.getByRole('button', { name: 'Sim, confirmar' }).click(); await p.waitForTimeout(200);
-    const q2 = await p.locator('dialog[open]').last().innerText();
-    if (!/tem acesso ao sistema: remover o acesso também\?/.test(q2)) fails.push(`${dev}: não perguntou sobre o acesso`);
-    await p.getByRole('button', { name: 'Voltar' }).last().click(); await p.waitForTimeout(300);
+    if (!(await p.getByText(/tem acesso ao sistema: remover o acesso também\?/).count())) fails.push(`${dev}: não perguntou sobre o acesso`);
+    await p.getByRole('button', { name: 'Voltar' }).click(); await p.waitForTimeout(300);
     const deact = calls.filter(([fn]) => fn === 'member_deactivate').pop();
     if (!deact || !/"_revoke":false/.test(deact[1] || '')) fails.push(`${dev}: remover não chamou member_deactivate mantendo o acesso (${deact && deact[1]})`);
     if (errs.length) fails.push(`${dev}: erro na tela: ${errs[0]}`);
