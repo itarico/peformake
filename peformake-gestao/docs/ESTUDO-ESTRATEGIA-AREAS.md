@@ -130,3 +130,38 @@ Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver deta
 2. Fila de perguntas + link progressivo do cliente (base para todas as áreas).
 3. Acompanhamento mensal da consultoria (histórico, plano aplicado ou não).
 4. Roteiro (Audiovisual) → Tráfego → Social → Vendas, todos com perguntas do mês.
+
+## 14. Estratégia de TRÁFEGO: como está hoje e a proposta "só tráfego" (11/11 noite)
+### Hoje
+- Direcionamento em 4 etapas até o dia 14 (meta, ofertas, datas e verba, o que evitar); geração no dia 15 por uma ROTINA
+  do Claude Code fora do sistema (estrategista-mensal); "Gerar agora" só põe pedido na fila; sem limite diário nem custo
+  registrado; 4 pedidos ficaram presos em "na fila" (05 a 09/11) sem aviso de falha.
+- Saída: resumo + pesquisa + 12 a 30 itens aprovados um a um. Só 64 de 244 itens são de tráfego; o resto é interno (62),
+  cliente (51), design (29), audiovisual (21), social (17): roteiros, conteúdo, artes, pedidos ao cliente, reunião.
+- Dados: métricas diárias por conta só desde 01/10 (~6 semanas) e por campanha/conjunto/anúncio desde 04/10; 291
+  anúncios (231 com miniatura); 17 relatórios semanais; sem Google Ads, sem conversões por evento, sem vendas do CRM;
+  Graph API da Meta bloqueada desde 04/11 (saldo manual), leitura de anúncios segue pelo conector.
+- Alerta: 8 estratégias de dezembro em rascunho podem ser sobrescritas pela rotina no dia 15.
+
+### Proposta: Tráfego no mesmo molde da Consultoria
+- **Só tráfego pago.** Itens de outras áreas viram **pedidos** automáticos para Design/Audiovisual/Social/Consultoria
+  (com a quantidade e o motivo), e não itens para o gestor de tráfego revisar.
+- **Entradas:** direcionamento do mês (o mesmo de todas as áreas + verba) e perguntas do mês ao cliente (fila/link).
+- **Motor (edge function, Opus, 1/dia, custo registrado), em etapas:**
+  1. Leitura do histórico: o que deu certo e errado por campanha, público, posicionamento e **criativo** (miniatura, gasto,
+     resultado, custo por resultado), quantos criativos subimos e quanto duraram.
+  2. Concorrentes e mercado: Biblioteca de Anúncios dos concorrentes, ofertas e ganchos que eles repetem.
+  3. Tendências globais e do nicho que dá para trazer (busca na web).
+  4. Ofertas de tráfego (isca, condição, urgência real), alinhadas à Consultoria e às datas do mês.
+  5. Canais além da Meta quando fizer sentido: Google (Pesquisa, Maps/Perfil da Empresa, YouTube), outros; com verba de
+     teste e motivo. Sem integração do Google Ads, entra como recomendação de teste.
+  6. Plano do mês pronto para aplicar: estrutura de campanhas, públicos, verba por campanha e por semana, criativos
+     pedidos (formato, ângulo, gancho), testes A/B, metas e KPIs (custo por contato, contatos, vendas), calendário
+     semanal e critérios de corte/escala.
+- **Saída:** apresentação em abas editável (Resumo, O que aprendemos, Concorrentes, Ofertas, Plano, Criativos pedidos,
+  Metas, Riscos, Do cliente), gráficos (evolução, custo por resultado, ranking de criativos, verba por campanha, funil),
+  aprovação → PDF vertical/paisagem → link público vivo → portal. Pedidos para outras áreas só saem após aprovar.
+- **Acompanhamento:** relatório semanal compara com o plano (o que foi aplicado, metas) e alimenta o mês seguinte.
+- **Limites honestos:** só ~6 semanas de histórico (melhora a cada mês), sem Google Ads e sem vendas reais; para ligar o
+  Google Ads é preciso o developer token (ESTUDO-MCPS-APIS.md) ou um conector (ex.: Windsor).
+- **Custo estimado:** ~US$ 1,5 por cliente/mês (Opus) → ~US$ 15 a 20/mês para os clientes de tráfego.
