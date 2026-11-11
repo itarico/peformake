@@ -512,6 +512,7 @@ export interface Database {
       traffic_save_report_settings: { Args: { _weekly: boolean; _monthly: boolean; _scan: boolean; _send: boolean }; Returns: undefined }
       traffic_chat_clear: { Args: Record<string, never>; Returns: undefined }
       traffic_resolve_alert: { Args: { _alert_id: string }; Returns: undefined }
+      traffic_set_balance: { Args: { _account_id: string; _available_cents: number }; Returns: undefined }
       traffic_save_alert_settings: {
         Args: { _daily_spend_alert_cents: number; _spike_multiplier: number; _notify_client: boolean; _notify_group: boolean; _group_jid: string | null }
         Returns: undefined

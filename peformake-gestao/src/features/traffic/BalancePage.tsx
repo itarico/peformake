@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, RefreshCw } from 'lucide-react'
+import { Check, Pencil, RefreshCw } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
-import { getLastRun, listAccountStatus, listOpenAlerts, readNow, resolveAlert } from './balanceApi'
-import { byUrgency, describeBalance, STATE_LABEL, type BalanceState } from './balanceRules'
+import { getLastRun, listAccountStatus, listOpenAlerts, readNow, resolveAlert, setBalance } from './balanceApi'
+import { byUrgency, describeBalance, METRICS_DAYS, parseReais, type BalanceState } from './balanceRules'
 import { LoadState } from './LoadState'
 import { listDailyMetrics } from './metricsApi'
 import { brl, todayInBrazil } from './metricsRules'
@@ -26,9 +27,68 @@ const TONE: Record<BalanceState, string> = {
   problem: 'bg-warn-soft text-warn-ink',
   low: 'bg-warn-soft text-warn-ink',
   ending: 'bg-warn-soft text-warn-ink',
+  check: 'bg-raised text-ink',
   unknown: 'bg-raised text-muted',
   ok: 'bg-ok-soft text-ok-ink',
   postpaid: 'bg-raised text-ink',
+}
+
+/** Pop-up "Atualizar saldo": um campo, já focado. Enter salva. */
+function BalanceDialog({ target, onClose }: { target: { id: string; label: string; cents: number | null } | null; onClose: () => void }) {
+  const queryClient = useQueryClient()
+  const [text, setText] = useState('')
+  const input = useRef<HTMLInputElement>(null)
+  const save = useMutation({
+    mutationFn: (cents: number) => setBalance(target!.id, cents),
+    onSuccess: () => {
+      for (const key of ['traffic-status', 'traffic-alerts']) void queryClient.invalidateQueries({ queryKey: [key] })
+      onClose()
+    },
+  })
+  useEffect(() => {
+    if (!target) return
+    setText('')
+    save.reset()
+    // O <dialog> abre depois deste efeito e põe o foco no primeiro botão; o campo pega o foco no quadro seguinte.
+    const frame = requestAnimationFrame(() => input.current?.focus())
+    return () => cancelAnimationFrame(frame)
+  }, [target]) // eslint-disable-line react-hooks/exhaustive-deps -- só ao abrir para outra conta
+  const cents = parseReais(text)
+  const invalid = text.trim() !== '' && cents === null
+  const submit = () => { if (cents !== null) save.mutate(cents) }
+
+  return (
+    <Dialog
+      open={!!target}
+      onClose={onClose}
+      size="sm"
+      title="Atualizar saldo"
+      description={target?.label}
+      footer={<>
+        <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+        <Button type="submit" form="saldo-form" disabled={cents === null || save.isPending}>{save.isPending ? 'Salvando' : 'Salvar saldo'}</Button>
+      </>}
+    >
+      <form id="saldo-form" onSubmit={(e) => { e.preventDefault(); submit() }}>
+        <label className="flex flex-col gap-1 text-[13px] font-semibold">
+          Saldo disponível no Gerenciador da Meta (R$)
+          <input
+            ref={input}
+            inputMode="decimal"
+            autoComplete="off"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder={target?.cents != null ? brl(target.cents).replace(/^R\$\s?/, '') : '0,00'}
+            aria-invalid={invalid || undefined}
+            className={cn('min-h-12 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-[20px] font-semibold tabular-nums text-ink', invalid && 'border-2 border-warn')}
+          />
+        </label>
+        <p className="mt-2 text-[12px] text-muted" role={invalid || save.isError ? 'alert' : undefined}>
+          {invalid ? 'Digite só o valor, por exemplo 137,23.' : save.isError ? 'Não foi possível salvar. Tente de novo.' : 'Vale a partir de agora. Depois o sistema desconta o gasto do dia a dia.'}
+        </p>
+      </form>
+    </Dialog>
+  )
 }
 
 async function loadAlertLimit(): Promise<number> {
@@ -45,7 +105,9 @@ export function BalancePage() {
   const alerts = useQuery({ queryKey: ['traffic-alerts'], queryFn: listOpenAlerts })
   const run = useQuery({ queryKey: ['traffic-last-run'], queryFn: getLastRun })
   const limit = useQuery({ queryKey: ['traffic-alert-limit'], queryFn: loadAlertLimit })
-  const metrics = useQuery({ queryKey: ['traffic-metrics', minus(today, 8), today], queryFn: () => listDailyMetrics(minus(today, 8), today) })
+  // Gasto desde a leitura: carrega dias suficientes para estimar o saldo de leitura velha.
+  const metrics = useQuery({ queryKey: ['traffic-metrics', minus(today, METRICS_DAYS), today], queryFn: () => listDailyMetrics(minus(today, METRICS_DAYS), today) })
+  const [editing, setEditing] = useState<{ id: string; label: string; cents: number | null } | null>(null)
 
   const refreshAll = () => {
     for (const key of ['traffic-status', 'traffic-alerts', 'traffic-last-run', 'traffic-metrics']) void queryClient.invalidateQueries({ queryKey: [key] })
@@ -82,11 +144,12 @@ export function BalancePage() {
   const tokenMissing = hasApi && last?.error?.includes('META_SYSTEM_TOKEN')
   const count = (state: BalanceState) => views.filter((item) => item.view.state === state).length
   const totalAvailable = views.reduce((sum, item) => sum + (item.view.state !== 'postpaid' ? item.view.remainingCents ?? 0 : 0), 0)
+  const anyEstimate = views.some((item) => item.view.estimated)
   const cards = [
     { label: 'Contas monitoradas', value: String(views.length), note: 'Com leitura ligada' },
     { label: 'Pedem recarga', value: String(count('low') + count('ending')), note: `Abaixo do limite ou acabam em até 3 dias`, warn: count('low') + count('ending') > 0 },
     { label: 'Alertas abertos', value: String(alerts.data?.length ?? 0), note: 'Gasto fora do padrão, saldo e restrições', warn: (alerts.data?.length ?? 0) > 0 },
-    { label: 'Saldo somado', value: brl(totalAvailable), note: 'Pré-pago e limites de gasto' },
+    { label: 'Saldo somado', value: (anyEstimate ? '≈ ' : '') + brl(totalAvailable), note: anyEstimate ? 'Inclui estimativas' : 'Pré-pago e limites de gasto' },
   ]
 
   const problem = readProblemText(summarizeReadError(read.data?.failures?.length ? read.data.failures.join(' | ') : !read.data && last && !last.ok ? last.error : null))
@@ -98,7 +161,7 @@ export function BalancePage() {
           {last
             ? `Última leitura ${last.trigger === 'auto' ? 'automática' : 'manual'} em ${when(last.startedAt)}${last.finishedAt ? (last.ok ? ', sem erros.' : ', com problemas.') : ', em andamento.'}`
             : 'Nenhuma leitura feita ainda.'}
-          <span className="hidden md:inline">{' '}Leitura automática pela Meta (MCP oficial) a cada 6 horas.</span>
+          <span className="hidden md:inline">{' '}A Meta não entrega o saldo agora: atualize pelo lápis de cada conta.</span>
         </p>
         {hasApi && (
           <Button variant="secondary" className="shrink-0" disabled={read.isPending} onClick={() => read.mutate()}>
@@ -162,32 +225,49 @@ export function BalancePage() {
       ) : (
         <div className="@container">
           <ul className="flex flex-col overflow-hidden rounded-3xl border border-line bg-surface">
-            <li aria-hidden="true" className="hidden grid-cols-[minmax(0,2fr)_140px_110px_110px_110px_150px] gap-4 border-b border-line px-5 py-2.5 text-[12px] font-medium text-muted @3xl:grid">
+            <li aria-hidden="true" className="hidden grid-cols-[minmax(0,2fr)_170px_110px_110px_110px_150px] gap-4 border-b border-line px-5 py-2.5 text-[12px] font-medium text-muted @3xl:grid">
               <span>Conta</span><span className="text-right">Saldo</span><span className="text-right">Dura cerca de</span><span className="text-right">Ontem</span><span className="text-right">Média 7 dias</span><span>Situação</span>
             </li>
             {views.map(({ account, client, view }) => (
-              <li key={account.id} className="grid grid-cols-2 gap-x-4 gap-y-1 border-b border-line px-5 py-3.5 last:border-b-0 @3xl:grid-cols-[minmax(0,2fr)_140px_110px_110px_110px_150px] @3xl:items-center">
-                <div className="col-span-2 min-w-0 @3xl:col-span-1">
-                  <p className="truncate font-semibold">{client}</p>
-                  <p className="truncate text-[13px] text-muted">{account.name}</p>
+              <li key={account.id} className="grid grid-cols-2 gap-x-4 gap-y-1 border-b border-line px-5 py-3.5 last:border-b-0 @3xl:grid-cols-[minmax(0,2fr)_170px_110px_110px_110px_150px] @3xl:items-center">
+                <div className="col-span-2 flex min-w-0 items-center gap-2 @3xl:col-span-1">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-semibold">{client}</p>
+                    <p className="truncate text-[13px] text-muted">{account.name}</p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label={`Atualizar saldo de ${client}`}
+                    title="Atualizar saldo"
+                    onClick={() => setEditing({ id: account.id, label: `${client} · ${account.name}`, cents: view.remainingCents })}
+                    className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink md:size-9"
+                  >
+                    <Pencil size={16} aria-hidden="true" />
+                  </button>
                 </div>
-                <p className="tabular-nums @3xl:text-right" title={view.remainingLabel}>
-                  <span className="font-sans text-[12px] text-muted @3xl:hidden">Saldo: </span>
-                  {view.remainingCents === null ? <span className="font-sans text-[13px] text-muted">{view.remainingLabel}</span> : brl(view.remainingCents)}
-                </p>
+                <div className="tabular-nums @3xl:text-right" title={view.remainingLabel}>
+                  <p>
+                    <span className="font-sans text-[12px] text-muted @3xl:hidden">Saldo: </span>
+                    {view.remainingCents === null ? <span className="font-sans text-[13px] text-muted">{view.remainingLabel}</span> : `${view.estimated ? '≈ ' : ''}${brl(view.remainingCents)}`}
+                  </p>
+                  {view.readLabel && (
+                    <p className="font-sans text-[12px] text-muted">{view.estimated ? `estimativa, ${view.readLabel}` : view.readLabel}</p>
+                  )}
+                </div>
                 <p className="tabular-nums @3xl:text-right">
                   <span className="text-[12px] text-muted @3xl:hidden">Dura: </span>
                   {view.daysLeft === null ? '-' : `${view.daysLeft} ${view.daysLeft === 1 ? 'dia' : 'dias'}`}
                 </p>
                 <p className="tabular-nums @3xl:text-right"><span className="font-sans text-[12px] text-muted @3xl:hidden">Ontem: </span>{brl(view.yesterdayCents)}</p>
                 <p className="tabular-nums @3xl:text-right"><span className="font-sans text-[12px] text-muted @3xl:hidden">Média: </span>{brl(view.averageCents)}</p>
-                <p><span className={cn('inline-block rounded-full px-2.5 py-0.5 text-[12px] font-semibold', TONE[view.state])}>{STATE_LABEL[view.state]}</span></p>
+                <p><span className={cn('inline-block rounded-full px-2.5 py-0.5 text-[12px] font-semibold', TONE[view.state])}>{view.stateLabel}</span></p>
               </li>
             ))}
           </ul>
         </div>
       )}
-      <p className="text-[12px] text-muted">"Dura cerca de" divide o saldo pela média de gasto dos últimos 7 dias. A leitura não usa IA e não tem custo de Claude.</p>
+      <p className="text-[12px] text-muted">"Dura cerca de" divide o saldo pela média de gasto dos últimos 7 dias. Saldo lido há mais de 24 h vira estimativa (saldo lido menos o gasto desde então): confira na Meta e atualize.</p>
+      <BalanceDialog target={editing} onClose={() => setEditing(null)} />
     </>
   )
 }

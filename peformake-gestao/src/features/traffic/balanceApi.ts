@@ -83,6 +83,12 @@ export async function getLastRun(): Promise<TrafficRun | null> {
   }
 }
 
+/** Saldo visto no Gerenciador da Meta, informado pela equipe (a Meta não entrega o saldo desde 04/11/2026). */
+export async function setBalance(accountId: string, availableCents: number): Promise<void> {
+  const { error } = await supabase.rpc('traffic_set_balance', { _account_id: accountId, _available_cents: availableCents })
+  if (error) throw error
+}
+
 export async function resolveAlert(alertId: string): Promise<void> {
   const { error } = await supabase.rpc('traffic_resolve_alert', { _alert_id: alertId })
   if (error) throw error
