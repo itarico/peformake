@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 import { Route } from 'react-router-dom'
-import { RequireRole } from '@/auth/guards'
+import { NotEllcazoOnly, RequireRole } from '@/auth/guards'
 import { COMMERCIAL_ROLES, TEAM_ROLES } from '@/lib/roles'
 import { CommercialIndex } from './CommercialLayout'
 import { MovedTo } from '@/components/layout/MovedTo'
@@ -17,6 +17,7 @@ const CatalogSettings = lazy(() => import('@/features/settings/SettingsLayout').
 export function CommercialRoutes() {
   return (
     <Route element={<RequireRole roles={TEAM_ROLES} />}>
+      <Route element={<NotEllcazoOnly to="/inicio" />}>
       <Route path="comercial" element={<CommercialLayout />}>
         <Route index element={<CommercialIndex />} />
         <Route path="funil" element={<PipelinePage />} />
@@ -36,6 +37,7 @@ export function CommercialRoutes() {
         <Route path="contas" element={<MovedTo to="/configuracoes/whatsapp" />} />
         <Route path="configuracoes" element={<MovedTo to="/configuracoes/whatsapp" />} />
         </Route>
+      </Route>
       </Route>
     </Route>
   )

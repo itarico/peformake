@@ -54,8 +54,9 @@ export function ServiceJobDialog({ clientId, clients, onClose, onSaved }: { clie
   const [step, setStep] = useState<'servico' | 'quem'>('servico')
   // Parte da empresa nos avulsos (Equipe → Configurações). Sem valor para quem fez, vale o do cliente menos essa parte.
   const share = useQuery({ queryKey: ['job-company-pct'], staleTime: 300_000, queryFn: async () => {
-    const { data } = await supabase.from('team_settings').select('job_company_pct').maybeSingle()
-    return Number((data as { job_company_pct?: number } | null)?.job_company_pct ?? 25)
+    // RPC: as regras de comissão (team_settings) são só de admin/head; aqui só o número da parte da empresa.
+    const { data } = await (supabase.rpc as unknown as (fn: string) => Promise<{ data: unknown }>)('team_job_company_pct')
+    return Number(data ?? 25)
   } })
   const pct = share.data ?? 25
 

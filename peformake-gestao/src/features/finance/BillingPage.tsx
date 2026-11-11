@@ -80,6 +80,10 @@ export function BillingPage() {
   const queryClient = useQueryClient()
   const { state } = useAuth()
   const isAdmin = state.status === 'ready' && state.user.roles.includes('admin')
+  // Quem é da Ellcazo cria e dá baixa só nas faturas da Ellcazo (o banco confere com can_finance).
+  const isEllcazo = state.status === 'ready' && state.user.roles.includes('ellcazo')
+  const canCreate = isAdmin || isEllcazo
+  const canEdit = (u: string) => isAdmin || (isEllcazo && u === 'ellcazo')
   const [month] = useMonthParam()
   const [creating, setCreating] = useState(false)
   const [jobOpen, setJobOpen] = useState(false)
@@ -306,7 +310,7 @@ export function BillingPage() {
   const mobileIcons = (
     <span className="flex items-center gap-1.5 md:hidden">
       <button type="button" aria-label="Buscar cobrança" onClick={() => setSearchOpen((v) => !v)} className="grid size-11 cursor-pointer place-items-center rounded-full border border-line"><Search size={17} aria-hidden="true" /></button>
-      {isAdmin && <button type="button" aria-label="Nova cobrança" onClick={() => setCreating(true)} className="grid size-11 cursor-pointer place-items-center rounded-full bg-fill text-on-fill"><Plus size={18} aria-hidden="true" /></button>}
+      {canCreate && <button type="button" aria-label="Nova cobrança" onClick={() => setCreating(true)} className="grid size-11 cursor-pointer place-items-center rounded-full bg-fill text-on-fill"><Plus size={18} aria-hidden="true" /></button>}
       <ActionMenu label="Mais ações da cobrança" actions={menu} />
     </span>
   )
@@ -379,7 +383,7 @@ export function BillingPage() {
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar cliente" aria-label="Buscar cobrança" autoFocus={searchOpen}
               className="min-h-11 w-full rounded-full border border-line bg-surface pl-9 pr-3 text-[13px] md:min-h-10 md:w-44" />
           </label>
-          {isAdmin && <span className="hidden md:contents"><Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button></span>}
+          {canCreate && <span className="hidden md:contents"><Button onClick={() => setCreating(true)}><Plus size={15} aria-hidden="true" /> Nova cobrança</Button></span>}
           <span className="hidden md:contents"><ActionMenu label="Mais ações da cobrança" actions={menu} /></span>
         </div>
       </div>
@@ -391,7 +395,7 @@ export function BillingPage() {
               const first = row.items[0]
               if (!first) return null
               return (
-                <GroupCard key={row.id} id={row.id} items={row.items} name={nameOf(first)} today={today} isAdmin={isAdmin}
+                <GroupCard key={row.id} id={row.id} items={row.items} name={nameOf(first)} today={today} isAdmin={row.items.every((x) => canEdit(x.unit))} full={isAdmin}
                   logo={logoPublicUrl(first.clients?.logo_path ?? null) ?? first.clients?.legacy_logo_url ?? null}
                   busy={chargeNow.isPending || split.isPending || cancelGroup.isPending || pay.isPending || undo.isPending}
                   onCopy={() => copyPay(first.pay_token)}
@@ -426,21 +430,21 @@ export function BillingPage() {
                   {isOpen(i) && Number(i.partial_paid ?? 0) > 0 && <span className="rounded-full bg-warn-soft px-2.5 py-0.5 text-[12px] font-semibold text-warn-ink">Parcial: falta {brl(openAmount(i))}</span>}
                   <span className={cn('rounded-full px-2.5 py-0.5 text-[12px] font-semibold',
                     st.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : st.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : st.tone === 'info' ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>{st.label}</span>
-                  {isOpen(i) && isAdmin && <button type="button" onClick={() => setCharging(i.client_id)} title="Mensagem pronta para mandar no WhatsApp ou copiar"
+                  {isOpen(i) && canEdit(i.unit) && <button type="button" onClick={() => setCharging(i.client_id)} title="Mensagem pronta para mandar no WhatsApp ou copiar"
                     className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full bg-fill px-3 text-[13px] font-semibold text-on-fill"><MessageCircle size={14} aria-hidden="true" /> Cobrar</button>}
-                  {isOpen(i) && !isAdmin && !isBidInvoice(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
+                  {isOpen(i) && !canEdit(i.unit) && !isBidInvoice(i) && <button type="button" onClick={() => copyPay(i.pay_token)} title="O cliente abre, informa o CPF/CNPJ se faltar e paga por Pix, boleto ou cartão."
                     className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 text-[13px] font-medium hover:border-ink"><Copy size={14} aria-hidden="true" /> Copiar link</button>}
-                  {isAdmin && <ActionMenu label={`Mais ações de ${clientName}`} actions={i.status === 'pago' ? [
+                  {canEdit(i.unit) && <ActionMenu label={`Mais ações de ${clientName}`} actions={i.status === 'pago' ? [
                     { label: 'Desfazer pagamento', icon: <Undo2 size={15} aria-hidden="true" />, disabled: undo.isPending, onClick: () => { void ask('Desfazer o pagamento? A fatura volta para em aberto e sai do Caixa como recebida.').then((ok) => { if (ok) undo.mutate(i.id) }) } },
                   ] : i.status === 'cancelado' ? [] : [
                     { label: 'Copiar link de pagamento', icon: <Copy size={15} aria-hidden="true" />, hidden: isBidInvoice(i), onClick: () => copyPay(i.pay_token) },
                     { label: 'Ver licitação', icon: <ExternalLink size={15} aria-hidden="true" />, href: `/clientes/${i.client_id}?aba=contrato`, hidden: !isBidInvoice(i) },
                     { label: 'Abrir link no Asaas', icon: <ExternalLink size={15} aria-hidden="true" />, href: i.payment_url ?? undefined, hidden: !i.payment_url },
-                    { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!i.payment_url || isBidInvoice(i), disabled: chargeNow.isPending, onClick: () => { if (client && !client.document) { setBillingFor(client); return } chargeNow.mutate(i.id) } },
-                    { label: `Juntar com as outras (${joinable(i).length})`, icon: <Layers size={15} aria-hidden="true" />, hidden: isBidInvoice(i) || !(canJoin(i) && joinable(i).length >= 2), disabled: join.isPending, onClick: () => askJoin(i) },
+                    { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !isAdmin || !!i.payment_url || isBidInvoice(i), disabled: chargeNow.isPending, onClick: () => { if (client && !client.document) { setBillingFor(client); return } chargeNow.mutate(i.id) } },
+                    { label: `Juntar com as outras (${joinable(i).length})`, icon: <Layers size={15} aria-hidden="true" />, hidden: !isAdmin || isBidInvoice(i) || !(canJoin(i) && joinable(i).length >= 2), disabled: join.isPending, onClick: () => askJoin(i) },
                     { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!i.payment_url, onClick: () => setDueFor({ id: i.id, label: `${clientName} · ${i.description}`, due: i.due_date, monthly: i.source === 'mensalidade' }) },
                     { label: 'Recebi (marcar pago)', icon: <Check size={15} aria-hidden="true" />, disabled: pay.isPending, onClick: () => setPaying(i) },
-                    { label: 'Desconto do cliente', icon: <Percent size={15} aria-hidden="true" />, onClick: () => setDiscountFor({ id: i.client_id, name: clientName }) },
+                    { label: 'Desconto do cliente', icon: <Percent size={15} aria-hidden="true" />, hidden: !isAdmin, onClick: () => setDiscountFor({ id: i.client_id, name: clientName }) },
                     { label: 'Cancelar cobrança', danger: true, disabled: setStatus.isPending, onClick: () => { void ask('Cancelar esta cobrança?').then((ok) => { if (ok) setStatus.mutate({ id: i.id, status: 'cancelado' }) }) } },
                   ]} />}
                 </div>
@@ -457,9 +461,9 @@ export function BillingPage() {
       {paying && <PayInvoiceDialog invoice={paying} name={nameOf(paying)} single={!paying.group_id && 'partial_paid' in paying} onClose={() => setPaying(null)} onPay={(date, amount) => { pay.mutate({ id: paying.id, date, amount, due: openAmount(paying) }); setPaying(null) }} />}
       {dueFor && <DueDialog target={dueFor} onClose={() => setDueFor(null)} onSaved={(msg) => { setNotice(msg); refresh() }} />}
       {jobOpen && <ServiceJobDialog clients={clients.data ?? []} onClose={() => setJobOpen(false)} onSaved={() => { setNotice('Serviço lançado: a fatura do cliente e a conta a pagar de quem fez já estão no sistema.'); refresh() }} />}
-      {creating && <InvoiceDialog clients={clients.data ?? []} onClose={() => setCreating(false)} onSaved={refresh} />}
+      {creating && <InvoiceDialog clients={clients.data ?? []} units={isAdmin ? ['peformake', 'ellcazo'] : ['ellcazo']} onClose={() => setCreating(false)} onSaved={refresh} />}
       {settingsOpen && <BillingSettingsDialog onClose={() => setSettingsOpen(false)} />}
-      {charging && <ChargeDialog clientId={charging} items={chargeablesOf(charging)} onClose={() => setCharging(null)} onDone={(msg) => { setNotice(msg); refresh() }} />}
+      {charging && <ChargeDialog clientId={charging} items={chargeablesOf(charging).filter((c) => canEdit(c.unit))} canSavePix={isAdmin} onClose={() => setCharging(null)} onDone={(msg) => { setNotice(msg); refresh() }} />}
       {discountFor && <ClientDiscountDialog client={discountFor} onClose={() => setDiscountFor(null)} onSaved={(msg) => setNotice(msg)} />}
       {billingFor && <ClientBillingDialog client={billingFor} onClose={() => setBillingFor(null)} onSaved={() => { void queryClient.invalidateQueries({ queryKey: ['billing-clients'] }); setNotice('Dados de cobrança salvos. Agora crie o link.') }} />}
     </>
@@ -469,8 +473,8 @@ export function BillingPage() {
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
 
 /** Cobrança única: várias faturas (de cada empresa) com um link e um pagamento só. */
-function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onBill, onCharge, onDue, onPay, onUndo, onSplit, onCancel }: {
-  id: string; items: Invoice[]; name: string; logo: string | null; today: string; isAdmin: boolean; busy: boolean
+function GroupCard({ id, items, name, logo, today, isAdmin, full, busy, onCopy, onBill, onCharge, onDue, onPay, onUndo, onSplit, onCancel }: {
+  id: string; items: Invoice[]; name: string; logo: string | null; today: string; isAdmin: boolean; full: boolean; busy: boolean
   onCopy: () => void; onBill: () => void; onCharge: () => void; onDue: () => void; onPay: () => void; onUndo: () => void; onSplit: () => void; onCancel: () => void
 }) {
   const first = items[0]
@@ -500,7 +504,7 @@ function GroupCard({ id, items, name, logo, today, isAdmin, busy, onCopy, onBill
         ] : [
           { label: 'Copiar link de pagamento', icon: <Copy size={15} aria-hidden="true" />, onClick: onCopy },
           { label: 'Abrir link no Asaas', icon: <ExternalLink size={15} aria-hidden="true" />, href: url ?? undefined, hidden: !url },
-          { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onCharge },
+          { label: 'Criar link no Asaas agora', icon: <Link2 size={15} aria-hidden="true" />, hidden: !full || !!url, disabled: busy, onClick: onCharge },
           { label: 'Mudar vencimento', icon: <CalendarClock size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onDue },
           { label: 'Marcar pago', icon: <Check size={15} aria-hidden="true" />, disabled: busy, onClick: onPay },
           { label: 'Separar', icon: <Split size={15} aria-hidden="true" />, hidden: !!url, disabled: busy, onClick: onSplit },
@@ -596,9 +600,9 @@ export function PayInvoiceDialog({ invoice, name, single, onClose, onPay }: { in
   )
 }
 
-function InvoiceDialog({ clients, onClose, onSaved }: { clients: ClientRow[]; onClose: () => void; onSaved: () => void }) {
+function InvoiceDialog({ clients, units, onClose, onSaved }: { clients: ClientRow[]; units: ('peformake' | 'ellcazo')[]; onClose: () => void; onSaved: () => void }) {
   const [client, setClient] = useState('')
-  const [unit, setUnit] = useState<'peformake' | 'ellcazo'>('peformake')
+  const [unit, setUnit] = useState<'peformake' | 'ellcazo'>(units[0] ?? 'peformake')
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [due, setDue] = useState(new Date(Date.now() + 3 * 86_400_000).toISOString().slice(0, 10))
@@ -624,11 +628,11 @@ function InvoiceDialog({ clients, onClose, onSaved }: { clients: ClientRow[]; on
             {clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </label>
-        <div role="group" aria-label="Empresa" className="inline-flex self-start rounded-full border border-line p-0.5">
-          {(['peformake', 'ellcazo'] as const).map((u) => (
+        {units.length > 1 && <div role="group" aria-label="Empresa" className="inline-flex self-start rounded-full border border-line p-0.5">
+          {units.map((u) => (
             <button key={u} type="button" aria-pressed={unit === u} onClick={() => setUnit(u)} className={cn('min-h-9 cursor-pointer rounded-full px-4 text-[13px] font-semibold', unit === u ? 'bg-fill text-on-fill' : 'text-muted')}>{u === 'ellcazo' ? 'Ellcazo' : 'Peformake'}</button>
           ))}
-        </div>
+        </div>}
         <label className="flex flex-col text-[13px] font-semibold">O que está sendo cobrado<input value={description} onChange={(e) => setDescription(e.target.value)} maxLength={200} className={field} /></label>
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col text-[13px] font-semibold">Valor (R$)<input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0,00" className={field} /></label>

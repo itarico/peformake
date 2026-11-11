@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
-import { hasAnyRole, type AppRole } from '@/lib/roles'
+import { hasAnyRole, isEllcazoOnly, type AppRole } from '@/lib/roles'
 import { useAuth } from './context'
 
 export function RequireAuth() {
@@ -33,10 +33,19 @@ export function RequireAuth() {
   return <Outlet />
 }
 
-export function RequireRole({ roles }: { roles: readonly AppRole[] }) {
+/** Sem o cargo: mensagem de bloqueio, ou leva direto para `redirectTo` (sem tela de erro). */
+export function RequireRole({ roles, redirectTo }: { roles: readonly AppRole[]; redirectTo?: string }) {
   const { state } = useAuth()
   if (state.status !== 'ready' || !hasAnyRole(state.user.roles, roles)) {
+    if (redirectTo && state.status === 'ready') return <Navigate to={redirectTo} replace />
     return <CenteredMessage title="Você não tem acesso a esta área" text="Fale com um administrador se precisar dela." />
   }
+  return <Outlet />
+}
+
+/** Áreas que quem é só da Ellcazo não usa (ex.: Comercial, por enquanto): leva para `to` em vez de mostrar erro. */
+export function NotEllcazoOnly({ to }: { to: string }) {
+  const { state } = useAuth()
+  if (state.status === 'ready' && isEllcazoOnly(state.user.roles)) return <Navigate to={to} replace />
   return <Outlet />
 }

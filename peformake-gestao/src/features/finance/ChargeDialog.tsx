@@ -23,7 +23,7 @@ export const sentLabel = (at: string | null, how: string | null) => (at ? `Cobra
  * "Enviar pelo sistema" só aparece se a fila do WhatsApp estiver ligada, e sempre pergunta antes.
  * Cada envio fica anotado na fatura para não cobrar duas vezes sem saber.
  */
-export function ChargeDialog({ clientId, items, onClose, onDone }: { clientId: string; items: Chargeable[]; onClose: () => void; onDone: (msg: string) => void }) {
+export function ChargeDialog({ clientId, items, canSavePix = true, onClose, onDone }: { clientId: string; items: Chargeable[]; canSavePix?: boolean; onClose: () => void; onDone: (msg: string) => void }) {
   const info = useQuery({
     queryKey: ['charge-info', clientId],
     queryFn: async () => {
@@ -125,7 +125,8 @@ export function ChargeDialog({ clientId, items, onClose, onDone }: { clientId: s
             </div>
           )}
         </div>
-        {needPix && (
+        {needPix && !canSavePix && <p className="rounded-lg bg-raised px-3 py-2 text-[12.5px] text-muted">A chave Pix da {UNIT(unit)} ainda não está cadastrada. Use o Link ou peça ao administrador para cadastrar.</p>}
+        {needPix && canSavePix && (
           <div className="flex items-end gap-2 rounded-xl bg-raised p-2.5">
             <label className="flex min-w-0 flex-1 flex-col gap-1 text-[12.5px] font-semibold">Chave Pix da {UNIT(unit)} (fica guardada)
               <input value={pixDraft} onChange={(e) => setPixDraft(e.target.value)} placeholder="CNPJ, e-mail, telefone ou chave" autoComplete="off" className={field} />

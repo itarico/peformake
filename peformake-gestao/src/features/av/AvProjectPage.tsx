@@ -13,6 +13,8 @@ import { AV_LABEL, AV_STAGES, AV_TONE, SCRIPT_LABEL, avActionsFor, countdown, mi
 import { EllcazoHeader, TONE_CLASS } from './AvShell'
 import { ScheduleDialog } from './ScheduleDialog'
 import { ask } from '@/components/ui/confirm'
+import { useAuth } from '@/auth/context'
+import { TRAFFIC_ROLES, hasAnyRole } from '@/lib/roles'
 
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink disabled:opacity-70'
 
@@ -246,6 +248,9 @@ export function AvProjectPage() {
   const { id = '' } = useParams()
   const queryClient = useQueryClient()
   const { clientName } = useProduction()
+  const { state } = useAuth()
+  // Ficha do cliente: completa para tráfego/admin/head, resumida para quem é da Ellcazo.
+  const canOpenClient = state.status === 'ready' && hasAnyRole(state.user.roles, [...TRAFFIC_ROLES, 'ellcazo'])
   const project = useQuery({ queryKey: ['av-project', id], queryFn: () => getProject(id) })
   const events = useQuery({ queryKey: ['av-events', id], queryFn: () => listAvEvents(id) })
   const addComment = useMutation({ mutationFn: (m: string) => avComment(id, m), onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['av-events', id] }) })
@@ -258,7 +263,7 @@ export function AvProjectPage() {
       <Link to={`/audiovisual/producao${p.month ? `?mes=${p.month}` : ''}`} className="inline-flex min-h-10 items-center gap-1.5 self-start text-[14px] font-medium">
         <ArrowLeft size={16} aria-hidden="true" /> Produção
       </Link>
-      <EllcazoHeader sub={<>{p.title}{p.kind === 'project' ? ' · Projeto avulso' : ''}</>}>{clientName(p.clientId)}</EllcazoHeader>
+      <EllcazoHeader sub={<>{p.title}{p.kind === 'project' ? ' · Projeto avulso' : ''}</>}>{canOpenClient && p.clientId ? <Link to={`/clientes/${p.clientId}`} className="text-inherit no-underline hover:underline">{clientName(p.clientId)}</Link> : clientName(p.clientId)}</EllcazoHeader>
       <StageTrack p={p} />
       <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
         <div className="flex flex-col gap-3">

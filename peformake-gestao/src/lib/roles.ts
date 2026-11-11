@@ -40,6 +40,11 @@ export const AV_MANAGER_ROLES: readonly AppRole[] = ['admin', 'head_marketing', 
 export const NOTIFICATION_ADMIN_ROLES: readonly AppRole[] = ['admin', 'head_marketing']
 export const COMMERCIAL_ROLES: readonly AppRole[] = ['admin', 'head_marketing', 'sdr', 'closer']
 
+/** Só da Ellcazo: tem o papel ellcazo e nenhum papel da Peformake (parceiro não conta). Mesma regra de public.is_ellcazo_only(). */
+export function isEllcazoOnly(userRoles: readonly AppRole[]): boolean {
+  return userRoles.includes('ellcazo') && userRoles.every((r) => r === 'ellcazo' || r === 'parceiro')
+}
+
 export function hasAnyRole(userRoles: readonly AppRole[], allowed: readonly AppRole[]): boolean {
   return userRoles.some((role) => allowed.includes(role))
 }

@@ -1,4 +1,4 @@
-import { ADMIN_ROLES, AV_ROLES, COMMERCIAL_ROLES, CONTENT_ROLES, TEAM_ROLES, TRAFFIC_ROLES, hasAnyRole, type AppRole } from './roles'
+import { ADMIN_ROLES, AV_ROLES, COMMERCIAL_ROLES, CONTENT_ROLES, TEAM_ROLES, TRAFFIC_ROLES, hasAnyRole, isEllcazoOnly, type AppRole } from './roles'
 
 export type MenuIcon = 'home' | 'clients' | 'whatsapp' | 'sales' | 'traffic' | 'design' | 'video' | 'plug' | 'shield' | 'gauge' | 'wallet' | 'team' | 'social' | 'compass' | 'book' | 'settings'
 
@@ -9,6 +9,8 @@ export interface MenuItem {
   to: string
   icon: MenuIcon
   roles: readonly AppRole[]
+  /** Some para quem é só da Ellcazo (ex.: Comercial, por enquanto). */
+  hideEllcazoOnly?: boolean
 }
 
 export interface MenuGroup {
@@ -36,7 +38,7 @@ const MENU: MenuGroup[] = [
       { label: 'Tráfego', to: '/trafego', icon: 'traffic', roles: TRAFFIC_ROLES },
       { label: 'Social Media', short: 'Social', to: '/conteudo', icon: 'design', roles: CONTENT_ROLES },
       { label: 'Audiovisual', short: 'Vídeo', to: '/audiovisual', icon: 'video', roles: AV_ROLES },
-      { label: 'Comercial', to: '/comercial', icon: 'sales', roles: TEAM_ROLES },
+      { label: 'Comercial', to: '/comercial', icon: 'sales', roles: TEAM_ROLES, hideEllcazoOnly: true },
       { label: 'WhatsApp', to: '/whatsapp', icon: 'whatsapp', roles: COMMERCIAL_ROLES },
     ],
   },
@@ -53,7 +55,7 @@ const MENU: MenuGroup[] = [
 export function menuForRoles(userRoles: readonly AppRole[]): MenuGroup[] {
   return MENU.map((group) => ({
     ...group,
-    items: group.items.filter((item) => hasAnyRole(userRoles, item.roles)),
+    items: group.items.filter((item) => hasAnyRole(userRoles, item.roles) && !(item.hideEllcazoOnly && isEllcazoOnly(userRoles))),
   })).filter((group) => group.items.length > 0)
 }
 

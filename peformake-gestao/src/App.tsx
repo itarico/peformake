@@ -1,17 +1,19 @@
 import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth, RequireRole } from '@/auth/guards'
+import { useAuth } from '@/auth/context'
 import { AppShell } from '@/components/layout/AppShell'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
 import { CommercialRoutes } from '@/features/commercial/CommercialRoutes'
 import { WhatsAppRoutes } from '@/features/commercial/WhatsAppRoutes'
-import { AV_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, NOTIFICATION_ADMIN_ROLES, TRAFFIC_ROLES } from '@/lib/roles'
+import { AV_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, NOTIFICATION_ADMIN_ROLES, TRAFFIC_ROLES, hasAnyRole } from '@/lib/roles'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { SiteGate } from '@/site/SiteGate'
 import { ConfirmHost } from '@/components/ui/confirm'
 
 // Cada tela baixa só quando é aberta (o site e o login ficam leves).
 const ClientDetailPage = lazy(() => import('@/features/clients/ClientDetailPage').then((m) => ({ default: m.ClientDetailPage })))
+const EllcazoClientSheet = lazy(() => import('@/features/clients/EllcazoClientSheet').then((m) => ({ default: m.EllcazoClientSheet })))
 const ClientFormPage = lazy(() => import('@/features/clients/ClientFormPage').then((m) => ({ default: m.ClientFormPage })))
 const ClientsPage = lazy(() => import('@/features/clients/ClientsPage').then((m) => ({ default: m.ClientsPage })))
 const AvBoard = lazy(() => import('@/features/av/AvBoard').then((m) => ({ default: m.AvBoard })))
@@ -61,6 +63,13 @@ const SocialAgent = lazy(() => import('@/features/social/SocialPage').then((m) =
 const TeamPage = lazy(() => import('@/features/team/TeamPage').then((m) => ({ default: m.TeamPage })))
 const NewPasswordPage = lazy(() => import('@/pages/NewPasswordPage').then((m) => ({ default: m.NewPasswordPage })))
 
+/** Quem tem tráfego/admin/head vê a ficha completa; quem é da Ellcazo, a resumida. */
+function ClientDetailRoute() {
+  const { state } = useAuth()
+  const roles = state.status === 'ready' ? state.user.roles : []
+  return hasAnyRole(roles, TRAFFIC_ROLES) ? <ClientDetailPage /> : <EllcazoClientSheet />
+}
+
 export function App() {
   return (
     <>
@@ -101,8 +110,11 @@ export function App() {
           <Route element={<RequireRole roles={TRAFFIC_ROLES} />}>
             <Route path="clientes" element={<ClientsPage />} />
             <Route path="clientes/novo" element={<ClientFormPage />} />
-            <Route path="clientes/:id" element={<ClientDetailPage />} />
             <Route path="clientes/:id/editar" element={<ClientFormPage />} />
+          </Route>
+          {/* Ficha do cliente: quem é da Ellcazo (sem tráfego) vê a ficha resumida, só com o que é da Ellcazo. */}
+          <Route element={<RequireRole roles={[...TRAFFIC_ROLES, 'ellcazo']} />}>
+            <Route path="clientes/:id" element={<ClientDetailRoute />} />
           </Route>
           <Route element={<RequireRole roles={CONTENT_ROLES} />}>
             <Route path="conteudo" element={<ContentLayout />}>
@@ -141,6 +153,8 @@ export function App() {
             <Route path="financeiro" element={<FinanceHome />} />
             <Route path="financeiro/caixa" element={<FinancePage />} />
             <Route path="financeiro/cobranca" element={<BillingPage />} />
+          </Route>
+          <Route element={<RequireRole roles={['admin']} redirectTo="/financeiro/caixa" />}>
             <Route path="financeiro/contratos" element={<ContractsPage />} />
           </Route>
           <Route element={<RequireRole roles={['admin']} />}>
