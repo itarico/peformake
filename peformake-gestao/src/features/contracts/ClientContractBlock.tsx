@@ -1,3 +1,4 @@
+import { ContractPreview } from './ContractPreview'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { FileSignature, Send } from 'lucide-react'
@@ -100,6 +101,7 @@ export function ClientContractBlock({ clientId, clientType }: { clientId: string
           {d.status === 'aguardando_dados' && <p className="text-[13px]">Mande o link do portal para o cliente pelo WhatsApp: ele preenche CPF/CNPJ, e-mail e endereço lá, e o contrato fica pronto para enviar.</p>}
           {d.status === 'erro' && d.provider_error && <p className="text-[13px] text-warn-ink">{d.provider_error}</p>}
           <div className="flex flex-wrap gap-2">
+            {(d.status === 'rascunho' || d.status === 'erro') && <ContractPreview title={d.title} body={d.body} note={`Assim vai para a Assinafy${d.signer_email ? ` (${d.signer_email})` : ''}. Nada foi enviado.`} />}
             {(d.status === 'rascunho' || d.status === 'erro') && <Button disabled={send.isPending} onClick={() => send.mutate(d.id)}><Send size={15} aria-hidden="true" /> {send.isPending ? 'Enviando' : 'Enviar para assinatura'}</Button>}
             <Button variant="secondary" onClick={() => setReading((r) => !r)}>{reading ? 'Fechar texto' : 'Ver texto'}</Button>
             {d.status !== 'assinado' && <Button variant="link" onClick={() => { void ask('Cancelar este contrato e gerar outro?').then((ok) => { if (ok) cancel.mutate(d.id) }) }}>Cancelar</Button>}

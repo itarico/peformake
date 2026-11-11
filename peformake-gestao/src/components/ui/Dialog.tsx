@@ -40,7 +40,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
               <h2 className="text-[20px] font-semibold tracking-tight">{title}</h2>
               {description && <p className="text-[13px] text-muted">{description}</p>}
             </div>
-            <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink">
+            <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink md:size-10">
               <X size={18} aria-hidden="true" />
             </button>
           </header>

@@ -12,6 +12,7 @@ import { clientValue, clientKind, KIND_LABEL } from '@/features/clients/portfoli
 import { brlValue, dateBr } from '@/features/clients/format'
 import { inputClass } from '@/features/clients/ui'
 import { readDocument } from './docReader'
+import { ContractPreview } from './ContractPreview'
 
 type Rpc = (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
@@ -120,15 +121,17 @@ export function ContractWizard({ client, open, onClose, onSent }: { client: Clie
   // Etapa 4: revisar
   const [docId, setDocId] = useState<string | null>(null)
   const [body, setBody] = useState('')
+  const [docTitle, setDocTitle] = useState<string | null>(null)
   const create = useMutation({
     mutationFn: async () => {
       const { data, error } = await rpc('contract_create', { _client: client.id, _template: template })
       if (error) throw new Error(error.message.includes('contratante') ? 'Faltam dados do contratante.' : error.message.includes('contratada') ? 'Faltam dados da contratada.' : 'Não foi possível gerar.')
       const id = String(data)
-      const { data: doc } = await supabase.from('client_contract_docs').select('body').eq('id', id).single()
-      return { id, body: (doc as { body: string } | null)?.body ?? '' }
+      const { data: doc } = await supabase.from('client_contract_docs').select('title, body').eq('id', id).single()
+      const row = doc as { title: string | null; body: string } | null
+      return { id, body: row?.body ?? '', title: row?.title ?? null }
     },
-    onSuccess: (d) => { setDocId(d.id); setBody(d.body); setStep(3) },
+    onSuccess: (d) => { setDocId(d.id); setBody(d.body); setDocTitle(d.title); setStep(3) },
   })
   const saveBody = useMutation({
     mutationFn: async () => {
@@ -276,7 +279,7 @@ export function ContractWizard({ client, open, onClose, onSent }: { client: Clie
           <div className="flex flex-col gap-3">
             <p className="text-[13px] text-muted">Leia e ajuste o que precisar. Os dados das duas partes, os serviços e os valores já estão no texto.</p>
             <textarea aria-label="Texto do contrato" value={body} onChange={(e) => setBody(e.target.value)} className="h-[45dvh] w-full resize-none rounded-2xl border border-line-strong bg-surface p-4 text-[13px] leading-relaxed" />
-            <div className="flex justify-end"><Button disabled={body.trim().length < 50 || saveBody.isPending} onClick={() => saveBody.mutate()}>{saveBody.isPending ? 'Salvando' : 'Texto pronto'}</Button></div>
+            <div className="flex justify-end gap-2"><ContractPreview title={docTitle} body={body} /><Button disabled={body.trim().length < 50 || saveBody.isPending} onClick={() => saveBody.mutate()}>{saveBody.isPending ? 'Salvando' : 'Texto pronto'}</Button></div>
           </div>
         )}
 
@@ -294,9 +297,12 @@ export function ContractWizard({ client, open, onClose, onSent }: { client: Clie
                 </button>
               ))}
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-wrap justify-between gap-2">
               <Button variant="secondary" onClick={() => setStep(3)}>Voltar</Button>
+              <span className="flex flex-wrap gap-2">
+              <ContractPreview title={docTitle} body={body} note={method === 'aceite' ? 'Assim o cliente vai ler no portal. Nada foi enviado.' : `Assim vai para a Assinafy (${party.email}). Nada foi enviado.`} />
               <Button disabled={send.isPending} onClick={() => send.mutate()}>{send.isPending ? 'Enviando' : method === 'aceite' ? 'Liberar no portal' : 'Enviar para assinar'}</Button>
+              </span>
             </div>
           </div>
         )}

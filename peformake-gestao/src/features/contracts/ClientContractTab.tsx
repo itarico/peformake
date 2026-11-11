@@ -1,3 +1,4 @@
+import { ContractPreview, ContractText } from './ContractPreview'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, Download, FilePlus2, FileSignature, Pencil, Send } from 'lucide-react'
@@ -164,6 +165,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
             )}
 
             <div className="flex flex-wrap gap-2">
+              {['rascunho', 'aguardando_dados', 'erro'].includes(current.status) && <ContractPreview title={current.title} body={current.body} note={current.sign_method === 'aceite' ? 'Assim o cliente vai ler no portal. Nada foi enviado.' : 'Assim vai para a Assinafy. Nada foi enviado.'} />}
               {(current.status === 'rascunho' || current.status === 'erro') && current.sign_method === 'assinafy' && (
                 <Button disabled={send.isPending} onClick={() => send.mutate(current.id)}><Send size={15} aria-hidden="true" /> {send.isPending ? 'Enviando' : 'Enviar pela Assinafy'}</Button>
               )}
@@ -173,7 +175,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
               {['rascunho', 'aguardando_dados', 'erro', 'aguardando_aceite'].includes(current.status) && (
                 <Button variant="secondary" onClick={() => { setText(current.body); rpc.reset(); setEditing(current) }}><Pencil size={14} aria-hidden="true" /> Editar texto</Button>
               )}
-              <Button variant="secondary" onClick={() => setReading(current)}>Ler</Button>
+              {!['rascunho', 'aguardando_dados', 'erro'].includes(current.status) && <Button variant="secondary" onClick={() => setReading(current)}>Ler</Button>}
               <Button variant="secondary" disabled={pdf.isPending} onClick={() => pdf.mutate(current.id)}><Download size={14} aria-hidden="true" /> {pdf.isPending ? 'Gerando' : 'PDF'}</Button>
               {current.status !== 'assinado' && (
                 <Button variant="link" disabled={rpc.isPending} onClick={() => { void ask('Cancelar este contrato?').then((ok) => { if (ok) rpc.mutate({ fn: 'contract_cancel', args: { _id: current.id } }) }) }}>Cancelar</Button>
@@ -257,7 +259,7 @@ export function ClientContractTab({ client, kindLabel }: { client: ClientRecord;
       <Dialog open={!!reading} onClose={() => setReading(null)} title={reading?.title ?? 'Contrato'} size="lg">
         <div className="flex flex-col gap-2">
           <p className="flex items-center gap-2 text-[13px] text-muted"><FileSignature size={14} aria-hidden="true" /> {reading && (CONTRACT_STATUS[reading.status]?.[0] ?? reading.status)}</p>
-          <pre className="whitespace-pre-wrap font-sans text-[14px] leading-relaxed">{reading?.body}</pre>
+          {reading && <ContractText title={reading.title} body={reading.body} />}
         </div>
       </Dialog>
     </div>
