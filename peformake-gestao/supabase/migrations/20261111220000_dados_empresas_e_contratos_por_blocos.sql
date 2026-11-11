@@ -252,8 +252,8 @@ begin
     _letter := _letter + 1;
     _items := _items || E'\n' || chr(96 + least(_letter, 26)) || ') ' || r.name || ', conforme Cláusula ' || _n || 'ª;';
     _clauses := _clauses || 'CLÁUSULA # — ' || _ttl || E'\n' || _cl || E'\n\n';
-    if r.area = 'audiovisual' then _subs := _subs || 'produção audiovisual'; elsif r.area = 'trafego' then _subs := _subs || 'gestão de tráfego pago';
-    elsif r.area = 'social' then _subs := _subs || 'gestão de redes sociais'; elsif r.area = 'design' then _subs := _subs || 'design'; else _subs := _subs || lower(r.name); end if;
+    if r.area = 'audiovisual' then _subs := array_append(_subs, 'produção audiovisual'::text); elsif r.area = 'trafego' then _subs := array_append(_subs, 'gestão de tráfego pago'::text);
+    elsif r.area = 'social' then _subs := array_append(_subs, 'gestão de redes sociais'::text); elsif r.area = 'design' then _subs := array_append(_subs, 'design'::text); else _subs := array_append(_subs, lower(r.name)); end if;
   end loop;
   if _n = 1 then _items := E'\n' || 'a) os serviços combinados entre as partes.'; end if;
   if _kind <> 'avulso' then

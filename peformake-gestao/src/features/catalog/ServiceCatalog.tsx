@@ -15,9 +15,9 @@ const UNITS = ['mês', 'projeto', 'unidade', 'hora', 'diária'] as const
 
 export interface ServiceOption { id: string; kind: 'variacao' | 'extra'; name: string; price: number | null }
 export interface Service { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; isActive: boolean; price: number | null; clients: number; deliveryUnit: string | null; options: ServiceOption[] }
-interface PackageItem { serviceId: string; name: string; area: Area; quantity: number; price: number | null }
-interface Pkg { id: string; name: string; description: string | null; isActive: boolean; promoPrice: number | null; promoStarts: string | null; promoEnds: string | null; items: PackageItem[] }
-interface Catalog { canEdit: boolean; services: Service[]; packages: Pkg[] }
+export interface PackageItem { serviceId: string; name: string; area: Area; quantity: number; price: number | null }
+export interface Pkg { id: string; name: string; description: string | null; isActive: boolean; promoPrice: number | null; promoStarts: string | null; promoEnds: string | null; items: PackageItem[] }
+interface Catalog { canEdit: boolean; canSeePrices: boolean; services: Service[]; packages: Pkg[] }
 
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 font-normal text-ink'
@@ -31,11 +31,13 @@ async function loadCatalog(area: Area | null): Promise<Catalog> {
   const unitById = new Map((units.data ?? []).map((u) => [u.id, u.delivery_unit]))
   const d = (data ?? { can_edit: false, services: [], packages: [] }) as {
     can_edit: boolean
+    can_see_prices?: boolean
     services: { id: string; name: string; area: Area; description: string | null; deliverables: string | null; unit: string; is_active: boolean; price: number | null; clients: number; options?: ServiceOption[] }[]
     packages: { id: string; name: string; description: string | null; is_active: boolean; promo_price: number | null; promo_starts: string | null; promo_ends: string | null; items: { service_id: string; name: string; area: Area; quantity: number; price: number | null }[] }[]
   }
   return {
     canEdit: d.can_edit,
+    canSeePrices: d.can_see_prices ?? d.can_edit,
     services: d.services.map((s) => ({ id: s.id, name: s.name, area: s.area, description: s.description, deliverables: s.deliverables, unit: s.unit, isActive: s.is_active, price: s.price, clients: s.clients, deliveryUnit: unitById.get(s.id) ?? null, options: s.options ?? [] })),
     packages: d.packages.map((p) => ({
       id: p.id, name: p.name, description: p.description, isActive: p.is_active, promoPrice: p.promo_price, promoStarts: p.promo_starts, promoEnds: p.promo_ends,

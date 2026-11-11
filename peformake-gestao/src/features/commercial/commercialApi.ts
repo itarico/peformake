@@ -167,11 +167,16 @@ export async function listDeals(): Promise<Deal[]> {
 export async function listSales(): Promise<Sale[]> {
   const { data, error } = await supabase
     .from('crm_sales')
-    .select('id, deal_id, contact_id, client_id, description, value_cents, sale_date, status, source, excerpt, created_at')
+    .select('id, deal_id, contact_id, client_id, description, value_cents, sale_date, status, source, excerpt, created_at, kind, unit, seller_id' as 'id, deal_id, contact_id, client_id, description, value_cents, sale_date, status, source, excerpt, created_at')
     .order('sale_date', { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(1000)
   if (error) throw error
+  type Extra = { kind?: 'avulso' | 'recorrente' | null; unit?: 'peformake' | 'ellcazo' | null; seller_id?: string | null }
   return (data ?? []).map((row) => ({
+    kind: (row as Extra).kind ?? null,
+    unit: (row as Extra).unit ?? null,
+    sellerId: (row as Extra).seller_id ?? null,
     id: row.id,
     dealId: row.deal_id,
     contactId: row.contact_id,

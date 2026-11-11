@@ -127,6 +127,10 @@ export interface Sale {
   source: 'manual' | 'agente'
   excerpt: string | null
   createdAt: string
+  /** Vendas da "Nova venda": tipo, empresa e vendedor. As antigas não têm. */
+  kind?: 'avulso' | 'recorrente' | null
+  unit?: 'peformake' | 'ellcazo' | null
+  sellerId?: string | null
 }
 
 export interface CommercialSettings {

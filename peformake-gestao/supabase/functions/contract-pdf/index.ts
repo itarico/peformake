@@ -32,7 +32,7 @@ async function makePdf(title: string, body: string, evidence: [string, string][]
   y -= lh * 2
   for (const para of body.split('\n')) {
     if (!para.trim()) { newLine(); continue }
-    write(para, /^[0-9]+\.\s|^[A-ZÀ-Ý\s]{8,}$/.test(para.trim()) ? bold : font)
+    write(para, /^[0-9]+\.\s|^[A-ZÀ-Ý\s]{8,}$|^CL[AÁ]USULA\s/.test(para.trim()) ? bold : font)
   }
   if (evidence.length) {
     page = pdf.addPage([width, height]); y = height - margin
