@@ -271,12 +271,12 @@ returns jsonb language sql stable security definer set search_path to '' as $$
   a as (
     select 'bid80:' || b.id || ':' || floor(b.used / nullif(b.total, 0) * 10) id, 'info' level, b.client_id,
       format('📑 %s: %s%% do crédito da licitação usado', b.client_name, floor(b.used / b.total * 100)) title,
-      format('Pedido %s · faltam R$ %s', b.number, to_char(greatest(b.total - b.used, 0), 'FM999G999G990D00')) sub, b.id bid_id
+      format('Pedido %s · faltam R$ %s', b.number, translate(to_char(greatest(b.total - b.used, 0), 'FM999,999,990.00'), ',.', '.,')) sub, b.id bid_id
     from b where b.total > 0 and b.used / b.total >= 0.8
     union all
     select 'bidend:' || b.id || ':' || b.ends_on, 'info', b.client_id,
       format('📑 %s: licitação acaba em %s dias', b.client_name, b.ends_on - t.d),
-      format('Pedido %s · ainda há R$ %s para usar', b.number, to_char(b.total - b.used, 'FM999G999G990D00')), b.id
+      format('Pedido %s · ainda há R$ %s para usar', b.number, translate(to_char(b.total - b.used, 'FM999,999,990.00'), ',.', '.,')), b.id
     from b, today t where b.ends_on between t.d and t.d + 30 and b.total - b.used > 0.009
     union all
     select 'bidnf:' || o.id, 'hoje', b.client_id,

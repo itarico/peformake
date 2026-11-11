@@ -1,0 +1,16 @@
+/* Tela de login: personagens e frase. Tudo desliga com movimento reduzido. */
+.pf-login-blink { transform-box: fill-box; transform-origin: center; animation: pf-login-blink 6s ease-in-out infinite; }
+@keyframes pf-login-blink { 0%, 95%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
+
+.pf-login-shake { transform-box: fill-box; transform-origin: 50% 100%; animation: pf-login-shake 0.55s ease-in-out both; }
+@keyframes pf-login-shake { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-3deg); } 45% { transform: rotate(3deg); } 70% { transform: rotate(-1.5deg); } }
+
+.pf-login-hop { transform-box: fill-box; transform-origin: 50% 100%; animation: pf-login-hop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes pf-login-hop { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-8px); } }
+
+.pf-login-phrase { animation: pf-login-phrase 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes pf-login-phrase { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-login-blink, .pf-login-shake, .pf-login-hop, .pf-login-phrase { animation: none; }
+}
