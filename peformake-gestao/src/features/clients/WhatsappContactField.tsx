@@ -46,6 +46,7 @@ export function WhatsappContactField({ id, value, onChange, onPick, invalid, des
       liveFormat={(t) => (looksLikePhone(t) ? maskPhone(t) : t)}
       format={(t) => (looksLikePhone(t) ? maskPhone(t) : t)}
       addLabel={(t) => (looksLikePhone(t) ? `Usar o número ${t}` : `Usar “${t}”`)}
+      allowNew={looksLikePhone(text)}
       onTextChange={setText}
       onChange={(v) => {
         const hit = byLabel.get(v)

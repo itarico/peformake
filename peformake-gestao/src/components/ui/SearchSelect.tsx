@@ -124,7 +124,6 @@ export function SearchSelect({ id, value, onChange, options, placeholder = 'Digi
           else if (e.key === 'ArrowUp') { e.preventDefault(); setActive((a) => Math.max(a - 1, 0)) }
           else if (e.key === 'Enter' && open && items[active]) { e.preventDefault(); choose(items[active]!.label) }
           else if (e.key === 'Escape' && open) { e.preventDefault(); e.stopPropagation(); setOpen(false); setText(value); setTyped(false) }
-          else if (e.key === 'Tab' && open && typed && items[active] && !items[active]!.add) { choose(items[active]!.label) }
         }}
         className={cn('min-h-11 w-full rounded-xl border border-line-strong bg-surface py-2 pl-3 pr-10 text-ink', invalid && 'border-2 border-warn', className)}
       />
