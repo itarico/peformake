@@ -4,7 +4,7 @@ import { AREA_LABEL, type Service } from '@/features/catalog/ServiceCatalog'
 import { itemTotals, unitOf, type DiscountType, type SaleItemDraft, type SaleKind } from './saleRules'
 
 export const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-export const chip = (on: boolean) => cn('min-h-10 cursor-pointer rounded-full border px-3.5 text-[13px] font-semibold', on ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:border-line-strong hover:text-ink')
+export const chip = (on: boolean) => cn('min-h-10 cursor-pointer rounded-full border px-3 text-[13px] font-semibold', on ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:border-line-strong hover:text-ink')
 const field = 'min-h-10 rounded-xl border border-line-strong bg-surface px-3 font-normal'
 
 /**
@@ -26,7 +26,7 @@ export function SaleItemEditor({ item, service, onChange, canSeePrices, canEditP
   const ellcazo = unitOf(service) === 'ellcazo'
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2.5">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-[15px] font-semibold">{service.name}</span>
         <span className={cn('rounded-full px-2 py-0.5 text-[11.5px] font-semibold', ellcazo ? 'theme-ellcazo bg-fill text-on-fill' : 'bg-raised text-muted')}>{ellcazo ? 'Ellcazo' : 'Peformake'} · {AREA_LABEL[service.area]}</span>
@@ -48,11 +48,6 @@ export function SaleItemEditor({ item, service, onChange, canSeePrices, canEditP
               className={cn('min-h-9 cursor-pointer rounded-full px-3.5 text-[13px] font-semibold', item.kind === k ? 'bg-fill text-on-fill' : 'text-muted')}>{k === 'recorrente' ? 'Mensal' : 'Avulso'}</button>
           ))}
         </div>
-        {canEditPrice && (
-          <label className="flex items-center gap-1.5 text-[13px] font-semibold">Preço
-            <input inputMode="decimal" value={item.price} placeholder={t.base > 0 && !item.price ? String(t.base).replace('.', ',') : 'catálogo'} onChange={(e) => set({ price: e.target.value })} className={cn(field, 'w-24')} aria-label="Preço unitário" />
-          </label>
-        )}
       </div>
       {extras.length > 0 && (
         <div role="group" aria-label="Extras" className="flex flex-wrap gap-1.5">
@@ -69,10 +64,10 @@ export function SaleItemEditor({ item, service, onChange, canSeePrices, canEditP
       )}
       <div className="flex flex-wrap items-center gap-2">
         <select aria-label="Desconto" value={item.discountType} onChange={(e) => set({ discountType: e.target.value as DiscountType })} className={field}>
-          <option value="">Sem desconto</option><option value="percent">Desconto em %</option><option value="fixed">Desconto em R$</option>
+          <option value="">Sem desconto</option><option value="percent">Desconto %</option><option value="fixed">Desconto R$</option>
         </select>
         {item.discountType && <input aria-label={item.discountType === 'percent' ? 'Percentual de desconto' : 'Desconto em reais'} inputMode="decimal" value={item.discount} onChange={(e) => set({ discount: e.target.value })} placeholder={item.discountType === 'percent' ? '10' : '100,00'} className={cn(field, 'w-24')} />}
-        {canSeePrices && t.total > 0 && <span className="ml-auto text-[15px] font-semibold tabular-nums">{brl(t.total)}{item.kind === 'recorrente' ? '/mês' : ''}</span>}
+        {canEditPrice && <input inputMode="decimal" value={item.price} placeholder={`Preço ${t.base > 0 && !item.price ? String(t.base).replace('.', ',') : ''}`.trim()} onChange={(e) => set({ price: e.target.value })} className={cn(field, 'w-28')} aria-label="Preço unitário (deixe vazio para usar o do catálogo)" />}
       </div>
       {t.needsVariant && <p className="text-[13px] text-muted">Escolha uma variação.</p>}
       {canSeePrices && !t.needsVariant && t.base <= 0 && <p className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">Este serviço não tem preço no catálogo. O admin define em Comercial → Serviços e pacotes.</p>}

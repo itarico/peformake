@@ -99,7 +99,7 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
       }
       const { data: deal } = await supabase.from('crm_deals').select('id, contact_id, lead_name, lead_company, lead_phone, service_id, title').eq('id', dealId!).maybeSingle()
       if (!deal) return
-      const d = deal as { id: string; contact_id: string | null; lead_name: string | null; lead_company: string | null; lead_phone: string | null; service_id: string | null; title: string }
+      const d = deal as unknown as { id: string; contact_id: string | null; lead_name: string | null; lead_company: string | null; lead_phone: string | null; service_id: string | null; title: string }
       let contact: { client_id: string | null; display_name: string | null; wa_name: string | null; phone: string | null } | null = null
       if (d.contact_id) contact = (await supabase.from('wa_contacts').select('client_id, display_name, wa_name, phone').eq('id', d.contact_id).maybeSingle()).data
       setOrigin({ dealId: d.id, contactId: d.contact_id, label: d.title.replace(/^Oportunidade: /, '') })
@@ -288,9 +288,9 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
         {/* ---------- 2. Serviço ---------- */}
         {step === 1 && (
           <div className="flex flex-col gap-2">
-            <p className="truncate text-[13px] text-muted">Para <b className="text-ink">{clientName}</b></p>
+            {!editing && <p className="truncate text-[13px] text-muted">Para <b className="text-ink">{clientName}</b></p>}
             {editing && byId.get(items.find((i) => i.key === editing)?.serviceId ?? '') ? (
-              <div className="flex flex-col gap-3 rounded-2xl border border-line p-3">
+              <div className="flex flex-col gap-2.5">
                 <SaleItemEditor item={items.find((i) => i.key === editing)!} service={byId.get(items.find((i) => i.key === editing)!.serviceId)!}
                   onChange={(n) => setItems((c) => c.map((i) => (i.key === n.key ? n : i)))} canSeePrices={canSeePrices} canEditPrice={canEditPrice} />
                 <div className="flex justify-between gap-2">
@@ -317,9 +317,9 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
                     <button key={it.key} type="button" onClick={() => setEditing(it.key)} className="flex min-h-12 w-full cursor-pointer items-center gap-2 rounded-2xl border border-line px-3 py-1.5 text-left hover:border-line-strong">
                       <span className="min-w-0 flex-1">
                         <span className="block truncate font-semibold">{itemLabel(it, s)}</span>
-                        <span className="block truncate text-[12px] text-muted">{it.kind === 'recorrente' ? 'Mensal' : 'Avulso'} · {s && unitOf(s) === 'ellcazo' ? 'Ellcazo' : 'Peformake'}{totals[n].needsVariant ? ' · escolha a variação' : ''}</span>
+                        <span className="block truncate text-[12px] text-muted">{it.kind === 'recorrente' ? 'Mensal' : 'Avulso'} · {s && unitOf(s) === 'ellcazo' ? 'Ellcazo' : 'Peformake'}{totals[n]?.needsVariant ? ' · escolha a variação' : ''}</span>
                       </span>
-                      {canSeePrices && <span className="font-semibold tabular-nums">{brl(totals[n].total)}</span>}
+                      {canSeePrices && <span className="font-semibold tabular-nums">{brl(totals[n]?.total ?? 0)}</span>}
                       <Pencil size={15} aria-hidden="true" className="shrink-0 text-muted" />
                     </button>
                   )
@@ -338,7 +338,7 @@ export function NewSaleDialog({ onClose, dealId = null, clientId = null }: { onC
               {items.slice(0, 3).map((it, n) => (
                 <p key={it.key} className="flex justify-between gap-2 text-[13px]">
                   <span className="min-w-0 truncate">{itemLabel(it, byId.get(it.serviceId))} <span className="text-muted">· {it.kind === 'recorrente' ? 'mensal' : 'avulso'}</span></span>
-                  {canSeePrices && <span className="shrink-0 tabular-nums">{brl(totals[n].total)}</span>}
+                  {canSeePrices && <span className="shrink-0 tabular-nums">{brl(totals[n]?.total ?? 0)}</span>}
                 </p>
               ))}
               {items.length > 3 && <p className="text-[12px] text-muted">+ {items.length - 3} {items.length - 3 === 1 ? 'serviço' : 'serviços'}</p>}

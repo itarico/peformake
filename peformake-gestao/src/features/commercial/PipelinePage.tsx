@@ -21,7 +21,7 @@ import {
   type Deal,
   type DealStage,
 } from './commercialRules'
-import { SaleForm } from './SaleForm'
+import { useSearchParams } from 'react-router-dom'
 import { commercialKeys, useCommercialData, useDeals, useServices } from './useCommercial'
 
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink'
@@ -129,7 +129,9 @@ export function PipelinePage() {
   const deals = useDeals()
   const services = useServices()
   const [editing, setEditing] = useState<Deal | null>(null)
-  const [selling, setSelling] = useState<Deal | null>(null)
+  const [, setParams] = useSearchParams()
+  // Nova venda com o negócio já preenchido (o pop-up é do layout do Comercial).
+  const sell = (deal: Deal) => setParams((p) => { const n = new URLSearchParams(p); n.set('nova', '1'); n.set('negocio', deal.id); return n })
   const [losing, setLosing] = useState<{ deal: Deal; reason: string } | null>(null)
   const [dragId, setDragId] = useState<string | null>(null)
   const [overStage, setOverStage] = useState<DealStage | null>(null)
@@ -170,7 +172,7 @@ export function PipelinePage() {
     if (deal.stage === stage) return
     if (stage === 'perdido') return setLosing({ deal, reason: '' })
     move.mutate({ id: deal.id, stage, reason: null })
-    if (stage === 'ganho' && deal.contactId && isCommercial) setSelling(deal)
+    if (stage === 'ganho' && isCommercial) sell(deal)
   }
   const drop = (event: DragEvent, stage: DealStage) => {
     event.preventDefault()
@@ -214,7 +216,6 @@ export function PipelinePage() {
           </div>
         </section>
       )}
-      {selling && <SaleForm deal={selling} contacts={data.contacts ?? []} canConfirm={canManage} onClose={() => setSelling(null)} />}
       {editing && <DealEditor key={`${editing.id}-${editing.updatedAt}`} deal={editing} data={data} services={services.data} canManage={canManage} userId={userId} seesAll={seesAll} onClose={() => setEditing(null)} />}
       {creating && <NewLeadDialog services={services.data} staff={seesAll ? data.staff ?? [] : []} onClose={() => setCreating(false)} />}
       {move.isError && <p role="alert" className="font-medium text-warn-ink">{commercialErrorMessage(move.error)}</p>}
@@ -256,8 +257,8 @@ export function PipelinePage() {
                     </p>
                     {deal.valueCents !== null && <p className="text-[13px] font-semibold">{formatBRL(deal.valueCents)}</p>}
                     {deal.nextStep && <p className={cn('text-[12px]', overdue ? 'font-semibold text-warn-ink' : 'text-muted')}>{deal.nextStepAt && `${deal.nextStepAt.split('-').reverse().slice(0, 2).join('/')}: `}{deal.nextStep}</p>}
-                    {deal.stage === 'ganho' && deal.contactId && isCommercial && (
-                      <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setSelling(deal)}><DollarSign size={14} aria-hidden="true" /> Lançar venda</Button>
+                    {(deal.stage === 'negociacao' || deal.stage === 'aguardando' || deal.stage === 'ganho') && isCommercial && (
+                      <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => sell(deal)}><DollarSign size={14} aria-hidden="true" /> Nova venda</Button>
                     )}
                     <label className="sr-only" htmlFor={`mover-${deal.id}`}>Mover {deal.title}</label>
                     <select id={`mover-${deal.id}`} value="" onChange={(e) => tryMove(deal, e.target.value as DealStage)} className="min-h-9 rounded-full border border-line bg-surface px-2.5 text-[12px] text-muted">

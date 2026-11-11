@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Crown, MailCheck, Plus, ShieldCheck, UserMinus, UserPlus } from 'lucide-react'
 import { useAuth } from '@/auth/context'
@@ -92,7 +93,7 @@ async function confirmRemove(m: Member): Promise<boolean | null> {
   return ask(`${m.name} tem acesso ao sistema: remover o acesso também? (Voltar = mantém o acesso)`)
 }
 
-export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { member: Member | null; isMe: boolean; onClose: () => void; startTab?: 'dados' | 'funcao' | 'acesso' | 'pagamento' }) {
+export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startPay }: { member: Member | null; isMe: boolean; onClose: () => void; startTab?: 'dados' | 'funcao' | 'acesso' | 'pagamento'; startPay?: 'contrato' }) {
   const queryClient = useQueryClient()
   const isNew = !member
   const [tab, setTab] = useState<'dados' | 'funcao' | 'acesso' | 'pagamento'>(startTab)
@@ -165,7 +166,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados' }: { me
           ))}
         </div>
 
-        {tab === 'pagamento' && member?.id ? <MemberPayTab staffId={member.id} name={member.name} /> : tab === 'dados' ? (
+        {tab === 'pagamento' && member?.id ? <MemberPayTab staffId={member.id} name={member.name} startStep={startPay} /> : tab === 'dados' ? (
           <div className="flex flex-col gap-3">
             <label className="flex flex-col text-[13px] font-semibold">Nome<input value={name} onChange={(e) => setName(e.target.value)} className={field} autoFocus={isNew} /></label>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -234,6 +235,10 @@ export function MembersPage() {
   const q = useQuery({ queryKey: ['access-members'], queryFn: listMembers })
   const [open, setOpen] = useState<Member | 'new' | null>(null)
   const [showOut, setShowOut] = useState(false)
+  // Link direto (avisos): /equipe/membros?membro=<id>&aba=contrato abre a ficha no contrato.
+  const [params, setParams] = useSearchParams()
+  const linked = params.get('membro') ? q.data?.find((m) => m.id === params.get('membro')) ?? null : null
+  const closeLinked = () => setParams((c) => { const n = new URLSearchParams(c); n.delete('membro'); n.delete('aba'); return n }, { replace: true })
   if (!q.data) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
   const active = q.data.filter((m) => m.active)
   const out = q.data.filter((m) => !m.active)
@@ -279,6 +284,8 @@ export function MembersPage() {
         </section>
       )}
       {open && <MemberDialog member={open === 'new' ? null : open} isMe={open !== 'new' && open.profile_id === me} onClose={() => setOpen(null)} />}
+      {!open && linked && <MemberDialog member={linked} isMe={linked.profile_id === me} onClose={closeLinked}
+        startTab={params.get('aba') === 'contrato' || params.get('aba') === 'pagamento' ? 'pagamento' : 'dados'} startPay={params.get('aba') === 'contrato' ? 'contrato' : undefined} />}
     </div>
   )
 }

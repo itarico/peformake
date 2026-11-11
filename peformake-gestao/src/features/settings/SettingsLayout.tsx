@@ -17,6 +17,7 @@ import { WhatsappAccountsPage } from '@/features/commercial/WhatsappAccountsPage
 import { IntegrationsPage } from '@/features/integrations/IntegrationsPage'
 import { NotificationSettingsPanel } from '@/features/notifications/NotificationsPage'
 import { AutomationsCenter, AutomationsLink } from './AutomationsCenter'
+import { CompanySettings } from './CompanySettings'
 
 // Menu das Configurações em grupos. Computador: menu na lateral. Celular: lista que abre cada página (sem barra de lado).
 // A Ellcazo (audiovisual) é a produtora dentro da Peformake: grupo próprio, sempre com o destaque de cor.
@@ -33,6 +34,7 @@ const GROUPS: Group[] = [
     { to: 'whatsapp', label: 'WhatsApp e comercial', hint: 'Números, prazos e etiquetas' },
   ] },
   { id: 'peformake', label: 'Peformake', items: [
+    { to: 'empresas', label: 'Dados das empresas', hint: 'CNPJ, representante e documentos da Peformake e da Ellcazo', roles: ADMIN_ROLES },
   ] },
   { id: 'ellcazo', label: 'Ellcazo · Audiovisual', ellcazo: true, items: [
     { to: 'audiovisual', label: 'Produção', hint: 'Agenda, prazos e equipe de gravação' },
@@ -146,6 +148,7 @@ export function SettingsLayout() {
             </Route>
             <Route element={<RequireRole roles={ADMIN_ROLES} />}>
               <Route path="acessos" element={<MovedTo to="/equipe/membros" />} />
+              <Route path="empresas" element={<CompanySettings />} />
             </Route>
             <Route path="*" element={<Navigate to="/configuracoes" replace />} />
           </Routes>

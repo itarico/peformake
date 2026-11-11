@@ -28,6 +28,9 @@ export function CommercialRoutes() {
         <Route path="servicos" element={<CatalogSettings />} />
         <Route path="prospeccao" element={<ProspectingPage />} />
         <Route path="vendas" element={<SalesPage />} />
+        <Route path="nova-venda" element={<MovedTo to="/comercial/vendas?nova=1" />} />
+        <Route path="lancar-venda" element={<MovedTo to="/comercial/vendas?nova=1" />} />
+        <Route path="lancar-servico" element={<MovedTo to="/comercial/vendas?nova=1" />} />
         <Route path="pacotes" element={<MovedTo to="/comercial/servicos?area=pacotes" />} />
         <Route path="satisfacao" element={<MovedTo to="/whatsapp/satisfacao" />} />
         <Route path="contas" element={<MovedTo to="/configuracoes/whatsapp" />} />

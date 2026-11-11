@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { GOAL_META, ROLE_LABEL, type GoalRole } from '@/features/goals/goals'
 import { fixedInstallments, type Contract, type Schedule } from './teamRules'
+import { MemberContractPanel } from './MemberContract'
 
 // Remuneração de um membro por tipo de contrato (CLT, PJ, Freela, Sócio). Só administrador.
 // Cada tipo mostra só os campos dele; metas ficam numa etapa à parte (sem rolagem no pop-up).
@@ -62,10 +63,10 @@ export function Attainment({ pct, min, cap }: { pct: number | null; min: number;
   )
 }
 
-export function MemberPayTab({ staffId, name }: { staffId: string; name?: string }) {
+export function MemberPayTab({ staffId, name, startStep }: { staffId: string; name?: string; startStep?: 'contrato' }) {
   const q = useQuery({ queryKey: ['member-ote', staffId], queryFn: () => fetchOte(staffId) })
   if (!q.data) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
-  return <PayForm key={JSON.stringify(q.data)} staffId={staffId} name={name ?? ''} ote={q.data} />
+  return <PayForm key={JSON.stringify(q.data)} staffId={staffId} name={name ?? ''} ote={q.data} startStep={startStep} />
 }
 
 function Chips<T extends string>({ label, items, value, onPick }: { label: string; items: readonly (readonly [T, string])[]; value: T | null; onPick: (v: T) => void }) {
@@ -77,9 +78,9 @@ function Chips<T extends string>({ label, items, value, onPick }: { label: strin
   )
 }
 
-function PayForm({ staffId, name, ote }: { staffId: string; name: string; ote: Ote }) {
+function PayForm({ staffId, name, ote, startStep }: { staffId: string; name: string; ote: Ote; startStep?: 'contrato' }) {
   const queryClient = useQueryClient()
-  const [step, setStep] = useState<'tipo' | 'valores' | 'metas'>(ote.contract ? 'valores' : 'tipo')
+  const [step, setStep] = useState<'tipo' | 'valores' | 'metas' | 'contrato'>(startStep ?? (ote.contract ? 'valores' : 'tipo'))
   const [contract, setContract] = useState<Contract | null>(ote.contract)
   const [schedule, setSchedule] = useState<Schedule>(ote.pay_schedule ?? 'mensal')
   const [advance, setAdvance] = useState(String(ote.advance_pct ?? ''))
@@ -119,7 +120,7 @@ function PayForm({ staffId, name, ote }: { staffId: string; name: string; ote: O
   const parts = canSchedule && contract !== 'freela' ? fixedInstallments(num(base), schedule, advPct) : []
   const keys = Object.keys(GOAL_META)
 
-  const steps = [['tipo', '1 Tipo'], ['valores', '2 Valores'], ...(hasVariable ? [['metas', '3 Metas'] as const] : [])] as const
+  const steps = [['tipo', '1 Tipo'], ['valores', '2 Valores'], ...(hasVariable ? [['metas', '3 Metas'] as const] : []), ['contrato', 'Contrato'] as const] as const
   const cur = step === 'metas' && !hasVariable ? 'valores' : step
 
   return (
@@ -127,15 +128,15 @@ function PayForm({ staffId, name, ote }: { staffId: string; name: string; ote: O
       <div className="flex items-center justify-between gap-2">
         <div role="tablist" aria-label="Etapas do pagamento" className="inline-flex rounded-full bg-raised p-0.5 text-[12.5px]">
           {steps.map(([k, l]) => (
-            <button key={k} type="button" role="tab" aria-selected={cur === k} disabled={!contract && k !== 'tipo'} onClick={() => setStep(k)}
+            <button key={k} type="button" role="tab" aria-selected={cur === k} disabled={!contract && k !== 'tipo' && k !== 'contrato'} onClick={() => setStep(k)}
               className={cn('min-h-8 cursor-pointer rounded-full px-3 font-semibold disabled:cursor-not-allowed disabled:opacity-40', cur === k ? 'bg-surface text-ink shadow-sm' : 'text-muted')}>{l}</button>
           ))}
         </div>
-        <Button disabled={save.isPending || !contract} onClick={() => { setSaved(false); setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
+        {cur !== 'contrato' && <Button disabled={save.isPending || !contract} onClick={() => { setSaved(false); setProblem(null); save.mutate() }}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>}
       </div>
       {(saved || problem) && <p role={problem ? 'alert' : 'status'} className={cn('text-[12.5px] font-medium', problem ? 'text-warn-ink' : 'text-ok-ink')}>{problem ?? 'Salvo.'}</p>}
 
-      {cur === 'tipo' ? (
+      {cur === 'contrato' ? <MemberContractPanel staffId={staffId} name={name} /> : cur === 'tipo' ? (
         <>
           <fieldset>
             <legend className="mb-1.5 text-[13px] font-semibold">Tipo de contrato{!contract && <span className="ml-1.5 rounded-full bg-warn-soft px-2 py-0.5 text-[11px] text-warn-ink">definir</span>}</legend>

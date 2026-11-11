@@ -4,9 +4,10 @@ import { FileSignature } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { supabase } from '@/lib/supabase'
+import { ContractClauses } from './ContractClauses'
 
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
-const PLACEHOLDERS = ['{{cliente_nome}}', '{{cliente_documento}}', '{{cliente_endereco}}', '{{empresa_responsavel}}', '{{servicos}}', '{{valor_mensal}}', '{{dia_vencimento}}', '{{meses}}', '{{inicio}}', '{{data}}']
+const PLACEHOLDERS = ['{{contratada_qualificacao}}', '{{contratante_qualificacao}}', '{{objeto_itens}}', '{{clausulas_servicos}}', '{{valor_texto}}', '{{prazo_texto}}', '{{local_data}}', '{{contratada_razao}}', '{{contratante_nome}}', '{{subtitulo}}']
 
 /** Integrações (admin): liga o Assinafy, quem assina pela Peformake e os modelos de contrato. */
 export function ContractSettings() {
@@ -74,6 +75,7 @@ export function ContractSettings() {
           ))}
         </ul>
       </div>
+      <ContractClauses />
       {editing && (
         <Dialog open onClose={() => setEditing(null)} title={editing.id ? 'Editar modelo' : 'Novo modelo'} size="lg" footer={<Button disabled={editing.name.trim().length < 2 || editing.body.length < 50 || saveTemplate.isPending} onClick={() => saveTemplate.mutate()}>Salvar modelo</Button>}>
           <div className="flex flex-col gap-3">
@@ -84,9 +86,9 @@ export function ContractSettings() {
               </select>
             </label>
             <label className="flex flex-col text-[13px] font-semibold">Texto do contrato
-              <textarea rows={16} value={editing.body} onChange={(e) => setEditing({ ...editing, body: e.target.value })} className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-[13px] font-normal" />
+              <textarea value={editing.body} onChange={(e) => setEditing({ ...editing, body: e.target.value })} className="mt-1 h-[40dvh] w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[13px] font-normal" />
             </label>
-            <p className="text-[12px] text-muted">Campos preenchidos sozinhos: {PLACEHOLDERS.join(' ')}</p>
+            <p className="text-[12px] text-muted">Campos preenchidos sozinhos: {PLACEHOLDERS.join(' ')}. "CLÁUSULA #" e "#.1." são numerados sozinhos.</p>
             {saveTemplate.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível salvar.</p>}
           </div>
         </Dialog>
