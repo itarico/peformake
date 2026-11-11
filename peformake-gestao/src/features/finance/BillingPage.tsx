@@ -6,6 +6,7 @@ import { CalendarClock, Check, Copy, Download, ExternalLink, Layers, Link2, Perc
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { DialogTabs } from '@/components/ui/DialogTabs'
 import { SectionHeader } from '@/components/layout/SectionTabs'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -741,6 +742,8 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
     },
   })
   const [draft, setDraft] = useState<Record<string, unknown>>({})
+  // Sem rolagem: Onde cobra · Automático · Multa e desconto · Repasse (antigo, em "Mais").
+  const [tab, setTab] = useState<'gateway' | 'auto' | 'multa' | 'mais'>('gateway')
   const v = { ...(q.data ?? {}), ...draft } as Record<string, unknown>
   const set = (k: string, val: unknown) => setDraft((d) => ({ ...d, [k]: val }))
   const save = useMutation({
@@ -759,7 +762,10 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
   return (
     <Dialog open onClose={onClose} title="Configurar cobrança" size="md" footer={<Button disabled={save.isPending || !Object.keys(draft).length} onClick={() => save.mutate()}>Salvar</Button>}>
       {!q.data ? <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} /> : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
+          <DialogTabs label="Partes da cobrança" value={tab} onChange={setTab}
+            options={[{ id: 'gateway', label: 'Onde cobra' }, { id: 'auto', label: 'Automático' }, { id: 'multa', label: 'Multa e desconto' }, { id: 'mais', label: 'Mais' }]} />
+          <div hidden={tab !== 'gateway'} className="flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-3">
             <label className="flex flex-col text-[13px] font-semibold">Gateway
               <select value={String(v.gateway)} onChange={(e) => set('gateway', e.target.value)} className={field}>
@@ -773,12 +779,17 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
               </select>
             </label>
           </div>
-          <p className="text-[12px] text-muted">As chaves ficam no servidor (Supabase): ASAAS_API_KEY e ASAAS_WEBHOOK_TOKEN, ou MP_ACCESS_TOKEN. A Cora exige o plano CoraPro e certificado; por enquanto a cobrança dela é manual.</p>
-          <fieldset className="flex flex-col">
-            <legend className="mb-1 text-[13px] font-semibold">Automático</legend>
+          <EllcazoBilling />
+          </div>
+          <fieldset hidden={tab !== 'auto'} className="flex flex-col">
+            <legend className="sr-only">Automático</legend>
             {toggle('monthly_generate', 'Gerar mensalidades sozinho', 'Todo dia confere os clientes fixos e cria a mensalidade do mês, com vencimento no dia 30, respeitando início e fim do contrato.')}
             {toggle('merge_monthly', 'Cobrança única do mês', 'Junta as faturas do mesmo cliente no mês (Peformake, Ellcazo e avulsos) numa cobrança só, com um link. Por dentro cada empresa continua com a sua parte. Sinal de orçamento e fotos não entram.')}
             {toggle('auto_charge', 'Criar o link no gateway sozinho', '5 dias antes do vencimento a fatura ganha o link de pagamento (Pix, boleto ou cartão). Cancelar ou dar baixa aqui também fecha a cobrança no Asaas.')}
+            <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova e lembretes) ligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>
+          </fieldset>
+          <fieldset hidden={tab !== 'multa'} className="flex flex-col">
+            <legend className="sr-only">Multa e desconto</legend>
             {toggle('fine_enabled', 'Multa e juros por atraso', 'Vale para os links criados daqui em diante. O Asaas soma sozinho depois do vencimento.')}
             {!!v.fine_enabled && (
               <div className="flex flex-wrap gap-3 pb-1 pl-6">
@@ -793,10 +804,8 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
                 <label className="flex flex-col text-[13px] font-semibold">Pagando até (dias antes)<input inputMode="numeric" value={String(v.discount_days ?? 0)} onChange={(e) => set('discount_days', Math.min(30, Math.max(0, Number(e.target.value.replace(/\D/g, '')) || 0)))} className={cn(field, 'w-28')} /></label>
               </div>
             )}
-            <p className="py-1 text-[13px] text-muted">Mensagens ao cliente (fatura nova com link e lembretes de vencimento) ligam e desligam em <a href="/configuracoes/notificacoes" className="font-semibold">Configurações &gt; Notificações</a>, no grupo Financeiro. Com 3 dias de atraso o gestor é avisado; com 7 a régua para.</p>
           </fieldset>
-          <EllcazoBilling />
-          <fieldset className="flex flex-col gap-2 rounded-2xl border border-line p-4">
+          <fieldset hidden={tab !== 'mais'} className="flex flex-col gap-2 rounded-2xl border border-line p-4">
             <legend className="px-1 text-[13px] font-semibold">Repasse diário da Ellcazo (Pix, antigo)</legend>
             {toggle('sweep_enabled', 'Fazer o Pix todo dia às 18h', 'Soma o que a Ellcazo recebeu pelo Asaas no dia e transfere para a conta da Ellcazo. Só com a chave Pix abaixo.')}
             <div className="grid grid-cols-[1fr_auto] gap-3">
@@ -809,6 +818,7 @@ function BillingSettingsDialog({ onClose }: { onClose: () => void }) {
               </label>
             </div>
             <label className="flex flex-col text-[13px] font-semibold">Quanto da receita da Ellcazo vai no Pix (%)<input inputMode="decimal" value={String(v.sweep_share_pct ?? 100)} onChange={(e) => set('sweep_share_pct', Number(e.target.value.replace(',', '.')) || 0)} className={cn(field, 'w-32')} /></label>
+            <p className="text-[12px] text-muted">As chaves ficam no servidor (Supabase): ASAAS_API_KEY e ASAAS_WEBHOOK_TOKEN, ou MP_ACCESS_TOKEN. A Cora exige o plano CoraPro e certificado; por enquanto a cobrança dela é manual.</p>
           </fieldset>
           {save.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível salvar.</p>}
         </div>
