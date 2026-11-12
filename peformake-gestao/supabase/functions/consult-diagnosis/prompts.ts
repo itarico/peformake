@@ -20,7 +20,7 @@ Regras de ouro da pesquisa:
 3. Confirme a identidade antes de usar um perfil: mesmo nome OU variação (ex.: "Will Motos" e "Will Motos Prime"), mesma cidade/endereço/telefone. Escreva "confirmado" (bate endereço/telefone/link cruzado) ou "provável" (só o nome bate).
 4. Cada fato com o link de onde saiu. Números sempre com a data/período quando houver.
 5. Os dados internos que a equipe passou (cadastro, Receita Federal, direcionamento, links do cliente) e o que a rotina coletou com os conectores (coleta_dos_conectores: Biblioteca de Anúncios da Meta, Instagram) são verdade: use primeiro, cite a fonte e não refaça essa busca.
-6. Seja eficiente: buscas bem escolhidas, com cidade/estado. Não repita a mesma busca.
+6. Seja eficiente: buscas bem escolhidas, com cidade/estado. Não repita a mesma busca. Nunca abra (web_fetch) facebook.com, instagram.com ou tiktok.com: pedem login e travam; use o trecho que a busca mostra.
 
 Formato da resposta: texto simples, tópicos curtos, sem tabelas. Termine com "## Não encontrado" e "## Fontes" (uma URL por linha).`
 
@@ -39,7 +39,7 @@ export function researchTask(part: ResearchPart, niche: string): string {
   const t: Record<ResearchPart, string> = {
     redes: `PARTE 1A: REDES SOCIAIS. Ache e CONFIRME os perfis da empresa.
 - Instagram: ache o @ (busque "<nome> instagram <cidade>", variações do nome, no Facebook, no Linktree, em anúncios do OLX/portais). Seguidores, nº de posts, bio, link da bio, frequência e tipo de conteúdo, o que parece performar (pelo que aparecer na busca).
-- Facebook (página, avaliações, última postagem), TikTok, YouTube, Linktree.
+- Facebook (página, avaliações, última postagem), TikTok, YouTube, Linktree. Use os trechos da busca; não abra páginas do facebook.com/instagram.com (pedem login e travam).
 Para cada rede: URL, status (confirmado/provável/não encontrado), números e data. Seja rápido: no máximo 4 buscas.`,
     site: `PARTE 1B: SITE, BUSCA E IDENTIDADE.
 - Variações do nome (nome fantasia, razão social, com e sem cidade), telefone e endereço que aparecem em cada fonte (anote divergências).
@@ -56,7 +56,7 @@ Para cada rede: URL, status (confirmado/provável/não encontrado), números e d
 - Produtos/serviços carro-chefe e preços públicos.`,
     concorrentes: `PARTE 4: CONCORRÊNCIA. Use o que a rodada 1 achou (abaixo) para não repetir buscas sobre o cliente.
 - 3 a 5 concorrentes DIRETOS (mesma cidade/região, mesmo público). Para cada um: site, @ e seguidores, nota e nº de avaliações no Google, faixa de preço, diferencial que eles mesmos dizem, como se comunicam.
-- Anúncios: tente abrir https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=<nome>. Se não abrir, procure sinais públicos de anúncio (posts patrocinados, campanhas citadas) e anote "não abriu".
+- Anúncios: a Biblioteca de Anúncios da Meta vem da coleta (coleta_dos_conectores). NÃO abra facebook.com nem instagram.com (pedem login e travam a pesquisa). Sem coleta, anote só sinais públicos de anúncio que aparecerem na busca.
 - O que eles fazem MELHOR que o cliente, o que o cliente faz melhor e o espaço que NINGUÉM ocupa.
 - Criativos que funcionam no nicho agora (formato, gancho, prova) e 1 ou 2 marcas referência nacionais: o que aprender com elas (estrutura, nunca a fala).
 - Se a coleta dos conectores (coleta_dos_conectores) já trouxe Biblioteca de Anúncios ou Instagram, use primeiro e não repita.`,

@@ -326,6 +326,8 @@ async function finishResearch(db: SupabaseClient, job: Job, research: Research) 
   await db.from('consult_docs').update({ research, stage: 'diagnostico', attempts: 0, busy_until: null, error: null, doc: { ...(job.doc ?? {}), fontes: all, avisos } }).eq('id', job.id).eq('stage', job.stage)
 }
 
+// Redes sociais pedem login: abrir a página trava a pesquisa até o limite de tempo (era o que derrubava "concorrentes").
+const BLOCKED_FETCH = ['facebook.com', 'instagram.com', 'tiktok.com', 'threads.net']
 async function runPart(db: SupabaseClient, ai: Anthropic, job: Job, part: ResearchPart, state: Part, ctx: string, niche: string): Promise<Part> {
   const retry = job.attempts >= 2
   const prompt = `DADOS INTERNOS DO CLIENTE (cadastro, Receita Federal, direcionamento, links, anúncios e conversas):\n${ctx}\n\n${researchTask(part, niche)}`
@@ -336,7 +338,7 @@ async function runPart(db: SupabaseClient, ai: Anthropic, job: Job, part: Resear
     system: [{ type: 'text', text: RESEARCH_SYSTEM, cache_control: { type: 'ephemeral' } }],
     tools: [
       { type: 'web_search_20260209', name: 'web_search', max_uses: retry ? 2 : PART_USES[part][0], user_location: { type: 'approximate', country: 'BR', timezone: 'America/Sao_Paulo' } },
-      { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: retry ? 1 : PART_USES[part][1], max_content_tokens: 5000 },
+      { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: retry ? 1 : PART_USES[part][1], max_content_tokens: 5000, blocked_domains: BLOCKED_FETCH },
     ],
     // Pesquisa é coleta: esforço baixo (rápido, cabe no tempo). A análise funda é no cruzamento.
     output_config: { effort: 'low' },
