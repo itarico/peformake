@@ -24,6 +24,7 @@ import { CardSection, DeckCard, DeckThumb, OrientationDialog, placeholderCover, 
 import { AreaCard, AvCard, MonthlyCard, MonthPick } from './PlanCards'
 import { ReportCards } from './ReportCards'
 import { AgentDocs, PdfCard, latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
+import { MeetingNotes } from './MeetingNotes'
 import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
@@ -360,9 +361,9 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
           {pdf.estrategia && <PdfCard phone={phone.data ?? null} id="estrategia" title="Estratégia do mês" doc={pdf.estrategia} name={name} />}
-          {has.trafego && (pdf.trafego || pdf.estrategia) && <PdfCard phone={phone.data ?? null} id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
-          {has.social && pdf.social && <PdfCard phone={phone.data ?? null} id="social" title="Social media + Design" doc={pdf.social} name={name} />}
-          {has.av && pdf.audiovisual && <PdfCard phone={phone.data ?? null} id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
+          {(pdf.trafego || (has.trafego && pdf.estrategia)) && <PdfCard phone={phone.data ?? null} id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
+          {pdf.social && <PdfCard phone={phone.data ?? null} id="social" title="Social media + Design" doc={pdf.social} name={name} />}
+          {pdf.audiovisual && <PdfCard phone={phone.data ?? null} id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
         </CardSection>
       </>}
       {view === 'planejamento' && !hasPdf && <>
@@ -388,6 +389,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
           </CardSection>
         )}
       </>}
+      {view === 'planejamento' && <MeetingNotes clientId={clientId} name={name} />}
       {view === 'planejamento' && <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
       {dialogs}
     </section>

@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
-import { Download, ExternalLink, FileText, MessageCircle } from 'lucide-react'
+import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Download, ExternalLink, FileText, MessageCircle, Send } from 'lucide-react'
 import { DeckCard, DeckThumb, placeholderCover } from './DeckCard'
 import { ask } from '@/components/ui/confirm'
 import { supabase } from '@/lib/supabase'
@@ -9,7 +10,7 @@ import { supabase } from '@/lib/supabase'
  * estratégia, social media, audiovisual e relatórios. Decisão do Italo (12/11/2026): esses PDFs são a versão que vai ao cliente.
  */
 export type Folder = 'estrategia' | 'trafego' | 'social' | 'audiovisual' | 'relatorios'
-export interface Doc { id: string; folder: Folder; name: string; bucket: string; path: string; created_at: string }
+export interface Doc { id: string; folder: Folder; name: string; bucket: string; path: string; created_at: string; approved_at?: string | null; sent_at?: string | null }
 
 const LABEL: Record<Folder, string> = { estrategia: 'Estratégia', trafego: 'Tráfego', social: 'Social media', audiovisual: 'Audiovisual', relatorios: 'Relatório' }
 const ORDER: Folder[] = ['estrategia', 'trafego', 'social', 'audiovisual', 'relatorios']
@@ -31,10 +32,10 @@ export function useAgentDocs(clientId: string) {
   return useQuery({
     queryKey: ['agent-docs', clientId],
     queryFn: async () => {
-      const { data, error } = await supabase.from('client_assets').select('id, folder, name, bucket, path, created_at')
+      const { data, error } = await supabase.from('client_assets').select('id, folder, name, bucket, path, created_at, approved_at, sent_at')
         .eq('client_id', clientId).eq('source', 'agente').in('folder', ORDER).order('created_at', { ascending: false }).limit(40)
       if (error) throw new Error(error.message)
-      return (data ?? []) as Doc[]
+      return (data ?? []) as unknown as Doc[]
     },
   })
 }
@@ -54,16 +55,36 @@ export async function sendDoc(d: Doc, name: string, phone?: string | null) {
  * Quando existe, substitui o cartão gerado pelo sistema (decisão do Italo, 12/11/2026).
  */
 export function PdfCard({ id, title, doc, name, brand = 'peformake', note, phone }: { id: string; title: string; doc: Doc; name: string; brand?: 'peformake' | 'ellcazo'; note?: string; phone?: string | null }) {
-  const when = new Date(doc.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+  const qc = useQueryClient()
+  const [problem, setProblem] = useState<string | null>(null)
+  const dm = (iso: string) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+  // Aprovar = enviar sozinho pelo Wasender para os contatos de aprovação do cliente (decisão do Italo, 12/11/2026).
+  const approve = useMutation({
+    mutationFn: async () => {
+      const url = await signed(doc, 60 * 60 * 24 * 30)
+      const { data, error } = await supabase.rpc('agent_doc_approve' as never, { _asset: doc.id, _url: url } as never)
+      if (error) throw new Error(error.message)
+      return data as unknown as number
+    },
+    onSuccess: (n) => { setProblem(n ? null : 'Aprovado, mas o cliente não tem WhatsApp no cadastro: use "Enviar pelo meu WhatsApp".'); void qc.invalidateQueries({ queryKey: ['agent-docs'] }) },
+    onError: (e) => setProblem((e as Error).message),
+  })
+  const sent = !!doc.sent_at
+  const status = sent ? { label: `Enviado ${dm(doc.sent_at!)}`, tone: 'ok' as const } : doc.approved_at ? { label: 'Aprovado', tone: 'ok' as const } : { label: 'Para aprovar', tone: 'info' as const }
+  const go = async () => { if (await ask(`Aprovar e enviar "${doc.name.replace(/\.pdf$/i, '')}" para ${name}? A mensagem com o link sai sozinha agora pelo WhatsApp da Peformake.`)) approve.mutate() }
   return (
     <DeckCard id={id} title={title}
       cover={<DeckThumb slide={placeholderCover(doc.name.replace(/\.pdf$/i, '').split('·')[0]!.trim(), name)} name={name} brand={brand} />}
-      status={{ label: 'Pronto', tone: 'ok' }}
-      missing={note ?? `${doc.name.replace(/\.pdf$/i, '')} · enviado à pasta em ${when}`}
-      primary={{ label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: () => void openDoc(doc) }}
+      status={status}
+      missing={problem ?? note ?? `${doc.name.replace(/\.pdf$/i, '')} · na pasta desde ${dm(doc.created_at)}`}
+      primary={sent || doc.approved_at
+        ? { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: () => void openDoc(doc) }
+        : { label: approve.isPending ? 'Enviando' : 'Aprovar e enviar', icon: <Send size={15} aria-hidden="true" />, onClick: () => void go(), disabled: approve.isPending }}
       menu={[
+        { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: () => void openDoc(doc), hidden: sent || !!doc.approved_at },
         { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, onClick: () => void saveDoc(doc) },
-        { label: 'Enviar ao cliente', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => void sendDoc(doc, name, phone) },
+        { label: sent ? 'Enviar de novo' : 'Aprovar e enviar', icon: <Send size={15} aria-hidden="true" />, onClick: () => void go(), hidden: !sent && !doc.approved_at },
+        { label: 'Enviar pelo meu WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => void sendDoc(doc, name, phone) },
       ]} />
   )
 }

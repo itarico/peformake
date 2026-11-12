@@ -16,6 +16,7 @@ Para cada cliente, um estudo só, no design aprovado (o mesmo da apresentação 
 5. **Relatório do mês** (pasta `relatorios`): estilo Reportei, um por conta, do mês fechado. Só se o cliente tem tráfego. Aparece só na aba Relatórios (nunca no cartão Tráfego).
 
 ## Dados
+- **Primeiro, as anotações da reunião** (`client_meeting_notes` com `done_at` nulo): são pedidos do cliente e têm prioridade sobre tudo. Depois de aplicar no documento, marque `done_at = now()`.
 - Supabase `wkkzcjnxyylrqoolmmhi` (só leitura): `consult_docs` (diagnóstico), `client_brand_guides`, `client_brand_voice`, `client_services`, `client_questions` respondidas, `client_scan` e `monthly_scan_extra`, `content_items`, `av_projects`, `traffic_daily_metrics`, `ad_accounts`, `client_directions` (direcionamento da equipe tem prioridade).
 - Meta (só leitura; nunca alterar nada): contas de anúncio e Biblioteca de Anúncios pelos conectores ADS.
 - Firecrawl (scrapecreators: tiktok/search-videos, instagram/search-reels, instagram/user-posts) para concorrentes e o que está viralizando; teto de 40 créditos por cliente.
@@ -23,7 +24,8 @@ Para cada cliente, um estudo só, no design aprovado (o mesmo da apresentação 
 ## Subir os PDFs
 1. Token (vale 2 h): `insert into public.agent_upload_tokens (token) values (encode(extensions.gen_random_bytes(24),'hex')) returning token;`
 2. Enviar: POST `https://wkkzcjnxyylrqoolmmhi.supabase.co/functions/v1/agent-upload` com JSON `{token, client_id, folder, name, file (base64), mime}`. Nome: "Estratégia · <mês ano>.pdf", "Planejamento de social media · <mês ano>.pdf", "Planejamento de audiovisual · <mês ano>.pdf", "Estratégia de tráfego · <mês ano>.pdf", "Relatório de tráfego · <mês ano>.pdf".
-3. Avisar a equipe: `select public.notify(...)` para o responsável de cada área do cliente (client_team) com link `/clientes/<id>?aba=arquivos`. Nunca mandar nada ao cliente (o envio é sempre de um humano).
+3. O PDF novo chega no cartão como "Para aprovar" (o upload zera a aprovação). Quando o Italo toca em **Aprovar e enviar**, a mensagem com o link sai sozinha pelo Wasender (função `agent_doc_approve`). Nunca aprovar no lugar dele.
+4. Avisar a equipe: `select public.notify(...)` para o responsável de cada área do cliente (client_team) com link `/clientes/<id>?aba=arquivos`. Nunca mandar nada ao cliente (o envio é sempre de um humano).
 
 ## Fim
 Uma linha no topo de `peformake-gestao/docs/rotina-diario.md` com os clientes feitos e os que ficaram para o dia seguinte.

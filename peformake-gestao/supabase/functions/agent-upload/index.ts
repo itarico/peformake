@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
   const up = await db.storage.from('client-assets').upload(path, bytes, { contentType: mime, upsert: true })
   if (up.error) return json({ error: up.error.message }, 500)
   await db.from('agent_upload_tokens').update({ uses: t.uses + 1 }).eq('token', b.token)
-  const { data: row, error } = await db.from('client_assets').upsert({ client_id: b.client_id, folder, name: b.name.slice(0, 200), bucket: 'client-assets', path, mime, size_bytes: bytes.length, source: 'agente' }, { onConflict: 'bucket,path' }).select('id').single()
+  const { data: row, error } = await db.from('client_assets').upsert({ client_id: b.client_id, folder, name: b.name.slice(0, 200), bucket: 'client-assets', path, mime, size_bytes: bytes.length, source: 'agente', approved_at: null, approved_by: null, sent_at: null }, { onConflict: 'bucket,path' }).select('id').single()
   if (error) return json({ error: error.message }, 500)
   return json({ ok: true, id: row.id, path })
 })
