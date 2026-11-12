@@ -34,6 +34,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-12 · Planos de dezembro pelo agente + lançamento de despesa pelo WhatsApp ligado (nuvem)
+- API da Anthropic ficou sem crédito (gasto do mês ~US$71: diagnósticos 55, planos 16). Planos de dezembro de Fornario (29 ações), VOVINA (26) e Brio (27) escritos pelos agentes do Claude e gravados em monthly_strategies.partial; a função só montou (US$0 de API). Truque: parallel() pula o que já está em partial.
+- Combinado com o Italo: modo MISTO (agente faz coleta/pesquisa/escrita; API só o rápido; sem crédito ou teto → vai para a fila do agente; interruptor em Automações; teto API US$80). AINDA NÃO CONSTRUÍDO.
+- Financeiro pelo WhatsApp: migração fin_whatsapp_revisao aplicada (em pedaços; só o que tem "delete" pede confirmação). Nova 20261115180000_fin_wa_le_o_dono: o número conectado é o do Italo, então o que ele manda no grupo "Despesas" (from_me) agora é lido; resposta do sistema ignorada. Canal "Despesas" ligado, Italo liberado (telefone posto na ficha dele), leitura ligada, resposta no grupo desligada. Teste com rollback: "gasolina 150 ellcazo" → saída Ellcazo R$150 Deslocamento a revisar.
+- Pendente: Vinícius Lima está INATIVO na equipe (perguntar ao Italo se reativa e libera). Firecrawl da chave do Supabase sem saldo.
+
 ## 2026-11-13 · Apresentações voltam para a identidade da Peformake (ciano/petróleo); só o audiovisual (roteiros em PDF) usa a logo e as cores da Ellcazo. Regra anotada no CLAUDE.md. (nuvem)
 
 ## 2026-11-12 · Consultoria: edição, perguntas, link público e portal no banco + tela publicada (nuvem)
