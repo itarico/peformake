@@ -29,3 +29,11 @@ Foco agora: **artes/postagens (design)**. Responder comentários, stories etc. f
 
 ## 5. Organização da área (proposta aceita como direção)
 Trocar as 7 abas atuais por poucas: **Resumo/Hoje** (o que fazer agora e o gráfico), **Briefing** (por cliente, com sugestões), **Calendário/Mês**, **Design** (do designer) e **Contas**. Quadro completo com todas as colunas fica atrás de "Ver tudo" para o gestor. Números do gestor vão para o Início.
+
+## 6. Kanban mais enxuto (pedido do Italo, 12/11)
+Só 4 colunas, nesta ordem:
+1. **Tarefas**: tarefas da social media (tabela social_tasks), que nascem de **pedido do cliente** (WhatsApp/portal) ou da **estratégia** (mensal, Consultoria, tráfego). Hoje ficam escondidas em "Redes sociais → Tarefas das redes"; passam a ser a primeira coluna.
+2. **Briefings**: peças com briefing escrito, esperando ir para o design.
+3. **Produção**: com o design (a fazer, fazendo e ajuste pedido juntos, com selo de qual).
+4. **Aprovado**: com o cliente e aprovadas (selo "com o cliente" / "aprovada"); publicadas somem depois de alguns dias.
+No celular, uma coluna por vez com abas no topo (sem rolar para o lado).
