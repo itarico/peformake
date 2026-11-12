@@ -18,6 +18,15 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-12 · PASSAGEM PARA O PC (sessão da nuvem para aqui)
+Estado:
+- Consultoria: motor novo no ar (consult-diagnosis v16: Fable 5.2, pesquisa em 6 partes, coleta pelos conectores, retentativas, nada preso em "gerando"); Will motos, CIA COFFE e Fornario "pronto para revisar". Trava de 1/dia REMOVIDA (ai_generation_allowed = true). Gasto de IA em 12/11 ~US$ 37 (testes); diagnóstico estável ~US$ 8-9/cliente; teto US$ 90/mês.
+- PENDENTE 1 (bloqueia edição por slide, perguntas ao cliente, link público e portal): aplicar supabase/migrations/20261114110000_consultoria_edicao.sql. O apply pela ferramenta pede confirmação (tem "drop policy/drop trigger if exists", mas nenhum dos dois existe) e o cartão não chega no celular. No PC: aprovar o cartão, ou colar o arquivo no SQL Editor, ou aplicar sem as 2 linhas de drop. Depois publicar a tela (slides/edição) a partir de cópia limpa e conferir /estrategia/consultoria.
+- PENDENTE 2: criar a tarefa agendada de COLETA com conectores (Meta Ads ads_library_search/IG, Firecrawl) que lê consult_collect_queue() e grava com consult_collect_save(...) e consult_collect_done(...).
+- Esperando o Italo: CNPJ de MF maquinas, Sn Distribuidora, Brio Burguer, APM, Restaurante do Vando, Disalp (entram na fila sozinhos); subir teto para US$150 no mês?; refazer "concorrentes" da CIA COFFE (~US$5)?; recarregar Firecrawl (créditos -5).
+- Próximo a construir (ordem em docs/ESTUDO-ESTRATEGIA-AREAS.md seções 17 a 19): 1) chat de perguntas ao cliente (link, áudio/foto, NPS, semanal por nicho, última semana pergunta o mês seguinte); 2) estratégia MENSAL com as 4 semanas visíveis (botão "4 semanas") + aprovar = produção (roteiro aprovado entra no agendamento); 3) ajuste semanal barato (modelo pequeno); 4) estratégias por área (tráfego só tráfego, social, design, audiovisual) em slides; 5) trimestral liberado aos 3 meses.
+- Feito hoje também: Ellcazo permissões (no ar), Nova venda com vencimento junto da mensalidade (no ar), audiovisual por visita (no ar), login claro, Início com "cadastro pela metade", Cia Coffee 3 faturas R$600 (venc. 20/11) + mensagem enviada (falta criar link Asaas e mandar).
+
 ## 2026-11-11 noite · Nova venda: avulso de cliente recorrente vence com a mensalidade (nuvem)
 - RPC sale_next_due(_client,_unit): próxima mensalidade em aberto da MESMA empresa (ou o próximo dia de cobrança do contrato). Nova venda com item avulso já preenche esse vencimento e mostra "Junto com a mensalidade: sai na mesma cobrança" (se a pessoa mudar a data, respeita). Disalp → 30/11. Migração 20261114140000.
 
