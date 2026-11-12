@@ -337,8 +337,9 @@ async function runPart(db: SupabaseClient, ai: Anthropic, job: Job, part: Resear
     model: MODEL, max_tokens: 16000,
     system: [{ type: 'text', text: RESEARCH_SYSTEM, cache_control: { type: 'ephemeral' } }],
     tools: [
-      { type: 'web_search_20260209', name: 'web_search', max_uses: retry ? 3 : PART_USES[part][0], user_location: { type: 'approximate', country: 'BR', timezone: 'America/Sao_Paulo' } },
-      ...(PART_USES[part][1] > 0 && !retry ? [{ type: 'web_fetch_20260209' as const, name: 'web_fetch' as const, max_uses: PART_USES[part][1], max_content_tokens: 5000, blocked_domains: BLOCKED_FETCH }] : []),
+      // Versões básicas (sem filtro por código): bem mais rápidas, e a pesquisa precisa caber em ~2 minutos.
+      { type: 'web_search_20250305', name: 'web_search', max_uses: retry ? 3 : PART_USES[part][0], user_location: { type: 'approximate', country: 'BR', timezone: 'America/Sao_Paulo' } },
+      ...(PART_USES[part][1] > 0 && !retry ? [{ type: 'web_fetch_20250910' as const, name: 'web_fetch' as const, max_uses: PART_USES[part][1], max_content_tokens: 5000, blocked_domains: BLOCKED_FETCH }] : []),
     ],
     // Pesquisa é coleta: esforço baixo (rápido, cabe no tempo). A análise funda é no cruzamento.
     output_config: { effort: 'low' },
