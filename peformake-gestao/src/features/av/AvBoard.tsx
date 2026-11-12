@@ -11,7 +11,8 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
 import { useProduction } from '@/features/production/useProduction'
 import { listProjects } from './avApi'
-import { AV_STAGES, SCRIPT_LABEL, countdown, countdownTarget, initials, stageOf, type AvProject } from './avRules'
+import { AV_STAGES, SCRIPT_LABEL, countdown, countdownTarget, initials, onBoard, stageOf, type AvProject } from './avRules'
+import { Dialog } from '@/components/ui/Dialog'
 import { AvShell, TONE_CLASS } from './AvShell'
 import { ScheduleDialog } from './ScheduleDialog'
 
@@ -67,6 +68,8 @@ export function AvBoard() {
   const [query, setQuery] = useState('')
   const [person, setPerson] = useState(canManageAv || onlyClient ? '' : 'me')
   const [creating, setCreating] = useState(false)
+  const [noDateOpen, setNoDateOpen] = useState(false)
+  const [scheduling, setScheduling] = useState<AvProject | null>(null)
   const { clientName, isLive } = useProduction()
 
   const list = useMemo(() => (projects.data ?? []).filter((p) => {
@@ -78,7 +81,9 @@ export function AvBoard() {
   }), [projects.data, person, myStaffId, query, clientName, isLive, onlyClient])
 
   if (!projects.data) return <AvShell title="Produção"><LoadState isPending={projects.isPending} isError={projects.isError} refetch={() => void projects.refetch()} /></AvShell>
-  const delivered = list.filter((p) => stageOf(p) === 'entregue' && p.month === month)
+  const noDate = list.filter((p) => !onBoard(p))
+  const board = list.filter(onBoard)
+  const delivered = board.filter((p) => stageOf(p) === 'entregue' && p.month === month)
   const sortKey = (p: AvProject) => countdownTarget(p) ?? '9999'
 
   return (
@@ -98,6 +103,11 @@ export function AvBoard() {
           {(staff ?? []).filter((s) => ['videomaker', 'editor'].includes(s.mainRole ?? '')).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
         </FilterSheet>
+        {noDate.length > 0 && (
+          <button type="button" onClick={() => setNoDateOpen(true)} className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full bg-warn-soft px-3 text-[13px] font-semibold text-warn-ink">
+            <CircleAlert size={14} aria-hidden="true" /> {noDate.length} sem data
+          </button>
+        )}
         <span className="ml-auto hidden text-[13px] text-muted md:inline">{delivered.length} entregues no mês</span>
       </div>
 
@@ -110,7 +120,7 @@ export function AvBoard() {
       <div className="-mx-4 snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 pb-2 md:mx-0 md:snap-none md:px-0">
         <div className="grid auto-cols-[86%] grid-flow-col gap-2 md:min-w-[1180px] md:snap-none md:auto-cols-auto md:grid-flow-row md:grid-cols-6">
           {AV_STAGES.map((st) => {
-            const items = list.filter((p) => stageOf(p) === st.key).sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
+            const items = board.filter((p) => stageOf(p) === st.key).sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
             return (
               <section key={st.key} aria-label={st.label} data-conteudo className="flex min-h-[420px] snap-start flex-col gap-2 rounded-3xl bg-raised/60 p-2.5">
                 <div className="px-1">
@@ -126,6 +136,21 @@ export function AvBoard() {
       </div>
 
       {creating && <ScheduleDialog onClose={() => setCreating(false)} />}
+      <Dialog open={noDateOpen} onClose={() => setNoDateOpen(false)} size="sm" title="Roteiros sem data" description="Só entra no quadro depois de agendar a gravação.">
+        <ul className="flex flex-col divide-y divide-line">
+          {noDate.slice(0, 8).map((p) => (
+            <li key={p.id} className="flex items-center justify-between gap-2 py-2">
+              <Link to={`/audiovisual/projeto/${p.id}`} className="min-w-0 text-ink no-underline">
+                <span className="block truncate font-semibold">{clientName(p.clientId)}</span>
+                <span className="block truncate text-[12px] text-muted">{p.title}</span>
+              </Link>
+              {canManageAv && <Button variant="secondary" onClick={() => { setNoDateOpen(false); setScheduling(p) }}>Agendar</Button>}
+            </li>
+          ))}
+        </ul>
+        {noDate.length > 8 && <p className="pt-2 text-[13px] text-muted">E mais {noDate.length - 8}. Use a busca por cliente.</p>}
+      </Dialog>
+      {scheduling && <ScheduleDialog project={scheduling} onClose={() => setScheduling(null)} />}
     </AvShell>
   )
 }

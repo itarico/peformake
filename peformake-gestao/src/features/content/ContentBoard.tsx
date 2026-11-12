@@ -13,6 +13,7 @@ import { useMonthParam } from './useMonthParam'
 import {
   EMPTY_FILTERS,
   filterItems,
+  onBoard,
   isLate,
   itemTitle,
   KIND_LABEL,
@@ -53,7 +54,7 @@ export function ContentBoard() {
   const filters: ContentFilters = useMemo(() => (autoDesigner ? { ...picked, designerId: autoDesigner } : picked), [picked, autoDesigner])
   const [showDone, setShowDone] = useState(false)
 
-  const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId)), filters, clientName), [items.data, filters, clientName, isLive])
+  const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId) && onBoard(i)), filters, clientName), [items.data, filters, clientName, isLive])
   if (!items.data || !clients || !staff) {
     return <LoadState isPending={items.isPending || isPending} isError={items.isError || isError} refetch={() => { refetch(); void items.refetch() }} />
   }

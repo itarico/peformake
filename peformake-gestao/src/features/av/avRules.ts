@@ -244,3 +244,8 @@ export function coordsFromMapsLink(text: string): { lat: number; lng: number } |
   const lat = Number(m[1]); const lng = Number(m[2])
   return Math.abs(lat) <= 90 && Math.abs(lng) <= 180 ? { lat, lng } : null
 }
+
+/** No quadro só entra o que já tem gravação agendada (pedido do Italo, 12/11). Roteiro sem data fica em "Sem data". */
+export function onBoard(p: Pick<AvProject, 'status' | 'shootAt'>): boolean {
+  return p.status !== 'script' || !!p.shootAt
+}

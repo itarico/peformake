@@ -200,3 +200,8 @@ export function fileCheck(name: string, size: number): { ext: string; mime: stri
   if (size <= 0) return 'Arquivo vazio.'
   return { ext: ext === 'jpeg' ? 'jpg' : ext, mime: MIME_BY_EXT[ext] as string }
 }
+
+/** No quadro só entra peça com briefing lançado (pedido do Italo, 12/11). Peça vazia fica só na pauta do mês. */
+export function onBoard(item: Pick<ContentItem, 'status' | 'briefing'>): boolean {
+  return item.status !== 'briefing' || !!item.briefing?.trim()
+}
