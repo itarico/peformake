@@ -50,6 +50,7 @@ const AvGalleryPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) =
 const PublicGalleryPage = lazy(() => import('@/features/av/PublicGalleryPage').then((m) => ({ default: m.PublicGalleryPage })))
 const ClientChatPage = lazy(() => import('@/features/strategy/ClientChatPage').then((m) => ({ default: m.ClientChatPage })))
 const PublicDeckPage = lazy(() => import('@/features/strategy/PublicDeckPage').then((m) => ({ default: m.PublicDeckPage })))
+const DocPresentation = lazy(() => import('@/features/strategy/DocPresentation').then((m) => ({ default: m.DocPresentation })))
 const DiagnosticReview = lazy(() => import('@/features/review/DiagnosticReview').then((m) => ({ default: m.DiagnosticReview })))
 const MonthlyReview = lazy(() => import('@/features/review/MonthlyReview').then((m) => ({ default: m.MonthlyReview })))
 const AreaReviewRedirect = lazy(() => import('@/features/review/AreaReviewRedirect').then((m) => ({ default: m.AreaReviewRedirect })))
@@ -109,6 +110,8 @@ export function App() {
         </Route>
         {/* Guia de revisão das apresentações (aba nova, sem o menu): diagnóstico, plano do mês e as visões por área. */}
         <Route path="revisao/diagnostico/:clientId" element={<DiagnosticReview />} />
+        {/* Apresentação dos documentos da Peformake (HTML do agente): aprovar página a página e virar tarefa. */}
+        <Route path="documento/:assetId" element={<DocPresentation />} />
         <Route path="revisao/plano/:clientId/:mes" element={<MonthlyReview />} />
         <Route path="revisao/:area/:clientId/:mes" element={<AreaReviewRedirect />} />
         <Route path="revisao/trimestral/:clientId" element={<CenteredMessage title="Revisão do trimestral" text="Ainda não existe o plano trimestral. Quando existir, ele abre aqui na mesma guia." />} />

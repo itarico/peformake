@@ -1,7 +1,5 @@
-import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Download, ExternalLink, FileText, MessageCircle, Send } from 'lucide-react'
-import { DeckCard, DeckThumb, placeholderCover } from './DeckCard'
+import { Download, ExternalLink, FileText, MessageCircle } from 'lucide-react'
 import { ask } from '@/components/ui/confirm'
 import { supabase } from '@/lib/supabase'
 
@@ -10,12 +8,20 @@ import { supabase } from '@/lib/supabase'
  * estratégia, social media, audiovisual e relatórios. Decisão do Italo (12/11/2026): esses PDFs são a versão que vai ao cliente.
  */
 export type Folder = 'estrategia' | 'trafego' | 'social' | 'audiovisual' | 'relatorios'
-export interface Doc { id: string; folder: Folder; name: string; bucket: string; path: string; created_at: string; approved_at?: string | null; sent_at?: string | null }
+export interface Doc { id: string; client_id?: string; folder: Folder; name: string; bucket: string; path: string; mime?: string | null; created_at: string; approved_at?: string | null; sent_at?: string | null }
+
+/** O agente sobe o PDF e, junto, a versão HTML (mesmo caminho trocando .pdf por .html) que abre na Apresentação. */
+export const isHtml = (d: Pick<Doc, 'name' | 'path'>) => /\.html?$/i.test(d.path) || /\.html?$/i.test(d.name)
+export const htmlPathOf = (path: string) => path.replace(/\.pdf$/i, '.html')
+export const htmlOf = (d: Doc, all: Doc[]) => all.find((x) => x.id !== d.id && isHtml(x) && x.path === htmlPathOf(d.path))
+export const docLabel = (name: string) => name.replace(/\.(pdf|html?)$/i, '')
+/** "Estratégia · 12-11 a 31-12-2026.pdf" -> "12/11 a 31/12" */
+export const docPeriod = (name: string) => (docLabel(name).split('·')[1] ?? '').trim().replace(/-(\d{4})$/, '').replace(/(\d{2})-(\d{2})/g, '$1/$2')
 
 const LABEL: Record<Folder, string> = { estrategia: 'Estratégia', trafego: 'Tráfego', social: 'Social media', audiovisual: 'Audiovisual', relatorios: 'Relatório' }
 const ORDER: Folder[] = ['estrategia', 'trafego', 'social', 'audiovisual', 'relatorios']
 
-async function signed(d: Doc, seconds: number, download = false): Promise<string> {
+export async function signed(d: Doc, seconds: number, download = false): Promise<string> {
   const { data, error } = await supabase.storage.from(d.bucket).createSignedUrl(d.path, seconds, download ? { download: d.name } : undefined)
   if (error || !data?.signedUrl) throw new Error(error?.message ?? 'Não foi possível abrir o arquivo.')
   return data.signedUrl
@@ -24,7 +30,7 @@ async function signed(d: Doc, seconds: number, download = false): Promise<string
 /** O documento mais recente de cada pasta. */
 export function latestDocs(all: Doc[]): Partial<Record<Folder, Doc>> {
   const out: Partial<Record<Folder, Doc>> = {}
-  for (const d of all) if (!out[d.folder]) out[d.folder] = d
+  for (const d of all) if (!isHtml(d) && !out[d.folder]) out[d.folder] = d
   return out
 }
 
@@ -32,7 +38,7 @@ export function useAgentDocs(clientId: string) {
   return useQuery({
     queryKey: ['agent-docs', clientId],
     queryFn: async () => {
-      const { data, error } = await supabase.from('client_assets').select('id, folder, name, bucket, path, created_at, approved_at, sent_at')
+      const { data, error } = await supabase.from('client_assets').select('id, client_id, folder, name, bucket, path, mime, created_at, approved_at, sent_at')
         .eq('client_id', clientId).eq('source', 'agente').in('folder', ORDER).order('created_at', { ascending: false }).limit(40)
       if (error) throw new Error(error.message)
       return (data ?? []) as unknown as Doc[]
@@ -45,49 +51,28 @@ export const saveDoc = async (d: Doc) => { window.location.href = await signed(d
 export async function sendDoc(d: Doc, name: string, phone?: string | null) {
   if (!(await ask(`Preparar o envio de "${d.name}" para ${name}? Abre o WhatsApp com a mensagem; você confere e envia.`))) return
   const u = await signed(d, 60 * 60 * 24 * 14)
-  const text = `Olá! Segue o documento da Peformake: ${d.name.replace(/\.pdf$/i, '')}.\n${u}`
+  const text = `Olá! Segue o documento da Peformake: ${docLabel(d.name)}.\n${u}`
   const to = (phone ?? '').replace(/\D/g, '')
   window.open(`https://wa.me/${to}?text=${encodeURIComponent(text)}`, '_blank')
 }
 
 /**
- * Cartão do documento oficial (PDF feito pela Peformake) no mesmo padrão dos outros cartões.
- * Quando existe, substitui o cartão gerado pelo sistema (decisão do Italo, 12/11/2026).
+ * Aprovar = enviar sozinho pelo Wasender para os contatos de aprovação do cliente (decisão do Italo, 12/11/2026).
+ * Devolve quantas mensagens saíram (0 = o cliente não tem WhatsApp no cadastro).
  */
-export function PdfCard({ id, title, doc, name, brand = 'peformake', note, phone }: { id: string; title: string; doc: Doc; name: string; brand?: 'peformake' | 'ellcazo'; note?: string; phone?: string | null }) {
+export function useApproveDoc() {
   const qc = useQueryClient()
-  const [problem, setProblem] = useState<string | null>(null)
-  const dm = (iso: string) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
-  // Aprovar = enviar sozinho pelo Wasender para os contatos de aprovação do cliente (decisão do Italo, 12/11/2026).
-  const approve = useMutation({
-    mutationFn: async () => {
+  return useMutation({
+    mutationFn: async (doc: Doc) => {
       const url = await signed(doc, 60 * 60 * 24 * 30)
       const { data, error } = await supabase.rpc('agent_doc_approve' as never, { _asset: doc.id, _url: url } as never)
       if (error) throw new Error(error.message)
       return data as unknown as number
     },
-    onSuccess: (n) => { setProblem(n ? null : 'Aprovado, mas o cliente não tem WhatsApp no cadastro: use "Enviar pelo meu WhatsApp".'); void qc.invalidateQueries({ queryKey: ['agent-docs'] }) },
-    onError: (e) => setProblem((e as Error).message),
+    onSettled: () => { void qc.invalidateQueries({ queryKey: ['agent-docs'] }); void qc.invalidateQueries({ queryKey: ['agent-doc'] }) },
   })
-  const sent = !!doc.sent_at
-  const status = sent ? { label: `Enviado ${dm(doc.sent_at!)}`, tone: 'ok' as const } : doc.approved_at ? { label: 'Aprovado', tone: 'ok' as const } : { label: 'Para aprovar', tone: 'info' as const }
-  const go = async () => { if (await ask(`Aprovar e enviar "${doc.name.replace(/\.pdf$/i, '')}" para ${name}? A mensagem com o link sai sozinha agora pelo WhatsApp da Peformake.`)) approve.mutate() }
-  return (
-    <DeckCard id={id} title={title}
-      cover={<DeckThumb slide={placeholderCover(doc.name.replace(/\.pdf$/i, '').split('·')[0]!.trim(), name)} name={name} brand={brand} />}
-      status={status}
-      missing={problem ?? note ?? `${doc.name.replace(/\.pdf$/i, '')} · na pasta desde ${dm(doc.created_at)}`}
-      primary={sent || doc.approved_at
-        ? { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: () => void openDoc(doc) }
-        : { label: approve.isPending ? 'Enviando' : 'Aprovar e enviar', icon: <Send size={15} aria-hidden="true" />, onClick: () => void go(), disabled: approve.isPending }}
-      menu={[
-        { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: () => void openDoc(doc), hidden: sent || !!doc.approved_at },
-        { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, onClick: () => void saveDoc(doc) },
-        { label: sent ? 'Enviar de novo' : 'Aprovar e enviar', icon: <Send size={15} aria-hidden="true" />, onClick: () => void go(), hidden: !sent && !doc.approved_at },
-        { label: 'Enviar pelo meu WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => void sendDoc(doc, name, phone) },
-      ]} />
-  )
 }
+export const confirmApprove = (d: Doc, name: string) => ask(`Aprovar e enviar "${docLabel(d.name)}" para ${name}? A mensagem com o link sai sozinha agora pelo WhatsApp da Peformake.`)
 
 /** Os documentos mais recentes de cada pasta (ou só os relatórios). */
 export function AgentDocs({ clientId, name, only }: { clientId: string; name: string; only?: 'relatorios' }) {
@@ -96,7 +81,7 @@ export function AgentDocs({ clientId, name, only }: { clientId: string; name: st
   const folders = only ? (['relatorios'] as Folder[]) : ORDER.filter((f) => f !== 'relatorios')
   // Por pasta: os do envio mais recente (mesmo dia), para não misturar meses.
   const docs = folders.flatMap((f) => {
-    const list = all.filter((d) => d.folder === f)
+    const list = all.filter((d) => d.folder === f && !isHtml(d))
     const day = list[0]?.created_at.slice(0, 10)
     return list.filter((d) => d.created_at.slice(0, 10) === day)
   })

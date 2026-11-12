@@ -24,7 +24,8 @@ Para cada cliente, um estudo só, no design aprovado (o mesmo da apresentação 
 ## Subir os PDFs
 1. Token (vale 2 h): `insert into public.agent_upload_tokens (token) values (encode(extensions.gen_random_bytes(24),'hex')) returning token;`
 2. Enviar: POST `https://wkkzcjnxyylrqoolmmhi.supabase.co/functions/v1/agent-upload` com JSON `{token, client_id, folder, name, file (base64), mime}`. Nome: "Estratégia · <mês ano>.pdf", "Planejamento de social media · <mês ano>.pdf", "Planejamento de audiovisual · <mês ano>.pdf", "Estratégia de tráfego · <mês ano>.pdf", "Relatório de tráfego · <mês ano>.pdf".
-3. O PDF novo chega no cartão como "Para aprovar" (o upload zera a aprovação). Quando o Italo toca em **Aprovar e enviar**, a mensagem com o link sai sozinha pelo Wasender (função `agent_doc_approve`). Nunca aprovar no lugar dele.
+   **Cada PDF sobe junto com o .html de mesmo nome** (mesma pasta, `name` igual trocando `.pdf` por `.html`, `mime: "text/html"`; uma página por `<section class="pg ...">` com o título em `<h1>`). É ele que abre na **Apresentação** (/documento/:id), onde a equipe revisa página a página (OK, Recusar, Virar tarefa). Sem o .html, o botão Apresentação fica desabilitado.
+3. O PDF novo chega na lista como "Para aprovar" (o upload zera a aprovação). Quando o Italo toca em **Aprovar e enviar**, a mensagem com o link sai sozinha pelo Wasender (função `agent_doc_approve`). Nunca aprovar no lugar dele.
 4. Avisar a equipe: `select public.notify(...)` para o responsável de cada área do cliente (client_team) com link `/clientes/<id>?aba=arquivos`. Nunca mandar nada ao cliente (o envio é sempre de um humano).
 
 ## Fim
