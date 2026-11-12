@@ -23,7 +23,7 @@ import { useProduction } from '@/features/production/useProduction'
 import { CardSection, DeckCard, DeckThumb, OrientationDialog, placeholderCover, screenOrientation, type CardPrimary } from './DeckCard'
 import { AreaCard, AvCard, MonthlyCard, MonthPick } from './PlanCards'
 import { ReportCards } from './ReportCards'
-import { AgentDocs, PdfCard, latestDocs, useAgentDocs } from './AgentDocs'
+import { AgentDocs, PdfCard, latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
@@ -261,6 +261,8 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const agentDocs = useAgentDocs(clientId)
   const pdf = useMemo(() => latestDocs(agentDocs.data ?? []), [agentDocs.data])
   const hasPdf = !!(pdf.estrategia || pdf.trafego || pdf.social || pdf.audiovisual)
+  /** O PDF da Peformake que vale para cada envio (quando existe, o "Enviar" manda o PDF, não a versão do sistema). */
+  const pdfFor = (k: string) => k === 'mes' ? pdf.estrategia : k === 'trafego' ? (pdf.trafego ?? pdf.estrategia) : k === 'social' ? pdf.social : k === 'av' ? pdf.audiovisual : undefined
   const st = plan.data
   const planReady = !!st && ['pronto', 'aprovado'].includes(st.status) && !!st.doc?.titulo
   const questions = useClientQuestions(clientId)
@@ -307,12 +309,14 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const dialogs = (
     <>
       {dirOpen && <DirectionDialog clientId={clientId} name={name} initial={row?.direction ?? ''} links={nicheLinks(row?.segment, name)} onClose={() => setDirOpen(false)} />}
-      {picker && <SendPicker name={name} month={month} onClose={() => setPicker(false)} onPick={(k) => openSend(k, avApproved)} options={[
+      {picker && <SendPicker name={name} month={month} onClose={() => setPicker(false)}
+        onPick={(k) => { const doc = pdfFor(k); if (doc) { setPicker(false); void sendDoc(doc, name, phone.data ?? null) } else openSend(k, avApproved) }} options={[
         { id: 'diag', label: 'Diagnóstico', ok: approved, why: ready ? 'Aprove o diagnóstico antes' : 'Ainda não está pronto' },
-        { id: 'mes', label: `Estratégia de ${monthName(month).toLowerCase()}`, ok: planReady, why: 'A estratégia do mês ainda não está pronta' },
-        ...(has.trafego ? [{ id: 'trafego' as const, label: 'Tráfego', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
-        ...(has.social ? [{ id: 'social' as const, label: 'Social media + Design', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
-        ...(has.av ? [{ id: 'av' as const, label: `Audiovisual (${avApproved} vídeos)`, ok: planReady && avApproved > 0, why: 'Aprove pelo menos um vídeo' }] : []),
+        pdf.estrategia ? { id: 'mes' as const, label: 'Estratégia do mês (PDF)', ok: true }
+          : { id: 'mes' as const, label: `Estratégia de ${monthName(month).toLowerCase()}`, ok: planReady, why: 'A estratégia do mês ainda não está pronta' },
+        ...(has.trafego ? [pdfFor('trafego') ? { id: 'trafego' as const, label: pdf.trafego ? 'Estratégia de tráfego (PDF)' : 'Tráfego (na Estratégia do mês)', ok: true } : { id: 'trafego' as const, label: 'Tráfego', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
+        ...(has.social ? [pdf.social ? { id: 'social' as const, label: 'Social media + Design (PDF)', ok: true } : { id: 'social' as const, label: 'Social media + Design', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
+        ...(has.av ? [pdf.audiovisual ? { id: 'av' as const, label: 'Audiovisual (PDF)', ok: true } : { id: 'av' as const, label: `Audiovisual (${avApproved} vídeos)`, ok: planReady && avApproved > 0, why: 'Aprove pelo menos um vídeo' }] : []),
         { id: 'perguntas', label: toAsk ? `Perguntas (${toAsk})` : 'Perguntas', ok: true },
       ]} />}
       {send === 'diag' && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSend(null)} onSent={refresh} />}
@@ -355,10 +359,10 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
             onApprove={() => act.mutate(() => approveConsult(clientId))}
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
-          {pdf.estrategia && <PdfCard id="estrategia" title="Estratégia do mês" doc={pdf.estrategia} name={name} />}
-          {has.trafego && (pdf.trafego || pdf.estrategia) && <PdfCard id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
-          {has.social && pdf.social && <PdfCard id="social" title="Social media + Design" doc={pdf.social} name={name} />}
-          {has.av && pdf.audiovisual && <PdfCard id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
+          {pdf.estrategia && <PdfCard phone={phone.data ?? null} id="estrategia" title="Estratégia do mês" doc={pdf.estrategia} name={name} />}
+          {has.trafego && (pdf.trafego || pdf.estrategia) && <PdfCard phone={phone.data ?? null} id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
+          {has.social && pdf.social && <PdfCard phone={phone.data ?? null} id="social" title="Social media + Design" doc={pdf.social} name={name} />}
+          {has.av && pdf.audiovisual && <PdfCard phone={phone.data ?? null} id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
         </CardSection>
       </>}
       {view === 'planejamento' && !hasPdf && <>
@@ -369,17 +373,17 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
             onApprove={() => act.mutate(() => approveConsult(clientId))}
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
-          {pdf.estrategia ? <PdfCard id="estrategia" title="Estratégia do mês" doc={pdf.estrategia} name={name} />
+          {pdf.estrategia ? <PdfCard phone={phone.data ?? null} id="estrategia" title="Estratégia do mês" doc={pdf.estrategia} name={name} />
             : <MonthlyCard clientId={clientId} name={name} logo={logo} month={month} st={st} monthPick={mp} onCreate={() => void create()} creating={act.isPending}
               onSend={() => openSend('mes')} onDetails={() => go({ ver: 'plano', secao: null })} />}
         </CardSection>
         {(has.trafego || has.social || has.av) && (
           <CardSection title="Por área">
-            {has.trafego && (pdf.trafego || pdf.estrategia) && <PdfCard id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
+            {has.trafego && (pdf.trafego || pdf.estrategia) && <PdfCard phone={phone.data ?? null} id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
             {has.trafego && !pdf.trafego && !pdf.estrategia && <AreaCard area="trafego" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('trafego')} onDetails={() => go({ ver: 'plano', secao: 'trafego' })} />}
-            {has.social && pdf.social && <PdfCard id="social" title="Social media + Design" doc={pdf.social} name={name} />}
+            {has.social && pdf.social && <PdfCard phone={phone.data ?? null} id="social" title="Social media + Design" doc={pdf.social} name={name} />}
             {has.social && !pdf.social && <AreaCard area="social" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('social')} onDetails={() => go({ ver: 'plano', secao: 'social' })} />}
-            {has.av && pdf.audiovisual && <PdfCard id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
+            {has.av && pdf.audiovisual && <PdfCard phone={phone.data ?? null} id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
             {has.av && !pdf.audiovisual && <AvCard clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={(n) => openSend('av', n)} onDetails={() => go({ ver: 'plano', secao: 'audiovisual' })} />}
           </CardSection>
         )}

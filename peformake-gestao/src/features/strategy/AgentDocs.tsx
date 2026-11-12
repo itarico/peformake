@@ -41,18 +41,19 @@ export function useAgentDocs(clientId: string) {
 
 export const openDoc = async (d: Doc) => { const w = window.open('', '_blank'); try { const u = await signed(d, 600); if (w) w.location.href = u; else window.location.href = u } catch { w?.close() } }
 export const saveDoc = async (d: Doc) => { window.location.href = await signed(d, 600, true) }
-export async function sendDoc(d: Doc, name: string) {
+export async function sendDoc(d: Doc, name: string, phone?: string | null) {
   if (!(await ask(`Preparar o envio de "${d.name}" para ${name}? Abre o WhatsApp com a mensagem; você confere e envia.`))) return
   const u = await signed(d, 60 * 60 * 24 * 14)
   const text = `Olá! Segue o documento da Peformake: ${d.name.replace(/\.pdf$/i, '')}.\n${u}`
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+  const to = (phone ?? '').replace(/\D/g, '')
+  window.open(`https://wa.me/${to}?text=${encodeURIComponent(text)}`, '_blank')
 }
 
 /**
  * Cartão do documento oficial (PDF feito pela Peformake) no mesmo padrão dos outros cartões.
  * Quando existe, substitui o cartão gerado pelo sistema (decisão do Italo, 12/11/2026).
  */
-export function PdfCard({ id, title, doc, name, brand = 'peformake', note }: { id: string; title: string; doc: Doc; name: string; brand?: 'peformake' | 'ellcazo'; note?: string }) {
+export function PdfCard({ id, title, doc, name, brand = 'peformake', note, phone }: { id: string; title: string; doc: Doc; name: string; brand?: 'peformake' | 'ellcazo'; note?: string; phone?: string | null }) {
   const when = new Date(doc.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
   return (
     <DeckCard id={id} title={title}
@@ -62,7 +63,7 @@ export function PdfCard({ id, title, doc, name, brand = 'peformake', note }: { i
       primary={{ label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: () => void openDoc(doc) }}
       menu={[
         { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, onClick: () => void saveDoc(doc) },
-        { label: 'Enviar ao cliente', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => void sendDoc(doc, name) },
+        { label: 'Enviar ao cliente', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => void sendDoc(doc, name, phone) },
       ]} />
   )
 }
