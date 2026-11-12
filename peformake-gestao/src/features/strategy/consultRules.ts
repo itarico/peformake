@@ -11,9 +11,15 @@ export interface ConsultRow {
   questions_open?: number; questions_answered?: number; answers_new?: number; answers_last?: string | null
   /** Estratégia do mês mais recente (Consultoria → Estratégia). */
   monthly?: { month: string; status: string; finished_at: string | null; pending: number; suggestions: number } | null
+  /** Contratou Consultoria (diagnóstico)? Sem ela, o cliente entra pela área (tráfego, social, audiovisual) e não tem diagnóstico. */
+  consultoria?: boolean
+  /** Áreas com serviço ativo (mesma regra do banco: client_in_area). */
+  areas?: { trafego: boolean; social: boolean; audiovisual: boolean }
 }
 
 export const CONSULT_PATH = '/estrategia/consultoria'
+/** Quem abre a Consultoria: os líderes veem tudo; tráfego, social e design veem os seus clientes e a sua parte. */
+export const CONSULT_ROLES = ['admin', 'head_marketing', 'traffic_manager', 'social_media', 'designer'] as const
 export const consultLink = (clientId: string) => `${CONSULT_PATH}?cliente=${clientId}`
 
 export const SECTIONS: { id: ConsultSection; label: string }[] = [
@@ -146,14 +152,15 @@ export function nicheLinks(...hints: (string | null | undefined)[]): NicheLink[]
 export const diagReviewPath = (clientId: string) => `/revisao/diagnostico/${clientId}`
 export const planReviewPath = (clientId: string, month: string, area?: string | null) => `/revisao/plano/${clientId}/${month.slice(0, 7)}${area ? `?area=${area}` : ''}`
 
-export type PartState = 'pronto' | 'revisar' | 'falta' | 'andando'
+export type PartState = 'pronto' | 'revisar' | 'falta' | 'andando' | 'fora'
 export interface Part { state: PartState; label: string }
 
 const mesOf = (month: string) => new Date(`${month.slice(0, 7)}-15T12:00:00Z`).toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })
 
 /** As 3 partes do cliente (diagnóstico, plano do mês, perguntas) em pronto / revisar / falta, com um texto de 1 a 3 palavras. */
-export function clientParts(r: Pick<ConsultRow, 'status' | 'document' | 'stage' | 'monthly' | 'questions_open' | 'answers_new'>): { diag: Part; plan: Part; questions: Part } {
-  const diag: Part = r.status === 'pronto' ? { state: 'revisar', label: 'revisar' }
+export function clientParts(r: Pick<ConsultRow, 'status' | 'document' | 'stage' | 'monthly' | 'questions_open' | 'answers_new' | 'consultoria'>): { diag: Part; plan: Part; questions: Part } {
+  const diag: Part = r.consultoria === false ? { state: 'fora', label: 'não contratado' }
+    : r.status === 'pronto' ? { state: 'revisar', label: 'revisar' }
     : r.status === 'aprovado' ? { state: 'pronto', label: 'aprovado' }
     : r.status === 'enviado' ? { state: 'pronto', label: 'enviado' }
     : r.status === 'gerando' || r.status === 'na_fila' ? { state: 'andando', label: r.status === 'gerando' ? 'gerando' : 'na fila' }
@@ -177,7 +184,14 @@ export type NextStep =
   | { kind: 'aba'; label: string; tab: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios' }
 
 /** A próxima coisa a fazer com o cliente (UMA ação por linha), na ordem do que trava mais. */
-export function nextStep(r: Pick<ConsultRow, 'client_id' | 'status' | 'document' | 'stage' | 'monthly' | 'questions_open' | 'answers_new' | 'can_generate'>): NextStep {
+export function nextStep(r: Pick<ConsultRow, 'client_id' | 'status' | 'document' | 'stage' | 'monthly' | 'questions_open' | 'answers_new' | 'can_generate' | 'consultoria'>): NextStep {
+  // Sem Consultoria contratada: nada de diagnóstico; só o plano do mês e as respostas.
+  if (r.consultoria === false) {
+    const m = r.monthly
+    if ((r.answers_new ?? 0) > 0) return { kind: 'aba', label: 'Ver respostas', tab: 'perguntas' }
+    if (m && ['pronto', 'aprovado'].includes(m.status) && m.pending > 0) return { kind: 'link', label: `Revisar plano de ${mesOf(m.month)}`, href: planReviewPath(r.client_id, m.month) }
+    return { kind: 'aba', label: 'Abrir', tab: 'diagnostico' }
+  }
   if (r.status === 'falta_dados') return { kind: 'dados', label: 'Informar CNPJ' }
   if (r.status === 'erro') return { kind: 'gerar', label: 'Tentar de novo' }
   if (r.status === 'na_fila') return { kind: 'gerar', label: 'Gerar diagnóstico' }

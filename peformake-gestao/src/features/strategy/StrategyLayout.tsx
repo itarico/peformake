@@ -1,56 +1,51 @@
-import { lazy, Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { RequireRole } from '@/auth/guards'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { SectionHeader, type SectionTab } from '@/components/layout/SectionTabs'
-import { MonthSwitcher } from '@/features/content/ContentLayout'
-import { CONTENT_PLANNER_ROLES, TRAFFIC_ROLES } from '@/lib/roles'
-import { Docs } from '@/features/social/SocialPage'
-import { AreaPlanPage } from './AreaPlanPage'
 import { ConsultoriaPage } from './ConsultoriaPage'
-import { CONSULT_PATH } from './consultRules'
+import { CONSULT_PATH, CONSULT_ROLES } from './consultRules'
 import { LibraryPage } from './LibraryPage'
 
-const TrafficStrategy = lazy(() => import('@/features/traffic/StrategyPage').then((m) => ({ default: m.StrategyPage })))
-
 const LEADS = ['admin', 'head_marketing'] as const
-const SOCIAL_ROLES = [...CONTENT_PLANNER_ROLES, 'designer'] as const
 
 const TABS: SectionTab[] = [
-  { to: CONSULT_PATH, label: 'Consultoria', roles: LEADS },
-  { to: '/estrategia/trafego', label: 'Tráfego', roles: TRAFFIC_ROLES },
-  { to: '/estrategia/social', label: 'Social media', roles: SOCIAL_ROLES },
+  { to: CONSULT_PATH, label: 'Consultoria', roles: CONSULT_ROLES },
   { to: '/estrategia/biblioteca', label: 'Biblioteca', roles: LEADS },
 ]
 
-const loading = <p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>
+/**
+ * Tráfego e Social media eram abas; agora moram dentro do cliente, em Consultoria (Italo, 12/11).
+ * Com cliente: abre o cliente e rola até o cartão da área (?foco=). Sem cliente: a lista. ?ver=historico: o histórico da área.
+ */
+function AreaMoved({ area }: { area: 'trafego' | 'social' }) {
+  const { search } = useLocation()
+  const n = new URLSearchParams(search)
+  if (n.get('ver') === 'historico') { n.delete('cliente'); n.delete('mes'); n.set('area', area) } else if (n.get('cliente')) n.set('foco', area)
+  const q = n.toString()
+  return <Navigate to={`${CONSULT_PATH}${q ? `?${q}` : ''}`} replace />
+}
 
 /**
  * Estratégia: UM plano do mês por cliente (função monthly-strategy), para todo cliente com serviço de operação.
- * Consultoria vê tudo; Tráfego e Social media veem só a sua parte de cada cliente (com Aprovar); o Audiovisual vê a dele
- * em Audiovisual → Plano do mês. Biblioteca junta Nichos, Estudos e Retenção. Rotas antigas caem no lugar novo (MovedTo).
+ * Consultoria lista todos (tráfego, social/design, audiovisual, consultoria); quem é de tráfego ou social vê só os seus clientes
+ * e só a sua parte (com Aprovar). O Audiovisual também tem a dele em Audiovisual → Plano do mês.
+ * Biblioteca junta Nichos, Estudos e Retenção. Rotas antigas caem no lugar novo (MovedTo / AreaMoved).
  */
 export function StrategyLayout() {
   const { state } = useAuth()
   const roles = state.status === 'ready' ? state.user.roles : []
-  const home = TABS.find((t) => !t.roles || t.roles.some((r) => roles.includes(r)))?.to ?? '/estrategia/trafego'
+  const home = TABS.find((t) => !t.roles || t.roles.some((r) => roles.includes(r)))?.to ?? CONSULT_PATH
   return (
     <>
-      <SectionHeader title="Estratégia" sub="Um plano do mês por cliente: a IA escreve, cada área revisa e aprova a sua parte." tabs={TABS} />
+      <SectionHeader title="Estratégia" sub="Um plano do mês por cliente: a IA escreve, cada área revisa e aprova a sua parte no cartão dela." tabs={TABS} />
       <Routes>
         <Route index element={<Navigate to={home} replace />} />
         <Route path="frameworks" element={<MovedTo to={CONSULT_PATH} />} />
-        <Route element={<RequireRole roles={LEADS} />}>
+        <Route element={<RequireRole roles={CONSULT_ROLES} />}>
           <Route path="consultoria" element={<ConsultoriaPage />} />
-        </Route>
-        <Route element={<RequireRole roles={TRAFFIC_ROLES} />}>
-          <Route path="trafego" element={<AreaPlanPage area="trafego" historyLabel="Histórico (estratégias antigas)"
-            history={<Suspense fallback={loading}><TrafficStrategy readOnly /></Suspense>} />} />
-        </Route>
-        <Route element={<RequireRole roles={SOCIAL_ROLES} />}>
-          <Route path="social" element={<AreaPlanPage area="social" historyLabel="Histórico (estratégia e relatório do Instagram)"
-            history={<div className="flex flex-col gap-3"><MonthSwitcher /><Docs /></div>} />} />
+          <Route path="trafego" element={<AreaMoved area="trafego" />} />
+          <Route path="social" element={<AreaMoved area="social" />} />
         </Route>
         <Route element={<RequireRole roles={LEADS} />}>
           <Route path="biblioteca" element={<LibraryPage />} />

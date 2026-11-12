@@ -204,7 +204,7 @@ export function actions(r: GoalRow, c: Coach | undefined): Action[] {
     case 'devendo': case 'inadimplencia': client(c?.overdue[0], 'Cobrar', 'cobrar'); a.push({ label: 'Abrir cobrança', to: '/financeiro/cobranca' }); break
     case 'artes': case 'aprovacao_parada': case 'planos': a.push({ label: 'Abrir Social Media', to: '/conteudo' }); break
     case 'relatorios': a.push({ label: 'Abrir relatórios', to: '/trafego/relatorios' }); break
-    case 'estrategias': a.push({ label: 'Abrir estratégias', to: '/estrategia/trafego' }); break
+    case 'estrategias': a.push({ label: 'Abrir estratégias', to: '/estrategia/consultoria' }); break
     case 'videos': a.push({ label: 'Abrir produção', to: '/audiovisual/producao' }); break
     case 'orcamentos_aceitos': a.push({ label: 'Abrir orçamentos', to: '/audiovisual/orcamentos' }); break
     case 'fotos_extras': a.push({ label: 'Abrir fotos', to: '/audiovisual/fotos' }); break

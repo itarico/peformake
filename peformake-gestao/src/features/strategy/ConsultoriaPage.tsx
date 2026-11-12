@@ -23,6 +23,7 @@ import { useProduction } from '@/features/production/useProduction'
 import { CardSection, DeckCard, DeckThumb, OrientationDialog, placeholderCover, screenOrientation, type CardPrimary } from './DeckCard'
 import { AreaCard, AvCard, MonthlyCard, MonthPick } from './PlanCards'
 import { ReportCards } from './ReportCards'
+import { AgentDocs } from './AgentDocs'
 import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
@@ -123,7 +124,7 @@ async function openPublicDeck(clientId: string): Promise<void> {
 
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
 
-const DOT: Record<PartState, string> = { pronto: 'bg-ok', revisar: 'bg-accent', falta: 'bg-warn', andando: 'bg-muted pf-pulse' }
+const DOT: Record<PartState, string> = { pronto: 'bg-ok', revisar: 'bg-accent', falta: 'bg-warn', andando: 'bg-muted pf-pulse', fora: 'bg-line' }
 
 /** Diagnóstico · Plano · Perguntas numa linha: bolinha (pronto / revisar / falta) e 1 a 3 palavras. */
 export function PartsLine({ parts, gerando }: { parts: { diag: Part; plan: Part; questions: Part }; gerando?: string }) {
@@ -333,8 +334,9 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       </div>
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
-      {view === 'relatorios' && <ReportCards clientId={clientId} name={name} />}
+      {view === 'relatorios' && <><AgentDocs clientId={clientId} name={name} only="relatorios" /><ReportCards clientId={clientId} name={name} /></>}
       {view === 'planejamento' && <>
+        <AgentDocs clientId={clientId} name={name} />
         <CardSection title="Diagnóstico e estratégia">
           <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
