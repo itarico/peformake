@@ -1,6 +1,6 @@
 // Autoteste da Estratégia do mês (Consultoria → cliente → Estratégia) com dados FALSOS no navegador (nada vai ao banco nem à IA).
 // Mede no iPhone 13 e em 1366x800 (claro e escuro): as 4 semanas à vista, os pop-ups (ação, roteiro em páginas, troca sugerida,
-// editar, refazer com ideias, PDF) sem rolagem interna, a aba Relatórios, os slides, e nada de rolagem de lado.
+// editar, refazer com ideias, PDF, enviar ao cliente) sem rolagem interna, a aba Relatórios, os slides, e nada de rolagem de lado.
 // Uso: npx vite --config e2e/shell/vite.config.ts --port 5199 --strictPort &  BASE=http://localhost:5199 node e2e/estrategia-mensal.cjs
 const { chromium, devices } = require('playwright');
 const BASE = process.env.BASE || 'http://localhost:5200';
@@ -37,6 +37,7 @@ async function mock(route) {
   const p = u.pathname; const one = (req.headers()['accept'] || '').includes('vnd.pgrst.object');
   if (p === '/rest/v1/rpc/consult_list') return json([row]);
   if (p === '/rest/v1/rpc/monthly_get') return json(strategy);
+  if (p === '/rest/v1/rpc/monthly_share_create') return json('a'.repeat(64));
   if (p.startsWith('/rest/v1/rpc/')) return json(null);
   if (p === '/rest/v1/traffic_reports') return json(reports);
   if (p === '/rest/v1/clients') return json(one ? { phone: '81987122050' } : [{ phone: '81987122050' }]);
@@ -85,6 +86,7 @@ const close = async (p) => { await p.keyboard.press('Escape'); await p.waitForTi
       await close(p);
       await p.getByRole('button', { name: /Refazer com ideias/ }).click(); await p.waitForTimeout(250); await check(p, tag, 'ideias'); await close(p);
       await p.getByRole('button', { name: /^PDF$/ }).click(); await p.waitForTimeout(250); await check(p, tag, 'pdf'); await close(p);
+      await p.getByRole('button', { name: /Enviar ao cliente/ }).click(); await p.waitForTimeout(500); await check(p, tag, 'enviar'); await close(p);
 
       // Esta semana e slides.
       await p.getByRole('tab', { name: /Esta semana|Semana 1/ }).click(); await p.waitForTimeout(300);

@@ -124,3 +124,21 @@ export function textPages(text: string, max = 520): string[] {
   if (cur) pages.push(cur)
   return pages.length ? pages : ['']
 }
+
+/** Mensagem para o cliente com o link da apresentação do mês (a pessoa confere e manda pelo WhatsApp dela). */
+export function monthlyMessage(name: string, month: string, link: string | null): string {
+  const mes = monthName(month).toLowerCase()
+  return [
+    `Oi! Tudo bem? Aqui é da Peformake.`,
+    `Fechamos a estratégia de ${mes} da ${name.trim()}: o que vamos fazer semana a semana, por que, a meta e o que fica do seu lado.`,
+    link ? `A apresentação está aqui (abre no celular, um slide por vez):\n${link}` : `Vou te mandar o PDF por aqui.`,
+    `Qualquer ideia ou mudança, me fala que a gente ajusta toda segunda.`,
+  ].join('\n\n')
+}
+
+/** Mês já começado: semanas que acabaram antes de a estratégia ser gerada (ficam fora da apresentação). */
+export function pastWeeks(month: string, generatedAt: string | null | undefined): number[] {
+  if (!generatedAt) return []
+  const gen = new Date(new Date(generatedAt).getTime() - 3 * 3600_000).toISOString().slice(0, 10)
+  return weeksOf(month).filter((w) => w.to < gen).map((w) => w.week)
+}

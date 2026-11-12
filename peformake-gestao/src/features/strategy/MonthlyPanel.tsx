@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronLeft, ChevronRight, Download, ExternalLink, Lightbulb, Pencil, Presentation, RefreshCw, Sparkles, X } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Check, ChevronLeft, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, Pencil, Presentation, RefreshCw, Send, Sparkles, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -8,13 +8,15 @@ import { DialogTabs } from '@/components/ui/DialogTabs'
 import { VoiceNote } from '@/components/ui/VoiceNote'
 import { ask } from '@/components/ui/confirm'
 import { cn } from '@/lib/cn'
+import { supabase } from '@/lib/supabase'
 import { ago } from '@/features/settings/AutomationsCenter'
 import { consultKey } from './consultApi'
 import { openPresentation, printDeck, type Orientation } from './consultDeck'
-import { adjustNow, approveWeek, decideAction, decideAdjust, editAction, monthlyKey, requestMonthly, useMonthly } from './monthlyApi'
+import { waLink } from './consultRules'
+import { adjustNow, approveWeek, decideAction, decideAdjust, editAction, monthlyKey, monthlyShareLink, requestMonthly, useMonthly } from './monthlyApi'
 import { monthlyDeckInput } from './monthlyDeck'
 import {
-  AREA, AREA_ORDER, actionState, currentWeek, dm, monthName, monthOptions, parseMonthParam, statusLabel, textPages, weekRange, weekSummary,
+  AREA, AREA_ORDER, actionState, currentWeek, dm, monthlyMessage, monthName, monthOptions, monthStart, parseMonthParam, pastWeeks, statusLabel, textPages, weekRange, weeksOf, weekSummary,
   type ActionArea, type MonthlyAction, type MonthlyStrategy,
 } from './monthlyRules'
 import { SlideViewer } from './SlideViewer'
@@ -43,6 +45,7 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
   const [open, setOpen] = useState<MonthlyAction | null>(null)
   const [ideas, setIdeas] = useState(false)
   const [deck, setDeck] = useState(false)
+  const [send, setSend] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
   const refresh = () => { void qc.invalidateQueries({ queryKey: monthlyKey(clientId, month) }); void qc.invalidateQueries({ queryKey: consultKey }) }
   const act = useMutation({
@@ -63,6 +66,10 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
   const sum = weekSummary(st?.actions ?? [])
   const suggestions = (st?.actions ?? []).filter((a) => a.suggestion)
   const weeks = view === 'semana' ? [cw ?? 1] : [1, 2, 3, 4]
+  const past = ready && st ? pastWeeks(month, st.doc.gerado_em) : []
+  const lastDay = dm(weeksOf(month)[3]!.to)
+  // Mês já começado: a IA planeja de hoje até o fim do mês; as semanas que já passaram ficam fora da apresentação.
+  const midMonth = monthStart(today) === month && today.getDate() > 7
 
   return (
     <div className="flex flex-col gap-3">
@@ -90,6 +97,7 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
       {q.isSuccess && !ready && (
         <div data-conteudo className="rounded-3xl border border-line bg-surface p-5 text-[14px]">
           {!st && <p>A estratégia de {monthName(month)} ainda não foi gerada. A IA lê o diagnóstico, as respostas do cliente, o direcionamento, os anúncios, o conteúdo e as datas, e já entrega as 4 semanas com ações prontas.</p>}
+          {(!st || st.status === 'erro') && midMonth && <p className="mt-2 text-[13px] text-muted">Mês já começado: o plano vale de hoje até {lastDay}. As semanas que já passaram ficam fora da apresentação.</p>}
           {st?.status === 'gerando' && <p className="flex items-center gap-2"><Sparkles size={16} aria-hidden="true" className="text-accent-ink" /> A IA está {st.stage === 'acoes' ? 'escrevendo as ações das 4 semanas' : 'lendo os dados e decidindo o foco do mês'}. Leva uns 5 minutos; pode sair da tela.</p>}
           {st?.status === 'na_fila' && <p>Na fila. Começa em instantes.</p>}
           {st?.status === 'limite' && <p>Limite do mês com IA atingido. O administrador pode aumentar em Configurações → Automações.</p>}
@@ -103,12 +111,14 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
           {view !== 'slides' && <section data-conteudo aria-label="Resumo do mês" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4">
             <p className="text-[12px] font-semibold uppercase tracking-wide text-accent-ink">{monthName(month, true)}</p>
             <h2 className="text-[17px] font-bold leading-snug">{st.doc.titulo}</h2>
+            {past.length > 0 && <p className="text-[12.5px] text-muted">Mês já começado: o plano vale até {lastDay}. {past.length === 1 ? `A semana ${past[0]} já tinha passado e fica` : `As semanas ${past.join(' e ')} já tinham passado e ficam`} fora da apresentação.</p>}
             <div className="flex flex-wrap items-center gap-2 text-[12.5px]">
               {st.doc.meta?.numero && <span className="rounded-full bg-accent-soft px-2.5 py-1 font-semibold text-accent-ink">Meta: {st.doc.meta.numero}</span>}
               <span className="rounded-full bg-raised px-2.5 py-1 text-muted">{sum.pending ? `${sum.pending} para aprovar · ` : ''}{sum.routed} na produção · {sum.done} feitas</span>
             </div>
             <div className="flex flex-wrap gap-2 pt-1">
-              <Button variant="secondary" onClick={() => deckInput && openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')}><Presentation size={15} aria-hidden="true" /> Apresentação</Button>
+              <Button onClick={() => deckInput && openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')}><Presentation size={15} aria-hidden="true" /> Abrir apresentação</Button>
+              <Button variant="secondary" onClick={() => setSend(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente</Button>
               <Button variant="secondary" onClick={() => setDeck(true)}><Download size={15} aria-hidden="true" /> PDF</Button>
               <Button variant="secondary" disabled={act.isPending} onClick={() => setIdeas(true)}><Lightbulb size={15} aria-hidden="true" /> Refazer com ideias</Button>
               {cw && <Button variant="secondary" disabled={act.isPending} title="Compara a semana passada com o plano e sugere trocas (≈US$ 0,01)" onClick={() => act.mutate(() => adjustNow(st.id))}><RefreshCw size={15} aria-hidden="true" /> {act.isPending ? 'Revendo' : 'Rever a semana'}</Button>}
@@ -144,10 +154,10 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
                     <section key={w} aria-label={`Semana ${w}`} className={cn('flex flex-col gap-2 rounded-3xl border bg-surface p-3', cw === w ? 'border-accent' : 'border-line')}>
                       <div className="flex items-start justify-between gap-2 px-1">
                         <div className="min-w-0">
-                          <p className="text-[12px] font-semibold text-muted">Semana {w} · {weekRange(month, w)}{cw === w ? ' · agora' : ''}</p>
+                          <p className="text-[12px] font-semibold text-muted">Semana {w} · {weekRange(month, w)}{cw === w ? ' · agora' : past.includes(w) ? ' · já passou' : ''}</p>
                           <h3 className="text-[14.5px] font-bold leading-snug">{theme?.tema ?? `Semana ${w}`}</h3>
                         </div>
-                        {s.pending > 0 && <Button variant="secondary" className="min-h-9 shrink-0 px-3 text-[12.5px]" disabled={act.isPending}
+                        {s.pending > 0 && !past.includes(w) && <Button variant="secondary" className="min-h-9 shrink-0 px-3 text-[12.5px]" disabled={act.isPending}
                           onClick={async () => { if (await ask(`Aprovar as ${s.pending} ações da semana ${w}? Cada uma vai para a fila da área.`)) act.mutate(() => approveWeek(st.id, w)) }}><Check size={14} aria-hidden="true" /> Aprovar ({s.pending})</Button>}
                       </div>
                       {list.length === 0 && <p className="px-1 py-3 text-[12.5px] text-muted">Nada nesta semana{area !== 'todas' ? ' para esta área' : ''}.</p>}
@@ -188,6 +198,7 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
         onClose={() => setOpen(null)} />}
       {ideas && st && <IdeasDialog name={name} month={month} initial={st.ideas ?? ''} onClose={() => setIdeas(false)}
         onSave={(t) => { setIdeas(false); act.mutate(() => requestMonthly(clientId, month, t)) }} />}
+      {send && st && <SendDialog strategyId={st.id} clientId={clientId} name={name} month={month} onClose={() => setSend(false)} />}
       {deck && deckInput && <DeckDialog onClose={() => setDeck(false)} onPick={(o) => { printDeck(deckInput, o); setDeck(false) }} />}
     </div>
   )
@@ -309,6 +320,38 @@ function DeckDialog({ onClose, onPick }: { onClose: () => void; onPick: (o: Orie
   return (
     <Dialog open onClose={onClose} title="Baixar a estratégia" description={'Escolha o formato. Na janela que abrir, escolha "Salvar como PDF".'} size="sm">
       <div className="flex gap-3">{opt('vertical', 'Vertical', 'A4 em pé · celular', 'h-12 w-9')}{opt('paisagem', 'Paisagem', '16:9 · reunião e TV', 'h-9 w-14')}</div>
+    </Dialog>
+  )
+}
+
+// ───────── Enviar ao cliente: o sistema só prepara (link + mensagem); a pessoa confere e manda pelo WhatsApp dela ─────────
+function SendDialog({ strategyId, clientId, name, month, onClose }: { strategyId: string; clientId: string; name: string; month: string; onClose: () => void }) {
+  const link = useQuery({ queryKey: ['monthly-link', strategyId], queryFn: () => monthlyShareLink(strategyId), staleTime: Infinity, retry: false })
+  const phone = useQuery({
+    queryKey: ['client-phone', clientId],
+    queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null },
+  })
+  if (link.isPending || phone.isPending) return <Dialog open onClose={onClose} title={`Enviar a ${name}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Preparando o link</p></Dialog>
+  if (link.isError) return <Dialog open onClose={onClose} title={`Enviar a ${name}`} size="sm"><p role="alert" className="text-[13px] text-warn-ink">{(link.error as Error).message}</p></Dialog>
+  return <SendBody name={name} month={month} clientId={clientId} link={link.data} phone={phone.data ?? null} onClose={onClose} />
+}
+
+function SendBody({ name, month, clientId, link, phone, onClose }: { name: string; month: string; clientId: string; link: string; phone: string | null; onClose: () => void }) {
+  const [text, setText] = useState(() => monthlyMessage(name, month, link))
+  const [copied, setCopied] = useState(false)
+  const wa = waLink(phone, text)
+  return (
+    <Dialog open onClose={onClose} title={`Enviar a ${name}`} description="O sistema não envia sozinho. Confira a mensagem (já vai com o link da apresentação) e mande pelo seu WhatsApp." size="md">
+      <div className="flex flex-col gap-2">
+        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={7} className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[13.5px]" />
+        <div className="flex flex-wrap gap-2">
+          <a href={link} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline"><Presentation size={15} aria-hidden="true" /> Ver o que o cliente vai abrir</a>
+          {wa
+            ? <a href={wa} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><MessageCircle size={15} aria-hidden="true" /> Abrir no WhatsApp</a>
+            : <Button onClick={() => { void navigator.clipboard?.writeText(text); setCopied(true) }}>{copied ? 'Copiado' : 'Copiar mensagem'}</Button>}
+        </div>
+        {!phone && <p className="text-[12px] text-muted">Cliente sem WhatsApp no cadastro: copie e mande pelo seu aparelho. <Link to={`/clientes/${clientId}?passo=empresa`} className="font-semibold">Cadastrar telefone</Link></p>}
+      </div>
     </Dialog>
   )
 }

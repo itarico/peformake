@@ -87,6 +87,7 @@ export function App() {
       <Route path="/portal" element={<PortalPage />} />
       <Route path="/orcamento/:token" element={<PublicQuotePage />} />
       <Route path="/pagar/:token" element={<PayPage />} />
+      <Route path="/apresentacao/mes/:token" element={<PublicDeckPage kind="mes" />} />
       <Route path="/apresentacao/:token" element={<PublicDeckPage />} />
       <Route path="/conversa/:token" element={<ClientChatPage />} />
       <Route path="/galeria/:token" element={<PublicGalleryPage />} />

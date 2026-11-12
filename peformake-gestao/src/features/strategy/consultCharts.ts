@@ -2,7 +2,11 @@
 // Só desenham com dado de verdade; quem chama decide se mostra (funções *Data devolvem null sem dado).
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 
-export const SERIES: readonly string[] & { 0: string; 1: string; 2: string; 3: string } = ['#0090ad', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300']
+// Identidade das apresentações (Ellcazo): verde-limão + branco, detalhes em preto. 0 = destaque (cliente/principal), 1 = preto (alerta/rival),
+// 2 = verde da marca (bom), 3 = cinza (médio/referência). A tela do sistema usa outra paleta (components/charts).
+export const SERIES: readonly string[] & { 0: string; 1: string; 2: string; 3: string } = ['#B6E61F', '#0E0F0C', '#72B52F', '#A3A99B', '#5D6358', '#D4DBC8']
+/** Cor do texto em cima de uma cor da série: preto nas claras, branco nas escuras. */
+export const onColor = (c: string): string => (['#0E0F0C', '#5D6358'].includes(c) ? '#FFFFFF' : '#0E0F0C')
 const INK = 'currentColor'
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 /** Rótulo sem "…": quebra em até 2 linhas nas palavras; se ainda sobrar, fica a parte que cabe, terminando numa palavra inteira. */
@@ -131,7 +135,7 @@ export function positioningSvg(pts: { name: string; x: number; y: number; me: bo
     let y = py(p.y)
     for (let k = 1; placed.some((q) => Math.abs(q.y - y) < 22 && Math.abs(q.x - x) < 130) && k < 12; k++) y = py(p.y) + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 24
     placed.push({ x, y })
-    body += `<circle cx="${x}" cy="${y}" r="${p.me ? 10 : 7}" fill="${p.me ? SERIES[0] : SERIES[1]}" fill-opacity="${p.me ? 1 : 0.85}" stroke="#fff" stroke-width="2"/>`
+    body += `<circle cx="${x}" cy="${y}" r="${p.me ? 10 : 7}" fill="${p.me ? SERIES[0] : SERIES[1]}" fill-opacity="${p.me ? 1 : 0.85}" stroke="${p.me ? '#0E0F0C' : '#fff'}" stroke-width="2"/>`
     const right = x > L + PW * 0.62
     body += `<text x="${right ? x - 13 : x + 13}" y="${y + 4}" text-anchor="${right ? 'end' : 'start'}" font-size="12.5" font-weight="${p.me ? 700 : 500}" fill="${INK}">${tl(p.name, 20, right ? x - 13 : x + 13)}</text>`
   }
@@ -156,7 +160,7 @@ export function timelineSvg(fases: Doc[]): string {
   let body = `<line x1="20" y1="44" x2="${W - 20}" y2="44" stroke="${INK}" stroke-opacity="0.2" stroke-width="6" stroke-linecap="round"/>`
   fases.forEach((f, i) => {
     const x = 20 + seg * i + seg / 2, c = SERIES[i % SERIES.length]
-    body += `<circle cx="${x}" cy="44" r="16" fill="${c}"/><text x="${x}" y="49" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${i + 1}</text>`
+    body += `<circle cx="${x}" cy="44" r="16" fill="${c}"/><text x="${x}" y="49" text-anchor="middle" font-size="13" font-weight="700" fill="${onColor(c ?? '')}">${i + 1}</text>`
     body += `<text x="${x}" y="88" text-anchor="middle" font-size="15" font-weight="700" fill="${INK}">${esc(f.periodo)}</text>`
     body += `<text x="${x}" y="110" text-anchor="middle" font-size="12.5" fill="${INK}" fill-opacity="0.75">${(f.passos ?? []).length} passos</text>`
   })

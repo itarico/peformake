@@ -10,6 +10,7 @@ const db = supabase as unknown as { from: (t: string) => any } // eslint-disable
 function fail(e: { message: string; code?: string }): never {
   if (e.code === 'PF012') throw new Error('Já está gerando. Volte em alguns minutos.')
   if (e.code === 'PF001') throw new Error('Essa ação já foi decidida.')
+  if (e.code === 'PF005') throw new Error('A estratégia ainda não está pronta.')
   if (e.code === 'PF006') throw new Error(e.message.includes('Consultoria') ? 'Este cliente não tem Consultoria ativa.' : 'Confira os dados.')
   if (e.code === '42501') throw new Error('Só administrador ou head de marketing.')
   throw new Error('Não foi possível agora. Tente de novo.')
@@ -57,6 +58,13 @@ export async function approveWeek(strategyId: string, week: number): Promise<num
 export async function editAction(id: string, v: { title: string; what: string; due: string | null; proof: string | null }): Promise<void> {
   const { error } = await rpc('monthly_action_edit', { _id: id, _title: v.title, _what: v.what, _due: v.due, _proof: v.proof })
   if (error) fail(error)
+}
+
+/** Link público da apresentação do mês (o cliente abre no celular, um slide por vez). Cria o código na primeira vez. */
+export async function monthlyShareLink(strategyId: string): Promise<string> {
+  const { data, error } = await rpc('monthly_share_create', { _strategy: strategyId })
+  if (error) { if (error.code === 'PF005') throw new Error('A estratégia ainda não está pronta.'); fail(error) }
+  return `${window.location.origin}/apresentacao/mes/${data as string}`
 }
 
 export async function decideAdjust(id: string, accept: boolean): Promise<void> {

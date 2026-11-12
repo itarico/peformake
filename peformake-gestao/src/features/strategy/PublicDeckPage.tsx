@@ -4,19 +4,22 @@ import { useParams } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { presentHtml, type Orientation } from './consultDeck'
+import { monthlyDeckInput } from './monthlyDeck'
+import type { MonthlyStrategy } from './monthlyRules'
 
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 
 /**
- * Link público da apresentação (/apresentacao/:token): só os slides do cliente, um por vez, sem login.
+ * Link público da apresentação (/apresentacao/:token = diagnóstico; /apresentacao/mes/:token = estratégia do mês):
+ * só os slides do cliente, um por vez, sem login.
  * Celular em pé abre em retrato; computador, em paisagem. Nunca mostra os slides internos.
  */
-export function PublicDeckPage() {
+export function PublicDeckPage({ kind = 'diagnostico' }: { kind?: 'diagnostico' | 'mes' }) {
   const { token = '' } = useParams()
   const q = useQuery({
-    queryKey: ['consult-public', token], retry: false,
-    queryFn: async () => { const { data, error } = await rpc('consult_public', { _token: token }); if (error) throw new Error(error.message); return data as Doc },
+    queryKey: ['consult-public', kind, token], retry: false,
+    queryFn: async () => { const { data, error } = await rpc(kind === 'mes' ? 'monthly_public' : 'consult_public', { _token: token }); if (error) throw new Error(error.message); return data as Doc },
   })
   const [o, setO] = useState<Orientation>(() => (typeof window !== 'undefined' && window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem'))
   useEffect(() => {
@@ -28,14 +31,20 @@ export function PublicDeckPage() {
   const html = useMemo(() => {
     const d = q.data
     if (!d?.doc) return null
+    // Estratégia do mês: o servidor já manda só o que o cliente pode ver (sem roteiro, cargos, custo, "a confirmar").
+    if (kind === 'mes') {
+      const strategy = { id: '', client_id: '', month: String(d.month), status: d.status, stage: 'done', error: null, doc: d.doc, ideas: null, cost_usd: null, adjust: null, adjusted_at: null, finished_at: null, approved_at: null, updated_at: null,
+        actions: ((d.actions ?? []) as Doc[]).map((a) => ({ what: '', place: null, proof: null, why: null, format: null, routed_table: null, routed_id: null, routed_link: null, suggestion: null, done: null, ...a })) } as MonthlyStrategy
+      return presentHtml(monthlyDeckInput({ name: String(d.name ?? ''), strategy, clientLogoUrl: logoPublicUrl(d.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }), o)
+    }
     return presentHtml({
       name: String(d.name ?? ''), doc: d.doc, questions: (d.questions ?? []) as Doc[] as { question: string; why?: string | null; answer?: string | null }[],
       clientLogoUrl: logoPublicUrl(d.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png`, updatedAt: d.updated_at ?? null,
     }, o)
-  }, [q.data, o])
+  }, [q.data, o, kind])
 
   const msg = (t: string, sub?: string) => (
-    <main className="grid min-h-dvh place-items-center bg-[#0a1d22] p-6 text-center text-[#cfe3e7]">
+    <main className="grid min-h-dvh place-items-center bg-[#0E0F0C] p-6 text-center text-[#D9DCD3]">
       <div><p className="text-[18px] font-semibold text-white">{t}</p>{sub && <p className="mt-1 text-[14px]">{sub}</p>}</div>
     </main>
   )
