@@ -80,6 +80,7 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
 - A Peformake é **assessoria**, nunca "agência".
 - Faturamento separado Peformake × Ellcazo.
 - Identidade visual dos documentos e apresentações (diagnóstico, estratégia, plano, guia da marca, relatórios): **Peformake** (ciano #1FC8DB, petróleo #056F84, azul-escuro #0B3C44, branco). Só o que é do **audiovisual** (roteiro, orçamento, galeria) usa a **Ellcazo** (logo + verde-limão e preto). Decisão do Italo, 13/11/2026.
+- Relatórios (tráfego e redes): sempre no estilo do Reportei (capa; visão geral com cartões de métricas e variação % vs período anterior; seção por rede com gráfico diário, tabela de campanhas e melhores anúncios/posts com miniatura; análise e próximos passos curtos), identidade Peformake. Decisão do Italo, 12/11/2026.
 - Contratos: Assinafy (10/mês grátis) para recorrente novo; aceite eletrônico no portal para avulso e regularização. Tudo dentro do sistema; o PDF fica salvo.
 - Valores em dinheiro só para administradores.
 - Nunca vilanizar o tráfego pago (o vilão é o marketing "no automático").
