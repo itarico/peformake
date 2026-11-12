@@ -217,3 +217,36 @@ Custo (Fable 5.2 é caro): usar Fable em diagnóstico, trimestral e mensal; Sonn
 Estimativa para ~10 clientes de consultoria: US$ 60 a 120/mês — o teto de US$ 90 pode precisar subir.
 Ordem: 1) Diagnóstico estável no ar; 2) Aba Perguntas + formulário; 3) Hub do cliente juntando relatórios e estratégias
 existentes; 4) Estratégia mensal (todas as áreas) + semanal; 5) Trimestral; 6) Radar do nicho; 7) Decisões e acompanhamento.
+
+## 18. Definição do Italo (12/11, áudio) — como cada peça da Consultoria funciona
+### Estratégia SEMANAL = plano executável da semana (não ideias)
+- Puxa o que está acontecendo naquela semana e devolve TAREFAS prontas para executar, por área:
+  arte da semana; ação de tráfego (intensificar o que deu certo na semana passada, copy nova, criativo novo, campanha nova);
+  audiovisual (ideia de conteúdo da semana, para nós ou para o cliente fazer); vendas (ex.: serviço que está saindo bem).
+- Rápida, curta, cada item com dono, prazo e o "porquê" em 1 linha.
+### DIAGNÓSTICO = consultoria de entrada (e reavaliação)
+- Feito na entrada para achar os erros e já trazer planos executáveis; é o que se apresenta ao cliente como consultoria.
+- Usa TODOS os frameworks do sistema, cruzados e fundidos quando fizer sentido (não um por um).
+### PLANO TRIMESTRAL
+- Liberado quando o cliente completa 3 meses ativo (ou na hora, se já tem mais de 3 meses).
+- Analisa o diagnóstico, o que foi feito dele, planeja os próximos 3 meses por completo, avalia tecnologias e novidades
+  do mercado dos últimos 3 meses (não só marketing: o negócio do cliente no geral) e apresenta ao cliente.
+### PERGUNTAS AO CLIENTE = conversa inteligente (chat), toda semana
+- Semanal, por nicho, só clientes com Consultoria. O sistema lê tudo (ficha, diagnóstico, estratégias, resultados, abas)
+  e gera perguntas que MUDAM o direcionamento/comunicação (nada de "qual seu cliente ideal").
+- Formato: CHAT com a IA (Claude API) num link: o cliente responde por botões, texto, ÁUDIO (transcrito), foto ou documento;
+  a IA conduz até extrair o que precisa (estilo Bete, com botões para ele escrever pouco).
+- Pede também o NPS e a avaliação do trabalho.
+- Retroalimentação nos dois sentidos: respostas alimentam o sistema; o sistema gera as próximas perguntas.
+- Na ÚLTIMA semana do mês: perguntas sobre o mês seguinte, datas sazonais, sugestões já baseadas na estratégia que
+  rodou, instigando ideias do cliente; as respostas entram na geração da estratégia mensal.
+### ESTRATÉGIA MENSAL = a mais importante (base de toda a execução de marketing)
+- Usa as respostas do cliente; gera para todas as áreas; regenera com as ideias que o cliente trouxer.
+### ESTRATÉGIA DE TRÁFEGO = 100% tráfego (segmentação detalhada), baseada na análise de como cada cliente está rodando.
+### Social media, Design e Audiovisual (principalmente)
+- Analisa comunicação, frequência de postagens, engajamento (social), consistência visual (design) e vídeos (audiovisual).
+### APRESENTAÇÃO de cada uma: slides intuitivos, gráficos, sem poluição; o cliente entende só olhando.
+### APROVAR → PRODUÇÃO
+- Botão aprovar manda direto para a produção: roteiro, design, tráfego e demais.
+- Roteiro aprovado entra no agendamento do cliente: quando a captação for agendada e entrar na Produção, aquele vídeo
+  aprovado já está lá para ser gravado.
