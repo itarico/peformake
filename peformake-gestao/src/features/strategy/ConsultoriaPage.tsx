@@ -243,8 +243,12 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const ver = params.get('ver')
   const go = (patch: Record<string, string | null>, replace = false) => setParams((c) => { const n = new URLSearchParams(c); for (const [k, v] of Object.entries(patch)) { if (v) n.set(k, v); else n.delete(k) } return n }, { replace })
   const today = useMemo(() => new Date(), [])
-  const month = parseMonthParam(params.get('mes'), today)
-  const plan = useMonthly(clientId, month)
+  // Sem ?mes: abre no mês que já tem plano (este mês; se não houver, o próximo), para não mostrar "Não criada" à toa.
+  const opts = useMemo(() => monthOptions(today), [today])
+  const p0 = useMonthly(clientId, opts[0]!)
+  const p1 = useMonthly(clientId, opts[1]!)
+  const month = params.get('mes') ? parseMonthParam(params.get('mes'), today) : p0.data ? opts[0]! : p1.data ? opts[1]! : parseMonthParam(null, today)
+  const plan = month === opts[0] ? p0 : p1
   const st = plan.data
   const planReady = !!st && ['pronto', 'aprovado'].includes(st.status) && !!st.doc?.titulo
   const questions = useClientQuestions(clientId)
