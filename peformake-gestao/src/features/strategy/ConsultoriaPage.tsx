@@ -23,7 +23,7 @@ import { useProduction } from '@/features/production/useProduction'
 import { CardSection, DeckCard, DeckThumb, OrientationDialog, placeholderCover, screenOrientation, type CardPrimary } from './DeckCard'
 import { AreaCard, AvCard, MonthlyCard, MonthPick } from './PlanCards'
 import { ReportCards } from './ReportCards'
-import { AgentDocs } from './AgentDocs'
+import { AgentDocs, PdfCard, latestDocs, useAgentDocs } from './AgentDocs'
 import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
@@ -250,6 +250,9 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const p1 = useMonthly(clientId, opts[1]!)
   const month = params.get('mes') ? parseMonthParam(params.get('mes'), today) : p0.data ? opts[0]! : p1.data ? opts[1]! : parseMonthParam(null, today)
   const plan = month === opts[0] ? p0 : p1
+  // Documentos oficiais feitos pela Peformake (PDF na pasta do cliente): substituem os cartões gerados pelo sistema.
+  const agentDocs = useAgentDocs(clientId)
+  const pdf = useMemo(() => latestDocs(agentDocs.data ?? []), [agentDocs.data])
   const st = plan.data
   const planReady = !!st && ['pronto', 'aprovado'].includes(st.status) && !!st.doc?.titulo
   const questions = useClientQuestions(clientId)
@@ -336,7 +339,6 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
       {view === 'relatorios' && <><AgentDocs clientId={clientId} name={name} only="relatorios" /><ReportCards clientId={clientId} name={name} /></>}
       {view === 'planejamento' && <>
-        <AgentDocs clientId={clientId} name={name} />
         <CardSection title="Diagnóstico e estratégia">
           <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
@@ -344,14 +346,18 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
             onApprove={() => act.mutate(() => approveConsult(clientId))}
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
-          <MonthlyCard clientId={clientId} name={name} logo={logo} month={month} st={st} monthPick={mp} onCreate={() => void create()} creating={act.isPending}
-            onSend={() => openSend('mes')} onDetails={() => go({ ver: 'plano', secao: null })} />
+          {pdf.estrategia ? <PdfCard id="estrategia" title="Estratégia do mês" doc={pdf.estrategia} name={name} />
+            : <MonthlyCard clientId={clientId} name={name} logo={logo} month={month} st={st} monthPick={mp} onCreate={() => void create()} creating={act.isPending}
+              onSend={() => openSend('mes')} onDetails={() => go({ ver: 'plano', secao: null })} />}
         </CardSection>
         {(has.trafego || has.social || has.av) && (
           <CardSection title="Por área">
-            {has.trafego && <AreaCard area="trafego" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('trafego')} onDetails={() => go({ ver: 'plano', secao: 'trafego' })} />}
-            {has.social && <AreaCard area="social" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('social')} onDetails={() => go({ ver: 'plano', secao: 'social' })} />}
-            {has.av && <AvCard clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={(n) => openSend('av', n)} onDetails={() => go({ ver: 'plano', secao: 'audiovisual' })} />}
+            {has.trafego && pdf.estrategia && <PdfCard id="trafego" title="Tráfego" doc={pdf.relatorios ?? pdf.estrategia} name={name} note={pdf.relatorios ? 'Relatório mais recente · a estratégia de tráfego está na Estratégia do mês' : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
+            {has.trafego && !pdf.estrategia && <AreaCard area="trafego" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('trafego')} onDetails={() => go({ ver: 'plano', secao: 'trafego' })} />}
+            {has.social && pdf.social && <PdfCard id="social" title="Social media + Design" doc={pdf.social} name={name} />}
+            {has.social && !pdf.social && <AreaCard area="social" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('social')} onDetails={() => go({ ver: 'plano', secao: 'social' })} />}
+            {has.av && pdf.audiovisual && <PdfCard id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
+            {has.av && !pdf.audiovisual && <AvCard clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={(n) => openSend('av', n)} onDetails={() => go({ ver: 'plano', secao: 'audiovisual' })} />}
           </CardSection>
         )}
         <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />

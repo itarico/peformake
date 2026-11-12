@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Download, ExternalLink, FileText, MessageCircle } from 'lucide-react'
+import { DeckCard, DeckThumb, placeholderCover } from './DeckCard'
 import { ask } from '@/components/ui/confirm'
 import { supabase } from '@/lib/supabase'
 
@@ -7,8 +8,8 @@ import { supabase } from '@/lib/supabase'
  * Documentos oficiais feitos pela Peformake (agente do Claude) e salvos nos Arquivos do cliente:
  * estratégia, social media, audiovisual e relatórios. Decisão do Italo (12/11/2026): esses PDFs são a versão que vai ao cliente.
  */
-type Folder = 'estrategia' | 'social' | 'audiovisual' | 'relatorios'
-interface Doc { id: string; folder: Folder; name: string; bucket: string; path: string; created_at: string }
+export type Folder = 'estrategia' | 'social' | 'audiovisual' | 'relatorios'
+export interface Doc { id: string; folder: Folder; name: string; bucket: string; path: string; created_at: string }
 
 const LABEL: Record<Folder, string> = { estrategia: 'Estratégia', social: 'Social media', audiovisual: 'Audiovisual', relatorios: 'Relatório' }
 const ORDER: Folder[] = ['estrategia', 'social', 'audiovisual', 'relatorios']
@@ -17,6 +18,13 @@ async function signed(d: Doc, seconds: number, download = false): Promise<string
   const { data, error } = await supabase.storage.from(d.bucket).createSignedUrl(d.path, seconds, download ? { download: d.name } : undefined)
   if (error || !data?.signedUrl) throw new Error(error?.message ?? 'Não foi possível abrir o arquivo.')
   return data.signedUrl
+}
+
+/** O documento mais recente de cada pasta. */
+export function latestDocs(all: Doc[]): Partial<Record<Folder, Doc>> {
+  const out: Partial<Record<Folder, Doc>> = {}
+  for (const d of all) if (!out[d.folder]) out[d.folder] = d
+  return out
 }
 
 export function useAgentDocs(clientId: string) {
@@ -31,6 +39,34 @@ export function useAgentDocs(clientId: string) {
   })
 }
 
+export const openDoc = async (d: Doc) => { const w = window.open('', '_blank'); try { const u = await signed(d, 600); if (w) w.location.href = u; else window.location.href = u } catch { w?.close() } }
+export const saveDoc = async (d: Doc) => { window.location.href = await signed(d, 600, true) }
+export async function sendDoc(d: Doc, name: string) {
+  if (!(await ask(`Preparar o envio de "${d.name}" para ${name}? Abre o WhatsApp com a mensagem; você confere e envia.`))) return
+  const u = await signed(d, 60 * 60 * 24 * 14)
+  const text = `Olá! Segue o documento da Peformake: ${d.name.replace(/\.pdf$/i, '')}.\n${u}`
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+}
+
+/**
+ * Cartão do documento oficial (PDF feito pela Peformake) no mesmo padrão dos outros cartões.
+ * Quando existe, substitui o cartão gerado pelo sistema (decisão do Italo, 12/11/2026).
+ */
+export function PdfCard({ id, title, doc, name, brand = 'peformake', note }: { id: string; title: string; doc: Doc; name: string; brand?: 'peformake' | 'ellcazo'; note?: string }) {
+  const when = new Date(doc.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+  return (
+    <DeckCard id={id} title={title}
+      cover={<DeckThumb slide={placeholderCover(doc.name.replace(/\.pdf$/i, '').split('·')[0]!.trim(), name)} name={name} brand={brand} />}
+      status={{ label: 'Pronto', tone: 'ok' }}
+      missing={note ?? `${doc.name.replace(/\.pdf$/i, '')} · enviado à pasta em ${when}`}
+      primary={{ label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: () => void openDoc(doc) }}
+      menu={[
+        { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, onClick: () => void saveDoc(doc) },
+        { label: 'Enviar ao cliente', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => void sendDoc(doc, name) },
+      ]} />
+  )
+}
+
 /** Os documentos mais recentes de cada pasta (ou só os relatórios). */
 export function AgentDocs({ clientId, name, only }: { clientId: string; name: string; only?: 'relatorios' }) {
   const q = useAgentDocs(clientId)
@@ -43,15 +79,7 @@ export function AgentDocs({ clientId, name, only }: { clientId: string; name: st
     return list.filter((d) => d.created_at.slice(0, 10) === day)
   })
   if (!docs.length) return null
-
-  const open = async (d: Doc) => { const w = window.open('', '_blank'); try { const u = await signed(d, 600); if (w) w.location.href = u; else window.location.href = u } catch { w?.close() } }
-  const save = async (d: Doc) => { window.location.href = await signed(d, 600, true) }
-  const send = async (d: Doc) => {
-    if (!(await ask(`Preparar o envio de "${d.name}" para ${name}? Abre o WhatsApp com a mensagem; você confere e envia.`))) return
-    const u = await signed(d, 60 * 60 * 24 * 14)
-    const text = `Olá! Segue o documento da Peformake: ${d.name.replace(/\.pdf$/i, '')}.\n${u}`
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
-  }
+  const send = (d: Doc) => sendDoc(d, name)
 
   return (
     <section aria-label="Documentos da Peformake" className="flex flex-col gap-2">
@@ -67,8 +95,8 @@ export function AgentDocs({ clientId, name, only }: { clientId: string; name: st
               </div>
             </div>
             <div className="mt-auto flex flex-wrap gap-1.5">
-              <button type="button" onClick={() => void open(d)} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full bg-fill px-3 text-[13px] font-semibold text-on-fill"><ExternalLink size={14} aria-hidden="true" /> Abrir</button>
-              <button type="button" onClick={() => void save(d)} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full border border-line px-3 text-[13px] font-semibold hover:border-ink"><Download size={14} aria-hidden="true" /> Baixar</button>
+              <button type="button" onClick={() => void openDoc(d)} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full bg-fill px-3 text-[13px] font-semibold text-on-fill"><ExternalLink size={14} aria-hidden="true" /> Abrir</button>
+              <button type="button" onClick={() => void saveDoc(d)} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full border border-line px-3 text-[13px] font-semibold hover:border-ink"><Download size={14} aria-hidden="true" /> Baixar</button>
               <button type="button" onClick={() => void send(d)} className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full border border-line px-3 text-[13px] font-semibold hover:border-ink"><MessageCircle size={14} aria-hidden="true" /> Enviar</button>
             </div>
           </li>
