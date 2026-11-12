@@ -20,7 +20,8 @@ const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: 
 // O modelo mais capaz (pensa sempre; profundidade pelo effort). Recusa de segurança cai num modelo reserva no próprio pedido (fallbacks).
 const MODEL = 'claude-fable-5-2'
 const FN = 'consult-diagnosis'
-const STREAM_LIMIT_MS = 138_000
+// O Supabase grátis corta a chamada em 150 s: cada pedido à IA termina até 128 s depois do início da etapa, para dar tempo de gravar.
+const STAGE_BUDGET_MS = 128_000
 type Section = 'resumo' | 'diagnostico' | 'comunicacao' | 'plano' | 'riscos' | 'do_cliente'
 type Effort = 'low' | 'medium' | 'high' | 'xhigh'
 type Source = { url: string; title: string }
@@ -29,6 +30,7 @@ interface Job {
   human_edits?: Record<string, unknown> | null
   id: string; client_id: string; status: string; stage: string; redo_section: Section | null; attempts: number
   receita: Record<string, unknown> | null; research: Research | null; doc: Record<string, unknown>; cost_usd: number
+  t0?: number
 }
 interface Part { notes?: string; sources?: Source[]; pending?: unknown[]; cont?: number; done?: boolean; failed?: boolean }
 interface Research {
@@ -77,6 +79,7 @@ Deno.serve(async (request) => {
 })
 
 async function runStage(db: SupabaseClient, job: Job) {
+  job.t0 = Date.now()
   const ai = new Anthropic()
   let next = true
   try {
@@ -243,7 +246,8 @@ async function logUsage(db: SupabaseClient, job: Job, stage: string, msg: Anthro
 // Pedido cortado pelo limite de tempo também custa: grava o que já foi gasto (etapa com ":cortado").
 async function streamCall(ai: Anthropic, params: Omit<Anthropic.Beta.MessageCreateParamsStreaming, 'stream'>, cut?: { db: SupabaseClient; job: Job; stage: string }) {
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), STREAM_LIMIT_MS)
+  const left = cut?.job.t0 ? cut.job.t0 + STAGE_BUDGET_MS - Date.now() : STAGE_BUDGET_MS
+  const timer = setTimeout(() => controller.abort(), Math.max(15_000, left))
   const stream = ai.beta.messages.stream({ ...params, betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' } as Anthropic.Beta.MessageCreateParamsStreaming, { signal: controller.signal })
   try {
     return await stream.finalMessage()
@@ -278,11 +282,15 @@ async function stageResearch(db: SupabaseClient, ai: Anthropic, job: Job) {
   const earlier = round > 0 ? `\n\nO QUE A RODADA 1 JÁ ACHOU (não repita estas buscas):\n${researchNotes(research, RESEARCH_ROUNDS[0])}` : ''
   // Na 3ª tentativa a parte que ainda falha é dada como "não concluída" para não travar o resto.
   const giveUp = job.attempts >= 3
-  const results = await Promise.allSettled(todo.map((p) => runPart(db, ai, job, p, research.parts![p] ?? {}, `${ctx}${earlier}`, niche)))
+  // Cada parte é gravada assim que termina (se a chamada for cortada, o que já veio não se perde).
+  let chain: Promise<unknown> = Promise.resolve()
+  const persist = () => { chain = chain.then(() => db.from('consult_docs').update({ research }).eq('id', job.id).eq('stage', job.stage)); return chain }
+  const results = await Promise.allSettled(todo.map((p) => runPart(db, ai, job, p, research.parts![p] ?? {}, `${ctx}${earlier}`, niche).then(async (v) => { research.parts![p] = v; await persist(); return v })))
+  await chain
   let progress = false
   results.forEach((r, i) => {
     const key = todo[i]!
-    if (r.status === 'fulfilled') { research.parts![key] = r.value; progress = true } else {
+    if (r.status === 'fulfilled') { progress = true } else {
       console.error('consult research part', job.id, key, String((r.reason as Error)?.message ?? r.reason).slice(0, 200))
       if (giveUp) research.parts![key] = { done: true, failed: true, notes: 'Esta parte da pesquisa não terminou a tempo.' }
     }
