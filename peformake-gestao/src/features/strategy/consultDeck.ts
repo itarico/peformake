@@ -38,7 +38,6 @@ export const esc = (s: unknown) => String(s ?? '').replace(/\s*\[(?:CONFIRMAR|co
 const arr = (v: unknown): Doc[] => (Array.isArray(v) ? v as Doc[] : [])
 const strs = (v: unknown): string[] => (Array.isArray(v) ? (v as unknown[]).map(String).filter((s) => s.trim()) : [])
 const chunk = <T,>(a: T[], n: number): T[][] => { const out: T[][] = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out }
-const initials = (n: string) => n.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
 const isUrl = (s: unknown): s is string => typeof s === 'string' && /^https?:\/\//.test(s)
 /**
  * Texto do slide: nunca corta com "…" (frase pela metade não serve para o cliente).
@@ -91,7 +90,6 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
 
   add({ kind: 'cover', section: 'resumo', body: `${brand}
     <div class="cover-mid">
-      ${input.clientLogoUrl ? `<img class="cli-logo" src="${esc(input.clientLogoUrl)}" alt="">` : `<span class="cli-mono">${esc(initials(name))}</span>`}
       <p class="kicker">Diagnóstico e plano de ação</p>
       <h1>${esc(name)}</h1>
     </div>
@@ -384,30 +382,43 @@ ${deckCss(o)}</style></head><body><div class="pfd">${deckSlidesHtml(input, o)}</
  * Vale para a equipe (antes de enviar) e para o link público do cliente.
  */
 export function presentHtml(input: DeckInput, o: Orientation): string {
-  const ratio = o === 'paisagem' ? 16 / 9 : 210 / 297
+  // As duas orientações vão juntas: o botão ⇄ troca na hora, sem gerar de novo. ✕ fecha (ou volta).
+  const stage = (k: Orientation) => {
+    const id = k === 'paisagem' ? 'sp' : 'sv'
+    const ratio = k === 'paisagem' ? 16 / 9 : 210 / 297
+    const css = deckCss(k).replace(/\.pfd/g, `#${id} .pfd`)
+    return { id, css: `${css}\n#${id} .pfd{width:min(calc(100vw - 24px),calc((100dvh - 88px) * ${ratio.toFixed(4)}))}`, html: `<div class="stage" id="${id}"${k === o ? '' : ' hidden'}><div class="pfd measure">${deckSlidesHtml(input, k)}</div></div>` }
+  }
+  const a = stage('paisagem'), b = stage('vertical')
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(input.name)} · Peformake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;height:100%;background:#0B3C44;overflow:hidden;font-family:Geist,system-ui,sans-serif}
-.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px 64px}
-.pfd{width:min(calc(100vw - 24px),calc((100dvh - 88px) * ${ratio.toFixed(4)}))}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px 64px}.stage[hidden]{display:none}
 .pfd .slide{display:none;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.45)} .pfd .slide.on{display:block}
 .pfd.measure .slide{display:block;position:absolute;visibility:hidden;width:inherit}
-.bar{position:fixed;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:10px;color:#CFE3E7;font-size:14px}
-.bar button{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:20px}
-.bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
-${deckCss(o)}</style></head><body><div class="stage"><div class="pfd measure">${deckSlidesHtml(input, o)}</div></div>
-<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="f" aria-label="Tela cheia">⛶</button></div>
-<script>var pfFit=${fitSlides.toString()};var d=document.querySelector('.pfd'),S=[].slice.call(d.querySelectorAll('.slide')),i=0;
+.bar{position:fixed;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:8px;color:#CFE3E7;font-size:14px}
+.bar button{all:unset;cursor:pointer;min-width:44px;height:44px;padding:0 6px;box-sizing:border-box;border-radius:22px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:18px}
+.bar button.t{font-size:13px;font-weight:600;padding:0 12px}
+.bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:58px;text-align:center;font-variant-numeric:tabular-nums}
+.close{all:unset;position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff;font-size:18px;z-index:5}
+${a.css}
+${b.css}</style></head><body>${a.html}${b.html}
+<button class="close" id="c" aria-label="Fechar a apresentação">✕</button>
+<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="o" class="t" aria-label="Trocar entre vertical e horizontal"></button><button id="f" aria-label="Tela cheia">⛶</button></div>
+<script>var pfFit=${fitSlides.toString()};var cur='${o === 'paisagem' ? 'sp' : 'sv'}',i=0,d,S;
+function use(id){cur=id;['sp','sv'].forEach(function(k){document.getElementById(k).hidden=k!==id});d=document.querySelector('#'+id+' .pfd');S=[].slice.call(d.querySelectorAll('.slide'));document.getElementById('o').textContent=id==='sp'?'Vertical':'Horizontal';fit()}
 function show(k){i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(s,j){s.classList.toggle('on',j===i)});document.getElementById('n').textContent=(i+1)+' / '+S.length;document.getElementById('p').disabled=i===0;document.getElementById('x').disabled=i===S.length-1}
 function fit(){d.classList.add('measure');pfFit(d);d.classList.remove('measure');show(i)}
-(document.fonts?document.fonts.ready:Promise.resolve()).then(fit);window.addEventListener('resize',fit);show(0);
+(document.fonts?document.fonts.ready:Promise.resolve()).then(function(){use(cur)});window.addEventListener('resize',fit);use(cur);
 document.getElementById('p').onclick=function(){show(i-1)};document.getElementById('x').onclick=function(){show(i+1)};
+document.getElementById('o').onclick=function(){use(cur==='sp'?'sv':'sp')};
 document.getElementById('f').onclick=function(){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen()};
+document.getElementById('c').onclick=function(){if(document.fullscreenElement){document.exitFullscreen()}var t=window.top;try{if(t.opener){t.close();return}}catch(e){}try{if(t.history.length>1){t.history.back();return}}catch(e){}try{t.close()}catch(e){}};
 addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')show(i+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1)});
 var t0=null;addEventListener('touchstart',function(e){t0=e.touches[0].clientX},{passive:true});addEventListener('touchend',function(e){if(t0===null)return;var dx=e.changedTouches[0].clientX-t0;t0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1)});
-d.addEventListener('click',function(e){if(e.target.closest('a'))return;var r=d.getBoundingClientRect();show(e.clientX>r.left+r.width/2?i+1:i-1)})</script></body></html>`
+['sp','sv'].forEach(function(k){document.querySelector('#'+k+' .pfd').addEventListener('click',function(e){if(e.target.closest('a'))return;var r=d.getBoundingClientRect();show(e.clientX>r.left+r.width/2?i+1:i-1)})})</script></body></html>`
 }
 
 /** Abre o modo apresentação numa aba nova (só os slides do cliente, sem os internos). */

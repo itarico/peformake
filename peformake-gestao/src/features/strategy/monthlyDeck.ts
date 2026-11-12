@@ -9,7 +9,6 @@ import { esc, words, type DeckInput, type Orientation, type Slide } from './cons
 import { onColor } from './consultCharts'
 import { AREA, dm, monthName, pastWeeks, weekRange, weeksOf, type ActionArea, type MonthlyAction, type MonthlyStrategy } from './monthlyRules'
 
-const initials = (n: string) => n.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
 
 /** Cores das áreas na apresentação (identidade Peformake: ciano, petróleo e cinzas). A tela do sistema usa AREA.color. */
 export const DECK_AREA: Record<ActionArea, string> = {
@@ -76,7 +75,8 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
   const team = live.filter((a) => !isClient(a))
   const out: Slide[] = []
   const brand = `<div class="cover-top">${x.peformakeLogoUrl ? `<img class="pf-logo" src="${esc(x.peformakeLogoUrl)}" alt="Peformake">` : ''}<span class="brand">Peformake</span></div>`
-  const logo = x.clientLogoUrl ? `<img class="cli-logo" src="${esc(x.clientLogoUrl)}" alt="">` : `<span class="cli-mono">${esc(initials(name))}</span>`
+  // Sem logo do cliente na apresentação (pedido do Italo, 13/11): a capa leva só a marca da Peformake e o nome.
+  const logo = ''
   const range = weeksOf(st.month)
   const from = midMonth ? (d.gerado_em ? dm(new Date(new Date(d.gerado_em).getTime() - 3 * 3600_000).toISOString().slice(0, 10)) : dm(range[wks[0]! - 1]!.from)) : dm(range[0]!.from)
   const period = `${from} a ${dm(range[3]!.to)}`
