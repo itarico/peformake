@@ -255,8 +255,8 @@ function BusinessHome() {
       { key: 'brief', label: 'Peças sem briefing', count: cs('briefing'), to: `/conteudo/quadro?mes=${month}` },
       { key: 'review', label: 'Artes para revisar', count: cs('review'), to: `/conteudo/quadro?mes=${month}`, urgent: true },
     ] : []),
-    ...(c && !can.planner ? [{ key: 'design', label: 'Artes para produzir', count: cs('ready') + cs('changes_requested'), to: `/conteudo/quadro?mes=${month}` }] : []),
-    ...(c ? [{ key: 'late', label: 'Artes atrasadas', count: c.late, to: `/conteudo/calendario?mes=${month}`, urgent: true }] : []),
+    ...(c && !can.planner ? [{ key: 'design', label: 'Artes para produzir', count: cs('ready') + cs('changes_requested'), to: '/conteudo/design' }] : []),
+    ...(c ? [{ key: 'late', label: 'Artes atrasadas', count: c.late, to: '/conteudo/design', urgent: true }] : []),
     ...(a ? [
       { key: 'avreview', label: 'Vídeos para revisar', count: a.by_status.review ?? 0, to: '/audiovisual/producao' },
       { key: 'avlate', label: 'Edições atrasadas', count: a.late, to: '/audiovisual/producao', urgent: true },

@@ -72,7 +72,7 @@ export function ContentSummary({ month, compact = false }: { month: string; comp
       <StatTile label="Peças do mês" value={fmt.int(d.total)} hint={`${d.clients} clientes | ${d.plans_ready} de ${d.plans_total} planejamentos prontos`} to={`/conteudo/planejamento?mes=${month}`} />
       <StatTile label="Aprovadas" value={fmt.pct(pct)} tone={pct >= 80 ? 'ok' : 'default'} hint={`${done} de ${d.total} peças`} to={`/conteudo/quadro?mes=${month}`} />
       <StatTile label="Sem briefing" value={fmt.int(s('briefing'))} tone={s('briefing') > 0 ? 'warn' : 'default'} hint="Social media precisa escrever" to={`/conteudo/quadro?mes=${month}`} />
-      <StatTile label="Atrasadas" value={fmt.int(d.late)} tone={d.late > 0 ? 'warn' : 'ok'} hint={`${d.publish_next7} publicam nos próximos 7 dias`} to={`/conteudo/calendario?mes=${month}`} />
+      <StatTile label="Atrasadas" value={fmt.int(d.late)} tone={d.late > 0 ? 'warn' : 'ok'} hint={`${d.publish_next7} publicam nos próximos 7 dias`} to={`/conteudo/design`} />
     </KpiRow>
   )
   if (compact) return tiles

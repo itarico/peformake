@@ -1,25 +1,29 @@
 import { describe, expect, it } from 'vitest'
-import { actionsFor, fileCheck, filterItems, isLate, monthGrid, summarize, waitingOn, type ContentItem } from './contentRules'
+import { actionsFor, deliveryTarget, designQueue, fileCheck, filterItems, formOf, isLate, monthGrid, shortBriefing, specSummary, summarize, waitingOn, type ContentItem } from './contentRules'
 
 const item = (over: Partial<ContentItem>): ContentItem => ({
   id: 'i', planId: 'p', clientId: 'c', month: '2026-11-01', number: 1, kind: 'post', status: 'briefing', title: 'Promo', headline: null,
   subtitle: null, cta: null, briefing: null, caption: null, observations: null, referenceLinks: [], publishDate: null, deadline: null,
-  designerId: null, isExtra: false, revisionNote: null, revisionCount: 0, legacyFinalUrls: [], updatedAt: '', ...over,
+  designerId: null, isExtra: false, revisionNote: null, revisionCount: 0, legacyFinalUrls: [], updatedAt: '', carouselSlides: [], spec: {}, ...over,
 })
 
 describe('actionsFor', () => {
-  it('designer só produz e envia para revisão', () => {
+  it('designer produz e entrega direto ao cliente (decisão de 12/11)', () => {
     const designer = { planner: false, designer: true }
     expect(actionsFor(item({ status: 'briefing' }), designer, false)).toEqual([])
     expect(actionsFor(item({ status: 'ready' }), designer, false).map((a) => a.to)).toEqual(['in_production'])
+    expect(actionsFor(item({ status: 'in_production' }), designer, true).map((a) => a.to)).toEqual(['client_review'])
     expect(actionsFor(item({ status: 'review' }), designer, true)).toEqual([])
+  })
+  it('social também pode revisar antes do cliente', () => {
+    expect(actionsFor(item({ status: 'in_production' }), { planner: true, designer: false }, true).map((a) => a.to)).toEqual(['client_review', 'review'])
   })
   it('quem planeja aprova, manda ao cliente e pede ajuste com nota', () => {
     const review = actionsFor(item({ status: 'review' }), { planner: true, designer: false }, true)
     expect(review.map((a) => a.to)).toEqual(['client_review', 'approved', 'changes_requested'])
     expect(review.find((a) => a.to === 'changes_requested')?.needsNote).toBe(true)
   })
-  it('sem arte final o envio para revisão fica sem destaque', () => {
+  it('sem arte final a entrega fica sem destaque', () => {
     expect(actionsFor(item({ status: 'in_production' }), { planner: false, designer: true }, false)[0]?.primary).toBe(false)
   })
 })
@@ -60,5 +64,42 @@ describe('fileCheck', () => {
     expect(fileCheck('arte.PNG', 1000)).toEqual({ ext: 'png', mime: 'image/png' })
     expect(typeof fileCheck('programa.exe', 10)).toBe('string')
     expect(typeof fileCheck('video.mp4', 60 * 1024 * 1024)).toBe('string')
+  })
+})
+
+describe('fila do design', () => {
+  it('as minhas primeiro, depois ajuste, depois o prazo mais perto', () => {
+    const list = [
+      item({ id: 'a', status: 'ready', deadline: '2026-11-20' }),
+      item({ id: 'b', status: 'ready', deadline: '2026-11-14' }),
+      item({ id: 'c', status: 'changes_requested', deadline: '2026-11-30' }),
+      item({ id: 'd', status: 'in_production', designerId: 'eu', deadline: '2026-12-01' }),
+      item({ id: 'e', status: 'client_review' }),
+    ]
+    expect(designQueue(list, 'eu').map((i) => i.id)).toEqual(['d', 'c', 'b', 'a'])
+  })
+  it('alvo da entrega: prazo às 18h, senão publicação às 9h', () => {
+    expect(deliveryTarget({ deadline: '2026-11-14', publishDate: '2026-11-16' })).toBe('2026-11-14T18:00:00-03:00')
+    expect(deliveryTarget({ deadline: null, publishDate: '2026-11-16' })).toBe('2026-11-16T09:00:00-03:00')
+    expect(deliveryTarget({ deadline: null, publishDate: null })).toBeNull()
+    expect(deliveryTarget({ deadline: '2026-11-14', publishDate: null, designDueAt: '2026-11-13T15:00:00Z' })).toBe('2026-11-13T15:00:00Z')
+  })
+  it('briefing curto', () => {
+    expect(shortBriefing({ briefing: 'a'.repeat(200), headline: null }, 20)).toHaveLength(20)
+    expect(shortBriefing({ briefing: null, headline: 'Chamada' })).toBe('Chamada')
+  })
+})
+
+describe('peça por tipo', () => {
+  it('cada tipo tem o seu formulário', () => {
+    expect(formOf('carrossel')).toBe('carrossel')
+    expect(formOf('banner')).toBe('print')
+    expect(formOf('vetor')).toBe('vetor')
+    expect(formOf('story')).toBe('social')
+  })
+  it('resume o que é do tipo', () => {
+    expect(specSummary(item({ kind: 'banner', spec: { width: 0.8, height: 1.2, unit: 'm', material: 'Lona', quantity: 2 } }))).toBe('0,8×1,2 m · Lona · 2 un.')
+    expect(specSummary(item({ kind: 'carrossel', carouselSlides: [{ text: '' }, { text: '' }], spec: { purpose: 'criativo' } }))).toBe('2 telas · para anúncio')
+    expect(specSummary(item({ kind: 'post' }))).toBeNull()
   })
 })

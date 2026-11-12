@@ -10,7 +10,7 @@ import { monthLabel } from '@/features/traffic/planRules'
 import { DESIGN_AREAS, inAreas, useProduction } from '@/features/production/useProduction'
 import { contentErrorMessage, draftOf, ensurePlan, listItems, listPlans, saveItem, savePlan, sendToClient, type ContentPlan } from './contentApi'
 import { useMonthParam } from './useMonthParam'
-import { isLate, itemTitle, KIND_LABEL, STATUS_LABEL, STATUS_TONE, summarize, type ContentKind } from './contentRules'
+import { isLate, itemTitle, KIND_LABEL, STATUS_LABEL, STATUS_TONE, summarize } from './contentRules'
 
 function PlanNotes({ plan, canPlan }: { plan: ContentPlan; canPlan: boolean }) {
   const queryClient = useQueryClient()
@@ -49,7 +49,6 @@ export function ContentPlanPage() {
   const { clients, clientName, staffName, canPlan, isPending, isError, refetch } = useProduction()
   const plans = useQuery({ queryKey: ['content-plans', month], queryFn: () => listPlans([month]) })
   const items = useQuery({ queryKey: ['content-items', month], queryFn: () => listItems([month]) })
-  const [kind, setKind] = useState<ContentKind>('post')
   const [problem, setProblem] = useState<string | null>(null)
   const [sent, setSent] = useState<number | null>(null)
 
@@ -57,12 +56,12 @@ export function ContentPlanPage() {
   const add = useMutation({
     mutationFn: async (extra: boolean) => {
       const planId = plan?.id ?? (await ensurePlan(clientId, month))
-      return saveItem(null, null, { ...draftOf(null), kind }, planId, extra)
+      return saveItem(null, null, draftOf(null), planId, extra)
     },
     onSuccess: (id) => {
       void queryClient.invalidateQueries({ queryKey: ['content-items'] })
       void queryClient.invalidateQueries({ queryKey: ['content-plans'] })
-      navigate(`/conteudo/peca/${id}`)
+      navigate(`/conteudo/peca/${id}?editar=1`)
     },
     onError: (e) => setProblem(contentErrorMessage(e)),
   })
@@ -134,10 +133,6 @@ export function ContentPlanPage() {
               </div>
               {canPlan && (
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <label htmlFor="nova-tipo" className="sr-only">Tipo</label>
-                  <select id="nova-tipo" value={kind} onChange={(e) => setKind(e.target.value as ContentKind)} className="min-h-10 rounded-full border border-line-strong bg-surface px-3">
-                    {(Object.keys(KIND_LABEL) as ContentKind[]).map((k) => <option key={k} value={k}>{KIND_LABEL[k]}</option>)}
-                  </select>
                   <Button className="min-h-10 px-3" disabled={add.isPending} onClick={() => { setProblem(null); add.mutate(false) }}>
                     <Plus size={16} aria-hidden="true" /> Nova peça
                   </Button>

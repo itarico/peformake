@@ -1,18 +1,17 @@
 import { ArtRequestButton } from './ArtRequest'
 import { Suspense } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
+import { useProduction } from '@/features/production/useProduction'
 import { SectionHeader, type SectionTab } from '@/components/layout/SectionTabs'
-import { CONTENT_PLANNER_ROLES } from '@/lib/roles'
 import { monthLabel, monthStart } from '@/features/traffic/planRules'
 import { useMonthParam } from './useMonthParam'
 
 const TABS: SectionTab[] = [
   { to: '/conteudo/planejamento', label: 'Planejamento do mês', short: 'Planejamento' },
   { to: '/conteudo/quadro', label: 'Peças' },
-  { to: '/conteudo/calendario', label: 'Calendário' },
-  { to: '/conteudo/redes', label: 'Redes sociais', roles: CONTENT_PLANNER_ROLES },
-  { to: '/conteudo/novidades', label: 'Novidades e agente', roles: CONTENT_PLANNER_ROLES },
+  { to: '/conteudo/design', label: 'Design' },
+  // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
   { to: '/conteudo/datas', label: 'Datas sazonais' },
   { to: '/conteudo/automatico', label: 'Pedidos de arte' },
 ]
@@ -32,12 +31,18 @@ export function MonthSwitcher() {
   )
 }
 
+/** /conteudo: o designer cai direto na fila do design; quem planeja, nas peças. */
+export function ContentIndex() {
+  const { isDesigner, canPlan } = useProduction()
+  return <Navigate to={isDesigner && !canPlan ? 'design' : 'quadro'} replace />
+}
+
 export function ContentLayout() {
   return (
     <>
       <SectionHeader
         title="Social Media"
-        sub="Social media planeja e cuida das redes, o designer produz, o cliente aprova no portal."
+        sub="Social media planeja e manda para o design; o designer entrega direto ao cliente, que aprova no portal."
         actions={<><MonthSwitcher /><ArtRequestButton iconOnMobile /></>}
         tabs={TABS}
       />

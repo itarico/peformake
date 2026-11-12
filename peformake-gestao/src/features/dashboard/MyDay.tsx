@@ -59,7 +59,7 @@ function Points({ d }: { d: Day }) {
 
 const PIECE_COLUMNS: { id: string; label: string; match: string[]; hint: string }[] = [
   { id: 'fazer', label: 'Para fazer', match: ['ready', 'changes_requested', 'in_production'], hint: 'Briefing pronto ou ajuste pedido' },
-  { id: 'revisao', label: 'Em revisão', match: ['review'], hint: 'Com a social media' },
+  { id: 'revisao', label: 'Em revisão', match: ['review'], hint: 'A social pediu para ver antes do cliente' },
   { id: 'cliente', label: 'Com o cliente', match: ['client_review'], hint: 'Esperando aprovação no portal' },
   { id: 'briefing', label: 'Esperando briefing', match: ['briefing'], hint: 'A social media ainda não escreveu' },
 ]
@@ -280,7 +280,7 @@ export function MyDay({ greeting }: { greeting: string }) {
       {(isTraffic || (!isDesigner && !isSocial && !isAv && d.tasks.length > 0)) && <TasksView d={d} now={now} />}
       <ClientsTable d={d} social={isSocial} />
       {!isDesigner && d.pieces.length > 0 && (
-        <p className="flex items-center gap-2 text-[13px] text-muted"><CheckCircle2 size={14} aria-hidden="true" /> Também há {d.pieces.length} peças de design com você. <Link to="/conteudo/quadro">Abrir quadro</Link></p>
+        <p className="flex items-center gap-2 text-[13px] text-muted"><CheckCircle2 size={14} aria-hidden="true" /> Também há {d.pieces.length} peças de design com você. <Link to="/conteudo/design">Abrir fila do design</Link></p>
       )}
       {d.leads.length > 0 && (
         <Panel title="Leads que eu trouxe" className="pf-rise" action={<Link to="/comercial/funil" className="inline-flex min-h-10 items-center gap-1 text-[13px] font-medium">Abrir <ArrowRight size={14} aria-hidden="true" /></Link>}>

@@ -1,7 +1,24 @@
 // Regras do Conteúdo (Design + Social Media): etapas, quem pode mover, filtros e calendário.
 
 export type ContentStatus = 'briefing' | 'ready' | 'in_production' | 'review' | 'client_review' | 'changes_requested' | 'approved' | 'published'
-export type ContentKind = 'post' | 'carrossel' | 'story' | 'reels' | 'anuncio'
+export type ContentKind = 'post' | 'carrossel' | 'story' | 'reels' | 'anuncio' | 'impressao' | 'banner' | 'vetor'
+
+/** Campos de cada tipo (content_items.spec). Só o que o tipo usa é preenchido. */
+export interface PieceSpec {
+  /** Carrossel: para postar ou para criativo de anúncio. */
+  purpose?: 'postagem' | 'criativo'
+  width?: number
+  height?: number
+  unit?: 'cm' | 'm' | 'px'
+  material?: string
+  finishing?: string
+  quantity?: number
+  /** Vetor: o que vetorizar e formatos pedidos. */
+  vectorWhat?: string
+  formats?: string[]
+}
+
+export interface CarouselSlide { text: string }
 
 export interface ContentItem {
   id: string
@@ -19,8 +36,12 @@ export interface ContentItem {
   caption: string | null
   observations: string | null
   referenceLinks: string[]
+  carouselSlides: CarouselSlide[]
+  spec: PieceSpec
   publishDate: string | null
   deadline: string | null
+  /** Hora-limite da entrega do design (prazo de Configurações → Inteligência, gravado quando vai para o design). */
+  designDueAt?: string | null
   designerId: string | null
   isExtra: boolean
   revisionNote: string | null
@@ -59,6 +80,62 @@ export const KIND_LABEL: Record<ContentKind, string> = {
   story: 'Story',
   reels: 'Reels',
   anuncio: 'Anúncio',
+  impressao: 'Impressão',
+  banner: 'Banner',
+  vetor: 'Vetor',
+}
+
+/** Cartões do 1º passo: nome, explicação curta e que formulário o tipo usa. */
+export const KIND_CARDS: { kind: ContentKind; label: string; hint: string; form: 'social' | 'carrossel' | 'print' | 'vetor' }[] = [
+  { kind: 'post', label: 'Post', hint: 'Feed', form: 'social' },
+  { kind: 'carrossel', label: 'Carrossel', hint: 'Várias telas', form: 'carrossel' },
+  { kind: 'story', label: 'Story', hint: 'Vertical', form: 'social' },
+  { kind: 'reels', label: 'Reels', hint: 'Capa de vídeo', form: 'social' },
+  { kind: 'anuncio', label: 'Anúncio', hint: 'Criativo', form: 'social' },
+  { kind: 'impressao', label: 'Impressão', hint: 'Flyer, cardápio, cartão', form: 'print' },
+  { kind: 'banner', label: 'Banner', hint: 'Adesivo, lona', form: 'print' },
+  { kind: 'vetor', label: 'Vetor', hint: 'Logo, arte vetorizada', form: 'vetor' },
+]
+
+export function formOf(kind: ContentKind): 'social' | 'carrossel' | 'print' | 'vetor' {
+  return KIND_CARDS.find((c) => c.kind === kind)?.form ?? 'social'
+}
+
+/** Tamanhos comuns para impressão e banner (largura × altura). */
+export const SIZE_PRESETS: Record<'impressao' | 'banner', { label: string; width: number; height: number; unit: 'cm' | 'm' }[]> = {
+  impressao: [
+    { label: 'A4', width: 21, height: 29.7, unit: 'cm' },
+    { label: 'A5', width: 14.8, height: 21, unit: 'cm' },
+    { label: 'Cartão', width: 9, height: 5, unit: 'cm' },
+    { label: 'Flyer 10×15', width: 10, height: 15, unit: 'cm' },
+  ],
+  banner: [
+    { label: '1×2 m', width: 1, height: 2, unit: 'm' },
+    { label: '0,8×1,2 m', width: 0.8, height: 1.2, unit: 'm' },
+    { label: '3×1 m', width: 3, height: 1, unit: 'm' },
+    { label: 'Adesivo 10×10', width: 10, height: 10, unit: 'cm' },
+  ],
+}
+export const MATERIALS: Record<'impressao' | 'banner', string[]> = {
+  impressao: ['Papel couché', 'Papel offset', 'Papel kraft', 'Cartão 300 g'],
+  banner: ['Lona', 'Adesivo vinil', 'Adesivo perfurado', 'PVC'],
+}
+export const VECTOR_FORMATS = ['AI', 'PDF', 'SVG', 'EPS', 'PNG'] as const
+
+/** Resumo de uma linha do que é específico do tipo (cartão da peça e fila do design). */
+export function specSummary(item: Pick<ContentItem, 'kind' | 'spec' | 'carouselSlides'>): string | null {
+  const s = item.spec ?? {}
+  const f = formOf(item.kind)
+  if (f === 'carrossel') {
+    const n = item.carouselSlides?.length ?? 0
+    return [n ? `${n} telas` : null, s.purpose === 'criativo' ? 'para anúncio' : s.purpose === 'postagem' ? 'para postar' : null].filter(Boolean).join(' · ') || null
+  }
+  if (f === 'print') {
+    const num = (v: number) => String(v).replace('.', ',')
+    return [s.width && s.height ? `${num(s.width)}×${num(s.height)} ${s.unit ?? 'cm'}` : null, s.material, s.quantity ? `${s.quantity} un.` : null].filter(Boolean).join(' · ') || null
+  }
+  if (f === 'vetor') return [s.vectorWhat, s.formats?.length ? s.formats.join(', ') : null].filter(Boolean).join(' · ') || null
+  return null
 }
 
 export interface Actor {
@@ -87,7 +164,9 @@ export function actionsFor(item: Pick<ContentItem, 'status'>, actor: Actor, hasF
       if (planner && item.status === 'ready') a.push({ to: 'briefing', label: 'Voltar para briefing' })
       break
     case 'in_production':
-      if (planner || designer) a.push({ to: 'review', label: hasFinal ? 'Enviar para revisão' : 'Envie a arte para revisar', primary: hasFinal })
+      // Decisão do Italo (12/11): o design entrega direto ao cliente; a revisão interna fica opcional para a social.
+      if (planner || designer) a.push({ to: 'client_review', label: hasFinal ? 'Entregar ao cliente' : 'Envie a arte para entregar', primary: hasFinal })
+      if (planner) a.push({ to: 'review', label: 'Revisar antes do cliente' })
       break
     case 'review':
       if (planner) {
@@ -204,4 +283,32 @@ export function fileCheck(name: string, size: number): { ext: string; mime: stri
 /** No quadro só entra peça com briefing lançado (pedido do Italo, 12/11). Peça vazia fica só na pauta do mês. */
 export function onBoard(item: Pick<ContentItem, 'status' | 'briefing'>): boolean {
   return item.status !== 'briefing' || !!item.briefing?.trim()
+}
+
+/** Fila do design: peças que estão com o designer agora. */
+export const DESIGN_QUEUE: ContentStatus[] = ['changes_requested', 'ready', 'in_production']
+
+/** Hora-alvo da entrega: a hora-limite gravada; senão o prazo do design às 18h; senão a publicação às 9h (Recife). */
+export function deliveryTarget(item: Pick<ContentItem, 'deadline' | 'publishDate' | 'designDueAt'>): string | null {
+  if (item.designDueAt) return item.designDueAt
+  if (item.deadline) return `${item.deadline}T18:00:00-03:00`
+  if (item.publishDate) return `${item.publishDate}T09:00:00-03:00`
+  return null
+}
+
+/** Ordem da fila: as minhas primeiro, depois ajuste pedido, depois a entrega mais próxima. */
+export function designQueue<T extends Pick<ContentItem, 'status' | 'designerId' | 'deadline' | 'publishDate' | 'designDueAt'>>(items: readonly T[], myStaffId: string | null): T[] {
+  return items.filter((i) => DESIGN_QUEUE.includes(i.status)).sort((a, b) => {
+    const mine = Number(b.designerId === myStaffId && !!myStaffId) - Number(a.designerId === myStaffId && !!myStaffId)
+    if (mine) return mine
+    const adj = Number(b.status === 'changes_requested') - Number(a.status === 'changes_requested')
+    if (adj) return adj
+    return (deliveryTarget(a) ?? '9999').localeCompare(deliveryTarget(b) ?? '9999')
+  })
+}
+
+/** Primeiras palavras do briefing para o cartão da fila. */
+export function shortBriefing(item: Pick<ContentItem, 'briefing' | 'headline'>, max = 140): string {
+  const t = (item.briefing?.trim() || item.headline?.trim() || '').replace(/\s+/g, ' ')
+  return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t
 }

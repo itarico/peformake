@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, FileUp, Trash2 } from 'lucide-react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ArrowLeft, FileUp, Pencil, Trash2 } from 'lucide-react'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { PieceEditor } from './PieceEditor'
 import { Button } from '@/components/ui/Button'
 import { AiTakeoverBanner } from './AiTakeoverBanner'
 import { cn } from '@/lib/cn'
@@ -13,19 +14,16 @@ import {
   comment,
   contentErrorMessage,
   deleteItem,
-  draftOf,
   fileUrl,
   getItem,
   listEvents,
   listFiles,
   removeFile,
-  saveItem,
   setStatus,
   uploadFile,
   type ContentFile,
-  type ItemDraft,
 } from './contentApi'
-import { actionsFor, briefingMissing, fileCheck, itemTitle, KIND_LABEL, STATUS_LABEL, STATUS_TONE, waitingOn, type ContentItem, type ContentKind, type StatusAction } from './contentRules'
+import { actionsFor, briefingMissing, fileCheck, itemTitle, KIND_LABEL, specSummary, STATUS_LABEL, STATUS_TONE, waitingOn, type ContentItem, type StatusAction } from './contentRules'
 
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink disabled:opacity-70'
 const WAITING = { social: 'Social media', design: 'Design', client: 'Cliente' } as const
@@ -76,7 +74,7 @@ function Actions({ item, hasFinal }: { item: ContentItem; hasFinal: boolean }) {
             <Button
               key={a.to + a.label}
               variant={a.primary ? 'primary' : 'secondary'}
-              disabled={move.isPending || (a.to === 'review' && !hasFinal)}
+              disabled={move.isPending || ((a.to === 'review' || a.to === 'client_review') && !hasFinal)}
               onClick={() => { setProblem(null); if (a.needsNote) setPending(a); else move.mutate(a) }}
             >
               {a.label}
@@ -194,99 +192,74 @@ function Files({ item, files, canUploadFinal, canUploadRef }: { item: ContentIte
   )
 }
 
-function BriefingForm({ item, canPlan: planner }: { item: ContentItem; canPlan: boolean }) {
+function BriefingSummary({ item, canPlan: planner, startOpen }: { item: ContentItem; canPlan: boolean; startOpen: boolean }) {
   const locked = item.status === 'client_review' || item.status === 'approved' || item.status === 'published'
-  const canPlan = planner && !locked
-  const queryClient = useQueryClient()
-  const { staff } = useProduction()
-  const [draft, setDraft] = useState<ItemDraft>(() => draftOf(item))
-  const [links, setLinks] = useState(item.referenceLinks.join('\n'))
-  const set = <K extends keyof ItemDraft>(k: K, v: ItemDraft[K]) => setDraft((d) => ({ ...d, [k]: v }))
-  const save = useMutation({
-    mutationFn: () => saveItem(item.id, item.updatedAt, { ...draft, referenceLinks: links.split('\n').map((l) => l.trim()).filter((l) => /^https?:\/\//.test(l)) }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['content-item', item.id] })
-      void queryClient.invalidateQueries({ queryKey: ['content-items'] })
-    },
-  })
-  const dirty = JSON.stringify({ ...draft, referenceLinks: [] }) !== JSON.stringify({ ...draftOf(item), referenceLinks: [] }) || links !== item.referenceLinks.join('\n')
-  const missing = item.status === 'briefing' ? briefingMissing({ title: draft.title, briefing: draft.briefing, headline: draft.headline }) : null
-
-  const text = (key: 'title' | 'headline' | 'subtitle' | 'cta', label: string, max: number) => (
-    <div>
-      <label htmlFor={`f-${key}`} className="mb-1 block text-[13px] font-semibold">{label}</label>
-      <input id={`f-${key}`} value={draft[key]} maxLength={max} disabled={!canPlan} onChange={(e) => set(key, e.target.value)} className={field} />
-    </div>
-  )
-  const area = (key: 'briefing' | 'caption' | 'observations', label: string, rows: number, help?: string) => (
-    <div className="sm:col-span-2">
-      <label htmlFor={`f-${key}`} className="mb-1 block text-[13px] font-semibold">{label}</label>
-      {help && <p className="mb-1 text-[12px] text-muted">{help}</p>}
-      <textarea id={`f-${key}`} rows={rows} value={draft[key]} disabled={!canPlan} onChange={(e) => set(key, e.target.value)} className={field} />
-    </div>
-  )
-
+  const canEdit = planner && !locked
+  const { staffName } = useProduction()
+  const [open, setOpen] = useState(startOpen && canEdit)
+  const [, setParams] = useSearchParams()
+  const [more, setMore] = useState(false)
+  const missing = item.status === 'briefing' ? briefingMissing(item) : null
+  const extra = specSummary(item)
+  const close = () => { setOpen(false); setParams((p) => { p.delete('editar'); return p }, { replace: true }) }
+  const row = (k: string, v: string | null | undefined) => (v ? <div className="min-w-0"><dt className="text-[12px] text-muted">{k}</dt><dd className="break-words">{v}</dd></div> : null)
+  const dmy = (d: string | null) => (d ? `${d.slice(8)}/${d.slice(5, 7)}` : null)
   return (
-    <section aria-labelledby="briefing" className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
-      <div>
+    <section aria-labelledby="briefing" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="briefing" className="font-semibold">Briefing</h2>
-        {!planner && <p className="text-[13px] text-muted">Só social media, head ou admin editam o briefing.</p>}
-        {planner && locked && <p className="text-[13px] text-muted">Com o cliente ou aprovada, a peça fica travada. Para mudar, peça ajuste.</p>}
+        {canEdit && <Button onClick={() => setOpen(true)}><Pencil size={15} aria-hidden="true" /> Editar</Button>}
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div>
-          <label htmlFor="f-kind" className="mb-1 block text-[13px] font-semibold">Tipo</label>
-          <select id="f-kind" value={draft.kind} disabled={!canPlan} onChange={(e) => set('kind', e.target.value as ContentKind)} className={field}>
-            {(Object.keys(KIND_LABEL) as ContentKind[]).map((k) => <option key={k} value={k}>{KIND_LABEL[k]}</option>)}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="f-designer" className="mb-1 block text-[13px] font-semibold">Designer</label>
-          <select id="f-designer" value={draft.designerId} disabled={!canPlan} onChange={(e) => set('designerId', e.target.value)} className={field}>
-            <option value="">Sem designer</option>
-            {(staff ?? []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-          </select>
-        </div>
-        {text('title', 'Título (tema da peça)', 200)}
-        {text('headline', 'Chamada na arte', 500)}
-        {text('subtitle', 'Texto de apoio', 500)}
-        {text('cta', 'Chamada para ação', 200)}
-        {area('briefing', 'Briefing para o design', 5, 'O que a arte precisa comunicar, estilo, cores, fotos a usar.')}
-        {area('caption', 'Legenda', 5, 'Texto que vai no post. O cliente vê na aprovação.')}
-        {area('observations', 'Observações', 2)}
-        <div className="sm:col-span-2">
-          <label htmlFor="f-links" className="mb-1 block text-[13px] font-semibold">Links de referência</label>
-          <textarea id="f-links" rows={2} value={links} disabled={!canPlan} onChange={(e) => setLinks(e.target.value)} placeholder="Um link por linha" className={field} />
-        </div>
-        <div>
-          <label htmlFor="f-pub" className="mb-1 block text-[13px] font-semibold">Data de publicação</label>
-          <input id="f-pub" type="date" value={draft.publishDate} disabled={!canPlan} onChange={(e) => set('publishDate', e.target.value)} className={field} />
-        </div>
-        <div>
-          <label htmlFor="f-deadline" className="mb-1 block text-[13px] font-semibold">Prazo do design</label>
-          <input id="f-deadline" type="date" value={draft.deadline} disabled={!canPlan} onChange={(e) => set('deadline', e.target.value)} className={field} />
-        </div>
-      </div>
-      {canPlan && (
-        <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
-          <Button disabled={!dirty || save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar briefing'}</Button>
-          {dirty && <span className="text-[13px] text-muted">Alterações não salvas.</span>}
-          {missing && !dirty && <span className="text-[13px] text-warn-ink">{missing}</span>}
-          {save.isError && <span role="alert" className="font-medium text-warn-ink">{contentErrorMessage(save.error)}</span>}
-        </div>
+      {!planner && <p className="text-[13px] text-muted">Só social media, head ou admin editam o briefing.</p>}
+      {planner && locked && <p className="text-[13px] text-muted">Com o cliente ou aprovada, a peça fica travada. Para mudar, peça ajuste.</p>}
+      {missing && <p className="text-[13px] text-warn-ink">{missing} <button type="button" onClick={() => setOpen(true)} className="cursor-pointer font-semibold underline">Preencher</button></p>}
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-[14px]">
+        {row('Tipo', KIND_LABEL[item.kind])}
+        {row('Designer', item.designerId ? staffName(item.designerId) : 'Sem designer')}
+        {row('Chamada na arte', item.headline)}
+        {row('Chamada para ação', item.cta)}
+        {extra && row('Detalhes do tipo', extra)}
+        {row('Prazo do design', dmy(item.deadline))}
+        {row('Publicação', dmy(item.publishDate))}
+      </dl>
+      {item.briefing && <p className={cn('whitespace-pre-wrap text-[14px] text-muted', !more && 'line-clamp-3')}>{item.briefing}</p>}
+      {(item.briefing?.length ?? 0) > 180 || item.subtitle || item.caption || item.observations || item.carouselSlides.some((x) => x.text) ? (
+        <button type="button" onClick={() => setMore((m) => !m)} className="self-start text-[13px] font-semibold text-accent-ink">{more ? 'Ver menos' : 'Ver detalhes'}</button>
+      ) : null}
+      {more && (
+        <dl className="grid grid-cols-1 gap-2 border-t border-line pt-3 text-[14px]">
+          {row('Texto de apoio', item.subtitle)}
+          {item.carouselSlides.some((x) => x.text) && row('Telas', item.carouselSlides.map((x, i) => `${i + 1}. ${x.text || '—'}`).join('\n'))}
+          {row('Legenda', item.caption)}
+          {row('Observações', item.observations)}
+          {row('Acabamento', item.spec.finishing)}
+        </dl>
       )}
+      {open && <PieceEditor item={item} startAtType={startOpen || item.status === 'briefing' && !item.title} onClose={close} />}
     </section>
   )
 }
 
 export function ContentItemPage() {
   const { id = '' } = useParams()
+  const [params] = useSearchParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { clientName, canPlan, isDesigner } = useProduction()
   const data = useQuery({ queryKey: ['content-item', id], queryFn: () => getItem(id) })
   const files = useQuery({ queryKey: ['content-files', id], queryFn: () => listFiles([id]) })
   const events = useQuery({ queryKey: ['content-events', id], queryFn: () => listEvents(id) })
+  // Designer abriu a peça para fazer: já marca Em produção e o tempo começa a contar (PLANO-SOCIAL-DESIGN, item 4).
+  const started = useRef(false)
+  const status = data.data?.item.status
+  useEffect(() => {
+    if (started.current || !isDesigner || canPlan || (status !== 'ready' && status !== 'changes_requested')) return
+    started.current = true
+    void setStatus(id, 'in_production', null).then(() => {
+      void queryClient.invalidateQueries({ queryKey: ['content-item', id] })
+      void queryClient.invalidateQueries({ queryKey: ['design-queue'] })
+    }).catch(() => { /* sem permissão ou já mudou: segue como está */ })
+  }, [id, status, isDesigner, canPlan, queryClient])
   const [confirm, setConfirm] = useState(false)
   const addComment = useMutation({
     mutationFn: (message: string) => comment(id, message),
@@ -313,7 +286,7 @@ export function ContentItemPage() {
       <AiTakeoverBanner itemId={item.id} />
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-3">
-          <BriefingForm key={item.id} item={item} canPlan={canPlan} />
+          <BriefingSummary key={item.id} item={item} canPlan={canPlan} startOpen={params.get('editar') === '1'} />
           {plan.notes && (
             <section aria-label="Pauta do mês" className="rounded-3xl border border-line bg-surface p-5">
               <h2 className="font-semibold">Pauta do mês</h2>

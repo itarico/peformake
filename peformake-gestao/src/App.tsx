@@ -19,9 +19,11 @@ const ClientsPage = lazy(() => import('@/features/clients/ClientsPage').then((m)
 const AvBoard = lazy(() => import('@/features/av/AvBoard').then((m) => ({ default: m.AvBoard })))
 const AvProjectPage = lazy(() => import('@/features/av/AvProjectPage').then((m) => ({ default: m.AvProjectPage })))
 const ContentBoard = lazy(() => import('@/features/content/ContentBoard').then((m) => ({ default: m.ContentBoard })))
-const ContentCalendar = lazy(() => import('@/features/content/ContentCalendar').then((m) => ({ default: m.ContentCalendar })))
+// Desligado até a integração com o Instagram (12/11): const ContentCalendar = lazy(() => import('@/features/content/ContentCalendar').then((m) => ({ default: m.ContentCalendar })))
 const ContentItemPage = lazy(() => import('@/features/content/ContentItemPage').then((m) => ({ default: m.ContentItemPage })))
 const ContentLayout = lazy(() => import('@/features/content/ContentLayout').then((m) => ({ default: m.ContentLayout })))
+const ContentIndex = lazy(() => import('@/features/content/ContentLayout').then((m) => ({ default: m.ContentIndex })))
+const DesignPage = lazy(() => import('@/features/content/DesignPage').then((m) => ({ default: m.DesignPage })))
 const SeasonalPage = lazy(() => import('@/features/content/SeasonalPage').then((m) => ({ default: m.SeasonalPage })))
 const ContentPlanPage = lazy(() => import('@/features/content/ContentPlanPage').then((m) => ({ default: m.ContentPlanPage })))
 const NotificationsPage = lazy(() => import('@/features/notifications/NotificationsPage').then((m) => ({ default: m.NotificationsPage })))
@@ -60,8 +62,8 @@ const BillingPage = lazy(() => import('@/features/finance/BillingPage').then((m)
 const NichePage = lazy(() => import('@/site/NichePage').then((m) => ({ default: m.NichePage })))
 const StrategyLayout = lazy(() => import('@/features/strategy/StrategyLayout').then((m) => ({ default: m.StrategyLayout })))
 const SettingsLayout = lazy(() => import('@/features/settings/SettingsLayout').then((m) => ({ default: m.SettingsLayout })))
-const NetworksPage = lazy(() => import('@/features/social/NetworksPage').then((m) => ({ default: m.NetworksPage })))
-const SocialAgent = lazy(() => import('@/features/social/SocialPage').then((m) => ({ default: m.Agent })))
+// Desligado até a integração com o Instagram (12/11): const NetworksPage = lazy(() => import('@/features/social/NetworksPage').then((m) => ({ default: m.NetworksPage })))
+// Desligado (12/11; novidades do Instagram vão para a Bete): const SocialAgent = lazy(() => import('@/features/social/SocialPage').then((m) => ({ default: m.Agent })))
 const TeamPage = lazy(() => import('@/features/team/TeamPage').then((m) => ({ default: m.TeamPage })))
 const NewPasswordPage = lazy(() => import('@/pages/NewPasswordPage').then((m) => ({ default: m.NewPasswordPage })))
 
@@ -122,16 +124,17 @@ export function App() {
           </Route>
           <Route element={<RequireRole roles={CONTENT_ROLES} />}>
             <Route path="conteudo" element={<ContentLayout />}>
-              <Route index element={<Navigate to="quadro" replace />} />
+              <Route index element={<ContentIndex />} />
               <Route path="quadro" element={<ContentBoard />} />
-              <Route path="calendario" element={<ContentCalendar />} />
+              <Route path="design" element={<DesignPage />} />
+              <Route path="calendario" element={<MovedTo to="/conteudo/quadro" />} />
               <Route path="planejamento" element={<ContentPlanPage />} />
               <Route path="datas" element={<SeasonalPage />} />
               <Route path="automatico" element={<AutoCreativePage />} />
               <Route path="servicos" element={<MovedTo to="/comercial/servicos?area=design" />} />
               <Route element={<RequireRole roles={CONTENT_PLANNER_ROLES} />}>
-                <Route path="redes" element={<NetworksPage />} />
-                <Route path="novidades" element={<SocialAgent />} />
+                <Route path="redes" element={<MovedTo to="/conteudo/quadro" />} />
+                <Route path="novidades" element={<MovedTo to="/conteudo/quadro" />} />
               </Route>
             </Route>
             <Route path="conteudo/peca/:id" element={<ContentItemPage />} />
@@ -165,13 +168,13 @@ export function App() {
             <Route path="financeiro/whatsapp" element={<FinanceWhatsappPage />} />
           </Route>
           <Route path="equipe/*" element={<TeamPage />} />
-          <Route path="social" element={<MovedTo to="/conteudo/redes" />} />
-          <Route path="social/painel" element={<MovedTo to="/conteudo/redes" />} />
-          <Route path="social/quadro" element={<MovedTo to="/conteudo/redes" />} />
+          <Route path="social" element={<MovedTo to="/conteudo/quadro" />} />
+          <Route path="social/painel" element={<MovedTo to="/conteudo/quadro" />} />
+          <Route path="social/quadro" element={<MovedTo to="/conteudo/quadro" />} />
           <Route path="social/briefings" element={<MovedTo to="/conteudo/planejamento" />} />
-          <Route path="social/agente" element={<MovedTo to="/conteudo/novidades" />} />
+          <Route path="social/agente" element={<MovedTo to="/conteudo/quadro" />} />
           <Route path="social/estrategia" element={<MovedTo to="/estrategia/social" />} />
-          <Route path="social/contas" element={<MovedTo to="/conteudo/redes?ver=contas" />} />
+          <Route path="social/contas" element={<MovedTo to="/conteudo/quadro" />} />
           <Route element={<RequireRole roles={['admin', 'head_marketing', 'traffic_manager', 'social_media']} />}>
             <Route path="estrategia/*" element={<StrategyLayout />} />
           </Route>
