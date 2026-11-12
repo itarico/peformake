@@ -18,6 +18,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-12 · Consultoria: edição, perguntas, link público e portal no banco + tela publicada (nuvem)
+- Migração consultoria_edicao aplicada sem as 3 linhas "drop ... if exists" (nada existia; assim não pede confirmação). 21 perguntas criadas a partir dos 3 diagnósticos; comunicação estruturada de 3 clientes.
+- Tela publicada a partir de cópia limpa do HEAD (tsc ok, vitest 60/414 ok, e2e/consultoria.cjs ok). O PENDENTE 1 da passagem para o PC está resolvido; a sessão da nuvem continua o trabalho a pedido do Italo ("faça").
+
 ## 2026-11-12 · PASSAGEM PARA O PC (sessão da nuvem para aqui)
 Estado:
 - Consultoria: motor novo no ar (consult-diagnosis v16: Fable 5.2, pesquisa em 6 partes, coleta pelos conectores, retentativas, nada preso em "gerando"); Will motos, CIA COFFE e Fornario "pronto para revisar". Trava de 1/dia REMOVIDA (ai_generation_allowed = true). Gasto de IA em 12/11 ~US$ 37 (testes); diagnóstico estável ~US$ 8-9/cliente; teto US$ 90/mês.
