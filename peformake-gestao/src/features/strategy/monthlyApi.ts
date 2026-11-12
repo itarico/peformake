@@ -114,3 +114,22 @@ export function useClientReports(clientId: string, enabled = true) {
     },
   })
 }
+
+/** Link público só dos vídeos aprovados do mês (identidade Ellcazo). Cria o código na primeira vez. */
+export async function monthlyAvShareLink(strategyId: string): Promise<string> {
+  const { data, error } = await rpc('monthly_av_share', { _strategy: strategyId })
+  if (error) { if (error.code === 'PF005') throw new Error('O plano ainda não está pronto.'); fail(error) }
+  return `${window.location.origin}/apresentacao/audiovisual/${data as string}`
+}
+
+/** Vídeos coletados das redes no mês (TikTok e Reels), para as referências do audiovisual. */
+export function useClientScan(clientId: string, month: string, enabled = true) {
+  return useQuery({
+    queryKey: ['client-scan', clientId, month], enabled, staleTime: 10 * 60_000,
+    queryFn: async () => {
+      const { data, error } = await db.from('client_scan').select('source, data').eq('client_id', clientId).eq('month', month).in('source', ['tiktok', 'instagram'])
+      if (error) return []
+      return (data ?? []) as { source: string; data: Record<string, unknown> }[]
+    },
+  })
+}

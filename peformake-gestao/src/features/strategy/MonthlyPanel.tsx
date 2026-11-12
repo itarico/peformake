@@ -14,7 +14,9 @@ import { ago } from '@/features/settings/AutomationsCenter'
 import { consultKey } from './consultApi'
 import { openPresentation, printDeck, type Orientation } from './consultDeck'
 import { waLink } from './consultRules'
-import { adjustNow, approveAreaWeek, approveWeek, decideAction, decideAdjust, editAction, monthlyKey, monthlyShareLink, requestMonthly, useMonthly } from './monthlyApi'
+import { adjustNow, approveAreaWeek, approveWeek, decideAction, decideAdjust, editAction, monthlyAvShareLink, monthlyKey, monthlyShareLink, requestMonthly, useMonthly } from './monthlyApi'
+import { AvPlanSection } from './AvPlanSection'
+import { avMessage } from './avDeck'
 import { monthlyDeckInput } from './monthlyDeck'
 import {
   AREA, actionState, currentWeek, dm, monthlyMessage, monthName, monthOptions, monthStart, parseMonthParam, pastWeeks, statusLabel, textPages, weeksOf,
@@ -60,6 +62,7 @@ export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName
   const [ideas, setIdeas] = useState(false)
   const [deck, setDeck] = useState(false)
   const [send, setSend] = useState(false)
+  const [sendAv, setSendAv] = useState<number | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const refresh = () => { void qc.invalidateQueries({ queryKey: monthlyKey(clientId, month) }); void qc.invalidateQueries({ queryKey: consultKey }); void qc.invalidateQueries({ queryKey: ['monthly-board'] }) }
   const act = useMutation({
@@ -166,7 +169,9 @@ export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName
             </div>
           )}
           {sec && <SectionBody st={st} sec={sec} scope={scope} busy={act.isPending} onDetail={setDetail} onOpen={setOpen}
-            onApprove={(a) => act.mutate(() => decideAction(a.id, true))} />}
+            onApprove={(a) => act.mutate(() => decideAction(a.id, true))}
+            av={sec === 'audiovisual' ? <AvPlanSection st={st} clientId={clientId} name={name} busy={act.isPending} canDecide={(a) => canDecide(st, a)}
+              onApprove={(a) => act.mutate(() => decideAction(a.id, true))} onDecided={(fn) => act.mutate(fn)} onSend={setSendAv} /> : null} />}
           <p className="text-[12px] text-muted">Gerado {ago(st.finished_at) ?? ''}{st.ideas ? ' · com as ideias do cliente' : ''}{st.cost_usd != null ? ` · US$ ${Number(st.cost_usd).toFixed(2).replace('.', ',')}` : ''}.</p>
         </>
       )}
@@ -180,21 +185,26 @@ export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName
       {ideas && st && <IdeasDialog name={name} month={month} usd={GEN_USD[scope]} initial={st.ideas ?? ''} onClose={() => setIdeas(false)}
         onSave={(t) => { setIdeas(false); act.mutate(() => requestMonthly(clientId, month, t)) }} />}
       {send && st && <SendDialog strategyId={st.id} clientId={clientId} name={name} month={month} onClose={() => setSend(false)} />}
+      {sendAv !== null && st && <SendDialog strategyId={st.id} clientId={clientId} name={name} month={month} av={sendAv} onClose={() => setSendAv(null)} />}
       {deck && deckInput && <DeckDialog onClose={() => setDeck(false)} onPick={(o) => { printDeck(deckInput, o); setDeck(false) }} />}
     </div>
   )
 }
 
 // ───────── Uma seção: cartões curtos + as ações para aprovar ─────────
-function SectionBody({ st, sec, scope, busy, onDetail, onOpen, onApprove }: {
+function SectionBody({ st, sec, scope, busy, onDetail, onOpen, onApprove, av }: {
   st: MonthlyStrategy; sec: SectionId; scope: PlanScope; busy: boolean
   onDetail: (c: PlanCard) => void; onOpen: (a: MonthlyAction) => void; onApprove: (a: MonthlyAction) => void
+  /** Audiovisual: os vídeos com roteiro, filmagem, referências e anúncio (no lugar da lista simples). */
+  av?: ReactNode
 }) {
-  const cards = sectionCards(st.doc, sec, scope)
-  const list = sectionActions(st.actions, sec, scope).filter((a) => a.status !== 'recusada')
+  // No audiovisual, a lista de vídeos já mostra cada reels: o cartão "N vídeos no mês" sairia repetido.
+  const cards = sectionCards(st.doc, sec, scope).filter((c) => !(av && c.key === 'reels'))
+  const list = av ? [] : sectionActions(st.actions, sec, scope).filter((a) => a.status !== 'recusada')
     .sort((a, b) => (a.status === 'proposta' ? 0 : 1) - (b.status === 'proposta' ? 0 : 1) || a.week - b.week)
   return (
     <div data-conteudo className="flex flex-col gap-3">
+      {av}
       {cards.length > 0 && (
         <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
           {cards.map((c) => (
@@ -240,7 +250,7 @@ function SectionBody({ st, sec, scope, busy, onDetail, onOpen, onApprove }: {
           </ul>
         </section>
       )}
-      {!cards.length && !list.length && <p className="rounded-2xl border border-line bg-surface p-4 text-[13px] text-muted">Nada nesta seção neste mês.</p>}
+      {!av && !cards.length && !list.length && <p className="rounded-2xl border border-line bg-surface p-4 text-[13px] text-muted">Nada nesta seção neste mês.</p>}
     </div>
   )
 }
@@ -377,19 +387,20 @@ function DeckDialog({ onClose, onPick }: { onClose: () => void; onPick: (o: Orie
 }
 
 // ───────── Enviar ao cliente: o sistema só prepara (link + mensagem); a pessoa confere e manda pelo WhatsApp dela ─────────
-function SendDialog({ strategyId, clientId, name, month, onClose }: { strategyId: string; clientId: string; name: string; month: string; onClose: () => void }) {
-  const link = useQuery({ queryKey: ['monthly-link', strategyId], queryFn: () => monthlyShareLink(strategyId), staleTime: Infinity, retry: false })
+function SendDialog({ strategyId, clientId, name, month, av, onClose }: { strategyId: string; clientId: string; name: string; month: string; av?: number; onClose: () => void }) {
+  const link = useQuery({ queryKey: ['monthly-link', strategyId, av !== undefined ? 'av' : 'mes'], queryFn: () => (av !== undefined ? monthlyAvShareLink(strategyId) : monthlyShareLink(strategyId)), staleTime: Infinity, retry: false })
   const phone = useQuery({
     queryKey: ['client-phone', clientId],
     queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null },
   })
   if (link.isPending || phone.isPending) return <Dialog open onClose={onClose} title={`Enviar a ${name}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Preparando o link</p></Dialog>
   if (link.isError) return <Dialog open onClose={onClose} title={`Enviar a ${name}`} size="sm"><p role="alert" className="text-[13px] text-warn-ink">{(link.error as Error).message}</p></Dialog>
-  return <SendBody name={name} month={month} clientId={clientId} link={link.data} phone={phone.data ?? null} onClose={onClose} />
+  return <SendBody name={name} month={month} clientId={clientId} link={link.data} phone={phone.data ?? null} onClose={onClose}
+    initial={av !== undefined ? avMessage(name, month, link.data, av) : undefined} />
 }
 
-function SendBody({ name, month, clientId, link, phone, onClose }: { name: string; month: string; clientId: string; link: string; phone: string | null; onClose: () => void }) {
-  const [text, setText] = useState(() => monthlyMessage(name, month, link))
+function SendBody({ name, month, clientId, link, phone, initial, onClose }: { name: string; month: string; clientId: string; link: string; phone: string | null; initial?: string; onClose: () => void }) {
+  const [text, setText] = useState(() => initial ?? monthlyMessage(name, month, link))
   const [copied, setCopied] = useState(false)
   const wa = waLink(phone, text)
   return (

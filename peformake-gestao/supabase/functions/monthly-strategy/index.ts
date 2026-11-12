@@ -384,7 +384,7 @@ async function stepPecas(db: SupabaseClient, ai: Anthropic, job: Job): Promise<b
   const cal = (job.partial.out_cal?.cal ?? {}) as Row
   const pecas = (cal.pecas ?? []) as Row[]
   const ctr = (job.partial.contratado ?? {}) as Row
-  const list = (ids: Row[]) => JSON.stringify(ids.map((p) => ({ id: p.id, data: p.data, formato: p.formato, serie: p.serie, titulo: p.titulo, objetivo: p.objetivo, funil: p.funil, ideia: p.ideia, material: p.material, vira_anuncio: p.vira_anuncio, tendencia_link: p.tendencia_link })))
+  const list = (ids: Row[]) => JSON.stringify(ids.map((p) => ({ id: p.id, data: p.data, formato: p.formato, serie: p.serie, titulo: p.titulo, objetivo: p.objetivo, funil: p.funil, ideia: p.ideia, material: p.material, vira_anuncio: p.vira_anuncio, tendencia_link: p.tendencia_link, papel: p.papel, papel_porque: p.papel_porque })))
   const calls: Record<string, () => Promise<Row>> = {}
   const batches: string[] = []
   for (let i = 0; i < pecas.length; i += PIECES_PER_BATCH) {

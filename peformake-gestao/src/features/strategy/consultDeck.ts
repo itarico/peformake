@@ -17,7 +17,8 @@ export interface DeckInput {
   peformakeLogoUrl?: string | null
   updatedAt?: string | null
   /** Outra apresentação no mesmo estilo (ex.: estratégia do mês): monta os próprios slides. */
-  slides?: (o: Orientation) => Slide[]
+  /** `live`: modo apresentação na tela (pode tocar vídeo); sem ele, PDF/impressão. */
+  slides?: (o: Orientation, ctx?: { live?: boolean }) => Slide[]
   /** Nome do documento na aba/PDF (padrão: Diagnóstico). */
   title?: string
   /** Identidade: Peformake (padrão) ou Ellcazo (tudo que é do audiovisual: logo + verde-limão e preto). */
@@ -87,8 +88,8 @@ const stage = (e: unknown) => { const t = String(e ?? ''); const m = t.match(/\(
 const bullets = (items: string[], n = 4, w = 14) => `<ul class="bul">${items.slice(0, n).map((t) => `<li>${esc(words(t, w))}</li>`).join('')}</ul>`
 
 /** Lista de slides (o modelo). `internal` inclui os slides só da equipe (tela). */
-export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?: boolean } = {}): Slide[] {
-  if (input.slides) return input.slides(o).filter((x) => opts.internal || !x.internal)
+export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?: boolean; live?: boolean } = {}): Slide[] {
+  if (input.slides) return input.slides(o, { live: opts.live }).filter((x) => opts.internal || !x.internal)
   const { doc, name } = input
   const r = doc.resumo ?? {}, d = doc.diagnostico ?? {}, c = doc.comunicacao ?? {}, p = doc.plano ?? {}, intel = doc.inteligencia ?? {}
   const land = o === 'paisagem'
@@ -327,11 +328,11 @@ export function deckCss(o: Orientation, brand: DeckBrand = 'peformake'): string 
   .pfd .card.xl{padding:${f(2.6)}} .pfd .card.xl h3{font-size:${f(2.8)}} .pfd .card.xl p{font-size:${f(2.1)}}
   .pfd .card .wk{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)};color:var(--muted)} .pfd .card .cnt{font-size:${f(1.35)};color:var(--muted)}
   .pfd .legend{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .legend li{display:flex;gap:${f(1.2)};align-items:center;font-size:${f(1.8)};line-height:1.25} .pfd .legend .num{background:var(--ink);color:#fff;width:${f(2.8)};height:${f(2.8)}}
-  ${brand === 'ellcazo' ? ellcazoCss(f) : ''}`
+  ${brand === 'ellcazo' ? ellcazoCss(f, land) : ''}`
 }
 
 /** Identidade Ellcazo por cima do mesmo sistema de slides: preto, verde-limão e branco (só o que é do audiovisual). */
-function ellcazoCss(f: (n: number) => string): string {
+function ellcazoCss(f: (n: number) => string, land: boolean): string {
   return `
   .pfd{--ink:#121410;--muted:#5F6656;--acc:#4E6B00;--fill:#B5E61D;--deep:#121410;--soft:#F1F8DA;--line:#E2E6D8;--canvas:#F5F7EF}
   .pfd .cover{background:radial-gradient(circle at 86% 14%,rgba(181,230,29,.2) 0,rgba(181,230,29,0) 44%),#121410}
@@ -353,6 +354,17 @@ function ellcazoCss(f: (n: number) => string): string {
   .pfd .refs li{display:grid;grid-template-columns:${f(3.2)} 1fr;gap:${f(1.4)};align-items:start;font-size:${f(1.7)};line-height:1.3}
   .pfd .refs a{color:#121410;font-weight:700;text-decoration:none;border-bottom:${f(.3)} solid var(--fill)} .pfd .refs small{display:block;color:var(--muted);font-size:${f(1.3)};margin-top:${f(.3)};word-break:break-all}
   .pfd .vlist{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .vlist li{display:grid;grid-template-columns:${f(3.2)} 1fr auto;gap:${f(1.4)};align-items:center;border-bottom:1px solid var(--line);padding-bottom:${f(1)};font-size:${f(1.9)}}
+  .pfd .vpage{display:grid;grid-template-columns:${land ? '24cqw' : '34cqw'} 1fr;gap:${f(2.4)};align-items:start;flex:1;min-height:0} .pfd .vpage.noref{grid-template-columns:1fr}
+  .pfd .vref{display:flex;flex-direction:column;gap:${f(.8)}} .pfd .ref-live{width:100%;aspect-ratio:9/16;max-height:${land ? '36cqw' : '60cqw'};border-radius:${f(1.4)};overflow:hidden;background:#121410}
+  .pfd .ref-live iframe{width:100%;height:100%;border:0;display:block}
+  .pfd .ref-card{display:flex;flex-direction:column;gap:${f(1)};background:#121410;color:#fff;border-radius:${f(1.4)};padding:${f(1.6)};text-decoration:none}
+  .pfd .ref-card .qr{width:100%;max-width:${land ? '15cqw' : '100%'};align-self:center;height:auto;border-radius:${f(.8)};background:#fff} .pfd .ref-card span{display:flex;flex-direction:column;font-size:${f(1.5)};line-height:1.25}
+  .pfd .ref-card b{color:var(--fill);font-size:${f(1.8)}} .pfd .ref-card small{color:#B8C0AA;font-size:${f(1.15)};word-break:break-all;margin-top:${f(.3)}}
+  .pfd .refnote{font-size:${f(1.3)};color:var(--muted);line-height:1.3}
+  .pfd .vmain{display:flex;flex-direction:column;gap:${f(1.5)};min-width:0} .pfd .vmain .why{font-size:${f(1.9)};line-height:1.35;font-weight:550}
+  .pfd .vmain .ideas h3{font-size:${f(1.6)};text-transform:uppercase;letter-spacing:.08em;margin-bottom:${f(.8)}} .pfd .vmain .ideas .bul li{font-size:${f(1.7)}}
+  .pfd .callout.light{font-weight:450} .pfd .callout.light b{font-weight:750}
+  .pfd .vmain .more{font-size:${f(1.35)};color:var(--muted)} .pfd .vmain .more a{color:#121410;font-weight:700}
   .pfd .vlist li:last-child{border-bottom:0} .pfd .vlist .num{background:#121410;color:var(--fill)} .pfd .vlist small{display:block;color:var(--muted);font-size:${f(1.3)}}
   `
 }
@@ -432,7 +444,7 @@ export function presentHtml(input: DeckInput, o: Orientation): string {
   // "?" abre os detalhes do slide; ✕ fecha (ou volta). Vertical ocupa a tela toda; troca de slide animada.
   const stage = (k: Orientation) => {
     const id = k === 'paisagem' ? 'sp' : 'sv'
-    const list = buildSlides(input, k)
+    const list = buildSlides(input, k, { live: true })
     const css = deckCss(k, input.brand).replace(/\.pfd/g, `#${id} .pfd`)
     const size = k === 'paisagem'
       ? `#${id} .pfd{width:min(calc(var(--vw) - 24px),calc((var(--vh) - 88px) * ${(16 / 9).toFixed(4)}))}`

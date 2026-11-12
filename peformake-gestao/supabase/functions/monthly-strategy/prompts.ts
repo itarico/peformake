@@ -5,6 +5,8 @@ export const AREAS = ['trafego', 'social', 'design', 'audiovisual', 'vendas', 'a
 export const OBJETIVOS = ['vender', 'autoridade', 'posicionamento', 'relacionamento', 'educar'] as const
 export const FUNIL = ['atrair', 'nutrir', 'converter', 'fidelizar'] as const
 export const FORMATOS_PECA = ['carrossel', 'post', 'reels', 'story', 'anuncio'] as const
+/** Papel de cada vídeo no mês (estudo antes do roteiro). "" nas peças que não são vídeo. */
+export const PAPEIS = ['', 'converter', 'autoridade', 'humanizar', 'conectar', 'viralizar', 'didatico'] as const
 
 export const SYSTEM = `Você é o estrategista digital sênior da Peformake, uma assessoria de marketing de Recife (nunca diga "agência").
 Você monta o PLANO DE EXECUÇÃO DO MÊS de um cliente: O QUE vamos fazer, COMO e QUANDO, com tudo pronto para a equipe produzir,
@@ -103,7 +105,7 @@ export const CALENDAR_SCHEMA = obj({
   ritmo: s,
   pecas: arr({
     id: s, data: s, formato: en(FORMATOS_PECA), serie: s, titulo: s, objetivo: en(OBJETIVOS), funil: en(FUNIL),
-    ideia: s, material: s, vira_anuncio: { type: 'boolean' }, tendencia_link: s,
+    ideia: s, material: s, vira_anuncio: { type: 'boolean' }, tendencia_link: s, papel: en(PAPEIS), papel_porque: s,
   }),
   capturas: arr({ data: s, onde: s, quem: s, quem_apresenta: s, o_que_gravar: sa, pecas: sa }),
   stories_rotina: arr({ dia: s, quadro: s, sequencia: s }),
@@ -124,6 +126,9 @@ export const PIECES_SCHEMA = obj({
     legenda: s, cta: s, hashtags: sa,
     metrica: obj({ nome: s, meta: s }),
     anuncio: arr({ gancho: s, texto_principal: s, titulo: s }),
+    ideias_rapidas: sa,
+    filmagem: obj({ enquadramento: s, luz: s, locacao: s, quem_aparece: s, levar: sa, takes_extras: sa }),
+    engajamento: obj({ pergunta_comentario: s, audio: s }),
     observacoes_internas: s,
   }),
 })
@@ -210,6 +215,10 @@ export const BRAND_TASK = (mes: string) => `Organize a PESQUISA e a MARCA APLICA
 export const CALENDAR_TASK = (mes: string, semanas: string, entregas: string) => `Monte o CALENDÁRIO de ${mes} (${semanas}).
 QUANTIDADE (obrigatória): ${entregas}
 - pecas: cada peça com id (P01, P02... em ordem de data), data AAAA-MM-DD dentro do mês, formato, série (código da série ou "" se avulsa), título, objetivo, funil, ideia (1 a 2 frases do que é a peça), material (o que precisa: foto de produto, captação do dia X, arte), vira_anuncio (true para as que viram anúncio, quando há tráfego) e tendencia_link (link da tendência usada ou "").
+  ESTUDO ANTES DO ROTEIRO (só reels/vídeo; nas outras peças papel = "" e papel_porque = ""): decida que tipo de vídeo este cliente precisa e por quê.
+  papel: converter (vende no tráfego), autoridade (mostra que sabe), humanizar (gente e bastidor), conectar (puxa conversa), viralizar (formato em alta para alcançar gente nova) ou didatico (ensina algo útil).
+  Distribua os papéis no mês conforme o diagnóstico e a meta (ex.: clínica = 1 que converte no tráfego, 1 de autoridade, 1 que humaniza, 1 didático).
+  papel_porque: 1 a 2 frases ligando o papel ao diagnóstico, à meta do mês e à comunicação da marca, citando o número da referência (tendencia_link) que prova que o formato funciona.
   Respeite o mix de objetivos do núcleo e a intenção de cada semana. Distribua nos melhores dias para este negócio. Não poste nas datas de "nao_postar".
 - capturas: as datas de gravação/foto sugeridas (só se há audiovisual), onde, quem aparece, a lista do que gravar e as peças que saem dela.
 - stories_rotina: um quadro fixo por dia útil (dia, quadro, sequência de 3 a 4 telas). stories_extras: sequências especiais do mês com data. (Só se há social media.)
@@ -227,6 +236,10 @@ Para cada peça (todos os campos; o que não se aplica fica "" ou []):
 - legenda pronta (com quebra de linha), cta, hashtags (3 a 6).
 - metrica: o número que mostra que a peça funcionou e a meta.
 - anuncio: se a peça vira anúncio, 2 ou 3 variações para testar (gancho, texto principal, título). Senão [].
+- só reels/vídeo (nas outras peças: [] e ""):
+  ideias_rapidas: 3 a 5 variações curtas do mesmo vídeo (outro gancho, outro formato, POV, depoimento, em passos) para a equipe não ficar presa ao roteiro.
+  filmagem: enquadramento, luz, locacao, quem_aparece, levar (o que levar/separar no dia) e takes_extras (cenas a mais para corte e anúncio).
+  engajamento: pergunta_comentario (o que pedir nos comentários) e audio (áudio em alta da <coleta> que combina, ou "som ambiente").
 - observacoes_internas: dúvidas, autorizações, o que confirmar (nunca dentro da copy).`
 
 export const TRAFFIC_TASK = (mes: string, semanas: string) => `Monte a ESTRATÉGIA DE TRÁFEGO PAGO de ${mes} (${semanas}).
