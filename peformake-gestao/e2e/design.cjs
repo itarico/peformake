@@ -15,10 +15,11 @@ const items = [
   { ...base, id: 'i3', number: 3, status: 'in_production', client_id: 'c2', designer_id: 's2', design_due_at: iso(-3), kind: 'post', piece_type: 'banner', spec: { width: 1, height: 2, unit: 'm', material: 'Lona', quantity: 2 } },
   { ...base, id: 'i4', number: 4, status: 'ready', designer_id: null, design_due_at: iso(90), kind: 'carrossel', carousel_slides: [{ text: 'Capa' }, { text: '' }, { text: '' }], spec: { purpose: 'criativo' } },
 ];
+items.push({ ...base, id: 'i5', number: 5, status: 'briefing' }, { ...base, id: 'i6', number: 6, status: 'client_review' }, { ...base, id: 'i7', number: 7, status: 'approved' });
 const files = [{ id: 'f1', item_id: 'i1', role: 'reference', path: 'i1/a.png', name: 'ref1.png', mime: 'image/png', size_bytes: 10, created_at: '2026-11-12T10:00:00Z' }];
 const plans = [{ id: 'p1', client_id: 'c1', month: '2026-11-01', notes: null, planned_at: null, sent_to_client_at: null }];
-const T = { content_items: items, content_files: files, content_plans: plans, content_events: [], staff_members: S.map((s) => ({ ...s, avatar_path: null, is_active: true })) };
-const RPC = { production_clients: C, production_staff: S, my_staff_id: 's1', design_on_time: [{ designer_id: 's1', delivered: 9, on_time: 8, late: 1 }] };
+const T = { content_items: items, content_files: files, content_plans: plans, content_events: [], social_tasks: [{ id: 't1', client_id: 'c1', title: 'Responder pedido de story do cliente', description: null, status: 'a_fazer', source: 'pedido_cliente', network: 'instagram', priority: true, due_date: '2026-11-14', ref_table: null, ref_id: null, created_at: '2026-11-12T10:00:00Z' }], staff_members: S.map((s) => ({ ...s, avatar_path: null, is_active: true })) };
+const RPC = { production_clients: C, production_staff: S, my_staff_id: 's1', dash_content: { by_status: { briefing: 1, ready: 2, approved: 1 }, total: 7, clients: 2, plans_ready: 1, plans_total: 2, late: 1, publish_next7: 2, designers: [] }, design_on_time: [{ designer_id: 's1', delivered: 9, on_time: 8, late: 1 }] };
 function filt(rows, params) {
   for (const [k, v] of params) {
     if (['select', 'order', 'limit'].includes(k)) continue;
@@ -55,7 +56,7 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
     for (const role of ['designer', 'admin']) {
       const ctx = await b.newContext(opts); await ctx.route('**/*', mock);
       await ctx.addInitScript((r) => localStorage.setItem('e2e_roles', r), role);
-      const p = await ctx.newPage();
+      const p = await ctx.newPage(); p.on('pageerror', (e) => console.log('ERRO na página: ' + e.message.slice(0, 200))); p.on('console', (m) => { if (m.type() === 'error' && !/Failed to load|404/.test(m.text())) console.log('ERRO no console: ' + m.text().slice(0, 300)) });
       await p.goto(`http://localhost:${PORT}/conteudo`); await p.waitForTimeout(1500);
       const url = new URL(p.url()).pathname;
       if (role === 'designer' && url !== '/conteudo/design') bad(`${dev} designer abriu ${url} (esperado /conteudo/design)`);
@@ -74,6 +75,16 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       await p.screenshot({ path: `e2e/capturas/design-entregar-${dev}.png` });
       await p.keyboard.press('Escape');
       if (role === 'admin') {
+        await p.goto(`http://localhost:${PORT}/conteudo/quadro`); await p.waitForTimeout(1500);
+        if (await sideScroll(p)) bad(`${dev} quadro: rolagem de lado`);
+        const shown = await p.locator('[data-conteudo] > section:visible').count();
+        if (shown !== (dev === 'desk' ? 4 : 1)) bad(`${dev} quadro: ${shown} colunas visíveis`);
+        if (dev === 'iphone') { await p.getByRole('tab', { name: /Tarefas/ }).click(); await p.waitForTimeout(200) }
+        if (!(await p.getByText('Responder pedido de story do cliente').isVisible())) bad(`${dev} quadro: tarefa não aparece`);
+        await p.screenshot({ path: `e2e/capturas/quadro-${dev}.png`, fullPage: true });
+        await p.getByText('Responder pedido de story do cliente').click(); await p.waitForTimeout(300);
+        const tm = await measure(p); if (!tm || tm.sh > tm.ch) bad(`${dev} pop-up da tarefa rola ${JSON.stringify(tm)}`);
+        await p.keyboard.press('Escape');
         await p.goto(`http://localhost:${PORT}/conteudo/peca/i1?editar=1`); await p.waitForTimeout(1500);
         if (await sideScroll(p)) bad(`${dev} peça: rolagem de lado`);
         for (const kind of ['Post', 'Carrossel', 'Story', 'Reels', 'Anúncio', 'Impressão', 'Banner', 'Vetor']) {

@@ -312,3 +312,32 @@ export function shortBriefing(item: Pick<ContentItem, 'briefing' | 'headline'>, 
   const t = (item.briefing?.trim() || item.headline?.trim() || '').replace(/\s+/g, ' ')
   return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t
 }
+
+/** Quadro enxuto (PLANO-SOCIAL-DESIGN, item 6): Tarefas · Briefings · Produção · Aprovado. */
+export type BoardColumn = 'tarefas' | 'briefings' | 'producao' | 'aprovado'
+export const BOARD_COLUMNS: { id: BoardColumn; label: string }[] = [
+  { id: 'tarefas', label: 'Tarefas' },
+  { id: 'briefings', label: 'Briefings' },
+  { id: 'producao', label: 'Produção' },
+  { id: 'aprovado', label: 'Aprovado' },
+]
+/** Selo de cada etapa dentro da coluna. */
+export const BOARD_BADGE: Partial<Record<ContentStatus, { label: string; tone: string }>> = {
+  ready: { label: 'A fazer', tone: 'bg-accent-soft text-accent-ink' },
+  in_production: { label: 'Fazendo', tone: 'bg-accent-soft text-accent-ink' },
+  changes_requested: { label: 'Ajuste pedido', tone: 'bg-warn-soft text-warn-ink' },
+  review: { label: 'Revisar', tone: 'bg-warn-soft text-warn-ink' },
+  client_review: { label: 'Com o cliente', tone: 'bg-warn-soft text-warn-ink' },
+  approved: { label: 'Aprovada', tone: 'bg-ok-soft text-ok-ink' },
+  published: { label: 'Publicada', tone: 'bg-raised text-muted' },
+}
+
+/** Em que coluna a peça fica. Publicada some 3 dias depois; peça sem briefing fica só no planejamento. */
+export function boardColumn(item: Pick<ContentItem, 'status' | 'briefing' | 'updatedAt'>, now: number): Exclude<BoardColumn, 'tarefas'> | null {
+  switch (item.status) {
+    case 'briefing': return item.briefing?.trim() ? 'briefings' : null
+    case 'ready': case 'in_production': case 'changes_requested': case 'review': return 'producao'
+    case 'client_review': case 'approved': return 'aprovado'
+    case 'published': return now - new Date(item.updatedAt).getTime() <= 3 * 86_400_000 ? 'aprovado' : null
+  }
+}

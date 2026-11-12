@@ -13,7 +13,7 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
 import { COLUMNS, NETWORKS, NETWORK_LABEL, SOURCE_LABEL, SOURCE_TONE, briefingProgress, type Network, type TaskSource, type TaskStatus } from './socialRules'
 
-interface Task { id: string; client_id: string | null; title: string; description: string | null; status: TaskStatus; source: TaskSource; network: Network; priority: boolean; due_date: string | null; ref_table: string | null; ref_id: string | null; created_at: string }
+export interface Task { id: string; client_id: string | null; title: string; description: string | null; status: TaskStatus; source: TaskSource; network: Network; priority: boolean; due_date: string | null; ref_table: string | null; ref_id: string | null; created_at: string }
 interface News { id: string; network: Network; title: string; summary: string; what_to_do: string | null; impact: 'alto' | 'medio' | 'baixo'; source_url: string | null; published_at: string | null; status: string; created_at: string }
 interface Suggestion { id: string; client_id: string | null; network: Network; title: string; body: string; reason: string | null; status: string; created_at: string }
 interface Doc { id: string; client_id: string; kind: 'estrategia' | 'relatorio'; network: Network; month: string; status: string; summary: string | null; body: string | null; requested_at: string }
@@ -184,7 +184,7 @@ export function Board() {
   )
 }
 
-function TaskDialog({ task, clients, onClose }: { task: Task | null; clients: { id: string; name: string }[]; onClose: () => void }) {
+export function TaskDialog({ task, clients, onClose }: { task: Task | null; clients: { id: string; name: string }[]; onClose: () => void }) {
   const queryClient = useQueryClient()
   const [d, setD] = useState({ title: task?.title ?? '', description: task?.description ?? '', client_id: task?.client_id ?? '', network: task?.network ?? 'instagram', due_date: task?.due_date ?? '', priority: task?.priority ?? false })
   const save = useMutation({
@@ -194,8 +194,18 @@ function TaskDialog({ task, clients, onClose }: { task: Task | null; clients: { 
     },
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['social', 'tasks'] }); onClose() },
   })
+  const done = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.rpc('social_task_save', { _id: task!.id, _data: { status: 'feito' } })
+      if (error) throw error
+    },
+    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['social', 'tasks'] }); onClose() },
+  })
   return (
-    <Dialog open onClose={onClose} title={task ? 'Tarefa' : 'Nova tarefa'} size="sm" footer={<Button disabled={d.title.trim().length < 2 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>}>
+    <Dialog open onClose={onClose} title={task ? 'Tarefa' : 'Nova tarefa'} size="sm" footer={<>
+      {task && task.status !== 'feito' && <Button variant="secondary" disabled={done.isPending} onClick={() => done.mutate()}><Check size={15} aria-hidden="true" /> Concluir</Button>}
+      <Button disabled={d.title.trim().length < 2 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
+    </>}>
       <div className="flex flex-col gap-3">
         {task && <p className={cn('self-start rounded-full px-2.5 py-0.5 text-[12px] font-semibold', SOURCE_TONE[task.source])}>{SOURCE_LABEL[task.source]}</p>}
         <label className="flex flex-col text-[13px] font-semibold">O que fazer<input value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} maxLength={200} className={field} /></label>

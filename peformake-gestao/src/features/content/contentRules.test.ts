@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { actionsFor, deliveryTarget, designQueue, fileCheck, filterItems, formOf, isLate, monthGrid, shortBriefing, specSummary, summarize, waitingOn, type ContentItem } from './contentRules'
+import { actionsFor, boardColumn, deliveryTarget, designQueue, fileCheck, filterItems, formOf, isLate, monthGrid, shortBriefing, specSummary, summarize, waitingOn, type ContentItem } from './contentRules'
 
 const item = (over: Partial<ContentItem>): ContentItem => ({
   id: 'i', planId: 'p', clientId: 'c', month: '2026-11-01', number: 1, kind: 'post', status: 'briefing', title: 'Promo', headline: null,
@@ -101,5 +101,17 @@ describe('peça por tipo', () => {
     expect(specSummary(item({ kind: 'banner', spec: { width: 0.8, height: 1.2, unit: 'm', material: 'Lona', quantity: 2 } }))).toBe('0,8×1,2 m · Lona · 2 un.')
     expect(specSummary(item({ kind: 'carrossel', carouselSlides: [{ text: '' }, { text: '' }], spec: { purpose: 'criativo' } }))).toBe('2 telas · para anúncio')
     expect(specSummary(item({ kind: 'post' }))).toBeNull()
+  })
+})
+
+describe('quadro em 4 colunas', () => {
+  const now = new Date('2026-11-12T12:00:00Z').getTime()
+  it('separa por etapa e esconde o que não precisa de atenção', () => {
+    expect(boardColumn(item({ status: 'briefing', briefing: 'x' }), now)).toBe('briefings')
+    expect(boardColumn(item({ status: 'briefing', briefing: null }), now)).toBeNull()
+    expect(boardColumn(item({ status: 'changes_requested' }), now)).toBe('producao')
+    expect(boardColumn(item({ status: 'client_review' }), now)).toBe('aprovado')
+    expect(boardColumn(item({ status: 'published', updatedAt: '2026-11-11T12:00:00Z' }), now)).toBe('aprovado')
+    expect(boardColumn(item({ status: 'published', updatedAt: '2026-11-01T12:00:00Z' }), now)).toBeNull()
   })
 })
