@@ -14,22 +14,23 @@ import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl, lookupCnpj, type CompanyLookup } from '@/features/clients/clientsApi'
 import { ago } from '@/features/settings/AutomationsCenter'
 import {
-  approveConsult, consultKey, kickConsult, markSent, presentationLink, redoSection, requestConsult, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
+  approveConsult, consultKey, kickConsult, markSent, presentationLink, requestConsult, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
 } from './consultApi'
 import { openPresentation, printDeck, type DeckInput, type Orientation } from './consultDeck'
-import { Paged, SlideViewer } from './SlideViewer'
-import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow, type ConsultSection } from './consultRules'
+import { Paged } from './SlideViewer'
+import { ReviewCard } from '@/features/review/ReviewCard'
+import { useReview } from '@/features/review/reviewApi'
+import { reviewedInput } from '@/features/review/reviewRules'
+import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
 import { MonthlyPanel } from './MonthlyPanel'
+import { parseMonthParam } from './monthlyRules'
 import { ReportsPanel } from './ReportsPanel'
 
 type DocView = 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios'
 const viewOf = (v: string | null): DocView => (v === 'estrategia' || v === 'perguntas' || v === 'relatorios' ? v : 'diagnostico')
-
-// Custo aproximado de refazer cada parte com a IA (Fable 5.2), para a confirmação.
-const REDO_USD: Record<string, string> = { inteligencia: '1,00', do_cliente: '1,00', diagnostico: '1,10', comunicacao: '0,70', plano: '0,60', resumo: '0,50', riscos: '0,50' }
 
 const TONE = {
   warn: 'bg-warn-soft text-warn-ink', info: 'bg-accent-soft text-accent-ink', ok: 'bg-ok-soft text-ok-ink',
@@ -203,13 +204,15 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const toAsk = (questions.data?.questions ?? []).filter((x) => x.status === 'pendente').length
   const monthPending = row?.monthly?.pending ?? 0
 
-  const redo = (s: ConsultSection) => act.mutate(() => redoSection(clientId, s))
+  const review = useReview('diagnostico', clientId)
   const [sources, setSources] = useState(false)
   const logo = logoPublicUrl(row?.logo_path ?? null)
   const deckInput = useMemo<DeckInput>(() => ({
     name, doc, clientLogoUrl: logo, peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png`, updatedAt: d?.finished_at ?? null,
     questions: ((doc.do_cliente ?? []) as Doc[]).map((x) => ({ question: x.pergunta, why: x.por_que })),
   }), [name, doc, logo, d?.finished_at])
+  // O que o cliente vê (prévia, PDF): com a revisão aplicada (sem recusados, textos editados, dados preenchidos).
+  const clientInput = useMemo(() => reviewedInput(deckInput, review.data?.state), [deckInput, review.data?.state])
   return (
     <section aria-label={`Diagnóstico de ${name}`} className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
@@ -229,27 +232,31 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       </div>
 
       {view === 'perguntas' && <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />}
-      {view === 'estrategia' && <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} />}
+      {view === 'estrategia' && <>
+        {/* Revisão em slides (aba nova): OK / Recusar / Editar, aprovar cada ação e enviar ao cliente. */}
+        <a href={`/revisao/plano/${clientId}/${parseMonthParam(params.get('mes'), new Date()).slice(0, 7)}`} target="_blank" rel="noreferrer"
+          className="inline-flex min-h-10 w-fit items-center gap-1.5 rounded-full border border-line-strong px-4 text-[13px] font-semibold text-ink no-underline hover:border-ink"><Presentation size={15} aria-hidden="true" /> Revisar em slides <ExternalLink size={12} aria-hidden="true" className="opacity-60" /></a>
+        <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} />
+      </>}
       {view === 'relatorios' && <ReportsPanel clientId={clientId} />}
       {view === 'diagnostico' && <>
       {/* UMA ação principal; o resto no "⋯". */}
       <div className="flex items-center gap-2">
         {status === 'falta_dados' && <Button onClick={onInfo}>Informar CNPJ</Button>}
-        {status === 'pronto' && <Button disabled={act.isPending} onClick={() => act.mutate(() => approveConsult(clientId))}><Check size={15} aria-hidden="true" /> Aprovar</Button>}
         {approved && <Button onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar no WhatsApp</Button>}
         <ActionMenu label="Mais opções do diagnóstico" actions={[
           { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !ready, onClick: () => {
             // Aprovado: abre o link do cliente. Antes de aprovar: prévia só para a equipe (mesmos slides, sem os internos).
             if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message))
-            else openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
+            else openPresentation(clientInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
           } },
+          { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: act.isPending, onClick: () => act.mutate(() => approveConsult(clientId)) },
           { label: 'Baixar apresentação', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: () => setDeckOpen(true) },
           { label: 'Enviar no WhatsApp', icon: <Send size={15} aria-hidden="true" />, hidden: !ready || approved, onClick: () => setSendOpen(true) },
           { label: `Direcionamento${row?.direction?.trim() ? ' ✓' : ''}`, icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setDirOpen(true) },
           { label: 'Enviar perguntas', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => setAskOpen(true) },
         ]} />
       </div>
-      {ready && !approved && <p className="-mt-1 text-[12px] text-muted">Aprove para gerar a apresentação.</p>}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
       {q.isPending && <p role="status" className="py-8 text-center text-[13px] text-muted">Carregando</p>}
@@ -267,8 +274,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {ready && (
         <div data-conteudo>
           {((doc.avisos ?? []) as string[]).map((a) => <p key={a} className="mb-2 rounded-xl bg-raised px-3 py-2 text-[12.5px] text-muted">{a} A análise usou a pesquisa na web no lugar.</p>)}
-          <SlideViewer input={deckInput} canRedo={!act.isPending && status !== 'gerando'}
-            onRedo={async (sec, label) => { if (await ask(`Refazer "${label}"? Isso usa a IA de novo (≈US$ ${REDO_USD[sec] ?? '1'}).`)) redo(sec === 'inteligencia' ? 'do_cliente' : sec) }}
+          <ReviewCard clientId={clientId} input={deckInput} statusLabel={statusChip({ status, document: row?.document ?? null, stage: d?.stage ?? null }).label}
             footer={<Button variant="link" onClick={() => setSources(true)}>Fontes e frameworks</Button>} />
           <p className="mt-1 text-[12px] text-muted">Gerado {ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}.</p>
         </div>
@@ -278,7 +284,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
       {dirOpen && <DirectionDialog clientId={clientId} name={name} initial={row?.direction ?? ''} links={nicheLinks(row?.segment, name)} onClose={() => setDirOpen(false)} />}
       {sendOpen && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSendOpen(false)} onSent={refresh} />}
-      {deckOpen && <DeckDialog name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(deckInput, o); setDeckOpen(false) }} />}
+      {deckOpen && <DeckDialog name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(clientInput, o); setDeckOpen(false) }} />}
       {info && <InfoDialog row={info} onClose={closeInfo} />}
       {askOpen && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => setAskOpen(false)} />}
     </section>

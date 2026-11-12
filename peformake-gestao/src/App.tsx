@@ -50,6 +50,9 @@ const AvGalleryPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) =
 const PublicGalleryPage = lazy(() => import('@/features/av/PublicGalleryPage').then((m) => ({ default: m.PublicGalleryPage })))
 const ClientChatPage = lazy(() => import('@/features/strategy/ClientChatPage').then((m) => ({ default: m.ClientChatPage })))
 const PublicDeckPage = lazy(() => import('@/features/strategy/PublicDeckPage').then((m) => ({ default: m.PublicDeckPage })))
+const DiagnosticReview = lazy(() => import('@/features/review/DiagnosticReview').then((m) => ({ default: m.DiagnosticReview })))
+const MonthlyReview = lazy(() => import('@/features/review/MonthlyReview').then((m) => ({ default: m.MonthlyReview })))
+const AreaReviewRedirect = lazy(() => import('@/features/review/AreaReviewRedirect').then((m) => ({ default: m.AreaReviewRedirect })))
 const MonthlyPlanPage = lazy(() => import('@/features/strategy/MonthlyPlanPage').then((m) => ({ default: m.MonthlyPlanPage })))
 const PayPage = lazy(() => import('@/features/finance/PayPage').then((m) => ({ default: m.PayPage })))
 const PublicQuotePage = lazy(() => import('@/features/av/PublicQuotePage').then((m) => ({ default: m.PublicQuotePage })))
@@ -97,6 +100,11 @@ export function App() {
       <Route path="/captacao/:token" element={<StaffCapturePage />} />
       <Route element={<RequireAuth />}>
         <Route path="tv" element={<TvPage />} />
+        {/* Guia de revisão das apresentações (aba nova, sem o menu): diagnóstico, plano do mês e as visões por área. */}
+        <Route path="revisao/diagnostico/:clientId" element={<DiagnosticReview />} />
+        <Route path="revisao/plano/:clientId/:mes" element={<MonthlyReview />} />
+        <Route path="revisao/:area/:clientId/:mes" element={<AreaReviewRedirect />} />
+        <Route path="revisao/trimestral/:clientId" element={<CenteredMessage title="Revisão do trimestral" text="Ainda não existe o plano trimestral. Quando existir, ele abre aqui na mesma guia." />} />
         <Route element={<AppShell />}>
           <Route
             path="sem-modulo"

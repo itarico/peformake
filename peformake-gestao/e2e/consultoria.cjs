@@ -95,33 +95,16 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       // Documento
       await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1), { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
-      // Slides: um por vez, setas, índice e "Ver detalhes" (sem rolagem no pop-up).
-      const counter = p.getByRole('button', { name: /^\d+ \/ \d+/ }).first();
-      const total = Number(((await counter.textContent()) ?? '').match(/\/ (\d+)/)?.[1] ?? 0);
-      if (total < 15) fails.push(`${tag}: só ${total} slides`);
-      if (await sideScroll(p)) fails.push(`${tag}: slide com rolagem de lado`);
-      let detailsSeen = 0, internalSeen = 0
-      for (let i = 0; i < total; i++) {
-        if (await p.getByText('Só a equipe vê').count()) internalSeen++;
-        const det = p.getByRole('button', { name: 'Ver detalhes' });
-        if (detailsSeen < 4 && await det.isEnabled()) {
-          await det.click(); await p.waitForTimeout(200);
-          m = await popup(p); if (!m) fails.push(`${tag}: detalhes do slide ${i + 1} não abriu`); else if (m.sh > m.ch + 1) fails.push(`${tag}: detalhes do slide ${i + 1} rola (${m.sh}/${m.ch})`);
-          await p.keyboard.press('Escape'); await p.waitForTimeout(150); detailsSeen++;
-        }
-        if (i < 3 || i === total - 1) await p.screenshot({ path: `${OUT}/consultoria-slide${i + 1}-${tag}.png`, fullPage: true });
-        if (i < total - 1) { await p.getByRole('button', { name: 'Próximo slide' }).click(); await p.waitForTimeout(80) }
-      }
-      if (!internalSeen) fails.push(`${tag}: nenhum slide interno (decisões da Peformake) na tela da equipe`);
-      await counter.click(); await p.waitForTimeout(200);
-      m = await popup(p); if (!m) fails.push(`${tag}: índice não abriu`); else if (m.sh > m.ch + 1) fails.push(`${tag}: índice rola (${m.sh}/${m.ch})`);
-      await p.getByRole('button', { name: /Capa/ }).first().click().catch(() => fails.push(`${tag}: índice sem Capa`)); await p.waitForTimeout(150);
-      // Antes de aprovar, a apresentação fica travada com a dica.
-      const deckBtn = p.getByRole('button', { name: 'Baixar apresentação' }).first();
-      if (!(await deckBtn.isDisabled())) fails.push(`${tag}: Baixar apresentação liberado antes de aprovar`);
-      if (!(await p.getByText('Aprove para gerar a apresentação').count())) fails.push(`${tag}: sem a dica "Aprove para gerar a apresentação"`);
-      for (const [btn, name] of [['Fontes e frameworks', 'Ver detalhes'], ['Direcionamento', 'Direcionamento'], ['Enviar ao cliente', 'Enviar']]) {
-        await p.getByRole('button', { name: btn }).first().click(); await p.waitForTimeout(300);
+      // A apresentação virou um cartão compacto: capa, progresso, o que falta e "Revisar apresentação" (aba nova /revisao/diagnostico/:id).
+      const rev = p.getByRole('link', { name: /Revisar apresentação/ }).first();
+      if (!(await rev.count())) fails.push(`${tag}: sem o botão Revisar apresentação`);
+      else if (!/\/revisao\/diagnostico\//.test(await rev.getAttribute('href') || '') || (await rev.getAttribute('target')) !== '_blank') fails.push(`${tag}: Revisar apresentação não abre a guia nova`);
+      if (!/revisados/.test(await p.locator('[data-testid=card-progresso]').first().innerText().catch(() => ''))) fails.push(`${tag}: cartão sem o progresso`);
+      if (await sideScroll(p)) fails.push(`${tag}: cartão com rolagem de lado`);
+      await p.screenshot({ path: `${OUT}/consultoria-cartao-${tag}.png`, fullPage: true });
+      for (const [btn, name] of [['Fontes e frameworks', 'Ver detalhes']]) {
+        await p.getByRole('button', { name: btn }).first().click();
+        await p.waitForTimeout(300);
         m = await popup(p); if (!m) { fails.push(`${tag}: pop-up ${name} não abriu`); continue }
         if (m.sh > m.ch + 1) fails.push(`${tag}: pop-up "${m.title}" rola (${m.sh}/${m.ch})`);
         if (name === 'Ver detalhes') { await p.getByRole('tab', { name: /Fontes/ }).click(); await p.waitForTimeout(150); m = await popup(p); if (m && m.sh > m.ch + 1) fails.push(`${tag}: Fontes rola (${m.sh}/${m.ch})`) }

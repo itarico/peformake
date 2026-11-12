@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { presentHtml, type Orientation } from './consultDeck'
 import { monthlyDeckInput } from './monthlyDeck'
+import { reviewedInput, type ReviewState } from '@/features/review/reviewRules'
 import { avDeckInput } from './avDeck'
 import { avVideos, scanVideos } from './avPlan'
 import type { MonthlyStrategy } from './monthlyRules'
@@ -44,12 +45,13 @@ export function PublicDeckPage({ kind = 'diagnostico' }: { kind?: 'diagnostico' 
     if (kind === 'mes') {
       const strategy = { id: '', client_id: '', month: String(d.month), status: d.status, stage: 'done', error: null, doc: d.doc, ideas: null, cost_usd: null, adjust: null, adjusted_at: null, finished_at: null, approved_at: null, updated_at: null,
         actions: ((d.actions ?? []) as Doc[]).map((a) => ({ what: '', place: null, proof: null, why: null, format: null, routed_table: null, routed_id: null, routed_link: null, suggestion: null, done: null, ...a })) } as MonthlyStrategy
-      return presentHtml(monthlyDeckInput({ name: String(d.name ?? ''), strategy, clientLogoUrl: logoPublicUrl(d.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }), o)
+      return presentHtml(reviewedInput(monthlyDeckInput({ name: String(d.name ?? ''), strategy, clientLogoUrl: logoPublicUrl(d.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }), d.review as ReviewState | null), o)
     }
-    return presentHtml({
+    // Revisão da equipe: sem os slides recusados, com os textos editados e os dados preenchidos.
+    return presentHtml(reviewedInput({
       name: String(d.name ?? ''), doc: d.doc, questions: (d.questions ?? []) as Doc[] as { question: string; why?: string | null; answer?: string | null }[],
       clientLogoUrl: logoPublicUrl(d.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png`, updatedAt: d.updated_at ?? null,
-    }, o)
+    }, d.review as ReviewState | null), o)
   }, [q.data, o, kind])
 
   const msg = (t: string, sub?: string) => (
