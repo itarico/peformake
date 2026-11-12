@@ -4,6 +4,7 @@ import { Download, FileUp, Link2, Send } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { GuideButton } from '@/features/clients/BrandGuideCard'
 import { cn } from '@/lib/cn'
 import { countdown } from '@/features/av/avRules'
 import { TONE_CLASS } from '@/features/av/AvShell'
@@ -139,6 +140,7 @@ function QueueCard({ item, files, now, mine, clientName, staffName, onDeliver }:
           </button>
         )}
         {item.status === 'in_production' && <span className="text-[12px] text-muted">{STATUS_LABEL.in_production}</span>}
+        {item.clientId && <GuideButton clientId={item.clientId} start="visual" className="ml-auto" />}
       </div>
     </li>
   )

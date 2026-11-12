@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, FileUp, Pencil, Trash2 } from 'lucide-react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { PieceEditor } from './PieceEditor'
+import { BrandGuideCard } from '@/features/clients/BrandGuideCard'
 import { Button } from '@/components/ui/Button'
 import { AiTakeoverBanner } from './AiTakeoverBanner'
 import { cn } from '@/lib/cn'
@@ -287,6 +288,7 @@ export function ContentItemPage() {
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-3">
           <BriefingSummary key={item.id} item={item} canPlan={canPlan} startOpen={params.get('editar') === '1'} />
+          <BrandGuideCard clientId={item.clientId} focus={isDesigner && !canPlan ? 'design' : 'social'} />
           {plan.notes && (
             <section aria-label="Pauta do mês" className="rounded-3xl border border-line bg-surface p-5">
               <h2 className="font-semibold">Pauta do mês</h2>

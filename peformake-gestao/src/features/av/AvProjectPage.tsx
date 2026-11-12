@@ -12,6 +12,7 @@ import { avComment, avErrorMessage, getProject, listAvEvents, scriptAction, setA
 import { AV_LABEL, AV_STAGES, AV_TONE, SCRIPT_LABEL, avActionsFor, countdown, missingFor, shootText, stageOf, type AvAction, type AvProject } from './avRules'
 import { EllcazoHeader, TONE_CLASS } from './AvShell'
 import { ScheduleDialog } from './ScheduleDialog'
+import { BrandGuideCard } from '@/features/clients/BrandGuideCard'
 import { ask } from '@/components/ui/confirm'
 import { useAuth } from '@/auth/context'
 import { TRAFFIC_ROLES, hasAnyRole } from '@/lib/roles'
@@ -278,6 +279,7 @@ export function AvProjectPage() {
           {p.status !== 'cancelled' && p.status !== 'delivered' && <CancelLink p={p} />}
         </div>
         <div className="flex flex-col gap-3">
+          {p.clientId && <BrandGuideCard clientId={p.clientId} focus="audiovisual" />}
           <ShootBox p={p} />
           <EventLog events={events.data ?? []} statusLabel={(s) => AV_LABEL[s as keyof typeof AV_LABEL] ?? s} onComment={(m) => addComment.mutateAsync(m)} commenting={addComment.isPending} />
         </div>

@@ -18,6 +18,7 @@ import { ClientSetupSteps } from './ClientSetupSteps'
 import { ClientAssets } from './ClientAssets'
 import { cn } from '@/lib/cn'
 import { ClientOverview } from './ClientOverview'
+import { BrandGuideCard } from './BrandGuideCard'
 import { monthsIdle, useClientIntel } from './intelApi'
 import { useIntelSettings } from '@/features/settings/IntelSettings'
 import { DeliveryBar, MeetingDialog, useClientDeliveries } from './DeliveryBar'
@@ -151,7 +152,10 @@ export function ClientDetailPage() {
           </div>
         )}
         {tab === 'geral' && (
-          <ClientOverview view={view} isAdmin={isAdmin} canManage={canManage} whatsapp={whatsapp} onOpenTab={(t) => setTab(t)} />
+          <div className="flex flex-col gap-3">
+            <ClientOverview view={view} isAdmin={isAdmin} canManage={canManage} whatsapp={whatsapp} onOpenTab={(t) => setTab(t)} />
+            <BrandGuideCard clientId={client.id} focus="geral" />
+          </div>
         )}
 
         {tab === 'operacao' && (

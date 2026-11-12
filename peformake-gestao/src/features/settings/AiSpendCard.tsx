@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn'
 import { setAiCap, useAiSpend } from '@/features/strategy/consultApi'
 
 const usd = (n: number) => `US$ ${n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-const FN_LABEL: Record<string, string> = { 'consult-diagnosis': 'Diagnóstico da consultoria' }
+const FN_LABEL: Record<string, string> = { 'consult-diagnosis': 'Diagnóstico da consultoria', 'brand-guide': 'Guia da marca' }
 
 /** Gasto com IA no mês (só administrador). Ao chegar no limite, nada novo começa até o mês seguinte. */
 export function AiSpendCard() {

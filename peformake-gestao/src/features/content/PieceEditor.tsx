@@ -6,6 +6,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
 import { cn } from '@/lib/cn'
 import { listStaff, type StaffOption } from '@/features/clients/clientsApi'
+import { GuideButton } from '@/features/clients/BrandGuideCard'
 import { useProduction } from '@/features/production/useProduction'
 import { contentErrorMessage, draftOf, saveItem, uploadFile, type ItemDraft } from './contentApi'
 import { fileCheck, formOf, KIND_CARDS, MATERIALS, SIZE_PRESETS, VECTOR_FORMATS, type ContentItem, type ContentKind, type PieceSpec } from './contentRules'
@@ -267,8 +268,8 @@ export function PieceEditor({ item, startAtType, onClose }: { item: ContentItem;
       <div className="flex flex-col gap-3">
         {form === 'print' && <PrintExtras draft={draft} set={set} />}
         <div>
-          <label htmlFor="pe-brief" className={label}>Briefing para o design</label>
-          <p className="mb-1 text-[12px] text-muted">O que a arte precisa comunicar, estilo, cores, fotos a usar.</p>
+          <div className="flex items-center justify-between gap-2"><label htmlFor="pe-brief" className={label}>Briefing para o design</label><GuideButton clientId={item.clientId} start="design" className="min-h-0 py-0" /></div>
+          <p className="mb-1 text-[12px] text-muted">O que a arte precisa comunicar. Cores, fontes e tom já estão no guia da marca.</p>
           <textarea id="pe-brief" rows={form === 'print' ? 5 : 7} maxLength={8000} value={draft.briefing} onChange={(e) => set({ briefing: e.target.value })} className={field} />
         </div>
       </div>

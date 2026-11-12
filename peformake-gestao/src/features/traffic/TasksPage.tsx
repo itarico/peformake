@@ -33,6 +33,7 @@ import {
 } from './taskRules'
 import { deleteTask, listTasks, moveTask, saveTask, taskErrorMessage, type TaskDraft, undoTask } from './tasksApi'
 import { useTrafficData } from './useTrafficData'
+import { GuideButton } from '@/features/clients/BrandGuideCard'
 import { ask } from '@/components/ui/confirm'
 
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink'
@@ -228,6 +229,7 @@ function TaskCard({ task, today, clientName, staffName, canApprove, detailed, dr
       {expanded && (
         <div className="flex flex-col gap-1.5 border-t border-line pt-2">
           {task.assigneeId && <p className="text-[12px] text-muted">Responsável: {staffName.get(task.assigneeId) ?? 'Responsável'}</p>}
+          {task.clientId && (task.category === 'criativo' || task.category === 'campanha') && <GuideButton clientId={task.clientId} start="design" className="self-start px-0" />}
           {why && <p className="text-[12.5px] leading-snug text-ink/80"><b className="font-semibold text-ink">Por quê: </b>{why}</p>}
           {task.actionSummary && <ActionBox task={task} canApprove={canApprove} onUndo={onUndo} undoing={undoing} />}
           {reply && task.clientId && (() => {
