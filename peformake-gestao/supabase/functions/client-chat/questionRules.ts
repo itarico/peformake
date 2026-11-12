@@ -125,9 +125,19 @@ export function npsCategory(score: number): 'promotor' | 'neutro' | 'detrator' {
 export const firstName = (name: string) => (name.trim().split(/\s+/)[0] ?? '').replace(/^./, (c) => c.toUpperCase())
 
 /** Mensagem que a equipe manda pelo WhatsApp dela com o link da conversa. */
-export function chatInvite(clientName: string, n: number, link: string, nextMonth: string | null = null): string {
-  const what = nextMonth ? `para planejar ${monthName(nextMonth)}` : 'para ajustar a estratégia desta semana'
-  return `Oi! Tudo bem? Separamos ${n === 1 ? '1 pergunta rápida' : `${n} perguntas rápidas`} sobre a ${clientName.trim()} ${what}. `
+/** Bom dia / boa tarde / boa noite pelo horário de Recife. */
+export function greeting(now: Date = new Date()): string {
+  const h = Number(new Intl.DateTimeFormat('pt-BR', { hour: 'numeric', hourCycle: 'h23', timeZone: 'America/Recife' }).format(now))
+  return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'
+}
+
+/** Mensagem que a equipe manda pelo WhatsApp dela com o link da conversa (chama a pessoa pelo nome). */
+export function chatInvite(clientName: string, n: number, link: string, nextMonth: string | null = null, person: string | null = null, now: Date = new Date()): string {
+  const who = person?.trim() ? firstName(person) : clientName.trim()
+  const qty = n === 1 ? 'esta pergunta rápida' : `estas ${n} perguntas rápidas`
+  const what = nextMonth ? `e planejar ${monthName(nextMonth)}` : ''
+  return `${greeting(now)}, ${who}! Tudo bem?\n\n`
+    + `Preciso que você responda ${qty} para ajudar a gente nas estratégias de marketing da ${clientName.trim()}${what ? ` ${what}` : ''}. `
     + `Dá para responder com um toque, por texto ou por áudio, em uns 3 minutos:\n${link}\n\nObrigado!`
 }
 

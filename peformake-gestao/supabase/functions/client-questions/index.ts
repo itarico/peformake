@@ -51,6 +51,8 @@ Regras das perguntas:
 - Uma ideia por pergunta, até 160 caracteres, português simples, tratando por "você".
 - Quando a resposta couber em botões, sugira de 2 a 4 botões curtos (até 30 letras: "Sim", "Não", "Até 5", "6 a 10"...). Senão, botoes = [].
 - Nunca fale mal do tráfego pago; o problema é o marketing "no automático".
+- QUEM FAZ O QUÊ: o tráfego pago (anúncios, verba, pausas, públicos, campanhas, criativos no ar) é feito pela PEFORMAKE, não pelo cliente. Nunca pergunte ao cliente sobre operação de anúncio ("você pausou?", "mudou a verba?", "trocou o público?"): se um anúncio parou, foi a nossa equipe ou a conta, e isso é assunto interno. Do tráfego, pergunte só o que acontece DEPOIS do anúncio e só o dono sabe: quantos contatos viraram venda, o que os clientes pedem, estoque/capacidade para atender, qual produto quer empurrar.
+- O mesmo vale para o que a Peformake produz (posts, artes, vídeos, roteiros): não pergunte se ele postou, criou ou editou.
 - Não cite valores cobrados pela Peformake nem dados de outros clientes.
 - "por_que": 1 linha para a equipe (o que nos dados levou à pergunta). "muda_o_que": a decisão que a resposta muda.
 Proponha até 10 perguntas, da mais importante para a menos importante.

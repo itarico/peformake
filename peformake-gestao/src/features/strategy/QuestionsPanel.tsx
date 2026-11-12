@@ -15,7 +15,7 @@ import { answerQuestion, discardQuestion, editQuestion, fileUrl, generateQuestio
 import { Paged } from './SlideViewer'
 
 /** Estratégia → Consultoria → cliente → Perguntas: o pacote da semana, envio (por humano) e as respostas. */
-export function QuestionsPanel({ clientId, name, phone }: { clientId: string; name: string; phone: string | null }) {
+export function QuestionsPanel({ clientId, name }: { clientId: string; name: string; phone: string | null }) {
   const qc = useQueryClient()
   const q = useClientQuestions(clientId)
   const [edit, setEdit] = useState<ClientQuestion | null>(null)
@@ -78,7 +78,7 @@ export function QuestionsPanel({ clientId, name, phone }: { clientId: string; na
 
       {edit && <EditDialog q={edit} onClose={() => setEdit(null)} onDone={refresh} />}
       {answer && <AnswerDialog q={answer} onClose={() => setAnswer(null)} onDone={refresh} />}
-      {sendOpen && <SendQuestionsDialog clientId={clientId} name={name} phone={phone} open={open} onClose={() => setSendOpen(false)} onDone={refresh} />}
+      {sendOpen && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => setSendOpen(false)} />}
     </div>
   )
 }
@@ -155,14 +155,14 @@ function AnswerDialog({ q, onClose, onDone }: { q: ClientQuestion; onClose: () =
 }
 
 /** Envio sempre por humano: escolhe as perguntas, o sistema marca como enviadas e prepara a mensagem com o link. */
-function SendQuestionsDialog({ clientId, name, phone, open, onClose, onDone }: { clientId: string; name: string; phone: string | null; open: ClientQuestion[]; onClose: () => void; onDone: () => void }) {
+function SendQuestionsDialog({ clientId, name, phone, person, open, onClose, onDone }: { clientId: string; name: string; phone: string | null; person: string | null; open: ClientQuestion[]; onClose: () => void; onDone: () => void }) {
   const initial = useMemo(() => defaultToSend(open), [open])
   const [picked, setPicked] = useState<Set<string>>(() => new Set(initial.length ? initial : open.slice(0, 4).map((x) => x.id)))
   const [msg, setMsg] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const prep = useMutation({
     mutationFn: () => openChat(clientId, open.filter((x) => picked.has(x.id)).map((x) => x.id)),
-    onSuccess: (token) => { setMsg(chatInvite(name, picked.size, chatLink(window.location.origin, token), nextMonthFocus(weekStart()))); onDone() },
+    onSuccess: (token) => { setMsg(chatInvite(name, picked.size, chatLink(window.location.origin, token), nextMonthFocus(weekStart()), person)); onDone() },
   })
   const toggle = (id: string) => setPicked((c) => { const n = new Set(c); if (n.has(id)) n.delete(id); else n.add(id); return n })
   const wa = msg ? waLink(phone, msg) : null
@@ -216,9 +216,18 @@ function SendQuestionsLoader({ clientId, name, onClose }: { clientId: string; na
     queryKey: ['client-phone', clientId],
     queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null },
   })
+  // Quem recebe: o contato principal (dono) do cliente, para a mensagem chamar pelo nome.
+  const person = useQuery({
+    queryKey: ['client-main-contact', clientId],
+    queryFn: async () => {
+      const { data } = await supabase.from('client_contacts').select('name, role, gets_approvals').eq('client_id', clientId).order('created_at').limit(10)
+      const list = (data ?? []) as { name: string | null; role: string | null; gets_approvals: boolean | null }[]
+      return (list.find((c) => c.role === 'dono') ?? list.find((c) => c.gets_approvals) ?? list[0])?.name ?? null
+    },
+  })
   const refresh = () => void qc.invalidateQueries({ queryKey: questionsKey(clientId) })
   const gen = useMutation({ mutationFn: () => generateQuestions(clientId, false), onSettled: refresh })
-  if (q.isPending || phone.isPending) return <Dialog open onClose={onClose} title={`Perguntas para ${name}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Carregando</p></Dialog>
+  if (q.isPending || phone.isPending || person.isPending) return <Dialog open onClose={onClose} title={`Perguntas para ${name}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Carregando</p></Dialog>
   const open = (q.data?.questions ?? []).filter((x) => x.status === 'pendente' || x.status === 'enviada')
   if (!open.length) {
     return (
@@ -230,5 +239,5 @@ function SendQuestionsLoader({ clientId, name, onClose }: { clientId: string; na
       </Dialog>
     )
   }
-  return <SendQuestionsDialog clientId={clientId} name={name} phone={phone.data ?? null} open={open} onClose={onClose} onDone={refresh} />
+  return <SendQuestionsDialog clientId={clientId} name={name} phone={phone.data ?? null} person={person.data ?? null} open={open} onClose={onClose} onDone={refresh} />
 }

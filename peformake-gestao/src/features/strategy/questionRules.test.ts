@@ -90,8 +90,10 @@ describe('envio e conversa', () => {
   it('monta o convite com o link', () => {
     const link = chatLink('https://peformake-gestao.vercel.app/', 'abc')
     expect(link).toBe('https://peformake-gestao.vercel.app/conversa/abc')
-    expect(chatInvite('Will motos ', 3, link)).toContain('3 perguntas rápidas sobre a Will motos para ajustar a estratégia desta semana')
-    expect(chatInvite('Will motos', 1, link, '2026-12')).toContain('1 pergunta rápida sobre a Will motos para planejar dezembro')
+    const tarde = new Date('2026-11-12T17:00:00Z') // 14h em Recife
+    expect(chatInvite('Will motos ', 3, link, null, 'william souza', tarde)).toContain('Boa tarde, William! Tudo bem?')
+    expect(chatInvite('Will motos ', 3, link, null, null, tarde)).toContain('responda estas 3 perguntas rápidas para ajudar a gente nas estratégias de marketing da Will motos.')
+    expect(chatInvite('Will motos', 1, link, '2026-12', null, new Date('2026-11-12T11:00:00Z'))).toMatch(/^Bom dia, Will motos!.*esta pergunta rápida.*planejar dezembro/s)
     expect(packLabel(null)).toBe('Do diagnóstico')
     expect(packLabel('2026-11-23', 'proximo_mes')).toBe('Semana de 23/11 · mês que vem')
   })
