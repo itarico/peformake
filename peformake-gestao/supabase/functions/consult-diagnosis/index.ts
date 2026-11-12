@@ -36,6 +36,7 @@ interface Part { notes?: string; sources?: Source[]; pending?: unknown[]; cont?:
 interface Research {
   round?: number; parts?: Partial<Record<ResearchPart, Part>>; interno?: Record<string, unknown>
   notes?: string; sources?: Source[]; intel?: boolean; done_at?: string; coleta?: Coleta
+  partial?: Record<string, Record<string, unknown>>
 }
 interface Coleta { instagram?: Record<string, unknown>[]; creditos: number; aviso?: string | null }
 
@@ -527,25 +528,39 @@ function intelDoc(i: Record<string, unknown>): Record<string, unknown> {
 }
 
 // O cruzamento vai em 2 pedidos ao mesmo tempo (um só ficaria grande demais e lento): achados e decisões/perguntas.
+// Se só um dos dois pedidos estourar o tempo, o que terminou fica guardado (research.partial) e a nova tentativa refaz só o que faltou.
+async function pair(db: SupabaseClient, ai: Anthropic, job: Job, stages: [WriteStage, WriteStage], extra: string): Promise<Record<string, unknown>> {
+  const key = (st: WriteStage) => `${job.stage}:${st}`
+  const saved = (job.research?.partial ?? {}) as Record<string, Record<string, unknown>>
+  const res = await Promise.allSettled(stages.map((st) => saved[key(st)] ? Promise.resolve(saved[key(st)]!) : write(db, ai, job, st, extra)))
+  const failed = res.find((r): r is PromiseRejectedResult => r.status === 'rejected')
+  if (failed) {
+    const partial = { ...saved }
+    res.forEach((r, i) => { if (r.status === 'fulfilled') partial[key(stages[i]!)] = r.value })
+    await db.from('consult_docs').update({ research: { ...(job.research ?? {}), partial } }).eq('id', job.id).eq('stage', job.stage)
+    throw failed.reason
+  }
+  return Object.assign({}, ...res.map((r) => (r as PromiseFulfilledResult<Record<string, unknown>>).value))
+}
+const clearPartial = (job: Job) => ({ ...(job.research ?? {}), partial: {} })
+
 async function writeIntel(db: SupabaseClient, ai: Anthropic, job: Job, extra: string): Promise<Record<string, unknown>> {
-  const [a, b] = await Promise.all([write(db, ai, job, 'inteligencia', extra), write(db, ai, job, 'decisoes', extra)])
-  return { ...a, ...b }
+  return pair(db, ai, job, ['inteligencia', 'decisoes'], extra)
 }
 
 async function writeDiag(db: SupabaseClient, ai: Anthropic, job: Job, extra: string): Promise<Record<string, unknown>> {
   const ctx = `${prev(job, ['inteligencia'])}${extra ? `\n\n${extra}` : ''}`
-  const [a, b] = await Promise.all([write(db, ai, job, 'diagnostico', ctx), write(db, ai, job, 'mercado', ctx)])
-  return { ...a, ...b }
+  return pair(db, ai, job, ['diagnostico', 'mercado'], ctx)
 }
 
 async function stageWrite(db: SupabaseClient, ai: Anthropic, job: Job, stage: 'diagnostico' | 'comunicacao' | 'plano' | 'resumo') {
   const ok = { attempts: 0, busy_until: null, error: null }
   if (stage === 'diagnostico' && !job.research?.intel) {
     const i = await writeIntel(db, ai, job, '')
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i) }), research: { ...(job.research ?? {}), intel: true }, ...ok }).eq('id', job.id).eq('stage', job.stage)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i) }), research: { ...clearPartial(job), intel: true }, ...ok }).eq('id', job.id).eq('stage', job.stage)
   } else if (stage === 'diagnostico') {
     const d = await writeDiag(db, ai, job, '')
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d }), stage: 'comunicacao', ...ok }).eq('id', job.id).eq('stage', job.stage)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d }), research: clearPartial(job), stage: 'comunicacao', ...ok }).eq('id', job.id).eq('stage', job.stage)
   } else if (stage === 'comunicacao') {
     const c = await write(db, ai, job, 'comunicacao', prev(job, ['inteligencia', 'diagnostico']))
     await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia }), stage: 'plano', ...ok }).eq('id', job.id).eq('stage', job.stage)
@@ -575,10 +590,10 @@ async function stageRedo(db: SupabaseClient, ai: Anthropic, job: Job) {
   const at = new Date().toISOString()
   if (section === 'diagnostico') {
     const d = await writeDiag(db, ai, job, `${note}\n\n${prev(job, ['diagnostico'])}`)
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d, gerado_em: at }), ...done }).eq('id', job.id).eq('stage', job.stage)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, diagnostico: d, gerado_em: at }), research: clearPartial(job), ...done }).eq('id', job.id).eq('stage', job.stage)
   } else if (section === 'do_cliente') {
     const i = await writeIntel(db, ai, job, `${note}\n\n${prev(job, ['inteligencia'])}`)
-    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i), gerado_em: at }), ...done }).eq('id', job.id).eq('stage', job.stage)
+    await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, ...intelDoc(i), gerado_em: at }), research: clearPartial(job), ...done }).eq('id', job.id).eq('stage', job.stage)
   } else if (section === 'comunicacao') {
     const c = await write(db, ai, job, 'comunicacao', `${note}\n\n${prev(job, ['inteligencia', 'diagnostico', 'comunicacao', 'experiencia'])}`)
     await db.from('consult_docs').update({ doc: keepEdits(job, { ...job.doc, comunicacao: c.comunicacao, experiencia: c.experiencia, gerado_em: at }), ...done }).eq('id', job.id).eq('stage', job.stage)
