@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -14,23 +14,11 @@ type Row = Ote & { staff_id: string; name: string; avatar_path: string | null; j
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 const initials = (n: string) => n.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
-const field = 'mt-1 min-h-11 w-24 rounded-xl border border-line-strong bg-surface px-3 font-normal'
 
 export function TeamPayOverview() {
-  const queryClient = useQueryClient()
   const q = useQuery({ queryKey: ['team-pay'], queryFn: async () => { const { data, error } = await rpc('team_pay_overview'); if (error) throw new Error(error.message); return data as Row[] } })
   const members = useQuery({ queryKey: ['access-members'], queryFn: listMembers })
   const [openId, setOpenId] = useState<string | null>(null)
-  const first = q.data?.[0]
-  const [min, setMin] = useState<string | null>(null)
-  const [cap, setCap] = useState<string | null>(null)
-  const rules = useMutation({
-    mutationFn: async () => {
-      const { error } = await rpc('team_pay_rules_save', { _min: Number(min ?? first?.min_pct ?? 70), _cap: Number(cap ?? first?.cap_pct ?? 120) })
-      if (error) throw new Error(error.message)
-    },
-    onSuccess: () => { setMin(null); setCap(null); for (const k of ['team-pay', 'member-ote']) void queryClient.invalidateQueries({ queryKey: [k] }) },
-  })
   const gen = useMutation({
     mutationFn: async () => { const { data, error } = await rpc('team_pay_generate'); if (error) throw new Error(error.message); return data as { created: number } },
   })
@@ -74,7 +62,7 @@ export function TeamPayOverview() {
                     <span className="min-w-0 flex-1"><b className="block truncate font-semibold">{r.name}</b><span className="block truncate text-[12px] text-muted">{payTag(r.contract, r.pay_schedule) ?? 'Contrato: definir'}{r.job_title ? ` · ${r.job_title}` : ''}</span></span>
                     <span className="text-right"><b className="block tabular-nums">{r.has_pay ? brl(r.ote) : 'Preencher'}</b><span className="block text-[11.5px] text-muted">{r.has_pay ? `OTE · recebe ${brl(r.total_month)}` : 'sem fixo e variável'}</span></span>
                   </span>
-                  {r.has_pay && r.variable_target > 0 && <Attainment pct={r.attainment} min={r.min_pct} cap={r.cap_pct} />}
+                  {r.has_pay && r.variable_target > 0 && <Attainment goals={r.goals} earned={r.variable_earned} variable={r.variable_target} />}
                 </button>
               </li>
             )
@@ -82,16 +70,10 @@ export function TeamPayOverview() {
         </ul>
       </section>
 
-      <section aria-labelledby="regras-var" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
-        <h3 id="regras-var" className="text-[15px] font-semibold">Regras da variável (para todos)</h3>
-        <p className="text-[12.5px] text-muted">A variável é paga pela média das metas do mês. Abaixo do gatilho não paga; acima do teto não cresce.</p>
-        <div className="flex flex-wrap items-end gap-3">
-          <label className="flex flex-col text-[13px] font-semibold">Gatilho (%)<input inputMode="numeric" value={min ?? String(first?.min_pct ?? 70)} onChange={(e) => setMin(e.target.value.replace(/\D/g, ''))} className={field} /></label>
-          <label className="flex flex-col text-[13px] font-semibold">Teto (%)<input inputMode="numeric" value={cap ?? String(first?.cap_pct ?? 120)} onChange={(e) => setCap(e.target.value.replace(/\D/g, ''))} className={field} /></label>
-          <Button variant="secondary" disabled={(min === null && cap === null) || rules.isPending} onClick={() => rules.mutate()}>Salvar regras</Button>
-          {rules.isError && <span role="alert" className="text-[13px] text-warn-ink">{(rules.error as Error).message}</span>}
-        </div>
-      </section>
+      <p className="rounded-2xl bg-raised px-4 py-3 text-[12.5px] text-muted">
+        <b className="text-ink">Como funciona o OTE:</b> o total se divide em 60% fixo + 40% variável. Cada pessoa tem até 2 metas, pelas funções dela;
+        cada meta batida paga 20% do OTE (metade da variável), meta não batida não paga. A variável do mês sai no dia 30 do mês seguinte.
+      </p>
 
       {member && <MemberDialog member={member} isMe={false} startTab="pagamento" onClose={() => setOpenId(null)} />}
     </div>

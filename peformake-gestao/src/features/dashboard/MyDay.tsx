@@ -11,6 +11,8 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { countdown } from '@/features/av/avRules'
 import { TONE_CLASS } from '@/features/av/AvShell'
 import { ArtRequestButton } from '@/features/content/ArtRequest'
+import { Attainment, fetchOte, goalTitle } from '@/features/team/MemberPay'
+import { progressText } from '@/features/team/memberGoals'
 
 interface Day {
   linked: boolean
@@ -238,6 +240,7 @@ export function MyDay({ greeting }: { greeting: string }) {
         <Points d={d} />
       </header>
       <MyPayables staffId={viewAs?.staffId ?? null} />
+      {d.staff?.id && <MyGoals staffId={d.staff.id} />}
 
       <section aria-label="Resumo" className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {isDesigner && <>
@@ -288,6 +291,32 @@ export function MyDay({ greeting }: { greeting: string }) {
         </Panel>
       )}
     </>
+  )
+}
+
+/** Minhas metas do mês (OTE): as 2 metas, o realizado e quanto da variável já está garantido. Some sem OTE. */
+function MyGoals({ staffId }: { staffId: string }) {
+  const q = useQuery({ queryKey: ['member-ote', staffId], queryFn: () => fetchOte(staffId), retry: false, staleTime: 5 * 60_000 })
+  const o = q.data
+  if (!o || !o.variable_enabled || o.goals.length === 0) return null
+  return (
+    <section aria-label="Minhas metas do mês" className="pf-rise flex flex-col gap-2 rounded-2xl border border-line bg-surface px-4 py-3">
+      <p className="text-[12px] font-medium text-muted">Minhas metas do mês · cada meta batida vale metade da variável</p>
+      <ul className="grid gap-1.5 sm:grid-cols-2">
+        {o.goals.slice(0, 2).map((g) => {
+          const c = o.catalog?.find((x) => x.key === g.key)
+          const hit = g.hit ?? (g.pct ?? 0) >= 100
+          return (
+            <li key={g.key} className="flex items-center justify-between gap-2 rounded-xl bg-raised px-3 py-2 text-[13px]">
+              <span className="min-w-0"><b className="block truncate font-medium">{goalTitle(g.key, g.param)}</b>
+                <span className="block truncate text-[12px] text-muted">{c ? progressText(c, { done: g.done ?? 0, total: g.total ?? 0, actual: g.actual }) : `${Math.round(g.actual ?? 0)} de ${Math.round(g.target)}`} · alvo {Math.round(g.target)}{c?.unit === 'pct' ? '%' : ''}</span></span>
+              <Chip tone={hit ? 'green' : 'yellow'}>{hit ? 'Batida' : `${g.pct ?? 0}%`}</Chip>
+            </li>
+          )
+        })}
+      </ul>
+      <Attainment goals={o.goals} earned={o.variable_earned} variable={o.variable_target} />
+    </section>
   )
 }
 

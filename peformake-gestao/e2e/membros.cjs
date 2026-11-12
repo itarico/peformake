@@ -12,7 +12,18 @@ const MEMBERS = [
   member(3, 'Thyfany Rayane', { profile_id: id(103), login_active: true, level: 'user' }),
   member(4, 'Lucas'), member(5, 'Ingrid Rayane'), member(7, 'Teste Falso', { email: 'teste+peformake@example.com', invited: true, level: 'user', main_role: 'ellcazo' }), member(6, 'Aleffer', { contract: 'freela', pay_schedule: 'mensal' }),
 ];
-const ote = (contract, extra = {}) => ({ month: '2026-11-01', goal_role: 'conteudo', min_pct: 70, cap_pct: 120, contract, base_salary: 3000, variable_target: 500, ote: 3500, pay_day: null, unit: 'peformake', notes: null, pay_schedule: 'quinzenal', advance_pct: 50, variable_enabled: false, require_invoice: false, profit_share_pct: contract === 'socio' ? 10 : null, profit_period: 'trimestral', job_rates: {}, has_own_goals: false, goals: [{ key: 'artes', target: 22, actual: 5, pct: 23, weight: 1, origem: 'area' }, { key: 'planos', target: 13, actual: 1, pct: 8, weight: 1, origem: 'area' }], attainment: 15, variable_earned: 0, total_month: 3000, ...extra });
+const cat = (key, func, title, unit, better, target, extra = {}) => ({ key, func, title, how: 'Como mede ' + key, unit, better, target, param_label: null, param: null, is_default: false, historic: better === 'mais', has_history: false, history: null, value: { done: 18, total: 20, actual: 90 }, ...extra });
+const CATALOG = [
+  cat('ed_prazo', 'editor', 'Edição entregue em até {n} h', 'pct', 'mais', 80, { param_label: 'horas', param: 24, is_default: true, has_history: true, history: 76 }),
+  cat('ed_sem_ajuste', 'editor', 'Vídeos aprovados sem ajuste', 'pct', 'mais', 70, { is_default: true }),
+  cat('ed_entregas', 'editor', 'Vídeos editados no mês', 'qtd', 'mais', 4),
+  cat('ed_atraso', 'editor', 'Nenhuma edição atrasada', 'qtd', 'menos', 0, { param_label: 'horas', param: 24 }),
+  cat('cap_na_data', 'videomaker', 'Gravações feitas na data marcada', 'pct', 'mais', 80, { is_default: true }),
+  cat('cap_bruto', 'videomaker', 'Bruto enviado em até {n} h', 'pct', 'mais', 80, { param_label: 'horas', param: 3, is_default: true }),
+  cat('cap_pontual', 'videomaker', 'Chegou no horário (até {n} min)', 'pct', 'mais', 80, { param_label: 'min', param: 10 }),
+  cat('cap_gravacoes', 'videomaker', 'Gravações no mês', 'qtd', 'mais', 4),
+];
+const ote = (contract, extra = {}) => ({ month: '2026-11-01', goal_role: 'audiovisual', min_pct: 70, cap_pct: 120, contract, base_salary: 3000, variable_target: 2000, ote: 5000, pay_day: null, unit: 'peformake', notes: null, pay_schedule: 'quinzenal', advance_pct: 50, variable_enabled: contract === 'pj', require_invoice: false, profit_share_pct: contract === 'socio' ? 10 : null, profit_period: 'trimestral', job_rates: {}, has_own_goals: false, functions: ['editor', 'videomaker'], catalog: CATALOG, max_goals: 2, goal_share: 1000, hits: 1, goals: [{ key: 'ed_prazo', target: 80, param: 24, actual: 90, done: 18, total: 20, pct: 113, hit: true, weight: 1, origem: 'funcao', func: 'editor' }, { key: 'ed_sem_ajuste', target: 70, param: null, actual: 50, done: 5, total: 10, pct: 71, hit: false, weight: 1, origem: 'funcao', func: 'editor' }], attainment: 86, variable_earned: 1000, total_month: 4000, ...extra });
 let currentOte = ote(null);
 const calls = [];
 async function mock(route) {
@@ -24,6 +35,7 @@ async function mock(route) {
   if (p.startsWith('/rest/v1/rpc/')) {
     const fn = p.split('/').pop(); calls.push([fn, req.postData()]);
     if (fn === 'access_members') return json(MEMBERS);
+    if (fn === 'member_pay_config_save') return json(null);
     if (fn === 'member_ote') return json(currentOte);
     if (fn === 'partner_profit') return json({ start: '2026-07-01', end: '2026-09-30', entradas: 30000, saidas: 18000, resultado: 12000, pct: 10, valor: 1200, launched: false });
     if (fn === 'team_pay_overview') return json(MEMBERS.map((m) => ({ ...currentOte, staff_id: m.id, name: m.name, avatar_path: null, job_title: null, has_pay: !!m.contract, contract: m.contract, pay_schedule: m.pay_schedule })));
@@ -83,8 +95,38 @@ async function check(p, dev, label) {
       await p.locator('dialog[open]').getByRole('tab', { name: 'Pagamento' }).click(); await p.waitForTimeout(500);
       await check(p, dev, 'pagamento-' + (c ?? 'definir'));
       if (c) { await p.locator('dialog[open]').getByRole('tab', { name: '1 Tipo' }).click(); await p.waitForTimeout(200); await check(p, dev, 'tipo-' + c); }
-      if (c === 'pj' || c === 'clt') { await p.locator('dialog[open]').getByRole('tab', { name: '3 Metas' }).click(); await p.waitForTimeout(200); await check(p, dev, 'metas-' + c); }
+      if (c === 'pj' || c === 'clt') {
+        await p.locator('dialog[open]').getByRole('tab', { name: '3 Metas' }).click(); await p.waitForTimeout(200); await check(p, dev, 'metas-' + c);
+        const mt = await p.locator('dialog[open]').innerText();
+        if (!(await p.locator('dialog[open] [role=tablist][aria-label^="Funções"]').innerText()).match(/Edição[\s\S]*Captação/)) fails.push(`${dev} ${c}: metas sem as funções da pessoa`);
+        if (!/Edição entregue em até 24 h/.test(mt) || !/18 de 20 · 90%/.test(mt)) fails.push(`${dev} ${c}: meta de edição sem prazo/realizado`);
+        if (!/2 de 2 ligadas/.test(mt)) fails.push(`${dev} ${c}: contador de metas errado`);
+        if (/Metas próprias|Metas da área/.test(mt)) fails.push(`${dev} ${c}: ainda mostra Metas da área/próprias`);
+        if (!(await p.locator('dialog[open] [role=switch][aria-checked=false]').first().isDisabled())) fails.push(`${dev} ${c}: deixou ligar a 3ª meta`);
+        await p.locator('dialog[open]').getByRole('tab', { name: /Captação/ }).click(); await p.waitForTimeout(150); await check(p, dev, 'metas-captacao-' + c);
+        await p.locator('dialog[open]').getByRole('tab', { name: '2 Valores' }).click(); await p.waitForTimeout(150); await check(p, dev, 'valores-ote-' + c);
+        const vt = await p.locator('dialog[open]').innerText();
+        if (!/OTE R\$\s?5\.000 = fixo R\$\s?3\.000 \+ variável R\$\s?2\.000/.test(vt)) fails.push(`${dev} ${c}: divisão 60/40 não aparece (${vt.slice(0, 200)})`);
+        await p.locator('dialog[open] input[inputmode=decimal]').first().fill('10000'); await p.waitForTimeout(100);
+        if (!/fixo R\$\s?6\.000 \+ variável R\$\s?4\.000/.test(await p.locator('dialog[open]').innerText())) fails.push(`${dev} ${c}: OTE digitado não dividiu`);
+        await p.locator('dialog[open]').getByRole('tab', { name: '3 Metas' }).click(); await p.waitForTimeout(150);
+        await p.locator('dialog[open]').getByRole('tab', { name: /Edição/ }).click(); await p.waitForTimeout(100);
+        await p.locator('dialog[open] [role=switch][aria-checked=true]').first().click(); await p.waitForTimeout(100);
+        await p.locator('dialog[open]').getByRole('button', { name: /^Salvar$/ }).click(); await p.waitForTimeout(300);
+        const sv = calls.filter(([fn]) => fn === 'member_pay_config_save').pop();
+        const body = sv ? JSON.parse(sv[1])._data : null;
+        if (!body || body.base_salary !== 6000 || body.variable_target !== 4000 || body.goals.length !== 1 || !body.variable_enabled) fails.push(`${dev} ${c}: salvar mandou errado ${sv && sv[1]}`);
+      }
     }
+    // Sem função marcada: explica e leva para a aba Função.
+    currentOte = ote('pj', { functions: [], catalog: [], goals: [] });
+    await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+    await p.getByRole('button', { name: /Almeida/ }).first().click(); await p.waitForTimeout(200);
+    await p.locator('dialog[open]').getByRole('tab', { name: 'Pagamento' }).click(); await p.waitForTimeout(400);
+    await p.locator('dialog[open]').getByRole('tab', { name: '3 Metas' }).click(); await p.waitForTimeout(200); await check(p, dev, 'metas-sem-funcao');
+    if (!/não tem função marcada/.test(await p.locator('dialog[open]').innerText())) fails.push(`${dev}: sem aviso de função não marcada`);
+    await p.locator('dialog[open]').getByRole('button', { name: 'Marcar funções' }).click(); await p.waitForTimeout(200);
+    if (!(await p.locator('dialog[open]').getByRole('tab', { name: 'Função', selected: true }).count())) fails.push(`${dev}: Marcar funções não abriu a aba Função`);
     // Remover quem tem login: duas perguntas.
     await p.keyboard.press('Escape'); await p.waitForTimeout(200);
     await p.getByRole('button', { name: /Thyfany/ }).first().click(); await p.waitForTimeout(200);

@@ -29,11 +29,12 @@ const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
 const LEVELS: { id: Level; label: string; hint: string }[] = [
   { id: 'none', label: 'Sem acesso', hint: 'Está na equipe, mas não entra no sistema.' },
-  { id: 'user', label: 'Usuário', hint: 'Trabalha na área dele. Não vê valores nem configura.' },
-  { id: 'area', label: 'Admin de área', hint: 'Vê valores e configura só as áreas escolhidas.' },
-  { id: 'total', label: 'Acesso total', hint: 'Administrador: vê e configura tudo, como você.' },
+  { id: 'user', label: 'Usuário', hint: 'Trabalha na área dele, sem ver valores.' },
+  { id: 'area', label: 'Admin de área', hint: 'Vê valores e configura só as áreas dele.' },
+  { id: 'total', label: 'Acesso total', hint: 'Vê e configura tudo, como você.' },
 ]
-const SKILLS = [['apresentadora', 'Apresentadora'], ['fotografo', 'Fotografia'], ['videomaker', 'Gravação'], ['editor', 'Edição'], ['modelo', 'Modelo']] as const
+// Também faz: define as metas da pessoa (Pagamento → 3 Metas) e quem aparece primeiro no avulso. Chaves iguais às de main_role.
+const SKILLS = [['videomaker', 'Captação'], ['editor', 'Edição'], ['fotografo', 'Fotografia'], ['designer', 'Design'], ['social_media', 'Social'], ['traffic_manager', 'Tráfego'], ['comercial', 'Comercial'], ['apresentadora', 'Apresentadora'], ['modelo', 'Modelo']] as const
 const WORK_ROLES = ROLES.filter((r) => r !== 'admin')
 const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 font-normal'
 const chip = (on: boolean) => cn('min-h-9 cursor-pointer rounded-full border px-3.5 text-[13px] font-semibold', on ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:border-line-strong hover:text-ink')
@@ -108,7 +109,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
   const [problem, setProblem] = useState<string | null>(null)
   const [reveal, setReveal] = useState(false)
   const locked = !!member?.is_master
-  const refresh = () => { for (const k of ['access-members', 'job-people', 'staff-links', 'my-staff-id']) void queryClient.invalidateQueries({ queryKey: [k] }) }
+  const refresh = () => { for (const k of ['access-members', 'job-people', 'staff-links', 'my-staff-id', 'member-ote', 'team-pay']) void queryClient.invalidateQueries({ queryKey: [k] }) }
 
   const save = useMutation({
     mutationFn: async () => {
@@ -149,7 +150,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
 
   return (
     <Dialog open onClose={onClose} title={isNew ? 'Adicionar membro' : member!.name} size="md"
-      description={isNew ? 'Com acesso: depois de salvar, crie o login (senha temporária) ou envie o convite por e-mail.' : locked ? 'Master: acesso total sempre.' : undefined}
+      description={isNew ? 'Depois de salvar, crie o login ou mande o convite.' : locked ? 'Master: acesso total sempre.' : undefined}
       footer={
         <div className="flex w-full flex-wrap items-center justify-between gap-2">
           {!isNew && !locked && !isMe && member!.active
@@ -167,7 +168,7 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
           ))}
         </div>
 
-        {tab === 'pagamento' && member?.id ? <MemberPayTab staffId={member.id} name={member.name} startStep={startPay} /> : tab === 'dados' ? (
+        {tab === 'pagamento' && member?.id ? <MemberPayTab staffId={member.id} name={member.name} startStep={startPay} onGoFunctions={() => setTab('funcao')} /> : tab === 'dados' ? (
           <div className="flex flex-col gap-3">
             <label className="flex flex-col text-[13px] font-semibold">Nome<input value={name} onChange={(e) => setName(e.target.value)} className={field} autoFocus={isNew} /></label>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -182,13 +183,13 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
             <fieldset>
               <legend className="mb-1.5 text-[13px] font-semibold">Função no sistema</legend>
               <div className="flex flex-wrap gap-1.5">
-                {WORK_ROLES.map((r) => <button key={r} type="button" aria-pressed={role === r} onClick={() => setRole(r)} className={chip(role === r)}>{ROLE_LABELS[r]}</button>)}
+                {WORK_ROLES.map((r) => <button key={r} type="button" aria-pressed={role === r} onClick={() => setRole(r)} className={cn(chip(role === r), 'min-h-8 px-3 text-[12.5px]')}>{ROLE_LABELS[r]}</button>)}
               </div>
             </fieldset>
             <fieldset>
-              <legend className="mb-1.5 text-[13px] font-semibold">Também faz <span className="font-normal text-muted">· aparece primeiro no avulso</span></legend>
+              <legend className="mb-1.5 text-[13px] font-semibold">Também faz <span className="font-normal text-muted">· define as metas e o avulso</span></legend>
               <div className="flex flex-wrap gap-1.5">
-                {SKILLS.map(([k, l]) => <button key={k} type="button" aria-pressed={skills.includes(k)} onClick={() => setSkills((c) => tog(c, k))} className={chip(skills.includes(k))}>{l}</button>)}
+                {SKILLS.filter(([k]) => k !== role).map(([k, l]) => <button key={k} type="button" aria-pressed={skills.includes(k)} onClick={() => setSkills((c) => tog(c, k))} className={cn(chip(skills.includes(k)), 'min-h-8 px-3 text-[12.5px]')}>{l}</button>)}
               </div>
             </fieldset>
           </div>
