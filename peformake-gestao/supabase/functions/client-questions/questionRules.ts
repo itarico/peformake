@@ -3,6 +3,8 @@
 // O teste questionRules.test.ts confere que as cópias estão iguais. Sem imports aqui.
 
 export const MAX_PER_WEEK = 4
+/** Opções que a IA deixa prontas por semana: a equipe escolhe as 4 que vão (as mais importantes já vêm marcadas). */
+export const MAX_OPTIONS = 8
 export const MAX_FOLLOWUPS = 1
 export const SKIP_LABEL = 'Responder depois'
 
@@ -48,6 +50,10 @@ const GENERIC = [
   'cliente ideal', 'publico alvo', 'qual seu publico', 'qual o seu publico', 'quem e seu cliente', 'quem e o seu cliente', 'qual seu objetivo', 'qual o seu objetivo',
   'quais seus objetivos', 'qual sua missao', 'quais seus valores', 'qual seu diferencial', 'qual o seu diferencial', 'o que voce espera', 'o que achou do nosso trabalho',
   'como podemos ajudar', 'tem alguma duvida', 'qual seu orcamento', 'qual o seu orcamento', 'qual seu nicho',
+  // perguntas bobas: não mudam nenhuma decisão
+  'esta satisfeito', 'gostou do', 'gostou da', 'o que achou', 'como esta o movimento', 'como estao as vendas', 'tudo bem por ai', 'qual seu horario',
+  'qual o horario', 'qual seu endereco', 'qual o endereco', 'qual seu instagram', 'tem fotos', 'pode mandar fotos', 'pode enviar fotos', 'ja pensou em',
+  'o que acha de postar', 'gostaria de postar', 'qual cor', 'quais cores', 'tem logo', 'tem interesse em', 'quer aumentar as vendas', 'quer vender mais',
 ]
 export function isGeneric(question: string): boolean {
   const q = norm(question)
