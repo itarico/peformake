@@ -42,6 +42,13 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-12 · DECISÃO: estratégias e relatórios feitos pelo agente do Claude, PDF na pasta do cliente (nuvem)
+- O motor de estratégia do sistema fica de lado por enquanto ("muito difícil, não progredimos"). Um estudo por cliente, dividido em: Estratégia do mês (diagnóstico embutido e objetivo), Planejamento de social media, Planejamento de audiovisual (Ellcazo) e Relatório do mês (estilo Reportei, um por conta). Design = o da estratégia do Paulo.
+- PDFs sobem em Arquivos do cliente (pastas novas Estratégia e Relatórios) pela função agent-upload (token curto em agent_upload_tokens). Já subiram os relatórios de Fornario e VOVINA (01/10 a 12/11).
+- Tarefa agendada "Estratégia do mês seguinte" (trig_01MPizxumUtqgTUM4a8RHi3J), dias 14 a 18 às 7h13, até 6 clientes/dia; passo a passo em docs/ROTINA-ESTRATEGIA-MENSAL.md; em automation_catalog (est_mensal_agente). FALTA o Italo adicionar os conectores (Firecrawl, Supabase, ADS) na tarefa em claude.ai/code/routines.
+- Novembro foi gerado atrasado (12/11 a 31/12) para Fornario, VOVINA e Brio (reunião com o Paulo).
+- Venda que não cria a operação (Grelina): estudo guardado em docs/ESTUDO-VENDA-OPERACAO.md, para depois.
+
 ## 2026-11-12 · Planos de dezembro pelo agente + lançamento de despesa pelo WhatsApp ligado (nuvem)
 - API da Anthropic ficou sem crédito (gasto do mês ~US$71: diagnósticos 55, planos 16). Planos de dezembro de Fornario (29 ações), VOVINA (26) e Brio (27) escritos pelos agentes do Claude e gravados em monthly_strategies.partial; a função só montou (US$0 de API). Truque: parallel() pula o que já está em partial.
 - Combinado com o Italo: modo MISTO (agente faz coleta/pesquisa/escrita; API só o rápido; sem crédito ou teto → vai para a fila do agente; interruptor em Automações; teto API US$80). AINDA NÃO CONSTRUÍDO.
