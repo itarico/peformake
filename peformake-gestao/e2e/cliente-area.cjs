@@ -65,7 +65,7 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
     if (path === '/conteudo/design' && !/Padaria Sol/.test(txt)) bad(`${path}: cliente certo sumiu`);
     console.log('ok ' + path);
   }
-  const cards = await (async () => { await p.goto(`http://localhost:${PORT}/conteudo/design`); await p.waitForTimeout(1200); return p.locator('ul[aria-label="Fila do design"] > li').count() })();
+  const cards = await (async () => { await p.goto(`http://localhost:${PORT}/conteudo/design`); await p.waitForTimeout(1200); for (const b of await p.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]').all()) await b.click(); return p.locator('ul[aria-label="Fila do design por cliente"] > li ul > li').count() })();
   if (cards !== 4) bad(`fila do design com ${cards} cartões (esperado 4)`);
   await b.close();
   console.log(fails ? `${fails} falha(s)` : 'TUDO OK'); process.exit(fails ? 1 : 0);

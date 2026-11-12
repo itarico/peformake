@@ -62,9 +62,10 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       if (role === 'designer' && url !== '/conteudo/design') bad(`${dev} designer abriu ${url} (esperado /conteudo/design)`);
       if (role === 'admin' && url !== '/conteudo/quadro') bad(`${dev} admin abriu ${url}`);
       await p.goto(`http://localhost:${PORT}/conteudo/design`); await p.waitForTimeout(1200);
-      const cards = await p.locator('ul[aria-label="Fila do design"] > li').count();
+      for (const b of await p.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]').all()) await b.click();
+      const cards = await p.locator('ul[aria-label="Fila do design por cliente"] > li ul > li').count();
       if (cards !== 4) bad(`${dev} ${role}: ${cards} cartões na fila`);
-      const first = await p.locator('ul[aria-label="Fila do design"] > li').first().innerText();
+      const first = await p.locator('ul[aria-label="Fila do design por cliente"] > li ul > li').first().innerText();
       if (!/Entrega/.test(first)) bad(`${dev}: sem cronômetro no 1º cartão`);
       if (await sideScroll(p)) bad(`${dev} design: rolagem de lado`);
       if (!(await p.getByText('8 de 9 no prazo').count())) bad(`${dev}: placar no prazo não apareceu`);
