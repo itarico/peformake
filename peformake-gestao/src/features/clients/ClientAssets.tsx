@@ -6,8 +6,10 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { ask } from '@/components/ui/confirm'
 
-type FolderId = 'design' | 'trafego' | 'audiovisual' | 'social' | 'contratos' | 'outros'
+type FolderId = 'estrategia' | 'relatorios' | 'design' | 'trafego' | 'audiovisual' | 'social' | 'contratos' | 'outros'
 const FOLDERS: { id: FolderId; label: string }[] = [
+  { id: 'estrategia', label: 'Estratégia' },
+  { id: 'relatorios', label: 'Relatórios' },
   { id: 'design', label: 'Design' },
   { id: 'trafego', label: 'Tráfego' },
   { id: 'audiovisual', label: 'Audiovisual' },
@@ -15,7 +17,7 @@ const FOLDERS: { id: FolderId; label: string }[] = [
   { id: 'contratos', label: 'Contratos' },
   { id: 'outros', label: 'Outros' },
 ]
-const SOURCE: Record<string, string> = { manual: 'Enviado pela equipe', creative: 'Criativo automático', report: 'Relatório gerado', strategy: 'Estratégia' }
+const SOURCE: Record<string, string> = { manual: 'Enviado pela equipe', creative: 'Criativo automático', report: 'Relatório gerado', strategy: 'Estratégia', agente: 'Feito pela Peformake' }
 const MAX = 100 * 1024 * 1024
 
 interface Asset { id: string; folder: FolderId; name: string; bucket: string; path: string; mime: string; size: number; source: string; createdAt: string }
@@ -53,7 +55,7 @@ export function ClientAssets({ clientId }: { clientId: string }) {
   const queryClient = useQueryClient()
   const key = ['client-assets', clientId]
   const data = useQuery({ queryKey: key, queryFn: () => listAssets(clientId) })
-  const [folder, setFolder] = useState<FolderId>('design')
+  const [folder, setFolder] = useState<FolderId>('estrategia')
   const [problem, setProblem] = useState<string | null>(null)
   const input = useRef<HTMLInputElement>(null)
   const refresh = () => void queryClient.invalidateQueries({ queryKey: key })
