@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Check, Download, ExternalLink, Lightbulb, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -12,26 +12,25 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl, lookupCnpj, type CompanyLookup } from '@/features/clients/clientsApi'
-import { ago } from '@/features/settings/AutomationsCenter'
 import {
   approveConsult, consultKey, kickConsult, markSent, presentationLink, requestConsult, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
 } from './consultApi'
-import { openPresentation, printDeck, type DeckInput, type Orientation } from './consultDeck'
+import { buildSlides, openPresentation, printDeck, type DeckInput } from './consultDeck'
 import { Paged } from './SlideViewer'
-import { ReviewCard } from '@/features/review/ReviewCard'
 import { useReview } from '@/features/review/reviewApi'
-import { reviewedInput } from '@/features/review/reviewRules'
+import { applyFills, findFills, insertAdded, progress, reviewedInput, slideKeys } from '@/features/review/reviewRules'
+import { useProduction } from '@/features/production/useProduction'
+import { CardSection, DeckCard, DeckThumb, OrientationDialog, placeholderCover, screenOrientation, type CardPrimary } from './DeckCard'
+import { AreaCard, AvCard, MonthlyCard, MonthPick } from './PlanCards'
+import { ReportCards } from './ReportCards'
 import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
-import { MonthlyPanel } from './MonthlyPanel'
-import { useMonthly } from './monthlyApi'
-import { parseMonthParam } from './monthlyRules'
-import { ReportsPanel } from './ReportsPanel'
+import { MonthlyPanel, SendDialog as MonthlySendDialog } from './MonthlyPanel'
+import { requestMonthly, useMonthly } from './monthlyApi'
+import { monthName, monthOptions, parseMonthParam } from './monthlyRules'
 
-type DocView = 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios'
-const viewOf = (v: string | null): DocView => (v === 'estrategia' || v === 'perguntas' || v === 'relatorios' ? v : 'diagnostico')
 
 const TONE = {
   warn: 'bg-warn-soft text-warn-ink', info: 'bg-accent-soft text-accent-ink', ok: 'bg-ok-soft text-ok-ink',
@@ -53,7 +52,8 @@ export function ConsultoriaPage() {
   const [sending, setSending] = useState<ConsultRow | null>(null)
   const [asking, setAsking] = useState<ConsultRow | null>(null)
   const qc = useQueryClient()
-  const open = (id: string | null, tab?: DocView) => setParams((c) => { const n = new URLSearchParams(c); if (id) { n.set('cliente', id); if (tab && tab !== 'diagnostico') n.set('aba', tab) } else { n.delete('cliente'); n.delete('aba') } return n })
+  // Perguntas viram o detalhe ?ver=perguntas; Relatórios é a 2ª aba; o resto abre o Planejamento.
+  const open = (id: string | null, tab?: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios') => setParams((c) => { const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao']) n.delete(k); if (id) { n.set('cliente', id); if (tab === 'perguntas') n.set('ver', 'perguntas'); if (tab === 'relatorios') n.set('aba', 'relatorios') } else n.delete('cliente'); return n })
   const gen = useMutation({
     mutationFn: async (r: ConsultRow) => { if (r.status === 'erro') await requestConsult(r.client_id); else await kickConsult() },
     onMutate: () => setProblem(null),
@@ -189,7 +189,16 @@ function InfoDialog({ row, onClose }: { row: ConsultRow; onClose: () => void }) 
 
 // ───────── Documento ─────────
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+type SendKind = 'diag' | 'mes' | 'trafego' | 'social' | 'av' | 'perguntas'
+const GEN_USD = '4,50 a 6'
 
+/**
+ * Consultoria → cliente: UMA página com os cartões de apresentação empilhados, todos no mesmo padrão
+ * (capa · nome · situação · progresso · o que falta · 1 botão forte · ⋯). Aba Planejamento: Diagnóstico e Estratégia mensal,
+ * e por área (só o que o cliente contratou) Tráfego · Social media + Design · Audiovisual; as perguntas numa faixa curta.
+ * Aba Relatórios: o semanal e o mensal de tráfego. Links antigos (?aba=estrategia|plano|perguntas) caem no lugar novo.
+ * "Ver detalhes" da estratégia/área abre o plano completo (?ver=plano&secao=…); das perguntas, ?ver=perguntas.
+ */
 function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { clientId: string; row: ConsultRow | null; onBack: () => void; onInfo: () => void; info: ConsultRow | null; closeInfo: () => void }) {
   const qc = useQueryClient()
   const q = useConsultDoc(clientId)
@@ -198,8 +207,11 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
     queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null },
   })
   const [dirOpen, setDirOpen] = useState(false)
-  const [sendOpen, setSendOpen] = useState(false)
-  const [askOpen, setAskOpen] = useState(false)
+  const [send, setSend] = useState<SendKind | null>(null)
+  const [avCount, setAvCount] = useState(0)
+  const [picker, setPicker] = useState(false)
+  const [deckOpen, setDeckOpen] = useState(false)
+  const [sources, setSources] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
   const refresh = () => { void qc.invalidateQueries({ queryKey: consultKey }); void qc.invalidateQueries({ queryKey: ['consult-doc', clientId] }) }
   const act = useMutation({
@@ -213,19 +225,37 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const name = row?.name.trim() ?? 'Cliente'
   const ready = !!doc.resumo && !!d && ['pronto', 'aprovado', 'enviado'].includes(d.status)
   const approved = !!d && ['aprovado', 'enviado'].includes(d.status)
-  const [deckOpen, setDeckOpen] = useState(false)
   const status = (d?.status ?? row?.status ?? 'na_fila') as ConsultRow['status']
+
+  // Links antigos: ?aba=estrategia|plano (com ?secao= abre o plano completo), ?aba=perguntas, ?aba=diagnostico.
   const [params, setParams] = useSearchParams()
-  const view = viewOf(params.get('aba'))
-  const setView = (v: DocView) => setParams((c) => { const n = new URLSearchParams(c); if (v !== 'diagnostico') n.set('aba', v); else n.delete('aba'); return n }, { replace: true })
+  const aba = params.get('aba')
+  useEffect(() => {
+    if (!aba || aba === 'relatorios') return
+    setParams((c) => {
+      const n = new URLSearchParams(c); n.delete('aba')
+      if ((aba === 'estrategia' || aba === 'plano') && n.get('secao')) n.set('ver', 'plano')
+      if (aba === 'perguntas') n.set('ver', 'perguntas')
+      return n
+    }, { replace: true })
+  }, [aba, setParams])
+  const view = aba === 'relatorios' ? 'relatorios' : 'planejamento'
+  const ver = params.get('ver')
+  const go = (patch: Record<string, string | null>, replace = false) => setParams((c) => { const n = new URLSearchParams(c); for (const [k, v] of Object.entries(patch)) { if (v) n.set(k, v); else n.delete(k) } return n }, { replace })
+  const today = useMemo(() => new Date(), [])
+  const month = parseMonthParam(params.get('mes'), today)
+  const plan = useMonthly(clientId, month)
+  const st = plan.data
+  const planReady = !!st && ['pronto', 'aprovado'].includes(st.status) && !!st.doc?.titulo
   const questions = useClientQuestions(clientId)
   const toAsk = (questions.data?.questions ?? []).filter((x) => x.status === 'pendente').length
-  const month = parseMonthParam(params.get('mes'), new Date())
-  const plan = useMonthly(clientId, month)
-  const monthPending = plan.data ? plan.data.actions.filter((a) => a.status === 'proposta').length : row?.monthly?.pending ?? 0
+  const waiting = (questions.data?.questions ?? []).filter((x) => x.status === 'enviada').length
+  const prod = useProduction()
+  const areas = prod.clients?.find((c) => c.id === clientId)?.areas ?? []
+  const has = { trafego: areas.includes('trafego'), social: areas.includes('social') || areas.includes('design'), av: areas.includes('audiovisual') }
+  const avApproved = st ? st.actions.filter((a) => a.area === 'audiovisual' && a.status === 'aprovada').length : 0
 
   const review = useReview('diagnostico', clientId)
-  const [sources, setSources] = useState(false)
   const logo = logoPublicUrl(row?.logo_path ?? null)
   const deckInput = useMemo<DeckInput>(() => ({
     name, doc, clientLogoUrl: logo, peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png`, updatedAt: d?.finished_at ?? null,
@@ -233,110 +263,193 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   }), [name, doc, logo, d?.finished_at])
   // O que o cliente vê (prévia, PDF): com a revisão aplicada (sem recusados, textos editados, dados preenchidos).
   const clientInput = useMemo(() => reviewedInput(deckInput, review.data?.state), [deckInput, review.data?.state])
-  // Cabeçalho: cliente + situação + UM botão principal (o que se faz nesta aba) + "⋯" com o resto.
-  const planReady = !!plan.data && ['pronto', 'aprovado'].includes(plan.data.status)
-  const diagMenu = [
-    { label: 'Revisar em slides', icon: <Presentation size={15} aria-hidden="true" />, hidden: !ready || !(approved && status === 'aprovado'), href: diagReviewPath(clientId) },
-    { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !ready, onClick: () => {
-      // Aprovado: abre o link do cliente. Antes de aprovar: prévia só para a equipe (mesmos slides, sem os internos).
-      if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message))
-      else openPresentation(clientInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
-    } },
-    { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: act.isPending, onClick: () => act.mutate(() => approveConsult(clientId)) },
-    { label: 'Baixar apresentação', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: () => setDeckOpen(true) },
-    { label: 'Enviar no WhatsApp', icon: <Send size={15} aria-hidden="true" />, hidden: !ready || status === 'aprovado', onClick: () => setSendOpen(true) },
-    { label: `Direcionamento${row?.direction?.trim() ? ' ✓' : ''}`, icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setDirOpen(true) },
-    { label: 'Enviar perguntas', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => setAskOpen(true) },
-  ]
-  const slidesLink = (href: string) => (
-    <a href={href} target="_blank" rel="noreferrer" data-revisar-slides className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-brand px-4 text-[14px] font-semibold text-on-brand no-underline hover:opacity-85">
-      <Presentation size={15} aria-hidden="true" /> <span className="max-sm:hidden">Revisar em slides</span><span className="sm:hidden">Revisar</span> <ExternalLink size={12} aria-hidden="true" className="opacity-70" />
-    </a>
-  )
-  let primary: React.ReactNode = null
-  if (view === 'diagnostico') {
-    if (status === 'falta_dados') primary = <Button onClick={onInfo}>Informar CNPJ</Button>
-    else if (status === 'aprovado') primary = <Button onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar</Button>
-    else if (ready) primary = slidesLink(diagReviewPath(clientId))
-  } else if (view === 'estrategia' && planReady) primary = slidesLink(planReviewPath(clientId, month))
-  // Abas curtas; o número é o que pede ação ali (revisar, aprovar, mandar).
-  const tabs = [
-    ['diagnostico', 'Diagnóstico', 'Diagnóstico', ''],
-    ['estrategia', 'Plano do mês', 'Plano', monthPending ? String(monthPending) : ''],
-    ['perguntas', 'Perguntas', 'Perguntas', (row?.answers_new ?? 0) > 0 ? String(row?.answers_new) : toAsk ? String(toAsk) : ''],
-    ['relatorios', 'Relatórios', 'Relatórios', ''],
-  ] as const
-  return (
-    <section aria-label={`Diagnóstico de ${name}`} className="flex flex-col gap-3">
-      <header data-cliente-cabecalho className="flex items-center gap-2">
-        <button type="button" onClick={onBack} aria-label="Voltar para a lista" className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">Consultoria</span></button>
-        <span className="flex min-w-0 flex-1 items-center gap-2">
-          <ClientAvatar name={name} url={logoPublicUrl(row?.logo_path ?? null)} size="sm" />
-          <span className="min-w-0">
-            <b className="block truncate text-[16px] leading-tight">{name}</b>
-            {row && <span className="max-sm:hidden"><PartsLine parts={clientParts(row)} /></span>}
-          </span>
-        </span>
-        {primary}
-        {view === 'diagnostico' && <ActionMenu label="Mais opções do diagnóstico" actions={diagMenu} />}
-      </header>
+  const openSend = (k: SendKind, n = 0) => { setPicker(false); setAvCount(n); setSend(k) }
+  const create = async () => {
+    if (await ask(`Criar o plano de ${monthName(month)} de ${name}? A IA pesquisa e escreve só as partes do que o cliente contratou (≈US$ ${GEN_USD}, uns 10 minutos).`)) act.mutate(() => requestMonthly(clientId, month))
+  }
+  const mp = <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) }, true)} />
+  const next = row ? nextStep(row) : null
 
-      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-4 gap-1 rounded-full bg-raised p-1 sm:max-w-2xl">
-        {tabs.map(([id, label, short, n]) => (
-          <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => setView(id)}
-            className={cn('inline-flex min-h-10 min-w-0 cursor-pointer items-center justify-center gap-1 rounded-full px-1 text-[12px] font-semibold sm:px-3 sm:text-[13.5px]', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>
-            <span className="truncate max-sm:hidden">{label}</span><span className="truncate sm:hidden">{short}</span>{n && <span aria-label={`${n} para fazer`} className="shrink-0 rounded-full bg-accent px-1.5 text-[10.5px] leading-[18px] text-white">{n}</span>}
-          </button>
+  const header = (
+    <header data-cliente-cabecalho className="flex items-center gap-2">
+      <button type="button" onClick={ver ? () => go({ ver: null, secao: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Planejamento' : 'Consultoria'}</span></button>
+      <span className="flex min-w-0 flex-1 items-center gap-2">
+        <ClientAvatar name={name} url={logo} size="sm" />
+        <span className="min-w-0">
+          <b className="block truncate text-[16px] leading-tight">{name}</b>
+          {next && next.label !== 'Abrir' && <span data-proximo className="block truncate text-[12px] text-muted">Agora: {next.label.charAt(0).toLowerCase() + next.label.slice(1)}</span>}
+        </span>
+      </span>
+      {!ver && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setPicker(true)}><Send size={14} aria-hidden="true" /> Enviar</Button>}
+      <ActionMenu label="Mais opções do cliente" actions={[
+        { label: `Direcionamento${row?.direction?.trim() ? ' ✓' : ''}`, icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setDirOpen(true) },
+        { label: 'Informar CPF ou CNPJ', icon: <Search size={15} aria-hidden="true" />, onClick: onInfo, hidden: status !== 'falta_dados' },
+      ]} />
+    </header>
+  )
+
+  const dialogs = (
+    <>
+      {dirOpen && <DirectionDialog clientId={clientId} name={name} initial={row?.direction ?? ''} links={nicheLinks(row?.segment, name)} onClose={() => setDirOpen(false)} />}
+      {picker && <SendPicker name={name} month={month} onClose={() => setPicker(false)} onPick={(k) => openSend(k, avApproved)} options={[
+        { id: 'diag', label: 'Diagnóstico', ok: approved, why: ready ? 'Aprove o diagnóstico antes' : 'Ainda não está pronto' },
+        { id: 'mes', label: `Estratégia de ${monthName(month).toLowerCase()}`, ok: planReady, why: 'A estratégia do mês ainda não está pronta' },
+        ...(has.trafego ? [{ id: 'trafego' as const, label: 'Tráfego', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
+        ...(has.social ? [{ id: 'social' as const, label: 'Social media + Design', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
+        ...(has.av ? [{ id: 'av' as const, label: `Audiovisual (${avApproved} vídeos)`, ok: planReady && avApproved > 0, why: 'Aprove pelo menos um vídeo' }] : []),
+        { id: 'perguntas', label: toAsk ? `Perguntas (${toAsk})` : 'Perguntas', ok: true },
+      ]} />}
+      {send === 'diag' && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSend(null)} onSent={refresh} />}
+      {(send === 'mes' || send === 'trafego' || send === 'social') && st && <MonthlySendDialog strategyId={st.id} clientId={clientId} name={name} month={month} area={send === 'mes' ? undefined : send} onClose={() => setSend(null)} />}
+      {send === 'av' && st && <MonthlySendDialog strategyId={st.id} clientId={clientId} name={name} month={month} av={avCount} onClose={() => setSend(null)} />}
+      {send === 'perguntas' && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => setSend(null)} />}
+      {deckOpen && <OrientationDialog title="Baixar o diagnóstico" name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(clientInput, o); setDeckOpen(false) }} />}
+      {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}
+      {info && <InfoDialog row={info} onClose={closeInfo} />}
+    </>
+  )
+
+  // Detalhe: o plano completo (seções, ações para aprovar, editar, refazer) ou as perguntas.
+  if (ver === 'plano' || ver === 'perguntas') return (
+    <section aria-label={`${ver === 'plano' ? 'Plano' : 'Perguntas'} de ${name}`} className="flex flex-col gap-3">
+      {header}
+      {ver === 'plano' ? <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} /> : <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />}
+      {dialogs}
+    </section>
+  )
+
+  return (
+    <section aria-label={`Consultoria de ${name}`} className="flex flex-col gap-4">
+      {header}
+      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-2 gap-1 rounded-full bg-raised p-1 sm:max-w-sm">
+        {([['planejamento', 'Planejamento'], ['relatorios', 'Relatórios']] as const).map(([id, label]) => (
+          <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => go({ aba: id === 'relatorios' ? 'relatorios' : null }, true)}
+            className={cn('inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full px-3 text-[13.5px] font-semibold', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
         ))}
       </div>
-
-      {view === 'perguntas' && <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />}
-      {view === 'estrategia' && <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} quiet={planReady} />}
-      {view === 'relatorios' && <ReportsPanel clientId={clientId} />}
-      {view === 'diagnostico' && <>
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
-      {q.isPending && <p role="status" className="py-8 text-center text-[13px] text-muted">Carregando</p>}
-      {!q.isPending && !ready && (
-        <div data-conteudo className="rounded-3xl border border-line bg-surface p-5 text-[14px]">
-          {status === 'gerando' && <p className="flex items-center gap-2"><Sparkles size={16} aria-hidden="true" className="text-accent-ink" /> A IA está {statusChip({ status, document: null, stage: d?.stage ?? null }).sub ?? 'trabalhando'}. Leva uns 10 minutos; pode sair da tela.</p>}
-          {status === 'falta_dados' && <p>Falta o CPF ou CNPJ. Com ele, a Receita preenche a empresa e a IA começa o diagnóstico.</p>}
-          {status === 'na_fila' && <p>Na fila. Começa em instantes (ou toque em Gerar agora).</p>}
-          {status === 'limite' && <p>Limite do mês com IA atingido. Volta sozinho no mês que vem (ou o administrador aumenta o limite em Configurações → Automações).</p>}
-          {status === 'erro' && <p>Não deu certo: {d?.error ?? 'erro desconhecido'} Toque em Gerar agora para tentar de novo.</p>}
-          {(status === 'na_fila' || status === 'erro') && <Button className="mt-3" disabled={act.isPending} onClick={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}>Gerar agora</Button>}
-        </div>
-      )}
-
-      {ready && (
-        <div data-conteudo>
-          {((doc.avisos ?? []) as string[]).map((a) => <p key={a} className="mb-2 rounded-xl bg-raised px-3 py-2 text-[12.5px] text-muted">{a} A análise usou a pesquisa na web no lugar.</p>)}
-          <ReviewCard clientId={clientId} input={deckInput} statusLabel={statusChip({ status, document: row?.document ?? null, stage: d?.stage ?? null }).label} compact
-            footer={<><Button variant="link" className="text-[12.5px]" onClick={() => setSources(true)}>Ver detalhes</Button><span className="text-[12px] text-muted">Gerado {ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}</span></>} />
-        </div>
-      )}
-      {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}
+      {view === 'relatorios' && <ReportCards clientId={clientId} name={name} />}
+      {view === 'planejamento' && <>
+        <CardSection title="Diagnóstico e estratégia">
+          <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
+            loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
+            onInfo={onInfo} onGenerate={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}
+            onApprove={() => act.mutate(() => approveConsult(clientId))}
+            onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
+            onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
+          <MonthlyCard clientId={clientId} name={name} logo={logo} month={month} st={st} monthPick={mp} onCreate={() => void create()} creating={act.isPending}
+            onSend={() => openSend('mes')} onDetails={() => go({ ver: 'plano', secao: null })} />
+        </CardSection>
+        {(has.trafego || has.social || has.av) && (
+          <CardSection title="Por área">
+            {has.trafego && <AreaCard area="trafego" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('trafego')} onDetails={() => go({ ver: 'plano', secao: 'trafego' })} />}
+            {has.social && <AreaCard area="social" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('social')} onDetails={() => go({ ver: 'plano', secao: 'social' })} />}
+            {has.av && <AvCard clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={(n) => openSend('av', n)} onDetails={() => go({ ver: 'plano', secao: 'audiovisual' })} />}
+          </CardSection>
+        )}
+        <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />
       </>}
-
-      {dirOpen && <DirectionDialog clientId={clientId} name={name} initial={row?.direction ?? ''} links={nicheLinks(row?.segment, name)} onClose={() => setDirOpen(false)} />}
-      {sendOpen && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSendOpen(false)} onSent={refresh} />}
-      {deckOpen && <DeckDialog name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(clientInput, o); setDeckOpen(false) }} />}
-      {info && <InfoDialog row={info} onClose={closeInfo} />}
-      {askOpen && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => setAskOpen(false)} />}
+      {dialogs}
     </section>
+  )
+}
+
+/** Perguntas numa faixa só: quantas estão abertas, respostas novas e "Mandar ao cliente" (o envio de sempre). */
+function QuestionsStrip({ toAsk, waiting, answers, onSend, onOpen }: { toAsk: number; waiting: number; answers: number; onSend: () => void; onOpen: () => void }) {
+  const text = [answers > 0 ? `${answers} ${answers === 1 ? 'resposta nova' : 'respostas novas'}` : null, toAsk ? `${toAsk} ${toAsk === 1 ? 'pergunta aberta' : 'perguntas abertas'}` : null, waiting ? `${waiting} esperando o cliente` : null].filter(Boolean).join(' · ') || 'Perguntas em dia'
+  return (
+    <div data-perguntas className="flex items-center gap-2 rounded-2xl border border-line bg-surface px-3 py-2">
+      <MessageCircle size={16} aria-hidden="true" className="shrink-0 text-muted" />
+      <button type="button" onClick={onOpen} className="min-w-0 flex-1 cursor-pointer truncate text-left text-[13.5px]"><b className="font-semibold">Perguntas</b> <span className="text-muted">· {text}</span></button>
+      <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={onSend}><Send size={14} aria-hidden="true" /> <span className="max-sm:hidden">Mandar ao cliente</span><span className="sm:hidden">Mandar</span></Button>
+    </div>
+  )
+}
+
+/** "Enviar" do cabeçalho: escolhe o que mandar (só o que está pronto). Cada opção abre o envio de sempre. */
+function SendPicker({ name, onClose, onPick, options }: { name: string; month: string; onClose: () => void; onPick: (k: SendKind) => void; options: { id: SendKind; label: string; ok: boolean; why?: string }[] }) {
+  return (
+    <Dialog open onClose={onClose} title={`Enviar a ${name}`} description="Escolha o que mandar. Você confere a mensagem antes; nada sai sozinho." size="sm">
+      <ul className="flex flex-col gap-1.5">
+        {options.map((o) => (
+          <li key={o.id}>
+            <button type="button" disabled={!o.ok} onClick={() => onPick(o.id)} className="flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-2xl border border-line px-3 text-left hover:border-ink disabled:cursor-not-allowed disabled:opacity-50">
+              <span className="min-w-0 flex-1"><b className="block text-[14px] font-semibold">{o.label}</b>{!o.ok && o.why && <span className="block text-[12px] text-muted">{o.why}</span>}</span>
+              {o.ok && <Send size={14} aria-hidden="true" className="shrink-0 text-muted" />}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </Dialog>
+  )
+}
+
+const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
+
+/** Cartão do diagnóstico (mesmo padrão dos outros): capa, situação, revisão, o que falta, 1 botão forte e o ⋯. */
+function DiagCard({ clientId, name, input, status, stage, document, error, loading, ready, approved, busy, onInfo, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
+  clientId: string; name: string; input: DeckInput; status: ConsultRow['status']; stage: string | null; document: string | null; error: string | null
+  loading: boolean; ready: boolean; approved: boolean; busy: boolean
+  onInfo: () => void; onGenerate: () => void; onApprove: () => void; onOpen: () => void; onPdf: () => void; onSend: () => void; onDetails: () => void
+}) {
+  const review = useReview('diagnostico', clientId)
+  const questions = useClientQuestions(clientId)
+  const state = useMemo(() => review.data?.state ?? {}, [review.data?.state])
+  const info = useMemo(() => {
+    if (!ready) return null
+    const doc = applyFills(input.doc, state.fills)
+    const slides = insertAdded(buildSlides({ ...input, doc }, 'paisagem', { internal: true }), doc, state)
+    const fields = findFills(input.doc).filter((f) => state.fills?.[f.path] === undefined).length
+    const shown = new Set(((input.doc.do_cliente ?? []) as { pergunta?: string }[]).slice(0, 7).map((x) => norm(String(x.pergunta ?? ''))))
+    const openQs = (questions.data?.questions ?? []).filter((q) => q.area === 'consultoria' && shown.has(norm(q.question)) && q.status !== 'respondida').length
+    const steps = ((input.doc.plano?.fases ?? []) as { passos?: unknown[] }[]).reduce((a, f) => a + (f.passos?.length ?? 0), 0)
+    const decided = Object.keys(state.steps ?? {}).filter((k) => !k.startsWith('a:')).length
+    return { p: progress(slideKeys(slides), state, fields + openQs), cover: slides[0] ?? null, ideas: steps - decided }
+  }, [ready, input, state, questions.data])
+  const chip = statusChip({ status, document, stage })
+  const done = !!review.data?.finished_at
+  const p = info?.p
+  const missing = !ready
+    ? (loading ? null : status === 'gerando' ? `A IA está ${chip.sub ?? 'trabalhando'}. Leva uns 10 minutos.`
+      : status === 'falta_dados' ? 'Falta: o CPF ou CNPJ (a Receita preenche a empresa)'
+        : status === 'na_fila' ? 'Na fila. Começa em instantes.'
+          : status === 'limite' ? 'Limite do mês com IA atingido (Configurações → Automações).'
+            : status === 'erro' ? `Não deu certo: ${error ?? 'erro desconhecido'}` : null)
+    : p && !approved ? (() => { const m = [p.total - p.reviewed > 0 ? `${p.total - p.reviewed} slides` : null, p.toFill ? `${p.toFill} ${p.toFill === 1 ? 'dado' : 'dados'} para preencher` : null, info!.ideas > 0 ? `${info!.ideas} ideias do plano` : null].filter(Boolean); return m.length ? `Falta: ${m.join(' · ')}` : null })() : null
+  let primary: CardPrimary | null = null
+  if (status === 'falta_dados') primary = { label: 'Informar CNPJ', onClick: onInfo }
+  else if (status === 'na_fila' || status === 'erro') primary = { label: 'Criar', icon: <Sparkles size={15} aria-hidden="true" />, onClick: onGenerate, disabled: busy }
+  else if (ready && !approved) primary = { label: 'Revisar', icon: <Presentation size={15} aria-hidden="true" />, href: diagReviewPath(clientId) }
+  else if (ready) primary = { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: onOpen }
+  return (
+    <DeckCard id="diagnostico" title="Diagnóstico"
+      cover={<DeckThumb slide={info?.cover ?? placeholderCover('Diagnóstico', name)} name={name} dim={!ready} />}
+      status={{ label: done && !approved ? 'Revisado' : chip.label, tone: chip.tone, pulse: status === 'gerando' }}
+      progress={p && !approved ? { pct: p.total ? (p.reviewed / p.total) * 100 : 0, label: `${p.reviewed}/${p.total} revisados` } : null}
+      missing={missing} primary={primary} details={ready ? onDetails : null}
+      menu={[
+        { label: 'Revisar em slides', icon: <Presentation size={15} aria-hidden="true" />, href: diagReviewPath(clientId), hidden: !ready || !approved },
+        { label: 'Ver prévia', icon: <Presentation size={15} aria-hidden="true" />, onClick: onOpen, hidden: !ready || approved },
+        { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: busy, onClick: onApprove },
+        { label: 'Enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onSend },
+        { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onPdf },
+      ]} />
   )
 }
 
 const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, '') } catch { return u } }
 
 function DetailsDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
-  const [tab, setTab] = useState<'fw' | 'fontes'>('fw')
+  const avisos = (doc.avisos ?? []) as string[]
+  const [tab, setTab] = useState<'avisos' | 'fw' | 'fontes'>(avisos.length ? 'avisos' : 'fw')
   const fw = (doc.frameworks ?? []) as { nome: string; como_usou: string }[]
   const fontes = (doc.fontes ?? []) as { url: string; title: string }[]
   return (
     <Dialog open onClose={onClose} title="Como o diagnóstico foi feito" size="md">
       <div className="flex flex-col gap-3">
-        <DialogTabs value={tab} onChange={setTab} options={[{ id: 'fw', label: `Frameworks (${fw.length})` }, { id: 'fontes', label: `Fontes (${fontes.length})` }]} />
+        <DialogTabs value={tab} onChange={setTab} options={[{ id: 'avisos', label: `Avisos (${avisos.length})`, hidden: !avisos.length }, { id: 'fw', label: `Frameworks (${fw.length})` }, { id: 'fontes', label: `Fontes (${fontes.length})` }]} />
+        {tab === 'avisos' && <Paged items={avisos} per={4} render={(a) => <p className="rounded-xl bg-raised px-3 py-2 text-[13px] text-muted">{a} A análise usou a pesquisa na web no lugar.</p>} />}
         {tab === 'fw' && <Paged items={fw} per={5} render={(f) => <p className="text-[13.5px] leading-snug"><b>{f.nome}:</b> {f.como_usou}</p>} />}
         {tab === 'fontes' && (fontes.length ? <Paged items={fontes} per={8} render={(f) => (
           <a href={f.url} target="_blank" rel="noreferrer" className="flex min-h-9 items-center gap-2 text-[13px] text-accent-ink"><ExternalLink size={13} aria-hidden="true" className="shrink-0" /><span className="truncate">{f.title && f.title !== f.url ? f.title : host(f.url)}</span><span className="shrink-0 text-muted">{host(f.url)}</span></a>
@@ -414,24 +527,6 @@ function SendDialogBody({ clientId, name, phone, doc, approved, link, onDeck, on
         </div>
         {!phone && <p className="text-[12px] text-muted">Cliente sem WhatsApp no cadastro: copie e mande pelo seu aparelho. <Link to={`/clientes/${clientId}?passo=empresa`} className="font-semibold">Cadastrar telefone</Link></p>}
         {mark.isError && <p role="alert" className="text-[12.5px] text-warn-ink">{(mark.error as Error).message}</p>}
-      </div>
-    </Dialog>
-  )
-}
-
-// ───────── Baixar apresentação: o usuário escolhe o formato ─────────
-function DeckDialog({ name, onClose, onPick }: { name: string; onClose: () => void; onPick: (o: Orientation) => void }) {
-  const opt = (o: Orientation, label: string, sub: string, box: string) => (
-    <button type="button" onClick={() => onPick(o)} className="flex min-h-24 flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-line-strong p-3 hover:border-ink">
-      <span aria-hidden="true" className={cn('rounded-md border-2 border-accent bg-accent-soft', box)} />
-      <b className="text-[14px]">{label}</b><span className="text-[12px] text-muted">{sub}</span>
-    </button>
-  )
-  return (
-    <Dialog open onClose={onClose} title="Baixar apresentação" description={`${name}: escolha o formato. Na janela que abrir, escolha "Salvar como PDF".`} size="sm">
-      <div className="flex gap-3">
-        {opt('vertical', 'Vertical', 'A4 em pé · celular', 'h-12 w-9')}
-        {opt('paisagem', 'Paisagem', '16:9 · reunião e TV', 'h-9 w-14')}
       </div>
     </Dialog>
   )

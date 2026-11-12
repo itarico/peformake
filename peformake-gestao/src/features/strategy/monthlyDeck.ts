@@ -65,7 +65,9 @@ export function weekHighlights(acts: MonthlyAction[]): { show: MonthlyAction[]; 
   return { show: pick, rest: acts.filter((a) => !isClient(a)).length - pick.length }
 }
 
-export interface MonthlyDeckOpts { name: string; strategy: MonthlyStrategy; clientLogoUrl?: string | null; peformakeLogoUrl?: string | null }
+export interface MonthlyDeckOpts { name: string; strategy: MonthlyStrategy; clientLogoUrl?: string | null; peformakeLogoUrl?: string | null
+  /** Apresentação de uma área (Tráfego, Social e design): entra no selo da capa. */
+  label?: string }
 
 export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] {
   const { strategy: st, name } = x
@@ -86,7 +88,7 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
   const areaTag = (a: MonthlyAction) => `<span class="atag"><span class="dot" style="--c:${DECK_AREA[a.area]}"></span>${esc(AREA[a.area].label)}</span>`
 
   // 1. Capa
-  out.push({ kind: 'cover', body: `${brand}<div class="cover-mid">${logo}<p class="kicker">Estratégia de ${esc(mes)}</p><h1>${esc(name)}</h1></div><p class="cover-foot">${esc(period)} · Consultoria Peformake</p>` })
+  out.push({ kind: 'cover', body: `${brand}<div class="cover-mid">${logo}<p class="kicker">${x.label ? `${esc(x.label)} · ` : ''}Estratégia de ${esc(mes)}</p><h1>${esc(name)}</h1></div><p class="cover-foot">${esc(period)} · Consultoria Peformake</p>` })
 
   // 2. O mês em uma frase + 3 números
   const [metaBig, metaLabel] = d.meta?.numero ? bigNum(d.meta.numero) : ['', '']
@@ -187,4 +189,24 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
 /** DeckInput para SlideViewer, modo apresentação, link público e PDF (mesmas funções do diagnóstico). */
 export function monthlyDeckInput(x: MonthlyDeckOpts): DeckInput {
   return { name: x.name, doc: {}, title: `Estratégia de ${monthName(x.strategy.month)}`, clientLogoUrl: x.clientLogoUrl, peformakeLogoUrl: x.peformakeLogoUrl, slides: (o) => buildMonthlySlides(x, o) }
+}
+
+/** Apresentação de uma área (Tráfego · Social media e design): o mesmo plano só com as ações e as metas da área. */
+export const AREA_DECK = {
+  trafego: { label: 'Tráfego', areas: ['trafego'] as ActionArea[] },
+  social: { label: 'Social media e design', areas: ['social', 'design'] as ActionArea[] },
+} as const
+export type DeckArea = keyof typeof AREA_DECK
+export const isDeckArea = (v: unknown): v is DeckArea => v === 'trafego' || v === 'social'
+
+export function areaStrategy(st: MonthlyStrategy, area: DeckArea): MonthlyStrategy {
+  const ar = AREA_DECK[area].areas
+  const d = st.doc ?? {}
+  return { ...st, actions: st.actions.filter((a) => ar.includes(a.area)), doc: { ...d, metas_area: (d.metas_area ?? []).filter((m) => ar.includes(m.area)), perguntas: [] } }
+}
+
+export function monthlyAreaDeckInput(x: MonthlyDeckOpts, area: DeckArea): DeckInput {
+  const cfg = AREA_DECK[area]
+  const input = monthlyDeckInput({ ...x, strategy: areaStrategy(x.strategy, area), label: cfg.label })
+  return { ...input, title: `${cfg.label} · ${monthName(x.strategy.month)}` }
 }

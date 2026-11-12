@@ -117,7 +117,7 @@ describe('answeredNotices', () => {
   it('avisa quem respondeu e abre a aba Perguntas', () => {
     const base = { client_id: 'c1', name: ' Will motos ', logo_path: null, segment: null, document: null, instagram: null, website: null, status: 'pronto', stage: null, redo_section: null, error: null, updated_at: null, finished_at: null, suggestions: 0, can_generate: true, direction: null } as const
     const n = answeredNotices([{ ...base, answers_new: 2, answers_last: '2026-11-12T10:00:00Z' }, { ...base, client_id: 'c2', answers_new: 0 }])
-    expect(n).toEqual([{ id: 'answers:c1:2026-11-12T10:00:00Z', clientId: 'c1', title: 'Will motos respondeu as perguntas', to: '/estrategia/consultoria?cliente=c1&aba=perguntas' }])
+    expect(n).toEqual([{ id: 'answers:c1:2026-11-12T10:00:00Z', clientId: 'c1', title: 'Will motos respondeu as perguntas', to: '/estrategia/consultoria?cliente=c1&ver=perguntas' }])
   })
 })
 

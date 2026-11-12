@@ -1,6 +1,7 @@
 // Autoteste da aba Estratégia → Consultoria com dados FALSOS no navegador (nada vai ao banco nem à IA).
-// Mede no iPhone 13 e em 1366x800: 1º item da lista até 35% da altura, sem rolagem de lado, cada aba do documento
-// sem rolagem de lado, e os pop-ups (Falta pouco, Direcionamento, Enviar, Ver detalhes) sem rolagem interna.
+// Mede no iPhone 13 e em 1366x800: 1º item da lista até 35% da altura, sem rolagem de lado; no cliente, os cartões de apresentação
+// no mesmo padrão (Diagnóstico, Estratégia mensal e um por área contratada), 1 botão forte por cartão, aviso técnico só no "Ver detalhes",
+// links antigos (?aba=perguntas, ?aba=estrategia) no lugar novo, e os pop-ups (Falta pouco, Enviar, Ver detalhes) sem rolagem interna.
 // Uso: npx vite --config e2e/shell/vite.config.ts & node e2e/consultoria.cjs   (código 1 se algo quebrar)
 const { chromium, devices } = require('playwright');
 const BASE = process.env.BASE || 'http://localhost:5200';
@@ -40,6 +41,7 @@ const doc = {
   confirmar: [{ item: 'Endereço', encontrado: 'Av. Caxangá, 2083' }],
   do_cliente: L('Pergunta', 6).map((q) => ({ pergunta: q, por_que: L('Porque', 1)[0] })),
   frameworks: ['SWOT', 'Pesquisa de nicho', 'Concorrentes', '5 Forças', 'Persona', 'ICP', 'Jornada', 'Proposta de valor', 'Equação de valor', 'Arquétipo'].map((n) => ({ nome: n, como_usou: L('Usou', 1)[0] })),
+  avisos: ['Instagram não lido: créditos do Firecrawl esgotados.'],
   fontes: Array.from({ length: 19 }, (_, k) => ({ url: `https://site-${k}.com.br/pagina/${k}`, title: k % 2 ? `Página ${k} com um título longo de fonte pública` : '' })),
 };
 const docRow = { client_id: id(1), status: 'pronto', stage: 'done', redo_section: null, error: null, doc, finished_at: '2026-11-11T20:00:00Z', approved_at: null, sent_at: null, cost_usd: 1.47, done_at: '2026-11-11T19:55:00Z' };
@@ -52,6 +54,7 @@ async function mock(route) {
   if (req.method() === 'OPTIONS') return route.fulfill({ status: 200, headers: h, body: '' });
   const p = u.pathname;
   if (p === '/rest/v1/rpc/consult_list') return json(rows);
+  if (p === '/rest/v1/rpc/production_clients') return json(rows.map((r, i) => ({ id: r.client_id, name: r.name, is_active: true, areas: i === 0 ? ['trafego', 'social', 'audiovisual', 'consultoria'] : ['consultoria'], recurring: true })));
   if (p.startsWith('/rest/v1/rpc/')) return json(null);
   if (p === '/rest/v1/consult_docs') return json(docRow);
   if (p === '/rest/v1/clients') return json({ phone: '81987122050' });
@@ -103,30 +106,44 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       m = await popup(p); if (m && m.sh > m.ch + 1) fails.push(`${tag}: aba Links do pop-up rola (${m.sh}/${m.ch})`);
       if (!(await p.getByText('Google Maps').count())) fails.push(`${tag}: campo de link do nicho não apareceu`);
       await p.keyboard.press('Escape'); await p.waitForTimeout(200);
-      // Documento
-      await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1), { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
-      // Cabeçalho com UM botão principal "Revisar em slides" (aba nova /revisao/diagnostico/:id); a apresentação é um cartão-resumo.
-      const rev = p.locator('[data-cliente-cabecalho] [data-revisar-slides]');
-      if ((await rev.count()) !== 1) fails.push(`${tag}: cabeçalho sem o botão Revisar em slides`);
-      else if (!/\/revisao\/diagnostico\//.test(await rev.getAttribute('href') || '') || (await rev.getAttribute('target')) !== '_blank') fails.push(`${tag}: Revisar em slides não abre a guia nova`);
-      if (await p.getByRole('link', { name: /Revisar apresentação/ }).count()) fails.push(`${tag}: botão grande repetido no cartão`);
-      const cardH = await p.locator('[data-cartao-revisao]').evaluate((e) => e.getBoundingClientRect().height).catch(() => 999);
-      if (cardH > 220) fails.push(`${tag}: cartão do diagnóstico alto demais (${Math.round(cardH)}px)`);
-      if (!/revisados/.test(await p.locator('[data-testid=card-progresso]').first().innerText().catch(() => ''))) fails.push(`${tag}: cartão sem o progresso`);
-      if (await sideScroll(p)) fails.push(`${tag}: cartão com rolagem de lado`);
-      await p.screenshot({ path: `${OUT}/consultoria-cartao-${tag}.png`, fullPage: true });
-      for (const [btn, name] of [['Ver detalhes', 'Ver detalhes']]) {
-        await p.getByRole('button', { name: btn }).first().click();
-        await p.waitForTimeout(300);
-        m = await popup(p); if (!m) { fails.push(`${tag}: pop-up ${name} não abriu`); continue }
-        if (m.sh > m.ch + 1) fails.push(`${tag}: pop-up "${m.title}" rola (${m.sh}/${m.ch})`);
-        if (name === 'Ver detalhes') { await p.getByRole('tab', { name: /Fontes/ }).click(); await p.waitForTimeout(150); m = await popup(p); if (m && m.sh > m.ch + 1) fails.push(`${tag}: Fontes rola (${m.sh}/${m.ch})`) }
-        if (name === 'Enviar' && !(await p.getByRole('link', { name: 'Abrir no WhatsApp' }).count())) fails.push(`${tag}: sem botão do WhatsApp (envio manual)`);
-        await p.screenshot({ path: `${OUT}/consultoria-popup-${name.replace(/\W/g, '')}-${tag}.png` });
-        await p.keyboard.press('Escape'); await p.waitForTimeout(200);
-      }
-      // Plano do mês: o botão principal do cabeçalho vira a revisão do plano; "Aprovar semana" fica discreto.
-      await p.getByRole('tab', { name: /Plano/ }).click(); await p.waitForTimeout(500);
+      // Cliente: UMA página com os cartões (mesmo padrão), sem faixa de aviso no topo e sem a aba Perguntas.
+      await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1), { waitUntil: 'networkidle' }); await p.waitForTimeout(1200);
+      const tabs = await p.getByRole('tablist', { name: 'Partes da consultoria' }).getByRole('tab').allInnerTexts();
+      if (tabs.join('|') !== 'Planejamento|Relatórios') fails.push(`${tag}: abas do cliente: ${tabs.join('|')}`);
+      for (const c of ['diagnostico', 'estrategia', 'area-trafego', 'area-social', 'area-audiovisual']) if (!(await p.locator(`[data-cartao=${c}]`).count())) fails.push(`${tag}: sem o cartão ${c}`);
+      const strongs = await p.evaluate(() => [...document.querySelectorAll('[data-cartao]')].map((c) => c.querySelectorAll('[data-principal]').length));
+      if (strongs.some((n) => n > 1)) fails.push(`${tag}: cartão com mais de 1 botão forte (${strongs})`);
+      const rev = p.locator('[data-cartao=diagnostico] [data-principal]');
+      if (!/Revisar/.test(await rev.innerText().catch(() => ''))) fails.push(`${tag}: diagnóstico pronto sem "Revisar"`);
+      else if (!/\/revisao\/diagnostico\//.test(await rev.getAttribute('href') || '') || (await rev.getAttribute('target')) !== '_blank') fails.push(`${tag}: Revisar não abre a guia em aba nova`);
+      if (!/revisados/.test(await p.locator('[data-cartao=diagnostico] [data-testid=card-progresso]').innerText().catch(() => ''))) fails.push(`${tag}: diagnóstico sem o progresso`);
+      if (!/Falta:/.test(await p.locator('[data-cartao=diagnostico] [data-falta]').innerText().catch(() => ''))) fails.push(`${tag}: diagnóstico sem o que falta`);
+      if (!/Criar/.test(await p.locator('[data-cartao=estrategia] [data-principal]').innerText().catch(() => ''))) fails.push(`${tag}: estratégia sem plano não mostra "Criar"`);
+      if (!/Aguardando a estratégia/.test(await p.locator('[data-cartao=area-trafego] [data-situacao]').innerText().catch(() => ''))) fails.push(`${tag}: área não espera a estratégia mensal`);
+      if (await p.locator('main').getByText('Instagram não lido').count()) fails.push(`${tag}: aviso técnico ainda aparece na página`);
+      // Mesmo tamanho para todos os cartões.
+      const hs = await p.evaluate(() => [...document.querySelectorAll('[data-cartao]')].map((e) => Math.round(e.getBoundingClientRect().height)));
+      if (new Set(hs).size > 1) fails.push(`${tag}: cartões com alturas diferentes (${hs})`);
+      if (Math.max(...hs) > (dev === 'iphone' ? 230 : 210)) fails.push(`${tag}: cartão alto demais (${Math.max(...hs)}px)`);
+      if (!(await p.locator('[data-perguntas]').count())) fails.push(`${tag}: sem a faixa das perguntas`);
+      if (await sideScroll(p)) fails.push(`${tag}: cliente com rolagem de lado`);
+      await p.screenshot({ path: `${OUT}/consultoria-cartoes-${tag}.png`, fullPage: true });
+      // Ver detalhes do diagnóstico: o aviso técnico fica aqui.
+      await p.locator('[data-cartao=diagnostico]').getByRole('button', { name: 'Ver detalhes' }).click(); await p.waitForTimeout(300);
+      m = await popup(p); if (!m) fails.push(`${tag}: Ver detalhes não abriu`); else if (m.sh > m.ch + 1) fails.push(`${tag}: pop-up "${m.title}" rola (${m.sh}/${m.ch})`);
+      if (!(await p.locator('dialog[open]').getByText('Instagram não lido').count())) fails.push(`${tag}: aviso técnico não está no Ver detalhes`);
+      await p.getByRole('tab', { name: /Fontes/ }).click(); await p.waitForTimeout(150); m = await popup(p); if (m && m.sh > m.ch + 1) fails.push(`${tag}: Fontes rola (${m.sh}/${m.ch})`);
+      await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      // Enviar do cabeçalho: escolhe o que mandar.
+      await p.locator('[data-cliente-cabecalho]').getByRole('button', { name: 'Enviar' }).click(); await p.waitForTimeout(300);
+      m = await popup(p); if (!m) fails.push(`${tag}: Enviar do cabeçalho não abriu`); else if (m.sh > m.ch + 1) fails.push(`${tag}: pop-up "${m.title}" rola (${m.sh}/${m.ch})`);
+      await p.screenshot({ path: `${OUT}/consultoria-enviar-${tag}.png` });
+      await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      // Links antigos (Bete, avisos gravados no banco).
+      await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1) + '&aba=perguntas', { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
+      if (!p.url().includes('ver=perguntas') || p.url().includes('aba=')) fails.push(`${tag}: ?aba=perguntas não foi para as perguntas (${p.url()})`);
+      await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1) + '&aba=estrategia&mes=2026-11', { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
+      if (p.url().includes('aba=') || !(await p.locator('[data-cartao=estrategia]').count())) fails.push(`${tag}: ?aba=estrategia não abriu o Planejamento (${p.url()})`);
       if (errs.length) fails.push(`${tag}: erros na página: ${errs.join(' | ')}`);
       await ctx.close();
     }

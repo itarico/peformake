@@ -399,7 +399,7 @@ export function GoalsChat() {
     const setup = setupNotice(setupPending)
     if (setup) out.push({ id: setup.id, level: 'info', title: setup.title, sub: setup.sub, action: { label: 'Resolver', to: setup.to } })
     for (const c of readyNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `🧭 ${c.title}`, sub: 'Consultoria', action: { label: 'Revisar', to: c.to } })
-    for (const c of monthlyNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `🗓️ ${c.title}`, sub: 'Consultoria · aprovar manda para a fila da área', action: { label: 'Ver as 4 semanas', to: c.to } })
+    for (const c of monthlyNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `🗓️ ${c.title}`, sub: 'Consultoria · aprovar manda para a fila da área', action: { label: 'Revisar', to: c.to } })
     for (const c of answeredNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `💬 ${c.title}`, sub: 'Consultoria · as respostas já entram na estratégia', action: { label: 'Ver respostas', to: c.to } })
     const wa = finWa.data ?? 0
     for (const b of bids.data ?? []) {

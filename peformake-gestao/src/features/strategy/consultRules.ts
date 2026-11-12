@@ -69,16 +69,16 @@ export function readyNotices(rows: ConsultRow[] | undefined): { id: string; clie
   }))
 }
 
-/** Bete e Início: "X respondeu as perguntas" (sem alarde), abrindo a aba Perguntas do cliente. O id muda a cada resposta nova. */
+/** Bete e Início: "X respondeu as perguntas" (sem alarde), abrindo as Perguntas do cliente (?ver=perguntas). O id muda a cada resposta nova. */
 export function answeredNotices(rows: ConsultRow[] | undefined): { id: string; clientId: string; title: string; to: string }[] {
   return (rows ?? []).filter((r) => (r.answers_new ?? 0) > 0).map((r) => ({
     id: `answers:${r.client_id}:${r.answers_last ?? ''}`, clientId: r.client_id,
-    title: `${r.name.trim()} respondeu as perguntas`, to: `${consultLink(r.client_id)}&aba=perguntas`,
+    title: `${r.name.trim()} respondeu as perguntas`, to: `${consultLink(r.client_id)}&ver=perguntas`,
   }))
 }
 
-/** Link da estratégia do mês de um cliente (aba Estratégia, no mês certo). */
-export const monthlyLink = (clientId: string, month?: string | null) => `${consultLink(clientId)}&aba=estrategia${month ? `&mes=${month.slice(0, 7)}` : ''}`
+/** Link da estratégia do mês de um cliente (Planejamento, no mês certo: o cartão Estratégia mensal). */
+export const monthlyLink = (clientId: string, month?: string | null) => `${consultLink(clientId)}${month ? `&mes=${month.slice(0, 7)}` : ''}`
 
 /**
  * Bete e Início: estratégia do mês pronta com ações para aprovar, ou troca sugerida no ajuste de segunda (sem alarde).

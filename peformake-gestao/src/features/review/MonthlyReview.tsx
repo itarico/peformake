@@ -141,7 +141,7 @@ export function MonthlyReview() {
           if (vn) { const a = videos[Number(vn[1]) - 1]?.action; if (!a) return null; const it = [{ id: a.id, title: a.title, sub: 'Audiovisual', state: a.status === 'aprovada' ? 'ok' as const : a.status === 'recusada' ? 'recusado' as const : undefined, link: a.status === 'aprovada' ? a.routed_link : null, locked: a.status !== 'proposta' || decide.isPending }]; return <DecidePanel title="Este vídeo" hint="Aprovar manda para a produção (roteiro) e avisa o videomaker." items={it} onDecide={(id, m: Mark | null) => m && decide.mutate({ id, approve: m === 'ok' })} /> }
           const w = weekOf(sl.kicker); if (w === null) return null; const it = items(w); return it.length ? <DecidePanel title={`Ações da semana ${w}`} hint="Aprovar manda para a produção da área e avisa o responsável." items={it} onDecide={(id, m: Mark | null) => m && decide.mutate({ id, approve: m === 'ok' })} /> : null }}
         onAdd={(sl) => setAdding(sl && weekOf(sl.kicker) ? String(weekOf(sl.kicker)) : null)}
-        summary={summary} backTo={`/estrategia/consultoria?cliente=${clientId}&aba=estrategia&mes=${mes}`} />
+        summary={summary} backTo={`/estrategia/consultoria?cliente=${clientId}&mes=${mes}`} />
       {adding !== false && (
         <AddDialog when={[1, 2, 3, 4].map((w) => ({ id: String(w), label: `Semana ${w}` }))} initialWhen={adding} withDate onClose={() => setAdding(false)}
           onSave={async (v) => {

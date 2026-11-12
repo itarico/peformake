@@ -390,8 +390,10 @@ function DeckDialog({ onClose, onPick }: { onClose: () => void; onPick: (o: Orie
 }
 
 // ───────── Enviar ao cliente: o sistema só prepara (link + mensagem); a pessoa confere e manda pelo WhatsApp dela ─────────
-function SendDialog({ strategyId, clientId, name, month, av, onClose }: { strategyId: string; clientId: string; name: string; month: string; av?: number; onClose: () => void }) {
-  const link = useQuery({ queryKey: ['monthly-link', strategyId, av !== undefined ? 'av' : 'mes'], queryFn: () => (av !== undefined ? monthlyAvShareLink(strategyId) : monthlyShareLink(strategyId)), staleTime: Infinity, retry: false })
+export function SendDialog({ strategyId, clientId, name, month, av, area, onClose }: { strategyId: string; clientId: string; name: string; month: string; av?: number
+  /** Só a parte de uma área (o link público abre filtrado). */
+  area?: 'trafego' | 'social'; onClose: () => void }) {
+  const link = useQuery({ queryKey: ['monthly-link', strategyId, av !== undefined ? 'av' : 'mes'], queryFn: () => (av !== undefined ? monthlyAvShareLink(strategyId) : monthlyShareLink(strategyId)), staleTime: Infinity, retry: false, select: (u: string) => (area ? `${u}?area=${area}` : u) })
   const phone = useQuery({
     queryKey: ['client-phone', clientId],
     queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null },
