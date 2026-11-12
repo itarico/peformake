@@ -27,7 +27,8 @@ Formato da resposta: texto simples, tópicos curtos, sem tabelas. Termine com "#
 export type ResearchPart = 'redes' | 'site' | 'reputacao' | 'nicho' | 'concorrentes' | 'mercado'
 export const RESEARCH_ROUNDS: ResearchPart[][] = [['redes', 'site', 'reputacao', 'nicho'], ['concorrentes', 'mercado']]
 /** Buscas e páginas abertas por parte (cada parte precisa caber em ~2 minutos). */
-export const PART_USES: Record<ResearchPart, [number, number]> = { redes: [4, 2], site: [4, 2], reputacao: [4, 2], nicho: [4, 2], concorrentes: [5, 2], mercado: [4, 2] }
+// reputacao e concorrentes sem abrir páginas (Maps, Reclame Aqui e redes travam até o limite de tempo): só busca.
+export const PART_USES: Record<ResearchPart, [number, number]> = { redes: [4, 2], site: [4, 2], reputacao: [4, 0], nicho: [4, 2], concorrentes: [5, 0], mercado: [4, 2] }
 
 /** O que cada parte da pesquisa levanta. `niche` muda os portais procurados. */
 export function researchTask(part: ResearchPart, niche: string): string {
