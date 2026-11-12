@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Check, ChevronRight, Download, ExternalLink, MessageCircle, Presentation, X } from 'lucide-react'
+import { Check, ChevronRight, Clapperboard, Download, ExternalLink, MessageCircle, Presentation, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -9,8 +9,10 @@ import { EllcazoMark } from '@/components/ui/EllcazoMark'
 import { ask } from '@/components/ui/confirm'
 import { cn } from '@/lib/cn'
 import { avDeckInput } from './avDeck'
+import { printPocket } from './avPocket'
+import { progress, recordingLink, useAvTakes, type AvTake } from './avTakes'
 import { PAPEL, avVideos, scanVideos, whenLabel, type AvVideo } from './avPlan'
-import { openPresentation, printDeck, type Orientation } from './consultDeck'
+import { openPresentation } from './consultDeck'
 import { decideAction, useClientScan } from './monthlyApi'
 import { AREA, actionState, textPages, type MonthlyAction, type MonthlyStrategy } from './monthlyRules'
 
@@ -20,7 +22,9 @@ const pageChars = () => (typeof window !== 'undefined' && window.innerHeight < 7
 /**
  * Plano do mês → Audiovisual: cada vídeo é um cartão (papel no mês, data, objetivo, "vira anúncio") com "Ver roteiro"
  * (pop-up por etapas: Estudo · Roteiro · Filmar · Exemplos · Anúncio). Aprovar manda para a produção, como antes.
- * Botão principal: PDF só com os aprovados, na identidade Ellcazo. No ⋯: aprovar todos, apresentação e WhatsApp (sempre com conferência humana).
+ * Botões: "Modo gravação" (o set, /gravacao/...) e o PDF curto ("roteiro de bolso", só os aprovados, identidade Ellcazo).
+ * No ⋯: aprovar todos, apresentação completa e WhatsApp (sempre com conferência humana).
+ * As falas reescritas no set (monthly_av_takes) já aparecem aqui, no PDF e na apresentação.
  */
 export function AvPlanSection({ st, clientId, name, busy, canDecide, onApprove, onDecided, onSend }: {
   st: MonthlyStrategy; clientId: string; name: string; busy: boolean
@@ -30,9 +34,9 @@ export function AvPlanSection({ st, clientId, name, busy, canDecide, onApprove, 
   onSend: (n: number) => void
 }) {
   const scanQ = useClientScan(clientId, st.month)
-  const videos = useMemo(() => avVideos(st, scanVideos(scanQ.data ?? [])), [st, scanQ.data])
+  const takesQ = useAvTakes(st.id)
+  const videos = useMemo(() => avVideos(st, scanVideos(scanQ.data ?? []), takesQ.data ?? []), [st, scanQ.data, takesQ.data])
   const [open, setOpen] = useState<string | null>(null)
-  const [pdf, setPdf] = useState(false)
   const approved = videos.filter((v) => v.action?.status === 'aprovada')
   const pending = videos.filter((v) => v.action?.status === 'proposta' && canDecide(v.action))
   const input = useMemo(() => avDeckInput({ name, month: st.month, videos: approved }), [name, st.month, approved])
@@ -48,8 +52,11 @@ export function AvPlanSection({ st, clientId, name, busy, canDecide, onApprove, 
     <section aria-label="Vídeos do mês" className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <p className="min-w-0 flex-1 text-[12.5px] text-muted"><span className="theme-ellcazo inline-flex items-center gap-1 font-semibold text-ink"><EllcazoMark className="h-3.5 w-auto text-accent" /> {videos.length} vídeos</span> · {approved.length} aprovados</p>
-        <Button className="min-h-10 px-3 text-[13px]" disabled={!approved.length} title={approved.length ? 'Só os vídeos aprovados, com a identidade da Ellcazo' : 'Aprove pelo menos um vídeo'} onClick={() => setPdf(true)}>
-          <Download size={15} aria-hidden="true" /><span className="sm:hidden">PDF ({approved.length})</span><span className="max-sm:hidden">Baixar PDF do audiovisual ({approved.length} aprovados)</span>
+        <Link to={recordingLink(clientId, st.month)} title="No set: referência tocando, gancho, falas com Feito em cada cena" className="theme-ellcazo inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full bg-fill px-3 text-[13px] font-semibold text-on-fill no-underline">
+          <Clapperboard size={15} aria-hidden="true" /> <span className="max-[380px]:hidden">Modo</span> gravação
+        </Link>
+        <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={!approved.length} title={approved.length ? 'Roteiro de bolso: meia página por vídeo, só os aprovados' : 'Aprove pelo menos um vídeo'} onClick={() => printPocket({ name, month: st.month, videos: approved })}>
+          <Download size={15} aria-hidden="true" /><span className="sm:hidden">PDF</span><span className="max-sm:hidden">PDF curto ({approved.length})</span>
         </Button>
         <ActionMenu label="Mais opções do audiovisual" actions={[
           { label: `Aprovar todos (${pending.length})`, icon: <Check size={15} aria-hidden="true" />, onClick: () => void approveAll(), hidden: !pending.length, disabled: busy },
@@ -58,17 +65,17 @@ export function AvPlanSection({ st, clientId, name, busy, canDecide, onApprove, 
         ]} />
       </div>
       <ul className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {videos.map((v) => <VideoCard key={v.key} v={v} busy={busy} can={!!v.action && canDecide(v.action)} onOpen={() => setOpen(v.key)} onApprove={() => v.action && onApprove(v.action)} />)}
+        {videos.map((v) => <VideoCard key={v.key} v={v} takes={takesQ.data} busy={busy} can={!!v.action && canDecide(v.action)} onOpen={() => setOpen(v.key)} onApprove={() => v.action && onApprove(v.action)} />)}
       </ul>
-      {cur && <VideoDialog key={cur.key} v={cur} busy={busy} can={!!cur.action && canDecide(cur.action)} onClose={() => setOpen(null)}
+      {cur && <VideoDialog key={cur.key} v={cur} recordTo={recordingLink(clientId, st.month, cur.key)} busy={busy} can={!!cur.action && canDecide(cur.action)} onClose={() => setOpen(null)}
         onDecide={(ok) => cur.action && onDecided(async () => { await decideAction(cur.action!.id, ok); setOpen(null) })} />}
-      {pdf && <PdfDialog n={approved.length} onClose={() => setPdf(false)} onPick={(o) => { printDeck(input, o); setPdf(false) }} />}
     </section>
   )
 }
 
-function VideoCard({ v, busy, can, onOpen, onApprove }: { v: AvVideo; busy: boolean; can: boolean; onOpen: () => void; onApprove: () => void }) {
+function VideoCard({ v, takes, busy, can, onOpen, onApprove }: { v: AvVideo; takes: AvTake[] | undefined; busy: boolean; can: boolean; onOpen: () => void; onApprove: () => void }) {
   const s = v.action ? actionState(v.action) : null
+  const pr = progress(v, takes)
   return (
     <li className="flex flex-col gap-1.5 rounded-2xl border border-line bg-surface p-3">
       <div className="flex items-start gap-2">
@@ -80,6 +87,7 @@ function VideoCard({ v, busy, can, onOpen, onApprove }: { v: AvVideo; busy: bool
         <span className="rounded-full bg-raised px-1.5 font-semibold text-ink">{PAPEL[v.papel].label}</span>
         {v.objetivo !== PAPEL[v.papel].label && <span>{v.objetivo}</span>}
         {v.anuncio && <span className="rounded-full bg-accent-soft px-1.5 font-semibold text-accent-ink">vira anúncio</span>}
+        {(pr.recorded || pr.done > 0) && <span className={cn('rounded-full px-1.5 font-semibold', pr.recorded ? 'bg-ok-soft text-ok-ink' : 'bg-raised text-ink')}>{pr.recorded ? 'gravado' : pr.label}</span>}
       </p>
       <div className="mt-auto flex items-center gap-2 pt-1">
         <button type="button" onClick={onOpen} className="inline-flex min-h-9 flex-1 cursor-pointer items-center gap-1 text-[12.5px] font-semibold text-accent-ink">Ver roteiro <ChevronRight size={13} aria-hidden="true" /></button>
@@ -121,7 +129,7 @@ export function videoTabText(v: AvVideo, tab: Tab): string {
   }
 }
 
-function VideoDialog({ v, busy, can, onDecide, onClose }: { v: AvVideo; busy: boolean; can: boolean; onDecide: (ok: boolean) => void; onClose: () => void }) {
+function VideoDialog({ v, recordTo, busy, can, onDecide, onClose }: { v: AvVideo; recordTo: string; busy: boolean; can: boolean; onDecide: (ok: boolean) => void; onClose: () => void }) {
   const [tab, setTab] = useState<Tab>('estudo')
   const [page, setPage] = useState(0)
   const pages = useMemo(() => blockPages(videoTabText(v, tab), pageChars()), [v, tab])
@@ -132,6 +140,7 @@ function VideoDialog({ v, busy, can, onDecide, onClose }: { v: AvVideo; busy: bo
         <div className="flex flex-wrap gap-2">
           {a?.status === 'proposta' && can && <Button disabled={busy} title={`Vai para ${AREA.audiovisual.queue}`} onClick={() => onDecide(true)}><Check size={15} aria-hidden="true" /> Aprovar</Button>}
           {a?.status === 'proposta' && can && <Button variant="secondary" disabled={busy} onClick={() => onDecide(false)}><X size={15} aria-hidden="true" /> Recusar</Button>}
+          {a?.status !== 'recusada' && <Link to={recordTo} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline hover:border-ink"><Clapperboard size={15} aria-hidden="true" /> Gravar</Link>}
           {a?.routed_link && <Link to={a.routed_link} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><ExternalLink size={15} aria-hidden="true" /> Abrir na produção</Link>}
         </div>
       }>
@@ -165,19 +174,5 @@ function TextPages({ pages, page, setPage }: { pages: string[]; page: number; se
         </div>
       )}
     </div>
-  )
-}
-
-function PdfDialog({ n, onClose, onPick }: { n: number; onClose: () => void; onPick: (o: Orientation) => void }) {
-  const opt = (o: Orientation, label: string, sub: string, box: string) => (
-    <button type="button" onClick={() => onPick(o)} className="flex min-h-24 flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-line-strong p-3 hover:border-ink">
-      <span aria-hidden="true" className={cn('rounded-md border-2 border-accent bg-accent-soft', box)} />
-      <b className="text-[14px]">{label}</b><span className="text-[12px] text-muted">{sub}</span>
-    </button>
-  )
-  return (
-    <Dialog open onClose={onClose} title={`PDF do audiovisual (${n})`} description={'Só os vídeos aprovados, com a marca da Ellcazo. Na janela que abrir, escolha "Salvar como PDF".'} size="sm">
-      <div className="theme-ellcazo flex gap-3">{opt('vertical', 'Vertical', 'A4 em pé · celular', 'h-12 w-9')}{opt('paisagem', 'Paisagem', '16:9 · reunião e TV', 'h-9 w-14')}</div>
-    </Dialog>
   )
 }

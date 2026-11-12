@@ -1,7 +1,7 @@
 import { ellcazoSvg } from '@/components/ui/EllcazoMark'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, CalendarCheck, Copy, ExternalLink, FileDown, MapPin, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, CalendarCheck, Clapperboard, Copy, ExternalLink, FileDown, MapPin, Send, Sparkles } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
@@ -123,7 +123,11 @@ function ShootBox({ p }: { p: AvProject }) {
   const link = p.staffToken ? `${window.location.origin}/captacao/${p.staffToken}` : null
   const end = p.shootAt ? new Date(new Date(p.shootAt).getTime() + (p.shootDurationMin ?? 180) * 60_000) : null
   return (
-    <Box id="gravacao" title="Gravação" right={canManageAv && <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setEditing(true)}>{p.shootAt ? 'Reagendar' : 'Agendar'}</Button>}>
+    <Box id="gravacao" title="Gravação" right={<div className="flex flex-wrap gap-2">
+      {/* No set: os vídeos do plano do mês, com a referência tocando e "Feito" em cada cena. */}
+      {['script', 'scheduled', 'captured'].includes(p.status) && <Link to={`/gravacao/projeto/${p.id}`} className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-fill px-3 text-[13px] font-semibold text-on-fill no-underline"><Clapperboard size={14} aria-hidden="true" /> Modo gravação</Link>}
+      {canManageAv && <Button variant="secondary" className="min-h-9 px-3 text-[13px]" onClick={() => setEditing(true)}>{p.shootAt ? 'Reagendar' : 'Agendar'}</Button>}
+    </div>}>
       {p.shootAt ? (
         <div className="flex flex-col gap-1">
           <p className="text-[18px] font-semibold first-letter:uppercase">{shootText(p.shootAt)}{end && ` até ${end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })}`}</p>

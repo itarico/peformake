@@ -8,7 +8,9 @@ import { dm, type MonthlyAction, type MonthlyStrategy } from './monthlyRules'
 
 type Any = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 
-export interface AvScene { n: number; tempo: string; imagem: string; fala: string; tela: string }
+export interface AvScene { n: number; tempo: string; imagem: string; fala: string; tela: string; /** Fala reescrita no set (modo gravação). */ editada?: boolean }
+/** Texto de fala editado no set (monthly_av_takes): cena = índice 0, 1, 2… */
+export interface AvTakeText { video_key: string; scene_index: number; text_override: string | null }
 export interface AvRef { url: string; label: string; note: string; video: boolean; /** Player para tocar dentro da apresentação (TikTok, Instagram, YouTube). */ embed: string }
 /** O papel do vídeo no mês (o "estudo" antes do roteiro). */
 export type AvPapel = 'converter' | 'autoridade' | 'humanizar' | 'conectar' | 'viralizar' | 'didatico'
@@ -159,8 +161,24 @@ const pieceOf = (pecas: Any[], a: MonthlyAction): Any | null => {
 }
 const areaVideo = (a: MonthlyAction) => a.area === 'audiovisual'
 
-/** Os vídeos do mês, na ordem de data. `scan` = varredura das redes (opcional). */
-export function avVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan: ScanVideo[] = []): AvVideo[] {
+/** Troca a fala das cenas pelo texto editado no set (vale para o pop-up, o PDF e a apresentação). */
+export function applyTakes(videos: AvVideo[], takes: AvTakeText[]): AvVideo[] {
+  const m = new Map<string, string>()
+  for (const t of takes ?? []) { const x = str(t.text_override); if (x && t.scene_index >= 0) m.set(`${t.video_key}|${t.scene_index}`, x) }
+  if (!m.size) return videos
+  return videos.map((v) => {
+    if (!v.cenas.some((_, i) => m.has(`${v.key}|${i}`))) return v
+    const cenas = v.cenas.map((c, i) => { const x = m.get(`${v.key}|${i}`); return x && x !== c.fala ? { ...c, fala: x, editada: true } : c })
+    return { ...v, cenas, engajar: { ...v.engajar, gancho: v.engajar.gancho === v.cenas[0]?.fala ? cenas[0]!.fala : v.engajar.gancho } }
+  })
+}
+
+/** Os vídeos do mês, na ordem de data. `scan` = varredura das redes (opcional); `takes` = falas editadas no set (padrão: doc.av_takes do link público). */
+export function avVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan: ScanVideo[] = [], takes?: AvTakeText[]): AvVideo[] {
+  return applyTakes(baseVideos(st, scan), takes ?? (arr((st.doc as Any)?.av_takes) as AvTakeText[]))
+}
+
+function baseVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan: ScanVideo[]): AvVideo[] {
   const p = ((st.doc as Any)?.plano ?? {}) as Any
   const pecas = arr(p.calendario?.pecas)
   const caps = arr(p.calendario?.capturas)

@@ -739,7 +739,7 @@ export function GoalsChat() {
             {piecesOpen.map((p) => <Row key={p.id} to={`/conteudo/peca/${p.id}`} onGo={go} title={`${p.client} · ${p.title}`} sub={PIECE_STATUS[p.status] ?? p.status} right={p.deadline ? `até ${dmy(p.deadline)}` : undefined} tone={p.deadline && p.deadline < cal.iso ? 'warn' : undefined} />)}
           </Group>
           <Group title="Vídeos" empty="Nenhum vídeo com você agora.">
-            {videosOpen.map((v) => <Row key={v.id} to={`/audiovisual/projeto/${v.id}`} onGo={go} title={`${v.client} · ${v.title}`} sub={`${VIDEO_STATUS[v.status] ?? v.status}${v.my_part ? ` · você: ${v.my_part}` : ''}`} right={v.shoot_at && v.status === 'scheduled' ? `grava ${dmy(v.shoot_at.slice(0, 10))}` : v.edit_due_at ? `edita até ${dmy(v.edit_due_at.slice(0, 10))}` : undefined} />)}
+            {videosOpen.map((v) => <Row key={v.id} to={v.status === 'scheduled' && v.shoot_at && new Date(v.shoot_at).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) === new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) ? `/gravacao/projeto/${v.id}` : `/audiovisual/projeto/${v.id}`} onGo={go} title={`${v.client} · ${v.title}`} sub={`${VIDEO_STATUS[v.status] ?? v.status}${v.my_part ? ` · você: ${v.my_part}` : ''}`} right={v.shoot_at && v.status === 'scheduled' ? `grava ${dmy(v.shoot_at.slice(0, 10))}` : v.edit_due_at ? `edita até ${dmy(v.edit_due_at.slice(0, 10))}` : undefined} />)}
           </Group>
         </div>
       )

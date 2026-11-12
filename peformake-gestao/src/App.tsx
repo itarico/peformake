@@ -53,6 +53,8 @@ const PublicDeckPage = lazy(() => import('@/features/strategy/PublicDeckPage').t
 const DiagnosticReview = lazy(() => import('@/features/review/DiagnosticReview').then((m) => ({ default: m.DiagnosticReview })))
 const MonthlyReview = lazy(() => import('@/features/review/MonthlyReview').then((m) => ({ default: m.MonthlyReview })))
 const AreaReviewRedirect = lazy(() => import('@/features/review/AreaReviewRedirect').then((m) => ({ default: m.AreaReviewRedirect })))
+const RecordingPage = lazy(() => import('@/features/av/RecordingPage').then((m) => ({ default: m.RecordingPage })))
+const RecordingFromProject = lazy(() => import('@/features/av/RecordingPage').then((m) => ({ default: m.RecordingFromProject })))
 const MonthlyPlanPage = lazy(() => import('@/features/strategy/MonthlyPlanPage').then((m) => ({ default: m.MonthlyPlanPage })))
 const PayPage = lazy(() => import('@/features/finance/PayPage').then((m) => ({ default: m.PayPage })))
 const PublicQuotePage = lazy(() => import('@/features/av/PublicQuotePage').then((m) => ({ default: m.PublicQuotePage })))
@@ -100,6 +102,11 @@ export function App() {
       <Route path="/captacao/:token" element={<StaffCapturePage />} />
       <Route element={<RequireAuth />}>
         <Route path="tv" element={<TvPage />} />
+        {/* Modo gravação (no set, tela cheia): os vídeos do plano do mês, um por tela. */}
+        <Route element={<RequireRole roles={AV_ROLES} />}>
+          <Route path="gravacao/projeto/:id" element={<RecordingFromProject />} />
+          <Route path="gravacao/:clientId/:mes" element={<RecordingPage />} />
+        </Route>
         {/* Guia de revisão das apresentações (aba nova, sem o menu): diagnóstico, plano do mês e as visões por área. */}
         <Route path="revisao/diagnostico/:clientId" element={<DiagnosticReview />} />
         <Route path="revisao/plano/:clientId/:mes" element={<MonthlyReview />} />

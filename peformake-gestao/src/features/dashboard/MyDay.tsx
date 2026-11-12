@@ -166,6 +166,7 @@ function VideosView({ d, now }: { d: Day; now: number }) {
                 </span>
               </span>
               {c && <Chip tone={c.tone}>{c.text}</Chip>}
+              {v.status === 'scheduled' && v.shoot_at && new Date(v.shoot_at).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) === new Date(now).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) && <Link to={`/gravacao/projeto/${v.id}`} className="inline-flex min-h-9 items-center gap-1 rounded-full bg-fill px-3 text-[12px] font-semibold text-on-fill no-underline"><Clapperboard size={13} aria-hidden="true" /> Modo gravação</Link>}
               {v.staff_token && <Link to={`/captacao/${v.staff_token}`} className="inline-flex min-h-9 items-center gap-1 rounded-full bg-fill px-3 text-[12px] font-semibold text-on-fill no-underline"><Link2 size={13} aria-hidden="true" /> Link da captação</Link>}
             </li>
           )
