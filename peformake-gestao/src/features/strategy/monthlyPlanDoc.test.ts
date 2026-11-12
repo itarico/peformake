@@ -45,7 +45,7 @@ describe('plano de execução (documento)', () => {
     expect(html).toContain('Fornario · Dezembro de 2026')
     expect(html).toContain('Copy não ficou pronta')
     expect(html).toContain('A confirmar (interno)')
-    expect(html).toContain('#B6E61F')
+    expect(html).toContain('#1FC8DB')
   })
   it('data com dia da semana', () => {
     expect(dayLabel('2026-12-05')).toBe('05/12 Sáb')

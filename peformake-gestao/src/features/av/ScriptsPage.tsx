@@ -1,3 +1,4 @@
+import { ellcazoSvg } from '@/components/ui/EllcazoMark'
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Clapperboard, FileDown, Plus, Search } from 'lucide-react'
@@ -37,7 +38,7 @@ function exportScript(s: Script, client: string) {
 header{background:#1b1d18;color:#f4f7ea;padding:28px 32px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .k{color:#b5e61d;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}h1{font-size:26px;margin:8px 0 4px;line-height:1.2}
 .m{font-size:13px;opacity:.75}main{padding:24px 32px;font-size:15px;line-height:1.65;white-space:pre-wrap}footer{padding:0 32px 24px;font-size:11px;color:#6b7280}</style></head>
-<body><header><div class="k">Ellcazo · Produtora audiovisual</div><h1>${esc(s.title)}</h1><div class="m">Roteiro para ${esc(client)} · ${when(s.createdAt)}</div></header>
+<body><header><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">${ellcazoSvg('#b5e61d', 34)}<div class="k">Ellcazo · Produtora audiovisual</div></div><h1>${esc(s.title)}</h1><div class="m">Roteiro para ${esc(client)} · ${when(s.createdAt)}</div></header>
 <main>${esc(s.body || 'Roteiro sem texto.')}</main><footer>Ellcazo · Roteiro aprovado antes da gravação.</footer>
 <script>window.onload=function(){window.print()}</script></body></html>`)
   w.document.close()

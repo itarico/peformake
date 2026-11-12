@@ -1,3 +1,4 @@
+import { ellcazoSvg } from '@/components/ui/EllcazoMark'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, CalendarCheck, Copy, ExternalLink, FileDown, MapPin, Send, Sparkles } from 'lucide-react'
@@ -70,7 +71,7 @@ function ScriptBox({ p }: { p: AvProject }) {
     const w = window.open('', '_blank')
     if (!w) return
     const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string))
-    w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Roteiro · ${esc(clientName(p.clientId))}</title><style>@page{margin:18mm}body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#15181e;margin:0}header{border-bottom:3px solid #c6f432;padding-bottom:10px;margin-bottom:18px}small{letter-spacing:.18em;text-transform:uppercase;color:#5b6b00;font-weight:700;font-size:11px}h1{font-size:24px;margin:6px 0 2px}p.meta{color:#555;font-size:13px;margin:0}pre{white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.6}</style></head><body><header><small>Ellcazo · Produtora audiovisual</small><h1>${esc(p.title)}</h1><p class="meta">${esc(clientName(p.clientId))}${p.shootAt ? ' · Gravação ' + esc(shootText(p.shootAt)) : ''}</p></header><pre>${esc(text)}</pre><script>window.onload=()=>window.print()</script></body></html>`)
+    w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Roteiro · ${esc(clientName(p.clientId))}</title><style>@page{margin:18mm}body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#15181e;margin:0}header{border-bottom:3px solid #c6f432;padding-bottom:10px;margin-bottom:18px}small{letter-spacing:.18em;text-transform:uppercase;color:#5b6b00;font-weight:700;font-size:11px}h1{font-size:24px;margin:6px 0 2px}p.meta{color:#555;font-size:13px;margin:0}pre{white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.6}</style></head><body><header><div style="display:flex;align-items:center;gap:10px">${ellcazoSvg('#72b52f', 30)}<small>Ellcazo · Produtora audiovisual</small></div><h1>${esc(p.title)}</h1><p class="meta">${esc(clientName(p.clientId))}${p.shootAt ? ' · Gravação ' + esc(shootText(p.shootAt)) : ''}</p></header><pre>${esc(text)}</pre><script>window.onload=()=>window.print()</script></body></html>`)
     w.document.close()
   }
   const dirty = text !== (p.script ?? '')

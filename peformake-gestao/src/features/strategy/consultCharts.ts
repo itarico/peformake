@@ -4,9 +4,9 @@ type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-expl
 
 // Identidade das apresentações (Ellcazo): verde-limão + branco, detalhes em preto. 0 = destaque (cliente/principal), 1 = preto (alerta/rival),
 // 2 = verde da marca (bom), 3 = cinza (médio/referência). A tela do sistema usa outra paleta (components/charts).
-export const SERIES: readonly string[] & { 0: string; 1: string; 2: string; 3: string } = ['#B6E61F', '#0E0F0C', '#72B52F', '#A3A99B', '#5D6358', '#D4DBC8']
+export const SERIES: readonly string[] & { 0: string; 1: string; 2: string; 3: string } = ['#1FC8DB', '#0B3C44', '#056F84', '#9FB4BA', '#5D6C73', '#CFE0E4']
 /** Cor do texto em cima de uma cor da série: preto nas claras, branco nas escuras. */
-export const onColor = (c: string): string => (['#0E0F0C', '#5D6358'].includes(c) ? '#FFFFFF' : '#0E0F0C')
+export const onColor = (c: string): string => (['#0B3C44', '#5D6C73'].includes(c) ? '#FFFFFF' : '#0B3C44')
 const INK = 'currentColor'
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 /** Rótulo sem "…": quebra em até 2 linhas nas palavras; se ainda sobrar, fica a parte que cabe, terminando numa palavra inteira. */
@@ -135,7 +135,7 @@ export function positioningSvg(pts: { name: string; x: number; y: number; me: bo
     let y = py(p.y)
     for (let k = 1; placed.some((q) => Math.abs(q.y - y) < 22 && Math.abs(q.x - x) < 130) && k < 12; k++) y = py(p.y) + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 24
     placed.push({ x, y })
-    body += `<circle cx="${x}" cy="${y}" r="${p.me ? 10 : 7}" fill="${p.me ? SERIES[0] : SERIES[1]}" fill-opacity="${p.me ? 1 : 0.85}" stroke="${p.me ? '#0E0F0C' : '#fff'}" stroke-width="2"/>`
+    body += `<circle cx="${x}" cy="${y}" r="${p.me ? 10 : 7}" fill="${p.me ? SERIES[0] : SERIES[1]}" fill-opacity="${p.me ? 1 : 0.85}" stroke="${p.me ? '#0B3C44' : '#fff'}" stroke-width="2"/>`
     const right = x > L + PW * 0.62
     body += `<text x="${right ? x - 13 : x + 13}" y="${y + 4}" text-anchor="${right ? 'end' : 'start'}" font-size="12.5" font-weight="${p.me ? 700 : 500}" fill="${INK}">${tl(p.name, 20, right ? x - 13 : x + 13)}</text>`
   }

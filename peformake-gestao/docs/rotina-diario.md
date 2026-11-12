@@ -30,6 +30,8 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-13 · Apresentações voltam para a identidade da Peformake (ciano/petróleo); só o audiovisual (roteiros em PDF) usa a logo e as cores da Ellcazo. Regra anotada no CLAUDE.md. (nuvem)
+
 ## 2026-11-12 · Consultoria: edição, perguntas, link público e portal no banco + tela publicada (nuvem)
 - Migração consultoria_edicao aplicada sem as 3 linhas "drop ... if exists" (nada existia; assim não pede confirmação). 21 perguntas criadas a partir dos 3 diagnósticos; comunicação estruturada de 3 clientes.
 - Tela publicada a partir de cópia limpa do HEAD (tsc ok, vitest 60/414 ok, e2e/consultoria.cjs ok). O PENDENTE 1 da passagem para o PC está resolvido; a sessão da nuvem continua o trabalho a pedido do Italo ("faça").

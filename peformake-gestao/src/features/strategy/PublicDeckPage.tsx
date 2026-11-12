@@ -44,7 +44,7 @@ export function PublicDeckPage({ kind = 'diagnostico' }: { kind?: 'diagnostico' 
   }, [q.data, o, kind])
 
   const msg = (t: string, sub?: string) => (
-    <main className="grid min-h-dvh place-items-center bg-[#0E0F0C] p-6 text-center text-[#D9DCD3]">
+    <main className="grid min-h-dvh place-items-center bg-[#0B3C44] p-6 text-center text-[#CFE3E7]">
       <div><p className="text-[18px] font-semibold text-white">{t}</p>{sub && <p className="mt-1 text-[14px]">{sub}</p>}</div>
     </main>
   )

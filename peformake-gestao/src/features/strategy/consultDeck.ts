@@ -234,7 +234,7 @@ export function deckCss(o: Orientation): string {
   const k = land ? 1 : 1.5
   const f = (n: number) => `calc(${(n * k).toFixed(2)}cqw * var(--z, 1))`
   return `
-  .pfd{--ink:#0E0F0C;--muted:#5D6358;--acc:#3F6B0F;--fill:#B6E61F;--deep:#72B52F;--soft:#F1F8DC;--line:#E3E6DD;--canvas:#F3F5EF;color:var(--ink);font-family:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pfd{--ink:#0B3C44;--muted:#5D6C73;--acc:#007A8A;--fill:#1FC8DB;--deep:#056F84;--soft:#E6F6F8;--line:#D9E2E5;--canvas:#F3F7F8;color:var(--ink);font-family:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .pfd *{box-sizing:border-box;margin:0;padding:0}
   .pfd .slide{container-type:inline-size;position:relative;width:100%;aspect-ratio:${land ? '16 / 9' : '210 / 297'};background:#fff;overflow:hidden;break-after:page;break-inside:avoid;page-break-after:always}
   .pfd .slide>.in{position:absolute;inset:0;display:flex;flex-direction:column;padding:${land ? '5cqw 6cqw 6cqw' : '9cqw 8cqw 11cqw'}}
@@ -247,12 +247,12 @@ export function deckCss(o: Orientation): string {
   .pfd .foot{position:absolute;left:${land ? '6cqw' : '8cqw'};right:${land ? '6cqw' : '8cqw'};bottom:${land ? '2cqw' : '3.6cqw'};display:flex;justify-content:space-between;color:var(--muted);font-size:${f(1.15)}}
   .pfd .foot b{color:var(--ink)} .pfd .foot b:before{content:"";display:inline-block;width:.55em;height:.55em;border-radius:50%;background:var(--fill);margin-right:.45em;vertical-align:.05em}
   .pfd .slide.internal{background:#fffaf0} .pfd .slide.internal .kick{color:#b06a00}
-  .pfd .cover{background:radial-gradient(circle at 88% 12%,rgba(182,230,31,.22) 0,rgba(182,230,31,0) 42%),#0E0F0C;color:#fff} .pfd .cover:after{content:"";position:absolute;left:${land ? '6cqw' : '8cqw'};bottom:0;width:${land ? '14cqw' : '22cqw'};height:${f(.8)};background:var(--fill)} .pfd .cover>.in{justify-content:space-between;padding-bottom:${land ? '5cqw' : '9cqw'}}
+  .pfd .cover{background:radial-gradient(circle at 88% 12%,rgba(31,200,219,.22) 0,rgba(31,200,219,0) 42%),#0B3C44;color:#fff} .pfd .cover:after{content:"";position:absolute;left:${land ? '6cqw' : '8cqw'};bottom:0;width:${land ? '14cqw' : '22cqw'};height:${f(.8)};background:var(--fill)} .pfd .cover>.in{justify-content:space-between;padding-bottom:${land ? '5cqw' : '9cqw'}}
   .pfd .cover .cover-top{display:flex;align-items:center;gap:${f(1)}}
   .pfd .cover .pf-logo{height:${f(4.2)};width:auto;filter:brightness(0) invert(1)}
   .pfd .cover .brand{font-weight:700;font-size:${f(2.2)};letter-spacing:-.01em}
   .pfd .cover .cli-logo{height:${f(7)};width:auto;max-width:40cqw;background:#fff;border-radius:${f(1.2)};padding:${f(.8)};margin-bottom:${f(1.8)}}
-  .pfd .cover .cli-mono{display:inline-grid;place-items:center;width:${f(7)};height:${f(7)};border-radius:${f(1.8)};background:var(--fill);color:#0E0F0C;font-weight:800;font-size:${f(2.8)};margin-bottom:${f(1.8)}}
+  .pfd .cover .cli-mono{display:inline-grid;place-items:center;width:${f(7)};height:${f(7)};border-radius:${f(1.8)};background:var(--fill);color:#0B3C44;font-weight:800;font-size:${f(2.8)};margin-bottom:${f(1.8)}}
   .pfd .cover .kicker{color:var(--fill);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:${f(1.4)}}
   .pfd .cover .cover-mid{padding-bottom:${f(1)}} .pfd .cover h1{font-size:${f(5.8)};line-height:1.04;font-weight:800;letter-spacing:-.035em;margin-top:${f(.8)};max-width:${land ? '78cqw' : '84cqw'}}
   .pfd .cover .cover-foot{opacity:.75;font-size:${f(1.2)}} .pfd .cover .lead{color:#fff;opacity:.9;margin-top:${f(1.4)};max-width:${land ? '70cqw' : '84cqw'}}
@@ -279,7 +279,7 @@ export function deckCss(o: Orientation): string {
   .pfd .stack .find{display:grid;grid-template-columns:${f(26)} 1fr;align-items:center;column-gap:${f(2)}} .pfd .stack .find .tag{grid-column:1/-1}
   .pfd .op{border-top:${f(.6)} solid var(--c)} .pfd .card.op .est{font-weight:800;color:var(--acc);font-size:${f(1.9)};line-height:1.15}
   .pfd .card.ind .meta-big{font-size:${f(2.8)};line-height:1.05;font-weight:800;color:var(--ink)} .pfd .card.ind{border-top:${f(.6)} solid var(--c)}
-  .pfd .card .pro{color:#3F6B0F} .pfd .card .con{color:#8f2d1c}
+  .pfd .card .pro{color:#007A8A} .pfd .card .con{color:#8f2d1c}
   .pfd .ic{width:${f(2.8)};height:${f(2.8)};color:var(--ink)}
   .pfd .bul{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .bul li{position:relative;padding-left:${f(1.8)};font-size:${f(2)};line-height:1.3}
   .pfd .card .bul li{font-size:${f(1.7)}} .pfd .sw .bul{gap:${f(.7)}} .pfd .sw .bul li{font-size:${f(1.5)}}
@@ -289,10 +289,10 @@ export function deckCss(o: Orientation): string {
   .pfd .steps li>span:last-child{display:flex;flex-direction:column;gap:${f(.5)}} .pfd .steps small{font-size:${f(1.4)};color:var(--muted)}
   .pfd .qs{gap:${f(1.3)}} .pfd .qs li{font-size:${f(1.95)}}
   .pfd .num{flex:none;display:inline-grid;place-items:center;width:${f(3.2)};height:${f(3.2)};border-radius:50%;background:var(--fill);color:var(--ink);font-weight:800;font-size:${f(1.5)}}
-  .pfd .ans{color:#3F6B0F;font-size:${f(1.4)};margin-top:${f(.3)}}
+  .pfd .ans{color:#007A8A;font-size:${f(1.4)};margin-top:${f(.3)}}
   .pfd .swot{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:${f(1.4)};flex:1;min-height:0}
   .pfd .sw{border-radius:${f(1.6)};padding:${f(1.5)} ${f(1.8)};overflow:hidden} .pfd .sw h3{font-size:${f(1.9)};margin-bottom:${f(.7)}}
-  .pfd .sw.ok{background:var(--soft)} .pfd .sw.warn{background:#0E0F0C;color:#fff} .pfd .sw.warn .bul li:before{background:var(--fill)} .pfd .sw.acc{background:#E4F2B8} .pfd .sw.gray{background:var(--canvas)}
+  .pfd .sw.ok{background:var(--soft)} .pfd .sw.warn{background:#0B3C44;color:#fff} .pfd .sw.warn .bul li:before{background:var(--fill)} .pfd .sw.acc{background:#D3F0F4} .pfd .sw.gray{background:var(--canvas)}
   .pfd .journey{list-style:none;display:grid;grid-template-columns:repeat(${land ? 5 : 1},1fr);gap:${f(1.4)}}
   .pfd .journey li{border-${land ? 'top' : 'left'}:${f(.6)} solid var(--c);background:var(--canvas);border-radius:${f(1.2)};padding:${f(1.6)};display:flex;flex-direction:${land ? 'column' : 'row'};gap:${f(.8)};align-items:${land ? 'flex-start' : 'center'};font-size:${f(1.6)}}
   .pfd .journey b{font-size:${f(1.9)}} ${land ? '' : `.pfd .journey b{flex:0 0 ${f(18)}}`}
@@ -372,7 +372,7 @@ export function deckHtml(input: DeckInput, o: Orientation): string {
 <title>${esc(input.title ?? 'Diagnóstico')} · ${esc(input.name)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>@page{size:${page};margin:0}html,body{margin:0;background:#D9DCD3}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}
+<style>@page{size:${page};margin:0}html,body{margin:0;background:#CFE3E7}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .pfd{width:min(100%,${o === 'paisagem' ? '1100px' : '760px'})} .pfd .slide{box-shadow:0 2px 14px rgba(0,0,0,.18);margin-bottom:16px}
 @media print{html,body{background:#fff;padding:0;gap:0}.pfd{width:${o === 'paisagem' ? '338.67mm' : '210mm'}}.pfd .slide{width:${o === 'paisagem' ? '338.67mm' : '210mm'};height:${o === 'paisagem' ? '190.5mm' : '297mm'};aspect-ratio:auto;box-shadow:none;margin:0}}
 ${deckCss(o)}</style></head><body><div class="pfd">${deckSlidesHtml(input, o)}</div>
@@ -389,12 +389,12 @@ export function presentHtml(input: DeckInput, o: Orientation): string {
 <title>${esc(input.name)} · Peformake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>html,body{margin:0;height:100%;background:#0E0F0C;overflow:hidden;font-family:Geist,system-ui,sans-serif}
+<style>html,body{margin:0;height:100%;background:#0B3C44;overflow:hidden;font-family:Geist,system-ui,sans-serif}
 .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px 64px}
 .pfd{width:min(calc(100vw - 24px),calc((100dvh - 88px) * ${ratio.toFixed(4)}))}
 .pfd .slide{display:none;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.45)} .pfd .slide.on{display:block}
 .pfd.measure .slide{display:block;position:absolute;visibility:hidden;width:inherit}
-.bar{position:fixed;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:10px;color:#D9DCD3;font-size:14px}
+.bar{position:fixed;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:10px;color:#CFE3E7;font-size:14px}
 .bar button{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:20px}
 .bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
 ${deckCss(o)}</style></head><body><div class="stage"><div class="pfd measure">${deckSlidesHtml(input, o)}</div></div>

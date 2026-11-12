@@ -1,13 +1,13 @@
 // Plano de execução do mês (documento da equipe): o quê, como e quando, com a copy de cada peça.
 // Separado da apresentação do cliente (monthlyDeck). Vem de monthly_strategies.doc.plano (função monthly-strategy).
-// Identidade: lima #B6E61F, lima escuro #72B52F, preto #0E0F0C e branco. Tudo é escapado; só links http(s) viram link.
+// Identidade Peformake: ciano #1FC8DB, petróleo #056F84, azul-escuro #0B3C44 e branco. Tudo é escapado; só links http(s) viram link.
 
 type Any = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export interface PlanInput { name: string; month: string; doc: Any | null | undefined }
 
 const OBJ_LABEL: Record<string, string> = { vender: 'Vender', autoridade: 'Autoridade', posicionamento: 'Posicionamento', relacionamento: 'Relacionamento', educar: 'Educar' }
-const OBJ_COLOR: Record<string, string> = { vender: '#72B52F', autoridade: '#0E0F0C', posicionamento: '#B6E61F', relacionamento: '#9AA39A', educar: '#D7F27A' }
+const OBJ_COLOR: Record<string, string> = { vender: '#056F84', autoridade: '#0B3C44', posicionamento: '#1FC8DB', relacionamento: '#9FB4BA', educar: '#9FD9E3' }
 const FUNIL_LABEL: Record<string, string> = { atrair: 'Atrair', nutrir: 'Nutrir', converter: 'Converter', fidelizar: 'Fidelizar' }
 const FORMATO_LABEL: Record<string, string> = { carrossel: 'Carrossel', post: 'Post', reels: 'Reels', story: 'Story', anuncio: 'Anúncio' }
 const WEEKDAY = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
@@ -86,7 +86,7 @@ function pieceCard(p: Any): string {
 }
 
 const CSS = `
-:root{--lime:#B6E61F;--deep:#72B52F;--ink:#0E0F0C;--paper:#fff;--soft:#F4F8E8;--line:#DDE3D2;--muted:#5D6459}
+:root{--lime:#1FC8DB;--deep:#056F84;--ink:#0B3C44;--paper:#fff;--soft:#EAF6F8;--line:#D9E2E5;--muted:#5D6C73}
 *{box-sizing:border-box}html,body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
 .wrap{max-width:980px;margin:0 auto;padding:0 16px 48px}
 header.cover{background:var(--ink);color:#fff;padding:28px 16px 22px;border-bottom:6px solid var(--lime)}

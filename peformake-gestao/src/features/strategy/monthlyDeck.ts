@@ -11,9 +11,9 @@ import { AREA, dm, monthName, pastWeeks, weekRange, weeksOf, type ActionArea, ty
 
 const initials = (n: string) => n.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
 
-/** Cores das áreas na apresentação (identidade: verde-limão, preto e cinzas). A tela do sistema usa AREA.color. */
+/** Cores das áreas na apresentação (identidade Peformake: ciano, petróleo e cinzas). A tela do sistema usa AREA.color. */
 export const DECK_AREA: Record<ActionArea, string> = {
-  trafego: '#B6E61F', social: '#0E0F0C', design: '#72B52F', audiovisual: '#5D6358', vendas: '#A3A99B', atendimento: '#D4DBC8',
+  trafego: '#1FC8DB', social: '#0B3C44', design: '#056F84', audiovisual: '#5D6C73', vendas: '#9FB4BA', atendimento: '#CFE0E4',
 }
 const SHOW: ActionArea[] = ['trafego', 'social', 'design', 'audiovisual', 'vendas']
 
@@ -101,7 +101,7 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
   const leit = (d.leitura ?? []).filter((l) => !INTERNAL.test(`${l.fato} ${l.decisao} ${l.numero}`))
   if (leit.length) out.push({
     kicker: 'Dado vira decisão', title: 'O que os números dizem',
-    body: `<div class="${land ? 'grid g3' : 'stack lst'}">${leit.slice(0, 3).map((l) => { const n = shortNum(l.numero); return `<div class="card find" style="--c:#B6E61F"><p class="num-big${n.length > 12 ? ' long' : ''}">${esc(words(n, 6))}</p><p>${esc(words(clientText(l.fato) || l.fato, 16))}</p><h3>→ ${esc(words(sentences(l.decisao)[0] ?? l.decisao, 14))}</h3></div>` }).join('')}</div>`,
+    body: `<div class="${land ? 'grid g3' : 'stack lst'}">${leit.slice(0, 3).map((l) => { const n = shortNum(l.numero); return `<div class="card find" style="--c:#1FC8DB"><p class="num-big${n.length > 12 ? ' long' : ''}">${esc(words(n, 6))}</p><p>${esc(words(clientText(l.fato) || l.fato, 16))}</p><h3>→ ${esc(words(sentences(l.decisao)[0] ?? l.decisao, 14))}</h3></div>` }).join('')}</div>`,
     details: { title: 'Dado vira decisão', items: (d.leitura ?? []).map((l) => ({ k: `${l.numero} · ${l.fato}`, v: `Decisão: ${l.decisao}` })) },
   })
 
@@ -137,7 +137,7 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
   const metas = (d.metas_area ?? []).filter((m) => SHOW.includes(m.area)).slice(0, 4)
   if (metas.length || metaBig) out.push({
     kicker: 'Metas', title: 'Como vamos medir',
-    body: `${metaBig ? `<div class="metabox"><b>${esc(words(metaBig, 4))}</b><span>${esc(words(metaLabel, 8))} · a meta do mês</span></div>` : ''}${metas.length ? `<div class="grid ${land ? `g${metas.length}` : 'g2'}">${metas.map((m) => `<div class="card ind" style="--c:${DECK_AREA[m.area] ?? '#B6E61F'}"><p class="atag">${esc(AREA[m.area]?.label ?? m.area)}</p><p class="meta-big">${esc(words(tight(m.numero), 6))}</p><p>${esc(words(m.meta, 12))}</p></div>`).join('')}</div>` : ''}`,
+    body: `${metaBig ? `<div class="metabox"><b>${esc(words(metaBig, 4))}</b><span>${esc(words(metaLabel, 8))} · a meta do mês</span></div>` : ''}${metas.length ? `<div class="grid ${land ? `g${metas.length}` : 'g2'}">${metas.map((m) => `<div class="card ind" style="--c:${DECK_AREA[m.area] ?? '#1FC8DB'}"><p class="atag">${esc(AREA[m.area]?.label ?? m.area)}</p><p class="meta-big">${esc(words(tight(m.numero), 6))}</p><p>${esc(words(m.meta, 12))}</p></div>`).join('')}</div>` : ''}`,
     details: { title: 'Como medimos', items: [d.meta?.como_medir ? { k: 'Meta do mês', v: d.meta.como_medir } : null, ...metas.map((m) => ({ k: AREA[m.area]?.label ?? m.area, v: `${m.numero}: ${m.meta}` }))].filter(Boolean) as { k?: string; v: string }[] },
   })
 
@@ -145,7 +145,7 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
   const ofertas = (d.ofertas ?? []).slice(0, 3)
   if (ofertas.length) out.push({
     kicker: 'Ofertas', title: ofertas.length === 1 ? 'A oferta do mês' : 'As ofertas do mês',
-    body: `<div class="${land ? `grid g${ofertas.length}` : 'stack'}">${ofertas.map((f) => `<div class="card soft xl"><h3 class="hl" style="--c:#B6E61F">${esc(words(f.nome, 8))}</h3><p>${esc(words(clientText(f.condicao) || clientText(f.porque), 18))}</p></div>`).join('')}</div>`,
+    body: `<div class="${land ? `grid g${ofertas.length}` : 'stack'}">${ofertas.map((f) => `<div class="card soft xl"><h3 class="hl" style="--c:#1FC8DB">${esc(words(f.nome, 8))}</h3><p>${esc(words(clientText(f.condicao) || clientText(f.porque), 18))}</p></div>`).join('')}</div>`,
     details: { title: 'Ofertas', items: (d.ofertas ?? []).map((f) => ({ k: f.nome, v: `${f.condicao} · Por quê: ${f.porque}` })) },
   })
 

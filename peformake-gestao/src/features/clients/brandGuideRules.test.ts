@@ -38,9 +38,9 @@ describe('guia da marca', () => {
     expect(focusLines(g, 'audiovisual').map((l) => l.label)).toEqual(['Mostrar', 'Apresentador', 'Foto'])
     expect(focusLines(g, 'design')[0]?.label).toBe('Layout')
   })
-  it('PDF na identidade verde-limão, sem HTML do texto', () => {
+  it('PDF na identidade da Peformake, sem HTML do texto', () => {
     const html = guideHtml('A <b>', resolveGuide({ client, voice, guide: {} }))
-    expect(html).toContain('#B6E61F')
+    expect(html).toContain('#1FC8DB')
     expect(html).toContain('A &lt;b&gt;')
     expect(html).toContain('Visual')
   })

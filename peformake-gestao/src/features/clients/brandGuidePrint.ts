@@ -1,8 +1,8 @@
-// Guia da marca em PDF (impressão do navegador), na identidade das apresentações: verde-limão, branco e detalhes pretos.
+// Guia da marca em PDF (impressão do navegador), na identidade da Peformake (ciano, petróleo e branco).
 // Uma página A4 por parte do guia, texto curto, nada de parágrafo. Serve para mandar ao freelancer ou imprimir para a gravação.
 import { GUIDE_SECTIONS, inkOn, type BrandGuide } from './brandGuideRules'
 
-const LIME = '#B6E61F', DEEP = '#72B52F', BLACK = '#0E0F0C'
+const LIME = '#1FC8DB', DEEP = '#056F84', BLACK = '#0B3C44'
 const esc = (v: unknown) => String(v ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 const li = (items: string[]) => (items.length ? `<ul>${items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '')
 const row = (k: string, v: string) => (v ? `<div class="row"><b>${esc(k)}</b><p>${esc(v)}</p></div>` : '')
