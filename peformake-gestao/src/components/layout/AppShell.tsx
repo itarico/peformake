@@ -1,4 +1,5 @@
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useRef, useState, Suspense } from 'react'
+import { useIsFetching } from '@tanstack/react-query'
 import { AtSign, BookOpen, Handshake, Clapperboard, Compass, Gauge, Home, Megaphone, MessageCircle, MoreHorizontal, Palette, Plug, Settings, ShieldCheck, Users, UsersRound, Wallet, X, type LucideIcon } from 'lucide-react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
@@ -188,6 +189,25 @@ function ViewAsBar() {
   )
 }
 
+/**
+ * A Bete (bolha) faz ~14 leituras ao abrir. Ela espera a tela atual terminar de carregar (ou no máximo 2,5 s)
+ * para não disputar o banco com o que a pessoa abriu: o Início aparece primeiro, a Bete logo depois.
+ */
+function DeferredGoalsChat() {
+  const fetching = useIsFetching()
+  const [on, setOn] = useState(false)
+  const start = useRef(Date.now())
+  useEffect(() => {
+    if (on) return
+    const elapsed = Date.now() - start.current
+    const left = Math.max(0, 2500 - elapsed)
+    // Tela parada (nada carregando) por um instante: pode abrir. O mínimo de ~1,2 s cobre o tempo de baixar a tela.
+    const t = setTimeout(() => setOn(true), fetching === 0 ? Math.min(left, Math.max(400, 1200 - elapsed)) : left)
+    return () => clearTimeout(t)
+  }, [fetching, on])
+  return on ? <GoalsChat /> : null
+}
+
 export function AppShell() {
   const auth = useAuth()
   useRealtimeSync(auth.state.status === 'ready')
@@ -232,7 +252,7 @@ export function AppShell() {
         </div>
       </main>
 
-      <GoalsChat />
+      <DeferredGoalsChat />
       <TabBar moreOpen={more} onMore={() => setMore((v) => !v)} />
       <MoreSheet open={more} onClose={() => setMore(false)} />
     </div>

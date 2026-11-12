@@ -34,9 +34,9 @@ const STATUS = {
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
-export function useAutomations() {
+export function useAutomations(staleTime = 30_000, enabled = true) {
   return useQuery({
-    queryKey: ['automations'], staleTime: 30_000,
+    queryKey: ['automations'], staleTime, enabled,
     queryFn: async () => {
       const { data, error } = await rpc('automation_overview')
       if (error) throw new Error(error.message)
@@ -65,7 +65,9 @@ export function AutomationsLink({ module, modules }: { module?: AutoModule; modu
   const roles = state.status === 'ready' ? state.user.roles : []
   const allowed = roles.includes('admin') || roles.includes('head_marketing')
   const mods = modules ?? (module ? [module] : [])
-  const list = useAutomations()
+  // Só o ponto vermelho do ícone: não precisa reler a cada tela (5 min); a central aberta relê na hora.
+  // Quem não vê o ícone (não é admin nem gestor) nem chega a perguntar ao banco.
+  const list = useAutomations(5 * 60_000, allowed && mods.length > 0)
   const [open, setOpen] = useState(false)
   if (!allowed || !mods.length) return null
   const mine = (list.data ?? []).filter((r) => mods.includes(r.module))
