@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronLeft, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, Pencil, Presentation, RefreshCw, Send, Sparkles, X } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, ClipboardList, Download, ExternalLink, Lightbulb, MessageCircle, Pencil, Presentation, RefreshCw, Send, Sparkles, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -25,7 +25,7 @@ const TONE = {
   warn: 'bg-warn-soft text-warn-ink', info: 'bg-accent-soft text-accent-ink', ok: 'bg-ok-soft text-ok-ink',
   muted: 'bg-raised text-muted', bad: 'bg-[#e5484d]/10 text-[#c4373b] dark:text-[#ff8589]',
 } as const
-const GEN_USD = '1,50'
+const GEN_USD = '4,50'
 
 /**
  * Estratégia → Consultoria → cliente → Estratégia: a estratégia do mês com as 4 semanas à vista.
@@ -58,7 +58,7 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
   const cw = currentWeek(month, today)
   const deckInput = useMemo(() => (st && ready ? monthlyDeckInput({ name, strategy: st, clientLogoUrl: logoUrl, peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }) : null), [st, ready, name, logoUrl])
   const generate = async () => {
-    if (await ask(`Gerar a estratégia de ${monthName(month)} de ${name}? A IA lê tudo do cliente e escreve as 4 semanas (≈US$ ${GEN_USD}).`)) act.mutate(() => requestMonthly(clientId, month))
+    if (await ask(`Gerar a estratégia de ${monthName(month)} de ${name}? A IA pesquisa concorrentes e tendências e escreve o plano do mês com a copy de cada peça (≈US$ ${GEN_USD}, uns 10 minutos).`)) act.mutate(() => requestMonthly(clientId, month))
   }
 
   const actions = (st?.actions ?? []).filter((a) => area === 'todas' || a.area === area)
@@ -98,7 +98,7 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
         <div data-conteudo className="rounded-3xl border border-line bg-surface p-5 text-[14px]">
           {!st && <p>A estratégia de {monthName(month)} ainda não foi gerada. A IA lê o diagnóstico, as respostas do cliente, o direcionamento, os anúncios, o conteúdo e as datas, e já entrega as 4 semanas com ações prontas.</p>}
           {(!st || st.status === 'erro') && midMonth && <p className="mt-2 text-[13px] text-muted">Mês já começado: o plano vale de hoje até {lastDay}. As semanas que já passaram ficam fora da apresentação.</p>}
-          {st?.status === 'gerando' && <p className="flex items-center gap-2"><Sparkles size={16} aria-hidden="true" className="text-accent-ink" /> A IA está {st.stage === 'acoes' ? 'escrevendo as ações das 4 semanas' : 'lendo os dados e decidindo o foco do mês'}. Leva uns 5 minutos; pode sair da tela.</p>}
+          {st?.status === 'gerando' && <p className="flex items-center gap-2"><Sparkles size={16} aria-hidden="true" className="text-accent-ink" /> A IA está {st.stage === 'acoes' ? 'montando o calendário e escrevendo a copy de cada peça' : 'pesquisando concorrentes e tendências e decidindo a tese do mês'}. Leva uns 10 minutos; pode sair da tela.</p>}
           {st?.status === 'na_fila' && <p>Na fila. Começa em instantes.</p>}
           {st?.status === 'limite' && <p>Limite do mês com IA atingido. O administrador pode aumentar em Configurações → Automações.</p>}
           {st?.status === 'erro' && <p>Não deu certo: {st.error ?? 'erro desconhecido'}</p>}
@@ -120,6 +120,7 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
               <Button onClick={() => deckInput && openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')}><Presentation size={15} aria-hidden="true" /> Abrir apresentação</Button>
               <Button variant="secondary" onClick={() => setSend(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente</Button>
               <Button variant="secondary" onClick={() => setDeck(true)}><Download size={15} aria-hidden="true" /> PDF</Button>
+              <Link to={`/plano/${clientId}/${month.slice(0, 7)}`} title="O plano da equipe: tese, calendário, copy de cada peça, tráfego e vendas" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 py-2 font-medium text-ink no-underline hover:border-ink"><ClipboardList size={15} aria-hidden="true" /> Plano de execução</Link>
               <Button variant="secondary" disabled={act.isPending} onClick={() => setIdeas(true)}><Lightbulb size={15} aria-hidden="true" /> Refazer com ideias</Button>
               {cw && <Button variant="secondary" disabled={act.isPending} title="Compara a semana passada com o plano e sugere trocas (≈US$ 0,01)" onClick={() => act.mutate(() => adjustNow(st.id))}><RefreshCw size={15} aria-hidden="true" /> {act.isPending ? 'Revendo' : 'Rever a semana'}</Button>}
             </div>

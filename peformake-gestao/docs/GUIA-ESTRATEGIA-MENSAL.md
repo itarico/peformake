@@ -5,7 +5,9 @@ No topo você escolhe o mês (o atual ou o próximo).
 
 ## 1. Gerar
 
-- Toque em **Gerar agora**. Custa cerca de **US$ 1,50** por cliente e fica pronto em **2 a 5 minutos** (pode sair da tela; chega um aviso quando terminar).
+- Toque em **Gerar agora**. Custa cerca de **US$ 4 a 5** por cliente e fica pronto em **uns 10 minutos** (pode sair da tela; chega um aviso quando terminar).
+- O que a IA faz (desde 12/11): pesquisa o que os concorrentes estão fazendo agora (ofertas, preços, anúncios), as tendências do TikTok/Instagram do nicho e as datas do mês; decide a **tese do mês** ("Neste mês o foco do posicionamento é..."), o mix de conteúdo por objetivo e as ofertas; monta o **calendário do tamanho do contratado** com objetivo e funil por peça; escreve a **copy completa** de cada peça (telas do carrossel, roteiro com cenas, legenda, direção de arte, versões de anúncio); e fecha com **tráfego** (campanhas, públicos, verba, testes, KPI por semana) e **vendas** (script de WhatsApp, follow-up, objeções).
+- **Plano de execução**: botão na aba Estratégia (ou o link /plano/<cliente>/<AAAA-MM> que vai no briefing de cada peça). Qualquer pessoa da equipe abre e baixa em PDF. É o documento da equipe; a apresentação do cliente continua separada.
 - A IA lê o diagnóstico, as respostas do cliente, o direcionamento, os anúncios, o conteúdo e as datas do mês.
   Cliente **sem diagnóstico** (falta CNPJ) também gera, mas sai mais genérico: informe o CNPJ antes, se der.
 - **Mês já começado** (ex.: gerar novembro no dia 12): a IA planeja de hoje até o fim do mês.
@@ -16,6 +18,7 @@ No topo você escolhe o mês (o atual ou o próximo).
 ## 2. Revisar e editar
 
 - A tela mostra as 4 semanas lado a lado. Cada cartão é uma ação (cor = área: tráfego, social, design, audiovisual, vendas, atendimento).
+- Cada peça do calendário vira uma ação (P01, P02...); aprovar manda para a produção já com a copy, as telas do carrossel e a legenda preenchidas.
 - Toque numa ação: **Resumo** (o quê, até quando, o número que prova), **Roteiro/Briefing/O que fazer** (o texto pronto) e o lápis para **Editar**.
 - Filtre por área nos botões de cima se quiser revisar só uma frente.
 
