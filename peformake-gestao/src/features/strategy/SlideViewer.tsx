@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, ExternalLink, List, RefreshCw, Search } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
-import { buildSlides, deckCss, slideHtml, type DeckInput, type Orientation, type Slide, type SlideSection } from './consultDeck'
+import { DecisionTaskButton } from './DecisionTask'
+import { buildSlides, deckCss, fitSlides, slideHtml, type DeckInput, type Orientation, type Slide, type SlideSection } from './consultDeck'
 
 const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, '') } catch { return u } }
 
@@ -47,7 +48,7 @@ const REDO_LABEL: Record<SlideSection, string> = {
  * Computador: paisagem; celular: vertical. Setas do teclado e arrastar para o lado trocam o slide.
  * "Ver detalhes" mostra o texto completo do slide; slides internos (decisões da Peformake) só aparecem aqui.
  */
-export function SlideViewer({ input, onRedo, canRedo, footer }: { input: DeckInput; onRedo?: (s: SlideSection, label: string) => void; canRedo?: boolean; footer?: ReactNode }) {
+export function SlideViewer({ input, onRedo, canRedo, footer, clientId }: { input: DeckInput; onRedo?: (s: SlideSection, label: string) => void; canRedo?: boolean; footer?: ReactNode; clientId?: string }) {
   const narrow = useNarrow()
   const o: Orientation = narrow ? 'vertical' : 'paisagem'
   const slides = useMemo(() => buildSlides(input, o, { internal: true }), [input, o])
@@ -70,6 +71,17 @@ export function SlideViewer({ input, onRedo, canRedo, footer }: { input: DeckInp
   const touch = useRef<number | null>(null)
   const css = useMemo(() => deckCss(o), [o])
   const redoLabel = s.section ? REDO_LABEL[s.section] : null
+  // Texto que não cabe: o slide diminui a escala até caber (nunca corta a frase).
+  useLayoutEffect(() => {
+    const el = box.current
+    if (!el) return
+    const run = () => fitSlides(el)
+    run()
+    void document.fonts?.ready.then(run)
+    const ro = new ResizeObserver(run)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [s, i, css])
 
   return (
     <div className="flex flex-col gap-2">
@@ -87,6 +99,9 @@ export function SlideViewer({ input, onRedo, canRedo, footer }: { input: DeckInp
         <Button variant="secondary" aria-label="Próximo slide" className="min-h-11 px-3" disabled={i >= slides.length - 1} onClick={() => go(1)}><ChevronRight size={18} aria-hidden="true" /></Button>
       </div>
       <div className="flex flex-wrap items-center gap-2">
+        {clientId && s.decision !== undefined && input.doc.inteligencia?.decisoes_peformake?.[s.decision] && (
+          <DecisionTaskButton clientId={clientId} index={s.decision} decision={input.doc.inteligencia.decisoes_peformake[s.decision]} />
+        )}
         <Button variant="secondary" disabled={!s.details?.items.length} onClick={() => setDetails(s)}><Search size={15} aria-hidden="true" /> Ver detalhes</Button>
         {onRedo && redoLabel && s.kind !== 'cover' && <Button variant="secondary" disabled={!canRedo} onClick={() => onRedo(s.section!, redoLabel)}><RefreshCw size={15} aria-hidden="true" /> Refazer {redoLabel.toLowerCase()}</Button>}
         {footer}

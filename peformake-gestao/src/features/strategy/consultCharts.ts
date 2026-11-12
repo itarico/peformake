@@ -5,7 +5,24 @@ type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-expl
 export const SERIES: readonly string[] & { 0: string; 1: string; 2: string; 3: string } = ['#0090ad', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300']
 const INK = 'currentColor'
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
-const cut = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s)
+/** Rótulo sem "…": quebra em até 2 linhas nas palavras; se ainda sobrar, fica a parte que cabe, terminando numa palavra inteira. */
+const lines2 = (s: string, n: number): string[] => {
+  const w = String(s ?? '').trim().split(/\s+/).filter(Boolean)
+  const out: string[] = ['']
+  for (const t of w) {
+    const cur = out[out.length - 1]!
+    if (!cur || (cur + ' ' + t).length <= n) out[out.length - 1] = cur ? `${cur} ${t}` : t
+    else if (out.length < 2) out.push(t)
+    else break
+  }
+  return out.map((l) => l.replace(/[,;:(–-]+$/, '').trim()).filter(Boolean)
+}
+/** Conteúdo de <text> com 1 ou 2 linhas (tspan), centrado na mesma altura. */
+const tl = (s: string, n: number, x: number | string): string => {
+  const l = lines2(s, n)
+  return l.length < 2 ? esc(l[0] ?? '') : `<tspan x="${x}" dy="-0.5em">${esc(l[0])}</tspan><tspan x="${x}" dy="1.15em">${esc(l[1])}</tspan>`
+}
+const cut = (s: string, n: number) => lines2(s, n)[0] ?? ''
 const svg = (w: number, h: number, body: string, label: string) =>
   `<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="${esc(label)}" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:100%;height:auto;font-family:inherit">${body}</svg>`
 const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
@@ -91,7 +108,7 @@ export function ratingsSvg(rows: { name: string; nota: number; avaliacoes: numbe
   const W = 520, rowH = 38, H = rows.length * rowH + 10, x0 = 170, bw = W - x0 - 90
   const body = rows.map((r, i) => {
     const y = 6 + i * rowH, w = Math.max(2, (Math.min(5, r.nota) / 5) * bw)
-    return `<text x="${x0 - 10}" y="${y + 19}" text-anchor="end" font-size="13" font-weight="${r.me ? 700 : 500}" fill="${INK}">${esc(cut(r.name, 22))}</text>`
+    return `<text x="${x0 - 10}" y="${y + 19}" text-anchor="end" font-size="13" font-weight="${r.me ? 700 : 500}" fill="${INK}">${tl(r.name, 22, x0 - 10)}</text>`
       + `<rect x="${x0}" y="${y + 6}" width="${bw}" height="18" rx="9" fill="${INK}" fill-opacity="0.08"/>`
       + `<rect x="${x0}" y="${y + 6}" width="${w}" height="18" rx="9" fill="${r.me ? SERIES[0] : SERIES[3]}"/>`
       + `<text x="${x0 + bw + 8}" y="${y + 19}" font-size="13" font-weight="700" fill="${INK}">${r.nota.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}<tspan font-weight="400" fill-opacity="0.65"> ${r.avaliacoes !== null ? `(${r.avaliacoes.toLocaleString('pt-BR')})` : ''}</tspan></text>`
@@ -107,14 +124,16 @@ export function positioningSvg(pts: { name: string; x: number; y: number; me: bo
   body += `<line x1="${L + PW / 2}" y1="${T}" x2="${L + PW / 2}" y2="${T + PH}" stroke="${INK}" stroke-opacity="0.15" stroke-dasharray="4 4"/><line x1="${L}" y1="${T + PH / 2}" x2="${L + PW}" y2="${T + PH / 2}" stroke="${INK}" stroke-opacity="0.15" stroke-dasharray="4 4"/>`
   body += `<text x="${L + PW / 2}" y="${H - 14}" text-anchor="middle" font-size="13" fill="${INK}">Preço: mais barato → mais caro</text>`
   body += `<text transform="translate(18 ${T + PH / 2}) rotate(-90)" text-anchor="middle" font-size="13" fill="${INK}">Proposta: preço → valor/experiência</text>`
-  // Pontos no mesmo lugar ficam lado a lado.
-  const seen = new Map<string, number>()
+  // Pontos e nomes nunca se cobrem: se já tem alguém perto, desce/sobe o próximo até achar lugar.
+  const placed: { x: number; y: number }[] = []
   for (const p of pts) {
-    const k = `${p.x}:${p.y}`, n = seen.get(k) ?? 0; seen.set(k, n + 1)
-    const x = px(p.x) + n * 14, y = py(p.y) - n * 10
+    const x = px(p.x)
+    let y = py(p.y)
+    for (let k = 1; placed.some((q) => Math.abs(q.y - y) < 22 && Math.abs(q.x - x) < 130) && k < 12; k++) y = py(p.y) + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 24
+    placed.push({ x, y })
     body += `<circle cx="${x}" cy="${y}" r="${p.me ? 10 : 7}" fill="${p.me ? SERIES[0] : SERIES[1]}" fill-opacity="${p.me ? 1 : 0.85}" stroke="#fff" stroke-width="2"/>`
     const right = x > L + PW * 0.62
-    body += `<text x="${right ? x - 13 : x + 13}" y="${y + 4}" text-anchor="${right ? 'end' : 'start'}" font-size="12.5" font-weight="${p.me ? 700 : 500}" fill="${INK}">${esc(cut(p.name, 20))}</text>`
+    body += `<text x="${right ? x - 13 : x + 13}" y="${y + 4}" text-anchor="${right ? 'end' : 'start'}" font-size="12.5" font-weight="${p.me ? 700 : 500}" fill="${INK}">${tl(p.name, 20, right ? x - 13 : x + 13)}</text>`
   }
   return svg(W, H, body, 'Mapa de posicionamento: preço e proposta')
 }
@@ -125,7 +144,7 @@ export function funnelSvg(rows: { label: string; value: number }[]): string {
   const lg = (v: number) => Math.log10(Math.max(1, v) + 1), max = Math.max(...rows.map((r) => lg(r.value)), 1)
   const body = rows.map((r, i) => {
     const y = 3 + i * rowH, w = r.value > 0 ? Math.max(8, (lg(r.value) / max) * bw) : 4
-    return `<text x="${x0 - 10}" y="${y + 22}" text-anchor="end" font-size="13" fill="${INK}">${esc(cut(r.label, 26))}</text>`
+    return `<text x="${x0 - 10}" y="${y + 22}" text-anchor="end" font-size="13" fill="${INK}">${tl(r.label, 26, x0 - 10)}</text>`
       + `<rect x="${x0}" y="${y + 6}" width="${w}" height="24" rx="8" fill="${r.value > 0 ? SERIES[i % SERIES.length] : SERIES[1]}"/>`
       + `<text x="${x0 + w + 8}" y="${y + 23}" font-size="14" font-weight="700" fill="${r.value > 0 ? INK : SERIES[1]}">${r.value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}</text>`
   }).join('')
@@ -148,7 +167,7 @@ export function hbarsSvg(rows: { label: string; value: number }[], color = SERIE
   const W = 520, rowH = 34, H = rows.length * rowH + 6, x0 = 190, bw = W - x0 - 40, max = Math.max(...rows.map((r) => r.value), 1)
   const body = rows.map((r, i) => {
     const y = 3 + i * rowH
-    return `<text x="${x0 - 10}" y="${y + 19}" text-anchor="end" font-size="13" fill="${INK}">${esc(cut(r.label, 26))}</text>`
+    return `<text x="${x0 - 10}" y="${y + 19}" text-anchor="end" font-size="13" fill="${INK}">${tl(r.label, 26, x0 - 10)}</text>`
       + `<rect x="${x0}" y="${y + 6}" width="${Math.max(4, (r.value / max) * bw)}" height="18" rx="9" fill="${color}"/>`
       + `<text x="${x0 + Math.max(4, (r.value / max) * bw) + 6}" y="${y + 19}" font-size="12.5" font-weight="700" fill="${INK}">${r.value}</text>`
   }).join('')
@@ -162,7 +181,7 @@ export function forcesSvg(rows: Doc[]): string {
   const W = 520, rowH = 34, H = rows.length * rowH + 6, x0 = 190, bw = W - x0 - 70
   const body = rows.map((r, i) => {
     const y = 3 + i * rowH, v = lvl[r.nivel] ?? 0
-    return `<text x="${x0 - 10}" y="${y + 19}" text-anchor="end" font-size="13" fill="${INK}">${esc(cut(String(r.forca), 26))}</text>`
+    return `<text x="${x0 - 10}" y="${y + 19}" text-anchor="end" font-size="13" fill="${INK}">${tl(String(r.forca), 26, x0 - 10)}</text>`
       + `<rect x="${x0}" y="${y + 6}" width="${bw}" height="18" rx="9" fill="${INK}" fill-opacity="0.08"/>`
       + `<rect x="${x0}" y="${y + 6}" width="${(v / 3) * bw}" height="18" rx="9" fill="${col[r.nivel] ?? SERIES[0]}"/>`
       + `<text x="${x0 + bw + 8}" y="${y + 19}" font-size="12.5" font-weight="700" fill="${INK}">${r.nivel === 'media' ? 'média' : esc(r.nivel)}</text>`
@@ -188,13 +207,14 @@ export function gaugeSvg(value: number | null | undefined, label = 'Maturidade d
 
 /** Você × referência por métrica (cada linha na sua escala: unidades diferentes). */
 export function comparisonSvg(rows: Doc[], clientName: string): string {
-  const W = 640, rowH = 74, H = rows.length * rowH + 34, x0 = 270, bw = W - x0 - 90
+  const W = 640, rowH = 78, H = rows.length * rowH + 34, x0 = 270, bw = W - x0 - 90
   let body = `<g transform="translate(${x0},8)"><rect width="12" height="12" rx="3" fill="${SERIES[0]}"/><text x="18" y="11" font-size="13" fill="${INK}">${esc(cut(clientName, 22))}</text><rect x="190" width="12" height="12" rx="3" fill="${SERIES[3]}"/><text x="208" y="11" font-size="13" fill="${INK}">Referência</text></g>`
   rows.forEach((r, i) => {
     const y = 34 + i * rowH, a = isNum(r.cliente) ? Math.max(0, r.cliente) : 0, b = isNum(r.referencia) ? Math.max(0, r.referencia) : 0, max = Math.max(a, b, 1e-9)
     const val = (v: number) => `${v.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}${r.unidade && String(r.unidade).length <= 4 ? ` ${esc(r.unidade)}` : ''}`
-    body += `<text x="${x0 - 12}" y="${y + 22}" text-anchor="end" font-size="14" font-weight="700" fill="${INK}">${esc(cut(String(r.metrica), 34))}</text>`
-    body += `<text x="${x0 - 12}" y="${y + 40}" text-anchor="end" font-size="11.5" fill="${INK}" fill-opacity="0.6">vs ${esc(cut(String(r.referencia_nome ?? ''), 38))}</text>`
+    const ml = lines2(String(r.metrica), 34)
+    ml.forEach((l, k) => { body += `<text x="${x0 - 12}" y="${y + 20 + k * 17}" text-anchor="end" font-size="14" font-weight="700" fill="${INK}">${esc(l)}</text>` })
+    body += `<text x="${x0 - 12}" y="${y + 20 + ml.length * 17 + 2}" text-anchor="end" font-size="11.5" fill="${INK}" fill-opacity="0.6">vs ${esc(cut(String(r.referencia_nome ?? ''), 38))}</text>`
     body += `<rect x="${x0}" y="${y + 8}" width="${Math.max(3, (a / max) * bw)}" height="20" rx="6" fill="${SERIES[0]}"/><text x="${x0 + Math.max(3, (a / max) * bw) + 8}" y="${y + 23}" font-size="14" font-weight="700" fill="${INK}">${val(a)}</text>`
     body += `<rect x="${x0}" y="${y + 32}" width="${Math.max(3, (b / max) * bw)}" height="20" rx="6" fill="${SERIES[3]}"/><text x="${x0 + Math.max(3, (b / max) * bw) + 8}" y="${y + 47}" font-size="14" font-weight="700" fill="${INK}">${val(b)}</text>`
   })
@@ -207,7 +227,7 @@ export function maturitySvg(rows: Doc[]): string {
   const col = (v: number) => (v < 40 ? SERIES[1] : v < 70 ? SERIES[3] : SERIES[2])
   const body = rows.map((r, i) => {
     const y = 3 + i * rowH, v = Math.max(0, Math.min(100, Number(r.nota) || 0))
-    return `<text x="${x0 - 12}" y="${y + 22}" text-anchor="end" font-size="14" fill="${INK}">${esc(cut(String(r.dimensao), 28))}</text>`
+    return `<text x="${x0 - 12}" y="${y + 22}" text-anchor="end" font-size="14" fill="${INK}">${tl(String(r.dimensao), 28, x0 - 12)}</text>`
       + `<rect x="${x0}" y="${y + 8}" width="${bw}" height="20" rx="10" fill="${INK}" fill-opacity="0.08"/>`
       + `<rect x="${x0}" y="${y + 8}" width="${Math.max(4, (v / 100) * bw)}" height="20" rx="10" fill="${col(v)}"/>`
       + `<text x="${x0 + bw + 10}" y="${y + 23}" font-size="14" font-weight="700" fill="${INK}">${v}</text>`

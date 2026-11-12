@@ -26,16 +26,28 @@ export interface Slide {
   section?: SlideSection
   internal?: boolean
   details?: SlideDetail
+  /** Slide de decisão interna: índice em inteligencia.decisoes_peformake (vira tarefa). */
+  decision?: number
 }
 
-const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
+const esc = (s: unknown) => String(s ?? '').replace(/\s*\[(?:CONFIRMAR|confirmar|A CONFIRMAR)[^\]]*\]/g, '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 const arr = (v: unknown): Doc[] => (Array.isArray(v) ? v as Doc[] : [])
 const strs = (v: unknown): string[] => (Array.isArray(v) ? (v as unknown[]).map(String).filter((s) => s.trim()) : [])
 const chunk = <T,>(a: T[], n: number): T[][] => { const out: T[][] = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out }
 const initials = (n: string) => n.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
 const isUrl = (s: unknown): s is string => typeof s === 'string' && /^https?:\/\//.test(s)
-/** Corta em palavras (nunca no meio): o PDF não leva texto longo. */
-export const words = (s: unknown, n: number) => { const w = String(s ?? '').trim().split(/\s+/).filter(Boolean); return w.length > n ? `${w.slice(0, n).join(' ').replace(/[,;:.]$/, '')}…` : w.join(' ') }
+/**
+ * Texto do slide: nunca corta com "…" (frase pela metade não serve para o cliente).
+ * Se passar muito do tamanho, fica só a primeira frase inteira que couber; senão vai completo e o slide se ajusta (fitSlides).
+ */
+export const words = (s: unknown, n: number) => {
+  const t = String(s ?? '').trim().replace(/\s+/g, ' ')
+  const w = t.split(' ')
+  if (w.length <= Math.ceil(n * 1.3)) return t
+  const cut = w.slice(0, Math.ceil(n * 1.3)).join(' ')
+  const m = /^(.*[.!?])\s/.exec(cut + ' ')
+  return m && m[1]!.split(' ').length >= Math.ceil(n * 0.5) ? m[1]! : t
+}
 const pos = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v > 0
 const fmt = (n: number) => n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })
 const WHO: Record<string, string> = { cliente: 'Cliente', peformake: 'Peformake', juntos: 'Juntos' }
@@ -158,7 +170,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
     details: { title: 'Como testar', items: hip.map((x) => ({ k: x.hipotese, v: `Teste: ${x.como_testar} · Sinal de sucesso: ${x.sinal}` })) } })
 
   // 7. Internos (só na tela da equipe)
-  arr(intel.decisoes_peformake).forEach((x, i, all) => add({ internal: true, title: words(x.decisao, 14), kicker: `Decisão para a Peformake ${i + 1}/${all.length} · interno`, section: 'inteligencia',
+  arr(intel.decisoes_peformake).forEach((x, i, all) => add({ internal: true, decision: i, title: words(x.decisao, 14), kicker: `Decisão para a Peformake ${i + 1}/${all.length} · interno`, section: 'inteligencia',
     body: `<div class="grid ${land ? 'g3' : 'stack'}">${arr(x.opcoes).slice(0, 3).map((op) => `<div class="card"><h3 class="clamp-2">${esc(words(op.opcao, 10))}</h3><p class="pro clamp-2">+ ${esc(words(op.pros, 12))}</p><p class="con clamp-2">− ${esc(words(op.contras, 12))}</p></div>`).join('')}</div><p class="callout"><b>Recomendação:</b> ${esc(words(x.recomendacao, 18))}</p>`,
     details: { title: 'Por quê', items: [{ v: x.porque }, ...arr(x.opcoes).map((op) => ({ k: op.opcao, v: `Prós: ${op.pros} · Contras: ${op.contras}` }))] } }))
   if (intel.red_flags?.alertas?.length) add({ internal: true, title: `Alertas para a Peformake: ${({ verde: 'cliente saudável', amarelo: 'atenção', vermelho: 'risco alto' } as Record<string, string>)[intel.red_flags.veredicto] ?? ''}`, kicker: 'Interno', section: 'inteligencia', body: bullets(strs(intel.red_flags.alertas), 4, 14) })
@@ -211,7 +223,7 @@ export function deckCss(o: Orientation): string {
   const land = o === 'paisagem'
   // Escala por orientação: no retrato o slide é mais estreito, então as letras ocupam mais da largura.
   const k = land ? 1 : 1.5
-  const f = (n: number) => `${(n * k).toFixed(2)}cqw`
+  const f = (n: number) => `calc(${(n * k).toFixed(2)}cqw * var(--z, 1))`
   return `
   .pfd{--ink:#16262c;--muted:#5d6c73;--acc:#007a8a;--fill:#1fc8db;--soft:#e6f6f8;--line:#d9e2e5;--canvas:#f3f7f8;color:var(--ink);font-family:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .pfd *{box-sizing:border-box;margin:0;padding:0}
@@ -220,9 +232,10 @@ export function deckCss(o: Orientation): string {
   .pfd .slide:last-child{break-after:auto;page-break-after:auto}
   .pfd .head{margin-bottom:${f(2.6)}}
   .pfd .kick{color:var(--acc);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:${f(1.2)}}
-  .pfd h2{font-size:${f(3.9)};line-height:1.08;font-weight:750;letter-spacing:-.025em;margin-top:${f(.7)};display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
-  .pfd .content{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:${f(2)};font-size:${f(1.8)};line-height:1.35}
-  .pfd .foot{position:absolute;left:${land ? '6cqw' : '8cqw'};right:${land ? '6cqw' : '8cqw'};bottom:${land ? '2cqw' : '3.6cqw'};display:flex;justify-content:space-between;color:var(--muted);font-size:${f(1)}}
+  .pfd h2{font-size:${f(3.9)};line-height:1.08;font-weight:750;letter-spacing:-.025em;margin-top:${f(.7)}}
+  .pfd .content{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;padding-top:${f(1.2)};gap:${f(2.2)};font-size:${f(2)};line-height:1.38}
+  .pfd .content:has(> .chart-only:only-child),.pfd .content:has(> .split-r:only-child){justify-content:center;padding-top:0}
+  .pfd .foot{position:absolute;left:${land ? '6cqw' : '8cqw'};right:${land ? '6cqw' : '8cqw'};bottom:${land ? '2cqw' : '3.6cqw'};display:flex;justify-content:space-between;color:var(--muted);font-size:${f(1.15)}}
   .pfd .foot b{color:var(--acc)}
   .pfd .slide.internal{background:#fffaf0} .pfd .slide.internal .kick{color:#b06a00}
   .pfd .cover{background:linear-gradient(135deg,#062a31 0%,#0b4a55 55%,#0e7180 100%);color:#fff} .pfd .cover>.in{justify-content:space-between;padding-bottom:${land ? '5cqw' : '9cqw'}}
@@ -250,8 +263,8 @@ export function deckCss(o: Orientation): string {
   .pfd .cols2{display:grid;grid-template-columns:${land ? '1fr 1fr' : '1fr'};gap:${f(1.8)}}
   .pfd .card{background:#fff;border:1px solid var(--line);border-radius:${f(1.6)};padding:${f(2)};display:flex;flex-direction:column;gap:${f(.8)};min-height:0;overflow:hidden}
   .pfd .card.soft{background:var(--soft);border-color:transparent} .pfd .card.accent{background:var(--acc);color:#fff;border-color:transparent;justify-content:center}
-  .pfd .card h3{font-size:${f(2)};line-height:1.2;font-weight:700}
-  .pfd .card p{font-size:${f(1.6)}}
+  .pfd .card h3{font-size:${f(2.2)};line-height:1.2;font-weight:700}
+  .pfd .card p{font-size:${f(1.75)};line-height:1.4;color:#33464d}
   .pfd .find{border-top:${f(.6)} solid var(--c)} .pfd .card.find .tag{color:var(--c);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)}}
   .pfd .card .num-big.long{font-size:${f(3)}} .pfd .card .num-big{font-size:${f(4.6)};line-height:1;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
   .pfd .stack .find{display:grid;grid-template-columns:${f(26)} 1fr;align-items:center;column-gap:${f(2)}} .pfd .stack .find .tag{grid-column:1/-1}
@@ -263,14 +276,13 @@ export function deckCss(o: Orientation): string {
   .pfd .card .bul li{font-size:${f(1.7)}} .pfd .sw .bul{gap:${f(.7)}} .pfd .sw .bul li{font-size:${f(1.5)}}
   .pfd .bul li:before{content:"";position:absolute;left:0;top:.5em;width:${f(.7)};height:${f(.7)};border-radius:50%;background:var(--acc)}
   .pfd .steps,.pfd .qs{list-style:none;display:flex;flex-direction:column;gap:${f(1.6)}}
-  .pfd .steps li,.pfd .qs li{display:flex;gap:${f(1.6)};align-items:flex-start;font-size:${f(2)};line-height:1.3}
+  .pfd .steps li,.pfd .qs li{display:flex;gap:${f(1.6)};align-items:flex-start;font-size:${f(2.2)};line-height:1.3}
   .pfd .steps li>span:last-child{display:flex;flex-direction:column;gap:${f(.5)}} .pfd .steps small{font-size:${f(1.4)};color:var(--muted)}
-  .pfd .qs{gap:${f(1.2)}} .pfd .qs li{font-size:${f(1.75)}}
+  .pfd .qs{gap:${f(1.3)}} .pfd .qs li{font-size:${f(1.95)}}
   .pfd .num{flex:none;display:inline-grid;place-items:center;width:${f(3.2)};height:${f(3.2)};border-radius:50%;background:var(--soft);color:var(--acc);font-weight:800;font-size:${f(1.5)}}
   .pfd .ans{color:#1a7f55;font-size:${f(1.4)};margin-top:${f(.3)}}
   .pfd .swot{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:${f(1.4)};flex:1;min-height:0}
   .pfd .sw{border-radius:${f(1.6)};padding:${f(1.5)} ${f(1.8)};overflow:hidden} .pfd .sw h3{font-size:${f(1.9)};margin-bottom:${f(.7)}}
-  .pfd .sw .bul li{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
   .pfd .sw.ok{background:#e3f4ec} .pfd .sw.warn{background:#fbe9e0} .pfd .sw.acc{background:var(--soft)} .pfd .sw.gray{background:#eef1f2}
   .pfd .journey{list-style:none;display:grid;grid-template-columns:repeat(${land ? 5 : 1},1fr);gap:${f(1.4)}}
   .pfd .journey li{border-${land ? 'top' : 'left'}:${f(.6)} solid var(--c);background:var(--canvas);border-radius:${f(1.2)};padding:${f(1.6)};display:flex;flex-direction:${land ? 'column' : 'row'};gap:${f(.8)};align-items:${land ? 'flex-start' : 'center'};font-size:${f(1.6)}}
@@ -287,9 +299,33 @@ export function deckCss(o: Orientation): string {
   .pfd .chart-wide svg{max-height:${land ? '9cqw' : '22cqw'}}
   .pfd .split-r{display:grid;grid-template-columns:${land ? '1fr 1fr' : '1fr'};gap:${f(2)};align-items:center} .pfd .split-r svg{max-height:${land ? '32cqw' : '62cqw'};width:auto!important;margin:0 auto}
   .pfd .legend{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .legend li{display:flex;gap:${f(1.2)};align-items:center;font-size:${f(1.8)};line-height:1.25} .pfd .legend .num{background:var(--ink);color:#fff;width:${f(2.8)};height:${f(2.8)}}
-  .pfd .clamp-1,.pfd .clamp-2,.pfd .clamp-3,.pfd .clamp-4{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
-  .pfd .clamp-1{-webkit-line-clamp:1} .pfd .clamp-2{-webkit-line-clamp:2} .pfd .clamp-3{-webkit-line-clamp:3} .pfd .clamp-4{-webkit-line-clamp:4}
   `
+}
+
+/**
+ * Ajusta cada slide ao espaço: se algum texto não couber, diminui a escala do slide (--z) até caber.
+ * Roda na tela, no modo apresentação e antes do PDF. Função autocontida (vai como texto para a aba nova).
+ */
+export function fitSlides(root: ParentNode): void {
+  root.querySelectorAll<HTMLElement>('.slide').forEach((s) => {
+    let z = 1
+    s.style.setProperty('--z', '1')
+    const over = () => {
+      const c = (s.querySelector('.content') ?? s.querySelector('.in')) as HTMLElement | null
+      if (!c) return false
+      if (c.scrollHeight > c.clientHeight + 2) return true
+      let bad = false
+      // Cards e caixas: nada pode passar da borda. Títulos: só a largura (a altura das letras sempre passa um pouco).
+      s.querySelectorAll<HTMLElement>('.card, .sw, .kpi').forEach((e) => { if (e.scrollHeight > e.clientHeight + 2 || e.scrollWidth > e.clientWidth + 2) bad = true })
+      s.querySelectorAll<HTMLElement>('h1, h2, .big').forEach((e) => { if (e.scrollWidth > e.clientWidth + 2) bad = true })
+      const inner = s.querySelector<HTMLElement>('.in')
+      const foot = s.querySelector<HTMLElement>('.foot')
+      const last = (s.querySelector('.content') ?? s.querySelector('.cover-mid'))?.lastElementChild
+      if (inner && last && foot && last.getBoundingClientRect().bottom > foot.getBoundingClientRect().top + 2) bad = true
+      return bad
+    }
+    while (over() && z > 0.55) { z = Math.round((z - 0.05) * 100) / 100; s.style.setProperty('--z', String(z)) }
+  })
 }
 
 /** Um slide em HTML (sem <html>). */
@@ -318,7 +354,47 @@ export function deckHtml(input: DeckInput, o: Orientation): string {
 <style>@page{size:${page};margin:0}html,body{margin:0;background:#cfd8dc}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .pfd{width:min(100%,${o === 'paisagem' ? '1100px' : '760px'})} .pfd .slide{box-shadow:0 2px 14px rgba(0,0,0,.18);margin-bottom:16px}
 @media print{html,body{background:#fff;padding:0;gap:0}.pfd{width:${o === 'paisagem' ? '338.67mm' : '210mm'}}.pfd .slide{width:${o === 'paisagem' ? '338.67mm' : '210mm'};height:${o === 'paisagem' ? '190.5mm' : '297mm'};aspect-ratio:auto;box-shadow:none;margin:0}}
-${deckCss(o)}</style></head><body><div class="pfd">${deckSlidesHtml(input, o)}</div></body></html>`
+${deckCss(o)}</style></head><body><div class="pfd">${deckSlidesHtml(input, o)}</div>
+<script>var pfFit=${fitSlides.toString()};function run(){pfFit(document)}(document.fonts?document.fonts.ready:Promise.resolve()).then(run);window.addEventListener('beforeprint',run)</script></body></html>`
+}
+
+/**
+ * Modo apresentação: aba só com os slides, um por vez, tela cheia, setas/teclado/arrastar.
+ * Vale para a equipe (antes de enviar) e para o link público do cliente.
+ */
+export function presentHtml(input: DeckInput, o: Orientation): string {
+  const ratio = o === 'paisagem' ? 16 / 9 : 210 / 297
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${esc(input.name)} · Peformake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;background:#0a1d22;overflow:hidden;font-family:Geist,system-ui,sans-serif}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px 64px}
+.pfd{width:min(calc(100vw - 24px),calc((100dvh - 88px) * ${ratio.toFixed(4)}))}
+.pfd .slide{display:none;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.45)} .pfd .slide.on{display:block}
+.pfd.measure .slide{display:block;position:absolute;visibility:hidden;width:inherit}
+.bar{position:fixed;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:10px;color:#cfe3e7;font-size:14px}
+.bar button{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:20px}
+.bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+${deckCss(o)}</style></head><body><div class="stage"><div class="pfd measure">${deckSlidesHtml(input, o)}</div></div>
+<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="f" aria-label="Tela cheia">⛶</button></div>
+<script>var pfFit=${fitSlides.toString()};var d=document.querySelector('.pfd'),S=[].slice.call(d.querySelectorAll('.slide')),i=0;
+function show(k){i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(s,j){s.classList.toggle('on',j===i)});document.getElementById('n').textContent=(i+1)+' / '+S.length;document.getElementById('p').disabled=i===0;document.getElementById('x').disabled=i===S.length-1}
+function fit(){d.classList.add('measure');pfFit(d);d.classList.remove('measure');show(i)}
+(document.fonts?document.fonts.ready:Promise.resolve()).then(fit);window.addEventListener('resize',fit);show(0);
+document.getElementById('p').onclick=function(){show(i-1)};document.getElementById('x').onclick=function(){show(i+1)};
+document.getElementById('f').onclick=function(){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen()};
+addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')show(i+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1)});
+var t0=null;addEventListener('touchstart',function(e){t0=e.touches[0].clientX},{passive:true});addEventListener('touchend',function(e){if(t0===null)return;var dx=e.changedTouches[0].clientX-t0;t0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1)});
+d.addEventListener('click',function(e){if(e.target.closest('a'))return;var r=d.getBoundingClientRect();show(e.clientX>r.left+r.width/2?i+1:i-1)})</script></body></html>`
+}
+
+/** Abre o modo apresentação numa aba nova (só os slides do cliente, sem os internos). */
+export function openPresentation(input: DeckInput, o: Orientation) {
+  const w = window.open('', '_blank')
+  if (!w) return
+  w.document.write(presentHtml(input, o))
+  w.document.close()
 }
 
 /** Abre a apresentação numa aba e chama a impressão (salvar como PDF). */
