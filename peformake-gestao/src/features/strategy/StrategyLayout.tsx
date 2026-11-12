@@ -1,49 +1,43 @@
 import { lazy, Suspense } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { RequireRole } from '@/auth/guards'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { SectionHeader, type SectionTab } from '@/components/layout/SectionTabs'
-import { CONTENT_PLANNER_ROLES, TRAFFIC_ROLES } from '@/lib/roles'
 import { MonthSwitcher } from '@/features/content/ContentLayout'
-import { Niches, RetentionTab, Studies } from '@/features/methodology/MethodologyPage'
+import { CONTENT_PLANNER_ROLES, TRAFFIC_ROLES } from '@/lib/roles'
 import { Docs } from '@/features/social/SocialPage'
+import { AreaPlanPage } from './AreaPlanPage'
 import { ConsultoriaPage } from './ConsultoriaPage'
 import { CONSULT_PATH } from './consultRules'
+import { LibraryPage } from './LibraryPage'
 
 const TrafficStrategy = lazy(() => import('@/features/traffic/StrategyPage').then((m) => ({ default: m.StrategyPage })))
 
 const LEADS = ['admin', 'head_marketing'] as const
+const SOCIAL_ROLES = [...CONTENT_PLANNER_ROLES, 'designer'] as const
 
 const TABS: SectionTab[] = [
   { to: CONSULT_PATH, label: 'Consultoria', roles: LEADS },
   { to: '/estrategia/trafego', label: 'Tráfego', roles: TRAFFIC_ROLES },
-  { to: '/estrategia/social', label: 'Social media', roles: CONTENT_PLANNER_ROLES },
-  { to: '/estrategia/nichos', label: 'Nichos', roles: LEADS },
-  { to: '/estrategia/retencao', label: 'Retenção', roles: LEADS },
-  { to: '/estrategia/estudos', label: 'Estudos', roles: LEADS },
+  { to: '/estrategia/social', label: 'Social media', roles: SOCIAL_ROLES },
+  { to: '/estrategia/biblioteca', label: 'Biblioteca', roles: LEADS },
 ]
 
+const loading = <p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>
+
 /**
- * Estratégia: tudo que é pensar antes de produzir. Consultoria (diagnóstico + plano gerados pela IA para quem tem o serviço),
- * estratégia de tráfego e de social media, a metodologia por nicho e a rotina de retenção.
- * Os frameworks viraram receita interna da IA (não são mais tela de preencher): /estrategia/frameworks leva à Consultoria.
+ * Estratégia: UM plano do mês por cliente (função monthly-strategy), para todo cliente com serviço de operação.
+ * Consultoria vê tudo; Tráfego e Social media veem só a sua parte de cada cliente (com Aprovar); o Audiovisual vê a dele
+ * em Audiovisual → Plano do mês. Biblioteca junta Nichos, Estudos e Retenção. Rotas antigas caem no lugar novo (MovedTo).
  */
 export function StrategyLayout() {
-  // A estratégia de tráfego tem o próprio seletor de mês (já abre no mês seguinte); não repetir no cabeçalho.
-  const { pathname } = useLocation()
-  const ownMonth = pathname.startsWith('/estrategia/trafego') || pathname.startsWith(CONSULT_PATH)
   const { state } = useAuth()
   const roles = state.status === 'ready' ? state.user.roles : []
   const home = TABS.find((t) => !t.roles || t.roles.some((r) => roles.includes(r)))?.to ?? '/estrategia/trafego'
   return (
     <>
-      <SectionHeader
-        title="Estratégia"
-        sub="A IA pesquisa e escreve; a equipe revisa e decide. Design e vídeo são produção e ficam em Conteúdo e Audiovisual."
-        actions={ownMonth ? undefined : <MonthSwitcher />}
-        tabs={TABS}
-      />
+      <SectionHeader title="Estratégia" sub="Um plano do mês por cliente: a IA escreve, cada área revisa e aprova a sua parte." tabs={TABS} />
       <Routes>
         <Route index element={<Navigate to={home} replace />} />
         <Route path="frameworks" element={<MovedTo to={CONSULT_PATH} />} />
@@ -51,15 +45,18 @@ export function StrategyLayout() {
           <Route path="consultoria" element={<ConsultoriaPage />} />
         </Route>
         <Route element={<RequireRole roles={TRAFFIC_ROLES} />}>
-          <Route path="trafego" element={<Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><TrafficStrategy /></Suspense>} />
+          <Route path="trafego" element={<AreaPlanPage area="trafego" historyLabel="Histórico (estratégias antigas)"
+            history={<Suspense fallback={loading}><TrafficStrategy readOnly /></Suspense>} />} />
         </Route>
-        <Route element={<RequireRole roles={CONTENT_PLANNER_ROLES} />}>
-          <Route path="social" element={<Docs />} />
+        <Route element={<RequireRole roles={SOCIAL_ROLES} />}>
+          <Route path="social" element={<AreaPlanPage area="social" historyLabel="Histórico (estratégia e relatório do Instagram)"
+            history={<div className="flex flex-col gap-3"><MonthSwitcher /><Docs /></div>} />} />
         </Route>
         <Route element={<RequireRole roles={LEADS} />}>
-          <Route path="nichos" element={<Niches />} />
-          <Route path="retencao" element={<RetentionTab />} />
-          <Route path="estudos" element={<Studies />} />
+          <Route path="biblioteca" element={<LibraryPage />} />
+          <Route path="nichos" element={<MovedTo to="/estrategia/biblioteca?secao=nichos" />} />
+          <Route path="retencao" element={<MovedTo to="/estrategia/biblioteca?secao=retencao" />} />
+          <Route path="estudos" element={<MovedTo to="/estrategia/biblioteca?secao=estudos" />} />
         </Route>
         <Route path="*" element={<Navigate to={home} replace />} />
       </Routes>

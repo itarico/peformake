@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Check, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
@@ -19,7 +20,7 @@ import { openPresentation, printDeck, type DeckInput, type Orientation } from '.
 import { Paged, SlideViewer } from './SlideViewer'
 import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow, type ConsultSection } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
-import { QuestionsPanel, SendQuestionsButton } from './QuestionsPanel'
+import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
 import { MonthlyPanel } from './MonthlyPanel'
 import { ReportsPanel } from './ReportsPanel'
@@ -48,6 +49,7 @@ export function ConsultoriaPage() {
   const [info, setInfo] = useState<ConsultRow | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const [sending, setSending] = useState<ConsultRow | null>(null)
+  const [asking, setAsking] = useState<ConsultRow | null>(null)
   const qc = useQueryClient()
   const open = (id: string | null) => setParams((c) => { const n = new URLSearchParams(c); if (id) n.set('cliente', id); else { n.delete('cliente'); n.delete('aba') } return n })
   const gen = useMutation({
@@ -89,13 +91,11 @@ export function ConsultoriaPage() {
                 {a.kind === 'dados' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setInfo(r)}>{a.label}</Button>}
                 {a.kind === 'abrir' && <Button variant={r.status === 'pronto' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => open(r.client_id)}>{a.label}</Button>}
                 {a.kind === 'gerar' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={gen.isPending} onClick={() => gen.mutate(r)}>{a.label}</Button>}
-                {isApproved(r.status) && <>
-                  <Button variant="secondary" aria-label={`Abrir apresentação de ${r.name.trim()}`} title="Abrir apresentação" className="min-h-10 shrink-0 px-3"
-                    onClick={() => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) }}><Presentation size={16} aria-hidden="true" /></Button>
-                  <Button variant="secondary" aria-label={`Enviar a apresentação de ${r.name.trim()} no WhatsApp`} title="Enviar no WhatsApp" className="min-h-10 shrink-0 px-3"
-                    onClick={() => setSending(r)}><MessageCircle size={16} aria-hidden="true" /></Button>
-                </>}
-                <SendQuestionsButton clientId={r.client_id} name={r.name.trim()} className="min-h-10 shrink-0 px-3 text-[13px]" />
+                <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
+                  { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
+                  { label: 'Enviar no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => setSending(r) },
+                  { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, onClick: () => setAsking(r) },
+                ]} />
                 <ChevronRight size={16} aria-hidden="true" className="shrink-0 text-muted max-sm:hidden" />
               </li>
             )
@@ -104,6 +104,7 @@ export function ConsultoriaPage() {
       )}
       {info && <InfoDialog row={info} onClose={() => setInfo(null)} />}
       {sending && <RowSendDialog row={sending} onClose={() => setSending(null)} />}
+      {asking && <SendQuestionsLoader clientId={asking.client_id} name={asking.name.trim()} onClose={() => setAsking(null)} />}
     </section>
   )
 }
@@ -179,6 +180,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   })
   const [dirOpen, setDirOpen] = useState(false)
   const [sendOpen, setSendOpen] = useState(false)
+  const [askOpen, setAskOpen] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
   const refresh = () => { void qc.invalidateQueries({ queryKey: consultKey }); void qc.invalidateQueries({ queryKey: ['consult-doc', clientId] }) }
   const act = useMutation({
@@ -220,7 +222,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       </div>
 
       <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-4 gap-1 rounded-full bg-raised p-1 sm:max-w-xl">
-        {([['diagnostico', 'Diagnóstico'], ['estrategia', monthPending ? 'Estratégia •' : 'Estratégia'], ['perguntas', `Perguntas${toAsk ? ` · ${toAsk}` : ''}`], ['relatorios', 'Relatórios']] as const).map(([id, label]) => (
+        {([['diagnostico', 'Diagnóstico'], ['estrategia', monthPending ? 'Plano do mês •' : 'Plano do mês'], ['perguntas', `Perguntas${toAsk ? ` · ${toAsk}` : ''}`], ['relatorios', 'Relatórios']] as const).map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => setView(id)}
             className={cn('min-h-10 min-w-0 cursor-pointer truncate rounded-full px-1 text-[12px] font-semibold sm:px-3 sm:text-[13.5px]', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
         ))}
@@ -230,18 +232,22 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {view === 'estrategia' && <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} />}
       {view === 'relatorios' && <ReportsPanel clientId={clientId} />}
       {view === 'diagnostico' && <>
-      <div className="flex flex-wrap gap-2">
+      {/* UMA ação principal; o resto no "⋯". */}
+      <div className="flex items-center gap-2">
         {status === 'falta_dados' && <Button onClick={onInfo}>Informar CNPJ</Button>}
         {status === 'pronto' && <Button disabled={act.isPending} onClick={() => act.mutate(() => approveConsult(clientId))}><Check size={15} aria-hidden="true" /> Aprovar</Button>}
-        {ready && <Button variant="secondary" disabled={!approved} title={approved ? undefined : 'Aprove para gerar a apresentação'} onClick={() => setDeckOpen(true)}><Download size={15} aria-hidden="true" /> Baixar apresentação</Button>}
-        {ready && <Button variant="secondary" onClick={() => {
-          // Aprovado: abre o link do cliente. Antes de aprovar: prévia só para a equipe (mesmos slides, sem os internos).
-          if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message))
-          else openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
-        }}><Presentation size={15} aria-hidden="true" /> Abrir apresentação</Button>}
-        {ready && <Button variant="secondary" onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar no WhatsApp</Button>}
-        <Button variant="secondary" onClick={() => setDirOpen(true)}><Lightbulb size={15} aria-hidden="true" /> Direcionamento{row?.direction?.trim() ? ' ✓' : ''}</Button>
-        <SendQuestionsButton clientId={clientId} name={name} />
+        {approved && <Button onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar no WhatsApp</Button>}
+        <ActionMenu label="Mais opções do diagnóstico" actions={[
+          { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !ready, onClick: () => {
+            // Aprovado: abre o link do cliente. Antes de aprovar: prévia só para a equipe (mesmos slides, sem os internos).
+            if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message))
+            else openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
+          } },
+          { label: 'Baixar apresentação', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: () => setDeckOpen(true) },
+          { label: 'Enviar no WhatsApp', icon: <Send size={15} aria-hidden="true" />, hidden: !ready || approved, onClick: () => setSendOpen(true) },
+          { label: `Direcionamento${row?.direction?.trim() ? ' ✓' : ''}`, icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setDirOpen(true) },
+          { label: 'Enviar perguntas', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => setAskOpen(true) },
+        ]} />
       </div>
       {ready && !approved && <p className="-mt-1 text-[12px] text-muted">Aprove para gerar a apresentação.</p>}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
@@ -274,6 +280,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {sendOpen && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSendOpen(false)} onSent={refresh} />}
       {deckOpen && <DeckDialog name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(deckInput, o); setDeckOpen(false) }} />}
       {info && <InfoDialog row={info} onClose={closeInfo} />}
+      {askOpen && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => setAskOpen(false)} />}
     </section>
   )
 }

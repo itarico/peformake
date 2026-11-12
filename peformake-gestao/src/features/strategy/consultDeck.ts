@@ -429,6 +429,8 @@ body.rot .app{transform:translateX(100vw) rotate(90deg)}
 .bar button{all:unset;cursor:pointer;min-width:42px;height:42px;padding:0 6px;box-sizing:border-box;border-radius:21px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:17px}
 .bar button.t{font-size:12.5px;font-weight:600;padding:0 11px}.bar button.q{background:#1FC8DB;color:#0B3C44;font-weight:800}.bar button[hidden]{display:none}
 .bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:54px;text-align:center;font-variant-numeric:tabular-nums}
+.menu{position:absolute;right:50%;transform:translateX(50%);bottom:calc(max(10px,env(safe-area-inset-bottom)) + 52px);display:flex;flex-direction:column;gap:2px;min-width:210px;padding:6px;border-radius:16px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.4);z-index:15}.menu[hidden]{display:none}
+.menu button{all:unset;cursor:pointer;min-height:42px;padding:0 12px;border-radius:10px;color:#0B3C44;font-size:14px;font-weight:600;display:flex;align-items:center}.menu button:hover{background:#E6F7F9}.menu button[hidden]{display:none}
 .close{all:unset;position:absolute;top:max(10px,env(safe-area-inset-top));right:10px;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff;font-size:18px;z-index:20}
 .dlg{position:absolute;inset:0;background:rgba(5,25,30,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}.dlg.on{display:flex}
 .dlg .box{background:#fff;color:#0B3C44;border-radius:18px;max-width:560px;width:100%;max-height:calc(var(--vh) - 32px);display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4)}
@@ -439,11 +441,12 @@ body.rot .app{transform:translateX(100vw) rotate(90deg)}
 ${a.css}
 ${b.css}</style></head><body><div class="app">${a.html}${b.html}
 <button class="close" id="c" aria-label="Fechar a apresentação">✕</button>
-<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="q" class="q" aria-label="Ver detalhes deste slide" hidden>?</button><button id="o" class="t" aria-label="Trocar entre vertical e horizontal"></button><button id="r" aria-label="Girar a tela">⟳</button><button id="f" aria-label="Tela cheia">⛶</button></div>
+<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="mm" aria-label="Mais opções" aria-haspopup="menu" aria-expanded="false">⋯</button></div>
+<div class="menu" id="m" role="menu" hidden><button id="q" role="menuitem" hidden>? Detalhes deste slide</button><button id="o" role="menuitem"></button><button id="r" role="menuitem">⟳ Girar a tela</button><button id="f" role="menuitem">⛶ Tela cheia</button></div>
 <div class="dlg" id="dl" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="box"><header><h3 id="dt"></h3><button id="dc" aria-label="Fechar detalhes">✕</button></header><div class="body" id="db"></div><div class="pg" id="dp"><button id="dpp">‹ Anteriores</button><span id="dpn"></span><button id="dpx">Próximas ›</button></div></div></div></div>
 <script>var pfFit=${fitSlides.toString()};var DET=${det};var cur='${o === 'paisagem' ? 'sp' : 'sv'}',i=0,d,S,rot=false,pg=0;
 function dims(){var w=innerWidth,h=innerHeight;if(rot){var t=w;w=h;h=t}document.documentElement.style.setProperty('--vw',w+'px');document.documentElement.style.setProperty('--vh',h+'px')}
-function use(id){cur=id;['sp','sv'].forEach(function(k){document.getElementById(k).hidden=k!==id});d=document.querySelector('#'+id+' .pfd');S=[].slice.call(d.querySelectorAll('.slide'));document.getElementById('o').textContent=id==='sp'?'Vertical':'Horizontal';fit()}
+function use(id){cur=id;['sp','sv'].forEach(function(k){document.getElementById(k).hidden=k!==id});d=document.querySelector('#'+id+' .pfd');S=[].slice.call(d.querySelectorAll('.slide'));document.getElementById('o').textContent=id==='sp'?'▯ Ver na vertical':'▭ Ver na horizontal';fit()}
 function show(k,dir){var prev=i;i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(s,j){s.classList.remove('in-r','in-l');s.classList.toggle('on',j===i)});if(dir!==0&&i!==prev){void S[i].offsetWidth;S[i].classList.add(i>prev?'in-r':'in-l')}
 document.getElementById('n').textContent=(i+1)+' / '+S.length;document.getElementById('p').disabled=i===0;document.getElementById('x').disabled=i===S.length-1;document.getElementById('q').hidden=!(DET[cur]&&DET[cur][i])}
 function fit(){dims();d.classList.add('measure');pfFit(d);d.classList.remove('measure');show(i,0)}
@@ -454,6 +457,7 @@ document.getElementById('db').innerHTML=x.i.slice(pg*per,pg*per+per).map(functio
 document.getElementById('dp').style.display=n>1?'flex':'none';document.getElementById('dpn').textContent=(pg+1)+' de '+n;document.getElementById('dpp').disabled=pg===0;document.getElementById('dpx').disabled=pg>=n-1}
 function openD(){pg=0;page();document.getElementById('dl').classList.add('on')}function closeD(){document.getElementById('dl').classList.remove('on')}
 (document.fonts?document.fonts.ready:Promise.resolve()).then(function(){use(cur)});window.addEventListener('resize',fit);use(cur);
+var M=document.getElementById('m'),MM=document.getElementById('mm');function menu(v){M.hidden=!v;MM.setAttribute('aria-expanded',v?'true':'false')}MM.onclick=function(e){e.stopPropagation();menu(M.hidden)};M.addEventListener('click',function(){menu(false)});addEventListener('click',function(e){if(!M.hidden&&!M.contains(e.target)&&e.target!==MM)menu(false)},true);
 document.getElementById('p').onclick=function(){show(i-1)};document.getElementById('x').onclick=function(){show(i+1)};
 document.getElementById('o').onclick=function(){use(cur==='sp'?'sv':'sp')};
 document.getElementById('r').onclick=function(){rot=!rot;document.body.classList.toggle('rot',rot);if(rot&&cur==='sv')use('sp');else fit()};
@@ -461,7 +465,7 @@ document.getElementById('q').onclick=openD;document.getElementById('dc').onclick
 document.getElementById('dpp').onclick=function(){pg--;page()};document.getElementById('dpx').onclick=function(){pg++;page()};
 document.getElementById('f').onclick=function(){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen()};
 document.getElementById('c').onclick=function(){if(document.fullscreenElement){document.exitFullscreen()}var t=window.top;try{if(t.opener){t.close();return}}catch(e){}try{if(t.history.length>1){t.history.back();return}}catch(e){}try{t.close()}catch(e){}};
-addEventListener('keydown',function(e){if(document.getElementById('dl').classList.contains('on')){if(e.key==='Escape')closeD();return}if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')show(i+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1)});
+addEventListener('keydown',function(e){if(e.key==='Escape'&&!M.hidden){menu(false);return}if(document.getElementById('dl').classList.contains('on')){if(e.key==='Escape')closeD();return}if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')show(i+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1)});
 var t0=null;addEventListener('touchstart',function(e){t0=rot?e.touches[0].clientY:e.touches[0].clientX},{passive:true});addEventListener('touchend',function(e){if(t0===null||document.getElementById('dl').classList.contains('on'))return;var v=rot?e.changedTouches[0].clientY:e.changedTouches[0].clientX;var dx=v-t0;t0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1)});
 ['sp','sv'].forEach(function(k){document.querySelector('#'+k+' .pfd').addEventListener('click',function(e){if(e.target.closest('a'))return;var r=d.getBoundingClientRect();var mid=rot?(e.clientY>r.top+r.height/2):(e.clientX>r.left+r.width/2);show(mid?i+1:i-1)})})</script></body></html>`
 }

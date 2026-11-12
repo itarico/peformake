@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { supabase } from '@/lib/supabase'
 import { planHtml, printPlan } from './monthlyPlanDoc'
@@ -16,6 +16,9 @@ const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<str
 export function MonthlyPlanPage() {
   const { clientId = '', month = '' } = useParams()
   const m = /^\d{4}-\d{2}$/.test(month) ? `${month}-01` : ''
+  // ?secao=trafego: só a parte da área (o link que vai no aviso e no briefing de cada responsável).
+  const [params] = useSearchParams()
+  const only = params.get('secao')
   const q = useQuery({
     queryKey: ['monthly-plan', clientId, m], enabled: !!clientId && !!m, retry: false,
     queryFn: async () => {
@@ -24,7 +27,7 @@ export function MonthlyPlanPage() {
       return (data ?? null) as Any | null
     },
   })
-  const html = useMemo(() => (q.data?.doc ? planHtml({ name: String(q.data.name ?? ''), month: m, doc: q.data.doc }) : null), [q.data, m])
+  const html = useMemo(() => (q.data?.doc ? planHtml({ name: String(q.data.name ?? ''), month: m, doc: q.data.doc, only }) : null), [q.data, m, only])
   const frame = useRef<HTMLIFrameElement>(null)
   const [h, setH] = useState(600)
   useEffect(() => { document.title = q.data?.name ? `Plano de execução · ${q.data.name}` : 'Plano de execução' }, [q.data?.name])
@@ -38,7 +41,8 @@ export function MonthlyPlanPage() {
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-lg font-semibold">Plano de execução</h1>
-        <Button variant="secondary" onClick={() => printPlan({ name: String(q.data!.name ?? ''), month: m, doc: q.data!.doc })}>
+        {only && <Link to={`/plano/${clientId}/${month}`} className="text-[13px] font-semibold">Ver o plano completo</Link>}
+        <Button variant="secondary" onClick={() => printPlan({ name: String(q.data!.name ?? ''), month: m, doc: q.data!.doc, only })}>
           <Download size={15} aria-hidden="true" /> Baixar PDF
         </Button>
       </div>

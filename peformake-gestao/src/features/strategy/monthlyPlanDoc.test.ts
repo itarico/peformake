@@ -25,7 +25,7 @@ const doc = {
 describe('plano de execução (documento)', () => {
   it('lista só as seções com conteúdo, na ordem', () => {
     const ids = planSections(doc).map((s) => s.id)
-    expect(ids).toEqual(['tese', 'raciocinio', 'semanas', 'calendario', 'copy', 'cliente', 'fontes'])
+    expect(ids).toEqual(['estrategia', 'acao', 'social', 'audiovisual', 'fontes'])
   })
   it('plano antigo (sem "plano") mostra só o resumo', () => {
     expect(planSections({ titulo: 'x' })).toEqual([{ id: 'resumo', title: 'Resumo do mês' }])
@@ -46,6 +46,18 @@ describe('plano de execução (documento)', () => {
     expect(html).toContain('Copy não ficou pronta')
     expect(html).toContain('A confirmar (interno)')
     expect(html).toContain('#1FC8DB')
+  })
+  it('seção de uma área só (o link de cada responsável)', () => {
+    const html = planHtml({ name: 'Fornario', month: '2026-12-01', doc, only: 'audiovisual' })
+    expect(html).toContain('7. Audiovisual')
+    expect(html).not.toContain('2. Estratégia')
+  })
+  it('as seções novas aparecem quando vêm no plano', () => {
+    const d2 = { ...doc, plano: { ...doc.plano, plano_acao: [{ semana: 1, acao: 'Subir campanha', area: 'trafego', responsavel: 'gestor de tráfego', prazo: '05/12', kpi: 'conversas', ponto_de_partida: '12', meta: '30' }],
+      consultoria: [{ tema: 'preço', recomendacao: 'Combo', porque: 'x', impacto: 'y' }], offline: [{ onde: 'vitrine', acao: 'Cartaz', quando: 'S1', custo: 'baixo' }], ideias: [{ tipo: 'collab', ideia: 'Cervejaria', quando: 'S2' }] } }
+    const ids = planSections(d2).map((s) => s.id)
+    expect(ids).toEqual(['estrategia', 'acao', 'social', 'audiovisual', 'consultoria', 'offline', 'ideias', 'fontes'])
+    expect(planHtml({ name: 'F', month: '2026-12-01', doc: d2 })).toContain('12 → <b>30</b>')
   })
   it('data com dia da semana', () => {
     expect(dayLabel('2026-12-05')).toBe('05/12 Sáb')

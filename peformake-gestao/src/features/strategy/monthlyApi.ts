@@ -11,8 +11,8 @@ function fail(e: { message: string; code?: string }): never {
   if (e.code === 'PF012') throw new Error('Já está gerando. Volte em alguns minutos.')
   if (e.code === 'PF001') throw new Error('Essa ação já foi decidida.')
   if (e.code === 'PF005') throw new Error('A estratégia ainda não está pronta.')
-  if (e.code === 'PF006') throw new Error(e.message.includes('Consultoria') ? 'Este cliente não tem Consultoria ativa.' : 'Confira os dados.')
-  if (e.code === '42501') throw new Error('Só administrador ou head de marketing.')
+  if (e.code === 'PF006') throw new Error(e.message.includes('serviço') ? 'Este cliente não tem serviço ativo (tráfego, social, design, audiovisual ou consultoria).' : 'Confira os dados.')
+  if (e.code === '42501') throw new Error('Sem permissão para esta parte do plano.')
   throw new Error('Não foi possível agora. Tente de novo.')
 }
 
@@ -53,6 +53,28 @@ export async function approveWeek(strategyId: string, week: number): Promise<num
   const { data, error } = await rpc('monthly_approve_week', { _strategy: strategyId, _week: week })
   if (error) fail(error)
   return Number(data ?? 0)
+}
+
+/** Aprovar a semana só das áreas desta tela (Tráfego, Social/Design ou Audiovisual). */
+export async function approveAreaWeek(strategyId: string, week: number, areas: string[]): Promise<number> {
+  const { data, error } = await rpc('monthly_approve_area_week', { _strategy: strategyId, _week: week, _areas: areas })
+  if (error) fail(error)
+  return Number(data ?? 0)
+}
+
+export interface BoardRow { client_id: string; name: string; logo_path: string | null; strategy_id: string | null; status: string | null; finished_at: string | null; pending: number; approved: number; total: number }
+
+/** Clientes da área no mês, com a situação do plano e quantas ações da área esperam aprovação. */
+export function useMonthlyBoard(month: string, area: 'trafego' | 'social' | 'audiovisual') {
+  return useQuery({
+    queryKey: ['monthly-board', area, month],
+    queryFn: async () => {
+      const { data, error } = await rpc('monthly_area_board', { _month: month, _area: area })
+      if (error) fail(error)
+      return (data ?? []) as BoardRow[]
+    },
+    refetchInterval: (q) => ((q.state.data as BoardRow[] | undefined)?.some((r) => r.status === 'gerando' || r.status === 'na_fila') ? 20_000 : false),
+  })
 }
 
 export async function editAction(id: string, v: { title: string; what: string; due: string | null; proof: string | null }): Promise<void> {

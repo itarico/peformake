@@ -1,4 +1,36 @@
-# Guia da Estratégia do mês (para o Italo)
+# Guia do Plano do mês (para o Italo)
+
+**Desde 13/11 é UM plano por cliente para todas as áreas** (antes era só Consultoria). Todo cliente ativo, não perdido, com algum
+serviço de operação (Consultoria, Tráfego, Social/Design ou Audiovisual) ganha o plano do mês seguinte no **dia 26** (madrugada).
+Cada cliente recebe só as partes do que contratou.
+
+Onde cada um vê a sua parte (mesmo plano, telas diferentes):
+- **Estratégia → Consultoria → cliente → aba "Plano do mês"**: tudo (as 12 seções).
+- **Estratégia → Tráfego**: todos os clientes com tráfego; por cliente: Tráfego (estrutura de campanhas, públicos, divisão da verba, anúncios com variações, KPI por semana, testes), Plano de ação, Vendas e ofertas, Mercado, e os relatórios de tráfego. As estratégias antigas ficam em ⋯ → Histórico (só leitura).
+- **Estratégia → Social media**: todos os clientes com social ou design; por cliente: Social media (calendário, séries, copy, stories), Design (direção visual, layouts, peças-chave), Plano de ação, Ideias, Mercado. As estratégias/relatórios antigos do Instagram ficam em ⋯ → Histórico.
+- **Audiovisual → Plano do mês** (identidade Ellcazo): pauta de captação (data, local, quem apresenta, lista de cenas) e roteiros. Aprovar cria o projeto com o roteiro na Produção.
+- **Estratégia → Biblioteca**: Nichos, Estudos e Retenção juntos. O plano do mês lê o estudo do nicho do cliente (metodologia + estudo do trimestre aprovado).
+
+## As 12 seções
+1. Mercado (curto: o diagnóstico é o passado) · 2. Estratégia (tese, posicionamento, meta, mix, ofertas) · 3. Plano de ação com KPIs
+(semana a semana: ação, responsável, prazo, KPI com ponto de partida → meta) · 4. Tráfego · 5. Design · 6. Social media · 7. Audiovisual ·
+8. Estratégia comercial (ofertas com âncora de preço, funil e metas, SLA, follow-up D0/D1/D3/D7, objeções, upsell, reativação, indicação, KPIs) ·
+9. Consultoria (preço, produto, processo, parcerias) · 10. Marketing 360 · 11. Off-line · 12. Ideias.
+As estratégicas (1, 2, 3 e 12) vão para todos; 4 a 7 só para quem contrata; 8 para tráfego ou Consultoria; 9 a 11 só Consultoria.
+
+## Custo por cliente (cada geração fica em ai_usage_log)
+- Só tráfego ≈ US$ 1,50 a 2,50 · só social/design ≈ US$ 2,50 a 3,50 · Consultoria (tudo) ≈ US$ 4,50 a 6.
+- Atenção ao teto do mês (Configurações → Automações): com ~30 clientes o dia 26 pode passar de US$ 90. Acima do teto, os planos ficam "Limite do mês" e saem quando o teto subir.
+
+## Tela (uma ação principal por tela)
+- Cabeçalho: cliente, mês (toque para trocar), situação, **um botão principal** (Gerar plano / Aprovar semana N / Apresentação) e **⋯** com o resto (apresentação, Plano de execução em PDF, enviar ao cliente, refazer com ideias, rever a semana).
+- Abaixo, as seções como abas; cada seção em cartões curtos com "Ver detalhes"; as ações têm **Aprovar** no próprio cartão.
+- Cada área só aprova a sua parte (admin e head aprovam tudo). Ao gerar, cada responsável (Clientes → equipe do cliente) recebe o aviso com o link da tela dele e da seção dele no Plano de execução (/plano/<cliente>/<AAAA-MM>?secao=trafego|social|design|audiovisual|vendas).
+- Modo apresentação: só ‹ › e um ⋯ (detalhes do slide, vertical/horizontal, girar, tela cheia) e ✕.
+
+---
+
+## Como era antes (Consultoria): continua valendo para a aba "Plano do mês" da Consultoria
 
 Onde fica: **Estratégia → Consultoria → toque no cliente → aba "Estratégia"**.
 No topo você escolhe o mês (o atual ou o próximo).

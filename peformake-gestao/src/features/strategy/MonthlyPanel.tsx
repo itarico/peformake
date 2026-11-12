@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronLeft, ChevronRight, ClipboardList, Download, ExternalLink, Lightbulb, MessageCircle, Pencil, Presentation, RefreshCw, Send, Sparkles, X } from 'lucide-react'
+import { CalendarDays, Check, ChevronLeft, ChevronRight, ClipboardList, Download, ExternalLink, Lightbulb, MessageCircle, Pencil, Presentation, RefreshCw, Send, Sparkles, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
@@ -13,41 +14,54 @@ import { ago } from '@/features/settings/AutomationsCenter'
 import { consultKey } from './consultApi'
 import { openPresentation, printDeck, type Orientation } from './consultDeck'
 import { waLink } from './consultRules'
-import { adjustNow, approveWeek, decideAction, decideAdjust, editAction, monthlyKey, monthlyShareLink, requestMonthly, useMonthly } from './monthlyApi'
+import { adjustNow, approveAreaWeek, approveWeek, decideAction, decideAdjust, editAction, monthlyKey, monthlyShareLink, requestMonthly, useMonthly } from './monthlyApi'
 import { monthlyDeckInput } from './monthlyDeck'
 import {
-  AREA, AREA_ORDER, actionState, currentWeek, dm, monthlyMessage, monthName, monthOptions, monthStart, parseMonthParam, pastWeeks, statusLabel, textPages, weekRange, weeksOf, weekSummary,
-  type ActionArea, type MonthlyAction, type MonthlyStrategy,
+  AREA, actionState, currentWeek, dm, monthlyMessage, monthName, monthOptions, monthStart, parseMonthParam, pastWeeks, statusLabel, textPages, weeksOf,
+  type MonthlyAction, type MonthlyStrategy,
 } from './monthlyRules'
-import { SlideViewer } from './SlideViewer'
+import {
+  SCOPE_AREAS, SCOPE_PDF_SECTION, SECTIONS, sectionActions, sectionCards, visibleSections, type PlanCard, type PlanScope, type SectionId,
+} from './planSections'
 
 const TONE = {
   warn: 'bg-warn-soft text-warn-ink', info: 'bg-accent-soft text-accent-ink', ok: 'bg-ok-soft text-ok-ink',
   muted: 'bg-raised text-muted', bad: 'bg-[#e5484d]/10 text-[#c4373b] dark:text-[#ff8589]',
 } as const
-const GEN_USD = '4,50'
+// Custo aproximado de uma geração (a função roda só as partes do que o cliente contratou).
+const GEN_USD: Record<PlanScope, string> = { tudo: '4,50 a 6', trafego: '1,50 a 2,50', social: '2,50 a 3,50', audiovisual: '2 a 3' }
+
+/** O que esta pessoa pode decidir em cada área (vem do banco: monthly_get.can). */
+function canDecide(st: MonthlyStrategy | null, a: Pick<MonthlyAction, 'area'>): boolean {
+  const c = st?.can
+  if (!c) return true
+  if (c.all) return true
+  if (a.area === 'trafego') return !!c.trafego
+  if (a.area === 'social' || a.area === 'design') return !!c.social
+  if (a.area === 'audiovisual') return !!c.audiovisual
+  return false
+}
 
 /**
- * Estratégia → Consultoria → cliente → Estratégia: a estratégia do mês com as 4 semanas à vista.
- * Aprovar uma ação manda para a fila da área (Social/Design → peça com briefing; Audiovisual → roteiro; Tráfego/Vendas → tarefa).
- * Nada vai para o cliente sozinho.
+ * O plano do mês de um cliente: cabeçalho limpo (cliente, mês, situação) + UMA ação principal + "⋯" com o resto,
+ * as seções como abas e o conteúdo em cartões com "Ver detalhes". Aprovar fica em cada ação (vai para a fila da área).
+ * scope: 'tudo' (Consultoria), ou a parte de uma área (Tráfego, Social media, Audiovisual). Nada vai para o cliente sozinho.
  */
-export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; name: string; logoUrl: string | null }) {
+export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName = false }: { clientId: string; name: string; logoUrl: string | null; scope?: PlanScope; showName?: boolean }) {
   const qc = useQueryClient()
   const [params, setParams] = useSearchParams()
   const today = useMemo(() => new Date(), [])
   const month = parseMonthParam(params.get('mes'), today)
-  const setMonth = (m: string) => setParams((c) => { const n = new URLSearchParams(c); n.set('mes', m.slice(0, 7)); return n }, { replace: true })
+  const setParam = (k: string, v: string | null) => setParams((c) => { const n = new URLSearchParams(c); if (v) n.set(k, v); else n.delete(k); return n }, { replace: true })
   const q = useMonthly(clientId, month)
   const st = q.data ?? null
-  const [view, setView] = useState<'semanas' | 'semana' | 'slides'>('semanas')
-  const [area, setArea] = useState<ActionArea | 'todas'>('todas')
   const [open, setOpen] = useState<MonthlyAction | null>(null)
+  const [detail, setDetail] = useState<PlanCard | null>(null)
   const [ideas, setIdeas] = useState(false)
   const [deck, setDeck] = useState(false)
   const [send, setSend] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
-  const refresh = () => { void qc.invalidateQueries({ queryKey: monthlyKey(clientId, month) }); void qc.invalidateQueries({ queryKey: consultKey }) }
+  const refresh = () => { void qc.invalidateQueries({ queryKey: monthlyKey(clientId, month) }); void qc.invalidateQueries({ queryKey: consultKey }); void qc.invalidateQueries({ queryKey: ['monthly-board'] }) }
   const act = useMutation({
     mutationFn: async (fn: () => Promise<unknown>) => fn(),
     onMutate: () => setProblem(null),
@@ -58,146 +72,112 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
   const cw = currentWeek(month, today)
   const deckInput = useMemo(() => (st && ready ? monthlyDeckInput({ name, strategy: st, clientLogoUrl: logoUrl, peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }) : null), [st, ready, name, logoUrl])
   const generate = async () => {
-    if (await ask(`Gerar a estratégia de ${monthName(month)} de ${name}? A IA pesquisa concorrentes e tendências e escreve o plano do mês com a copy de cada peça (≈US$ ${GEN_USD}, uns 10 minutos).`)) act.mutate(() => requestMonthly(clientId, month))
+    if (await ask(`Gerar o plano de ${monthName(month)} de ${name}? A IA pesquisa e escreve só as partes do que o cliente contratou (≈US$ ${GEN_USD[scope]}, uns 10 minutos).`)) act.mutate(() => requestMonthly(clientId, month))
   }
 
-  const actions = (st?.actions ?? []).filter((a) => area === 'todas' || a.area === area)
-  const areasHere = AREA_ORDER.filter((x) => st?.actions.some((a) => a.area === x))
-  const sum = weekSummary(st?.actions ?? [])
-  const suggestions = (st?.actions ?? []).filter((a) => a.suggestion)
-  const weeks = view === 'semana' ? [cw ?? 1] : [1, 2, 3, 4]
+  const actions = st?.actions ?? []
+  const mine = actions.filter((a) => SCOPE_AREAS[scope].includes(a.area))
+  const sections = ready ? visibleSections(st?.doc, actions, scope) : []
+  const pick = params.get('secao') as SectionId | null
+  const sec: SectionId | null = sections.includes(pick as SectionId) ? pick : sections[0] ?? null
+  const pending = mine.filter((a) => a.status === 'proposta' && canDecide(st, a))
   const past = ready && st ? pastWeeks(month, st.doc.gerado_em) : []
-  const lastDay = dm(weeksOf(month)[3]!.to)
-  // Mês já começado: a IA planeja de hoje até o fim do mês; as semanas que já passaram ficam fora da apresentação.
+  const pendingWeek = pending.length ? (cw && pending.some((a) => a.week === cw) ? cw : Math.min(...pending.map((a) => a.week))) : null
+  const weekCount = pendingWeek ? pending.filter((a) => a.week === pendingWeek).length : 0
+  const suggestions = mine.filter((a) => a.suggestion)
   const midMonth = monthStart(today) === month && today.getDate() > 7
+  const lastDay = dm(weeksOf(month)[3]!.to)
+  const months = monthOptions(today)
+  const other = months.find((m) => m !== month) ?? months[0]!
+  const pdfSec = SCOPE_PDF_SECTION[scope]
+  const planHref = `/plano/${clientId}/${month.slice(0, 7)}${pdfSec ? `?secao=${pdfSec}` : ''}`
+  const stl = statusLabel(st?.status)
+  const canAll = st?.can?.all ?? true
+
+  const approveThisWeek = async () => {
+    if (!st || !pendingWeek) return
+    if (await ask(`Aprovar as ${weekCount} ações da semana ${pendingWeek}? Cada uma vai para a fila da área.`))
+      act.mutate(() => (scope === 'tudo' ? approveWeek(st.id, pendingWeek) : approveAreaWeek(st.id, pendingWeek, SCOPE_AREAS[scope])))
+  }
+  const openDeck = () => deckInput && openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
+
+  // UMA ação principal por tela; o resto no "⋯".
+  let primary: ReactNode = null
+  if (q.isSuccess && (!st || st.status === 'erro')) primary = <Button disabled={act.isPending} onClick={() => void generate()}><Sparkles size={15} aria-hidden="true" /> Gerar plano</Button>
+  else if (ready && pendingWeek) primary = <Button disabled={act.isPending} onClick={() => void approveThisWeek()}><Check size={15} aria-hidden="true" /><span className="sm:hidden">Aprovar S{pendingWeek} ({weekCount})</span><span className="max-sm:hidden">Aprovar semana {pendingWeek} ({weekCount})</span></Button>
+  else if (ready && scope === 'tudo') primary = <Button onClick={openDeck}><Presentation size={15} aria-hidden="true" /> Apresentação</Button>
+  else if (ready) primary = <Link to={planHref} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><ClipboardList size={15} aria-hidden="true" /> Plano de execução</Link>
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <div role="group" aria-label="Mês" className="inline-flex rounded-full border border-line p-0.5">
-          {monthOptions(today).map((m) => (
-            <button key={m} type="button" aria-pressed={m === month} onClick={() => setMonth(m)}
-              className={cn('min-h-10 cursor-pointer rounded-full px-4 text-[13.5px] font-semibold', m === month ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{monthName(m)}</button>
-          ))}
+      <header data-plan-header className="flex items-center gap-2">
+        <div className="min-w-0 flex-1">
+          {showName && <p className="truncate text-[16px] font-bold leading-tight">{name}</p>}
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
+            <button type="button" title={`Ver ${monthName(other)}`} aria-label={`Mês: ${monthName(month)}. Trocar para ${monthName(other)}`} onClick={() => setParam('mes', other.slice(0, 7))}
+              className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-semibold hover:border-ink"><CalendarDays size={14} aria-hidden="true" /> <span>{monthName(month).slice(0, 3)}<span className="max-sm:hidden">{monthName(month).slice(3)}</span></span></button>
+            <span className={cn('inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[11.5px] font-semibold', TONE[stl.tone])}>{st?.status === 'gerando' && <span className="pf-pulse size-1.5 rounded-full bg-current" />}{stl.label}</span>
+            {ready && pending.length > 0 && <span className="whitespace-nowrap text-[12px] text-muted">{pending.length} para aprovar</span>}
+          </p>
         </div>
-        {st && <span className={cn('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11.5px] font-semibold', TONE[statusLabel(st.status).tone])}>{st.status === 'gerando' && <span className="pf-pulse size-1.5 rounded-full bg-current" />}{statusLabel(st.status).label}</span>}
-        {ready && (
-          <div role="tablist" aria-label="Como ver" className="ml-auto inline-flex rounded-full bg-raised p-1 max-sm:ml-0 max-sm:w-full">
-            {([['semanas', '4 semanas'], ['semana', cw ? 'Esta semana' : 'Semana 1'], ['slides', 'Slides']] as const).map(([id, label]) => (
-              <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => setView(id)}
-                className={cn('min-h-10 flex-1 cursor-pointer rounded-full px-3 text-[13px] font-semibold', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
-            ))}
-          </div>
-        )}
-      </div>
+        {primary}
+        <ActionMenu label="Mais opções do plano" actions={[
+          { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: openDeck, hidden: !ready || (scope === 'tudo' && !pendingWeek) },
+          { label: 'Plano de execução (PDF)', icon: <ClipboardList size={15} aria-hidden="true" />, href: planHref, hidden: !ready },
+          { label: 'Enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, onClick: () => setSend(true), hidden: !ready || !canAll },
+          { label: 'Baixar a apresentação', icon: <Download size={15} aria-hidden="true" />, onClick: () => setDeck(true), hidden: !ready || scope !== 'tudo' },
+          { label: 'Refazer com ideias', icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setIdeas(true), hidden: !st || !ready, disabled: act.isPending },
+          { label: 'Rever a semana (≈US$ 0,01)', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => st && act.mutate(() => adjustNow(st.id)), hidden: !ready || !cw, disabled: act.isPending },
+        ]} />
+      </header>
+
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
       {q.isPending && <p role="status" className="py-8 text-center text-[13px] text-muted">Carregando</p>}
       {q.isError && <p role="alert" className="text-[13px] text-warn-ink">{(q.error as Error).message}</p>}
 
       {q.isSuccess && !ready && (
         <div data-conteudo className="rounded-3xl border border-line bg-surface p-5 text-[14px]">
-          {!st && <p>A estratégia de {monthName(month)} ainda não foi gerada. A IA lê o diagnóstico, as respostas do cliente, o direcionamento, os anúncios, o conteúdo e as datas, e já entrega as 4 semanas com ações prontas.</p>}
-          {(!st || st.status === 'erro') && midMonth && <p className="mt-2 text-[13px] text-muted">Mês já começado: o plano vale de hoje até {lastDay}. As semanas que já passaram ficam fora da apresentação.</p>}
-          {st?.status === 'gerando' && <p className="flex items-center gap-2"><Sparkles size={16} aria-hidden="true" className="text-accent-ink" /> A IA está {st.stage === 'acoes' ? 'montando o calendário e escrevendo a copy de cada peça' : 'pesquisando concorrentes e tendências e decidindo a tese do mês'}. Leva uns 10 minutos; pode sair da tela.</p>}
+          {!st && <p>O plano de {monthName(month)} ainda não foi gerado. No dia 26 a IA gera sozinha; se precisar antes, toque em Gerar plano.</p>}
+          {(!st || st.status === 'erro') && midMonth && <p className="mt-2 text-[13px] text-muted">Mês já começado: o plano vale de hoje até {lastDay}.</p>}
+          {st?.status === 'gerando' && <p className="flex items-center gap-2"><Sparkles size={16} aria-hidden="true" className="text-accent-ink" /> A IA está {st.stage === 'acoes' ? 'montando o plano de ação e a parte de cada área' : 'pesquisando e decidindo a estratégia do mês'}. Leva uns 10 minutos; pode sair da tela.</p>}
           {st?.status === 'na_fila' && <p>Na fila. Começa em instantes.</p>}
           {st?.status === 'limite' && <p>Limite do mês com IA atingido. O administrador pode aumentar em Configurações → Automações.</p>}
           {st?.status === 'erro' && <p>Não deu certo: {st.error ?? 'erro desconhecido'}</p>}
-          {(!st || st.status === 'erro') && <Button className="mt-3" disabled={act.isPending} onClick={() => void generate()}><Sparkles size={15} aria-hidden="true" /> Gerar agora</Button>}
         </div>
       )}
 
       {ready && st && (
         <>
-          {view !== 'slides' && <section data-conteudo aria-label="Resumo do mês" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4">
-            <p className="text-[12px] font-semibold uppercase tracking-wide text-accent-ink">{monthName(month, true)}</p>
-            <h2 className="text-[17px] font-bold leading-snug">{st.doc.titulo}</h2>
-            {past.length > 0 && <p className="text-[12.5px] text-muted">Mês já começado: o plano vale até {lastDay}. {past.length === 1 ? `A semana ${past[0]} já tinha passado e fica` : `As semanas ${past.join(' e ')} já tinham passado e ficam`} fora da apresentação.</p>}
-            <div className="flex flex-wrap items-center gap-2 text-[12.5px]">
-              {st.doc.meta?.numero && <span className="rounded-full bg-accent-soft px-2.5 py-1 font-semibold text-accent-ink">Meta: {st.doc.meta.numero}</span>}
-              <span className="rounded-full bg-raised px-2.5 py-1 text-muted">{sum.pending ? `${sum.pending} para aprovar · ` : ''}{sum.routed} na produção · {sum.done} feitas</span>
-            </div>
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Button onClick={() => deckInput && openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')}><Presentation size={15} aria-hidden="true" /> Abrir apresentação</Button>
-              <Button variant="secondary" onClick={() => setSend(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente</Button>
-              <Button variant="secondary" onClick={() => setDeck(true)}><Download size={15} aria-hidden="true" /> PDF</Button>
-              <Link to={`/plano/${clientId}/${month.slice(0, 7)}`} title="O plano da equipe: tese, calendário, copy de cada peça, tráfego e vendas" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 py-2 font-medium text-ink no-underline hover:border-ink"><ClipboardList size={15} aria-hidden="true" /> Plano de execução</Link>
-              <Button variant="secondary" disabled={act.isPending} onClick={() => setIdeas(true)}><Lightbulb size={15} aria-hidden="true" /> Refazer com ideias</Button>
-              {cw && <Button variant="secondary" disabled={act.isPending} title="Compara a semana passada com o plano e sugere trocas (≈US$ 0,01)" onClick={() => act.mutate(() => adjustNow(st.id))}><RefreshCw size={15} aria-hidden="true" /> {act.isPending ? 'Revendo' : 'Rever a semana'}</Button>}
-            </div>
-          </section>}
-
-          {st.adjust && (
-            <p className={cn('rounded-xl px-3 py-2 text-[13px]', suggestions.length ? 'bg-accent-soft text-accent-ink' : 'bg-raised text-muted')}>
-              <b>Ajuste de {ago(st.adjusted_at) ?? 'segunda'}:</b> {st.adjust.resumo}{suggestions.length ? ` · ${suggestions.length} troca${suggestions.length > 1 ? 's' : ''} sugerida${suggestions.length > 1 ? 's' : ''} (abra a ação marcada).` : ''}
-            </p>
+          {st.adjust && suggestions.length > 0 && (
+            <p className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] text-accent-ink"><b>Ajuste de {ago(st.adjusted_at) ?? 'segunda'}:</b> {suggestions.length} troca{suggestions.length > 1 ? 's' : ''} sugerida{suggestions.length > 1 ? 's' : ''} (ações marcadas).</p>
           )}
-
-          {view === 'slides' && deckInput && <SlideViewer input={deckInput} />}
-
-          {view !== 'slides' && (
-            <>
-              {areasHere.length > 1 && (
-                <div role="group" aria-label="Área" className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
-                  {(['todas', ...areasHere] as const).map((x) => (
-                    <button key={x} type="button" aria-pressed={area === x} onClick={() => setArea(x)}
-                      className={cn('min-h-9 shrink-0 cursor-pointer rounded-full border px-3 text-[12.5px] font-semibold', area === x ? 'border-ink bg-ink text-surface' : 'border-line text-muted hover:text-ink')}>
-                      {x === 'todas' ? 'Todas' : AREA[x].label}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <div data-conteudo className={cn('grid gap-3', view === 'semanas' && 'md:grid-cols-2 2xl:grid-cols-4')}>
-                {weeks.map((w) => {
-                  const list = actions.filter((a) => a.week === w)
-                  const s = weekSummary(list)
-                  const theme = st.doc.semanas?.find((x) => x.semana === w)
-                  return (
-                    <section key={w} aria-label={`Semana ${w}`} className={cn('flex flex-col gap-2 rounded-3xl border bg-surface p-3', cw === w ? 'border-accent' : 'border-line')}>
-                      <div className="flex items-start justify-between gap-2 px-1">
-                        <div className="min-w-0">
-                          <p className="text-[12px] font-semibold text-muted">Semana {w} · {weekRange(month, w)}{cw === w ? ' · agora' : past.includes(w) ? ' · já passou' : ''}</p>
-                          <h3 className="text-[14.5px] font-bold leading-snug">{theme?.tema ?? `Semana ${w}`}</h3>
-                        </div>
-                        {s.pending > 0 && !past.includes(w) && <Button variant="secondary" className="min-h-9 shrink-0 px-3 text-[12.5px]" disabled={act.isPending}
-                          onClick={async () => { if (await ask(`Aprovar as ${s.pending} ações da semana ${w}? Cada uma vai para a fila da área.`)) act.mutate(() => approveWeek(st.id, w)) }}><Check size={14} aria-hidden="true" /> Aprovar ({s.pending})</Button>}
-                      </div>
-                      {list.length === 0 && <p className="px-1 py-3 text-[12.5px] text-muted">Nada nesta semana{area !== 'todas' ? ' para esta área' : ''}.</p>}
-                      <ul className="flex flex-col gap-1.5">
-                        {list.map((a) => {
-                          const stt = actionState(a)
-                          return (
-                            <li key={a.id}>
-                              <button type="button" onClick={() => setOpen(a)} className={cn('flex w-full cursor-pointer items-start gap-2 rounded-2xl border border-line px-2.5 py-2 text-left hover:border-ink', a.status === 'recusada' && 'opacity-55')}>
-                                <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full" style={{ background: AREA[a.area].color }} />
-                                <span className="min-w-0 flex-1">
-                                  <span className="line-clamp-2 text-[13.5px] font-semibold leading-snug">{a.title}</span>
-                                  <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11.5px] text-muted">
-                                    <span>{AREA[a.area].label}</span>{a.due_date && <span>até {dm(a.due_date)}</span>}
-                                    <span className={cn('rounded-full px-1.5 font-semibold', TONE[stt.tone])}>{stt.label}</span>
-                                    {a.suggestion && <span className="rounded-full bg-accent px-1.5 font-semibold text-white">troca sugerida</span>}
-                                  </span>
-                                </span>
-                              </button>
-                            </li>
-                          )
-                        })}
-                      </ul>
-                    </section>
-                  )
-                })}
-              </div>
-            </>
+          {past.length > 0 && <p className="text-[12px] text-muted">Mês já começado: o plano vale até {lastDay}.</p>}
+          {sections.length > 1 && (
+            <div role="tablist" aria-label="Seções do plano" className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
+              {sections.map((id) => {
+                const n = sectionActions(actions, id, scope).filter((a) => a.status === 'proposta' && canDecide(st, a)).length
+                return (
+                  <button key={id} type="button" role="tab" aria-selected={sec === id} onClick={() => setParam('secao', id)}
+                    className={cn('min-h-9 shrink-0 cursor-pointer rounded-full border px-3 text-[12.5px] font-semibold', sec === id ? 'border-ink bg-ink text-surface' : 'border-line text-muted hover:text-ink')}>
+                    {SECTIONS.find((s) => s.id === id)?.label}{n && id !== 'acao' ? ` · ${n}` : ''}
+                  </button>
+                )
+              })}
+            </div>
           )}
-          <p className="text-[12px] text-muted">Gerada {ago(st.finished_at) ?? ''}{st.ideas ? ' · com as ideias do cliente' : ''}.</p>
+          {sec && <SectionBody st={st} sec={sec} scope={scope} busy={act.isPending} onDetail={setDetail} onOpen={setOpen}
+            onApprove={(a) => act.mutate(() => decideAction(a.id, true))} />}
+          <p className="text-[12px] text-muted">Gerado {ago(st.finished_at) ?? ''}{st.ideas ? ' · com as ideias do cliente' : ''}{st.cost_usd != null ? ` · US$ ${Number(st.cost_usd).toFixed(2).replace('.', ',')}` : ''}.</p>
         </>
       )}
 
-      {open && st && <ActionDialog key={open.id} action={st.actions.find((a) => a.id === open.id) ?? open} busy={act.isPending}
+      {detail && <CardDialog card={detail} onClose={() => setDetail(null)} />}
+      {open && st && <ActionDialog key={open.id} action={st.actions.find((a) => a.id === open.id) ?? open} busy={act.isPending} canAct={canDecide(st, open)}
         onDecide={(ok) => act.mutate(async () => { await decideAction(open.id, ok); setOpen(null) })}
         onAdjust={(ok) => act.mutate(() => decideAdjust(open.id, ok))}
         onSave={(v) => act.mutateAsync(() => editAction(open.id, v))}
         onClose={() => setOpen(null)} />}
-      {ideas && st && <IdeasDialog name={name} month={month} initial={st.ideas ?? ''} onClose={() => setIdeas(false)}
+      {ideas && st && <IdeasDialog name={name} month={month} usd={GEN_USD[scope]} initial={st.ideas ?? ''} onClose={() => setIdeas(false)}
         onSave={(t) => { setIdeas(false); act.mutate(() => requestMonthly(clientId, month, t)) }} />}
       {send && st && <SendDialog strategyId={st.id} clientId={clientId} name={name} month={month} onClose={() => setSend(false)} />}
       {deck && deckInput && <DeckDialog onClose={() => setDeck(false)} onPick={(o) => { printDeck(deckInput, o); setDeck(false) }} />}
@@ -205,12 +185,83 @@ export function MonthlyPanel({ clientId, name, logoUrl }: { clientId: string; na
   )
 }
 
+// ───────── Uma seção: cartões curtos + as ações para aprovar ─────────
+function SectionBody({ st, sec, scope, busy, onDetail, onOpen, onApprove }: {
+  st: MonthlyStrategy; sec: SectionId; scope: PlanScope; busy: boolean
+  onDetail: (c: PlanCard) => void; onOpen: (a: MonthlyAction) => void; onApprove: (a: MonthlyAction) => void
+}) {
+  const cards = sectionCards(st.doc, sec, scope)
+  const list = sectionActions(st.actions, sec, scope).filter((a) => a.status !== 'recusada')
+    .sort((a, b) => (a.status === 'proposta' ? 0 : 1) - (b.status === 'proposta' ? 0 : 1) || a.week - b.week)
+  return (
+    <div data-conteudo className="flex flex-col gap-3">
+      {cards.length > 0 && (
+        <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+          {cards.map((c) => (
+            <article key={c.key} className="flex flex-col gap-1 rounded-2xl border border-line bg-surface p-3">
+              <div className="flex items-start gap-2">
+                <h3 className="line-clamp-2 min-w-0 flex-1 text-[14px] font-bold leading-snug">{c.title}</h3>
+                {c.tag && <span className="shrink-0 rounded-full bg-raised px-2 py-0.5 text-[11px] font-semibold text-muted">{c.tag}</span>}
+              </div>
+              {c.lines.map((l, i) => <p key={i} className="line-clamp-2 text-[13px] leading-snug text-muted">{l}</p>)}
+              {c.detail.length > c.lines.join(' ').length + 20 && (
+                <button type="button" onClick={() => onDetail(c)} className="mt-auto inline-flex min-h-9 cursor-pointer items-center gap-1 self-start text-[12.5px] font-semibold text-accent-ink">Ver detalhes <ChevronRight size={13} aria-hidden="true" /></button>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
+      {list.length > 0 && (
+        <section aria-label="Ações" className="flex flex-col gap-1.5">
+          <h3 className="px-1 text-[12.5px] font-semibold uppercase tracking-wide text-muted">{sec === 'acao' ? 'Ações do mês' : 'Para produzir'}</h3>
+          <ul className="grid gap-1.5 md:grid-cols-2">
+            {list.map((a) => {
+              const s = actionState(a)
+              const can = canDecide(st, a)
+              return (
+                <li key={a.id} className="flex items-center gap-2 rounded-2xl border border-line bg-surface px-2.5 py-2">
+                  <span aria-hidden="true" className="size-2 shrink-0 rounded-full" style={{ background: AREA[a.area].color }} />
+                  <button type="button" onClick={() => onOpen(a)} className="min-w-0 flex-1 cursor-pointer text-left">
+                    <span className="line-clamp-2 text-[13.5px] font-semibold leading-snug">{a.title}</span>
+                    <span className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11.5px] text-muted">
+                      <span>S{a.week}{a.due_date ? ` · até ${dm(a.due_date)}` : ''}</span>
+                      <span className={cn('rounded-full px-1.5 font-semibold', TONE[s.tone])}>{s.label}</span>
+                      {a.suggestion && <span className="rounded-full bg-accent px-1.5 font-semibold text-white">troca sugerida</span>}
+                    </span>
+                  </button>
+                  {a.status === 'proposta' && can && (
+                    <Button variant="secondary" className="min-h-9 shrink-0 px-3 text-[12.5px]" disabled={busy} title={`Vai para ${AREA[a.area].queue}`} onClick={() => onApprove(a)}>
+                      <Check size={14} aria-hidden="true" /> Aprovar
+                    </Button>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      )}
+      {!cards.length && !list.length && <p className="rounded-2xl border border-line bg-surface p-4 text-[13px] text-muted">Nada nesta seção neste mês.</p>}
+    </div>
+  )
+}
+
+/** "Ver detalhes" de um cartão: o texto completo em páginas (o pop-up nunca rola). */
+function CardDialog({ card, onClose }: { card: PlanCard; onClose: () => void }) {
+  const [page, setPage] = useState(0)
+  const pages = useMemo(() => textPages(card.detail || card.lines.join('\n'), pageChars()), [card])
+  return (
+    <Dialog open onClose={onClose} title={card.title.slice(0, 80)} size="md">
+      <Pages pages={pages} page={page} setPage={setPage} />
+    </Dialog>
+  )
+}
+
 // ───────── Uma ação: resumo + o texto pronto (em páginas, o pop-up nunca rola) ─────────
 /** Quanto texto cabe numa página do pop-up sem rolar (celular menor que computador). */
 export const pageChars = () => (typeof window !== 'undefined' && window.innerHeight < 760 ? 260 : 440)
 
-function ActionDialog({ action: a, busy, onDecide, onAdjust, onSave, onClose }: {
-  action: MonthlyAction; busy: boolean; onDecide: (ok: boolean) => void; onAdjust: (ok: boolean) => void
+function ActionDialog({ action: a, busy, canAct = true, onDecide, onAdjust, onSave, onClose }: {
+  action: MonthlyAction; busy: boolean; canAct?: boolean; onDecide: (ok: boolean) => void; onAdjust: (ok: boolean) => void
   onSave: (v: { title: string; what: string; due: string | null; proof: string | null }) => Promise<unknown>; onClose: () => void
 }) {
   const [tab, setTab] = useState<'resumo' | 'texto' | 'troca'>(a.suggestion ? 'troca' : 'resumo')
@@ -227,10 +278,10 @@ function ActionDialog({ action: a, busy, onDecide, onAdjust, onSave, onClose }: 
     <Dialog open onClose={onClose} title={`${AREA[a.area].label} · semana ${a.week}`} size="md"
       footer={
         <div className="flex flex-wrap gap-2">
-          {a.status === 'proposta' && <Button disabled={busy} title={`Vai para ${AREA[a.area].queue}`} onClick={() => onDecide(true)}><Check size={15} aria-hidden="true" /> Aprovar</Button>}
-          {a.status === 'proposta' && <Button variant="secondary" disabled={busy} onClick={() => onDecide(false)}><X size={15} aria-hidden="true" /> Recusar</Button>}
+          {a.status === 'proposta' && canAct && <Button disabled={busy} title={`Vai para ${AREA[a.area].queue}`} onClick={() => onDecide(true)}><Check size={15} aria-hidden="true" /> Aprovar</Button>}
+          {a.status === 'proposta' && canAct && <Button variant="secondary" disabled={busy} onClick={() => onDecide(false)}><X size={15} aria-hidden="true" /> Recusar</Button>}
           {a.routed_link && <Link to={a.routed_link} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><ExternalLink size={15} aria-hidden="true" /> Abrir na produção</Link>}
-          {a.status !== 'recusada' && <Button variant="secondary" aria-label="Editar" title="Editar" className="px-3" onClick={() => setEditing(true)}><Pencil size={15} aria-hidden="true" /></Button>}
+          {a.status !== 'recusada' && canAct && <Button variant="secondary" aria-label="Editar" title="Editar" className="px-3" onClick={() => setEditing(true)}><Pencil size={15} aria-hidden="true" /></Button>}
         </div>
       }>
       <div className="flex flex-col gap-3">
@@ -248,7 +299,7 @@ function ActionDialog({ action: a, busy, onDecide, onAdjust, onSave, onClose }: 
         {tab === 'troca' && sug && <div className="flex flex-col gap-2">
           <p className="text-[13px] text-accent-ink"><b>Por quê:</b> {sug.porque}</p>
           <Pages pages={sugPages} page={page} setPage={setPage} />
-          <div className="flex gap-2"><Button disabled={busy} onClick={() => onAdjust(true)}><Check size={15} aria-hidden="true" /> Aplicar</Button><Button variant="secondary" disabled={busy} onClick={() => onAdjust(false)}>Ignorar</Button></div>
+          <div className="flex gap-2"><Button disabled={busy || !canAct} onClick={() => onAdjust(true)}><Check size={15} aria-hidden="true" /> Aplicar</Button><Button variant="secondary" disabled={busy} onClick={() => onAdjust(false)}>Ignorar</Button></div>
         </div>}
       </div>
     </Dialog>
@@ -298,10 +349,10 @@ function EditDialog({ action: a, onSave, onClose }: { action: MonthlyAction; onS
   )
 }
 
-function IdeasDialog({ name, month, initial, onSave, onClose }: { name: string; month: string; initial: string; onSave: (t: string) => void; onClose: () => void }) {
+function IdeasDialog({ name, month, usd, initial, onSave, onClose }: { name: string; month: string; usd: string; initial: string; onSave: (t: string) => void; onClose: () => void }) {
   const [text, setText] = useState(initial)
   return (
-    <Dialog open onClose={onClose} title={`Refazer ${monthName(month).toLowerCase()} · ${name}`} description={`O que o cliente trouxe (ideia, oferta, data, mudança). A IA refaz as ações que ainda não foram aprovadas (≈US$ ${GEN_USD}). As aprovadas continuam na produção.`} size="md"
+    <Dialog open onClose={onClose} title={`Refazer ${monthName(month).toLowerCase()} · ${name}`} description={`O que o cliente trouxe (ideia, oferta, data, mudança). A IA refaz as ações que ainda não foram aprovadas (≈US$ ${usd}). As aprovadas continuam na produção.`} size="md"
       footer={<div className="flex gap-2"><Button disabled={text.trim().length < 3} onClick={() => onSave(text.trim())}><Sparkles size={15} aria-hidden="true" /> Refazer</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div className="flex flex-col gap-2">
         <textarea autoFocus value={text} onChange={(e) => setText(e.target.value)} rows={6} maxLength={4000} className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[14px]" placeholder="Ex.: quer fazer um feirão de seminovas no dia 13; vai chegar a Biz 2027; não quer falar de preço no Instagram." />

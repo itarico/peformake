@@ -105,7 +105,7 @@ export const CALENDAR_SCHEMA = obj({
     id: s, data: s, formato: en(FORMATOS_PECA), serie: s, titulo: s, objetivo: en(OBJETIVOS), funil: en(FUNIL),
     ideia: s, material: s, vira_anuncio: { type: 'boolean' }, tendencia_link: s,
   }),
-  capturas: arr({ data: s, onde: s, quem: s, o_que_gravar: sa, pecas: sa }),
+  capturas: arr({ data: s, onde: s, quem: s, quem_apresenta: s, o_que_gravar: sa, pecas: sa }),
   stories_rotina: arr({ dia: s, quadro: s, sequencia: s }),
   stories_extras: arr({ data: s, nome: s, telas: s }),
   nao_postar: arr({ data: s, motivo: s }),
@@ -138,15 +138,44 @@ export const TRAFFIC_SCHEMA = obj({
   }),
   testes: arr({ hipotese: s, como: s, metrica: s, prazo: s }),
   kpis_semana: arr({ semana: { type: 'integer' }, kpi: s, meta: s }),
-  anuncios: arr({ peca_id: s, conjunto: s, publico: s, texto_principal: s, titulo: s, cta: s }),
+  anuncios: arr({ peca_id: s, conjunto: s, publico: s, criativo: s, texto_principal: s, variacoes: sa, titulo: s, cta: s }),
 })
 
+/** Parte estratégica que todo cliente recebe: mercado (curto), plano de ação com KPIs (ponto de partida → meta) e banco de ideias. */
+const ACTION_PLAN = arr({ semana: { type: 'integer' }, acao: s, area: s, responsavel: s, prazo: s, kpi: s, ponto_de_partida: s, meta: s })
+const MARKET = obj({ resumo: s, pontos: arr({ fato: s, link: s, implicacao: s }) })
+const IDEAS = arr({ tipo: s, ideia: s, quando: s })
+export const STRAT_SCHEMA = obj({ diagnostico_mercado: MARKET, plano_acao: ACTION_PLAN, ideias: IDEAS })
+/** Consultoria: o mesmo + recomendações do negócio, Marketing 360 e off-line. */
+export const STRAT_FULL_SCHEMA = obj({
+  diagnostico_mercado: MARKET, plano_acao: ACTION_PLAN, ideias: IDEAS,
+  consultoria: arr({ tema: s, recomendacao: s, porque: s, impacto: s }),
+  marketing_360: obj({ resumo: s, canais: arr({ canal: s, papel: s, acao_do_mes: s, conecta_com: s }) }),
+  offline: arr({ onde: s, acao: s, quando: s, custo: s }),
+})
+
+/** Design: a direção visual do mês aplicada (separada do social). */
+export const DESIGN_SCHEMA = obj({
+  ideia_visual: s,
+  identidade_aplicada: obj({ cores: s, tipografia: s, imagem: s, elementos_fixos: s }),
+  layouts: arr({ nome: s, estrutura: s, uso: s }),
+  pecas_chave: arr({ peca_id: s, por_que: s, layout: s, cuidado: s }),
+  nao_fazer: sa,
+})
+
+/** Estratégia comercial do mês: ofertas com âncora de preço, funil e metas, SLA, follow-up, objeções, upsell, reativação e indicação. */
 export const SALES_SCHEMA = obj({
+  ofertas: arr({ nome: s, para_quem: s, o_que_inclui: s, preco: s, ancora_concorrente: s, escassez_prazo: s, garantia: s, canal: s }),
+  funil: obj({ leads: s, conversas: s, vendas: s, premissas_conversao: s, ticket_medio: s, receita_meta: s }),
   caminho: s,
+  sla: obj({ primeira_resposta: s, quem_responde: s, horario: s, regra: s }),
   script: arr({ etapa: s, mensagem: s }),
   follow_up: arr({ quando: s, mensagem: s }),
   objecoes: arr({ objecao: s, de_onde: s, resposta: s }),
-  indicadores: arr({ indicador: s, meta: s }),
+  upsell: arr({ quando: s, oferta: s, mensagem: s }),
+  reativacao: arr({ publico: s, oferta: s, mensagem: s }),
+  indicacao_parcerias: arr({ acao: s, como: s, recompensa: s }),
+  indicadores: arr({ indicador: s, ponto_de_partida: s, meta: s }),
   combinar_com_cliente: sa,
 })
 
@@ -206,16 +235,45 @@ export const TRAFFIC_TASK = (mes: string, semanas: string) => `Monte a ESTRATÉG
 - campanhas: estrutura para o gestor montar no Gerenciador: objetivo, destino (WhatsApp, perfil, site), conjuntos com público (interesses, raio/bairros, idade, remarketing), verba por dia e os criativos (ids das peças do calendário ou criativo novo descrito), critério de corte e de escala.
 - testes: 2 a 4 testes A/B com hipótese, como, métrica e prazo.
 - kpis_semana: KPI e meta de cada semana (custo por conversa, conversas, reservas, compras...).
-- anuncios: as peças do calendário que viram anúncio (peca_id), em qual conjunto, público, texto principal, título e CTA.`
+- anuncios: os anúncios do mês. Com calendário, as peças que viram anúncio (peca_id = id da peça); sem calendário (cliente só de tráfego), 4 a 8 anúncios novos (peca_id = A1, A2...).
+  Para cada um: conjunto, público, criativo (o que a imagem/vídeo mostra, formato e duração), texto principal, variacoes (2 ou 3 ganchos alternativos para testar), título e CTA.`
 
-export const SALES_TASK = (mes: string) => `Monte a ESTRATÉGIA DE VENDAS E ATENDIMENTO de ${mes}: como a conversa vira venda.
-- caminho: do anúncio/post até a venda, em passos (onde o cliente chega, quem responde, em quanto tempo, como fecha).
-- script: mensagens prontas de WhatsApp por etapa (primeira resposta, apresentar a oferta do mês, fechar, pós-venda/pedir avaliação).
-- follow_up: cadência (quando e a mensagem) para quem não fechou.
-- objecoes: as objeções que aparecem nas conversas reais dos dados (de_onde: "conversa real" com o trecho resumido, ou "provável" se for dedução) e a resposta pronta.
-- indicadores: o que medir (tempo de resposta, conversas → vendas) e a meta.
+export const SALES_TASK = (mes: string) => `Monte a ESTRATÉGIA COMERCIAL de ${mes}: o que vamos vender, por quanto, para quem e como a conversa vira venda (não é só um roteiro de WhatsApp).
+- ofertas: 1 a 4 ofertas do mês com nome (combo, kit, condição, pacote), para quem, o que inclui, preço (ou "preço a definir com o cliente"), âncora contra o preço público dos concorrentes da pesquisa (com o número), escassez/prazo real (data, quantidade), garantia ou redução de risco e canal.
+- funil: metas do mês em faixa realista a partir dos dados (leads → conversas → vendas), as premissas de conversão usadas, ticket médio e a receita esperada (faixa). Sem dado: diga a premissa.
+- caminho: do anúncio/post até a venda, em passos (onde chega, quem responde, como fecha).
+- sla: tempo máximo da primeira resposta, quem responde, horário de atendimento e a regra (ex.: lead sem resposta em 15 min vira prioridade).
+- script: mensagens prontas por etapa (primeira resposta, apresentar a oferta, fechar, pós-venda/pedir avaliação).
+- follow_up: cadência D0, D1, D3 e D7 (quando e a mensagem pronta) para quem não fechou.
+- objecoes: banco de objeções das conversas reais dos dados (de_onde: "conversa real" com o trecho resumido, ou "provável") e a resposta pronta.
+- upsell: 2 a 3 ofertas de upsell/cross-sell (quando oferecer, o quê, a mensagem).
+- reativacao: 1 a 3 ações para clientes antigos/inativos (público, oferta, mensagem).
+- indicacao_parcerias: programa de indicação e parcerias locais (ação, como funciona, recompensa).
+- indicadores: tabela de KPIs (tempo de resposta, conversas → vendas, ticket, receita...) com ponto de partida e meta.
 - combinar_com_cliente: o que acertar com o cliente para isso funcionar.`
 
 export const QUERIES_TASK = `Crie buscas curtas (2 a 4 palavras, português) para achar no TikTok e no Instagram os vídeos e posts que estão bombando no nicho DESTE cliente e na praça dele, e para a Biblioteca de Anúncios da Meta.
 tiktok: 2 buscas (ex.: "<produto> <cidade>", "<nicho> viral"). reels: 2 buscas. hashtags: 2 hashtags sem # (ex.: "pizzariarecife"). anuncios: 1 palavra-chave (ex.: "pizzaria recife").
 Use o produto/nicho real (não o segmento genérico) e a cidade grande mais próxima quando a cidade for pequena.`
+
+/** Diz à IA o que o cliente contratou: cada parte do plano só existe para o serviço contratado. */
+export const SCOPE = (c: { social?: boolean; design?: boolean; audiovisual?: boolean; trafego?: boolean; consultoria?: boolean }) => {
+  const on = [c.consultoria && 'Consultoria (plano completo)', c.trafego && 'Tráfego pago', c.social && 'Social media', c.design && 'Design', c.audiovisual && 'Audiovisual'].filter(Boolean).join(', ')
+  const onlyTraffic = c.trafego && !c.social && !c.design && !c.audiovisual && !c.consultoria
+  return `ESCOPO DESTE CLIENTE: ${on || 'nenhum serviço'}.${onlyTraffic ? ' Cliente SÓ DE TRÁFEGO: não há calendário de conteúdo nem séries; o mix de conteúdo vale só para os criativos dos anúncios. Concentre o raciocínio nos números dos anúncios, na oferta e no caminho até a conversa/venda.' : ''}`
+}
+
+export const STRAT_TASK = (mes: string, semanas: string, full: boolean) => `Feche a PARTE ESTRATÉGICA de ${mes} (${semanas}).
+- diagnostico_mercado: CURTO (o diagnóstico é o passado): resumo em 2 frases do que mudou no mercado/concorrência/tendência e 3 a 5 pontos (fato com número, link da pesquisa ou "dados do sistema", implicação para o mês).
+- plano_acao: o plano de ação semana a semana com KPI. 2 a 4 linhas por semana (semana 1 a 4): ação (verbo + o quê), area (trafego, social, design, audiovisual, vendas, atendimento, consultoria ou cliente), responsavel (papel: gestor de tráfego, social media, designer, videomaker, head de marketing, cliente), prazo (DD/MM), kpi, ponto_de_partida (o número de hoje a partir dos dados, ou "sem dado: medir na semana 1") e meta (o número no prazo). Só áreas contratadas (mais o cliente).
+- ideias: 4 a 8 ideias extras para este mês (tipo: criativa, guerrilha, data, collab, indicação), concretas para ESTE cliente, com quando fazer.${full ? `
+- consultoria: 3 a 5 recomendações do NEGÓCIO (tema: preço, produto, processo, parceria, atendimento ou equipe): a recomendação, o porquê (dado) e o impacto esperado (número).
+- marketing_360: resumo de como os canais se conectam neste mês e, por canal (Instagram, Google/Maps, site, WhatsApp, e-mail, marketplaces/iFood, indicações; só os que fazem sentido), o papel, a ação do mês e com que canal se conecta.
+- offline: 3 a 6 ações fora da internet (ponto de venda, vitrine, material impresso, evento, parceria local, experiência do cliente na loja): onde, a ação, quando e custo aproximado ("baixo", "médio" ou valor).` : ''}`
+
+export const DESIGN_TASK = (mes: string) => `Monte a DIREÇÃO VISUAL DE ${mes} para o designer (separada do social media; a copy já está pronta).
+- ideia_visual: a ideia que amarra as artes do mês em 1 a 2 frases.
+- identidade_aplicada: como usar as cores, a tipografia, a imagem (foto/ilustração) e os elementos fixos (selo de série, logo, grafismos) do guia da marca NESTE mês.
+- layouts: 2 a 4 modelos de layout reutilizáveis (nome, estrutura: onde fica título, imagem, preço, selo; e em que peças usar).
+- pecas_chave: as 3 a 6 peças mais importantes do calendário (peca_id), por que importam, qual layout usar e o cuidado (o que não pode errar).
+- nao_fazer: o que evitar nas artes deste mês.`

@@ -22,7 +22,7 @@ describe('menu', () => {
 
   it('mostra só os módulos deste sistema', () => {
     expect(labels(['admin'])).toEqual(['Início', 'Clientes', 'Estratégia', 'Tráfego', 'Social Media', 'Audiovisual', 'Comercial', 'WhatsApp', 'Financeiro', 'Equipe', 'Configurações'])
-    expect(labels(['designer'])).toEqual(['Início', 'Social Media', 'Comercial', 'Equipe'])
+    expect(labels(['designer'])).toEqual(['Início', 'Estratégia', 'Social Media', 'Comercial', 'Equipe'])
     expect(labels(['editor'])).toEqual(['Início', 'Audiovisual', 'Comercial', 'Equipe'])
     expect(labels(['traffic_manager'])).toEqual(['Início', 'Clientes', 'Estratégia', 'Tráfego', 'Comercial', 'Equipe'])
     expect(labels(['head_marketing'])).not.toContain('Clientes')

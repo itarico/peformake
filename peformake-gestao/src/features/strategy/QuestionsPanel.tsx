@@ -211,7 +211,7 @@ export function SendQuestionsButton({ clientId, name, className, compact }: { cl
   )
 }
 
-function SendQuestionsLoader({ clientId, name, onClose }: { clientId: string; name: string; onClose: () => void }) {
+export function SendQuestionsLoader({ clientId, name, onClose }: { clientId: string; name: string; onClose: () => void }) {
   const qc = useQueryClient()
   const q = useClientQuestions(clientId)
   const phone = useQuery({

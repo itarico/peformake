@@ -29,7 +29,7 @@ const MENU: MenuGroup[] = [
       { label: 'Início', to: '/inicio', icon: 'home', roles: ANY_MODULE },
       // Head vê operação e serviços, mas não a carteira de clientes nem o financeiro.
       { label: 'Clientes', to: '/clientes', icon: 'clients', roles: ['admin', 'traffic_manager'] },
-      { label: 'Estratégia', to: '/estrategia', icon: 'compass', roles: ['admin', 'head_marketing', 'traffic_manager', 'social_media'] },
+      { label: 'Estratégia', to: '/estrategia', icon: 'compass', roles: ['admin', 'head_marketing', 'traffic_manager', 'social_media', 'designer'] },
     ],
   },
   {

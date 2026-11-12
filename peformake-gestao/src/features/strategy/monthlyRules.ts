@@ -26,6 +26,8 @@ export interface MonthlyStrategy {
   doc: MonthlyDoc; ideas: string | null; cost_usd: number | null
   adjust: { semana?: number; mudou?: boolean; resumo?: string; trocas?: number } | null; adjusted_at: string | null
   finished_at: string | null; approved_at: string | null; updated_at: string | null
+  /** O que quem está vendo pode decidir (admin/head: tudo; cada área: a sua). */
+  can?: { all?: boolean; trafego?: boolean; social?: boolean; audiovisual?: boolean }
   actions: MonthlyAction[]
 }
 

@@ -20,13 +20,14 @@ export function EllcazoHeader({ children, sub, actions }: { children: ReactNode;
   )
 }
 
-/** Agenda (marcar gravação), Produção (do roteiro à aprovação), Orçamentos e Fotos (curadoria). */
+/** Agenda (marcar gravação), Produção (do roteiro à aprovação), Plano do mês (roteiros e captações do plano), Orçamentos e Fotos. */
 export function AvTabs() {
   const { state } = useAuth()
   const manager = state.status === 'ready' && hasAnyRole(state.user.roles, AV_MANAGER_ROLES)
   const tabs = [
     ...(manager ? [{ to: '/audiovisual', label: 'Agenda', end: true }] : []),
     { to: '/audiovisual/producao', label: 'Produção', end: false },
+    { to: '/audiovisual/plano-do-mes', label: 'Plano do mês', end: false },
     ...(manager ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }, { to: '/audiovisual/fotos', label: 'Fotos', end: false }] : []),
   ]
   if (tabs.length < 2) return null

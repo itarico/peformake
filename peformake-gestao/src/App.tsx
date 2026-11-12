@@ -17,6 +17,7 @@ const EllcazoClientSheet = lazy(() => import('@/features/clients/EllcazoClientSh
 const ClientFormPage = lazy(() => import('@/features/clients/ClientFormPage').then((m) => ({ default: m.ClientFormPage })))
 const ClientsPage = lazy(() => import('@/features/clients/ClientsPage').then((m) => ({ default: m.ClientsPage })))
 const AvBoard = lazy(() => import('@/features/av/AvBoard').then((m) => ({ default: m.AvBoard })))
+const AvMonthlyPlanPage = lazy(() => import('@/features/av/AvMonthlyPlanPage').then((m) => ({ default: m.AvMonthlyPlanPage })))
 const AvProjectPage = lazy(() => import('@/features/av/AvProjectPage').then((m) => ({ default: m.AvProjectPage })))
 const ContentBoard = lazy(() => import('@/features/content/ContentBoard').then((m) => ({ default: m.ContentBoard })))
 // Desligado até a integração com o Instagram (12/11): const ContentCalendar = lazy(() => import('@/features/content/ContentCalendar').then((m) => ({ default: m.ContentCalendar })))
@@ -150,6 +151,7 @@ export function App() {
             <Route path="audiovisual/fotos" element={<AvPhotosPage />} />
             <Route path="audiovisual/fotos/:id" element={<AvGalleryPage />} />
             <Route path="audiovisual/roteiros" element={<MovedTo to="/audiovisual/producao" />} />
+            <Route path="audiovisual/plano-do-mes" element={<AvMonthlyPlanPage />} />
             <Route path="audiovisual/orcamentos/novo" element={<AvQuoteEditor />} />
             <Route path="audiovisual/orcamentos/:id" element={<AvQuoteEditor />} />
           </Route>
@@ -178,13 +180,13 @@ export function App() {
           <Route path="social/agente" element={<MovedTo to="/conteudo/quadro" />} />
           <Route path="social/estrategia" element={<MovedTo to="/estrategia/social" />} />
           <Route path="social/contas" element={<MovedTo to="/conteudo/quadro" />} />
-          <Route element={<RequireRole roles={['admin', 'head_marketing', 'traffic_manager', 'social_media']} />}>
+          <Route element={<RequireRole roles={['admin', 'head_marketing', 'traffic_manager', 'social_media', 'designer']} />}>
             <Route path="estrategia/*" element={<StrategyLayout />} />
           </Route>
-          <Route path="metodologia" element={<MovedTo to="/estrategia/nichos" />} />
-          <Route path="metodologia/nichos" element={<MovedTo to="/estrategia/nichos" />} />
-          <Route path="metodologia/retencao" element={<MovedTo to="/estrategia/retencao" />} />
-          <Route path="metodologia/estudos" element={<MovedTo to="/estrategia/estudos" />} />
+          <Route path="metodologia" element={<MovedTo to="/estrategia/biblioteca?secao=nichos" />} />
+          <Route path="metodologia/nichos" element={<MovedTo to="/estrategia/biblioteca?secao=nichos" />} />
+          <Route path="metodologia/retencao" element={<MovedTo to="/estrategia/biblioteca?secao=retencao" />} />
+          <Route path="metodologia/estudos" element={<MovedTo to="/estrategia/biblioteca?secao=estudos" />} />
           <Route path="inicio" element={<HomePage />} />
           {CommercialRoutes()}
           {WhatsAppRoutes()}

@@ -89,7 +89,7 @@ export function monthlyNotices(rows: ConsultRow[] | undefined): { id: string; cl
     const m = r.monthly
     if (!m || !['pronto', 'aprovado'].includes(m.status)) return []
     const mes = new Date(`${m.month.slice(0, 7)}-15T12:00:00Z`).toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })
-    if (m.pending > 0) return [{ id: `monthly:${r.client_id}:${m.finished_at ?? ''}`, clientId: r.client_id, title: `Estratégia de ${mes} de ${r.name.trim()}: ${m.pending} ações para aprovar`, to: monthlyLink(r.client_id, m.month) }]
+    if (m.pending > 0) return [{ id: `monthly:${r.client_id}:${m.finished_at ?? ''}`, clientId: r.client_id, title: `Plano de ${mes} de ${r.name.trim()}: ${m.pending} ações para aprovar`, to: monthlyLink(r.client_id, m.month) }]
     if (m.suggestions > 0) return [{ id: `monthly-adj:${r.client_id}:${m.suggestions}`, clientId: r.client_id, title: `${r.name.trim()}: ajuste da semana sugerido`, to: monthlyLink(r.client_id, m.month) }]
     return []
   })

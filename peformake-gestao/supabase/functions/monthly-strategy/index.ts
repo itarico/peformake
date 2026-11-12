@@ -9,11 +9,15 @@
 //          · pecas:      copy completa de cada peça (em lotes paralelos) + tráfego pago; no fim vira ações (Aprovar = vai para produção)
 // mode "ajuste" (segunda 08:41 ou botão): modelo pequeno lê a semana que passou e sugere trocas nas ações da semana atual.
 // Nada é enviado ao cliente. Cada chamada fica em ai_usage_log (Firecrawl em créditos); o teto do mês é conferido em monthly_claim.
+// UM motor para todas as áreas (13/11): todo cliente com serviço de operação entra; cada etapa só roda para o que ele contratou
+// (só tráfego: 1 pesquisa, núcleo no Opus, parte estratégica, tráfego e vendas, ≈ US$ 1,5 a 2,5; Consultoria: tudo, ≈ US$ 4,5 a 6).
+// O plano sai nas 12 seções: mercado, estratégia, plano de ação com KPIs, tráfego, design, social, audiovisual, vendas,
+// consultoria, marketing 360, off-line e ideias (as estratégicas para todos; as de área só para quem contrata).
 import Anthropic from 'npm:@anthropic-ai/sdk@1.8.0'
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2.45.4'
 import {
-  BRAND_SCHEMA, BRAND_TASK, CALENDAR_SCHEMA, CALENDAR_TASK, CORE_SCHEMA, CORE_TASK, EXTRA_SCHEMA, EXTRA_TASK, PIECES_SCHEMA, PIECES_TASK, QUERIES_SCHEMA, QUERIES_TASK,
-  RESEARCH_SYSTEM, researchTasks, SALES_SCHEMA, SALES_TASK, SYSTEM, TRAFFIC_SCHEMA, TRAFFIC_TASK,
+  BRAND_SCHEMA, BRAND_TASK, CALENDAR_SCHEMA, CALENDAR_TASK, CORE_SCHEMA, CORE_TASK, DESIGN_SCHEMA, DESIGN_TASK, EXTRA_SCHEMA, EXTRA_TASK, PIECES_SCHEMA, PIECES_TASK, QUERIES_SCHEMA, QUERIES_TASK,
+  RESEARCH_SYSTEM, researchTasks, SALES_SCHEMA, SALES_TASK, SCOPE, STRAT_FULL_SCHEMA, STRAT_SCHEMA, STRAT_TASK, SYSTEM, TRAFFIC_SCHEMA, TRAFFIC_TASK,
 } from './prompts.ts'
 import { handlesIn, igHandle, trendScan } from './scan.ts'
 
@@ -59,6 +63,14 @@ const weekOfDay = (day: string) => Math.min(4, Math.floor((Number(day.slice(8, 1
 const monthLabel = (m: string) => new Date(`${m.slice(0, 7)}-15T12:00:00Z`).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' })
 const weeksText = (month: string) => weeksOf(month).map((w) => `Semana ${w.semana}: ${w.de.slice(8)}/${w.de.slice(5, 7)} a ${w.ate.slice(8)}/${w.ate.slice(5, 7)}`).join(' · ')
 
+// O que o cliente contratou decide quais etapas rodam (cliente de uma área só custa menos).
+const scopeOf = (job: Job) => {
+  const c = (job.partial.contratado ?? {}) as Row
+  const full = !!c.consultoria
+  const content = !!(c.social || c.design || c.audiovisual)
+  return { c, full, content, traffic: !!c.trafego, design: !!(c.design || c.social), sales: full || !!c.trafego }
+}
+
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: CORS })
   if (request.method !== 'POST') return json({ error: 'Use POST' }, 405)
@@ -74,9 +86,10 @@ Deno.serve(async (request) => {
     const asUser = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: request.headers.get('authorization') ?? '' } }, auth: { persistSession: false } })
     const { data: me } = await asUser.auth.getUser()
     if (!me?.user) return json({ error: 'Entre de novo no sistema.' }, 401)
-    const { data: roles } = await db.from('user_roles').select('role').eq('user_id', me.user.id).in('role', ['admin', 'head_marketing'])
+    // Cada área pede o plano dos seus clientes (a permissão por cliente fica no banco: monthly_request / monthly_area_ok).
+    const { data: roles } = await db.from('user_roles').select('role').eq('user_id', me.user.id).in('role', ['admin', 'head_marketing', 'traffic_manager', 'social_media', 'designer', 'videomaker', 'editor', 'ellcazo'])
     const { data: prof } = await db.from('profiles').select('is_active').eq('id', me.user.id).maybeSingle()
-    if (!roles?.length || !prof?.is_active) return json({ error: 'Só administrador ou head de marketing.' }, 403)
+    if (!roles?.length || !prof?.is_active) return json({ error: 'Sem permissão.' }, 403)
   }
   if (!Deno.env.get('ANTHROPIC_API_KEY')) return json({ error: 'Falta a chave da IA no Supabase.' }, 500)
 
@@ -227,7 +240,15 @@ async function stepColeta(db: SupabaseClient, ai: Anthropic, job: Job) {
   }
   const { data: set } = await db.from('ai_settings').select('*').maybeSingle()
   const cap = Number((set as Row | null)?.firecrawl_credits_per_client ?? 100)
-  const scan = await trendScan(db, job.month, queries as never, info.handles, info.anunciosColetados, Math.min(cap, 60))
+  const ctr0 = info.contratado
+  // Só tráfego: não precisa de TikTok/Reels/hashtags; fica a Biblioteca de Anúncios e os perfis.
+  const onlyAds = !(ctr0.consultoria || ctr0.social || ctr0.design || ctr0.audiovisual)
+  const scanQ = onlyAds ? { ...(queries as Row), tiktok: [], reels: [], hashtags: [] } : queries
+  const scan = await trendScan(db, job.month, scanQ as never, info.handles, info.anunciosColetados, Math.min(cap, ctr0.consultoria || ctr0.social || ctr0.design || ctr0.audiovisual ? 60 : 25))
+  // Fonte extra: dados já coletados por outra rotina (TikTok/Instagram/Biblioteca de Anúncios) para o cliente e o mês.
+  // monthly_scan_extra devolve null enquanto a tabela da rotina não existe; quando existir, basta trocar a função no banco.
+  const { data: pre } = await db.rpc('monthly_scan_extra', { _client: job.client_id, _month: job.month })
+  if (pre) (scan as Row).pre_coletado = JSON.stringify(pre).slice(0, 20_000)
   if (scan.creditos > 0) {
     const row = { function: FN, stage: 'varredura:firecrawl', client_id: job.client_id, model: 'firecrawl', input_tokens: 0, output_tokens: 0, cache_read_tokens: 0, cache_write_tokens: 0, web_searches: 0, usd: 0 }
     const { error } = await db.from('ai_usage_log').insert({ ...row, credits: scan.creditos })
@@ -238,7 +259,10 @@ async function stepColeta(db: SupabaseClient, ai: Anthropic, job: Job) {
 
 // ───────── Passo 2: pesquisa na web (2 em paralelo) ─────────
 async function stepPesquisa(db: SupabaseClient, ai: Anthropic, job: Job) {
+  const sc = scopeOf(job)
+  // Só tráfego: concorrentes/ofertas/anúncios. Só conteúdo (design/vídeo): tendências. Social e Consultoria: as duas.
   const tasks = researchTasks(monthLabel(job.month), String(job.partial.city ?? 'Recife'))
+    .filter((t) => t.key === 'mercado' ? sc.full || sc.traffic || !!sc.c.social : sc.full || sc.content)
   const brief = String(job.partial.ctx).slice(0, 30_000)
   const scan = JSON.stringify(job.partial.scan ?? {}).slice(0, 24_000)
   const retry = job.attempts >= 2
@@ -285,11 +309,16 @@ function mergeSources(...lists: (Source[] | undefined)[]) {
 async function stepNucleo(db: SupabaseClient, ai: Anthropic, job: Job) {
   const mes = monthLabel(job.month)
   const ideas = job.ideas ? `\n\nIDEIAS DO CLIENTE PARA ESTE MÊS (entram no plano):\n${job.ideas}` : ''
-  const done = await parallel(db, job, 'out_base', {
-    core: () => write(db, ai, job, 'nucleo', BRAIN, `${CORE_TASK(mes, weeksText(job.month))}\n\nENTREGAS CONTRATADAS: ${job.partial.entregas}${ideas}`, CORE_SCHEMA, job.attempts >= 2 ? 'low' : 'medium', 32000),
-    brand: () => write(db, ai, job, 'marca', WRITER, BRAND_TASK(mes), BRAND_SCHEMA, 'low'),
-    extra: () => write(db, ai, job, 'riscos', WRITER, `${EXTRA_TASK(mes)}${ideas}`, EXTRA_SCHEMA, 'low', 8000),
-  })
+  const sc = scopeOf(job)
+  const scope = SCOPE(sc.c)
+  // Núcleo no modelo mais forte só para Consultoria; as outras áreas no Opus (metade do preço).
+  const calls: Record<string, () => Promise<Row>> = {
+    core: () => write(db, ai, job, 'nucleo', sc.full ? BRAIN : WRITER, `${CORE_TASK(mes, weeksText(job.month))}\n\n${scope}\nENTREGAS CONTRATADAS: ${job.partial.entregas}${ideas}`, CORE_SCHEMA, job.attempts >= 2 ? 'low' : 'medium', 32000),
+    extra: () => write(db, ai, job, 'riscos', WRITER, `${EXTRA_TASK(mes)}\n\n${scope}${ideas}`, EXTRA_SCHEMA, 'low', 8000),
+  }
+  // Marca, pesquisa organizada e séries: só quem produz conteúdo (ou Consultoria).
+  if (sc.full || sc.content) calls.brand = () => write(db, ai, job, 'marca', WRITER, `${BRAND_TASK(mes)}\n\n${scope}`, BRAND_SCHEMA, 'low')
+  const done = await parallel(db, job, 'out_base', calls)
   const core = coreOf(done)
   // A tela e a apresentação já leem estes campos (compatível com a versão anterior).
   const doc = { ...clientSafe(core), mes: job.month, semanas_datas: weeksOf(job.month), gerado_em: new Date().toISOString(), versao: 2 }
@@ -332,13 +361,16 @@ const coreText = (job: Job) => {
 // ───────── Passo 4: calendário + vendas (em paralelo) ─────────
 async function stepCalendario(db: SupabaseClient, ai: Anthropic, job: Job) {
   const mes = monthLabel(job.month)
-  const ctr = (job.partial.contratado ?? {}) as Row
+  const sc = scopeOf(job)
+  const scope = SCOPE(sc.c)
   const calls: Record<string, () => Promise<Row>> = {
-    cal: () => write(db, ai, job, 'calendario', WRITER, `${coreText(job)}\n\n${CALENDAR_TASK(mes, weeksText(job.month), String(job.partial.entregas))}`, CALENDAR_SCHEMA, job.attempts >= 2 ? 'low' : 'medium'),
+    // Parte estratégica (todo cliente): mercado curto, plano de ação com KPIs e ideias; Consultoria ganha negócio, 360 e off-line.
+    estr: () => write(db, ai, job, 'estrategico', WRITER, `${coreText(job)}\n\n${scope}\n\n${STRAT_TASK(mes, weeksText(job.month), sc.full)}`, sc.full ? STRAT_FULL_SCHEMA : STRAT_SCHEMA, 'low', 16000),
   }
-  if (ctr.social || ctr.trafego || ctr.consultoria) calls.sales = () => write(db, ai, job, 'vendas', WRITER, `${coreText(job)}\n\n${SALES_TASK(mes)}`, SALES_SCHEMA, 'low', 16000)
-  const done = await parallel(db, job, 'out_cal', calls, ['sales'])
-  const cal = done.cal as Row
+  if (sc.full || sc.content) calls.cal = () => write(db, ai, job, 'calendario', WRITER, `${coreText(job)}\n\n${scope}\n\n${CALENDAR_TASK(mes, weeksText(job.month), String(job.partial.entregas))}`, CALENDAR_SCHEMA, job.attempts >= 2 ? 'low' : 'medium')
+  if (sc.sales) calls.sales = () => write(db, ai, job, 'vendas', WRITER, `${coreText(job)}\n\n${scope}\n\n${SALES_TASK(mes)}`, SALES_SCHEMA, 'low', 16000)
+  const done = await parallel(db, job, 'out_cal', calls, ['sales', 'estr'])
+  const cal = (done.cal ?? { pecas: [] }) as Row
   // Datas fora do mês ou repetidas: corrige para dentro do mês (a peça não some).
   const first = job.month.slice(0, 8)
   const last = weeksOf(job.month)[3]!.ate
@@ -361,8 +393,11 @@ async function stepPecas(db: SupabaseClient, ai: Anthropic, job: Job): Promise<b
     batches.push(key)
     calls[key] = () => write(db, ai, job, `copy:${key}`, WRITER, `${coreText(job)}\n\nCALENDÁRIO DO MÊS (para contexto): ${list(pecas).slice(0, 8000)}\n\nPEÇAS DESTE PEDIDO:\n${list(b)}\n\n${PIECES_TASK(b.map((p) => p.id).join(', '))}`, PIECES_SCHEMA, 'low', 20000)
   }
-  if (ctr.trafego) calls.trafego = () => write(db, ai, job, 'trafego', WRITER, `${coreText(job)}\n\nCALENDÁRIO DO MÊS: ${list(pecas)}\n\n${TRAFFIC_TASK(monthLabel(job.month), weeksText(job.month))}`, TRAFFIC_SCHEMA, 'low', 16000)
-  const done = await parallel(db, job, 'out_pecas', calls, batches)
+  const scope = SCOPE(ctr)
+  if (ctr.trafego) calls.trafego = () => write(db, ai, job, 'trafego', WRITER, `${coreText(job)}\n\n${scope}\n\nCALENDÁRIO DO MÊS: ${pecas.length ? list(pecas) : 'sem calendário de conteúdo (cliente só de tráfego): crie os anúncios novos.'}\n\n${TRAFFIC_TASK(monthLabel(job.month), weeksText(job.month))}`, TRAFFIC_SCHEMA, 'low', 16000)
+  // Direção visual do mês para o designer (separada do social).
+  if ((ctr.design || ctr.social) && pecas.length) calls.design = () => write(db, ai, job, 'design', WRITER, `${coreText(job)}\n\nCALENDÁRIO DO MÊS: ${list(pecas).slice(0, 8000)}\n\n${DESIGN_TASK(monthLabel(job.month))}`, DESIGN_SCHEMA, 'low', 8000)
+  const done = await parallel(db, job, 'out_pecas', calls, [...batches, 'design'])
   await finish(db, job, done)
   return false
 }
@@ -374,6 +409,8 @@ async function finish(db: SupabaseClient, job: Job, out: Row) {
   const cal = (job.partial.out_cal?.cal ?? {}) as Row
   const sales = (job.partial.out_cal?.sales ?? null) as Row | null
   const traffic = (out.trafego ?? null) as Row | null
+  const design = (out.design ?? null) as Row | null
+  const estr = (job.partial.out_cal?.estr ?? {}) as Row
   const ctr = (job.partial.contratado ?? {}) as Row
   const copy = new Map<string, Row>()
   for (const [k, v] of Object.entries(out)) if (k.startsWith('b') && v) for (const p of ((v as Row).pecas ?? []) as Row[]) copy.set(String(p.id), p)
@@ -385,7 +422,9 @@ async function finish(db: SupabaseClient, job: Job, out: Row) {
     pesquisa: { concorrentes: brand.concorrentes, referencias: brand.referencias, mercado: brand.mercado, tendencias: brand.tendencias, datas: brand.datas },
     marca: { visual: brand.posicionamento_visual, copy: brand.regras_copy }, series: brand.series,
     calendario: { ritmo: cal.ritmo, pecas, capturas: cal.capturas, stories_rotina: cal.stories_rotina, stories_extras: cal.stories_extras, nao_postar: cal.nao_postar, destaques: cal.destaques, banco_ideias: cal.banco_ideias },
-    trafego: traffic, vendas: sales, pedir_cliente: core.pedir_cliente,
+    trafego: traffic, vendas: sales, pedir_cliente: core.pedir_cliente, design,
+    diagnostico_mercado: estr.diagnostico_mercado ?? null, plano_acao: estr.plano_acao ?? [], ideias: estr.ideias ?? [],
+    consultoria: estr.consultoria ?? null, marketing_360: estr.marketing_360 ?? null, offline: estr.offline ?? null,
     confirmar: [...((core.confirmar ?? []) as string[]), ...internas],
     entregas: job.partial.entregas, contratado: ctr,
     fontes: job.partial.sources ?? [],
@@ -405,12 +444,8 @@ async function finish(db: SupabaseClient, job: Job, out: Row) {
     doc, status: kept2?.length ? 'aprovado' : 'pronto', stage: 'done', partial: {}, attempts: 0, busy_until: null, error: null, finished_at: new Date().toISOString(),
   }).eq('id', job.id).eq('stage', 'acoes')
   if (error) throw new Error(error.message)
-  const { data: c } = await db.from('clients').select('name').eq('id', job.client_id).maybeSingle()
-  const { data: to } = await db.rpc('client_staff_profiles', { _client_id: job.client_id, _roles: ['head_marketing'] })
-  await db.rpc('notify', {
-    _profiles: to ?? [], _kind: 'monthly_ready', _title: `Plano de ${monthLabel(job.month).split(' ')[0]} pronto: ${String(c?.name ?? '').trim()}`,
-    _body: `${pecas.length} peças com copy pronta e ${fresh.length} ações para revisar e aprovar.`, _link: `/estrategia/consultoria?cliente=${job.client_id}&aba=estrategia&mes=${job.month.slice(0, 7)}`, _client_id: job.client_id,
-  })
+  // Cada responsável recebe a sua parte (tela da área + seção dele no Plano de execução); o head recebe o todo.
+  await db.rpc('monthly_notify_ready', { _strategy: job.id })
 }
 
 const lines = (xs: unknown[] | undefined, f: (x: Row, i: number) => string) => ((xs ?? []) as Row[]).map(f).filter(Boolean).join('\n')
@@ -419,7 +454,9 @@ const PLACE: Record<string, string> = { carrossel: 'Instagram (feed)', post: 'In
 /** O plano vira ações por semana: cada peça (copy completa no briefing), tráfego, vendas e o que pedir ao cliente. */
 function actionsOf(job: Job, plano: Row, ctr: Row): Row[] {
   const weeks = weeksOf(job.month)
-  const planLink = `Plano completo do mês: /plano/${job.client_id}/${job.month.slice(0, 7)}`
+  const planBase = `/plano/${job.client_id}/${job.month.slice(0, 7)}`
+  const linkFor = (area: string) => `Plano do mês (sua seção): ${planBase}?secao=${area === 'design' ? 'design' : area === 'social' ? 'social' : area === 'audiovisual' ? 'audiovisual' : area === 'trafego' ? 'trafego' : 'vendas'}`
+  const planLink = linkFor('trafego')
   const clampDate = (d: unknown, w: number) => { const x = String(d ?? ''); const wk = weeks[w - 1]!; return /^\d{4}-\d{2}-\d{2}$/.test(x) && x >= wk.de && x <= wk.ate ? x : wk.ate }
   const rows: Row[] = []
   let pos = 0
@@ -438,12 +475,12 @@ function actionsOf(job: Job, plano: Row, ctr: Row): Row[] {
       c.texto_na_tela?.length ? `Texto na tela: ${c.texto_na_tela.join(' · ')}` : '',
       c.legenda ? `Legenda:\n${c.legenda}${c.hashtags?.length ? `\n\n${c.hashtags.map((h: string) => (h.startsWith('#') ? h : `#${h}`)).join(' ')}` : ''}` : '',
       c.cta ? `CTA: ${c.cta}` : '', ads ? `Versões para anúncio:\n${ads}` : '', p.material ? `Material: ${p.material}` : '',
-      p.tendencia_link ? `Referência/tendência: ${p.tendencia_link}` : '', !p.copy ? 'Copy não ficou pronta nesta geração: escrever a partir da ideia e do plano.' : '', planLink,
+      p.tendencia_link ? `Referência/tendência: ${p.tendencia_link}` : '', !p.copy ? 'Copy não ficou pronta nesta geração: escrever a partir da ideia e do plano.' : '', linkFor(area),
     ].filter(Boolean).join('\n\n')
     const caption = c.legenda ? `${c.legenda}${c.hashtags?.length ? `\n\n${c.hashtags.map((h: string) => (h.startsWith('#') ? h : `#${h}`)).join(' ')}` : ''}` : null
     rows.push({
       strategy_id: job.id, client_id: job.client_id, week, area, format: p.formato,
-      title: `${p.id} · ${String(p.titulo ?? 'Peça do mês')}`.slice(0, 200), what: (isVideo && area === 'audiovisual' ? [roteiro || head, c.texto_na_tela?.length ? `Texto na tela: ${c.texto_na_tela.join(' · ')}` : '', c.legenda ? `Legenda:\n${caption}` : '', planLink].filter(Boolean).join('\n\n') : body).slice(0, 12000),
+      title: `${p.id} · ${String(p.titulo ?? 'Peça do mês')}`.slice(0, 200), what: (isVideo && area === 'audiovisual' ? [roteiro || head, c.texto_na_tela?.length ? `Texto na tela: ${c.texto_na_tela.join(' · ')}` : '', c.legenda ? `Legenda:\n${caption}` : '', linkFor('audiovisual')].filter(Boolean).join('\n\n') : body).slice(0, 12000),
       place: PLACE[String(p.formato)] ?? null, owner_role: area === 'audiovisual' ? 'videomaker' : area === 'design' ? 'designer' : area === 'trafego' ? 'gestor de tráfego' : 'social media',
       due_date: clampDate(p.data, week), proof: c.metrica ? `${c.metrica.nome}: ${c.metrica.meta}`.slice(0, 300) : null,
       why: `${p.objetivo} · ${p.funil}: ${String(p.ideia ?? '')}`.slice(0, 600), position: pos++,
@@ -476,18 +513,33 @@ function actionsOf(job: Job, plano: Row, ctr: Row): Row[] {
       const piece = ((plano.calendario.pecas ?? []) as Row[]).find((p) => p.id === a.peca_id)
       const w = piece ? weekOfDay(String(piece.data)) : 1
       rows.push({
-        strategy_id: job.id, client_id: job.client_id, week: w, area: 'trafego', format: 'anuncio', title: `Anúncio ${a.peca_id}: ${String(piece?.titulo ?? a.conjunto)}`.slice(0, 200),
-        what: `Conjunto: ${a.conjunto}\nPúblico: ${a.publico}\n\nTexto principal:\n${a.texto_principal}\n\nTítulo: ${a.titulo}\nCTA: ${a.cta}\n\n${planLink}`.slice(0, 12000),
+        strategy_id: job.id, client_id: job.client_id, week: w, area: 'trafego', format: 'anuncio', title: `Anúncio ${a.peca_id}: ${String(piece?.titulo ?? a.criativo ?? a.conjunto)}`.slice(0, 200),
+        what: `Conjunto: ${a.conjunto}\nPúblico: ${a.publico}${a.criativo ? `\n\nCriativo: ${a.criativo}` : ''}\n\nTexto principal:\n${a.texto_principal}${(a.variacoes ?? []).length ? `\n\nGanchos para testar:\n${(a.variacoes as string[]).map((v, i) => `${i + 1}. ${v}`).join('\n')}` : ''}\n\nTítulo: ${a.titulo}\nCTA: ${a.cta}\n\n${planLink}`.slice(0, 12000),
         place: 'Meta Ads', owner_role: 'gestor de tráfego', due_date: clampDate(piece?.data, w), proof: null, why: `Peça ${a.peca_id} vira anúncio.`, position: 500 + pos++, payload: null,
       })
     }
   }
+  // Rotina de stories: tarefa só do social (vai para as tarefas do Social, não vira peça).
+  const stories = (plano.calendario.stories_rotina ?? []) as Row[]
+  if (ctr.social && stories.length) rows.push({
+    strategy_id: job.id, client_id: job.client_id, week: 1, area: 'social', format: 'tarefa', title: 'Rotina de stories do mês',
+    what: `${lines(stories, (x) => `${x.dia} · ${x.quadro}: ${x.sequencia}`)}${((plano.calendario.stories_extras ?? []) as Row[]).length ? `\n\nSequências especiais:\n${lines(plano.calendario.stories_extras, (x) => `${x.data} · ${x.nome}: ${x.telas}`)}` : ''}\n\n${linkFor('social')}`.slice(0, 12000),
+    place: 'Instagram (stories)', owner_role: 'social media', due_date: weeks[0]!.ate, proof: null, why: 'Stories todo dia útil mantêm o perfil vivo entre os posts.', position: 450, payload: null,
+  })
   const v = plano.vendas as Row | null
   if (v) rows.push({
-    strategy_id: job.id, client_id: job.client_id, week: 1, area: 'vendas', format: 'tarefa', title: 'Script de WhatsApp, follow-up e objeções do mês',
-    what: [`Caminho até a venda:\n${v.caminho}`, `Mensagens prontas:\n${lines(v.script, (x) => `${x.etapa}: "${x.mensagem}"`)}`, `Follow-up:\n${lines(v.follow_up, (x) => `${x.quando}: "${x.mensagem}"`)}`,
-      `Objeções:\n${lines(v.objecoes, (x) => `"${x.objecao}" (${x.de_onde})\n  Resposta: ${x.resposta}`)}`, `Combinar com o cliente: ${(v.combinar_com_cliente ?? []).join('; ')}`, planLink].join('\n\n').slice(0, 12000),
-    place: 'WhatsApp', owner_role: 'atendimento', due_date: weeks[0]!.ate, proof: lines(v.indicadores, (x) => `${x.indicador}: ${x.meta}`).slice(0, 300) || null,
+    strategy_id: job.id, client_id: job.client_id, week: 1, area: 'vendas', format: 'tarefa', title: 'Estratégia comercial do mês: ofertas, funil, atendimento e follow-up',
+    what: [
+      (v.ofertas ?? []).length ? `Ofertas do mês:\n${lines(v.ofertas, (o) => `- ${o.nome} (${o.para_quem}): ${o.o_que_inclui} · ${o.preco} · âncora: ${o.ancora_concorrente} · prazo: ${o.escassez_prazo} · garantia: ${o.garantia} · ${o.canal}`)}` : '',
+      v.funil ? `Funil e metas: ${v.funil.leads} leads → ${v.funil.conversas} conversas → ${v.funil.vendas} vendas · ticket ${v.funil.ticket_medio} · receita ${v.funil.receita_meta}\nPremissas: ${v.funil.premissas_conversao}` : '',
+      v.sla ? `Atendimento: primeira resposta em ${v.sla.primeira_resposta} · ${v.sla.quem_responde} · ${v.sla.horario}\n${v.sla.regra}` : '',
+      `Caminho até a venda:\n${v.caminho}`, `Mensagens prontas:\n${lines(v.script, (x) => `${x.etapa}: "${x.mensagem}"`)}`, `Follow-up:\n${lines(v.follow_up, (x) => `${x.quando}: "${x.mensagem}"`)}`,
+      `Objeções:\n${lines(v.objecoes, (x) => `"${x.objecao}" (${x.de_onde})\n  Resposta: ${x.resposta}`)}`,
+      (v.upsell ?? []).length ? `Upsell e cross-sell:\n${lines(v.upsell, (x) => `- ${x.quando}: ${x.oferta} ("${x.mensagem}")`)}` : '',
+      (v.reativacao ?? []).length ? `Reativação:\n${lines(v.reativacao, (x) => `- ${x.publico}: ${x.oferta} ("${x.mensagem}")`)}` : '',
+      (v.indicacao_parcerias ?? []).length ? `Indicação e parcerias:\n${lines(v.indicacao_parcerias, (x) => `- ${x.acao}: ${x.como} · recompensa: ${x.recompensa}`)}` : '',
+      `Combinar com o cliente: ${(v.combinar_com_cliente ?? []).join('; ')}`, linkFor('vendas')].filter(Boolean).join('\n\n').slice(0, 12000),
+    place: 'WhatsApp', owner_role: 'atendimento', due_date: weeks[0]!.ate, proof: lines(v.indicadores, (x) => `${x.indicador}: ${x.ponto_de_partida ? `${x.ponto_de_partida} → ` : ''}${x.meta}`).slice(0, 300) || null,
     why: 'A conversa precisa virar venda: mesmo roteiro para todos que respondem.', position: 800 + pos++, payload: null,
   })
   const ask = (plano.pedir_cliente ?? []) as Row[]
@@ -542,6 +594,12 @@ async function contextOf(db: SupabaseClient, job: Job): Promise<{ ctx: string; i
     safe(db.from('consult_collected').select('source, subject, url, data, collected_at').eq('client_id', id).gte('collected_at', new Date(Date.now() - 30 * 86400_000).toISOString()).order('collected_at', { ascending: false }).limit(10)),
     safe(db.from('whatsapp_accounts').select('id').eq('client_id', id)),
   ])
+  // Biblioteca: o estudo do nicho do cliente (metodologia + estudo do trimestre aprovado), se houver.
+  const nicheSlug = String((cli as Row | null)?.niche ?? '')
+  const [nicheRow, nicheStudy] = nicheSlug ? await Promise.all([
+    safe(db.from('niches').select('name, headline, pains, solution, kpis, offer, playbook').eq('slug', nicheSlug).maybeSingle()),
+    safe(db.from('niche_studies').select('quarter, summary, sections').eq('niche', nicheSlug).in('status', ['aprovado', 'aprovada', 'publicado']).order('quarter', { ascending: false }).limit(1).maybeSingle()),
+  ]) : [null, null]
   const c = (cli ?? {}) as Row
   const d = ((cdoc as Row | null)?.doc ?? {}) as Row
   const research = ((cdoc as Row | null)?.research ?? {}) as Row
@@ -630,6 +688,10 @@ async function contextOf(db: SupabaseClient, job: Job): Promise<{ ctx: string; i
     conversas_com_a_equipe: ((contacts ?? []) as Row[]).map((x) => hidePhones(`${cut(x.ai_summary, 240)} · intenção: ${x.ai_intent ?? '?'} · sentimento: ${x.ai_sentiment ?? '?'}`)),
     whatsapp_do_cliente_mensagens_dos_clientes_dele: leads.length ? leads.map((m) => hidePhones(cut(m.body, 160))) : 'WhatsApp do cliente não está ligado ao sistema',
     datas_sazonais: seasonal ?? [], datas_do_cliente: ownDates ?? [],
+    estudo_do_nicho: nicheRow || nicheStudy ? {
+      metodologia: nicheRow ? JSON.stringify(nicheRow).slice(0, 4000) : 'não cadastrada',
+      estudo_do_trimestre: nicheStudy ? { trimestre: (nicheStudy as Row).quarter, resumo: cut((nicheStudy as Row).summary, 1500), secoes: JSON.stringify((nicheStudy as Row).sections ?? {}).slice(0, 5000) } : 'sem estudo aprovado',
+    } : 'nicho sem estudo na Biblioteca',
     mes_anterior: prev ? { titulo: (prev as Row).doc?.titulo, meta: (prev as Row).doc?.meta, acoes_e_decisao: prevActions.map((a) => `S${a.week} ${a.area} ${a.status}: ${a.title}`) } : 'sem plano mensal anterior',
   }
   return {

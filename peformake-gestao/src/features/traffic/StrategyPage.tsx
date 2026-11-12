@@ -529,9 +529,9 @@ function ClientStrategy({ clientId, clientName, month, today, canManage }: { cli
             <h2 className="text-[17px] font-semibold tracking-tight">{clientName}</h2>
             <StagePill stage={stage} />
           </div>
-          <Button variant={strategy ? 'secondary' : 'primary'} disabled={generate.isPending || stage === 'preparing'} onClick={() => generate.mutate()}>
+          {canManage && <Button variant={strategy ? 'secondary' : 'primary'} disabled={generate.isPending || stage === 'preparing'} onClick={() => generate.mutate()}>
             <Sparkles size={16} aria-hidden="true" /> {stage === 'preparing' ? 'Gerando' : strategy ? 'Gerar de novo' : 'Gerar agora'}
-          </Button>
+          </Button>}
         </div>
         <ol className="grid grid-cols-2 gap-2 md:grid-cols-4">
           {STEPS.map((s, i) => (
@@ -581,8 +581,10 @@ function ClientStrategy({ clientId, clientName, month, today, canManage }: { cli
   )
 }
 
-export function StrategyPage() {
-  const { canManage } = useClientPermissions()
+/** readOnly: Estratégia → Tráfego → Histórico (as estratégias antigas; o plano do mês substituiu esta tela). */
+export function StrategyPage({ readOnly = false }: { readOnly?: boolean } = {}) {
+  const perms = useClientPermissions()
+  const canManage = perms.canManage && !readOnly
   const { clients, isPending, isError, refetch } = useTrafficData()
   const [params, setParams] = useSearchParams()
   const today = todayInBrazil()
