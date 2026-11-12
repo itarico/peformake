@@ -76,13 +76,14 @@ export function answeredNotices(rows: ConsultRow[] | undefined): { id: string; c
 }
 
 /** Mensagem pronta para o cliente (a pessoa revisa e envia pelo próprio WhatsApp; o sistema nunca envia sozinho). */
-export function clientMessage(name: string, firstStep: string | null | undefined): string {
+export function clientMessage(name: string, firstStep: string | null | undefined, link?: string | null): string {
   const who = name.trim()
   return [
     `Oi! Tudo bem? Aqui é da Peformake.`,
     `Terminamos o diagnóstico da ${who}: como o negócio está hoje, o que o mercado e os concorrentes estão fazendo e um plano de ação para os próximos 90 dias.`,
     firstStep ? `O primeiro passo que sugerimos: ${firstStep}` : '',
-    `Vou te mandar o PDF por aqui. Depois marcamos 30 minutos para passar juntos?`,
+    link ? `A apresentação está aqui (abre no celular, um slide por vez):\n${link}` : `Vou te mandar o PDF por aqui.`,
+    `Marcamos 30 minutos para passar juntos?`,
   ].filter(Boolean).join('\n\n')
 }
 

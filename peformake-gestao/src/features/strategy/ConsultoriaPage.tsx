@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -13,9 +13,9 @@ import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl, lookupCnpj, type CompanyLookup } from '@/features/clients/clientsApi'
 import { ago } from '@/features/settings/AutomationsCenter'
 import {
-  approveConsult, consultKey, kickConsult, markSent, redoSection, requestConsult, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
+  approveConsult, consultKey, kickConsult, markSent, presentationLink, redoSection, requestConsult, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
 } from './consultApi'
-import { printDeck, type DeckInput, type Orientation } from './consultDeck'
+import { openPresentation, printDeck, type DeckInput, type Orientation } from './consultDeck'
 import { Paged, SlideViewer } from './SlideViewer'
 import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow, type ConsultSection } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
@@ -42,6 +42,7 @@ export function ConsultoriaPage() {
   const list = useConsultList()
   const [info, setInfo] = useState<ConsultRow | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
+  const [sending, setSending] = useState<ConsultRow | null>(null)
   const qc = useQueryClient()
   const open = (id: string | null) => setParams((c) => { const n = new URLSearchParams(c); if (id) n.set('cliente', id); else { n.delete('cliente'); n.delete('aba') } return n })
   const gen = useMutation({
@@ -83,6 +84,12 @@ export function ConsultoriaPage() {
                 {a.kind === 'dados' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setInfo(r)}>{a.label}</Button>}
                 {a.kind === 'abrir' && <Button variant={r.status === 'pronto' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => open(r.client_id)}>{a.label}</Button>}
                 {a.kind === 'gerar' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={gen.isPending} onClick={() => gen.mutate(r)}>{a.label}</Button>}
+                {isApproved(r.status) && <>
+                  <Button variant="secondary" aria-label={`Abrir apresentação de ${r.name.trim()}`} title="Abrir apresentação" className="min-h-10 shrink-0 px-3"
+                    onClick={() => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) }}><Presentation size={16} aria-hidden="true" /></Button>
+                  <Button variant="secondary" aria-label={`Enviar a apresentação de ${r.name.trim()} no WhatsApp`} title="Enviar no WhatsApp" className="min-h-10 shrink-0 px-3"
+                    onClick={() => setSending(r)}><MessageCircle size={16} aria-hidden="true" /></Button>
+                </>}
                 <SendQuestionsButton clientId={r.client_id} name={r.name.trim()} className="min-h-10 shrink-0 px-3 text-[13px]" />
                 <ChevronRight size={16} aria-hidden="true" className="shrink-0 text-muted max-sm:hidden" />
               </li>
@@ -91,9 +98,21 @@ export function ConsultoriaPage() {
         </ul>
       )}
       {info && <InfoDialog row={info} onClose={() => setInfo(null)} />}
+      {sending && <RowSendDialog row={sending} onClose={() => setSending(null)} />}
     </section>
   )
 }
+
+/** Abre o link público (aba nova). A aba abre na hora do toque para o navegador não bloquear. */
+async function openPublicDeck(clientId: string): Promise<void> {
+  const w = window.open('', '_blank')
+  try {
+    const url = await presentationLink(clientId)
+    if (w) w.location.href = url; else window.location.href = url
+  } catch (e) { w?.close(); throw e }
+}
+
+const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
 
 // ───────── Pop-up de 1 passo: só o que falta ─────────
 function InfoDialog({ row, onClose }: { row: ConsultRow; onClose: () => void }) {
@@ -207,7 +226,12 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         {status === 'falta_dados' && <Button onClick={onInfo}>Informar CNPJ</Button>}
         {status === 'pronto' && <Button disabled={act.isPending} onClick={() => act.mutate(() => approveConsult(clientId))}><Check size={15} aria-hidden="true" /> Aprovar</Button>}
         {ready && <Button variant="secondary" disabled={!approved} title={approved ? undefined : 'Aprove para gerar a apresentação'} onClick={() => setDeckOpen(true)}><Download size={15} aria-hidden="true" /> Baixar apresentação</Button>}
-        {ready && <Button variant="secondary" onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente</Button>}
+        {ready && <Button variant="secondary" onClick={() => {
+          // Aprovado: abre o link do cliente. Antes de aprovar: prévia só para a equipe (mesmos slides, sem os internos).
+          if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message))
+          else openPresentation(deckInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
+        }}><Presentation size={15} aria-hidden="true" /> Abrir apresentação</Button>}
+        {ready && <Button variant="secondary" onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar no WhatsApp</Button>}
         <Button variant="secondary" onClick={() => setDirOpen(true)}><Lightbulb size={15} aria-hidden="true" /> Direcionamento{row?.direction?.trim() ? ' ✓' : ''}</Button>
         <SendQuestionsButton clientId={clientId} name={name} />
       </div>
@@ -293,18 +317,40 @@ function DirectionDialog({ clientId, name, initial, links, onClose }: { clientId
 }
 
 // ───────── Enviar ao cliente: só prepara; a pessoa confere e envia ─────────
-function SendDialog({ clientId, name, phone, doc, approved, onDeck, onClose, onSent }: { clientId: string; name: string; phone: string | null; doc: Doc; approved: boolean; onDeck: () => void; onClose: () => void; onSent: () => void }) {
-  const [text, setText] = useState(() => clientMessage(name, doc.resumo?.primeiro_passo))
+/** Enviar pela lista: carrega o diagnóstico e o telefone do cliente e abre o mesmo pop-up. */
+function RowSendDialog({ row, onClose }: { row: ConsultRow; onClose: () => void }) {
+  const qc = useQueryClient()
+  const q = useConsultDoc(row.client_id)
+  const phone = useQuery({
+    queryKey: ['client-phone', row.client_id],
+    queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', row.client_id).maybeSingle(); return (data?.phone as string | null) ?? null },
+  })
+  if (!q.data || phone.isPending) return <Dialog open onClose={onClose} title={`Enviar a ${row.name.trim()}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Carregando</p></Dialog>
+  return <SendDialog clientId={row.client_id} name={row.name.trim()} phone={phone.data ?? null} doc={(q.data.doc ?? {}) as Doc} approved={isApproved(row.status)}
+    onDeck={() => {}} onClose={onClose} onSent={() => void qc.invalidateQueries({ queryKey: consultKey })} />
+}
+
+function SendDialog(props: { clientId: string; name: string; phone: string | null; doc: Doc; approved: boolean; onDeck: () => void; onClose: () => void; onSent: () => void }) {
+  // Aprovado: a mensagem já leva o link da apresentação (o cliente abre no celular, sem baixar nada).
+  const link = useQuery({ queryKey: ['consult-link', props.clientId], enabled: props.approved, queryFn: () => presentationLink(props.clientId), staleTime: Infinity })
+  if (props.approved && link.isPending) return <Dialog open onClose={props.onClose} title={`Enviar a ${props.name}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Preparando o link</p></Dialog>
+  return <SendDialogBody {...props} link={link.data ?? null} />
+}
+
+function SendDialogBody({ clientId, name, phone, doc, approved, link, onDeck, onClose, onSent }: { clientId: string; name: string; phone: string | null; doc: Doc; approved: boolean; link: string | null; onDeck: () => void; onClose: () => void; onSent: () => void }) {
+  const [text, setText] = useState(() => clientMessage(name, doc.resumo?.primeiro_passo, link))
   const [copied, setCopied] = useState(false)
   const mark = useMutation({ mutationFn: () => markSent(clientId), onSuccess: () => { onSent(); onClose() } })
   const wa = waLink(phone, text)
   return (
-    <Dialog open onClose={onClose} title={`Enviar a ${name}`} description="O sistema não envia sozinho. Confira a mensagem, mande pelo seu WhatsApp com o PDF e marque como enviado." size="md"
+    <Dialog open onClose={onClose} title={`Enviar a ${name}`} description={approved ? "O sistema não envia sozinho. Confira a mensagem (já vai com o link da apresentação), mande pelo seu WhatsApp e marque como enviado." : "Aprove o diagnóstico para a mensagem levar o link da apresentação. O sistema não envia sozinho."} size="md"
       footer={<Button variant="secondary" disabled={mark.isPending} onClick={async () => { if (await ask(`Marcar o diagnóstico de ${name} como enviado?`)) mark.mutate() }}><Check size={15} aria-hidden="true" /> Já enviei</Button>}>
       <div className="flex flex-col gap-2">
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={8} className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[13.5px]" />
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" disabled={!approved} title={approved ? undefined : 'Aprove para gerar a apresentação'} onClick={onDeck}><Download size={15} aria-hidden="true" /> Baixar apresentação</Button>
+          {link
+            ? <a href={link} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline"><Presentation size={15} aria-hidden="true" /> Ver o que o cliente vai abrir</a>
+            : <Button variant="secondary" disabled={!approved} title={approved ? undefined : 'Aprove para gerar a apresentação'} onClick={onDeck}><Download size={15} aria-hidden="true" /> Baixar apresentação</Button>}
           {wa
             ? <a href={wa} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><MessageCircle size={15} aria-hidden="true" /> Abrir no WhatsApp</a>
             : <Button onClick={() => { void navigator.clipboard?.writeText(text); setCopied(true) }}>{copied ? 'Copiado' : 'Copiar mensagem'}</Button>}

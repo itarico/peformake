@@ -177,6 +177,23 @@ async function internalData(db: SupabaseClient, clientId: string): Promise<Recor
       }))
     }
   }
+  // Números da CONTA (dia a dia): existem mesmo quando a leitura por campanha ainda não rodou.
+  const accOnly = ((ads ?? []) as { id: string }[]).map((a) => a.id)
+  const dm = accOnly.length ? ((await safe(db.from('traffic_daily_metrics').select('account_id, day, spend_cents, impressions, clicks, leads, purchases, results, result_type').in('account_id', accOnly).gte('day', since).order('day').limit(2000))) ?? []) as Record<string, number | string>[] : []
+  const byMonth = new Map<string, Record<string, number>>()
+  for (const d of dm) {
+    const k = String(d.day).slice(0, 7)
+    const m = byMonth.get(k) ?? { investido_reais: 0, impressoes: 0, cliques: 0, contatos: 0, compras: 0, resultados: 0, dias_com_anuncio: 0 }
+    m.investido_reais = Math.round((m.investido_reais + Number(d.spend_cents ?? 0) / 100) * 100) / 100
+    m.impressoes += Number(d.impressions ?? 0); m.cliques += Number(d.clicks ?? 0); m.contatos += Number(d.leads ?? 0)
+    m.compras += Number(d.purchases ?? 0); m.resultados += Number(d.results ?? 0); if (Number(d.spend_cents ?? 0) > 0) m.dias_com_anuncio += 1
+    byMonth.set(k, m)
+  }
+  const lastDay = dm.length ? String(dm[dm.length - 1]!.day) : null
+  const resultType = [...new Set(dm.map((d) => d.result_type).filter(Boolean))].slice(0, 3)
+  // Estratégias de tráfego já feitas (e o que foi aprovado/recusado nelas): o diagnóstico continua daí, não recomeça.
+  const strat = ((await safe(db.from('traffic_strategies').select('id, kind, month, period_start, period_end, status, summary, sent_at').eq('client_id', clientId).order('created_at', { ascending: false }).limit(3))) ?? []) as Record<string, unknown>[]
+  const items = strat.length ? ((await safe(db.from('traffic_strategy_items').select('strategy_id, module, title, status, destination').in('strategy_id', strat.map((x) => x.id as string)).limit(80))) ?? []) as Record<string, unknown>[] : []
   const jids = ((contacts ?? []) as { chat_jid: string }[]).map((c) => c.chat_jid)
   const team = jids.length ? ((await safe(db.from('whatsapp_messages').select('from_me, body, sent_at').in('chat_jid', jids).not('body', 'is', null).order('sent_at', { ascending: false }).limit(120))) ?? []) as { from_me: boolean; body: string; sent_at: string }[] : []
   const accs = ((waAccounts ?? []) as { id: string }[]).map((a) => a.id)
@@ -185,7 +202,12 @@ async function internalData(db: SupabaseClient, clientId: string): Promise<Recor
   const first = inv[0]?.created_at
   return {
     contas_de_anuncio: ((ads ?? []) as Record<string, unknown>[]).map((a) => ({ nome: a.name, empresa: a.business_name, ligada: a.enabled })),
+    contas_de_anuncio_situacao: ((ads ?? []) as Record<string, unknown>[]).map((a) => ({ conta: a.name, ligada_no_sistema: a.enabled, leitura: a.enabled ? (dm.some((d) => d.account_id === a.id) ? `lida até ${lastDay}` : 'ligada mas sem números lidos (PROBLEMA INTERNO: conferir acesso da Peformake à conta)') : 'desligada no sistema (PROBLEMA INTERNO: liberar acesso ou ligar a leitura)' })),
+    trafego_por_mes_da_conta: byMonth.size ? Object.fromEntries(byMonth) : 'sem números da conta nos últimos 90 dias',
+    trafego_tipo_de_resultado: resultType.length ? resultType : null,
     campanhas_90_dias: campanhas,
+    estrategias_de_trafego_feitas: strat.length ? strat.map((x) => ({ tipo: x.kind, mes: x.month ?? x.period_start, situacao: x.status, enviada_ao_cliente: !!x.sent_at, resumo: String(x.summary ?? '').slice(0, 700),
+      itens: items.filter((i) => i.strategy_id === x.id).slice(0, 15).map((i) => ({ item: i.title, area: i.destination ?? i.module, decisao: i.status })) })) : 'nenhuma estratégia de tráfego feita ainda',
     relatorios_de_trafego: ((reports ?? []) as Record<string, unknown>[]).map((r) => {
       const m = (r.metrics ?? {}) as Record<string, unknown>
       return { tipo: r.kind, periodo: `${r.period_start} a ${r.period_end}`, resumo: String(r.summary ?? '').slice(0, 600), investido_centavos: m.spend, cliques: m.clicks, resultados: m.results, impressoes: m.impressions, semana_anterior: m.previous }

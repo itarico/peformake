@@ -73,6 +73,13 @@ export async function approveConsult(clientId: string): Promise<void> {
   if (error) fail(error)
 }
 
+/** Link público da apresentação (só depois de aprovar). Cria o código na primeira vez. */
+export async function presentationLink(clientId: string): Promise<string> {
+  const { data, error } = await rpc('consult_share_create', { _client: clientId })
+  if (error) fail(error)
+  return `${window.location.origin}/apresentacao/${data as string}`
+}
+
 export async function markSent(clientId: string): Promise<void> {
   const { error } = await rpc('consult_mark_sent', { _client: clientId })
   if (error) fail(error)

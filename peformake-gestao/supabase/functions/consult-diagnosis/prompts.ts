@@ -108,7 +108,9 @@ Você escreve o diagnóstico 360° e o plano de ação de um cliente da Consulto
 
 # O que as rotinas da Peformake já ensinam (agent_instructions: tráfego, estrategista, relatório, comercial)
 - Números dos anúncios: custo por resultado = investido ÷ resultados (sem resultado é "sem resultado", nunca divida por zero); CTR = cliques ÷ impressões. Compare sempre com o período anterior e com a média da própria conta.
+- Tráfego: use SEMPRE "trafego_por_mes_da_conta" (números da conta inteira) e "trafego_ultimos_30_dias"; "campanhas_90_dias" só detalha. Sem campanhas lidas NÃO quer dizer sem anúncio: olhe os números da conta antes de concluir. Continue das "estrategias_de_trafego_feitas" (o que já foi decidido e aprovado), sem recomeçar do zero.
 - Conta de anúncio sem leitura (sem dias de dados) não é achado sobre anúncio: é "falta liberar o acesso".
+- PROBLEMAS INTERNOS (da Peformake ou da operação: acesso não liberado, conta desligada, rastreamento/medição faltando, cadastro incompleto, dado que a equipe precisa conferir) vão SÓ em "problemas_internos" (interno, a equipe resolve). Nunca aparecem em descobertas, riscos, plano, resumo ou qualquer texto que o cliente lê.
 - Chame o resultado pelo nome real (conversa no WhatsApp, agendamento, visita, venda), nunca "resultado" ou "evento de conversão". Nome de campanha legível ("Honda Pop 110i 2024"), não o nome técnico.
 - Língua do nicho: revenda de veículos fala de estoque, moto/carro vendido, vídeo do veículo, entrada, parcela, troca, financiamento e resposta rápida; restaurante fala de pedidos, cardápio, dia fraco, iFood; clínica de avaliação e agendamento (regras do conselho); imobiliária de imóveis e visitas.
 - Recomendação boa diz o quê, onde, quanto e por quê, com o número. Ruim: "otimizar campanhas".
@@ -147,6 +149,7 @@ export const STAGE_TASK: Record<WriteStage, string> = {
 - hipoteses: 2 a 3 hipóteses para testar (como testar e o sinal de que deu certo).`,
   decisoes: `ETAPA: DECISÕES, MATURIDADE E PERGUNTAS (feita junto com o cruzamento; seja coerente com os mesmos dados). Preencha o JSON:
 - maturidade: as 7 dimensões com nota 0 a 100 e o porquê em até 15 palavras (compare com o mercado).
+- problemas_internos: 0 a 6 problemas da operação para a EQUIPE resolver (acesso, conta desligada, medição, cadastro, dado a conferir): problema (até 14 palavras), como_resolver (até 18 palavras), area (trafego, social, atendimento).
 - decisoes_peformake: 2 a 4 decisões que a Peformake precisa tomar com este cliente (INTERNO): 2 a 3 opções com prós e contras, recomendação e porquê.
 - red_flags: veredicto e alertas (INTERNO).
 - perguntas: no MÁXIMO 7, só estratégicas (que mudam uma decisão e que nem o sistema nem a internet respondem): pergunta, por_que (até 15 palavras), muda_o_que (a decisão que depende da resposta).
@@ -207,6 +210,7 @@ export const SCHEMAS: Record<WriteStage, unknown> = {
   }),
   decisoes: obj({
     maturidade: list(obj({ dimensao: en(...MATURIDADE), nota: int, porque: s() })),
+    problemas_internos: list(obj({ problema: s(), como_resolver: s(), area: s() })),
     decisoes_peformake: list(obj({ decisao: s(), opcoes: list(obj({ opcao: s(), pros: s(), contras: s() })), recomendacao: s(), porque: s() })),
     red_flags: obj({ veredicto: en('verde', 'amarelo', 'vermelho'), alertas: list(s()) }),
     perguntas: list(obj({ pergunta: s(), por_que: s(), muda_o_que: s() })),

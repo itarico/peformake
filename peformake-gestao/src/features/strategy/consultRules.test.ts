@@ -57,6 +57,11 @@ describe('envio (sempre por uma pessoa)', () => {
     expect(m).toContain('Criar o Instagram')
     expect(m).not.toMatch(/agência/i)
   })
+  it('com link da apresentação, a mensagem leva o link e não fala de PDF', () => {
+    const m = clientMessage('Will motos', null, 'https://x.app/apresentacao/abc')
+    expect(m).toContain('https://x.app/apresentacao/abc')
+    expect(m).not.toMatch(/PDF/)
+  })
   it('wa.me com DDI 55 e sem telefone não gera link', () => {
     expect(waLink('(81) 98712-2050', 'oi')).toBe('https://wa.me/5581987122050?text=oi')
     expect(waLink(null, 'oi')).toBeNull()

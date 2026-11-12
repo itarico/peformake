@@ -173,6 +173,10 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
   arr(intel.decisoes_peformake).forEach((x, i, all) => add({ internal: true, decision: i, title: words(x.decisao, 14), kicker: `Decisão para a Peformake ${i + 1}/${all.length} · interno`, section: 'inteligencia',
     body: `<div class="grid ${land ? 'g3' : 'stack'}">${arr(x.opcoes).slice(0, 3).map((op) => `<div class="card"><h3 class="clamp-2">${esc(words(op.opcao, 10))}</h3><p class="pro clamp-2">+ ${esc(words(op.pros, 12))}</p><p class="con clamp-2">− ${esc(words(op.contras, 12))}</p></div>`).join('')}</div><p class="callout"><b>Recomendação:</b> ${esc(words(x.recomendacao, 18))}</p>`,
     details: { title: 'Por quê', items: [{ v: x.porque }, ...arr(x.opcoes).map((op) => ({ k: op.opcao, v: `Prós: ${op.pros} · Contras: ${op.contras}` }))] } }))
+  const probs = arr(intel.problemas_internos)
+  if (probs.length) add({ internal: true, title: `${probs.length} ${probs.length === 1 ? 'problema interno' : 'problemas internos'} para resolver`, kicker: 'Interno · só a equipe vê', section: 'inteligencia',
+    body: `<ul class="rows">${probs.slice(0, 6).map((x) => `<li><b>${esc(x.problema)}</b><span>${esc(x.como_resolver)}</span></li>`).join('')}</ul>`,
+    details: { title: 'Problemas internos', items: probs.map((x) => ({ k: `${x.problema} (${x.area ?? 'geral'})`, v: String(x.como_resolver ?? '') })) } })
   if (intel.red_flags?.alertas?.length) add({ internal: true, title: `Alertas para a Peformake: ${({ verde: 'cliente saudável', amarelo: 'atenção', vermelho: 'risco alto' } as Record<string, string>)[intel.red_flags.veredicto] ?? ''}`, kicker: 'Interno', section: 'inteligencia', body: bullets(strs(intel.red_flags.alertas), 4, 14) })
   if (arr(doc.confirmar).length) add({ internal: true, title: 'Só confirmar com o cliente', kicker: 'Interno', section: 'do_cliente', body: `<ul class="rows">${arr(doc.confirmar).slice(0, 6).map((x) => `<li><b>${esc(words(x.item, 5))}</b><span class="clamp-1">${esc(words(x.encontrado, 14))}</span></li>`).join('')}</ul>` })
 
