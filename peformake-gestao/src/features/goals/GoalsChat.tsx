@@ -15,6 +15,7 @@ import { useSetupPending } from '@/features/clients/useSetupPending'
 import { useConsultList } from '@/features/strategy/consultApi'
 import { answeredNotices, monthlyNotices, readyNotices } from '@/features/strategy/consultRules'
 import { BeteToday, useBeteState, visibleItems, type TodayItem } from './BeteToday'
+import { firstPages, moreLabel, nextBatch, noticePrio, PAGE } from './priority'
 import { isoWeek } from '@/features/finance/whatsapp/waRules'
 import { brl, cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
 
@@ -29,12 +30,12 @@ type NewMsg =
   | { from: 'bot'; kind: 'notice'; n: Notice }
   | { from: 'bot'; kind: 'pending'; list: Pend[] }
   | { from: 'bot'; kind: 'summary' }
-  | { from: 'bot'; kind: 'today' }
+  | { from: 'bot'; kind: 'today'; ids?: string[]; all?: boolean }
   | { from: 'bot'; kind: 'view'; view: 'pendencias' | 'tarefas' | 'novidades' }
   | { from: 'bot'; kind: 'divider'; text: string }
   | { from: 'me'; kind: 'text'; text: string }
 type Msg = NewMsg & { id: number }
-type Reply = { label: string; act: 'how' | 'next' | 'all' | 'goal' | 'today' | 'menu' | 'tip' | 'bye' | 'end' | 'summary' | 'pend' | 'tasks' | 'news'; key?: string; role?: GoalRole }
+type Reply = { label: string; act: 'how' | 'next' | 'all' | 'goal' | 'today' | 'menu' | 'tip' | 'bye' | 'end' | 'summary' | 'pend' | 'tasks' | 'news' | 'more' | 'alltoday'; key?: string; role?: GoalRole }
 /** O que ainda não foi visto: mudança de número, meta batida, meta do dia ou dica. */
 type Pend = { id: string; client: string; label: string; late: number }
 type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'pending' | 'tasks'; key?: string; from?: number; text?: string; notice?: Notice; pend?: Pend[] }
@@ -42,6 +43,16 @@ type Item = { id: string; kind: 'change' | 'hit' | 'day' | 'tip' | 'notice' | 'p
 const PATH_ROLE: [RegExp, GoalRole][] = [[/^\/comercial/, 'comercial'], [/^\/financeiro/, 'financeiro'], [/^\/clientes/, 'relacionamento'], [/^\/trafego/, 'trafego'], [/^\/conteudo/, 'conteudo'], [/^\/audiovisual/, 'audiovisual']]
 const MONTH = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(new Date())
 const store = { get: (k: string) => { try { return localStorage.getItem(k) } catch { return null } }, set: (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* sem armazenamento */ } } }
+
+type SocialNews = { id: string; title: string; summary: string; what_to_do: string | null; status: string }
+type SocialSugg = { id: string; client_id: string | null; title: string; body: string; status: string }
+/** Mesma leitura (e mesmo cache) da tela do agente das redes. */
+async function socialRows<T>(table: string): Promise<T[]> {
+  const { data, error } = await (supabase.from as unknown as (t: string) => { select: (c: string) => { order: (c: string, o: { ascending: boolean }) => { limit: (n: number) => Promise<{ data: unknown; error: { message: string } | null }> } } })(table).select('*').order('created_at', { ascending: false }).limit(500)
+  if (error) throw new Error(error.message)
+  return (data ?? []) as T[]
+}
+const short = (t: string | null | undefined, n = 110) => (t ? (t.length > n ? `${t.slice(0, n - 1).trimEnd()}…` : t) : undefined)
 
 function useCoach() {
   return useQuery({
@@ -213,11 +224,15 @@ function Row({ to, onGo, title, sub, right, tone }: { to: string; onGo: () => vo
     </Link>
   )
 }
+/** Grupo da lista: 4 por vez (a lista já vem do mais importante para o menos), com "Ver mais" para o resto. */
 function Group({ title, children, empty }: { title: string; children: React.ReactNode[]; empty: string }) {
+  const [pages, setPages] = useState(1)
+  const { shown, more } = firstPages(children, pages)
   return (
     <div className="flex flex-col gap-0.5">
       <span className="px-2.5 pb-0.5 pt-2 text-[11px] font-semibold uppercase tracking-wide text-muted">{title}{children.length ? ` · ${children.length}` : ''}</span>
-      {children.length ? children : <span className="px-2.5 py-1.5 text-[12px] text-muted">{empty}</span>}
+      {children.length ? shown : <span className="px-2.5 py-1.5 text-[12px] text-muted">{empty}</span>}
+      {more > 0 && <button type="button" onClick={() => setPages((p) => p + 1)} className="mx-2.5 min-h-8 cursor-pointer self-start text-[12px] font-semibold text-accent-ink hover:underline">Ver mais {Math.min(PAGE, more)} (faltam {more})</button>}
     </div>
   )
 }
@@ -360,18 +375,27 @@ export function GoalsChat() {
   const setupPending = useSetupPending(state.status === 'ready')
   // Consultoria: diagnóstico pronto para revisar (admin e head), sem alarde.
   const consult = useConsultList(isAdmin || roles.includes('head_marketing'))
+  // Novidades das redes (Instagram) e sugestões do agente: para social media e head, sem alarde, no fim da fila.
+  const seesSocial = isAdmin || roles.includes('social_media') || roles.includes('head_marketing')
+  const socialNews = useQuery({ queryKey: ['social', 'news'], enabled: seesSocial && state.status === 'ready', retry: false, staleTime: 300_000, queryFn: () => socialRows<SocialNews>('social_news') })
+  const socialSugg = useQuery({ queryKey: ['social', 'suggestions'], enabled: seesSocial && state.status === 'ready', retry: false, staleTime: 300_000, queryFn: () => socialRows<SocialSugg>('social_suggestions') })
+  const socialRpc = async (fn: string, args: Record<string, unknown>) => {
+    const { error } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ error: { message: string } | null }>)(fn, args)
+    if (error) throw new Error(error.message)
+    void queryClient.invalidateQueries({ queryKey: ['social'] })
+  }
   const todayAll: TodayItem[] = useMemo(() => {
     const out: TodayItem[] = []
-    for (const o of overdue) out.push({ id: `inv:${o.id}:${month}`, level: 'urgente', title: `${o.name}: fatura em aberto`, sub: o.amount ? brl(o.amount) : undefined, action: { label: 'Cobrar', to: `/clientes/${o.id}?aba=contrato&acao=cobrar` } })
-    for (const p of pendAll) out.push({ id: `ent:${p.id}:${p.label}:${month}`, level: p.late > 3 ? 'urgente' : 'hoje', title: `${p.client}: ${p.label}`, sub: `${p.late} ${p.late === 1 ? 'dia' : 'dias'} de atraso`, action: { label: 'Resolver', to: p.to } })
+    for (const o of overdue) out.push({ id: `inv:${o.id}:${month}`, level: 'urgente', prio: 0, title: `${o.name}: fatura em aberto`, sub: o.amount ? brl(o.amount) : undefined, action: { label: 'Cobrar', to: `/clientes/${o.id}?aba=contrato&acao=cobrar` } })
+    for (const p of pendAll) out.push({ id: `ent:${p.id}:${p.label}:${month}`, level: p.late > 3 ? 'urgente' : 'hoje', prio: p.late > 3 ? 1 : 2, title: `${p.client}: ${p.label}`, sub: `${p.late} ${p.late === 1 ? 'dia' : 'dias'} de atraso`, action: { label: 'Resolver', to: p.to } })
     for (const t of tasksOpen) {
       const late = !!t.due_date && t.due_date < cal.iso
       if (!late && t.due_date !== cal.iso && t.priority !== 'high') continue
-      out.push({ id: `task:${t.id}`, level: late && t.priority === 'high' ? 'urgente' : 'hoje', title: t.title, sub: [t.client, t.due_date ? (late ? `venceu ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : 'vence hoje') : null].filter(Boolean).join(' · ') || undefined, action: { label: 'Abrir', to: `/trafego/tarefas?tarefa=${t.id}` } })
+      out.push({ id: `task:${t.id}`, level: late && t.priority === 'high' ? 'urgente' : 'hoje', prio: late ? 2 : 3, title: t.title, sub: [t.client, t.due_date ? (late ? `venceu ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : 'vence hoje') : null].filter(Boolean).join(' · ') || undefined, action: { label: 'Abrir', to: `/trafego/tarefas?tarefa=${t.id}` } })
     }
-    for (const p of latePieces) out.push({ id: `piece:${p.id}`, level: 'hoje', title: `${p.client}: ${p.title}`, sub: `peça atrasada desde ${p.deadline!.slice(8)}/${p.deadline!.slice(5, 7)}`, action: { label: 'Abrir peça', to: `/conteudo/peca/${p.id}` } })
+    for (const p of latePieces) out.push({ id: `piece:${p.id}`, level: 'hoje', prio: 2, title: `${p.client}: ${p.title}`, sub: `peça atrasada desde ${p.deadline!.slice(8)}/${p.deadline!.slice(5, 7)}`, action: { label: 'Abrir peça', to: `/conteudo/peca/${p.id}` } })
     // Resposta de cliente já aparece abaixo (uma linha por cliente, com o link da aba Perguntas).
-    for (const n of noticesFrom((notifs.data ?? []).filter((x) => x.kind !== 'client_answer'))) out.push({ id: n.id, level: 'info', title: `${n.icon} ${n.title}`, sub: n.lines.slice(0, 2).join(' · ') || undefined, action: n.action ? { label: n.action.label, to: n.action.to } : undefined })
+    for (const n of noticesFrom((notifs.data ?? []).filter((x) => x.kind !== 'client_answer'))) out.push({ id: n.id, level: 'info', prio: noticePrio((notifs.data ?? []).find((x) => x.id === n.ids[0])?.kind), title: `${n.icon} ${n.title}`, sub: n.lines.slice(0, 2).join(' · ') || undefined, action: n.action ? { label: n.action.label, to: n.action.to } : undefined })
     const setup = setupNotice(setupPending)
     if (setup) out.push({ id: setup.id, level: 'info', title: setup.title, sub: setup.sub, action: { label: 'Resolver', to: setup.to } })
     for (const c of readyNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `🧭 ${c.title}`, sub: 'Consultoria', action: { label: 'Revisar', to: c.to } })
@@ -381,11 +405,17 @@ export function GoalsChat() {
     for (const b of bids.data ?? []) {
       // Fatura vencida do cliente já aparece como "fatura em aberto": não repete.
       if (b.level === 'urgente' && overdue.some((o) => o.id === b.client_id)) continue
-      out.push({ id: b.id, level: b.level, title: b.title, sub: b.sub, action: { label: b.level === 'hoje' ? 'Anexar NF' : 'Abrir', to: b.to } })
+      out.push({ id: b.id, level: b.level, prio: b.level === 'urgente' ? 0 : b.level === 'hoje' ? 2 : 4, title: b.title, sub: b.sub, action: { label: b.level === 'hoje' ? 'Anexar NF' : 'Abrir', to: b.to } })
     }
-    if (wa > 0) out.push({ id: `finwa:${isoWeek()}`, level: 'info', title: `🧾 ${wa} ${wa === 1 ? 'lançamento' : 'lançamentos'} do WhatsApp para revisar`, sub: 'Antes do fechamento do mês', action: { label: 'Revisar', to: '/financeiro/whatsapp' } })
+    if (wa > 0) out.push({ id: `finwa:${isoWeek()}`, level: 'info', prio: 3, title: `🧾 ${wa} ${wa === 1 ? 'lançamento' : 'lançamentos'} do WhatsApp para revisar`, sub: 'Antes do fechamento do mês', action: { label: 'Revisar', to: '/financeiro/whatsapp' } })
+    for (const s of (socialSugg.data ?? []).filter((x) => x.status === 'nova').slice(0, 20)) {
+      out.push({ id: `ssug:${s.id}`, level: 'info', prio: 4, title: `💡 ${s.client_id ? `${clientName(s.client_id)}: ` : ''}${s.title}`, sub: short(s.body), run: { label: 'Virar tarefa', fn: () => socialRpc('social_suggestion_set', { _id: s.id, _accept: true }) }, action: s.client_id ? { label: 'Abrir cliente', to: `/clientes/${s.client_id}` } : undefined })
+    }
+    for (const n of (socialNews.data ?? []).filter((x) => x.status === 'nova').slice(0, 20)) {
+      out.push({ id: `snews:${n.id}`, level: 'info', prio: 4, title: `📱 Novidade do Instagram: ${n.title}`, sub: short(n.what_to_do ? `O que fazer: ${n.what_to_do}` : n.summary), run: { label: 'Virar tarefa', fn: () => socialRpc('social_news_set', { _id: n.id, _status: 'virou_tarefa' }) } })
+    }
     return out
-  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month, finWa.data, setupPending, bids.data, consult.data])
+  }, [overdue, pendAll, tasksOpen, latePieces, notifs.data, cal.iso, month, finWa.data, setupPending, bids.data, consult.data, socialNews.data, socialSugg.data, clientName]) // eslint-disable-line react-hooks/exhaustive-deps
   const todayItems = visibleItems(todayAll, beteState.data)
   const urgentCount = todayItems.filter((i) => i.level === 'urgente').length
 
@@ -414,6 +444,14 @@ export function GoalsChat() {
   const rnd = useMemo(() => seeded(`${cal.iso}-${role}`), [cal.iso, role])
   const pick = useMemo(() => pickWith(rnd), [rnd])
   const started = useRef(false)
+  /** "4 por vez": o que já foi mostrado nos lotes de hoje (o próximo lote pula esses). */
+  const shownRef = useRef<Set<string>>(new Set())
+  /** Lote que já recebeu o "Quer ver mais?" (para não perguntar duas vezes). */
+  const askedRef = useRef<number | null>(null)
+  const askMore = useRef<(() => void) | null>(null)
+  // Resolveu tudo do lote (✓, adiar ou "Virar tarefa"): a Bete pergunta se quer as próximas.
+  const visibleSig = todayItems.map((i) => i.id).join('|')
+  useEffect(() => { if (open && !typing) askMore.current?.() }, [visibleSig, open, typing, log.length])
 
   // Sempre mostra a última mensagem, inclusive quando aparecem os botões embaixo.
   useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight, behavior: 'smooth' }) }, [log, typing, links, replies])
@@ -561,10 +599,34 @@ export function GoalsChat() {
       [...(first ? [{ label: `Resolver ${first.client.split(' ').slice(0, 2).join(' ')}`, to: first.to }] : []), ...((myDay.data?.tasks?.length ?? 0) > 0 ? [{ label: 'Ver meu dia', to: '/' }] : []), ...(updates.length ? [{ label: 'Ver avisos', to: '/notificacoes' }] : [])].slice(0, 2))
   }
 
+  /** Manda as próximas 4 por prioridade. `reset`: recomeça do mais importante (o que já foi resolvido não volta). */
+  function batch(prefix: NewMsg[], reset = false) {
+    if (reset) shownRef.current = new Set()
+    const { batch: b, rest } = nextBatch(todayItems, shownRef.current)
+    if (!b.length) { say([...prefix, { from: 'bot', kind: 'text', text: 'Tudo resolvido por aqui. ✅' }], menu('today')); return }
+    b.forEach((i) => shownRef.current.add(i.id))
+    say([...prefix, { from: 'bot', kind: 'today', ids: b.map((i) => i.id) }],
+      [...(rest ? [{ label: `Pronto, ${moreLabel(rest).toLowerCase()}`, act: 'more' as const }] : []), other])
+  }
+
+  askMore.current = () => {
+    const last = [...log].reverse().find((m) => m.from === 'bot' && m.kind !== 'divider')
+    if (!last || last.kind !== 'today' || !last.ids || askedRef.current === last.id) return
+    const vis = new Set(todayItems.map((i) => i.id))
+    if (last.ids.some((id) => vis.has(id))) return
+    askedRef.current = last.id
+    const { batch: b, rest } = nextBatch(todayItems, shownRef.current)
+    const left = b.length + rest
+    if (!left) { say([{ from: 'bot', kind: 'text', text: pick(['Boa! 👏 Tudo resolvido por aqui.', 'Feito! ✅ Não sobrou nada pedindo atenção.']) }], menu('today')); return }
+    say([{ from: 'bot', kind: 'text', text: `Boa! 👏 Quer ver mais? ${left === 1 ? 'Falta só 1.' : `Te mando as próximas ${Math.min(PAGE, left)}?`}` }], [{ label: left === 1 ? 'Manda' : 'Sim, manda', act: 'more' }, { label: 'Agora não', act: 'bye' }])
+  }
+
   function begin() {
     const talkedToday = log.some((m) => m.from === 'bot')
     // Já conversamos hoje: a conversa continua de onde parou, sem cumprimentar de novo.
     if (talkedToday) {
+      const nb = nextBatch(todayItems, shownRef.current)
+      if (nb.batch.length && shownRef.current.size) { say([{ from: 'bot', kind: 'text', text: 'Voltou! Quer ver mais?' }], [{ label: moreLabel(nb.batch.length + nb.rest), act: 'more' }, other]); return }
       if (!news.length) { setReplies(menu()); setLinks([]); return }
       setLog((l) => [...l, { id: idRef.current++, from: 'bot', kind: 'divider', text: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) }])
       show(news[0], [{ from: 'bot', kind: 'text', text: pick(['Voltei com novidade:', 'Chegou coisa nova desde a última vez:', 'Atualizei por aqui:']) }])
@@ -573,8 +635,8 @@ export function GoalsChat() {
     const n = todayItems.length
     const dayLine = n ? ` Hoje tem ${n} ${n === 1 ? 'coisa' : 'coisas'} pedindo atenção${urgentCount ? ` (${urgentCount} ${urgentCount === 1 ? 'urgente' : 'urgentes'})` : ''}.` : ' Tudo em dia por aqui. ✅'
     const hello: NewMsg = { from: 'bot', kind: 'text', text: greeting(pick, firstName, day, days, MONTH) + dayLine }
-    // Tem urgente: ele vem primeiro, antes de metas e novidades.
-    if (urgentCount) { say([hello, { from: 'bot', kind: 'text', text: 'Começando pelo mais urgente. Toque em ✓ quando resolver:' }, { from: 'bot', kind: 'today' }], [...(news.length ? [{ label: 'Ver novidades', act: 'next' as const }] : []), other]); return }
+    // Tem o que pede atenção: 4 por vez, o mais importante primeiro (dinheiro, cliente, atraso, hoje, novidade).
+    if (n) { batch([hello, { from: 'bot', kind: 'text', text: n > PAGE ? `Começando pelas ${PAGE} mais importantes. Toque em ✓ quando resolver:` : 'Toque em ✓ quando resolver:' }], true); return }
     if (!news.length) { say([hello, { from: 'bot', kind: 'text', text: 'Nada novo desde a última vez. O que você quer ver?' }], menu()); return }
     show(news[0] ?? tips[0], [hello])
   }
@@ -611,7 +673,12 @@ export function GoalsChat() {
     }
     if (r.act === 'summary') summary()
     if (r.act === 'menu') say([{ from: 'bot', kind: 'text', text: pick(['O que você quer ver agora?', 'Claro! O que eu te mostro?']) }], menu())
-    if (r.act === 'today') say([{ from: 'bot', kind: 'text', text: todayItems.length ? `O que pede atenção agora (${todayItems.length}). Toque em ✓ quando resolver:` : 'Nada pedindo atenção agora. ✅' }, ...(todayItems.length ? [{ from: 'bot' as const, kind: 'today' as const }] : []), { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('today'))
+    if (r.act === 'today') {
+      if (!todayItems.length) say([{ from: 'bot', kind: 'text', text: 'Nada pedindo atenção agora. ✅' }], menu('today'))
+      else batch([{ from: 'bot', kind: 'text', text: todayItems.length > PAGE ? `São ${todayItems.length}. As ${PAGE} mais importantes primeiro:` : 'O que pede atenção agora. Toque em ✓ quando resolver:' }], true)
+    }
+    if (r.act === 'more') batch([{ from: 'bot', kind: 'text', text: pick(['Aqui vão as próximas:', 'Próximas, por ordem de importância:']) }])
+    if (r.act === 'alltoday') say([{ from: 'bot', kind: 'text', text: `A lista inteira (${todayItems.length}), do mais importante para o menos:` }, { from: 'bot', kind: 'today', all: true }], menu('today'))
     if (r.act === 'pend') say([{ from: 'bot', kind: 'text', text: pendCount ? 'Suas pendências agora:' : 'Nada atrasado agora. 👌' }, ...(pendCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'pendencias' as const }] : []), { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('pend'))
     if (r.act === 'tasks') say([{ from: 'bot', kind: 'text', text: taskCount ? 'O que está com você:' : 'Nenhuma tarefa aberta com você. 👌' }, ...(taskCount ? [{ from: 'bot' as const, kind: 'view' as const, view: 'tarefas' as const }] : []), { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('tasks'))
     if (r.act === 'news') say([{ from: 'bot', kind: 'text', text: 'Novidades da semana:' }, { from: 'bot', kind: 'view', view: 'novidades' }, { from: 'bot', kind: 'text', text: 'Quer ver mais alguma coisa?' }], menu('news'))
@@ -680,6 +747,10 @@ export function GoalsChat() {
     // Pendências: tudo que passou do prazo.
     return (
       <div className="flex flex-col">
+        {/* Dinheiro primeiro, depois cliente esperando, depois o que é seu. */}
+        {isAdmin && <Group title="Cobranças em atraso" empty="Ninguém devendo. 💚">
+          {overdue.map((o) => <Row key={o.id} to={`/clientes/${o.id}?aba=contrato&acao=cobrar`} onGo={go} title={o.name} sub="fatura em aberto" right={o.amount ? brl(o.amount) : undefined} tone="warn" />)}
+        </Group>}
         {seesDeliveries && <Group title="Entregas dos clientes" empty="Nenhuma entrega atrasada. 👏">
           {pendAll.map((p, i) => <Row key={`${p.id}${i}`} to={p.to} onGo={go} title={p.client} sub={p.label} right={`${p.late} ${p.late === 1 ? 'dia' : 'dias'}`} tone="warn" />)}
         </Group>}
@@ -687,9 +758,6 @@ export function GoalsChat() {
           {[...latePieces.map((p) => <Row key={p.id} to={`/conteudo/peca/${p.id}`} onGo={go} title={`${p.client} · ${p.title}`} sub="peça" right={`venceu ${dmy(p.deadline)}`} tone="warn" />),
             ...lateTasks.map((t) => <Row key={t.id} to={`/trafego/tarefas?tarefa=${t.id}`} onGo={go} title={t.title} sub={t.client ?? 'tarefa'} right={`venceu ${dmy(t.due_date)}`} tone="warn" />)]}
         </Group>
-        {isAdmin && <Group title="Cobranças em atraso" empty="Ninguém devendo. 💚">
-          {overdue.map((o) => <Row key={o.id} to={`/clientes/${o.id}?aba=contrato&acao=cobrar`} onGo={go} title={o.name} sub="fatura em aberto" right={o.amount ? brl(o.amount) : undefined} tone="warn" />)}
-        </Group>}
       </div>
     )
   }
@@ -726,7 +794,7 @@ export function GoalsChat() {
                       <span className="flex flex-wrap gap-1.5">{rows.filter((x) => x.role === m.role).map((g) => <button key={g.key} type="button" onClick={() => act({ label: GOAL_META[g.key]!.short, act: 'goal', key: g.key, role: g.role })} className="min-h-8 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-medium hover:border-ink">{GOAL_META[g.key]!.short}</button>)}</span>
                     </span>
                   )}
-                  {m.kind === 'today' && <div className="-mx-1 w-[300px] max-w-full"><BeteToday items={todayItems} goalLine={null} onGo={close} /></div>}
+                  {m.kind === 'today' && <div className="-mx-1 w-[300px] max-w-full"><BeteToday items={m.all ? todayItems : m.ids ? todayItems.filter((i) => m.ids!.includes(i.id)) : nextBatch(todayItems, new Set()).batch} goalLine={null} onGo={close} emptyText={m.ids ? 'Tudo deste lote resolvido ✅' : undefined} total={m.all ? undefined : todayItems.length} onAll={() => act({ label: 'Ver tudo', act: 'alltoday' })} /></div>}
                   {m.kind === 'view' && <div className="-mx-2 -my-1 w-[300px] max-w-full">{panel(m.view)}</div>}
                 </div>
               ))}

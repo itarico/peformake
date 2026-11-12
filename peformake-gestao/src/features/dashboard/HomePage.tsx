@@ -9,6 +9,7 @@ import { deltaTone, fillDays, pctChange } from '@/components/charts/chartRules'
 import { cn } from '@/lib/cn'
 import { AV_ROLES, COMMERCIAL_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, TRAFFIC_ROLES, hasAnyRole, type AppRole } from '@/lib/roles'
 import { MyDay } from './MyDay'
+import { firstPages, PAGE } from '@/features/goals/priority'
 import { SetupPendingAction } from '@/features/clients/SetupPendingCard'
 import { useSetupPending } from '@/features/clients/useSetupPending'
 import type { PendingSetup } from '@/features/clients/setupRules'
@@ -110,12 +111,15 @@ function BusinessSection({ side }: { side: React.ReactNode }) {
 function ActionList({ actions, loading, setup }: { actions: ActionItem[]; loading: boolean; setup: PendingSetup[] }) {
   const sorted = [...actions].sort((a, b) => Number(!!b.urgent) - Number(!!a.urgent))
   const total = actions.length + (setup.length > 0 ? 1 : 0)
+  // 4 por vez: o mais urgente primeiro; o resto atrás de "Ver mais".
+  const [pages, setPages] = useState(1)
+  const { shown, more } = firstPages(sorted, pages)
   return (
     <Panel title="Precisa de você" className="pf-rise" action={total > 0 ? <span className="text-[13px] tabular-nums text-muted">{total} {total === 1 ? 'item' : 'itens'}</span> : undefined}>
       {loading && total === 0 && <p role="status" className="text-[13px] text-muted">Carregando</p>}
       {!loading && total === 0 && <p className="flex items-center gap-2 text-[14px] text-ok-ink"><CheckCircle2 size={16} aria-hidden="true" /> Tudo em dia.</p>}
       <ul className="-mx-2 flex flex-col">
-        {sorted.map((x) => (
+        {shown.map((x) => (
           <li key={x.key}>
             <Link to={x.to} className="group flex min-h-12 items-center gap-3 rounded-xl px-2 text-ink no-underline hover:bg-raised">
               <span className={cn('w-10 shrink-0 text-right text-[20px] font-semibold tabular-nums', x.urgent && 'text-warn-ink')}>{x.count}</span>
@@ -125,8 +129,9 @@ function ActionList({ actions, loading, setup }: { actions: ActionItem[]; loadin
             </Link>
           </li>
         ))}
-        <SetupPendingAction pending={setup} />
+        {more === 0 && <SetupPendingAction pending={setup} />}
       </ul>
+      {more > 0 && <button type="button" onClick={() => setPages((p) => p + 1)} className="mt-1 min-h-10 cursor-pointer self-start text-[13px] font-semibold text-accent-ink hover:underline">Ver mais {Math.min(PAGE, more)} (faltam {more + (setup.length > 0 ? 1 : 0)})</button>}
     </Panel>
   )
 }
