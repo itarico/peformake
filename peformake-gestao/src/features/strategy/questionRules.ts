@@ -8,6 +8,8 @@ export const MAX_OPTIONS = 8
 export const MAX_FOLLOWUPS = 1
 /** No máximo 4 perguntas por conversa (a equipe não consegue marcar mais; o banco também recusa). */
 export const MAX_PER_CHAT = 4
+/** "Mandar todas": limite de perguntas num link só (o banco aceita até 30). */
+export const ALL_MAX = 30
 /** Pergunta curta e direta: a IA mira em até 90 letras; acima de 120 é descartada. */
 export const MAX_QUESTION_LEN = 120
 export const SKIP_LABEL = 'Responder depois'
