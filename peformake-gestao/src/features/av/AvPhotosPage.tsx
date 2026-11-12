@@ -7,7 +7,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
-import { useProduction } from '@/features/production/useProduction'
+import { inArea, useProduction } from '@/features/production/useProduction'
 import { AvTabs, EllcazoHeader } from './AvBoard'
 import { createGallery, deleteItems, getGallery, GALLERY_STATUS, listGalleries, storageStatus, teamPreviewUrls, updateGallery, uploadPhotos, type Gallery, type GalleryStatus } from './galleryApi'
 import { watermarkedPreview } from './imageTools'
@@ -75,7 +75,7 @@ function NewGalleryDialog({ open, onClose }: { open: boolean; onClose: () => voi
         <label className="flex flex-col text-[13px] font-semibold">Cliente
           <select value={v.client} onChange={(e) => setV({ ...v, client: e.target.value })} className={field}>
             <option value="">Escolha o cliente</option>
-            {(clients ?? []).filter((c) => c.isActive).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {(clients ?? []).filter((c) => inArea(c, 'audiovisual')).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </label>
         <label className="flex flex-col text-[13px] font-semibold">Nome da galeria<input value={v.title} onChange={(e) => setV({ ...v, title: e.target.value })} placeholder="Ensaio de produtos · novembro" className={field} /></label>

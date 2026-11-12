@@ -3,7 +3,8 @@ export interface TrafficClient {
   name: string
   segment: string | null
   isActive: boolean
-  /** Tem o serviço de Tráfego ativo no cadastro. */
+  isLost?: boolean
+  /** Tem o serviço de Tráfego ativo no cadastro e não está perdido nem desativado. */
   hasTraffic: boolean
 }
 

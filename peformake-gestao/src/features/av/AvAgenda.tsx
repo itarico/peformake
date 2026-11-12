@@ -26,7 +26,7 @@ export function AvAgenda() {
   const navigate = useNavigate()
   const [month] = useMonthParam()
   const today = todayInBrazil()
-  const { clients, clientName } = useProduction()
+  const { clients, clientName, isLive } = useProduction()
   const [dialog, setDialog] = useState<{ client?: string; day?: string } | null>(null)
   const last = useMemo(() => { const d = new Date(`${month}T12:00:00Z`); d.setUTCMonth(d.getUTCMonth() + 1); return d.toISOString().slice(0, 10) }, [month])
 
@@ -55,7 +55,7 @@ export function AvAgenda() {
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['av-settings'] }); void queryClient.invalidateQueries({ queryKey: ['av-calendar'] }) },
   })
 
-  const shoots = (projects.data ?? []).filter((p) => p.shootAt && p.status !== 'cancelled' && p.shootAt.slice(0, 7) === month.slice(0, 7))
+  const shoots = (projects.data ?? []).filter((p) => p.shootAt && p.status !== 'cancelled' && isLive(p.clientId, 'audiovisual') && p.shootAt.slice(0, 7) === month.slice(0, 7))
   const shotClients = new Set(shoots.map((p) => p.clientId))
   const toSchedule = (clients ?? []).filter((c) => c.isActive && c.recurring && inAreas(c, AV_AREAS) && !shotClients.has(c.id)).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
   const googleEvents = (calendar.data?.events ?? []).filter((e) => !e.av_project_id)

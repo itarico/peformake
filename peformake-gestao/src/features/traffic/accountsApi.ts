@@ -3,7 +3,7 @@ import { isTrafficService, type AdAccount, type TrafficClient } from './accountR
 
 export async function listTrafficClients(): Promise<TrafficClient[]> {
   const [clients, links, services] = await Promise.all([
-    supabase.from('clients').select('id, name, segment, is_active').order('name'),
+    supabase.from('clients').select('id, name, segment, is_active, is_lost').order('name'),
     supabase.from('client_services').select('client_id, service_id, is_active').eq('is_active', true),
     supabase.from('services').select('id, name'),
   ])
@@ -13,7 +13,8 @@ export async function listTrafficClients(): Promise<TrafficClient[]> {
   const withTraffic = new Set((links.data ?? []).filter((l) => l.service_id && trafficIds.has(l.service_id)).map((l) => l.client_id))
   const known = !links.error && !services.error
   return (clients.data ?? []).map((row) => ({
-    id: row.id, name: row.name.trim(), segment: row.segment, isActive: row.is_active, hasTraffic: !known || withTraffic.has(row.id),
+    id: row.id, name: row.name.trim(), segment: row.segment, isActive: row.is_active, // Regra da operação: só entra no Tráfego quem está vivo (ativo e não perdido) e tem o serviço ativo.
+    hasTraffic: row.is_active && !row.is_lost && (!known || withTraffic.has(row.id)),
   }))
 }
 

@@ -161,7 +161,7 @@ export function DesignPage() {
   if (!queue.data || !clients || !staff) {
     return <LoadState isPending={queue.isPending || isPending} isError={queue.isError || isError} refetch={() => { refetch(); void queue.refetch() }} />
   }
-  const all = designQueue(queue.data.filter((i) => isLive(i.clientId)), myStaffId)
+  const all = designQueue(queue.data.filter((i) => isLive(i.clientId, 'conteudo')), myStaffId)
   const mineCount = myStaffId ? all.filter((i) => i.designerId === myStaffId).length : 0
   const list = onlyMine && myStaffId ? all.filter((i) => i.designerId === myStaffId) : all
   const mineScore = (score.data ?? []).filter((r) => (myStaffId && mineCount ? r.designerId === myStaffId : true))

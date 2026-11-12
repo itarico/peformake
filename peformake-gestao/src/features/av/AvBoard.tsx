@@ -73,7 +73,7 @@ export function AvBoard() {
   const { clientName, isLive } = useProduction()
 
   const list = useMemo(() => (projects.data ?? []).filter((p) => {
-    if (p.status === 'cancelled' || !isLive(p.clientId)) return false
+    if (p.status === 'cancelled' || !isLive(p.clientId, 'audiovisual')) return false
     if (onlyClient && p.clientId !== onlyClient) return false
     if (person === 'me' && myStaffId && ![p.videomakerId, p.editorId, p.scriptwriterId].includes(myStaffId)) return false
     if (person && person !== 'me' && ![p.videomakerId, p.editorId, p.scriptwriterId].includes(person)) return false

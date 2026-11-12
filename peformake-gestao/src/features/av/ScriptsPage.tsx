@@ -7,7 +7,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
-import { useProduction } from '@/features/production/useProduction'
+import { inArea, useProduction } from '@/features/production/useProduction'
 import { AvTabs, EllcazoHeader } from './AvBoard'
 
 type ScriptStatus = 'rascunho' | 'aprovado' | 'gravado' | 'arquivado'
@@ -62,7 +62,7 @@ function ScriptForm({ script, onClose }: { script: Script | null; onClose: () =>
         <label className="flex flex-col text-[13px] font-semibold">Cliente
           <select value={d.clientId} disabled={!!script} onChange={(e) => setD({ ...d, clientId: e.target.value })} className={field}>
             <option value="">Escolha o cliente</option>
-            {(clients ?? []).filter((c) => c.isActive).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {(clients ?? []).filter((c) => inArea(c, 'audiovisual')).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </label>
         <label className="flex flex-col text-[13px] font-semibold">Situação
@@ -88,15 +88,15 @@ function ScriptForm({ script, onClose }: { script: Script | null; onClose: () =>
 
 /** Roteiros de todos os clientes: os aprovados na estratégia chegam sozinhos; exporta no layout da Ellcazo. */
 export function ScriptsPage() {
-  const { clientName } = useProduction()
+  const { clientName, isLive } = useProduction()
   const data = useQuery({ queryKey: ['client-scripts'], queryFn: listScripts })
   const [q, setQ] = useState('')
   const [status, setStatus] = useState<ScriptStatus | 'ativos'>('ativos')
   const [editing, setEditing] = useState<Script | 'new' | null>(null)
 
-  const list = useMemo(() => (data.data ?? []).filter((s) =>
+  const list = useMemo(() => (data.data ?? []).filter((s) => isLive(s.clientId, 'audiovisual') &&
     (status === 'ativos' ? s.status !== 'arquivado' : s.status === status) &&
-    (!q.trim() || `${clientName(s.clientId)} ${s.title}`.toLowerCase().includes(q.trim().toLowerCase()))), [data.data, status, q, clientName])
+    (!q.trim() || `${clientName(s.clientId)} ${s.title}`.toLowerCase().includes(q.trim().toLowerCase()))), [data.data, status, q, clientName, isLive])
 
   return (
     <div className="theme-ellcazo flex flex-col gap-4">

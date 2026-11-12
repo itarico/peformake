@@ -43,7 +43,8 @@ async function loadAll() {
       headline: String((r.copy as { headline?: string })?.headline ?? ''), status: r.status as CreativeRequest['status'],
       error: r.error, itemIds: r.item_ids ?? [], createdAt: r.created_at,
     })),
-    clients: (clients.data ?? []).filter((c) => c.is_active),
+    // Só quem o Conteúdo atende hoje (Social Media ou Design ativo, não perdido).
+    clients: (clients.data ?? []).filter((c) => c.is_active && (c.areas ?? []).some((a) => a === 'social' || a === 'design')),
     settings: settings.data ? { autoEnabled: settings.data.auto_enabled, autoToPortal: settings.data.auto_to_portal, driveRootId: settings.data.drive_root_id, aiTakeover: settings.data.ai_takeover, minutes: settings.data.ai_takeover_minutes, autoReply: settings.data.hub_auto_reply, replyGroups: settings.data.hub_reply_groups } as DesignSettings : null,
   }
 }
@@ -215,7 +216,7 @@ export function AutoCreativePage() {
         <section aria-label="Pedidos" className="overflow-hidden rounded-3xl border border-line bg-surface">
           <h2 className="border-b border-line bg-raised/50 px-5 py-2.5 text-[13px] font-semibold">Modelo rápido: últimos pedidos</h2>
           <ul>
-            {requests.map((r) => (
+            {requests.filter((r) => name.has(r.clientId)).map((r) => (
               <li key={r.id} className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-3 last:border-b-0">
                 <div className="min-w-0 flex-1">
                   <p className="font-medium">{name.get(r.clientId) ?? 'Cliente'} <span className="font-normal text-muted">· {r.headline}</span></p>

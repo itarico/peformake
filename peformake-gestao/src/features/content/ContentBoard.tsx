@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
-import { DESIGN_AREAS, inAreas, useProduction } from '@/features/production/useProduction'
+import { DESIGN_AREAS, inArea, inAreas, useProduction } from '@/features/production/useProduction'
 import { ContentSummary } from '@/features/dashboard/Summaries'
 import { TaskDialog, type Task } from '@/features/social/SocialPage'
 import { SOURCE_LABEL, SOURCE_TONE } from '@/features/social/socialRules'
@@ -69,14 +69,14 @@ export function ContentBoard() {
   const [tab, setTab] = useState<BoardColumn>('briefings')
   const [editing, setEditing] = useState<Task | 'new' | null>(null)
 
-  const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId)), filters, clientName), [items.data, filters, clientName, isLive])
+  const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId, 'conteudo')), filters, clientName), [items.data, filters, clientName, isLive])
   if (!items.data || !clients || !staff) {
     return <LoadState isPending={items.isPending || isPending} isError={items.isError || isError} refetch={() => { refetch(); void items.refetch() }} />
   }
   const set = (patch: Partial<ContentFilters>) => setFilters((f) => ({ ...f, ...patch }))
-  const clientsInMonth = clients.filter((c) => c.isActive && items.data.some((i) => i.clientId === c.id))
+  const clientsInMonth = clients.filter((c) => inArea(c, 'conteudo') && items.data.some((i) => i.clientId === c.id))
   const q = filters.query.trim().toLocaleLowerCase('pt-BR')
-  const taskList = (tasks.data ?? []).filter((t) => (!filters.clientId || t.client_id === filters.clientId)
+  const taskList = (tasks.data ?? []).filter((t) => (!t.client_id || isLive(t.client_id, 'conteudo')) && (!filters.clientId || t.client_id === filters.clientId)
     && (!q || `${t.title} ${t.client_id ? clientName(t.client_id) : ''}`.toLocaleLowerCase('pt-BR').includes(q)))
     .sort((a, b) => Number(b.priority) - Number(a.priority))
   const byCol = (col: BoardColumn) => visible.filter((i) => boardColumn(i, now) === col)

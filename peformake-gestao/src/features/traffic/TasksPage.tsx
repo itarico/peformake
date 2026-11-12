@@ -363,7 +363,11 @@ export function TasksPage() {
     setParams((current) => { const next = new URLSearchParams(current); next.delete('tarefa'); return next }, { replace: true })
   }, [linked, tasks.data, setParams])
   const [now] = useState(() => Date.now())
-  const visible = useMemo(() => filterTasks(tasks.data ?? [], filters, now), [tasks.data, filters, now])
+  // Tarefa de cliente perdido ou desativado some do quadro (o dado fica; volta se o cliente voltar).
+  const visible = useMemo(() => {
+    const dead = new Set((clients ?? []).filter((c) => !c.isActive || c.isLost).map((c) => c.id))
+    return filterTasks((tasks.data ?? []).filter((t) => !t.clientId || !dead.has(t.clientId)), filters, now)
+  }, [tasks.data, filters, now, clients])
   const clientName = useMemo(() => new Map((clients ?? []).map((c) => [c.id, c.name])), [clients])
   const staffName = useMemo(() => new Map((staff.data ?? []).map((p) => [p.id, p.name])), [staff.data])
 

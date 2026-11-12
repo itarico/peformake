@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, Check, ImagePlus, Loader2, RotateCcw, Sparkles, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -8,6 +8,7 @@ import { SearchSelect } from '@/components/ui/SearchSelect'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
+import { inArea, useProduction } from '@/features/production/useProduction'
 
 // ===== Pedido de arte para o agente de design (rotina na nuvem) =====
 
@@ -35,16 +36,11 @@ export const STEPS = [
   { id: 'pronto', label: 'Pronta' },
 ] as const
 
+/** Clientes que o Conteúdo atende hoje (Social Media ou Design ativo, não perdido). Mesma lista da produção. */
 export function useClients() {
-  return useQuery({
-    queryKey: ['production-clients'],
-    staleTime: 300_000,
-    queryFn: async () => {
-      const { data, error } = await supabase.rpc('production_clients')
-      if (error) throw error
-      return (data ?? []).filter((c) => c.is_active).sort((a, b) => a.name.localeCompare(b.name))
-    },
-  })
+  const { clients, isPending } = useProduction()
+  const data = useMemo(() => clients?.filter((c) => inArea(c, 'conteudo')).sort((a, b) => a.name.localeCompare(b.name)), [clients])
+  return { data, isPending }
 }
 
 function ArtRequestForm({ onDone, clientId: fixedClient, initialText, seasonKey }: { onDone: () => void; clientId?: string; initialText?: string; seasonKey?: string }) {
@@ -288,6 +284,7 @@ function RequestCard({ r, client, thumbs }: { r: Req; client: string; thumbs: Ma
 /** Pedidos de arte ao agente, com o andamento ao vivo e a arte quando fica pronta. */
 export function ArtRequestsPanel() {
   const clients = useClients()
+  const { isLive } = useProduction()
   const q = useQuery({
     queryKey: ['art-requests'],
     queryFn: loadRequests,
@@ -305,7 +302,7 @@ export function ArtRequestsPanel() {
       </div>
       {q.isPending && <p role="status" className="p-6 text-center text-muted">Carregando</p>}
       <ul>
-        {(q.data?.reqs ?? []).map((r) => <RequestCard key={r.id} r={r} client={name.get(r.client_id) ?? 'Cliente'} thumbs={q.data!.thumbs} />)}
+        {(q.data?.reqs ?? []).filter((r) => isLive(r.client_id, 'conteudo')).map((r) => <RequestCard key={r.id} r={r} client={name.get(r.client_id) ?? 'Cliente'} thumbs={q.data!.thumbs} />)}
         {q.data && q.data.reqs.length === 0 && <li className="p-8 text-center text-muted">Nenhum pedido ainda. Clique em <b>Pedir arte</b> e escreva o que precisa.</li>}
       </ul>
     </section>

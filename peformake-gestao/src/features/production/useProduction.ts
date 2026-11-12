@@ -14,12 +14,25 @@ export interface ClientOption {
   recurring: boolean
 }
 
-/** Cliente só aparece numa área se tiver serviço ativo dela. */
-export const DESIGN_AREAS = ['design', 'social'] as const
-export const AV_AREAS = ['audiovisual'] as const
-export function inAreas(c: ClientOption, areas: readonly string[]): boolean {
-  return c.areas.some((a) => areas.includes(a))
+/**
+ * Regra da operação (Italo, 12/11): o cliente só aparece numa área se tiver serviço ATIVO dela
+ * e nunca se estiver perdido ou desativado. Mesma regra no banco: public.client_in_area(cliente, área).
+ * Conteúdo/Design aceita pacote de Social Media OU só de Design.
+ */
+export type OpArea = 'conteudo' | 'audiovisual' | 'trafego' | 'consultoria'
+export const AREA_SERVICES: Record<OpArea, readonly string[]> = {
+  conteudo: ['design', 'social'],
+  audiovisual: ['audiovisual'],
+  trafego: ['trafego'],
+  consultoria: ['consultoria'],
 }
+export const DESIGN_AREAS = AREA_SERVICES.conteudo
+export const AV_AREAS = AREA_SERVICES.audiovisual
+/** Cliente vivo (ativo e não perdido) com serviço ativo de alguma destas áreas. */
+export function inAreas(c: ClientOption, areas: readonly string[]): boolean {
+  return c.isActive && c.areas.some((a) => areas.includes(a))
+}
+export const inArea = (c: ClientOption, area: OpArea) => inAreas(c, AREA_SERVICES[area])
 
 // Pelas funções, para designer, videomaker e editor verem só o nome, sem o resto do cadastro.
 async function listClients(): Promise<ClientOption[]> {
@@ -56,13 +69,21 @@ export function useProduction() {
     return (id: string | null) => (id ? map.get(id) ?? 'Equipe' : 'Sem responsável')
   }, [staff.data])
 
-  // Cliente perdido ou desativado some da operação (quadros, calendário, agenda).
+  // Cliente perdido, desativado ou sem o serviço da área some da operação (quadros, calendário, agenda).
+  // Sem área: só confere se está vivo. Enquanto a lista não chega, não esconde nada.
   const isLive = useMemo(() => {
-    const set = new Set((clients.data ?? []).filter((c) => c.isActive).map((c) => c.id))
-    return (id: string | null | undefined) => !clients.data || (!!id && set.has(id))
+    const byId = new Map((clients.data ?? []).map((c) => [c.id, c]))
+    return (id: string | null | undefined, area?: OpArea) => {
+      if (!clients.data) return true
+      const c = id ? byId.get(id) : undefined
+      return !!c && (area ? inArea(c, area) : c.isActive)
+    }
   }, [clients.data])
+  /** Clientes que a área atende hoje (para listas e escolhas). */
+  const clientsIn = useMemo(() => (area: OpArea) => (clients.data ?? []).filter((c) => inArea(c, area)), [clients.data])
   return {
     isLive,
+    clientsIn,
     clients: clients.data,
     staff: staff.data,
     myStaffId: me.data ?? null,

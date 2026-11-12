@@ -29,7 +29,8 @@ const TABS = [
 ]
 
 function useSocial<T>(key: string, table: string, order = 'created_at') {
-  return useQuery({
+  const { isLive } = useProduction()
+  const q = useQuery({
     queryKey: ['social', key],
     retry: false,
     queryFn: async () => {
@@ -38,6 +39,9 @@ function useSocial<T>(key: string, table: string, order = 'created_at') {
       return (data ?? []) as unknown as T[]
     },
   })
+  // Item de cliente sem Social Media/Design ativo (ou perdido) some daqui; o que é "Geral" fica.
+  const data = useMemo(() => q.data?.filter((r) => { const id = (r as { client_id?: string | null }).client_id; return !id || isLive(id, 'conteudo') }), [q.data, isLive])
+  return { ...q, data }
 }
 
 /** Social Media: quadro automático, briefings do mês, agente com novidades das redes, estratégia e relatórios orgânicos. */

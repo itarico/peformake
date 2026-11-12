@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { cn } from '@/lib/cn'
 import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
-import { useProduction } from '@/features/production/useProduction'
+import { inArea, useProduction } from '@/features/production/useProduction'
 import { listItems } from './contentApi'
 import { useMonthParam } from './useMonthParam'
 import { itemTitle, KIND_LABEL, monthGrid, STATUS_LABEL, STATUS_TONE, type ContentItem } from './contentRules'
@@ -32,13 +32,13 @@ export function ContentCalendar() {
   const { clients, clientName, isPending, isError, refetch, isLive } = useProduction()
   const items = useQuery({ queryKey: ['content-items', month], queryFn: () => listItems([month]) })
   const [clientId, setClientId] = useState('')
-  const filtered = useMemo(() => (items.data ?? []).filter((i) => isLive(i.clientId) && (!clientId || i.clientId === clientId)), [items.data, clientId, isLive])
+  const filtered = useMemo(() => (items.data ?? []).filter((i) => isLive(i.clientId, 'conteudo') && (!clientId || i.clientId === clientId)), [items.data, clientId, isLive])
 
   if (!items.data || !clients) return <LoadState isPending={items.isPending || isPending} isError={items.isError || isError} refetch={() => { refetch(); void items.refetch() }} />
   const byDay = new Map<string, ContentItem[]>()
   for (const i of filtered) if (i.publishDate) byDay.set(i.publishDate, [...(byDay.get(i.publishDate) ?? []), i])
   const undated = filtered.filter((i) => !i.publishDate || i.publishDate.slice(0, 7) !== month.slice(0, 7))
-  const clientsInMonth = clients.filter((c) => c.isActive && items.data.some((i) => i.clientId === c.id))
+  const clientsInMonth = clients.filter((c) => inArea(c, 'conteudo') && items.data.some((i) => i.clientId === c.id))
 
   return (
     <>
