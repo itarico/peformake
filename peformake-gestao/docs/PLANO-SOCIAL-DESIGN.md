@@ -55,3 +55,11 @@ Mesmo processo de sempre, só que a IA faz quando ninguém pega:
   - Tráfego → tarefa de tráfego; audiovisual → projeto com roteiro.
 - **Avisos à social media responsável pelo cliente** (client_team, papel social_media; se não houver, head): ao chegar tarefa de estratégia, pedido do cliente (WhatsApp/portal) ou novidade/notificação relacionada ao cliente. O aviso abre o item exato.
 - Falta hoje: o **plano de ação do diagnóstico** não tem Aprovar (só as decisões internas viram tarefa); a estratégia mensal já tem. Unificar no mesmo componente de aprovação.
+
+## 9. Card com imagem (pedido do Italo, 12/11)
+- Todo card de peça (quadro, aba Briefing, aba Design) parece uma postagenzinha com a área da imagem no formato do tipo (quadrado no post, vertical no story/reels, 1ª página no carrossel).
+- **Sem nada ainda** (briefing pré-criado pelo pacote ou tarefa de design): ícone padrão de imagem, convidando a preencher.
+- **Com referência enviada:** mostra a primeira imagem de referência (selo pequeno "referência").
+- **Com arte do designer (ou da IA):** mostra a arte final (selo "arte" ou "Feito por IA").
+- Ao abrir a peça, a imagem vem **em cima, grande**, antes de qualquer campo (toque para ampliar; carrossel desliza entre as páginas).
+- Miniaturas leves (não baixar o arquivo original no quadro).
