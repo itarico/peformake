@@ -250,3 +250,10 @@ existentes; 4) Estratégia mensal (todas as áreas) + semanal; 5) Trimestral; 6)
 - Botão aprovar manda direto para a produção: roteiro, design, tráfego e demais.
 - Roteiro aprovado entra no agendamento do cliente: quando a captação for agendada e entrar na Produção, aquele vídeo
   aprovado já está lá para ser gravado.
+
+## 19. Decisão de custo e formato (12/11)
+- NÃO haverá geração semanal separada. A estratégia MENSAL (modelo mais forte, em lote de madrugada, instruções em cache)
+  já traz as 4 semanas com ações executáveis. As 4 semanas ficam visíveis de uma vez (botão "4 semanas") para planejar
+  antes; não aparecem só na hora.
+- Toda segunda, um ajuste barato (modelo pequeno) lê a semana anterior e sugere trocas nas ações da semana (só se mudou algo).
+- Chat de perguntas no modelo barato. Diagnóstico e trimestral no mais forte.
