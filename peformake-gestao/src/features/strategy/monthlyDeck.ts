@@ -88,7 +88,7 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
   const areaTag = (a: MonthlyAction) => `<span class="atag"><span class="dot" style="--c:${DECK_AREA[a.area]}"></span>${esc(AREA[a.area].label)}</span>`
 
   // 1. Capa
-  out.push({ kind: 'cover', body: `${brand}<div class="cover-mid">${logo}<p class="kicker">${x.label ? `${esc(x.label)} · ` : ''}Estratégia de ${esc(mes)}</p><h1>${esc(name)}</h1></div><p class="cover-foot">${esc(period)} · Consultoria Peformake</p>` })
+  out.push({ kind: 'cover', body: `${brand}<div class="cover-mid">${logo}<p class="kicker">${x.label ? `${esc(x.label)} · ` : ''}Estratégia de ${esc(mes)}</p><h1>${esc(name)}</h1><p class="cv-t">Plano de ${esc(period)}</p></div><p class="cover-foot"><span>Consultoria <b>Peformake</b></span></p>` })
 
   // 2. O mês em uma frase + 3 números
   const [metaBig, metaLabel] = d.meta?.numero ? bigNum(d.meta.numero) : ['', '']
@@ -182,7 +182,7 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
     body: `<div class="${land ? `grid g${riscos.length}` : 'stack'}">${riscos.map((r) => `<div class="card xl"><h3>${esc(words(r.risco, 14))}</h3><p><b>Plano B:</b> ${esc(words(clientText(r.plano_b) || r.plano_b, 18))}</p></div>`).join('')}</div>`,
   })
 
-  out.push({ kind: 'cover', body: `${brand}<div class="cover-mid"><p class="kicker">Próximo passo</p><h1>Bora executar ${esc(mes.toLowerCase())}?</h1><p class="lead">Toda segunda a gente confere os números da semana e ajusta o plano.</p></div><p class="cover-foot">Peformake · assessoria de marketing</p>` })
+  out.push({ kind: 'cover', body: `${brand}<div class="cover-mid"><p class="kicker">Próximo passo</p><h1>Bora executar ${esc(mes.toLowerCase())}?</h1><p class="lead">Toda segunda a gente confere os números da semana e ajusta o plano.</p></div><p class="cover-foot"><span>Peformake · assessoria de marketing</span></p>` })
   return out
 }
 

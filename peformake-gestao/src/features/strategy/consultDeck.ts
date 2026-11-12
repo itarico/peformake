@@ -5,6 +5,7 @@
 // Slides "internos" (decisões da Peformake, alertas) só aparecem na tela da equipe; nunca no PDF, link ou portal.
 // Medidas em cqw (largura do slide): o slide escala igual na tela e no papel.
 import { ellcazoSvg } from '../../components/ui/ellcazoSvg'
+import { DECK_FONT_HREF, DECK_FONT_LINK, peformakeCss } from './deckTheme'
 import { comparisonSvg, funnelData, funnelSvg, maturitySvg, positioningData, positioningSvg, presenceBarsSvg, presenceData, ratingsData, ratingsSvg, onColor, riskMatrixSvg, SERIES, timelineSvg } from './consultCharts'
 
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -103,10 +104,11 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
 
   add({ kind: 'cover', section: 'resumo', body: `${brand}
     <div class="cover-mid">
-      <p class="kicker">Diagnóstico e plano de ação</p>
+      <p class="kicker">Consultoria · para decidir junto</p>
       <h1>${esc(name)}</h1>
+      <p class="cv-t">Diagnóstico e plano de ação</p>
     </div>
-    <p class="cover-foot">${esc(date)} · Consultoria Peformake</p>` })
+    <p class="cover-foot"><span>${esc(date)}</span><span>Consultoria <b>Peformake</b></span></p>` })
 
   // 1. A tese + 3 números
   const mat = arr(intel.maturidade).filter((m) => typeof m.nota === 'number')
@@ -127,7 +129,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
   const desc = arr(intel.descobertas)
   chunk(desc, land ? 3 : 3).forEach((g, i, all) => add({
     title: all.length > 1 ? `O que descobrimos (${i + 1}/${all.length})` : 'O que descobrimos', kicker: 'Descobertas', section: 'inteligencia',
-    body: `<div class="${land ? 'grid g3' : 'stack'}">${g.map((x) => { const [lab, col] = TIPO[x.tipo] ?? ['Achado', SERIES[0]]; return `<div class="card find" style="--c:${col}"><p class="tag">${esc(lab)}</p><p class="num-big${String(x.numero ?? '').length > 12 ? ' long' : ''} clamp-2">${esc(words(x.numero, 6))}</p><h3 class="clamp-3">${esc(words(x.titulo, 14))}</h3></div>` }).join('')}</div>`,
+    body: `<div class="${land ? 'grid g3' : 'stack'}">${g.map((x) => { const [lab, col] = TIPO[x.tipo] ?? ['Achado', SERIES[0]]; return `<div class="card find" style="--c:${col};--on:${onColor(col)}"><p class="tag">${esc(lab)}</p><p class="num-big${String(x.numero ?? '').length > 12 ? ' long' : ''} clamp-2">${esc(words(x.numero, 6))}</p><h3 class="clamp-3">${esc(words(x.titulo, 14))}</h3></div>` }).join('')}</div>`,
     details: { title: 'O que descobrimos', items: g.map((x) => ({ k: x.titulo, v: `${x.explicacao}${x.evidencia ? ` (Fonte: ${x.evidencia})` : ''}`, url: isUrl(x.evidencia) ? x.evidencia : undefined })) },
   }))
   if (!desc.length && strs(r.decisoes).length) add({ title: 'As decisões que importam', kicker: 'Resumo', section: 'resumo', body: bullets(strs(r.decisoes), 3) })
@@ -235,7 +237,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
     body: `<ol class="qs">${qs.map((q, k) => `<li><span class="num">${k + 1}</span><div><b class="clamp-2">${esc(words(q.question, 16))}</b>${q.answer ? `<p class="ans clamp-1">✓ ${esc(words(q.answer, 14))}</p>` : ''}</div></li>`).join('')}</ol>`,
     details: { title: 'Por que perguntamos', items: qs.map((q) => ({ k: q.question, v: q.why ?? '' })) } })
 
-  add({ kind: 'cover', section: 'resumo', body: `${brand}<div class="cover-mid"><p class="kicker">Próximo passo</p><h1>${r.primeiro_passo && String(r.primeiro_passo).split(/\s+/).length <= 10 ? esc(r.primeiro_passo) : 'Começar esta semana'}</h1>${r.primeiro_passo && String(r.primeiro_passo).split(/\s+/).length > 10 ? `<p class="lead">${esc(words(r.primeiro_passo, 26))}</p>` : ''}</div><p class="cover-foot">Peformake · assessoria de marketing</p>` })
+  add({ kind: 'cover', section: 'resumo', body: `${brand}<div class="cover-mid"><p class="kicker">Próximo passo</p><h1>${r.primeiro_passo && String(r.primeiro_passo).split(/\s+/).length <= 10 ? esc(r.primeiro_passo) : 'Começar esta semana'}</h1>${r.primeiro_passo && String(r.primeiro_passo).split(/\s+/).length > 10 ? `<p class="lead">${esc(words(r.primeiro_passo, 26))}</p>` : ''}</div><p class="cover-foot"><span>Peformake · assessoria de marketing</span></p>` })
   return out
 }
 
@@ -244,117 +246,35 @@ export function deckCss(o: Orientation, brand: DeckBrand = 'peformake'): string 
   // Escala por orientação: no retrato o slide é mais estreito, então as letras ocupam mais da largura.
   const k = land ? 1 : 1.5
   const f = (n: number) => `calc(${(n * k).toFixed(2)}cqw * var(--z, 1))`
-  return `
-  .pfd{--ink:#0B3C44;--muted:#5D6C73;--acc:#007A8A;--fill:#1FC8DB;--deep:#056F84;--soft:#E6F6F8;--line:#D9E2E5;--canvas:#F3F7F8;color:var(--ink);font-family:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .pfd *{box-sizing:border-box;margin:0;padding:0}
-  .pfd .slide{container-type:inline-size;position:relative;width:100%;aspect-ratio:${land ? '16 / 9' : '210 / 297'};background:#fff;overflow:hidden;break-after:page;break-inside:avoid;page-break-after:always}
-  .pfd .slide>.in{position:absolute;inset:0;display:flex;flex-direction:column;padding:${land ? '5cqw 6cqw 6cqw' : '9cqw 8cqw 11cqw'}}
-  .pfd .slide:last-child{break-after:auto;page-break-after:auto}
-  .pfd .head{margin-bottom:${f(2.6)}}
-  .pfd .kick{color:var(--ink);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:${f(1.2)};display:flex;align-items:center;gap:${f(.9)}} .pfd .kick:before{content:"";flex:none;width:${f(2.4)};height:${f(.55)};border-radius:99px;background:var(--fill)}
-  .pfd h2{font-size:${f(3.9)};line-height:1.06;font-weight:800;letter-spacing:-.03em;margin-top:${f(.9)}}
-  .pfd .content{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;padding-top:${f(1.2)};gap:${f(2.2)};font-size:${f(2)};line-height:1.38}
-  .pfd .content:has(> .chart-only:only-child),.pfd .content:has(> .split-r:only-child){justify-content:center;padding-top:0}
-  .pfd .foot{position:absolute;left:${land ? '6cqw' : '8cqw'};right:${land ? '6cqw' : '8cqw'};bottom:${land ? '2cqw' : '3.6cqw'};display:flex;justify-content:space-between;color:var(--muted);font-size:${f(1.15)}}
-  .pfd .foot b{color:var(--ink)} .pfd .foot b:before{content:"";display:inline-block;width:.55em;height:.55em;border-radius:50%;background:var(--fill);margin-right:.45em;vertical-align:.05em}
-  .pfd .slide.internal{background:#fffaf0} .pfd .slide.internal .kick{color:#b06a00}
-  .pfd .cover{background:radial-gradient(circle at 88% 12%,rgba(31,200,219,.22) 0,rgba(31,200,219,0) 42%),#0B3C44;color:#fff} .pfd .cover:after{content:"";position:absolute;left:${land ? '6cqw' : '8cqw'};bottom:0;width:${land ? '14cqw' : '22cqw'};height:${f(.8)};background:var(--fill)} .pfd .cover>.in{justify-content:space-between;padding-bottom:${land ? '5cqw' : '9cqw'}}
-  .pfd .cover .cover-top{display:flex;align-items:center;gap:${f(1)}}
-  .pfd .cover .pf-logo{height:${f(4.2)};width:auto;filter:brightness(0) invert(1)}
-  .pfd .cover .brand{font-weight:700;font-size:${f(2.2)};letter-spacing:-.01em}
-  .pfd .cover .cli-logo{height:${f(7)};width:auto;max-width:40cqw;background:#fff;border-radius:${f(1.2)};padding:${f(.8)};margin-bottom:${f(1.8)}}
-  .pfd .cover .cli-mono{display:inline-grid;place-items:center;width:${f(7)};height:${f(7)};border-radius:${f(1.8)};background:var(--fill);color:#0B3C44;font-weight:800;font-size:${f(2.8)};margin-bottom:${f(1.8)}}
-  .pfd .cover .kicker{color:var(--fill);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:${f(1.4)}}
-  .pfd .cover .cover-mid{padding-bottom:${f(1)}} .pfd .cover h1{font-size:${f(5.8)};line-height:1.04;font-weight:800;letter-spacing:-.035em;margin-top:${f(.8)};max-width:${land ? '78cqw' : '84cqw'}}
-  .pfd .cover .cover-foot{opacity:.75;font-size:${f(1.2)}} .pfd .cover .lead{color:#fff;opacity:.9;margin-top:${f(1.4)};max-width:${land ? '70cqw' : '84cqw'}}
-  .pfd .statement{background:var(--canvas)} .pfd .statement>.in{justify-content:center}
-  .pfd .statement .content{justify-content:center;gap:${f(3)}}
-  .pfd .big{font-size:${f(4.2)};line-height:1.14;font-weight:750;letter-spacing:-.025em}
-  .pfd .big2{font-size:${f(2.6)};line-height:1.22;font-weight:650}
-  .pfd .lead{font-size:${f(2)};color:var(--muted)}
-  .pfd .caption{font-size:${f(1.4)};color:var(--muted);text-align:center}
-  .pfd .up{text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:${f(1.2)};opacity:.85}
-  .pfd .kpis{display:grid;grid-template-columns:repeat(${land ? 3 : 1},1fr);gap:${f(1.6)}}
-  .pfd .kpi{background:#fff;border-radius:${f(1.6)};border-left:${f(.7)} solid var(--fill);padding:${f(1.6)} ${f(2)};display:flex;${land ? 'flex-direction:column' : 'align-items:baseline;gap:' + f(1.4)}}
-  .pfd .kpi b{font-size:${f(4.4)};line-height:1;font-weight:800;color:var(--ink);letter-spacing:-.035em} .pfd .kpi b small{font-size:.45em;font-weight:700;color:var(--muted);margin-left:.1em}
-  .pfd .kpi span{font-size:${f(1.4)};color:var(--muted);margin-top:${f(.6)}}
-  .pfd .grid{display:grid;gap:${f(1.6)}} .pfd .g2{grid-template-columns:1fr 1fr} .pfd .g3{grid-template-columns:repeat(3,1fr)} .pfd .g4{grid-template-columns:repeat(4,1fr)}
-  .pfd .stack{display:flex;flex-direction:column;gap:${f(1.6)}}
-  .pfd .cols2{display:grid;grid-template-columns:${land ? '1fr 1fr' : '1fr'};gap:${f(1.8)}}
-  .pfd .card{background:#fff;border:1px solid var(--line);border-radius:${f(1.6)};padding:${f(2)};display:flex;flex-direction:column;gap:${f(.8)};min-height:0;overflow:hidden}
-  .pfd .card.soft{background:var(--soft);border-color:transparent} .pfd .card.accent{background:var(--ink);color:#fff;border-color:transparent;justify-content:center} .pfd .card.accent .up{color:var(--fill);opacity:1} .pfd .card.accent p{color:#fff}
-  .pfd .card h3{font-size:${f(2.2)};line-height:1.2;font-weight:700}
-  .pfd .card p{font-size:${f(1.75)};line-height:1.4;color:#3B4037} .pfd .card h3.hl{border-top:${f(.5)} solid var(--c);padding-top:${f(.9)}}
-  .pfd .find{border-top:${f(.6)} solid var(--c)} .pfd .card.find .tag{color:var(--ink);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)}}
-  .pfd .card .num-big.long{font-size:${f(3)}} .pfd .card .num-big{font-size:${f(4.6)};line-height:1;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
-  .pfd .stack .find{display:grid;grid-template-columns:${f(26)} 1fr;align-items:center;column-gap:${f(2)}} .pfd .stack .find .tag{grid-column:1/-1}
-  .pfd .op{border-top:${f(.6)} solid var(--c)} .pfd .card.op .est{font-weight:800;color:var(--acc);font-size:${f(1.9)};line-height:1.15}
-  .pfd .card.ind .meta-big{font-size:${f(2.8)};line-height:1.05;font-weight:800;color:var(--ink)} .pfd .card.ind{border-top:${f(.6)} solid var(--c)}
-  .pfd .card .pro{color:#007A8A} .pfd .card .con{color:#8f2d1c}
-  .pfd .ic{width:${f(2.8)};height:${f(2.8)};color:var(--ink)}
-  .pfd .bul{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .bul li{position:relative;padding-left:${f(1.8)};font-size:${f(2)};line-height:1.3}
-  .pfd .card .bul li{font-size:${f(1.7)}} .pfd .sw .bul{gap:${f(.7)}} .pfd .sw .bul li{font-size:${f(1.5)}}
-  .pfd .bul li:before{content:"";position:absolute;left:0;top:.5em;width:${f(.7)};height:${f(.7)};border-radius:50%;background:var(--deep)}
-  .pfd .steps,.pfd .qs{list-style:none;display:flex;flex-direction:column;gap:${f(1.6)}}
-  .pfd .steps li,.pfd .qs li{display:flex;gap:${f(1.6)};align-items:flex-start;font-size:${f(2.2)};line-height:1.3}
-  .pfd .steps li>span:last-child{display:flex;flex-direction:column;gap:${f(.5)}} .pfd .steps small{font-size:${f(1.4)};color:var(--muted)}
-  .pfd .qs{gap:${f(1.3)}} .pfd .qs li{font-size:${f(1.95)}}
-  .pfd .num{flex:none;display:inline-grid;place-items:center;width:${f(3.2)};height:${f(3.2)};border-radius:50%;background:var(--fill);color:var(--ink);font-weight:800;font-size:${f(1.5)}}
-  .pfd .ans{color:#007A8A;font-size:${f(1.4)};margin-top:${f(.3)}}
-  .pfd .swot{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:${f(1.4)};flex:1;min-height:0}
-  .pfd .sw{border-radius:${f(1.6)};padding:${f(1.5)} ${f(1.8)};overflow:hidden} .pfd .sw h3{font-size:${f(1.9)};margin-bottom:${f(.7)}}
-  .pfd .sw.ok{background:var(--soft)} .pfd .sw.warn{background:#0B3C44;color:#fff} .pfd .sw.warn .bul li:before{background:var(--fill)} .pfd .sw.acc{background:#D3F0F4} .pfd .sw.gray{background:var(--canvas)}
-  .pfd .journey{list-style:none;display:grid;grid-template-columns:repeat(${land ? 5 : 1},1fr);gap:${f(1.4)}}
-  .pfd .journey li{border-${land ? 'top' : 'left'}:${f(.6)} solid var(--c);background:var(--canvas);border-radius:${f(1.2)};padding:${f(1.6)};display:flex;flex-direction:${land ? 'column' : 'row'};gap:${f(.8)};align-items:${land ? 'flex-start' : 'center'};font-size:${f(1.6)}}
-  .pfd .journey b{font-size:${f(1.9)}} ${land ? '' : `.pfd .journey b{flex:0 0 ${f(18)}}`}
-  .pfd .journey .num{background:var(--ink);color:var(--fill)}
-  .pfd .callout{background:var(--soft);border-left:${f(.7)} solid var(--fill);border-radius:${f(1.2)};padding:${f(1.6)} ${f(2)};font-size:${f(2.1)};font-weight:650;line-height:1.25}
-  .pfd .card .quote{font-style:italic;font-size:${f(1.7)}}
-  .pfd .rows{list-style:none;display:flex;flex-direction:column;gap:${f(1.2)}} .pfd .rows li{display:grid;grid-template-columns:${land ? '22cqw' : '30cqw'} 1fr;gap:${f(1.4)};font-size:${f(1.8)}}
-  .pfd .tags{display:flex;flex-wrap:wrap;gap:${f(.6)}} .pfd .tags span{font-size:${f(1.2)};font-weight:700;background:var(--canvas);border-radius:999px;padding:${f(.3)} ${f(1)};color:var(--muted)} .pfd .tags .acc{background:var(--fill);color:var(--ink)}
-  .pfd .card .tags{margin-top:auto}
-  .pfd .tbl{width:100%;border-collapse:collapse;font-size:${f(1.9)}} .pfd .tbl th{text-align:left;color:var(--muted);font-weight:700;font-size:${f(1.3)};text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--line);padding:${f(.8)} ${f(1)}}
-  .pfd .tbl td{border-bottom:1px solid var(--line);padding:${f(1.3)} ${f(1)};vertical-align:middle} .pfd .tbl td small{color:var(--muted);font-size:.75em} .pfd .tbl tr.me td{background:var(--soft)} .pfd .tbl tr.me td:first-child b{color:var(--acc)}
-  .pfd .chart-only{flex:1;min-height:0;display:flex;justify-content:center;align-items:center;color:var(--ink)} .pfd .chart-only svg{${land ? 'height:100%;max-height:36cqw;width:auto!important;max-width:100%' : 'width:100%!important;height:auto;max-height:110cqw'}}
-  .pfd .chart-wide svg{max-height:${land ? '9cqw' : '22cqw'}}
-  .pfd .split-r{display:grid;grid-template-columns:${land ? '1fr 1fr' : '1fr'};gap:${f(2)};align-items:center} .pfd .split-r svg{max-height:${land ? '32cqw' : '62cqw'};width:auto!important;margin:0 auto}
-  .pfd .wbar{display:flex;gap:2px;height:${f(1.1)};border-radius:99px;overflow:hidden;margin-top:auto} .pfd .wbar i{display:block;background:var(--c)}
-  .pfd .dot{display:inline-block;flex:none;width:.62em;height:.62em;border-radius:50%;background:var(--c);margin-right:.45em;vertical-align:.04em}
-  .pfd .lrow{display:flex;flex-wrap:wrap;gap:${f(.6)} ${f(2)};font-size:${f(1.35)};color:var(--muted)}
-  .pfd .atag{display:block;font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)};color:var(--muted)}
-  .pfd .steps.two{display:grid;grid-template-columns:1fr 1fr;column-gap:${f(3)}}
-  .pfd .pill{flex:none;display:inline-grid;place-items:center;min-width:${f(6.4)};height:${f(3.2)};padding:0 ${f(1)};border-radius:99px;background:var(--fill);color:var(--ink);font-weight:800;font-size:${f(1.45)}}
-  .pfd .metabox{background:var(--ink);color:#fff;border-radius:${f(1.6)};padding:${f(1.8)} ${f(2.4)};display:flex;align-items:baseline;flex-wrap:wrap;gap:${f(.6)} ${f(1.6)}} .pfd .metabox b{color:var(--fill);font-size:${f(4)};line-height:1;font-weight:800;letter-spacing:-.03em} .pfd .metabox span{font-size:${f(1.9)};opacity:.85}
-  .pfd .stack.lst .find{display:flex;align-items:stretch}
-  .pfd .steps.lg{gap:${f(2.2)}} .pfd .steps.lg li{font-size:${f(2.6)}} .pfd .qs.lg{gap:${f(2)}} .pfd .qs.lg li{font-size:${f(2.5)}}
-  .pfd .grid.tall{flex:1;min-height:0} .pfd .tall .card{padding:${f(2.4)}} .pfd .tall .card h3{font-size:${f(2.9)};line-height:1.12} .pfd .tall .wbar{height:${f(1.6)}}
-  .pfd .card.xl{padding:${f(2.6)}} .pfd .card.xl h3{font-size:${f(2.8)}} .pfd .card.xl p{font-size:${f(2.1)}}
-  .pfd .card .wk{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)};color:var(--muted)} .pfd .card .cnt{font-size:${f(1.35)};color:var(--muted)}
-  .pfd .legend{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .legend li{display:flex;gap:${f(1.2)};align-items:center;font-size:${f(1.8)};line-height:1.25} .pfd .legend .num{background:var(--ink);color:#fff;width:${f(2.8)};height:${f(2.8)}}
-  ${brand === 'ellcazo' ? ellcazoCss(f, land) : ''}`
+  // Tema único (deckTheme.ts): o mesmo desenho em todas as apresentações; o audiovisual troca para a Ellcazo por cima.
+  return `@import url('${DECK_FONT_HREF}');${peformakeCss(f, land, k)}${brand === 'ellcazo' ? ellcazoCss(f, land) : ''}`
 }
 
 /**
- * Identidade Ellcazo (tudo do audiovisual): plano tático de conteúdo. Fundo off-white, preto e verde-limão,
+ * Identidade Ellcazo (tudo do audiovisual): plano tático de conteúdo. Fundo verde-limão e branco intercalados (preto só nos detalhes),
  * tipografia grande e pesada, cartões com borda preta e sombra deslocada, poucos elementos por página.
  */
 function ellcazoCss(f: (n: number) => string, land: boolean): string {
+  const k = land ? 1 : 1.5
+  // Cabeçalho, rodapé e capa com tamanho fixo (não crescem nem encolhem com o conteúdo).
+  const fx = (n: number) => `${(n * k).toFixed(3)}cqw`
   const bd = `${f(0.22)} solid #121410`
   const sh = `${f(0.6)} ${f(0.6)} 0 #121410`
   const cols = (n: number) => (land ? `repeat(${n},minmax(0,1fr))` : '1fr')
   return `
   .pfd{--ink:#121410;--muted:#4A5040;--acc:#121410;--fill:#B5E61D;--deep:#121410;--soft:#F1F8DA;--line:#121410;--canvas:#F4F5EC}
-  .pfd .slide{background:#F4F5EC}
+  .pfd .slide{background:#FFFFFF} .pfd .slide.alt{background:var(--fill)}
+  .pfd .slide.alt :is(.kick,.pill,.card.lime,.quote,.rule){background:#FFFFFF}
   .pfd .slide>.in{padding:${land ? '5cqw 6.5cqw 6cqw' : '9cqw 8cqw 12cqw'}}
-  .pfd .head{margin-bottom:${f(2)}}
-  .pfd .kick,.pfd .pill{display:inline-flex;align-self:flex-start;align-items:center;gap:0;background:var(--fill);color:#121410;border:${bd};box-shadow:${f(0.4)} ${f(0.4)} 0 #121410;border-radius:999px;padding:${f(0.45)} ${f(1.4)};font-weight:850;text-transform:uppercase;letter-spacing:.09em;font-size:${f(1.15)};line-height:1.2}
+  .pfd .head{margin-bottom:${fx(2)}}
+  .pfd .kick,.pfd .pill{display:inline-flex;align-self:flex-start;align-items:center;gap:0;background:var(--fill);color:#121410;border:${bd};box-shadow:${fx(0.4)} ${fx(0.4)} 0 #121410;border-radius:999px;padding:${fx(0.45)} ${fx(1.4)};font-weight:850;text-transform:uppercase;letter-spacing:.09em;font-size:${fx(1.15)};line-height:1.2}
   .pfd .kick:before{display:none}
-  .pfd h2{font-size:${f(4.1)};font-weight:900;letter-spacing:-.035em;line-height:1.04;margin-top:${f(1.6)}}
+  .pfd h2{font-size:${fx(4.1)};font-weight:900;letter-spacing:-.035em;line-height:1.04;margin-top:${fx(1.6)}}
   .pfd .content{gap:${f(2)};padding-top:${f(0.4)}}
   .pfd .lead{font-size:${f(1.85)};color:var(--muted);line-height:1.35}
-  .pfd .foot{bottom:${land ? '2.4cqw' : '4cqw'};align-items:center;color:#3B4034;font-size:${f(1.2)}}
-  .pfd .foot b:before{display:none} .pfd .foot .flogo{display:inline-flex;align-items:center;gap:${f(0.6)}} .pfd .foot .flogo svg{height:${f(2.6)};width:auto}
-  .pfd .foot .flogo b{font-weight:900;font-size:${f(1.5)};letter-spacing:-.02em;color:#121410}
+  .pfd .foot{bottom:${land ? '2.4cqw' : '4cqw'};align-items:center;color:#3B4034;font-size:${fx(1.2)}}
+  .pfd .foot{display:flex;justify-content:space-between} .pfd .foot b:before{display:none} .pfd .foot .flogo{background:none;-webkit-mask:none;mask:none;width:auto;height:auto;display:inline-flex;align-items:center;gap:${fx(0.6)}} .pfd .foot .flogo svg{height:${fx(2.6)};width:auto}
+  .pfd .foot .flogo b{font-weight:900;font-size:${fx(1.5)};letter-spacing:-.02em;color:#121410}
   .pfd .card{background:#FDFDF8;border:${bd};box-shadow:${sh};border-radius:${f(1.6)};padding:${f(2.1)} ${f(2.3)};gap:${f(0.9)};overflow:visible;margin:0 ${f(0.6)} ${f(0.6)} 0}
   .pfd .card.lime{background:var(--fill)} .pfd .card.dark{background:#121410;color:#F4F5EC}
   .pfd .card h3{font-size:${f(2.25)};font-weight:900;letter-spacing:-.02em;line-height:1.12;display:flex;align-items:center;gap:${f(0.7)}}
@@ -383,25 +303,25 @@ function ellcazoCss(f: (n: number) => string, land: boolean): string {
   .pfd .pil .n{font-size:${f(5.2)};font-weight:900;line-height:.9;letter-spacing:-.04em} .pfd .pil .u{font-size:${f(1.15)};font-weight:850;letter-spacing:.1em;text-transform:uppercase}
   .pfd .pil .d{font-weight:850;font-size:${f(1.55)}}
   .pfd .card .up{font-size:${f(1.15)};font-weight:850;letter-spacing:.1em;text-transform:uppercase;opacity:1}
-  .pfd .cover{background:var(--fill);color:#121410} .pfd .cover:after{display:none} .pfd .cover>.in{justify-content:space-between;padding:${land ? '5.5cqw 6.5cqw' : '10cqw 8cqw'}}
-  .pfd .cover .tc-top{display:flex;align-items:center;gap:${f(1.2)}} .pfd .cover .tc-top svg{height:${f(6)};width:auto}
-  .pfd .cover .tc-top b{display:block;font-size:${f(3)};font-weight:900;letter-spacing:-.03em;line-height:1} .pfd .cover .tc-top small{display:block;font-size:${f(1.1)};font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-top:${f(0.4)}}
-  .pfd .cover h1{font-size:${f(10)};font-weight:900;letter-spacing:-.045em;line-height:.98;color:#F4F5EC;-webkit-text-stroke:${f(0.3)} #121410;paint-order:stroke fill;text-shadow:${f(0.7)} ${f(0.7)} 0 #121410;max-width:none;margin:0}
-  .pfd .cover .tc-t{font-size:${f(3.6)};font-weight:900;letter-spacing:-.03em;margin-top:${f(2)};line-height:1.05} .pfd .cover .tc-s{font-size:${f(1.8)};font-weight:650;margin-top:${f(1.4)};max-width:80cqw}
-  .pfd .cover .pill{background:#F4F5EC;font-size:${f(1.4)};padding:${f(0.7)} ${f(1.8)}}
-  .pfd .statement{background:#121410;color:#F4F5EC} .pfd .statement>.in{justify-content:flex-start} .pfd .statement .foot{display:none}
-  .pfd .statement .kick{background:var(--fill);border-color:#F4F5EC;box-shadow:none}
-  .pfd .statement .content{justify-content:center;gap:${f(1.4)}} .pfd .go{font-size:${f(8)};font-weight:900;letter-spacing:-.045em;line-height:1;color:var(--fill)}
-  .pfd .go-sub{font-size:${f(1.9)};font-style:italic;text-transform:uppercase;letter-spacing:.02em;max-width:${land ? '74cqw' : '84cqw'};line-height:1.35}
-  .pfd .go-foot{position:absolute;left:${land ? '6.5cqw' : '8cqw'};right:${land ? '6.5cqw' : '8cqw'};bottom:${land ? '4.5cqw' : '8cqw'};display:flex;justify-content:space-between;align-items:flex-end;font-size:${f(1.8)}}
-  .pfd .go-foot .lg{display:flex;align-items:center;gap:${f(1)}} .pfd .go-foot svg{height:${f(6)};width:auto} .pfd .go-foot b{font-size:${f(4.4)};font-weight:900;letter-spacing:-.04em;color:var(--fill)}
+  .pfd .cover{background:var(--fill);color:#121410} .pfd .cover:after,.pfd .cover:before{display:none} .pfd .cover>.in{justify-content:space-between;padding:${land ? '5.5cqw 6.5cqw' : '10cqw 8cqw'}}
+  .pfd .cover .tc-top{display:flex;align-items:center;gap:${fx(1.2)}} .pfd .cover .tc-top svg{height:${fx(6)};width:auto}
+  .pfd .cover .tc-top b{display:block;font-size:${fx(3)};font-weight:900;letter-spacing:-.03em;line-height:1} .pfd .cover .tc-top small{display:block;font-size:${fx(1.1)};font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-top:${fx(0.4)}}
+  .pfd .cover h1{font-size:${fx(10)};font-weight:900;letter-spacing:-.045em;line-height:.98;color:#F4F5EC;-webkit-text-stroke:${fx(0.3)} #121410;paint-order:stroke fill;text-shadow:${fx(0.7)} ${fx(0.7)} 0 #121410;max-width:none;margin:0}
+  .pfd .cover .tc-t{font-size:${fx(3.6)};font-weight:900;letter-spacing:-.03em;margin-top:${fx(2)};line-height:1.05} .pfd .cover .tc-s{font-size:${fx(1.8)};font-weight:650;margin-top:${fx(1.4)};max-width:80cqw}
+  .pfd .cover .pill{background:#F4F5EC;font-size:${fx(1.4)};padding:${fx(0.7)} ${fx(1.8)}}
+  .pfd .statement,.pfd .statement.alt{background:var(--fill);color:#121410} .pfd .statement>.in{justify-content:flex-start} .pfd .statement .foot{display:none}
+  .pfd .statement .kick{background:#FFFFFF}
+  .pfd .statement .content{flex:1;justify-content:center;gap:${fx(1.4)}} .pfd .go{font-size:${fx(8)};font-weight:900;letter-spacing:-.045em;line-height:1;color:#121410}
+  .pfd .go-sub{font-size:${fx(1.9)};font-style:italic;text-transform:uppercase;letter-spacing:.02em;max-width:${land ? '74cqw' : '84cqw'};line-height:1.35}
+  .pfd .go-foot{position:absolute;left:${land ? '6.5cqw' : '8cqw'};right:${land ? '6.5cqw' : '8cqw'};bottom:${land ? '4.5cqw' : '8cqw'};display:flex;justify-content:space-between;align-items:flex-end;font-size:${fx(1.8)}}
+  .pfd .go-foot .lg{display:flex;align-items:center;gap:${fx(1)}} .pfd .go-foot svg{height:${fx(6)};width:auto} .pfd .go-foot b{font-size:${fx(4.4)};font-weight:900;letter-spacing:-.04em;color:#121410}
   .pfd .ref{flex:1;min-height:0;display:grid;grid-template-columns:${land ? `${f(19)} 1fr` : '1fr'};gap:${f(2.6)};align-items:start}
   .pfd .ref-m{display:flex;flex-direction:column;gap:${f(1.3)};min-width:0} .pfd .ref-m h2{margin-top:${f(0.4)}}
-  .pfd .vt{position:relative;display:block;width:${land ? '100%' : `${f(18)}`};aspect-ratio:9/16;${land ? '' : 'max-height:58cqw;'}border:${bd};box-shadow:${sh};border-radius:${f(1.8)};overflow:hidden;background:#121410;color:#F4F5EC;text-decoration:none}
+  .pfd .vt{position:relative;display:block;width:${land ? '100%' : `${f(18)}`};aspect-ratio:9/16;${land ? '' : 'max-height:58cqw;'}border:${bd};box-shadow:${sh};border-radius:${f(1.8)};overflow:hidden;background:#FFFFFF;color:#121410;text-decoration:none}
   .pfd .vt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .pfd .vt img.th{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0} .pfd .vt.has img.th,.pfd .vt img.th.on{opacity:1}
   .pfd .vt .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:${f(1.2)};padding:${f(1.6)};text-align:center}
-  .pfd .vt.has .ph{display:none} .pfd .vt .ph b{font-size:${f(2.2)};font-weight:900;color:var(--fill)} .pfd .vt .ph .qr{width:70%;height:auto;border-radius:${f(0.6)}} .pfd .vt .ph .pl-ic{width:${f(4.4)};height:${f(4.4)};color:var(--fill)}
+  .pfd .vt.has .ph{display:none} .pfd .vt .ph b{font-size:${f(2.2)};font-weight:900;color:#121410} .pfd .vt .ph .qr{width:70%;height:auto;border-radius:${f(0.6)}} .pfd .vt .ph .pl-ic{width:${f(4.4)};height:${f(4.4)};color:#121410}
   .pfd .vt .go-btn{position:absolute;left:${f(1.2)};right:${f(1.2)};bottom:${f(1.4)};display:flex;justify-content:center;background:var(--fill);color:#121410;border:${bd};box-shadow:${f(0.35)} ${f(0.35)} 0 #121410;border-radius:999px;padding:${f(0.6)} ${f(0.6)};font-weight:900;font-size:${f(1.15)};text-decoration:underline;white-space:nowrap}
   .pfd .vt.live{background:#000} .pfd .vlink{display:block;margin-top:${f(1)};font-size:${f(1.2)};color:#3B4034;font-weight:700;text-align:center}
   .pfd .vars{display:grid;grid-template-columns:${cols(3)};gap:${f(1.2)}} .pfd .vars li{list-style:none;display:flex;gap:${f(0.8)};align-items:flex-start;background:#FDFDF8;border:${bd};border-radius:${f(1)};padding:${f(0.9)} ${f(1.1)};font-size:${f(1.45)};line-height:1.3;font-weight:650}
@@ -420,21 +340,22 @@ function ellcazoCss(f: (n: number) => string, land: boolean): string {
 }
 
 /**
- * Ajusta cada slide ao espaço: se algum texto não couber, diminui a escala do slide (--z) até caber.
- * Roda na tela, no modo apresentação e antes do PDF. Função autocontida (vai como texto para a aba nova).
+ * Ajusta cada slide ao espaço: começa com as letras maiores (até 1,4×, para a página não ficar vazia)
+ * e diminui a escala do slide (--z) até tudo caber. Roda na tela, no modo apresentação e antes do PDF.
+ * Função autocontida (vai como texto para a aba nova).
  */
 export function fitSlides(root: ParentNode): void {
   root.querySelectorAll<HTMLElement>('.slide').forEach((s) => {
-    let z = 1
-    s.style.setProperty('--z', '1')
+    let z = s.classList.contains('cover') ? 1 : 1.4
+    s.style.setProperty('--z', String(z))
     const over = () => {
       const c = (s.querySelector('.content') ?? s.querySelector('.in')) as HTMLElement | null
       if (!c) return false
       if (c.scrollHeight > c.clientHeight + 2) return true
       let bad = false
       // Cards e caixas: nada pode passar da borda. Títulos: só a largura (a altura das letras sempre passa um pouco).
-      s.querySelectorAll<HTMLElement>('.card, .sw, .kpi').forEach((e) => { if (e.scrollHeight > e.clientHeight + 2 || e.scrollWidth > e.clientWidth + 2) bad = true })
-      s.querySelectorAll<HTMLElement>('h1, h2, .big').forEach((e) => { if (e.scrollWidth > e.clientWidth + 2) bad = true })
+      s.querySelectorAll<HTMLElement>('.card, .sw, .kpi, .journey li').forEach((e) => { if (e.scrollHeight > e.clientHeight + 2 || e.scrollWidth > e.clientWidth + 2) bad = true })
+      s.querySelectorAll<HTMLElement>('h1, h2, h3, .big').forEach((e) => { if (e.scrollWidth > e.clientWidth + 2) bad = true })
       const inner = s.querySelector<HTMLElement>('.in')
       const foot = s.querySelector<HTMLElement>('.foot')
       const last = (s.querySelector('.content') ?? s.querySelector('.cover-mid'))?.lastElementChild
@@ -447,11 +368,12 @@ export function fitSlides(root: ParentNode): void {
 
 /** Um slide em HTML (sem <html>). */
 export function slideHtml(s: Slide, i: number, total: number, name: string, brand: DeckBrand = 'peformake', label?: string): string {
-  const cls = ['slide', s.kind === 'cover' ? 'cover' : s.kind === 'statement' ? 'statement' : '', s.internal ? 'internal' : ''].filter(Boolean).join(' ')
+  // `alt`: páginas intercaladas (na Ellcazo, fundo verde-limão e branco alternados).
+  const cls = ['slide', s.kind === 'cover' ? 'cover' : s.kind === 'statement' ? 'statement' : '', s.internal ? 'internal' : '', i % 2 ? 'alt' : ''].filter(Boolean).join(' ')
   const head = !s.bare && (s.title || (s.kicker && s.kind !== 'cover')) ? `<div class="head">${s.kicker ? `<p class="kick">${esc(s.kicker)}</p>` : ''}${s.title ? `<h2>${esc(s.title)}</h2>` : ''}</div>` : ''
   const foot = s.kind === 'cover' ? ''
     : brand === 'ellcazo' ? `<div class="foot"><span class="flogo">${ellcazoSvg('#121410', 30)}<b>Ellcazo</b></span><span>${esc(name)} • ${esc(label ?? 'Plano tático de conteúdo')}</span></div>`
-      : `<div class="foot"><span><b>${BRAND_NAME[brand]}</b> · ${esc(name)}</span><span>${i + 1} / ${total}</span></div>`
+      : `<div class="foot"><span class="fl"><i class="flogo"></i><b>${BRAND_NAME[brand]}</b> assessoria</span><span class="fc">${esc(label ? `${name} · ${label}` : name)}</span><span class="pn">${i + 1}${total > 1 ? ` <small>/ ${total}</small>` : ''}</span></div>`
   return `<section class="${cls}" aria-label="Slide ${i + 1} de ${total}"><div class="in">${s.kind === 'cover' ? s.body : `${head}<div class="content">${s.body}</div>`}${foot}</div></section>`
 }
 
@@ -468,8 +390,7 @@ export function deckHtml(input: DeckInput, o: Orientation): string {
   const page = o === 'paisagem' ? '338.67mm 190.5mm' : '210mm 297mm'
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(input.title ?? 'Diagnóstico')} · ${esc(input.name)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+${DECK_FONT_LINK}
 <style>@page{size:${page};margin:0}html,body{margin:0;background:${CHROME[input.brand ?? 'peformake'].paper}}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .pfd{width:min(100%,${o === 'paisagem' ? '1100px' : '760px'})} .pfd .slide{box-shadow:0 2px 14px rgba(0,0,0,.18);margin-bottom:16px}
 @media print{html,body{background:#fff;padding:0;gap:0}.pfd{width:${o === 'paisagem' ? '338.67mm' : '210mm'}}.pfd .slide{width:${o === 'paisagem' ? '338.67mm' : '210mm'};height:${o === 'paisagem' ? '190.5mm' : '297mm'};aspect-ratio:auto;box-shadow:none;margin:0}}
@@ -510,9 +431,8 @@ export function presentHtml(input: DeckInput, o: Orientation): string {
   const det = JSON.stringify({ sp: a.details, sv: b.details }).replace(/</g, '\\u003c')
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(input.name)} · ${BRAND_NAME[input.brand ?? 'peformake']}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>:root{--vw:100vw;--vh:100dvh}html,body{margin:0;height:100%;background:${C.bg};overflow:hidden;font-family:Geist,system-ui,sans-serif}
+${DECK_FONT_LINK}
+<style>:root{--vw:100vw;--vh:100dvh}html,body{margin:0;height:100%;background:${C.bg};overflow:hidden;font-family:Inter,Geist,system-ui,sans-serif}
 .app{position:fixed;left:0;top:0;width:var(--vw);height:var(--vh);transform-origin:0 0}
 body.rot .app{transform:translateX(100vw) rotate(90deg)}
 .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 8px 64px;box-sizing:border-box}.stage[hidden]{display:none}

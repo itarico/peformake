@@ -6,7 +6,7 @@ type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-expl
 // 2 = verde da marca (bom), 3 = cinza (médio/referência). A tela do sistema usa outra paleta (components/charts).
 export const SERIES: readonly string[] & { 0: string; 1: string; 2: string; 3: string } = ['#1FC8DB', '#0B3C44', '#056F84', '#9FB4BA', '#5D6C73', '#CFE0E4']
 /** Cor do texto em cima de uma cor da série: preto nas claras, branco nas escuras. */
-export const onColor = (c: string): string => (['#0B3C44', '#5D6C73'].includes(c) ? '#FFFFFF' : '#0B3C44')
+export const onColor = (c: string): string => (['#0B3C44', '#5D6C73', '#056F84'].includes(c.toUpperCase()) ? '#FFFFFF' : '#0B3C44')
 const INK = 'currentColor'
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 /** Rótulo sem "…": quebra em até 2 linhas nas palavras; se ainda sobrar, fica a parte que cabe, terminando numa palavra inteira. */

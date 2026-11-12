@@ -177,7 +177,7 @@ export function buildAvSlides(x: AvDeckOpts, o: Orientation, ctx: { live?: boole
   })
 
   // Próximo passo.
-  out.push({ kind: 'statement', kicker: 'Próximo passo', body: `<div class="go-foot"><span>${esc(t.mote || `${name} · ${mes}`)}</span><span class="lg">${ellcazoSvg('#B5E61D', 60)}<b>Ellcazo</b></span></div><h1 class="go">Vamos começar?</h1>${t.final ? `<p class="go-sub">${esc(words(t.final, 26))}</p>` : `<p class="go-sub">A Ellcazo agenda a gravação e manda cada vídeo pronto para você aprovar.</p>`}` })
+  out.push({ kind: 'statement', kicker: 'Próximo passo', body: `<div class="go-foot"><span>${esc(t.mote || `${name} · ${mes}`)}</span><span class="lg">${ellcazoSvg('#121410', 60)}<b>Ellcazo</b></span></div><h1 class="go">Vamos começar?</h1>${t.final ? `<p class="go-sub">${esc(words(t.final, 26))}</p>` : `<p class="go-sub">A Ellcazo agenda a gravação e manda cada vídeo pronto para você aprovar.</p>`}` })
   return out
 }
 
