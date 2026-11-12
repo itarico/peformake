@@ -16,6 +16,10 @@ export interface DeckInput {
   clientLogoUrl?: string | null
   peformakeLogoUrl?: string | null
   updatedAt?: string | null
+  /** Outra apresentação no mesmo estilo (ex.: estratégia do mês): monta os próprios slides. */
+  slides?: (o: Orientation) => Slide[]
+  /** Nome do documento na aba/PDF (padrão: Diagnóstico). */
+  title?: string
 }
 export interface SlideDetail { title: string; items: { k?: string; v: string; url?: string }[] }
 export interface Slide {
@@ -30,7 +34,7 @@ export interface Slide {
   decision?: number
 }
 
-const esc = (s: unknown) => String(s ?? '').replace(/\s*\[(?:CONFIRMAR|confirmar|A CONFIRMAR)[^\]]*\]/g, '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
+export const esc = (s: unknown) => String(s ?? '').replace(/\s*\[(?:CONFIRMAR|confirmar|A CONFIRMAR)[^\]]*\]/g, '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 const arr = (v: unknown): Doc[] => (Array.isArray(v) ? v as Doc[] : [])
 const strs = (v: unknown): string[] => (Array.isArray(v) ? (v as unknown[]).map(String).filter((s) => s.trim()) : [])
 const chunk = <T,>(a: T[], n: number): T[][] => { const out: T[][] = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out }
@@ -76,6 +80,7 @@ const bullets = (items: string[], n = 4, w = 14) => `<ul class="bul">${items.sli
 
 /** Lista de slides (o modelo). `internal` inclui os slides só da equipe (tela). */
 export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?: boolean } = {}): Slide[] {
+  if (input.slides) return input.slides(o).filter((x) => opts.internal || !x.internal)
   const { doc, name } = input
   const r = doc.resumo ?? {}, d = doc.diagnostico ?? {}, c = doc.comunicacao ?? {}, p = doc.plano ?? {}, intel = doc.inteligencia ?? {}
   const land = o === 'paisagem'
@@ -352,7 +357,7 @@ export function deckSlideCount(input: DeckInput, o: Orientation): number { retur
 export function deckHtml(input: DeckInput, o: Orientation): string {
   const page = o === 'paisagem' ? '338.67mm 190.5mm' : '210mm 297mm'
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Diagnóstico · ${esc(input.name)}</title>
+<title>${esc(input.title ?? 'Diagnóstico')} · ${esc(input.name)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>@page{size:${page};margin:0}html,body{margin:0;background:#cfd8dc}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}

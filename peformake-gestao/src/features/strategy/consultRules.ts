@@ -9,6 +9,8 @@ export interface ConsultRow {
   status: ConsultStatus; stage: string | null; redo_section: ConsultSection | null; error: string | null
   updated_at: string | null; finished_at: string | null; suggestions: number; can_generate: boolean; direction: string | null
   questions_open?: number; questions_answered?: number; answers_new?: number; answers_last?: string | null
+  /** Estratégia do mês mais recente (Consultoria → Estratégia). */
+  monthly?: { month: string; status: string; finished_at: string | null; pending: number; suggestions: number } | null
 }
 
 export const CONSULT_PATH = '/estrategia/consultoria'
@@ -73,6 +75,24 @@ export function answeredNotices(rows: ConsultRow[] | undefined): { id: string; c
     id: `answers:${r.client_id}:${r.answers_last ?? ''}`, clientId: r.client_id,
     title: `${r.name.trim()} respondeu as perguntas`, to: `${consultLink(r.client_id)}&aba=perguntas`,
   }))
+}
+
+/** Link da estratégia do mês de um cliente (aba Estratégia, no mês certo). */
+export const monthlyLink = (clientId: string, month?: string | null) => `${consultLink(clientId)}&aba=estrategia${month ? `&mes=${month.slice(0, 7)}` : ''}`
+
+/**
+ * Bete e Início: estratégia do mês pronta com ações para aprovar, ou troca sugerida no ajuste de segunda (sem alarde).
+ * O id muda quando a estratégia é refeita, para o aviso voltar.
+ */
+export function monthlyNotices(rows: ConsultRow[] | undefined): { id: string; clientId: string; title: string; to: string }[] {
+  return (rows ?? []).flatMap((r) => {
+    const m = r.monthly
+    if (!m || !['pronto', 'aprovado'].includes(m.status)) return []
+    const mes = new Date(`${m.month.slice(0, 7)}-15T12:00:00Z`).toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })
+    if (m.pending > 0) return [{ id: `monthly:${r.client_id}:${m.finished_at ?? ''}`, clientId: r.client_id, title: `Estratégia de ${mes} de ${r.name.trim()}: ${m.pending} ações para aprovar`, to: monthlyLink(r.client_id, m.month) }]
+    if (m.suggestions > 0) return [{ id: `monthly-adj:${r.client_id}:${m.suggestions}`, clientId: r.client_id, title: `${r.name.trim()}: ajuste da semana sugerido`, to: monthlyLink(r.client_id, m.month) }]
+    return []
+  })
 }
 
 /** Mensagem pronta para o cliente (a pessoa revisa e envia pelo próprio WhatsApp; o sistema nunca envia sozinho). */

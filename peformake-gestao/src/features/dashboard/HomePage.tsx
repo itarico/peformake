@@ -23,7 +23,7 @@ import { dashAv, dashCommercial, dashContent, dashHomeBusiness, dashTraffic } fr
 import { businessKpis, clientsInsight, concentrationInsight, mrrOf, revenueInsight, serviceInsight, type BusinessDash } from './businessRules'
 import { clientsToCall, greeting, pendingActions, type ActionItem } from './homeRules'
 import { useConsultList } from '@/features/strategy/consultApi'
-import { answeredNotices, CONSULT_PATH, readyNotices } from '@/features/strategy/consultRules'
+import { answeredNotices, CONSULT_PATH, monthlyNotices, readyNotices } from '@/features/strategy/consultRules'
 
 const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
 const brlShort = (n: number) => (n >= 1000 ? `R$ ${(n / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mil` : brl.format(n))
@@ -238,6 +238,7 @@ function BusinessHome() {
   const consultRows = useConsultList(can.operation).data
   const consultReady = readyNotices(consultRows)
   const consultAnswers = answeredNotices(consultRows)
+  const consultMonthly = monthlyNotices(consultRows)
 
   const t = traffic.data
   const c = content.data
@@ -266,6 +267,7 @@ function BusinessHome() {
     ] : []),
     // Consultoria: um item só, sem alarde; com 1 cliente abre direto o diagnóstico dele.
     ...(consultReady.length ? [{ key: 'consult', label: consultReady.length === 1 ? consultReady[0]!.title : 'Diagnósticos prontos para revisar', count: consultReady.length, to: consultReady.length === 1 ? consultReady[0]!.to : CONSULT_PATH }] : []),
+    ...(consultMonthly.length ? [{ key: 'consult-monthly', label: consultMonthly.length === 1 ? consultMonthly[0]!.title : 'Estratégias do mês para aprovar', count: consultMonthly.length, to: consultMonthly.length === 1 ? consultMonthly[0]!.to : CONSULT_PATH }] : []),
     ...(consultAnswers.length ? [{ key: 'consult-answers', label: consultAnswers.length === 1 ? consultAnswers[0]!.title : 'Clientes responderam as perguntas', count: consultAnswers.length, to: consultAnswers.length === 1 ? consultAnswers[0]!.to : CONSULT_PATH }] : []),
   ])
   const loading = [traffic, content, av, commercial].some((q) => q.isLoading)

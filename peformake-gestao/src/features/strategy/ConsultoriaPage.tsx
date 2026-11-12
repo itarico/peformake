@@ -21,6 +21,11 @@ import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChi
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsButton } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
+import { MonthlyPanel } from './MonthlyPanel'
+import { ReportsPanel } from './ReportsPanel'
+
+type DocView = 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios'
+const viewOf = (v: string | null): DocView => (v === 'estrategia' || v === 'perguntas' || v === 'relatorios' ? v : 'diagnostico')
 
 // Custo aproximado de refazer cada parte com a IA (Fable 5.2), para a confirmação.
 const REDO_USD: Record<string, string> = { inteligencia: '1,00', do_cliente: '1,00', diagnostico: '1,10', comunicacao: '0,70', plano: '0,60', resumo: '0,50', riscos: '0,50' }
@@ -78,7 +83,7 @@ export function ConsultoriaPage() {
                       <span className="truncate text-[14.5px] font-semibold">{r.name.trim()}</span>
                       <Chip row={r} />
                     </span>
-                    <span className="block truncate text-[12px] text-muted">{[r.segment, when].filter(Boolean).join(' · ') || ' '}</span>
+                    <span className="block truncate text-[12px] text-muted">{[r.segment, when, r.monthly?.pending ? `estratégia: ${r.monthly.pending} para aprovar` : null].filter(Boolean).join(' · ') || ' '}</span>
                   </span>
                 </button>
                 {a.kind === 'dados' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setInfo(r)}>{a.label}</Button>}
@@ -190,10 +195,11 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const [deckOpen, setDeckOpen] = useState(false)
   const status = (d?.status ?? row?.status ?? 'na_fila') as ConsultRow['status']
   const [params, setParams] = useSearchParams()
-  const view = params.get('aba') === 'perguntas' ? 'perguntas' : 'diagnostico'
-  const setView = (v: 'diagnostico' | 'perguntas') => setParams((c) => { const n = new URLSearchParams(c); if (v === 'perguntas') n.set('aba', 'perguntas'); else n.delete('aba'); return n }, { replace: true })
+  const view = viewOf(params.get('aba'))
+  const setView = (v: DocView) => setParams((c) => { const n = new URLSearchParams(c); if (v !== 'diagnostico') n.set('aba', v); else n.delete('aba'); return n }, { replace: true })
   const questions = useClientQuestions(clientId)
   const toAsk = (questions.data?.questions ?? []).filter((x) => x.status === 'pendente').length
+  const monthPending = row?.monthly?.pending ?? 0
 
   const redo = (s: ConsultSection) => act.mutate(() => redoSection(clientId, s))
   const [sources, setSources] = useState(false)
@@ -213,14 +219,16 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         </span>
       </div>
 
-      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-2 gap-1 rounded-full bg-raised p-1 sm:max-w-sm">
-        {([['diagnostico', 'Diagnóstico'], ['perguntas', `Perguntas${toAsk ? ` · ${toAsk}` : ''}`]] as const).map(([id, label]) => (
+      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-4 gap-1 rounded-full bg-raised p-1 sm:max-w-xl">
+        {([['diagnostico', 'Diagnóstico'], ['estrategia', monthPending ? 'Estratégia •' : 'Estratégia'], ['perguntas', `Perguntas${toAsk ? ` · ${toAsk}` : ''}`], ['relatorios', 'Relatórios']] as const).map(([id, label]) => (
           <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => setView(id)}
-            className={cn('min-h-10 cursor-pointer rounded-full px-3 text-[13.5px] font-semibold', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
+            className={cn('min-h-10 min-w-0 cursor-pointer truncate rounded-full px-1 text-[12px] font-semibold sm:px-3 sm:text-[13.5px]', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
         ))}
       </div>
 
       {view === 'perguntas' && <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />}
+      {view === 'estrategia' && <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} />}
+      {view === 'relatorios' && <ReportsPanel clientId={clientId} />}
       {view === 'diagnostico' && <>
       <div className="flex flex-wrap gap-2">
         {status === 'falta_dados' && <Button onClick={onInfo}>Informar CNPJ</Button>}
