@@ -85,6 +85,7 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
 - Meta Ads: só leitura, salvo aprovação. Vínculo conta↔cliente é só sugestão.
 - Envios de WhatsApp para cliente: sempre confirmados por um humano; automações nascem desligadas.
 - IA no sistema (Claude pela API, funções do Supabase): sem limite por dia (decisão do Italo em 11/11; cada geração fica registrada em ai_generations), teto de gasto do mês em Configurações → Automações (ai_settings, padrão US$ 90) e cada chamada registrada em ai_usage_log. Direcionamento da equipe por cliente/área fica em client_directions e tem prioridade sobre a pesquisa automática.
+- Exceção aprovada pelo Italo em 12/11/2026: vídeo entregue pela edição vai direto ao cliente e avisa no WhatsApp automaticamente (desligável em Configurações → Automações)
 
 ## Segurança
 

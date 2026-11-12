@@ -98,7 +98,7 @@ const AV_PARTS: { key: string; label: string; slot: Part['slot'] }[] = [
   { key: 'scheduled', label: 'Captação marcada', slot: 1 },
   { key: 'captured', label: 'Captado', slot: 2 },
   { key: 'editing', label: 'Em edição', slot: 3 },
-  { key: 'review', label: 'Revisão interna', slot: 4 },
+  { key: 'review', label: 'Pronto para o cliente', slot: 4 },
   { key: 'client_review', label: 'Com o cliente', slot: 5 },
 ]
 
@@ -111,7 +111,7 @@ export function AvSummary({ month, compact = false }: { month: string; compact?:
     <KpiRow label="Audiovisual em números">
       <StatTile label="Projetos abertos" value={fmt.int(d.total - s('delivered'))} hint={`${d.videos_planned} vídeos previstos`} to={`/audiovisual?mes=${month}`} />
       <StatTile label="Captações em 7 dias" value={fmt.int(d.shoots_next7)} to={`/audiovisual?mes=${month}`} />
-      <StatTile label="Esperando revisão" value={fmt.int(s('review'))} tone={s('review') > 0 ? 'warn' : 'default'} hint={`${s('client_review')} com o cliente`} to={`/audiovisual?mes=${month}`} />
+      <StatTile label="Com o cliente" value={fmt.int(s('client_review'))} tone={s('client_review') > 0 ? 'warn' : 'default'} hint={`${s('changes_requested')} com ajuste pedido`} to={`/audiovisual/producao?mes=${month}`} />
       <StatTile label="Edição atrasada" value={fmt.int(d.late)} tone={d.late > 0 ? 'warn' : 'ok'} hint={`${d.delivered_month} entregues no mês`} to={`/audiovisual?mes=${month}`} />
     </KpiRow>
   )

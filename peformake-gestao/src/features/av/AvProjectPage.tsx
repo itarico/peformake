@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { EventLog } from '@/features/production/EventLog'
 import { useProduction } from '@/features/production/useProduction'
-import { avComment, avErrorMessage, getProject, listAvEvents, scriptAction, setAvStatus, setFinalLink as saveFinalLink, setDeliveredVideos, minVideosPerVisit } from './avApi'
+import { avComment, avErrorMessage, getProject, listAvEvents, scriptAction, setAvStatus, setFinalLink as saveFinalLink, setDeliveredVideos, minVideosPerVisit, getAvSettings } from './avApi'
 import { AV_LABEL, AV_STAGES, AV_TONE, SCRIPT_LABEL, avActionsFor, countdown, missingFor, shootText, stageOf, type AvAction, type AvProject } from './avRules'
 import { EllcazoHeader, TONE_CLASS } from './AvShell'
 import { ScheduleDialog } from './ScheduleDialog'
@@ -34,7 +34,7 @@ function StageTrack({ p }: { p: AvProject }) {
   const at = AV_STAGES.findIndex((s) => s.key === stageOf(p))
   const done = stageOf(p) === 'entregue'
   return (
-    <ol aria-label="Etapas da produção" className="grid grid-cols-6 gap-1.5">
+    <ol aria-label="Etapas da produção" className="grid grid-cols-5 gap-1.5">
       {AV_STAGES.map((s, i) => (
         <li key={s.key} aria-current={i === at ? 'step' : undefined} className="flex min-w-0 flex-col gap-1.5">
           <span className={cn('h-1.5 rounded-full', done || i < at ? 'bg-accent-ink' : i === at ? 'bg-accent' : 'bg-line')} />
@@ -163,13 +163,15 @@ function ShootBox({ p }: { p: AvProject }) {
   )
 }
 
-/** Edição e aprovação: link final, prazo e o próximo passo (aprovação interna, cliente, ajuste). */
+/** Edição e aprovação: link final, vídeos da visita e o próximo passo (entregar ao cliente, aprovação, ajuste). */
 function EditBox({ p }: { p: AvProject }) {
   const queryClient = useQueryClient()
   const { canManageAv, isVideomaker, isEditor } = useProduction()
   const [finalLink, setFinalLink] = useState(p.finalLink ?? '')
   const [videos, setVideos] = useState(String(p.videoCount || ''))
   const minQ = useQuery({ queryKey: ['av-min-videos', p.clientId], queryFn: () => minVideosPerVisit(p.clientId), staleTime: 300_000 })
+  const settingsQ = useQuery({ queryKey: ['av-settings'], queryFn: getAvSettings, staleTime: 300_000 })
+  const autoWa = settingsQ.data?.auto_client_whatsapp ?? true
   const min = minQ.data ?? null
   const videosN = Number(videos)
   const videosOk = Number.isInteger(videosN) && videosN >= 1 && videosN <= 200
@@ -182,6 +184,8 @@ function EditBox({ p }: { p: AvProject }) {
     mutationFn: async (a: AvAction) => {
       // Na entrega, grava antes quantos vídeos saíram desta visita (conta nas entregas do mês do cliente).
       if ((a.to === 'approved' || a.to === 'delivered' || a.to === 'client_review') && videosOk && videosN !== p.videoCount) await setDeliveredVideos(p.id, videosN)
+      // Link digitado e não salvo: salva junto, sem pedir outro toque.
+      if (a.to === 'client_review' && finalLink && linkOk && finalLink !== (p.finalLink ?? '')) await saveFinalLink(p.id, finalLink)
       return setAvStatus(p.id, a.to, a.needsNote ? note : null)
     },
     onSuccess: () => { setPending(null); setNote(''); setProblem(null); refresh() },
@@ -221,17 +225,19 @@ function EditBox({ p }: { p: AvProject }) {
       ) : (
         <div className="flex flex-wrap gap-2">
           {actions.map((a) => {
-            const missing = missingFor(a, p)
+            const missing = missingFor(a, { ...p, finalLink: linkOk && finalLink ? finalLink : p.finalLink })
             return (
               <Button key={a.to + a.label} variant={a.primary ? 'primary' : a.to === 'cancelled' ? 'link' : 'secondary'} disabled={move.isPending}
-                onClick={async () => { const need = (a.to === 'approved' || a.to === 'delivered' || a.to === 'client_review') && !videosOk ? 'Informe quantos vídeos saíram desta visita.' : null; setProblem(missing ?? need); if (missing || need) return; if (a.to === 'cancelled' && !(await ask('Cancelar este projeto?'))) return; if (a.needsNote) setPending(a); else move.mutate(a) }}>
+                onClick={async () => { const need = (a.to === 'approved' || a.to === 'delivered' || a.to === 'client_review') && !videosOk ? 'Informe quantos vídeos saíram desta visita.' : null; setProblem(missing ?? need); if (missing || need) return; if (a.to === 'cancelled' && !(await ask('Cancelar este projeto?'))) return; if (a.to === 'client_review' && !(await ask(autoWa ? 'Entregar ao cliente? Ele recebe agora no WhatsApp o link para aprovar.' : 'Entregar ao cliente? O aviso automático está desligado: avise o cliente.'))) return; if (a.needsNote) setPending(a); else move.mutate(a) }}>
                 {a.to === 'approved' && p.status === 'client_review' ? 'Cliente aprovou (entregar)' : a.label}
               </Button>
             )
           })}
         </div>
       )}
-      <p className="text-[12px] text-muted">Quando o cliente aprova, o vídeo vai sozinho para os links do cliente, fica no portal e, se ele tiver social media, vira tarefa de publicação.</p>
+      <p className="text-[12px] text-muted">{['editing', 'changes_requested', 'captured'].includes(p.status)
+        ? 'Ao entregar, o vídeo vai direto ao cliente aprovar no portal' + (autoWa ? ' e ele recebe o link no WhatsApp.' : '.') + ' O videomaker e o responsável são avisados.'
+        : 'Quando o cliente aprova, o vídeo vai sozinho para os links do cliente, fica no portal e, se ele tiver social media, vira tarefa de publicação.'}</p>
     </Box>
   )
 }
@@ -267,7 +273,7 @@ export function AvProjectPage() {
       <StageTrack p={p} />
       <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
         <div className="flex flex-col gap-3">
-          {['edicao', 'interna', 'cliente', 'entregue'].includes(stageOf(p) ?? '') && <EditBox p={p} />}
+          {['edicao', 'cliente', 'entregue'].includes(stageOf(p) ?? '') && <EditBox p={p} />}
           <ScriptBox p={p} />
           {p.status !== 'cancelled' && p.status !== 'delivered' && <CancelLink p={p} />}
         </div>

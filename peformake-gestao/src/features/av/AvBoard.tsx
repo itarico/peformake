@@ -118,7 +118,7 @@ export function AvBoard() {
         </p>
       )}
       <div className="-mx-4 snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 pb-2 md:mx-0 md:snap-none md:px-0">
-        <div className="grid auto-cols-[86%] grid-flow-col gap-2 md:min-w-[1180px] md:snap-none md:auto-cols-auto md:grid-flow-row md:grid-cols-6">
+        <div className="grid auto-cols-[86%] grid-flow-col gap-2 md:min-w-[1000px] md:snap-none md:auto-cols-auto md:grid-flow-row md:grid-cols-5">
           {AV_STAGES.map((st) => {
             const items = board.filter((p) => stageOf(p) === st.key).sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
             return (

@@ -52,7 +52,7 @@ export const AV_LABEL: Record<AvStatus, string> = {
   scheduled: 'Captação marcada',
   captured: 'Captado',
   editing: 'Em edição',
-  review: 'Revisão interna',
+  review: 'Pronto para o cliente',
   client_review: 'Com o cliente',
   changes_requested: 'Ajuste pedido',
   approved: 'Aprovado',
@@ -79,7 +79,7 @@ export const AV_PHASES: { key: AvPhase; label: string; hint: string; statuses: A
   { key: 'pre', label: 'Pré-produção', hint: 'Briefing e roteiro', statuses: ['script'] },
   { key: 'shoot', label: 'Captação', hint: 'Marcada ou já gravada', statuses: ['scheduled', 'captured'] },
   { key: 'edit', label: 'Edição', hint: 'Montagem e ajustes', statuses: ['editing', 'changes_requested'] },
-  { key: 'approval', label: 'Aprovação', hint: 'Revisão interna e cliente', statuses: ['review', 'client_review'] },
+  { key: 'approval', label: 'Aprovação', hint: 'Com o cliente', statuses: ['review', 'client_review'] },
   { key: 'done', label: 'Entregue', hint: 'Aprovado e entregue', statuses: ['approved', 'delivered'] },
 ]
 export function phaseOf(s: AvStatus): AvPhase | null {
@@ -123,13 +123,17 @@ export function avActionsFor(p: Pick<AvProject, 'status'>, a: AvActor): AvAction
       if (a.manager) out.push({ to: 'script', label: 'Voltar para roteiro' })
       break
     case 'captured':
-    case 'changes_requested':
       if (a.manager || a.editor) out.push({ to: 'editing', label: 'Começar edição', primary: true })
       break
-    case 'editing':
-      if (a.manager || a.editor) out.push({ to: 'review', label: 'Enviar para revisão', primary: true, requires: 'finalLink' })
+    case 'changes_requested':
+      // Ajuste pedido: o editor troca o link e entrega de novo direto ao cliente.
+      if (a.manager || a.editor) out.push({ to: 'client_review', label: 'Entregar ao cliente', primary: true, requires: 'finalLink' }, { to: 'editing', label: 'Começar edição' })
       break
-    case 'review':
+    case 'editing':
+      // 12/11/2026: sem revisão interna. A entrega vai direto ao cliente, que recebe o link no WhatsApp.
+      if (a.manager || a.editor) out.push({ to: 'client_review', label: 'Entregar ao cliente', primary: true, requires: 'finalLink' })
+      break
+    case 'review': // vídeos de antes de 12/11
       if (a.manager) {
         out.push({ to: 'client_review', label: 'Mandar para o cliente', primary: true })
         out.push({ to: 'approved', label: 'Aprovar sem o cliente' })
@@ -189,22 +193,20 @@ export function fromLocalInput(value: string): string {
 
 
 // ===== Audiovisual 2.0: etapas do quadro de Produção =====
-export type AvStage = 'roteiro' | 'aguardando' | 'captacao' | 'edicao' | 'interna' | 'cliente' | 'entregue'
+export type AvStage = 'roteiro' | 'aguardando' | 'captacao' | 'edicao' | 'cliente' | 'entregue'
 export const AV_STAGES: { key: AvStage; label: string; hint: string }[] = [
   { key: 'roteiro', label: 'Roteiro', hint: 'Escrever e aprovar' },
   { key: 'aguardando', label: 'Aguardando captação', hint: 'Roteiro aprovado, data marcada' },
   { key: 'captacao', label: 'Captação', hint: 'Gravando ou mandando o bruto' },
   { key: 'edicao', label: 'Edição', hint: 'Montagem e ajustes' },
-  { key: 'interna', label: 'Aprovação interna', hint: 'Responsável revisa' },
-  { key: 'cliente', label: 'Aprovação do cliente', hint: 'No portal do cliente' },
+  { key: 'cliente', label: 'Aprovação do cliente', hint: 'Avisado no WhatsApp, aprova no portal' },
 ]
 export function stageOf(p: Pick<AvProject, 'status' | 'scriptStatus' | 'checkinAt' | 'rawSentAt'>): AvStage | null {
   switch (p.status) {
     case 'script': return 'roteiro'
     case 'scheduled': return p.checkinAt && !p.rawSentAt ? 'captacao' : 'aguardando'
     case 'captured': return 'captacao'
-    case 'editing': case 'changes_requested': return 'edicao'
-    case 'review': return 'interna'
+    case 'editing': case 'changes_requested': case 'review': return 'edicao'
     case 'client_review': return 'cliente'
     case 'approved': case 'delivered': return 'entregue'
     default: return null

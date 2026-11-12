@@ -13,7 +13,7 @@ import { noticesFrom, pendingFrom, setupNotice, type Notice } from './chatNotice
 import { bidAlerts, bidKeys } from '@/features/bids/bidsApi'
 import { useSetupPending } from '@/features/clients/useSetupPending'
 import { useConsultList } from '@/features/strategy/consultApi'
-import { answeredNotices, readyNotices } from '@/features/strategy/consultRules'
+import { answeredNotices, monthlyNotices, readyNotices } from '@/features/strategy/consultRules'
 import { BeteToday, useBeteState, visibleItems, type TodayItem } from './BeteToday'
 import { isoWeek } from '@/features/finance/whatsapp/waRules'
 import { brl, cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
@@ -202,7 +202,7 @@ const isOpenPiece = (p: Piece) => !/approved|aprovad|published|publicad|cancel/i
 const isOpenVideo = (v: Video) => !/delivered|cancelled|approved/i.test(v.status)
 const dmy = (iso: string | null) => (iso ? `${iso.slice(8, 10)}/${iso.slice(5, 7)}` : '')
 const PIECE_STATUS: Record<string, string> = { briefing: 'briefing', in_production: 'em produção', review: 'revisão interna', client_review: 'com o cliente', changes_requested: 'ajuste pedido', ready: 'pronta' }
-const VIDEO_STATUS: Record<string, string> = { script: 'roteiro', scheduled: 'captação marcada', captured: 'captado', editing: 'em edição', review: 'revisão interna', client_review: 'com o cliente', changes_requested: 'ajuste pedido' }
+const VIDEO_STATUS: Record<string, string> = { script: 'roteiro', scheduled: 'captação marcada', captured: 'captado', editing: 'em edição', review: 'pronto para o cliente', client_review: 'com o cliente', changes_requested: 'ajuste pedido' }
 
 /** Linha de lista das abas: texto, detalhe à direita e clique que leva ao lugar certo. */
 function Row({ to, onGo, title, sub, right, tone }: { to: string; onGo: () => void; title: string; sub?: string; right?: string; tone?: 'warn' | 'ok' }) {
@@ -375,6 +375,7 @@ export function GoalsChat() {
     const setup = setupNotice(setupPending)
     if (setup) out.push({ id: setup.id, level: 'info', title: setup.title, sub: setup.sub, action: { label: 'Resolver', to: setup.to } })
     for (const c of readyNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `🧭 ${c.title}`, sub: 'Consultoria', action: { label: 'Revisar', to: c.to } })
+    for (const c of monthlyNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `🗓️ ${c.title}`, sub: 'Consultoria · aprovar manda para a fila da área', action: { label: 'Ver as 4 semanas', to: c.to } })
     for (const c of answeredNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `💬 ${c.title}`, sub: 'Consultoria · as respostas já entram na estratégia', action: { label: 'Ver respostas', to: c.to } })
     const wa = finWa.data ?? 0
     for (const b of bids.data ?? []) {

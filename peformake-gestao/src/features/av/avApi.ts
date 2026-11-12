@@ -86,6 +86,7 @@ export function avErrorMessage(error: unknown): string {
     if (e.message?.includes('bruto')) return 'Coloque o link do material bruto antes.'
     if (e.message?.includes('final')) return 'Coloque o link do vídeo final antes.'
     if (e.message?.includes('ajustar')) return 'Escreva o que precisa ajustar.'
+    if (e.message?.includes('videos')) return 'Informe quantos vídeos saíram desta visita.'
     return 'Algum campo está fora do formato.'
   }
   return 'Não foi possível concluir. Nada foi alterado.'
@@ -118,9 +119,9 @@ export async function calendarCall<T = unknown>(body: Record<string, unknown>): 
   return out as T
 }
 
-export interface AvSettings { edit_hours: number; raw_until_hour: number; default_duration_min: number; checkin_radius_m: number; calendar_account_ids: string[]; notify_client: boolean; notify_team: boolean }
+export interface AvSettings { edit_hours: number; raw_until_hour: number; default_duration_min: number; checkin_radius_m: number; calendar_account_ids: string[]; notify_client: boolean; notify_team: boolean; auto_client_whatsapp: boolean }
 export async function getAvSettings(): Promise<AvSettings> {
-  const { data, error } = await supabase.from('av_settings').select('edit_hours, raw_until_hour, default_duration_min, checkin_radius_m, calendar_account_ids, notify_client, notify_team').eq('id', true).single()
+  const { data, error } = await supabase.from('av_settings').select('edit_hours, raw_until_hour, default_duration_min, checkin_radius_m, calendar_account_ids, notify_client, notify_team, auto_client_whatsapp').eq('id', true).single()
   if (error) throw error
   return data as unknown as AvSettings
 }

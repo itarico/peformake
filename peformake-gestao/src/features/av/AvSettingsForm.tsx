@@ -14,7 +14,7 @@ export function AvSettingsForm() {
   const [saved, setSaved] = useState(false)
   useEffect(() => { if (q.data) setF(q.data) }, [q.data])
   const save = useMutation({
-    mutationFn: () => saveAvSettings({ edit_hours: f!.edit_hours, raw_until_hour: f!.raw_until_hour, default_duration_min: f!.default_duration_min, checkin_radius_m: f!.checkin_radius_m, notify_client: f!.notify_client, notify_team: f!.notify_team }),
+    mutationFn: () => saveAvSettings({ edit_hours: f!.edit_hours, raw_until_hour: f!.raw_until_hour, default_duration_min: f!.default_duration_min, checkin_radius_m: f!.checkin_radius_m, notify_client: f!.notify_client, notify_team: f!.notify_team, auto_client_whatsapp: f!.auto_client_whatsapp }),
     onSuccess: () => { setSaved(true); setTimeout(() => setSaved(false), 2500); void queryClient.invalidateQueries({ queryKey: ['av-settings'] }) },
   })
   if (!f) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
@@ -33,6 +33,7 @@ export function AvSettingsForm() {
         {num('checkin_radius_m', 'Distância aceita no check-in', 'Mais longe que isso, o responsável é avisado.', 50, 5000, 'metros')}
       </div>
       <label className="flex items-start gap-2 text-[14px]"><input type="checkbox" checked={f.notify_client} onChange={(e) => setF({ ...f, notify_client: e.target.checked })} className="mt-1 size-4" /><span><b>Avisar o cliente no WhatsApp</b><span className="block text-[13px] text-muted">Gravação marcada, lembretes de 1 dia e 3 horas antes, roteiro para aprovar e início da edição.</span></span></label>
+      <label className="flex items-start gap-2 text-[14px]"><input type="checkbox" checked={f.auto_client_whatsapp} onChange={(e) => setF({ ...f, auto_client_whatsapp: e.target.checked })} className="mt-1 size-4" /><span><b>Vídeo entregue avisa o cliente</b><span className="block text-[13px] text-muted">Quando a edição entrega, o cliente recebe no WhatsApp o link para aprovar. Também em Configurações → Automações.</span></span></label>
       <label className="flex items-start gap-2 text-[14px]"><input type="checkbox" checked={f.notify_team} onChange={(e) => setF({ ...f, notify_team: e.target.checked })} className="mt-1 size-4" /><span><b>Avisar a equipe no WhatsApp</b><span className="block text-[13px] text-muted">Link da captação, check-in 30 minutos antes, checkout, bruto atrasado e prazo de edição. Usa o telefone do cadastro da equipe.</span></span></label>
       <div className="flex items-center gap-3"><Button disabled={save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar regras'}</Button>{saved && <span role="status" className="text-[13px] text-ok-ink">Salvo.</span>}</div>
     </section>

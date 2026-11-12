@@ -9,7 +9,7 @@ describe('noticesFrom', () => {
     const out = noticesFrom([n('1', 'crm_new_contact', 'Novo número: Ana', 5), n('2', 'crm_new_contact', 'Novo número: Bia', 9), n('3', 'av_review', 'Vídeo pronto: 3LM', 30), n('4', 'av_review', 'x', 10, 'lido'), n('5', 'crm_new_lead', 'velho', 60 * 24 * 9)], now)
     expect(out.map((x) => x.title)).toEqual(['2 números novos no WhatsApp', 'Vídeo pronto: 3LM'])
     expect(out[0]!.lines).toEqual(['Ana', 'Bia'])
-    expect(out[1]!.action?.label).toBe('Revisar vídeo')
+    expect(out[1]!.action?.label).toBe('Ver vídeo')
   })
 })
 

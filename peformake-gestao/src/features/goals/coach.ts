@@ -171,7 +171,7 @@ export function steps(r: GoalRow, c: Coach | undefined, day: number, days: numbe
       out.push('Comece pelos clientes de maior mensalidade.')
       break
     }
-    case 'videos': out.push(`Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'vídeo' : 'vídeos'} para entregar no prazo este mês.`, 'Bruto no mesmo dia, edição no dia seguinte.', 'Aprovação interna antes de mandar ao cliente.'); break
+    case 'videos': out.push(`Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'vídeo' : 'vídeos'} para entregar no prazo este mês.`, 'Bruto no mesmo dia, edição no dia seguinte.', 'Entregue pelo sistema: o cliente recebe o link no WhatsApp para aprovar.'); break
     case 'orcamentos_aceitos': if (c?.open_quotes) out.push(`${c.open_quotes} ${c.open_quotes === 1 ? 'orçamento aguarda' : 'orçamentos aguardam'} resposta. Retome em 48 horas quem não respondeu.`); else out.push('Nenhum orçamento esperando resposta agora. Para ter aceites, primeiro é preciso enviar.'); out.push('Ofereça captação aos clientes avulsos parados: são os mais fáceis de aceitar.', 'Use os pacotes prontos: o orçamento sai em 2 minutos.'); break
     case 'fotos_extras': out.push('Toda captação com foto vira galeria para o cliente escolher.', 'Suba as fotos no mesmo dia: a emoção vende as extras.', 'Avise o parceiro que ele já tem desconto.'); break
     case 'recebido': out.push(`Faltam ${brl(rem)} para entrar no caixa.`, 'Confira as faturas que vencem esta semana.', 'Quem atrasou: ligar no primeiro dia.'); break

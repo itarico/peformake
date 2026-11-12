@@ -15,10 +15,15 @@ describe('avActionsFor', () => {
     expect(avActionsFor(p({ status: 'scheduled' }), vm).map((a) => a.to)).toEqual(['captured'])
     expect(avActionsFor(p({ status: 'editing' }), vm)).toEqual([])
   })
-  it('editor envia para revisão, nunca direto ao cliente', () => {
+  it('editor entrega direto ao cliente (sem revisão interna) e entrega de novo depois do ajuste', () => {
     const ed = { manager: false, videomaker: false, editor: true }
-    expect(avActionsFor(p({ status: 'editing' }), ed).map((a) => a.to)).toEqual(['review'])
+    const [deliver] = avActionsFor(p({ status: 'editing' }), ed)
+    expect(deliver).toMatchObject({ to: 'client_review', primary: true, requires: 'finalLink' })
+    expect(avActionsFor(p({ status: 'editing' }), ed)).toHaveLength(1)
+    expect(avActionsFor(p({ status: 'changes_requested' }), ed)[0]?.to).toBe('client_review')
     expect(avActionsFor(p({ status: 'review' }), ed)).toEqual([])
+    expect(avActionsFor(p({ status: 'client_review' }), ed)).toEqual([])
+    expect(deliver && missingFor(deliver, p({}))).toMatch(/vídeo final/)
   })
   it('pede o campo que falta antes de mover', () => {
     const [mark] = avActionsFor(p({ status: 'script' }), { manager: true, videomaker: false, editor: false })
@@ -79,6 +84,7 @@ describe('Audiovisual 2.0', () => {
     expect(stageOf(p({ status: 'scheduled', checkinAt: '2026-11-05T12:00:00Z' }))).toBe('captacao')
     expect(stageOf(p({ status: 'editing' }))).toBe('edicao')
     expect(stageOf(p({ status: 'client_review' }))).toBe('cliente')
+    expect(stageOf(p({ status: 'review' }))).toBe('edicao')
   })
   it('cronômetro fica vermelho perto, amarelo no meio e verde longe', () => {
     const now = Date.parse('2026-11-05T12:00:00Z')
