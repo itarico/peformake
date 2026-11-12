@@ -20,6 +20,15 @@ export interface DeckInput {
   slides?: (o: Orientation) => Slide[]
   /** Nome do documento na aba/PDF (padrão: Diagnóstico). */
   title?: string
+  /** Identidade: Peformake (padrão) ou Ellcazo (tudo que é do audiovisual: logo + verde-limão e preto). */
+  brand?: DeckBrand
+}
+export type DeckBrand = 'peformake' | 'ellcazo'
+const BRAND_NAME: Record<DeckBrand, string> = { peformake: 'Peformake', ellcazo: 'Ellcazo' }
+/** Cores da moldura (fundo da aba, botões) de cada identidade. */
+const CHROME: Record<DeckBrand, { bg: string; paper: string; acc: string; ink: string; soft: string; line: string; mut: string }> = {
+  peformake: { bg: '#0B3C44', paper: '#CFE3E7', acc: '#1FC8DB', ink: '#0B3C44', soft: '#E6F7F9', line: '#D9E2E5', mut: '#CFE3E7' },
+  ellcazo: { bg: '#121410', paper: '#E4E8DA', acc: '#B5E61D', ink: '#121410', soft: '#F1F8DA', line: '#E2E6D8', mut: '#D8DECB' },
 }
 export interface SlideDetail { title: string; items: { k?: string; v: string; url?: string }[] }
 export interface Slide {
@@ -226,7 +235,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
   return out
 }
 
-export function deckCss(o: Orientation): string {
+export function deckCss(o: Orientation, brand: DeckBrand = 'peformake'): string {
   const land = o === 'paisagem'
   // Escala por orientação: no retrato o slide é mais estreito, então as letras ocupam mais da largura.
   const k = land ? 1 : 1.5
@@ -318,6 +327,33 @@ export function deckCss(o: Orientation): string {
   .pfd .card.xl{padding:${f(2.6)}} .pfd .card.xl h3{font-size:${f(2.8)}} .pfd .card.xl p{font-size:${f(2.1)}}
   .pfd .card .wk{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:${f(1.1)};color:var(--muted)} .pfd .card .cnt{font-size:${f(1.35)};color:var(--muted)}
   .pfd .legend{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .legend li{display:flex;gap:${f(1.2)};align-items:center;font-size:${f(1.8)};line-height:1.25} .pfd .legend .num{background:var(--ink);color:#fff;width:${f(2.8)};height:${f(2.8)}}
+  ${brand === 'ellcazo' ? ellcazoCss(f) : ''}`
+}
+
+/** Identidade Ellcazo por cima do mesmo sistema de slides: preto, verde-limão e branco (só o que é do audiovisual). */
+function ellcazoCss(f: (n: number) => string): string {
+  return `
+  .pfd{--ink:#121410;--muted:#5F6656;--acc:#4E6B00;--fill:#B5E61D;--deep:#121410;--soft:#F1F8DA;--line:#E2E6D8;--canvas:#F5F7EF}
+  .pfd .cover{background:radial-gradient(circle at 86% 14%,rgba(181,230,29,.2) 0,rgba(181,230,29,0) 44%),#121410}
+  .pfd .cover .ecz-logo{height:${f(5.4)};width:auto;display:block}
+  .pfd .sw.warn{background:#121410} .pfd .card.accent{background:#121410} .pfd .card .pro,.pfd .ans{color:#4E6B00}
+  .pfd .statement{background:#121410;color:#fff} .pfd .statement .kick{color:#fff} .pfd .statement .lead{color:#D8DECB}
+  .pfd .statement .card{background:#1D2019;border-color:#2C3125;color:#fff} .pfd .statement .card p{color:#D8DECB} .pfd .statement .card h3{color:#fff}
+  .pfd .statement .tags span{background:#2C3125;color:#E4E8DA} .pfd .statement .tags .acc{background:var(--fill);color:#121410}
+  .pfd .statement .foot{color:#8C9480} .pfd .statement .foot b{color:#fff}
+  .pfd .statement .callout{background:#1D2019;color:#fff}
+  .pfd .scn{list-style:none;display:flex;flex-direction:column;gap:${f(1.2)}}
+  .pfd .scn li{display:grid;grid-template-columns:${f(7.5)} 1fr;gap:${f(1.4)};align-items:start;border-bottom:1px solid var(--line);padding-bottom:${f(1.2)}}
+  .pfd .scn li:last-child{border-bottom:0}
+  .pfd .scn .t{display:flex;flex-direction:column;align-items:flex-start;gap:${f(.4)}} .pfd .scn .t .num{background:#121410;color:var(--fill)} .pfd .scn .t small{font-size:${f(1.2)};color:var(--muted);font-weight:700}
+  .pfd .scn .img{font-size:${f(1.6)};color:var(--muted);line-height:1.3} .pfd .scn .fala{font-size:${f(2)};font-weight:650;line-height:1.3;margin-top:${f(.3)}}
+  .pfd .scn .tela{display:inline-block;margin-top:${f(.6)};background:var(--fill);color:#121410;font-weight:800;font-size:${f(1.35)};border-radius:${f(.6)};padding:${f(.25)} ${f(.9)}}
+  .pfd .kv{display:flex;flex-direction:column;gap:${f(.9)}} .pfd .kv p{font-size:${f(1.7)};line-height:1.35;color:#2A2E24} .pfd .kv b{display:block;font-size:${f(1.15)};text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .pfd .refs{list-style:none;display:flex;flex-direction:column;gap:${f(1.2)}}
+  .pfd .refs li{display:grid;grid-template-columns:${f(3.2)} 1fr;gap:${f(1.4)};align-items:start;font-size:${f(1.7)};line-height:1.3}
+  .pfd .refs a{color:#121410;font-weight:700;text-decoration:none;border-bottom:${f(.3)} solid var(--fill)} .pfd .refs small{display:block;color:var(--muted);font-size:${f(1.3)};margin-top:${f(.3)};word-break:break-all}
+  .pfd .vlist{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .vlist li{display:grid;grid-template-columns:${f(3.2)} 1fr auto;gap:${f(1.4)};align-items:center;border-bottom:1px solid var(--line);padding-bottom:${f(1)};font-size:${f(1.9)}}
+  .pfd .vlist li:last-child{border-bottom:0} .pfd .vlist .num{background:#121410;color:var(--fill)} .pfd .vlist small{display:block;color:var(--muted);font-size:${f(1.3)}}
   `
 }
 
@@ -348,17 +384,17 @@ export function fitSlides(root: ParentNode): void {
 }
 
 /** Um slide em HTML (sem <html>). */
-export function slideHtml(s: Slide, i: number, total: number, name: string): string {
+export function slideHtml(s: Slide, i: number, total: number, name: string, brand: DeckBrand = 'peformake'): string {
   const cls = ['slide', s.kind === 'cover' ? 'cover' : s.kind === 'statement' ? 'statement' : '', s.internal ? 'internal' : ''].filter(Boolean).join(' ')
   const head = s.title || (s.kicker && s.kind !== 'cover') ? `<div class="head">${s.kicker ? `<p class="kick">${esc(s.kicker)}</p>` : ''}${s.title ? `<h2>${esc(s.title)}</h2>` : ''}</div>` : ''
-  const foot = s.kind === 'cover' ? '' : `<div class="foot"><span><b>Peformake</b> · ${esc(name)}</span><span>${i + 1} / ${total}</span></div>`
+  const foot = s.kind === 'cover' ? '' : `<div class="foot"><span><b>${BRAND_NAME[brand]}</b> · ${esc(name)}</span><span>${i + 1} / ${total}</span></div>`
   return `<section class="${cls}" aria-label="Slide ${i + 1} de ${total}"><div class="in">${s.kind === 'cover' ? s.body : `${head}<div class="content">${s.body}</div>`}${foot}</div></section>`
 }
 
 /** Slides em HTML (para o PDF, o link público e o portal: nunca os internos). */
 export function deckSlidesHtml(input: DeckInput, o: Orientation): string {
   const list = buildSlides(input, o)
-  return list.map((s, i) => slideHtml(s, i, list.length, input.name)).join('')
+  return list.map((s, i) => slideHtml(s, i, list.length, input.name, input.brand)).join('')
 }
 
 export function deckSlideCount(input: DeckInput, o: Orientation): number { return buildSlides(input, o).length }
@@ -370,10 +406,10 @@ export function deckHtml(input: DeckInput, o: Orientation): string {
 <title>${esc(input.title ?? 'Diagnóstico')} · ${esc(input.name)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>@page{size:${page};margin:0}html,body{margin:0;background:#CFE3E7}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}
+<style>@page{size:${page};margin:0}html,body{margin:0;background:${CHROME[input.brand ?? 'peformake'].paper}}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .pfd{width:min(100%,${o === 'paisagem' ? '1100px' : '760px'})} .pfd .slide{box-shadow:0 2px 14px rgba(0,0,0,.18);margin-bottom:16px}
 @media print{html,body{background:#fff;padding:0;gap:0}.pfd{width:${o === 'paisagem' ? '338.67mm' : '210mm'}}.pfd .slide{width:${o === 'paisagem' ? '338.67mm' : '210mm'};height:${o === 'paisagem' ? '190.5mm' : '297mm'};aspect-ratio:auto;box-shadow:none;margin:0}}
-${deckCss(o)}</style></head><body><div class="pfd">${deckSlidesHtml(input, o)}</div>
+${deckCss(o, input.brand)}</style></head><body><div class="pfd">${deckSlidesHtml(input, o)}</div>
 <script>var pfFit=${fitSlides.toString()};function run(){pfFit(document)}(document.fonts?document.fonts.ready:Promise.resolve()).then(run);window.addEventListener('beforeprint',run)</script></body></html>`
 }
 
@@ -397,21 +433,22 @@ export function presentHtml(input: DeckInput, o: Orientation): string {
   const stage = (k: Orientation) => {
     const id = k === 'paisagem' ? 'sp' : 'sv'
     const list = buildSlides(input, k)
-    const css = deckCss(k).replace(/\.pfd/g, `#${id} .pfd`)
+    const css = deckCss(k, input.brand).replace(/\.pfd/g, `#${id} .pfd`)
     const size = k === 'paisagem'
       ? `#${id} .pfd{width:min(calc(var(--vw) - 24px),calc((var(--vh) - 88px) * ${(16 / 9).toFixed(4)}))}`
       // Vertical em tela cheia: o slide fica da altura da tela (o conteúdo se ajusta com fitSlides).
       : `#${id}{padding-top:max(58px,env(safe-area-inset-top))} #${id} .pfd{width:min(calc(var(--vw) - 16px),640px)} #${id} .pfd .slide{aspect-ratio:auto;height:min(calc(var(--vh) - 130px),calc((var(--vw) - 16px) * 2.1))} #${id} .pfd .slide:not(.cover)>.in>.content{justify-content:center}`
     const details = list.map((x) => (x.details?.items.length ? { t: x.details.title, i: x.details.items.map((it) => ({ k: it.k ?? '', v: it.v, u: it.url ?? '' })) } : null))
-    return { id, details, css: `${css}\n${size}`, html: `<div class="stage" id="${id}"${k === o ? '' : ' hidden'}><div class="pfd measure">${list.map((x, n) => slideHtml(x, n, list.length, input.name)).join('')}</div></div>` }
+    return { id, details, css: `${css}\n${size}`, html: `<div class="stage" id="${id}"${k === o ? '' : ' hidden'}><div class="pfd measure">${list.map((x, n) => slideHtml(x, n, list.length, input.name, input.brand)).join('')}</div></div>` }
   }
   const a = stage('paisagem'), b = stage('vertical')
+  const C = CHROME[input.brand ?? 'peformake']
   const det = JSON.stringify({ sp: a.details, sv: b.details }).replace(/</g, '\\u003c')
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>${esc(input.name)} · Peformake</title>
+<title>${esc(input.name)} · ${BRAND_NAME[input.brand ?? 'peformake']}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>:root{--vw:100vw;--vh:100dvh}html,body{margin:0;height:100%;background:#0B3C44;overflow:hidden;font-family:Geist,system-ui,sans-serif}
+<style>:root{--vw:100vw;--vh:100dvh}html,body{margin:0;height:100%;background:${C.bg};overflow:hidden;font-family:Geist,system-ui,sans-serif}
 .app{position:fixed;left:0;top:0;width:var(--vw);height:var(--vh);transform-origin:0 0}
 body.rot .app{transform:translateX(100vw) rotate(90deg)}
 .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 8px 64px;box-sizing:border-box}.stage[hidden]{display:none}
@@ -425,30 +462,30 @@ body.rot .app{transform:translateX(100vw) rotate(90deg)}
 .pfd .slide.on :is(.grid,.bul,.steps,.qs,.rows,.kpis,.journey)>*:nth-child(4){animation-delay:.24s}.pfd .slide.on :is(.grid,.bul,.steps,.qs,.rows,.kpis,.journey)>*:nth-child(n+5){animation-delay:.32s}
 .pfd .slide.on .content>*:nth-child(2){animation-delay:.1s}.pfd .slide.on .chart-only svg{animation:pfGrow .7s cubic-bezier(.2,.7,.2,1) both}
 @keyframes pfUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes pfGrow{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}}
-.bar{position:absolute;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:6px;color:#CFE3E7;font-size:14px}
+.bar{position:absolute;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:6px;color:${C.mut};font-size:14px}
 .bar button{all:unset;cursor:pointer;min-width:42px;height:42px;padding:0 6px;box-sizing:border-box;border-radius:21px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:17px}
-.bar button.t{font-size:12.5px;font-weight:600;padding:0 11px}.bar button.q{background:#1FC8DB;color:#0B3C44;font-weight:800}.bar button[hidden]{display:none}
+.bar button.t{font-size:12.5px;font-weight:600;padding:0 11px}.bar button.q{background:${C.acc};color:${C.ink};font-weight:800}.bar button[hidden]{display:none}
 .bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:54px;text-align:center;font-variant-numeric:tabular-nums}
 .menu{position:absolute;right:50%;transform:translateX(50%);bottom:calc(max(10px,env(safe-area-inset-bottom)) + 52px);display:flex;flex-direction:column;gap:2px;min-width:210px;padding:6px;border-radius:16px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.4);z-index:15}.menu[hidden]{display:none}
-.menu button{all:unset;cursor:pointer;min-height:42px;padding:0 12px;border-radius:10px;color:#0B3C44;font-size:14px;font-weight:600;display:flex;align-items:center}.menu button:hover{background:#E6F7F9}.menu button[hidden]{display:none}
+.menu button{all:unset;cursor:pointer;min-height:42px;padding:0 12px;border-radius:10px;color:${C.ink};font-size:14px;font-weight:600;display:flex;align-items:center}.menu button:hover{background:${C.soft}}.menu button[hidden]{display:none}
 .close{all:unset;position:absolute;top:max(10px,env(safe-area-inset-top));right:10px;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff;font-size:18px;z-index:20}
 .dlg{position:absolute;inset:0;background:rgba(5,25,30,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}.dlg.on{display:flex}
-.dlg .box{background:#fff;color:#0B3C44;border-radius:18px;max-width:560px;width:100%;max-height:calc(var(--vh) - 32px);display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.dlg header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 10px;border-bottom:1px solid #D9E2E5}.dlg h3{margin:0;font-size:18px}
-.dlg header button{all:unset;cursor:pointer;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #056F84;font-size:16px}
-.dlg .body{padding:12px 18px 6px;font-size:15px;line-height:1.45;overflow:auto}.dlg .it{margin:0 0 10px}.dlg .it b{display:block}.dlg .it a{color:#056F84;font-size:13px;margin-left:4px}
+.dlg .box{background:#fff;color:${C.ink};border-radius:18px;max-width:560px;width:100%;max-height:calc(var(--vh) - 32px);display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.dlg header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 10px;border-bottom:1px solid ${C.line}}.dlg h3{margin:0;font-size:18px}
+.dlg header button{all:unset;cursor:pointer;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1.5px solid ${C.ink};font-size:16px}
+.dlg .body{padding:12px 18px 6px;font-size:15px;line-height:1.45;overflow:auto}.dlg .it{margin:0 0 10px}.dlg .it b{display:block}.dlg .it a{color:${input.brand === 'ellcazo' ? '#4E6B00' : '#056F84'};font-size:13px;margin-left:4px}
 .dlg .pg{display:flex;justify-content:space-between;align-items:center;padding:8px 18px 14px;font-size:13px}.dlg .pg button{all:unset;cursor:pointer;font-weight:600;padding:8px 4px}.dlg .pg button:disabled{opacity:.35;cursor:default}
 ${a.css}
 ${b.css}</style></head><body><div class="app">${a.html}${b.html}
 <button class="close" id="c" aria-label="Fechar a apresentação">✕</button>
-<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="mm" aria-label="Mais opções" aria-haspopup="menu" aria-expanded="false">⋯</button></div>
+<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="qq" class="q" aria-label="Detalhes deste slide (Enter)" title="Detalhes deste slide (Enter)" hidden>?</button><button id="mm" aria-label="Mais opções" aria-haspopup="menu" aria-expanded="false">⋯</button></div>
 <div class="menu" id="m" role="menu" hidden><button id="q" role="menuitem" hidden>? Detalhes deste slide (Enter)</button><button id="o" role="menuitem"></button><button id="r" role="menuitem">⟳ Girar a tela</button><button id="f" role="menuitem">⛶ Tela cheia</button></div>
 <div class="dlg" id="dl" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="box"><header><h3 id="dt"></h3><button id="dc" aria-label="Fechar detalhes">✕</button></header><div class="body" id="db"></div><div class="pg" id="dp"><button id="dpp">‹ Anteriores</button><span id="dpn"></span><button id="dpx">Próximas ›</button></div></div></div></div>
 <script>var pfFit=${fitSlides.toString()};var DET=${det};var cur='${o === 'paisagem' ? 'sp' : 'sv'}',i=0,d,S,rot=false,pg=0;
 function dims(){var w=innerWidth,h=innerHeight;if(rot){var t=w;w=h;h=t}document.documentElement.style.setProperty('--vw',w+'px');document.documentElement.style.setProperty('--vh',h+'px')}
 function use(id){cur=id;['sp','sv'].forEach(function(k){document.getElementById(k).hidden=k!==id});d=document.querySelector('#'+id+' .pfd');S=[].slice.call(d.querySelectorAll('.slide'));document.getElementById('o').textContent=id==='sp'?'▯ Ver na vertical':'▭ Ver na horizontal';fit()}
 function show(k,dir){var prev=i;i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(s,j){s.classList.remove('in-r','in-l');s.classList.toggle('on',j===i)});if(dir!==0&&i!==prev){void S[i].offsetWidth;S[i].classList.add(i>prev?'in-r':'in-l')}
-document.getElementById('n').textContent=(i+1)+' / '+S.length;document.getElementById('p').disabled=i===0;document.getElementById('x').disabled=i===S.length-1;document.getElementById('q').hidden=!(DET[cur]&&DET[cur][i])}
+document.getElementById('n').textContent=(i+1)+' / '+S.length;document.getElementById('p').disabled=i===0;document.getElementById('x').disabled=i===S.length-1;document.getElementById('q').hidden=document.getElementById('qq').hidden=!(DET[cur]&&DET[cur][i])}
 function fit(){dims();d.classList.add('measure');pfFit(d);d.classList.remove('measure');show(i,0)}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 var clean=${presentClean.toString()};var urls=${presentUrls.toString()};
@@ -461,7 +498,7 @@ var M=document.getElementById('m'),MM=document.getElementById('mm');function men
 document.getElementById('p').onclick=function(){show(i-1)};document.getElementById('x').onclick=function(){show(i+1)};
 document.getElementById('o').onclick=function(){use(cur==='sp'?'sv':'sp')};
 document.getElementById('r').onclick=function(){rot=!rot;document.body.classList.toggle('rot',rot);if(rot&&cur==='sv')use('sp');else fit()};
-document.getElementById('q').onclick=openD;document.getElementById('dc').onclick=closeD;document.getElementById('dl').addEventListener('click',function(e){if(e.target.id==='dl')closeD()});
+document.getElementById('q').onclick=openD;document.getElementById('qq').onclick=openD;document.getElementById('dc').onclick=closeD;document.getElementById('dl').addEventListener('click',function(e){if(e.target.id==='dl')closeD()});
 document.getElementById('dpp').onclick=function(){pg--;page()};document.getElementById('dpx').onclick=function(){pg++;page()};
 document.getElementById('f').onclick=function(){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen()};
 document.getElementById('c').onclick=function(){if(document.fullscreenElement){document.exitFullscreen()}var t=window.top;try{if(t.opener){t.close();return}}catch(e){}try{if(t.history.length>1){t.history.back();return}}catch(e){}try{t.close()}catch(e){}};
