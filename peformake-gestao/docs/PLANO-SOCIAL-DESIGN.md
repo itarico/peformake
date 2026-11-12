@@ -46,3 +46,12 @@ Mesmo processo de sempre, só que a IA faz quando ninguém pega:
 4. **Controle de qualidade antes de enviar:** a IA olha a arte pronta (texto cortado, contraste, foto ruim, erro de português, logo). Reprovou → volta para o designer com o motivo, não vai ao cliente.
 5. Aprovada no controle → sobe a arte, avança para **Com o cliente** e dispara o WhatsApp para o cliente **com o link para ver e aprovar** (hoje o aviso sai sem link: corrigir), avisando também a social media (e o grupo, se for o caso).
 6. Ajuste pedido pelo cliente volta para o designer humano.
+
+## 8. Tudo que nasce das estratégias passa por "Aprovar" e cai na área certa (lembrete do Italo, 12/11)
+- Toda tarefa gerada por **diagnóstico (Consultoria: plano de ação)**, **estratégia mensal**, **estratégia de tráfego** e futuras **estratégias por área** aparece com o botão **Aprovar / Recusar** (e editar antes).
+- Aprovou:
+  - O que é de **Instagram/redes** (postagem, stories, bio, destaques, responder, etc.) → vira **tarefa da social media** (coluna Tarefas do quadro de Conteúdo).
+  - O que é **arte** → vira peça com briefing para o design; se nenhum designer começar no tempo configurado, o piloto automático inicia (seção 7).
+  - Tráfego → tarefa de tráfego; audiovisual → projeto com roteiro.
+- **Avisos à social media responsável pelo cliente** (client_team, papel social_media; se não houver, head): ao chegar tarefa de estratégia, pedido do cliente (WhatsApp/portal) ou novidade/notificação relacionada ao cliente. O aviso abre o item exato.
+- Falta hoje: o **plano de ação do diagnóstico** não tem Aprovar (só as decisões internas viram tarefa); a estratégia mensal já tem. Unificar no mesmo componente de aprovação.
