@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Download, FileUp, Link2, Send } from 'lucide-react'
+import { ChevronDown, Download, FileUp, Link2, Send } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -155,6 +155,7 @@ export function DesignPage() {
   const files = useQuery({ queryKey: ['design-queue-files', ids], queryFn: () => listFiles(ids), enabled: ids.length > 0 })
   const [delivering, setDelivering] = useState<ContentItem | null>(null)
   const [onlyMine, setOnlyMine] = useState(false)
+  const [open, setOpen] = useState<Set<string>>(() => new Set())
   const month = monthStart(todayInBrazil().slice(0, 7) + '-01', 0)
   const score = useQuery({ queryKey: ['design-on-time', month], queryFn: () => designOnTime(month), staleTime: 5 * 60_000 })
 
@@ -168,6 +169,11 @@ export function DesignPage() {
   const delivered = mineScore.reduce((n, r) => n + r.delivered, 0)
   const onTime = mineScore.reduce((n, r) => n + r.onTime, 0)
   const filesOf = (id: string) => (files.data ?? []).filter((f) => f.itemId === id)
+  // Agrupado por cliente (como no app antigo): só aparece cliente com arte para fazer; tocar no cliente abre as artes dele.
+  const byClient = new Map<string, ContentItem[]>()
+  for (const i of list) byClient.set(i.clientId, [...(byClient.get(i.clientId) ?? []), i])
+  const groups = [...byClient.entries()]
+  const toggle = (id: string) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n })
 
   return (
     <>
@@ -186,11 +192,35 @@ export function DesignPage() {
           <p className="text-muted">Quando a social media mandar uma peça para o design, ela aparece aqui.</p>
         </div>
       ) : (
-        <ul data-conteudo aria-label="Fila do design" className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {list.map((i) => (
-            <QueueCard key={i.id} item={i} files={filesOf(i.id)} now={now} mine={i.designerId === myStaffId && !!myStaffId}
-              clientName={clientName(i.clientId)} staffName={staffName(i.designerId)} onDeliver={() => setDelivering(i)} />
-          ))}
+        <ul data-conteudo aria-label="Fila do design por cliente" className="flex flex-col gap-2">
+          {groups.map(([cid, items]) => {
+            const isOpen = groups.length === 1 || open.has(cid)
+            const c = countdown(deliveryTarget(items[0]!), now)
+            const late = items.some((x) => countdown(deliveryTarget(x), now)?.tone === 'red')
+            const adjust = items.filter((x) => x.status === 'changes_requested').length
+            return (
+              <li key={cid} className={cn('rounded-2xl border bg-surface', late ? 'border-warn/60' : 'border-line')}>
+                <button type="button" aria-expanded={isOpen} onClick={() => toggle(cid)}
+                  className="flex min-h-14 w-full cursor-pointer items-center gap-3 px-3 py-2 text-left">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-raised text-[14px] font-semibold text-ink">{clientName(cid).slice(0, 1)}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-semibold">{clientName(cid)}</span>
+                    <span className="block text-[12.5px] text-muted">{items.length} {items.length === 1 ? 'arte' : 'artes'} para fazer{adjust ? ` · ${adjust} com ajuste` : ''}</span>
+                  </span>
+                  {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>Próxima {c.text}</span>}
+                  <ChevronDown size={18} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
+                </button>
+                {isOpen && (
+                  <ul className="grid grid-cols-1 gap-3 border-t border-line p-3 md:grid-cols-2 xl:grid-cols-3">
+                    {items.map((i) => (
+                      <QueueCard key={i.id} item={i} files={filesOf(i.id)} now={now} mine={i.designerId === myStaffId && !!myStaffId}
+                        clientName={clientName(i.clientId)} staffName={staffName(i.designerId)} onDeliver={() => setDelivering(i)} />
+                    ))}
+                  </ul>
+                )}
+              </li>
+            )
+          })}
         </ul>
       )}
       {delivering && (
