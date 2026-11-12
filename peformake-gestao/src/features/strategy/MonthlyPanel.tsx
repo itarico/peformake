@@ -49,7 +49,9 @@ function canDecide(st: MonthlyStrategy | null, a: Pick<MonthlyAction, 'area'>): 
  * as seções como abas e o conteúdo em cartões com "Ver detalhes". Aprovar fica em cada ação (vai para a fila da área).
  * scope: 'tudo' (Consultoria), ou a parte de uma área (Tráfego, Social media, Audiovisual). Nada vai para o cliente sozinho.
  */
-export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName = false }: { clientId: string; name: string; logoUrl: string | null; scope?: PlanScope; showName?: boolean }) {
+export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName = false, quiet = false }: { clientId: string; name: string; logoUrl: string | null; scope?: PlanScope; showName?: boolean
+  /** A tela já tem o botão principal ("Revisar em slides" no cabeçalho): aqui "Aprovar semana" fica discreto e a apresentação vai para o "⋯". */
+  quiet?: boolean }) {
   const qc = useQueryClient()
   const [params, setParams] = useSearchParams()
   const today = useMemo(() => new Date(), [])
@@ -107,7 +109,8 @@ export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName
   // UMA ação principal por tela; o resto no "⋯".
   let primary: ReactNode = null
   if (q.isSuccess && (!st || st.status === 'erro')) primary = <Button disabled={act.isPending} onClick={() => void generate()}><Sparkles size={15} aria-hidden="true" /> Gerar plano</Button>
-  else if (ready && pendingWeek) primary = <Button disabled={act.isPending} onClick={() => void approveThisWeek()}><Check size={15} aria-hidden="true" /><span className="sm:hidden">Aprovar S{pendingWeek} ({weekCount})</span><span className="max-sm:hidden">Aprovar semana {pendingWeek} ({weekCount})</span></Button>
+  else if (ready && pendingWeek) primary = <Button variant={quiet ? 'secondary' : 'primary'} disabled={act.isPending} onClick={() => void approveThisWeek()}><Check size={15} aria-hidden="true" /><span className="sm:hidden">Aprovar S{pendingWeek} ({weekCount})</span><span className="max-sm:hidden">Aprovar semana {pendingWeek} ({weekCount})</span></Button>
+  else if (quiet) primary = null
   else if (ready && scope === 'tudo') primary = <Button onClick={openDeck}><Presentation size={15} aria-hidden="true" /> Apresentação</Button>
   else if (ready) primary = <Link to={planHref} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><ClipboardList size={15} aria-hidden="true" /> Plano de execução</Link>
 
@@ -120,13 +123,13 @@ export function MonthlyPanel({ clientId, name, logoUrl, scope = 'tudo', showName
             <button type="button" title={`Ver ${monthName(other)}`} aria-label={`Mês: ${monthName(month)}. Trocar para ${monthName(other)}`} onClick={() => setParam('mes', other.slice(0, 7))}
               className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full border border-line px-3 font-semibold hover:border-ink"><CalendarDays size={14} aria-hidden="true" /> <span>{monthName(month).slice(0, 3)}<span className="max-sm:hidden">{monthName(month).slice(3)}</span></span></button>
             <span className={cn('inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[11.5px] font-semibold', TONE[stl.tone])}>{st?.status === 'gerando' && <span className="pf-pulse size-1.5 rounded-full bg-current" />}{stl.label}</span>
-            {ready && pending.length > 0 && <span className="whitespace-nowrap text-[12px] text-muted">{pending.length} para aprovar</span>}
+            {ready && !quiet && pending.length > 0 && <span className="whitespace-nowrap text-[12px] text-muted">{pending.length} para aprovar</span>}
           </p>
         </div>
         {primary}
         <ActionMenu label="Mais opções do plano" actions={[
-          { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: openDeck, hidden: !ready || (scope === 'tudo' && !pendingWeek) },
-          { label: 'Plano de execução (PDF)', icon: <ClipboardList size={15} aria-hidden="true" />, href: planHref, hidden: !ready },
+          { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: openDeck, hidden: !ready || (!quiet && scope === 'tudo' && !pendingWeek) },
+          { label: 'Plano de execução (PDF)', icon: <ClipboardList size={15} aria-hidden="true" />, href: planHref, hidden: !ready || (!quiet && scope !== 'tudo' && !pendingWeek) },
           { label: 'Enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, onClick: () => setSend(true), hidden: !ready || !canAll },
           { label: 'Baixar a apresentação', icon: <Download size={15} aria-hidden="true" />, onClick: () => setDeck(true), hidden: !ready || scope !== 'tudo' },
           { label: 'Refazer com ideias', icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setIdeas(true), hidden: !st || !ready, disabled: act.isPending },

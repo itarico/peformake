@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { activeWeeks, bigNum, buildMonthlySlides, clientText, dateLabel, tight, weekHighlights } from './monthlyDeck'
+import { ADDED_WHY, activeWeeks, bigNum, buildMonthlySlides, clientText, dateLabel, isAdded, tight, weekHighlights } from './monthlyDeck'
 import { monthlyMessage, pastWeeks, type MonthlyAction, type MonthlyStrategy } from './monthlyRules'
 
 const act = (p: Partial<MonthlyAction>): MonthlyAction => ({ id: Math.random().toString(), week: 1, area: 'trafego', title: 'Subir a campanha', what: 'roteiro secreto', place: null, owner_role: 'gestor de tráfego', due_date: '2026-11-13', proof: null, why: null, format: null, status: 'proposta', routed_table: null, routed_id: null, routed_link: null, suggestion: null, done: null, ...p })
@@ -33,6 +33,19 @@ describe('apresentação da estratégia do mês', () => {
     expect(html).not.toMatch(/gestor de tráfego|social media|roteiro secreto|a confirmar/i)
     expect(html).toContain('Retomar quem perguntou')
     expect(html).toContain('As próximas 3 semanas')
+  })
+  it('ação adicionada na revisão ganha slide próprio (e no link público, pela marca added)', () => {
+    const base = { id: 'x', client_id: 'y', month: '2026-12-01', status: 'pronto', stage: 'done', error: null, ideas: null, cost_usd: 1.5, adjust: null, adjusted_at: null, finished_at: null, approved_at: null, updated_at: null,
+      doc: { titulo: 'Dezembro', semanas: [1, 2, 3, 4].map((n) => ({ semana: n, tema: `Tema ${n}`, objetivo: 'Objetivo.', datas: [] })) } }
+    const st = { ...base, actions: [act({ week: 2, due_date: '2026-12-09' }), act({ week: 2, area: 'social', title: 'Feirão de seminovas no sábado', why: ADDED_WHY, what: '' })] } as MonthlyStrategy
+    const slides = buildMonthlySlides({ name: 'Will', strategy: st }, 'paisagem')
+    const own = slides.filter((s) => s.kicker === 'Semana 2 · ideia nova')
+    expect(own.map((s) => s.title)).toEqual(['Feirão de seminovas no sábado'])
+    const week = slides.find((s) => s.kicker?.startsWith('Semana 2 ·') && s.kicker !== 'Semana 2 · ideia nova')
+    expect(week?.body).not.toContain('Feirão')
+    const pub = { ...base, actions: [act({ week: 3, title: 'Live de Natal', why: null, added: true })] } as MonthlyStrategy
+    expect(buildMonthlySlides({ name: 'Will', strategy: pub }, 'paisagem').some((s) => s.kicker === 'Semana 3 · ideia nova')).toBe(true)
+    expect(isAdded(act({}))).toBe(false)
   })
   it('mensagem para o cliente leva o link', () => {
     expect(monthlyMessage('Fornario', '2026-11-01', 'https://x.app/apresentacao/mes/abc')).toContain('https://x.app/apresentacao/mes/abc')

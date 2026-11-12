@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { buildSlides, type DeckInput, type Slide } from '@/features/strategy/consultDeck'
-import { ADDED_KICKER, applyEdit, applyFills, insertAdded, clientSlides, fillsBySlide, findFills, planPhaseOf, progress, progressLabel, removeRefusedSteps, reviewedInput, slideKeys, stripMarks, textSegments } from './reviewRules'
+import { ADDED_KICKER, applyEdit, avClientSlides, avSlideKeys, applyFills, insertAdded, clientSlides, fillsBySlide, findFills, planPhaseOf, progress, progressLabel, removeRefusedSteps, reviewedInput, slideKeys, stripMarks, textSegments } from './reviewRules'
 
 const doc = {
   resumo: { titulo: 'A loja vende bem, mas some no Google', primeiro_passo: 'Arrumar o Google' },
@@ -119,5 +119,17 @@ describe('ideias novas da equipe', () => {
     const added = pub.find((s) => s.kicker === ADDED_KICKER)!
     expect(added.body).toContain('emplacamento')
     expect(added.body).not.toContain('Recusada')
+  })
+})
+
+describe('revisão do audiovisual pelo vídeo', () => {
+  const sl = (kicker?: string, kind?: Slide['kind']) => ({ kicker, kind, title: kicker ?? 'capa', body: `<p>${kicker}</p>` }) as Slide
+  it('a mesma chave na guia (todos os vídeos) e no link público (só os aprovados)', () => {
+    const team = [sl(undefined, 'cover'), sl('O mês em vídeo'), sl('Vídeo 1 de 2 · 05/12 · Atrair'), sl('Vídeo 1 · Roteiro, caso precise'), sl('Vídeo 2 de 2 · 12/12 · Vender'), sl('Vídeo 2 · Filmagem')]
+    const k = avSlideKeys(team, ['a', 'b'])
+    expect(k[4]).toBe('av|b|video|0')
+    const pub = [sl(undefined, 'cover'), sl('O mês em vídeo'), sl('Vídeo 1 de 1 · 12/12 · Vender'), sl('Vídeo 1 · Filmagem')]
+    const state = { slides: { [k[5]!]: { s: 'recusado' as const }, [k[2]!]: { s: 'recusado' as const } } }
+    expect(avClientSlides(pub, ['b'], state).map((s) => s.kicker)).toEqual([undefined, 'O mês em vídeo', 'Vídeo 1 de 1 · 12/12 · Vender'])
   })
 })

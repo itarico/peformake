@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, ChevronRight, Download, ExternalLink, Lightbulb, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, Download, ExternalLink, Lightbulb, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -21,11 +21,12 @@ import { Paged } from './SlideViewer'
 import { ReviewCard } from '@/features/review/ReviewCard'
 import { useReview } from '@/features/review/reviewApi'
 import { reviewedInput } from '@/features/review/reviewRules'
-import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
+import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
 import { MonthlyPanel } from './MonthlyPanel'
+import { useMonthly } from './monthlyApi'
 import { parseMonthParam } from './monthlyRules'
 import { ReportsPanel } from './ReportsPanel'
 
@@ -52,7 +53,7 @@ export function ConsultoriaPage() {
   const [sending, setSending] = useState<ConsultRow | null>(null)
   const [asking, setAsking] = useState<ConsultRow | null>(null)
   const qc = useQueryClient()
-  const open = (id: string | null) => setParams((c) => { const n = new URLSearchParams(c); if (id) n.set('cliente', id); else { n.delete('cliente'); n.delete('aba') } return n })
+  const open = (id: string | null, tab?: DocView) => setParams((c) => { const n = new URLSearchParams(c); if (id) { n.set('cliente', id); if (tab && tab !== 'diagnostico') n.set('aba', tab) } else { n.delete('cliente'); n.delete('aba') } return n })
   const gen = useMutation({
     mutationFn: async (r: ConsultRow) => { if (r.status === 'erro') await requestConsult(r.client_id); else await kickConsult() },
     onMutate: () => setProblem(null),
@@ -63,10 +64,9 @@ export function ConsultoriaPage() {
   const row = list.data?.find((r) => r.client_id === clientId) ?? null
   if (clientId) return <ConsultDocView clientId={clientId} row={row} onBack={() => open(null)} onInfo={() => row && setInfo(row)} info={info} closeInfo={() => setInfo(null)} />
 
-  const rows = sortRows(list.data ?? [])
+  const rows = sortByNext(list.data ?? [])
   return (
     <section aria-label="Consultoria" className="flex flex-col gap-2.5">
-      <p className="text-[13px] text-muted max-md:hidden">Só clientes com Consultoria ativa. A IA pesquisa e escreve o diagnóstico com o plano de ação; você revisa, aprova e envia. Nada sai sozinho para o cliente.</p>
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
       {list.isPending && <p role="status" className="py-6 text-center text-[13px] text-muted">Carregando</p>}
       {list.isError && <p role="alert" className="flex items-center gap-2 text-[13px] text-warn-ink">{(list.error as Error).message} <button type="button" className="cursor-pointer font-semibold underline" onClick={() => void list.refetch()}>Tentar de novo</button></p>}
@@ -74,30 +74,32 @@ export function ConsultoriaPage() {
       {rows.length > 0 && (
         <ul data-conteudo className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
           {rows.map((r) => {
-            const a = rowAction(r)
-            const chip = statusChip(r)
-            const when = r.status === 'gerando' ? chip.sub : ago(r.finished_at ?? r.updated_at)
+            const a = nextStep(r)
+            const parts = clientParts(r)
+            const btn = 'min-h-10 shrink-0 px-3 text-[13px]'
             return (
-              <li key={r.client_id} className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2.5">
-                <button type="button" onClick={() => open(r.client_id)} className="flex min-w-[60%] flex-1 cursor-pointer items-center gap-3 text-left">
+              <li key={r.client_id} data-cliente={r.client_id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-2.5">
+                <button type="button" onClick={() => open(r.client_id)} className="flex min-w-0 basis-full cursor-pointer items-center gap-3 text-left sm:basis-0 sm:flex-1">
                   <ClientAvatar name={r.name} url={logoPublicUrl(r.logo_path)} size="sm" />
                   <span className="min-w-0 flex-1">
-                    <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                      <span className="truncate text-[14.5px] font-semibold">{r.name.trim()}</span>
-                      <Chip row={r} />
-                    </span>
-                    <span className="block truncate text-[12px] text-muted">{[r.segment, when, r.monthly?.pending ? `estratégia: ${r.monthly.pending} para aprovar` : null].filter(Boolean).join(' · ') || ' '}</span>
+                    <span className="block truncate text-[14.5px] font-semibold">{r.name.trim()}</span>
+                    <PartsLine parts={parts} gerando={r.status === 'gerando' ? statusChip(r).sub : undefined} />
                   </span>
                 </button>
-                {a.kind === 'dados' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setInfo(r)}>{a.label}</Button>}
-                {a.kind === 'abrir' && <Button variant={r.status === 'pronto' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => open(r.client_id)}>{a.label}</Button>}
-                {a.kind === 'gerar' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={gen.isPending} onClick={() => gen.mutate(r)}>{a.label}</Button>}
+                <span className="flex shrink-0 items-center gap-1.5 max-sm:w-full max-sm:ps-11">
+                {a.kind === 'link' && <a href={a.href} target="_blank" rel="noreferrer" className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full bg-brand px-3 text-[13px] font-semibold text-on-brand no-underline hover:opacity-85">{a.label} <ExternalLink size={12} aria-hidden="true" className="opacity-70" /></a>}
+                {a.kind === 'dados' && <Button variant="secondary" className={btn} onClick={() => setInfo(r)}>{a.label}</Button>}
+                {a.kind === 'aba' && <Button variant="secondary" className={btn} onClick={() => open(r.client_id, a.tab)}>{a.label}</Button>}
+                {a.kind === 'gerar' && <Button variant="secondary" className={btn} disabled={gen.isPending} onClick={() => gen.mutate(r)}>{a.label}</Button>}
+                {a.kind === 'enviar' && <Button variant="secondary" className={btn} onClick={() => setSending(r)}>{a.label}</Button>}
+                {a.kind === 'perguntas' && <Button variant="secondary" className={btn} onClick={() => setAsking(r)}>{a.label}</Button>}
                 <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
+                  { label: 'Revisar plano em slides', icon: <Presentation size={15} aria-hidden="true" />, hidden: !r.monthly || !['pronto', 'aprovado'].includes(r.monthly.status) || (a.kind === 'link' && a.href.includes('/plano/')), href: r.monthly ? planReviewPath(r.client_id, r.monthly.month) : undefined },
                   { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
-                  { label: 'Enviar no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => setSending(r) },
-                  { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, onClick: () => setAsking(r) },
+                  { label: 'Enviar no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status) || a.kind === 'enviar', onClick: () => setSending(r) },
+                  { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, hidden: a.kind === 'perguntas', onClick: () => setAsking(r) },
                 ]} />
-                <ChevronRight size={16} aria-hidden="true" className="shrink-0 text-muted max-sm:hidden" />
+                </span>
               </li>
             )
           })}
@@ -120,6 +122,22 @@ async function openPublicDeck(clientId: string): Promise<void> {
 }
 
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
+
+const DOT: Record<PartState, string> = { pronto: 'bg-ok', revisar: 'bg-accent', falta: 'bg-warn', andando: 'bg-muted pf-pulse' }
+
+/** Diagnóstico · Plano · Perguntas numa linha: bolinha (pronto / revisar / falta) e 1 a 3 palavras. */
+export function PartsLine({ parts, gerando }: { parts: { diag: Part; plan: Part; questions: Part }; gerando?: string }) {
+  const items: [string, string, Part][] = [['Diagnóstico', 'Diag.', gerando ? { ...parts.diag, label: gerando } : parts.diag], ['Plano', 'Plano', parts.plan], ['Perguntas', 'Perg.', parts.questions]]
+  return (
+    <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[12px] text-muted" data-partes>
+      {items.map(([k, short, p]) => (
+        <span key={k} className="inline-flex items-center gap-1 whitespace-nowrap" data-estado={p.state}>
+          <span aria-hidden="true" className={cn('size-1.5 rounded-full', DOT[p.state])} /><span className="max-sm:hidden">{k}:</span><span className="sm:hidden">{short}</span> <b className={cn('font-semibold', p.state === 'revisar' ? 'text-accent-ink' : p.state === 'falta' ? 'text-warn-ink' : 'text-ink')}>{p.label}</b>
+        </span>
+      ))}
+    </span>
+  )
+}
 
 // ───────── Pop-up de 1 passo: só o que falta ─────────
 function InfoDialog({ row, onClose }: { row: ConsultRow; onClose: () => void }) {
@@ -202,7 +220,9 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const setView = (v: DocView) => setParams((c) => { const n = new URLSearchParams(c); if (v !== 'diagnostico') n.set('aba', v); else n.delete('aba'); return n }, { replace: true })
   const questions = useClientQuestions(clientId)
   const toAsk = (questions.data?.questions ?? []).filter((x) => x.status === 'pendente').length
-  const monthPending = row?.monthly?.pending ?? 0
+  const month = parseMonthParam(params.get('mes'), new Date())
+  const plan = useMonthly(clientId, month)
+  const monthPending = plan.data ? plan.data.actions.filter((a) => a.status === 'proposta').length : row?.monthly?.pending ?? 0
 
   const review = useReview('diagnostico', clientId)
   const [sources, setSources] = useState(false)
@@ -213,50 +233,67 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   }), [name, doc, logo, d?.finished_at])
   // O que o cliente vê (prévia, PDF): com a revisão aplicada (sem recusados, textos editados, dados preenchidos).
   const clientInput = useMemo(() => reviewedInput(deckInput, review.data?.state), [deckInput, review.data?.state])
+  // Cabeçalho: cliente + situação + UM botão principal (o que se faz nesta aba) + "⋯" com o resto.
+  const planReady = !!plan.data && ['pronto', 'aprovado'].includes(plan.data.status)
+  const diagMenu = [
+    { label: 'Revisar em slides', icon: <Presentation size={15} aria-hidden="true" />, hidden: !ready || !(approved && status === 'aprovado'), href: diagReviewPath(clientId) },
+    { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !ready, onClick: () => {
+      // Aprovado: abre o link do cliente. Antes de aprovar: prévia só para a equipe (mesmos slides, sem os internos).
+      if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message))
+      else openPresentation(clientInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
+    } },
+    { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: act.isPending, onClick: () => act.mutate(() => approveConsult(clientId)) },
+    { label: 'Baixar apresentação', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: () => setDeckOpen(true) },
+    { label: 'Enviar no WhatsApp', icon: <Send size={15} aria-hidden="true" />, hidden: !ready || status === 'aprovado', onClick: () => setSendOpen(true) },
+    { label: `Direcionamento${row?.direction?.trim() ? ' ✓' : ''}`, icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setDirOpen(true) },
+    { label: 'Enviar perguntas', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => setAskOpen(true) },
+  ]
+  const slidesLink = (href: string) => (
+    <a href={href} target="_blank" rel="noreferrer" data-revisar-slides className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-brand px-4 text-[14px] font-semibold text-on-brand no-underline hover:opacity-85">
+      <Presentation size={15} aria-hidden="true" /> <span className="max-sm:hidden">Revisar em slides</span><span className="sm:hidden">Revisar</span> <ExternalLink size={12} aria-hidden="true" className="opacity-70" />
+    </a>
+  )
+  let primary: React.ReactNode = null
+  if (view === 'diagnostico') {
+    if (status === 'falta_dados') primary = <Button onClick={onInfo}>Informar CNPJ</Button>
+    else if (status === 'aprovado') primary = <Button onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar</Button>
+    else if (ready) primary = slidesLink(diagReviewPath(clientId))
+  } else if (view === 'estrategia' && planReady) primary = slidesLink(planReviewPath(clientId, month))
+  // Abas curtas; o número é o que pede ação ali (revisar, aprovar, mandar).
+  const tabs = [
+    ['diagnostico', 'Diagnóstico', 'Diagnóstico', ''],
+    ['estrategia', 'Plano do mês', 'Plano', monthPending ? String(monthPending) : ''],
+    ['perguntas', 'Perguntas', 'Perguntas', (row?.answers_new ?? 0) > 0 ? String(row?.answers_new) : toAsk ? String(toAsk) : ''],
+    ['relatorios', 'Relatórios', 'Relatórios', ''],
+  ] as const
   return (
     <section aria-label={`Diagnóstico de ${name}`} className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <button type="button" onClick={onBack} className="inline-flex min-h-10 cursor-pointer items-center gap-1 rounded-full pr-2 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /> Consultoria</button>
+      <header data-cliente-cabecalho className="flex items-center gap-2">
+        <button type="button" onClick={onBack} aria-label="Voltar para a lista" className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">Consultoria</span></button>
         <span className="flex min-w-0 flex-1 items-center gap-2">
           <ClientAvatar name={name} url={logoPublicUrl(row?.logo_path ?? null)} size="sm" />
-          <b className="truncate text-[16px]">{name}</b>
-          <Chip row={{ status, document: row?.document ?? null, stage: d?.stage ?? null }} />
+          <span className="min-w-0">
+            <b className="block truncate text-[16px] leading-tight">{name}</b>
+            {row && <span className="max-sm:hidden"><PartsLine parts={clientParts(row)} /></span>}
+          </span>
         </span>
-      </div>
+        {primary}
+        {view === 'diagnostico' && <ActionMenu label="Mais opções do diagnóstico" actions={diagMenu} />}
+      </header>
 
-      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-4 gap-1 rounded-full bg-raised p-1 sm:max-w-xl">
-        {([['diagnostico', 'Diagnóstico'], ['estrategia', monthPending ? 'Plano do mês •' : 'Plano do mês'], ['perguntas', `Perguntas${toAsk ? ` · ${toAsk}` : ''}`], ['relatorios', 'Relatórios']] as const).map(([id, label]) => (
+      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-4 gap-1 rounded-full bg-raised p-1 sm:max-w-2xl">
+        {tabs.map(([id, label, short, n]) => (
           <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => setView(id)}
-            className={cn('min-h-10 min-w-0 cursor-pointer truncate rounded-full px-1 text-[12px] font-semibold sm:px-3 sm:text-[13.5px]', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
+            className={cn('inline-flex min-h-10 min-w-0 cursor-pointer items-center justify-center gap-1 rounded-full px-1 text-[12px] font-semibold sm:px-3 sm:text-[13.5px]', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>
+            <span className="truncate max-sm:hidden">{label}</span><span className="truncate sm:hidden">{short}</span>{n && <span aria-label={`${n} para fazer`} className="shrink-0 rounded-full bg-accent px-1.5 text-[10.5px] leading-[18px] text-white">{n}</span>}
+          </button>
         ))}
       </div>
 
       {view === 'perguntas' && <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />}
-      {view === 'estrategia' && <>
-        {/* Revisão em slides (aba nova): OK / Recusar / Editar, aprovar cada ação e enviar ao cliente. */}
-        <a href={`/revisao/plano/${clientId}/${parseMonthParam(params.get('mes'), new Date()).slice(0, 7)}`} target="_blank" rel="noreferrer"
-          className="inline-flex min-h-10 w-fit items-center gap-1.5 rounded-full border border-line-strong px-4 text-[13px] font-semibold text-ink no-underline hover:border-ink"><Presentation size={15} aria-hidden="true" /> Revisar em slides <ExternalLink size={12} aria-hidden="true" className="opacity-60" /></a>
-        <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} />
-      </>}
+      {view === 'estrategia' && <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} quiet={planReady} />}
       {view === 'relatorios' && <ReportsPanel clientId={clientId} />}
       {view === 'diagnostico' && <>
-      {/* UMA ação principal; o resto no "⋯". */}
-      <div className="flex items-center gap-2">
-        {status === 'falta_dados' && <Button onClick={onInfo}>Informar CNPJ</Button>}
-        {approved && <Button onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar no WhatsApp</Button>}
-        <ActionMenu label="Mais opções do diagnóstico" actions={[
-          { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !ready, onClick: () => {
-            // Aprovado: abre o link do cliente. Antes de aprovar: prévia só para a equipe (mesmos slides, sem os internos).
-            if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message))
-            else openPresentation(clientInput, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
-          } },
-          { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: act.isPending, onClick: () => act.mutate(() => approveConsult(clientId)) },
-          { label: 'Baixar apresentação', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: () => setDeckOpen(true) },
-          { label: 'Enviar no WhatsApp', icon: <Send size={15} aria-hidden="true" />, hidden: !ready || approved, onClick: () => setSendOpen(true) },
-          { label: `Direcionamento${row?.direction?.trim() ? ' ✓' : ''}`, icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setDirOpen(true) },
-          { label: 'Enviar perguntas', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => setAskOpen(true) },
-        ]} />
-      </div>
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
       {q.isPending && <p role="status" className="py-8 text-center text-[13px] text-muted">Carregando</p>}
@@ -274,9 +311,8 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {ready && (
         <div data-conteudo>
           {((doc.avisos ?? []) as string[]).map((a) => <p key={a} className="mb-2 rounded-xl bg-raised px-3 py-2 text-[12.5px] text-muted">{a} A análise usou a pesquisa na web no lugar.</p>)}
-          <ReviewCard clientId={clientId} input={deckInput} statusLabel={statusChip({ status, document: row?.document ?? null, stage: d?.stage ?? null }).label}
-            footer={<Button variant="link" onClick={() => setSources(true)}>Fontes e frameworks</Button>} />
-          <p className="mt-1 text-[12px] text-muted">Gerado {ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}.</p>
+          <ReviewCard clientId={clientId} input={deckInput} statusLabel={statusChip({ status, document: row?.document ?? null, stage: d?.stage ?? null }).label} compact
+            footer={<><Button variant="link" className="text-[12.5px]" onClick={() => setSources(true)}>Ver detalhes</Button><span className="text-[12px] text-muted">Gerado {ago(doc.gerado_em ?? d?.finished_at ?? null) ?? ''}</span></>} />
         </div>
       )}
       {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}

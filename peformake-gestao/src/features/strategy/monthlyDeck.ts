@@ -41,6 +41,9 @@ export function dateLabel(datas: string[] | undefined): string | null {
   }
   return null
 }
+/** Ação que a equipe adicionou na guia de revisão (monthly_action_add). O link público marca com `added`. */
+export const ADDED_WHY = 'Ideia adicionada pela equipe na revisão.'
+export const isAdded = (a: MonthlyAction) => !!a.added || a.why === ADDED_WHY
 const isClient = (a: MonthlyAction) => (a.owner_role ?? '').trim().toLowerCase() === 'cliente'
 
 /** Semanas que ainda valem: as que não tinham acabado quando a estratégia foi gerada. */
@@ -123,13 +126,22 @@ export function buildMonthlySlides(x: MonthlyDeckOpts, o: Orientation): Slide[] 
     const acts = live.filter((a) => a.week === w)
     if (!acts.length) continue
     const theme = (d.semanas ?? []).find((x2) => x2.semana === w)
-    const { show, rest } = weekHighlights(acts)
+    const { show, rest } = weekHighlights(acts.filter((a) => !isAdded(a)))
     if (!show.length) continue
     const goal = clientText(theme?.objetivo)
     out.push({
       kicker: `Semana ${w} · ${weekRange(st.month, w)}`, title: theme?.tema ? words(theme.tema, 8) : `Semana ${w}`,
       body: `${goal ? `<p class="lead">${esc(words(sentences(goal).slice(0, 2).join(' '), 26))}</p>` : ''}<ul class="steps lg">${show.map((a) => `<li><span class="num" style="background:${DECK_AREA[a.area]};color:${onColor(DECK_AREA[a.area])}">${a.due_date ? esc(a.due_date.slice(8, 10)) : w}</span><span>${areaTag(a)}<b>${esc(words(a.title, 12))}</b></span></li>`).join('')}</ul>${rest > 0 ? `<p class="caption" style="text-align:left">E mais ${rest} ${rest === 1 ? 'entrega' : 'entregas'} da equipe nesta semana.</p>` : ''}`,
       details: { title: `Semana ${w}`, items: acts.map((a) => ({ k: `${AREA[a.area].label}: ${a.title}`, v: [a.place && `Onde: ${a.place}`, a.owner_role && `Quem: ${a.owner_role}`, a.due_date && `Até ${dm(a.due_date)}`, a.proof && `Número que prova: ${a.proof}`, a.why && `Por quê: ${a.why}`].filter(Boolean).join(' · ') })) },
+    })
+  }
+
+  // 5b. Ação adicionada pela equipe na revisão: um slide próprio para cada (não some no meio da semana).
+  for (const a of live.filter(isAdded)) {
+    out.push({
+      kicker: `Semana ${a.week} · ideia nova`, title: words(a.title, 12),
+      body: `<p class="lead">${areaTag(a)}</p><ul class="steps lg"><li><span class="num" style="background:${DECK_AREA[a.area]};color:${onColor(DECK_AREA[a.area])}">${a.due_date ? esc(a.due_date.slice(8, 10)) : a.week}</span><span><b>${esc(words(a.title, 16))}</b>${a.what?.trim() ? `<span class="caption" style="text-align:left">${esc(words(clientText(a.what) || a.what, 30))}</span>` : ''}</span></li></ul><p class="caption" style="text-align:left">Semana ${a.week} · ${esc(weekRange(st.month, a.week))}${a.due_date ? ` · até ${esc(dm(a.due_date))}` : ''}</p>`,
+      details: a.what?.trim() ? { title: a.title, items: [{ v: a.what }] } : undefined,
     })
   }
 

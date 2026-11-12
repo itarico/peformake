@@ -85,6 +85,16 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       const n = await p.locator('main [data-conteudo] li').count();
       if (n !== rows.length) fails.push(`${tag}: lista com ${n} clientes (esperado ${rows.length})`);
       if (await sideScroll(p)) fails.push(`${tag}: lista com rolagem de lado`);
+      // Cada linha: Diagnóstico · Plano · Perguntas com o estado, e UMA ação principal (a próxima coisa a fazer).
+      const partes = await p.locator('main [data-conteudo] li [data-partes]').count();
+      if (partes !== rows.length) fails.push(`${tag}: ${partes} linhas com as 3 partes (esperado ${rows.length})`);
+      const top = p.locator('main [data-conteudo] li').first();
+      const rd = top.getByRole('link', { name: /Revisar diagnóstico/ });
+      if (!(await rd.count())) fails.push(`${tag}: 1ª linha sem "Revisar diagnóstico"`);
+      else if (!/\/revisao\/diagnostico\//.test(await rd.getAttribute('href') || '') || (await rd.getAttribute('target')) !== '_blank') fails.push(`${tag}: Revisar diagnóstico não abre a guia em aba nova`);
+      if (!(await p.getByRole('button', { name: 'Enviar diagnóstico' }).count())) fails.push(`${tag}: aprovado sem "Enviar diagnóstico"`);
+      const rowH = await p.evaluate(() => Math.max(...[...document.querySelectorAll('main [data-conteudo] li')].map((e) => e.getBoundingClientRect().height)));
+      if (rowH > (dev === 'iphone' ? 135 : 70)) fails.push(`${tag}: linha da lista alta demais (${Math.round(rowH)}px)`);
       await p.screenshot({ path: `${OUT}/consultoria-lista-${tag}.png` });
       // Falta CNPJ → pop-up de 1 passo
       await p.getByRole('button', { name: 'Informar CNPJ' }).first().click(); await p.waitForTimeout(300);
@@ -95,14 +105,17 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       // Documento
       await p.goto(BASE + '/estrategia/consultoria?cliente=' + id(1), { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
-      // A apresentação virou um cartão compacto: capa, progresso, o que falta e "Revisar apresentação" (aba nova /revisao/diagnostico/:id).
-      const rev = p.getByRole('link', { name: /Revisar apresentação/ }).first();
-      if (!(await rev.count())) fails.push(`${tag}: sem o botão Revisar apresentação`);
-      else if (!/\/revisao\/diagnostico\//.test(await rev.getAttribute('href') || '') || (await rev.getAttribute('target')) !== '_blank') fails.push(`${tag}: Revisar apresentação não abre a guia nova`);
+      // Cabeçalho com UM botão principal "Revisar em slides" (aba nova /revisao/diagnostico/:id); a apresentação é um cartão-resumo.
+      const rev = p.locator('[data-cliente-cabecalho] [data-revisar-slides]');
+      if ((await rev.count()) !== 1) fails.push(`${tag}: cabeçalho sem o botão Revisar em slides`);
+      else if (!/\/revisao\/diagnostico\//.test(await rev.getAttribute('href') || '') || (await rev.getAttribute('target')) !== '_blank') fails.push(`${tag}: Revisar em slides não abre a guia nova`);
+      if (await p.getByRole('link', { name: /Revisar apresentação/ }).count()) fails.push(`${tag}: botão grande repetido no cartão`);
+      const cardH = await p.locator('[data-cartao-revisao]').evaluate((e) => e.getBoundingClientRect().height).catch(() => 999);
+      if (cardH > 220) fails.push(`${tag}: cartão do diagnóstico alto demais (${Math.round(cardH)}px)`);
       if (!/revisados/.test(await p.locator('[data-testid=card-progresso]').first().innerText().catch(() => ''))) fails.push(`${tag}: cartão sem o progresso`);
       if (await sideScroll(p)) fails.push(`${tag}: cartão com rolagem de lado`);
       await p.screenshot({ path: `${OUT}/consultoria-cartao-${tag}.png`, fullPage: true });
-      for (const [btn, name] of [['Fontes e frameworks', 'Ver detalhes']]) {
+      for (const [btn, name] of [['Ver detalhes', 'Ver detalhes']]) {
         await p.getByRole('button', { name: btn }).first().click();
         await p.waitForTimeout(300);
         m = await popup(p); if (!m) { fails.push(`${tag}: pop-up ${name} não abriu`); continue }
@@ -112,6 +125,8 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
         await p.screenshot({ path: `${OUT}/consultoria-popup-${name.replace(/\W/g, '')}-${tag}.png` });
         await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       }
+      // Plano do mês: o botão principal do cabeçalho vira a revisão do plano; "Aprovar semana" fica discreto.
+      await p.getByRole('tab', { name: /Plano/ }).click(); await p.waitForTimeout(500);
       if (errs.length) fails.push(`${tag}: erros na página: ${errs.join(' | ')}`);
       await ctx.close();
     }

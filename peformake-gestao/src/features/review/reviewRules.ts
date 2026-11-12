@@ -217,3 +217,33 @@ export function planPhaseOf(s: Pick<Slide, 'kicker' | 'section'>): number | null
   const m = /fase (\d+) de \d+/.exec(s.kicker ?? '')
   return s.section === 'plano' && m ? Number(m[1]) - 1 : null
 }
+
+// ───────── Audiovisual: a revisão segue o vídeo, não a posição ─────────
+/**
+ * Chaves dos slides do audiovisual pelo vídeo (id da ação): a guia de revisão mostra todos os vídeos do mês e o link
+ * público só os aprovados, então "Vídeo 2" pode ser outro vídeo em cada um. Os slides gerais (capa, lista) seguem slideKeys.
+ */
+export function avSlideKeys(slides: Pick<Slide, 'kind' | 'section' | 'kicker'>[], videoKeys: (string | null | undefined)[]): string[] {
+  const base = slideKeys(slides)
+  const seen = new Map<string, number>()
+  return slides.map((s, i) => {
+    const m = /^Vídeo (\d+)\b(.*)$/.exec(s.kicker ?? '')
+    const id = m ? videoKeys[Number(m[1]) - 1] : null
+    if (!m || !id) return base[i]!
+    const part = /Roteiro/i.test(m[2]!) ? 'roteiro' : /Filmagem/i.test(m[2]!) ? 'filmagem' : /An[úu]ncio/i.test(m[2]!) ? 'anuncio' : 'video'
+    const k = `av|${id}|${part}`
+    const n = seen.get(k) ?? 0
+    seen.set(k, n + 1)
+    return `${k}|${n}`
+  })
+}
+
+/** Link público do audiovisual: some o slide recusado na revisão e vale o texto editado (pela chave do vídeo). */
+export function avClientSlides(slides: Slide[], videoKeys: (string | null | undefined)[], state: ReviewState | null | undefined): Slide[] {
+  const keys = avSlideKeys(slides, videoKeys)
+  return slides.flatMap((s, i) => {
+    const r = state?.slides?.[keys[i]!]
+    if (s.internal || r?.s === 'recusado') return []
+    return [applyEdit(s, r?.edit)]
+  })
+}

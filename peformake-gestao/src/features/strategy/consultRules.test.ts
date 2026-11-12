@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { answeredNotices, clientMessage, consultLink, nicheLinks, readyNotices, rowAction, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
+import { answeredNotices, clientMessage, clientParts, consultLink, nextStep, nicheLinks, planReviewPath, readyNotices, rowAction, sortByNext, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
 import { deckHtml, deckSlideCount } from './consultDeck'
 import { effortData, funnelData, positioningData, presenceData, ratingsData } from './consultCharts'
 
@@ -118,5 +118,31 @@ describe('answeredNotices', () => {
     const base = { client_id: 'c1', name: ' Will motos ', logo_path: null, segment: null, document: null, instagram: null, website: null, status: 'pronto', stage: null, redo_section: null, error: null, updated_at: null, finished_at: null, suggestions: 0, can_generate: true, direction: null } as const
     const n = answeredNotices([{ ...base, answers_new: 2, answers_last: '2026-11-12T10:00:00Z' }, { ...base, client_id: 'c2', answers_new: 0 }])
     expect(n).toEqual([{ id: 'answers:c1:2026-11-12T10:00:00Z', clientId: 'c1', title: 'Will motos respondeu as perguntas', to: '/estrategia/consultoria?cliente=c1&aba=perguntas' }])
+  })
+})
+
+describe('Estratégia: uma linha por cliente', () => {
+  const m = (p: Partial<NonNullable<ConsultRow['monthly']>>) => ({ month: '2026-12-01', status: 'pronto', finished_at: null, pending: 0, suggestions: 0, ...p })
+  it('a próxima ação segue o que trava mais', () => {
+    expect(nextStep(row({ status: 'falta_dados' })).label).toBe('Informar CNPJ')
+    expect(nextStep(row({ status: 'pronto', monthly: m({ pending: 4 }) }))).toEqual({ kind: 'link', label: 'Revisar diagnóstico', href: '/revisao/diagnostico/c1' })
+    expect(nextStep(row({ status: 'enviado', monthly: m({ pending: 4 }) }))).toEqual({ kind: 'link', label: 'Revisar plano de dezembro', href: '/revisao/plano/c1/2026-12' })
+    expect(nextStep(row({ status: 'enviado', answers_new: 1, monthly: m({ pending: 4 }) })).label).toBe('Ver respostas')
+    expect(nextStep(row({ status: 'aprovado' })).label).toBe('Enviar diagnóstico')
+    expect(nextStep(row({ status: 'enviado', questions_open: 3 })).label).toBe('Mandar perguntas')
+    expect(nextStep(row({ status: 'enviado', monthly: m({}) })).label).toBe('Abrir')
+  })
+  it('as 3 partes em pronto / revisar / falta', () => {
+    const p = clientParts(row({ status: 'pronto', monthly: m({ pending: 2 }), questions_open: 5 }))
+    expect([p.diag.state, p.plan.state, p.questions.state]).toEqual(['revisar', 'revisar', 'falta'])
+    expect(p.plan.label).toBe('2 a aprovar')
+    expect(clientParts(row({ status: 'enviado' })).plan).toEqual({ state: 'falta', label: 'falta' })
+  })
+  it('a lista começa por quem tem revisão', () => {
+    const rows = [row({ client_id: 'a', name: 'A', status: 'enviado' }), row({ client_id: 'b', name: 'B', status: 'pronto' }), row({ client_id: 'c', name: 'C', status: 'falta_dados' })]
+    expect(sortByNext(rows).map((r) => r.client_id)).toEqual(['b', 'c', 'a'])
+  })
+  it('link da revisão do plano já na área', () => {
+    expect(planReviewPath('c1', '2026-12-01', 'trafego')).toBe('/revisao/plano/c1/2026-12?area=trafego')
   })
 })

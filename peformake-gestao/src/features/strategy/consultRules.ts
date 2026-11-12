@@ -140,3 +140,59 @@ export function nicheLinks(...hints: (string | null | undefined)[]): NicheLink[]
     return [{ name: 'Loja online ou catálogo', placeholder: 'Site, Shopee, Mercado Livre ou catálogo do WhatsApp' }, MAPS]
   return [MAPS]
 }
+
+// ───────── Estratégia em uma linha por cliente ─────────
+/** Guia de revisão em slides (aba nova). Plano: mes = AAAA-MM; area filtra a visão da área. */
+export const diagReviewPath = (clientId: string) => `/revisao/diagnostico/${clientId}`
+export const planReviewPath = (clientId: string, month: string, area?: string | null) => `/revisao/plano/${clientId}/${month.slice(0, 7)}${area ? `?area=${area}` : ''}`
+
+export type PartState = 'pronto' | 'revisar' | 'falta' | 'andando'
+export interface Part { state: PartState; label: string }
+
+const mesOf = (month: string) => new Date(`${month.slice(0, 7)}-15T12:00:00Z`).toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })
+
+/** As 3 partes do cliente (diagnóstico, plano do mês, perguntas) em pronto / revisar / falta, com um texto de 1 a 3 palavras. */
+export function clientParts(r: Pick<ConsultRow, 'status' | 'document' | 'stage' | 'monthly' | 'questions_open' | 'answers_new'>): { diag: Part; plan: Part; questions: Part } {
+  const diag: Part = r.status === 'pronto' ? { state: 'revisar', label: 'revisar' }
+    : r.status === 'aprovado' ? { state: 'pronto', label: 'aprovado' }
+    : r.status === 'enviado' ? { state: 'pronto', label: 'enviado' }
+    : r.status === 'gerando' || r.status === 'na_fila' ? { state: 'andando', label: r.status === 'gerando' ? 'gerando' : 'na fila' }
+    : r.status === 'falta_dados' ? { state: 'falta', label: statusChip(r).label.replace(/^F/, 'f') }
+    : { state: 'falta', label: r.status === 'limite' ? 'limite' : 'deu erro' }
+  const m = r.monthly
+  const plan: Part = !m || m.status === 'erro' || m.status === 'limite' ? { state: 'falta', label: m?.status === 'erro' ? 'deu erro' : 'falta' }
+    : m.status === 'gerando' || m.status === 'na_fila' ? { state: 'andando', label: 'gerando' }
+    : m.pending > 0 ? { state: 'revisar', label: `${m.pending} a aprovar` }
+    : { state: 'pronto', label: 'aprovado' }
+  const open = r.questions_open ?? 0
+  const questions: Part = (r.answers_new ?? 0) > 0 ? { state: 'revisar', label: `${r.answers_new} ${r.answers_new === 1 ? 'resposta' : 'respostas'}` }
+    : open > 0 ? { state: 'falta', label: `${open} abertas` }
+    : { state: 'pronto', label: 'em dia' }
+  return { diag, plan, questions }
+}
+
+export type NextStep =
+  | { kind: 'dados' | 'gerar' | 'enviar' | 'perguntas' | 'aguardar'; label: string }
+  | { kind: 'link'; label: string; href: string }
+  | { kind: 'aba'; label: string; tab: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios' }
+
+/** A próxima coisa a fazer com o cliente (UMA ação por linha), na ordem do que trava mais. */
+export function nextStep(r: Pick<ConsultRow, 'client_id' | 'status' | 'document' | 'stage' | 'monthly' | 'questions_open' | 'answers_new' | 'can_generate'>): NextStep {
+  if (r.status === 'falta_dados') return { kind: 'dados', label: 'Informar CNPJ' }
+  if (r.status === 'erro') return { kind: 'gerar', label: 'Tentar de novo' }
+  if (r.status === 'na_fila') return { kind: 'gerar', label: 'Gerar diagnóstico' }
+  if (r.status === 'pronto') return { kind: 'link', label: 'Revisar diagnóstico', href: diagReviewPath(r.client_id) }
+  if ((r.answers_new ?? 0) > 0) return { kind: 'aba', label: 'Ver respostas', tab: 'perguntas' }
+  const m = r.monthly
+  if (m && ['pronto', 'aprovado'].includes(m.status) && m.pending > 0) return { kind: 'link', label: `Revisar plano de ${mesOf(m.month)}`, href: planReviewPath(r.client_id, m.month) }
+  if (r.status === 'aprovado') return { kind: 'enviar', label: 'Enviar diagnóstico' }
+  if ((r.questions_open ?? 0) > 0) return { kind: 'perguntas', label: 'Mandar perguntas' }
+  if (r.status === 'gerando' || r.status === 'limite') return { kind: 'aguardar', label: r.status === 'limite' ? 'Limite do mês' : 'Gerando' }
+  return { kind: 'aba', label: 'Abrir', tab: 'diagnostico' }
+}
+
+/** Ordem da lista pelo que pede ação: primeiro o que trava (dado, revisão), por último o que está em dia. */
+export function sortByNext(rows: ConsultRow[]): ConsultRow[] {
+  const rank = (r: ConsultRow) => { const n = nextStep(r); return n.kind === 'dados' ? 1 : n.kind === 'link' ? 0 : n.kind === 'aba' && n.tab === 'perguntas' ? 2 : n.kind === 'enviar' ? 3 : n.kind === 'perguntas' ? 4 : n.kind === 'gerar' ? 5 : n.kind === 'aguardar' ? 6 : 7 }
+  return [...rows].sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name, 'pt-BR'))
+}

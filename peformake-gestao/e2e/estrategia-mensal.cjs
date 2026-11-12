@@ -1,6 +1,7 @@
 // Autoteste da Estratégia do mês (Consultoria → cliente → Estratégia) com dados FALSOS no navegador (nada vai ao banco nem à IA).
-// Mede no iPhone 13 e em 1366x800 (claro e escuro): as 4 semanas à vista, os pop-ups (ação, roteiro em páginas, troca sugerida,
-// editar, refazer com ideias, PDF, enviar ao cliente) sem rolagem interna, a aba Relatórios, os slides, e nada de rolagem de lado.
+// Mede no iPhone 13 e em 1366x800 (claro e escuro): cabeçalho com UM botão principal (Revisar em slides → /revisao/plano/...),
+// as seções como filtro, os pop-ups (ação, texto em páginas, editar, refazer com ideias, baixar, enviar ao cliente) sem rolagem interna,
+// a aba Relatórios, as telas Tráfego e Audiovisual com o link da revisão já na área, e nada de rolagem de lado.
 // Uso: npx vite --config e2e/shell/vite.config.ts --port 5199 --strictPort &  BASE=http://localhost:5199 node e2e/estrategia-mensal.cjs
 const { chromium, devices } = require('playwright');
 const BASE = process.env.BASE || 'http://localhost:5200';
@@ -37,6 +38,7 @@ async function mock(route) {
   const p = u.pathname; const one = (req.headers()['accept'] || '').includes('vnd.pgrst.object');
   if (p === '/rest/v1/rpc/consult_list') return json([row]);
   if (p === '/rest/v1/rpc/monthly_get') return json(strategy);
+  if (p === '/rest/v1/rpc/monthly_area_board') return json([{ client_id: id(1), name: 'Will motos', logo_path: null, strategy_id: id(50), status: 'pronto', finished_at: null, pending: 8, approved: 1, total: 9 }]);
   if (p === '/rest/v1/rpc/monthly_share_create') return json('a'.repeat(64));
   if (p.startsWith('/rest/v1/rpc/')) return json(null);
   if (p === '/rest/v1/traffic_reports') return json(reports);
@@ -60,50 +62,57 @@ const check = async (p, tag, name) => {
 };
 const close = async (p) => { await p.keyboard.press('Escape'); await p.waitForTimeout(200) };
 
+const menu = async (p, label, item) => { await p.getByRole('button', { name: label }).click(); await p.waitForTimeout(150); await p.getByRole('menuitem', { name: item }).click(); await p.waitForTimeout(400) };
+
 (async () => {
   const b = await chromium.launch();
+  const mes = month.slice(0, 7);
   for (const [dev, opts] of [['iphone', devices['iPhone 13']], ['desktop', { viewport: { width: 1366, height: 800 } }]]) {
     for (const scheme of ['light', 'dark']) {
       const ctx = await b.newContext({ ...opts, colorScheme: scheme }); await ctx.route('**/*', mock);
       const p = await ctx.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(String(e.message).slice(0, 160)));
       const tag = `${dev}-${scheme}`;
-      await p.goto(`${BASE}/estrategia/consultoria?cliente=${id(1)}&aba=estrategia&mes=${month.slice(0, 7)}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
-      if (!(await p.getByRole('tab', { name: /Estratégia/, selected: true }).count())) fails.push(`${tag}: aba Estratégia não abriu pelo link`);
-      const weeks = await p.locator('section[aria-label^="Semana "]').count();
-      if (weeks !== 4) fails.push(`${tag}: ${weeks} semanas à vista (esperado 4)`);
-      if (await sideScroll(p)) fails.push(`${tag}: estratégia com rolagem de lado`);
-      await p.screenshot({ path: `${OUT}/mensal-semanas-${tag}.png`, fullPage: true });
+      await p.goto(`${BASE}/estrategia/consultoria?cliente=${id(1)}&aba=estrategia&mes=${mes}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(800);
+      if (!(await p.getByRole('tab', { name: /Plano/, selected: true }).count())) fails.push(`${tag}: aba Plano do mês não abriu pelo link`);
+      // UM botão principal: "Revisar em slides" no cabeçalho, abrindo a guia do plano em aba nova.
+      const rev = p.locator('[data-cliente-cabecalho] [data-revisar-slides]');
+      if ((await rev.count()) !== 1) fails.push(`${tag}: cabeçalho sem Revisar em slides`);
+      else if ((await rev.getAttribute('href')) !== `/revisao/plano/${id(1)}/${mes}` || (await rev.getAttribute('target')) !== '_blank') fails.push(`${tag}: Revisar em slides não abre /revisao/plano/... em aba nova`);
+      const strong = await p.evaluate(() => [...document.querySelectorAll('main .bg-brand')].filter((e) => e.offsetParent).length);
+      if (strong > 1) fails.push(`${tag}: ${strong} botões principais na tela (meta 1)`);
+      if (!(await p.getByRole('button', { name: /Aprovar (S|semana )\d/ }).count())) fails.push(`${tag}: sem Aprovar semana`);
+      // Seções por área como filtro.
+      const secs = await p.getByRole('tablist', { name: 'Seções do plano' }).getByRole('tab').count();
+      if (secs < 3) fails.push(`${tag}: ${secs} seções no filtro`);
+      if (await sideScroll(p)) fails.push(`${tag}: plano com rolagem de lado`);
+      await p.screenshot({ path: `${OUT}/mensal-plano-${tag}.png`, fullPage: true });
 
-      // Ação com roteiro longo: resumo, roteiro em páginas, troca sugerida.
-      const av = p.locator('section[aria-label="Semana 1"] li button').nth(3);
-      await av.click(); await p.waitForTimeout(300); await check(p, tag, 'acao-resumo');
-      await p.getByRole('tab', { name: 'Roteiro' }).click(); await p.waitForTimeout(200); await check(p, tag, 'acao-roteiro');
-      if (!(await p.getByRole('button', { name: /Continua/ }).count())) fails.push(`${tag}: roteiro longo sem páginas`);
+      // Uma ação do tráfego: resumo, texto em páginas, editar.
+      await p.getByRole('tab', { name: /^Tráfego/ }).click(); await p.waitForTimeout(300);
+      await p.locator('section[aria-label="Ações"] li button').first().click(); await p.waitForTimeout(300); await check(p, tag, 'acao-resumo');
+      await p.getByRole('tab', { name: 'O que fazer' }).click(); await p.waitForTimeout(200); await check(p, tag, 'acao-texto');
       await p.getByRole('button', { name: 'Editar' }).click(); await p.waitForTimeout(250); await check(p, tag, 'editar');
       await p.getByRole('tab', { name: 'Texto' }).click(); await p.waitForTimeout(200); await check(p, tag, 'editar-texto');
       await close(p); await close(p);
-      await p.locator('section[aria-label="Semana 1"] li button').nth(2).click(); await p.waitForTimeout(300); await check(p, tag, 'troca');
-      await close(p);
-      await p.getByRole('button', { name: /Refazer com ideias/ }).click(); await p.waitForTimeout(250); await check(p, tag, 'ideias'); await close(p);
-      await p.getByRole('button', { name: /^PDF$/ }).click(); await p.waitForTimeout(250); await check(p, tag, 'pdf'); await close(p);
-      await p.getByRole('button', { name: /Enviar ao cliente/ }).click(); await p.waitForTimeout(500); await check(p, tag, 'enviar'); await close(p);
-
-      // Esta semana e slides.
-      await p.getByRole('tab', { name: /Esta semana|Semana 1/ }).click(); await p.waitForTimeout(300);
-      if ((await p.locator('section[aria-label^="Semana "]').count()) !== 1) fails.push(`${tag}: "Esta semana" não mostra só uma semana`);
-      await p.getByRole('tab', { name: 'Slides' }).click(); await p.waitForTimeout(600);
-      const cut = await p.evaluate(() => [...document.querySelectorAll('.pfd .slide')].some((s) => /…/.test(s.textContent || '')));
-      if (cut) fails.push(`${tag}: slide com frase cortada por "…"`);
-      if (await sideScroll(p)) fails.push(`${tag}: slides com rolagem de lado`);
-      await p.screenshot({ path: `${OUT}/mensal-slides-${tag}.png` });
-      for (let i = 0; i < 12; i++) { const nx = p.getByRole('button', { name: 'Próximo slide' }); if (await nx.isDisabled()) break; await nx.click(); await p.waitForTimeout(120) }
-      await p.screenshot({ path: `${OUT}/mensal-slides-fim-${tag}.png` });
+      await menu(p, 'Mais opções do plano', /Refazer com ideias/); await check(p, tag, 'ideias'); await close(p);
+      await menu(p, 'Mais opções do plano', /Baixar a apresentação/); await check(p, tag, 'baixar'); await close(p);
+      await menu(p, 'Mais opções do plano', /Enviar ao cliente/); await p.waitForTimeout(300); await check(p, tag, 'enviar'); await close(p);
 
       // Relatórios do cliente dentro da Consultoria.
       await p.getByRole('tab', { name: 'Relatórios' }).click(); await p.waitForTimeout(500);
       if (!(await p.getByText('03/11 a 09/11').count())) fails.push(`${tag}: relatório semanal não aparece na aba Relatórios`);
       await p.getByText('03/11 a 09/11').click(); await p.waitForTimeout(250); await check(p, tag, 'relatorio'); await close(p);
       if (await sideScroll(p)) fails.push(`${tag}: relatórios com rolagem de lado`);
+
+      // Tráfego, Social media e Audiovisual: o mesmo plano só com a parte da área, e a revisão em slides já filtrada.
+      for (const [path, area] of [[`/estrategia/trafego?cliente=${id(1)}&mes=${mes}`, 'trafego'], [`/estrategia/social?cliente=${id(1)}&mes=${mes}`, 'social'], [`/audiovisual/plano-do-mes?cliente=${id(1)}&mes=${mes}`, 'audiovisual']]) {
+        await p.goto(BASE + path, { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
+        const l = p.locator('[data-revisar-slides]');
+        if ((await l.count()) !== 1) { fails.push(`${tag}: ${area} sem Revisar em slides`); continue }
+        if ((await l.getAttribute('href')) !== `/revisao/plano/${id(1)}/${mes}?area=${area}`) fails.push(`${tag}: ${area}: link da revisão sem a área (${await l.getAttribute('href')})`);
+        if (await sideScroll(p)) fails.push(`${tag}: ${area} com rolagem de lado`);
+        await p.screenshot({ path: `${OUT}/mensal-${area}-${tag}.png` });
+      }
       if (errs.length) fails.push(`${tag}: erros na página: ${errs.join(' | ')}`);
       await ctx.close();
     }

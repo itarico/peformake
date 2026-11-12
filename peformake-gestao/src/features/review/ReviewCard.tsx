@@ -15,7 +15,9 @@ export const reviewPath = (clientId: string) => `/revisao/diagnostico/${clientId
  * No lugar da apresentação grande: capa em miniatura, situação, quanto já foi revisado e o que falta.
  * Botão principal "Revisar apresentação" abre a guia grande numa aba nova.
  */
-export function ReviewCard({ clientId, input, statusLabel, footer }: { clientId: string; input: DeckInput; statusLabel: string; footer?: React.ReactNode }) {
+export function ReviewCard({ clientId, input, statusLabel, footer, compact = false }: { clientId: string; input: DeckInput; statusLabel: string; footer?: React.ReactNode
+  /** Cartão-resumo: capa pequena, sem o botão grande (o "Revisar em slides" fica no cabeçalho da tela). */
+  compact?: boolean }) {
   const review = useReview('diagnostico', clientId)
   const questions = useClientQuestions(clientId)
   const state = useMemo(() => review.data?.state ?? {}, [review.data?.state])
@@ -37,33 +39,33 @@ export function ReviewCard({ clientId, input, statusLabel, footer }: { clientId:
   const { p } = info
   const pct = p.total ? Math.round((p.reviewed / p.total) * 100) : 0
   const missing = [
-    p.total - p.reviewed > 0 ? `${p.total - p.reviewed} slides para revisar` : null,
-    p.toFill ? `${p.toFill} ${p.toFill === 1 ? 'dado para preencher' : 'dados para preencher'}` : null,
+    p.total - p.reviewed > 0 && !compact ? `${p.total - p.reviewed} slides para revisar` : null,
+    p.toFill && !compact ? `${p.toFill} ${p.toFill === 1 ? 'dado para preencher' : 'dados para preencher'}` : null,
     info.steps - info.decided > 0 ? `${info.steps - info.decided} ideias do plano para aprovar` : null,
   ].filter(Boolean) as string[]
   const done = !!review.data?.finished_at
 
   return (
-    <div data-conteudo className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-3 sm:flex-row sm:items-center sm:p-4">
+    <div data-conteudo data-cartao-revisao className={cn('flex rounded-3xl border border-line bg-surface', compact ? 'flex-row items-center gap-3 p-3' : 'flex-col gap-3 p-3 sm:flex-row sm:items-center sm:p-4')}>
       <style>{css}</style>
-      <a href={reviewPath(clientId)} target="_blank" rel="noreferrer" aria-label="Abrir a revisão (capa)" className="block w-full shrink-0 overflow-hidden rounded-2xl border border-line shadow-sm sm:w-[260px]">
+      <a href={reviewPath(clientId)} target="_blank" rel="noreferrer" aria-label="Abrir a revisão (capa)" className={cn('block shrink-0 overflow-hidden rounded-2xl border border-line shadow-sm', compact ? 'w-[112px] sm:w-[200px]' : 'w-full sm:w-[260px]')}>
         <div className="pfd pointer-events-none w-full" dangerouslySetInnerHTML={{ __html: info.cover }} />
       </a>
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2">
-          <b className="text-[15px]">Apresentação do diagnóstico</b>
-          <span className="rounded-full bg-raised px-2 py-0.5 text-[11.5px] font-semibold text-muted">{statusLabel}</span>
+          <b className="text-[15px]">{compact ? 'Apresentação' : 'Apresentação do diagnóstico'}</b>
+          {!compact && <span className="rounded-full bg-raised px-2 py-0.5 text-[11.5px] font-semibold text-muted">{statusLabel}</span>}
           {done && <span className="rounded-full bg-ok-soft px-2 py-0.5 text-[11.5px] font-semibold text-ok-ink">Revisão finalizada</span>}
         </div>
         <div className="flex items-center gap-2">
           <div className="h-1.5 w-full max-w-[220px] overflow-hidden rounded-full bg-raised"><div className="h-full rounded-full bg-accent" style={{ width: `${pct}%` }} /></div>
           <span className="text-[12.5px] text-muted" data-testid="card-progresso">{progressLabel(p)}</span>
         </div>
-        {missing.length > 0 && <p className="text-[12.5px] text-muted">Falta: {missing.join(' · ')}</p>}
+        {missing.length > 0 && <p className={cn('text-[12.5px] text-muted', compact && 'max-sm:line-clamp-2')}>Falta: {missing.join(' · ')}</p>}
         <div className="flex flex-wrap items-center gap-2">
-          <a href={reviewPath(clientId)} target="_blank" rel="noreferrer" className={cn('inline-flex min-h-11 items-center gap-2 rounded-full bg-fill px-5 text-[14px] font-semibold text-on-fill no-underline hover:opacity-90')}>
+          {!compact && <a href={reviewPath(clientId)} target="_blank" rel="noreferrer" className={cn('inline-flex min-h-11 items-center gap-2 rounded-full bg-fill px-5 text-[14px] font-semibold text-on-fill no-underline hover:opacity-90')}>
             <Presentation size={16} aria-hidden="true" /> Revisar apresentação <ExternalLink size={13} aria-hidden="true" className="opacity-70" />
-          </a>
+          </a>}
           {footer}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react'
-import { ArrowLeft, CalendarDays, ChevronRight, FileText, History } from 'lucide-react'
+import { ArrowLeft, CalendarDays, ChevronRight, ExternalLink, FileText, History, Presentation } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -9,6 +9,7 @@ import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { useMonthlyBoard, type BoardRow } from './monthlyApi'
 import { monthName, monthOptions, parseMonthParam, statusLabel, type MonthlyStatus } from './monthlyRules'
 import { MonthlyPanel } from './MonthlyPanel'
+import { planReviewPath } from './consultRules'
 import { ReportsPanel } from './ReportsPanel'
 
 const TONE = {
@@ -48,10 +49,15 @@ export function AreaPlanPage({ area, history, historyLabel = 'Histórico' }: { a
 
   if (clientId) {
     const row = rows.find((r) => r.client_id === clientId)
+    const ready = !!row?.status && ['pronto', 'aprovado'].includes(row.status)
     return (
       <div className="flex flex-col gap-3">
-        <button type="button" onClick={() => set({ cliente: null, secao: null })} className="inline-flex min-h-10 cursor-pointer items-center gap-1 self-start pr-2 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /> Todos os clientes</button>
-        <MonthlyPanel key={clientId} clientId={clientId} name={row?.name ?? 'Cliente'} logoUrl={logoPublicUrl(row?.logo_path ?? null)} scope={area} showName />
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => set({ cliente: null, secao: null })} className="inline-flex min-h-10 flex-1 cursor-pointer items-center gap-1 self-start pr-2 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /> Todos os clientes</button>
+          {/* Guia de revisão em slides (aba nova), já filtrada na área. */}
+          {ready && <a href={planReviewPath(clientId, month, area)} target="_blank" rel="noreferrer" data-revisar-slides className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-brand px-4 text-[14px] font-semibold text-on-brand no-underline hover:opacity-85"><Presentation size={15} aria-hidden="true" /> Revisar em slides <ExternalLink size={12} aria-hidden="true" className="opacity-70" /></a>}
+        </div>
+        <MonthlyPanel key={clientId} clientId={clientId} name={row?.name ?? 'Cliente'} logoUrl={logoPublicUrl(row?.logo_path ?? null)} scope={area} showName quiet={ready} />
         {area === 'trafego' && (
           <section aria-label="Relatórios de tráfego" className="flex flex-col gap-2 border-t border-line pt-3">
             <h2 className="text-[14px] font-bold">Relatórios de tráfego</h2>

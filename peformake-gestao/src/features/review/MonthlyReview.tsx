@@ -9,11 +9,12 @@ import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { decideAction, monthlyKey, monthlyShareLink, useClientScan, useMonthly } from '@/features/strategy/monthlyApi'
 import { avDeckInput } from '@/features/strategy/avDeck'
 import { avVideos, scanVideos } from '@/features/strategy/avPlan'
+import { useAvTakes } from '@/features/strategy/avTakes'
 import { monthlyDeckInput } from '@/features/strategy/monthlyDeck'
 import { AREA, monthName, monthlyMessage, type ActionArea, type MonthlyAction } from '@/features/strategy/monthlyRules'
 import { AddDialog, DecidePanel, ReviewDeck, useNarrow, type DecideItem } from './ReviewDeck'
 import { useReview, useReviewSave } from './reviewApi'
-import { progress, slideKeys, type Mark } from './reviewRules'
+import { avSlideKeys, progress, slideKeys, type Mark } from './reviewRules'
 import { SendToClient } from './SendToClient'
 
 const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
@@ -62,12 +63,15 @@ export function MonthlyReview() {
   const state = useMemo(() => review.data?.state ?? {}, [review.data?.state])
   const inView = (a: MonthlyAction) => !view.areas || view.areas.includes(a.area)
   const input = useMemo(() => (s ? monthlyDeckInput({ name, strategy: s, clientLogoUrl: logoPublicUrl(client.data?.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }) : null), [s, name, client.data?.logo_path])
-  const videos = useMemo(() => (s && isAv ? avVideos(s, scanVideos(scan.data ?? [])) : []), [s, isAv, scan.data])
+  // Falas reescritas no set (modo gravação, monthly_av_takes) valem aqui também, como no "Ver roteiro" e no PDF.
+  const takes = useAvTakes(isAv ? s?.id : null)
+  const videos = useMemo(() => (s && isAv ? avVideos(s, scanVideos(scan.data ?? []), takes.data ?? []) : []), [s, isAv, scan.data, takes.data])
   const all = useMemo(() => {
     if (isAv) return s ? avDeckInput({ name, month, videos }).slides!(o, { live: true }) : []
     return input?.slides ? input.slides(o) : []
   }, [input, o, isAv, s, name, month, videos])
-  const allKeys = useMemo(() => slideKeys(all), [all])
+  // Audiovisual: a chave segue o vídeo (id da ação), para o link público (só os aprovados) esconder o slide recusado certo.
+  const allKeys = useMemo(() => (isAv ? avSlideKeys(all, videos.map((v) => v.key)) : slideKeys(all)), [all, isAv, videos])
   // Na visão da área: só as semanas que têm ação dessa área (o resto do plano continua).
   const idx = all.map((_, i) => i).filter((i) => { if (isAv) return true; const w = weekOf(all[i]!.kicker); return w === null || !view.areas || (s?.actions ?? []).some((a) => a.week === w && inView(a)) })
   const slides = idx.map((i) => all[i]!)

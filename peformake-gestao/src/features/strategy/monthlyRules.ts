@@ -9,6 +9,8 @@ export interface MonthlyAction {
   due_date: string | null; proof: string | null; why: string | null; format: string | null; status: 'proposta' | 'aprovada' | 'recusada'
   routed_table: string | null; routed_id: string | null; routed_link: string | null
   suggestion: { titulo?: string; o_que?: string; porque?: string } | null; done: boolean | null
+  /** Adicionada pela equipe na revisão (o link público manda assim). */
+  added?: boolean
 }
 export interface MonthlyDoc {
   titulo?: string; situacao?: string; foco?: string
