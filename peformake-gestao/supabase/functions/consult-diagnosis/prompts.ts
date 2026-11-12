@@ -27,7 +27,7 @@ Formato da resposta: texto simples, tópicos curtos, sem tabelas. Termine com "#
 export type ResearchPart = 'redes' | 'site' | 'reputacao' | 'nicho' | 'concorrentes' | 'mercado'
 export const RESEARCH_ROUNDS: ResearchPart[][] = [['redes', 'site', 'reputacao', 'nicho'], ['concorrentes', 'mercado']]
 /** Buscas e páginas abertas por parte (cada parte precisa caber em ~2 minutos). */
-export const PART_USES: Record<ResearchPart, [number, number]> = { redes: [6, 3], site: [5, 4], reputacao: [6, 4], nicho: [6, 4], concorrentes: [7, 4], mercado: [6, 3] }
+export const PART_USES: Record<ResearchPart, [number, number]> = { redes: [4, 2], site: [4, 2], reputacao: [4, 2], nicho: [4, 2], concorrentes: [5, 2], mercado: [4, 2] }
 
 /** O que cada parte da pesquisa levanta. `niche` muda os portais procurados. */
 export function researchTask(part: ResearchPart, niche: string): string {
@@ -40,7 +40,7 @@ export function researchTask(part: ResearchPart, niche: string): string {
     redes: `PARTE 1A: REDES SOCIAIS. Ache e CONFIRME os perfis da empresa.
 - Instagram: ache o @ (busque "<nome> instagram <cidade>", variações do nome, no Facebook, no Linktree, em anúncios do OLX/portais). Seguidores, nº de posts, bio, link da bio, frequência e tipo de conteúdo, o que parece performar (pelo que aparecer na busca).
 - Facebook (página, avaliações, última postagem), TikTok, YouTube, Linktree.
-Para cada rede: URL, status (confirmado/provável/não encontrado), números e data. Seja rápido: no máximo 6 buscas.`,
+Para cada rede: URL, status (confirmado/provável/não encontrado), números e data. Seja rápido: no máximo 4 buscas.`,
     site: `PARTE 1B: SITE, BUSCA E IDENTIDADE.
 - Variações do nome (nome fantasia, razão social, com e sem cidade), telefone e endereço que aparecem em cada fonte (anote divergências).
 - Site: existe? HTTPS? o que vende? tem WhatsApp/CTA? Quem aparece no Google para "<produto principal> <cidade>" (a empresa aparece? quem aparece antes?).

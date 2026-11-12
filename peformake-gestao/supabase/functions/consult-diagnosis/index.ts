@@ -280,8 +280,8 @@ async function stageResearch(db: SupabaseClient, ai: Anthropic, job: Job) {
   const niche = `${cli?.niche ?? ''} ${cli?.segment ?? ''} ${(job.receita?.atividade as string) ?? ''}`
   const ctx = await clientContext(db, job)
   const earlier = round > 0 ? `\n\nO QUE A RODADA 1 JÁ ACHOU (não repita estas buscas):\n${researchNotes(research, RESEARCH_ROUNDS[0])}` : ''
-  // Na 3ª tentativa a parte que ainda falha é dada como "não concluída" para não travar o resto.
-  const giveUp = job.attempts >= 3
+  // Na 2ª tentativa a parte que ainda falha é dada como "não concluída" para não travar o resto.
+  const giveUp = job.attempts >= 2
   // Cada parte é gravada assim que termina (se a chamada for cortada, o que já veio não se perde).
   let chain: Promise<unknown> = Promise.resolve()
   const persist = () => { chain = chain.then(() => db.from('consult_docs').update({ research }).eq('id', job.id).eq('stage', job.stage)); return chain }
@@ -335,10 +335,11 @@ async function runPart(db: SupabaseClient, ai: Anthropic, job: Job, part: Resear
     model: MODEL, max_tokens: 16000,
     system: [{ type: 'text', text: RESEARCH_SYSTEM, cache_control: { type: 'ephemeral' } }],
     tools: [
-      { type: 'web_search_20260209', name: 'web_search', max_uses: retry ? 3 : PART_USES[part][0], user_location: { type: 'approximate', country: 'BR', timezone: 'America/Sao_Paulo' } },
-      { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: retry ? 2 : PART_USES[part][1], max_content_tokens: 5000 },
+      { type: 'web_search_20260209', name: 'web_search', max_uses: retry ? 2 : PART_USES[part][0], user_location: { type: 'approximate', country: 'BR', timezone: 'America/Sao_Paulo' } },
+      { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: retry ? 1 : PART_USES[part][1], max_content_tokens: 5000 },
     ],
-    output_config: { effort: retry ? 'low' : 'medium' },
+    // Pesquisa é coleta: esforço baixo (rápido, cabe no tempo). A análise funda é no cruzamento.
+    output_config: { effort: 'low' },
     messages,
   }, { db, job, stage: `research:${part}` })
   await logUsage(db, job, `research:${part}`, msg)
