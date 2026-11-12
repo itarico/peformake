@@ -10,7 +10,8 @@ import { brl, brl0, changeLabel, currentPeriods, dailySpend, inRange, lastMonthR
 import { cn } from '@/lib/cn'
 import { useTheme } from '@/lib/theme'
 import { getPortal, getPortalMetrics } from './portalApi'
-import { historyRange, isInvalidLink, monthlyHistory, parsePortalToken } from './portalRules'
+import { historyRange, isInvalidLink, monthlyHistory, parsePortalToken, portalSection } from './portalRules'
+import { PortalReferrals } from './PortalReferrals'
 import { PortalDeliveries } from './PortalDeliveries'
 import { PortalApprovals } from './PortalApprovals'
 import { PortalShoots } from './PortalShoots'
@@ -180,6 +181,7 @@ function Results({ token }: { token: string }) {
 export function PortalPage() {
   const { hash } = useLocation()
   const token = parsePortalToken(hash)
+  const section = portalSection(hash)
   const portal = useQuery({
     queryKey: ['portal', token],
     queryFn: () => getPortal(token as string),
@@ -218,6 +220,8 @@ export function PortalPage() {
         </div>
       </header>
 
+      {section === 'indicacoes' && <PortalReferrals token={token} highlight />}
+
       <PortalOverview token={token} />
 
       <PortalDeliveries token={token} />
@@ -229,6 +233,8 @@ export function PortalPage() {
       <PortalContract token={token} />
 
       <PortalWhatsapp token={token} />
+
+      {section !== 'indicacoes' && <PortalReferrals token={token} />}
 
       {data.hasTraffic ? (
         <Results token={token} />

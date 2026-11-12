@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Download, MapPin, Play, Plus, Star, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -284,19 +285,24 @@ function BuscaTabs({ children }: { children: (tab: 'busca' | 'mais') => React.Re
   )
 }
 
-interface SiteLead { id: string; name: string; phone: string; company: string | null; segment: string | null; interest: string | null; revenue: string | null; message: string | null; status: string; created_at: string }
+interface SiteLead {
+  id: string; name: string; phone: string; company: string | null; segment: string | null; interest: string | null; revenue: string | null; message: string | null; status: string; created_at: string
+  source?: 'site' | 'indicacao' | 'orcamento'; unit?: 'peformake' | 'ellcazo'; referrer?: { name: string } | null
+}
 const SITE_STATUS: Record<string, string> = { novo: 'Novo', contatado: 'Contatado', virou_lead: 'Foi para Meus leads', descartado: 'Descartado' }
 
-/** Pedidos de diagnóstico que chegam pelo formulário da página inicial. */
+/** Pedidos que chegam pelo formulário do site, por orçamento da Ellcazo ou por indicação de cliente (portal). ?lead=<id> abre direto no pedido. */
 export function SiteLeads() {
   const queryClient = useQueryClient()
+  const [params] = useSearchParams()
+  const focus = params.get('lead')
   const q = useQuery({
     queryKey: ['site-leads'],
     retry: false,
     queryFn: async () => {
-      const { data, error } = await supabase.from('site_leads').select('*').neq('status', 'descartado').order('created_at', { ascending: false }).limit(100)
+      const { data, error } = await supabase.from('site_leads').select('*, referrer:clients!site_leads_referred_by_fkey(name)').neq('status', 'descartado').order('created_at', { ascending: false }).limit(100)
       if (error) throw error
-      return (data ?? []) as SiteLead[]
+      return (data ?? []) as unknown as SiteLead[]
     },
   })
   const update = useMutation({
@@ -306,15 +312,19 @@ export function SiteLeads() {
     },
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['site-leads'] }); void queryClient.invalidateQueries({ queryKey: ['member-leads'] }) },
   })
+  useEffect(() => { if (focus && q.data) document.getElementById(`lead-${focus}`)?.scrollIntoView({ block: 'center' }) }, [focus, q.data])
   if (!q.data || q.data.length === 0) return null
   return (
     <section aria-labelledby="site-leads" className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-5">
-      <h2 id="site-leads" className="text-[17px] font-semibold">Pedidos pelo site · {q.data.filter((l) => l.status === 'novo').length} novos</h2>
+      <h2 id="site-leads" className="text-[17px] font-semibold">Pedidos pelo site e indicações · {q.data.filter((l) => l.status === 'novo').length} novos</h2>
       <ul className="flex flex-col">
         {q.data.map((l) => (
-          <li key={l.id} className="flex flex-col gap-1.5 border-b border-line py-2.5 last:border-b-0 md:flex-row md:items-center">
+          <li key={l.id} id={`lead-${l.id}`} className={cn('flex scroll-mt-20 flex-col gap-1.5 border-b border-line py-2.5 last:border-b-0 md:flex-row md:items-center', focus === l.id && '-mx-2 rounded-2xl bg-accent-soft px-2')}>
             <div className="min-w-0 flex-1">
-              <p className="font-semibold">{l.name}{l.company ? <span className="font-normal text-muted"> · {l.company}</span> : null}</p>
+              <p className="font-semibold">{l.name}{l.company ? <span className="font-normal text-muted"> · {l.company}</span> : null}
+                {l.source === 'indicacao' && <span className="ml-2 inline-block rounded-full bg-ok-soft px-2 py-0.5 align-middle text-[11.5px] font-semibold text-ok-ink">Indicação de {l.referrer?.name?.trim() ?? 'cliente'}</span>}
+                {l.unit === 'ellcazo' && <span className="ml-1.5 inline-block rounded-full bg-raised px-2 py-0.5 align-middle text-[11.5px] font-semibold">Ellcazo</span>}
+              </p>
               <p className="text-[13px] text-muted">{[l.segment, l.interest, l.revenue, new Date(l.created_at).toLocaleDateString('pt-BR')].filter(Boolean).join(' · ')}</p>
               {l.message && <p className="text-[13px]">{l.message}</p>}
             </div>

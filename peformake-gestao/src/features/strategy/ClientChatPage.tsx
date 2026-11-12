@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Loader2, Mic, Paperclip, SendHorizontal, Square } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import { Gift, Loader2, Mic, Paperclip, SendHorizontal, Square } from 'lucide-react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { EllcazoMark } from '@/components/ui/EllcazoMark'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 
@@ -12,6 +13,7 @@ interface ChatMsg { from: 'ia' | 'cliente'; text: string; at: string; files: { n
 interface ChatState {
   client: string; greeting: string; status: 'aberta' | 'concluida'; stage: string
   progress: { done: number; total: number }; messages: ChatMsg[]; options: string[]; nps: boolean; transcribe: boolean
+  brand?: 'peformake' | 'ellcazo'; closing?: { promoter: boolean; portal: string | null } | null
 }
 interface FileRef { path: string; name: string; type: string; text?: string | null }
 
@@ -34,11 +36,14 @@ export function ClientChatPage() {
   const [pending, setPending] = useState<string | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const end = useRef<HTMLDivElement>(null)
+  // Terminou agora (nesta visita): só aí o promotor é levado sozinho ao portal. Quem reabre o link vê o botão.
+  const [finishedNow, setFinishedNow] = useState(false)
+  const [showChat, setShowChat] = useState(false)
 
   const send = useMutation({
     mutationFn: async (v: { text: string; files?: FileRef[] }) => call({ action: 'send', token, text: v.text, files: v.files ?? [] }) as Promise<ChatState>,
     onMutate: (v) => { setProblem(null); setPending(v.text || (v.files?.[0]?.type.startsWith('audio') ? '🎤 Áudio' : `📎 ${v.files?.[0]?.name ?? 'arquivo'}`)) },
-    onSuccess: (d) => { qc.setQueryData(key, d); setText('') },
+    onSuccess: (d) => { if (d.status !== 'aberta') setFinishedNow(true); qc.setQueryData(key, d); setText('') },
     onError: (e) => setProblem((e as Error).message),
     onSettled: () => setPending(null),
   })
@@ -67,13 +72,15 @@ export function ClientChatPage() {
 
   if (chat.isPending) return <Shell><p role="status" className="m-auto flex items-center gap-2 text-muted"><Loader2 size={16} className="animate-spin" aria-hidden="true" /> Abrindo a conversa</p></Shell>
   if (chat.isError || !d) return <Shell><div className="m-auto max-w-xs px-4 text-center"><img src="/icon-192.png" alt="Peformake" className="mx-auto mb-4 size-12 rounded-2xl" /><p className="text-[15px]">{(chat.error as Error | null)?.message ?? 'Este link não vale mais.'}</p></div></Shell>
+  const brand = d.brand ?? 'peformake'
+  if (!open && d.closing && !showChat) return <Shell><Closing brand={brand} name={d.greeting} closing={d.closing} auto={finishedNow} onChat={() => setShowChat(true)} /></Shell>
 
   return (
     <Shell>
       <header className="flex shrink-0 items-center gap-3 border-b border-line bg-surface px-4 py-2.5">
-        <img src="/icon-192.png" alt="" className="size-9 rounded-xl" />
+        <BrandLogo brand={brand} className="size-9" />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[15px] font-semibold leading-tight">Peformake · {d.client}</p>
+          <p className="truncate text-[15px] font-semibold leading-tight">{brand === 'ellcazo' ? 'Ellcazo' : 'Peformake'} · {d.client}</p>
           <div className="mt-1 flex items-center gap-2">
             <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised"><span className="block h-full rounded-full bg-accent transition-all" style={{ width: `${open ? pct : 100}%` }} /></span>
             <span className="shrink-0 text-[11.5px] text-muted">{open ? `${d.progress.done} de ${d.progress.total}` : 'Concluída'}</span>
@@ -110,6 +117,43 @@ export function ClientChatPage() {
         </footer>
       )}
     </Shell>
+  )
+}
+
+/** Logo de quem atende o cliente: Peformake ou Ellcazo (cliente só do audiovisual). */
+function BrandLogo({ brand, className }: { brand: 'peformake' | 'ellcazo'; className?: string }) {
+  if (brand === 'ellcazo') return <span className={cn('theme-ellcazo grid shrink-0 place-items-center rounded-xl bg-[#0f1a12]', className)}><EllcazoMark className="h-[70%] w-auto text-accent" /></span>
+  return <img src="/icon-192.png" alt="Peformake" className={cn('shrink-0 rounded-xl', className)} />
+}
+
+/** Tela final: logo, obrigado e, para quem indicaria (nota 9 ou 10), o caminho para o portal em Indicações. */
+function Closing({ brand, name, closing, auto, onChat }: { brand: 'peformake' | 'ellcazo'; name: string; closing: { promoter: boolean; portal: string | null }; auto: boolean; onChat: () => void }) {
+  const go = useNavigate()
+  const target = closing.promoter ? closing.portal : null
+  const [secs, setSecs] = useState(auto && target ? 5 : 0)
+  useEffect(() => {
+    if (!secs || !target) return
+    const t = setTimeout(() => { if (secs <= 1) go(target); else setSecs(secs - 1) }, 1000)
+    return () => clearTimeout(t)
+  }, [secs, target, go])
+  return (
+    <div className="m-auto flex w-full max-w-sm flex-col items-center gap-4 px-6 text-center">
+      <BrandLogo brand={brand} className="size-20 rounded-3xl" />
+      <div>
+        <h1 className="text-[22px] font-semibold tracking-tight">Obrigado{name ? `, ${name}` : ''}!</h1>
+        <p className="mt-1 text-[15px] text-muted">Suas respostas já estão com a equipe da {brand === 'ellcazo' ? 'Ellcazo' : 'Peformake'}.</p>
+      </div>
+      {target && (
+        <div className="flex w-full flex-col gap-2 rounded-3xl bg-accent-soft p-4">
+          <p className="text-[15px] font-medium">Que bom que você nos indicaria! Conhece alguém que precisa da gente?</p>
+          <button type="button" onClick={() => go(target)} className="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-brand px-5 text-[15px] font-semibold text-on-brand">
+            <Gift size={17} aria-hidden="true" /> Indicar agora{secs ? ` (${secs})` : ''}
+          </button>
+          {secs > 0 && <button type="button" onClick={() => setSecs(0)} className="min-h-10 cursor-pointer text-[13.5px] text-muted underline">Agora não</button>}
+        </div>
+      )}
+      <button type="button" onClick={onChat} className="min-h-10 cursor-pointer text-[13px] text-muted underline">Ver a conversa</button>
+    </div>
   )
 }
 

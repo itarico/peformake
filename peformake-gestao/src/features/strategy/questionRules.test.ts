@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import {
-  canFollowUp, chatInvite, chatLink, cleanOptions, defaultToSend, isGeneric, isSimilar, nextMonthFocus, nextQuestion, npsCategory, packLabel, parseNps, pickNew, weekStart,
+  canFollowUp, chatInvite, chatLink, cleanOptions, defaultToSend, isGeneric, isSimilar, nextMonthFocus, nextQuestion, MAX_QUESTION_LEN, npsCategory, packLabel, parseNps, pickNew, weekStart,
 } from './questionRules'
 
 describe('weekStart', () => {
@@ -52,6 +52,11 @@ describe('perguntas novas', () => {
       'Vai ter alguma moto nova chegando em dezembro para anunciar?',
       'O feriado de 8 de dezembro a loja abre normalmente?',
     ])
+  })
+  it('descarta pergunta comprida (mais de 120 letras)', () => {
+    const long = 'Das 40 conversas que chegaram pelo anúncio da Biz 125 em outubro, quantas viraram venda de verdade na loja ou pelo WhatsApp de vocês?'
+    expect(long.length).toBeGreaterThan(MAX_QUESTION_LEN)
+    expect(pickNew([{ pergunta: long }, { pergunta: 'Das 40 conversas da Biz 125 em outubro, quantas compraram?' }], [])).toEqual([{ pergunta: 'Das 40 conversas da Biz 125 em outubro, quantas compraram?' }])
   })
   it('limpa botões', () => {
     expect(cleanOptions(['Sim', 'sim', '  Não  ', 'Responder depois', 'Às vezes', 'Uma opção comprida demais que passa de quarenta letras com folga', 'Outra'])).toEqual([

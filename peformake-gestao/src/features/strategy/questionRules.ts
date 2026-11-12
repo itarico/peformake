@@ -6,6 +6,10 @@ export const MAX_PER_WEEK = 4
 /** Opções que a IA deixa prontas por semana: a equipe escolhe as 4 que vão (as mais importantes já vêm marcadas). */
 export const MAX_OPTIONS = 8
 export const MAX_FOLLOWUPS = 1
+/** No máximo 4 perguntas por conversa (a equipe não consegue marcar mais; o banco também recusa). */
+export const MAX_PER_CHAT = 4
+/** Pergunta curta e direta: a IA mira em até 90 letras; acima de 120 é descartada. */
+export const MAX_QUESTION_LEN = 120
 export const SKIP_LABEL = 'Responder depois'
 
 export interface QuestionLite { id: string; status: string; pack: string | null; created_at: string }
@@ -76,9 +80,9 @@ export function pickNew<T extends { pergunta: string }>(candidates: T[], existin
   const out: T[] = []
   for (const c of candidates) {
     const q = (c.pergunta ?? '').trim()
-    if (!q || isGeneric(q)) continue
+    if (!q || q.length > MAX_QUESTION_LEN || isGeneric(q)) continue
     if (existing.some((e) => isSimilar(e, q)) || out.some((o) => isSimilar(o.pergunta, q))) continue
-    out.push({ ...c, pergunta: q.slice(0, 500) })
+    out.push({ ...c, pergunta: q })
     if (out.length >= limit) break
   }
   return out

@@ -5,6 +5,7 @@ import {
   isInvalidLink,
   monthlyHistory,
   parsePortalToken,
+  portalSection,
   portalLinkErrorMessage,
   portalUrl,
   teamRoleLabel,
@@ -26,6 +27,13 @@ describe('link do portal', () => {
     expect(parsePortalToken(`#${TOKEN}a`)).toBeNull()
     expect(parsePortalToken(`#${TOKEN.slice(0, 42)}=`)).toBeNull()
     expect(parsePortalToken('#<script>')).toBeNull()
+  })
+
+  it('abre direto em Indicações', () => {
+    expect(parsePortalToken(`#${TOKEN}/indicacoes`)).toBe(TOKEN)
+    expect(portalSection(`#${TOKEN}/indicacoes`)).toBe('indicacoes')
+    expect(portalSection(`#${TOKEN}`)).toBeNull()
+    expect(portalSection(`#${TOKEN}/outra`)).toBeNull()
   })
 
   it('monta o link com o código depois do #', () => {

@@ -6,8 +6,13 @@ const MONTHS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', '
 
 /** O link fica depois do #, que o navegador nunca envia ao servidor. */
 export function parsePortalToken(hash: string): string | null {
-  const token = hash.replace(/^#/, '').trim()
+  const token = (hash.replace(/^#/, '').trim().split('/')[0] ?? '')
   return TOKEN.test(token) ? token : null
+}
+
+/** Parte do portal que o link abre direto: /portal#<código>/indicacoes (vindo do fim da conversa). */
+export function portalSection(hash: string): 'indicacoes' | null {
+  return /^#?[A-Za-z0-9_-]{43}\/indicacoes\/?$/.test(hash.trim()) ? 'indicacoes' : null
 }
 
 export function portalUrl(origin: string, token: string): string {

@@ -76,6 +76,13 @@ async function questionsOf(db: SupabaseClient, s: Session): Promise<Question[]> 
 const skippedOf = (s: Session) => new Set(Array.isArray(s.followups._skip) ? (s.followups._skip as string[]) : [])
 const counts = (s: Session) => Object.fromEntries(Object.entries(s.followups).filter(([k, v]) => k !== '_skip' && typeof v === 'number')) as Record<string, number>
 
+type Brand = 'peformake' | 'ellcazo'
+const BRAND_NAME: Record<Brand, string> = { peformake: 'Peformake', ellcazo: 'Ellcazo' }
+async function brandOf(db: SupabaseClient, id: string): Promise<Brand> {
+  const { data } = await db.rpc('client_brand', { _client: id })
+  return data === 'ellcazo' ? 'ellcazo' : 'peformake'
+}
+
 async function clientName(db: SupabaseClient, id: string): Promise<string> {
   const { data } = await db.from('clients').select('name').eq('id', id).maybeSingle()
   return String(data?.name ?? 'sua empresa').trim()
@@ -94,8 +101,8 @@ async function ensurePrompt(db: SupabaseClient, s: Session) {
       if (s.current_question === next && last?.qid === next) return
       const q = qs.find((x) => x.id === next)!
       if (!s.messages.length) {
-        const name = await clientName(db, s.client_id)
-        push(s, { from: 'ia', text: `Oi! Aqui é a assistente da Peformake 👋 São ${open.length === 1 ? '1 pergunta rápida' : `${open.length} perguntas rápidas`} sobre a ${name}. Pode tocar num botão, escrever ou mandar áudio. Vamos lá?` })
+        const brand = BRAND_NAME[await brandOf(db, s.client_id)]
+        push(s, { from: 'ia', text: `Oi! Aqui é a assistente da ${brand} 👋 ${open.length === 1 ? 'É 1 pergunta rápida' : `São ${open.length} perguntas rápidas`}. Toque num botão, escreva ou mande áudio.` })
       }
       push(s, { from: 'ia', text: q.question, qid: q.id, options: [...(Array.isArray(q.options) ? q.options : []), SKIP_LABEL], kind: 'pergunta' })
       s.current_question = next
@@ -106,11 +113,12 @@ async function ensurePrompt(db: SupabaseClient, s: Session) {
     s.current_question = null
   }
   if (s.stage === 'nps' && last?.kind !== 'nps') {
-    push(s, { from: 'ia', text: 'Obrigado! Agora duas rápidas sobre o nosso trabalho. De 0 a 10, quanto você indicaria a Peformake para um amigo?', options: NPS_OPTIONS, kind: 'nps' })
+    const brand = BRAND_NAME[await brandOf(db, s.client_id)]
+    push(s, { from: 'ia', text: `Obrigado! Para fechar, duas rápidas. De 0 a 10, quanto você indicaria a ${brand} para um amigo?`, options: NPS_OPTIONS, kind: 'nps' })
   } else if (s.stage === 'avaliacao' && last?.kind !== 'avaliacao') {
-    push(s, { from: 'ia', text: 'Para fechar: em uma frase, o que está bom e o que podemos melhorar?', options: [EVAL_OK], kind: 'avaliacao' })
+    push(s, { from: 'ia', text: 'Em uma frase: o que está bom e o que podemos melhorar?', options: [EVAL_OK], kind: 'avaliacao' })
   } else if (s.stage === 'fim') {
-    if (last?.kind !== 'fim') push(s, { from: 'ia', text: 'Pronto, é isso! Suas respostas já chegaram para a equipe. Muito obrigado 🙏', kind: 'fim' })
+    if (last?.kind !== 'fim') push(s, { from: 'ia', text: 'Pronto! Suas respostas já chegaram para a equipe. Muito obrigado 🙏', kind: 'fim' })
     await save(db, s, { stage: 'fim', status: 'concluida', current_question: null, finished_at: now() })
     s.status = 'concluida'
     return
@@ -264,8 +272,19 @@ async function view(db: SupabaseClient, s: Session) {
   const name = await clientName(db, s.client_id)
   const last = [...s.messages].reverse().find((m) => m.from === 'ia')
   const open = s.status === 'aberta'
+  // Fim: marca de quem atende (logo da tela final) e, só para quem deu 9 ou 10, o portal dele direto em Indicações.
+  let brand: Brand = 'peformake'
+  let portal: string | null = null
+  if (open) brand = await brandOf(db, s.client_id)
+  else {
+    const { data: c } = await db.rpc('client_chat_closing', { _session: s.id })
+    const r = (c ?? {}) as { brand?: string; portal?: string | null }
+    brand = r.brand === 'ellcazo' ? 'ellcazo' : 'peformake'
+    portal = typeof r.portal === 'string' && /^[A-Za-z0-9_-]{43}$/.test(r.portal) ? `/portal#${r.portal}/indicacoes` : null
+  }
   return {
-    client: name, greeting: firstName(name), status: s.status, stage: s.stage,
+    client: name, greeting: firstName(name), status: s.status, stage: s.stage, brand,
+    closing: open ? null : { promoter: (s.nps_score ?? -1) >= 9, portal },
     progress: { done: qs.filter((q) => q.status === 'respondida').length, total: qs.length },
     messages: s.messages.map((m) => ({ from: m.from, text: m.text, at: m.at, files: (m.files ?? []).map((f) => ({ name: f.name, type: f.type })) })),
     options: open ? (last?.options ?? []) : [],

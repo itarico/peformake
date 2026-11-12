@@ -79,6 +79,9 @@ const check = async (p, tag, name) => {
       await check(p, tag, 'escolher');
       const checked = await p.locator('dialog[open] input[type=checkbox]:checked').count();
       if (checked !== 4) fails.push(`${tag}: ${checked} perguntas marcadas para enviar (esperado as 4 da semana)`);
+      if (!(await p.locator('dialog[open]').getByText('4 de 4').count())) fails.push(`${tag}: sem o contador "4 de 4"`);
+      const free = p.locator('dialog[open] input[type=checkbox]:not(:checked)');
+      if (await free.count() && !(await free.first().isDisabled())) fails.push(`${tag}: deu para marcar a 5ª pergunta`);
       await p.getByRole('button', { name: /Preparar mensagem/ }).click(); await p.waitForTimeout(400);
       await check(p, tag, 'mensagem');
       const wa = await p.locator('dialog[open] a[href^="https://wa.me/"]').getAttribute('href').catch(() => null);

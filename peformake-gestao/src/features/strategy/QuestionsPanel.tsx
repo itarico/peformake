@@ -10,7 +10,7 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { ago } from '@/features/settings/AutomationsCenter'
 import { waLink } from './consultRules'
-import { chatInvite, chatLink, defaultToSend, nextMonthFocus, packLabel, weekStart } from './questionRules'
+import { chatInvite, chatLink, defaultToSend, MAX_PER_CHAT, nextMonthFocus, packLabel, weekStart } from './questionRules'
 import { answerQuestion, discardQuestion, editQuestion, fileUrl, generateQuestions, openChat, questionsKey, useClientQuestions, type ClientQuestion } from './questionsApi'
 import { Paged } from './SlideViewer'
 
@@ -44,7 +44,7 @@ export function QuestionsPanel({ clientId, name }: { clientId: string; name: str
   return (
     <div data-conteudo className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        <Button disabled={!open.length} onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente{open.length ? ` (${defaultToSend(open).length || Math.min(open.length, 4)})` : ''}</Button>
+        <Button disabled={!open.length} onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente{open.length ? ` (${defaultToSend(open).length || Math.min(open.length, MAX_PER_CHAT)})` : ''}</Button>
         <Button variant="secondary" disabled={gen.isPending} onClick={async () => { if (await ask(hasPack ? 'Gerar de novo o pacote desta semana? As perguntas ainda não enviadas saem da lista. Usa a IA (≈ US$ 0,03).' : 'Gerar as perguntas da semana agora? Usa a IA (≈ US$ 0,03).')) gen.mutate() }}>
           <Sparkles size={15} aria-hidden="true" /> {gen.isPending ? 'Gerando' : hasPack ? 'Gerar de novo' : 'Gerar perguntas agora'}
         </Button>
@@ -157,30 +157,32 @@ function AnswerDialog({ q, onClose, onDone }: { q: ClientQuestion; onClose: () =
 /** Envio sempre por humano: escolhe as perguntas, o sistema marca como enviadas e prepara a mensagem com o link. */
 function SendQuestionsDialog({ clientId, name, phone, person, open, onClose, onDone }: { clientId: string; name: string; phone: string | null; person: string | null; open: ClientQuestion[]; onClose: () => void; onDone: () => void }) {
   const initial = useMemo(() => defaultToSend(open), [open])
-  const [picked, setPicked] = useState<Set<string>>(() => new Set(initial.length ? initial : open.slice(0, 4).map((x) => x.id)))
+  const [picked, setPicked] = useState<Set<string>>(() => new Set((initial.length ? initial : open.map((x) => x.id)).slice(0, MAX_PER_CHAT)))
   const [msg, setMsg] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const prep = useMutation({
     mutationFn: () => openChat(clientId, open.filter((x) => picked.has(x.id)).map((x) => x.id)),
     onSuccess: (token) => { setMsg(chatInvite(name, picked.size, chatLink(window.location.origin, token), nextMonthFocus(weekStart()), person)); onDone() },
   })
-  const toggle = (id: string) => setPicked((c) => { const n = new Set(c); if (n.has(id)) n.delete(id); else n.add(id); return n })
+  // Até 4 por conversa: com 4 marcadas, as outras ficam travadas até desmarcar uma.
+  const toggle = (id: string) => setPicked((c) => { const n = new Set(c); if (n.has(id)) n.delete(id); else if (n.size < MAX_PER_CHAT) n.add(id); return n })
+  const full = picked.size >= MAX_PER_CHAT
   const wa = msg ? waLink(phone, msg) : null
   return (
     <Dialog open onClose={onClose} title={msg ? `Mandar para ${name}` : 'Quais perguntas enviar?'} size="md"
-      description={msg ? 'O sistema não envia sozinho. Confira e mande pelo seu WhatsApp.' : 'O cliente responde numa conversa pelo celular, uma de cada vez.'}
+      description={msg ? 'O sistema não envia sozinho. Confira e mande pelo seu WhatsApp.' : `Escolha até ${MAX_PER_CHAT}. O cliente responde uma de cada vez, pelo celular.`}
       footer={msg
         ? <div className="flex flex-wrap gap-2">
             {wa ? <a href={wa} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><MessageCircle size={15} aria-hidden="true" /> Abrir no WhatsApp</a>
               : <Button onClick={() => { void navigator.clipboard?.writeText(msg); setCopied(true) }}>{copied ? 'Copiado' : 'Copiar mensagem'}</Button>}
             <Button variant="secondary" onClick={onClose}>Fechar</Button>
           </div>
-        : <div className="flex gap-2"><Button disabled={!picked.size || prep.isPending} onClick={() => prep.mutate()}>{prep.isPending ? 'Preparando' : `Preparar mensagem (${picked.size})`}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
+        : <div className="flex flex-wrap items-center gap-2"><Button disabled={!picked.size || prep.isPending} onClick={() => prep.mutate()}>{prep.isPending ? 'Preparando' : 'Preparar mensagem'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button><span className={cn('ml-auto text-[13px] font-semibold tabular-nums', full ? 'text-accent-ink' : 'text-muted')} aria-live="polite">{picked.size} de {MAX_PER_CHAT}</span></div>}>
       {!msg && (
         <div className="flex flex-col gap-2">
           <Paged items={open} per={4} render={(x) => (
-            <label className="flex min-h-11 cursor-pointer items-start gap-2.5 rounded-xl border border-line px-3 py-2">
-              <input type="checkbox" checked={picked.has(x.id)} onChange={() => toggle(x.id)} className="mt-0.5 size-4.5 shrink-0 accent-[var(--color-accent)]" />
+            <label className={cn('flex min-h-11 items-start gap-2.5 rounded-xl border border-line px-3 py-2', full && !picked.has(x.id) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer')}>
+              <input type="checkbox" checked={picked.has(x.id)} disabled={full && !picked.has(x.id)} onChange={() => toggle(x.id)} className="mt-0.5 size-4.5 shrink-0 accent-[var(--color-accent)]" />
               <span className="min-w-0 text-[13.5px] leading-snug"><span className="line-clamp-2">{x.question}</span><span className="text-[11.5px] text-muted">{packLabel(x.pack, x.focus)}</span></span>
             </label>
           )} />
