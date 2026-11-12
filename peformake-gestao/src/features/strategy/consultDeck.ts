@@ -4,7 +4,7 @@
 // O mesmo HTML serve para: tela (um slide por vez), PDF (impressão do navegador, @page por orientação), link público e portal.
 // Slides "internos" (decisões da Peformake, alertas) só aparecem na tela da equipe; nunca no PDF, link ou portal.
 // Medidas em cqw (largura do slide): o slide escala igual na tela e no papel.
-import { comparisonSvg, funnelData, funnelSvg, maturitySvg, positioningData, positioningSvg, presenceData, radarSvg, ratingsData, ratingsSvg, onColor, riskMatrixSvg, SERIES, timelineSvg } from './consultCharts'
+import { comparisonSvg, funnelData, funnelSvg, maturitySvg, positioningData, positioningSvg, presenceBarsSvg, presenceData, ratingsData, ratingsSvg, onColor, riskMatrixSvg, SERIES, timelineSvg } from './consultCharts'
 
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 export type Orientation = 'vertical' | 'paisagem'
@@ -132,7 +132,7 @@ export function buildSlides(input: DeckInput, o: Orientation, opts: { internal?:
 
   // 4. Mercado e concorrentes
   const pres = presenceData(d, name)
-  if (pres) add({ title: 'Presença digital: você × concorrentes', kicker: 'Mercado', section: 'diagnostico', body: `<div class="chart-only">${radarSvg(pres)}</div>`,
+  if (pres) add({ title: 'Presença digital: você × concorrentes', kicker: 'Mercado', section: 'diagnostico', body: `<div class="chart-only">${presenceBarsSvg(pres)}</div>`,
     details: { title: 'Presença por canal', items: arr(d.presenca_digital?.itens).map((x) => ({ k: x.canal, v: x.observacao, url: isUrl(x.fonte) ? x.fonte : undefined })) } })
   const rat = ratingsData(d, name)
   if (rat) add({ title: 'Reputação no Google', kicker: 'Mercado', section: 'diagnostico', body: `<div class="chart-only">${ratingsSvg(rat)}</div><p class="caption">Nota no Google (nº de avaliações).</p>` })

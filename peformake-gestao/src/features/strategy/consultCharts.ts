@@ -108,6 +108,34 @@ export function radarSvg(series: Series[], axes: readonly string[] = PRESENCE_AX
   return svg(W, H + (series.length > 2 ? 18 : 0), body + legend, 'Presença digital: cliente e concorrentes')
 }
 
+/**
+ * Presença digital em barras (troca o radar, que embolava com vários concorrentes e notas zero):
+ * por canal, a nota do cliente (0 a 10) e a do concorrente mais forte naquele canal, com o nome dele.
+ */
+export function presenceBarsSvg(series: Series[], axes: readonly string[] = PRESENCE_AXES.map(([, l]) => l)): string {
+  const [me, ...rivals] = series
+  if (!me) return ''
+  const W = 640, rowH = 62, x0 = 150, bw = W - x0 - 60, H = axes.length * rowH + 36
+  let body = `<g transform="translate(${x0},6)"><rect width="12" height="12" rx="3" fill="${SERIES[0]}"/><text x="18" y="11" font-size="13" fill="${INK}">${esc(cut(me.name, 24))}</text><rect x="210" width="12" height="12" rx="3" fill="${SERIES[3]}"/><text x="228" y="11" font-size="13" fill="${INK}">Concorrente mais forte</text></g>`
+  axes.forEach((a, i) => {
+    const y = 32 + i * rowH
+    const mine = me.values[i] ?? 0
+    const best = rivals.reduce<{ name: string; v: number } | null>((acc, r) => ((r.values[i] ?? 0) > (acc?.v ?? -1) ? { name: r.name, v: r.values[i] ?? 0 } : acc), null)
+    const w = (v: number) => Math.max(4, (Math.max(0, Math.min(10, v)) / 10) * bw)
+    body += `<text x="${x0 - 14}" y="${y + 24}" text-anchor="end" font-size="15" font-weight="700" fill="${INK}">${esc(a)}</text>`
+    body += `<rect x="${x0}" y="${y + 4}" width="${bw}" height="20" rx="10" fill="${INK}" fill-opacity="0.06"/><rect x="${x0}" y="${y + 4}" width="${w(mine)}" height="20" rx="10" fill="${SERIES[0]}"/>`
+    body += `<text x="${x0 + bw + 8}" y="${y + 19}" font-size="14" font-weight="700" fill="${INK}">${mine.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}</text>`
+    if (!best || best.v <= 0) {
+      body += `<text x="${x0}" y="${y + 40}" font-size="12" fill="${INK}" fill-opacity="0.6">Nenhum concorrente pontuou aqui</text>`
+    } else {
+      body += `<rect x="${x0}" y="${y + 30}" width="${w(best.v)}" height="12" rx="6" fill="${SERIES[3]}"/>`
+      body += `<text x="${x0 + bw + 8}" y="${y + 40}" font-size="12" fill="${INK}" fill-opacity="0.75">${best.v.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}</text>`
+      body += `<text x="${x0 - 14}" y="${y + 41}" text-anchor="end" font-size="11.5" fill="${INK}" fill-opacity="0.6">${esc(best.name.length > 26 ? cut(best.name, 26) : best.name)}</text>`
+    }
+  })
+  return svg(W, H, body, 'Presença digital: cliente e concorrente mais forte por canal')
+}
+
 export function ratingsSvg(rows: { name: string; nota: number; avaliacoes: number | null; me: boolean }[]): string {
   const W = 520, rowH = 38, H = rows.length * rowH + 10, x0 = 170, bw = W - x0 - 90
   const body = rows.map((r, i) => {
