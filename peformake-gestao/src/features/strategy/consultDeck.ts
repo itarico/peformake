@@ -381,44 +381,89 @@ ${deckCss(o)}</style></head><body><div class="pfd">${deckSlidesHtml(input, o)}</
  * Modo apresentação: aba só com os slides, um por vez, tela cheia, setas/teclado/arrastar.
  * Vale para a equipe (antes de enviar) e para o link público do cliente.
  */
+/** Texto dos detalhes no modo apresentação: sem links soltos nem "(Fonte: ...)" no meio da frase (os links viram "fonte"). */
+export function presentClean(v: unknown): string {
+  return String(v ?? '').replace(/\s*\((?:fontes?)\s*:[^)]*\)/gi, '').replace(/https?:\/\/\S+/g, '').replace(/\s{2,}/g, ' ').replace(/\s+([.,;])/g, '$1').replace(/[.,;]\s*,?\s*(?:e\s*)?$/, '.').replace(/\.,/g, '.').trim()
+}
+export function presentUrls(it: { v: unknown; u?: string }): string[] {
+  const a: string[] = [...(String(it.v ?? '').match(/https?:\/\/[^\s),]+/g) ?? [])]
+  if (it.u && /^https?:/.test(it.u)) a.unshift(it.u)
+  return a.filter((u, k) => a.indexOf(u) === k).slice(0, 3)
+}
+
 export function presentHtml(input: DeckInput, o: Orientation): string {
-  // As duas orientações vão juntas: o botão ⇄ troca na hora, sem gerar de novo. ✕ fecha (ou volta).
+  // As duas orientações vão juntas: "Vertical/Horizontal" troca na hora; "Girar" vira a tela (celular deitado na TV/notebook);
+  // "?" abre os detalhes do slide; ✕ fecha (ou volta). Vertical ocupa a tela toda; troca de slide animada.
   const stage = (k: Orientation) => {
     const id = k === 'paisagem' ? 'sp' : 'sv'
-    const ratio = k === 'paisagem' ? 16 / 9 : 210 / 297
+    const list = buildSlides(input, k)
     const css = deckCss(k).replace(/\.pfd/g, `#${id} .pfd`)
-    return { id, css: `${css}\n#${id} .pfd{width:min(calc(100vw - 24px),calc((100dvh - 88px) * ${ratio.toFixed(4)}))}`, html: `<div class="stage" id="${id}"${k === o ? '' : ' hidden'}><div class="pfd measure">${deckSlidesHtml(input, k)}</div></div>` }
+    const size = k === 'paisagem'
+      ? `#${id} .pfd{width:min(calc(var(--vw) - 24px),calc((var(--vh) - 88px) * ${(16 / 9).toFixed(4)}))}`
+      // Vertical em tela cheia: o slide fica da altura da tela (o conteúdo se ajusta com fitSlides).
+      : `#${id}{padding-top:max(58px,env(safe-area-inset-top))} #${id} .pfd{width:min(calc(var(--vw) - 16px),640px)} #${id} .pfd .slide{aspect-ratio:auto;height:min(calc(var(--vh) - 130px),calc((var(--vw) - 16px) * 2.1))} #${id} .pfd .slide:not(.cover)>.in>.content{justify-content:center}`
+    const details = list.map((x) => (x.details?.items.length ? { t: x.details.title, i: x.details.items.map((it) => ({ k: it.k ?? '', v: it.v, u: it.url ?? '' })) } : null))
+    return { id, details, css: `${css}\n${size}`, html: `<div class="stage" id="${id}"${k === o ? '' : ' hidden'}><div class="pfd measure">${list.map((x, n) => slideHtml(x, n, list.length, input.name)).join('')}</div></div>` }
   }
   const a = stage('paisagem'), b = stage('vertical')
+  const det = JSON.stringify({ sp: a.details, sv: b.details }).replace(/</g, '\\u003c')
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(input.name)} · Peformake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>html,body{margin:0;height:100%;background:#0B3C44;overflow:hidden;font-family:Geist,system-ui,sans-serif}
-.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px 64px}.stage[hidden]{display:none}
+<style>:root{--vw:100vw;--vh:100dvh}html,body{margin:0;height:100%;background:#0B3C44;overflow:hidden;font-family:Geist,system-ui,sans-serif}
+.app{position:fixed;left:0;top:0;width:var(--vw);height:var(--vh);transform-origin:0 0}
+body.rot .app{transform:translateX(100vw) rotate(90deg)}
+.stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 8px 64px;box-sizing:border-box}.stage[hidden]{display:none}
 .pfd .slide{display:none;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.45)} .pfd .slide.on{display:block}
 .pfd.measure .slide{display:block;position:absolute;visibility:hidden;width:inherit}
-.bar{position:fixed;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:8px;color:#CFE3E7;font-size:14px}
-.bar button{all:unset;cursor:pointer;min-width:44px;height:44px;padding:0 6px;box-sizing:border-box;border-radius:22px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:18px}
-.bar button.t{font-size:13px;font-weight:600;padding:0 12px}
-.bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:58px;text-align:center;font-variant-numeric:tabular-nums}
-.close{all:unset;position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff;font-size:18px;z-index:5}
+@media (prefers-reduced-motion:no-preference){
+.pfd .slide.on.in-r{animation:pfIn .45s cubic-bezier(.2,.7,.2,1) both;--dx:36px}.pfd .slide.on.in-l{animation:pfIn .45s cubic-bezier(.2,.7,.2,1) both;--dx:-36px}
+@keyframes pfIn{from{opacity:0;transform:translateX(var(--dx))}to{opacity:1;transform:none}}
+.pfd .slide.on .content>*,.pfd .slide.on .cover-mid>*,.pfd .slide.on .grid>*,.pfd .slide.on .bul>li,.pfd .slide.on .steps>li,.pfd .slide.on .qs>li,.pfd .slide.on .rows>li,.pfd .slide.on .kpis>*,.pfd .slide.on .journey>li{animation:pfUp .5s cubic-bezier(.2,.7,.2,1) both}
+.pfd .slide.on :is(.grid,.bul,.steps,.qs,.rows,.kpis,.journey)>*:nth-child(2){animation-delay:.08s}.pfd .slide.on :is(.grid,.bul,.steps,.qs,.rows,.kpis,.journey)>*:nth-child(3){animation-delay:.16s}
+.pfd .slide.on :is(.grid,.bul,.steps,.qs,.rows,.kpis,.journey)>*:nth-child(4){animation-delay:.24s}.pfd .slide.on :is(.grid,.bul,.steps,.qs,.rows,.kpis,.journey)>*:nth-child(n+5){animation-delay:.32s}
+.pfd .slide.on .content>*:nth-child(2){animation-delay:.1s}.pfd .slide.on .chart-only svg{animation:pfGrow .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes pfUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes pfGrow{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}}
+.bar{position:absolute;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:6px;color:#CFE3E7;font-size:14px}
+.bar button{all:unset;cursor:pointer;min-width:42px;height:42px;padding:0 6px;box-sizing:border-box;border-radius:21px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:17px}
+.bar button.t{font-size:12.5px;font-weight:600;padding:0 11px}.bar button.q{background:#1FC8DB;color:#0B3C44;font-weight:800}.bar button[hidden]{display:none}
+.bar button:disabled{opacity:.3;cursor:default} .bar span{min-width:54px;text-align:center;font-variant-numeric:tabular-nums}
+.close{all:unset;position:absolute;top:max(10px,env(safe-area-inset-top));right:10px;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff;font-size:18px;z-index:20}
+.dlg{position:absolute;inset:0;background:rgba(5,25,30,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}.dlg.on{display:flex}
+.dlg .box{background:#fff;color:#0B3C44;border-radius:18px;max-width:560px;width:100%;max-height:calc(var(--vh) - 32px);display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.dlg header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 10px;border-bottom:1px solid #D9E2E5}.dlg h3{margin:0;font-size:18px}
+.dlg header button{all:unset;cursor:pointer;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #056F84;font-size:16px}
+.dlg .body{padding:12px 18px 6px;font-size:15px;line-height:1.45;overflow:auto}.dlg .it{margin:0 0 10px}.dlg .it b{display:block}.dlg .it a{color:#056F84;font-size:13px;margin-left:4px}
+.dlg .pg{display:flex;justify-content:space-between;align-items:center;padding:8px 18px 14px;font-size:13px}.dlg .pg button{all:unset;cursor:pointer;font-weight:600;padding:8px 4px}.dlg .pg button:disabled{opacity:.35;cursor:default}
 ${a.css}
-${b.css}</style></head><body>${a.html}${b.html}
+${b.css}</style></head><body><div class="app">${a.html}${b.html}
 <button class="close" id="c" aria-label="Fechar a apresentação">✕</button>
-<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="o" class="t" aria-label="Trocar entre vertical e horizontal"></button><button id="f" aria-label="Tela cheia">⛶</button></div>
-<script>var pfFit=${fitSlides.toString()};var cur='${o === 'paisagem' ? 'sp' : 'sv'}',i=0,d,S;
+<div class="bar"><button id="p" aria-label="Anterior">‹</button><span id="n"></span><button id="x" aria-label="Próximo">›</button><button id="q" class="q" aria-label="Ver detalhes deste slide" hidden>?</button><button id="o" class="t" aria-label="Trocar entre vertical e horizontal"></button><button id="r" aria-label="Girar a tela">⟳</button><button id="f" aria-label="Tela cheia">⛶</button></div>
+<div class="dlg" id="dl" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="box"><header><h3 id="dt"></h3><button id="dc" aria-label="Fechar detalhes">✕</button></header><div class="body" id="db"></div><div class="pg" id="dp"><button id="dpp">‹ Anteriores</button><span id="dpn"></span><button id="dpx">Próximas ›</button></div></div></div></div>
+<script>var pfFit=${fitSlides.toString()};var DET=${det};var cur='${o === 'paisagem' ? 'sp' : 'sv'}',i=0,d,S,rot=false,pg=0;
+function dims(){var w=innerWidth,h=innerHeight;if(rot){var t=w;w=h;h=t}document.documentElement.style.setProperty('--vw',w+'px');document.documentElement.style.setProperty('--vh',h+'px')}
 function use(id){cur=id;['sp','sv'].forEach(function(k){document.getElementById(k).hidden=k!==id});d=document.querySelector('#'+id+' .pfd');S=[].slice.call(d.querySelectorAll('.slide'));document.getElementById('o').textContent=id==='sp'?'Vertical':'Horizontal';fit()}
-function show(k){i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(s,j){s.classList.toggle('on',j===i)});document.getElementById('n').textContent=(i+1)+' / '+S.length;document.getElementById('p').disabled=i===0;document.getElementById('x').disabled=i===S.length-1}
-function fit(){d.classList.add('measure');pfFit(d);d.classList.remove('measure');show(i)}
+function show(k,dir){var prev=i;i=Math.max(0,Math.min(S.length-1,k));S.forEach(function(s,j){s.classList.remove('in-r','in-l');s.classList.toggle('on',j===i)});if(dir!==0&&i!==prev){void S[i].offsetWidth;S[i].classList.add(i>prev?'in-r':'in-l')}
+document.getElementById('n').textContent=(i+1)+' / '+S.length;document.getElementById('p').disabled=i===0;document.getElementById('x').disabled=i===S.length-1;document.getElementById('q').hidden=!(DET[cur]&&DET[cur][i])}
+function fit(){dims();d.classList.add('measure');pfFit(d);d.classList.remove('measure');show(i,0)}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var clean=${presentClean.toString()};var urls=${presentUrls.toString()};
+function page(){var x=DET[cur][i];if(!x)return;var long=x.i.some(function(it){return clean(it.v).length>220});var per=long?2:4,n=Math.max(1,Math.ceil(x.i.length/per));pg=Math.max(0,Math.min(n-1,pg));document.getElementById('dt').textContent=x.t;
+document.getElementById('db').innerHTML=x.i.slice(pg*per,pg*per+per).map(function(it){return '<p class="it">'+(it.k?'<b>'+esc(it.k)+'</b>':'')+esc(clean(it.v))+urls(it).map(function(u,k){return '<a href="'+esc(u)+'" target="_blank" rel="noreferrer">fonte'+(k?' '+(k+1):'')+'</a>'}).join('')+'</p>'}).join('');
+document.getElementById('dp').style.display=n>1?'flex':'none';document.getElementById('dpn').textContent=(pg+1)+' de '+n;document.getElementById('dpp').disabled=pg===0;document.getElementById('dpx').disabled=pg>=n-1}
+function openD(){pg=0;page();document.getElementById('dl').classList.add('on')}function closeD(){document.getElementById('dl').classList.remove('on')}
 (document.fonts?document.fonts.ready:Promise.resolve()).then(function(){use(cur)});window.addEventListener('resize',fit);use(cur);
 document.getElementById('p').onclick=function(){show(i-1)};document.getElementById('x').onclick=function(){show(i+1)};
 document.getElementById('o').onclick=function(){use(cur==='sp'?'sv':'sp')};
+document.getElementById('r').onclick=function(){rot=!rot;document.body.classList.toggle('rot',rot);if(rot&&cur==='sv')use('sp');else fit()};
+document.getElementById('q').onclick=openD;document.getElementById('dc').onclick=closeD;document.getElementById('dl').addEventListener('click',function(e){if(e.target.id==='dl')closeD()});
+document.getElementById('dpp').onclick=function(){pg--;page()};document.getElementById('dpx').onclick=function(){pg++;page()};
 document.getElementById('f').onclick=function(){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen()};
 document.getElementById('c').onclick=function(){if(document.fullscreenElement){document.exitFullscreen()}var t=window.top;try{if(t.opener){t.close();return}}catch(e){}try{if(t.history.length>1){t.history.back();return}}catch(e){}try{t.close()}catch(e){}};
-addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')show(i+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1)});
-var t0=null;addEventListener('touchstart',function(e){t0=e.touches[0].clientX},{passive:true});addEventListener('touchend',function(e){if(t0===null)return;var dx=e.changedTouches[0].clientX-t0;t0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1)});
-['sp','sv'].forEach(function(k){document.querySelector('#'+k+' .pfd').addEventListener('click',function(e){if(e.target.closest('a'))return;var r=d.getBoundingClientRect();show(e.clientX>r.left+r.width/2?i+1:i-1)})})</script></body></html>`
+addEventListener('keydown',function(e){if(document.getElementById('dl').classList.contains('on')){if(e.key==='Escape')closeD();return}if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown')show(i+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1)});
+var t0=null;addEventListener('touchstart',function(e){t0=rot?e.touches[0].clientY:e.touches[0].clientX},{passive:true});addEventListener('touchend',function(e){if(t0===null||document.getElementById('dl').classList.contains('on'))return;var v=rot?e.changedTouches[0].clientY:e.changedTouches[0].clientX;var dx=v-t0;t0=null;if(Math.abs(dx)>50)show(dx<0?i+1:i-1)});
+['sp','sv'].forEach(function(k){document.querySelector('#'+k+' .pfd').addEventListener('click',function(e){if(e.target.closest('a'))return;var r=d.getBoundingClientRect();var mid=rot?(e.clientY>r.top+r.height/2):(e.clientX>r.left+r.width/2);show(mid?i+1:i-1)})})</script></body></html>`
 }
 
 /** Abre o modo apresentação numa aba nova (só os slides do cliente, sem os internos). */
