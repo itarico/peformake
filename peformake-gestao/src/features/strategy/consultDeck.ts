@@ -4,6 +4,7 @@
 // O mesmo HTML serve para: tela (um slide por vez), PDF (impressão do navegador, @page por orientação), link público e portal.
 // Slides "internos" (decisões da Peformake, alertas) só aparecem na tela da equipe; nunca no PDF, link ou portal.
 // Medidas em cqw (largura do slide): o slide escala igual na tela e no papel.
+import { ellcazoSvg } from '../../components/ui/ellcazoSvg'
 import { comparisonSvg, funnelData, funnelSvg, maturitySvg, positioningData, positioningSvg, presenceBarsSvg, presenceData, ratingsData, ratingsSvg, onColor, riskMatrixSvg, SERIES, timelineSvg } from './consultCharts'
 
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -42,6 +43,8 @@ export interface Slide {
   details?: SlideDetail
   /** Slide de decisão interna: índice em inteligencia.decisoes_peformake (vira tarefa). */
   decision?: number
+  /** Sem cabeçalho padrão: o corpo traz o próprio selo e título (páginas de referência do audiovisual). */
+  bare?: boolean
 }
 
 export const esc = (s: unknown) => String(s ?? '').replace(/\s*\[(?:CONFIRMAR|confirmar|A CONFIRMAR)[^\]]*\]/g, '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
@@ -331,41 +334,88 @@ export function deckCss(o: Orientation, brand: DeckBrand = 'peformake'): string 
   ${brand === 'ellcazo' ? ellcazoCss(f, land) : ''}`
 }
 
-/** Identidade Ellcazo por cima do mesmo sistema de slides: preto, verde-limão e branco (só o que é do audiovisual). */
+/**
+ * Identidade Ellcazo (tudo do audiovisual): plano tático de conteúdo. Fundo off-white, preto e verde-limão,
+ * tipografia grande e pesada, cartões com borda preta e sombra deslocada, poucos elementos por página.
+ */
 function ellcazoCss(f: (n: number) => string, land: boolean): string {
+  const bd = `${f(0.22)} solid #121410`
+  const sh = `${f(0.6)} ${f(0.6)} 0 #121410`
+  const cols = (n: number) => (land ? `repeat(${n},minmax(0,1fr))` : '1fr')
   return `
-  .pfd{--ink:#121410;--muted:#5F6656;--acc:#4E6B00;--fill:#B5E61D;--deep:#121410;--soft:#F1F8DA;--line:#E2E6D8;--canvas:#F5F7EF}
-  .pfd .cover{background:radial-gradient(circle at 86% 14%,rgba(181,230,29,.2) 0,rgba(181,230,29,0) 44%),#121410}
-  .pfd .cover .ecz-logo{height:${f(5.4)};width:auto;display:block}
-  .pfd .sw.warn{background:#121410} .pfd .card.accent{background:#121410} .pfd .card .pro,.pfd .ans{color:#4E6B00}
-  .pfd .statement{background:#121410;color:#fff} .pfd .statement .kick{color:#fff} .pfd .statement .lead{color:#D8DECB}
-  .pfd .statement .card{background:#1D2019;border-color:#2C3125;color:#fff} .pfd .statement .card p{color:#D8DECB} .pfd .statement .card h3{color:#fff}
-  .pfd .statement .tags span{background:#2C3125;color:#E4E8DA} .pfd .statement .tags .acc{background:var(--fill);color:#121410}
-  .pfd .statement .foot{color:#8C9480} .pfd .statement .foot b{color:#fff}
-  .pfd .statement .callout{background:#1D2019;color:#fff}
-  .pfd .scn{list-style:none;display:flex;flex-direction:column;gap:${f(1.2)}}
-  .pfd .scn li{display:grid;grid-template-columns:${f(7.5)} 1fr;gap:${f(1.4)};align-items:start;border-bottom:1px solid var(--line);padding-bottom:${f(1.2)}}
-  .pfd .scn li:last-child{border-bottom:0}
-  .pfd .scn .t{display:flex;flex-direction:column;align-items:flex-start;gap:${f(.4)}} .pfd .scn .t .num{background:#121410;color:var(--fill)} .pfd .scn .t small{font-size:${f(1.2)};color:var(--muted);font-weight:700}
-  .pfd .scn .img{font-size:${f(1.6)};color:var(--muted);line-height:1.3} .pfd .scn .fala{font-size:${f(2)};font-weight:650;line-height:1.3;margin-top:${f(.3)}}
-  .pfd .scn .tela{display:inline-block;margin-top:${f(.6)};background:var(--fill);color:#121410;font-weight:800;font-size:${f(1.35)};border-radius:${f(.6)};padding:${f(.25)} ${f(.9)}}
-  .pfd .kv{display:flex;flex-direction:column;gap:${f(.9)}} .pfd .kv p{font-size:${f(1.7)};line-height:1.35;color:#2A2E24} .pfd .kv b{display:block;font-size:${f(1.15)};text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-  .pfd .refs{list-style:none;display:flex;flex-direction:column;gap:${f(1.2)}}
-  .pfd .refs li{display:grid;grid-template-columns:${f(3.2)} 1fr;gap:${f(1.4)};align-items:start;font-size:${f(1.7)};line-height:1.3}
-  .pfd .refs a{color:#121410;font-weight:700;text-decoration:none;border-bottom:${f(.3)} solid var(--fill)} .pfd .refs small{display:block;color:var(--muted);font-size:${f(1.3)};margin-top:${f(.3)};word-break:break-all}
-  .pfd .vlist{list-style:none;display:flex;flex-direction:column;gap:${f(1)}} .pfd .vlist li{display:grid;grid-template-columns:${f(3.2)} 1fr auto;gap:${f(1.4)};align-items:center;border-bottom:1px solid var(--line);padding-bottom:${f(1)};font-size:${f(1.9)}}
-  .pfd .vpage{display:grid;grid-template-columns:${land ? '24cqw' : '34cqw'} 1fr;gap:${f(2.4)};align-items:start;flex:1;min-height:0} .pfd .vpage.noref{grid-template-columns:1fr}
-  .pfd .vref{display:flex;flex-direction:column;gap:${f(.8)}} .pfd .ref-live{width:100%;aspect-ratio:9/16;max-height:${land ? '36cqw' : '60cqw'};border-radius:${f(1.4)};overflow:hidden;background:#121410}
-  .pfd .ref-live iframe{width:100%;height:100%;border:0;display:block}
-  .pfd .ref-card{display:flex;flex-direction:column;gap:${f(1)};background:#121410;color:#fff;border-radius:${f(1.4)};padding:${f(1.6)};text-decoration:none}
-  .pfd .ref-card .qr{width:100%;max-width:${land ? '15cqw' : '100%'};align-self:center;height:auto;border-radius:${f(.8)};background:#fff} .pfd .ref-card span{display:flex;flex-direction:column;font-size:${f(1.5)};line-height:1.25}
-  .pfd .ref-card b{color:var(--fill);font-size:${f(1.8)}} .pfd .ref-card small{color:#B8C0AA;font-size:${f(1.15)};word-break:break-all;margin-top:${f(.3)}}
-  .pfd .refnote{font-size:${f(1.3)};color:var(--muted);line-height:1.3}
-  .pfd .vmain{display:flex;flex-direction:column;gap:${f(1.5)};min-width:0} .pfd .vmain .why{font-size:${f(1.9)};line-height:1.35;font-weight:550}
-  .pfd .vmain .ideas h3{font-size:${f(1.6)};text-transform:uppercase;letter-spacing:.08em;margin-bottom:${f(.8)}} .pfd .vmain .ideas .bul li{font-size:${f(1.7)}}
-  .pfd .callout.light{font-weight:450} .pfd .callout.light b{font-weight:750}
-  .pfd .vmain .more{font-size:${f(1.35)};color:var(--muted)} .pfd .vmain .more a{color:#121410;font-weight:700}
-  .pfd .vlist li:last-child{border-bottom:0} .pfd .vlist .num{background:#121410;color:var(--fill)} .pfd .vlist small{display:block;color:var(--muted);font-size:${f(1.3)}}
+  .pfd{--ink:#121410;--muted:#4A5040;--acc:#121410;--fill:#B5E61D;--deep:#121410;--soft:#F1F8DA;--line:#121410;--canvas:#F4F5EC}
+  .pfd .slide{background:#F4F5EC}
+  .pfd .slide>.in{padding:${land ? '5cqw 6.5cqw 6cqw' : '9cqw 8cqw 12cqw'}}
+  .pfd .head{margin-bottom:${f(2)}}
+  .pfd .kick,.pfd .pill{display:inline-flex;align-self:flex-start;align-items:center;gap:0;background:var(--fill);color:#121410;border:${bd};box-shadow:${f(0.4)} ${f(0.4)} 0 #121410;border-radius:999px;padding:${f(0.45)} ${f(1.4)};font-weight:850;text-transform:uppercase;letter-spacing:.09em;font-size:${f(1.15)};line-height:1.2}
+  .pfd .kick:before{display:none}
+  .pfd h2{font-size:${f(4.1)};font-weight:900;letter-spacing:-.035em;line-height:1.04;margin-top:${f(1.6)}}
+  .pfd .content{gap:${f(2)};padding-top:${f(0.4)}}
+  .pfd .lead{font-size:${f(1.85)};color:var(--muted);line-height:1.35}
+  .pfd .foot{bottom:${land ? '2.4cqw' : '4cqw'};align-items:center;color:#3B4034;font-size:${f(1.2)}}
+  .pfd .foot b:before{display:none} .pfd .foot .flogo{display:inline-flex;align-items:center;gap:${f(0.6)}} .pfd .foot .flogo svg{height:${f(2.6)};width:auto}
+  .pfd .foot .flogo b{font-weight:900;font-size:${f(1.5)};letter-spacing:-.02em;color:#121410}
+  .pfd .card{background:#FDFDF8;border:${bd};box-shadow:${sh};border-radius:${f(1.6)};padding:${f(2.1)} ${f(2.3)};gap:${f(0.9)};overflow:visible;margin:0 ${f(0.6)} ${f(0.6)} 0}
+  .pfd .card.lime{background:var(--fill)} .pfd .card.dark{background:#121410;color:#F4F5EC}
+  .pfd .card h3{font-size:${f(2.25)};font-weight:900;letter-spacing:-.02em;line-height:1.12;display:flex;align-items:center;gap:${f(0.7)}}
+  .pfd .card h3 .ic{width:${f(2.4)};height:${f(2.4)};flex:none}
+  .pfd .card p{font-size:${f(1.7)};line-height:1.42;color:#23271E}
+  .pfd .card.lime p,.pfd .card.lime li{color:#121410}
+  .pfd .bul li:before{background:#121410;width:${f(0.55)};height:${f(0.55)};top:.55em}
+  .pfd .card .bul li{font-size:${f(1.7)};line-height:1.35}
+  .pfd .g2{grid-template-columns:${cols(2)}} .pfd .g3{grid-template-columns:${cols(3)}} .pfd .g4{grid-template-columns:${land ? 'repeat(4,minmax(0,1fr))' : 'repeat(2,minmax(0,1fr))'}}
+  .pfd .grid{gap:${f(2)}}
+  .pfd .box{background:#FDFDF8;border:${bd};border-radius:${f(1)};padding:${f(1)} ${f(1.4)};font-weight:800;font-size:${f(1.6)};line-height:1.35;color:#121410;margin-top:${f(0.4)}}
+  .pfd .quote{background:var(--fill);border:${bd};border-radius:${f(1)};padding:${f(1)} ${f(1.3)};font-style:italic;font-size:${f(1.55)};line-height:1.4;color:#121410;margin-top:auto}
+  .pfd .strip{align-self:flex-start;background:#121410;color:#F4F5EC;border-radius:${f(1)};padding:${f(1)} ${f(1.8)};font-weight:850;font-size:${f(1.7)};line-height:1.3}
+  .pfd .chips{display:flex;flex-wrap:wrap;align-items:center;gap:${f(0.8)} ${f(1)};font-size:${f(1.5)}} .pfd .chips>b{font-weight:900;font-size:${f(1.7)}}
+  .pfd .chips span{border:${bd};border-radius:999px;padding:${f(0.4)} ${f(1.2)};font-weight:750;background:#FDFDF8}
+  .pfd .sw2{display:grid;grid-template-columns:1fr 1fr;gap:${f(1)} ${f(1.4)};margin-top:${f(0.6)}} .pfd .sw2 span{display:flex;align-items:center;gap:${f(0.8)};font-weight:800;font-size:${f(1.4)};line-height:1.15}
+  .pfd .sw2 i{flex:none;width:${f(3.2)};height:${f(3.2)};border:${bd};border-radius:${f(0.7)};background:var(--c)}
+  .pfd .rule{display:flex;align-items:center;background:var(--fill);border:${bd};box-shadow:${sh};border-radius:${f(1.6)};padding:${f(3)};font-size:${f(3.4)};font-weight:900;line-height:1.12;letter-spacing:-.025em}
+  .pfd .split{display:grid;grid-template-columns:${land ? '0.9fr 1.6fr' : '1fr'};gap:${f(2.4)};align-items:stretch}
+  .pfd .rows{gap:${f(1)}} .pfd .rows li{display:grid;grid-template-columns:${land ? `${f(16)} 1fr` : '1fr'};gap:${f(0.4)} ${f(1.4)};align-items:center;background:#FDFDF8;border:${bd};box-shadow:${f(0.4)} ${f(0.4)} 0 #121410;border-radius:${f(1)};padding:${f(0.9)} ${f(1.6)};font-size:${f(1.6)};margin:0 ${f(0.4)} ${f(0.4)} 0}
+  .pfd .rows li b{font-weight:900}
+  .pfd .cal{list-style:none;display:flex;flex-direction:column;gap:${f(0.9)}}
+  .pfd .cal li{display:grid;grid-template-columns:${land ? `${f(11)} ${f(19)} 1fr auto` : `${f(10)} 1fr auto`};gap:${f(1.4)};align-items:center;background:#FDFDF8;border:${bd};box-shadow:${f(0.4)} ${f(0.4)} 0 #121410;border-radius:${f(1)};padding:${f(0.85)} ${f(1.6)};font-size:${f(1.6)};line-height:1.25;margin:0 ${f(0.4)} ${f(0.4)} 0}
+  .pfd .cal li b{font-weight:900} .pfd .cal li .r{font-weight:900;font-size:${f(1.35)};white-space:nowrap} ${land ? '' : '.pfd .cal li .pl{display:none}'}
+  .pfd .cal li.hot{background:#121410;color:#F4F5EC;box-shadow:${f(0.4)} ${f(0.4)} 0 var(--fill)} .pfd .cal li.hot b{color:var(--fill)} .pfd .cal li.hot .r{color:var(--fill)}
+  .pfd .pil .n{font-size:${f(5.2)};font-weight:900;line-height:.9;letter-spacing:-.04em} .pfd .pil .u{font-size:${f(1.15)};font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+  .pfd .pil .d{font-weight:850;font-size:${f(1.55)}}
+  .pfd .card .up{font-size:${f(1.15)};font-weight:850;letter-spacing:.1em;text-transform:uppercase;opacity:1}
+  .pfd .cover{background:var(--fill);color:#121410} .pfd .cover:after{display:none} .pfd .cover>.in{justify-content:space-between;padding:${land ? '5.5cqw 6.5cqw' : '10cqw 8cqw'}}
+  .pfd .cover .tc-top{display:flex;align-items:center;gap:${f(1.2)}} .pfd .cover .tc-top svg{height:${f(6)};width:auto}
+  .pfd .cover .tc-top b{display:block;font-size:${f(3)};font-weight:900;letter-spacing:-.03em;line-height:1} .pfd .cover .tc-top small{display:block;font-size:${f(1.1)};font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-top:${f(0.4)}}
+  .pfd .cover h1{font-size:${f(10)};font-weight:900;letter-spacing:-.045em;line-height:.98;color:#F4F5EC;-webkit-text-stroke:${f(0.3)} #121410;paint-order:stroke fill;text-shadow:${f(0.7)} ${f(0.7)} 0 #121410;max-width:none;margin:0}
+  .pfd .cover .tc-t{font-size:${f(3.6)};font-weight:900;letter-spacing:-.03em;margin-top:${f(2)};line-height:1.05} .pfd .cover .tc-s{font-size:${f(1.8)};font-weight:650;margin-top:${f(1.4)};max-width:80cqw}
+  .pfd .cover .pill{background:#F4F5EC;font-size:${f(1.4)};padding:${f(0.7)} ${f(1.8)}}
+  .pfd .statement{background:#121410;color:#F4F5EC} .pfd .statement>.in{justify-content:flex-start} .pfd .statement .foot{display:none}
+  .pfd .statement .kick{background:var(--fill);border-color:#F4F5EC;box-shadow:none}
+  .pfd .statement .content{justify-content:center;gap:${f(1.4)}} .pfd .go{font-size:${f(8)};font-weight:900;letter-spacing:-.045em;line-height:1;color:var(--fill)}
+  .pfd .go-sub{font-size:${f(1.9)};font-style:italic;text-transform:uppercase;letter-spacing:.02em;max-width:${land ? '74cqw' : '84cqw'};line-height:1.35}
+  .pfd .go-foot{position:absolute;left:${land ? '6.5cqw' : '8cqw'};right:${land ? '6.5cqw' : '8cqw'};bottom:${land ? '4.5cqw' : '8cqw'};display:flex;justify-content:space-between;align-items:flex-end;font-size:${f(1.8)}}
+  .pfd .go-foot .lg{display:flex;align-items:center;gap:${f(1)}} .pfd .go-foot svg{height:${f(6)};width:auto} .pfd .go-foot b{font-size:${f(4.4)};font-weight:900;letter-spacing:-.04em;color:var(--fill)}
+  .pfd .ref{flex:1;min-height:0;display:grid;grid-template-columns:${land ? `${f(19)} 1fr` : '1fr'};gap:${f(2.6)};align-items:start}
+  .pfd .ref-m{display:flex;flex-direction:column;gap:${f(1.3)};min-width:0} .pfd .ref-m h2{margin-top:${f(0.4)}}
+  .pfd .vt{position:relative;display:block;width:${land ? '100%' : `${f(18)}`};aspect-ratio:9/16;${land ? '' : 'max-height:58cqw;'}border:${bd};box-shadow:${sh};border-radius:${f(1.8)};overflow:hidden;background:#121410;color:#F4F5EC;text-decoration:none}
+  .pfd .vt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .pfd .vt img.th{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0} .pfd .vt.has img.th,.pfd .vt img.th.on{opacity:1}
+  .pfd .vt .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:${f(1.2)};padding:${f(1.6)};text-align:center}
+  .pfd .vt.has .ph{display:none} .pfd .vt .ph b{font-size:${f(2.2)};font-weight:900;color:var(--fill)} .pfd .vt .ph .qr{width:70%;height:auto;border-radius:${f(0.6)}} .pfd .vt .ph .pl-ic{width:${f(4.4)};height:${f(4.4)};color:var(--fill)}
+  .pfd .vt .go-btn{position:absolute;left:${f(1.2)};right:${f(1.2)};bottom:${f(1.4)};display:flex;justify-content:center;background:var(--fill);color:#121410;border:${bd};box-shadow:${f(0.35)} ${f(0.35)} 0 #121410;border-radius:999px;padding:${f(0.6)} ${f(0.6)};font-weight:900;font-size:${f(1.15)};text-decoration:underline;white-space:nowrap}
+  .pfd .vt.live{background:#000} .pfd .vlink{display:block;margin-top:${f(1)};font-size:${f(1.2)};color:#3B4034;font-weight:700;text-align:center}
+  .pfd .vars{display:grid;grid-template-columns:${cols(3)};gap:${f(1.2)}} .pfd .vars li{list-style:none;display:flex;gap:${f(0.8)};align-items:flex-start;background:#FDFDF8;border:${bd};border-radius:${f(1)};padding:${f(0.9)} ${f(1.1)};font-size:${f(1.45)};line-height:1.3;font-weight:650}
+  .pfd .vars li .num{flex:none;width:${f(2.4)};height:${f(2.4)};font-size:${f(1.2)};background:#121410;color:var(--fill);border-radius:50%;display:inline-grid;place-items:center;font-weight:900}
+  .pfd .vh{font-size:${f(1.15)};font-weight:900;letter-spacing:.1em;text-transform:uppercase;margin-bottom:${f(-0.4)}}
+  .pfd .dose{align-self:flex-start;display:flex;gap:${f(0.8)};align-items:baseline;flex-wrap:wrap;background:#121410;color:#F4F5EC;border-radius:${f(1)};padding:${f(0.8)} ${f(1.5)};font-size:${f(1.45)};line-height:1.35} .pfd .dose b{color:var(--fill);font-weight:900}
+  .pfd .paras{list-style:none;display:grid;grid-template-columns:${land ? 'var(--pc,1fr)' : '1fr'};gap:${f(1.1)} ${f(2.2)}}
+  .pfd .paras li{display:grid;grid-template-columns:${f(3)} 1fr;gap:${f(1.2)};align-items:start;background:#FDFDF8;border:${bd};border-radius:${f(1)};padding:${f(1)} ${f(1.4)}}
+  .pfd .paras .num{width:${f(2.8)};height:${f(2.8)};font-size:${f(1.3)};background:var(--fill);color:#121410;border:${bd};font-weight:900}
+  .pfd .paras .fala{font-size:${f(1.75)};font-weight:700;line-height:1.35} .pfd .paras .img{font-size:${f(1.35)};color:#4A5040;line-height:1.3;margin-top:${f(0.3)}}
+  .pfd .paras .sem{font-size:${f(1.6)};font-weight:650;line-height:1.35} .pfd .paras .tela{display:inline-block;margin-top:${f(0.5)};background:#121410;color:var(--fill);font-weight:800;font-size:${f(1.2)};border-radius:${f(0.5)};padding:${f(0.2)} ${f(0.8)}}
+  .pfd .paras.dense .img{display:none} .pfd .paras.dense li{padding:${f(0.7)} ${f(1.2)}} .pfd .rule.long{font-size:${f(2.6)}}
+  .pfd .ref .card{padding:${f(1.5)} ${f(1.8)};gap:${f(0.6)}} .pfd .ref .card .bul{gap:${f(0.6)}} .pfd .ref .card .bul li{font-size:${f(1.5)};line-height:1.3} .pfd .ref .card h3{font-size:${f(2)}} .pfd .ref .lead{font-size:${f(1.6)}} .pfd .ref h2{font-size:${f(3.6)}}
+  .pfd .end{font-size:${f(1.55)};line-height:1.35} .pfd .end b{font-weight:900}
   `
 }
 
@@ -388,7 +438,7 @@ export function fitSlides(root: ParentNode): void {
       const inner = s.querySelector<HTMLElement>('.in')
       const foot = s.querySelector<HTMLElement>('.foot')
       const last = (s.querySelector('.content') ?? s.querySelector('.cover-mid'))?.lastElementChild
-      if (inner && last && foot && last.getBoundingClientRect().bottom > foot.getBoundingClientRect().top + 2) bad = true
+      if (inner && last && foot && foot.getClientRects().length && last.getBoundingClientRect().bottom > foot.getBoundingClientRect().top + 2) bad = true
       return bad
     }
     while (over() && z > 0.55) { z = Math.round((z - 0.05) * 100) / 100; s.style.setProperty('--z', String(z)) }
@@ -396,17 +446,19 @@ export function fitSlides(root: ParentNode): void {
 }
 
 /** Um slide em HTML (sem <html>). */
-export function slideHtml(s: Slide, i: number, total: number, name: string, brand: DeckBrand = 'peformake'): string {
+export function slideHtml(s: Slide, i: number, total: number, name: string, brand: DeckBrand = 'peformake', label?: string): string {
   const cls = ['slide', s.kind === 'cover' ? 'cover' : s.kind === 'statement' ? 'statement' : '', s.internal ? 'internal' : ''].filter(Boolean).join(' ')
-  const head = s.title || (s.kicker && s.kind !== 'cover') ? `<div class="head">${s.kicker ? `<p class="kick">${esc(s.kicker)}</p>` : ''}${s.title ? `<h2>${esc(s.title)}</h2>` : ''}</div>` : ''
-  const foot = s.kind === 'cover' ? '' : `<div class="foot"><span><b>${BRAND_NAME[brand]}</b> · ${esc(name)}</span><span>${i + 1} / ${total}</span></div>`
+  const head = !s.bare && (s.title || (s.kicker && s.kind !== 'cover')) ? `<div class="head">${s.kicker ? `<p class="kick">${esc(s.kicker)}</p>` : ''}${s.title ? `<h2>${esc(s.title)}</h2>` : ''}</div>` : ''
+  const foot = s.kind === 'cover' ? ''
+    : brand === 'ellcazo' ? `<div class="foot"><span class="flogo">${ellcazoSvg('#121410', 30)}<b>Ellcazo</b></span><span>${esc(name)} • ${esc(label ?? 'Plano tático de conteúdo')}</span></div>`
+      : `<div class="foot"><span><b>${BRAND_NAME[brand]}</b> · ${esc(name)}</span><span>${i + 1} / ${total}</span></div>`
   return `<section class="${cls}" aria-label="Slide ${i + 1} de ${total}"><div class="in">${s.kind === 'cover' ? s.body : `${head}<div class="content">${s.body}</div>`}${foot}</div></section>`
 }
 
 /** Slides em HTML (para o PDF, o link público e o portal: nunca os internos). */
 export function deckSlidesHtml(input: DeckInput, o: Orientation): string {
   const list = buildSlides(input, o)
-  return list.map((s, i) => slideHtml(s, i, list.length, input.name, input.brand)).join('')
+  return list.map((s, i) => slideHtml(s, i, list.length, input.name, input.brand, input.title)).join('')
 }
 
 export function deckSlideCount(input: DeckInput, o: Orientation): number { return buildSlides(input, o).length }
@@ -417,7 +469,7 @@ export function deckHtml(input: DeckInput, o: Orientation): string {
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(input.title ?? 'Diagnóstico')} · ${esc(input.name)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>@page{size:${page};margin:0}html,body{margin:0;background:${CHROME[input.brand ?? 'peformake'].paper}}body{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .pfd{width:min(100%,${o === 'paisagem' ? '1100px' : '760px'})} .pfd .slide{box-shadow:0 2px 14px rgba(0,0,0,.18);margin-bottom:16px}
 @media print{html,body{background:#fff;padding:0;gap:0}.pfd{width:${o === 'paisagem' ? '338.67mm' : '210mm'}}.pfd .slide{width:${o === 'paisagem' ? '338.67mm' : '210mm'};height:${o === 'paisagem' ? '190.5mm' : '297mm'};aspect-ratio:auto;box-shadow:none;margin:0}}
@@ -451,7 +503,7 @@ export function presentHtml(input: DeckInput, o: Orientation): string {
       // Vertical em tela cheia: o slide fica da altura da tela (o conteúdo se ajusta com fitSlides).
       : `#${id}{padding-top:max(58px,env(safe-area-inset-top))} #${id} .pfd{width:min(calc(var(--vw) - 16px),640px)} #${id} .pfd .slide{aspect-ratio:auto;height:min(calc(var(--vh) - 130px),calc((var(--vw) - 16px) * 2.1))} #${id} .pfd .slide:not(.cover)>.in>.content{justify-content:center}`
     const details = list.map((x) => (x.details?.items.length ? { t: x.details.title, i: x.details.items.map((it) => ({ k: it.k ?? '', v: it.v, u: it.url ?? '' })) } : null))
-    return { id, details, css: `${css}\n${size}`, html: `<div class="stage" id="${id}"${k === o ? '' : ' hidden'}><div class="pfd measure">${list.map((x, n) => slideHtml(x, n, list.length, input.name, input.brand)).join('')}</div></div>` }
+    return { id, details, css: `${css}\n${size}`, html: `<div class="stage" id="${id}"${k === o ? '' : ' hidden'}><div class="pfd measure">${list.map((x, n) => slideHtml(x, n, list.length, input.name, input.brand, input.title)).join('')}</div></div>` }
   }
   const a = stage('paisagem'), b = stage('vertical')
   const C = CHROME[input.brand ?? 'peformake']
@@ -459,7 +511,7 @@ export function presentHtml(input: DeckInput, o: Orientation): string {
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(input.name)} · ${BRAND_NAME[input.brand ?? 'peformake']}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>:root{--vw:100vw;--vh:100dvh}html,body{margin:0;height:100%;background:${C.bg};overflow:hidden;font-family:Geist,system-ui,sans-serif}
 .app{position:fixed;left:0;top:0;width:var(--vw);height:var(--vh);transform-origin:0 0}
 body.rot .app{transform:translateX(100vw) rotate(90deg)}

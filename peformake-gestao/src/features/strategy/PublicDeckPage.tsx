@@ -29,6 +29,11 @@ export function PublicDeckPage({ kind = 'diagnostico' }: { kind?: 'diagnostico' 
     queryKey: ['consult-public-review', kind, token], retry: false, enabled: kind === 'av',
     queryFn: async () => { const { data, error } = await rpc('monthly_av_public_review', { _token: token }); if (error) return null; return data as ReviewState | null },
   })
+  // Plano tático: guia da marca e o que o plano traz para essência, tom, expressão e linha editorial (o que faltar some).
+  const avExtra = useQuery({
+    queryKey: ['consult-public-extra', kind, token], retry: false, enabled: kind === 'av',
+    queryFn: async () => { const { data, error } = await rpc('monthly_av_public_extra', { _token: token }); if (error) return null; return data as Doc | null },
+  })
   const [o, setO] = useState<Orientation>(() => (typeof window !== 'undefined' && window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem'))
   useEffect(() => {
     const on = () => setO(window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem')
@@ -43,8 +48,11 @@ export function PublicDeckPage({ kind = 'diagnostico' }: { kind?: 'diagnostico' 
     // Audiovisual do mês: só os vídeos aprovados (o servidor já filtra), na identidade Ellcazo.
     if (kind === 'av') {
       const actions = ((d.actions ?? []) as Doc[]).map((a) => ({ place: null, owner_role: null, proof: null, why: null, routed_table: null, routed_id: null, routed_link: null, suggestion: null, done: null, ...a })) as MonthlyStrategy['actions']
-      const videos = avVideos({ month: String(d.month), doc: d.doc, actions }, scanVideos((d.scan ?? []) as { source: string; data: Doc }[]))
-      const input = avDeckInput({ name: String(d.name ?? ''), month: String(d.month), videos })
+      const x = avExtra.data ?? null
+      const doc = { ...d.doc, plano: { ...(d.doc.plano ?? {}), perfil_fala: x?.plano?.perfil_fala } }
+      const videos = avVideos({ month: String(d.month), doc, actions }, scanVideos((d.scan ?? []) as { source: string; data: Doc }[]), undefined, { segment: x?.client?.segment ?? null, niche: x?.client?.niche ?? null })
+      const input = avDeckInput({ name: String(d.name ?? ''), month: String(d.month), videos,
+        ctx: { brand: x ? { voice: x.voice ?? null, guide: x.guide ?? null, client: x.client ?? null } : null, plano: { ...(d.doc.plano ?? {}), ...(x?.plano ?? {}) }, titulo: x?.titulo ?? null, foco: x?.foco ?? null } })
       const keys = videos.map((v) => v.key)
       return presentHtml({ ...input, slides: (or, ctx) => avClientSlides(input.slides!(or, ctx), keys, avReview.data) }, o)
     }
@@ -59,14 +67,14 @@ export function PublicDeckPage({ kind = 'diagnostico' }: { kind?: 'diagnostico' 
       name: String(d.name ?? ''), doc: d.doc, questions: (d.questions ?? []) as Doc[] as { question: string; why?: string | null; answer?: string | null }[],
       clientLogoUrl: logoPublicUrl(d.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png`, updatedAt: d.updated_at ?? null,
     }, d.review as ReviewState | null), o)
-  }, [q.data, o, kind, avReview.data])
+  }, [q.data, o, kind, avReview.data, avExtra.data])
 
   const msg = (t: string, sub?: string) => (
     <main className={`grid min-h-dvh place-items-center p-6 text-center ${kind === 'av' ? 'bg-[#121410] text-[#D8DECB]' : 'bg-[#0B3C44] text-[#CFE3E7]'}`}>
       <div><p className="text-[18px] font-semibold text-white">{t}</p>{sub && <p className="mt-1 text-[14px]">{sub}</p>}</div>
     </main>
   )
-  if (q.isPending || (kind === 'av' && avReview.isPending)) return msg('Abrindo a apresentação…')
+  if (q.isPending || (kind === 'av' && (avReview.isPending || avExtra.isPending))) return msg('Abrindo a apresentação…')
   if (q.isError) return msg('Este link não está mais ativo.', `Peça um link novo para a equipe da ${brand}.`)
   if (q.data?.updating) return msg('A apresentação está sendo atualizada.', 'Volte daqui a pouco.')
   if (!html) return msg('Apresentação indisponível.')

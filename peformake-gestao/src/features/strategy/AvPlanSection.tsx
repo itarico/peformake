@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { Check, ChevronRight, Clapperboard, Download, ExternalLink, MessageCircle, Presentation, X } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { Check, ChevronRight, Clapperboard, Download, ExternalLink, FileText, MessageCircle, Presentation, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -8,11 +9,12 @@ import { DialogTabs } from '@/components/ui/DialogTabs'
 import { EllcazoMark } from '@/components/ui/EllcazoMark'
 import { ask } from '@/components/ui/confirm'
 import { cn } from '@/lib/cn'
-import { avDeckInput } from './avDeck'
+import { avDeckInput, fetchThumbs } from './avDeck'
+import { useBrandGuide } from '@/features/clients/brandGuideApi'
 import { printPocket } from './avPocket'
 import { progress, recordingLink, useAvTakes, type AvTake } from './avTakes'
 import { PAPEL, avVideos, scanVideos, whenLabel, type AvVideo } from './avPlan'
-import { openPresentation } from './consultDeck'
+import { openPresentation, printDeck } from './consultDeck'
 import { decideAction, useClientScan } from './monthlyApi'
 import { AREA, actionState, textPages, type MonthlyAction, type MonthlyStrategy } from './monthlyRules'
 
@@ -35,11 +37,20 @@ export function AvPlanSection({ st, clientId, name, busy, canDecide, onApprove, 
 }) {
   const scanQ = useClientScan(clientId, st.month)
   const takesQ = useAvTakes(st.id)
-  const videos = useMemo(() => avVideos(st, scanVideos(scanQ.data ?? []), takesQ.data ?? []), [st, scanQ.data, takesQ.data])
+  // Guia da marca: essência, tom, expressão e o segmento (que decide a dose de fala do roteiro).
+  const guideQ = useBrandGuide(clientId)
+  const segment = guideQ.data?.client.segment ?? null
+  const videos = useMemo(() => avVideos(st, scanVideos(scanQ.data ?? []), takesQ.data ?? [], { segment }), [st, scanQ.data, takesQ.data, segment])
   const [open, setOpen] = useState<string | null>(null)
   const approved = videos.filter((v) => v.action?.status === 'aprovada')
   const pending = videos.filter((v) => v.action?.status === 'proposta' && canDecide(v.action))
-  const input = useMemo(() => avDeckInput({ name, month: st.month, videos: approved }), [name, st.month, approved])
+  const refUrls = useMemo(() => approved.flatMap((v) => v.refs.slice(0, 1).map((r) => r.url)), [approved])
+  const thumbsQ = useQuery({ queryKey: ['av-thumbs', refUrls], queryFn: () => fetchThumbs(refUrls), enabled: refUrls.length > 0, staleTime: 3_600_000 })
+  const doc = st.doc as { plano?: Record<string, unknown>; titulo?: string; foco?: string } | null
+  const input = useMemo(() => avDeckInput({
+    name, month: st.month, videos: approved, thumbs: thumbsQ.data,
+    ctx: { brand: guideQ.data ? { voice: guideQ.data.voice, guide: guideQ.data.guide as Record<string, unknown>, client: guideQ.data.client } : null, plano: doc?.plano ?? null, titulo: doc?.titulo ?? null, foco: doc?.foco ?? null },
+  }), [name, st.month, approved, thumbsQ.data, guideQ.data, doc])
   const cur = videos.find((v) => v.key === open) ?? null
 
   const approveAll = async () => {
@@ -61,6 +72,7 @@ export function AvPlanSection({ st, clientId, name, busy, canDecide, onApprove, 
         <ActionMenu label="Mais opções do audiovisual" actions={[
           { label: `Aprovar todos (${pending.length})`, icon: <Check size={15} aria-hidden="true" />, onClick: () => void approveAll(), hidden: !pending.length, disabled: busy },
           { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: () => openPresentation(input, window.innerWidth < window.innerHeight ? 'vertical' : 'paisagem'), disabled: !approved.length },
+          { label: 'Baixar plano tático (PDF)', icon: <FileText size={15} aria-hidden="true" />, onClick: () => printDeck(input, 'paisagem'), disabled: !approved.length },
           { label: 'Enviar no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, onClick: () => onSend(approved.length), disabled: !approved.length },
         ]} />
       </div>

@@ -54,6 +54,89 @@ export interface AvVideo {
   refs: AvRef[]
   engajar: { gancho: string; pergunta: string; audio: string }
   anuncio: AvAd | null
+  /** Dose de fala deste vídeo (pelo nicho do cliente, ajustada pelo próprio roteiro). */
+  perfil: PerfilFala
+  /** 3 jeitos de gravar este mesmo vídeo (o destaque da página da referência). */
+  variacoes: string[]
+  /** Cardápio: até 10 ideias de vídeo na mesma linha, cada uma com 3 variações (a equipe escolhe e elabora). */
+  cardapio: AvIdeia[]
+  /** Uma linha de direção (como o vídeo deve parecer). */
+  direcao: string
+  /** "Quem fala" e "Quem grava": 3 tópicos curtos cada. */
+  falaTopicos: string[]
+  gravaTopicos: string[]
+}
+export interface AvIdeia { titulo: string; variacoes: string[]; /** Ideia genérica do papel (não veio do plano): fica fora do banco de pautas. */ padrao?: boolean }
+
+// ───────── Dose de fala por cliente ─────────
+/** Quanto o vídeo fala: gastronomia vende desejo (pouca), quem ensina/explica fala mais (muita), varejo fica no meio. */
+export type PerfilFala = 'pouca' | 'media' | 'muita'
+export const PERFIL_FALA: Record<PerfilFala, { label: string; regra: string; frases: number }> = {
+  pouca: { label: 'Pouca fala, muito desejo', regra: 'Imagem, som e close vendem. Fala de 1 ou 2 frases (ou nenhuma) e texto curto na tela.', frases: 1 },
+  media: { label: 'Fala na medida', regra: 'Mostra o produto e fala o essencial: até 2 frases por momento.', frases: 2 },
+  muita: { label: 'Fala que explica', regra: 'Explica passo a passo, olhando para a câmera; a imagem acompanha cada passo.', frases: 99 },
+}
+const norm = (t: string) => str(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+const POUCA = /(gastronom|restaura|pizz|hamburg|burger|lanch|confeit|doce(ria|s)|padari|cafeter|\bcafe\b|\bbar\b|bistr|food|comida|culinar|sorvet|acai|churras|buffet|sushi|delivery de comida|floricult|turismo|hotel|pousada|casamento)/
+const MUITA = /(clinic|odonto|dentist|medic|saude|fisio|psicol|nutricion|advoc|juridic|contab|consultor|escola|educa|curso|ensino|idioma|tutorial|oficina|mecanic|auto ?pec|assistencia tecnica|tecnolog|software|seguro|financ|credito|imobiliar|engenhar|arquitet|academia|personal|veterin|estetica)/
+/**
+ * Perfil de fala do cliente. Ordem: escolha do plano (perfil_fala) > segmento/nicho do cadastro > guia da marca e plano (texto).
+ * Sem pista nenhuma: meio-termo.
+ */
+export function perfilFala(x: { override?: unknown; segment?: string | null; niche?: string | null; text?: string | null }): PerfilFala {
+  const o = norm(String(x.override ?? ''))
+  if (o === 'pouca' || o === 'media' || o === 'muita') return o
+  const seg = norm(`${x.segment ?? ''} ${x.niche ?? ''}`)
+  if (seg.trim()) { if (MUITA.test(seg)) return 'muita'; if (POUCA.test(seg)) return 'pouca' }
+  const t = norm(x.text ?? '')
+  const count = (re: RegExp) => (t.match(new RegExp(re.source, 'g')) ?? []).length
+  const a = count(POUCA), b = count(MUITA)
+  if (a === 0 && b === 0) return 'media'
+  return a >= b * 2 ? 'pouca' : b >= a * 2 ? 'muita' : 'media'
+}
+/** Dose de um vídeo: quem fala para a câmera ou explica sobe um nível no "pouca"; ASMR/sem fala desce para "pouca". */
+export function doseVideo(base: PerfilFala, hint: string): PerfilFala {
+  const h = norm(hint)
+  if (/(sem fala|asmr|so som|so imagem)/.test(h)) return 'pouca'
+  if (base === 'pouca' && /(olhando para a camera|para a camera|explica|entrevista|depoimento|responde)/.test(h)) return 'media'
+  return base
+}
+const sentences = (t: string) => str(t).split(/(?<=[.!?…])\s+/).filter(Boolean)
+/**
+ * Aplica a dose no roteiro: "muita" fica como veio; "media" deixa até 2 frases por momento;
+ * "pouca" fala só na abertura e no fim (1 frase cada) e o meio vira imagem (fala curta passa para a tela).
+ */
+export function dosarFalas(cenas: AvScene[], perfil: PerfilFala): AvScene[] {
+  if (perfil === 'muita') return cenas
+  if (perfil === 'media') return cenas.map((c) => (c.fala ? { ...c, fala: sentences(c.fala).slice(0, 2).join(' ') } : c))
+  const withFala = cenas.map((c, i) => (c.fala ? i : -1)).filter((i) => i >= 0)
+  const keep = new Set([withFala[0], withFala.at(-1)].filter((i): i is number => i !== undefined))
+  return cenas.map((c, i) => {
+    if (!c.fala) return c
+    if (keep.has(i)) return { ...c, fala: sentences(c.fala)[0] ?? c.fala }
+    return { ...c, fala: '', tela: c.tela || (c.fala.split(/\s+/).length <= 7 ? c.fala : '') }
+  })
+}
+const VARIA: Record<'pouca' | 'muita', Partial<Record<AvPapel, string[]>> & { padrao: string[] }> = {
+  pouca: {
+    padrao: ['A origem: de onde veio a ideia, em uma frase', 'O processo: mãos, ingredientes e preparo em close', 'O momento: o corte, a primeira mordida, a reação'],
+    humanizar: ['Quem faz: nome e função na tela, sem roteiro', 'A rotina em 5 cortes, com som ambiente', 'O detalhe que só a equipe vê'],
+    converter: ['O produto em close e como pedir na tela', 'A ocasião: a mesa certa para vir', 'Reação de quem prova e a chamada para reservar'],
+    conectar: ['Pergunta curta na tela: "qual é o seu?"', 'Isso ou aquilo: dois produtos lado a lado', 'Resposta em vídeo a um comentário real'],
+    viralizar: ['Só imagem e som (ASMR), sem fala', 'POV com um áudio em alta', 'O detalhe mais impressionante em câmera lenta'],
+  },
+  muita: {
+    padrao: ['Passo a passo falado em 3 etapas', 'Erro comum × jeito certo', 'A dúvida mais comum respondida em 15 segundos'],
+    converter: ['Para quem é: o problema e a solução em 3 frases', 'Antes e depois, explicado', 'Objeção respondida: "é caro?" ou "demora?"'],
+    humanizar: ['Quem atende se apresenta em 2 frases', 'Bastidor explicado: o que acontece antes de você chegar', 'Pergunta de cliente respondida pela equipe'],
+    conectar: ['"Você sabia?" com a resposta falada', 'Enquete falada: "isso ou aquilo?"', 'Resposta em vídeo a um comentário real'],
+  },
+}
+/** 3 variações de um vídeo pelo perfil de fala e pelo papel (o "meio-termo" usa as ideias do papel). */
+export function variacoesPadrao(perfil: PerfilFala, papel: AvPapel): string[] {
+  if (perfil === 'media') return PAPEL[papel].ideas.map((t) => t.replace(/^Vers[ãa]o\s+/i, '').replace(/^"([^"]+)"/, '$1').replace(/^./, (c) => c.toUpperCase()))
+  const t = VARIA[perfil]
+  return t[papel] ?? t.padrao
 }
 /** Um vídeo da varredura das redes (TikTok, Reels). */
 export interface ScanVideo { link: string; autor?: string; texto?: string; views?: number; audio?: string | null; fonte: string }
@@ -174,12 +257,20 @@ export function applyTakes(videos: AvVideo[], takes: AvTakeText[]): AvVideo[] {
 }
 
 /** Os vídeos do mês, na ordem de data. `scan` = varredura das redes (opcional); `takes` = falas editadas no set (padrão: doc.av_takes do link público). */
-export function avVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan: ScanVideo[] = [], takes?: AvTakeText[]): AvVideo[] {
-  return applyTakes(baseVideos(st, scan), takes ?? (arr((st.doc as Any)?.av_takes) as AvTakeText[]))
+export function avVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan: ScanVideo[] = [], takes?: AvTakeText[], client?: { segment?: string | null; niche?: string | null }): AvVideo[] {
+  return applyTakes(baseVideos(st, scan, client), takes ?? (arr((st.doc as Any)?.av_takes) as AvTakeText[]))
 }
 
-function baseVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan: ScanVideo[]): AvVideo[] {
+/** Perfil de fala do plano: o que o plano escolheu, o cadastro do cliente ou o texto do próprio plano (marca, séries, peças). */
+export function planPerfil(doc: unknown, client?: { segment?: string | null; niche?: string | null }): PerfilFala {
+  const p = ((doc as Any)?.plano ?? {}) as Any
+  const text = [JSON.stringify(p.marca ?? ''), ...arr(p.series).map((x) => `${str(x.nome)} ${str(x.o_que_e)}`), ...arr(p.calendario?.pecas).map((x) => `${str(x.titulo)} ${str(x.ideia)}`)].join(' ')
+  return perfilFala({ override: p.perfil_fala, segment: client?.segment, niche: client?.niche, text })
+}
+
+function baseVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan: ScanVideo[], client?: { segment?: string | null; niche?: string | null }): AvVideo[] {
   const p = ((st.doc as Any)?.plano ?? {}) as Any
+  const base = planPerfil(st.doc, client)
   const pecas = arr(p.calendario?.pecas)
   const caps = arr(p.calendario?.capturas)
   const series = arr(p.series)
@@ -202,9 +293,14 @@ function baseVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan
     const r = (c.roteiro ?? {}) as Any
     const legacy = pc ? null : parseLegacy(a.what)
     const [dur, durNote] = splitDur(str(r.duracao))
-    const cenas: AvScene[] = pc
-      ? arr(r.cenas).map((x, i) => ({ n: i + 1, tempo: '', imagem: pub(x.imagem), fala: pub(x.fala), tela: pub(x.texto_tela) }))
+    // Roteiro: cenas do plano; nos planos novos pode vir só por parágrafo (roteiro_paragrafos: um por momento do vídeo).
+    const paras = arr(c.roteiro_paragrafos ?? r.paragrafos).map((x) => (typeof x === 'string' ? { fala: x } : x))
+    const raw: AvScene[] = pc
+      ? (paras.length ? paras : arr(r.cenas)).map((x, i) => ({ n: i + 1, tempo: '', imagem: pub(x.imagem), fala: pub(x.fala ?? x.texto), tela: pub(x.texto_tela ?? x.tela) }))
       : legacy!.cenas.map((x) => ({ ...x, imagem: pub(x.imagem), fala: pub(x.fala), tela: pub(x.tela) }))
+    const ov = c.perfil_fala ?? pc?.perfil_fala
+    const perfil = doseVideo(ov ? perfilFala({ override: ov }) : base, `${str(r.duracao)} ${pc ? '' : a.what.slice(0, 300)}`)
+    const cenas = dosarFalas(raw, perfil)
     const title = str(pc?.titulo) || a.title.replace(/^P\d+\s*·\s*/, '').replace(/^Gravar (?:o )?v[íi]deo\s+/i, '')
     const objKey = str(pc?.objetivo).toLowerCase()
     const allText = `${title} ${str(pc?.ideia)} ${cenas.map((x) => `${x.imagem} ${x.fala}`).join(' ')}`
@@ -304,22 +400,69 @@ function baseVideos(st: Pick<MonthlyStrategy, 'doc' | 'actions' | 'month'>, scan
     ]).filter((x, i, all) => !all.slice(0, i).some((y) => overlap(keys(x), keys(y)) >= 3)).slice(0, 5)
     const nf = (c.filmagem ?? {}) as Any
     const ne = (c.engajamento ?? {}) as Any
+    const filmagem = {
+      enquadramento: arr(nf.enquadramento).length ? arr(nf.enquadramento).map(pub) : str(nf.enquadramento) ? [pub(nf.enquadramento)] : enq,
+      locacao: pub(nf.locacao) || locacao, luz: pub(nf.luz) || pub(luz), quem: pub(nf.quem_aparece) || quem,
+      levar: arr(nf.levar).length ? arr(nf.levar).map(pub) : levar, takes: arr(nf.takes_extras).length ? arr(nf.takes_extras).map(pub) : takes,
+    }
+
+    // Os 3 jeitos de gravar (destaque) e o cardápio de até 10 ideias, cada uma com 3 variações.
+    const own = arr(c.ideias_video).map((x) => ({ titulo: pub(typeof x === 'string' ? x : x.titulo), variacoes: arr(x?.variacoes).map(pub).filter(Boolean).slice(0, 3) })).filter((x) => x.titulo)
+    const padrao = variacoesPadrao(perfil, papel)
+    const variacoes = uniq([...arr(c.variacoes).map(pub), ...(own[0] && overlap(keys(own[0].titulo), keys(title)) >= 1 ? own[0].variacoes : []), ...padrao]).slice(0, 3)
+    const tit = (t: string) => cap(str(t).replace(/^(?:Vers[ãa]o|Abrir com outro gancho:?)\s*/i, '').replace(/^Outro epis[óo]dio da s[ée]rie:\s*/i, ''))
+    const generic = new Set(ideias.filter((x) => PAPEL[papel].ideas.includes(x) || /^Abrir com outro gancho/i.test(x)).map((x) => words(tit(x), 14).toLowerCase()))
+    const cardapio = uniq([
+      title, ...own.map((x) => x.titulo),
+      ...seriesEps.map(pub),
+      ...bank.filter((b) => overlap(kf(b), k) >= 2).map(pub),
+      ...research.filter((x) => overlap(k, kf(x.text)) >= 2).map((x) => pub(arr(pq.tendencias).find((t) => t.link === x.link)?.ideia ?? '')),
+      ...ideias.map(tit),
+    ].map((t) => words(t, 14)))
+      .filter((x, i, all) => !all.slice(0, i).some((y) => overlap(keys(x), keys(y)) >= 3))
+      .slice(0, 10)
+      .map((t, i): AvIdeia => {
+        const mine = own.find((o) => o.titulo === t)
+        return { titulo: t, variacoes: i === 0 ? variacoes : mine?.variacoes.length === 3 ? mine.variacoes : padrao, ...(generic.has(t.toLowerCase()) ? { padrao: true } : {}) }
+      })
+
+    // Quem fala / quem grava: 3 tópicos curtos cada (do roteiro, da filmagem e da dose de fala).
+    const falas = cenas.filter((x) => x.fala)
+    const who = /(fala|narra|apresent|\boff\b|sem fala|som ambiente|pizzaiolo|dono|dona|equipe|cliente|gar[çc]om|chef)/i.test(durNote) ? durNote : filmagem.quem
+    const falaTopicos = uniq([
+      who ? cap(clause(who)) : '',
+      falas.length ? `Abra com: “${clause(falas[0]!.fala)}”` : /sem fala/i.test(who) ? '' : 'Sem fala: imagem, som e texto curto na tela',
+      !falas.length ? 'Deixe o som do lugar contar a história' : perfil === 'pouca' ? 'Uma ou duas frases, com calma, sem decorar' : perfil === 'muita' ? 'Um passo por vez, olhando para a câmera' : 'Fale como numa conversa, sem decorar',
+      falas.length > 1 ? `Termine com: “${clause(falas.at(-1)!.fala)}”` : cta ? `Termine com: “${clause(cta)}”` : '',
+    ]).slice(0, 3)
+    const gravaTopicos = uniq([
+      ...filmagem.enquadramento.filter((x) => !/^vertical 9:16/i.test(x)).map(clause),
+      clause(filmagem.luz),
+      ...filmagem.takes.map(clause),
+    ]).slice(0, 3)
+    const direcao = pub(c.direcao) || sentences(pub(pc?.ideia).replace(/\b(?:gancho|fecha com|abre com|t[íi]tulo)[^:]{0,12}:\s*(['"“][^'"”]*['"”])\.?\s*/gi, '')).find((x) => !/['"“]/.test(x) && x.split(' ').length >= 4 && x.split(' ').length <= 26) || clause(porque)
 
     return {
+      perfil, variacoes, cardapio, direcao, falaTopicos, gravaTopicos,
       papel, papelPorque: porque, ideias,
       key: a.id, action: a, pieceId: pc ? str(pc.id) : null, title: pub(title) || title, week: a.week, date: str(pc?.data) || a.due_date, objetivo,
       serie: serie ? str(serie.nome) : '', ideia: pub(pc?.ideia), duracao: dur || legacy?.duracao || '', quemFala: pub(durNote),
       cenas, fechamento: pub(r.fechamento), cta,
-      filmagem: {
-        enquadramento: arr(nf.enquadramento).length ? arr(nf.enquadramento).map(pub) : str(nf.enquadramento) ? [pub(nf.enquadramento)] : enq,
-        locacao: pub(nf.locacao) || locacao, luz: pub(nf.luz) || pub(luz), quem: pub(nf.quem_aparece) || quem,
-        levar: arr(nf.levar).length ? arr(nf.levar).map(pub) : levar, takes: arr(nf.takes_extras).length ? arr(nf.takes_extras).map(pub) : takes,
-      },
+      filmagem,
       refs: finalRefs, engajar: { gancho, pergunta: pub(ne.pergunta_comentario) || pergunta, audio: pub(ne.audio) || audioTip }, anuncio,
     }
   })
   return out.sort((a, b) => (a.date ?? '').localeCompare(b.date ?? '') || a.week - b.week)
 }
+
+/** Frase curta para tópico: a primeira oração (sem cortar com "…"). */
+function clause(t: string): string {
+  const x = sentences(t)[0] ?? ''
+  if (x.split(' ').length <= 12) return x.replace(/[.;]$/, '')
+  const c = x.split(/[,;:(]\s*/)[0]!
+  return (c.split(' ').length >= 3 ? c : x).replace(/[.;]$/, '')
+}
+const words = (t: string, n: number) => { const x = str(t); const w = x.split(' '); return w.length <= n ? x : (sentences(x)[0]?.split(' ').length ?? 99) <= n + 4 ? sentences(x)[0]! : x }
 
 /** Ganchos alternativos viram ideia: "Abrir com: “...”". */
 const variantsFor = (gs: string[]) => gs.map((g) => `Abrir com outro gancho: “${g}”`)

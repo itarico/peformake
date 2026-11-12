@@ -10,6 +10,7 @@ import { decideAction, monthlyKey, monthlyShareLink, useClientScan, useMonthly }
 import { avDeckInput } from '@/features/strategy/avDeck'
 import { avVideos, scanVideos } from '@/features/strategy/avPlan'
 import { useAvTakes } from '@/features/strategy/avTakes'
+import { useBrandGuide } from '@/features/clients/brandGuideApi'
 import { monthlyDeckInput } from '@/features/strategy/monthlyDeck'
 import { AREA, monthName, monthlyMessage, type ActionArea, type MonthlyAction } from '@/features/strategy/monthlyRules'
 import { AddDialog, DecidePanel, ReviewDeck, useNarrow, type DecideItem } from './ReviewDeck'
@@ -65,11 +66,14 @@ export function MonthlyReview() {
   const input = useMemo(() => (s ? monthlyDeckInput({ name, strategy: s, clientLogoUrl: logoPublicUrl(client.data?.logo_path ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }) : null), [s, name, client.data?.logo_path])
   // Falas reescritas no set (modo gravação, monthly_av_takes) valem aqui também, como no "Ver roteiro" e no PDF.
   const takes = useAvTakes(isAv ? s?.id : null)
-  const videos = useMemo(() => (s && isAv ? avVideos(s, scanVideos(scan.data ?? []), takes.data ?? []) : []), [s, isAv, scan.data, takes.data])
+  // Plano tático: o guia da marca entra nas páginas de essência, tom e expressão (e o segmento decide a dose de fala).
+  const guide = useBrandGuide(isAv ? clientId : null).data ?? null
+  const videos = useMemo(() => (s && isAv ? avVideos(s, scanVideos(scan.data ?? []), takes.data ?? [], { segment: guide?.client.segment ?? null }) : []), [s, isAv, scan.data, takes.data, guide])
   const all = useMemo(() => {
-    if (isAv) return s ? avDeckInput({ name, month, videos }).slides!(o, { live: true }) : []
+    const doc = (s?.doc ?? null) as { plano?: Record<string, unknown>; titulo?: string; foco?: string } | null
+    if (isAv) return s ? avDeckInput({ name, month, videos, ctx: { brand: guide ? { voice: guide.voice, guide: guide.guide as Record<string, unknown>, client: guide.client } : null, plano: doc?.plano ?? null, titulo: doc?.titulo ?? null, foco: doc?.foco ?? null } }).slides!(o, { live: true }) : []
     return input?.slides ? input.slides(o) : []
-  }, [input, o, isAv, s, name, month, videos])
+  }, [input, o, isAv, s, name, month, videos, guide])
   // Audiovisual: a chave segue o vídeo (id da ação), para o link público (só os aprovados) esconder o slide recusado certo.
   const allKeys = useMemo(() => (isAv ? avSlideKeys(all, videos.map((v) => v.key)) : slideKeys(all)), [all, isAv, videos])
   // Na visão da área: só as semanas que têm ação dessa área (o resto do plano continua).

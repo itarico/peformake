@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { avVideos, parseLegacy, scanVideos, trendingAudio } from './avPlan'
-import { avMessage, buildAvSlides, sceneChunks } from './avDeck'
+import { avVideos, doseVideo, dosarFalas, parseLegacy, perfilFala, scanVideos, trendingAudio } from './avPlan'
+import { avDeckInput, avMessage, buildAvSlides, sceneChunks } from './avDeck'
 import { deckHtml } from './consultDeck'
 import type { MonthlyAction } from './monthlyRules'
 
@@ -73,22 +73,60 @@ describe('audiovisual do plano do mês', () => {
     expect(v!.filmagem.luz).toBe('Luz natural, de dia')
     expect(JSON.stringify({ ...v, action: null })).not.toMatch(/pagamento no mesmo dia|valor pago/)
   })
-  it('PDF Ellcazo: só o que vai ao cliente, sem nada interno', () => {
+  it('plano tático Ellcazo: só o que vai ao cliente, seção sem dado some', () => {
     const vids = avVideos({ month: '2026-12-01', doc: doc as never, actions: [act({}), act({ status: 'recusada', title: 'P09 · outro' })] }, scan)
     expect(vids).toHaveLength(1)
-    const slides = buildAvSlides({ name: 'Fornario', month: '2026-12-01', videos: vids }, 'vertical')
-    expect(slides.map((s) => s.title ?? s.kind)).toEqual(['cover', 'Os vídeos de Dezembro', 'Por que essa Marguerita custa R$ 60', 'Por que essa Marguerita custa R$ 60', 'Como filmar', 'Versão para anúncio', 'cover'])
-    // PDF: a referência vira QR + link; na tela (live), toca ali mesmo.
-    expect(slides[2]!.body).toContain('class="qr"')
-    expect(slides[2]!.body).not.toContain('<iframe')
-    expect(slides[2]!.kicker).toContain('Didático')
-    expect(buildAvSlides({ name: 'Fornario', month: '2026-12-01', videos: vids }, 'vertical', { live: true })[2]!.body).toContain('https://www.tiktok.com/player/v1/7702850285139430663')
-    expect(vids[0]!.ideias.length).toBeGreaterThanOrEqual(3)
-    const html = deckHtml({ name: 'Fornario', doc: {}, brand: 'ellcazo', slides: (o) => buildAvSlides({ name: 'Fornario', month: '2026-12-01', videos: vids }, o) }, 'vertical')
+    const opts = { name: 'Fornario', month: '2026-12-01', videos: vids }
+    // Sem guia da marca: some essência, tom e expressão; ficam linguagem de vídeo, linha editorial, calendário, referência e roteiro.
+    const slides = buildAvSlides(opts, 'paisagem')
+    expect(slides.map((s) => s.kicker ?? s.kind)).toEqual(['cover', '01 · Linguagem de vídeo', '02 · Linha editorial', '03 · Calendário de conteúdo', 'Vídeo 1 · R1', 'Vídeo 1 · Roteiro', 'Próximo passo'])
+    // PDF: a referência vira bloco da rede com QR e link; na tela (live), toca ali mesmo.
+    expect(slides[4]!.body).toContain('class="qr"')
+    expect(slides[4]!.body).not.toContain('<iframe')
+    expect(slides[4]!.body).toContain('3 jeitos de gravar')
+    expect(slides[4]!.details?.items.length).toBeGreaterThanOrEqual(3)
+    expect(buildAvSlides(opts, 'paisagem', { live: true })[4]!.body).toContain('https://www.tiktok.com/player/v1/7702850285139430663')
+    // Com o guia: essência, projeto, tom e expressão entram.
+    const ctx = { brand: { voice: { essencia: 'Massa de 48 horas em uma casa feita para comemorar. Premium [CONFIRMAR com a dona].', proposito: 'Um lugar para comemorar perto de casa.', tom: [{ adjetivo: 'Caloroso', exemplo: 'A mesa já está esperando.' }, { adjetivo: 'Artesanal', exemplo: 'Pressa não entra na receita.' }], evitar: ['Promoção barata'], expressao: { paleta: 'Azul como base.', ambiente: 'Luz quente e fundo escuro.', presenca: 'Um produto por peça.' } }, client: { segment: 'Gastronomia', brand_style: { cores: [{ hex: '#18469C', nome: 'Azul' }] } } }, plano: doc.plano, titulo: 'Dezembro se comemora no Fornario: da audiência à mesa' }
+    const full = buildAvSlides({ ...opts, ctx }, 'paisagem')
+    expect(full.map((s) => s.kicker ?? s.kind).slice(0, 6)).toEqual(['cover', 'Diretriz da marca · Essência', 'Antes de começar', '01 · Tom de voz', '02 · Expressão de marca', '02 · Linguagem de vídeo'])
+    const html = deckHtml(avDeckInput({ ...opts, ctx }), 'paisagem')
     expect(html).toContain('aria-label="Ellcazo"')
     expect(html).toContain('#B5E61D')
-    expect(html).toContain('<b>Ellcazo</b> · Fornario')
+    expect(html).toContain('Fornario • Plano tático de conteúdo')
+    expect(html).toContain('Dezembro se comemora no Fornario')
     expect(html).not.toMatch(/SEGREDO|confirmar|videomaker|\/plano\/|US\$|Peformake<\/b>/i)
+  })
+  it('dose de fala pelo nicho: gastronomia fala pouco, clínica explica, varejo no meio', () => {
+    expect(perfilFala({ segment: 'Gastronomia' })).toBe('pouca')
+    expect(perfilFala({ segment: 'Clínica odontológica' })).toBe('muita')
+    expect(perfilFala({ segment: 'Oficina mecânica' })).toBe('muita')
+    expect(perfilFala({ segment: 'Loja de roupas' })).toBe('media')
+    expect(perfilFala({ text: 'pizza artesanal, pizzaria, forno' })).toBe('pouca')
+    expect(perfilFala({ override: 'muita', segment: 'Gastronomia' })).toBe('muita')
+    expect(doseVideo('pouca', '30 segundos (fala o pizzaiolo, olhando para a câmera)')).toBe('media')
+    expect(doseVideo('media', 'ASMR, sem fala')).toBe('pouca')
+    const cenas = [1, 2, 3, 4].map((n) => ({ n, tempo: '', imagem: `img ${n}`, fala: `Frase ${n} um. Frase ${n} dois. Frase ${n} três.`, tela: n === 2 ? 'Na tela' : '' }))
+    const pouca = dosarFalas(cenas, 'pouca')
+    expect(pouca.map((c) => c.fala)).toEqual(['Frase 1 um.', '', '', 'Frase 4 um.'])
+    expect(pouca[1]!.tela).toBe('Na tela')
+    expect(dosarFalas(cenas, 'media')[0]!.fala).toBe('Frase 1 um. Frase 1 dois.')
+    expect(dosarFalas(cenas, 'muita')).toBe(cenas)
+  })
+  it('cada vídeo traz 3 variações, cardápio de até 10 ideias e quem fala/quem grava em 3 tópicos', () => {
+    const [v] = avVideos({ month: '2026-12-01', doc: doc as never, actions: [act({})] }, scan, [], { segment: 'Gastronomia' })
+    expect(v!.perfil).toBe('media')
+    expect(v!.variacoes).toHaveLength(3)
+    expect(v!.cardapio.length).toBeGreaterThanOrEqual(3)
+    expect(v!.cardapio.length).toBeLessThanOrEqual(10)
+    expect(v!.cardapio.every((c) => c.variacoes.length === 3)).toBe(true)
+    expect(v!.falaTopicos.length).toBeLessThanOrEqual(3)
+    expect(v!.gravaTopicos.length).toBeGreaterThan(0)
+    // Plano novo: ideias_video e roteiro por parágrafo.
+    const doc2 = { plano: { ...doc.plano, perfil_fala: 'muita', calendario: { pecas: [{ ...peca, copy: { ...peca.copy, roteiro: { duracao: '30 segundos' }, roteiro_paragrafos: ['Primeiro parágrafo. Com duas frases.', 'Segundo.'], ideias_video: [{ titulo: 'Outro vídeo', variacoes: ['a', 'b', 'c'] }] } }] } } }
+    const [w] = avVideos({ month: '2026-12-01', doc: doc2 as never, actions: [act({})] })
+    expect(w!.cenas.map((c) => c.fala)).toEqual(['Primeiro parágrafo. Com duas frases.', 'Segundo.'])
+    expect(w!.cardapio.find((c) => c.titulo === 'Outro vídeo')?.variacoes).toEqual(['a', 'b', 'c'])
   })
   it('roteiro longo se divide em slides equilibrados e a mensagem leva o link', () => {
     expect(sceneChunks([1, 2, 3, 4, 5, 6, 7], 4).map((g) => g.length)).toEqual([4, 3])

@@ -98,6 +98,8 @@ export const BRAND_SCHEMA = obj({
   posicionamento_visual: obj({ ideia_central: s, cores: s, tipografia: s, fotografia: s, elementos: s, regras: sa, nao_fazer: sa }),
   regras_copy: obj({ tom: s, usar: sa, evitar: sa, palavras_proibidas: sa }),
   series: arr({ codigo: s, nome: s, formato: s, frequencia: s, objetivo: en(OBJETIVOS), o_que_e: s, episodios: sa }),
+  // Plano tático do audiovisual (Ellcazo). Planos antigos não têm: o sistema deduz (avPlan/avTatico).
+  audiovisual: obj({ perfil_fala: en(['pouca', 'media', 'muita']), papel: s, quem_fala: s, quem_grava: s, linguagem_frase: s, linguagem_video: arr({ regra: s, como: s }) }),
 })
 
 /** Calendário do mês (peças com objetivo e funil), capturas e stories. */
@@ -127,6 +129,11 @@ export const PIECES_SCHEMA = obj({
     metrica: obj({ nome: s, meta: s }),
     anuncio: arr({ gancho: s, texto_principal: s, titulo: s }),
     ideias_rapidas: sa,
+    // Plano tático (só reels/vídeo): 3 jeitos de gravar, cardápio de até 10 ideias, roteiro por parágrafo e direção em 1 linha.
+    variacoes: sa,
+    ideias_video: arr({ titulo: s, variacoes: sa }),
+    roteiro_paragrafos: arr({ fala: s, imagem: s, texto_tela: s }),
+    direcao: s,
     filmagem: obj({ enquadramento: s, luz: s, locacao: s, quem_aparece: s, levar: sa, takes_extras: sa }),
     engajamento: obj({ pergunta_comentario: s, audio: s }),
     observacoes_internas: s,
@@ -210,7 +217,11 @@ export const BRAND_TASK = (mes: string) => `Organize a PESQUISA e a MARCA APLICA
 - datas: as datas do mês que importam (e as que NÃO usar), com o uso.
 - posicionamento_visual: como a marca aparece nas artes e vídeos deste mês (ideia central, uso das cores do guia, tipografia, fotografia, elementos fixos, regras e o que não fazer). Use o guia/voz da marca dos dados.
 - regras_copy: tom, expressões a usar, a evitar e palavras proibidas (da voz da marca e do que a pesquisa mostrou).
-- series: 3 a 8 séries contínuas de conteúdo (nome, formato, frequência, objetivo, o que é, episódios prontos), específicas do cliente e ligadas à tese do mês. Código S1, S2...`
+- series: 3 a 8 séries contínuas de conteúdo (nome, formato, frequência, objetivo, o que é, episódios prontos), específicas do cliente e ligadas à tese do mês. Código S1, S2...
+- audiovisual (plano tático da Ellcazo; se não há audiovisual contratado, tudo "" e []):
+  perfil_fala pelo nicho, guia da marca e diagnóstico: "pouca" (gastronomia, comida, bebida, turismo, evento: menos fala e mais desejo, imagem, som, close e texto curto na tela; fala de 1 a 2 frases ou nenhuma), "muita" (quem ensina ou explica: clínica, saúde, oficina, educação, serviço técnico, jurídico: passo a passo falado), "media" (varejo de produto, moda, beleza, loja: meio-termo).
+  papel: 1 frase com o papel dos vídeos para esta marca ("Mostrar, em cada vídeo, ..."). quem_fala e quem_grava: 1 a 2 frases simples para o cliente ("Você não precisa ser ator...", "Você não precisa de equipamento caro...").
+  linguagem_frase: a frase-regra do vídeo ("Se o vídeo te deixa ansioso, não é <marca>."). linguagem_video: 5 regras de câmera (regra curta + como, 1 linha), coerentes com o perfil de fala.`
 
 export const CALENDAR_TASK = (mes: string, semanas: string, entregas: string) => `Monte o CALENDÁRIO de ${mes} (${semanas}).
 QUANTIDADE (obrigatória): ${entregas}
@@ -238,6 +249,10 @@ Para cada peça (todos os campos; o que não se aplica fica "" ou []):
 - anuncio: se a peça vira anúncio, 2 ou 3 variações para testar (gancho, texto principal, título). Senão [].
 - só reels/vídeo (nas outras peças: [] e ""):
   ideias_rapidas: 3 a 5 variações curtas do mesmo vídeo (outro gancho, outro formato, POV, depoimento, em passos) para a equipe não ficar presa ao roteiro.
+  variacoes: 3 tópicos curtos (até 10 palavras) com 3 jeitos de gravar ESTE vídeo (ex.: pizza → como surgiu a ideia; o processo e os ingredientes; a degustação).
+  ideias_video: até 10 ideias de vídeo na mesma linha (cardápio para a equipe escolher), cada uma com titulo curto e 3 variacoes curtas. Só a ideia, sem roteiro.
+  roteiro_paragrafos: o roteiro breve, 1 parágrafo por momento do vídeo (fala, imagem, texto_tela), na dose do perfil_fala da marca (pouca: fala só na abertura e no fim, o resto é imagem e texto curto; muita: passo a passo falado). Mesmo número de momentos das cenas.
+  direcao: 1 linha de como o vídeo deve parecer (câmera, luz, ritmo).
   filmagem: enquadramento, luz, locacao, quem_aparece, levar (o que levar/separar no dia) e takes_extras (cenas a mais para corte e anúncio).
   engajamento: pergunta_comentario (o que pedir nos comentários) e audio (áudio em alta da <coleta> que combina, ou "som ambiente").
 - observacoes_internas: dúvidas, autorizações, o que confirmar (nunca dentro da copy).`

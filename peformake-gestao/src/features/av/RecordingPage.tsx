@@ -8,7 +8,8 @@ import { EllcazoMark } from '@/components/ui/EllcazoMark'
 import { VoiceNote } from '@/components/ui/VoiceNote'
 import { cn } from '@/lib/cn'
 import { useProduction } from '@/features/production/useProduction'
-import { PAPEL, applyTakes, avVideos, scanVideos, whenLabel, type AvVideo } from '@/features/strategy/avPlan'
+import { PAPEL, PERFIL_FALA, applyTakes, avVideos, scanVideos, whenLabel, type AvVideo } from '@/features/strategy/avPlan'
+import { useBrandGuide } from '@/features/clients/brandGuideApi'
 import { WHOLE, mergeTake, progress, recordingLink, recordingVideos, saveTake, startIndex, takeOf, takesKey, useAvTakes, type AvTake, type TakePatch } from '@/features/strategy/avTakes'
 import { monthlyKey, useClientScan, useMonthly } from '@/features/strategy/monthlyApi'
 import { monthName } from '@/features/strategy/monthlyRules'
@@ -33,13 +34,15 @@ export function RecordingPage() {
   const st = q.data ?? null
   const scanQ = useClientScan(clientId, month, !!st)
   const takesQ = useAvTakes(st?.id)
+  // Segmento do cliente: decide a dose de fala do roteiro (igual na apresentação).
+  const segment = useBrandGuide(clientId).data?.client.segment ?? null
   const takes = useMemo(() => takesQ.data ?? [], [takesQ.data])
   const { clientName } = useProduction()
   const name = clientName(clientId)
   useEffect(() => { document.title = `Gravação · ${name || 'Ellcazo'}` }, [name])
 
   // Base = o plano como veio (para "voltar ao original"); na tela, já com as falas editadas no set.
-  const base = useMemo(() => (st ? recordingVideos(avVideos(st, scanVideos(scanQ.data ?? []), [])) : { list: [], onlyProposals: false }), [st, scanQ.data])
+  const base = useMemo(() => (st ? recordingVideos(avVideos(st, scanVideos(scanQ.data ?? []), [], { segment })) : { list: [], onlyProposals: false }), [st, scanQ.data, segment])
   const list = useMemo(() => applyTakes(base.list, takes), [base.list, takes])
 
   const [idx, setIdx] = useState(0)
@@ -202,17 +205,23 @@ function VideoScreen({ v, n, near, takes, onScene, onEdit }: { v: AvVideo; n: nu
               <p className="text-[22px] font-bold leading-snug md:text-[26px]">“{v.engajar.gancho}”</p>
             </div>
           )}
-          {v.ideias.length > 0 && (
+          {v.variacoes.length > 0 && (
             <div>
-              <p className={cn('mb-1 text-[11.5px] font-bold uppercase tracking-[0.14em]', LIME)}>Ideias rápidas</p>
-              <ul className="flex flex-col gap-1.5 text-[17px] leading-snug">{v.ideias.slice(0, 3).map((t) => <li key={t} className="flex gap-2"><span aria-hidden="true" className="mt-2 size-2 shrink-0 rounded-full bg-[#B5E61D]" />{t}</li>)}</ul>
+              <p className={cn('mb-1 text-[11.5px] font-bold uppercase tracking-[0.14em]', LIME)}>3 jeitos de gravar</p>
+              <ol className="flex flex-col gap-1.5 text-[17px] leading-snug">{v.variacoes.slice(0, 3).map((t, k) => <li key={t} className="flex gap-2"><span aria-hidden="true" className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-[#B5E61D] text-[13px] font-bold text-[#121410]">{k + 1}</span>{t}</li>)}</ol>
+              {v.cardapio.length > 1 && (
+                <details className="mt-2 rounded-2xl bg-white/5 px-4 py-2.5">
+                  <summary className="cursor-pointer text-[14px] font-semibold">Cardápio de ideias ({v.cardapio.length - 1} outras)</summary>
+                  <ul className="mt-2 flex flex-col gap-2 text-[15px]">{v.cardapio.slice(1).map((c) => <li key={c.titulo}><b>{c.titulo}</b><span className="block text-[13px] text-[#AEB7A2]">{c.variacoes.join(' · ')}</span></li>)}</ul>
+                </details>
+              )}
             </div>
           )}
 
           {/* Roteiro de fala cena a cena. */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <p className={cn('flex-1 text-[11.5px] font-bold uppercase tracking-[0.14em]', LIME)}>Roteiro de fala</p>
+              <p className={cn('flex-1 text-[11.5px] font-bold uppercase tracking-[0.14em]', LIME)}>Roteiro por parágrafo <span className="ml-1 rounded-full bg-white/10 px-2 py-0.5 normal-case tracking-normal text-white" title={PERFIL_FALA[v.perfil].regra}>{PERFIL_FALA[v.perfil].label}</span></p>
               {pr.total > 0 && <span data-testid="contador" className="text-[14px] font-semibold">{pr.done} de {pr.total} {pr.total === 1 ? 'cena' : 'cenas'}</span>}
             </div>
             {pr.total > 0 && <div className="h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-[#B5E61D] transition-[width]" style={{ width: `${(pr.done / pr.total) * 100}%` }} /></div>}

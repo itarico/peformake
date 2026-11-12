@@ -355,7 +355,7 @@ const coreText = (job: Job) => {
   const c = coreOf((job.partial.out_base ?? {}) as Row)
   const b = (job.partial.out_base?.brand ?? {}) as Row
   return `NÚCLEO DO MÊS JÁ DECIDIDO (siga):\n${JSON.stringify({ tese: c.tese, mix: c.mix, semanas: c.semanas, semanas_plano: c.semanas_plano, ofertas: c.ofertas_detalhe, meta: c.meta, raciocinio: c.raciocinio })}
-\nMARCA, PESQUISA E SÉRIES (use):\n${JSON.stringify({ posicionamento_visual: b.posicionamento_visual, regras_copy: b.regras_copy, series: b.series, tendencias: b.tendencias, datas: b.datas })}`
+\nMARCA, PESQUISA E SÉRIES (use):\n${JSON.stringify({ posicionamento_visual: b.posicionamento_visual, regras_copy: b.regras_copy, series: b.series, tendencias: b.tendencias, datas: b.datas, audiovisual: b.audiovisual })}`
 }
 
 // ───────── Passo 4: calendário + vendas (em paralelo) ─────────
@@ -421,6 +421,9 @@ async function finish(db: SupabaseClient, job: Job, out: Row) {
     tese: core.tese, mix: core.mix, raciocinio: core.raciocinio, semanas_plano: core.semanas_plano, ofertas: core.ofertas_detalhe,
     pesquisa: { concorrentes: brand.concorrentes, referencias: brand.referencias, mercado: brand.mercado, tendencias: brand.tendencias, datas: brand.datas },
     marca: { visual: brand.posicionamento_visual, copy: brand.regras_copy }, series: brand.series,
+    // Plano tático do audiovisual (Ellcazo): dose de fala, papel, quem fala/quem grava e linguagem de vídeo.
+    ...(brand.audiovisual ? { perfil_fala: brand.audiovisual.perfil_fala || undefined, papel_audiovisual: brand.audiovisual.papel || undefined, quem_fala: brand.audiovisual.quem_fala || undefined,
+      quem_grava: brand.audiovisual.quem_grava || undefined, linguagem_frase: brand.audiovisual.linguagem_frase || undefined, linguagem_video: brand.audiovisual.linguagem_video?.length ? brand.audiovisual.linguagem_video : undefined } : {}),
     calendario: { ritmo: cal.ritmo, pecas, capturas: cal.capturas, stories_rotina: cal.stories_rotina, stories_extras: cal.stories_extras, nao_postar: cal.nao_postar, destaques: cal.destaques, banco_ideias: cal.banco_ideias },
     trafego: traffic, vendas: sales, pedir_cliente: core.pedir_cliente, design,
     diagnostico_mercado: estr.diagnostico_mercado ?? null, plano_acao: estr.plano_acao ?? [], ideias: estr.ideias ?? [],
