@@ -193,3 +193,27 @@ Vira uma nota mensal por cliente e por pessoa, com o detalhe atrás de "Ver deta
 | Tendências | Google Trends / Firecrawl trends | |
 | Análise de público de perfil grande (opcional) | influencers.club analytics (Firecrawl) | caro (~264 créditos por perfil): só em caso especial |
 Arquitetura: a função primeiro COLETA (Firecrawl, internos, Places, IBGE) e guarda os dados brutos; depois o Claude (Fable 5.2) ANALISA e cruza. Coleta barata, análise cara só uma vez.
+
+## 17. Plano mestre: Consultoria completa (pedido do Italo, 12/11)
+A Consultoria é o centro: cada cliente com Consultoria tem, num lugar só, todos os documentos, sempre cruzando dados,
+pesquisando mercado/público/concorrentes/economia/novidades do nicho e terminando em DECISÕES com dono e prazo.
+
+| Peça | Situação | Falta |
+|---|---|---|
+| Diagnóstico de entrada | Motor novo (Fable 5.2, pesquisa em 6 partes, coleta pelos conectores) e slides em teste na Will motos | Publicar, refazer CIA COFFE/Fornario, CNPJ de 6 clientes, criar a tarefa de coleta (conectores) |
+| Aba "Perguntas ao cliente" | Tabela genérica pedida; nada na tela | Aba com a fila; mini formulário (até 4 perguntas) por link público; botão Enviar (confirmação humana); respostas voltam para ficha/diagnóstico |
+| Plano trimestral | Não existe | Gerar a cada trimestre a partir do diagnóstico + resultados (OKR, métrica norte, apostas) |
+| Estratégia mensal (todas as áreas) | Só a de tráfego, por rotina antiga e misturada | Gerar pela API com seções Tráfego/Social/Audiovisual/Vendas; perguntas do mês |
+| Estratégia semanal (prática) | Rotina antiga, só tráfego | O que implementar na semana, por área, a partir do mensal e dos números |
+| Estratégia de tráfego | Rotina antiga | Refazer no molde novo (seção 14) |
+| Estratégia de social media | Pedido avulso em Social | Refazer no molde novo (linha editorial, calendário, pautas) |
+| Relatório de tráfego (semanal e mensal) | Existe em Tráfego → Relatórios | Mostrar dentro da Consultoria do cliente e alimentar as estratégias |
+| Radar do nicho | Não existe | Rotina semanal por nicho: novidades, anúncios de concorrentes, ofertas, tendências; vira "o que mudou" nos documentos |
+| Persona e público real | No diagnóstico (texto) | Persona com dados (conversas, comentários, quem compra nos anúncios, IBGE) e atualização mensal |
+| Decisões e acompanhamento | Seção "Decisões" no diagnóstico novo | Cada decisão vira ação com dono/prazo; sistema marca aplicado ou não; histórico da evolução |
+| Robustez | Retentativas por etapa pedidas | Monitorar falhas, aviso claro, nunca travar em "gerando", testes de ponta a ponta |
+
+Custo (Fable 5.2 é caro): usar Fable em diagnóstico, trimestral e mensal; Sonnet 5.5 no semanal, relatórios e radar.
+Estimativa para ~10 clientes de consultoria: US$ 60 a 120/mês — o teto de US$ 90 pode precisar subir.
+Ordem: 1) Diagnóstico estável no ar; 2) Aba Perguntas + formulário; 3) Hub do cliente juntando relatórios e estratégias
+existentes; 4) Estratégia mensal (todas as áreas) + semanal; 5) Trimestral; 6) Radar do nicho; 7) Decisões e acompanhamento.
