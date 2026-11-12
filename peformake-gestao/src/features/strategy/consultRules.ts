@@ -8,6 +8,7 @@ export interface ConsultRow {
   document: string | null; instagram: string | null; website: string | null
   status: ConsultStatus; stage: string | null; redo_section: ConsultSection | null; error: string | null
   updated_at: string | null; finished_at: string | null; suggestions: number; can_generate: boolean; direction: string | null
+  questions_open?: number; questions_answered?: number; answers_new?: number; answers_last?: string | null
 }
 
 export const CONSULT_PATH = '/estrategia/consultoria'
@@ -63,6 +64,14 @@ export function readyNotices(rows: ConsultRow[] | undefined): { id: string; clie
   return (rows ?? []).filter((r) => r.status === 'pronto').map((r) => ({
     id: `consult:${r.client_id}:${r.finished_at ?? ''}`, clientId: r.client_id,
     title: `Diagnóstico de ${r.name.trim()} pronto para revisar`, to: consultLink(r.client_id),
+  }))
+}
+
+/** Bete e Início: "X respondeu as perguntas" (sem alarde), abrindo a aba Perguntas do cliente. O id muda a cada resposta nova. */
+export function answeredNotices(rows: ConsultRow[] | undefined): { id: string; clientId: string; title: string; to: string }[] {
+  return (rows ?? []).filter((r) => (r.answers_new ?? 0) > 0).map((r) => ({
+    id: `answers:${r.client_id}:${r.answers_last ?? ''}`, clientId: r.client_id,
+    title: `${r.name.trim()} respondeu as perguntas`, to: `${consultLink(r.client_id)}&aba=perguntas`,
   }))
 }
 

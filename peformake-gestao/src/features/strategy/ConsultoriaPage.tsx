@@ -19,6 +19,8 @@ import { printDeck, type DeckInput, type Orientation } from './consultDeck'
 import { Paged, SlideViewer } from './SlideViewer'
 import { CONSULT_PATH, clientMessage, nicheLinks, rowAction, sortRows, statusChip, waLink, type ConsultRow, type ConsultSection } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
+import { QuestionsPanel, SendQuestionsButton } from './QuestionsPanel'
+import { useClientQuestions } from './questionsApi'
 
 // Custo aproximado de refazer cada parte com a IA (Fable 5.2), para a confirmação.
 const REDO_USD: Record<string, string> = { inteligencia: '1,00', do_cliente: '1,00', diagnostico: '1,10', comunicacao: '0,70', plano: '0,60', resumo: '0,50', riscos: '0,50' }
@@ -41,7 +43,7 @@ export function ConsultoriaPage() {
   const [info, setInfo] = useState<ConsultRow | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const qc = useQueryClient()
-  const open = (id: string | null) => setParams((c) => { const n = new URLSearchParams(c); if (id) n.set('cliente', id); else n.delete('cliente'); return n })
+  const open = (id: string | null) => setParams((c) => { const n = new URLSearchParams(c); if (id) n.set('cliente', id); else { n.delete('cliente'); n.delete('aba') } return n })
   const gen = useMutation({
     mutationFn: async (r: ConsultRow) => { if (r.status === 'erro') await requestConsult(r.client_id); else await kickConsult() },
     onMutate: () => setProblem(null),
@@ -67,8 +69,8 @@ export function ConsultoriaPage() {
             const chip = statusChip(r)
             const when = r.status === 'gerando' ? chip.sub : ago(r.finished_at ?? r.updated_at)
             return (
-              <li key={r.client_id} className="flex items-center gap-3 px-3 py-2.5">
-                <button type="button" onClick={() => open(r.client_id)} className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left">
+              <li key={r.client_id} className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2.5">
+                <button type="button" onClick={() => open(r.client_id)} className="flex min-w-[60%] flex-1 cursor-pointer items-center gap-3 text-left">
                   <ClientAvatar name={r.name} url={logoPublicUrl(r.logo_path)} size="sm" />
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
@@ -81,6 +83,7 @@ export function ConsultoriaPage() {
                 {a.kind === 'dados' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setInfo(r)}>{a.label}</Button>}
                 {a.kind === 'abrir' && <Button variant={r.status === 'pronto' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => open(r.client_id)}>{a.label}</Button>}
                 {a.kind === 'gerar' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={gen.isPending} onClick={() => gen.mutate(r)}>{a.label}</Button>}
+                <SendQuestionsButton clientId={r.client_id} name={r.name.trim()} className="min-h-10 shrink-0 px-3 text-[13px]" />
                 <ChevronRight size={16} aria-hidden="true" className="shrink-0 text-muted max-sm:hidden" />
               </li>
             )
@@ -167,6 +170,11 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const approved = !!d && ['aprovado', 'enviado'].includes(d.status)
   const [deckOpen, setDeckOpen] = useState(false)
   const status = (d?.status ?? row?.status ?? 'na_fila') as ConsultRow['status']
+  const [params, setParams] = useSearchParams()
+  const view = params.get('aba') === 'perguntas' ? 'perguntas' : 'diagnostico'
+  const setView = (v: 'diagnostico' | 'perguntas') => setParams((c) => { const n = new URLSearchParams(c); if (v === 'perguntas') n.set('aba', 'perguntas'); else n.delete('aba'); return n }, { replace: true })
+  const questions = useClientQuestions(clientId)
+  const toAsk = (questions.data?.questions ?? []).filter((x) => x.status === 'pendente').length
 
   const redo = (s: ConsultSection) => act.mutate(() => redoSection(clientId, s))
   const [sources, setSources] = useState(false)
@@ -186,12 +194,22 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         </span>
       </div>
 
+      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-2 gap-1 rounded-full bg-raised p-1 sm:max-w-sm">
+        {([['diagnostico', 'Diagnóstico'], ['perguntas', `Perguntas${toAsk ? ` · ${toAsk}` : ''}`]] as const).map(([id, label]) => (
+          <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => setView(id)}
+            className={cn('min-h-10 cursor-pointer rounded-full px-3 text-[13.5px] font-semibold', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
+        ))}
+      </div>
+
+      {view === 'perguntas' && <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />}
+      {view === 'diagnostico' && <>
       <div className="flex flex-wrap gap-2">
         {status === 'falta_dados' && <Button onClick={onInfo}>Informar CNPJ</Button>}
         {status === 'pronto' && <Button disabled={act.isPending} onClick={() => act.mutate(() => approveConsult(clientId))}><Check size={15} aria-hidden="true" /> Aprovar</Button>}
         {ready && <Button variant="secondary" disabled={!approved} title={approved ? undefined : 'Aprove para gerar a apresentação'} onClick={() => setDeckOpen(true)}><Download size={15} aria-hidden="true" /> Baixar apresentação</Button>}
         {ready && <Button variant="secondary" onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente</Button>}
         <Button variant="secondary" onClick={() => setDirOpen(true)}><Lightbulb size={15} aria-hidden="true" /> Direcionamento{row?.direction?.trim() ? ' ✓' : ''}</Button>
+        <SendQuestionsButton clientId={clientId} name={name} />
       </div>
       {ready && !approved && <p className="-mt-1 text-[12px] text-muted">Aprove para gerar a apresentação.</p>}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
@@ -218,6 +236,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         </div>
       )}
       {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}
+      </>}
 
       {dirOpen && <DirectionDialog clientId={clientId} name={name} initial={row?.direction ?? ''} links={nicheLinks(row?.segment, name)} onClose={() => setDirOpen(false)} />}
       {sendOpen && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSendOpen(false)} onSent={refresh} />}

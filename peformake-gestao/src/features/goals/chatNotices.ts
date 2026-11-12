@@ -24,6 +24,7 @@ const KIND: Record<string, { icon: string; label: string; many: (n: number) => s
   crm_sale_pending: { icon: '💰', label: 'Confirmar venda', many: (n) => `${n} vendas para confirmar` },
   crm_deal_won: { icon: '🏆', label: 'Ver venda', many: (n) => `${n} vendas fechadas` },
   crm_complaint: { icon: '⚠️', label: 'Ver reclamação', many: (n) => `${n} reclamações para olhar` },
+  client_answer: { icon: '💬', label: 'Ver respostas', many: (n) => `${n} clientes responderam as perguntas` },
   crm_nps_detractor: { icon: '⚠️', label: 'Ver avaliação', many: (n) => `${n} avaliações baixas` },
   rating_low: { icon: '⚠️', label: 'Ver avaliação', many: (n) => `${n} avaliações baixas` },
   quote_accepted: { icon: '🎉', label: 'Ver orçamento', many: (n) => `${n} orçamentos aceitos` },

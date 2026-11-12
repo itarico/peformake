@@ -201,7 +201,7 @@ pesquisando mercado/público/concorrentes/economia/novidades do nicho e terminan
 | Peça | Situação | Falta |
 |---|---|---|
 | Diagnóstico de entrada | Motor novo (Fable 5.2, pesquisa em 6 partes, coleta pelos conectores) e slides em teste na Will motos | Publicar, refazer CIA COFFE/Fornario, CNPJ de 6 clientes, criar a tarefa de coleta (conectores) |
-| Aba "Perguntas ao cliente" | Tabela genérica pedida; nada na tela | Aba com a fila; mini formulário (até 4 perguntas) por link público; botão Enviar (confirmação humana); respostas voltam para ficha/diagnóstico |
+| Aba "Perguntas ao cliente" | FEITO 12/11 (fase 2): pacote semanal pela IA (client-questions, Sonnet 5.5, segunda 08:17), aba Perguntas no cliente, botão "Enviar perguntas" em cada cliente (WhatsApp da pessoa, com link), conversa /conversa/<código> (client-chat, Haiku 5.5: botões, texto, áudio, foto, documento, NPS) | Transcrição de áudio precisa de TRANSCRIBE_API_KEY; estratégia mensal ainda vai ler client_answers_context(cliente, área) |
 | Plano trimestral | Não existe | Gerar a cada trimestre a partir do diagnóstico + resultados (OKR, métrica norte, apostas) |
 | Estratégia mensal (todas as áreas) | Só a de tráfego, por rotina antiga e misturada | Gerar pela API com seções Tráfego/Social/Audiovisual/Vendas; perguntas do mês |
 | Estratégia semanal (prática) | Rotina antiga, só tráfego | O que implementar na semana, por área, a partir do mensal e dos números |

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { clientMessage, consultLink, nicheLinks, readyNotices, rowAction, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
+import { answeredNotices, clientMessage, consultLink, nicheLinks, readyNotices, rowAction, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
 import { deckHtml, deckSlideCount } from './consultDeck'
 import { effortData, funnelData, positioningData, presenceData, ratingsData } from './consultCharts'
 
@@ -105,5 +105,13 @@ describe('gráficos só com dado de verdade', () => {
   })
   it('esforço por área pesa o tamanho do passo', () => {
     expect(effortData({ fases: [{ passos: [{ area: 'Vendas', esforco: 'alto' }, { area: 'Vendas', esforco: 'baixo' }, { area: 'Tráfego', esforco: 'medio' }] }] })).toEqual([{ label: 'Vendas', value: 4 }, { label: 'Tráfego', value: 2 }])
+  })
+})
+
+describe('answeredNotices', () => {
+  it('avisa quem respondeu e abre a aba Perguntas', () => {
+    const base = { client_id: 'c1', name: ' Will motos ', logo_path: null, segment: null, document: null, instagram: null, website: null, status: 'pronto', stage: null, redo_section: null, error: null, updated_at: null, finished_at: null, suggestions: 0, can_generate: true, direction: null } as const
+    const n = answeredNotices([{ ...base, answers_new: 2, answers_last: '2026-11-12T10:00:00Z' }, { ...base, client_id: 'c2', answers_new: 0 }])
+    expect(n).toEqual([{ id: 'answers:c1:2026-11-12T10:00:00Z', clientId: 'c1', title: 'Will motos respondeu as perguntas', to: '/estrategia/consultoria?cliente=c1&aba=perguntas' }])
   })
 })

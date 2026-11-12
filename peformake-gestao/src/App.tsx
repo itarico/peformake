@@ -45,6 +45,8 @@ const AvQuoteEditor = lazy(() => import('@/features/av/AvQuoteEditor').then((m) 
 const AvPhotosPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) => ({ default: m.AvPhotosPage })))
 const AvGalleryPage = lazy(() => import('@/features/av/AvPhotosPage').then((m) => ({ default: m.AvGalleryPage })))
 const PublicGalleryPage = lazy(() => import('@/features/av/PublicGalleryPage').then((m) => ({ default: m.PublicGalleryPage })))
+const ClientChatPage = lazy(() => import('@/features/strategy/ClientChatPage').then((m) => ({ default: m.ClientChatPage })))
+const PublicDeckPage = lazy(() => import('@/features/strategy/PublicDeckPage').then((m) => ({ default: m.PublicDeckPage })))
 const PayPage = lazy(() => import('@/features/finance/PayPage').then((m) => ({ default: m.PayPage })))
 const PublicQuotePage = lazy(() => import('@/features/av/PublicQuotePage').then((m) => ({ default: m.PublicQuotePage })))
 const AvHome = lazy(() => import('@/features/av/AvHome').then((m) => ({ default: m.AvHome })))
@@ -83,6 +85,8 @@ export function App() {
       <Route path="/portal" element={<PortalPage />} />
       <Route path="/orcamento/:token" element={<PublicQuotePage />} />
       <Route path="/pagar/:token" element={<PayPage />} />
+      <Route path="/apresentacao/:token" element={<PublicDeckPage />} />
+      <Route path="/conversa/:token" element={<ClientChatPage />} />
       <Route path="/galeria/:token" element={<PublicGalleryPage />} />
       <Route path="/captacao/:token" element={<StaffCapturePage />} />
       <Route element={<RequireAuth />}>

@@ -13,7 +13,7 @@ import { noticesFrom, pendingFrom, setupNotice, type Notice } from './chatNotice
 import { bidAlerts, bidKeys } from '@/features/bids/bidsApi'
 import { useSetupPending } from '@/features/clients/useSetupPending'
 import { useConsultList } from '@/features/strategy/consultApi'
-import { readyNotices } from '@/features/strategy/consultRules'
+import { answeredNotices, readyNotices } from '@/features/strategy/consultRules'
 import { BeteToday, useBeteState, visibleItems, type TodayItem } from './BeteToday'
 import { isoWeek } from '@/features/finance/whatsapp/waRules'
 import { brl, cheer, clientCard, formatFor, primaryAction, goalIntro, greeting, pickWith, plain, projection, seeded, steps, suggestion, type Action, type Coach, type GoalFormat } from './coach'
@@ -370,10 +370,12 @@ export function GoalsChat() {
       out.push({ id: `task:${t.id}`, level: late && t.priority === 'high' ? 'urgente' : 'hoje', title: t.title, sub: [t.client, t.due_date ? (late ? `venceu ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : 'vence hoje') : null].filter(Boolean).join(' · ') || undefined, action: { label: 'Abrir', to: `/trafego/tarefas?tarefa=${t.id}` } })
     }
     for (const p of latePieces) out.push({ id: `piece:${p.id}`, level: 'hoje', title: `${p.client}: ${p.title}`, sub: `peça atrasada desde ${p.deadline!.slice(8)}/${p.deadline!.slice(5, 7)}`, action: { label: 'Abrir peça', to: `/conteudo/peca/${p.id}` } })
-    for (const n of noticesFrom(notifs.data ?? [])) out.push({ id: n.id, level: 'info', title: `${n.icon} ${n.title}`, sub: n.lines.slice(0, 2).join(' · ') || undefined, action: n.action ? { label: n.action.label, to: n.action.to } : undefined })
+    // Resposta de cliente já aparece abaixo (uma linha por cliente, com o link da aba Perguntas).
+    for (const n of noticesFrom((notifs.data ?? []).filter((x) => x.kind !== 'client_answer'))) out.push({ id: n.id, level: 'info', title: `${n.icon} ${n.title}`, sub: n.lines.slice(0, 2).join(' · ') || undefined, action: n.action ? { label: n.action.label, to: n.action.to } : undefined })
     const setup = setupNotice(setupPending)
     if (setup) out.push({ id: setup.id, level: 'info', title: setup.title, sub: setup.sub, action: { label: 'Resolver', to: setup.to } })
     for (const c of readyNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `🧭 ${c.title}`, sub: 'Consultoria', action: { label: 'Revisar', to: c.to } })
+    for (const c of answeredNotices(consult.data)) out.push({ id: c.id, level: 'info', title: `💬 ${c.title}`, sub: 'Consultoria · as respostas já entram na estratégia', action: { label: 'Ver respostas', to: c.to } })
     const wa = finWa.data ?? 0
     for (const b of bids.data ?? []) {
       // Fatura vencida do cliente já aparece como "fatura em aberto": não repete.
