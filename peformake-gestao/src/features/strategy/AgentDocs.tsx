@@ -8,11 +8,11 @@ import { supabase } from '@/lib/supabase'
  * Documentos oficiais feitos pela Peformake (agente do Claude) e salvos nos Arquivos do cliente:
  * estratégia, social media, audiovisual e relatórios. Decisão do Italo (12/11/2026): esses PDFs são a versão que vai ao cliente.
  */
-export type Folder = 'estrategia' | 'social' | 'audiovisual' | 'relatorios'
+export type Folder = 'estrategia' | 'trafego' | 'social' | 'audiovisual' | 'relatorios'
 export interface Doc { id: string; folder: Folder; name: string; bucket: string; path: string; created_at: string }
 
-const LABEL: Record<Folder, string> = { estrategia: 'Estratégia', social: 'Social media', audiovisual: 'Audiovisual', relatorios: 'Relatório' }
-const ORDER: Folder[] = ['estrategia', 'social', 'audiovisual', 'relatorios']
+const LABEL: Record<Folder, string> = { estrategia: 'Estratégia', trafego: 'Tráfego', social: 'Social media', audiovisual: 'Audiovisual', relatorios: 'Relatório' }
+const ORDER: Folder[] = ['estrategia', 'trafego', 'social', 'audiovisual', 'relatorios']
 
 async function signed(d: Doc, seconds: number, download = false): Promise<string> {
   const { data, error } = await supabase.storage.from(d.bucket).createSignedUrl(d.path, seconds, download ? { download: d.name } : undefined)

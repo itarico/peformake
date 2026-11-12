@@ -122,6 +122,13 @@ async function openPublicDeck(clientId: string): Promise<void> {
   } catch (e) { w?.close(); throw e }
 }
 
+/** Período escrito no nome do PDF ("Estratégia · 12-11 a 31-12-2026.pdf" → "12/11 a 31/12/2026"). */
+const periodOf = (p: Partial<Record<string, { name: string }>>) => {
+  const n = (p.estrategia ?? p.social ?? p.audiovisual ?? p.trafego)?.name ?? ''
+  const m = n.split('·')[1]?.replace(/\.pdf$/i, '').trim() ?? ''
+  return m.replace(/(\d{2})-(\d{2})/g, '$1/$2') || 'do mês'
+}
+
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
 
 const DOT: Record<PartState, string> = { pronto: 'bg-ok', revisar: 'bg-accent', falta: 'bg-warn', andando: 'bg-muted pf-pulse', fora: 'bg-line' }
@@ -253,6 +260,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   // Documentos oficiais feitos pela Peformake (PDF na pasta do cliente): substituem os cartões gerados pelo sistema.
   const agentDocs = useAgentDocs(clientId)
   const pdf = useMemo(() => latestDocs(agentDocs.data ?? []), [agentDocs.data])
+  const hasPdf = !!(pdf.estrategia || pdf.trafego || pdf.social || pdf.audiovisual)
   const st = plan.data
   const planReady = !!st && ['pronto', 'aprovado'].includes(st.status) && !!st.doc?.titulo
   const questions = useClientQuestions(clientId)
@@ -337,8 +345,23 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       </div>
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
-      {view === 'relatorios' && <><AgentDocs clientId={clientId} name={name} only="relatorios" /><ReportCards clientId={clientId} name={name} /></>}
-      {view === 'planejamento' && <>
+      {view === 'relatorios' && <><AgentDocs clientId={clientId} name={name} only="relatorios" />{!pdf.relatorios && <ReportCards clientId={clientId} name={name} />}</>}
+      {view === 'planejamento' && hasPdf && <>
+        {/* Com os documentos da Peformake (PDF): uma seção só, um cartão por documento, na ordem de uso. */}
+        <CardSection title={`Planejamento · ${periodOf(pdf)}`}>
+          <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
+            loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
+            onInfo={onInfo} onGenerate={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}
+            onApprove={() => act.mutate(() => approveConsult(clientId))}
+            onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
+            onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
+          {pdf.estrategia && <PdfCard id="estrategia" title="Estratégia do mês" doc={pdf.estrategia} name={name} />}
+          {has.trafego && (pdf.trafego || pdf.estrategia) && <PdfCard id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
+          {has.social && pdf.social && <PdfCard id="social" title="Social media + Design" doc={pdf.social} name={name} />}
+          {has.av && pdf.audiovisual && <PdfCard id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
+        </CardSection>
+      </>}
+      {view === 'planejamento' && !hasPdf && <>
         <CardSection title="Diagnóstico e estratégia">
           <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
@@ -352,16 +375,16 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         </CardSection>
         {(has.trafego || has.social || has.av) && (
           <CardSection title="Por área">
-            {has.trafego && pdf.estrategia && <PdfCard id="trafego" title="Tráfego" doc={pdf.relatorios ?? pdf.estrategia} name={name} note={pdf.relatorios ? 'Relatório mais recente · a estratégia de tráfego está na Estratégia do mês' : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
-            {has.trafego && !pdf.estrategia && <AreaCard area="trafego" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('trafego')} onDetails={() => go({ ver: 'plano', secao: 'trafego' })} />}
+            {has.trafego && (pdf.trafego || pdf.estrategia) && <PdfCard id="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} name={name} note={pdf.trafego ? undefined : 'A estratégia de tráfego está dentro da Estratégia do mês'} />}
+            {has.trafego && !pdf.trafego && !pdf.estrategia && <AreaCard area="trafego" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('trafego')} onDetails={() => go({ ver: 'plano', secao: 'trafego' })} />}
             {has.social && pdf.social && <PdfCard id="social" title="Social media + Design" doc={pdf.social} name={name} />}
             {has.social && !pdf.social && <AreaCard area="social" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('social')} onDetails={() => go({ ver: 'plano', secao: 'social' })} />}
             {has.av && pdf.audiovisual && <PdfCard id="audiovisual" title="Audiovisual" doc={pdf.audiovisual} name={name} brand="ellcazo" />}
             {has.av && !pdf.audiovisual && <AvCard clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={(n) => openSend('av', n)} onDetails={() => go({ ver: 'plano', secao: 'audiovisual' })} />}
           </CardSection>
         )}
-        <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />
       </>}
+      {view === 'planejamento' && <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
       {dialogs}
     </section>
   )
