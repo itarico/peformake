@@ -37,3 +37,12 @@ Só 4 colunas, nesta ordem:
 3. **Produção**: com o design (a fazer, fazendo e ajuste pedido juntos, com selo de qual).
 4. **Aprovado**: com o cliente e aprovadas (selo "com o cliente" / "aprovada"); publicadas somem depois de alguns dias.
 No celular, uma coluna por vez com abas no topo (sem rolar para o lado).
+
+## 7. Piloto automático do design ("Pedidos de arte"), decisão de 12/11
+Mesmo processo de sempre, só que a IA faz quando ninguém pega:
+1. Pedido de arte (cliente no WhatsApp/portal, tarefa ou estratégia) → a IA preenche o briefing; se o cliente mandou foto no WhatsApp, a foto vai para o briefing; se não, busca no Drive do cliente.
+2. **Piloto automático** (liga/desliga + tempo configurável, ex.: 5 ou 10 min): se nenhum designer tocar em "Começar" nesse tempo, o card avança sozinho para **Em produção** com o selo **"Feito por IA"**.
+3. A IA escolhe o **melhor template pronto** (biblioteca de templates da Peformake, com cores, fontes e logo do cliente) e encaixa texto e foto. Sem template que sirva, monta por conta própria no mesmo padrão visual.
+4. **Controle de qualidade antes de enviar:** a IA olha a arte pronta (texto cortado, contraste, foto ruim, erro de português, logo). Reprovou → volta para o designer com o motivo, não vai ao cliente.
+5. Aprovada no controle → sobe a arte, avança para **Com o cliente** e dispara o WhatsApp para o cliente **com o link para ver e aprovar** (hoje o aviso sai sem link: corrigir), avisando também a social media (e o grupo, se for o caso).
+6. Ajuste pedido pelo cliente volta para o designer humano.
