@@ -43,6 +43,14 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-13 · Skill "Estudo do mês" e padrão de tráfego (nuvem)
+- Nova skill `.claude/skills/peformake-estudo-mes/` (SKILL.md + trafego-oferta.md): 1) diagnóstico e estudo, 2) estratégia mensal, 3) peças (social+design, audiovisual, tráfego, venda), 4) aprender com o resultado. Portões de qualidade; referências de arte e criativos com imagem e link; design dos PDFs mantido. ROTINA-ESTRATEGIA-MENSAL.md aponta para ela.
+- Regra: o audiovisual nasce da estratégia (estudo em 6 blocos + storyboard). Audiovisual da Peformake refeito assim (28 pág.).
+- Gerador dos PDFs guardado em peformake-gestao/tools/estudo-mes/ (sem imagens de clientes).
+- Estudo de vídeos do Italo (catálogo E1–E40, técnicas por perfil, MODELOS, skills roteiro-narrativa/edicao-cliente/motion-pro) está SÓ no PC (C:\Users\intal\peformake\video-tools\estilos). Italo vai enviar ao GitHub em 14/11; depois juntar à skill (audiovisual).
+- EM ANDAMENTO: estudo completo refeito pela skill para Brio Burguer (sem tráfego; página "Quando ligar o tráfego") e Peformake (tráfego no padrão novo + plano de vendas).
+- Estudo guardado: docs/ESTUDO-DOC-INTELIGENTE.md (4 perguntas para o Italo). Rotinas "Coleta das redes" e "Estratégia do mês seguinte" sem conectores: Italo precisa adicionar.
+
 ## 2026-11-13 · Raph Modas (audiovisual) e a própria Peformake (estudo completo) feitos pelo agente (nuvem)
 - Raph Modas = brechó chique (moda sustentável, trends). Planejamento de audiovisual 12/11 a 31/12 (16 pág., PDF + HTML) na pasta da cliente. Falta: Instagram, bairro, preços, se a Rejane é a dona; Rejane perguntou em 11/11 no grupo "Gestão Raph brechó" se a visita era filmagem ou sistema (sem resposta).
 - Peformake como cliente (c769a0b2…): cadastro preenchido com os dados da empresa, serviços internos Social, Design, Tráfego e Audiovisual (sem Consultoria para não disparar o diagnóstico pela API) e equipe ligada. 4 documentos (estratégia, social, audiovisual, tráfego; PDF + HTML) com a equipe como conteúdo e cases. Tese "O case é o anúncio"; oferta de entrada Raio-X grátis; "Comece 2027" até 19/12. Pendente: autorização dos clientes nos cases, conta de anúncio própria.
