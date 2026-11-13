@@ -100,7 +100,7 @@ Skills: `anthropic-skills:copy-lp-vendas` (quando houver página), `anthropic-sk
 - Respostas para as 5 objeções mais comuns (vindas do CRM/conversas).
 - Mensagens prontas de recompra/reativação e de indicação.
 
-**Portão 3 (conferência antes de subir)**
+**Portão 3 (conferência antes de subir)** — passe também a rubrica `rubrica.md` (nesta pasta): média ≥ 4, nenhum item < 3; se não passar, refaça antes de subir.
 - [ ] Cada peça aponta para tese/oferta, papel e meta.
 - [ ] Toda referência é real, com link e views.
 - [ ] Nenhum valor de contrato; case só com [autorização do cliente].
