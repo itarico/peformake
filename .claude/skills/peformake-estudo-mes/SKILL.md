@@ -28,7 +28,7 @@ Objetivo: saber o que é verdade hoje, com números. Saída: o **Dossiê do estu
 
 ### 1.1 O que o sistema já sabe (Supabase `wkkzcjnxyylrqoolmmhi`, só leitura)
 Ordem de prioridade (o de cima manda no de baixo):
-1. `client_meeting_notes` com `done_at` nulo (pedidos do cliente na reunião). Marcar `done_at` depois de aplicar.
+1. `client_meeting_notes` com `done_at` nulo: o que o Italo anota na faixa **Reunião** (Estratégia → Consultoria → cliente → "Anotar") durante a reunião com o cliente. Marcar `done_at` depois de aplicar no documento.
 2. `client_directions` (direcionamento da equipe por área).
 3. `clients`, `client_services`, `client_team`, `company_profiles` (Peformake/Ellcazo).
 4. `consult_docs` (diagnóstico anterior), `client_brand_guides`, `client_brand_voice`, `client_questions` respondidas.
@@ -80,6 +80,7 @@ Cada peça declara: **qual oferta ou tese serve · papel no funil (atrair, prova
 ### 3.1 Social media + Design (pasta `social`, identidade Peformake)
 Skills: `anthropic-skills:performake-content-agent`, `anthropic-skills:mdd`.
 - Pilares, ritmo e calendário do mês.
+- **Referências de arte (design):** para cada peça, 1 a 3 artes de referência com a **imagem (miniatura embutida) e o link** (Instagram, Pinterest, Behance, Biblioteca de Anúncios), e o que pegar de cada uma (composição, tipografia, cor, foto). Nunca só o nome.
 - **10 postagens**, uma por página: referência real (miniatura, @, link, views) + formato (post, carrossel com o texto de cada tela, story, capa de reels), objetivo, ligação com a estratégia, **copy da arte** (título + texto curto), **legenda pronta** (CTA + 3 a 5 hashtags locais), direção de arte em 1 linha, data.
 
 ### 3.2 Audiovisual (pasta `audiovisual`, identidade Ellcazo: verde-limão/branco, preto só nos detalhes, nunca fundo preto)
@@ -89,6 +90,7 @@ Skills: `anthropic-skills:redator-audiovisual-agencia`, `anthropic-skills:mdd`. 
 - **Até 10 vídeos**, uma página cada: prévia real + link + por que funciona; estilo do catálogo; papel, oferta, meta; **storytelling** (gancho, conflito, virada, CTA); **storyboard** cena a cena (o que aparece, enquadramento, fala, texto na tela, duração); quem fala, quem grava, diária, orgânico/anúncio; 3 ideias como variações do mesmo objetivo. Gastronomia: pouca fala, muito desejo; loja/serviço: mais fala e demonstração.
 
 ### 3.3 Tráfego (pasta `trafego`, só se o cliente tem tráfego)
+- **Criativos com referência:** cada criativo com 1 a 2 anúncios de referência da Biblioteca de Anúncios (imagem/miniatura embutida, link, há quanto tempo está no ar) e o que adaptar (gancho, oferta, formato).
 - Campanhas, públicos, criativos ligados às peças e vídeos do mês, verba em 3 opções, testes A/B, metas, calendário de subida/pausa. Meta Ads só leitura.
 
 ### 3.4 Venda (dentro da Estratégia, seção "Venda"; vira documento próprio quando o cliente tiver o serviço comercial)
@@ -107,6 +109,7 @@ Skills: `anthropic-skills:copy-lp-vendas` (quando houver página), `anthropic-sk
 ---
 
 ## Saída: documento inteligente
+- **Design dos PDFs: manter o padrão atual aprovado** (decisão do Italo, 13/11/2026). Peformake (ciano #1FC8DB, petróleo #056F84, azul-escuro #0B3C44, branco) em estratégia, social, tráfego e relatório; Ellcazo (logo, verde-limão e preto só nos detalhes) só no audiovisual. Modelo de referência: os documentos já entregues (Fornario, VOVINA, Brio, SN, Peformake). Não redesenhar.
 - PDF **e** HTML com o mesmo nome (o HTML vira a Apresentação no sistema; uma página por `<section class="pg ...">`, imagens embutidas).
 - Dados estruturados por página para "Virar tarefa" preencher roteiro e briefing: ver `peformake-gestao/docs/ESTUDO-DOC-INTELIGENTE.md` (estudo; aplicar quando aprovado).
 - Nomes: "Estratégia · <período>", "Planejamento de social media · <período>", "Planejamento de audiovisual · <período>", "Estratégia de tráfego · <período>", "Relatório de tráfego · <período>".
