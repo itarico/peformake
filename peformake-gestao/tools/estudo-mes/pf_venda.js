@@ -9,7 +9,7 @@ const msg = (who, t, me) => `<div class="xmsg ${me ? 'me' : ''}"><small>${who}</
 function entradaPage(d) {
   const L = [
     ['Raio-X (anúncio e conteúdo)', 'Quero o Raio-X do meu marketing', 'Thyfany', '1 h'],
-    ['Black Friday (27 a 30/11)', 'RAIO-X', 'Thyfany; Ingrid atualiza as vagas', '30 min'],
+    ['Black Friday (27 a 30/11)', 'RAIO-X', 'Thyfany; Ingrid atualiza as vagas', 'resposta em 30 min'],
     ['Case (remarketing)', 'Quero ver como foi o case', 'Thyfany', '1 h'],
     ['Comece 2027', '2027', 'Italo', '1 h'],
     ['Diária Ellcazo', 'Quero uma diária de gravação', 'Ellcazo (Aleffer) com cópia para a Thyfany', '2 h com datas'],
@@ -102,7 +102,7 @@ function followPage(d) {
     <table class="xtab"><thead><tr><th>Quando</th><th>O quê</th><th>Mensagem pronta (Italo)</th></tr></thead><tbody>
     ${F.map((r) => `<tr><td style="width:120px"><b>${r[0]}</b></td><td style="width:150px">${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table>
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="xbox xdk"><h3>Regras</h3>${ul(['No máximo 4 mensagens depois do Raio-X', 'Cada mensagem leva algo novo: texto, case ou prazo real', 'Respondeu “não agora”: agradece, registra o motivo e volta em janeiro', 'Tudo enviado por uma pessoa; nenhuma automação manda mensagem a lead'])}</div>
+      <div class="xbox xdk"><h3>Regras</h3>${ul(['No máximo 5 mensagens depois do Raio-X (D+0 a 18/12); D+30 é só registro', 'Cada mensagem leva algo novo: texto, case ou prazo real', 'Respondeu “não agora”: agradece, registra o motivo e volta em janeiro', 'Tudo enviado por uma pessoa; nenhuma automação manda mensagem a lead'])}</div>
       <div class="xbox"><h3>Registro</h3><p>Cada mensagem vira um evento no Comercial (crm_events). Segunda: quem está parado há mais de 5 dias aparece na lista do Italo.</p></div>
     </div>
   </div>`, { cls: 'dense big' })
@@ -116,7 +116,7 @@ function basePage(d) {
       ${msg('Italo', '[Nome], fiz um vídeo de 30 s mostrando o que a gente fez juntos no [negócio]. Você conhece um dono de negócio que trabalha muito e não vê o marketing virar venda? Se puder, encaminha para ele. Se ele fechar, [benefício a decidir] é seu.', 1)}
       <p style="margin-top:6px">Só depois de um mês bom (relatório positivo). Origem “Indicação”.</p></div>
     <div class="xbox"><span class="xl">Da gravação ao cliente · 13 só com audiovisual · até 11/12</span>
-      ${msg('Italo', '[Nome], aquele vídeo que a Ellcazo gravou de vocês tem cara de anúncio. Na VOVINA, um vídeo assim trouxe 893 cliques no delivery a R$ 0,13. Quer que eu te mostre quanto o seu renderia, em janeiro?', 1)}
+      ${msg('Italo', '[Nome], aquele vídeo que a Ellcazo gravou de vocês tem cara de anúncio. Na VOVINA, um vídeo assim trouxe [x] pedidos no delivery próprio (893 cliques a R$ 0,13) [autorização do cliente]. Quer que eu te mostre quanto o seu renderia, em janeiro?', 1)}
       <p style="margin-top:6px">Junto vai o próprio vídeo do cliente. Meta: 3 upgrades.</p></div>
     <div class="xbox"><span class="xl">Volta de ex-clientes · 5 saíram por fim de contrato</span>
       ${msg('Italo', '[Nome], tô montando os planos de janeiro e lembrei do [negócio]. Tenho 3 horários de Raio-X de graça esta semana; quer ver como está seu marketing hoje?', 1)}
@@ -140,7 +140,7 @@ function diariaPage(d) {
 }
 
 const v = Doc(BR, 'Plano de vendas')
-cover(v, BR, 'Plano de vendas · depois do clique', 'Vendas de 12/11 a 31/12', 'A porta, o roteiro do WhatsApp, o Raio-X em 30 minutos, a proposta, as 5 objeções reais, o follow-up e a venda para a base.')
+cover(v, BR, 'Plano de vendas · depois do clique', 'Vendas de 12/11 a 31/12', 'A porta, o roteiro do WhatsApp, o Raio-X com câmera (1 hora no negócio), a proposta, as 5 objeções reais, o follow-up e a venda para a base.')
 entradaPage(v); zapPage(v); raioxPage(v); propostaPage(v); objPage(v); followPage(v); basePage(v); diariaPage(v)
 fs.writeFileSync(path.join(OUT, 'plano-vendas.html'), fixCover(html(`Plano de vendas ${BR}`, v.pages)).replace('</head>', CSS + '</head>'))
 console.log('vendas', v.pages.length)

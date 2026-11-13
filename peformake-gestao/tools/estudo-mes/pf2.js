@@ -232,7 +232,7 @@ function vendaResumo(d) {
   <div class="xg3" style="margin-top:12px">
     <div class="xbox"><h3>Regra de ouro do atendimento</h3><p>Resposta em <b>até 1 hora</b> (8h às 19h). Lead sem resposta é verba jogada fora.</p></div>
     <div class="xbox"><h3>Follow-up</h3><p>Dia 1, 3 e 7 depois do Raio-X; depois só com novidade (case novo). Nunca “e aí, pensou?”.</p></div>
-    <div class="xbox xdk"><h3>Documento completo</h3><p>“Plano de vendas”, na mesma pasta: roteiro do WhatsApp, Raio-X em 30 min, proposta, objeções, follow-up e indicação.</p></div>
+    <div class="xbox xdk"><h3>Documento completo</h3><p>“Plano de vendas”, na mesma pasta: roteiro do WhatsApp, Raio-X com câmera (1 h), proposta, objeções, follow-up e indicação.</p></div>
   </div>`, { cls: 'dense big' })
 }
 

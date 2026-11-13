@@ -21,15 +21,15 @@ function startPage(d) {
 function tetoPage(d) {
   d.page('pf', 'Tráfego · os números que decidem', 'Quanto pode custar cada resultado sem dar prejuízo', `
   <table class="xtab"><thead><tr><th>Resultado</th><th>A conta</th><th>Teto</th><th>Meta</th></tr></thead><tbody>
-    <tr class="hi"><td><b>Conversa (Raio-X, frio)</b></td><td>[ticket médio da base] × margem <b>[40%]</b> × conversa→contrato <b>[7%]</b> (5 de 70)</td><td><b>R$ 35</b><small>paga no 1º mês</small></td><td>até R$ 35</td></tr>
-    <tr><td><b>Raio-X com câmera feito</b></td><td>[ticket] × [40%] × Raio-X→contrato <b>[25%]</b> (5 de 20)</td><td><b>R$ 115</b></td><td>até R$ 70</td></tr>
-    <tr><td><b>Conversa (remarketing, morno/quente)</b></td><td>[ticket] × [40%] × fechamento de quem já viu o case <b>[15%]</b></td><td><b>R$ 69</b></td><td>até R$ 30</td></tr>
+    <tr class="hi"><td><b>Conversa (Raio-X, frio)</b></td><td>[T] × margem <b>[40%]</b> × conversa→contrato <b>[7,5%]</b> (meta: 5 de 70)</td><td><b>R$ 35</b><small>paga no 1º mês</small></td><td>até R$ 35</td></tr>
+    <tr><td><b>Raio-X com câmera feito</b></td><td>[T] × [40%] × Raio-X→contrato <b>[25%]</b> (5 de 20)</td><td><b>R$ 115</b></td><td>até R$ 70</td></tr>
+    <tr><td><b>Conversa (remarketing, morno/quente)</b></td><td>[T] × [40%] × fechamento de quem já viu o case <b>[15%]</b></td><td><b>R$ 69</b></td><td>até R$ 30</td></tr>
     <tr><td><b>Conversa (Diária Ellcazo)</b></td><td>[valor da diária] × [margem] × fechamento <b>[25%]</b> (2 de 8)</td><td><b>[R$ 30]</b></td><td>até R$ 28</td></tr>
   </tbody></table>
   <div class="xg3" style="margin-top:14px;grid-template-columns:repeat(4,1fr)">
     ${[['Gancho (3 s)', '≥ 25%', 'das impressões assistem 3 s'], ['CTR no link', '≥ 1%', 'clique no botão do WhatsApp'], ['Resposta', '≤ 1 hora', 'Thyfany, das 8h às 19h'], ['Frequência', '≤ 3', 'acima disso, troca o criativo']].map((k, i) => `<div class="xbox ${i === 0 ? 'xdk' : ''}"><span class="xl" ${i === 0 ? 'style="color:var(--cy)"' : ''}>${k[0]}</span><b style="font:800 26px 'Inter Display';color:${i === 0 ? 'var(--cy)' : 'var(--pe)'}">${k[1]}</b><p>${k[2]}</p></div>`).join('')}
   </div>
-  <p class="cap" style="margin-top:8px">[Colchetes] = hipótese até termos dado: margem e taxas de fechamento são revistas em 30/11 com os números reais do Comercial. O ticket da base não aparece aqui: a conta completa fica na versão admin.</p>`, { cls: 'dense big' })
+  <p class="cap" style="margin-top:8px">[Colchetes] = hipótese até termos dado: margem e taxas de fechamento são revistas em 30/11 com os números reais do Comercial. As três contas usam o mesmo ticket [T], o ticket médio mensal da base (valor só na versão admin).</p>`, { cls: 'dense big' })
 }
 
 function estruturaPage(d) {
@@ -95,8 +95,8 @@ function verbaPage(d) {
 
 function regrasPage(d) {
   d.page('pf', 'Tráfego · testes e regras', 'Um teste por vez; pausa e escala com número, não com sensação', `
-  <table class="xtab"><thead><tr><th>Teste A/B</th><th>A × B</th><th>Quando</th><th>Quem ganha</th></tr></thead><tbody>
-  ${[['Rosto ou número?', 'P3 Italo falando × P4 case com o número na tela', '23 a 29/11', 'Custo por Raio-X 20% menor com 15+ conversas em cada'], ['Qual mensagem pronta?', '“Quero o Raio-X do meu marketing” × “Quero ver como foi o case”', '01 a 07/12', 'A que vira mais Raio-X (não a que gera mais conversa)'], ['Qual público?', 'Aberto (a Meta escolhe) × interesses de pequenas empresas', '08 a 14/12', 'Custo por Raio-X; o vencedor leva a verba de janeiro']].map((r) => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table>
+  <table class="xtab"><thead><tr><th>Teste A/B</th><th>A × B</th><th>Quando</th><th>Quem ganha</th><th>Sem vencedor</th></tr></thead><tbody>
+  ${[['Rosto ou número?', 'P3 Italo falando × P4 case com o número na tela', '23 a 29/11', 'Custo por Raio-X 20% menor, com pelo menos 8 conversas por braço', 'Fica o P4 (tem prova); o P3 vira orgânico'], ['Qual mensagem pronta?', '“Quero o Raio-X do meu marketing” × “Quero ver como foi o case”', '01 a 07/12', 'A que vira mais Raio-X, com pelo menos 8 conversas por braço', 'Diferença menor que 20% ou menos de 8 conversas: fica “Quero o Raio-X” e o teste não se repete'], ['Qual público?', 'Aberto (a Meta escolhe) × interesses de pequenas empresas', '08 a 14/12', 'Custo por Raio-X, com pelo menos 8 conversas por braço', 'Fica o aberto (menos manutenção) e janeiro testa de novo']].map((r) => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join('')}</tbody></table>
   <div class="xg3" style="margin-top:14px">
     <div class="xbox xdk"><h3>Pausar</h3>${ul(['Criativo que gastou <b>2× o teto</b> (R$ 70 no C1) sem conversa', 'Custo acima do teto por 3 dias seguidos', 'Fim da oferta: C2 em 19/12 · C3 em 18/12'])}</div>
     <div class="xbox"><h3>Escalar</h3>${ul(['Vencedor com custo ≤ R$ 25 e Raio-X marcado: <b>+20% a cada 48 h</b>', 'Nunca mais de 2 aumentos seguidos sem olhar o Comercial', 'Nos picos (BF, 15–19/12) a verba já vem programada'])}</div>

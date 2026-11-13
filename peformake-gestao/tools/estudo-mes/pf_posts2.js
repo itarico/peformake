@@ -5,7 +5,7 @@ const YTW = (id) => 'https://www.youtube.com/watch?v=' + id
 const AD = 'https://www.facebook.com/ads/library/?id='
 const R = (file, at, url, net, views, what, why) => ({ file: 'pf_thumbs/' + file + '.jpg', at, url, net, views, what, why })
 const WPP = '📲 Raio-X grátis no WhatsApp: (81) 98567-2212 (link na bio)'
-const TAG = '#marketingrecife #recife #pequenosnegocios #empreendedorismorecife #peformake'
+const TAG = '#marketingrecife #pequenosnegocios #peformake'
 
 module.exports = [
   { date: 'Ter 17/11', fmt: 'Carrossel · 8 telas', obj: 'Relação', title: 'Quem faz o quê na Peformake', est: 'A equipe é o conteúdo: cada pessoa com foto, nome e o que o cliente ganha com o trabalho dela.',
@@ -33,7 +33,7 @@ module.exports = [
     art: 'Capa azul-escuro com “192” enorme em ciano e “conversas no WhatsApp” embaixo; foto real da ótica [com autorização]; tela 5 com print do gráfico do sistema (sem valores de contrato).' },
 
   { date: 'Seg 23/11', fmt: 'Carrossel · 5 telas', obj: 'Educação', title: 'Post que vende × post que enfeita', est: 'Educação para o dono: a diferença entre conteúdo bonito e conteúdo que traz cliente.',
-    ref: R('ad_dezemhum_1', 'Dezemhum Marketing Gastronômico', AD + '4167174020249377', 'Biblioteca de Anúncios', 'anúncio ativo em 12/11/2026', '“Seu marketing está trazendo clientes ou apenas fazendo posts?”', 'a pergunta direta para o dono; aqui ela vira um teste de 4 itens que ele faz no próprio perfil.'),
+    ref: R('ad_dezemhum_1', 'Dezemhum Marketing Gastronômico', AD + '4167174020249377', 'Biblioteca de Anúncios', 'anúncio ativo em 12/11/2026', '“Seu marketing está trazendo clientes ou apenas fazendo posts?”', 'a pergunta direta para o dono; aqui ela vira um teste de 3 itens que ele faz no próprio perfil.'),
     t: 'Seu post vende ou enfeita?', x: 'Faz o teste com o último post do seu perfil.',
     telas: ['Seu post vende ou enfeita? Faz o teste com o último.', '1. Dá para saber o que você vende em 2 segundos?', '2. Tem preço, ou pelo menos “a partir de”?', '3. Diz o que fazer agora (WhatsApp, reserva, link)?', 'Errou 2? É decoração cara. A gente arruma no Raio-X.'],
     leg: T(`Post bonito sem estratégia é decoração cara. 🖼️
@@ -55,7 +55,7 @@ module.exports = [
     Se eu apareço, você aparece também. Seu cliente quer ver você, não um banco de imagem.
     Conta aqui: o que te trava na hora de gravar?`),
     tags: '#italosantosdigital #recife #comunicacao #empreendedorismo #marketingrecife',
-    art: 'Capa: o Italo em close no meio de uma frase, gravando num cliente; texto “Eu tinha problema de dicção” em duas linhas brancas sobre faixa azul-escuro. Vídeo P7.' },
+    art: 'Capa: o Italo em close no meio de uma frase, gravando num cliente; texto “Eu tinha problema de dicção” em duas linhas brancas sobre faixa azul-escuro. Vídeo P3.' },
 
   { date: 'Sex 27/11', fmt: 'Post + stories', obj: 'Venda', title: 'Black Friday: 12 Raio-X com câmera', est: 'Black Friday sem desconto: 12 Raio-X com câmera (3 por dia) de 27 a 30/11, junto da 1ª parcela do 13º.',
     ref: R('ad_provex_2', 'Provex Assessoria de Marketing', AD + '987902910570937', 'Biblioteca de Anúncios', 'anúncio ativo em 12/11/2026', 'Black Friday: “15 dias de anúncios grátis”', 'a data com número e prazo; aqui sem dar anúncio de graça: o que é grátis é o diagnóstico.'),
@@ -68,7 +68,7 @@ module.exports = [
     tags: TAG + ' #blackfriday',
     art: 'Fundo azul-escuro, “12 vagas” grande em ciano; foto do Italo e do Aleffer com a câmera na porta de um negócio. Contador nos stories só depois de 7 vagas preenchidas.' },
 
-  { date: 'Ter 01/12', fmt: 'Carrossel · 5 telas', obj: 'Educação', title: 'O teste do celular', est: 'Educação que vira lead: o dono testa o próprio anúncio e chama a Peformake quando trava. Versão em vídeo: P8.',
+  { date: 'Ter 01/12', fmt: 'Carrossel · 5 telas', obj: 'Educação', title: 'O teste do celular', est: 'Educação que vira lead: o dono testa o próprio anúncio e chama a Peformake quando trava. Peça só de carrossel, sem vídeo.',
     ref: R('ad_baruk_0', 'Agência Baruk', AD + '1095856403078936', 'Biblioteca de Anúncios', 'anúncio ativo desde 06/11/2026', '“Pare de pôr dinheiro em tráfego pago antes de fazer este teste”', 'ensinar em vez de prometer; aqui o teste ganha o jeito de falar do Recife e o Raio-X no fim.'),
     t: 'Antes de pôr mais dinheiro em anúncio, faz esse teste.', x: 'Abre seu anúncio no celular e tenta comprar de você mesmo.',
     telas: ['Antes de pôr mais dinheiro em anúncio, faz esse teste.', 'Abre seu anúncio no celular e tenta comprar de você mesmo.', 'Achou a oferta de cara? O botão funcionou?', 'Deu para pedir sem caçar informação?', 'Travou? Seu cliente também. Raio-X grátis no WhatsApp.'],
@@ -83,8 +83,8 @@ module.exports = [
 
   { date: 'Qui 03/12', fmt: 'Carrossel · 6 telas', obj: 'Prova', title: 'Estudo de caso #2: o delivery da VOVINA', est: 'Série de casos: vídeo de verdade + anúncio no delivery próprio. Prova de caixa: pedidos [confirmar com a VOVINA]. [autorização do cliente]',
     ref: R('ad_alavant_1', 'Alavantcompany', AD + '1633848741490201', 'Biblioteca de Anúncios', 'anúncio ativo desde 12/09/2026', '“Recorde de vendas em plena segunda-feira”', 'o print do resultado como prova; aqui com o número do sistema e o vídeo que gerou o clique.'),
-    t: '893 cliques no delivery próprio.', x: 'A R$ 0,13 cada. E 85% vieram de um vídeo só.',
-    telas: ['893 cliques no delivery próprio. Estudo de caso #2.', 'A VOVINA queria pedido sem depender de aplicativo.', 'A Ellcazo gravou o vídeo do Combo dentro da pizzaria.', 'O anúncio levou direto ao link do delivery.', '9 dias: 893 cliques a R$ 0,13 e [x] pedidos; 85% do vídeo do Combo.', 'Vídeo de verdade deixa o clique barato. Raio-X grátis.'],
+    t: '[x] pedidos no delivery próprio.', x: 'Com 893 cliques a R$ 0,13, 85% vindos de um vídeo só. [autorização do cliente]',
+    telas: ['[x] pedidos no delivery próprio. Estudo de caso #2.', 'A VOVINA queria pedido sem depender de aplicativo.', 'A Ellcazo gravou o vídeo do Combo dentro da pizzaria.', 'O anúncio levou direto ao link do delivery.', '9 dias: 893 cliques a R$ 0,13 e [x] pedidos; 85% do vídeo do Combo.', 'Vídeo de verdade deixa o clique barato. Raio-X grátis.'],
     leg: T(`Estudo de caso #2 🍕
     A [VOVINA] queria vender no delivery próprio, sem pagar taxa de aplicativo.
     A Ellcazo gravou o Combo dentro da pizzaria e o anúncio levou direto para o link de pedido.
