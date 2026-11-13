@@ -5,6 +5,7 @@ Sem miniaturas, fotos nem PDFs de clientes (ficam fora do repositório; o agente
 
 - `_base.js`, `style.css`, `logo.b64`: base visual (capa, cartões, páginas `<section class="pg">`).
 - `build3.js` (Fornario/VOVINA/Brio), `sn.js`, `raph.js`, `pf.js` + `pf_posts.js` + `pf_traf.js` + `pfav2.js` (Peformake): um arquivo por cliente/documento, com o conteúdo do estudo.
+- `brio.js` (estratégia + social), `brio_av.js` + `brio_av.css` (audiovisual com estilos E# e modelos M#), `brio_data.js`, `brio_posts.js`, `brio-shot.js` (Brio, 13/11; miniaturas em `scratchpad/brio2/th`).
 - `av.js`/`roteiros.js` (audiovisual), `sm.js` (social media), `trafego.js`, `analise.js`, `com.js` (comunicação/fotos).
 - `*-shot.js`: screenshots de conferência (Playwright em /opt/node-tools).
 - `subir2.py`: sobe para a pasta do cliente pela função agent-upload (`python3 -I subir2.py <token> <client_id> <pasta> "<nome>" <arquivo> <mime>`; token curto de `agent_upload_tokens`).
