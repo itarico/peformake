@@ -2,6 +2,8 @@
 
 Decisão do Italo (12/11/2026): as estratégias e os relatórios são feitos pelo **agente do Claude** (não pelo motor da API do sistema), e os PDFs sobem na **pasta do cliente** (Arquivos → Estratégia / Social media / Audiovisual / Relatórios). Regra do Italo: **tudo pronto 16 dias antes do mês começar** (até o dia 15). A rotina roda dos dias 11 a 15 e cada dia continua a fila de onde parou.
 
+**Método:** siga a skill `.claude/skills/peformake-estudo-mes/SKILL.md` (3 etapas: diagnóstico e estudo → estratégia mensal → peças: social, design, audiovisual, tráfego e venda). Este arquivo cuida da fila, dos dados e do upload.
+
 ## Fila
 - Clientes ativos (não perdidos, não desativados) com serviço ativo de consultoria, tráfego, social/design ou audiovisual: `select c.id, c.name from clients c where c.is_active and not c.is_lost and (public.client_in_area(c.id,'trafego') or public.client_in_area(c.id,'social') or public.client_in_area(c.id,'audiovisual') or public.client_in_area(c.id,'consultoria'))`.
 - Já feito no mês: existe em `client_assets` (source = 'agente', folder = 'estrategia') um arquivo com o nome do mês seguinte. Pule esses.
