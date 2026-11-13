@@ -4,7 +4,7 @@ const TT = (u, id) => `https://www.tiktok.com/@${u}/video/${id}`
 const T = (s) => s.trim().replace(/\n[ \t]+/g, '\n')
 const SITE = '👉 Pede pelo site: link na bio.'
 
-module.exports = [
+const L = [
   { date: 'Qua 18/11 (volta)', fmt: 'Carrossel · 5 telas', obj: 'Relacionamento', title: 'Sumimos. Voltamos com fome.',
     est: '<b>Tese</b>: o perfil volta a existir antes de qualquer anúncio (parado desde 29/10). Papel: atrair. Meta: 1.500 views de média até 31/12.',
     ref: { file: TH('old_f1cbfd78'), at: '@jurito.br', url: 'https://www.instagram.com/p/DfLFFqpvg9q/', net: 'Instagram', views: '5.958 views', what: 'Concorrente de São Lourenço anuncia a chegada', why: 'a volta vira acontecimento, com gente da casa. No Brio vira humor honesto: assumir o sumiço e voltar com uma promessa que se prova.' },
@@ -55,50 +55,51 @@ module.exports = [
     art: 'Fundo laranja Brio; caixa fechada real em close; contagem regressiva com contorno azul grosso.' },
 
   { date: 'Sex 27/11 (Black Friday)', fmt: 'Carrossel · 4 telas', obj: 'Venda', title: 'Black Friday sem desconto: o extra é por nossa conta',
-    est: '<b>Oferta principal</b>: Combo da Galera + extra da casa + Garantia Chegou Quente (decisão 2). Papel: converter. Meta: 10 Combos da Galera no fim de semana.',
+    est: '<b>Oferta principal</b>: Combo da Galera, o 5º Brio por R$ 1 e a garantia da hora (decisões 1 e 2). Papel: converter. Meta: junto com o B4, 20 Combos da Galera na Black Friday.',
     ref: { file: TH('tt_7694032968486063378'), at: '@hamburgueriaexprescombos', url: TT('hamburgueriaexprescombos', '7694032968486063378'), net: 'TikTok', views: '1,1 mi views · 14 mil compartilhamentos', what: '“Atenção! Novo combo no cardápio”', why: 'o combo inteiro já na 1ª imagem e a urgência dita em uma linha. Pegamos a 1ª tela “tudo que vem”, com o preço por pessoa no lugar do preço cheio.' },
-    t: 'Black Friday sem desconto.', x: 'O extra é por nossa conta.',
-    telas: ['O Combo da Galera aberto: 4 Brios, 2 fritas grandes, refri 2 L [composição a confirmar]', '“[R$ x por pessoa]” enorme + “só pelo site, de 27 a 29/11”', '“+ extra da casa: maionese do Brio em dobro” [a confirmar]', '“Chegou frio? A gente refaz.” (Garantia Chegou Quente)'],
-    leg: T(`Black Friday do Brio: sem desconto, com extra. 🔥
-    Combo da Galera (4 Brios + 2 fritas grandes + refri 2 L) e, só de 27 a 29/11, a maionese da casa vem em dobro.
-    E se chegar frio, a gente refaz. Simples assim.
+    t: 'R$ [x/4] pra cada.', x: 'E o 5º Brio sai por R$ 1, pro amigo atrasado.',
+    telas: ['O Combo da Galera aberto: 4 Brios + 2 fritas + refri 2 L', '“R$ [x] ÷ 4 = R$ [x/4] pra cada” enorme + “o atendente manda o Pix já dividido”', '“Só na Black Friday: o 5º Brio por R$ 1, pro amigo que chegou atrasado”', '“Saiu da chapa às [hora no bilhete]. Passou de [45] min, a próxima batata é nossa.”'],
+    leg: T(`Black Friday do Brio: a conta já vem feita. 🔥
+    Combo da Galera: 4 Brios + 2 fritas + refri 2 L por R$ [x]. Dá R$ [x/4] pra cada, e a gente manda o Pix já dividido.
+    Só de 27 a 29/11: o 5º Brio sai por R$ 1, pro amigo que chegou atrasado.
+    A hora que saiu da chapa vem no bilhete. Passou de [45] min, a próxima batata é nossa.
     ${SITE}`),
     tags: '#blackfriday #saolourencodamata #brioburger #comboparadividir',
-    art: 'Tela 1 de cima, combo inteiro; telas 2 a 4 com um único número ou frase em Lilita One; Vermelho Ketchup só no selo “27 a 29/11”.' },
+    art: 'Tela 1 de cima, combo inteiro; a conta “÷ 4” é o maior elemento da tela 2; Vermelho Ketchup só no selo “27 a 29/11”.' },
 
-  { date: 'Dom 29/11', fmt: 'Capa de Reels (vídeo V1)', obj: 'Prova', title: 'O termômetro não mente',
-    est: '<b>Tese</b> “a caixa é a vitrine”: prova que chega quente. Papel: quebrar a objeção “chega frio?”. Meta: 3 mil views e 10 comentários com bairro.',
-    ref: { file: TH('tt_7398299320572710150'), at: '@teffa_vitoria', url: TT('teffa_vitoria', '7398299320572710150'), net: 'TikTok', views: '3,6 mi views', what: '“A cliente pediu 10 lanches duplos”', why: 'um número na tela vira o assunto e todo mundo comenta. No Brio o número é a temperatura medida na porta do cliente.' },
-    t: '[XX] °C na porta.', x: 'Chega quente. A gente mede.',
-    leg: T(`Medimos na porta do cliente: [XX] °C. 🌡️
-    Sem filtro e sem mágica: caixa certa, rota curta e chapa que só liga quando o pedido entra.
-    Teu bairro é de São Lourenço? Comenta que o próximo termômetro vai até aí. 👇
+  { date: 'Dom 29/11', fmt: 'Capa de Reels (vídeo B1)', obj: 'Prova', title: 'A hora vem no bilhete',
+    est: '<b>Tese</b> “a caixa é a vitrine”: garantia da hora. Papel: quebrar a objeção “chega frio?”. Publica só depois de 5 medições reais. Meta: 3 mil views e 10 comentários com bairro.',
+    ref: { file: TH('tt_7398299320572710150'), at: '@teffa_vitoria', url: TT('teffa_vitoria', '7398299320572710150'), net: 'TikTok', views: '3,6 mi views', what: '“A cliente pediu 10 lanches duplos”', why: 'um número na tela vira o assunto e todo mundo comenta. No Brio o número é a hora que saiu da chapa, escrita no bilhete.' },
+    t: 'Saiu da chapa às [19h41].', x: 'Passou de [45] min, a próxima batata é nossa.',
+    leg: T(`A hora que teu Brio saiu da chapa vem escrita no bilhete. ⏱️
+    Passou de [45] min até a tua porta? A próxima batata é nossa.
+    Medimos a caixa 5 vezes antes de prometer. Comenta teu bairro 👇
     ${SITE}`),
     tags: '#delivery #saolourencodamata #brioburger #chegaquente',
-    art: 'Capa com o visor do termômetro em close e “[XX] °C” gigante em Lilita One; caixa aberta com vapor ao fundo, desfocada.' },
+    art: 'Capa com o bilhete em close e a hora gigante em Lilita One; caixa fechada com o termômetro infravermelho apontado para a tampa (nunca para o lanche).' },
 
   { date: 'Qua 02/12', fmt: 'Carrossel · 5 telas', obj: 'Venda', title: 'Vale-Brio: o amigo secreto que ninguém devolve',
-    est: '<b>Oferta sazonal</b>: Vale-Brio do Amigo Secreto (01 a 23/12; vale até 31/01). Papel: converter e já vender janeiro. Meta: 10 vales por este post.',
+    est: '<b>Oferta sazonal</b>: Vale-Brio do Amigo Secreto (venda de 01 a 23/12; vale 90 dias). Papel: converter e já vender janeiro. Meta: 10 vales por este post.',
     ref: { file: TH('tt_7452855699224251654'), at: '@babi.estrela', url: TT('babi.estrela', '7452855699224251654'), net: 'TikTok', views: '2,8 mi views · 84 mil compartilhamentos', what: '“O melhor amigo secreto de todos”', why: 'amigo secreto é o assunto de dezembro que todo mundo compartilha. Pegamos o tema e entramos com um presente que cabe no limite de valor da brincadeira.' },
     t: 'Tirou alguém difícil?', x: 'Vale-Brio: o presente que ninguém devolve.',
-    telas: ['“Tirou alguém difícil no amigo secreto?”', '“Vale-Brio: [R$ 40] ou [R$ 70]” (dentro do limite da brincadeira)', '“Compra no site ou no Pix; o vale chega com o nome de quem ganha”', '“Vale até 31/01: dá pra pedir nas férias”', '“Garante até 23/12.”'],
+    telas: ['“Tirou alguém difícil no amigo secreto?”', '“Vale-Brio: [R$ 40] ou [R$ 70]” (dentro do limite da brincadeira)', '“Compra no site ou no Pix; o vale chega com o nome de quem ganha”', '“Vale 90 dias; usou em janeiro, ganha [batata extra]”', '“Garante até 23/12.”'],
     leg: T(`Amigo secreto da firma, da sala ou da família? 🎁
-    O Vale-Brio resolve: [R$ 40] ou [R$ 70], chega com o nome de quem ganha e vale até 31/01.
+    O Vale-Brio resolve: [R$ 40] ou [R$ 70], chega com o nome de quem ganha e vale 90 dias. Usou em janeiro? Ganha [batata extra].
     Ninguém devolve hambúrguer. 😅
     Garante até 23/12: chama no WhatsApp ou pede pelo site.`),
     tags: '#amigosecreto #saolourencodamata #brioburger #presente',
     art: 'Vale desenhado como um ingresso laranja com contorno azul; laço de presente só como detalhe; nada de Papai Noel.' },
 
-  { date: 'Sex 04/12', fmt: 'Capa de Reels (vídeo V5)', obj: 'Prova', title: 'Teste cego: Brio x hambúrguer de rede',
-    est: '<b>Tese</b> + objeção “vale o preço?”. Papel: quebrar objeção. Meta: 4 mil views e 40 comentários com palpite.',
-    ref: { file: TH('tt_7123618797570772229'), at: '@guiadohamburguer', url: TT('guiadohamburguer', '7123618797570772229'), net: 'TikTok', views: '822 mil views', what: '“Teste cego: dá pra diferenciar?”', why: 'a comparação às cegas faz o público decidir junto e comentar o palpite. Pegamos a venda pelo veredito de quem prova, não pela nossa fala.' },
-    t: 'A ou B?', x: 'Teste cego em São Lourenço. Palpita aí.',
-    leg: T(`Teste cego na rua, em São Lourenço: Brio ou hambúrguer de rede? 🙈🍔
-    Ninguém sabia qual era qual. O resultado tá no vídeo.
-    E tu, acerta? Comenta A ou B antes de ver o final 👇
+  { date: 'Sáb 21/11', fmt: 'Capa de Reels (vídeo B5)', obj: 'Engajamento', title: 'Matuto × Costela às cegas',
+    est: '<b>Black Friday</b>: a galera escolhe às cegas qual é o Brio da Black Friday. Papel: atrair. Meta: 4 mil views e 40 comentários com palpite.',
+    ref: { file: TH('tt_7123618797570772229'), at: '@guiadohamburguer', url: TT('guiadohamburguer', '7123618797570772229'), net: 'TikTok', views: '822 mil views', what: '“Teste cego: dá pra diferenciar?”', why: 'a comparação às cegas faz o público decidir junto e comentar o palpite. Pegamos a escolha às cegas, entre dois Brios, sem resultado combinado.' },
+    t: 'Matuto ou Costela?', x: 'A galera escolhe o Brio da Black Friday.',
+    leg: T(`Matuto ou Costela? Às cegas, na rua de São Lourenço. 🙈🍔
+    O que a galera escolher vira o Brio da Black Friday.
+    E tu, qual é o teu? Comenta antes de ver o final 👇
     ${SITE}`),
-    tags: '#testecego #saolourencodamata #brioburger #hamburguer',
-    art: 'Capa dividida A | B com dois hambúrgueres sem embalagem; venda nos olhos de quem prova; “A ou B?” em Lilita One.' },
+    tags: '#asCegas #saolourencodamata #brioburger #blackfriday',
+    art: 'Capa dividida A | B com os dois Brios sem embalagem; venda nos olhos de quem prova; “Matuto ou Costela?” em Lilita One.' },
 
   { date: 'Sex 11/12', fmt: 'Post + stories', obj: 'Indicação', title: 'Quem te deve um Brio?',
     est: '<b>Indicação</b>: marca quem te deve; quem for marcado ganha o mimo no 1º pedido pelo site e quem marcou também (decisão 4). Papel: atrair. Meta: 15 indicações.',
@@ -116,8 +117,10 @@ module.exports = [
     ref: { file: TH('tt_7660631615290363143'), at: '@hamburgueriadiskfomebr', url: TT('hamburgueriadiskfomebr', '7660631615290363143'), net: 'TikTok', views: '569 mil views', what: '“Tudo por apenas R$ 54,90”', why: 'o preço fechado em destaque com o combo inteiro na foto. Pegamos a composição; o destaque é o extra que vem junto, sem baixar o preço.' },
     t: 'O 13º caiu. A galera também.', x: 'Combo da Galera com extra da casa, só até domingo.',
     leg: T(`O 13º caiu e a galera apareceu. 💸🍔
-    Combo da Galera com extra da casa, de 18 a 20/12. Chega quente, ou a gente refaz.
+    Combo da Galera com extra da casa, de 18 a 20/12. A hora da chapa vem no bilhete.
     ${SITE}`),
     tags: '#13salario #saolourencodamata #brioburger #combo',
     art: 'Foto do combo de cima com moedas/cédulas de brinquedo saindo da caixa; “13º” enorme em Lilita One com contorno azul.' },
 ]
+
+module.exports = [0, 1, 7, 2, 3, 4, 5, 6, 8, 9].map((i) => L[i])
