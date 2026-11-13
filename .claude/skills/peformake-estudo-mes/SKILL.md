@@ -84,7 +84,12 @@ Skills: `anthropic-skills:performake-content-agent`, `anthropic-skills:mdd`.
 - **10 postagens**, uma por página: referência real (miniatura, @, link, views) + formato (post, carrossel com o texto de cada tela, story, capa de reels), objetivo, ligação com a estratégia, **copy da arte** (título + texto curto), **legenda pronta** (CTA + 3 a 5 hashtags locais), direção de arte em 1 linha, data.
 
 ### 3.2 Audiovisual (pasta `audiovisual`, identidade Ellcazo: verde-limão/branco, preto só nos detalhes, nunca fundo preto)
-Skills: `anthropic-skills:redator-audiovisual-agencia`, `anthropic-skills:mdd`. Repertório: **estudo de vídeos do Italo** (catálogo de estilos E1–E40, técnicas por perfil, modelos de roteiro M1–M49, manual de edição e som; hoje só no PC em `C:\Users\intal\peformake\video-tools\estilos\` — quando estiver no GitHub, usar daqui). Regra do Italo: extrair a **gramática transferível** e a **intenção antes da técnica**; aprender, não clonar.
+Skills: `anthropic-skills:redator-audiovisual-agencia`, `anthropic-skills:mdd`. Repertório obrigatório: **estudo de vídeos do Italo** (no repositório desde 13/11/2026):
+  - `video-tools/estilos/catalogo_estilos.md` (estilos E1–E40: quando usar, estrutura, parâmetros) e `receitas_estilos.md`;
+  - estudos por perfil em `video-tools/estilos/estudo_*.md` (@rabbits, @omarcosvianna, @earn.edits, @dacostamotion, AslaniEdits, @giubeckers, mavic, maestros IA, narrativas, YouTube), `licoes_profissionais.md`, `tecnicas_vistas.md`, `sound_design.md`;
+  - `video-tools/NARRATIVA.md` (princípios de narrativa da Ellcazo/Peformake) e `video-tools/MANUAL_EDICAO.md`;
+  - skills `.claude/skills/roteiro-narrativa/` (com `MODELOS.md` M1–M49 e `IDEIAS_MDD.md`), `edicao-cliente/`, `motion-pro/`.
+  Cada vídeo do plano cita o **estilo (E#)** e o **modelo de roteiro (M#)** escolhidos e o porquê. Regra do Italo: extrair a **gramática transferível** e a **intenção antes da técnica**; aprender, não clonar.
 - Página "Estudo do audiovisual" com os 6 blocos: mercado e anúncios, tendência e momento, comunicação, narrativa, estrutura e objetivo (vídeos por papel no funil), escopo (diárias, quem fala, quem grava).
 - Capa minimalista, página de comunicação do cliente, referências de foto.
 - **Até 10 vídeos**, uma página cada: prévia real + link + por que funciona; estilo do catálogo; papel, oferta, meta; **storytelling** (gancho, conflito, virada, CTA); **storyboard** cena a cena (o que aparece, enquadramento, fala, texto na tela, duração); quem fala, quem grava, diária, orgânico/anúncio; 3 ideias como variações do mesmo objetivo. Gastronomia: pouca fala, muito desejo; loja/serviço: mais fala e demonstração.

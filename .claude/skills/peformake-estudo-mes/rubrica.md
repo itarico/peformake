@@ -12,7 +12,7 @@ Nota de 0 a 5 em cada item. Só sobe com **média ≥ 4 e nenhum item abaixo de 
 ## Criatividade (dá vontade de parar e assistir?)
 6. **Gancho:** cada vídeo/peça tem um gancho de 0–3 s que surpreende (pergunta, contraste, número, cena inesperada), não "oi, gente" nem "você sabia".
 7. **Ideia, não formato:** cada peça tem uma ideia própria ligada à marca (não é "POV genérico" ou "trend" sem motivo); dá para reconhecer a marca sem o logo.
-8. **Variedade:** os 10 vídeos/peças usam pelo menos 5 estilos/formatos diferentes (catálogo E1–E40 quando disponível) e distribuem os papéis do funil (atrair, provar, objeção, converter).
+8. **Variedade:** os 10 vídeos/peças usam pelo menos 5 estilos/formatos diferentes (catálogo `video-tools/estilos/catalogo_estilos.md`, E1–E40) e modelos de roteiro (`.claude/skills/roteiro-narrativa/MODELOS.md`) e distribuem os papéis do funil (atrair, provar, objeção, converter).
 9. **Referência forte:** toda referência é real, com imagem, link e views/dias no ar altos para o nicho, e explica o PORQUÊ funciona e o que adaptar (gramática, não cópia).
 10. **Executável:** dá para gravar/fazer com a equipe e as diárias do mês; storyboard cena a cena, quem fala, quem grava, texto na tela, legenda pronta.
 
