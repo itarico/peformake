@@ -4,3 +4,5 @@ Um arquivo por nicho (`gastronomia.md`, `servicos-b2b.md`, `moda.md`, `otica-sau
 
 Formato de cada linha:
 `AAAA-MM · Cliente · peça/oferta/criativo · formato/estilo (E#) · resultado (número e fonte) · aprendizado em 1 frase`
+
+**Regra que já se repete em vários nichos (11/2026):** anúncio com produto, preço e cidade sai 10 a 15 vezes mais barato que o genérico ("fale conosco", "resultado"). Comece toda campanha pela oferta específica.
