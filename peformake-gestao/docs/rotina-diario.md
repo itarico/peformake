@@ -43,6 +43,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-13 · Raph Modas (audiovisual) e a própria Peformake (estudo completo) feitos pelo agente (nuvem)
+- Raph Modas = brechó chique (moda sustentável, trends). Planejamento de audiovisual 12/11 a 31/12 (16 pág., PDF + HTML) na pasta da cliente. Falta: Instagram, bairro, preços, se a Rejane é a dona; Rejane perguntou em 11/11 no grupo "Gestão Raph brechó" se a visita era filmagem ou sistema (sem resposta).
+- Peformake como cliente (c769a0b2…): cadastro preenchido com os dados da empresa, serviços internos Social, Design, Tráfego e Audiovisual (sem Consultoria para não disparar o diagnóstico pela API) e equipe ligada. 4 documentos (estratégia, social, audiovisual, tráfego; PDF + HTML) com a equipe como conteúdo e cases. Tese "O case é o anúncio"; oferta de entrada Raio-X grátis; "Comece 2027" até 19/12. Pendente: autorização dos clientes nos cases, conta de anúncio própria.
+
 ## 2026-11-12 · DECISÃO: estratégias e relatórios feitos pelo agente do Claude, PDF na pasta do cliente (nuvem)
 - O motor de estratégia do sistema fica de lado por enquanto ("muito difícil, não progredimos"). Um estudo por cliente, dividido em: Estratégia do mês (diagnóstico embutido e objetivo), Planejamento de social media, Planejamento de audiovisual (Ellcazo) e Relatório do mês (estilo Reportei, um por conta). Design = o da estratégia do Paulo.
 - PDFs sobem em Arquivos do cliente (pastas novas Estratégia e Relatórios) pela função agent-upload (token curto em agent_upload_tokens). Já subiram os relatórios de Fornario e VOVINA (01/10 a 12/11).
