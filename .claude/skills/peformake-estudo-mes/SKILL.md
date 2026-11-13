@@ -24,7 +24,7 @@ ETAPA 1  Diagnóstico e estudo  ──►  ETAPA 2  Estratégia mensal  ──�
 
 ## Etapa 1 · Diagnóstico e estudo
 
-Objetivo: saber o que é verdade hoje, com números. Saída: o **Dossiê do estudo** (interno, não vai ao cliente; resumo entra na Estratégia).
+Objetivo: saber o que é verdade hoje, com números. Saída: o **Dossiê do estudo** no formato `dossie.md` (interno, não vai ao cliente; resumo entra na Estratégia). Leia antes o banco do nicho em `banco/<nicho>.md`.
 
 ### 1.1 O que o sistema já sabe (Supabase `wkkzcjnxyylrqoolmmhi`, só leitura)
 Ordem de prioridade (o de cima manda no de baixo):
@@ -32,7 +32,7 @@ Ordem de prioridade (o de cima manda no de baixo):
 2. `client_directions` (direcionamento da equipe por área).
 3. `clients`, `client_services`, `client_team`, `company_profiles` (Peformake/Ellcazo).
 4. `consult_docs` (diagnóstico anterior), `client_brand_guides`, `client_brand_voice`, `client_questions` respondidas.
-5. Comercial e conversas: CRM, mensagens de WhatsApp (perguntas e objeções reais do público).
+5. Comercial e conversas: `crm_deals`, `crm_events`, `crm_sales`, `site_leads`, `whatsapp_messages`, `client_messages` (perguntas e objeções reais do público).
 6. Resultado: `traffic_daily_metrics`, `traffic_entities`/`traffic_entity_daily`, `content_items`, `social_tasks`, `av_projects`, relatórios anteriores.
 7. Coleta automática: `client_scan`, `monthly_scan_extra` (rotina "Coleta das redes" da madrugada).
 
@@ -100,6 +100,7 @@ Skills: `anthropic-skills:redator-audiovisual-agencia`, `anthropic-skills:mdd`. 
 - Campanhas, públicos, criativos ligados às peças e vídeos do mês, verba em 3 opções, testes A/B, metas, calendário de subida/pausa. Meta Ads só leitura.
 
 ### 3.4 Venda (dentro da Estratégia, seção "Venda"; vira documento próprio quando o cliente tiver o serviço comercial)
+**Siga o padrão `venda.md` (nesta pasta).**
 Skills: `anthropic-skills:copy-lp-vendas` (quando houver página), `anthropic-skills:frameworks-marketing-agencia`.
 - Roteiro de atendimento no WhatsApp (primeira resposta, qualificação, oferta, fechamento) usando as perguntas reais do público.
 - Respostas para as 5 objeções mais comuns (vindas do CRM/conversas).
@@ -123,7 +124,7 @@ Skills: `anthropic-skills:copy-lp-vendas` (quando houver página), `anthropic-sk
 
 ## Etapa 4 · Aprender com o resultado (no mês seguinte, antes da Etapa 1)
 - O que funcionou: views, conversas, pedidos por peça e por vídeo (sistema + Meta).
-- Guardar as 3 melhores referências e ganchos do mês no banco do nicho; anotar o que não funcionou.
+- Acrescentar no `banco/<nicho>.md` (formato em `banco/README.md`) o que funcionou e o que não funcionou, sempre com número e fonte; as 3 melhores referências e ganchos do mês.
 - O estudo seguinte começa por aqui.
 
 ## Gerador do design
