@@ -32,9 +32,9 @@ const L = [
     est: '<b>Oferta principal</b>: mostra o preço <b>por pessoa</b> antes do lançamento. Papel: quebrar a objeção “é caro”. Meta: 40 salvamentos.',
     ref: { file: TH('tt_7667962574771703057'), at: '@joaododelivery', url: TT('joaododelivery', '7667962574771703057'), net: 'TikTok', views: '53,8 mil views', what: '“3 combos que toda hamburgueria deveria ter”', why: 'organiza o cardápio por tamanho de grupo, não por produto: quem lê se acha na lista. Pegamos a tabela por número de pessoas.' },
     t: 'Quantos Brios a tua galera precisa?', x: '2, 4 ou 6 pessoas: a conta já vem feita.',
-    telas: ['2 pessoas → Sessão Brio · [R$ x por pessoa]', '4 pessoas → Combo da Galera · [R$ x por pessoa]', '6 pessoas → Combo da Galera + Sessão Brio · [R$ x por pessoa]'],
+    telas: ['1 pessoa → 1 Brio + frita · [R$ x]', '4 pessoas → Combo da Galera · R$ [x/4] por pessoa', '5 ou 6 pessoas → Combo da Galera + 1 ou 2 Brios + frita · [R$ x por pessoa]'],
     leg: T(`Pra ninguém ficar com fome e ninguém pagar demais: 🧮
-    2 pessoas: Sessão Brio
+    Sozinho: 1 Brio + frita
     4 pessoas: Combo da Galera
     6 pessoas: os dois juntos
     O preço por pessoa tá na arte. Salva pra hora da fome. 📌
@@ -45,16 +45,16 @@ const L = [
   { date: 'Qua 25/11', fmt: 'Stories · sequência de 5', obj: 'Relacionamento', title: 'Black Friday do Brio: vem aí',
     est: '<b>Calendário</b>: aquece a Black Friday (27 a 29/11). Papel: atrair. Meta: 150 respostas na enquete e 40 lembretes ativados.',
     ref: { file: TH('tt_7699651942640815380'), at: '@sandyyburguer', url: TT('sandyyburguer', '7699651942640815380'), net: 'TikTok', views: '81,5 mil views', what: '“Calma! Ainda não é lançamento” (Recife)', why: 'o teaser cria espera com humor e sotaque, sem mostrar tudo. Pegamos o “ainda não”: mostra a caixa fechada e segura a revelação.' },
-    t: 'Black Friday do Brio: sem desconto. Com extra.', x: 'Sexta, 27. Ativa o lembrete.',
+    t: 'Black Friday do Brio: sem baixar o preço do combo. O 5º é por R$ 1.', x: 'Sexta, 27. Ativa o lembrete.',
     telas: ['Caixa fechada: “Sexta tem coisa nova aqui dentro”', 'Enquete: “Qual Brio a tua galera pede?” (Matuto × Costela)', 'Caixinha: “Quantas pessoas na tua galera?”', 'Contagem regressiva “Black Friday do Brio · 27/11”', '“Sem desconto. Com extra.” + link do site'],
     leg: T(`Stories, sem legenda de feed. Texto na tela:
     “Sexta tem coisa nova aqui dentro.”
-    “Black Friday do Brio: sem desconto. Com extra.”
+    “Black Friday do Brio: sem baixar o preço do combo. O 5º é por R$ 1.”
     Lembrete ativado = aviso na hora que abrir.`),
     tags: 'Sticker de local: São Lourenço da Mata',
     art: 'Fundo laranja Brio; caixa fechada real em close; contagem regressiva com contorno azul grosso.' },
 
-  { date: 'Sex 27/11 (Black Friday)', fmt: 'Carrossel · 4 telas', obj: 'Venda', title: 'Black Friday sem desconto: o extra é por nossa conta',
+  { date: 'Sex 27/11 (Black Friday)', fmt: 'Carrossel · 4 telas', obj: 'Venda', title: 'Black Friday: sem baixar o preço do combo, o 5º é por R$ 1',
     est: '<b>Oferta principal</b>: Combo da Galera, o 5º Brio por R$ 1 e a garantia da hora (decisões 1 e 2). Papel: converter. Meta: junto com o B4, 20 Combos da Galera na Black Friday.',
     ref: { file: TH('tt_7694032968486063378'), at: '@hamburgueriaexprescombos', url: TT('hamburgueriaexprescombos', '7694032968486063378'), net: 'TikTok', views: '1,1 mi views · 14 mil compartilhamentos', what: '“Atenção! Novo combo no cardápio”', why: 'o combo inteiro já na 1ª imagem e a urgência dita em uma linha. Pegamos a 1ª tela “tudo que vem”, com o preço por pessoa no lugar do preço cheio.' },
     t: 'R$ [x/4] pra cada.', x: 'E o 5º Brio sai por R$ 1, pro amigo atrasado.',
@@ -102,11 +102,11 @@ const L = [
     art: 'Capa dividida A | B com os dois Brios sem embalagem; venda nos olhos de quem prova; “Matuto ou Costela?” em Lilita One.' },
 
   { date: 'Sex 11/12', fmt: 'Post + stories', obj: 'Indicação', title: 'Quem te deve um Brio?',
-    est: '<b>Indicação</b>: marca quem te deve; quem for marcado ganha o mimo no 1º pedido pelo site e quem marcou também (decisão 4). Papel: atrair. Meta: 15 indicações.',
+    est: '<b>Indicação</b>: marca quem te deve e passa o código BRIO-XXX do bilhete; pedido no site com o código = [mimo] para os dois (decisão 4). Papel: atrair. Meta: 15 indicações com código.',
     ref: { file: TH('tt_7703684315669990677'), at: '@vivinarua', url: TT('vivinarua', '7703684315669990677'), net: 'TikTok', views: '46 mil views (02/11)', what: 'Criadora do Recife: “marca aqui quem…”', why: 'o pedido de marcação com um motivo concreto multiplica o alcance de graça. Pegamos o “marca” e damos o motivo: a dívida.' },
     t: 'Quem te deve um Brio?', x: 'Marca. A dívida vence no fim de semana.',
     leg: T(`Todo mundo tem um amigo que tá devendo um lanche. 👀
-    Marca ele aqui. Se ele pagar a dívida pelo site, os dois ganham [mimo] no pedido.
+    Marca ele aqui e passa o teu código BRIO-XXX (tá no bilhete da tua caixa). Ele digita no pedido do site e os dois ganham [mimo].
     A dívida vence no domingo. 😅
     ${SITE}`),
     tags: '#brioburger #saolourencodamata #marcaoamigo #hamburgueriaartesanal',

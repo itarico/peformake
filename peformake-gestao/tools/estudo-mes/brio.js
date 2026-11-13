@@ -138,7 +138,7 @@ function metasPage(d) {
     ['Combos da Galera no resto do período', '10', 'B2, B3, post 04 e stories'],
     ['Confra da Firma (pedidos de 10+ Brios)', '[3]', 'lista do comércio no WhatsApp'],
     ['Vale-Brio vendidos até 23/12', '30', 'B7 (15) + post 08 (10) + stories (5)'],
-    ['Indicações que viraram pedido', '15', 'B8 + post 09'],
+    ['Indicações que viraram pedido (código BRIO-XXX no bilhete)', '15', 'B8 + post 09'],
     ['Pedidos no dia 26/12 com “vi no Instagram”', '10', 'B10'],
     ['Pedidos do site na semana de 07/12 × semana de 23/11', '+30%', 'todas as peças'],
     ['Média de views dos Reels', '1.500', 'hoje 685'],
@@ -185,7 +185,7 @@ function salesPage2(d) {
     <div>
       <div class="card msg"><h3>Recompra (D+7 do pedido)</h3><q>Oi, [nome]! Faz uma semana do Combo da Galera. Teu código [BRIO-XXX] ainda vale até domingo: [mimo] no próximo pedido. Bora? [link]</q></div>
       <div class="card msg"><h3>Reativação (30 dias sem pedir)</h3><q>[nome], sumiu, hein? 😅 Voltamos com o Brio que chega quente (a gente mede!). Se pedir até sexta, [mimo] por nossa conta: [link]</q></div>
-      <div class="card msg"><h3>Indicação</h3><q>Tem alguém que te deve um Brio? Manda esse link pra ele: no 1º pedido ele ganha [mimo] e tu ganha [mimo] no teu próximo. [link de indicação]</q></div>
+      <div class="card msg"><h3>Indicação</h3><q>Tem alguém que te deve um Brio? Passa pra ele o teu código <b>BRIO-XXX</b> (tá no teu bilhete). Ele digita no pedido do site: ele ganha [mimo] e tu ganha [mimo] no próximo.</q></div>
       <p class="cap" style="margin-top:6px">Mensagens enviadas <b>por uma pessoa do Brio</b>, uma a uma. Nada automático.</p>
     </div>
   </div>`, { cls: 'dense' })
@@ -197,8 +197,8 @@ const CAL = [
   ['até 17/11', 'Preparação', 'Preços, site (aceita cupom?), horários, termômetro, bilhete da caixa'],
   ['18/11 (qua)', 'Volta do perfil', 'Carrossel “Sumimos. Voltamos com fome.”; stories todo dia'],
   ['19 a 28/11', 'Medições', '5 medições reais na caixa (termômetro infravermelho) antes do B1'],
-  ['21/11 (sáb)', 'Matuto × Costela às cegas', 'A galera escolhe o Brio da Black Friday'],
   ['20/11 (sex)', 'Feriado (Consciência Negra)', '“Feriado? Junta a galera.”: teaser do Combo'],
+  ['21/11 (sáb)', 'Matuto × Costela às cegas', 'A galera escolhe o Brio da Black Friday'],
   ['22 e 25/11', 'Aquecimento', '“Quantos Brios a tua galera precisa?” e stories da Black Friday'],
   ['25 a 29/11', 'Decisão 5 (se aprovada)', 'R$ 15/dia em anúncio, raio de 6 km'],
   ['26/11 (qui)', '<b>Diária Ellcazo</b> (13h–16h)', '6 vídeos, antes do serviço'],
@@ -232,7 +232,7 @@ function trafPage(d) {
       <div class="teto"><h3>Teto por pedido (a conta)</h3>
         <p>Teto = ticket do combo [R$ T] × margem [M%] × [0,5] (metade do lucro do 1º pedido, porque ele volta pelo bilhete).<br>Ex.: se T = R$ 100 e M = 30%, o teto é <b>R$ 15 por pedido</b>; com 1 pedido a cada 15 cliques no site, o clique pode custar até <b>R$ 1,00</b>.</p>
         <p class="ref">Régua interna de gastronomia (contas da Peformake, out–nov): de <b>R$ 0,13 a R$ 0,19</b> por clique.</p></div>
-      <div class="rules"><b>Regras:</b> objetivo Vendas no site (ou Mensagens, se o site não medir) · 3 a 5 criativos por temperatura · pausar criativo que gastar 2× o teto sem pedido · escalar o vencedor +20% a cada 48 h · trocar o ângulo antes do público · verba em 3 opções [R$ 10 / 15 / 25 por dia], decidida na hora de ligar.</div>
+      <div class="rules"><b>Regras:</b> objetivo Tráfego/Vendas para o site (o pedido é pelo site) · 3 a 5 criativos por temperatura · pausar criativo que gastar 2× o teto sem pedido · escalar o vencedor +20% a cada 48 h · trocar o ângulo antes do público · verba em 3 opções [R$ 10 / 15 / 25 por dia], decidida na hora de ligar.</div>
     </div>
   </div>`, { cls: 'dense' })
 }
@@ -243,7 +243,7 @@ const decs = [
   ['Garantia da hora', [['A', 'Hora da chapa no bilhete; passou de [45] min, a próxima batata é nossa', 'medível e cumprível', 1], ['B', 'Sem garantia', 'só a hora no bilhete']]],
   ['Vale-Brio do Amigo Secreto', [['A', 'Vales de [R$ 40] e [R$ 70], 90 dias', 'bônus de [batata extra] se usar em janeiro', 1], ['B', 'Sem vale', 'dezembro só com o Combo']]],
   ['Mimo do 1º pedido, da volta e da indicação', [['A', 'Maionese da casa em dobro', '[custo a confirmar]', 1], ['B', 'Fritas extra ou nada', '[custo a confirmar]']]],
-  ['Verba na Black Friday (gasto: precisa do sim do Brio)', [['A', 'R$ 15/dia de 25 a 29/11 (R$ 75)', 'post 04 em 25–26/11; B4 e post 06 em 27–29/11; raio 6 km; objetivo Mensagens', 1], ['B', 'Sem verba', 'Black Friday só no orgânico (média 685 views)']]],
+  ['Verba na Black Friday (gasto: precisa do sim do Brio)', [['A', 'R$ 15/dia de 25 a 29/11 (R$ 75)', 'post 04 em 25–26/11; B4 e post 06 em 27–29/11; raio 6 km; objetivo Tráfego para o site', 1], ['B', 'Sem verba', 'Black Friday só no orgânico (média 685 views)']]],
 ]
 function decPage(d) {
   d.page('pf', `${BR} · Decisões`, 'Cinco escolhas para o plano ir ao ar', `
@@ -254,7 +254,7 @@ function decPage(d) {
 }
 
 function nextPage(d) {
-  const need = ['<b>Preço do Combo da Galera até 15/11</b> e a <b>média de pedidos por semana</b> até 17/11', '<b>Endereço do site</b> e se ele aceita cupom (não está no sistema); <b>WhatsApp com 9 dígitos</b>', '<b>Cardápio</b> atual e preço da Sessão Brio e da Confra da Firma', '<b>Bairros e tempo</b> de entrega; horários de 24, 25, 26 e 31/12', '<b>Quem atende</b> o WhatsApp e os nomes de quem aparece nos vídeos (chapeiro, motoboy)', '<b>Autorização de imagem</b> da galera e dos clientes; 10 últimas conversas do WhatsApp']
+  const need = ['<b>Preço do Combo da Galera até 15/11</b> e a <b>média de pedidos por semana</b> até 17/11', '<b>Endereço do site</b> e se ele aceita cupom (não está no sistema); <b>WhatsApp com 9 dígitos</b>', '<b>Cardápio</b> atual e preço de <b>1 Brio + frita</b> e da Confra da Firma', '<b>Bairros e tempo</b> de entrega; horários de 24, 25, 26 e 31/12', '<b>Quem atende</b> o WhatsApp e os nomes de quem aparece nos vídeos (chapeiro, motoboy)', '<b>Autorização de imagem</b> da galera e dos clientes; 10 últimas conversas do WhatsApp']
   const steps = [['13/11', 'Decisões desta estratégia'], ['15/11', 'Preço do Combo fechado'], ['até 17/11', 'Média de pedidos por semana, site, horários, termômetro infravermelho e bilhete'], ['18/11', 'Volta do perfil'], ['26/11', 'Diária Ellcazo'], ['27 a 29/11', 'Black Friday: Combo da Galera'], ['01/12', 'Vale-Brio e Confra da Firma'], ['18 a 20/12', 'Semana do 13º'], ['23/12', 'Último dia do Vale-Brio'], ['05/01', 'Balanço e janeiro']]
   d.page('pf', `${BR} · O que precisamos e próximos passos`, 'Com isto até 15 e 17/11, o plano roda sozinho', `
   <div class="g2n">
