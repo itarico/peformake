@@ -19,14 +19,14 @@ module.exports = [
     tags: TAG + ' #bastidores',
     art: 'Fundo branco, foto real de cada pessoa trabalhando (recorte com sombra ciano), nome em azul-escuro e a função em uma linha. Última tela em azul-escuro com o selo do Raio-X.' },
 
-  { date: 'Qui 19/11', fmt: 'Carrossel · 6 telas', obj: 'Prova', title: 'Estudo de caso #1: a ótica que virou conversa', est: 'Série de casos: um cliente por semana, com número do sistema. [autorização do cliente]',
+  { date: 'Qui 19/11', fmt: 'Carrossel · 6 telas', obj: 'Prova', title: 'Estudo de caso #1: a ótica que virou conversa', est: 'Case nº 1 do anúncio do Raio-X. [confirmar satisfação e autorização da ótica até 19/11; plano B: F5, carro com preço no vídeo, R$ 4,08 por conversa]',
     ref: R('ad_alavant_0', 'Alavantcompany', AD + '1659169755173117', 'Biblioteca de Anúncios', 'anúncio ativo desde 28/07/2026', 'Assessoria nacional: “Destravamos as vendas dessa confeitaria”', 'o case com rosto do cliente rodando há mais de 100 dias (anúncio lucrativo); aqui com o número real e sem promessa.'),
     t: '192 conversas no WhatsApp.', x: 'Uma ótica, um anúncio com botão de conversa e uma equipe acompanhando todo dia.',
     telas: ['192 conversas no WhatsApp. Estudo de caso #1.', 'O problema: a ótica postava, mas a conversa não chegava.', 'O que fizemos: anúncio com botão do WhatsApp e mensagem pronta.', 'O que acompanhamos: custo por conversa, todo dia.', 'O resultado (out–nov): 192 conversas, R$ 6,53 cada.', 'Quer ver os números do seu negócio? Raio-X grátis.'],
     leg: T(`Estudo de caso #1 📊
     A [Ótica MD Prime] tinha vitrine bonita e Instagram ativo. O que faltava era conversa.
     A gente trocou o “impulsionar” por um anúncio com botão do WhatsApp e mensagem pronta, e passou a olhar o custo de cada conversa todo dia.
-    Resultado em outubro e novembro: 192 conversas, a R$ 6,53 cada. Dados do nosso sistema.
+    De 06/10 a 12/11: 192 conversas, a R$ 6,53 cada. Dados do nosso sistema (Meta).
     Anúncio não é o vilão. O vilão é o anúncio no automático.
     ${WPP}`),
     tags: TAG + ' #estudodecaso #otica',
@@ -57,16 +57,16 @@ module.exports = [
     tags: '#italosantosdigital #recife #comunicacao #empreendedorismo #marketingrecife',
     art: 'Capa: o Italo em close no meio de uma frase, gravando num cliente; texto “Eu tinha problema de dicção” em duas linhas brancas sobre faixa azul-escuro. Vídeo P7.' },
 
-  { date: 'Sex 27/11', fmt: 'Post + stories', obj: 'Venda', title: 'Black Friday: 20 vagas de Raio-X', est: 'Black Friday sem desconto: 20 vagas de Raio-X do marketing de 27 a 30/11, junto da 1ª parcela do 13º.',
+  { date: 'Sex 27/11', fmt: 'Post + stories', obj: 'Venda', title: 'Black Friday: 12 Raio-X com câmera', est: 'Black Friday sem desconto: 12 Raio-X com câmera (3 por dia) de 27 a 30/11, junto da 1ª parcela do 13º.',
     ref: R('ad_provex_2', 'Provex Assessoria de Marketing', AD + '987902910570937', 'Biblioteca de Anúncios', 'anúncio ativo em 12/11/2026', 'Black Friday: “15 dias de anúncios grátis”', 'a data com número e prazo; aqui sem dar anúncio de graça: o que é grátis é o diagnóstico.'),
-    t: 'Black Friday aqui não é desconto.', x: 'São 20 vagas de Raio-X do marketing, até 30/11.',
+    t: 'Black Friday aqui não é desconto.', x: '12 Raio-X com câmera, 3 por dia, até 30/11.',
     leg: T(`Black Friday aqui não é desconto. É clareza. 🔎
-    De 27 a 30/11 abrimos 20 vagas de Raio-X do marketing: 30 minutos olhando seu Instagram, seus anúncios e seus concorrentes.
-    Você sai sabendo os 3 lugares onde o seu marketing está perdendo venda.
+    De 27 a 30/11, o Italo e a Ellcazo vão até 12 negócios (3 por dia) fazer o Raio-X com câmera.
+    Tu sai com os 3 lugares onde o teu marketing perde venda, por escrito, e 1 vídeo de 15 s gravado ali, pronto pra anunciar.
     De graça. Sem compromisso.
     👉 Manda “RAIO-X” no WhatsApp (link na bio).`),
     tags: TAG + ' #blackfriday',
-    art: 'Fundo azul-escuro, “20 vagas” grande em ciano, contador de vagas nos stories (20, 14, 8…), foto do Italo com o notebook do sistema aberto.' },
+    art: 'Fundo azul-escuro, “12 vagas” grande em ciano; foto do Italo e do Aleffer com a câmera na porta de um negócio. Contador nos stories só depois de 7 vagas preenchidas.' },
 
   { date: 'Ter 01/12', fmt: 'Carrossel · 5 telas', obj: 'Educação', title: 'O teste do celular', est: 'Educação que vira lead: o dono testa o próprio anúncio e chama a Peformake quando trava. Versão em vídeo: P8.',
     ref: R('ad_baruk_0', 'Agência Baruk', AD + '1095856403078936', 'Biblioteca de Anúncios', 'anúncio ativo desde 06/11/2026', '“Pare de pôr dinheiro em tráfego pago antes de fazer este teste”', 'ensinar em vez de prometer; aqui o teste ganha o jeito de falar do Recife e o Raio-X no fim.'),
@@ -81,14 +81,14 @@ module.exports = [
     tags: TAG + ' #trafegopago',
     art: 'Mão real segurando o celular com um anúncio genérico (sem marca de cliente); cronômetro na capa; check e X em ciano e cinza.' },
 
-  { date: 'Qui 03/12', fmt: 'Carrossel · 6 telas', obj: 'Prova', title: 'Estudo de caso #2: o delivery da VOVINA', est: 'Série de casos: vídeo de verdade + anúncio = clique barato no delivery próprio. [autorização do cliente]',
+  { date: 'Qui 03/12', fmt: 'Carrossel · 6 telas', obj: 'Prova', title: 'Estudo de caso #2: o delivery da VOVINA', est: 'Série de casos: vídeo de verdade + anúncio no delivery próprio. Prova de caixa: pedidos [confirmar com a VOVINA]. [autorização do cliente]',
     ref: R('ad_alavant_1', 'Alavantcompany', AD + '1633848741490201', 'Biblioteca de Anúncios', 'anúncio ativo desde 12/09/2026', '“Recorde de vendas em plena segunda-feira”', 'o print do resultado como prova; aqui com o número do sistema e o vídeo que gerou o clique.'),
     t: '893 cliques no delivery próprio.', x: 'A R$ 0,13 cada. E 85% vieram de um vídeo só.',
-    telas: ['893 cliques no delivery próprio. Estudo de caso #2.', 'A VOVINA queria pedido sem depender de aplicativo.', 'A Ellcazo gravou o vídeo do Combo dentro da pizzaria.', 'O anúncio levou direto ao link do delivery.', '9 dias: 893 cliques a R$ 0,13; 85% do vídeo do Combo.', 'Vídeo de verdade deixa o clique barato. Raio-X grátis.'],
+    telas: ['893 cliques no delivery próprio. Estudo de caso #2.', 'A VOVINA queria pedido sem depender de aplicativo.', 'A Ellcazo gravou o vídeo do Combo dentro da pizzaria.', 'O anúncio levou direto ao link do delivery.', '9 dias: 893 cliques a R$ 0,13 e [x] pedidos; 85% do vídeo do Combo.', 'Vídeo de verdade deixa o clique barato. Raio-X grátis.'],
     leg: T(`Estudo de caso #2 🍕
     A [VOVINA] queria vender no delivery próprio, sem pagar taxa de aplicativo.
     A Ellcazo gravou o Combo dentro da pizzaria e o anúncio levou direto para o link de pedido.
-    Em 9 dias: 893 cliques a R$ 0,13. 85% vieram de um vídeo só.
+    Em 9 dias: 893 cliques a R$ 0,13, e [x] pedidos no delivery próprio. 85% vieram de um vídeo só.
     Vídeo de verdade, do seu negócio, deixa o clique barato.
     ${WPP}`),
     tags: TAG + ' #delivery #estudodecaso',
@@ -100,7 +100,7 @@ module.exports = [
     leg: T(`O marketing veio gravar no [Fornario] 🍕🎥
     Take 1: a luz. Take 4: o garçom entrou no quadro. Take 7: perfeito (e a pizza fria).
     É assim que a gente faz: de dentro do seu negócio, com a sua equipe, até ficar com cara de quem dá fome.
-    Depois, o número: [x] pedidos e conversas. [autorização do cliente]
+    E o número de um vídeo antigo do Fornario: o prato novo levou 479 pessoas ao perfil (anúncio de novembro). [autorização do cliente]
     ${WPP}`),
     tags: TAG + ' #bastidores #pizzaria',
     art: 'Capa: frame real do Aleffer de costas filmando a pizza saindo do forno; contador “TAKE 7” em ciano no canto; título curto em branco sobre faixa azul-escuro.' },
@@ -108,13 +108,13 @@ module.exports = [
   { date: 'Sex 11/12', fmt: 'Carrossel · 5 telas', obj: 'Venda (Ellcazo)', title: '3 erros do vídeo de restaurante que não dá fome', est: 'Oferta Diária Ellcazo (até 18/12), papel converter; mesma ideia do vídeo P9. Peça com a marca Ellcazo.',
     ref: R('yt_YExjJVL3kGU', '@NathanAbritta', YT('YExjJVL3kGU'), 'YouTube', '11 mil views', 'Tutorial: “a melhor forma de fazer um vídeo em restaurante”', 'o “take 3” acompanhando o prato; aqui vira 3 regras e a diária da Ellcazo no fim.'),
     t: '3 erros que fazem o vídeo do seu restaurante não dar fome.', x: 'E a diária da Ellcazo para gravar o seu antes do Natal.',
-    telas: ['3 erros que fazem o vídeo do seu restaurante não dar fome.', 'Erro 1: luz de cima. Vire o prato para a janela.', 'Erro 2: prato parado. Chegue devagar, com a câmera.', 'Erro 3: sem som. Fogo, faca, queijo puxando.', 'Diária Ellcazo: 6 a 10 vídeos num dia. Datas até 18/12.'],
+    telas: ['3 erros que fazem o vídeo do seu restaurante não dar fome.', 'Erro 1: luz de cima. Vire o prato para a janela.', 'Erro 2: prato parado. Chegue devagar, com a câmera.', 'Erro 3: sem som. Fogo, faca, queijo puxando.', 'Diária Ellcazo: até 6 vídeos em 3 h. Datas até 18/12.'],
     leg: T(`Vídeo de restaurante não é foto que mexe. 🎬
     3 regras que a Ellcazo usa em toda diária:
     1. Luz da janela, nunca a luz de cima.
     2. O prato chegando, não parado na mesa.
     3. O som: fogo, faca, queijo puxando.
-    Quer o seu gravado antes do Natal? A diária da Ellcazo entrega de 6 a 10 vídeos num dia. Datas até 18/12.
+    Quer o seu gravado antes do Natal? A diária da Ellcazo grava até 6 vídeos em 3 horas, fora do teu horário de movimento. Datas até 18/12.
     📲 Chama no WhatsApp (link na bio).`),
     tags: '#ellcazo #restaurantesrecife #gastronomiarecife #recife #videoparamarcas',
     art: 'Identidade Ellcazo: fundo verde-limão ou branco, preto só no texto e no logo; frames reais de clientes de gastronomia [com autorização].' },
@@ -125,10 +125,10 @@ module.exports = [
     leg: T(`Todo janeiro é igual: “esse ano eu organizo o marketing”. E fevereiro chega. 📅
     Quem fecha com a Peformake até 19/12 começa janeiro com:
     ✅ a estratégia do mês entregue antes da virada
-    ✅ a diária de gravação marcada na 1ª semana
+    ✅ a diária de gravação marcada entre 05 e 16/01
     ✅ anúncio, conteúdo e relatório toda segunda
     Comece 2027 com o plano pronto, não com pressa.
     👉 Manda “2027” no WhatsApp (link na bio).`),
     tags: TAG + ' #planejamento2027',
-    art: 'Calendário de janeiro com a 1ª semana marcada em ciano (“diária”, “plano”, “relatório”); foto do Italo com a equipe; prazo “até 19/12” no canto.' },
+    art: 'Calendário de janeiro com 05 a 16/01 marcado em ciano (“diária”, “plano”, “relatório”); foto do Italo com a equipe; prazo “até 19/12” no canto.' },
 ]

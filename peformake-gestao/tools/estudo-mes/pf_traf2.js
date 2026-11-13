@@ -12,8 +12,8 @@ function startPage(d) {
   d.page('pf', 'Tráfego · ponto de partida', 'O método já funciona nos clientes; agora, na Peformake', `
   <div class="xk">${[['0', 'anúncios da própria Peformake no ar (sem conta própria)'], ['653', 'conversas por anúncio nos clientes (out–nov)'], ['R$ 3,41 a 10,17', 'por conversa nos clientes (pilates a multimarcas)'], ['11 de 13', 'clientes vieram por indicação; 0 por anúncio']].map((k) => `<div><b>${k[0]}</b><span>${k[1]}</span></div>`).join('')}</div>
   <div class="xg3">
-    <div class="xbox xdk"><h3>O que a base ensina</h3>${ul(['Oferta com <b>nome, preço e cidade</b> custa 10 a 15 vezes menos que o genérico', '<b>Vídeo do serviço acontecendo</b> vence o card (F5, pilates)', 'Botão do WhatsApp com mensagem pronta: é o que gera conversa barata'])}</div>
-    <div class="xbox"><h3>Então, no anúncio da Peformake</h3>${ul(['O Raio-X tem nome, duração, quem faz e vagas', 'Todo criativo é um vídeo ou case real da equipe no cliente', 'Toda campanha termina numa conversa com origem no Comercial'])}</div>
+    <div class="xbox xdk"><h3>O que a base ensina</h3>${ul(['Os vencedores dizem <b>o quê, quanto e onde</b>: R$ 3,41 a 4,14 por conversa', '<b>Vídeo do serviço acontecendo</b> vence o card (F5, pilates)', 'Botão do WhatsApp com mensagem pronta: é o que gera conversa barata'])}</div>
+    <div class="xbox"><h3>Então, no anúncio da Peformake</h3>${ul(['O Raio-X com câmera diz quem vai, o que o dono leva e quantas vagas', 'Todo criativo é um vídeo ou case real da equipe no cliente', 'Toda campanha termina numa conversa com origem no Comercial'])}</div>
     <div class="xbox"><h3>O que é diferente aqui</h3>${ul(['Dono de negócio decide mais devagar que quem compra óculos: <b>a conversa custa mais</b>', 'Ticket de assessoria é recorrente: o teto se paga no 1º mês', 'Testamos só 2 coisas novas: rosto × número e o público'])}</div>
   </div>`, { cls: 'dense big' })
 }
@@ -21,26 +21,26 @@ function startPage(d) {
 function tetoPage(d) {
   d.page('pf', 'Tráfego · os números que decidem', 'Quanto pode custar cada resultado sem dar prejuízo', `
   <table class="xtab"><thead><tr><th>Resultado</th><th>A conta</th><th>Teto</th><th>Meta</th></tr></thead><tbody>
-    <tr class="hi"><td><b>Conversa (Raio-X, frio)</b></td><td>ticket da base R$ 1.150/mês (faixa R$ 600 a 1.600) × margem <b>[40%]</b> × conversa→contrato <b>[7,5%]</b> (6 de 80)</td><td><b>R$ 35</b><small>paga no 1º mês; R$ 200 nos 6 meses</small></td><td>até R$ 35</td></tr>
-    <tr><td><b>Raio-X feito</b></td><td>R$ 1.150 × [40%] × Raio-X→contrato <b>[24%]</b> (6 de 25)</td><td><b>R$ 110</b></td><td>até R$ 70</td></tr>
-    <tr><td><b>Conversa (remarketing, morno/quente)</b></td><td>R$ 1.150 × [40%] × fechamento de quem já viu o case <b>[15%]</b></td><td><b>R$ 69</b></td><td>até R$ 30</td></tr>
-    <tr><td><b>Conversa (Diária Ellcazo)</b></td><td>[valor da diária no catálogo] × [margem] × fechamento <b>[30%]</b>; provisório pelo histórico do nicho (R$ 4 a 10)</td><td><b>[R$ 25]</b></td><td>até R$ 15</td></tr>
+    <tr class="hi"><td><b>Conversa (Raio-X, frio)</b></td><td>[ticket médio da base] × margem <b>[40%]</b> × conversa→contrato <b>[7%]</b> (5 de 70)</td><td><b>R$ 35</b><small>paga no 1º mês</small></td><td>até R$ 35</td></tr>
+    <tr><td><b>Raio-X com câmera feito</b></td><td>[ticket] × [40%] × Raio-X→contrato <b>[25%]</b> (5 de 20)</td><td><b>R$ 115</b></td><td>até R$ 70</td></tr>
+    <tr><td><b>Conversa (remarketing, morno/quente)</b></td><td>[ticket] × [40%] × fechamento de quem já viu o case <b>[15%]</b></td><td><b>R$ 69</b></td><td>até R$ 30</td></tr>
+    <tr><td><b>Conversa (Diária Ellcazo)</b></td><td>[valor da diária] × [margem] × fechamento <b>[25%]</b> (2 de 8)</td><td><b>[R$ 30]</b></td><td>até R$ 28</td></tr>
   </tbody></table>
   <div class="xg3" style="margin-top:14px;grid-template-columns:repeat(4,1fr)">
     ${[['Gancho (3 s)', '≥ 25%', 'das impressões assistem 3 s'], ['CTR no link', '≥ 1%', 'clique no botão do WhatsApp'], ['Resposta', '≤ 1 hora', 'Thyfany, das 8h às 19h'], ['Frequência', '≤ 3', 'acima disso, troca o criativo']].map((k, i) => `<div class="xbox ${i === 0 ? 'xdk' : ''}"><span class="xl" ${i === 0 ? 'style="color:var(--cy)"' : ''}>${k[0]}</span><b style="font:800 26px 'Inter Display';color:${i === 0 ? 'var(--cy)' : 'var(--pe)'}">${k[1]}</b><p>${k[2]}</p></div>`).join('')}
   </div>
-  <p class="cap" style="margin-top:8px">[Colchetes] = hipótese até termos dado: margem e taxas de fechamento são revistas em 30/11 com os números reais do Comercial. Ticket: faixa da base, nunca valor de cliente individual.</p>`, { cls: 'dense big' })
+  <p class="cap" style="margin-top:8px">[Colchetes] = hipótese até termos dado: margem e taxas de fechamento são revistas em 30/11 com os números reais do Comercial. O ticket da base não aparece aqui: a conta completa fica na versão admin.</p>`, { cls: 'dense big' })
 }
 
 function estruturaPage(d) {
   const T = [
     ['Frio', 'Donos de negócio 28–55 anos, Grande Recife (25 km); aberto × interesses de pequenas empresas', 'Dor ou desejo + Raio-X com nome e vagas', 'P4 case, P2 Raio-X 30 s, P8 BF', 'C1 Raio-X'],
-    ['Morno', 'Viu 50% de um vídeo, visitou @peformake ou @italosantosdigital, interagiu (7–30 dias)', 'Prova e objeção: case, “já paguei agência”', 'P5 VOVINA, P7 objeção, P6 8 → 32', 'C2 Comece 2027'],
+    ['Morno', 'Viu 50% de um vídeo, visitou @peformake ou @italosantosdigital, interagiu (7–30 dias)', 'Prova e objeção: case, “já paguei agência”', 'P5 VOVINA, P7 objeção, P6 Fornario', 'C2 Comece 2027'],
     ['Quente', 'Conversou no WhatsApp, fez Raio-X, cliente da Ellcazo (lista)', 'Oferta principal com prazo: até 19/12', 'P10 Dezembro vende janeiro', 'C2 Comece 2027'],
     ['Nicho', 'Donos e gerentes de restaurante, bar e loja, Grande Recife; seguidores de gastronomia local', 'Desejo: vídeo que dá fome + prazo 18/12', 'P9 3 erros, P1 o marketing veio gravar', 'C3 Diária'],
   ]
   d.page('pf', 'Tráfego · estrutura', 'Uma campanha por oferta, conjuntos por temperatura', `
-  <div class="xfl" style="margin-bottom:14px">${[['C1 · Raio-X do marketing', 'Mensagens (WhatsApp) · “Quero o Raio-X do meu marketing”', '60% · R$ 22/dia na B'], ['C2 · Comece 2027', 'Mensagens · remarketing · “2027”', '25% · R$ 9/dia na B'], ['C3 · Diária Ellcazo', 'Mensagens · “Quero uma diária de gravação”', '15% · R$ 6/dia na B (01–18/12)']].map((c, i) => `<div style="${i === 0 ? 'background:var(--dk);color:#fff' : ''}"><h4 ${i === 0 ? 'style="color:var(--cy)"' : ''}>${c[0]}</h4>${c[1]}<span class="m">${c[2]}</span></div>`).join('')}</div>
+  <div class="xfl" style="margin-bottom:14px">${[['C1 · Raio-X com câmera', 'Mensagens (WhatsApp) · “Quero o Raio-X do meu marketing”', '62% · R$ 1.085 na B'], ['C2 · Comece 2027', 'Mensagens · remarketing · “2027” · desde 23/11', '25% · R$ 440 na B'], ['C3 · Diária Ellcazo', 'Mensagens · “Quero uma diária de gravação”', '13% · R$ 15/dia, 04 a 18/12 (R$ 225)']].map((c, i) => `<div style="${i === 0 ? 'background:var(--dk);color:#fff' : ''}"><h4 ${i === 0 ? 'style="color:var(--cy)"' : ''}>${c[0]}</h4>${c[1]}<span class="m">${c[2]}</span></div>`).join('')}</div>
   <table class="xtab"><thead><tr><th>Temperatura</th><th>Quem</th><th>Mensagem</th><th>Criativos</th><th>Campanha</th></tr></thead><tbody>
   ${T.map((r) => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><b>${r[4]}</b></td></tr>`).join('')}</tbody></table>
   <p class="cap" style="margin-top:8px">3 a 5 criativos por conjunto. Reels, Stories e Feed (Instagram e Facebook), seg a sáb 8h–20h. Antes de subir: conta própria na BM “Peformake CA 1”, página e @peformake ligados, Comercial com origem “Anúncio”. Meta Ads: só leitura até o Italo aprovar.</p>`, { cls: 'dense big' })
@@ -48,27 +48,27 @@ function estruturaPage(d) {
 
 // matriz: [ângulo, criativo/peça, gancho, temperatura, ref1, ref2]
 const C = {
-  c1: { name: 'C1 · Raio-X do marketing', offer: 'Raio-X: 30 min com o Italo, 3 vazamentos + 1 conserto · grátis · BF 20 vagas', next: 'WhatsApp “Quero o Raio-X do meu marketing” → Thyfany em 1 h', meta: '30 conversas · 15 Raio-X · teto R$ 35',
+  c1: { name: 'C1 · Raio-X com câmera', offer: 'O Italo e a Ellcazo vão até o negócio: 3 vazamentos + 1 vídeo de 15 s · grátis · BF 12 vagas (3 por dia)', next: 'WhatsApp “Quero o Raio-X do meu marketing” → Thyfany em 1 h', meta: '31 conversas a até R$ 35 · teto R$ 35',
     rows: [
       ['Dor', 'P2 · Raio-X em 30 s', '“Eu olho 3 coisas no seu perfil e sei se ele vende.”', 'Frio', 'brunoluis', 'bindes', 'A dor dita na 1ª frase e o “te explico em 1 min”; trocar a promessa por 3 itens que o dono confere'],
       ['Desejo', 'P3 · Eu tinha problema de dicção (corte de 15 s)', '“Se eu apareço, você aparece.”', 'Frio', 'bindes2', 'laquila', 'Dono contando a própria história; aqui a cicatriz real, sem palco'],
-      ['Prova', 'P4 · Estudo de caso #1 (Ótica MD) + carrossel 02', '“Essa ótica tinha vitrine. Não tinha conversa.”', 'Frio', 'alavant', 'alldaya', 'O case com rosto que roda há 108 dias; aqui com o número do sistema na tela'],
+      ['Prova', 'P4 · Case nº 1: Ótica MD [autorização até 19/11] ou F5 (plano B)', '“Essa ótica tinha vitrine. Não tinha conversa.”', 'Frio', 'alavant', 'alldaya', 'O case com rosto que roda há 108 dias; aqui com o número do sistema na tela'],
       ['Objeção', 'Post 06 · O teste do celular', '“Antes de pôr mais dinheiro em anúncio, faz esse teste.”', 'Frio', 'baruk', 'talisma', 'Ensinar um teste em vez de prometer; a objeção vira o gancho'],
       ['Urgência', 'P8 · Black Friday 0% de desconto + post 05', '“Black Friday aqui é zero por cento.” (rasga o cartaz)', 'Frio + morno', 'provex', 'fga', 'Contra-exemplo: eles dão grátis; nós damos vagas contadas. Do FGA, a garantia na 1ª linha'],
     ] },
-  c2: { name: 'C2 · Comece 2027 (remarketing)', offer: '6 meses, fechado até 19/12; diária de janeiro inclusa [a decidir]', next: 'WhatsApp “2027” → Italo em 1 h; proposta em 48 h', meta: '12 conversas · 6 contratos · teto R$ 69',
+  c2: { name: 'C2 · Comece 2027 (remarketing)', offer: '6 meses, fechado até 19/12; diária de janeiro inclusa [a decidir]', next: 'WhatsApp “2027” → Italo em 1 h; proposta em 48 h', meta: '14 conversas a até R$ 30 · 5 contratos · teto R$ 69',
     rows: [
       ['Prova', 'P5 · O vídeo que virou anúncio (VOVINA)', '“Esse vídeo foi gravado num dia.” (update)', 'Morno', 'alavant', 'laquila', 'Antes → o que fizemos → número; formato “update”'],
-      ['Prova', 'P6 · De 8 para 32 posts (Fornario)', '“Agosto: 8 posts. Novembro: 32.”', 'Morno', 'alldaya', 'igor2biz', 'Nicho na 1ª frase (“dono de restaurante”); a equipe no lugar do especialista'],
+      ['Prova', 'P6 · Quem lembra de postar quando o salão enche? (Fornario)', '“[x] reservas em novembro.” [autorização]', 'Morno', 'alldaya', 'igor2biz', 'Nicho na 1ª frase (“dono de restaurante”); a equipe no lugar do especialista'],
       ['Objeção', 'P7 · “Já paguei agência e não deu em nada”', 'A pergunta do story na tela', 'Morno', 'growthodonto', 'talisma', 'A pergunta do seguidor na tela, respondida com o relatório de segunda'],
       ['Urgência', 'P10 · Dezembro vende janeiro + post 10', 'Caneta risca 3 semanas de janeiro', 'Quente', 'fga', 'growing', 'Prazo e plano de 3 meses; contra o “dobrar em 2027”, a conta do calendário'],
       ['Desejo', 'P1 · O marketing veio gravar no restaurante', '“O marketing veio gravar…” take 7', 'Morno', 'trivo', 'maracatu', 'Humor que faz lembrar a marca; o rosto local da equipe'],
     ] },
-  c3: { name: 'C3 · Diária Ellcazo de fim de ano', offer: '6 a 10 vídeos num dia + corte de 15 s · agenda até 18/12', next: 'WhatsApp “Quero uma diária” → Ellcazo em 2 h com datas', meta: '8 conversas · 3 diárias · teto [R$ 25]',
+  c3: { name: 'C3 · Diária Ellcazo de fim de ano', offer: 'Até 6 vídeos numa diária de 3 h + corte de 15 s · agenda até 18/12', next: 'WhatsApp “Quero uma diária” → Ellcazo em 2 h com datas', meta: '8 conversas · 2 diárias · R$ 15/dia · teto [R$ 30]',
     rows: [
       ['Dor', 'P9 · 3 erros do vídeo de restaurante', '“Se o seu vídeo é assim, ele não dá fome.”', 'Nicho', 'bindes', 'dezemhum', 'Aula curta + pergunta direta ao dono; erro e correção na mesma cena'],
       ['Desejo', 'Carrossel 09 · antes e depois do prato', 'O mesmo prato: celular tremido × Ellcazo', 'Nicho', 'taghy', 'igor2biz', 'Comida grande, luz quente; lado a lado com o “antes”'],
-      ['Prova', 'Corte do Brio Matuto (2.431 views)', '“Esse close teve 3,6 vezes a média.”', 'Nicho', 'alavant', 'bindes2', 'Número do cliente na capa do vídeo (views do Brio)'],
+      ['Prova', 'P1 · O marketing veio gravar (Fornario)', '“Esse prato novo levou 479 pessoas ao perfil.”', 'Nicho', 'alavant', 'bindes2', 'Número de uma peça antiga do cliente na tela, não promessa'],
       ['Urgência', 'Story/feed “agenda até 18/12”', '“Natal se grava agora.”', 'Nicho + quente', 'fga', 'provex', 'Prazo na faixa de cor; sem “grátis”: diária com agenda até 18/12'],
     ] },
 }
@@ -81,14 +81,14 @@ function campPage(d, k) {
 }
 
 function verbaPage(d) {
-  const cal = [['13–16/11', 'Preparação: conta, mensagens, Comercial', 'R$ 0', ''], ['17–22/11', 'C1 sobe (case Ótica MD 19/11)', 'R$ 22', ''], ['23–26/11', 'C2 sobe; teste rosto × número', 'R$ 31', ''], ['27–30/11', 'Black Friday: C1 em dobro (20 vagas)', 'R$ 50', 'hot'], ['01–07/12', 'C3 sobe (04/12); teste da mensagem', 'R$ 37', ''], ['08–14/12', 'Teste de público; troca de criativos', 'R$ 37', ''], ['15–19/12', 'Comece 2027: C2 no máximo', 'R$ 50', 'hot'], ['20–23/12', 'Só remarketing e C1 leve', 'R$ 20', ''], ['24–27/12', 'Natal: tudo pausado', 'R$ 0', 'lo'], ['28–31/12', 'C1 volta: agenda de Raio-X de janeiro', 'R$ 30', '']]
+  const cal = [['13–16/11', 'Preparação: conta, mensagens, Comercial', 'R$ 0', ''], ['17–22/11', 'C1 sobe (case nº 1 em 19/11) · 6 dias × R$ 30', 'R$ 180', ''], ['23–26/11', 'C2 sobe; teste rosto × número · 4 × R$ 40', 'R$ 160', ''], ['27–30/11', 'Black Friday: 12 Raio-X · 4 × R$ 60', 'R$ 240', 'hot'], ['01–07/12', 'C3 sobe em 04/12 (R$ 15/dia) · 7 × R$ 45', 'R$ 315', ''], ['08–14/12', 'Teste de público; troca de criativos · 7 × R$ 45', 'R$ 315', ''], ['15–19/12', 'Comece 2027 no máximo · 5 × R$ 60', 'R$ 300', 'hot'], ['20–23/12', 'Remarketing e C1 leve · 4 × R$ 30', 'R$ 120', ''], ['24–27/12', 'Natal: tudo pausado', 'R$ 0', 'lo'], ['28–31/12', 'C1: agenda de Raio-X de janeiro · 4 × R$ 30', 'R$ 120', ''], ['Total', '41 dias no ar', 'R$ 1.750', 'hot']]
   d.page('pf', 'Tráfego · verba e calendário', 'Três opções de verba e quando cada coisa sobe, troca e pausa', `
   <div class="xg2" style="grid-template-columns:1fr 1.25fr">
     <div style="display:flex;flex-direction:column;gap:10px">
-      ${[['A', 'R$ 25/dia', '≈ R$ 1.150 · ≈ 33 conversas a R$ 35', ''], ['B · sugerida', 'R$ 37/dia', '≈ R$ 1.750 · ≈ 50 conversas, dobrando nos picos', 'xdk'], ['C', 'R$ 57/dia', '≈ R$ 2.700 · ≈ 75 conversas; precisa de mais horários de Raio-X', '']].map((o) => `<div class="xbox ${o[3]}"><span class="xl" ${o[3] ? 'style="color:var(--cy)"' : ''}>${o[0]}</span><b style="font:800 26px 'Inter Display';color:${o[3] ? 'var(--cy)' : 'var(--pe)'}">${o[1]}</b><p>${o[2]}</p></div>`).join('')}
-      <div class="xbox"><h3>Divisão de referência</h3><p><b>60%</b> no que já vende (C1) · <b>25%</b> remarketing (C2) · <b>15%</b> teste e nicho (C3). Troca de criativo a cada 10 a 14 dias ou queda de CTR.</p></div>
+      ${[['A', 'R$ 1.150', '≈ R$ 28/dia nos 41 dias · ≈ 30 conversas', ''], ['B · sugerida', 'R$ 1.750', '≈ R$ 43/dia nos 41 dias · 45 conversas de Raio-X + 8 de diária', 'xdk'], ['C', 'R$ 2.700', '≈ R$ 66/dia · ≈ 75 conversas; precisa de mais Raio-X na agenda', '']].map((o) => `<div class="xbox ${o[3]}"><span class="xl" ${o[3] ? 'style="color:var(--cy)"' : ''}>${o[0]}</span><b style="font:800 26px 'Inter Display';color:${o[3] ? 'var(--cy)' : 'var(--pe)'}">${o[1]}</b><p>${o[2]}</p></div>`).join('')}
+      <div class="xbox"><h3>Divisão de referência</h3><p><b>62%</b> no que já vende (C1) · <b>25%</b> remarketing (C2) · <b>13%</b> nicho (C3, R$ 15/dia). Troca de criativo a cada 10 a 14 dias ou queda de CTR.</p></div>
     </div>
-    <table class="xtab"><thead><tr><th>Quando</th><th>O que acontece</th><th>Dia (B)</th></tr></thead><tbody>
+    <table class="xtab"><thead><tr><th>Quando</th><th>O que acontece</th><th>Período (B)</th></tr></thead><tbody>
     ${cal.map((r) => `<tr class="${r[3] === 'hot' ? 'hi' : r[3]}"><td><b>${r[0]}</b></td><td>${r[1]}</td><td><b>${r[2]}</b></td></tr>`).join('')}</tbody></table>
   </div>`, { cls: 'dense big' })
 }
@@ -106,10 +106,10 @@ function regrasPage(d) {
 
 function cliquePage(d) {
   d.page('pf', 'Tráfego · depois do clique', 'O anúncio só termina quando vende', `
-  <div class="xfl" style="margin-bottom:14px">${[['Anúncio', 'botão do WhatsApp, mensagem pronta por campanha'], ['Conversa', 'Thyfany responde em até 1 h; origem no Comercial'], ['Qualificação', '3 perguntas: negócio e cidade, de onde vêm os clientes, o que já tentou'], ['Raio-X', '30 min com o Italo: 3 vazamentos + 1 conserto'], ['Proposta', 'em até 48 h; Comece 2027 até 19/12'], ['Contrato', 'Assinafy; diária marcada']].map((s, i) => `<div style="${i === 5 ? 'background:var(--dk);color:#fff' : ''}"><h4 ${i === 5 ? 'style="color:var(--cy)"' : ''}>${s[0]}</h4>${s[1]}</div>`).join('')}</div>
+  <div class="xfl" style="margin-bottom:14px">${[['Anúncio', 'botão do WhatsApp, mensagem pronta por campanha'], ['Conversa', 'Thyfany responde em 1 h, registra a origem e prepara a ficha'], ['Qualificação', '3 perguntas: negócio e cidade, de onde vêm os clientes, o que já tentou'], ['Raio-X com câmera', 'Italo + Aleffer no negócio: 3 vazamentos + 1 vídeo de 15 s'], ['Proposta', 'em até 48 h; Comece 2027 até 19/12'], ['Contrato', 'Assinafy; diária marcada']].map((s, i) => `<div style="${i === 5 ? 'background:var(--dk);color:#fff' : ''}"><h4 ${i === 5 ? 'style="color:var(--cy)"' : ''}>${s[0]}</h4>${s[1]}</div>`).join('')}</div>
   <div class="xg2">
     <table class="xtab"><thead><tr><th>Objeção real</th><th>Resposta curta</th></tr></thead><tbody>
-    ${[['“Quanto custa?”', 'Faixa por área antes de gastar 1 minuto; preço claro em 48 h'], ['“Já paguei agência…”', 'Faltou olhar o número toda segunda. Aqui você recebe.'], ['“Eu mesmo impulsiono”', 'Impulsionar acelera o que está lá; a gente arruma antes'], ['“Depois do fim de ano”', 'Quem decide em janeiro começa em fevereiro'], ['“Não tenho tempo de gravar”', 'A Ellcazo vai até você e o Italo dirige']].map((r) => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td></tr>`).join('')}</tbody></table>
+    ${[['“Quanto custa?”', 'Preço claro na proposta, em 48 h, depois do Raio-X'], ['“Já paguei agência…”', 'Faltou olhar o número toda segunda. Aqui você recebe.'], ['“Eu mesmo impulsiono”', 'Impulsionar acelera o que está lá; a gente arruma antes'], ['“Depois do fim de ano”', 'Quem decide em janeiro começa em fevereiro'], ['“Não tenho tempo de gravar”', 'A Ellcazo vai até você e o Italo dirige']].map((r) => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td></tr>`).join('')}</tbody></table>
     <div class="xbox xdk"><h3>Como medir anúncio → venda</h3>${ul(['A Meta conta as <b>conversas iniciadas</b>; o Comercial conta Raio-X e contrato', 'Mensagem pronta diferente por campanha = origem automática', 'Link da bio com <b>?utm_source=instagram&amp;utm_medium=anuncio&amp;utm_campaign=raio-x</b>', 'Segunda: custo por conversa, por Raio-X e por contrato'])}<p style="margin-top:6px">Roteiro completo no <b>Plano de vendas</b> (pasta Estratégia).</p></div>
   </div>`, { cls: 'dense big' })
 }
@@ -119,10 +119,8 @@ const BANCO = [
   ['Ótica', 'Ótica MD · “Só a lente” · Carpina', 'Produto + preço + cidade', 'vídeo animado', 'R$ 3,76', '1,07%', 'hi'],
   ['Ótica', 'Ótica MD · “Só a lente” · Limoeiro', 'Produto + preço + cidade', 'vídeo', 'R$ 4,14', '1,55%', 'hi'],
   ['Ótica', 'Ótica CM · anúncio de engajamento (conversa)', 'Genérico com botão', 'imagem', 'R$ 2,45 a 7,47', '1,34–2,00%', ''],
-  ['Ótica', 'Ótica MD · “Converse conosco WhatsApp, detalhado”', 'Genérico sem oferta', 'imagem', 'R$ 58,88', '0,87%', 'lo'],
   ['Estética', 'Clínica · Pilates (engajamento → conversa)', 'Aula/serviço acontecendo', 'vídeo', 'R$ 3,41', '2,84%', 'hi'],
   ['Estética', 'Clínica · “Resultado” (antes e depois)', 'Prova', 'vídeo', 'R$ 9,46', '1,91%', ''],
-  ['Estética', 'Clínica · Reels fisioterapia funcional', 'Educação sem oferta', 'Reels', 'R$ 40,07', '2,47%', 'lo'],
   ['Automotivo', 'F5 · Fox 2013 com preço no vídeo (R$ 36.990)', 'Produto + preço', 'vídeo', 'R$ 4,08', '3,51%', 'hi'],
   ['Automotivo', 'F5 · Creta 2020 · vídeo 1', 'Produto em vídeo', 'vídeo', 'R$ 4,11', '4,65%', 'hi'],
   ['Automotivo', 'F5 · Festival Peugeot (card)', 'Evento/condição', 'card', 'R$ 8,78', '2,97%', ''],
@@ -135,26 +133,26 @@ function bancoPage(d) {
   d.page('pf', 'Tráfego · banco de ofertas (1 de 2)', 'O que vendeu nos nossos clientes, por nicho', `
   <table class="xtab bk"><thead><tr><th>Nicho</th><th>Anúncio</th><th>Oferta / ângulo</th><th>Formato</th><th>Custo por resultado</th><th>CTR</th></tr></thead><tbody>
   ${BANCO.map((r) => `<tr class="${r[6]}"><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><b>${r[4]}</b></td><td>${r[5]}</td></tr>`).join('')}</tbody></table>
-  <p class="cap" style="margin-top:6px">Fonte: traffic_entity_daily e traffic_daily_metrics (Meta, lidos pelo sistema), 01/10 a 12/11/2026, anúncios com mais de R$ 40 gastos. Resultado = conversa no WhatsApp, salvo indicação. Azul: o que vendeu; vermelho: o que não vendeu.</p>`, { cls: 'dense bkpg' })
+  <p class="cap" style="margin-top:6px">Fonte: traffic_entity_daily e traffic_daily_metrics (Meta, lidos pelo sistema), 01/10 a 12/11/2026, anúncios com mais de R$ 40 gastos. Resultado = conversa no WhatsApp, salvo indicação. Em azul: o que mais vendeu. Só anúncios dos nossos clientes, sem expor resultado fraco.</p>`, { cls: 'dense bkpg' })
 }
 function bancoPage2(d) {
   d.page('pf', 'Tráfego · banco de ofertas (2 de 2)', 'O que aprendemos e o que a Peformake testa de novo', `
   <div class="xg3" style="grid-template-columns:repeat(4,1fr)">
-    ${[['Ótica e saúde', 'Produto ou exame com nome + cidade no anúncio; conversa a R$ 3 a 7. Genérico “converse conosco” não vende.'], ['Estética', 'Mostrar a aula/serviço acontecendo (pilates R$ 3,41) vence o “resultado” (R$ 9,46) e a dica sem oferta (R$ 40).'], ['Automotivo', 'Carro com preço no vídeo: R$ 4. Card de evento custa o dobro.'], ['Gastronomia', 'Prato novo e combo em vídeo, levando ao delivery próprio: clique a R$ 0,13.']].map((x, i) => `<div class="xbox ${i % 2 ? '' : 'xdk'}"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}
+    ${[['Ótica e saúde', 'Produto ou exame com nome + cidade no anúncio; conversa a R$ 3 a 7.'], ['Estética', 'Mostrar a aula/serviço acontecendo (pilates R$ 3,41) é o formato que mais vendeu.'], ['Automotivo', 'Carro com preço no vídeo: R$ 4. O vídeo do carro rodando vende mais que a foto.'], ['Gastronomia', 'Prato novo e combo em vídeo, levando ao delivery próprio: clique a R$ 0,13.']].map((x, i) => `<div class="xbox ${i % 2 ? '' : 'xdk'}"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}
   </div>
   <div class="xg2" style="margin-top:14px">
-    <div class="xbox"><h3>Regra que vale para todos (e para a Peformake)</h3>${ul(['<b>Nome da oferta + preço ou condição + cidade</b> na primeira linha', '<b>Vídeo do serviço acontecendo</b> antes de arte bonita', 'Botão do WhatsApp com mensagem pronta; nunca “saiba mais”', 'Desconto não foi o que mais vendeu (Fuctura 20% OFF: R$ 9,87)'])}</div>
+    <div class="xbox"><h3>Regra que vale para todos (e para a Peformake)</h3>${ul(['<b>Nome da oferta + preço ou condição + cidade</b> na primeira linha', '<b>Vídeo do serviço acontecendo</b> antes de arte bonita', 'Botão do WhatsApp com mensagem pronta; nunca “saiba mais”', 'Desconto não aparece entre os vencedores da base'])}</div>
     <div class="xbox xdk"><h3>O que é novo neste mês (só 2 testes)</h3>${ul(['<b>Serviço B2B</b> (assessoria) ainda não tem histórico na base: o teto de R$ 35 é aposta, revista em 30/11', '<b>Rosto × número</b> no criativo e <b>público aberto × interesses</b>', 'Em 05/01: página “O que aprendemos no mês” com o custo real por Raio-X e por contrato'])}</div>
   </div>`, { cls: 'dense big' })
 }
 
 function decPage(d) {
   const decs = [
-    ['Verba de anúncio', [['A', 'R$ 25/dia', '≈ R$ 1.150'], ['B', 'R$ 37/dia', '≈ R$ 1.750, dobrando nos picos', 1], ['C', 'R$ 57/dia', '≈ R$ 2.700']]],
+    ['Verba de anúncio', [['A', 'R$ 1.150', '≈ R$ 28/dia'], ['B', 'R$ 1.750', '≈ R$ 43/dia, mais nos picos', 1], ['C', 'R$ 2.700', '≈ R$ 66/dia']]],
     ['Conta de anúncio', [['A', 'Conta própria na BM Peformake CA 1', 'separa o gasto dos clientes', 1], ['B', 'Conta de um cliente', 'nunca: mistura gasto e relatório']]],
     ['Para onde o anúncio leva', [['A', 'Direto no WhatsApp', 'mensagem pronta, menos atrito', 1], ['B', 'Formulário do site', 'mais dados, menos conversa']]],
     ['Rosto dos anúncios', [['A', 'Italo + equipe com nome', 'o diferencial é a equipe', 1], ['B', 'Só arte e número', 'sem gravar; perde o diferencial']]],
-    ['C3 Diária Ellcazo', [['A', 'Sobe de 04 a 18/12', 'R$ 6/dia na B', 1], ['B', 'Não sobe', 'verba vai para o C1']]],
+    ['C3 Diária Ellcazo', [['A', 'Sobe de 04 a 18/12', 'R$ 15/dia (R$ 225)', 1], ['B', 'Não sobe', 'verba vai para o C1']]],
     ['Margem para o teto', [['A', '[40%]', 'teto R$ 35 por conversa', 1], ['B', '[25%]', 'teto R$ 22; mais rígido']]],
   ]
   d.page('pf', 'Tráfego · decisões e rotina', 'Seis escolhas e 5 minutos por dia', `

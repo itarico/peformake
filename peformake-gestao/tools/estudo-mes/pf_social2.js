@@ -22,7 +22,7 @@ const ARTS = [
   [art('laquila', 'Uma frase enorme centralizada sobre fundo escuro: o “192” ocupa a capa assim.'), art('alavant1', 'Print do celular recortado com sombra: a tela 5 com o gráfico do sistema.')],
   [art('dezem0', 'Pergunta no topo + celular em mockup: a comparação “vende × enfeita”.'), art('baruk1', 'Faixa de cor só na palavra que importa: “vende” em ciano.')],
   [art('talisma', 'Legenda grande no meio da fala, 2 linhas no máximo.'), art('igor', 'Close do rosto com fundo desfocado: a capa do Reels.')],
-  [art('fg0', 'Número grande em caixa (“16 a 20”) + botão desenhado: o contador “20 vagas”.'), art('growing1', 'Caixinha de pergunta do story como título: “Cadê o desconto?”')],
+  [art('fg0', 'Número grande em caixa (“16 a 20”) + botão desenhado: o “12 vagas”.'), art('growing1', 'Caixinha de pergunta do story como título: “Cadê o desconto?”')],
   [art('godonto', 'Celular na mão em primeiro plano, caixinha por cima: a capa do teste.'), art('dezem0', 'Mockup de celular com o anúncio dentro: telas 2 a 4.')],
   [art('taghy2', 'Produto grande + pergunta curta embaixo: o Combo da VOVINA com o “893”.'), art('alavant0', 'Dupla dono + resultado em vermelho; aqui em ciano e com número.')],
   [art('alavant2', 'Equipe e dono juntos no salão: a capa “o marketing veio gravar”.'), art('taghy1', 'Cozinha real, luz quente, sem texto em cima do produto.')],
@@ -30,7 +30,7 @@ const ARTS = [
   [art('fga', 'Faixa amarela com o prazo (“4 semanas”): aqui “até 19/12” em ciano.'), art('fg0', 'Data grande + botão “Quero o meu”: a tela da oferta.')],
 ]
 
-const PIL = [['Prova (cases com número)', 30, 'Ótica MD, VOVINA, Fornario; sempre com o número do sistema'], ['A equipe dentro do cliente', 20, 'o marketing gravando no restaurante, o take 7, a diária'], ['Educação para o dono', 20, 'vende × enfeita, teste do celular, 3 erros do vídeo'], ['Italo (marca pessoal)', 15, 'a dicção, o automático; collab com @italosantosdigital'], ['Oferta', 15, 'Raio-X (20 vagas), Diária Ellcazo, Comece 2027']]
+const PIL = [['Prova (cases com número)', 30, 'Ótica MD (ou F5), VOVINA, Fornario; prova de caixa: conversas e pedidos'], ['A equipe dentro do cliente', 20, 'o marketing gravando no restaurante, o take 7, a diária'], ['Educação para o dono', 20, 'vende × enfeita, teste do celular, 3 erros do vídeo'], ['Italo (marca pessoal)', 15, 'a dicção, o automático; collab com @italosantosdigital'], ['Oferta', 15, 'Raio-X com câmera (12 vagas), Diária Ellcazo, Comece 2027']]
 function pilaresPage(d) {
   d.page('pf', `${BR} · Pilares, ritmo e design`, 'Gente de verdade, número de verdade e uma porta: o Raio-X', `
   <div class="xg2" style="grid-template-columns:1.1fr 1fr">
@@ -38,7 +38,7 @@ function pilaresPage(d) {
       ${PIL.map((p) => `<div class="xbar"><span style="width:230px"><b>${p[0]}</b><small style="display:block;color:#4b6d73;font-size:12px">${p[2]}</small></span><i style="width:${p[1] * 7}px"></i><b>${p[1]}%</b></div>`).join('')}
       <p class="cap" style="margin-top:6px">3 posts por semana no @peformake + stories diários. Toda peça termina no <b>Raio-X no WhatsApp</b> ou na oferta da semana.</p></div>
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="xbox xdk"><h3>Ritmo da semana</h3>${ul(['<b>Seg</b> educação para o dono (Thyfany escreve, Higor desenha)', '<b>Qua/Qui</b> prova: case ou a equipe no cliente (Reels do Almeida)', '<b>Sex</b> Italo ou oferta (corte de anúncio do Lucas)', '<b>Todo dia</b> stories: bastidor e contador de vagas (Ingrid)'])}</div>
+      <div class="xbox xdk"><h3>Ritmo da semana</h3>${ul(['<b>Seg</b> “Segunda do número”: Reel de 30 s com o placar anônimo da base (Thyfany tira, Italo grava)', '<b>Qua/Qui</b> prova: case ou a equipe no cliente (Reels do Almeida)', '<b>Sex</b> Italo ou oferta (corte de anúncio do Lucas)', '<b>Todo dia</b> stories: bastidor dos Raio-X (Ingrid); educação vai para o carrossel de quinzena'])}</div>
       <div class="xbox"><h3>Design: as regras do período</h3>${ul(['Fundo branco ou azul-escuro; <b>ciano só no número que importa</b>', 'Foto real da equipe e do cliente; nunca banco de imagem', 'Número do case grande na capa, com “dados do sistema”', 'Selo fixo “Raio-X grátis no WhatsApp”', 'Peça de audiovisual com a marca Ellcazo (verde-limão)'])}</div>
     </div>
   </div>`, { cls: 'dense big' })
@@ -46,12 +46,12 @@ function pilaresPage(d) {
 
 function calPage(d, P) {
   const map = ['Relação · P1 equipe', 'Provar · P4', 'Educação · atrair', 'Atrair · P3', 'Converter · P8', 'Quebrar objeção', 'Provar · P5', 'Atrair · P1', 'Converter · P9', 'Converter · P10']
-  const off = ['Raio-X', 'Raio-X', 'Raio-X', 'Raio-X', 'Raio-X (BF, 20 vagas)', 'Raio-X', 'Da gravação ao cliente', 'Raio-X', 'Diária Ellcazo', 'Comece 2027']
+  const off = ['Raio-X', 'Raio-X', 'Raio-X', 'Raio-X', 'Raio-X com câmera (BF, 12 vagas)', 'Raio-X', 'Da gravação ao cliente', 'Raio-X', 'Diária Ellcazo', 'Comece 2027']
   d.page('pf', `${BR} · As 10 postagens no calendário`, 'Cada post serve a uma oferta, com papel e data', `
   <table class="xtab"><thead><tr><th>Nº</th><th>Quando</th><th>Postagem</th><th>Formato</th><th>Papel · vídeo ligado</th><th>Oferta</th></tr></thead><tbody>
   ${P.map((p, i) => `<tr class="${/Venda|Converter/.test(map[i]) ? 'hi' : ''}"><td><b>${String(i + 1).padStart(2, '0')}</b></td><td><b>${p.date}</b></td><td><b>${p.title}</b></td><td>${p.fmt}</td><td>${map[i]}</td><td>${off[i]}</td></tr>`).join('')}
   </tbody></table>
-  <p class="cap" style="margin-top:8px">Datas sem post: 20/11 e 08/12 (feriados, só story de horário), 24 a 27/12 (Natal: post de obrigado com a equipe e os clientes). Códigos P = vídeos do Planejamento de audiovisual.</p>`, { cls: 'dense big' })
+  <p class="cap" style="margin-top:8px">Além dos 10: “Segunda do número” toda segunda e os 5 vídeos de “A rua gravada de dentro” (09/12, collab). Feriados 20/11 e 08/12: só story. Natal: post de obrigado. Códigos P = vídeos do Planejamento de audiovisual.</p>`, { cls: 'dense big' })
 }
 
 const s = Doc(BR, 'Social media')

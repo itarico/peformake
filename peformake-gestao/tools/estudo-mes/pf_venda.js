@@ -21,7 +21,7 @@ function entradaPage(d) {
   <div class="xg3" style="margin-top:14px">
     <div class="xbox xdk"><h3>Regra 1: resposta em até 1 hora</h3><p>Das 8h às 19h, de segunda a sábado. Fora do horário, a mensagem automática do WhatsApp Business diz quando volta (sem robô fingindo ser gente).</p></div>
     <div class="xbox"><h3>Regra 2: todo lead no Comercial</h3><p>Na hora, com nome, empresa, nicho, cidade e <b>origem</b>. A mensagem pronta já diz a origem; indicação: perguntar quem indicou.</p></div>
-    <div class="xbox"><h3>Regra 3: um dono por lead</h3><p>Thyfany até marcar o Raio-X; Italo do Raio-X ao contrato. Ninguém fica sem próximo passo com data.</p></div>
+    <div class="xbox"><h3>Regra 3: um dono por lead</h3><p>Thyfany até marcar e preparar a ficha; Italo e Aleffer no Raio-X; Italo até o contrato. Ninguém fica sem próximo passo com data.</p></div>
   </div>`, { cls: 'dense big' })
 }
 
@@ -30,33 +30,33 @@ function zapPage(d) {
   <div class="xg2" style="grid-template-columns:1fr 1fr 1fr;gap:18px">
     <div class="xbox"><span class="xl">1 · Primeira resposta</span>
       ${msg('Lead', 'Quero o Raio-X do meu marketing')}
-      ${msg('Thyfany', 'Oi, [nome]! Aqui é a Thyfany, da Peformake. O Raio-X é uma conversa de 30 min com o Italo, de graça: ele abre seu Instagram, seu anúncio e seu WhatsApp e te mostra onde está perdendo venda. Posso te fazer 3 perguntas rápidas pra ele já chegar preparado?', 1)}
+      ${msg('Thyfany', 'Oi, [nome]! Aqui é a Thyfany, da Peformake. O Raio-X com câmera é de graça: o Italo e a Ellcazo vão até o teu negócio, olham Instagram, anúncio e WhatsApp, e tu sai com 3 vazamentos por escrito e 1 vídeo de 15 s pronto pra anunciar. Posso te fazer 3 perguntas rápidas?', 1)}
       <p style="margin-top:6px"><b>Nunca:</b> mandar preço, PDF ou áudio longo na primeira resposta.</p></div>
     <div class="xbox"><span class="xl">2 · Qualificação (3 perguntas)</span>
       ${msg('Thyfany', '1) Qual é o seu negócio e em que cidade?<br>2) Hoje, de onde vem a maioria dos seus clientes?<br>3) Já tentou anúncio, agência ou alguém cuidando do Instagram? Como foi?', 1)}
       <p style="margin-top:6px"><b>Qualificado:</b> dono ou sócio, Grande Recife (ou online), faturamento entre R$ 30 e 150 mil por mês [perguntar só se surgir], vende serviço ou produto local.</p>
       <p style="margin-top:4px"><b>Fora do perfil:</b> agradece e manda 1 conteúdo útil (P2, “Raio-X em 30 s”).</p></div>
     <div class="xbox"><span class="xl">3 · Marcar e confirmar</span>
-      ${msg('Thyfany', 'Perfeito. O Italo tem [terça 10h] ou [quinta 16h]. Qual fica melhor? Pode ser por vídeo ou aqui no escritório.', 1)}
+      ${msg('Thyfany', 'Perfeito. O Italo e o Aleffer podem ir aí [terça 9h] ou [quinta 14h], fora do horário de movimento. Qual fica melhor?', 1)}
       ${msg('Thyfany', '(no dia, 2 h antes) Tudo certo pro Raio-X às [16h]? Me manda o @ do Instagram e, se tiver, um print do seu último anúncio.', 1)}
-      <p style="margin-top:6px"><b>BF:</b> “Restam [x] das 20 vagas desta Black Friday.” Só o número real.</p></div>
+      <p style="margin-top:6px"><b>BF:</b> 12 vagas, 3 por dia. Contador nos stories só depois de 7 preenchidas, e só o número real.</p></div>
   </div>`, { cls: 'dense big' })
 }
 
 function raioxPage(d) {
   const S = [
-    ['0–5 min', 'O negócio em 1 minuto', 'Pergunta o que mais vende, o ticket e o que o dono quer em janeiro. Anota no Comercial.'],
-    ['5–12 min', 'Vazamento 1 · o perfil', 'Bio diz o quê e onde? Último post tem preço e chamada? (o teste de 2 segundos)'],
-    ['12–20 min', 'Vazamento 2 · o anúncio', 'Abre a Biblioteca: tem anúncio? Tem oferta com nome? Mostra o “Só a lente” R$ 3,76 × genérico R$ 58,88.'],
-    ['20–25 min', 'Vazamento 3 · o WhatsApp', '“Teste do celular” ao vivo: manda mensagem para o negócio e cronometra a resposta.'],
-    ['25–30 min', 'O conserto e o próximo passo', 'Escreve 1 conserto para 7 dias (faça mesmo sem contratar). Pergunta: “Quer que eu monte o plano de janeiro?”'],
+    ['Antes · Thyfany, 20 min', 'A ficha', 'Perfil, Biblioteca de Anúncios e teste do WhatsApp (manda mensagem e cronometra). O Italo chega sabendo.'],
+    ['0–10 min', 'O negócio', 'O que mais vende, o ticket e o que o dono quer em janeiro. Anota no Comercial.'],
+    ['10–25 min', 'Os 3 vazamentos', 'O perfil (teste de 2 segundos), o anúncio (tem oferta com nome, preço e cidade?) e o WhatsApp (o tempo da ficha).'],
+    ['25–45 min', 'Os 15 s · Aleffer', 'Grava 1 vídeo do produto ou serviço com a regra da casa: luz de lado, movimento lento, som real. Autorização do dono.'],
+    ['45–60 min', 'O próximo passo', 'Vazamentos por escrito até o fim do dia; o vídeo editado pelo Lucas em 24 h; “Quer que eu monte o plano de janeiro?”'],
   ]
-  d.page('pf', 'Plano de vendas · 3 · O Raio-X em 30 minutos', 'Mostrar o serviço acontecendo: 3 vazamentos e 1 conserto', `
+  d.page('pf', 'Plano de vendas · 3 · O Raio-X com câmera', 'Uma hora no negócio: 3 vazamentos e 1 vídeo pronto', `
   <div class="xg2" style="grid-template-columns:1.35fr 1fr">
     <div>${S.map((s, i) => `<div class="xstep"><b>${i + 1}</b><div><h4>${s[0]} · ${s[1]}</h4><p>${s[2]}</p></div></div>`).join('')}</div>
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="xbox xdk"><h3>O que o dono leva</h3>${ul(['Os 3 vazamentos por escrito (1 página, no WhatsApp, até o fim do dia)', '1 conserto para 7 dias', 'Se fizer sentido: a proposta “Comece 2027” em até 48 h'])}</div>
-      <div class="xbox"><h3>O que o Italo não faz</h3>${ul(['Falar de preço antes de mostrar o vazamento', 'Criticar quem cuidava antes (o vilão é o automático, não a pessoa)', 'Prometer número: mostra o case e diz “vamos medir”'])}</div>
+      <div class="xbox xdk"><h3>O que o dono leva</h3>${ul(['Os 3 vazamentos por escrito (1 página, no WhatsApp, até o fim do dia)', '1 vídeo de 15 s pronto para anunciar, em 24 h', 'Se fizer sentido: a proposta “Comece 2027” em até 48 h'])}</div>
+      <div class="xbox"><h3>O que o Italo não faz</h3>${ul(['Falar de preço antes de mostrar o vazamento', 'Criticar quem cuidava antes (o vilão é o automático, não a pessoa)', 'Prometer número: mostra o case e diz “vamos medir”', 'Analisar em vídeo o perfil de quem não pediu e não autorizou'])}</div>
     </div>
   </div>`, { cls: 'dense big' })
 }
@@ -65,7 +65,7 @@ function propostaPage(d) {
   d.page('pf', 'Plano de vendas · 4 · Proposta em 48 horas', 'Uma página, preço claro e o “por que agora” com data', `
   <div class="xg2" style="grid-template-columns:1.1fr 1fr">
     <div class="xbox"><h3>A proposta (1 página, identidade Peformake)</h3>
-      ${ul(['<b>O que vimos no Raio-X:</b> os 3 vazamentos, com print', '<b>O plano de janeiro:</b> tese, oferta do cliente e 1 meta medida no Comercial dele', '<b>Quem faz:</b> foto da equipe que vai atender (Thyfany, Higor, Aleffer…)', '<b>O que entra:</b> áreas, diária de gravação na 1ª semana, relatório toda segunda', '<b>Investimento:</b> por área, dentro da faixa da base [preço do pacote a decidir]; 6 meses', '<b>Por que agora:</b> fechando até 19/12, a diária de janeiro vai inclusa [decisão 1]', '<b>Próximo passo:</b> “Responde OK que eu mando o contrato pelo sistema”'])}</div>
+      ${ul(['<b>O que vimos no Raio-X:</b> os 3 vazamentos, com print', '<b>O plano de janeiro:</b> tese, oferta do cliente e 1 meta medida no Comercial dele', '<b>Quem faz:</b> foto da equipe que vai atender (Thyfany, Higor, Aleffer…)', '<b>O que entra:</b> áreas, diária de gravação entre 05 e 16/01, relatório toda segunda', '<b>Investimento:</b> preço claro por área [tabela na versão admin]; 6 meses', '<b>Por que agora:</b> fechando até 19/12, a diária de janeiro vai inclusa [decisão 1]', '<b>Próximo passo:</b> “Responde OK que eu mando o contrato pelo sistema”'])}</div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="xbox"><span class="xl">Mensagem de envio (Italo)</span>
         ${msg('Italo', '[Nome], como combinamos: aqui está o plano de janeiro do [negócio]. Coloquei os 3 pontos que vimos e o que a gente faz em cada um. Se fechar até 19/12, a gravação de janeiro já fica marcada. Posso te ligar amanhã às [hora] para tirar dúvidas?', 1)}</div>
@@ -75,11 +75,11 @@ function propostaPage(d) {
 }
 
 const OBJ = [
-  ['“Quanto custa?”', 'Medo de pagar caro antes de entender o que leva. 3 clientes saíram por preço.', 'Depende do que a gente achar no Raio-X; por área, fica na faixa de [R$ 600 a 1.600 por mês]. Antes de falar de preço, deixa eu te mostrar onde você está perdendo venda. 30 minutos, sem custo.', 'Faixa por área; proposta com preço claro em 48 h'],
+  ['“Quanto custa?”', 'Medo de pagar caro antes de entender o que leva. 3 clientes saíram por preço.', 'Depende do que a gente achar no Raio-X; a proposta vem com preço claro em 48 horas. Antes do preço, deixa a gente ir aí e te mostrar onde está perdendo venda. É de graça e tu fica com um vídeo pronto.', 'Proposta de 1 página com preço'],
   ['“Já paguei agência e não deu em nada”', 'Já foi enganado pelo automático. 3 clientes saíram por resultado.', 'Faz sentido desconfiar. Quase sempre faltou alguém olhando o número toda semana. Aqui você recebe toda segunda o relatório com conversas e pedidos, e a gente muda o que não funcionou.', 'Relatório de segunda (exemplo sem valores); P7'],
-  ['“Eu mesmo impulsiono”', 'Acha que anúncio é botão. Mensagem real: “se não conseguir, eu impulsiono”.', 'Impulsionar acelera o que já está lá. Se a oferta não tem nome e o WhatsApp demora, acelera para o lugar errado. Na ótica, o anúncio com oferta saiu a R$ 3,76 a conversa; o genérico, R$ 58,88.', 'Banco de ofertas da base'],
-  ['“Depois do fim de ano eu vejo”', 'Dezembro corrido; quer começar “do zero” em janeiro.', 'Quem decide em janeiro assina dia 5, tem plano dia 20 e vídeo em fevereiro. Fechando até 19/12, o plano chega antes da virada e a gravação já está marcada na 1ª semana.', 'Calendário 05/01 → 20/01 → fevereiro; P10'],
-  ['“Não tenho tempo nem jeito para gravar”', 'Vergonha de câmera e falta de tempo (mensagem real: “inseguro pra gravar”).', 'Você não grava sozinho: a Ellcazo vai até você, o Italo dirige e em 1 manhã sai o mês. E se não quiser aparecer, mostramos o produto e a equipe.', 'P3 “Eu tinha problema de dicção”; diária'],
+  ['“Eu mesmo impulsiono”', 'Acha que anúncio é botão (tema frequente nas conversas).', 'Impulsionar acelera o que já está lá. Se a oferta não tem nome e o WhatsApp demora, acelera para o lugar errado. Na nossa base, o anúncio com oferta, preço e cidade sai de R$ 3,41 a 4,14 por conversa.', 'Banco de ofertas da base'],
+  ['“Depois do fim de ano eu vejo”', 'Dezembro corrido; quer começar “do zero” em janeiro.', 'Quem decide em janeiro assina dia 5, tem plano dia 20 e vídeo em fevereiro. Fechando até 19/12, o plano chega antes da virada e a gravação já está marcada entre 05 e 16/01.', 'Calendário 05/01 → 20/01 → fevereiro; P10'],
+  ['“Não tenho tempo nem jeito para gravar”', 'Vergonha de câmera e falta de tempo (tema frequente).', 'Você não grava sozinho: a Ellcazo vai até você, o Italo dirige e em 1 manhã sai o mês. E se não quiser aparecer, mostramos o produto e a equipe.', 'P3 “Eu tinha problema de dicção”; diária'],
 ]
 function objPage(d) {
   d.page('pf', 'Plano de vendas · 5 · As 5 objeções reais', 'O que o dono diz, o que está por trás e a resposta pronta', `
@@ -110,7 +110,7 @@ function followPage(d) {
 
 function basePage(d) {
   d.page('pf', 'Plano de vendas · 7 · Indicação, upgrade e volta', 'A venda mais barata é para quem já confia na Peformake', `
-  <div class="xk">${[['12', 'clientes com pacote ou tráfego: pedir 1 indicação cada (meta: 3 leads)'], ['13', 'clientes só com audiovisual: o vídeo deles vira anúncio (meta: 3 upgrades)'], ['5', 'ex-clientes que saíram por fim de contrato (meta: 1 volta)'], ['0 R$', 'de anúncio: só mensagem de uma pessoa, com o vídeo certo']].map((k) => `<div><b>${k[0]}</b><span>${k[1]}</span></div>`).join('')}</div>
+  <div class="xk">${[['12', 'clientes com pacote ou tráfego: pedir 1 indicação cada (meta: 3 leads)'], ['13', 'clientes só com audiovisual: o vídeo deles vira anúncio (meta: 3 upgrades)'], ['5', 'ex-clientes que saíram por fim de contrato (meta: 1 volta)'], ['12', 'cartões “Raio-X de presente” nas reuniões de dezembro (meta: 3 Raio-X de indicados)']].map((k) => `<div><b>${k[0]}</b><span>${k[1]}</span></div>`).join('')}</div>
   <div class="xg3">
     <div class="xbox"><span class="xl">Indicação com vídeo pronto · 12 clientes · até 18/12</span>
       ${msg('Italo', '[Nome], fiz um vídeo de 30 s mostrando o que a gente fez juntos no [negócio]. Você conhece um dono de negócio que trabalha muito e não vê o marketing virar venda? Se puder, encaminha para ele. Se ele fechar, [benefício a decidir] é seu.', 1)}
@@ -129,11 +129,11 @@ function diariaPage(d) {
   <div class="xg2" style="grid-template-columns:1fr 1.1fr">
     <div class="xbox"><span class="xl">Diária Ellcazo · resposta em até 2 h</span>
       ${msg('Lead', 'Quero uma diária de gravação')}
-      ${msg('Ellcazo', 'Oi, [nome]! Em 1 dia a gente grava de 6 a 10 vídeos do [restaurante/loja] para Natal, Réveillon e janeiro, e você já recebe 1 corte de 15 s pronto para anunciar. Datas livres até 18/12: [datas]. Câmera ou celular profissional: [valores do catálogo]. Qual data fica melhor?', 1)}
+      ${msg('Ellcazo', 'Oi, [nome]! Numa diária de 3 h, fora do horário de movimento, a gente grava até 6 vídeos do [restaurante/loja] para Natal, Réveillon e janeiro, e você já recebe 1 corte de 15 s pronto para anunciar. Datas livres até 18/12: [datas]. Câmera ou celular profissional: [valores do catálogo]. Qual data fica melhor?', 1)}
       <p style="margin-top:6px">Fechou: venda avulsa no sistema e o Italo oferece o Raio-X depois da entrega (porta para o “Comece 2027”).</p></div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <table class="xtab"><thead><tr><th>Etapa no Comercial</th><th>Meta até 31/12</th></tr></thead><tbody>
-      ${[['Conversa (com origem)', '80'], ['Qualificado', '50'], ['Raio-X feito', '25'], ['Proposta enviada', '15'], ['Contrato (Comece 2027)', '6'], ['Diária vendida / upgrade', '3 / 3']].map((r) => `<tr><td>${r[0]}</td><td><b>${r[1]}</b></td></tr>`).join('')}</tbody></table>
+      ${[['Conversa (com origem)', '70'], ['Qualificado', '40'], ['Raio-X com câmera', '20'], ['Proposta enviada', '12'], ['Contrato (Comece 2027)', '5'], ['Diária vendida / upgrade', '2 / 3']].map((r) => `<tr><td>${r[0]}</td><td><b>${r[1]}</b></td></tr>`).join('')}</tbody></table>
       <div class="xbox xdk"><h3>Toda segunda (relatório da Peformake)</h3><p>Conversas por origem, Raio-X, propostas, contratos, custo por conversa e por Raio-X (do tráfego). O que travou e quem está parado.</p></div>
     </div>
   </div>`, { cls: 'dense big' })
