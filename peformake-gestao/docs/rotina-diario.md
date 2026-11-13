@@ -43,6 +43,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-13 · Brio e Peformake refeitos pela skill e aprovados na revisão às cegas (nuvem)
+- Estudo de vídeos do Italo no repo (video-tools/estilos, NARRATIVA, MANUAL_EDICAO, skills roteiro-narrativa/edicao-cliente/motion-pro) e ligado à skill peformake-estudo-mes. Novos padrões: venda.md, dossie.md, banco/<nicho>.md, rubrica com "erros já pegos".
+- Brio (estratégia 15, social 15, audiovisual 28) e Peformake (estratégia, social, audiovisual, tráfego, plano de vendas) refeitos; 1ª revisão às cegas 3,5/3,75 (não), 2ª 4,17/4,0 (sim com ajustes pequenos), ajustes aplicados e subidos como "Para aprovar".
+- Falta do Italo: preços (combos Brio, Comece 2027, diária), WhatsApp do Brio com 9 dígitos, autorizações dos cases (Ótica até 19/11), pedidos VOVINA/reservas Fornario, conta de anúncio da Peformake; conectores nas rotinas.
+
 ## 2026-11-13 · Skill "Estudo do mês" e padrão de tráfego (nuvem)
 - Nova skill `.claude/skills/peformake-estudo-mes/` (SKILL.md + trafego-oferta.md): 1) diagnóstico e estudo, 2) estratégia mensal, 3) peças (social+design, audiovisual, tráfego, venda), 4) aprender com o resultado. Portões de qualidade; referências de arte e criativos com imagem e link; design dos PDFs mantido. ROTINA-ESTRATEGIA-MENSAL.md aponta para ela.
 - Regra: o audiovisual nasce da estratégia (estudo em 6 blocos + storyboard). Audiovisual da Peformake refeito assim (28 pág.).
