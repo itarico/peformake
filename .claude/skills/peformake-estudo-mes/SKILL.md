@@ -90,6 +90,7 @@ Skills: `anthropic-skills:redator-audiovisual-agencia`, `anthropic-skills:mdd`. 
 - **Até 10 vídeos**, uma página cada: prévia real + link + por que funciona; estilo do catálogo; papel, oferta, meta; **storytelling** (gancho, conflito, virada, CTA); **storyboard** cena a cena (o que aparece, enquadramento, fala, texto na tela, duração); quem fala, quem grava, diária, orgânico/anúncio; 3 ideias como variações do mesmo objetivo. Gastronomia: pouca fala, muito desejo; loja/serviço: mais fala e demonstração.
 
 ### 3.3 Tráfego (pasta `trafego`, só se o cliente tem tráfego)
+**Siga o padrão `trafego-oferta.md` (nesta pasta):** oferta antes do anúncio, temperatura × mensagem, matriz oferta × ângulo, teto por resultado, o que acontece depois do clique e o banco de ofertas que venderam no nicho.
 - **Criativos com referência:** cada criativo com 1 a 2 anúncios de referência da Biblioteca de Anúncios (imagem/miniatura embutida, link, há quanto tempo está no ar) e o que adaptar (gancho, oferta, formato).
 - Campanhas, públicos, criativos ligados às peças e vídeos do mês, verba em 3 opções, testes A/B, metas, calendário de subida/pausa. Meta Ads só leitura.
 
@@ -121,4 +122,4 @@ Skills: `anthropic-skills:copy-lp-vendas` (quando houver página), `anthropic-sk
 - O estudo seguinte começa por aqui.
 
 ## Gerador do design
-Hoje o gerador (Node + Chromium; `build3.js`, `av.js`, `sm.js`, `trafego.js`, `_base.js`, `style.css`) está só no scratchpad da sessão da nuvem. **Pendente:** trazer para `peformake-gestao/tools/estudo-mes/` (sem miniaturas nem PDFs de clientes) para não se perder.
+Gerador (Node + Chromium) guardado em `peformake-gestao/tools/estudo-mes/` (veja o README de lá). Miniaturas e fotos não vão para o repositório.
