@@ -11,3 +11,8 @@ Sem miniaturas, fotos nem PDFs de clientes (ficam fora do repositório; o agente
 - `paulo/`: o deck aprovado (estratégia Nov–Dez do Paulo), modelo do design.
 
 Atenção: os caminhos de imagens e saídas apontam para o scratchpad da sessão que gerou (`.../scratchpad/entregas/`). Ao rodar em outra sessão, ajuste a pasta de saída e baixe as miniaturas de novo.
+
+## Peformake v2 (13/11/2026, refeito pela skill com o padrão de tráfego)
+- `pfk.js`: kit comum (lê `pf_kit3.js`, cópia congelada do `build3.js`), CSS extra e o banco de anúncios de referência.
+- `pf2.js` (Estratégia, 19 pág.), `pf_venda.js` (Plano de vendas), `pf_traf2.js` (Tráfego por oferta + banco de ofertas), `pf_social2.js` + `pf_posts2.js` + `pf_sm.js` (social com referências de arte), `pfav3.js` (audiovisual com estilo E# e modelo M#).
+- `pf2-shot.js pdf '' estrategia,trafego` gera PDF e screenshots; `pf-sheet.py` monta folha de conferência.
