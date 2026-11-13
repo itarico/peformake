@@ -24,3 +24,20 @@ Nota de 0 a 5 em cada item. Só sobe com **média ≥ 4 e nenhum item abaixo de 
 - O Italo leria e diria "isso eu não tinha pensado"? Aponte as 3 ideias mais fortes do plano.
 - Um concorrente poderia usar este plano trocando só o nome? Se sim, não está pronto.
 - Se só uma coisa for feita no mês, qual traz mais dinheiro? Ela está em destaque na primeira página?
+
+## Erros que a revisão independente já pegou (13/11/2026) — conferir sempre
+- **Autonota inflada:** a nota do autor não vale; antes de subir, um revisor que não fez o plano avalia às cegas.
+- **Oferta sem preço** não é oferta: peça o preço ao cliente antes de fechar (prazo na lista de decisões) e escreva a oferta já com a conta por pessoa/por unidade.
+- **Garantia objetiva e cumprível:** nada subjetivo ("chegou frio, a gente refaz"); use critério medível (horário da saída × tempo) e higiene (termômetro na caixa, nunca no alimento).
+- **Uma tabela única de metas:** os números de cada peça somam a meta do período; nenhum número contraditório entre páginas; ponto de partida (média atual) declarado.
+- **Mesmo número em todo o documento** (um case = um número, com período e fonte).
+- **Prova de caixa, não de vaidade:** pedidos, conversas, vendas; não "número de posts" nem clique sozinho.
+- **Nunca expor cliente:** sem mensagem interna de cliente, sem usar anúncio ruim de cliente como contraexemplo, sem analisar negócio real sem autorização; case só com cliente satisfeito e autorizado.
+- **Valores em dinheiro da base só em versão de administrador.**
+- **Capacidade:** some as horas de cada pessoa (Raio-X, gravações, propostas); se uma pessoa vira gargalo, redistribua.
+- **Diária executável:** não gravar no horário de pico do cliente; no máximo 6 vídeos por diária de 3 h.
+- **Pico sem mídia:** se o período tem um pico de venda (Black Friday, Natal) e o orgânico é baixo, ofereça uma decisão de verba mínima (precisa do sim do cliente).
+- **Teste/experimento sem resultado pré-escrito** e com plano para o caso de dar errado.
+- **Prazos de vale/cupom** compatíveis com o Código do Consumidor (validade razoável, ex.: 90 dias).
+- **Audiovisual Ellcazo:** nenhum quadro/bloco com fundo preto (inclusive storyboard); preto só nos detalhes.
+- **Telefone e dados de contato** conferidos (celular com 9 dígitos).
