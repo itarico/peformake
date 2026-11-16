@@ -126,7 +126,7 @@ describe('Estratégia: uma linha por cliente', () => {
   it('a próxima ação segue o que trava mais', () => {
     expect(nextStep(row({ status: 'falta_dados' })).label).toBe('Informar CNPJ')
     expect(nextStep(row({ status: 'pronto', monthly: m({ pending: 4 }) }))).toEqual({ kind: 'link', label: 'Revisar diagnóstico', href: '/revisao/diagnostico/c1' })
-    expect(nextStep(row({ status: 'enviado', monthly: m({ pending: 4 }) }))).toEqual({ kind: 'link', label: 'Revisar plano de dezembro', href: '/revisao/plano/c1/2026-12' })
+    expect(nextStep(row({ status: 'enviado', monthly: m({ pending: 4 }) }))).toEqual({ kind: 'aba', label: 'Revisar estratégia de dezembro', tab: 'estrategia' })
     expect(nextStep(row({ status: 'enviado', answers_new: 1, monthly: m({ pending: 4 }) })).label).toBe('Ver respostas')
     expect(nextStep(row({ status: 'aprovado' })).label).toBe('Enviar diagnóstico')
     expect(nextStep(row({ status: 'enviado', questions_open: 3 })).label).toBe('Mandar perguntas')
@@ -135,7 +135,7 @@ describe('Estratégia: uma linha por cliente', () => {
   it('as 3 partes em pronto / revisar / falta', () => {
     const p = clientParts(row({ status: 'pronto', monthly: m({ pending: 2 }), questions_open: 5 }))
     expect([p.diag.state, p.plan.state, p.questions.state]).toEqual(['revisar', 'revisar', 'falta'])
-    expect(p.plan.label).toBe('2 a aprovar')
+    expect(p.plan.label).toBe('2 a revisar')
     expect(clientParts(row({ status: 'enviado' })).plan).toEqual({ state: 'falta', label: 'falta' })
   })
   it('a lista começa por quem tem revisão', () => {

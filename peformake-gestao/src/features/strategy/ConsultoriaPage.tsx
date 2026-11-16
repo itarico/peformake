@@ -19,22 +19,18 @@ import { buildSlides, openPresentation, printDeck, type DeckInput } from './cons
 import { Paged } from './SlideViewer'
 import { useReview } from '@/features/review/reviewApi'
 import { applyFills, findFills, insertAdded, progress, reviewedInput, slideKeys } from '@/features/review/reviewRules'
-import { useProduction } from '@/features/production/useProduction'
 import { CardSection, DeckCard, DeckThumb, OrientationDialog, placeholderCover, screenOrientation, type CardPrimary } from './DeckCard'
-import { AreaCard, AvCard, MonthlyCard, MonthPick } from './PlanCards'
 import { ReportCards } from './ReportCards'
-import { AgentDocs, docPeriod, latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
-import { DocList, DocRow, PdfRow, type RowAction } from './DocList'
-import { MeetingNotes } from './MeetingNotes'
+import { AgentDocs, latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { StrategyStrip } from './brief/StrategyStrip'
-import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
-import { MonthlyPanel, SendDialog as MonthlySendDialog } from './MonthlyPanel'
-import { requestMonthly, useMonthly } from './monthlyApi'
-import { monthName, monthOptions, parseMonthParam } from './monthlyRules'
+import { SendDialog as MonthlySendDialog } from './MonthlyPanel'
+import { useMonthly } from './monthlyApi'
+import { monthOptions, parseMonthParam } from './monthlyRules'
 
 
 const TONE = {
@@ -58,7 +54,7 @@ export function ConsultoriaPage() {
   const [asking, setAsking] = useState<ConsultRow | null>(null)
   const qc = useQueryClient()
   // Perguntas viram o detalhe ?ver=perguntas; Relatórios é a 2ª aba; o resto abre o Planejamento.
-  const open = (id: string | null, tab?: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios') => setParams((c) => { const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao']) n.delete(k); if (id) { n.set('cliente', id); if (tab === 'perguntas') n.set('ver', 'perguntas'); if (tab === 'relatorios') n.set('aba', 'relatorios') } else n.delete('cliente'); return n })
+  const open = (id: string | null, tab?: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios') => setParams((c) => { const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao']) n.delete(k); if (id) { n.set('cliente', id); if (tab === 'perguntas') n.set('ver', 'perguntas'); if (tab === 'estrategia') n.set('ver', 'estrategia'); if (tab === 'relatorios') n.set('aba', 'relatorios') } else n.delete('cliente'); return n })
   const gen = useMutation({
     mutationFn: async (r: ConsultRow) => { if (r.status === 'erro') await requestConsult(r.client_id); else await kickConsult() },
     onMutate: () => setProblem(null),
@@ -99,7 +95,7 @@ export function ConsultoriaPage() {
                 {a.kind === 'enviar' && <Button variant="secondary" className={btn} onClick={() => setSending(r)}>{a.label}</Button>}
                 {a.kind === 'perguntas' && <Button variant="secondary" className={btn} onClick={() => setAsking(r)}>{a.label}</Button>}
                 <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
-                  { label: 'Revisar plano em slides', icon: <Presentation size={15} aria-hidden="true" />, hidden: !r.monthly || !['pronto', 'aprovado'].includes(r.monthly.status) || (a.kind === 'link' && a.href.includes('/plano/')), href: r.monthly ? planReviewPath(r.client_id, r.monthly.month) : undefined },
+                  { label: 'Estratégia do mês', icon: <Sparkles size={15} aria-hidden="true" />, hidden: a.kind === 'aba' && a.tab === 'estrategia', onClick: () => open(r.client_id, 'estrategia') },
                   { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
                   { label: 'Enviar no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status) || a.kind === 'enviar', onClick: () => setSending(r) },
                   { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, hidden: a.kind === 'perguntas', onClick: () => setAsking(r) },
@@ -126,8 +122,6 @@ async function openPublicDeck(clientId: string): Promise<void> {
   } catch (e) { w?.close(); throw e }
 }
 
-/** Período escrito no nome do PDF ("Estratégia · 12-11 a 31-12-2026.pdf" → "12/11 a 31/12/2026"). */
-const periodOf = (p: Partial<Record<string, { name: string }>>) => docPeriod((p.estrategia ?? p.social ?? p.audiovisual ?? p.trafego)?.name ?? '') || 'do mês'
 
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
 
@@ -198,7 +192,6 @@ function InfoDialog({ row, onClose }: { row: ConsultRow; onClose: () => void }) 
 // ───────── Documento ─────────
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 type SendKind = 'diag' | 'mes' | 'trafego' | 'social' | 'av' | 'perguntas'
-const GEN_USD = '4,50 a 6'
 
 /**
  * Consultoria → cliente: UMA página com os cartões de apresentação empilhados, todos no mesmo padrão
@@ -260,17 +253,12 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   // Documentos oficiais feitos pela Peformake (PDF na pasta do cliente): substituem os cartões gerados pelo sistema.
   const agentDocs = useAgentDocs(clientId)
   const pdf = useMemo(() => latestDocs(agentDocs.data ?? []), [agentDocs.data])
-  const hasPdf = !!(pdf.estrategia || pdf.trafego || pdf.social || pdf.audiovisual)
   /** O PDF da Peformake que vale para cada envio (quando existe, o "Enviar" manda o PDF, não a versão do sistema). */
   const pdfFor = (k: string) => k === 'mes' ? pdf.estrategia : k === 'trafego' ? (pdf.trafego ?? pdf.estrategia) : k === 'social' ? pdf.social : k === 'av' ? pdf.audiovisual : undefined
   const st = plan.data
-  const planReady = !!st && ['pronto', 'aprovado'].includes(st.status) && !!st.doc?.titulo
   const questions = useClientQuestions(clientId)
   const toAsk = (questions.data?.questions ?? []).filter((x) => x.status === 'pendente').length
   const waiting = (questions.data?.questions ?? []).filter((x) => x.status === 'enviada').length
-  const prod = useProduction()
-  const areas = prod.clients?.find((c) => c.id === clientId)?.areas ?? []
-  const has = { trafego: areas.includes('trafego'), social: areas.includes('social') || areas.includes('design'), av: areas.includes('audiovisual') }
   const avApproved = st ? st.actions.filter((a) => a.area === 'audiovisual' && a.status === 'aprovada').length : 0
 
   const review = useReview('diagnostico', clientId)
@@ -282,10 +270,6 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   // O que o cliente vê (prévia, PDF): com a revisão aplicada (sem recusados, textos editados, dados preenchidos).
   const clientInput = useMemo(() => reviewedInput(deckInput, review.data?.state), [deckInput, review.data?.state])
   const openSend = (k: SendKind, n = 0) => { setPicker(false); setAvCount(n); setSend(k) }
-  const create = async () => {
-    if (await ask(`Criar o plano de ${monthName(month)} de ${name}? A IA pesquisa e escreve só as partes do que o cliente contratou (≈US$ ${GEN_USD}, uns 10 minutos).`)) act.mutate(() => requestMonthly(clientId, month))
-  }
-  const mp = <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) }, true)} />
   const next = row ? nextStep(row) : null
 
   const header = (
@@ -312,11 +296,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {picker && <SendPicker name={name} month={month} onClose={() => setPicker(false)}
         onPick={(k) => { const doc = pdfFor(k); if (doc) { setPicker(false); void sendDoc(doc, name, phone.data ?? null) } else openSend(k, avApproved) }} options={[
         { id: 'diag', label: 'Diagnóstico', ok: approved, why: ready ? 'Aprove o diagnóstico antes' : 'Ainda não está pronto' },
-        pdf.estrategia ? { id: 'mes' as const, label: 'Estratégia do mês (PDF)', ok: true }
-          : { id: 'mes' as const, label: `Estratégia de ${monthName(month).toLowerCase()}`, ok: planReady, why: 'A estratégia do mês ainda não está pronta' },
-        ...(has.trafego ? [pdfFor('trafego') ? { id: 'trafego' as const, label: pdf.trafego ? 'Estratégia de tráfego (PDF)' : 'Tráfego (na Estratégia do mês)', ok: true } : { id: 'trafego' as const, label: 'Tráfego', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
-        ...(has.social ? [pdf.social ? { id: 'social' as const, label: 'Social media + Design (PDF)', ok: true } : { id: 'social' as const, label: 'Social media + Design', ok: planReady, why: 'Aguardando a estratégia mensal' }] : []),
-        ...(has.av ? [pdf.audiovisual ? { id: 'av' as const, label: 'Audiovisual (PDF)', ok: true } : { id: 'av' as const, label: `Audiovisual (${avApproved} vídeos)`, ok: planReady && avApproved > 0, why: 'Aprove pelo menos um vídeo' }] : []),
+        { id: 'mes' as const, label: 'Estratégia do mês (PDF)', ok: !!pdf.estrategia, why: 'Aprove a estratégia e gere o PDF antes' },
         { id: 'perguntas', label: toAsk ? `Perguntas (${toAsk})` : 'Perguntas', ok: true },
       ]} />}
       {send === 'diag' && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSend(null)} onSent={refresh} />}
@@ -330,17 +310,17 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   )
 
   // Detalhe: o plano completo (seções, ações para aprovar, editar, refazer) ou as perguntas.
-  if (ver === 'estrategia') return (
+  if (ver === 'estrategia' || ver === 'plano') return (
     <section aria-label={`Estratégia de ${name}`} className="flex flex-col gap-3">
       {header}
       <StrategyBoard clientId={clientId} name={name} />
       {dialogs}
     </section>
   )
-  if (ver === 'plano' || ver === 'perguntas') return (
-    <section aria-label={`${ver === 'plano' ? 'Plano' : 'Perguntas'} de ${name}`} className="flex flex-col gap-3">
+  if (ver === 'perguntas') return (
+    <section aria-label={`Perguntas de ${name}`} className="flex flex-col gap-3">
       {header}
-      {ver === 'plano' ? <MonthlyPanel clientId={clientId} name={name} logoUrl={logo} /> : <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />}
+      <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />
       {dialogs}
     </section>
   )
@@ -357,42 +337,18 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
       {view === 'relatorios' && <><AgentDocs clientId={clientId} name={name} only="relatorios" />{!pdf.relatorios && <ReportCards clientId={clientId} name={name} />}</>}
-      {view === 'planejamento' && hasPdf && <>
-        {/* Com os documentos da Peformake (PDF): uma lista só, uma linha por documento, na ordem de uso. */}
-        <DocList title={`Planejamento · ${periodOf(pdf)}`}>
-          <DiagRow clientId={clientId} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null} finishedAt={d?.finished_at ?? null}
-            loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
-            onInfo={onInfo} onGenerate={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}
-            onApprove={() => act.mutate(async () => { await approveConsult(clientId); openSend('diag') })}
-            onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
-            onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
-          {pdf.estrategia && <PdfRow phone={phone.data ?? null} id="estrategia" kind="estrategia" title="Estratégia do mês" doc={pdf.estrategia} all={agentDocs.data ?? []} name={name} />}
-          {(pdf.trafego || (has.trafego && pdf.estrategia)) && <PdfRow phone={phone.data ?? null} id="trafego" kind="trafego" title="Tráfego" doc={(pdf.trafego ?? pdf.estrategia)!} all={agentDocs.data ?? []} name={name} note={pdf.trafego ? undefined : 'Está dentro da Estratégia do mês'} />}
-          {pdf.social && <PdfRow phone={phone.data ?? null} id="social" kind="social" title="Social media + Design" doc={pdf.social} all={agentDocs.data ?? []} name={name} />}
-          {pdf.audiovisual && <PdfRow phone={phone.data ?? null} id="audiovisual" kind="audiovisual" title="Audiovisual" doc={pdf.audiovisual} all={agentDocs.data ?? []} name={name} />}
-        </DocList>
-      </>}
-      {view === 'planejamento' && !hasPdf && <>
-        <CardSection title="Diagnóstico e estratégia">
+      {/* O plano do mês antigo foi desligado em 16/11: a Estratégia interativa (briefing → cards → PDF) é o único caminho. */}
+      {view === 'planejamento' && <StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
+      {view === 'planejamento' && row?.consultoria !== false && (
+        <CardSection title="Diagnóstico">
           <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
             onInfo={onInfo} onGenerate={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}
             onApprove={() => act.mutate(() => approveConsult(clientId))}
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
-          <MonthlyCard clientId={clientId} name={name} logo={logo} month={month} st={st} monthPick={mp} onCreate={() => void create()} creating={act.isPending}
-              onSend={() => openSend('mes')} onDetails={() => go({ ver: 'plano', secao: null })} />
         </CardSection>
-        {(has.trafego || has.social || has.av) && (
-          <CardSection title="Por área">
-            {has.trafego && <AreaCard area="trafego" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('trafego')} onDetails={() => go({ ver: 'plano', secao: 'trafego' })} />}
-            {has.social && <AreaCard area="social" clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={() => openSend('social')} onDetails={() => go({ ver: 'plano', secao: 'social' })} />}
-            {has.av && <AvCard clientId={clientId} name={name} logo={logo} month={month} st={st} onSend={(n) => openSend('av', n)} onDetails={() => go({ ver: 'plano', secao: 'audiovisual' })} />}
-          </CardSection>
-        )}
-      </>}
-      {view === 'planejamento' && <StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
-      {view === 'planejamento' && <MeetingNotes clientId={clientId} name={name} />}
+      )}
       {view === 'planejamento' && <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
       {dialogs}
     </section>
@@ -478,39 +434,6 @@ function DiagCard({ clientId, name, input, status, stage, document, error, loadi
         { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: busy, onClick: onApprove },
         { label: 'Enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onSend },
         { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onPdf },
-      ]} />
-  )
-}
-
-/** Linha do diagnóstico (mesmo padrão da lista): Ver PDF (a apresentação de sempre) · Apresentação (a revisão) · a ação do momento. */
-function DiagRow({ clientId, status, stage, document, error, finishedAt, loading, ready, approved, busy, onInfo, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
-  clientId: string; status: ConsultRow['status']; stage: string | null; document: string | null; error: string | null; finishedAt: string | null
-  loading: boolean; ready: boolean; approved: boolean; busy: boolean
-  onInfo: () => void; onGenerate: () => void; onApprove: () => void; onOpen: () => void; onPdf: () => void; onSend: () => void; onDetails: () => void
-}) {
-  const chip = statusChip({ status, document, stage })
-  const sub = !ready
-    ? (loading ? null : status === 'gerando' ? `A IA está ${chip.sub ?? 'trabalhando'} (uns 10 minutos)`
-      : status === 'falta_dados' ? 'Falta o CPF ou CNPJ' : status === 'na_fila' ? 'Na fila, começa em instantes'
-        : status === 'limite' ? 'Limite do mês com IA atingido' : status === 'erro' ? `Não deu certo: ${error ?? 'erro desconhecido'}` : null)
-    : finishedAt ? `Feito em ${new Date(finishedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}` : null
-  const soon = ready ? undefined : 'O diagnóstico ainda não está pronto'
-  const actions: RowAction[] = [
-    { key: 'pdf', label: 'Ver PDF', short: 'PDF', icon: <ExternalLink size={15} aria-hidden="true" />, onClick: onOpen, hint: soon },
-    { key: 'apresentacao', label: 'Apresentação', short: 'Revisar', icon: <Presentation size={15} aria-hidden="true" />, to: diagReviewPath(clientId), hint: soon },
-  ]
-  if (status === 'falta_dados') actions.push({ key: 'dados', label: 'Informar CNPJ', short: 'CNPJ', icon: <Search size={15} aria-hidden="true" />, strong: true, onClick: onInfo })
-  else if (status === 'na_fila' || status === 'erro') actions.push({ key: 'criar', label: 'Criar', short: 'Criar', icon: <Sparkles size={15} aria-hidden="true" />, strong: true, disabled: busy, onClick: onGenerate })
-  else if (ready && !approved) actions.push({ key: 'aprovar', label: 'Aprovar e enviar', short: 'Enviar', icon: <Send size={15} aria-hidden="true" />, strong: true, disabled: busy, onClick: onApprove })
-  else if (approved && status !== 'enviado') actions.push({ key: 'enviar', label: 'Enviar', short: 'Enviar', icon: <Send size={15} aria-hidden="true" />, strong: true, onClick: onSend })
-  return (
-    <DocRow id="diagnostico" kind="diagnostico" title="Diagnóstico" sub={sub}
-      status={{ label: ready && !approved ? 'Para aprovar' : chip.label, tone: ready && !approved ? 'info' : chip.tone, pulse: status === 'gerando' }}
-      actions={actions}
-      menu={[
-        { label: 'Enviar de novo', icon: <Send size={15} aria-hidden="true" />, hidden: status !== 'enviado', onClick: onSend },
-        { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, hidden: !approved, onClick: onPdf },
-        { label: 'Fontes e detalhes', icon: <Search size={15} aria-hidden="true" />, hidden: !ready, onClick: onDetails },
       ]} />
   )
 }

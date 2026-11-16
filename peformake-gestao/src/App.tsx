@@ -17,7 +17,6 @@ const EllcazoClientSheet = lazy(() => import('@/features/clients/EllcazoClientSh
 const ClientFormPage = lazy(() => import('@/features/clients/ClientFormPage').then((m) => ({ default: m.ClientFormPage })))
 const ClientsPage = lazy(() => import('@/features/clients/ClientsPage').then((m) => ({ default: m.ClientsPage })))
 const AvBoard = lazy(() => import('@/features/av/AvBoard').then((m) => ({ default: m.AvBoard })))
-const AvMonthlyPlanPage = lazy(() => import('@/features/av/AvMonthlyPlanPage').then((m) => ({ default: m.AvMonthlyPlanPage })))
 const AvProjectPage = lazy(() => import('@/features/av/AvProjectPage').then((m) => ({ default: m.AvProjectPage })))
 const ContentBoard = lazy(() => import('@/features/content/ContentBoard').then((m) => ({ default: m.ContentBoard })))
 // Desligado até a integração com o Instagram (12/11): const ContentCalendar = lazy(() => import('@/features/content/ContentCalendar').then((m) => ({ default: m.ContentCalendar })))
@@ -52,8 +51,7 @@ const ClientChatPage = lazy(() => import('@/features/strategy/ClientChatPage').t
 const PublicDeckPage = lazy(() => import('@/features/strategy/PublicDeckPage').then((m) => ({ default: m.PublicDeckPage })))
 const DocPresentation = lazy(() => import('@/features/strategy/DocPresentation').then((m) => ({ default: m.DocPresentation })))
 const DiagnosticReview = lazy(() => import('@/features/review/DiagnosticReview').then((m) => ({ default: m.DiagnosticReview })))
-const MonthlyReview = lazy(() => import('@/features/review/MonthlyReview').then((m) => ({ default: m.MonthlyReview })))
-const AreaReviewRedirect = lazy(() => import('@/features/review/AreaReviewRedirect').then((m) => ({ default: m.AreaReviewRedirect })))
+const StrategyRedirect = lazy(() => import('@/features/strategy/brief/StrategyRedirect').then((m) => ({ default: m.StrategyRedirect })))
 const RecordingPage = lazy(() => import('@/features/av/RecordingPage').then((m) => ({ default: m.RecordingPage })))
 const RecordingFromProject = lazy(() => import('@/features/av/RecordingPage').then((m) => ({ default: m.RecordingFromProject })))
 const MonthlyPlanPage = lazy(() => import('@/features/strategy/MonthlyPlanPage').then((m) => ({ default: m.MonthlyPlanPage })))
@@ -112,8 +110,9 @@ export function App() {
         <Route path="revisao/diagnostico/:clientId" element={<DiagnosticReview />} />
         {/* Apresentação dos documentos da Peformake (HTML do agente): aprovar página a página e virar tarefa. */}
         <Route path="documento/:assetId" element={<DocPresentation />} />
-        <Route path="revisao/plano/:clientId/:mes" element={<MonthlyReview />} />
-        <Route path="revisao/:area/:clientId/:mes" element={<AreaReviewRedirect />} />
+        {/* Plano do mês antigo desligado em 16/11: os links caem na Estratégia interativa. */}
+        <Route path="revisao/plano/:clientId/:mes" element={<StrategyRedirect />} />
+        <Route path="revisao/:area/:clientId/:mes" element={<StrategyRedirect />} />
         <Route path="revisao/trimestral/:clientId" element={<CenteredMessage title="Revisão do trimestral" text="Ainda não existe o plano trimestral. Quando existir, ele abre aqui na mesma guia." />} />
         <Route element={<AppShell />}>
           <Route
@@ -170,7 +169,7 @@ export function App() {
             <Route path="audiovisual/fotos" element={<AvPhotosPage />} />
             <Route path="audiovisual/fotos/:id" element={<AvGalleryPage />} />
             <Route path="audiovisual/roteiros" element={<MovedTo to="/audiovisual/producao" />} />
-            <Route path="audiovisual/plano-do-mes" element={<AvMonthlyPlanPage />} />
+            <Route path="audiovisual/plano-do-mes" element={<MovedTo to="/estrategia/consultoria" />} />
             <Route path="audiovisual/orcamentos/novo" element={<AvQuoteEditor />} />
             <Route path="audiovisual/orcamentos/:id" element={<AvQuoteEditor />} />
           </Route>

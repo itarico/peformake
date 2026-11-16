@@ -38,7 +38,7 @@ export function StrategyLayout() {
   const home = TABS.find((t) => !t.roles || t.roles.some((r) => roles.includes(r)))?.to ?? CONSULT_PATH
   return (
     <>
-      <SectionHeader title="Estratégia" sub="Um plano do mês por cliente: a IA escreve, cada área revisa e aprova a sua parte no cartão dela." tabs={TABS} />
+      <SectionHeader title="Estratégia" sub="Uma estratégia por cliente: briefing, o agente gera os cards, você revisa e aprova, sai o PDF." tabs={TABS} />
       <Routes>
         <Route index element={<Navigate to={home} replace />} />
         <Route path="frameworks" element={<MovedTo to={CONSULT_PATH} />} />

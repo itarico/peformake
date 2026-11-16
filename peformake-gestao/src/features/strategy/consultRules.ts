@@ -84,7 +84,7 @@ export function answeredNotices(rows: ConsultRow[] | undefined): { id: string; c
 }
 
 /** Link da estratégia do mês de um cliente (Planejamento, no mês certo: o cartão Estratégia mensal). */
-export const monthlyLink = (clientId: string, month?: string | null) => `${consultLink(clientId)}${month ? `&mes=${month.slice(0, 7)}` : ''}`
+export const monthlyLink = (clientId: string, month?: string | null) => `${consultLink(clientId)}&ver=estrategia${month ? `&mes=${month.slice(0, 7)}` : ''}`
 
 /**
  * Bete e Início: estratégia do mês pronta com ações para aprovar, ou troca sugerida no ajuste de segunda (sem alarde).
@@ -95,7 +95,7 @@ export function monthlyNotices(rows: ConsultRow[] | undefined): { id: string; cl
     const m = r.monthly
     if (!m || !['pronto', 'aprovado'].includes(m.status)) return []
     const mes = new Date(`${m.month.slice(0, 7)}-15T12:00:00Z`).toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })
-    if (m.pending > 0) return [{ id: `monthly:${r.client_id}:${m.finished_at ?? ''}`, clientId: r.client_id, title: `Plano de ${mes} de ${r.name.trim()}: ${m.pending} ações para aprovar`, to: monthlyLink(r.client_id, m.month) }]
+    if (m.pending > 0) return [{ id: `monthly:${r.client_id}:${m.finished_at ?? ''}`, clientId: r.client_id, title: `Estratégia de ${mes} de ${r.name.trim()}: ${m.pending} ${m.pending === 1 ? 'card' : 'cards'} para revisar`, to: monthlyLink(r.client_id, m.month) }]
     if (m.suggestions > 0) return [{ id: `monthly-adj:${r.client_id}:${m.suggestions}`, clientId: r.client_id, title: `${r.name.trim()}: ajuste da semana sugerido`, to: monthlyLink(r.client_id, m.month) }]
     return []
   })
@@ -151,6 +151,8 @@ export function nicheLinks(...hints: (string | null | undefined)[]): NicheLink[]
 /** Guia de revisão em slides (aba nova). Plano: mes = AAAA-MM; area filtra a visão da área. */
 export const diagReviewPath = (clientId: string) => `/revisao/diagnostico/${clientId}`
 export const planReviewPath = (clientId: string, month: string, area?: string | null) => `/revisao/plano/${clientId}/${month.slice(0, 7)}${area ? `?area=${area}` : ''}`
+/** A Estratégia interativa do cliente no mês (substituiu o plano do mês antigo em 16/11). */
+export const strategyPath = (clientId: string, month: string) => `${CONSULT_PATH}?cliente=${clientId}&ver=estrategia&mes=${month.slice(0, 7)}`
 
 export type PartState = 'pronto' | 'revisar' | 'falta' | 'andando' | 'fora'
 export interface Part { state: PartState; label: string }
@@ -169,7 +171,7 @@ export function clientParts(r: Pick<ConsultRow, 'status' | 'document' | 'stage' 
   const m = r.monthly
   const plan: Part = !m || m.status === 'erro' || m.status === 'limite' ? { state: 'falta', label: m?.status === 'erro' ? 'deu erro' : 'falta' }
     : m.status === 'gerando' || m.status === 'na_fila' ? { state: 'andando', label: 'gerando' }
-    : m.pending > 0 ? { state: 'revisar', label: `${m.pending} a aprovar` }
+    : m.pending > 0 ? { state: 'revisar', label: `${m.pending} a revisar` }
     : { state: 'pronto', label: 'aprovado' }
   const open = r.questions_open ?? 0
   const questions: Part = (r.answers_new ?? 0) > 0 ? { state: 'revisar', label: `${r.answers_new} ${r.answers_new === 1 ? 'resposta' : 'respostas'}` }
@@ -189,7 +191,7 @@ export function nextStep(r: Pick<ConsultRow, 'client_id' | 'status' | 'document'
   if (r.consultoria === false) {
     const m = r.monthly
     if ((r.answers_new ?? 0) > 0) return { kind: 'aba', label: 'Ver respostas', tab: 'perguntas' }
-    if (m && ['pronto', 'aprovado'].includes(m.status) && m.pending > 0) return { kind: 'link', label: `Revisar plano de ${mesOf(m.month)}`, href: planReviewPath(r.client_id, m.month) }
+    if (m && ['pronto', 'aprovado'].includes(m.status) && m.pending > 0) return { kind: 'aba', label: `Revisar estratégia de ${mesOf(m.month)}`, tab: 'estrategia' }
     return { kind: 'aba', label: 'Abrir', tab: 'diagnostico' }
   }
   if (r.status === 'falta_dados') return { kind: 'dados', label: 'Informar CNPJ' }
@@ -198,7 +200,7 @@ export function nextStep(r: Pick<ConsultRow, 'client_id' | 'status' | 'document'
   if (r.status === 'pronto') return { kind: 'link', label: 'Revisar diagnóstico', href: diagReviewPath(r.client_id) }
   if ((r.answers_new ?? 0) > 0) return { kind: 'aba', label: 'Ver respostas', tab: 'perguntas' }
   const m = r.monthly
-  if (m && ['pronto', 'aprovado'].includes(m.status) && m.pending > 0) return { kind: 'link', label: `Revisar plano de ${mesOf(m.month)}`, href: planReviewPath(r.client_id, m.month) }
+  if (m && ['pronto', 'aprovado'].includes(m.status) && m.pending > 0) return { kind: 'aba', label: `Revisar estratégia de ${mesOf(m.month)}`, tab: 'estrategia' }
   if (r.status === 'aprovado') return { kind: 'enviar', label: 'Enviar diagnóstico' }
   if ((r.questions_open ?? 0) > 0) return { kind: 'perguntas', label: 'Mandar perguntas' }
   if (r.status === 'gerando' || r.status === 'limite') return { kind: 'aguardar', label: r.status === 'limite' ? 'Limite do mês' : 'Gerando' }

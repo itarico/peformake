@@ -5,7 +5,7 @@ import { Niches, RetentionTab, Studies } from '@/features/methodology/Methodolog
 
 const PARTS = [
   { id: 'nichos', label: 'Nichos', sub: 'A metodologia de cada nicho (dores, solução, KPIs e oferta).' },
-  { id: 'estudos', label: 'Estudos', sub: 'O estudo do trimestre de cada nicho. O plano do mês lê o do nicho do cliente.' },
+  { id: 'estudos', label: 'Estudos', sub: 'O estudo do trimestre de cada nicho, para consulta da equipe.' },
   { id: 'retencao', label: 'Retenção', sub: 'A rotina de retenção: reuniões trimestrais e quem está em risco.' },
 ] as const
 type Part = (typeof PARTS)[number]['id']
