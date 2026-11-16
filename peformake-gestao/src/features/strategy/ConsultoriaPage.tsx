@@ -26,6 +26,8 @@ import { ReportCards } from './ReportCards'
 import { AgentDocs, docPeriod, latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { DocList, DocRow, PdfRow, type RowAction } from './DocList'
 import { MeetingNotes } from './MeetingNotes'
+import { StrategyBoard } from './brief/StrategyBoard'
+import { StrategyStrip } from './brief/StrategyStrip'
 import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, planReviewPath, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
@@ -288,7 +290,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
   const header = (
     <header data-cliente-cabecalho className="flex items-center gap-2">
-      <button type="button" onClick={ver ? () => go({ ver: null, secao: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Planejamento' : 'Consultoria'}</span></button>
+      <button type="button" onClick={ver ? () => go({ ver: null, secao: null, parte: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Planejamento' : 'Consultoria'}</span></button>
       <span className="flex min-w-0 flex-1 items-center gap-2">
         <ClientAvatar name={name} url={logo} size="sm" />
         <span className="min-w-0">
@@ -328,6 +330,13 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   )
 
   // Detalhe: o plano completo (seções, ações para aprovar, editar, refazer) ou as perguntas.
+  if (ver === 'estrategia') return (
+    <section aria-label={`Estratégia de ${name}`} className="flex flex-col gap-3">
+      {header}
+      <StrategyBoard clientId={clientId} name={name} />
+      {dialogs}
+    </section>
+  )
   if (ver === 'plano' || ver === 'perguntas') return (
     <section aria-label={`${ver === 'plano' ? 'Plano' : 'Perguntas'} de ${name}`} className="flex flex-col gap-3">
       {header}
@@ -382,6 +391,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
           </CardSection>
         )}
       </>}
+      {view === 'planejamento' && <StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
       {view === 'planejamento' && <MeetingNotes clientId={clientId} name={name} />}
       {view === 'planejamento' && <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
       {dialogs}
