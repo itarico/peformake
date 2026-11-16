@@ -50,6 +50,25 @@ const check = async (p, tag, name) => {
 };
 const close = async (p) => { await p.keyboard.press('Escape'); await p.waitForTimeout(200) };
 
+
+const long = (n) => 'Texto de exemplo com bastante conteúdo para medir o pop-up sem rolagem. '.repeat(n);
+const mk = (i, tab, kind, title, data, extra = {}) => ({ id: id(500 + i), board_id: id(400), tab, kind, position: i, title, data, funnel: ['atrair', 'provar', 'objecao', 'converter'][i % 4], serves: 'Combo família R$ 129', goal: '300 pedidos', inspired: { link: 'https://www.instagram.com/reel/abc/', numero: '41 mil views' }, assumed: i % 3 ? null : 'Preço do combo não confirmado', status: i % 5 === 0 ? 'aprovado' : 'proposta', reject_reason: null, in_pdf: true, regen_count: 0, is_new: false, updated_at: '2026-11-16T10:00:00Z', redo_pedido: null, redo_requested_at: null, ...extra });
+const cards = [
+  mk(0, 'resumo', 'tese', 'Dezembro é o mês da família na mesa do Fornario', { texto: long(3) }),
+  mk(1, 'resumo', 'objetivo', '300 pedidos no WhatsApp', { numero: '300 pedidos', como_medir: 'Contagem das conversas com pedido fechado' }),
+  mk(2, 'resumo', 'oferta', 'Combo família', { condicao: 'Pizza grande + refri 2L por R$ 129', quando: 'até 24/12', porque: long(2) }),
+  mk(3, 'resumo', 'data', 'Natal', { dia: '24/12', uso: 'Encomendas até 22/12' }),
+  mk(4, 'resumo', 'decisao', 'Não abrir rodízio no Natal', { porque: long(2) }),
+  mk(5, 'audiovisual', 'video', 'POV: você chega com fome e a pizza sai do forno', { formato: 'POV', ganchos: [long(1), long(1), long(1)], roteiro: Array.from({ length: 8 }, (_, k) => ({ cena: 'Close no forno a lenha, câmera na mão ' + k, fala: long(2) })), outras_ideias: [long(1), long(1), long(1)], referencia: { link: 'https://youtu.be/abcdefghijk', porque: 'gancho visual' }, cruzamento: long(1), filmar: long(2) }),
+  mk(6, 'audiovisual', 'video', 'Mito x verdade da massa de fermentação natural', { formato: 'mito x verdade', ganchos: ['a', 'b', 'c'], roteiro: [{ cena: 'x', fala: 'y' }], outras_ideias: ['1', '2', '3'], referencia: { link: '', porque: '' }, cruzamento: '', filmar: '' }),
+  mk(7, 'social', 'peca', 'Carrossel: 5 pizzas para o Natal', { formato: 'carrossel', ideia: long(1), slides: Array.from({ length: 8 }, () => long(1)), copy: long(3), legenda: long(6), cta: 'Peça no WhatsApp', ideia_imagem: long(2), referencia_visual: { link: 'https://pinterest.com/x', porque: 'paleta' }, data_sugerida: '05/12' }),
+  mk(8, 'trafego', 'campanha', 'Mensagens: Combo família', { campanha: 'x', objetivo: 'Mensagens', publico: long(2), criativo: long(1), verba_opcoes: [{ valor_dia: 'R$ 30/dia', o_que_esperar: long(1) }, { valor_dia: 'R$ 50/dia', o_que_esperar: long(1) }, { valor_dia: 'R$ 80/dia', o_que_esperar: long(1) }], teste_ab: { a: long(1), b: long(1), como_decidir: long(1) } }),
+  mk(9, 'atendimento', 'roteiro', 'Roteiro do Combo família', { oferta: 'Combo', roteiro_whatsapp: Array.from({ length: 5 }, () => long(2)), objecoes: Array.from({ length: 3 }, () => ({ objecao: 'Tá caro', resposta: long(2) })), follow_up: Array.from({ length: 3 }, () => ({ quando: 'No dia seguinte', mensagem: long(1) })) }),
+  mk(10, 'referencias', 'concorrente', 'Forno Bom', { link: 'https://instagram.com/fornobom', porque: 'combo de terça' }, { is_new: true }),
+  mk(11, 'referencias', 'referencia', 'Gancho do queijo puxando', { link: 'https://youtu.be/abcdefghijk', porque: 'Gancho do queijo', numero: '1,2 mi', thumb: '' }),
+];
+global.BOARD = { id: id(400), client_id: C, month: `${month}-01`, status: 'pronto', step: 'fim', stage: null, error: null, cost_usd: 0, missing: [], engine: 'agente', finished_at: '2026-11-16T10:00:00Z', approved_at: null, pdf_asset_id: null, cards };
+
 module.exports = { mock, check, close, sideScroll, fails, C, month, id };
 if (require.main === module) (async () => {
   const b = await chromium.launch();
@@ -77,6 +96,36 @@ if (require.main === module) (async () => {
       if (!(await p.locator('dialog[open]').getByRole('button', { name: /Gravar resposta/ }).count())) fails.push(`${tag}: resposta sem o botão de gravar`);
       if (!(await p.locator('dialog[open] audio').count())) fails.push(`${tag}: resposta com áudio sem o player`);
       await close(p);
+      // Cards: cada aba, contador, card aberto em cada parte (sem rolar), recusar, refazer e PDF.
+      for (const t of ['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias']) {
+        await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=${t}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
+        if (!(await p.locator(`[data-aba-cards="${t}"]`).count())) { fails.push(`${tag}: aba ${t} sem cards`); continue }
+        if (!(await p.locator('[data-contador]').count())) fails.push(`${tag}: aba ${t} sem o contador de aprovados`);
+        if (await sideScroll(p)) fails.push(`${tag}: aba ${t} com rolagem de lado`);
+        await p.screenshot({ path: `${OUT}/estrategia-aba-${t}-${tag}.png`, fullPage: true });
+        const rows = await p.locator('[data-aba-cards] li button').count();
+        for (let r = 0; r < Math.min(rows, t === 'resumo' ? 5 : 2); r++) {
+          await p.locator('[data-aba-cards] li button').nth(r).click(); await p.waitForTimeout(300);
+          const parts = p.locator('dialog[open] [role=tablist] [role=tab]');
+          const np = await parts.count();
+          if (!np) await check(p, tag, `${t}-${r}`);
+          for (let k = 0; k < np; k++) { await parts.nth(k).click(); await p.waitForTimeout(150); await check(p, tag, `${t}-${r}-parte${k}`) }
+          if (r === 0 && t === 'audiovisual') {
+            await p.locator('dialog[open]').getByRole('button', { name: 'Recusar' }).click(); await p.waitForTimeout(150); await check(p, tag, 'recusar');
+            await p.locator('dialog[open]').getByRole('button', { name: 'Voltar' }).click(); await p.waitForTimeout(150);
+            await p.locator('dialog[open] footer').getByRole('button', { name: /Refazer/ }).click(); await p.waitForTimeout(150); await check(p, tag, 'refazer');
+            if (!(await p.locator('dialog[open]').getByRole('button', { name: 'Outro gancho' }).count())) fails.push(`${tag}: refazer sem os atalhos de pedido`);
+          }
+          await close(p);
+        }
+      }
+      // PDF: com tudo decidido, o botão vira "Aprovar e gerar PDF".
+      const saved = global.BOARD.cards; global.BOARD = { ...global.BOARD, cards: saved.map((c) => ({ ...c, status: 'aprovado' })) };
+      await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=resumo`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
+      const pdfBtn = p.getByRole('button', { name: /Aprovar e gerar PDF/ });
+      if (!(await pdfBtn.count())) fails.push(`${tag}: sem o botão Aprovar e gerar PDF com tudo aprovado`);
+      else { await pdfBtn.click(); await p.waitForTimeout(300); await check(p, tag, 'pdf'); await close(p) }
+      global.BOARD = { ...global.BOARD, cards: saved };
       if (errs.length) fails.push(`${tag}: erros na página: ${errs.join(' | ')}`);
       await ctx.close();
     }
