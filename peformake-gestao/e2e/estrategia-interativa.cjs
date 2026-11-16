@@ -115,10 +115,19 @@ if (require.main === module) (async () => {
             await p.locator('dialog[open]').getByRole('button', { name: 'Voltar' }).click(); await p.waitForTimeout(150);
             await p.locator('dialog[open] footer').getByRole('button', { name: /Refazer/ }).click(); await p.waitForTimeout(150); await check(p, tag, 'refazer');
             if (!(await p.locator('dialog[open]').getByRole('button', { name: 'Outro gancho' }).count())) fails.push(`${tag}: refazer sem os atalhos de pedido`);
+            await p.locator('dialog[open]').getByRole('button', { name: 'Colar card refeito' }).click(); await p.waitForTimeout(150); await check(p, tag, 'refazer-colar');
           }
           await close(p);
         }
       }
+      // Colar resultado do chat (menu ⋯ da estratégia).
+      await p.getByRole('button', { name: 'Mais opções da estratégia' }).click(); await p.waitForTimeout(150);
+      await p.getByRole('menuitem', { name: 'Colar resultado' }).or(p.getByText('Colar resultado')).first().click(); await p.waitForTimeout(250);
+      await check(p, tag, 'colar-resultado');
+      await p.locator('dialog[open] textarea').fill('{"cards":[{"aba":"blog","tipo":"x","titulo":"A"}]}');
+      await p.locator('dialog[open]').getByRole('button', { name: 'Importar cards' }).click(); await p.waitForTimeout(250);
+      if (!(await p.locator('dialog[open] [role=alert]').count())) fails.push(`${tag}: colar resultado não avisou o JSON errado`);
+      await close(p);
       // PDF: com tudo decidido, o botão vira "Aprovar e gerar PDF".
       const saved = global.BOARD.cards; global.BOARD = { ...global.BOARD, cards: saved.map((c) => ({ ...c, status: 'aprovado' })) };
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=resumo`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);

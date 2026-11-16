@@ -2,6 +2,7 @@
 
 Decisão do Italo (16/11/2026): a estratégia em cards é gerada pelo **agente do Claude** (esta rotina), não pela API paga.
 A função `strategy-cards` (API) fica só de reserva, desligada (`ai_settings.strategy_engine = 'agente'`).
+As regras e o formato de saída estão também no banco: `select public.agent_instructions('estrategia-interativa');` (o mesmo texto que o chat usa; ao mudar uma regra, mude nos dois). Briefing pronto num JSON só: `select public.strategy_brief_context('<client_id>', '<AAAA-MM-01>');`.
 Nada vai ao cliente. Siga as regras do CLAUDE.md (assessoria, nunca "agência"; só valores reais; audiovisual sem tráfego etc.).
 
 ## 1. Ver a fila (Supabase, projeto wkkzcjnxyylrqoolmmhi)

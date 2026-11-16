@@ -43,6 +43,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-16 · Plano do mês antigo DESLIGADO e pedido da estratégia pelo chat (nuvem)
+- DECISÃO do Italo (16/11): a Estratégia interativa substitui o plano do mês antigo de vez. Rotinas do dia 26 e do ajuste de segunda desligadas (consult_settings), monthly_request bloqueado, consult_list.monthly lê strategy_boards. Tela do cliente: só faixa da Estratégia, Diagnóstico e Perguntas (a Reunião fica no Briefing). /revisao/plano e /audiovisual/plano-do-mes caem na Estratégia; planos antigos só para consulta (/plano/:cliente/:mes); PDFs antigos seguem em Arquivos.
+- Pedido pelo chat: regras e formato em agent_instructions('estrategia-interativa') (fila e chat usam o mesmo texto). Na Estratégia (⋯): Copiar pedido para o chat (com conector do Supabase: lê strategy_brief_context e grava com strategy_chat_submit), Copiar pedido completo (sem conector) e Colar resultado (valida o JSON). No Refazer de cada card: copiar pedido deste card e colar card refeito (strategy_import_card).
+
 ## 2026-11-16 · Estratégia interativa (MVP) no ar: briefing → gerar → revisar → PDF (nuvem)
 - Cliente → faixa "Estratégia de <mês>" (abre o mês seguinte). Briefing com medidor %: dados fixos (preenche o que o sistema sabe; concorrentes e referências acumulativos com selo "novo"), do mês, reunião, "o que funcionou" (relatório mensal) e 8 perguntas do mês (cliente pelo link de sempre ou a equipe no sistema, com ÁUDIO gravado, transcrito e guardado em client-chat/equipe).
 - DECISÃO do Italo (16/11): o motor principal é o AGENTE do Claude, não a API (a conta da Anthropic está sem crédito). "Gerar" e "Refazer este card" entram na fila (strategy_agent_queue); tarefa agendada "Fila da estratégia (cards)" (trig_01Ubd9ZCPKmZEXkd5bmsZS3Y, 8h23 a 20h23 de hora em hora; fila vazia = termina na hora); passo a passo em docs/ROTINA-ESTRATEGIA-CARDS.md. API strategy-cards só reserva (ai_settings.strategy_engine='api').

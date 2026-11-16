@@ -53,7 +53,7 @@ const CONTRACT_HINT: Partial<Record<CardTab, string>> = {
 }
 
 /** Uma aba de cards: contador "6/10 aprovados", lista resumida e o card aberto em pop-up. */
-export function CardsTab({ board, tab, onChanged }: { board: StrategyBoardData; tab: CardTab; onChanged: () => void }) {
+export function CardsTab({ board, tab, onChanged, name }: { board: StrategyBoardData; tab: CardTab; onChanged: () => void; name: string }) {
   const [open, setOpen] = useState<StrategyCard | null>(null)
   const cards = board.cards.filter((c) => c.tab === tab).sort((a, b) => (a.status === 'recusado' ? 1 : 0) - (b.status === 'recusado' ? 1 : 0) || a.position - b.position)
   const n = tabCount(board.cards, tab)
@@ -92,7 +92,7 @@ export function CardsTab({ board, tab, onChanged }: { board: StrategyBoardData; 
           </li>
         ))}
       </ul>
-      {open && <CardDialog card={open} viaApi={board.engine === 'api'} onClose={() => setOpen(null)} onChanged={onChanged} />}
+      {open && <CardDialog card={open} viaApi={board.engine === 'api'} chat={{ name, clientId: board.client_id, month: board.month }} onClose={() => setOpen(null)} onChanged={onChanged} />}
     </section>
   )
 }

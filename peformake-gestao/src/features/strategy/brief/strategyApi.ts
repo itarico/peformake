@@ -66,3 +66,22 @@ export async function approveBoard(boardId: string): Promise<void> {
   const { error } = await rpc('strategy_approve', { _board: boardId })
   if (error) fail(error)
 }
+
+// ───────── Pedir pelo chat (copiar pedido / colar resultado) ─────────
+export async function chatMaterial(clientId: string, month: string): Promise<{ rules: string; context: unknown }> {
+  const [r, c] = await Promise.all([rpc('strategy_chat_rules'), rpc('strategy_brief_context', { _client: clientId, _month: month })])
+  if (r.error) fail(r.error)
+  if (c.error) fail(c.error)
+  return { rules: String(r.data ?? ''), context: c.data }
+}
+
+export async function importResult(clientId: string, month: string, cards: unknown[], novos: unknown): Promise<number> {
+  const { data, error } = await rpc('strategy_import', { _client: clientId, _month: month, _payload: { cards, novos } })
+  if (error) fail(error)
+  return Number(data ?? 0)
+}
+
+export async function importCard(id: string, card: unknown): Promise<void> {
+  const { error } = await rpc('strategy_import_card', { _card: id, _c: card })
+  if (error) fail(error)
+}

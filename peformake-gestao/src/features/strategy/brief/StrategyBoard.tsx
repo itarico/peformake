@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, FileDown, RefreshCw, Sparkles } from 'lucide-react'
+import { ChevronDown, ClipboardCopy, ClipboardPaste, FileDown, MessageSquare, RefreshCw, Sparkles } from 'lucide-react'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
 import { useSearchParams } from 'react-router-dom'
@@ -11,7 +11,9 @@ import { BriefingView, useBriefStatus } from './BriefingView'
 import { BoardStatus, CardsTab, GenerateDialog } from './CardsView'
 import { boardCount, boardState, tabCount, type CardTab, type StrategyCard } from './cardRules'
 import { PdfDialog } from './PdfDialog'
-import { boardKey, useBoard } from './strategyApi'
+import { boardKey, chatMaterial, useBoard } from './strategyApi'
+import { copyText, PasteDialog } from './ChatTools'
+import { fullPrompt, shortPrompt } from './chatPrompt'
 
 export const BOARD_TABS = [
   { id: 'briefing', label: 'Briefing' },
@@ -91,6 +93,14 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const b = board.data ?? null
   const [gen, setGen] = useState(false)
   const [pdfOpen, setPdfOpen] = useState(false)
+  const [paste, setPaste] = useState(false)
+  const [note, setNote] = useState<string | null>(null)
+  const say = (t: string) => { setNote(t); setTimeout(() => setNote(null), 4000) }
+  const copyShort = async () => say(await copyText(shortPrompt(name, clientId, month)) ? 'Pedido copiado. Cole num chat do Claude com o Supabase.' : 'Não consegui copiar. Tente de novo.')
+  const copyFull = async () => {
+    try { const m = await chatMaterial(clientId, month); say(await copyText(fullPrompt(name, month, m.rules, m.context)) ? 'Pedido completo copiado. Depois cole a resposta em Colar resultado.' : 'Não consegui copiar. Tente de novo.') }
+    catch (e) { say((e as Error).message) }
+  }
   const refresh = () => void qc.invalidateQueries({ queryKey: boardKey(clientId, month) })
   const cards = b?.cards ?? []
   const cnt = boardCount(cards)
@@ -110,20 +120,25 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
         <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) })} />
         <span className="ml-auto flex items-center gap-1.5">
           {action}
-          {ready && <ActionMenu label="Mais opções da estratégia" actions={[
-            { label: 'Gerar de novo', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => setGen(true) },
-            { label: 'Baixar PDF', icon: <FileDown size={15} aria-hidden="true" />, onClick: () => setPdfOpen(true), hidden: cnt.approved === 0 },
-          ]} />}
+          <ActionMenu label="Mais opções da estratégia" actions={[
+            { label: 'Gerar de novo', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => setGen(true), hidden: !ready },
+            { label: 'Baixar PDF', icon: <FileDown size={15} aria-hidden="true" />, onClick: () => setPdfOpen(true), hidden: !ready || cnt.approved === 0 },
+            { label: 'Copiar pedido para o chat', icon: <MessageSquare size={15} aria-hidden="true" />, onClick: () => void copyShort(), hidden: busy },
+            { label: 'Copiar pedido completo', icon: <ClipboardCopy size={15} aria-hidden="true" />, onClick: () => void copyFull(), hidden: busy },
+            { label: 'Colar resultado', icon: <ClipboardPaste size={15} aria-hidden="true" />, onClick: () => setPaste(true), hidden: busy },
+          ]} />
         </span>
       </div>
+      {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
       <Steps at={at} labels={['Briefing', 'Gerar', 'Revisar', 'PDF']} />
       <BoardStatus board={b} />
       <BoardTabs value={tab} onChange={(t) => go({ parte: t === 'briefing' ? null : t })} counts={counts} />
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
       {tab !== 'briefing' && (ready && b
-        ? <CardsTab board={b} tab={tab as CardTab} onChanged={refresh} />
+        ? <CardsTab board={b} tab={tab as CardTab} name={name} onChanged={refresh} />
         : <p className="rounded-2xl border border-dashed border-line px-3 py-8 text-center text-[13px] text-muted">{busy ? 'O agente está montando os cards. Pode sair: fica salvo.' : 'Preencha o briefing e toque em Gerar estratégia.'}</p>)}
       {gen && <GenerateDialog clientId={clientId} month={month} missing={brief.missing} percent={brief.percent} regenerate={ready} onClose={() => setGen(false)} onBriefing={() => { setGen(false); go({ parte: null }) }} />}
+      {paste && <PasteDialog clientId={clientId} month={month} onClose={() => setPaste(false)} onDone={() => { refresh(); say('Cards importados. Revise nas abas.'); go({ parte: 'resumo' }) }} />}
       {pdfOpen && b && <PdfDialog board={b} clientId={clientId} name={name} onClose={() => setPdfOpen(false)} onDone={refresh} />}
     </div>
   )

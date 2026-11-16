@@ -7,7 +7,9 @@ import { DialogTabs } from '@/components/ui/DialogTabs'
 import { cn } from '@/lib/cn'
 import { thumbOf } from './briefRules'
 import { cardSections, chunkBy, FUNNEL, KIND_LABEL, REDO_HINTS, RESUMO_FIELDS, type Funnel, type StrategyCard } from './cardRules'
-import { patchCard, redoCard, rejectCard, requestRedo } from './strategyApi'
+import { chatMaterial, importCard, patchCard, redoCard, rejectCard, requestRedo } from './strategyApi'
+import { cardPrompt, parseCard } from './chatPrompt'
+import { copyText } from './ChatTools'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -72,7 +74,7 @@ function LinkOut({ href, label }: { href?: string; label?: string }) {
  * Card aberto: tudo dele, em abas (nunca rola). Editar tocando no texto (salva sozinho).
  * Ações sempre no mesmo lugar (rodapé): Aprovar · Recusar · Refazer, e "Incluir no PDF".
  */
-export function CardDialog({ card, onClose, onChanged, viaApi = false }: { card: StrategyCard; onClose: () => void; onChanged: () => void; viaApi?: boolean }) {
+export function CardDialog({ card, onClose, onChanged, viaApi = false, chat }: { card: StrategyCard; onClose: () => void; onChanged: () => void; viaApi?: boolean; chat?: { name: string; clientId: string; month: string } }) {
   const [c, setC] = useState(card)
   useEffect(() => setC(card), [card])
   const sections = cardSections(c)
@@ -81,6 +83,20 @@ export function CardDialog({ card, onClose, onChanged, viaApi = false }: { card:
   const [reason, setReason] = useState('')
   const [pedido, setPedido] = useState('')
   const [err, setErr] = useState<string | null>(null)
+  const [note, setNote] = useState<string | null>(null)
+  const [pasteOpen, setPasteOpen] = useState(false)
+  const [pasted, setPasted] = useState('')
+  const copyCard = async (full: boolean) => {
+    if (!chat) return
+    try {
+      const rules = full ? (await chatMaterial(chat.clientId, chat.month)).rules : undefined
+      setNote(await copyText(cardPrompt(c, chat.name, chat.clientId, chat.month, pedido, rules)) ? (full ? 'Copiado. Cole a resposta em Colar card refeito.' : 'Copiado. Cole num chat do Claude com o Supabase.') : 'Não consegui copiar.')
+    } catch (e) { setErr((e as Error).message) }
+  }
+  const pasteCard = useMutation({
+    mutationFn: async () => { const r = parseCard(pasted, c); if (r.error) throw new Error(r.error); await importCard(c.id, r.card) },
+    onSuccess: () => { setPasteOpen(false); setPasted(''); onChanged(); onClose() }, onError: (e) => setErr((e as Error).message),
+  })
   const d = c.data ?? {}
   const isRef = sections[0]!.id === 'ref'
 
@@ -190,10 +206,17 @@ export function CardDialog({ card, onClose, onChanged, viaApi = false }: { card:
         {mode === 'recusar' && <label className="text-[13px] font-semibold">Motivo em 1 linha <span className="font-normal text-muted">(vira regra de conteúdo)</span>
           <input autoFocus maxLength={200} value={reason} onChange={(e) => setReason(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') reject.mutate() }} placeholder="Ex.: não mostrar a cozinha" className="mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 text-[14px]" /></label>}
         {mode === 'refazer' && <div className="flex flex-col gap-2">
-          <p className="text-[13px] text-muted">Refaz só este card. Quer pedir algo?</p>
+          {!pasteOpen && <p className="text-[13px] text-muted">Refaz só este card. Quer pedir algo?</p>}
           <div className="flex flex-wrap gap-1.5">{hints.map((h) => <button key={h} type="button" aria-pressed={pedido === h} onClick={() => setPedido(pedido === h ? '' : h)} className={cn('min-h-9 cursor-pointer rounded-full border px-3 text-[13px] font-medium', pedido === h ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{h}</button>)}</div>
           <input value={pedido} maxLength={200} onChange={(e) => setPedido(e.target.value)} placeholder="Ou escreva (opcional)" aria-label="Pedido" className="min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 text-[14px]" />
-          {redo.isPending ? <p role="status" className="text-[12.5px] text-muted">{viaApi ? 'A IA está reescrevendo (até 1 minuto).' : 'Mandando para a fila'}</p> : !viaApi && <p className="text-[12.5px] text-muted">O agente refaz na próxima rodada (até 1 hora).</p>}
+          {chat && <div className="flex flex-wrap gap-x-3 gap-y-1 text-[12.5px] font-semibold">
+            <button type="button" className="min-h-9 cursor-pointer underline underline-offset-2" onClick={() => void copyCard(false)}>Copiar pedido deste card</button>
+            <button type="button" className="min-h-9 cursor-pointer underline underline-offset-2" onClick={() => void copyCard(true)}>Pedido completo (sem conector)</button>
+            <button type="button" className="min-h-9 cursor-pointer underline underline-offset-2" onClick={() => setPasteOpen((v) => !v)}>Colar card refeito</button>
+          </div>}
+          {pasteOpen && <div className="flex gap-2"><textarea rows={2} value={pasted} onChange={(e) => setPasted(e.target.value)} aria-label="Card refeito (JSON)" placeholder='{"titulo": "...", ...}' className="min-w-0 flex-1 resize-none rounded-xl border border-line-strong bg-surface px-2 py-1 font-mono text-[12px]" /><Button className="min-h-10 px-3 text-[13px]" disabled={!pasted.trim() || pasteCard.isPending} onClick={() => pasteCard.mutate()}>{pasteCard.isPending ? 'Salvando' : 'Usar'}</Button></div>}
+          {note && <p role="status" className="text-[12.5px] font-medium text-accent-ink">{note}</p>}
+          {redo.isPending ? <p role="status" className="text-[12.5px] text-muted">{viaApi ? 'A IA está reescrevendo (até 1 minuto).' : 'Mandando para a fila'}</p> : !viaApi && !pasteOpen && <p className="text-[12.5px] text-muted">O agente refaz na próxima rodada (até 1 hora).</p>}
         </div>}
         {mode === 'ver' && <>
           {sections.length > 1 && <DialogTabs value={tab} onChange={setTab} options={sections} label="Partes do card" />}
