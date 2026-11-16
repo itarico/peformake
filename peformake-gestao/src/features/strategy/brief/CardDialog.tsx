@@ -7,7 +7,7 @@ import { DialogTabs } from '@/components/ui/DialogTabs'
 import { cn } from '@/lib/cn'
 import { thumbOf } from './briefRules'
 import { cardSections, chunkBy, FUNNEL, KIND_LABEL, REDO_HINTS, RESUMO_FIELDS, type Funnel, type StrategyCard } from './cardRules'
-import { chatMaterial, importCard, patchCard, redoCard, rejectCard, requestRedo } from './strategyApi'
+import { approveCard, chatMaterial, importCard, patchCard, redoCard, rejectCard, requestRedo } from './strategyApi'
 import { cardPrompt, parseCard } from './chatPrompt'
 import { copyText } from './ChatTools'
 
@@ -108,6 +108,11 @@ export function CardDialog({ card, onClose, onChanged, viaApi = false, chat }: {
   })
   const setData = (k: string, v: unknown) => save.mutate({ data: { ...d, [k]: v } })
   const setArr = (k: string, i: number, v: unknown) => { const a = [...((d[k] ?? []) as unknown[])]; a[i] = v; setData(k, a) }
+  const approve = useMutation({
+    mutationFn: () => approveCard(c.id),
+    onSuccess: (link) => { onChanged(); if (link && c.status !== 'aprovado') { setC((x) => ({ ...x, status: 'aprovado', routed_link: link })); setNote('Aprovado e enviado para a produção da área.') } else onClose() },
+    onError: (e) => setErr((e as Error).message),
+  })
   const reject = useMutation({ mutationFn: () => rejectCard(c.id, reason), onSuccess: () => { onChanged(); onClose() }, onError: (e) => setErr((e as Error).message) })
   const redo = useMutation({
     mutationFn: async () => { if (viaApi) return redoCard(c.id, pedido); await requestRedo(c.id, pedido); return { ...c, redo_pedido: pedido || 'versão melhor', redo_requested_at: new Date().toISOString() } },
@@ -186,7 +191,9 @@ export function CardDialog({ card, onClose, onChanged, viaApi = false, chat }: {
         </label>
         {!isRef && <Button variant="secondary" aria-label="Refazer este card" className="min-h-10 px-3 text-[13px]" onClick={() => { setErr(null); setMode('refazer') }}><RefreshCw size={14} aria-hidden="true" /> <span className="max-sm:hidden">Refazer</span></Button>}
         <Button variant="secondary" aria-label="Recusar" className="min-h-10 px-3 text-[13px]" onClick={() => { setErr(null); setMode('recusar') }}><X size={14} aria-hidden="true" /> <span className="max-sm:hidden">Recusar</span></Button>
-        <Button className="min-h-10 px-4 text-[13px]" disabled={c.status === 'aprovado'} onClick={() => { save.mutate({ status: 'aprovado' }); onClose() }}><Check size={14} aria-hidden="true" /> {c.status === 'aprovado' ? 'Aprovado' : 'Aprovar'}</Button>
+        {c.status === 'aprovado' && c.routed_link
+          ? <a href={c.routed_link} className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-brand px-4 text-[13px] font-semibold text-on-brand no-underline hover:opacity-85"><Check size={14} aria-hidden="true" /> Ver na produção</a>
+          : <Button className="min-h-10 px-4 text-[13px]" disabled={c.status === 'aprovado' || approve.isPending} onClick={() => approve.mutate()}><Check size={14} aria-hidden="true" /> {c.status === 'aprovado' ? 'Aprovado' : approve.isPending ? 'Aprovando' : 'Aprovar'}</Button>}
       </div>
 
   return (
@@ -222,6 +229,7 @@ export function CardDialog({ card, onClose, onChanged, viaApi = false, chat }: {
           {sections.length > 1 && <DialogTabs value={tab} onChange={setTab} options={sections} label="Partes do card" />}
           {body()}
         </>}
+        {mode === 'ver' && note && <p role="status" className="text-[12.5px] font-medium text-ok-ink">{note}</p>}
         {err && <p role="alert" className="text-[12.5px] text-warn-ink">{err}</p>}
       </div>
     </Dialog>

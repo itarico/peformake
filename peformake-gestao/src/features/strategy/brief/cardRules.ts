@@ -10,6 +10,7 @@ export interface StrategyCard {
   funnel: Funnel | null; serves: string | null; goal: string | null; inspired: { link?: string; numero?: string } | null; assumed: string | null
   status: CardStatus; reject_reason: string | null; in_pdf: boolean; regen_count: number; is_new: boolean; updated_at: string
   redo_pedido?: string | null; redo_requested_at?: string | null
+  routed_table?: string | null; routed_link?: string | null
 }
 export type BoardStatus = 'na_fila' | 'gerando' | 'pronto' | 'aprovado' | 'erro' | 'limite'
 export interface StrategyBoardData {

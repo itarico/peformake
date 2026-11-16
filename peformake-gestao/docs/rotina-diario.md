@@ -43,6 +43,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-16 · Card aprovado vai para a produção da área (nuvem)
+- strategy_card_approve: vídeo aprovado vira projeto no Audiovisual (roteiro cena a cena no script; ganchos, ideias, filmar e referências no briefing), peça de social vira pauta no Conteúdo (legenda, CTA, slides, data sugerida), campanha vira tarefa de tráfego e atendimento vira tarefa de atendimento. Uma vez só por card; avisa a área (notify). No card: "Ver na produção". Resumo e Referências só ficam aprovados.
+- Ainda sem geração real: o Italo pediu para esperar o teste do Fornario.
+
 ## 2026-11-16 · Plano do mês antigo DESLIGADO e pedido da estratégia pelo chat (nuvem)
 - DECISÃO do Italo (16/11): a Estratégia interativa substitui o plano do mês antigo de vez. Rotinas do dia 26 e do ajuste de segunda desligadas (consult_settings), monthly_request bloqueado, consult_list.monthly lê strategy_boards. Tela do cliente: só faixa da Estratégia, Diagnóstico e Perguntas (a Reunião fica no Briefing). /revisao/plano e /audiovisual/plano-do-mes caem na Estratégia; planos antigos só para consulta (/plano/:cliente/:mes); PDFs antigos seguem em Arquivos.
 - Pedido pelo chat: regras e formato em agent_instructions('estrategia-interativa') (fila e chat usam o mesmo texto). Na Estratégia (⋯): Copiar pedido para o chat (com conector do Supabase: lê strategy_brief_context e grava com strategy_chat_submit), Copiar pedido completo (sem conector) e Colar resultado (valida o JSON). No Refazer de cada card: copiar pedido deste card e colar card refeito (strategy_import_card).

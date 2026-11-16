@@ -41,6 +41,13 @@ export async function patchCard(id: string, patch: Partial<Pick<StrategyCard, 't
   if (error) fail(error)
 }
 
+/** Aprovar: vídeo vira projeto no Audiovisual, peça vira pauta no Conteúdo, campanha/atendimento viram tarefa. Devolve o link. */
+export async function approveCard(id: string): Promise<string | null> {
+  const { data, error } = await rpc('strategy_card_approve', { _id: id })
+  if (error) fail(error)
+  return (data as string | null) ?? null
+}
+
 export async function rejectCard(id: string, reason: string): Promise<void> {
   const { error } = await rpc('strategy_card_reject', { _id: id, _reason: reason })
   if (error) fail(error)

@@ -80,6 +80,7 @@ export function CardsTab({ board, tab, onChanged, name }: { board: StrategyBoard
                 <FunnelChip f={c.funnel} />
                 {c.assumed && <span className="shrink-0 font-semibold text-warn-ink">suposição</span>}
                 {c.redo_requested_at && <span className="shrink-0 font-semibold text-accent-ink">na fila para refazer</span>}
+                {c.routed_link && <span className="shrink-0 font-semibold text-ok-ink">na produção</span>}
                 <span className="truncate">{cardLine(c)}</span>
               </span>
             </button>
