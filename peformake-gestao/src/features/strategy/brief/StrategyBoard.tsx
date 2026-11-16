@@ -9,8 +9,9 @@ import { MonthPick } from '../PlanCards'
 import { monthOptions, parseMonthParam } from '../monthlyRules'
 import { BriefingView, useBriefStatus } from './BriefingView'
 import { BoardStatus, CardsTab, GenerateDialog } from './CardsView'
-import { boardCount, boardState, tabCount, type CardTab, type StrategyCard } from './cardRules'
+import { boardCount, boardState, tabCount, type CardTab } from './cardRules'
 import { PdfDialog } from './PdfDialog'
+import { ReviewMode } from './ReviewMode'
 import { boardKey, chatMaterial, useBoard } from './strategyApi'
 import { copyText, PasteDialog } from './ChatTools'
 import { fullPrompt, shortPrompt } from './chatPrompt'
@@ -112,7 +113,7 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const action = busy ? null
     : !ready ? <Button className="min-h-10 px-4 text-[13px]" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar estratégia</Button>
     : cnt.approved > 0 && cnt.pending === 0 ? <Button className="min-h-10 px-4 text-[13px]" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> {b?.status === 'aprovado' ? 'PDF' : 'Aprovar e gerar PDF'}</Button>
-    : <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => go({ parte: firstPending(cards) })}>Revisar ({cnt.pending})</Button>
+    : <Button className="min-h-10 px-4 text-[13px]" onClick={() => go({ revisar: 'todos' })}>Revisar ({cnt.pending})</Button>
   return (
     <div data-estrategia className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
@@ -135,17 +136,13 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
       <BoardTabs value={tab} onChange={(t) => go({ parte: t === 'briefing' ? null : t })} counts={counts} />
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
       {tab !== 'briefing' && (ready && b
-        ? <CardsTab board={b} tab={tab as CardTab} name={name} onChanged={refresh} />
+        ? <CardsTab board={b} tab={tab as CardTab} name={name} onChanged={refresh} onReview={() => go({ revisar: tab })} />
         : <p className="rounded-2xl border border-dashed border-line px-3 py-8 text-center text-[13px] text-muted">{busy ? 'O agente está montando os cards. Pode sair: fica salvo.' : 'Preencha o briefing e toque em Gerar estratégia.'}</p>)}
       {gen && <GenerateDialog clientId={clientId} month={month} missing={brief.missing} percent={brief.percent} regenerate={ready} onClose={() => setGen(false)} onBriefing={() => { setGen(false); go({ parte: null }) }} />}
+      {params.get('revisar') && b && ready && <ReviewMode board={b} name={name} tab={params.get('revisar') === 'todos' ? null : params.get('revisar')} onClose={() => go({ revisar: null })} onChanged={refresh} />}
       {paste && <PasteDialog clientId={clientId} month={month} onClose={() => setPaste(false)} onDone={() => { refresh(); say('Cards importados. Revise nas abas.'); go({ parte: 'resumo' }) }} />}
       {pdfOpen && b && <PdfDialog board={b} clientId={clientId} name={name} onClose={() => setPdfOpen(false)} onDone={refresh} />}
     </div>
   )
 }
 
-/** A primeira aba com card esperando revisão. */
-function firstPending(cards: StrategyCard[]): string {
-  const order: CardTab[] = ['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias']
-  return order.find((t) => cards.some((c) => c.tab === t && c.status === 'proposta')) ?? 'resumo'
-}

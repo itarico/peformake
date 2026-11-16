@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronRight, Sparkles } from 'lucide-react'
+import { Check, ChevronRight, Play, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
@@ -53,7 +53,7 @@ const CONTRACT_HINT: Partial<Record<CardTab, string>> = {
 }
 
 /** Uma aba de cards: contador "6/10 aprovados", lista resumida e o card aberto em pop-up. */
-export function CardsTab({ board, tab, onChanged, name }: { board: StrategyBoardData; tab: CardTab; onChanged: () => void; name: string }) {
+export function CardsTab({ board, tab, onChanged, name, onReview }: { board: StrategyBoardData; tab: CardTab; onChanged: () => void; name: string; onReview?: () => void }) {
   const [open, setOpen] = useState<StrategyCard | null>(null)
   const cards = board.cards.filter((c) => c.tab === tab).sort((a, b) => (a.status === 'recusado' ? 1 : 0) - (b.status === 'recusado' ? 1 : 0) || a.position - b.position)
   const n = tabCount(board.cards, tab)
@@ -64,6 +64,7 @@ export function CardsTab({ board, tab, onChanged, name }: { board: StrategyBoard
       <div className="flex items-center gap-2 px-1">
         <b data-contador className="text-[13.5px]">{n.approved}/{n.total} aprovados</b>
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised"><div className="h-full rounded-full bg-ok" style={{ width: `${n.total ? (n.approved / n.total) * 100 : 0}%` }} /></div>
+        {onReview && tab !== 'referencias' && <Button className="min-h-9 shrink-0 px-3 text-[12.5px]" onClick={onReview}><Play size={13} aria-hidden="true" /> Um por um</Button>}
       </div>
       {CONTRACT_HINT[tab] && <p className="px-1 text-[12.5px] text-muted">{CONTRACT_HINT[tab]}</p>}
       <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">

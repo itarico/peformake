@@ -120,6 +120,19 @@ if (require.main === module) (async () => {
           await close(p);
         }
       }
+      // Revisão um por um: moldura do formato, texto ao lado, barra de ações sempre visível.
+      await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=resumo&revisar=todos`, { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
+      if (!(await p.locator('[data-revisao]').count())) fails.push(`${tag}: modo revisão não abriu`);
+      for (let k = 0; k < 10; k++) {
+        if (!(await p.locator('[data-mockup]').count())) break;
+        if (await sideScroll(p)) fails.push(`${tag}: revisão ${k + 1} com rolagem de lado`);
+        const ft = await p.evaluate(() => { const f = document.querySelector('[data-revisao] footer'); if (!f) return null; const r = f.getBoundingClientRect(); return r.bottom <= innerHeight + 1 });
+        if (!ft) fails.push(`${tag}: revisão ${k + 1} sem a barra de ações na tela`);
+        await p.screenshot({ path: `${OUT}/estrategia-revisao-${k + 1}-${tag}.png` });
+        await p.getByRole('button', { name: 'Próximo' }).click(); await p.waitForTimeout(350);
+      }
+      await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+
       // Colar resultado do chat (menu ⋯ da estratégia).
       await p.getByRole('button', { name: 'Mais opções da estratégia' }).click(); await p.waitForTimeout(150);
       await p.getByRole('menuitem', { name: 'Colar resultado' }).or(p.getByText('Colar resultado')).first().click(); await p.waitForTimeout(250);

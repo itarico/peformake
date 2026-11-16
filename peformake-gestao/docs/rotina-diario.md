@@ -43,6 +43,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-16 · Revisão "um por um" com mockup (nuvem)
+- Estratégia → botão "Revisar (n)" ou "Um por um" em cada aba (?revisar=todos|aba): uma peça por vez em tela cheia, na moldura do formato (feed, carrossel que desliza, story, Reels, vídeo horizontal YouTube/TV, anúncio com "Patrocinado", WhatsApp para atendimento, pôster para o Resumo), com inclinação leve. Ao lado: título grande, texto da arte, CTA, legenda, roteiro, ganchos, link da referência. Aprovar (manda para a produção) / Recusar (não apaga, motivo opcional vira regra) / Editar (abre a caixa) e passa sozinho; setas, arrastar e tecla A. YouTube toca dentro da moldura; Instagram/TikTok só pelo link. Cores e logo da marca do cliente (guia > cadastro).
+- Próximo (ideia do Italo, não regra): levar o mesmo molde para a revisão da equipe (Design) e o portal do cliente; arte real dentro da moldura quando existir; fachada e outros formatos.
+
 ## 2026-11-16 · Card aprovado vai para a produção da área (nuvem)
 - strategy_card_approve: vídeo aprovado vira projeto no Audiovisual (roteiro cena a cena no script; ganchos, ideias, filmar e referências no briefing), peça de social vira pauta no Conteúdo (legenda, CTA, slides, data sugerida), campanha vira tarefa de tráfego e atendimento vira tarefa de atendimento. Uma vez só por card; avisa a área (notify). No card: "Ver na produção". Resumo e Referências só ficam aprovados.
 - Ainda sem geração real: o Italo pediu para esperar o teste do Fornario.
