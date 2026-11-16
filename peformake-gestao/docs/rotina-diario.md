@@ -43,6 +43,12 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-16 · Estratégia interativa (MVP) no ar: briefing → gerar → revisar → PDF (nuvem)
+- Cliente → faixa "Estratégia de <mês>" (abre o mês seguinte). Briefing com medidor %: dados fixos (preenche o que o sistema sabe; concorrentes e referências acumulativos com selo "novo"), do mês, reunião, "o que funcionou" (relatório mensal) e 8 perguntas do mês (cliente pelo link de sempre ou a equipe no sistema, com ÁUDIO gravado, transcrito e guardado em client-chat/equipe).
+- DECISÃO do Italo (16/11): o motor principal é o AGENTE do Claude, não a API (a conta da Anthropic está sem crédito). "Gerar" e "Refazer este card" entram na fila (strategy_agent_queue); tarefa agendada "Fila da estratégia (cards)" (trig_01Ubd9ZCPKmZEXkd5bmsZS3Y, 8h23 a 20h23 de hora em hora; fila vazia = termina na hora); passo a passo em docs/ROTINA-ESTRATEGIA-CARDS.md. API strategy-cards só reserva (ai_settings.strategy_engine='api').
+- Cards por aba (Resumo, Audiovisual, Social, Tráfego, Atendimento, Referências) com contador, funil, serve, meta, inspirado, suposição; editar tocando no texto (salva sozinho), Aprovar, Recusar (motivo vira content_rules), Refazer, Incluir no PDF. PDF de modelo fixo (strategyDoc.ts; Peformake + Ellcazo no audiovisual) salvo como HTML na pasta Estratégia; o agente gera o PDF (tools/estrategia-cards/pdf.ts).
+- FALTA o Italo: na tarefa agendada (claude.ai/code/routines) adicionar os conectores Supabase e Firecrawl e o repositório itarico/peformake (a tarefa foi criada sem eles). Ainda não houve teste de geração real (sem crédito na API; o agente roda na próxima rodada com os conectores). Função strategy-cards: o arquivo do repo tem a mensagem "sem crédito" que ainda não foi publicada (só reserva).
+
 ## 2026-11-13 · Brio e Peformake refeitos pela skill e aprovados na revisão às cegas (nuvem)
 - Estudo de vídeos do Italo no repo (video-tools/estilos, NARRATIVA, MANUAL_EDICAO, skills roteiro-narrativa/edicao-cliente/motion-pro) e ligado à skill peformake-estudo-mes. Novos padrões: venda.md, dossie.md, banco/<nicho>.md, rubrica com "erros já pegos".
 - Brio (estratégia 15, social 15, audiovisual 28) e Peformake (estratégia, social, audiovisual, tráfego, plano de vendas) refeitos; 1ª revisão às cegas 3,5/3,75 (não), 2ª 4,17/4,0 (sim com ajustes pequenos), ajustes aplicados e subidos como "Para aprovar".
