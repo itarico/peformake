@@ -122,11 +122,23 @@ if (require.main === module) (async () => {
       }
       // Produtos: importar de arquivo (CSV aqui; PDF, Excel e Word passam pelo mesmo leitor).
       await p.locator('[data-briefing] button', { hasText: 'Produtos e serviços' }).first().click(); await p.waitForTimeout(300);
+      await p.locator('dialog[open]').getByRole('button', { name: /Importar/ }).click(); await p.waitForTimeout(200);
+      if (!(await p.locator('[data-importar-modo="menu"]').count())) fails.push(`${tag}: Importar não abriu as 3 opções`);
+      await check(p, tag, 'importar-menu');
       await p.locator('[data-importar]').setInputFiles({ name: 'cardapio.csv', mimeType: 'text/csv', buffer: Buffer.from('Produto;Preço;Obs\nPizza grande;59,90;\nCalzone;42;só delivery\nRefri 2L;12,00;\nPizza doce;49,9;\nBorda recheada;8;\nCombo família;129;até 24/12\n') });
       await p.waitForTimeout(600);
       const note = await p.locator('dialog[open] [role=status]').textContent().catch(() => '');
       if (!/Encontrei 6/.test(note || '')) fails.push(`${tag}: importar produtos não leu o arquivo (${note})`);
-      await check(p, tag, 'produtos-importados'); await close(p);
+      await check(p, tag, 'produtos-importados');
+      // Colar a lista de uma vez.
+      await p.locator('dialog[open]').getByRole('button', { name: /Importar/ }).click(); await p.waitForTimeout(150);
+      await p.locator('dialog[open]').getByRole('button', { name: /Colar a lista/ }).click(); await p.waitForTimeout(150);
+      await p.locator('dialog[open] textarea[aria-label="Lista de produtos"]').fill('Esfiha de carne — R$ 6,50\nEsfiha de queijo — R$ 6,00\nKibe 4,90');
+      await check(p, tag, 'importar-colar');
+      await p.locator('dialog[open]').getByRole('button', { name: 'Ler a lista' }).click(); await p.waitForTimeout(300);
+      const note2 = await p.locator('dialog[open] [role=status]').first().textContent().catch(() => '');
+      if (!/Encontrei 3/.test(note2 || '')) fails.push(`${tag}: colar a lista não leu (${note2})`);
+      await close(p);
       // Links: cola o link e o sistema dá o nome.
       await p.locator('[data-briefing] button', { hasText: 'Links importantes' }).first().click(); await p.waitForTimeout(300);
       const before = await p.locator('[data-link]').count();
@@ -178,6 +190,9 @@ if (require.main === module) (async () => {
       await p.locator('[data-briefing] button', { hasText: 'pergunta 1' }).click(); await p.waitForTimeout(350);
       await check(p, tag, 'resposta');
       if (!(await p.locator('dialog[open]').getByRole('button', { name: /Gravar resposta/ }).count())) fails.push(`${tag}: resposta sem o botão de gravar`);
+      if (!(await p.locator('dialog[open]').getByRole('button', { name: /Foto ou arquivo/ }).count())) fails.push(`${tag}: resposta sem anexar foto ou arquivo`);
+      await p.locator('dialog[open] [data-anexar]').setInputFiles({ name: 'cardapio.jpg', mimeType: 'image/jpeg', buffer: Buffer.from([255, 216, 255]) }); await p.waitForTimeout(150);
+      if (!(await p.locator('dialog[open]').getByText('cardapio.jpg').count())) fails.push(`${tag}: anexo não apareceu na resposta`);
       if (!(await p.locator('dialog[open] audio').count())) fails.push(`${tag}: resposta com áudio sem o player`);
       await close(p);
       // Cards: cada aba, contador, card aberto em cada parte (sem rolar), recusar, refazer e PDF.

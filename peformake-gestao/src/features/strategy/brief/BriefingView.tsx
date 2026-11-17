@@ -8,7 +8,7 @@ import { MeetingNotes } from '../MeetingNotes'
 import { SendQuestionsLoader } from '../QuestionsPanel'
 import { questionsKey, type ClientQuestion } from '../questionsApi'
 import { textPages, monthName } from '../monthlyRules'
-import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
+import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
@@ -100,9 +100,9 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
     onSuccess: () => { void qc.invalidateQueries({ queryKey: briefMonthKey(clientId, month) }); next() },
   })
   const answer = useMutation({
-    mutationFn: async ({ id, text, audio }: { id: string; text: string; audio: Blob | null }) => {
-      const att = audio ? await uploadAudio(clientId, audio) : null
-      await answerBrief(id, text || (att ? '(resposta em áudio)' : ''), att)
+    mutationFn: async ({ id, text, audio, files }: { id: string; text: string; audio: Blob | null; files: File[] }) => {
+      const atts = [...(audio ? [await uploadAudio(clientId, audio)] : []), ...(await Promise.all(files.map((f) => uploadFile(clientId, f))))]
+      await answerBrief(id, text || (audio ? '(resposta em áudio)' : files.length ? `Enviou: ${files.map((f) => f.name).join(', ')}` : ''), atts)
     },
     onSuccess: () => { void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }); void qc.invalidateQueries({ queryKey: questionsKey(clientId) }); next() },
   })
@@ -183,7 +183,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
       {open?.kind === 'referencias' && <ListDialog<Referencia & Record<string, unknown>> title="Referências" hint="Posts, vídeos, anúncios e outros nichos. Com o link e o porquê." items={refs as (Referencia & Record<string, unknown>)[]} empty={{ link: '', porque: '', numero: '' }}
         fields={[{ key: 'link', label: 'Link', placeholder: 'https://…' }, { key: 'porque', label: 'Por que é referência', placeholder: 'Ex.: gancho forte nos 2 primeiros segundos' }, { key: 'numero', label: 'Número (se souber)', placeholder: 'Ex.: 1,2 mi de views' }]}
         line={(x) => (x.porque ? short(x.porque, 40) : netOf(x.link))} sub={(x) => [netOf(x.link), x.numero].filter(Boolean).join(' · ')} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ referencias: v })} />}
-      {open?.kind === 'q' && <AnswerDialog key={open.q.id} q={open.q} busy={answer.isPending} error={err(answer)} onClose={stop} onSave={(text, audio) => answer.mutate({ id: open.q.id, text, audio })} />}
+      {open?.kind === 'q' && <AnswerDialog key={open.q.id} q={open.q} busy={answer.isPending} error={err(answer)} onClose={stop} onSave={(text, audio, files) => answer.mutate({ id: open.q.id, text, audio, files })} />}
       {open?.kind === 'enviar' && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => { setOpen(null); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) }} />}
       </GuideCtx.Provider>
       {open?.kind === 'funcionou' && <WorkedDialog text={last.data?.summary ?? null} period={last.data ? `${last.data.period_start.slice(8, 10)}/${last.data.period_start.slice(5, 7)} a ${last.data.period_end.slice(8, 10)}/${last.data.period_end.slice(5, 7)}` : ''} onClose={stop} />}

@@ -94,8 +94,32 @@ export async function transcribe(blob: Blob): Promise<string> {
   return String((data as { text?: string }).text ?? '').trim()
 }
 
-export async function answerBrief(id: string, answer: string, attachment?: { path: string; name: string; type: string } | null): Promise<void> {
-  const { error } = await rpc('brief_question_answer', { _id: id, _answer: answer, _attachments: attachment ? [attachment] : null })
+/** Lê a lista de produtos de um link (cardápio, catálogo, site) pela função page-text (sem IA). */
+export async function productsFromUrl(url: string): Promise<import('./briefRules').Produto[]> {
+  const { data, error } = await supabase.functions.invoke('page-text', { body: { url } })
+  if (error) {
+    const ctx = (error as { context?: Response }).context
+    throw new Error(((ctx ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não consegui ler esta página. Tente o PDF ou cole a lista.')
+  }
+  const { parseProducts } = await import('./productImport')
+  return parseProducts(((data as { lines?: string[] }).lines ?? []).map((l) => [l]))
+}
+
+export type Att = { path: string; name: string; type: string }
+/** Foto, documento ou vídeo que a equipe anexa à resposta (mesma pasta equipe/ das conversas). Até 15 MB. */
+export async function uploadFile(clientId: string, file: File): Promise<Att> {
+  if (file.size > 15_000_000) throw new Error('Arquivo grande demais (até 15 MB).')
+  const ext = (file.name.split('.').pop() ?? 'bin').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 5) || 'bin'
+  const path = `equipe/${clientId}/${crypto.randomUUID()}.${ext}`
+  const { error } = await supabase.storage.from('client-chat').upload(path, file, { contentType: file.type || 'application/octet-stream', upsert: false })
+  if (error) throw new Error('Não foi possível guardar o arquivo. Tente de novo.')
+  return { path, name: file.name.slice(0, 120) || `arquivo.${ext}`, type: file.type || 'application/octet-stream' }
+}
+
+/** Resposta da equipe (ou correção): texto + anexos (áudio, foto, arquivo). Correção de resposta do cliente continua dele. */
+export async function answerBrief(id: string, answer: string, attachment?: Att | Att[] | null): Promise<void> {
+  const list = !attachment ? [] : Array.isArray(attachment) ? attachment : [attachment]
+  const { error } = await rpc('brief_question_answer', { _id: id, _answer: answer, _attachments: list.length ? list : null })
   if (error) { if (error.code === 'PF004') throw new Error('Esta pergunta não existe mais. Atualize a tela.'); fail(error) }
 }
 

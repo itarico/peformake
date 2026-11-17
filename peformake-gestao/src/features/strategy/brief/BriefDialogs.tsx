@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { ChevronLeft, ChevronRight, FileUp, ListChecks, Mic, Pencil, Plus, Square, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ClipboardList, FileUp, Link2, ListChecks, Mic, Paperclip, Pencil, Plus, Square, Trash2, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { VoiceNote } from '@/components/ui/VoiceNote'
@@ -7,7 +7,8 @@ import { cn } from '@/lib/cn'
 import { fileUrl, type ClientQuestion } from '../questionsApi'
 import { transcribe } from './briefApi'
 import { detectLink, fromLinkList, linkList, QUIZ, quizText, type BriefFixed, type LinkItem, type QuizStep, type TextKey } from './briefRules'
-import { IMPORT_ACCEPT, importProducts } from './productImport'
+import { IMPORT_ACCEPT, importProducts, productsFromText } from './productImport'
+import { productsFromUrl } from './briefApi'
 
 export const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 text-[14px]'
 const area = 'mt-1 w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[14px]'
@@ -167,18 +168,24 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
   const [note, setNote] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const per = importer ? (typeof window !== 'undefined' && window.innerHeight < 760 ? 4 : 6) : 4
-  const readFile = async (file: File) => {
+  const [mode, setMode] = useState<null | 'menu' | 'colar' | 'link'>(null)
+  const [paste, setPaste] = useState('')
+  const [link, setLink] = useState('')
+  /** Soma os produtos achados (sem repetir) e diz quantos vieram. */
+  const addFound = async (get: () => Promise<{ nome: string }[]>) => {
     setReading(true); setNote(null)
     try {
-      const found = await importProducts(file)
+      const found = await get()
       const key = (x: unknown) => String(x ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\W+/g, '')
       const first = fields[0]!.key
       const fresh = found.filter((p) => !items.some((x) => key(x[first]) === key(p.nome))).map((p) => ({ ...empty, ...p, novo: true }) as unknown as T)
       setItems((c) => [...c, ...fresh])
-      setNote(found.length ? `Encontrei ${found.length} ${found.length === 1 ? 'item' : 'itens'}${fresh.length < found.length ? ` (${found.length - fresh.length} já estavam)` : ''}. Confira, edite ou remova antes de salvar.` : 'Não achei produtos neste arquivo. Tente outro formato (Excel ou PDF com texto).')
+      setNote(found.length ? `Encontrei ${found.length} ${found.length === 1 ? 'item' : 'itens'}${fresh.length < found.length ? ` (${found.length - fresh.length} já estavam)` : ''}. Confira, edite ou remova antes de salvar.` : 'Não achei produtos. Tente outro formato (Excel, PDF com texto ou colar a lista).')
       if (fresh.length) setPage(Math.floor(items.length / per))
-    } catch (e) { setNote((e as Error).message || 'Não consegui ler o arquivo.') } finally { setReading(false) }
+      if (found.length) { setMode(null); setPaste(''); setLink('') }
+    } catch (e) { setNote((e as Error).message || 'Não consegui ler.') } finally { setReading(false) }
   }
+  const readFile = (file: File) => addFound(() => importProducts(file))
   const pages = Math.max(1, Math.ceil(items.length / per))
   const shown = items.slice(page * per, page * per + per)
   const first = fields[0]!.key
@@ -192,6 +199,27 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
     if (edit.i < 0) setPage(Math.floor(items.length / per))
     setEdit(null)
   }
+  if (importer && mode) return (
+    <Dialog open onClose={onClose} title="Importar a lista" description={mode === 'menu' ? 'Do jeito que estiver: o sistema acha nome e preço sozinho.' : mode === 'colar' ? 'Cole a lista inteira: um produto por linha, com o preço.' : 'Link do cardápio, catálogo ou site.'} size="md"
+      footer={<div className="flex gap-2">
+        {mode === 'colar' && <Button disabled={reading || !paste.trim()} onClick={() => void addFound(async () => productsFromText(paste))}>{reading ? 'Lendo' : 'Ler a lista'}</Button>}
+        {mode === 'link' && <Button disabled={reading || !link.trim()} onClick={() => void addFound(() => productsFromUrl(link.trim()))}>{reading ? 'Lendo a página' : 'Ler o link'}</Button>}
+        <Button variant="secondary" onClick={() => setMode(mode === 'menu' ? null : 'menu')}>Voltar</Button>
+      </div>}>
+      <div data-importar-modo={mode} className="flex flex-col gap-2">
+        {mode === 'menu' && <>
+          <button type="button" onClick={() => fileRef.current?.click()} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><FileUp size={18} aria-hidden="true" /><span><b className="block text-[14px]">Arquivo</b><span className="text-[12.5px] text-muted">PDF, Excel, Word, CSV ou foto do cardápio</span></span></button>
+          <button type="button" onClick={() => setMode('colar')} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><ClipboardList size={18} aria-hidden="true" /><span><b className="block text-[14px]">Colar a lista</b><span className="text-[12.5px] text-muted">Do WhatsApp, de uma planilha ou de onde estiver</span></span></button>
+          <button type="button" onClick={() => setMode('link')} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><Link2 size={18} aria-hidden="true" /><span><b className="block text-[14px]">Link</b><span className="text-[12.5px] text-muted">Cardápio digital, catálogo ou site</span></span></button>
+          <input ref={fileRef} type="file" hidden accept={IMPORT_ACCEPT} data-importar onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void readFile(f) }} />
+        </>}
+        {mode === 'colar' && <textarea autoFocus rows={8} value={paste} onChange={(e) => setPaste(e.target.value)} className={area} placeholder={'Pizza grande — R$ 59,90\nCalzone — R$ 42\nRefri 2L — R$ 12'} aria-label="Lista de produtos" />}
+        {mode === 'link' && <input autoFocus value={link} onChange={(e) => setLink(e.target.value)} className={field} placeholder="https://…" inputMode="url" aria-label="Link da lista" />}
+        {reading && mode === 'menu' && <p role="status" className="text-[12.5px] font-medium text-muted">Lendo o arquivo…</p>}
+        {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[12.5px] font-medium text-accent-ink">{note}</p>}
+      </div>
+    </Dialog>
+  )
   if (edit) return (
     <Dialog open onClose={onClose} title={title} description={edit.i < 0 ? 'Novo item' : 'Editar item'} size="sm"
       footer={<div className="flex gap-2"><Button onClick={commit}>Pronto</Button><Button variant="secondary" onClick={() => setEdit(null)}>Voltar</Button></div>}>
@@ -236,15 +264,29 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
         </ul>
         <div className="flex items-center gap-2">
           <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => setEdit({ i: -1, v: { ...empty } })}>{quick ? <><Pencil size={14} aria-hidden="true" /> Escrever</> : <><Plus size={14} aria-hidden="true" /> Adicionar</>}</Button>
-          {importer && <>
-            <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={reading} onClick={() => fileRef.current?.click()}><FileUp size={14} aria-hidden="true" /> <span>{reading ? 'Lendo' : <>Importar<span className="max-sm:hidden"> PDF, Excel ou Word</span></>}</span></Button>
-            <input ref={fileRef} type="file" hidden accept={IMPORT_ACCEPT} data-importar onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void readFile(f) }} />
-          </>}
+          {importer && <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => { setNote(null); setMode('menu') }}><FileUp size={14} aria-hidden="true" /> Importar<span className="max-sm:hidden"> lista</span></Button>}
           {pages > 1 && <Pager page={page} pages={pages} onPage={setPage} />}
         </div>
         {error && <p role="alert" className="text-[12.5px] text-warn-ink">{error}</p>}
       </div>
     </Dialog>
+  )
+}
+
+/** Anexar foto, documento ou vídeo à resposta (vários de uma vez). Sobe só ao salvar. */
+export function AttachButton({ files, onChange }: { files: File[]; onChange: (f: File[]) => void }) {
+  const ref = useRef<HTMLInputElement>(null)
+  return (
+    <span className="flex flex-wrap items-center gap-1.5">
+      <button type="button" onClick={() => ref.current?.click()} className="inline-flex min-h-9 w-fit cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold hover:border-ink"><Paperclip size={14} aria-hidden="true" /> Foto ou arquivo</button>
+      <input ref={ref} type="file" multiple hidden data-anexar accept="image/*,video/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" onChange={(e) => { const add = [...(e.target.files ?? [])]; e.target.value = ''; if (add.length) onChange([...files, ...add].slice(0, 6)) }} />
+      {files.map((f, i) => (
+        <span key={`${f.name}${i}`} className="inline-flex min-h-8 max-w-44 items-center gap-1 rounded-full bg-raised pl-2.5 text-[12px] font-medium">
+          <span className="truncate">{f.name}</span>
+          <button type="button" aria-label={`Tirar ${f.name}`} onClick={() => onChange(files.filter((_, k) => k !== i))} className="grid size-8 cursor-pointer place-items-center rounded-full hover:bg-line"><X size={12} aria-hidden="true" /></button>
+        </span>
+      ))}
+    </span>
   )
 }
 
@@ -282,7 +324,7 @@ function Recorder({ onDone }: { onDone: (blob: Blob, text: string) => void }) {
   return (
     <span className="flex flex-col gap-1">
       <button type="button" disabled={state === 'busy'} onClick={state === 'rec' ? () => rec.current?.stop() : () => void start()}
-        className={cn('inline-flex min-h-11 w-fit cursor-pointer items-center gap-2 rounded-full px-4 text-[14px] font-semibold disabled:opacity-60', state === 'rec' ? 'bg-warn-soft text-warn-ink' : 'bg-fill text-on-fill')}>
+        className={cn('inline-flex min-h-10 w-fit cursor-pointer items-center gap-2 rounded-full px-3.5 text-[13.5px] font-semibold disabled:opacity-60', state === 'rec' ? 'bg-warn-soft text-warn-ink' : 'bg-fill text-on-fill')}>
         {state === 'rec' ? <><Square size={14} aria-hidden="true" /> Parar · {Math.floor(secs / 60)}:{String(secs % 60).padStart(2, '0')}</> : state === 'busy' ? 'Transcrevendo' : <><Mic size={15} aria-hidden="true" /> Gravar resposta</>}
       </button>
       {error && <span role="alert" className="text-[12px] font-medium text-warn-ink">{error}</span>}
@@ -297,9 +339,10 @@ function SavedAudio({ path }: { path: string }) {
 }
 
 /** Responder uma pergunta do mês: opções (toque), texto ou áudio (principal: grava, transcreve e guarda o áudio). */
-export function AnswerDialog({ q, onSave, onClose, busy, error }: { q: ClientQuestion; onSave: (text: string, audio: Blob | null) => void; onClose: () => void; busy?: boolean; error?: string | null }) {
+export function AnswerDialog({ q, onSave, onClose, busy, error }: { q: ClientQuestion; onSave: (text: string, audio: Blob | null, files: File[]) => void; onClose: () => void; busy?: boolean; error?: string | null }) {
   const [text, setText] = useState(q.answer ?? '')
   const [blob, setBlob] = useState<Blob | null>(null)
+  const [files, setFiles] = useState<File[]>([])
   const preview = useMemo(() => (blob ? URL.createObjectURL(blob) : null), [blob])
   useEffect(() => () => { if (preview) URL.revokeObjectURL(preview) }, [preview])
   const opts = (q.options ?? []).slice(0, 6)
@@ -308,9 +351,12 @@ export function AnswerDialog({ q, onSave, onClose, busy, error }: { q: ClientQue
   const audios = (q.attachments ?? []).filter((a) => a.type?.startsWith('audio'))
   return (
     <Dialog open onClose={onClose} title={q.question} description={q.answered_via === 'cliente' ? 'Respondida pelo cliente. Pode ajustar.' : q.why ?? undefined} size="sm"
-      footer={<Footer busy={busy} disabled={!text.trim() && !blob} onSave={() => onSave(text.trim(), blob)} onClose={onClose} label="Salvar resposta" />}>
+      footer={<Footer busy={busy} disabled={!text.trim() && !blob && !files.length} onSave={() => onSave(text.trim(), blob, files)} onClose={onClose} label="Salvar resposta" />}>
       <div className="flex flex-col gap-3">
-        <Recorder onDone={(b, t) => { setBlob(b); if (t) setText((c) => (c.trim() ? `${c.trim()} ${t}` : t)) }} />
+        <div className="flex flex-wrap items-start gap-2">
+          <Recorder onDone={(b, t) => { setBlob(b); if (t) setText((c) => (c.trim() ? `${c.trim()} ${t}` : t)) }} />
+          <AttachButton files={files} onChange={setFiles} />
+        </div>
         {preview && <audio controls src={preview} className="h-9 w-full" />}
         {!preview && audios.slice(-1).map((a) => <SavedAudio key={a.path} path={a.path} />)}
         {opts.length > 0 && (
@@ -318,7 +364,7 @@ export function AnswerDialog({ q, onSave, onClose, busy, error }: { q: ClientQue
             {opts.map((o) => <button key={o} type="button" aria-pressed={has(o)} onClick={() => toggle(o)} className={cn('min-h-9 cursor-pointer rounded-full border px-3 text-[13px] font-medium', has(o) ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o}</button>)}
           </div>
         )}
-        <textarea rows={3} value={text} onChange={(e) => setText(e.target.value)} placeholder="Ou escreva aqui" aria-label="Resposta" className={area} />
+        <textarea rows={3} value={text} onChange={(e) => setText(e.target.value)} placeholder="Ou escreva aqui" aria-label="Resposta" className={cn(area, 'max-sm:h-[58px]')} />
         {error && <p role="alert" className="text-[12.5px] text-warn-ink">{error}</p>}
       </div>
     </Dialog>

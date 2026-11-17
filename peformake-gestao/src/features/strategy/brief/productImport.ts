@@ -220,6 +220,11 @@ function csvRows(text: string): string[][] {
   return lines.map((l) => (sep ? l.split(sep).map((c) => c.replace(/^"|"$/g, '')) : [l]))
 }
 
+/** Lista colada (de qualquer lugar: WhatsApp, planilha, site): cada linha; tabulação ou ";" viram colunas. */
+export function productsFromText(text: string): Produto[] {
+  return parseProducts(csvRows(text))
+}
+
 export const IMPORT_ACCEPT = '.pdf,.xlsx,.docx,.csv,.txt,image/*'
 
 /** Lê o arquivo e devolve os produtos encontrados. Erros em português. */

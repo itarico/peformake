@@ -13,6 +13,8 @@ import { waLink } from './consultRules'
 import { ALL_MAX, chatInvite, chatLink, defaultToSend, MAX_PER_CHAT, nextMonthFocus, packLabel, weekStart } from './questionRules'
 import { answerQuestion, discardQuestion, editAnswer, editQuestion, fileUrl, generateQuestions, openChat, questionsKey, useClientQuestions, type ClientQuestion } from './questionsApi'
 import { Paged } from './SlideViewer'
+import { AttachButton } from './brief/BriefDialogs'
+import { answerBrief, uploadFile } from './brief/briefApi'
 
 /** Estratégia → Consultoria → cliente → Perguntas: o pacote da semana, envio (por humano) e as respostas. */
 export function QuestionsPanel({ clientId, name }: { clientId: string; name: string; phone: string | null }) {
@@ -145,14 +147,22 @@ function AnswerDialog({ q, onClose, onDone }: { q: ClientQuestion; onClose: () =
   // Já respondida: corrige o texto (quem respondeu e os anexos ficam). Senão, a equipe responde.
   const editing = q.status === 'respondida'
   const [text, setText] = useState(editing ? q.answer ?? '' : '')
-  const save = useMutation({ mutationFn: () => (editing ? editAnswer(q.id, text) : answerQuestion(q.id, text)), onSuccess: () => { onDone(); onClose() } })
+  const [files, setFiles] = useState<File[]>([])
+  const save = useMutation({
+    mutationFn: async () => {
+      if (!files.length) return editing ? editAnswer(q.id, text) : answerQuestion(q.id, text)
+      const atts = await Promise.all(files.map((f) => uploadFile(q.client_id, f)))
+      return answerBrief(q.id, text.trim() || `Enviou: ${files.map((f) => f.name).join(', ')}`, atts)
+    },
+    onSuccess: () => { onDone(); onClose() },
+  })
   return (
     <Dialog open onClose={onClose} title={editing ? 'Editar resposta' : 'Responder pela equipe'} description={editing ? `${q.question}${q.answered_via === 'cliente' ? ' · respondida pelo cliente' : ''}` : q.question} size="md"
-      footer={<div className="flex gap-2"><Button disabled={save.isPending || !text.trim()} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar resposta'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
+      footer={<div className="flex gap-2"><Button disabled={save.isPending || (!text.trim() && !files.length)} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar resposta'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div className="flex flex-col gap-2">
         {q.options?.length > 0 && <div className="flex flex-wrap gap-1.5">{q.options.map((o) => <button key={o} type="button" onClick={() => setText((n) => (n.trim() && !n.includes(o) ? `${n.trim()}; ${o}` : n.trim() ? n : o))} className="min-h-9 cursor-pointer rounded-full border border-line-strong px-3 text-[13px] hover:border-ink">{o}</button>)}</div>}
         <textarea autoFocus value={text} onChange={(e) => setText(e.target.value)} rows={4} maxLength={4000} className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[14px]" placeholder="O que o cliente respondeu (por telefone, reunião...)" />
-        <VoiceNote onText={(t) => setText((n) => (n.trim() ? `${n.trim()}\n${t}` : t))} />
+        <div className="flex flex-wrap items-start gap-2"><VoiceNote onText={(t) => setText((n) => (n.trim() ? `${n.trim()}\n${t}` : t))} /><AttachButton files={files} onChange={setFiles} /></div>
         {save.isError && <p role="alert" className="text-[12.5px] text-warn-ink">{(save.error as Error).message}</p>}
       </div>
     </Dialog>
