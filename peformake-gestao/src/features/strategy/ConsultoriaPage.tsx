@@ -334,7 +334,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
     </>
   )
 
-  if (aba === 'relatorios') return <Navigate to={`/estrategia/relatorios?cliente=${clientId}`} replace />
+  if (aba === 'relatorios') return <Navigate to={`/trafego/relatorios?cliente=${clientId}`} replace />
   // Detalhe: o plano completo (seções, ações para aprovar, editar, refazer) ou as perguntas.
   if (ver === 'estrategia' || ver === 'plano') return (
     <section aria-label={`Estratégia de ${name}`} className="flex flex-col gap-3">

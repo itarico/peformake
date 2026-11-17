@@ -60,7 +60,8 @@ async function sessionOf(db: SupabaseClient, token?: string): Promise<Session | 
   const { data } = await db.from('client_chat_sessions').select('*').eq('token', token).maybeSingle()
   const s = data as Session | null
   if (!s || s.status === 'encerrada' || Date.parse(s.expires_at) < Date.now()) return null
-  const { data: alive } = await db.rpc('consult_has_service', { _client: s.client_id })
+  // Link vale para qualquer cliente ativo com algum serviço (não só Consultoria): briefing e perguntas são de todos.
+  const { data: alive } = await db.rpc('client_chat_alive', { _client: s.client_id })
   if (alive === false) return null
   s.messages = Array.isArray(s.messages) ? s.messages : []
   s.followups = (s.followups ?? {}) as Record<string, unknown>
