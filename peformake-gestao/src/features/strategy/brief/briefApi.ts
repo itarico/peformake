@@ -24,16 +24,20 @@ export function useBrief(clientId: string) {
   return useQuery({
     queryKey: briefKey(clientId),
     queryFn: async () => {
-      const [b, c, l, v, dg] = await Promise.all([
+      const [b, c, l, v, dg, ln] = await Promise.all([
         db.from('client_briefs').select('data, updated_at').eq('client_id', clientId).maybeSingle(),
-        db.from('clients').select('description, target_audience, value_proposition, competitors, instagram, website, phone').eq('id', clientId).maybeSingle(),
+        db.from('clients').select('description, target_audience, value_proposition, competitors, instagram, website, phone, document').eq('id', clientId).maybeSingle(),
         db.from('client_links').select('name, url').eq('client_id', clientId).limit(30),
         db.from('client_brand_voice').select('essencia, tom, evitar').eq('client_id', clientId).maybeSingle(),
         db.from('consult_docs').select('rivals:doc->diagnostico->mercado->concorrentes').eq('client_id', clientId).maybeSingle(),
+        // Razão social à parte: se a coluna não existir, só não aparece (não derruba o briefing).
+        db.from('clients').select('legal_name').eq('id', clientId).maybeSingle(),
       ])
       if (b.error) throw new Error('Não foi possível abrir o briefing.')
       const saved = (b.data?.data ?? {}) as BriefFixed
-      return { data: prefill(saved, { ...(c.data ?? {}), links: l.data ?? [], voz: v.data ?? null, diagRivals: Array.isArray(dg.data?.rivals) ? dg.data.rivals : null }), saved: !!b.data, updatedAt: (b.data?.updated_at as string | null) ?? null }
+      return { data: prefill(saved, { ...(c.data ?? {}), links: l.data ?? [], voz: v.data ?? null, diagRivals: Array.isArray(dg.data?.rivals) ? dg.data.rivals : null }), saved: !!b.data, updatedAt: (b.data?.updated_at as string | null) ?? null,
+        // CPF/CNPJ do cadastro: se já tem, o briefing mostra preenchido; só pede quando falta.
+        document: (c.data?.document as string | null) ?? null, legalName: ((ln.data as { legal_name?: string } | null)?.legal_name) ?? null }
     },
   })
 }

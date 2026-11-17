@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { MeetingNotes } from '../MeetingNotes'
-import { consultKey, saveDirection, useConsultList } from '../consultApi'
+import { consultKey, saveConsultInfo, saveDirection, useConsultList } from '../consultApi'
+import { lookupCnpj, type CompanyLookup } from '@/features/clients/clientsApi'
+import { field as fieldCls } from './BriefDialogs'
 import { SendQuestionsLoader } from '../QuestionsPanel'
 import { questionsKey, type ClientQuestion } from '../questionsApi'
 import { textPages, monthName } from '../monthlyRules'
@@ -16,7 +18,7 @@ import {
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
 } from './briefRules'
 
-type Open = { kind: 'direcao' } | { kind: 'text'; key: TextKey } | { kind: 'month'; key: MonthKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'funcionou' | 'enviar' } | { kind: 'q'; q: ClientQuestion } | null
+type Open = { kind: 'direcao' } | { kind: 'documento' } | { kind: 'text'; key: TextKey } | { kind: 'month'; key: MonthKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'funcionou' | 'enviar' } | { kind: 'q'; q: ClientQuestion } | null
 
 /** Resultado do briefing para quem chama (o botão Gerar mostra o que falta). */
 export function useBriefStatus(clientId: string, month: string) {
@@ -120,6 +122,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   if (b.isError || m.isError) return <p role="alert" className="text-[13px] text-warn-ink">{((b.error ?? m.error) as Error).message}</p>
 
   const qs = q.data ?? []
+  const doc = (b.data?.document ?? '').replace(/\D/g, '')
   const prods = f.produtos ?? []
   const links = linkList(f)
   const comps = f.concorrentes ?? []
@@ -149,6 +152,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
       </Section>
 
       <Section title="Do cliente (fixo)">
+        <Row label="CPF ou CNPJ" done={!!doc} value={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : ''} onOpen={() => setOpen({ kind: 'documento' })} />
         <Row label="Produtos e serviços" done={prods.some((p) => p.preco)} value={prods.length ? `${prods.length} · ${prods.slice(0, 3).map((p) => `${p.nome}${p.preco ? ` ${p.preco}` : ''}`).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'produtos' })} />
         <Row label="Links importantes" done={links.length >= 2} value={links.length ? `${links.length} · ${links.slice(0, 4).map((l) => l.nome).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'links' })} />
         {(['publico', 'diferenciais'] as const).map((k) => <Row key={k} label={TEXT_FIELDS[k].label} done={!!f[k]} value={short(f[k])} onOpen={() => setOpen({ kind: 'text', key: k })} />)}
@@ -175,6 +179,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
       </Section>
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
+      {open?.kind === 'documento' && <DocumentDialog clientId={clientId} initial={doc} onClose={stop} onDone={() => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: consultKey }); next() }} />}
       {open?.kind === 'direcao' && <TextDialog key="direcao" title="Direcionamento da equipe" hint="O que a IA não acha sozinha: objetivo do dono, o que ele pediu, o que não fazer. Vale mais que a pesquisa." initial={direction} busy={saveDir.isPending} error={err(saveDir)} onClose={stop} onSave={(v) => saveDir.mutate(v)} />}
       {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
       {open?.kind === 'month' && <TextDialog key={open.key} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
@@ -212,6 +217,36 @@ function WorkedDialog({ text, period, onClose }: { text: string | null; period: 
     <Dialog open onClose={onClose} title="O que funcionou no mês passado" description={text ? `Relatório mensal · ${period}` : undefined} size="sm"
       footer={pages.length > 1 ? <div className="flex items-center gap-2"><Button variant="secondary" disabled={p === 0} onClick={() => setP(p - 1)}>Anterior</Button><span className="text-[12.5px] text-muted">{p + 1}/{pages.length}</span><Button variant="secondary" disabled={p >= pages.length - 1} onClick={() => setP(p + 1)}>Próxima</Button></div> : undefined}>
       <p className="whitespace-pre-line text-[14px] leading-relaxed">{text ? pages[p] : 'Ainda não há relatório mensal de tráfego deste cliente. Ele entra aqui sozinho quando existir.'}</p>
+    </Dialog>
+  )
+}
+
+const fmtDoc = (d: string) => d.length === 14 ? d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5') : d.length === 11 ? d.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4') : d
+
+/** CPF ou CNPJ do cliente: com CNPJ, a Receita preenche a razão social, o endereço e o porte. Salva no cadastro. */
+function DocumentDialog({ clientId, initial, onClose, onDone }: { clientId: string; initial: string; onClose: () => void; onDone: () => void }) {
+  const [v, setV] = useState(initial)
+  const [found, setFound] = useState<CompanyLookup | null>(null)
+  const digits = v.replace(/\D/g, '')
+  const look = useMutation({ mutationFn: () => lookupCnpj(digits), onSuccess: setFound })
+  const save = useMutation({
+    mutationFn: async () => {
+      const rf = found ?? (digits.length === 14 ? await lookupCnpj(digits).catch(() => null) : null)
+      await saveConsultInfo({ clientId, document: digits, legalName: rf?.legalName, address: rf?.address, size: rf?.size, capital: rf?.capital })
+    },
+    onSuccess: onDone,
+  })
+  return (
+    <Dialog open onClose={onClose} title="CPF ou CNPJ" description="Com CNPJ, a Receita preenche a empresa sozinha." size="sm"
+      footer={<div className="flex gap-2"><Button disabled={save.isPending || ![11, 14].includes(digits.length)} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
+      <div data-documento className="flex flex-col gap-2">
+        <span className="flex gap-2">
+          <input autoFocus inputMode="numeric" autoComplete="off" value={v} onChange={(e) => { setV(e.target.value); setFound(null) }} className={fieldCls} placeholder="Só números" aria-label="CPF ou CNPJ" />
+          {digits.length === 14 && <Button variant="secondary" className="mt-1 shrink-0 px-3" disabled={look.isPending} onClick={() => look.mutate()}>{look.isPending ? 'Buscando' : 'Buscar'}</Button>}
+        </span>
+        {found && <p className="rounded-xl bg-ok-soft px-3 py-2 text-[12.5px] text-ok-ink"><b>{found.legalName}</b>{found.activity ? ` · ${found.activity}` : ''}</p>}
+        {(look.isError || save.isError) && <p role="alert" className="text-[12.5px] text-warn-ink">{((look.error ?? save.error) as Error).message}</p>}
+      </div>
     </Dialog>
   )
 }

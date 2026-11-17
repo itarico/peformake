@@ -26,6 +26,7 @@ export const BOARD_TABS = [
   { id: 'referencias', label: 'Referências' },
 ] as const
 export type BoardTab = (typeof BOARD_TABS)[number]['id']
+const AREA_TABS = BOARD_TABS.filter((t) => t.id !== 'briefing')
 
 const tabClass = (active: boolean) => cn(
   '-mb-px flex min-h-11 shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap border-b-2 border-transparent px-2.5 py-2 text-[14px] md:px-3 font-medium text-muted hover:text-ink',
@@ -33,12 +34,12 @@ const tabClass = (active: boolean) => cn(
 )
 
 /** Abas da estratégia: no celular, 3 + "Mais" (o padrão do sistema); no computador, todas. */
-export function BoardTabs({ value, onChange, counts }: { value: BoardTab; onChange: (t: BoardTab) => void; counts?: Partial<Record<BoardTab, string>> }) {
+export function BoardTabs({ value, onChange, counts, tabs = BOARD_TABS }: { value: BoardTab; onChange: (t: BoardTab) => void; counts?: Partial<Record<BoardTab, string>>; tabs?: readonly (typeof BOARD_TABS)[number][] }) {
   const [open, setOpen] = useState(false)
   const box = useRef<HTMLDivElement>(null)
-  const idx = BOARD_TABS.findIndex((t) => t.id === value)
+  const idx = tabs.findIndex((t) => t.id === value)
   const shown = new Set(idx >= 3 ? [0, 1, idx] : [0, 1, 2])
-  const rest = BOARD_TABS.filter((_, i) => !shown.has(i))
+  const rest = tabs.filter((_, i) => !shown.has(i))
   useEffect(() => {
     if (!open) return
     const close = (e: MouseEvent | KeyboardEvent) => { if (e instanceof KeyboardEvent ? e.key === 'Escape' : !box.current?.contains(e.target as Node)) setOpen(false) }
@@ -49,7 +50,7 @@ export function BoardTabs({ value, onChange, counts }: { value: BoardTab; onChan
   return (
     <div ref={box} className="relative flex border-b border-line">
       <div role="tablist" aria-label="Partes da estratégia" className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {BOARD_TABS.map((t, i) => (
+        {tabs.map((t, i) => (
           <button key={t.id} type="button" role="tab" aria-selected={value === t.id} onClick={() => onChange(t.id)} className={cn(tabClass(value === t.id), !shown.has(i) && 'max-md:hidden')}>{label(t)}</button>
         ))}
       </div>
@@ -117,10 +118,10 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   return (
     <div data-estrategia className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
-        <h2 className="text-[16px] font-semibold">Estratégia</h2>
+        <h2 className="text-[16px] font-semibold">{tab === 'briefing' ? 'Briefing' : 'Estratégia'}</h2>
         <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) })} />
         <span className="ml-auto flex items-center gap-1.5">
-          {action}
+          {tab === 'briefing' && ready ? null : action}
           <ActionMenu label="Mais opções da estratégia" actions={[
             { label: 'Gerar de novo', icon: <RefreshCw size={15} aria-hidden="true" />, onClick: () => setGen(true), hidden: !ready },
             { label: 'Baixar PDF', icon: <FileDown size={15} aria-hidden="true" />, onClick: () => setPdfOpen(true), hidden: !ready || cnt.approved === 0 },
@@ -131,9 +132,10 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
         </span>
       </div>
       {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
-      <Steps at={at} labels={['Briefing', 'Gerar', 'Revisar', 'PDF']} />
+      {/* Briefing é só briefing (17/11); as áreas abrem com as abas delas, sem o briefing junto. */}
+      {tab !== 'briefing' && <Steps at={at} labels={['Briefing', 'Gerar', 'Revisar', 'PDF']} />}
       <BoardStatus board={b} />
-      <BoardTabs value={tab} onChange={(t) => go({ parte: t === 'briefing' ? null : t })} counts={counts} />
+      {tab !== 'briefing' && <BoardTabs value={tab} tabs={AREA_TABS} onChange={(t) => go({ parte: t })} counts={counts} />}
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
       {tab !== 'briefing' && (ready && b
         ? <CardsTab board={b} tab={tab as CardTab} name={name} onChanged={refresh} onReview={() => go({ revisar: tab })} />

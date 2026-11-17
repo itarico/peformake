@@ -111,7 +111,7 @@ if (require.main === module) (async () => {
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
       if (!(await p.locator('[data-estrategia-faixa]').count())) fails.push(`${tag}: cliente sem a faixa da estratégia`);
       await p.screenshot({ path: `${OUT}/estrategia-cliente-${tag}.png` });
-      await p.locator('[data-estrategia-faixa] button').click(); await p.waitForTimeout(700);
+      await p.locator('[data-linha="briefing"] button').click(); await p.waitForTimeout(700);
       if (!(await p.locator('[data-briefing]').count())) fails.push(`${tag}: faixa não abriu o briefing`);
       const pct = await p.locator('[role=meter]').getAttribute('aria-valuenow').catch(() => null);
       if (!pct || Number(pct) <= 0 || Number(pct) >= 100) fails.push(`${tag}: medidor do briefing estranho (${pct})`);
@@ -159,7 +159,7 @@ if (require.main === module) (async () => {
         await check(p, tag, 'editar-resposta'); await close(p);
       }
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
-      await p.locator('[data-estrategia-faixa] button').click(); await p.waitForTimeout(700);
+      await p.locator('[data-linha="briefing"] button').click(); await p.waitForTimeout(700);
       // Completar em passos: só o que falta, um por vez, Pular passa para o próximo.
       await p.locator('[data-completar]').click(); await p.waitForTimeout(300);
       const t1 = await p.locator('dialog[open]').getAttribute('aria-label');

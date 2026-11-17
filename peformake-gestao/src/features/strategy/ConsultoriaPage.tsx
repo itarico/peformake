@@ -309,7 +309,6 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       </span>
       {!ver && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setPicker(true)}><Send size={14} aria-hidden="true" /> Enviar</Button>}
       <ActionMenu label="Mais opções do cliente" actions={[
-        { label: 'Informar CPF ou CNPJ', icon: <Search size={15} aria-hidden="true" />, onClick: onInfo, hidden: status !== 'falta_dados' },
       ]} />
     </header>
   )
@@ -356,7 +355,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
       {/* O plano do mês antigo foi desligado em 16/11: a Estratégia interativa (briefing → cards → PDF) é o único caminho. */}
-      {<StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
+      {<StrategyStrip clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte: parte === 'briefing' ? null : parte, mes: opts[1]!.slice(0, 7) })} />}
       {(
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
@@ -405,7 +404,7 @@ function SendPicker({ name, onClose, onPick, options }: { name: string; month: s
 const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
 
 /** Cartão do diagnóstico (mesmo padrão dos outros): capa, situação, revisão, o que falta, 1 botão forte e o ⋯. */
-function DiagCard({ clientId, input, status, stage, document, error, loading, ready, approved, busy, hasDoc, finishedAt, onCopyChat, onInfo, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
+function DiagCard({ clientId, input, status, stage, document, error, loading, ready, approved, busy, hasDoc, finishedAt, onCopyChat, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
   clientId: string; name: string; input: DeckInput; status: ConsultRow['status']; stage: string | null; document: string | null; error: string | null
   loading: boolean; ready: boolean; approved: boolean; busy: boolean; hasDoc: boolean; finishedAt: string | null; onCopyChat: () => void
   onInfo: () => void; onGenerate: () => void; onApprove: () => void; onOpen: () => void; onPdf: () => void; onSend: () => void; onDetails: () => void
@@ -463,7 +462,6 @@ function DiagCard({ clientId, input, status, stage, document, error, loading, re
         { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onPdf },
         { label: locked ? `Novo diagnóstico em ${nextLabel}` : 'Fazer novo diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, hidden: !ready, disabled: locked || busy, onClick: onGenerate },
         { label: 'Copiar pedido para o chat', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !(agent && (status === 'na_fila' || status === 'gerando')), onClick: onCopyChat },
-        { label: 'Informar CPF ou CNPJ', icon: <Search size={15} aria-hidden="true" />, hidden: status !== 'falta_dados', onClick: onInfo },
       ]} />
     </div>
   )

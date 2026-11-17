@@ -33,7 +33,7 @@ export function GenerateDialog({ clientId, month, missing, percent, regenerate, 
   })
   return (
     <Dialog open onClose={onClose} title={regenerate ? 'Gerar de novo' : 'Gerar estratégia'} size="sm"
-      description={regenerate ? 'Os cards aprovados ficam; os outros são trocados.' : 'O agente do Claude lê o briefing e monta os cards. Fica pronto em até 1 hora.'}
+      description={regenerate ? 'Os cards aprovados ficam; os outros são trocados.' : 'O agente do Claude lê o briefing e monta os cards de todas as áreas (resumo, vídeos, social, tráfego, atendimento). Fica pronto em até 1 hora.'}
       footer={<div className="flex gap-2">
         <Button disabled={go.isPending} onClick={() => go.mutate()}><Sparkles size={15} aria-hidden="true" /> {go.isPending ? 'Pedindo' : missing.length ? 'Gerar assim mesmo' : 'Gerar'}</Button>
         {missing.length > 0 && <Button variant="secondary" onClick={onBriefing}>Completar briefing</Button>}
