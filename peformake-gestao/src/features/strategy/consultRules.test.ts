@@ -161,3 +161,13 @@ describe('lista mínima da estratégia', () => {
     expect(out.map((x) => x.name)).toEqual(['C', 'D', 'B', 'A'])
   })
 })
+
+import { stepDots } from './consultRules'
+describe('ícones das etapas', () => {
+  it('azul feito, cinza falta; dia 12 a 15 amarelo; depois do 15 vermelho', () => {
+    expect(stepDots(1, 30, new Date(2026, 10, 5)).map((d) => d.state)).toEqual(['feito', 'falta', 'falta', 'falta'])
+    expect(stepDots(0, 70, new Date(2026, 10, 14)).map((d) => d.state)).toEqual(['feito', 'atencao', 'atencao', 'atencao'])
+    expect(stepDots(2, 0, new Date(2026, 10, 17)).map((d) => d.state)).toEqual(['feito', 'feito', 'atrasado', 'atrasado'])
+    expect(stepDots(4, 0, new Date(2026, 10, 20)).every((d) => d.state === 'feito')).toBe(true)
+  })
+})

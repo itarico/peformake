@@ -86,7 +86,7 @@ if (require.main === module) (async () => {
       if (!(await p.locator('[data-passo]').count())) fails.push(`${tag}: lista sem o passo da estratégia`);
       if (await sideScroll(p)) fails.push(`${tag}: lista com rolagem de lado`);
       if (!(await p.locator('[data-etapas-mini]').count())) fails.push(`${tag}: lista sem as etapas do cliente`);
-      if (!(await p.locator('[data-resumo]').count())) fails.push(`${tag}: lista sem o resumo do cliente`);
+      if ((await p.locator('[data-etapas-mini]').first().locator('[data-dot]').count()) !== 4) fails.push(`${tag}: lista sem os 4 ícones das etapas`);
       if (await p.getByRole('link', { name: 'Biblioteca' }).count()) fails.push(`${tag}: Biblioteca ainda aparece`);
       if (!(await p.getByRole('link', { name: 'Relatórios' }).count())) fails.push(`${tag}: sem a aba Relatórios na Estratégia`);
       await p.screenshot({ path: `${OUT}/estrategia-lista-${tag}.png` });

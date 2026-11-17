@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, Download, ExternalLink, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, CheckCheck, ClipboardList, Download, ExternalLink, FileText, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -24,7 +24,7 @@ import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { StrategyStrip } from './brief/StrategyStrip'
 import { useBriefProgress } from './brief/briefApi'
-import { CONSULT_PATH, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, STRATEGY_STEPS, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { CONSULT_PATH, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, stepDots, strategyProgress, strategyStep, type DotState, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
@@ -94,11 +94,7 @@ export function ConsultoriaPage() {
                       <b className="truncate text-[14.5px] font-semibold">{r.name.trim()}</b>
                       {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
                     </span>
-                    <StepsMini at={prog.at} briefPercent={briefs.data?.[r.client_id]?.percent} />
-                    <span data-resumo className="flex min-w-0 items-center gap-1.5 text-[12.5px] text-muted">
-                      <span aria-hidden="true" className={cn('size-1.5 shrink-0 rounded-full', DOT[step.state])} />
-                      <span className="truncate">{prog.text}</span>
-                    </span>
+                    <StepDots at={prog.at} briefPercent={briefs.data?.[r.client_id]?.percent} />
                   </span>
                 </button>
                 {step.go !== 'briefing' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px] max-md:hidden" onClick={() => go(r, null)}>Briefing</Button>}
@@ -135,18 +131,18 @@ async function openPublicDeck(clientId: string): Promise<void> {
 
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
 
-/** Briefing · Gerar · Revisar · PDF em 4 tracinhos (o da vez em destaque; o do briefing enche conforme o %). */
-function StepsMini({ at, briefPercent }: { at: number; briefPercent?: number }) {
+const DOT_TONE: Record<DotState, string> = {
+  feito: 'bg-accent text-white border-transparent', falta: 'bg-raised text-muted border-transparent',
+  atencao: 'bg-warn-soft text-warn-ink border-warn/40', atrasado: 'bg-[#e5484d] text-white border-transparent',
+}
+const DOT_ICON = { briefing: ClipboardList, gerar: Sparkles, revisar: CheckCheck, pdf: FileText } as const
+
+/** As 4 etapas em ícones (Italo, 17/11): azul feito, cinza falta, amarelo perto do prazo (dia 12–15), vermelho depois do dia 15. */
+function StepDots({ at, briefPercent }: { at: number; briefPercent?: number }) {
+  const dots = stepDots(at, briefPercent)
   return (
-    <span data-etapas-mini className="grid max-w-72 grid-cols-4 gap-1" aria-label={`Etapa: ${STRATEGY_STEPS[Math.min(at, 3)]}${at >= 4 ? ' (concluída)' : ''}`}>
-      {STRATEGY_STEPS.map((l, i) => (
-        <span key={l} className="flex min-w-0 flex-col gap-0.5">
-          <span className="relative h-1 overflow-hidden rounded-full bg-raised">
-            <span className={cn('absolute inset-y-0 left-0 rounded-full', i < at ? 'bg-ok' : i === at ? 'bg-accent' : '')} style={{ width: i < at ? '100%' : i === at ? (i === 0 && briefPercent != null ? `${Math.max(8, briefPercent)}%` : '100%') : '0%' }} />
-          </span>
-          <span className={cn('truncate text-[10.5px] max-sm:hidden', i === at ? 'font-semibold text-ink' : 'text-muted')}>{l}</span>
-        </span>
-      ))}
+    <span data-etapas-mini role="img" aria-label={dots.map((d) => `${d.label}: ${d.state === 'feito' ? 'feito' : d.state === 'atrasado' ? 'atrasado' : d.state === 'atencao' ? 'perto do prazo' : 'falta'}`).join(', ')} className="flex items-center gap-1.5">
+      {dots.map((d) => { const I = DOT_ICON[d.key as keyof typeof DOT_ICON]; return <span key={d.key} data-dot={d.state} title={d.label} className={cn('grid size-6 place-items-center rounded-full border', DOT_TONE[d.state])}><I size={12} aria-hidden="true" /></span> })}
     </span>
   )
 }

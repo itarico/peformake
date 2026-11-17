@@ -247,6 +247,19 @@ export function strategyProgress(r: Pick<ConsultRow, 'monthly' | 'answers_new'>,
   return { at: 4, text: sub }
 }
 
+/** Ícones das etapas na lista (Italo, 17/11): azul = feito, cinza = falta; perto do prazo (dia 12 a 15) amarelo; passou do dia 15 vermelho.
+ * A estratégia do mês seguinte tem que estar pronta até o dia 15 (16 dias antes do mês começar). */
+export type DotState = 'feito' | 'falta' | 'atencao' | 'atrasado'
+export const DOT_STEPS = [{ key: 'briefing', label: 'Briefing' }, { key: 'gerar', label: 'Estratégia gerada' }, { key: 'revisar', label: 'Revisada' }, { key: 'pdf', label: 'PDF' }] as const
+export function stepDots(at: number, briefPercent: number | undefined, today: Date = new Date()): { key: string; label: string; state: DotState }[] {
+  const day = today.getDate()
+  const late: DotState = day > 15 ? 'atrasado' : day >= 12 ? 'atencao' : 'falta'
+  return DOT_STEPS.map((s, i) => {
+    const done = i < at || (i === 0 && (briefPercent ?? 0) >= 60)
+    return { key: s.key, label: s.label, state: done ? 'feito' : late }
+  })
+}
+
 /** Ordem da lista mínima: primeiro o que pede você (revisar, respostas novas), depois briefing, por último o que está em dia. */
 export function sortByStrategy(rows: ConsultRow[]): ConsultRow[] {
   const rank = (r: ConsultRow) => Math.min(strategyStep(r).rank, (r.answers_new ?? 0) > 0 ? 1 : 9)
