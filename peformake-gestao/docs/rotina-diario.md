@@ -59,6 +59,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-17 · SN: vídeos com a fala da Sandra + Black do biodigestor, caixa d'água e entrevista (nuvem)
+- Os 12 cards de Vídeos (dez/2026) ganharam roteiro cena a cena com a FALA completa da Sandra e outras ideias com fala (Italo: "não tinha a fala dela"); referência, funil e filmar mantidos (update merge em data; strategy_import_card apaga campos não enviados: não usar para mudança parcial).
+- Novos cards: Black do biodigestor (preço/condição/data entre colchetes, a confirmar), Caixa d'água: qual tamanho eu preciso?, Entrevista com a Sandra (14 perguntas: história + briefing de dezembro).
+
 ## 2026-11-17 · SN: roteiros da diária viraram cards de Vídeos (nuvem)
 - Os 10 vídeos do Planejamento de audiovisual (S1–S10, diária 17/11 com a Sandra; fonte tools/estudo-mes/sn.js) + 2 extras (Distribuidora oficial Tigre; Não é só hidráulica) entraram como cards da aba Vídeos da Estratégia de dezembro (strategy_chat_submit, board 2026-12 "pronto"). Só Vídeos foi preenchido; Resumo, Social, Tráfego, Atendimento seguem para gerar.
 
