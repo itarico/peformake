@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronRight, ListChecks, Mic, Send } from 'lucide-react'
+import { Ban, Bookmark, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, Mic, NotebookPen, Package, Send, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
@@ -44,31 +44,48 @@ export function BriefMeter({ percent, missing, compact }: { percent: number; mis
   )
 }
 
-function Section({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
+type Icon = typeof Check
+
+/** Grupo de ícones (sem caixa de texto): o título é só uma palavra. */
+function Group({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-1.5">
-      <div className="flex items-center gap-2 px-1"><h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted">{title}</h3>{right && <span className="ml-auto">{right}</span>}</div>
-      <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">{children}</ul>
+    <section className="flex flex-col gap-2">
+      <div className="flex min-h-9 items-center gap-2 px-1"><h3 className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">{title}</h3>{right && <span className="ml-auto">{right}</span>}</div>
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">{children}</div>
     </section>
   )
 }
 
-function Row({ label, value, onOpen, badge, done }: { label: string; value: string; onOpen: () => void; badge?: ReactNode; done?: boolean }) {
+/** Um item do briefing: ícone verde com ✓ quando feito, tracejado quando falta. Tocar abre o pop-up. */
+function Tile({ icon: I, label, title, done, count, isNew, onOpen }: { icon: Icon; label: string; title: string; done: boolean; count?: number; isNew?: boolean; onOpen: () => void }) {
   return (
-    <li>
-      <button type="button" onClick={onOpen} className="flex min-h-12 w-full cursor-pointer items-center gap-2.5 px-3 py-2 text-left hover:bg-raised/60">
-        <span aria-hidden="true" className={cn('grid size-5 shrink-0 place-items-center rounded-full', done ? 'bg-ok text-white' : 'border border-dashed border-line-strong')}>{done && <Check size={12} />}</span>
-        <span className="min-w-0 flex-1">
-          <span className="flex items-center gap-1.5"><b className="text-[13.5px] font-semibold">{label}</b>{badge}</span>
-          <span className={cn('block truncate text-[12.5px]', value ? 'text-muted' : 'font-medium text-warn-ink')}>{value || 'Falta preencher'}</span>
-        </span>
-        <ChevronRight size={16} aria-hidden="true" className="shrink-0 text-muted" />
-      </button>
-    </li>
+    <button type="button" onClick={onOpen} title={title} data-item={done ? 'feito' : 'falta'}
+      className="relative flex min-h-[78px] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border border-line bg-surface px-1 py-2 text-center transition-colors hover:bg-raised/60">
+      <span aria-hidden="true" className={cn('relative grid size-9 place-items-center rounded-full', done ? 'bg-ok-soft text-ok-ink' : 'border border-dashed border-line-strong text-muted')}>
+        <I size={17} />
+        {done && <span className="absolute -bottom-0.5 -right-0.5 grid size-4 place-items-center rounded-full bg-ok text-white ring-2 ring-surface"><Check size={10} strokeWidth={3} /></span>}
+      </span>
+      <span className="line-clamp-2 w-full text-[11.5px] font-semibold leading-tight tracking-tight">{label}</span>
+      {!!count && <span className="absolute right-1.5 top-1.5 rounded-full bg-raised px-1.5 text-[10.5px] font-bold text-muted">{count}</span>}
+      {isNew && <span aria-label="Tem novidade" className="absolute left-2 top-2 size-2 rounded-full bg-accent" />}
+    </button>
   )
 }
 
-const NewBadge = ({ n }: { n: number }) => (n ? <span className="rounded-full bg-accent-soft px-1.5 text-[10.5px] font-bold text-accent-ink">{n} novo{n > 1 ? 's' : ''}</span> : null)
+/** Anel do briefing (só o número no meio). */
+function Ring({ percent }: { percent: number }) {
+  const r = 20, c = 2 * Math.PI * r
+  const tone = percent >= 80 ? 'text-ok' : percent >= 50 ? 'text-accent' : 'text-warn'
+  return (
+    <div role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-label="Briefing completo" className="relative size-12 shrink-0">
+      <svg viewBox="0 0 48 48" className="size-12 -rotate-90" aria-hidden="true">
+        <circle cx="24" cy="24" r={r} fill="none" strokeWidth="5" className="stroke-raised" />
+        <circle cx="24" cy="24" r={r} fill="none" strokeWidth="5" strokeLinecap="round" stroke="currentColor" className={tone} strokeDasharray={c} strokeDashoffset={c * (1 - percent / 100)} />
+      </svg>
+      <b className="absolute inset-0 grid place-items-center text-[12px]">{percent}%</b>
+    </div>
+  )
+}
 
 /**
  * Estratégia → cliente → Briefing: o que a estratégia precisa saber, antes de gerar.
@@ -143,40 +160,56 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   return (
     <div data-briefing className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
-        <div className="min-w-0 flex-1"><BriefMeter percent={st.percent} missing={st.missing} /></div>
-        {todo.length > 0 && <Button data-completar className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={14} aria-hidden="true" /> Completar<span className="max-sm:hidden"> em passos</span> ({todo.length})</Button>}
+        <Ring percent={st.percent} />
+        <div className="min-w-0 flex-1 text-[13px] text-muted">{todo.length ? <><b className="text-ink">{todo.length}</b> para completar</> : <b className="text-ok-ink">Tudo pronto</b>}</div>
+        {todo.length > 0 && <Button data-completar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /> Completar</Button>}
       </div>
 
-      <Section title="Direcionamento da equipe">
-        <Row label="O que a estratégia precisa saber" done={!!direction.trim()} value={short(direction)} onOpen={() => setOpen({ kind: 'direcao' })} />
-      </Section>
+      <Group title="O cliente">
+        <Tile icon={Compass} label="Direção" title="Direcionamento da equipe" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />
+        <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />
+        <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />
+        <Tile icon={Link2} label="Links" title="Links importantes" done={links.length >= 2} count={links.length} onOpen={() => setOpen({ kind: 'links' })} />
+        <Tile icon={Users} label="Público" title={TEXT_FIELDS.publico.label} done={!!f.publico} onOpen={() => setOpen({ kind: 'text', key: 'publico' })} />
+        <Tile icon={Star} label="Diferenciais" title={TEXT_FIELDS.diferenciais.label} done={!!f.diferenciais} onOpen={() => setOpen({ kind: 'text', key: 'diferenciais' })} />
+        <Tile icon={Swords} label="Concorrentes" title={f.sem_concorrentes && !comps.length ? 'Não tem concorrente direto' : 'Concorrentes'} done={comps.length > 0 || !!f.sem_concorrentes} count={comps.length} isNew={comps.some((c) => c.novo)} onOpen={() => { setSemComp(!!f.sem_concorrentes); setOpen({ kind: 'concorrentes' }) }} />
+        <Tile icon={Bookmark} label="Referências" title="Referências" done={refs.length > 0} count={refs.length} isNew={refs.some((r) => r.novo)} onOpen={() => setOpen({ kind: 'referencias' })} />
+        <Tile icon={MessageCircle} label="Voz" title={TEXT_FIELDS.voz.label} done={!!f.voz} onOpen={() => setOpen({ kind: 'text', key: 'voz' })} />
+        <Tile icon={Ban} label="Proibidos" title={TEXT_FIELDS.proibidos.label} done={!!f.proibidos} onOpen={() => setOpen({ kind: 'text', key: 'proibidos' })} />
+        <Tile icon={UserRound} label="Quem aparece" title={TEXT_FIELDS.quem_aparece.label} done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'text', key: 'quem_aparece' })} />
+        <Tile icon={Video} label="Quem grava" title={TEXT_FIELDS.quem_grava.label} done={!!f.quem_grava} onOpen={() => setOpen({ kind: 'text', key: 'quem_grava' })} />
+        <Tile icon={Gauge} label="Capacidade" title={TEXT_FIELDS.capacidade.label} done={!!f.capacidade} onOpen={() => setOpen({ kind: 'text', key: 'capacidade' })} />
+      </Group>
 
-      <Section title="Do cliente (fixo)">
-        <Row label="CPF ou CNPJ" done={!!doc} value={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : ''} onOpen={() => setOpen({ kind: 'documento' })} />
-        <Row label="Produtos e serviços" done={prods.some((p) => p.preco)} value={prods.length ? `${prods.length} · ${prods.slice(0, 3).map((p) => `${p.nome}${p.preco ? ` ${p.preco}` : ''}`).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'produtos' })} />
-        <Row label="Links importantes" done={links.length >= 2} value={links.length ? `${links.length} · ${links.slice(0, 4).map((l) => l.nome).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'links' })} />
-        {(['publico', 'diferenciais'] as const).map((k) => <Row key={k} label={TEXT_FIELDS[k].label} done={!!f[k]} value={short(f[k])} onOpen={() => setOpen({ kind: 'text', key: k })} />)}
-        <Row label="Concorrentes" done={comps.length > 0 || !!f.sem_concorrentes} badge={<NewBadge n={comps.filter((c) => c.novo).length} />} value={comps.length ? `${comps.length} · ${comps.slice(0, 3).map((c) => c.nome).join(' · ')}` : f.sem_concorrentes ? 'Não tem concorrente direto' : ''} onOpen={() => { setSemComp(!!f.sem_concorrentes); setOpen({ kind: 'concorrentes' }) }} />
-        <Row label="Referências" done={refs.length > 0} badge={<NewBadge n={refs.filter((r) => r.novo).length} />} value={refs.length ? `${refs.length} · ${refs.slice(0, 3).map((r) => r.porque ? short(r.porque, 24) : netOf(r.link)).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'referencias' })} />
-        {(['voz', 'proibidos', 'quem_aparece', 'quem_grava', 'capacidade'] as const).map((k) => <Row key={k} label={TEXT_FIELDS[k].label} done={!!f[k]} value={short(f[k])} onOpen={() => setOpen({ kind: 'text', key: k })} />)}
-      </Section>
+      <Group title={mes}>
+        <Tile icon={Tag} label="Ofertas" title={MONTH_FIELDS.ofertas.label} done={!!mo.ofertas} onOpen={() => setOpen({ kind: 'month', key: 'ofertas' })} />
+        <Tile icon={Target} label="Meta" title={MONTH_FIELDS.meta.label} done={!!mo.meta} onOpen={() => setOpen({ kind: 'month', key: 'meta' })} />
+        <Tile icon={CalendarX} label="Datas" title={MONTH_FIELDS.datas_travam.label} done={!!mo.datas_travam} onOpen={() => setOpen({ kind: 'month', key: 'datas_travam' })} />
+        <Tile icon={TrendingUp} label="Mês passado" title="O que funcionou no mês passado" done={!!last.data?.summary} onOpen={() => setOpen({ kind: 'funcionou' })} />
+        <MeetingNotes clientId={clientId} name={name} trigger={(o, n) => <Tile icon={NotebookPen} label="Reunião" title={n ? `${n} ajustes da reunião para fazer` : 'Anotar a reunião'} done={false} count={n} onOpen={o} />} />
+      </Group>
 
-      <Section title={`De ${mes}`}>
-        {(['ofertas', 'meta', 'datas_travam'] as const).map((k) => <Row key={k} label={MONTH_FIELDS[k].label} done={!!mo[k]} value={short(mo[k])} onOpen={() => setOpen({ kind: 'month', key: k })} />)}
-        <Row label="O que funcionou no mês passado" done={!!last.data?.summary} value={last.data?.summary ? short(last.data.summary) : 'Sem relatório mensal ainda'} onOpen={() => setOpen({ kind: 'funcionou' })} />
-      </Section>
-      <MeetingNotes clientId={clientId} name={name} />
-
-      <Section title={`Perguntas de ${mes} (${st.answered}/${qs.length || 8})`}
-        right={<Button variant="secondary" className="min-h-9 px-3 text-[12.5px]" onClick={() => setOpen({ kind: 'enviar' })}><Send size={13} aria-hidden="true" /> Mandar<span className="max-sm:hidden"> ao cliente</span></Button>}>
-        {q.isPending && <li className="px-3 py-3 text-[13px] text-muted">Carregando</li>}
-        {q.isError && <li role="alert" className="px-3 py-3 text-[13px] text-warn-ink">{(q.error as Error).message}</li>}
-        {qs.map((x) => (
-          <Row key={x.id} label={x.question} done={x.status === 'respondida'} onOpen={() => setOpen({ kind: 'q', q: x })}
-            badge={(x.attachments ?? []).some((a) => a.type?.startsWith('audio')) ? <Mic size={12} aria-label="Tem áudio" className="shrink-0 text-muted" /> : undefined}
-            value={x.status === 'respondida' ? `${x.answered_via === 'cliente' ? 'Cliente: ' : ''}${short(x.answer ?? '')}` : x.status === 'enviada' ? 'Esperando o cliente · tocar para responder você' : ''} />
-        ))}
-      </Section>
+      <section data-perguntas className="flex flex-col gap-2">
+        <div className="flex min-h-9 items-center gap-2 px-1">
+          <h3 className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">Perguntas {st.answered}/{qs.length || 8}</h3>
+          <Button variant="secondary" className="ml-auto min-h-9 px-3 text-[12.5px]" onClick={() => setOpen({ kind: 'enviar' })}><Send size={13} aria-hidden="true" /> Mandar</Button>
+        </div>
+        {q.isPending && <p className="px-1 text-[13px] text-muted">Carregando</p>}
+        {q.isError && <p role="alert" className="px-1 text-[13px] text-warn-ink">{(q.error as Error).message}</p>}
+        <div className="grid max-w-[480px] grid-cols-8 gap-1.5">
+          {qs.map((x, n) => {
+            const ok = x.status === 'respondida', wait = x.status === 'enviada'
+            return (
+              <button key={x.id} type="button" data-pergunta={n + 1} title={x.question} aria-label={`Pergunta ${n + 1}: ${x.question}${ok ? ' (respondida)' : wait ? ' (esperando o cliente)' : ''}`} onClick={() => setOpen({ kind: 'q', q: x })}
+                className={cn('relative grid aspect-square w-full cursor-pointer place-items-center rounded-full text-[14px] font-bold transition-colors',
+                  ok ? 'bg-ok text-white' : wait ? 'border-2 border-accent text-accent-ink' : 'border border-dashed border-line-strong text-muted hover:bg-raised/60')}>
+                {ok ? <Check size={17} strokeWidth={3} aria-hidden="true" /> : n + 1}
+                {(x.attachments ?? []).some((a) => a.type?.startsWith('audio')) && <Mic size={11} aria-hidden="true" className="absolute -right-0.5 -top-0.5 rounded-full bg-surface text-muted" />}
+              </button>
+            )
+          })}
+        </div>
+      </section>
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
       {open?.kind === 'documento' && <DocumentDialog clientId={clientId} initial={doc} onClose={stop} onDone={() => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: consultKey }); next() }} />}

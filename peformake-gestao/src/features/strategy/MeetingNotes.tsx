@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, NotebookPen } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -15,7 +15,7 @@ const db = supabase as unknown as { from: (t: string) => any } // eslint-disable
  */
 interface Note { id: string; body: string; created_at: string; done_at: string | null }
 
-export function MeetingNotes({ clientId, name }: { clientId: string; name: string }) {
+export function MeetingNotes({ clientId, name, trigger }: { clientId: string; name: string; trigger?: (open: () => void, openCount: number) => ReactNode }) {
   const qc = useQueryClient()
   const key = ['meeting-notes', clientId]
   const q = useQuery({
@@ -42,12 +42,13 @@ export function MeetingNotes({ clientId, name }: { clientId: string; name: strin
 
   return (
     <>
+{trigger ? trigger(() => setOpen(true), openCount) : (
       <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-surface px-3 py-2">
         <NotebookPen size={16} aria-hidden="true" className="text-muted" />
         <span className="text-[13.5px] font-semibold">Reunião</span>
         <span className="text-[13px] text-muted">{openCount ? `${openCount} ${openCount === 1 ? 'ajuste' : 'ajustes'} para fazer nos documentos` : notes.length ? 'Tudo ajustado' : 'Anote o que o cliente pedir'}</span>
         <button type="button" onClick={() => setOpen(true)} className="ml-auto inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full bg-fill px-3.5 text-[13px] font-semibold text-on-fill">Anotar</button>
-      </div>
+      </div>)}
       {open && (
         <Dialog open onClose={() => setOpen(false)} size="md" title={`Reunião com ${name}`} description="Anote o que o cliente pediu. Os documentos são refeitos com esses ajustes."
           footer={<div className="flex gap-2"><Button disabled={!text.trim() || add.isPending} onClick={() => add.mutate()}>{add.isPending ? 'Salvando' : 'Salvar anotação'}</Button><Button variant="secondary" onClick={() => setOpen(false)}>Fechar</Button></div>}>
