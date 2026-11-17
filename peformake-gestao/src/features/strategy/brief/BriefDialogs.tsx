@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, FileUp, ListChecks, Mic, Pencil, Plus, Square, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -12,7 +12,21 @@ import { IMPORT_ACCEPT, importProducts } from './productImport'
 export const field = 'mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 text-[14px]'
 const area = 'mt-1 w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[14px]'
 
+/** Modo "Completar em passos": o rodapé vira Salvar e seguir · Pular · 3/12. */
+export const GuideCtx = createContext<{ at: number; total: number; skip: () => void } | null>(null)
+
 function Footer({ busy, onSave, onClose, label = 'Salvar', disabled }: { busy?: boolean; onSave: () => void; onClose: () => void; label?: string; disabled?: boolean }) {
+  const g = useContext(GuideCtx)
+  if (g) return (
+    <div data-passos className="flex w-full items-center gap-2">
+      <Button disabled={busy || disabled} onClick={onSave}>{busy ? 'Salvando' : g.at >= g.total ? 'Salvar e terminar' : 'Salvar e seguir'}</Button>
+      <Button variant="secondary" onClick={g.skip}>Pular</Button>
+      <span className="ml-auto flex min-w-12 flex-col items-end gap-1 text-[12px] font-semibold text-muted">
+        {g.at}/{g.total}
+        <span className="h-1 w-12 overflow-hidden rounded-full bg-raised"><span className="block h-full rounded-full bg-accent" style={{ width: `${(g.at / g.total) * 100}%` }} /></span>
+      </span>
+    </div>
+  )
   return <div className="flex gap-2"><Button disabled={busy || disabled} onClick={onSave}>{busy ? 'Salvando' : label}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>
 }
 

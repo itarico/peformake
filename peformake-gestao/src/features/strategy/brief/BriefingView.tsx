@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronRight, Mic, Send } from 'lucide-react'
+import { Check, ChevronRight, ListChecks, Mic, Send } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
@@ -9,7 +9,7 @@ import { SendQuestionsLoader } from '../QuestionsPanel'
 import { questionsKey, type ClientQuestion } from '../questionsApi'
 import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
-import { AnswerDialog, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
+import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -81,23 +81,30 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   const st = useBriefStatus(clientId, month)
   const [open, setOpen] = useState<Open>(null)
   const [semComp, setSemComp] = useState(false)
+  // "Completar em passos": só o que falta, um por vez (o mais importante primeiro). Salvar ou Pular passa para o próximo.
+  const [guide, setGuide] = useState<{ steps: NonNullable<Open>[]; i: number } | null>(null)
+  const next = () => {
+    if (guide && guide.i + 1 < guide.steps.length) { const n = { ...guide, i: guide.i + 1 }; setGuide(n); openStep(n.steps[n.i]!) } else { setGuide(null); setOpen(null) }
+  }
+  const stop = () => { setGuide(null); setOpen(null) }
+  const openStep = (o: NonNullable<Open>) => { if (o.kind === 'concorrentes') setSemComp(!!f.sem_concorrentes); setOpen(o) }
   const f: BriefFixed = b.data?.data ?? {}
   const mo: BriefMonth = m.data ?? {}
 
   const saveF = useMutation({
     mutationFn: (patch: Partial<BriefFixed>) => saveBrief(clientId, { ...f, ...patch }),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); setOpen(null) },
+    onSuccess: () => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); next() },
   })
   const saveM = useMutation({
     mutationFn: (patch: Partial<BriefMonth>) => saveBriefMonth(clientId, month, { ...mo, ...patch }),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: briefMonthKey(clientId, month) }); setOpen(null) },
+    onSuccess: () => { void qc.invalidateQueries({ queryKey: briefMonthKey(clientId, month) }); next() },
   })
   const answer = useMutation({
     mutationFn: async ({ id, text, audio }: { id: string; text: string; audio: Blob | null }) => {
       const att = audio ? await uploadAudio(clientId, audio) : null
       await answerBrief(id, text || (att ? '(resposta em áudio)' : ''), att)
     },
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }); void qc.invalidateQueries({ queryKey: questionsKey(clientId) }); setOpen(null) },
+    onSuccess: () => { void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }); void qc.invalidateQueries({ queryKey: questionsKey(clientId) }); next() },
   })
   const err = (x: { error: unknown }) => (x.error ? (x.error as Error).message : null)
 
@@ -110,10 +117,24 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   const comps = f.concorrentes ?? []
   const refs = f.referencias ?? []
   const mes = monthName(month).toLowerCase()
+  const STEP: Record<string, NonNullable<Open> | undefined> = {
+    produtos: { kind: 'produtos' }, links: { kind: 'links' }, concorrentes: { kind: 'concorrentes' }, referencias: { kind: 'referencias' },
+    publico: { kind: 'text', key: 'publico' }, diferenciais: { kind: 'text', key: 'diferenciais' }, voz: { kind: 'text', key: 'voz' }, proibidos: { kind: 'text', key: 'proibidos' },
+    quem_aparece: { kind: 'text', key: 'quem_aparece' }, capacidade: { kind: 'text', key: 'capacidade' },
+    ofertas: { kind: 'month', key: 'ofertas' }, meta: { kind: 'month', key: 'meta' }, datas_travam: { kind: 'month', key: 'datas_travam' },
+  }
+  const todo: NonNullable<Open>[] = [
+    ...briefChecks(f, mo, st.answered, qs.length || 8).filter((c) => !c.done).sort((a, b) => b.weight - a.weight).map((c) => STEP[c.key]).filter((x): x is NonNullable<Open> => !!x),
+    ...qs.filter((x) => x.status !== 'respondida').map((x) => ({ kind: 'q' as const, q: x })),
+  ]
+  const startGuide = () => { if (!todo.length) return; setGuide({ steps: todo, i: 0 }); openStep(todo[0]!) }
 
   return (
     <div data-briefing className="flex flex-col gap-4">
-      <BriefMeter percent={st.percent} missing={st.missing} />
+      <div className="flex items-center gap-3">
+        <div className="min-w-0 flex-1"><BriefMeter percent={st.percent} missing={st.missing} /></div>
+        {todo.length > 0 && <Button data-completar className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={14} aria-hidden="true" /> Completar<span className="max-sm:hidden"> em passos</span> ({todo.length})</Button>}
+      </div>
 
       <Section title="Do cliente (fixo)">
         <Row label="Produtos e serviços" done={prods.some((p) => p.preco)} value={prods.length ? `${prods.length} · ${prods.slice(0, 3).map((p) => `${p.nome}${p.preco ? ` ${p.preco}` : ''}`).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'produtos' })} />
@@ -141,18 +162,19 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         ))}
       </Section>
 
-      {open?.kind === 'text' && <TextDialog quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
-      {open?.kind === 'month' && <TextDialog title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={() => setOpen(null)} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
-      {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate(v)} />}
+      <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
+      {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
+      {open?.kind === 'month' && <TextDialog key={open.key} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
+      {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate(v)} />}
       {open?.kind === 'produtos' && <ListDialog<Produto & Record<string, unknown>> importer title="Produtos e serviços" hint="Importe a lista (PDF, Excel, Word ou foto) ou adicione. Só valores reais entram na estratégia." items={prods as (Produto & Record<string, unknown>)[]} empty={{ nome: '', preco: '', condicoes: '' }}
         fields={[{ key: 'nome', label: 'Nome', placeholder: 'Ex.: Pizza grande' }, { key: 'preco', label: 'Preço', placeholder: 'Ex.: R$ 59,90' }, { key: 'condicoes', label: 'Condições', placeholder: 'Ex.: só no delivery, até 2x' }]}
-        line={(x) => `${x.nome}${x.preco ? ` · ${x.preco}` : ''}`} sub={(x) => x.condicoes || null} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate({ produtos: v })} />}
+        line={(x) => `${x.nome}${x.preco ? ` · ${x.preco}` : ''}`} sub={(x) => x.condicoes || null} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ produtos: v })} />}
       {open?.kind === 'concorrentes' && <ListDialog<Concorrente & Record<string, unknown>> title="Concorrentes" hint="Cole o link (Instagram, Maps ou site): o nome entra sozinho. Os do diagnóstico já vêm aqui." items={comps as (Concorrente & Record<string, unknown>)[]} empty={{ nome: '', link: '', porque: '' }}
         quick={{ placeholder: 'Cole o link do concorrente', make: (t) => (/[./]/.test(t) ? competitorFromLink(t) : { nome: t }) as Concorrente & Record<string, unknown> }}
         badge={(x) => (x.origem === 'diagnostico' ? 'do diagnóstico' : null)}
         top={<label data-sem-concorrente className="flex min-h-10 cursor-pointer items-center gap-2 text-[13.5px] font-semibold"><input type="checkbox" className="size-4" checked={semComp} onChange={(e) => setSemComp(e.target.checked)} /> Não tem concorrente direto</label>}
         fields={[{ key: 'nome', label: 'Nome', placeholder: 'Ex.: Pizzaria do Bairro' }, { key: 'link', label: 'Link', placeholder: 'Instagram ou site' }, { key: 'porque', label: 'Por que olhar', placeholder: 'Ex.: combo que vende muito' }]}
-        line={(x) => x.nome} sub={(x) => x.porque || x.link || null} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)}
+        line={(x) => x.nome} sub={(x) => x.porque || x.link || null} busy={saveF.isPending} error={err(saveF)} onClose={stop}
         onSave={(v) => {
           const kept = new Set(v.map((x) => x.nome.toLowerCase()))
           const removed = comps.filter((c) => c.origem === 'diagnostico' && !kept.has(c.nome.toLowerCase())).map((c) => c.nome)
@@ -160,10 +182,11 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         }} />}
       {open?.kind === 'referencias' && <ListDialog<Referencia & Record<string, unknown>> title="Referências" hint="Posts, vídeos, anúncios e outros nichos. Com o link e o porquê." items={refs as (Referencia & Record<string, unknown>)[]} empty={{ link: '', porque: '', numero: '' }}
         fields={[{ key: 'link', label: 'Link', placeholder: 'https://…' }, { key: 'porque', label: 'Por que é referência', placeholder: 'Ex.: gancho forte nos 2 primeiros segundos' }, { key: 'numero', label: 'Número (se souber)', placeholder: 'Ex.: 1,2 mi de views' }]}
-        line={(x) => (x.porque ? short(x.porque, 40) : netOf(x.link))} sub={(x) => [netOf(x.link), x.numero].filter(Boolean).join(' · ')} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate({ referencias: v })} />}
-      {open?.kind === 'q' && <AnswerDialog q={open.q} busy={answer.isPending} error={err(answer)} onClose={() => setOpen(null)} onSave={(text, audio) => answer.mutate({ id: open.q.id, text, audio })} />}
+        line={(x) => (x.porque ? short(x.porque, 40) : netOf(x.link))} sub={(x) => [netOf(x.link), x.numero].filter(Boolean).join(' · ')} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ referencias: v })} />}
+      {open?.kind === 'q' && <AnswerDialog key={open.q.id} q={open.q} busy={answer.isPending} error={err(answer)} onClose={stop} onSave={(text, audio) => answer.mutate({ id: open.q.id, text, audio })} />}
       {open?.kind === 'enviar' && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => { setOpen(null); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) }} />}
-      {open?.kind === 'funcionou' && <WorkedDialog text={last.data?.summary ?? null} period={last.data ? `${last.data.period_start.slice(8, 10)}/${last.data.period_start.slice(5, 7)} a ${last.data.period_end.slice(8, 10)}/${last.data.period_end.slice(5, 7)}` : ''} onClose={() => setOpen(null)} />}
+      </GuideCtx.Provider>
+      {open?.kind === 'funcionou' && <WorkedDialog text={last.data?.summary ?? null} period={last.data ? `${last.data.period_start.slice(8, 10)}/${last.data.period_start.slice(5, 7)} a ${last.data.period_end.slice(8, 10)}/${last.data.period_end.slice(5, 7)}` : ''} onClose={stop} />}
     </div>
   )
 }

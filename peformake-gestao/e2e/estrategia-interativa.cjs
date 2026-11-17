@@ -119,6 +119,16 @@ if (require.main === module) (async () => {
       await p.locator('dialog[open]').getByRole('button', { name: 'Adicionar' }).click(); await p.waitForTimeout(200);
       if ((await p.locator('[data-link]').count()) <= before && before < 3) fails.push(`${tag}: link não entrou na lista`);
       await check(p, tag, 'links-lista'); await close(p);
+      // Completar em passos: só o que falta, um por vez, Pular passa para o próximo.
+      await p.locator('[data-completar]').click(); await p.waitForTimeout(300);
+      const t1 = await p.locator('dialog[open]').getAttribute('aria-label');
+      if (!(await p.locator('dialog[open] [data-passos]').count())) fails.push(`${tag}: passos sem o rodapé Salvar e seguir / Pular`);
+      await check(p, tag, 'passo-1');
+      await p.locator('dialog[open]').getByRole('button', { name: 'Pular' }).click(); await p.waitForTimeout(300);
+      const t2 = await p.locator('dialog[open]').getAttribute('aria-label');
+      if (!t2 || t2 === t1) fails.push(`${tag}: Pular não foi para o próximo passo (${t1} → ${t2})`);
+      await check(p, tag, 'passo-2'); await close(p);
+      if (await p.locator('dialog[open]').count()) fails.push(`${tag}: fechar não saiu dos passos`);
       // Concorrentes: colar o link e "Não tem concorrente".
       await p.locator('[data-briefing] button', { hasText: 'Concorrentes' }).first().click(); await p.waitForTimeout(300);
       if (!(await p.locator('[data-sem-concorrente]').count())) fails.push(`${tag}: concorrentes sem "Não tem concorrente"`);

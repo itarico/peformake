@@ -28,7 +28,7 @@ interface Session {
   id: string; client_id: string; token: string; question_ids: string[]; status: string; stage: 'perguntas' | 'nps' | 'avaliacao' | 'fim'
   current_question: string | null; followups: Record<string, unknown>; messages: Msg[]; nps_score: number | null; uploads: number; cost_usd: number; expires_at: string
 }
-interface Question { id: string; question: string; options: string[]; status: string }
+interface Question { id: string; question: string; options: string[]; status: string; why?: string | null }
 
 const now = () => new Date().toISOString()
 const transcribeOn = () => !!Deno.env.get('TRANSCRIBE_API_KEY') && !!TRANSCRIBERS[Deno.env.get('TRANSCRIBE_PROVIDER') ?? 'groq']
@@ -68,7 +68,7 @@ async function sessionOf(db: SupabaseClient, token?: string): Promise<Session | 
 }
 
 async function questionsOf(db: SupabaseClient, s: Session): Promise<Question[]> {
-  const { data } = await db.from('client_questions').select('id, question, options, status').eq('client_id', s.client_id).in('id', s.question_ids)
+  const { data } = await db.from('client_questions').select('id, question, options, status, why').eq('client_id', s.client_id).in('id', s.question_ids)
   const rows = (data ?? []) as Question[]
   return s.question_ids.map((id) => rows.find((r) => r.id === id)).filter((q): q is Question => !!q && q.status !== 'descartada')
 }
@@ -104,7 +104,9 @@ async function ensurePrompt(db: SupabaseClient, s: Session) {
         const brand = BRAND_NAME[await brandOf(db, s.client_id)]
         push(s, { from: 'ia', text: `Oi! Aqui é a assistente da ${brand} 👋 ${open.length === 1 ? 'É 1 pergunta rápida' : `São ${open.length} perguntas rápidas`}. Toque num botão, escreva ou mande áudio.` })
       }
-      push(s, { from: 'ia', text: q.question, qid: q.id, options: [...(Array.isArray(q.options) ? q.options : []), SKIP_LABEL], kind: 'pergunta' })
+      // Exemplo de resposta ("Ex.: …") vai junto: ajuda o cliente a responder bem (perguntas do briefing do mês).
+      const hint = /^Ex\.?:/i.test(q.why ?? '') ? `\n${String(q.why).trim()}` : ''
+      push(s, { from: 'ia', text: `${q.question}${hint}`, qid: q.id, options: [...(Array.isArray(q.options) ? q.options : []), SKIP_LABEL], kind: 'pergunta' })
       s.current_question = next
       await save(db, s, { current_question: next })
       return
