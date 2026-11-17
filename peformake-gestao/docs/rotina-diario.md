@@ -59,6 +59,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-17 · SN Distribuidora: referências no briefing (nuvem)
+- 15 referências de Instagram (distribuidoras de hidráulica, criadores de dicas de hidráulica, marcas parceiras e humor de balcão) salvas em client_briefs.referencias com selo "novo" e o porquê; concorrentes reescritos em 4 itens (o texto estava cortado). Não conferi seguidores/engajamento de cada perfil. Diferencial pouco explorado no nicho: biodigestor e Lightwall.
+
 ## 2026-11-16 · Revisão "um por um" com mockup (nuvem)
 - Estratégia → botão "Revisar (n)" ou "Um por um" em cada aba (?revisar=todos|aba): uma peça por vez em tela cheia, na moldura do formato (feed, carrossel que desliza, story, Reels, vídeo horizontal YouTube/TV, anúncio com "Patrocinado", WhatsApp para atendimento, pôster para o Resumo), com inclinação leve. Ao lado: título grande, texto da arte, CTA, legenda, roteiro, ganchos, link da referência. Aprovar (manda para a produção) / Recusar (não apaga, motivo opcional vira regra) / Editar (abre a caixa) e passa sozinho; setas, arrastar e tecla A. YouTube toca dentro da moldura; Instagram/TikTok só pelo link. Cores e logo da marca do cliente (guia > cadastro).
 - Próximo (ideia do Italo, não regra): levar o mesmo molde para a revisão da equipe (Design) e o portal do cliente; arte real dentro da moldura quando existir; fachada e outros formatos.
