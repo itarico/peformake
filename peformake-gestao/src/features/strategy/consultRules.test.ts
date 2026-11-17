@@ -171,3 +171,15 @@ describe('ícones das etapas', () => {
     expect(stepDots(4, 0, new Date(2026, 10, 20)).every((d) => d.state === 'feito')).toBe(true)
   })
 })
+
+import { onlyVideo, targetMonth } from './consultRules'
+describe('cliente só de audiovisual', () => {
+  it('é só audiovisual sem tráfego, social nem consultoria; roteiro atrasado fica vermelho depois do dia 15', () => {
+    expect(onlyVideo({ areas: { audiovisual: true, trafego: false, social: false }, consultoria: false })).toBe(true)
+    expect(onlyVideo({ areas: { audiovisual: true, trafego: true, social: false }, consultoria: false })).toBe(false)
+    const d = stepDots(1, 80, new Date(2026, 10, 16), { video: true })
+    expect(d[1]).toEqual({ key: 'gerar', label: 'Roteiro gerado', state: 'atrasado' })
+    expect(targetMonth(new Date(2026, 10, 17))).toBe('2026-12')
+    expect(targetMonth(new Date(2026, 11, 3))).toBe('2027-01')
+  })
+})

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, CheckCheck, ClipboardList, Download, ExternalLink, FileText, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, CheckCheck, Clapperboard, ClipboardList, Download, ExternalLink, FileText, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -24,7 +24,7 @@ import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { StrategyStrip } from './brief/StrategyStrip'
 import { useBriefProgress } from './brief/briefApi'
-import { CONSULT_PATH, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, stepDots, strategyProgress, strategyStep, type DotState, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { CONSULT_PATH, onlyVideo, targetMonth, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, stepDots, strategyProgress, strategyStep, type DotState, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
@@ -94,7 +94,7 @@ export function ConsultoriaPage() {
                       <b className="truncate text-[14.5px] font-semibold">{r.name.trim()}</b>
                       {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
                     </span>
-                    <StepDots at={prog.at} briefPercent={briefs.data?.[r.client_id]?.percent} />
+                    <StepDots at={(r.monthly?.month ?? '').slice(0, 7) >= targetMonth() ? prog.at : 0} briefPercent={briefs.data?.[r.client_id]?.percent} video={onlyVideo(r)} />
                   </span>
                 </button>
                 {step.go !== 'briefing' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px] max-md:hidden" onClick={() => go(r, null)}>Briefing</Button>}
@@ -136,13 +136,14 @@ const DOT_TONE: Record<DotState, string> = {
   atencao: 'bg-warn-soft text-warn-ink border-warn/40', atrasado: 'bg-[#e5484d] text-white border-transparent',
 }
 const DOT_ICON = { briefing: ClipboardList, gerar: Sparkles, revisar: CheckCheck, pdf: FileText } as const
+const DOT_ICON_VIDEO = { ...DOT_ICON, gerar: Clapperboard } as const
 
 /** As 4 etapas em ícones (Italo, 17/11): azul feito, cinza falta, amarelo perto do prazo (dia 12–15), vermelho depois do dia 15. */
-function StepDots({ at, briefPercent }: { at: number; briefPercent?: number }) {
-  const dots = stepDots(at, briefPercent)
+function StepDots({ at, briefPercent, video }: { at: number; briefPercent?: number; video?: boolean }) {
+  const dots = stepDots(at, briefPercent, new Date(), { video })
   return (
     <span data-etapas-mini role="img" aria-label={dots.map((d) => `${d.label}: ${d.state === 'feito' ? 'feito' : d.state === 'atrasado' ? 'atrasado' : d.state === 'atencao' ? 'perto do prazo' : 'falta'}`).join(', ')} className="flex items-center gap-1.5">
-      {dots.map((d) => { const I = DOT_ICON[d.key as keyof typeof DOT_ICON]; return <span key={d.key} data-dot={d.state} title={d.label} className={cn('grid size-6 place-items-center rounded-full border', DOT_TONE[d.state])}><I size={12} aria-hidden="true" /></span> })}
+      {dots.map((d) => { const I = (video ? DOT_ICON_VIDEO : DOT_ICON)[d.key as keyof typeof DOT_ICON]; return <span key={d.key} data-dot={d.state} title={d.label} className={cn('grid size-6 place-items-center rounded-full border', DOT_TONE[d.state])}><I size={12} aria-hidden="true" /></span> })}
     </span>
   )
 }

@@ -251,12 +251,17 @@ export function strategyProgress(r: Pick<ConsultRow, 'monthly' | 'answers_new'>,
  * A estratégia do mês seguinte tem que estar pronta até o dia 15 (16 dias antes do mês começar). */
 export type DotState = 'feito' | 'falta' | 'atencao' | 'atrasado'
 export const DOT_STEPS = [{ key: 'briefing', label: 'Briefing' }, { key: 'gerar', label: 'Estratégia gerada' }, { key: 'revisar', label: 'Revisada' }, { key: 'pdf', label: 'PDF' }] as const
-export function stepDots(at: number, briefPercent: number | undefined, today: Date = new Date()): { key: string; label: string; state: DotState }[] {
+/** Cliente só de audiovisual: a estratégia dele é o roteiro dos vídeos (mesmo prazo, dia 15). Italo, 17/11. */
+export const onlyVideo = (r: Pick<ConsultRow, 'areas' | 'consultoria'>) => !!r.areas?.audiovisual && !r.areas.trafego && !r.areas.social && !r.consultoria
+const VIDEO_LABEL: Record<string, string> = { gerar: 'Roteiro gerado', revisar: 'Roteiro revisado', pdf: 'PDF do roteiro' }
+/** O mês que está sendo preparado: o seguinte ao de hoje (a estratégia de dezembro fica pronta até 15/11). */
+export const targetMonth = (today: Date = new Date()) => { const d = new Date(today.getFullYear(), today.getMonth() + 1, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` }
+export function stepDots(at: number, briefPercent: number | undefined, today: Date = new Date(), opts: { video?: boolean } = {}): { key: string; label: string; state: DotState }[] {
   const day = today.getDate()
   const late: DotState = day > 15 ? 'atrasado' : day >= 12 ? 'atencao' : 'falta'
   return DOT_STEPS.map((s, i) => {
     const done = i < at || (i === 0 && (briefPercent ?? 0) >= 60)
-    return { key: s.key, label: s.label, state: done ? 'feito' : late }
+    return { key: s.key, label: (opts.video && VIDEO_LABEL[s.key]) || s.label, state: done ? 'feito' : late }
   })
 }
 
