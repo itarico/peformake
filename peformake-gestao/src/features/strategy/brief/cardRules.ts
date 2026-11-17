@@ -15,7 +15,7 @@ export interface StrategyCard {
 export type BoardStatus = 'na_fila' | 'gerando' | 'pronto' | 'aprovado' | 'erro' | 'limite'
 export interface StrategyBoardData {
   id: string; client_id: string; month: string; status: BoardStatus; step: string; stage: string | null; error: string | null
-  cost_usd: number; missing: string[]; engine?: 'agente' | 'api'; finished_at: string | null; approved_at: string | null; pdf_asset_id: string | null; cards: StrategyCard[]
+  cost_usd: number; missing: string[]; engine?: 'agente' | 'api'; more_requests?: { aba: string; pedido?: string | null; em: string }[]; finished_at: string | null; approved_at: string | null; pdf_asset_id: string | null; cards: StrategyCard[]
 }
 
 export const FUNNEL: Record<Funnel, { label: string; cls: string }> = {

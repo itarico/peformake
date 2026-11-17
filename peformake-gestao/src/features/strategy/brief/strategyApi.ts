@@ -54,6 +54,12 @@ export async function rejectCard(id: string, reason: string): Promise<void> {
 }
 
 /** Refazer com o agente: o card vai para a fila (com o pedido opcional). */
+/** "Mais ideias": novo planejamento de uma aba; o agente soma cards novos sem repetir os que já existem. */
+export async function requestMore(boardId: string, tab: string, pedido: string): Promise<void> {
+  const { error } = await rpc('strategy_request_more', { _board: boardId, _tab: tab, _pedido: pedido })
+  if (error) { if (error.code === 'PF005') throw new Error('Já tem um pedido de mais ideias desta aba na fila.'); fail(error) }
+}
+
 export async function requestRedo(id: string, pedido: string): Promise<void> {
   const { error } = await rpc('strategy_card_redo_request', { _id: id, _pedido: pedido })
   if (error) fail(error)

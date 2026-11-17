@@ -47,6 +47,14 @@ Campos comuns: `aba`, `tipo`, `titulo`, `funil` (atrair | provar | objecao | con
 Reescreva SÓ aquele card seguindo o `pedido` (ex.: "mais curto", "outro gancho"), mesmo formato, e grave:
 `select public.strategy_agent_redo('<card_id>', '<card json>'::jsonb);`
 
+## 3b. Mais ideias (cada item de `mais`)
+Novo planejamento de UMA aba. `ja_existem` = títulos que já estão na aba: não repita nem reescreva; explore ângulos novos e siga o `pedido`.
+Gravar: `select public.strategy_agent_add('<board_id>', '<aba>', '<cards>'::jsonb);` (soma, nunca apaga; entra com o selo "novo").
+
+## Autoavaliação (vale para gerar, refazer e mais ideias)
+Nota 0 a 10 por card nos 6 critérios de agent_instructions('estrategia-interativa') (específico, pronto para produzir, serve à oferta/meta,
+começo forte, novo, verdadeiro). Abaixo de 9: refaça só aquele card, no máximo 2 vezes, mudando só o que derrubou a nota; sem inventar dado.
+
 ## 4. PDF (cada item de `pdf`)
 O Italo aprovou e o HTML (modelo fixo) já está na pasta Estratégia. Gere o PDF com o mesmo modelo:
 1. Salve em JSON `{name, month, cards}`: `select c.name, b.month, (select jsonb_agg(to_jsonb(s)) from strategy_cards s where s.board_id=b.id) cards from strategy_boards b join clients c on c.id=b.client_id where b.id='<board_id>';`

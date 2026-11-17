@@ -203,6 +203,11 @@ if (require.main === module) (async () => {
         await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=${t}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
         if (!(await p.locator(`[data-aba-cards="${t}"]`).count())) { fails.push(`${tag}: aba ${t} sem cards`); continue }
         if (!(await p.locator('[data-contador]').count())) fails.push(`${tag}: aba ${t} sem o contador de aprovados`);
+        if (t === 'social') {
+          await p.getByRole('button', { name: 'Mais ideias' }).click(); await p.waitForTimeout(250);
+          if (!(await p.locator('[data-mais-ideias]').count())) fails.push(`${tag}: Mais ideias não abriu`);
+          await check(p, tag, 'mais-ideias'); await close(p);
+        }
         if (await sideScroll(p)) fails.push(`${tag}: aba ${t} com rolagem de lado`);
         await p.screenshot({ path: `${OUT}/estrategia-aba-${t}-${tag}.png`, fullPage: true });
         const rows = await p.locator('[data-aba-cards] li button').count();
