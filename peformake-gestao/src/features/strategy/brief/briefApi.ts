@@ -23,15 +23,16 @@ export function useBrief(clientId: string) {
   return useQuery({
     queryKey: briefKey(clientId),
     queryFn: async () => {
-      const [b, c, l, v] = await Promise.all([
+      const [b, c, l, v, dg] = await Promise.all([
         db.from('client_briefs').select('data, updated_at').eq('client_id', clientId).maybeSingle(),
         db.from('clients').select('description, target_audience, value_proposition, competitors, instagram, website, phone').eq('id', clientId).maybeSingle(),
         db.from('client_links').select('name, url').eq('client_id', clientId).limit(30),
         db.from('client_brand_voice').select('essencia, tom, evitar').eq('client_id', clientId).maybeSingle(),
+        db.from('consult_docs').select('rivals:doc->diagnostico->mercado->concorrentes').eq('client_id', clientId).maybeSingle(),
       ])
       if (b.error) throw new Error('Não foi possível abrir o briefing.')
       const saved = (b.data?.data ?? {}) as BriefFixed
-      return { data: prefill(saved, { ...(c.data ?? {}), links: l.data ?? [], voz: v.data ?? null }), saved: !!b.data, updatedAt: (b.data?.updated_at as string | null) ?? null }
+      return { data: prefill(saved, { ...(c.data ?? {}), links: l.data ?? [], voz: v.data ?? null, diagRivals: Array.isArray(dg.data?.rivals) ? dg.data.rivals : null }), saved: !!b.data, updatedAt: (b.data?.updated_at as string | null) ?? null }
     },
   })
 }
@@ -115,18 +116,20 @@ export function useBriefProgress(month: string) {
   return useQuery({
     queryKey: ['brief-progress', month],
     queryFn: async () => {
-      const [b, m, q, c] = await Promise.all([
+      const [b, m, q, c, dg] = await Promise.all([
         db.from('client_briefs').select('client_id, data'),
         db.from('client_brief_months').select('client_id, data').eq('month', month),
         db.from('client_questions').select('client_id, status').eq('pack', 'briefing_mes').eq('focus', focusOf(month)).neq('status', 'descartada'),
         db.from('clients').select('id, target_audience, value_proposition, competitors, instagram, website, phone').limit(500),
+        db.from('consult_docs').select('client_id, rivals:doc->diagnostico->mercado->concorrentes'),
       ])
       if (b.error || m.error) throw new Error('Não foi possível ler os briefings.')
       const out: Record<string, { percent: number; missing: string[] }> = {}
       const ids = new Set<string>([...(c.data ?? []).map((x: { id: string }) => x.id), ...(b.data ?? []).map((x: { client_id: string }) => x.client_id)])
       for (const id of ids) {
         const known = (c.data ?? []).find((x: { id: string }) => x.id === id) ?? {}
-        const f = prefill(((b.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.data ?? {}) as BriefFixed, known)
+        const rivals = (dg.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.rivals
+        const f = prefill(((b.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.data ?? {}) as BriefFixed, { ...known, diagRivals: Array.isArray(rivals) ? rivals : null })
         const mo = ((m.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.data ?? {}) as BriefMonth
         const qs = (q.data ?? []).filter((x: { client_id: string }) => x.client_id === id)
         const answered = qs.filter((x: { status: string }) => x.status === 'respondida').length

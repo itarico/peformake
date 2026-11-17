@@ -119,6 +119,13 @@ if (require.main === module) (async () => {
       await p.locator('dialog[open]').getByRole('button', { name: 'Adicionar' }).click(); await p.waitForTimeout(200);
       if ((await p.locator('[data-link]').count()) <= before && before < 3) fails.push(`${tag}: link não entrou na lista`);
       await check(p, tag, 'links-lista'); await close(p);
+      // Concorrentes: colar o link e "Não tem concorrente".
+      await p.locator('[data-briefing] button', { hasText: 'Concorrentes' }).first().click(); await p.waitForTimeout(300);
+      if (!(await p.locator('[data-sem-concorrente]').count())) fails.push(`${tag}: concorrentes sem "Não tem concorrente"`);
+      await p.locator('dialog[open] input[aria-label="Cole o link do concorrente"]').fill('instagram.com/forno.bom');
+      await p.locator('dialog[open] input[aria-label="Cole o link do concorrente"]').press('Enter'); await p.waitForTimeout(200);
+      if (!(await p.locator('dialog[open]').getByText('@forno.bom').count())) fails.push(`${tag}: concorrente pelo link não entrou`);
+      await check(p, tag, 'concorrentes-rapido'); await close(p);
       // Público: quiz com opções e "Outro".
       await p.locator('[data-briefing] button', { hasText: 'Público' }).first().click(); await p.waitForTimeout(300);
       await p.locator('dialog[open]').getByRole('button', { name: 'Responder com opções' }).click(); await p.waitForTimeout(200);

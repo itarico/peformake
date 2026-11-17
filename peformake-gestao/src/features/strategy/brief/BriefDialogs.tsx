@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, FileUp, ListChecks, Mic, Pencil, Plus, Square, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -131,14 +131,23 @@ export interface ListField<T> { key: keyof T & string; label: string; placeholde
  * Lista editável (produtos, concorrentes, referências): 4 por página, tocar edita, + Adicionar.
  * Nunca rola: a lista pagina e o formulário é uma etapa à parte.
  */
-export function ListDialog<T extends Record<string, unknown>>({ title, hint, items: initial, fields, line, sub, onSave, onClose, busy, error, empty, importer }: {
+export function ListDialog<T extends Record<string, unknown>>({ title, hint, items: initial, fields, line, sub, onSave, onClose, busy, error, empty, importer, quick, top, badge, startEmpty = true }: {
   title: string; hint: string; items: T[]; fields: ListField<T>[]; line: (x: T) => string; sub?: (x: T) => string | null
   onSave: (items: T[]) => void; onClose: () => void; busy?: boolean; error?: string | null; empty: T
   /** Importar de arquivo (produtos): lê PDF, Excel, Word, CSV ou foto e soma à lista, sem repetir. */
   importer?: boolean
+  /** Adicionar rápido: cola um texto/link e o item já entra (ex.: link do concorrente). */
+  quick?: { placeholder: string; make: (text: string) => T }
+  /** Algo acima da lista (ex.: "Não tem concorrente"). */
+  top?: ReactNode
+  /** Selo curto por item (ex.: "do diagnóstico"). */
+  badge?: (x: T) => string | null
+  /** Abrir direto no formulário quando a lista está vazia. */
+  startEmpty?: boolean
 }) {
+  const [qv, setQv] = useState('')
   const [items, setItems] = useState<T[]>(initial)
-  const [edit, setEdit] = useState<{ i: number; v: T } | null>(initial.length || importer ? null : { i: -1, v: { ...empty } })
+  const [edit, setEdit] = useState<{ i: number; v: T } | null>(initial.length || importer || quick || !startEmpty ? null : { i: -1, v: { ...empty } })
   const [page, setPage] = useState(0)
   const [reading, setReading] = useState(false)
   const [note, setNote] = useState<string | null>(null)
@@ -188,6 +197,13 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
     <Dialog open onClose={onClose} title={title} description={hint} size={importer ? 'md' : 'sm'} footer={<Footer busy={busy} onSave={() => onSave(importer ? items.map((x) => { const c = { ...x }; delete (c as Record<string, unknown>).novo; return c }) : items)} onClose={onClose} />}>
       <div className="flex flex-col gap-2">
         {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[12.5px] font-medium text-accent-ink">{note}</p>}
+        {top}
+        {quick && (
+          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); const t = qv.trim(); if (!t) return; setItems((c) => { const n = [...c, quick.make(t)]; setPage(Math.floor((n.length - 1) / per)); return n }); setQv('') }}>
+            <input value={qv} onChange={(e) => setQv(e.target.value)} className={cn(field, 'mt-0')} placeholder={quick.placeholder} autoComplete="off" aria-label={quick.placeholder} />
+            <Button type="submit" variant="secondary" className="min-h-11 shrink-0 px-3" disabled={!qv.trim()}><Plus size={14} aria-hidden="true" /><span className="max-sm:hidden"> Adicionar</span></Button>
+          </form>
+        )}
         {items.length === 0 && <p className="rounded-xl border border-dashed border-line px-3 py-4 text-center text-[13px] text-muted">Nada ainda.</p>}
         <ul className="flex flex-col gap-1.5">
           {shown.map((x, j) => {
@@ -195,7 +211,7 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
             return (
               <li key={i} className="flex items-center gap-1.5 rounded-xl border border-line px-2.5 py-1.5">
                 <button type="button" onClick={() => setEdit({ i, v: { ...x } })} className="min-w-0 flex-1 cursor-pointer text-left">
-                  <span className="flex items-center gap-1.5"><b className="truncate text-[13.5px] font-semibold">{line(x)}</b>{x.novo ? <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[10.5px] font-bold text-accent-ink">novo</span> : null}</span>
+                  <span className="flex items-center gap-1.5"><b className="truncate text-[13.5px] font-semibold">{line(x)}</b>{x.novo ? <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[10.5px] font-bold text-accent-ink">novo</span> : null}{badge?.(x) ? <span className="shrink-0 rounded-full bg-raised px-1.5 text-[10.5px] font-semibold text-muted">{badge(x)}</span> : null}</span>
                   {sub?.(x) && <span className="block truncate text-[12px] text-muted">{sub(x)}</span>}
                 </button>
                 <button type="button" aria-label="Editar" onClick={() => setEdit({ i, v: { ...x } })} className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised"><Pencil size={14} aria-hidden="true" /></button>
@@ -205,7 +221,7 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
           })}
         </ul>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => setEdit({ i: -1, v: { ...empty } })}><Plus size={14} aria-hidden="true" /> Adicionar</Button>
+          <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => setEdit({ i: -1, v: { ...empty } })}>{quick ? <><Pencil size={14} aria-hidden="true" /> Escrever</> : <><Plus size={14} aria-hidden="true" /> Adicionar</>}</Button>
           {importer && <>
             <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={reading} onClick={() => fileRef.current?.click()}><FileUp size={14} aria-hidden="true" /> <span>{reading ? 'Lendo' : <>Importar<span className="max-sm:hidden"> PDF, Excel ou Word</span></>}</span></Button>
             <input ref={fileRef} type="file" hidden accept={IMPORT_ACCEPT} data-importar onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void readFile(f) }} />

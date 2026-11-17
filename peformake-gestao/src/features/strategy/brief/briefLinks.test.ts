@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { detectLink, fromLinkList, linkList, prefill, quizText, QUIZ } from './briefRules'
+import { competitorFromLink, detectLink, fromLinkList, linkList, prefill, quizText, QUIZ } from './briefRules'
 
 describe('links do briefing', () => {
   it('reconhece o tipo pelo endereço', () => {
@@ -25,5 +25,21 @@ describe('links do briefing', () => {
 describe('quiz', () => {
   it('junta as respostas num texto curto', () => {
     expect(quizText(QUIZ.publico!.slice(0, 2), [['Mulheres', 'Casais'], ['31 a 40']])).toBe('Quem mais compra: Mulheres, Casais. Qual a idade: 31 a 40.')
+  })
+})
+
+describe('concorrentes', () => {
+  it('vêm do diagnóstico, sem repetir e sem voltar os removidos', () => {
+    const rivals = [{ nome: 'Santa Clara', instagram: 'https://instagram.com/sc', diferencial: 'Domina a busca' }, { nome: 'Cacau Show' }]
+    const a = prefill({ concorrentes: [{ nome: 'santa clara' }] }, { diagRivals: rivals })
+    expect(a.concorrentes!.map((c) => c.nome)).toEqual(['santa clara', 'Cacau Show'])
+    expect(a.concorrentes![1]!.origem).toBe('diagnostico')
+    expect(prefill({ concorrentes_off: ['Cacau Show'] }, { diagRivals: rivals }).concorrentes!.map((c) => c.nome)).toEqual(['Santa Clara'])
+    expect(prefill({ sem_concorrentes: true }, { diagRivals: rivals, competitors: 'X, Y' }).concorrentes).toBeUndefined()
+  })
+  it('nome sai do link colado', () => {
+    expect(competitorFromLink('instagram.com/pizzaria.atlantico/').nome).toBe('@pizzaria.atlantico')
+    expect(competitorFromLink('https://www.google.com/maps/place/Forno+Bom/@-8,1').nome).toBe('Forno Bom')
+    expect(competitorFromLink('https://fornobom.com.br').nome).toBe('fornobom')
   })
 })

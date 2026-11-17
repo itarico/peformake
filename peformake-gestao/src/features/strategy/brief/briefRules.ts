@@ -2,7 +2,7 @@
 // Dados fixos (client_briefs) + do mês (client_brief_months) + perguntas do mês (client_questions, pack 'briefing_mes').
 
 export interface Produto { nome: string; preco?: string; condicoes?: string }
-export interface Concorrente { nome: string; link?: string; porque?: string; novo?: boolean }
+export interface Concorrente { nome: string; link?: string; porque?: string; novo?: boolean; origem?: 'diagnostico' }
 export interface Referencia { link: string; porque?: string; tipo?: 'post' | 'video' | 'anuncio' | 'outro_nicho'; thumb?: string; numero?: string; novo?: boolean }
 export const LINK_KEYS = ['site', 'instagram', 'whatsapp', 'catalogo', 'gmn', 'agendamento'] as const
 export type LinkKey = (typeof LINK_KEYS)[number]
@@ -18,6 +18,10 @@ export interface BriefFixed {
   links_off?: string[]
   publico?: string; diferenciais?: string
   concorrentes?: Concorrente[]; referencias?: Referencia[]
+  /** Marcado "Não tem concorrente": conta como preenchido. */
+  sem_concorrentes?: boolean
+  /** Concorrentes do diagnóstico que a equipe removeu (não voltam). */
+  concorrentes_off?: string[]
   voz?: string; proibidos?: string
   quem_aparece?: string; quem_grava?: string; capacidade?: string
 }
@@ -54,7 +58,7 @@ export function briefChecks(f: BriefFixed, m: BriefMonth, answered: number, tota
     { key: 'links', label: 'Links (2 ou mais)', done: linksCount(f) >= 2, weight: 1 },
     { key: 'publico', label: 'Público', done: filled(f.publico), weight: 1 },
     { key: 'diferenciais', label: 'Diferenciais', done: filled(f.diferenciais), weight: 1 },
-    { key: 'concorrentes', label: 'Concorrentes', done: filled(f.concorrentes), weight: 0.5 },
+    { key: 'concorrentes', label: 'Concorrentes', done: filled(f.concorrentes) || !!f.sem_concorrentes, weight: 0.5 },
     { key: 'referencias', label: 'Referências', done: filled(f.referencias), weight: 0.5 },
     { key: 'voz', label: 'Voz da marca', done: filled(f.voz), weight: 0.5 },
     { key: 'proibidos', label: 'Proibidos', done: filled(f.proibidos), weight: 0.5 },
@@ -122,6 +126,8 @@ export function netOf(link: string): string {
 export function prefill(f: BriefFixed, known: {
   description?: string | null; target_audience?: string | null; value_proposition?: string | null; competitors?: string | null
   instagram?: string | null; website?: string | null; phone?: string | null; links?: { name: string; url: string }[]
+  /** Concorrentes achados no diagnóstico (consult_docs.doc.diagnostico.mercado.concorrentes). */
+  diagRivals?: { nome?: string; instagram?: string; site?: string; google_maps?: string; diferencial?: string; o_que_fazem?: string }[] | null
   voz?: { tom?: unknown; evitar?: unknown; essencia?: string | null } | null
 }): BriefFixed {
   const out: BriefFixed = { ...f, links: { ...(f.links ?? {}) } }
@@ -142,7 +148,14 @@ export function prefill(f: BriefFixed, known: {
     const k: LinkKey | null = /card|cat[aá]l|menu|ifood/.test(n) ? 'catalogo' : /google|gmn|maps|meu neg/.test(n) ? 'gmn' : /agend|reserva/.test(n) ? 'agendamento' : /site/.test(n) ? 'site' : null
     if (k) put(k, l.url)
   }
-  if (!(out.concorrentes ?? []).length && known.competitors?.trim()) {
+  // Do diagnóstico: entram sozinhos (com a origem marcada), sem repetir e sem trazer de volta os removidos.
+  if (!out.sem_concorrentes && known.diagRivals?.length) {
+    const off = new Set((f.concorrentes_off ?? []).map((n) => norm(n)))
+    const add = known.diagRivals.filter((r) => r.nome?.trim() && !off.has(norm(r.nome)))
+      .map((r) => ({ nome: r.nome!.trim(), link: r.instagram || r.site || r.google_maps || undefined, porque: (r.diferencial || r.o_que_fazem || '').slice(0, 160) || undefined, origem: 'diagnostico' as const }))
+    out.concorrentes = mergeCompetitors(out.concorrentes ?? [], add, false)
+  }
+  if (!out.sem_concorrentes && !(out.concorrentes ?? []).length && known.competitors?.trim()) {
     out.concorrentes = known.competitors.split(/[,;\n]+/).map((s) => s.trim()).filter((s) => s.length > 1).slice(0, 8).map((nome) => ({ nome }))
   }
   return out
@@ -245,4 +258,14 @@ export function quizText(steps: QuizStep[], answers: string[][]): string {
     const a = (answers[i] ?? []).map((x) => x.trim()).filter(Boolean)
     return a.length ? `${s.q.replace(/\?$/, '')}: ${a.join(', ')}.` : ''
   }).filter(Boolean).join(' ')
+}
+
+/** Concorrente a partir de um link colado (Instagram, Maps, site): o nome sai do próprio link. */
+export function competitorFromLink(link: string): Concorrente {
+  const url = /^https?:\/\//i.test(link.trim()) ? link.trim() : `https://${link.trim()}`
+  const ig = /instagram\.com\/([\w.]+)/i.exec(url)?.[1] ?? /tiktok\.com\/@([\w.]+)/i.exec(url)?.[1]
+  const place = /google\.[^/]+\/maps\/place\/([^/@]+)/i.exec(url)?.[1]
+  let nome = ig ? `@${ig}` : place ? decodeURIComponent(place.replace(/\+/g, ' ')) : ''
+  if (!nome) { try { nome = new URL(url).hostname.replace(/^www\./, '').split('.')[0]! } catch { nome = link.trim() } }
+  return { nome, link: url }
 }
