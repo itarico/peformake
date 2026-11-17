@@ -59,6 +59,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-17 · SN: roteiros da diária viraram cards de Vídeos (nuvem)
+- Os 10 vídeos do Planejamento de audiovisual (S1–S10, diária 17/11 com a Sandra; fonte tools/estudo-mes/sn.js) + 2 extras (Distribuidora oficial Tigre; Não é só hidráulica) entraram como cards da aba Vídeos da Estratégia de dezembro (strategy_chat_submit, board 2026-12 "pronto"). Só Vídeos foi preenchido; Resumo, Social, Tráfego, Atendimento seguem para gerar.
+
 ## 2026-11-17 · SN Distribuidora: briefing completo (nuvem)
 - "Distribuidora OFICIAL Tigre" (pedido do Italo) entrou em diferenciais e voz. Preenchidos público (3 públicos), proibidos, quem aparece e quem grava (marcados "sugestão/a confirmar"). Dezembro (client_brief_months 2026-12): ofertas sugeridas (caixa d'água verão, biodigestor, obra antes do Natal), meta e datas que travam a confirmar.
 - Perguntas do mês: a de preço citava "**IMPERMEABILIZANTES**" (cabeçalho da lista) e foi corrigida; as respostas ficam para a SN (não inventei respostas do cliente).
