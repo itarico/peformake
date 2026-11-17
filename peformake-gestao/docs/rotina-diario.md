@@ -59,6 +59,10 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-17 · SN Distribuidora: briefing completo (nuvem)
+- "Distribuidora OFICIAL Tigre" (pedido do Italo) entrou em diferenciais e voz. Preenchidos público (3 públicos), proibidos, quem aparece e quem grava (marcados "sugestão/a confirmar"). Dezembro (client_brief_months 2026-12): ofertas sugeridas (caixa d'água verão, biodigestor, obra antes do Natal), meta e datas que travam a confirmar.
+- Perguntas do mês: a de preço citava "**IMPERMEABILIZANTES**" (cabeçalho da lista) e foi corrigida; as respostas ficam para a SN (não inventei respostas do cliente).
+
 ## 2026-11-17 · SN Distribuidora: briefing conferido com site e Instagram (nuvem)
 - Produtos: bloco novo "Confirmado no site e no Instagram" (Tigre/Amanco, Fortlev, fibra até 25.000 L/Resinort, biodigestores, bombas Thebe, Docol, Eucatex, Tecnipar, elétrico Série Reforçada, dutos); Lightwall, impermeabilizantes e PPR/PEX/CPVC/PEAD/PBA/DEFoFo marcados "confirmar com a SN" (só no cadastro antigo). Preços: nenhum público.
 - Preenchidos: diferenciais, voz da marca, capacidade/horário, links (Google Maps, loja, Facebook, formulário, e-mail). Faltam do Italo/cliente: preços, proibidos, quem aparece/grava, sábado.
