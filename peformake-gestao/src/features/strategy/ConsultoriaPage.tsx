@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Check, Download, ExternalLink, Lightbulb, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -20,11 +20,11 @@ import { Paged } from './SlideViewer'
 import { useReview } from '@/features/review/reviewApi'
 import { applyFills, findFills, insertAdded, progress, reviewedInput, slideKeys } from '@/features/review/reviewRules'
 import { OrientationDialog, screenOrientation, type CardPrimary } from './DeckCard'
-import { ReportCards } from './ReportCards'
-import { AgentDocs, latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
+import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { StrategyStrip } from './brief/StrategyStrip'
-import { CONSULT_PATH, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { useBriefProgress } from './brief/briefApi'
+import { CONSULT_PATH, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, STRATEGY_STEPS, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
@@ -54,7 +54,7 @@ export function ConsultoriaPage() {
   const [asking, setAsking] = useState<ConsultRow | null>(null)
   const qc = useQueryClient()
   // Perguntas viram o detalhe ?ver=perguntas; Relatórios é a 2ª aba; o resto abre o Planejamento.
-  const open = (id: string | null, tab?: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios') => setParams((c) => { const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao']) n.delete(k); if (id) { n.set('cliente', id); if (tab === 'perguntas') n.set('ver', 'perguntas'); if (tab === 'estrategia') n.set('ver', 'estrategia'); if (tab === 'relatorios') n.set('aba', 'relatorios') } else n.delete('cliente'); return n })
+  const open = (id: string | null, tab?: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios') => setParams((c) => { const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao']) n.delete(k); if (id) { n.set('cliente', id); if (tab === 'perguntas') n.set('ver', 'perguntas'); if (tab === 'estrategia') n.set('ver', 'estrategia');  } else n.delete('cliente'); return n })
   const gen = useMutation({
     mutationFn: async (r: ConsultRow) => { if (r.status === 'erro') await requestConsult(r.client_id); else await kickConsult() },
     onMutate: () => setProblem(null),
@@ -63,12 +63,13 @@ export function ConsultoriaPage() {
   })
 
   const row = list.data?.find((r) => r.client_id === clientId) ?? null
+  const briefs = useBriefProgress(monthOptions(new Date())[1]!)
   if (clientId) return <ConsultDocView clientId={clientId} row={row} onBack={() => open(null)} onInfo={() => row && setInfo(row)} info={info} closeInfo={() => setInfo(null)} />
 
   const rows = sortByStrategy(list.data ?? [])
-  const go = (r: ConsultRow, step: ReturnType<typeof strategyStep>) => setParams((c) => {
+  const go = (r: ConsultRow, step: ReturnType<typeof strategyStep> | null) => setParams((c) => {
     const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao', 'parte', 'revisar']) n.delete(k)
-    n.set('cliente', r.client_id); n.set('ver', 'estrategia'); if (step.go === 'revisar') n.set('revisar', 'todos'); return n
+    n.set('cliente', r.client_id); n.set('ver', 'estrategia'); if (step?.go === 'revisar') n.set('revisar', 'todos'); return n
   })
   return (
     <section aria-label="Consultoria" className="flex flex-col gap-2.5">
@@ -82,19 +83,24 @@ export function ConsultoriaPage() {
             const step = strategyStep(r)
             const diag = r.consultoria !== false
             const answers = r.answers_new ?? 0
+            const prog = strategyProgress(r, briefs.data?.[r.client_id])
             return (
               <li key={r.client_id} data-cliente={r.client_id} data-passo={step.go} className="flex items-center gap-2 px-3 py-2.5">
                 <button type="button" onClick={() => open(r.client_id)} className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left">
                   <ClientAvatar name={r.name} url={logoPublicUrl(r.logo_path)} size="sm" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[14.5px] font-semibold">{r.name.trim()}</span>
-                    <span className="flex min-w-0 items-center gap-1.5 text-[12.5px] text-muted">
-                      <span aria-hidden="true" className={cn('size-1.5 shrink-0 rounded-full', DOT[step.state])} />
-                      <span className="truncate">{step.sub}</span>
+                  <span className="flex min-w-0 flex-1 flex-col gap-1">
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <b className="truncate text-[14.5px] font-semibold">{r.name.trim()}</b>
                       {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
+                    </span>
+                    <StepsMini at={prog.at} briefPercent={briefs.data?.[r.client_id]?.percent} />
+                    <span data-resumo className="flex min-w-0 items-center gap-1.5 text-[12.5px] text-muted">
+                      <span aria-hidden="true" className={cn('size-1.5 shrink-0 rounded-full', DOT[step.state])} />
+                      <span className="truncate">{prog.text}</span>
                     </span>
                   </span>
                 </button>
+                {step.go !== 'briefing' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px] max-md:hidden" onClick={() => go(r, null)}>Briefing</Button>}
                 <Button variant={step.go === 'revisar' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => go(r, step)}>{step.label}</Button>
                 <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
                   { label: 'Ver respostas novas', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: answers === 0, onClick: () => open(r.client_id, 'perguntas') },
@@ -128,6 +134,22 @@ async function openPublicDeck(clientId: string): Promise<void> {
 
 
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
+
+/** Briefing · Gerar · Revisar · PDF em 4 tracinhos (o da vez em destaque; o do briefing enche conforme o %). */
+function StepsMini({ at, briefPercent }: { at: number; briefPercent?: number }) {
+  return (
+    <span data-etapas-mini className="grid max-w-72 grid-cols-4 gap-1" aria-label={`Etapa: ${STRATEGY_STEPS[Math.min(at, 3)]}${at >= 4 ? ' (concluída)' : ''}`}>
+      {STRATEGY_STEPS.map((l, i) => (
+        <span key={l} className="flex min-w-0 flex-col gap-0.5">
+          <span className="relative h-1 overflow-hidden rounded-full bg-raised">
+            <span className={cn('absolute inset-y-0 left-0 rounded-full', i < at ? 'bg-ok' : i === at ? 'bg-accent' : '')} style={{ width: i < at ? '100%' : i === at ? (i === 0 && briefPercent != null ? `${Math.max(8, briefPercent)}%` : '100%') : '0%' }} />
+          </span>
+          <span className={cn('truncate text-[10.5px] max-sm:hidden', i === at ? 'font-semibold text-ink' : 'text-muted')}>{l}</span>
+        </span>
+      ))}
+    </span>
+  )
+}
 
 const DOT: Record<PartState, string> = { pronto: 'bg-ok', revisar: 'bg-accent', falta: 'bg-warn', andando: 'bg-muted pf-pulse', fora: 'bg-line' }
 
@@ -236,7 +258,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const [params, setParams] = useSearchParams()
   const aba = params.get('aba')
   useEffect(() => {
-    if (!aba || aba === 'relatorios') return
+    if (!aba || aba === 'relatorios') return /* Relatórios virou aba de Estratégia (Navigate abaixo). */
     setParams((c) => {
       const n = new URLSearchParams(c); n.delete('aba')
       if ((aba === 'estrategia' || aba === 'plano') && n.get('secao')) n.set('ver', 'plano')
@@ -244,7 +266,6 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       return n
     }, { replace: true })
   }, [aba, setParams])
-  const view = aba === 'relatorios' ? 'relatorios' : 'planejamento'
   const ver = params.get('ver')
   const go = (patch: Record<string, string | null>, replace = false) => setParams((c) => { const n = new URLSearchParams(c); for (const [k, v] of Object.entries(patch)) { if (v) n.set(k, v); else n.delete(k) } return n }, { replace })
   const today = useMemo(() => new Date(), [])
@@ -313,6 +334,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
     </>
   )
 
+  if (aba === 'relatorios') return <Navigate to={`/estrategia/relatorios?cliente=${clientId}`} replace />
   // Detalhe: o plano completo (seções, ações para aprovar, editar, refazer) ou as perguntas.
   if (ver === 'estrategia' || ver === 'plano') return (
     <section aria-label={`Estratégia de ${name}`} className="flex flex-col gap-3">
@@ -332,18 +354,11 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   return (
     <section aria-label={`Consultoria de ${name}`} className="flex flex-col gap-4">
       {header}
-      <div role="tablist" aria-label="Partes da consultoria" className="grid grid-cols-2 gap-1 rounded-full bg-raised p-1 sm:max-w-sm">
-        {([['planejamento', 'Planejamento'], ['relatorios', 'Relatórios']] as const).map(([id, label]) => (
-          <button key={id} type="button" role="tab" aria-selected={view === id} onClick={() => go({ aba: id === 'relatorios' ? 'relatorios' : null }, true)}
-            className={cn('inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full px-3 text-[13.5px] font-semibold', view === id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink')}>{label}</button>
-        ))}
-      </div>
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
-      {view === 'relatorios' && <><AgentDocs clientId={clientId} name={name} only="relatorios" />{!pdf.relatorios && <ReportCards clientId={clientId} name={name} />}</>}
       {/* O plano do mês antigo foi desligado em 16/11: a Estratégia interativa (briefing → cards → PDF) é o único caminho. */}
-      {view === 'planejamento' && <StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
-      {view === 'planejamento' && row?.consultoria !== false && (
+      {<StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
+      {row?.consultoria !== false && (
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
             onInfo={onInfo} onGenerate={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}
@@ -351,7 +366,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
       )}
-      {view === 'planejamento' && <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
+      {<QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
       {dialogs}
     </section>
   )

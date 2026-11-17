@@ -11,7 +11,7 @@ import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import {
-  briefChecks, briefMissing, briefPercent, LINK_KEYS, LINK_LABEL, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
+  briefChecks, briefMissing, briefPercent, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
 } from './briefRules'
 
@@ -105,7 +105,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
 
   const qs = q.data ?? []
   const prods = f.produtos ?? []
-  const links = LINK_KEYS.filter((k) => f.links?.[k])
+  const links = linkList(f)
   const comps = f.concorrentes ?? []
   const refs = f.referencias ?? []
   const mes = monthName(month).toLowerCase()
@@ -116,7 +116,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
 
       <Section title="Do cliente (fixo)">
         <Row label="Produtos e serviços" done={prods.some((p) => p.preco)} value={prods.length ? `${prods.length} · ${prods.slice(0, 3).map((p) => `${p.nome}${p.preco ? ` ${p.preco}` : ''}`).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'produtos' })} />
-        <Row label="Links importantes" done={links.length >= 2} value={links.length ? links.map((k) => LINK_LABEL[k]).join(' · ') : ''} onOpen={() => setOpen({ kind: 'links' })} />
+        <Row label="Links importantes" done={links.length >= 2} value={links.length ? `${links.length} · ${links.slice(0, 4).map((l) => l.nome).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'links' })} />
         {(['publico', 'diferenciais'] as const).map((k) => <Row key={k} label={TEXT_FIELDS[k].label} done={!!f[k]} value={short(f[k])} onOpen={() => setOpen({ kind: 'text', key: k })} />)}
         <Row label="Concorrentes" done={comps.length > 0} badge={<NewBadge n={comps.filter((c) => c.novo).length} />} value={comps.length ? `${comps.length} · ${comps.slice(0, 3).map((c) => c.nome).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'concorrentes' })} />
         <Row label="Referências" done={refs.length > 0} badge={<NewBadge n={refs.filter((r) => r.novo).length} />} value={refs.length ? `${refs.length} · ${refs.slice(0, 3).map((r) => r.porque ? short(r.porque, 24) : netOf(r.link)).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'referencias' })} />
@@ -140,10 +140,10 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         ))}
       </Section>
 
-      {open?.kind === 'text' && <TextDialog title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
+      {open?.kind === 'text' && <TextDialog quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
       {open?.kind === 'month' && <TextDialog title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={() => setOpen(null)} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
-      {open?.kind === 'links' && <LinksDialog initial={f.links} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate({ links: v })} />}
-      {open?.kind === 'produtos' && <ListDialog<Produto & Record<string, unknown>> title="Produtos e serviços" hint="Com o preço real e as condições. Só valores reais entram na estratégia." items={prods as (Produto & Record<string, unknown>)[]} empty={{ nome: '', preco: '', condicoes: '' }}
+      {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate(v)} />}
+      {open?.kind === 'produtos' && <ListDialog<Produto & Record<string, unknown>> importer title="Produtos e serviços" hint="Importe a lista (PDF, Excel, Word ou foto) ou adicione. Só valores reais entram na estratégia." items={prods as (Produto & Record<string, unknown>)[]} empty={{ nome: '', preco: '', condicoes: '' }}
         fields={[{ key: 'nome', label: 'Nome', placeholder: 'Ex.: Pizza grande' }, { key: 'preco', label: 'Preço', placeholder: 'Ex.: R$ 59,90' }, { key: 'condicoes', label: 'Condições', placeholder: 'Ex.: só no delivery, até 2x' }]}
         line={(x) => `${x.nome}${x.preco ? ` · ${x.preco}` : ''}`} sub={(x) => x.condicoes || null} busy={saveF.isPending} error={err(saveF)} onClose={() => setOpen(null)} onSave={(v) => saveF.mutate({ produtos: v })} />}
       {open?.kind === 'concorrentes' && <ListDialog<Concorrente & Record<string, unknown>> title="Concorrentes" hint="Lista que só cresce. A busca soma os novos com o selo novo." items={comps as (Concorrente & Record<string, unknown>)[]} empty={{ nome: '', link: '', porque: '' }}

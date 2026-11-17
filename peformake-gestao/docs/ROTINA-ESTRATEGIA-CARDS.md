@@ -26,6 +26,8 @@ Ordem: refazer (rápido) → gerar → pdf. No máximo 3 quadros "gerar" por rod
    `select public.strategy_agent_submit('<board_id>', '<cards json>'::jsonb, '<novos json>'::jsonb);`
    - `novos` = `{"concorrentes":[{nome,link,porque}], "referencias":[{link,porque,numero,tipo}]}` achados na pesquisa (entram no briefing com o selo "novo", sem duplicar; tipo: post, video, anuncio ou outro_nicho).
    - Os aprovados de antes ficam; a aba Referências sai do briefing sozinha.
+   - Links do briefing: `links` (principais) + `links_extra` (com nome); ignore `links_off` (a equipe removeu). Abra cada um e use o que achar.
+   - Referências de qualquer fonte útil (Instagram, TikTok, YouTube, Pinterest foto e vídeo, Behance, Dribbble, Vimeo, Biblioteca de Anúncios da Meta, sites), sempre com link e porquê. Foto do Pinterest é só referência de estilo; post usa só foto real do cliente.
 
 ### Formato de cada card (lista `cards`)
 Campos comuns: `aba`, `tipo`, `titulo`, `funil` (atrair | provar | objecao | converter), `serve` (oferta ou tese), `meta`, `inspirado` `{link, numero}`, `suposicao`.

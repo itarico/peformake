@@ -8,9 +8,14 @@ export const LINK_KEYS = ['site', 'instagram', 'whatsapp', 'catalogo', 'gmn', 'a
 export type LinkKey = (typeof LINK_KEYS)[number]
 export const LINK_LABEL: Record<LinkKey, string> = { site: 'Site', instagram: 'Instagram', whatsapp: 'WhatsApp', catalogo: 'Cardápio ou catálogo', gmn: 'Google Meu Negócio', agendamento: 'Agendamento' }
 
+export interface LinkExtra { nome: string; url: string }
 export interface BriefFixed {
   produtos?: Produto[]
   links?: Partial<Record<LinkKey, string>>
+  /** Links além dos principais (nome dado pela equipe ou deduzido do link). */
+  links_extra?: LinkExtra[]
+  /** Links que o sistema puxou sozinho e a equipe removeu: não voltam no preenchimento automático. */
+  links_off?: string[]
   publico?: string; diferenciais?: string
   concorrentes?: Concorrente[]; referencias?: Referencia[]
   voz?: string; proibidos?: string
@@ -37,7 +42,7 @@ export const MONTH_FIELDS: Record<MonthKey, { label: string; hint: string }> = {
 }
 
 const filled = (v: unknown) => typeof v === 'string' ? v.trim().length > 1 : Array.isArray(v) ? v.length > 0 : !!v
-const linksCount = (l: BriefFixed['links']) => Object.values(l ?? {}).filter((v) => filled(v)).length
+const linksCount = (f: BriefFixed) => Object.values(f.links ?? {}).filter((v) => filled(v)).length + (f.links_extra ?? []).filter((l) => filled(l.url)).length
 
 export interface Check { key: string; label: string; done: boolean; weight: number }
 
@@ -46,7 +51,7 @@ export function briefChecks(f: BriefFixed, m: BriefMonth, answered: number, tota
   const precos = (f.produtos ?? []).some((p) => filled(p.preco))
   return [
     { key: 'produtos', label: precos ? 'Produtos' : 'Produtos com preço', done: precos, weight: 1.5 },
-    { key: 'links', label: 'Links (2 ou mais)', done: linksCount(f.links) >= 2, weight: 1 },
+    { key: 'links', label: 'Links (2 ou mais)', done: linksCount(f) >= 2, weight: 1 },
     { key: 'publico', label: 'Público', done: filled(f.publico), weight: 1 },
     { key: 'diferenciais', label: 'Diferenciais', done: filled(f.diferenciais), weight: 1 },
     { key: 'concorrentes', label: 'Concorrentes', done: filled(f.concorrentes), weight: 0.5 },
@@ -127,13 +132,15 @@ export function prefill(f: BriefFixed, known: {
   if (known.voz) set('voz', [known.voz.essencia, list(known.voz.tom) && `Tom: ${list(known.voz.tom)}`].filter(Boolean).join('. '))
   if (known.voz && list(known.voz.evitar)) set('proibidos', `Evitar: ${list(known.voz.evitar)}`)
   const L = out.links!
-  if (!L.instagram && known.instagram) L.instagram = known.instagram.startsWith('http') ? known.instagram : `https://instagram.com/${known.instagram.replace(/^@/, '')}`
-  if (!L.site && known.website) L.site = known.website
-  if (!L.whatsapp && known.phone) { const d = known.phone.replace(/\D/g, ''); if (d.length >= 10) L.whatsapp = `https://wa.me/${d.length <= 11 ? `55${d}` : d}` }
+  const off = new Set((f.links_off ?? []).map(linkKey))
+  const put = (k: LinkKey, url: string) => { if (!L[k] && !off.has(linkKey(url)) && !(out.links_extra ?? []).some((x) => linkKey(x.url) === linkKey(url))) L[k] = url }
+  if (known.instagram) put('instagram', known.instagram.startsWith('http') ? known.instagram : `https://instagram.com/${known.instagram.replace(/^@/, '')}`)
+  if (known.website) put('site', known.website)
+  if (known.phone) { const d = known.phone.replace(/\D/g, ''); if (d.length >= 10) put('whatsapp', `https://wa.me/${d.length <= 11 ? `55${d}` : d}`) }
   for (const l of known.links ?? []) {
     const n = l.name.toLowerCase()
     const k: LinkKey | null = /card|cat[aá]l|menu|ifood/.test(n) ? 'catalogo' : /google|gmn|maps|meu neg/.test(n) ? 'gmn' : /agend|reserva/.test(n) ? 'agendamento' : /site/.test(n) ? 'site' : null
-    if (k && !L[k]) L[k] = l.url
+    if (k) put(k, l.url)
   }
   if (!(out.concorrentes ?? []).length && known.competitors?.trim()) {
     out.concorrentes = known.competitors.split(/[,;\n]+/).map((s) => s.trim()).filter((s) => s.length > 1).slice(0, 8).map((nome) => ({ nome }))
@@ -149,3 +156,93 @@ export function short(v: string | undefined, n = 70): string {
 
 /** Mês da pergunta: o pacote do mês guarda 'AAAA-MM' em focus. */
 export const focusOf = (month: string) => month.slice(0, 7)
+
+
+// ───────── Links: uma lista só, o sistema reconhece o tipo e dá o nome ─────────
+export interface LinkItem { nome: string; url: string; key: LinkKey | null }
+
+/** Reconhece o link pelo endereço (sem IA): Google Maps, Instagram, WhatsApp, cardápio… */
+export function detectLink(raw: string): { key: LinkKey | null; nome: string } {
+  const u = raw.trim().toLowerCase()
+  const handle = (re: RegExp) => { const m = re.exec(raw); return m?.[1] ? ` @${m[1]}` : '' }
+  if (/instagram\.com|instagr\.am/.test(u)) return { key: 'instagram', nome: `Instagram${handle(/instagram\.com\/([\w.]+)/i)}` }
+  if (/wa\.me|whatsapp\.com|api\.whatsapp/.test(u)) return { key: 'whatsapp', nome: 'WhatsApp' }
+  if (/google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps|g\.page|maps\.google|business\.google|g\.co\/kgs/.test(u)) return { key: 'gmn', nome: 'Google Maps' }
+  if (/ifood|anota\.?ai|goomer|cardapio|cardápio|menu|aiqfome|deliverydireto|catalogo|catálogo|wa\.me\/c\//.test(u)) return { key: 'catalogo', nome: /ifood/.test(u) ? 'iFood' : 'Cardápio' }
+  if (/calendly|agend|booking|reserva|getin|tagme|simplybook|trinks|doctoralia/.test(u)) return { key: 'agendamento', nome: 'Agendamento' }
+  if (/tiktok\.com/.test(u)) return { key: null, nome: `TikTok${handle(/tiktok\.com\/@([\w.]+)/i)}` }
+  if (/youtu\.?be/.test(u)) return { key: null, nome: 'YouTube' }
+  if (/facebook\.com|fb\.com/.test(u)) return { key: null, nome: 'Facebook' }
+  if (/linktr\.ee|linkbio|beacons\.ai/.test(u)) return { key: null, nome: 'Link da bio' }
+  if (/pinterest\./.test(u)) return { key: null, nome: 'Pinterest' }
+  if (/shopee|mercadolivre|amazon\./.test(u)) return { key: null, nome: 'Loja online' }
+  return { key: 'site', nome: 'Site' }
+}
+
+/** Links do briefing numa lista (principais primeiro, depois os extras). */
+export function linkList(f: BriefFixed): LinkItem[] {
+  const main = LINK_KEYS.filter((k) => f.links?.[k]?.trim()).map((k) => ({ nome: LINK_LABEL[k], url: f.links![k]!.trim(), key: k as LinkKey }))
+  return [...main, ...(f.links_extra ?? []).filter((x) => x.url?.trim()).map((x) => ({ nome: x.nome || detectLink(x.url).nome, url: x.url.trim(), key: null }))]
+}
+
+/** Volta da lista para o formato salvo: o 1º de cada tipo vira o link principal; o resto, extra. Removidos ficam em links_off. */
+export function fromLinkList(items: LinkItem[], before: BriefFixed): Pick<BriefFixed, 'links' | 'links_extra' | 'links_off'> {
+  const links: Partial<Record<LinkKey, string>> = {}
+  const extra: LinkExtra[] = []
+  for (const it of items) {
+    const url = it.url.trim(); if (!url) continue
+    const key = it.key ?? detectLink(url).key
+    const custom = it.nome.trim() && key && it.nome.trim() !== LINK_LABEL[key] && it.nome.trim() !== detectLink(url).nome
+    if (key && !links[key] && !custom) links[key] = url
+    else extra.push({ nome: it.nome.trim() || detectLink(url).nome, url })
+  }
+  const kept = new Set(items.map((i) => linkKey(i.url)))
+  const removed = linkList(before).map((i) => i.url).filter((u) => !kept.has(linkKey(u)))
+  const off = [...new Set([...(before.links_off ?? []).filter((u) => !kept.has(linkKey(u))), ...removed])]
+  return { links, links_extra: extra, links_off: off }
+}
+
+// ───────── Quiz: responder tocando em opções (com "Outro") ─────────
+export interface QuizStep { q: string; opts: string[]; multi?: boolean }
+export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
+  publico: [
+    { q: 'Quem mais compra?', opts: ['Mulheres', 'Homens', 'Casais', 'Famílias com filhos', 'Jovens', 'Empresas'], multi: true },
+    { q: 'Qual a idade?', opts: ['18 a 24', '25 a 34', '35 a 44', '45 a 59', '60 ou mais'], multi: true },
+    { q: 'Onde mora ou trabalha?', opts: ['No bairro', 'Bairros vizinhos', 'Na cidade toda', 'Região metropolitana', 'Turistas', 'Outras cidades (online)'], multi: true },
+    { q: 'Qual a renda?', opts: ['Popular', 'Classe média', 'Média alta', 'Alta'], multi: true },
+    { q: 'O que mais pesa na compra?', opts: ['Preço', 'Qualidade', 'Rapidez', 'Atendimento', 'Experiência', 'Confiança na marca'], multi: true },
+    { q: 'Quando costuma comprar?', opts: ['Dia a dia', 'Fim de semana', 'À noite', 'No almoço', 'Datas especiais', 'Quando tem promoção'], multi: true },
+  ],
+  diferenciais: [
+    { q: 'Por que escolhem vocês?', opts: ['Qualidade', 'Preço justo', 'Atendimento', 'Rapidez', 'Localização', 'Tradição', 'Produto exclusivo'], multi: true },
+    { q: 'O que o cliente mais elogia?', opts: ['Sabor/resultado', 'Ambiente', 'Equipe', 'Entrega', 'Variedade', 'Custo-benefício'], multi: true },
+    { q: 'Há quanto tempo existem?', opts: ['Menos de 1 ano', '1 a 3 anos', '3 a 10 anos', 'Mais de 10 anos'] },
+  ],
+  voz: [
+    { q: 'Como a marca fala?', opts: ['Descontraída', 'Próxima, de amigo', 'Profissional', 'Sofisticada', 'Divertida', 'Acolhedora'], multi: true },
+    { q: 'Usa gírias e emojis?', opts: ['Sim, bastante', 'Pouco', 'Não'] },
+    { q: 'Trata o cliente por', opts: ['Você', 'Vocês/galera', 'Senhor(a)'] },
+  ],
+  proibidos: [
+    { q: 'O que nunca falar ou mostrar?', opts: ['Política', 'Religião', 'Palavrão', 'Concorrente pelo nome', 'Preço baixo como foco', 'Bebida alcoólica', 'Crianças'], multi: true },
+  ],
+  quem_aparece: [
+    { q: 'Quem pode aparecer nos vídeos?', opts: ['O dono', 'A equipe', 'Clientes', 'Só as mãos/produto', 'Ninguém (só produto)'], multi: true },
+  ],
+  quem_grava: [
+    { q: 'Quem grava?', opts: ['Ellcazo', 'O próprio cliente', 'A equipe do cliente', 'Misto'], multi: true },
+    { q: 'Com que frequência dá para gravar?', opts: ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar'] },
+  ],
+  capacidade: [
+    { q: 'Quanto dá para atender por dia?', opts: ['Até 20', '20 a 50', '50 a 100', 'Mais de 100'] },
+    { q: 'Qual o gargalo?', opts: ['Cozinha/produção', 'Atendimento', 'Entrega', 'Espaço', 'Agenda', 'Nenhum'], multi: true },
+  ],
+}
+
+/** Junta as respostas do quiz num texto curto ("Quem mais compra: Mulheres, Casais. Idade: 25 a 34."). */
+export function quizText(steps: QuizStep[], answers: string[][]): string {
+  return steps.map((s, i) => {
+    const a = (answers[i] ?? []).map((x) => x.trim()).filter(Boolean)
+    return a.length ? `${s.q.replace(/\?$/, '')}: ${a.join(', ')}.` : ''
+  }).filter(Boolean).join(' ')
+}

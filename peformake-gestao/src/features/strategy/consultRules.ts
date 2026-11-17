@@ -229,6 +229,24 @@ export function strategyStep(r: Pick<ConsultRow, 'monthly' | 'answers_new'>): St
   return { go: 'abrir', label: 'Abrir', sub: `Estratégia de ${mes}: aprovada`, state: 'pronto', rank: 4 }
 }
 
+/** As 4 etapas da estratégia (Briefing · Gerar · Revisar · PDF): onde o cliente está (4 = tudo feito) e o resumo curto da linha. */
+export const STRATEGY_STEPS = ['Briefing', 'Gerar', 'Revisar', 'PDF'] as const
+export function strategyProgress(r: Pick<ConsultRow, 'monthly' | 'answers_new'>, brief?: { percent: number; missing: string[] } | null): { at: number; text: string } {
+  const m = r.monthly
+  const b = brief ? `Briefing ${brief.percent}%` : ''
+  if (!m) {
+    const ready = !!brief && brief.percent >= 60
+    const falta = brief?.missing.length ? `falta ${brief.missing.slice(0, 2).join(', ').toLowerCase()}` : ''
+    return { at: ready ? 1 : 0, text: [b, ready ? 'pronto para gerar' : falta || 'fazer o briefing'].filter(Boolean).join(' · ') }
+  }
+  const step = strategyStep(r)
+  const sub = step.sub.replace(/^Estratégia de [^:]+: /, '')
+  if (m.status === 'na_fila' || m.status === 'gerando' || m.status === 'erro' || m.status === 'limite') return { at: 1, text: [b, sub].filter(Boolean).join(' · ') }
+  if (m.status === 'pronto' && m.pending > 0) return { at: 2, text: sub }
+  if (m.status === 'pronto') return { at: 3, text: sub }
+  return { at: 4, text: sub }
+}
+
 /** Ordem da lista mínima: primeiro o que pede você (revisar, respostas novas), depois briefing, por último o que está em dia. */
 export function sortByStrategy(rows: ConsultRow[]): ConsultRow[] {
   const rank = (r: ConsultRow) => Math.min(strategyStep(r).rank, (r.answers_new ?? 0) > 0 ? 1 : 9)

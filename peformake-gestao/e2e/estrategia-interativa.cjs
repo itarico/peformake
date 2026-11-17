@@ -80,7 +80,15 @@ if (require.main === module) (async () => {
       await p.goto(`${BASE}/estrategia/consultoria`, { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
       if (!(await p.locator('[data-passo]').count())) fails.push(`${tag}: lista sem o passo da estratégia`);
       if (await sideScroll(p)) fails.push(`${tag}: lista com rolagem de lado`);
+      if (!(await p.locator('[data-etapas-mini]').count())) fails.push(`${tag}: lista sem as etapas do cliente`);
+      if (!(await p.locator('[data-resumo]').count())) fails.push(`${tag}: lista sem o resumo do cliente`);
+      if (await p.getByRole('link', { name: 'Biblioteca' }).count()) fails.push(`${tag}: Biblioteca ainda aparece`);
+      if (!(await p.getByRole('link', { name: 'Relatórios' }).count())) fails.push(`${tag}: sem a aba Relatórios`);
       await p.screenshot({ path: `${OUT}/estrategia-lista-${tag}.png` });
+      await p.goto(`${BASE}/estrategia/relatorios`, { waitUntil: 'networkidle' }); await p.waitForTimeout(400);
+      if (!(await p.locator('[data-relatorios] button').count())) fails.push(`${tag}: Relatórios sem a lista de clientes`);
+      await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&aba=relatorios`, { waitUntil: 'networkidle' }); await p.waitForTimeout(400);
+      if (!p.url().includes('/estrategia/relatorios?cliente=')) fails.push(`${tag}: link antigo ?aba=relatorios não foi para Relatórios`);
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
       if (!(await p.locator('[data-estrategia-faixa]').count())) fails.push(`${tag}: cliente sem a faixa da estratégia`);
       await p.screenshot({ path: `${OUT}/estrategia-cliente-${tag}.png` });
@@ -96,6 +104,34 @@ if (require.main === module) (async () => {
         if (name === 'produtos') { await p.locator('dialog[open]').getByRole('button', { name: 'Adicionar' }).click(); await p.waitForTimeout(200); await check(p, tag, 'produto-novo') }
         await close(p);
       }
+      // Produtos: importar de arquivo (CSV aqui; PDF, Excel e Word passam pelo mesmo leitor).
+      await p.locator('[data-briefing] button', { hasText: 'Produtos e serviços' }).first().click(); await p.waitForTimeout(300);
+      await p.locator('[data-importar]').setInputFiles({ name: 'cardapio.csv', mimeType: 'text/csv', buffer: Buffer.from('Produto;Preço;Obs\nPizza grande;59,90;\nCalzone;42;só delivery\nRefri 2L;12,00;\nPizza doce;49,9;\nBorda recheada;8;\nCombo família;129;até 24/12\n') });
+      await p.waitForTimeout(600);
+      const note = await p.locator('dialog[open] [role=status]').textContent().catch(() => '');
+      if (!/Encontrei 6/.test(note || '')) fails.push(`${tag}: importar produtos não leu o arquivo (${note})`);
+      await check(p, tag, 'produtos-importados'); await close(p);
+      // Links: cola o link e o sistema dá o nome.
+      await p.locator('[data-briefing] button', { hasText: 'Links importantes' }).first().click(); await p.waitForTimeout(300);
+      const before = await p.locator('[data-link]').count();
+      await p.locator('dialog[open] input[aria-label=Link]').fill('https://maps.app.goo.gl/xyz');
+      if ((await p.locator('dialog[open] input[aria-label="Nome do link"]').first().inputValue()) !== 'Google Maps') fails.push(`${tag}: link do Maps não foi reconhecido`);
+      await p.locator('dialog[open]').getByRole('button', { name: 'Adicionar' }).click(); await p.waitForTimeout(200);
+      if ((await p.locator('[data-link]').count()) <= before && before < 3) fails.push(`${tag}: link não entrou na lista`);
+      await check(p, tag, 'links-lista'); await close(p);
+      // Público: quiz com opções e "Outro".
+      await p.locator('[data-briefing] button', { hasText: 'Público' }).first().click(); await p.waitForTimeout(300);
+      await p.locator('dialog[open]').getByRole('button', { name: 'Responder com opções' }).click(); await p.waitForTimeout(200);
+      if (!(await p.locator('[data-quiz]').count())) fails.push(`${tag}: quiz não abriu`);
+      await check(p, tag, 'quiz');
+      await p.locator('dialog[open]').getByRole('button', { name: 'Mulheres' }).click();
+      await p.locator('dialog[open]').getByRole('button', { name: 'Próxima' }).click(); await p.waitForTimeout(150);
+      await p.locator('dialog[open]').getByRole('button', { name: 'Outro' }).click();
+      await p.locator('dialog[open] input[aria-label="Outra resposta"]').fill('31 a 40');
+      for (let k = 0; k < 6; k++) { const bt = p.locator('dialog[open]').getByRole('button', { name: /^(Próxima|Pular|Usar respostas)$/ }); const t = await bt.textContent(); await bt.click(); await p.waitForTimeout(120); if (t === 'Usar respostas') break }
+      const txt = await p.locator('dialog[open] textarea').inputValue().catch(() => '');
+      if (!/Mulheres/.test(txt) || !/31 a 40/.test(txt)) fails.push(`${tag}: quiz não virou texto (${txt.slice(0, 80)})`);
+      await close(p);
       await p.locator('[data-briefing] button', { hasText: 'pergunta 1' }).click(); await p.waitForTimeout(350);
       await check(p, tag, 'resposta');
       if (!(await p.locator('dialog[open]').getByRole('button', { name: /Gravar resposta/ }).count())) fails.push(`${tag}: resposta sem o botão de gravar`);

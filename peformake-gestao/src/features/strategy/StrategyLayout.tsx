@@ -6,12 +6,14 @@ import { SectionHeader, type SectionTab } from '@/components/layout/SectionTabs'
 import { ConsultoriaPage } from './ConsultoriaPage'
 import { CONSULT_PATH, CONSULT_ROLES } from './consultRules'
 import { LibraryPage } from './LibraryPage'
+import { RelatoriosPage } from './RelatoriosPage'
 
 const LEADS = ['admin', 'head_marketing'] as const
 
 const TABS: SectionTab[] = [
   { to: CONSULT_PATH, label: 'Consultoria', roles: CONSULT_ROLES },
-  { to: '/estrategia/biblioteca', label: 'Biblioteca', roles: LEADS },
+  // Biblioteca (nichos, estudos, retenção) fica oculta por enquanto (Italo, 17/11): a rota continua para links antigos.
+  { to: '/estrategia/relatorios', label: 'Relatórios', roles: CONSULT_ROLES },
 ]
 
 /**
@@ -30,7 +32,7 @@ function AreaMoved({ area }: { area: 'trafego' | 'social' }) {
  * Estratégia: UM plano do mês por cliente (função monthly-strategy), para todo cliente com serviço de operação.
  * Consultoria lista todos (tráfego, social/design, audiovisual, consultoria); quem é de tráfego ou social vê só os seus clientes
  * e só a sua parte (com Aprovar). O Audiovisual também tem a dele em Audiovisual → Plano do mês.
- * Biblioteca junta Nichos, Estudos e Retenção. Rotas antigas caem no lugar novo (MovedTo / AreaMoved).
+ * Abas: Consultoria e Relatórios. Biblioteca (Nichos, Estudos e Retenção) está oculta, só pela rota. Rotas antigas caem no lugar novo (MovedTo / AreaMoved).
  */
 export function StrategyLayout() {
   const { state } = useAuth()
@@ -44,6 +46,7 @@ export function StrategyLayout() {
         <Route path="frameworks" element={<MovedTo to={CONSULT_PATH} />} />
         <Route element={<RequireRole roles={CONSULT_ROLES} />}>
           <Route path="consultoria" element={<ConsultoriaPage />} />
+          <Route path="relatorios" element={<RelatoriosPage />} />
           <Route path="trafego" element={<AreaMoved area="trafego" />} />
           <Route path="social" element={<AreaMoved area="social" />} />
         </Route>
