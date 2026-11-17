@@ -60,6 +60,12 @@ export async function answerQuestion(id: string, answer: string): Promise<void> 
   if (error) fail(error)
 }
 
+/** Corrige uma resposta já dada (do cliente ou da equipe): só o texto muda; quem respondeu e os anexos ficam. */
+export async function editAnswer(id: string, answer: string): Promise<void> {
+  const { error } = await rpc('client_question_edit_answer', { _id: id, _answer: answer })
+  if (error) fail(error)
+}
+
 export async function discardQuestion(id: string): Promise<void> {
   const { error } = await rpc('client_question_answer', { _id: id, _answer: null, _discard: true })
   if (error) fail(error)

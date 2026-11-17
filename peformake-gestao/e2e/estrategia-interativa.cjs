@@ -119,6 +119,16 @@ if (require.main === module) (async () => {
       await p.locator('dialog[open]').getByRole('button', { name: 'Adicionar' }).click(); await p.waitForTimeout(200);
       if ((await p.locator('[data-link]').count()) <= before && before < 3) fails.push(`${tag}: link não entrou na lista`);
       await check(p, tag, 'links-lista'); await close(p);
+      // Perguntas respondidas: dá para editar a resposta (vem preenchida).
+      await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=perguntas`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
+      if (!(await p.locator('[data-respondida]').count())) fails.push(`${tag}: perguntas sem as respondidas`);
+      else {
+        await p.locator('[data-respondida]').first().getByRole('button', { name: 'Editar resposta' }).click(); await p.waitForTimeout(300);
+        if ((await p.locator('dialog[open] textarea').inputValue().catch(() => '')) !== 'Combo família') fails.push(`${tag}: editar resposta não veio preenchido`);
+        await check(p, tag, 'editar-resposta'); await close(p);
+      }
+      await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
+      await p.locator('[data-estrategia-faixa] button').click(); await p.waitForTimeout(700);
       // Completar em passos: só o que falta, um por vez, Pular passa para o próximo.
       await p.locator('[data-completar]').click(); await p.waitForTimeout(300);
       const t1 = await p.locator('dialog[open]').getAttribute('aria-label');

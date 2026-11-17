@@ -11,7 +11,7 @@ import { supabase } from '@/lib/supabase'
 import { ago } from '@/features/settings/AutomationsCenter'
 import { waLink } from './consultRules'
 import { ALL_MAX, chatInvite, chatLink, defaultToSend, MAX_PER_CHAT, nextMonthFocus, packLabel, weekStart } from './questionRules'
-import { answerQuestion, discardQuestion, editQuestion, fileUrl, generateQuestions, openChat, questionsKey, useClientQuestions, type ClientQuestion } from './questionsApi'
+import { answerQuestion, discardQuestion, editAnswer, editQuestion, fileUrl, generateQuestions, openChat, questionsKey, useClientQuestions, type ClientQuestion } from './questionsApi'
 import { Paged } from './SlideViewer'
 
 /** Estratégia → Consultoria → cliente → Perguntas: o pacote da semana, envio (por humano) e as respostas. */
@@ -73,7 +73,7 @@ export function QuestionsPanel({ clientId, name }: { clientId: string; name: str
       <section aria-label="Respondidas" className="flex flex-col gap-1.5">
         <h3 className="text-[13px] font-semibold text-muted">Respondidas ({answered.length})</h3>
         {answered.length === 0 && <p className="text-[13px] text-muted">Ainda nenhuma. As respostas entram sozinhas no diagnóstico e nas próximas perguntas.</p>}
-        {answered.length > 0 && <Paged items={answered} per={4} render={(x) => <AnsweredCard q={x} />} />}
+        {answered.length > 0 && <Paged items={answered} per={4} render={(x) => <AnsweredCard q={x} onEdit={() => setAnswer(x)} />} />}
       </section>
 
       {edit && <EditDialog q={edit} onClose={() => setEdit(null)} onDone={refresh} />}
@@ -102,11 +102,14 @@ function SessionLine({ session }: { session: NonNullable<ReturnType<typeof useCl
   )
 }
 
-function AnsweredCard({ q }: { q: ClientQuestion }) {
+function AnsweredCard({ q, onEdit }: { q: ClientQuestion; onEdit: () => void }) {
   const openFile = async (path: string) => { const u = await fileUrl(path); if (u) window.open(u, '_blank', 'noopener') }
   return (
-    <div className="rounded-2xl border border-line bg-surface px-3 py-2.5">
-      <p className="text-[12.5px] leading-snug text-muted">{q.question}</p>
+    <div data-respondida className="rounded-2xl border border-line bg-surface px-3 py-2.5">
+      <div className="flex items-start gap-2">
+        <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-muted">{q.question}</p>
+        <button type="button" aria-label="Editar resposta" onClick={onEdit} className="-mr-1 -mt-1 grid size-10 shrink-0 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"><Pencil size={15} aria-hidden="true" /></button>
+      </div>
       {q.answer && <p className="mt-1 whitespace-pre-line text-[14px] font-medium leading-snug">{q.answer}</p>}
       <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted">
         <span>{q.answered_via === 'cliente' ? 'Cliente' : 'Equipe'} · {ago(q.answered_at) ?? ''}</span>
@@ -139,13 +142,15 @@ function EditDialog({ q, onClose, onDone }: { q: ClientQuestion; onClose: () => 
 }
 
 function AnswerDialog({ q, onClose, onDone }: { q: ClientQuestion; onClose: () => void; onDone: () => void }) {
-  const [text, setText] = useState('')
-  const save = useMutation({ mutationFn: () => answerQuestion(q.id, text), onSuccess: () => { onDone(); onClose() } })
+  // Já respondida: corrige o texto (quem respondeu e os anexos ficam). Senão, a equipe responde.
+  const editing = q.status === 'respondida'
+  const [text, setText] = useState(editing ? q.answer ?? '' : '')
+  const save = useMutation({ mutationFn: () => (editing ? editAnswer(q.id, text) : answerQuestion(q.id, text)), onSuccess: () => { onDone(); onClose() } })
   return (
-    <Dialog open onClose={onClose} title="Responder pela equipe" description={q.question} size="md"
+    <Dialog open onClose={onClose} title={editing ? 'Editar resposta' : 'Responder pela equipe'} description={editing ? `${q.question}${q.answered_via === 'cliente' ? ' · respondida pelo cliente' : ''}` : q.question} size="md"
       footer={<div className="flex gap-2"><Button disabled={save.isPending || !text.trim()} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar resposta'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div className="flex flex-col gap-2">
-        {q.options?.length > 0 && <div className="flex flex-wrap gap-1.5">{q.options.map((o) => <button key={o} type="button" onClick={() => setText(o)} className="min-h-9 cursor-pointer rounded-full border border-line-strong px-3 text-[13px] hover:border-ink">{o}</button>)}</div>}
+        {q.options?.length > 0 && <div className="flex flex-wrap gap-1.5">{q.options.map((o) => <button key={o} type="button" onClick={() => setText((n) => (n.trim() && !n.includes(o) ? `${n.trim()}; ${o}` : n.trim() ? n : o))} className="min-h-9 cursor-pointer rounded-full border border-line-strong px-3 text-[13px] hover:border-ink">{o}</button>)}</div>}
         <textarea autoFocus value={text} onChange={(e) => setText(e.target.value)} rows={4} maxLength={4000} className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[14px]" placeholder="O que o cliente respondeu (por telefone, reunião...)" />
         <VoiceNote onText={(t) => setText((n) => (n.trim() ? `${n.trim()}\n${t}` : t))} />
         {save.isError && <p role="alert" className="text-[12.5px] text-warn-ink">{(save.error as Error).message}</p>}
