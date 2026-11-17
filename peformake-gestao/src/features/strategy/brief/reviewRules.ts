@@ -22,6 +22,25 @@ export function reviewOrder(cards: StrategyCard[], tab?: string | null): Strateg
 }
 
 export const ytId = (link?: string | null) => /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/.exec(link ?? '')?.[1] ?? null
+/**
+ * Tocar a referência dentro da moldura, pelo jeito oficial de cada rede (sem baixar nada).
+ * Instagram (post/reels), TikTok, Pinterest, YouTube e Vimeo. Outros sites: null (fica o link).
+ */
+export function embedOf(link?: string | null): { src: string; net: string; tall: boolean } | null {
+  const l = String(link ?? '')
+  const yt = ytId(l)
+  if (yt) return { src: `https://www.youtube-nocookie.com/embed/${yt}?playsinline=1&rel=0`, net: 'YouTube', tall: /shorts\//.test(l) }
+  const ig = /instagram\.com\/(?:[\w.]+\/)?(p|reel|reels|tv)\/([\w-]+)/i.exec(l)
+  if (ig) return { src: `https://www.instagram.com/${ig[1] === 'p' ? 'p' : 'reel'}/${ig[2]}/embed/`, net: 'Instagram', tall: true }
+  const tt = /tiktok\.com\/.*\/video\/(\d+)/i.exec(l)
+  if (tt) return { src: `https://www.tiktok.com/player/v1/${tt[1]}?music_info=1&description=1`, net: 'TikTok', tall: true }
+  const pin = /pinterest\.[a-z.]+\/pin\/(?:[\w-]*--)?(\d+)/i.exec(l)
+  if (pin) return { src: `https://assets.pinterest.com/ext/embed.html?id=${pin[1]}`, net: 'Pinterest', tall: true }
+  const vm = /vimeo\.com\/(?:video\/)?(\d+)/i.exec(l)
+  if (vm) return { src: `https://player.vimeo.com/video/${vm[1]}`, net: 'Vimeo', tall: false }
+  return null
+}
+
 /** O link da referência do card (vídeo, visual ou "inspirado em"). */
 export function refLink(c: Pick<StrategyCard, 'data' | 'inspired'>): string {
   return String(c.data?.referencia?.link || c.data?.referencia_visual?.link || c.data?.link || c.inspired?.link || '')

@@ -52,7 +52,7 @@ const close = async (p) => { await p.keyboard.press('Escape'); await p.waitForTi
 
 
 const long = (n) => 'Texto de exemplo com bastante conteúdo para medir o pop-up sem rolagem. '.repeat(n);
-const mk = (i, tab, kind, title, data, extra = {}) => ({ id: id(500 + i), board_id: id(400), tab, kind, position: i, title, data, funnel: ['atrair', 'provar', 'objecao', 'converter'][i % 4], serves: 'Combo família R$ 129', goal: '300 pedidos', inspired: { link: 'https://www.instagram.com/reel/abc/', numero: '41 mil views' }, assumed: i % 3 ? null : 'Preço do combo não confirmado', status: i % 5 === 0 ? 'aprovado' : 'proposta', reject_reason: null, in_pdf: true, regen_count: 0, is_new: false, updated_at: '2026-11-16T10:00:00Z', redo_pedido: null, redo_requested_at: null, ...extra });
+const mk = (i, tab, kind, title, data, extra = {}) => ({ id: id(500 + i), board_id: id(400), tab, kind, position: i, title, data, funnel: ['atrair', 'provar', 'objecao', 'converter'][i % 4], serves: 'Combo família R$ 129', goal: '300 pedidos', inspired: { link: 'https://www.instagram.com/reel/DfpgOksBZs5/', numero: '41 mil views' }, assumed: i % 3 ? null : 'Preço do combo não confirmado', status: i % 5 === 0 ? 'aprovado' : 'proposta', reject_reason: null, in_pdf: true, regen_count: 0, is_new: false, updated_at: '2026-11-16T10:00:00Z', redo_pedido: null, redo_requested_at: null, ...extra });
 const cards = [
   mk(0, 'resumo', 'tese', 'Dezembro é o mês da família na mesa do Fornario', { texto: long(3) }),
   mk(1, 'resumo', 'objetivo', '300 pedidos no WhatsApp', { numero: '300 pedidos', como_medir: 'Contagem das conversas com pedido fechado' }),

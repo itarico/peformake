@@ -115,6 +115,10 @@ export function netOf(link: string): string {
   if (l.includes('instagram.com')) return 'Instagram'
   if (l.includes('tiktok.com')) return 'TikTok'
   if (l.includes('youtu')) return 'YouTube'
+  if (l.includes('pinterest.') || l.includes('pin.it')) return 'Pinterest'
+  if (l.includes('vimeo.com')) return 'Vimeo'
+  if (l.includes('behance.net')) return 'Behance'
+  if (l.includes('dribbble.com')) return 'Dribbble'
   if (l.includes('facebook.com/ads') || l.includes('ads/library')) return 'Anúncio'
   try { return new URL(l.startsWith('http') ? l : `https://${l}`).hostname.replace(/^www\./, '') } catch { return 'Link' }
 }

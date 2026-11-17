@@ -2,7 +2,7 @@ import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Bookmark, Heart, MessageCircle, Play, Send } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { StrategyCard } from './cardRules'
-import { inkOn, mockupOf, refLink, ytId, type Mockup } from './reviewRules'
+import { embedOf, inkOn, mockupOf, refLink, ytId, type Mockup } from './reviewRules'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 export interface Brand { name: string; logo: string | null; main: string; accent: string }
@@ -83,30 +83,30 @@ function Carousel({ brand, slides, cta }: { brand: Brand; slides: string[]; cta?
 
 function VerticalVideo({ brand, c, story }: { brand: Brand; c: StrategyCard; story?: boolean }) {
   const d = c.data ?? {}
-  const yt = ytId(refLink(c))
+  const emb = embedOf(refLink(c))
   const hook = (Array.isArray(d.ganchos) && d.ganchos[0]) || d.copy || c.title
   return (
     <div className="relative h-full w-full">
-      {yt
-        ? <iframe title="Referência" src={`https://www.youtube-nocookie.com/embed/${yt}?playsinline=1&rel=0`} allow="autoplay; encrypted-media; picture-in-picture" className="absolute inset-0 h-full w-full" />
+      {emb
+        ? <iframe title={`Referência (${emb.net})`} src={emb.src} allow="autoplay; encrypted-media; picture-in-picture; clipboard-write" allowFullScreen loading="lazy" className="absolute inset-0 h-full w-full border-0 bg-black" />
         : <Poster brand={brand} title={String(hook)} sub={story ? d.ideia : undefined} cta={story ? d.cta : undefined} className="absolute inset-0" />}
       {story && <div className="pointer-events-none absolute inset-x-3 top-9 flex gap-1">{[0, 1, 2].map((k) => <span key={k} className={cn('h-0.5 flex-1 rounded-full', k === 0 ? 'bg-white' : 'bg-white/40')} />)}</div>}
       <div className="pointer-events-none absolute left-3 top-12 flex items-center gap-2 text-[11.5px] font-semibold text-white drop-shadow"><Avatar brand={brand} size={24} />{brand.name}</div>
-      {yt && <span className="pointer-events-none absolute right-3 top-12 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white">Referência</span>}
-      {!yt && !story && <span className="pointer-events-none absolute left-1/2 top-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/35 text-white"><Play size={26} /></span>}
+      {emb && <span className="pointer-events-none absolute right-3 top-12 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white">Referência · {emb.net}</span>}
+      {!emb && !story && <span className="pointer-events-none absolute left-1/2 top-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/35 text-white"><Play size={26} /></span>}
       {!story && <div className="pointer-events-none absolute bottom-16 right-2 flex flex-col items-center gap-3 text-white drop-shadow"><Heart size={22} /><MessageCircle size={22} /><Send size={22} /></div>}
     </div>
   )
 }
 
 function Wide({ brand, c }: { brand: Brand; c: StrategyCard }) {
-  const yt = ytId(refLink(c))
+  const emb = embedOf(refLink(c))
   const hook = (Array.isArray(c.data?.ganchos) && c.data.ganchos[0]) || c.title
   return (
     <div className="mx-auto w-[min(92vw,520px)]">
       <div className="rounded-2xl bg-[#111] p-2.5 shadow-[0_30px_60px_-20px_#0008]">
         <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
-          {yt ? <iframe title="Referência" src={`https://www.youtube-nocookie.com/embed/${yt}?rel=0`} allow="autoplay; encrypted-media; picture-in-picture" className="absolute inset-0 h-full w-full" />
+          {emb ? <iframe title={`Referência (${emb.net})`} src={emb.src} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen loading="lazy" className="absolute inset-0 h-full w-full border-0" />
             : <Poster brand={brand} title={String(hook)} className="absolute inset-0" />}
         </div>
       </div>

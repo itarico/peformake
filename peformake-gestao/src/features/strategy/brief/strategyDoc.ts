@@ -7,7 +7,11 @@ import { ellcazoSvg } from '@/components/ui/ellcazoSvg'
 import type { StrategyCard } from './cardRules'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
-export interface DocInput { name: string; month: string; cards: StrategyCard[]; logoUrl?: string | null; peformakeLogoUrl?: string | null; ellcazoLogoUrl?: string | null }
+export interface DocInput {
+  name: string; month: string; cards: StrategyCard[]; logoUrl?: string | null; peformakeLogoUrl?: string | null; ellcazoLogoUrl?: string | null
+  /** Capas das referências já embutidas (link → data URI), buscadas na hora de gerar (refThumbs.ts). Sem elas: só o YouTube tem capa. */
+  thumbs?: Record<string, string>
+}
 
 const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 const nl = (v: unknown) => esc(v).replace(/\n/g, '<br>')
@@ -16,6 +20,16 @@ export const monthTitle = (m: string) => `${MESES[Number(m.slice(5, 7)) - 1] ?? 
 const FUNIL: Record<string, string> = { atrair: 'Atrair', provar: 'Provar', objecao: 'Objeção', converter: 'Converter' }
 const url = (l?: string) => (!l ? '' : /^https?:\/\//.test(l) ? l : `https://${l}`)
 const ytThumb = (l?: string) => { const m = /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})/.exec(l ?? ''); return m ? `https://i.ytimg.com/vi/${m[1]}/hqdefault.jpg` : '' }
+let TH: Record<string, string> = {}
+/** Capa da referência no PDF: a buscada na hora (qualquer rede) ou, sem ela, a do YouTube. */
+const coverOf = (l?: string) => (!l ? '' : TH[l] || TH[url(l)] || ytThumb(l))
+
+/** Links de referência dos cards que vão para o PDF (para buscar as capas antes de gerar). */
+export function pdfRefLinks(cards: StrategyCard[]): string[] {
+  const out = new Set<string>()
+  for (const c of pdfCards(cards)) for (const l of [c.data?.referencia?.link, c.data?.referencia_visual?.link, c.tab === 'referencias' ? c.data?.link : null, c.tab === 'audiovisual' ? c.inspired?.link : null]) if (l) out.add(url(String(l)))
+  return [...out]
+}
 
 /** Os cards que entram no PDF: aprovados e marcados. */
 export function pdfCards(cards: StrategyCard[]): StrategyCard[] {
@@ -52,7 +66,7 @@ function social(cs: StrategyCard[]) {
   return cs.map((c, i) => pfPage(c.title, `Social media · peça ${i + 1} de ${cs.length}`, `
     <p class="meta">${[c.data.formato ? `<span class="tag">${esc(c.data.formato)}</span>` : '', c.data.data_sugerida ? `<span class="mut">Data: ${esc(c.data.data_sugerida)}</span>` : '', meta(c)].filter(Boolean).join(' ')}</p>
     <div class="two"><div><h3>Ideia</h3><p>${nl(c.data.ideia)}</p><h3>Copy</h3><p>${nl(c.data.copy)}</p>${(c.data.slides ?? []).length ? `<h3>Slides</h3><ol>${list(c.data.slides, (s) => `<li>${esc(s)}</li>`)}</ol>` : ''}</div>
-    <div><h3>Legenda</h3><p class="box">${nl(c.data.legenda)}</p><h3>Chamada</h3><p>${esc(c.data.cta)}</p><h3>Imagem (foto real)</h3><p>${nl(c.data.ideia_imagem)}</p>${c.data.referencia_visual?.link ? `<p><a href="${esc(url(c.data.referencia_visual.link))}">Referência visual</a> · ${esc(c.data.referencia_visual.porque)}</p>` : ''}</div></div>`)).join('')
+    <div><h3>Legenda</h3><p class="box">${nl(c.data.legenda)}</p><h3>Chamada</h3><p>${esc(c.data.cta)}</p><h3>Imagem (foto real)</h3><p>${nl(c.data.ideia_imagem)}</p>${c.data.referencia_visual?.link ? `${coverOf(c.data.referencia_visual.link) ? `<a href="${esc(url(c.data.referencia_visual.link))}"><img class="refimg" src="${esc(coverOf(c.data.referencia_visual.link))}" alt="Referência visual"></a>` : ''}<p><a href="${esc(url(c.data.referencia_visual.link))}">Referência visual</a> · ${esc(c.data.referencia_visual.porque)}</p>` : ''}</div></div>`)).join('')
 }
 
 function trafego(cs: StrategyCard[]) {
@@ -72,14 +86,14 @@ function atendimento(cs: StrategyCard[]) {
 
 function referencias(cs: StrategyCard[]) {
   if (!cs.length) return ''
-  return pfPage('Referências', 'Concorrentes e inspirações', `<div class="grid">${cs.map((c) => `<div class="card"><span class="k">${c.kind === 'concorrente' ? 'Concorrente' : c.kind === 'outro_nicho' ? 'Outro nicho' : c.kind === 'anuncio' ? 'Anúncio' : 'Referência'}</span><b>${esc(c.title)}</b><p>${esc(c.data.porque)}</p>${c.data.numero ? `<p class="num">${esc(c.data.numero)}</p>` : ''}${c.data.link ? `<p><a href="${esc(url(c.data.link))}">${esc(String(c.data.link).replace(/^https?:\/\/(www\.)?/, '').slice(0, 48))}</a></p>` : ''}</div>`).join('')}</div>`)
+  return pfPage('Referências', 'Concorrentes e inspirações', `<div class="grid">${cs.map((c) => `<div class="card"><span class="k">${c.kind === 'concorrente' ? 'Concorrente' : c.kind === 'outro_nicho' ? 'Outro nicho' : c.kind === 'anuncio' ? 'Anúncio' : 'Referência'}</span>${coverOf(c.data.link) ? `<a href="${esc(url(c.data.link))}"><img class="refimg" src="${esc(coverOf(c.data.link))}" alt=""></a>` : ''}<b>${esc(c.title)}</b><p>${esc(c.data.porque)}</p>${c.data.numero ? `<p class="num">${esc(c.data.numero)}</p>` : ''}${c.data.link ? `<p><a href="${esc(url(c.data.link))}">${esc(String(c.data.link).replace(/^https?:\/\/(www\.)?/, '').slice(0, 48))}</a></p>` : ''}</div>`).join('')}</div>`)
 }
 
 /** Audiovisual (Ellcazo): uma página por vídeo; fundo verde-limão e branco intercalados; preto só nos detalhes. */
 function audiovisual(cs: StrategyCard[], logo?: string | null) {
   return cs.map((c, i) => {
     const ref = c.data.referencia?.link ? url(c.data.referencia.link) : c.inspired?.link ? url(c.inspired.link) : ''
-    const thumb = ytThumb(ref)
+    const thumb = coverOf(ref)
     return `<section class="page ez ${i % 2 ? 'white' : 'lime'}">
       <header>${logo ? `<img src="${esc(logo)}" alt="Ellcazo" class="ezlogo">` : `<span class="ezmark">${ellcazoSvg('#000', 22)}</span>`}<span class="k">Vídeo ${i + 1} de ${cs.length}${c.data.formato ? ` · ${esc(c.data.formato)}` : ''}</span></header>
       <h2>${esc(c.title)}</h2>
@@ -118,6 +132,7 @@ p{font-size:12.5px;line-height:1.45;margin:4px 0}ol{font-size:12.5px;line-height
 .ez header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ez .k{color:#000}.ezmark{font-weight:800;letter-spacing:.12em;font-size:13px;border:2px solid #000;border-radius:12px;padding:3px 9px}
 .ezlogo{height:28px}.ezcard{background:#fff;border:2px solid #000;border-radius:14px;box-shadow:4px 4px 0 #000;padding:10px 12px;margin-bottom:12px;break-inside:avoid}
 .ez.white .ezcard{background:#fff}.ezcard.ref img{width:100%;border-radius:12px;border:2px solid #000;display:block;aspect-ratio:16/9;object-fit:cover}
+.refimg{width:100%;max-height:220px;object-fit:cover;border-radius:12px;display:block;margin:6px 0}
 .noimg{border:2px dashed #000;border-radius:12px;aspect-ratio:16/9;display:grid;place-items:center;font-weight:700}
 .btn{display:inline-block;margin:8px 0 2px;background:#B5E61D;color:#000;border:2px solid #000;border-radius:12px;box-shadow:3px 3px 0 #000;padding:5px 12px;font-weight:800;text-decoration:none;font-size:12px}
 .ez.lime .btn{background:#fff}.ez .mut{color:#333}
@@ -125,6 +140,7 @@ p{font-size:12.5px;line-height:1.45;margin:4px 0}ol{font-size:12.5px;line-height
 
 /** HTML completo (abre no navegador, imprime ou vira PDF no Chromium). */
 export function strategyHtml(input: DocInput): string {
+  TH = input.thumbs ?? {}
   const cs = pdfCards(input.cards)
   const tab = (t: string) => cs.filter((c) => c.tab === t)
   const cover = `<section class="page cover"><div><span class="k">Estratégia do mês</span><h1>${esc(input.name)}<br>${esc(monthTitle(input.month))}</h1></div>

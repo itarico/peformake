@@ -6,11 +6,18 @@ import { supabase } from '@/lib/supabase'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import { boardCount, type StrategyBoardData } from './cardRules'
 import { approveBoard } from './strategyApi'
-import { docName, pdfCards, strategyHtml } from './strategyDoc'
+import { docName, pdfCards, pdfRefLinks, strategyHtml } from './strategyDoc'
 
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 const TAB_LABEL: Record<string, string> = { resumo: 'Resumo', audiovisual: 'Vídeos', social: 'Social', trafego: 'Tráfego', atendimento: 'Atendimento', referencias: 'Referências' }
+
+/** Capas das referências (só para o PDF): a função busca e devolve embutidas. Se falhar, o PDF sai sem elas. */
+async function refCovers(links: string[]): Promise<Record<string, string>> {
+  if (!links.length) return {}
+  const go = supabase.functions.invoke('ref-thumb', { body: { links } }).then(({ data }) => ((data as { thumbs?: Record<string, string> } | null)?.thumbs ?? {})).catch(() => ({}))
+  return Promise.race([go, new Promise<Record<string, string>>((r) => setTimeout(() => r({}), 40_000))])
+}
 
 /** Abre o documento numa aba nova e chama a impressão ("Salvar como PDF"). A aba abre na hora do toque. */
 function printNow(w: Window | null, html: string) {
@@ -34,7 +41,8 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
       try {
         if (board.status !== 'aprovado') await approveBoard(board.id)
         const { data: cli } = await supabase.from('clients').select('logo_path').eq('id', clientId).maybeSingle()
-        const html = strategyHtml({ name, month: board.month, cards: board.cards, logoUrl: logoPublicUrl((cli?.logo_path as string | null) ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` })
+        const thumbs = await refCovers(pdfRefLinks(board.cards))
+        const html = strategyHtml({ name, month: board.month, cards: board.cards, thumbs, logoUrl: logoPublicUrl((cli?.logo_path as string | null) ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` })
         const title = docName(board.month)
         const safe = title.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9._-]+/g, '-').slice(0, 120)
         const path = `${clientId}/estrategia/${safe}.html`
@@ -51,7 +59,7 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
   return (
     <Dialog open onClose={onClose} title={board.status === 'aprovado' ? 'PDF da estratégia' : 'Aprovar e gerar PDF'} size="sm"
       description="Só os cards aprovados e marcados entram. Nada vai ao cliente."
-      footer={<div className="flex gap-2"><Button disabled={run.isPending || !inPdf.length} onClick={() => run.mutate()}><FileDown size={15} aria-hidden="true" /> {run.isPending ? 'Preparando' : board.status === 'aprovado' ? 'Gerar de novo' : 'Aprovar e gerar'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
+      footer={<div className="flex gap-2"><Button disabled={run.isPending || !inPdf.length} onClick={() => run.mutate()}><FileDown size={15} aria-hidden="true" /> {run.isPending ? 'Buscando as capas' : board.status === 'aprovado' ? 'Gerar de novo' : 'Aprovar e gerar'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div className="flex flex-col gap-2 text-[13.5px]">
         <p><b>{inPdf.length}</b> {inPdf.length === 1 ? 'card entra' : 'cards entram'} no PDF{cnt.pending ? ` · ${cnt.pending} ainda sem decisão (ficam de fora)` : ''}.</p>
         <ul className="flex flex-wrap gap-1.5">{byTab.map(([t, n]) => <li key={t} className="rounded-full bg-raised px-2.5 py-1 text-[12.5px] font-medium">{TAB_LABEL[t] ?? t}: {n}</li>)}</ul>

@@ -4,12 +4,15 @@
 // Saem saida.pdf e saida.html (o HTML vai junto na pasta do cliente).
 import { readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
-import { strategyHtml } from '../../src/features/strategy/brief/strategyDoc'
+import { pdfRefLinks, strategyHtml } from '../../src/features/strategy/brief/strategyDoc'
+import { fetchThumbs } from '../../src/features/strategy/brief/refThumbs'
 
 const [inp, out] = process.argv.slice(2).filter((a) => a !== '--')
 if (!inp || !out) { console.error('Uso: npx vite-node tools/estrategia-cards/pdf.ts -- entrada.json saida.pdf'); process.exit(1) }
 const data = JSON.parse(readFileSync(inp, 'utf8'))
-const html = strategyHtml({ peformakeLogoUrl: 'https://peformake-gestao.vercel.app/logo-pfmk.png', ...data })
+// Capas das referências embutidas no PDF (qualquer rede; sem chave do Firecrawl aqui, só oEmbed/og:image).
+const thumbs = await fetchThumbs(pdfRefLinks(data.cards ?? []), fetch).catch(() => ({}))
+const html = strategyHtml({ peformakeLogoUrl: 'https://peformake-gestao.vercel.app/logo-pfmk.png', thumbs, ...data })
 writeFileSync(out.replace(/\.pdf$/, '.html'), html)
 const { chromium } = createRequire(import.meta.url)('playwright') as typeof import('playwright')
 const b = await chromium.launch()
