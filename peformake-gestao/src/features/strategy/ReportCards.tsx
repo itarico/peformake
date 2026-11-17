@@ -108,7 +108,7 @@ function Empty({ text, clientId }: { text: string; clientId: string }) {
   return (
     <div data-conteudo className="flex flex-col items-center justify-center gap-1 rounded-3xl border border-dashed border-line px-3 py-6 text-center text-[13px] text-muted">
       <p>{text}</p>
-      <Link to={`/trafego/relatorios?cliente=${clientId}`} className="text-[12.5px] font-semibold">Gerar em Tráfego → Relatórios</Link>
+      <Link to={`/estrategia/relatorios?cliente=${clientId}`} className="text-[12.5px] font-semibold">Gerar em Estratégia → Relatórios</Link>
     </div>
   )
 }

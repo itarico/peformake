@@ -30,7 +30,7 @@ export function ReportsPanel({ clientId }: { clientId: string }) {
               className={cn('min-h-10 cursor-pointer rounded-full px-4 text-[13.5px] font-semibold', kind === id ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>{label}</button>
           ))}
         </div>
-        <Link to={`/trafego/relatorios?cliente=${clientId}`} className="ml-auto text-[13px] font-semibold">Gerar ou enviar em Tráfego → Relatórios</Link>
+        <Link to={`/estrategia/relatorios?cliente=${clientId}`} className="ml-auto text-[13px] font-semibold">Gerar ou enviar em Estratégia → Relatórios</Link>
       </div>
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
       {q.isPending && <p role="status" className="py-6 text-center text-[13px] text-muted">Carregando</p>}

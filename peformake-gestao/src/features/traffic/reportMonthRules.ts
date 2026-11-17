@@ -1,4 +1,4 @@
-// Relatórios do mês por cliente (Italo, 17/11): Semana 1, 2, 3, 4 (às vezes 5) + Mensal, como cartões.
+// Relatórios do mês por cliente (Italo, 17/11): Semana 1, 2, 3, 4 + Mensal, como cartões (Estratégia → Relatórios).
 // Cada semanal entra na semana pela segunda-feira em que começa (não importa se o fim é domingo ou segunda).
 
 export interface MonthReport {
@@ -18,13 +18,13 @@ const add = (s: string, n: number) => iso(new Date(d(s).getTime() + n * 86_400_0
 /** Segunda-feira da semana de uma data. */
 export const mondayOf = (s: string) => add(s, -((d(s).getUTCDay() + 6) % 7))
 
-/** As segundas-feiras do mês (4 ou 5): cada uma é uma semana. */
+/** As semanas do mês: as 4 primeiras segundas-feiras (Italo, 17/11: "só tem a semana 4; virou o mês, começa outro ciclo"). */
 export function mondaysOf(month: string): string[] {
   const first = `${month.slice(0, 7)}-01`
   let m = mondayOf(first); if (m < first) m = add(m, 7)
   const out: string[] = []
   while (m.slice(0, 7) === month.slice(0, 7)) { out.push(m); m = add(m, 7) }
-  return out
+  return out.slice(0, 4)
 }
 
 const stateOf = (r: MonthReport | null, done: boolean): SlotState =>

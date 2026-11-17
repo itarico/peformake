@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { ClientQuestion } from '../questionsApi'
 import { briefChecks, briefMissing, briefPercent, focusOf, prefill, type BriefFixed, type BriefMonth } from './briefRules'
+import { monthQuestions } from './questionEngine'
 
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
@@ -63,7 +64,22 @@ export function useBriefQuestions(clientId: string, month: string) {
   return useQuery({
     queryKey: briefQuestionsKey(clientId, month),
     queryFn: async () => {
-      const { error: e1 } = await rpc('brief_questions_ensure', { _client: clientId, _month: month })
+      // Motor das perguntas (sem IA): nicho + o que falta no briefing + datas do mês + diagnóstico, sem repetir meses anteriores.
+      const [cli, br, bm, hist, dg] = await Promise.all([
+        db.from('clients').select('name, segment, description').eq('id', clientId).maybeSingle(),
+        db.from('client_briefs').select('data').eq('client_id', clientId).maybeSingle(),
+        db.from('client_brief_months').select('data').eq('client_id', clientId).eq('month', month).maybeSingle(),
+        db.from('client_questions').select('question, status, focus, pack').eq('client_id', clientId).in('status', ['enviada', 'respondida']),
+        db.from('consult_docs').select('do_cliente:doc->do_cliente').eq('client_id', clientId).maybeSingle(),
+      ])
+      const f = (br.data?.data ?? {}) as BriefFixed
+      const qs = monthQuestions({
+        clientId, name: cli.data?.name ?? '', segment: cli.data?.segment, description: cli.data?.description, month,
+        products: f.produtos, competitors: f.concorrentes, noCompetitors: f.sem_concorrentes, publico: f.publico, meta: (bm.data?.data as BriefMonth | undefined)?.meta,
+        asked: ((hist.data ?? []) as { question: string; focus: string | null; pack: string | null }[]).filter((x) => !(x.pack === 'briefing_mes' && x.focus === focusOf(month))).map((x) => x.question),
+        diagQuestions: Array.isArray(dg.data?.do_cliente) ? dg.data.do_cliente : [],
+      })
+      const { error: e1 } = await rpc('brief_questions_put', { _client: clientId, _month: month, _qs: qs })
       if (e1) throw new Error(e1.code === '42501' ? 'Só administrador ou head de marketing.' : 'Não foi possível abrir as perguntas.')
       const { data, error } = await db.from('client_questions').select('id, client_id, area, pack, focus, question, why, answer, status, source, options, attachments, audio_pending, sent_to_portal_at, answered_at, answered_via, created_at')
         .eq('client_id', clientId).eq('pack', 'briefing_mes').eq('focus', focusOf(month)).order('created_at')

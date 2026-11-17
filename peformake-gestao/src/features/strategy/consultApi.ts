@@ -51,16 +51,33 @@ export function useConsultDoc(clientId: string | null) {
   })
 }
 
-/** Dispara a função na hora (o cron também pega a cada 2 min). */
-export async function kickConsult(): Promise<void> {
-  await supabase.functions.invoke('consult-diagnosis', { body: {} }).catch(() => undefined)
-}
+/** Desde 17/11 o diagnóstico é feito pelo AGENTE (fila diag_agent_queue); a função antiga da API paga não é mais chamada. */
+export async function kickConsult(): Promise<void> {}
 
 export async function requestConsult(clientId: string): Promise<void> {
   const { error } = await rpc('consult_request', { _client: clientId })
   if (error) fail(error)
   await kickConsult()
 }
+
+/** Diagnóstico padronizado (17/11): entra na fila do AGENTE do Claude (não usa a API paga). 1 a cada 3 meses por cliente. */
+export async function requestDiag(clientId: string): Promise<void> {
+  const { error } = await rpc('diag_request', { _client: clientId })
+  if (!error) return
+  if (error.code === 'PF013' || error.code === 'PF014') throw new Error(error.message)
+  fail(error)
+}
+
+/** Quando o próximo diagnóstico libera (3 meses depois do último pronto). */
+export function diagNextAt(finishedAt: string | null | undefined): Date | null {
+  if (!finishedAt) return null
+  const d = new Date(finishedAt); d.setMonth(d.getMonth() + 3); return d
+}
+
+/** Pedido para colar num chat do Claude com o conector do Supabase (o mesmo que a tarefa agendada faz). */
+export const diagChatPrompt = (clientId: string, name: string) =>
+  `Faça o diagnóstico do cliente ${name} da Peformake (client_id ${clientId}). Use o conector do Supabase, projeto wkkzcjnxyylrqoolmmhi.\n`
+  + `1. Rode: select public.agent_instructions('diagnostico');\n2. Siga as instruções à risca para este cliente (diag_agent_start → pesquisa → diag_agent_submit).\nNunca envie nada ao cliente.`
 
 export async function redoSection(clientId: string, section: ConsultSection): Promise<void> {
   const { error } = await rpc('consult_redo', { _client: clientId, _section: section })

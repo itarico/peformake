@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, Download, ExternalLink, Lightbulb, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, Download, ExternalLink, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -13,7 +13,7 @@ import { supabase } from '@/lib/supabase'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { logoPublicUrl, lookupCnpj, type CompanyLookup } from '@/features/clients/clientsApi'
 import {
-  approveConsult, consultKey, kickConsult, markSent, presentationLink, requestConsult, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
+  approveConsult, consultKey, diagChatPrompt, diagNextAt, kickConsult, markSent, presentationLink, requestDiag, saveConsultInfo, saveDirection, useConsultDoc, useConsultList,
 } from './consultApi'
 import { buildSlides, openPresentation, printDeck, type DeckInput } from './consultDeck'
 import { Paged } from './SlideViewer'
@@ -56,7 +56,7 @@ export function ConsultoriaPage() {
   // Perguntas viram o detalhe ?ver=perguntas; Relatórios é a 2ª aba; o resto abre o Planejamento.
   const open = (id: string | null, tab?: 'diagnostico' | 'estrategia' | 'perguntas' | 'relatorios') => setParams((c) => { const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao']) n.delete(k); if (id) { n.set('cliente', id); if (tab === 'perguntas') n.set('ver', 'perguntas'); if (tab === 'estrategia') n.set('ver', 'estrategia');  } else n.delete('cliente'); return n })
   const gen = useMutation({
-    mutationFn: async (r: ConsultRow) => { if (r.status === 'erro') await requestConsult(r.client_id); else await kickConsult() },
+    mutationFn: async (r: ConsultRow) => requestDiag(r.client_id),
     onMutate: () => setProblem(null),
     onError: (e) => setProblem((e as Error).message),
     onSettled: () => setTimeout(() => void qc.invalidateQueries({ queryKey: consultKey }), 1500),
@@ -81,7 +81,8 @@ export function ConsultoriaPage() {
         <ul data-conteudo className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
           {rows.map((r) => {
             const step = strategyStep(r)
-            const diag = r.consultoria !== false
+            // Diagnóstico para todo cliente ativo (17/11), feito pelo agente; 1 a cada 3 meses.
+            const diagBusy = r.status === 'gerando' || (r.status === 'na_fila' && r.stage === 'agente')
             const answers = r.answers_new ?? 0
             const prog = strategyProgress(r, briefs.data?.[r.client_id])
             return (
@@ -104,9 +105,8 @@ export function ConsultoriaPage() {
                 <Button variant={step.go === 'revisar' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => go(r, step)}>{step.label}</Button>
                 <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
                   { label: 'Ver respostas novas', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: answers === 0, onClick: () => open(r.client_id, 'perguntas') },
-                  { label: 'Revisar diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: !diag || r.status !== 'pronto', href: diagReviewPath(r.client_id) },
-                  { label: 'Informar CPF ou CNPJ (diagnóstico)', icon: <Search size={15} aria-hidden="true" />, hidden: !diag || r.status !== 'falta_dados', onClick: () => setInfo(r) },
-                  { label: 'Gerar diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, hidden: !diag || !['na_fila', 'erro'].includes(r.status), onClick: () => gen.mutate(r) },
+                  { label: 'Revisar diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: r.status !== 'pronto', href: diagReviewPath(r.client_id) },
+                  { label: diagBusy ? 'Diagnóstico com o agente' : 'Criar diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, disabled: diagBusy || gen.isPending, onClick: () => gen.mutate(r) },
                   { label: 'Abrir apresentação do diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
                   { label: 'Enviar diagnóstico no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => setSending(r) },
                   { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, onClick: () => setAsking(r) },
@@ -309,7 +309,6 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       </span>
       {!ver && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setPicker(true)}><Send size={14} aria-hidden="true" /> Enviar</Button>}
       <ActionMenu label="Mais opções do cliente" actions={[
-        { label: `Direcionamento${row?.direction?.trim() ? ' ✓' : ''}`, icon: <Lightbulb size={15} aria-hidden="true" />, onClick: () => setDirOpen(true) },
         { label: 'Informar CPF ou CNPJ', icon: <Search size={15} aria-hidden="true" />, onClick: onInfo, hidden: status !== 'falta_dados' },
       ]} />
     </header>
@@ -334,7 +333,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
     </>
   )
 
-  if (aba === 'relatorios') return <Navigate to={`/trafego/relatorios?cliente=${clientId}`} replace />
+  if (aba === 'relatorios') return <Navigate to={`/estrategia/relatorios?cliente=${clientId}`} replace />
   // Detalhe: o plano completo (seções, ações para aprovar, editar, refazer) ou as perguntas.
   if (ver === 'estrategia' || ver === 'plano') return (
     <section aria-label={`Estratégia de ${name}`} className="flex flex-col gap-3">
@@ -358,10 +357,11 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
       {/* O plano do mês antigo foi desligado em 16/11: a Estratégia interativa (briefing → cards → PDF) é o único caminho. */}
       {<StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
-      {row?.consultoria !== false && (
+      {(
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
-            onInfo={onInfo} onGenerate={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}
+            onInfo={onInfo} onGenerate={() => act.mutate(() => requestDiag(clientId))} hasDoc={!!d} finishedAt={d?.finished_at ?? null}
+            onCopyChat={() => void navigator.clipboard?.writeText(diagChatPrompt(clientId, name)).then(() => setProblem('Pedido copiado. Cole num chat do Claude com o conector do Supabase.'))}
             onApprove={() => act.mutate(() => approveConsult(clientId))}
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
@@ -405,9 +405,9 @@ function SendPicker({ name, onClose, onPick, options }: { name: string; month: s
 const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
 
 /** Cartão do diagnóstico (mesmo padrão dos outros): capa, situação, revisão, o que falta, 1 botão forte e o ⋯. */
-function DiagCard({ clientId, input, status, stage, document, error, loading, ready, approved, busy, onInfo, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
+function DiagCard({ clientId, input, status, stage, document, error, loading, ready, approved, busy, hasDoc, finishedAt, onCopyChat, onInfo, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
   clientId: string; name: string; input: DeckInput; status: ConsultRow['status']; stage: string | null; document: string | null; error: string | null
-  loading: boolean; ready: boolean; approved: boolean; busy: boolean
+  loading: boolean; ready: boolean; approved: boolean; busy: boolean; hasDoc: boolean; finishedAt: string | null; onCopyChat: () => void
   onInfo: () => void; onGenerate: () => void; onApprove: () => void; onOpen: () => void; onPdf: () => void; onSend: () => void; onDetails: () => void
 }) {
   const review = useReview('diagnostico', clientId)
@@ -427,16 +427,20 @@ function DiagCard({ clientId, input, status, stage, document, error, loading, re
   const chip = statusChip({ status, document, stage })
   const done = !!review.data?.finished_at
   const p = info?.p
+  const agent = stage === 'agente'
+  const next = diagNextAt(finishedAt)
+  const locked = !!next && next > new Date()
+  const nextLabel = next ? next.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''
   const missing = !ready
-    ? (loading ? null : status === 'gerando' ? `A IA está ${chip.sub ?? 'trabalhando'}. Leva uns 10 minutos.`
-      : status === 'falta_dados' ? 'Falta: o CPF ou CNPJ (a Receita preenche a empresa)'
-        : status === 'na_fila' ? 'Na fila. Começa em instantes.'
+    ? (loading ? null : !hasDoc ? 'Ainda não tem. O agente do Claude faz em até 1 hora.'
+      : status === 'gerando' ? (agent ? 'O agente está fazendo. Pode sair: fica salvo.' : `A IA está ${chip.sub ?? 'trabalhando'}. Leva uns 10 minutos.`)
+      : status === 'falta_dados' ? 'Ainda não tem. O agente do Claude faz em até 1 hora.'
+        : status === 'na_fila' ? (agent ? 'Na fila do agente. Fica pronto em até 1 hora.' : 'Na fila.')
           : status === 'limite' ? 'Limite do mês com IA atingido (Configurações → Automações).'
             : status === 'erro' ? `Não deu certo: ${error ?? 'erro desconhecido'}` : null)
     : p && !approved ? (() => { const m = [p.total - p.reviewed > 0 ? `${p.total - p.reviewed} slides` : null, p.toFill ? `${p.toFill} ${p.toFill === 1 ? 'dado' : 'dados'} para preencher` : null, info!.ideas > 0 ? `${info!.ideas} ideias do plano` : null].filter(Boolean); return m.length ? `Falta: ${m.join(' · ')}` : null })() : null
   let primary: CardPrimary | null = null
-  if (status === 'falta_dados') primary = { label: 'Informar CNPJ', onClick: onInfo }
-  else if (status === 'na_fila' || status === 'erro') primary = { label: 'Criar', icon: <Sparkles size={15} aria-hidden="true" />, onClick: onGenerate, disabled: busy }
+  if (!hasDoc || status === 'falta_dados' || status === 'erro' || status === 'limite' || (status === 'na_fila' && !agent)) primary = { label: 'Criar', icon: <Sparkles size={15} aria-hidden="true" />, onClick: onGenerate, disabled: busy }
   else if (ready && !approved) primary = { label: 'Revisar', icon: <Presentation size={15} aria-hidden="true" />, href: diagReviewPath(clientId) }
   else if (ready) primary = { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: onOpen }
   return (
@@ -445,7 +449,7 @@ function DiagCard({ clientId, input, status, stage, document, error, loading, re
       <Presentation size={16} aria-hidden="true" className="shrink-0 text-muted" />
       <div className="min-w-0 flex-1">
         <b className="block truncate text-[14px] font-semibold">Diagnóstico <span className={cn('ms-1 rounded-full px-1.5 py-0.5 text-[11px] font-semibold', TONE[chip.tone])}>{done && !approved ? 'Revisado' : chip.label}</span></b>
-        <span className="block truncate text-[12.5px] text-muted">{missing ?? (p && !approved ? `${p.reviewed}/${p.total} slides revisados` : approved ? 'Aprovado' : '')}</span>
+        <span className="block truncate text-[12.5px] text-muted">{missing ?? (p && !approved ? `${p.reviewed}/${p.total} slides revisados` : approved ? (locked ? `Aprovado · próximo em ${nextLabel}` : 'Aprovado · já dá para fazer o próximo') : '')}</span>
       </div>
       {primary && (primary.href
         ? <a href={primary.href} className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold no-underline hover:border-ink">{primary.label}</a>
@@ -457,6 +461,9 @@ function DiagCard({ clientId, input, status, stage, document, error, loading, re
         { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: busy, onClick: onApprove },
         { label: 'Enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onSend },
         { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onPdf },
+        { label: locked ? `Novo diagnóstico em ${nextLabel}` : 'Fazer novo diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, hidden: !ready, disabled: locked || busy, onClick: onGenerate },
+        { label: 'Copiar pedido para o chat', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !(agent && (status === 'na_fila' || status === 'gerando')), onClick: onCopyChat },
+        { label: 'Informar CPF ou CNPJ', icon: <Search size={15} aria-hidden="true" />, hidden: status !== 'falta_dados', onClick: onInfo },
       ]} />
     </div>
   )

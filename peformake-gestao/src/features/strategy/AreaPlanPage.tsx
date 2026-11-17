@@ -85,7 +85,7 @@ export function AreaPlanPage({ area, history, historyLabel = 'Histórico' }: { a
         {waiting.length > 0 && <Button onClick={() => set({ cliente: waiting[0]!.client_id })}>Revisar {waiting[0]!.name.split(' ')[0]}</Button>}
         <ActionMenu label="Mais opções" actions={[
           { label: historyLabel, icon: <History size={15} aria-hidden="true" />, onClick: () => set({ ver: 'historico', mes: null, cliente: null }), hidden: !history },
-          { label: 'Relatórios de tráfego', icon: <FileText size={15} aria-hidden="true" />, onClick: () => navigate('/trafego/relatorios'), hidden: area !== 'trafego' },
+          { label: 'Relatórios de tráfego', icon: <FileText size={15} aria-hidden="true" />, onClick: () => navigate('/estrategia/relatorios'), hidden: area !== 'trafego' },
         ]} />
       </header>
       {board.isPending && <p role="status" className="py-8 text-center text-[13px] text-muted">Carregando</p>}

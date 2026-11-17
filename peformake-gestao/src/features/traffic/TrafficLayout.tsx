@@ -9,7 +9,6 @@ const TABS = [
   { to: '/trafego/saldo', label: 'Saldo' },
   { to: '/trafego/agente', label: 'Agente' },
   { to: '/trafego/tarefas', label: 'Tarefas' },
-  { to: '/trafego/relatorios', label: 'Relatórios' },
   { to: '/trafego/contas', label: 'Contas' },
   { to: '/trafego/configuracoes', label: 'Configurações' },
 ]

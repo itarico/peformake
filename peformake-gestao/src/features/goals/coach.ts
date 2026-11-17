@@ -167,7 +167,7 @@ export function steps(r: GoalRow, c: Coach | undefined, day: number, days: numbe
     }
     case 'relatorios': case 'estrategias': {
       out.push(r.key === 'relatorios' ? `Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'relatório' : 'relatórios'} no mês.` : `Falta${rem === 1 ? '' : 'm'} ${rem} ${rem === 1 ? 'estratégia' : 'estratégias'}, com prazo até o dia 15.`)
-      out.push(r.key === 'relatorios' ? 'Ligue o envio automático em Tráfego → Configurações.' : 'Gere logo depois da reunião do mês: a conversa vira estratégia.')
+      out.push(r.key === 'relatorios' ? 'Ligue o envio automático em Estratégia → Relatórios → Configurações.' : 'Gere logo depois da reunião do mês: a conversa vira estratégia.')
       out.push('Comece pelos clientes de maior mensalidade.')
       break
     }
@@ -203,7 +203,7 @@ export function actions(r: GoalRow, c: Coach | undefined): Action[] {
     case 'saidas': client(c?.unhappy[0], 'Ligar para', 'ligar'); a.push({ label: 'Perdidos e pausados', to: '/clientes?aba=perdidos' }); break
     case 'devendo': case 'inadimplencia': client(c?.overdue[0], 'Cobrar', 'cobrar'); a.push({ label: 'Abrir cobrança', to: '/financeiro/cobranca' }); break
     case 'artes': case 'aprovacao_parada': case 'planos': a.push({ label: 'Abrir Social Media', to: '/conteudo' }); break
-    case 'relatorios': a.push({ label: 'Abrir relatórios', to: '/trafego/relatorios' }); break
+    case 'relatorios': a.push({ label: 'Abrir relatórios', to: '/estrategia/relatorios' }); break
     case 'estrategias': a.push({ label: 'Abrir estratégias', to: '/estrategia/consultoria' }); break
     case 'videos': a.push({ label: 'Abrir produção', to: '/audiovisual/producao' }); break
     case 'orcamentos_aceitos': a.push({ label: 'Abrir orçamentos', to: '/audiovisual/orcamentos' }); break

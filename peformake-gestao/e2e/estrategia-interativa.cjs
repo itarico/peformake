@@ -88,13 +88,13 @@ if (require.main === module) (async () => {
       if (!(await p.locator('[data-etapas-mini]').count())) fails.push(`${tag}: lista sem as etapas do cliente`);
       if (!(await p.locator('[data-resumo]').count())) fails.push(`${tag}: lista sem o resumo do cliente`);
       if (await p.getByRole('link', { name: 'Biblioteca' }).count()) fails.push(`${tag}: Biblioteca ainda aparece`);
-      if (await p.getByRole('link', { name: 'Relatórios' }).count()) fails.push(`${tag}: Relatórios ainda aparece na Estratégia (vai para Tráfego)`);
+      if (!(await p.getByRole('link', { name: 'Relatórios' }).count())) fails.push(`${tag}: sem a aba Relatórios na Estratégia`);
       await p.screenshot({ path: `${OUT}/estrategia-lista-${tag}.png` });
       // Relatórios em Tráfego: o mês em cartões (Semana 1, 2, 3… + Mensal).
-      await p.goto(`${BASE}/trafego/relatorios`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
+      await p.goto(`${BASE}/estrategia/relatorios`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
       if ((await p.locator('[data-cliente-rel]').count()) !== 2) fails.push(`${tag}: Relatórios do mês sem os clientes`);
       const chips = await p.locator('[data-cliente-rel]').first().locator('[data-slot]').evaluateAll((els) => els.map((e) => e.getAttribute('data-slot')));
-      if (chips.length !== 6) fails.push(`${tag}: cartões do mês: ${chips.length} (esperado 5 semanas + mensal)`);
+      if (chips.length !== 5) fails.push(`${tag}: cartões do mês: ${chips.length} (esperado 4 semanas + mensal)`);
       if (await sideScroll(p)) fails.push(`${tag}: Relatórios com rolagem de lado`);
       await p.screenshot({ path: `${OUT}/relatorios-mes-${tag}.png` });
       await p.locator('[data-slot="sent"]').first().click(); await p.waitForTimeout(300);
@@ -102,9 +102,12 @@ if (require.main === module) (async () => {
       await check(p, tag, 'relatorio'); await close(p);
       await p.getByRole('button', { name: /Configurações/ }).click(); await p.waitForTimeout(300); await check(p, tag, 'relatorio-config'); await close(p);
       await p.goto(`${BASE}/estrategia/relatorios?cliente=${C}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(400);
-      if (!p.url().includes('/trafego/relatorios?cliente=')) fails.push(`${tag}: /estrategia/relatorios não foi para Tráfego → Relatórios`);
+      if (!p.url().includes('/estrategia/relatorios?cliente=')) fails.push(`${tag}: /estrategia/relatorios perdeu o cliente`);
+      if ((await p.locator('[data-cliente-rel]').count()) !== 1) fails.push(`${tag}: Relatórios com ?cliente não filtrou o cliente`);
+      await p.goto(`${BASE}/trafego/relatorios`, { waitUntil: 'networkidle' }); await p.waitForTimeout(300);
+      if (!p.url().includes('/estrategia/relatorios')) fails.push(`${tag}: /trafego/relatorios não foi para Estratégia → Relatórios`);
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&aba=relatorios`, { waitUntil: 'networkidle' }); await p.waitForTimeout(400);
-      if (!p.url().includes('/trafego/relatorios?cliente=')) fails.push(`${tag}: link antigo ?aba=relatorios não foi para Tráfego → Relatórios`);
+      if (!p.url().includes('/estrategia/relatorios?cliente=')) fails.push(`${tag}: link antigo ?aba=relatorios não foi para Estratégia → Relatórios`);
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
       if (!(await p.locator('[data-estrategia-faixa]').count())) fails.push(`${tag}: cliente sem a faixa da estratégia`);
       await p.screenshot({ path: `${OUT}/estrategia-cliente-${tag}.png` });

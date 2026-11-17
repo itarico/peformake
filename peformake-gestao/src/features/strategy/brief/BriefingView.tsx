@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { MeetingNotes } from '../MeetingNotes'
+import { consultKey, saveDirection, useConsultList } from '../consultApi'
 import { SendQuestionsLoader } from '../QuestionsPanel'
 import { questionsKey, type ClientQuestion } from '../questionsApi'
 import { textPages, monthName } from '../monthlyRules'
@@ -15,7 +16,7 @@ import {
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
 } from './briefRules'
 
-type Open = { kind: 'text'; key: TextKey } | { kind: 'month'; key: MonthKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'funcionou' | 'enviar' } | { kind: 'q'; q: ClientQuestion } | null
+type Open = { kind: 'direcao' } | { kind: 'text'; key: TextKey } | { kind: 'month'; key: MonthKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'funcionou' | 'enviar' } | { kind: 'q'; q: ClientQuestion } | null
 
 /** Resultado do briefing para quem chama (o botão Gerar mostra o que falta). */
 export function useBriefStatus(clientId: string, month: string) {
@@ -81,6 +82,13 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   const st = useBriefStatus(clientId, month)
   const [open, setOpen] = useState<Open>(null)
   const [semComp, setSemComp] = useState(false)
+  // Direcionamento da equipe (o que a IA não acha sozinha): fica aqui no briefing, junto das respostas (Italo, 17/11).
+  const consult = useConsultList()
+  const direction = consult.data?.find((r) => r.client_id === clientId)?.direction ?? ''
+  const saveDir = useMutation({
+    mutationFn: (v: string) => saveDirection(clientId, 'consultoria', v),
+    onSuccess: () => { void qc.invalidateQueries({ queryKey: consultKey }); next() },
+  })
   // "Completar em passos": só o que falta, um por vez (o mais importante primeiro). Salvar ou Pular passa para o próximo.
   const [guide, setGuide] = useState<{ steps: NonNullable<Open>[]; i: number } | null>(null)
   const next = () => {
@@ -136,6 +144,10 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         {todo.length > 0 && <Button data-completar className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={14} aria-hidden="true" /> Completar<span className="max-sm:hidden"> em passos</span> ({todo.length})</Button>}
       </div>
 
+      <Section title="Direcionamento da equipe">
+        <Row label="O que a estratégia precisa saber" done={!!direction.trim()} value={short(direction)} onOpen={() => setOpen({ kind: 'direcao' })} />
+      </Section>
+
       <Section title="Do cliente (fixo)">
         <Row label="Produtos e serviços" done={prods.some((p) => p.preco)} value={prods.length ? `${prods.length} · ${prods.slice(0, 3).map((p) => `${p.nome}${p.preco ? ` ${p.preco}` : ''}`).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'produtos' })} />
         <Row label="Links importantes" done={links.length >= 2} value={links.length ? `${links.length} · ${links.slice(0, 4).map((l) => l.nome).join(' · ')}` : ''} onOpen={() => setOpen({ kind: 'links' })} />
@@ -163,6 +175,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
       </Section>
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
+      {open?.kind === 'direcao' && <TextDialog key="direcao" title="Direcionamento da equipe" hint="O que a IA não acha sozinha: objetivo do dono, o que ele pediu, o que não fazer. Vale mais que a pesquisa." initial={direction} busy={saveDir.isPending} error={err(saveDir)} onClose={stop} onSave={(v) => saveDir.mutate(v)} />}
       {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
       {open?.kind === 'month' && <TextDialog key={open.key} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
       {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate(v)} />}
