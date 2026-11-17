@@ -64,19 +64,6 @@ export function BoardTabs({ value, onChange, counts, tabs = BOARD_TABS }: { valu
   )
 }
 
-/** Um caminho só: Briefing → Gerar → Revisar → PDF (o passo da vez fica destacado). */
-function Steps({ at, labels }: { at: number; labels: string[] }) {
-  return (
-    <ol aria-label="Etapas da estratégia" className="grid grid-cols-4 gap-1.5" data-etapas>
-      {labels.map((l, i) => (
-        <li key={l} aria-current={i === at ? 'step' : undefined} className="flex min-w-0 flex-col gap-1">
-          <span className={cn('h-1.5 rounded-full', i < at ? 'bg-ok' : i === at ? 'bg-accent' : 'bg-raised')} />
-          <span className={cn('truncate text-[12px]', i === at ? 'font-semibold text-ink' : 'text-muted')}>{i + 1}. {l}</span>
-        </li>
-      ))}
-    </ol>
-  )
-}
 
 /**
  * Estratégia interativa do cliente (?ver=estrategia&parte=…&mes=AAAA-MM). Um caminho só: Briefing → Gerar → Revisar → Aprovar → PDF.
@@ -108,7 +95,6 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const cnt = boardCount(cards)
   const busy = boardState(b).busy
   const ready = !!b && ['pronto', 'aprovado'].includes(b.status)
-  const at = !b || b.status === 'erro' || b.status === 'limite' ? (brief.percent >= 60 ? 1 : 0) : busy ? 1 : cnt.pending > 0 ? 2 : 3
   const counts = Object.fromEntries(BOARD_TABS.filter((t) => t.id !== 'briefing').map((t) => [t.id, tabCount(cards, t.id as CardTab).label])) as Partial<Record<BoardTab, string>>
   counts.briefing = `${brief.percent}%`
   const action = busy ? null
@@ -133,7 +119,6 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
       </div>
       {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
       {/* Briefing é só briefing (17/11); as áreas abrem com as abas delas, sem o briefing junto. */}
-      {tab !== 'briefing' && <Steps at={at} labels={['Briefing', 'Gerar', 'Revisar', 'PDF']} />}
       <BoardStatus board={b} />
       {tab !== 'briefing' && <BoardTabs value={tab} tabs={AREA_TABS} onChange={(t) => go({ parte: t })} counts={counts} />}
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}

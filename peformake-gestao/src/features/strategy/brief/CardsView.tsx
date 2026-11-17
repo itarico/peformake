@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronRight, Play, Plus, Sparkles } from 'lucide-react'
+import { CalendarDays, Check, ChevronRight, Clapperboard, Flag, Gift, Image as ImageIcon, Lightbulb, Link2, Megaphone, MessageCircle, Play, Plus, Sparkles, Target, Users } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
-import { CardDialog, FunnelChip } from './CardDialog'
+import { CardDialog } from './CardDialog'
 import { boardKey, patchCard, requestMore, requestStrategy } from './strategyApi'
-import { boardState, cardLine, KIND_LABEL, tabCount, type CardTab, type StrategyBoardData, type StrategyCard } from './cardRules'
+import { boardState, FUNNEL, KIND_LABEL, tabCount, type CardTab, type StrategyBoardData, type StrategyCard } from './cardRules'
 
 const TONE = { warn: 'bg-warn-soft text-warn-ink', info: 'bg-accent-soft text-accent-ink', ok: 'bg-ok-soft text-ok-ink', muted: 'bg-raised text-muted', bad: 'bg-[#e5484d]/10 text-[#c4373b] dark:text-[#ff8589]' } as const
 
@@ -47,10 +47,16 @@ export function GenerateDialog({ clientId, month, missing, percent, regenerate, 
   )
 }
 
-const CONTRACT_HINT: Partial<Record<CardTab, string>> = {
-  audiovisual: 'Formatos variados (no máximo 2 iguais). Você escolhe o que vai para o PDF.',
-  social: 'Foco em ganhar seguidores. Você escolhe o que vai para o PDF.',
+const KIND_ICON: Record<string, typeof Check> = {
+  tese: Lightbulb, objetivo: Target, oferta: Gift, data: CalendarDays, decisao: Flag, video: Clapperboard, peca: ImageIcon,
+  campanha: Megaphone, roteiro: MessageCircle, concorrente: Users, referencia: Link2, anuncio: Megaphone, outro_nicho: Link2,
 }
+/** Ícone do tipo do card; aprovado ganha o fundo verde com o visto. */
+function KindIcon({ kind, approved }: { kind: string; approved: boolean }) {
+  const I = approved ? Check : KIND_ICON[kind] ?? Sparkles
+  return <span title={`${KIND_LABEL[kind] ?? ''}${approved ? ' · aprovado' : ''}`} className={cn('grid size-8 shrink-0 place-items-center rounded-full', approved ? 'bg-ok text-white' : 'bg-raised text-muted')}><I size={15} aria-hidden="true" /></span>
+}
+
 
 /** Uma aba de cards: contador "6/10 aprovados", lista resumida e o card aberto em pop-up. */
 export function CardsTab({ board, tab, onChanged, name, onReview }: { board: StrategyBoardData; tab: CardTab; onChanged: () => void; name: string; onReview?: () => void }) {
@@ -64,29 +70,28 @@ export function CardsTab({ board, tab, onChanged, name, onReview }: { board: Str
   if (!cards.length) return <p className="rounded-2xl border border-dashed border-line px-3 py-8 text-center text-[13px] text-muted">Nenhum card nesta aba.</p>
   return (
     <section data-aba-cards={tab} className="flex flex-col gap-2">
+      {/* Minimalista (17/11): selo de aprovados + ações; sem texto de explicação. */}
       <div className="flex items-center gap-2 px-1">
-        <b data-contador className="text-[13.5px]">{n.approved}/{n.total} aprovados</b>
-        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised"><div className="h-full rounded-full bg-ok" style={{ width: `${n.total ? (n.approved / n.total) * 100 : 0}%` }} /></div>
-        {canMore && <Button variant="secondary" className="min-h-9 shrink-0 px-3 text-[12.5px]" disabled={moreQueued} onClick={() => setMore(true)}><Plus size={13} aria-hidden="true" /> {moreQueued ? 'Mais ideias na fila' : 'Mais ideias'}</Button>}
-        {onReview && tab !== 'referencias' && <Button className="min-h-9 shrink-0 px-3 text-[12.5px]" onClick={onReview}><Play size={13} aria-hidden="true" /> Um por um</Button>}
+        <b data-contador title={`${n.approved} de ${n.total} aprovados`} className={cn('inline-flex min-h-8 items-center gap-1 rounded-full px-2.5 text-[12.5px] font-semibold', n.total && n.approved === n.total ? 'bg-ok-soft text-ok-ink' : 'bg-raised text-ink')}><Check size={13} aria-hidden="true" /> {n.approved}/{n.total}</b>
+        <span className="ml-auto flex items-center gap-1.5">
+          {canMore && <Button variant="secondary" aria-label="Mais ideias" className="min-h-9 shrink-0 px-3 text-[12.5px]" disabled={moreQueued} onClick={() => setMore(true)}><Plus size={14} aria-hidden="true" /> {moreQueued ? 'Na fila' : 'Ideias'}</Button>}
+          {onReview && tab !== 'referencias' && <Button className="min-h-9 shrink-0 px-3 text-[12.5px]" onClick={onReview}><Play size={13} aria-hidden="true" /> Um por um</Button>}
+        </span>
       </div>
-      {CONTRACT_HINT[tab] && <p className="px-1 text-[12.5px] text-muted">{CONTRACT_HINT[tab]}</p>}
       <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
         {cards.map((c) => (
           <li key={c.id} data-card={c.status} className={cn('flex items-center gap-2 px-3 py-2', c.status === 'recusado' && 'opacity-55')}>
-            <span aria-hidden="true" className={cn('grid size-5 shrink-0 place-items-center rounded-full', c.status === 'aprovado' ? 'bg-ok text-white' : 'border border-dashed border-line-strong')}>{c.status === 'aprovado' && <Check size={12} />}</span>
+            <KindIcon kind={c.kind} approved={c.status === 'aprovado'} />
             <button type="button" onClick={() => setOpen(c)} className="flex min-h-11 min-w-0 flex-1 cursor-pointer flex-col justify-center text-left">
               <span className="flex min-w-0 items-center gap-1.5">
                 <b className={cn('truncate text-[14px] font-semibold', c.status === 'recusado' && 'line-through')}>{c.title}</b>
                 {c.is_new && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[10.5px] font-bold text-accent-ink">novo</span>}
               </span>
-              <span className="flex min-w-0 items-center gap-1.5 text-[12px] text-muted">
-                <span className="shrink-0">{KIND_LABEL[c.kind] ?? ''}</span>
-                <FunnelChip f={c.funnel} />
-                {c.assumed && <span className="shrink-0 font-semibold text-warn-ink">suposição</span>}
-                {c.redo_requested_at && <span className="shrink-0 font-semibold text-accent-ink">na fila para refazer</span>}
-                {c.routed_link && <span className="shrink-0 font-semibold text-ok-ink">na produção</span>}
-                <span className="truncate">{cardLine(c)}</span>
+              <span className="flex min-w-0 items-center gap-1.5 text-[11.5px] font-semibold">
+                {c.funnel && <span title={`Funil: ${FUNNEL[c.funnel].label}`} className={cn('rounded-full px-1.5 py-px', FUNNEL[c.funnel].cls)}>{FUNNEL[c.funnel].label}</span>}
+                {c.assumed && <span title={`Suposição: ${c.assumed}`} className="rounded-full bg-warn-soft px-1.5 py-px text-warn-ink">suposição</span>}
+                {c.redo_requested_at && <span className="rounded-full bg-accent-soft px-1.5 py-px text-accent-ink">refazendo</span>}
+                {c.routed_link && <span className="rounded-full bg-ok-soft px-1.5 py-px text-ok-ink">na produção</span>}
               </span>
             </button>
             {c.status !== 'recusado' && (
