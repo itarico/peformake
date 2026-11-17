@@ -19,12 +19,12 @@ import { buildSlides, openPresentation, printDeck, type DeckInput } from './cons
 import { Paged } from './SlideViewer'
 import { useReview } from '@/features/review/reviewApi'
 import { applyFills, findFills, insertAdded, progress, reviewedInput, slideKeys } from '@/features/review/reviewRules'
-import { CardSection, DeckCard, DeckThumb, OrientationDialog, placeholderCover, screenOrientation, type CardPrimary } from './DeckCard'
+import { OrientationDialog, screenOrientation, type CardPrimary } from './DeckCard'
 import { ReportCards } from './ReportCards'
 import { AgentDocs, latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { StrategyStrip } from './brief/StrategyStrip'
-import { CONSULT_PATH, clientMessage, clientParts, diagReviewPath, nextStep, nicheLinks, sortByNext, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { CONSULT_PATH, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
@@ -65,42 +65,46 @@ export function ConsultoriaPage() {
   const row = list.data?.find((r) => r.client_id === clientId) ?? null
   if (clientId) return <ConsultDocView clientId={clientId} row={row} onBack={() => open(null)} onInfo={() => row && setInfo(row)} info={info} closeInfo={() => setInfo(null)} />
 
-  const rows = sortByNext(list.data ?? [])
+  const rows = sortByStrategy(list.data ?? [])
+  const go = (r: ConsultRow, step: ReturnType<typeof strategyStep>) => setParams((c) => {
+    const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao', 'parte', 'revisar']) n.delete(k)
+    n.set('cliente', r.client_id); n.set('ver', 'estrategia'); if (step.go === 'revisar') n.set('revisar', 'todos'); return n
+  })
   return (
     <section aria-label="Consultoria" className="flex flex-col gap-2.5">
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
       {list.isPending && <p role="status" className="py-6 text-center text-[13px] text-muted">Carregando</p>}
       {list.isError && <p role="alert" className="flex items-center gap-2 text-[13px] text-warn-ink">{(list.error as Error).message} <button type="button" className="cursor-pointer font-semibold underline" onClick={() => void list.refetch()}>Tentar de novo</button></p>}
-      {list.isSuccess && rows.length === 0 && <p data-conteudo className="rounded-2xl border border-dashed border-line px-3 py-8 text-center text-[13px] text-muted">Nenhum cliente com Consultoria ativa. Ative o serviço Consultoria na ficha do cliente e o diagnóstico começa sozinho.</p>}
+      {list.isSuccess && rows.length === 0 && <p data-conteudo className="rounded-2xl border border-dashed border-line px-3 py-8 text-center text-[13px] text-muted">Nenhum cliente com serviço ativo.</p>}
       {rows.length > 0 && (
         <ul data-conteudo className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
           {rows.map((r) => {
-            const a = nextStep(r)
-            const parts = clientParts(r)
-            const btn = 'min-h-10 shrink-0 px-3 text-[13px]'
+            const step = strategyStep(r)
+            const diag = r.consultoria !== false
+            const answers = r.answers_new ?? 0
             return (
-              <li key={r.client_id} data-cliente={r.client_id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-2.5">
-                <button type="button" onClick={() => open(r.client_id)} className="flex min-w-0 basis-full cursor-pointer items-center gap-3 text-left sm:basis-0 sm:flex-1">
+              <li key={r.client_id} data-cliente={r.client_id} data-passo={step.go} className="flex items-center gap-2 px-3 py-2.5">
+                <button type="button" onClick={() => open(r.client_id)} className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left">
                   <ClientAvatar name={r.name} url={logoPublicUrl(r.logo_path)} size="sm" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[14.5px] font-semibold">{r.name.trim()}</span>
-                    <PartsLine parts={parts} gerando={r.status === 'gerando' ? statusChip(r).sub : undefined} />
+                    <span className="flex min-w-0 items-center gap-1.5 text-[12.5px] text-muted">
+                      <span aria-hidden="true" className={cn('size-1.5 shrink-0 rounded-full', DOT[step.state])} />
+                      <span className="truncate">{step.sub}</span>
+                      {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
+                    </span>
                   </span>
                 </button>
-                <span className="flex shrink-0 items-center gap-1.5 max-sm:w-full max-sm:ps-11">
-                {a.kind === 'link' && <a href={a.href} target="_blank" rel="noreferrer" className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full bg-brand px-3 text-[13px] font-semibold text-on-brand no-underline hover:opacity-85">{a.label} <ExternalLink size={12} aria-hidden="true" className="opacity-70" /></a>}
-                {a.kind === 'dados' && <Button variant="secondary" className={btn} onClick={() => setInfo(r)}>{a.label}</Button>}
-                {a.kind === 'aba' && <Button variant="secondary" className={btn} onClick={() => open(r.client_id, a.tab)}>{a.label}</Button>}
-                {a.kind === 'gerar' && <Button variant="secondary" className={btn} disabled={gen.isPending} onClick={() => gen.mutate(r)}>{a.label}</Button>}
-                {a.kind === 'enviar' && <Button variant="secondary" className={btn} onClick={() => setSending(r)}>{a.label}</Button>}
-                {a.kind === 'perguntas' && <Button variant="secondary" className={btn} onClick={() => setAsking(r)}>{a.label}</Button>}
+                <Button variant={step.go === 'revisar' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => go(r, step)}>{step.label}</Button>
                 <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
-                  { label: 'Estratégia do mês', icon: <Sparkles size={15} aria-hidden="true" />, hidden: a.kind === 'aba' && a.tab === 'estrategia', onClick: () => open(r.client_id, 'estrategia') },
-                  { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
-                  { label: 'Enviar no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status) || a.kind === 'enviar', onClick: () => setSending(r) },
-                  { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, hidden: a.kind === 'perguntas', onClick: () => setAsking(r) },
+                  { label: 'Ver respostas novas', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: answers === 0, onClick: () => open(r.client_id, 'perguntas') },
+                  { label: 'Revisar diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: !diag || r.status !== 'pronto', href: diagReviewPath(r.client_id) },
+                  { label: 'Informar CPF ou CNPJ (diagnóstico)', icon: <Search size={15} aria-hidden="true" />, hidden: !diag || r.status !== 'falta_dados', onClick: () => setInfo(r) },
+                  { label: 'Gerar diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, hidden: !diag || !['na_fila', 'erro'].includes(r.status), onClick: () => gen.mutate(r) },
+                  { label: 'Abrir apresentação do diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
+                  { label: 'Enviar diagnóstico no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => setSending(r) },
+                  { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, onClick: () => setAsking(r) },
                 ]} />
-                </span>
               </li>
             )
           })}
@@ -340,14 +344,12 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {/* O plano do mês antigo foi desligado em 16/11: a Estratégia interativa (briefing → cards → PDF) é o único caminho. */}
       {view === 'planejamento' && <StrategyStrip clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, mes: opts[1]!.slice(0, 7) })} />}
       {view === 'planejamento' && row?.consultoria !== false && (
-        <CardSection title="Diagnóstico">
-          <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
+        <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
             onInfo={onInfo} onGenerate={() => act.mutate(() => status === 'erro' ? requestConsult(clientId) : kickConsult())}
             onApprove={() => act.mutate(() => approveConsult(clientId))}
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
-        </CardSection>
       )}
       {view === 'planejamento' && <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
       {dialogs}
@@ -388,7 +390,7 @@ function SendPicker({ name, onClose, onPick, options }: { name: string; month: s
 const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
 
 /** Cartão do diagnóstico (mesmo padrão dos outros): capa, situação, revisão, o que falta, 1 botão forte e o ⋯. */
-function DiagCard({ clientId, name, input, status, stage, document, error, loading, ready, approved, busy, onInfo, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
+function DiagCard({ clientId, input, status, stage, document, error, loading, ready, approved, busy, onInfo, onGenerate, onApprove, onOpen, onPdf, onSend, onDetails }: {
   clientId: string; name: string; input: DeckInput; status: ConsultRow['status']; stage: string | null; document: string | null; error: string | null
   loading: boolean; ready: boolean; approved: boolean; busy: boolean
   onInfo: () => void; onGenerate: () => void; onApprove: () => void; onOpen: () => void; onPdf: () => void; onSend: () => void; onDetails: () => void
@@ -423,18 +425,25 @@ function DiagCard({ clientId, name, input, status, stage, document, error, loadi
   else if (ready && !approved) primary = { label: 'Revisar', icon: <Presentation size={15} aria-hidden="true" />, href: diagReviewPath(clientId) }
   else if (ready) primary = { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: onOpen }
   return (
-    <DeckCard id="diagnostico" title="Diagnóstico"
-      cover={<DeckThumb slide={info?.cover ?? placeholderCover('Diagnóstico', name)} name={name} dim={!ready} />}
-      status={{ label: done && !approved ? 'Revisado' : chip.label, tone: chip.tone, pulse: status === 'gerando' }}
-      progress={p && !approved ? { pct: p.total ? (p.reviewed / p.total) * 100 : 0, label: `${p.reviewed}/${p.total} revisados` } : null}
-      missing={missing} primary={primary} details={ready ? onDetails : null}
-      menu={[
+    // Faixa compacta (17/11): situação em 1 linha, 1 botão e o resto no ⋯ (a apresentação em slides continua lá).
+    <div data-diagnostico className="flex items-center gap-3 rounded-2xl border border-line bg-surface px-3 py-2.5">
+      <Presentation size={16} aria-hidden="true" className="shrink-0 text-muted" />
+      <div className="min-w-0 flex-1">
+        <b className="block truncate text-[14px] font-semibold">Diagnóstico <span className={cn('ms-1 rounded-full px-1.5 py-0.5 text-[11px] font-semibold', TONE[chip.tone])}>{done && !approved ? 'Revisado' : chip.label}</span></b>
+        <span className="block truncate text-[12.5px] text-muted">{missing ?? (p && !approved ? `${p.reviewed}/${p.total} slides revisados` : approved ? 'Aprovado' : '')}</span>
+      </div>
+      {primary && (primary.href
+        ? <a href={primary.href} className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold no-underline hover:border-ink">{primary.label}</a>
+        : <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={primary.disabled} onClick={primary.onClick}>{primary.label}</Button>)}
+      <ActionMenu label="Mais opções do diagnóstico" actions={[
+        { label: 'Ver detalhes e fontes', icon: <Search size={15} aria-hidden="true" />, hidden: !ready, onClick: onDetails },
         { label: 'Revisar em slides', icon: <Presentation size={15} aria-hidden="true" />, href: diagReviewPath(clientId), hidden: !ready || !approved },
         { label: 'Ver prévia', icon: <Presentation size={15} aria-hidden="true" />, onClick: onOpen, hidden: !ready || approved },
         { label: 'Aprovar sem revisar', icon: <Check size={15} aria-hidden="true" />, hidden: status !== 'pronto', disabled: busy, onClick: onApprove },
         { label: 'Enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onSend },
         { label: 'Baixar PDF', icon: <Download size={15} aria-hidden="true" />, hidden: !ready, disabled: !approved, onClick: onPdf },
       ]} />
+    </div>
   )
 }
 

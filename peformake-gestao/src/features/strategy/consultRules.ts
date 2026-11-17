@@ -212,3 +212,25 @@ export function sortByNext(rows: ConsultRow[]): ConsultRow[] {
   const rank = (r: ConsultRow) => { const n = nextStep(r); return n.kind === 'dados' ? 1 : n.kind === 'link' ? 0 : n.kind === 'aba' && n.tab === 'perguntas' ? 2 : n.kind === 'enviar' ? 3 : n.kind === 'perguntas' ? 4 : n.kind === 'gerar' ? 5 : n.kind === 'aguardar' ? 6 : 7 }
   return [...rows].sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name, 'pt-BR'))
 }
+
+// ───────── Lista mínima (17/11): uma linha por cliente com a situação da Estratégia e UMA ação ─────────
+export type StrategyGo = 'briefing' | 'revisar' | 'abrir'
+export interface StrategyStep { go: StrategyGo; label: string; sub: string; state: PartState; rank: number }
+
+/** O passo da Estratégia do cliente: o que mostrar na linha e para onde o botão leva. */
+export function strategyStep(r: Pick<ConsultRow, 'monthly' | 'answers_new'>): StrategyStep {
+  const m = r.monthly
+  const mes = m ? mesOf(m.month).slice(0, 3) + '.' : ''
+  if (!m) return { go: 'briefing', label: 'Briefing', sub: 'Estratégia: fazer o briefing', state: 'falta', rank: 2 }
+  if (m.status === 'na_fila' || m.status === 'gerando') return { go: 'abrir', label: 'Ver', sub: `Estratégia de ${mes}: o agente está montando`, state: 'andando', rank: 3 }
+  if (m.status === 'erro' || m.status === 'limite') return { go: 'abrir', label: 'Gerar de novo', sub: `Estratégia de ${mes}: não deu certo`, state: 'falta', rank: 1 }
+  if (m.status === 'pronto' && m.pending > 0) return { go: 'revisar', label: `Revisar (${m.pending})`, sub: `Estratégia de ${mes}: ${m.pending} ${m.pending === 1 ? 'card' : 'cards'} a revisar`, state: 'revisar', rank: 0 }
+  if (m.status === 'pronto') return { go: 'abrir', label: 'Gerar PDF', sub: `Estratégia de ${mes}: revisada, falta o PDF`, state: 'revisar', rank: 1 }
+  return { go: 'abrir', label: 'Abrir', sub: `Estratégia de ${mes}: aprovada`, state: 'pronto', rank: 4 }
+}
+
+/** Ordem da lista mínima: primeiro o que pede você (revisar, respostas novas), depois briefing, por último o que está em dia. */
+export function sortByStrategy(rows: ConsultRow[]): ConsultRow[] {
+  const rank = (r: ConsultRow) => Math.min(strategyStep(r).rank, (r.answers_new ?? 0) > 0 ? 1 : 9)
+  return [...rows].sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name, 'pt-BR'))
+}

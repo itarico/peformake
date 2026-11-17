@@ -77,8 +77,13 @@ if (require.main === module) (async () => {
       const ctx = await b.newContext({ ...opts, colorScheme: scheme }); await ctx.route('**/*', mock);
       const p = await ctx.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(String(e.message).slice(0, 160)));
       const tag = `${dev}-${scheme}`;
+      await p.goto(`${BASE}/estrategia/consultoria`, { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
+      if (!(await p.locator('[data-passo]').count())) fails.push(`${tag}: lista sem o passo da estratégia`);
+      if (await sideScroll(p)) fails.push(`${tag}: lista com rolagem de lado`);
+      await p.screenshot({ path: `${OUT}/estrategia-lista-${tag}.png` });
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
       if (!(await p.locator('[data-estrategia-faixa]').count())) fails.push(`${tag}: cliente sem a faixa da estratégia`);
+      await p.screenshot({ path: `${OUT}/estrategia-cliente-${tag}.png` });
       await p.locator('[data-estrategia-faixa] button').click(); await p.waitForTimeout(700);
       if (!(await p.locator('[data-briefing]').count())) fails.push(`${tag}: faixa não abriu o briefing`);
       const pct = await p.locator('[role=meter]').getAttribute('aria-valuenow').catch(() => null);

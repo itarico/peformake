@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { answeredNotices, clientMessage, clientParts, consultLink, nextStep, nicheLinks, planReviewPath, readyNotices, rowAction, sortByNext, sortRows, statusChip, waLink, type ConsultRow } from './consultRules'
+import { answeredNotices, clientMessage, clientParts, consultLink, nextStep, nicheLinks, planReviewPath, readyNotices, rowAction, sortByNext, sortByStrategy, sortRows, statusChip, strategyStep, waLink, type ConsultRow } from './consultRules'
 import { deckHtml, deckSlideCount } from './consultDeck'
 import { effortData, funnelData, positioningData, presenceData, ratingsData } from './consultCharts'
 
@@ -144,5 +144,20 @@ describe('Estratégia: uma linha por cliente', () => {
   })
   it('link da revisão do plano já na área', () => {
     expect(planReviewPath('c1', '2026-12-01', 'trafego')).toBe('/revisao/plano/c1/2026-12?area=trafego')
+  })
+})
+
+describe('lista mínima da estratégia', () => {
+  const base = { answers_new: 0 }
+  it('um passo por situação', () => {
+    expect(strategyStep({ ...base, monthly: null }).go).toBe('briefing')
+    expect(strategyStep({ ...base, monthly: { month: '2026-12-01', status: 'pronto', finished_at: null, pending: 3, suggestions: 0 } })).toMatchObject({ go: 'revisar', label: 'Revisar (3)' })
+    expect(strategyStep({ ...base, monthly: { month: '2026-12-01', status: 'gerando', finished_at: null, pending: 0, suggestions: 0 } }).state).toBe('andando')
+    expect(strategyStep({ ...base, monthly: { month: '2026-12-01', status: 'aprovado', finished_at: null, pending: 0, suggestions: 0 } }).label).toBe('Abrir')
+  })
+  it('revisar primeiro, aprovada por último', () => {
+    const r = (name: string, monthly: unknown, answers_new = 0) => ({ client_id: name, name, monthly, answers_new }) as unknown as ConsultRow
+    const out = sortByStrategy([r('A', { month: '2026-12-01', status: 'aprovado', pending: 0 }), r('B', null), r('C', { month: '2026-12-01', status: 'pronto', pending: 2 }), r('D', null, 2)])
+    expect(out.map((x) => x.name)).toEqual(['C', 'D', 'B', 'A'])
   })
 })
