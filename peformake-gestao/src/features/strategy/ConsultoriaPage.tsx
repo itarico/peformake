@@ -96,7 +96,7 @@ export function ConsultoriaPage() {
                       {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
                     </span>
                     {/* Sem ícones coloridos por etapa (Italo, 18/11: poluíam). Só a situação em palavras, neutra. */}
-                    <span data-situacao className="truncate text-[12.5px] text-muted">{(r.monthly?.month ?? '').slice(0, 7) >= targetMonth() || !r.monthly ? prog.text : 'Estratégia do próximo mês: fazer o briefing'}</span>
+                    <span data-situacao className="truncate text-[12.5px] text-muted">{((r.monthly?.month ?? '').slice(0, 7) >= targetMonth() || !r.monthly ? prog.text : 'Próximo mês: fazer o briefing').replace(/^\w/, (x) => x.toUpperCase())}</span>
                   </span>
                 </button>
                 {step.go !== 'briefing' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px] max-md:hidden" onClick={() => go(r, null)}>Briefing</Button>}
