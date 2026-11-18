@@ -60,6 +60,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-18 · Motor de roteiro (estudo + pipeline) e Estratégia em modo leitura (nuvem)
+- NO AR: Estratégia em modo leitura (padrão PDF da Rosanne), sem ícones vermelhos na lista, Baixar PDF aprova o que está no PDF, Editar/Refazer/Tirar do PDF por item (commit a63ab5d, publicado).
+- Pedido do Italo: proibido roteiro simples. Estudo e motor em docs/: ESTUDO-ROTEIRO-AUDIOVISUAL.md (MDD como espinha, persona, dossiê, autoridades, formatos/UGC, humor, identidade, algoritmos, neuromarketing), MOTOR-ROTEIRO.md (pipeline de especialistas, portão de conhecimento, interrogatório, notas), PROMPT-ROTEIRO-MASTER.md, RADAR-TENDENCIAS.md, TESTE-ROTEIROS-SN.md. Material do PC em video-tools/estudos-perfis/ (2.078 arquivos).
+- FALTA (container reiniciando sem parar; fazer em chat novo): mix como orientação; sistema escolhe as ideias; banca única com 4 notas (criativa, fidelidade, autenticidade, conhecimento); card enxuto; prompt mestre modular + atualizar agent_instructions; conjunto de ouro (Rosanne + Colégio Militar); completar os 3 roteiros de teste da SN. Italo precisa pôr os conectores Supabase e Firecrawl na tarefa "Fila da estratégia (cards)".
+
 ## 2026-11-17 · SN: vídeos com a fala da Sandra + Black do biodigestor, caixa d'água e entrevista (nuvem)
 - Os 12 cards de Vídeos (dez/2026) ganharam roteiro cena a cena com a FALA completa da Sandra e outras ideias com fala (Italo: "não tinha a fala dela"); referência, funil e filmar mantidos (update merge em data; strategy_import_card apaga campos não enviados: não usar para mudança parcial).
 - Novos cards: Black do biodigestor (preço/condição/data entre colchetes, a confirmar), Caixa d'água: qual tamanho eu preciso?, Entrevista com a Sandra (14 perguntas: história + briefing de dezembro).
