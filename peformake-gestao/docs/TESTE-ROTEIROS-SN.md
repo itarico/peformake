@@ -1,60 +1,134 @@
-# Teste do motor: 3 roteiros para a SN Distribuidora (dez/2026)
+# Teste do motor: 3 roteiros para a SN Distribuidora (dez/2026), com o pipeline rodando
 
-18/11/2026. Teste de `MOTOR-ROTEIRO.md`. **Não está no banco e não substitui os cards existentes**: é para o Italo
-comparar com os 15 cards de dezembro. Dados entre colchetes = confirmar com a SN.
+18/11/2026. Teste de `PROMPT-ROTEIRO-MASTER.md` / `MOTOR-ROTEIRO.md`. **Não está no banco e não substitui os cards
+existentes**: é para o Italo comparar com os 15 cards de dezembro. [a confirmar] = dado que a SN precisa confirmar.
 
-## Leitura do cliente (A)
-| # | Leitura | Fonte |
+---
+
+## ETAPA 0 · Dossiê da SN (com fonte)
+
+**O que o sistema tem (consultado em 18/11):** briefing e briefing de dezembro completos; nenhuma pergunta respondida;
+nenhuma anotação de reunião aberta; nenhum direcionamento; sem voz de marca (`client_brand_voice`) nem guia; diagnóstico
+(`consult_docs`) com **erro** ("créditos do Firecrawl esgotados"); sem conta de anúncio; sem rede social conectada; sem
+WhatsApp da SN no sistema (zero palavras do cliente final); 4 artes de social em aprovação ("Veja como funciona um
+biodigestor", "Aqui você encontra materiais", "Sua obra merece produtos hidráulicos que duram", "15 de novembro");
+nenhuma recusa registrada; 15 cards de vídeo de dezembro (o resultado ruim). O estudo do mês (`tools/estudo-mes/sn.js`)
+existe fora do banco.
+
+| Item | O que sabemos | Fonte |
 |---|---|---|
-| 1 | Distribuidora/atacado de material hidráulico (Av. Recife, 5536, Estância). Venda por cotação: lista no WhatsApp, telefone, site; entrega na obra; consultor pode visitar a obra. | `briefing.capacidade`, `briefing.diferenciais`, `clients.description` |
-| 2 | **Público principal: construtoras e engenheiros** (compra grande, querem preço, prazo e nota). Comitê: engenheiro especifica, suprimentos compra, mestre recebe e cobra, dono paga. Encanador/mestre indica; consumidor final só entra pela mão do profissional. | `briefing.publico` (público 1), `briefing_do_mes.ofertas` (3: "cotação completa de hidráulica Tigre para construtoras"), estudo do mês `sn.js` ("vende para quem constrói"), pedido do Italo |
-| 3 | Oferta: **Manda a lista da obra** (a SN confere o que tem, o prazo e o que costuma faltar). Dezembro: pedido programado para a volta das férias coletivas [datas a confirmar]. | `sn.js` (ofertas), `briefing_do_mes.ofertas` |
-| 4 | Objeções: "cotei em 3 lugares e fecho no menor preço"; "distribuidora é tudo igual"; "e se faltar item / atrasar?" (suposição: não há perguntas do mês respondidas) | `sn.js` (sem briga de preço; prazo), `faltou_no_briefing` |
-| 5 | Diferenciais com prova: **distribuidora oficial Tigre**; desde 2012 (começou como Só Hidráulica); Tigre, Amanco Wavin, Fortlev, Docol, Thebe; estoque e centro de distribuição; 8h–18h sem fechar no almoço; **forneceu toda a tubulação Tigre, o sistema hidráulico e o biodigestor de uma obra em Maria Farinha**. | `briefing.diferenciais` |
-| 6 | Voz: profissional para engenheiro e construtora, simples para o pedreiro; fala de prazo, especificação e economia. Proibidos: preço sem confirmar, prazo exato em post, citar concorrente, marca que não revende, produto "a confirmar". | `clients.brand_style.voz`, `briefing.proibidos` |
-| 7 | Sandra é o rosto (vídeos com ela rendem 28 e 21 curtidas × 12 das artes). Grava: Ellcazo na diária; equipe da SN no celular. | `briefing.quem_grava`, banco `servicos-b2b.md` |
+| Negócio | Distribuidora de varejo **e atacado** de materiais de construção, foco hidráulico; venda por cotação (WhatsApp, telefone, formulário, consultor que visita a obra) e entrega | site (descrição e "promover uma visita de nossos consultores"), briefing.capacidade |
+| História | Fundada em 2012 como Só Hidráulica Distribuidora; hoje SN | portfólio p.2, site, briefing |
+| Missão e valores | "Atuar com excelência no mercado da construção civil…"; valores: respeito à individualidade, crescer juntos, comprometimento com o cliente, **fazer acontecer**, vender bem e sempre, valorizar quem faz a empresa | portfólio p.3 |
+| Produtos | Linha predial Tigre (água fria/quente: Aquatherm, PPR, CPVC, PEX; esgoto; pluvial; incêndio; gás/elétrica), linha infra (drenagem, poços); biodigestores (Tecnipar, Fortlev, Acqualimp: "dispensa caminhão limpa-fossa", explica as 4 etapas); reservatórios e cisternas (Fortlev, Acqualimp, Resinort, Bakof Tec); adesivos e vedação (Pulvitec, Firmex); metais Docol; motobombas Schneider e Thebe; tintas Eucatex; PEAD ADS Tigre; elétricos em PVC | portfólio p.4–13 |
+| Marcas | Tigre, ADS Tigre, Docol, Tecnipar, Amanco, Firmex, Acqualimp, Fortlev, Pulvitec, Thebe, Eucatex, Plastilit, Schneider, Siemens, Resinort, Bakof Tec | portfólio p.4 |
+| Selo | **"Distribuidora autorizada"** no portfólio (página dos biodigestores); briefing diz "**oficial** Tigre" | portfólio p.6 × briefing → **[a confirmar a expressão certa]** |
+| Preços | nenhum | lacuna |
+| Horário | seg–sex 8h–18h sem fechar no almoço (sábado [a confirmar]) | briefing |
+| Local e área | Av. Recife, 5536 (galpão), Estância, Recife; atende o estado e Noronha | site; estudo do mês |
+| Contato | WhatsApp (81) 98818-8000 e fixo (81) 3446-9009 no site; no portfólio o ícone de WhatsApp está ao lado do 93446-9009 | site × portfólio → **conferir antes de publicar** |
+| Equipe | Sandra é o rosto (gestora); vendas/balcão, consultor, entregador [a confirmar quem topa aparecer] | briefing.quem_aparece |
+| Prova | forneceu toda a tubulação Tigre, o sistema hidráulico e o biodigestor de uma obra em Maria Farinha | briefing.diferenciais |
+| Reputação | Google Meu Negócio: não foi possível ler as avaliações (lacuna); página antiga do Facebook (Só Hidráulica): 100 % recomendam (5 avaliações); listada no ObraMaestra | busca web |
+| Comunicação atual | 5.480 seguidores; 12–28 curtidas por post; vídeos com a Sandra (28 e 21) rendem mais que artes (12); recado "8h às 18h sem fechar no almoço" foi o mais curtido; artes genéricas ("Aqui você encontra materiais") | estudo do mês, `content_items` |
+| Dono × cliente | **O dono se vê** como fornecedor sério para "grandes construções ou pequenas reformas", com equipe qualificada e "fazer acontecer". **O mercado vê** (pela comunicação): mais uma loja com arte de produto e "aqui você encontra". **Distância = pauta:** mostrar o "fazer acontecer" (a lista conferida, o caminhão saindo, a obra entregue) | portfólio × Instagram |
 
-**Tese:** a SN não vende peça, vende **obra que não para**: a lista chega, é conferida por quem já viu muita obra, e
-volta completa.
+**Mapa dor → conteúdo → formato** (dores do estudo do mês, já que o diagnóstico do sistema falhou):
+| Dor/fraqueza | Conteúdo que resolve | Formato |
+|---|---|---|
+| Ninguém sabe por que comprar da SN e não do home center | o método (lista conferida, consultor, marca especificada) | institucional cinemático + POV do pedido |
+| Comprador decide por menor preço linha a linha | custo da obra parada × preço da peça | talking head de objeção |
+| Perfil com arte genérica, pouca gente | rosto e humor de ofício que profissional compartilha | esquete / série |
+| Não se conta pedido vindo do Instagram | CTA único com palavra e etiqueta no WhatsApp | pós-vídeo |
+| Dezembro: obra para nas férias coletivas | pedido programado de janeiro | vídeo de oferta |
 
-**Mix proposto para o mês (só os 3 do teste em negrito):** **apresentar (cinemático)** · **objeção (institucional
-falado)** · **comunidade (esquete)** · prova (depoimento de engenheiro na obra) · método (POV da lista ao caminhão,
-celular) · oferta (pedido programado de janeiro, talking head) · história (entrevista com a Sandra, 3 cortes).
-Linguagens: 7 vídeos, 7 linguagens diferentes; 1 cinemático Ellcazo; 1 de celular.
+### Ficha de identidade audiovisual da SN (deduzida; confirmar)
+- **Arquétipo:** Cuidador (garante que nada falte) + Cara Comum (gente de obra, sem pose). Secundário: Sábio técnico.
+- **Propósito:** obra que não para. **Posicionamento:** para quem constrói em PE, a distribuidora que confere a lista
+  antes de faltar (não a do menor preço do tijolo). **Promessa:** "manda a lista; a gente confere".
+- **Tom (1–5):** informal 3 · divertido 2–3 (humor de ofício, nunca deboche) · técnico 3 (técnico para engenheiro,
+  simples para o pedreiro) · entusiasmo 2 (calmo, firme) · irreverência 2.
+- **Vocabulário que usa:** lista, cotação, obra, etapa, prazo certinho, bitola, especificado, Tigre original, manda no
+  WhatsApp, "Gente" (no social). **Proibidas:** "agência", "o menor preço", "pronta-entrega" garantida, prazo exato,
+  nome de concorrente, produto "a confirmar".
+- **Bordões possíveis:** "Antes de faltar, não depois." · "Manda a lista do jeito que estiver." [testar]
+- **Rosto:** Sandra (calma, direta, firme); vendedor técnico; mestres e engenheiros clientes (com autorização).
+- **Visual em vídeo:** amarelo SN (#FEB039), azul água (#2EADE4), azul profundo (#12324A); Sora/Manrope nos textos;
+  cenários que provam (galpão, corredor de tubos, caminhão, obra); luz natural do galpão e da obra; ritmo médio;
+  trilha acústica/percussiva leve; assinatura sonora: caminhão saindo/porta do galpão; fecho com logo discreto.
+
+## ETAPA 0b · Portão de conhecimento
+Negócio 9 · produtos 8 · preços 1 · público/quem decide 6 · dores 6 · voz da marca e do dono 5 · o que o público diz
+2 · equipe/quem aparece 4 · restrições 7 · performance 3 · calendário 7 → **média 5,3 (abaixo de 7)**.
+**Consequência (como o motor manda):** os 3 roteiros abaixo saem como **pré-roteiros de validação**, com lacunas
+marcadas; não viram card final antes das respostas. **Perguntas para o pacote do mês** (estilo The Mom Test):
+1. Conta a última vez que uma obra de cliente parou por falta de um item. Qual item, quanto tempo, o que vocês fizeram?
+2. Quando uma lista chega, o que a equipe confere antes de separar? O que mais costuma faltar nas listas?
+3. A SN é "distribuidora oficial" ou "autorizada" Tigre? Qual expressão podemos usar?
+4. Qual o WhatsApp de vendas certo para os vídeos (98818-8000 ou 93446-9009)?
+5. Quem compra mais hoje: construtora, engenheiro autônomo, mestre/encanador ou quem reforma? Quem decide nas construtoras?
+6. O que vocês ouvem quando perdem uma venda? ("achei mais barato", "demora", outra?)
+7. Quem da equipe topa aparecer? Algum cliente engenheiro/mestre topa gravar?
+8. Podemos filmar a obra de Maria Farinha (ou outra obra atual) e o caminhão saindo? Qual o horário da separação?
+
+## ETAPA 1 · Estrategista
+- **Repertório (haste):** abastecer obra de hidráulica sem faltar. Peças: Maria Farinha (caso), 2012/Só Hidráulica
+  (origem), "fazer acontecer" (valor), galpão e caminhão (bastidor), lista conferida (método) [detalhes a confirmar].
+- **Eixo:** "Obra não para por falta de peça quando o fornecedor lê a lista como quem já viu obra parar." Falseável
+  (há quem defenda "compro onde é mais barato e pronto"). Inimigo-ideia: **a cotação no automático** (comparar linha
+  por linha e descobrir a falta na obra). Não somos: o menor preço do tijolo.
+- **Personas** (HIPÓTESE, sem palavras reais do público no sistema; fonte: briefing, estudo do mês):
+  1. **Engenheiro de obra / residente (principal):** 28–45 anos, vive de cronograma; dor: etapa atrasada e equipe
+     parada; medo: material errado ou fora da especificação; diz "especificado", "cronograma", "medição"; para o
+     scroll com problema de obra real e número; "isso sou eu": "o pedreiro chega às 7 e o material não chegou";
+     consome Reels, YouTube técnico, LinkedIn; nível de consciência 3 (conhece distribuidoras, não conhece a SN).
+  2. **Comprador/suprimentos de construtora:** compara cotações em planilha; dor: cotação incompleta e retrabalho;
+     objeção: preço; decide junto com o engenheiro; nível 3–4.
+  3. **Mestre de obras / encanador:** escreve a lista na correria, indica onde comprar; fala "cano", "joelho",
+     "aquele do banheiro", manda áudio; para com humor de canteiro; nível 2–3.
+  4. **Quem reforma:** entra pela mão do profissional (no máximo 1 vídeo).
+- **Tese do mês:** a SN não vende peça, vende **obra que não para**.
+- **Mix (7 vagas):** apresentar (cinemático, Ellcazo, perene) · objeção (institucional falado, perene) · comunidade
+  (esquete de humor, perene/série) · prova (depoimento de engenheiro na obra) · método (POV da lista ao caminhão,
+  celular) · oferta (pedido programado de janeiro, **do momento**, validade até [19/12]) · história (entrevista com a
+  Sandra, 3 cortes). 7 linguagens diferentes; 4 construção / 3 conversão.
+- **Performance:** sem anúncios; nenhum criativo para substituir.
+
+## ETAPA 2 · Curador (resumo; detalhes em cada roteiro)
+Escolhidas: Volvo Trucks Live Tests (fora do nicho, global) 8,3 · Avis "We try harder" (fora do nicho, estrutura de
+objeção) 8,7 · Mavic/Techfrio paródia de gênero (regional brasileira) 7,7. Descartadas: "Nomes estranhos que os
+clientes pedem" (130 mil, leigo) 5,3 · Tigre história da marca 5,7 · "Mostrando as peças da loja" 5,0 · Kairoz
+leigo×especialista 6,7.
+
+## ETAPA 3 · Ideação (12 loglines; 3 escolhidas para o teste)
+1. **Antes da obra começar** (o dia da SN visto pela obra que não parou) ✔ · 2. **"Vocês não foram os mais baratos"**
+(a Sandra admite e muda o critério) ✔ · 3. **Arqueologia da lista** (a equipe decifra o papel de pão como cientistas)
+✔ · 4. Cena com relógio: sexta 6h40, a obra precisa do biodigestor às 8h · 5. O engenheiro conta por que voltou ·
+6. A lista ao vivo: do WhatsApp ao caminhão em POV · 7. Mito × verdade da bitola · 8. Janeiro começa em dezembro
+(pedido programado) · 9. Desafio: achar o item que falta em 30 s · 10. "Tradutor de obra" (apelido → especificação) ·
+11. Uma peça de R$ X que parou a obra [preço a confirmar] · 12. Timelapse da obra de Maria Farinha.
 
 ---
 
 ## Roteiro 1 · "Antes da obra começar" (cinemático / institucional)
 
-| Ficha | |
+**Por que existe:** quem compra para obra ainda não sabe por que escolher a SN; este vídeo mostra o método em vez de
+dizer "qualidade". **Intenção:** alívio e confiança → o engenheiro manda a lista da próxima etapa.
+
+| Etapa | Saída (resumo) |
 |---|---|
-| Papel | apresentar / autoridade (vídeo fixado no perfil; versão 16:9 para site e YouTube) |
-| Linguagem | curta cinematográfico (E19) com voz off da Sandra, fechando nela na câmera |
-| Alvo | engenheiro e comprador de construtora que ainda não conhece a SN |
-| Nasceu de | `briefing.diferenciais` (oficial Tigre; desde 2012; Maria Farinha); `briefing.capacidade` (estoque, entrega, 8h–18h); tese "obra que não para" (`sn.js`); `quem_aparece` (Sandra) |
-| Frase-alma | O engenheiro deve SENTIR alívio ("alguém pensa na minha lista como eu penso") e ACREDITAR que a SN é o fornecedor que evita a obra parada. |
-| Objetivo / ação | autoridade / mandar a lista da próxima etapa |
-| Duração | ≈ 70 s (≈ 150 palavras ÷ 2,5 + respiros) |
+| Estrategista | papel: apresentar/autoridade · objetivo: autoridade · fase 3 · persona: engenheiro de obra · CEP: "a próxima etapa vai começar" · linguagem: curta cinemático (E19) + voz off · perene · fixado no perfil, versão 16:9 para site/YouTube/LinkedIn |
+| Curador | Volvo Trucks Live Tests / "Epic Split" (youtube.com/watch?v=M7FIvfx5J10): B2B, uma característica por filme, mostrada de verdade, "coração e cérebro"; 100 mi+ views e ~8 mi compartilhamentos (Contagious, 2014). Nota (2×4 + 5 + 5 + 3 + 4) ÷ 3 = **8,3**. Por que funciona aqui: comprador B2B com comitê; a "característica" vira a lista conferida. Engenharia reversa: imagem que intriga → uma ideia → demonstração real → trilha → assinatura curta |
+| Copywriter | nível 3 · promessa: "sua obra não espera por uma peça" · ganchos (3–5 abaixo) · FAB: lista conferida (característica) → pergunta pelo que falta (vantagem) → equipe não para (benefício) · CTA suave-direto: "me manda a lista; eu confiro antes de faltar" |
+| Roteirista | logline: "a distribuidora que lê a lista como quem já viu obra parar" · premissa: lista conferida → obra sem parada · frase-alma: SENTIR alívio, ACREDITAR que a SN evita a obra parada · Pixar 2+2 (não dizer "somos os melhores") · callback: a bancada vazia da abertura volta com a peça instalada |
+| Diretor | Ellcazo; galpão no início da separação [horário a confirmar], caminhão, obra autorizada, Sandra na câmera; letterbox no 9:16 |
+| Editor | cortes lentos, 4 s de respiro sem fala, trilha que sobe no respiro, legenda pequena, fecho com logo discreto |
+| Interrogatório (resumo) | Por que voz off? a Sandra fica natural e a imagem prova. Por que abrir na obra e não no galpão? o problema é do engenheiro, não da SN (StoryBrand). Por que citar Maria Farinha? única prova real no dossiê. Se tirar "por isso a SN é distribuidora oficial Tigre"? perde autoridade, **mas a expressão está a confirmar** → fica entre colchetes |
 
-**Referência escolhida:** Volvo Trucks, Live Tests / "The Epic Split" (https://www.youtube.com/watch?v=M7FIvfx5J10).
-Série B2B que mostra **uma característica por filme, de verdade**, falando com "coração e cérebro" de quem compra e de
-quem influencia: mais de 100 milhões de views e quase 8 milhões de compartilhamentos (Contagious, 2014).
-Nota: aderência 4 (comprador B2B de equipamento de trabalho, comitê de compra) · estrutura 5 (uma característica,
-demonstrada) · prova 5 · viabilidade 3 (sem acrobacia: a "característica" vira a lista conferida, filmada no galpão e
-na obra) · originalidade 4 → **(8 + 5 + 5 + 3 + 4) ÷ 3 = 8,3**. O que adaptamos: a gramática (uma ideia só, mostrada
-com imagem real e trilha, sem enumerar produtos), não a cena.
-Descartadas: Tigre contando a história da marca (`/reel/DdB7lSvCv8j`) → é a história da Tigre, não da SN; aderência 3,
-originalidade 1, nota 5,7. "Mostrando as peças da loja" (23,3 mil, TikTok @hoffmannmtc) → vitrine sem pessoa nem tese;
-nota 5,0.
-
-**Ganchos (3):**
-1. (imagem) Close de um joelho de PVC sozinho numa bancada de obra vazia, poeira no contraluz. Texto: "Toda obra tem um
-   dia em que tudo para por causa disso."
-2. "O pedreiro chega às sete. O material tem que ter chegado antes."
-3. "Eu sou a Sandra. O meu trabalho é que a sua obra nunca espere por uma peça."
-
-**Arco:** a obra para por uma peça pequena → quem é a Sandra e o que ela faz → o método (ler a lista como quem já viu
-obra parar) → a prova (Tigre oficial, Maria Farinha) → respiro na obra andando → convite.
+**Ganchos:** 1) (imagem) joelho de PVC sozinho numa bancada de obra vazia, poeira no contraluz; texto "Toda obra tem um
+dia em que tudo para por causa disso." 2) "O pedreiro chega às sete. O material tem que ter chegado antes." 3) "Eu sou
+a Sandra. O meu trabalho é que a sua obra nunca espere por uma peça." **Para anúncio:** 4) "Engenheiro: quantas vezes
+a etapa atrasou por uma peça?" 5) "Esta pecinha já parou obra inteira."
 
 **Roteiro**
 
@@ -65,20 +139,19 @@ registro que ninguém lembrou de pedir. A equipe chega, olha, e espera."
 
 CORTE SECO PARA O GALPÃO DA SN · LUZES ACENDENDO UMA A UMA · TRILHA ENTRA BAIXA · SANDRA DE COSTAS, CELULAR NA MÃO COM UMA LISTA NO WHATSAPP
 
-SANDRA (voz off): "Eu sou a Sandra, da SN Distribuidora. Faz quase quinze anos que o meu trabalho é fazer esse dia não
-chegar."
+SANDRA (voz off): "Eu sou a Sandra, da SN Distribuidora. Desde 2012, quando a gente ainda era Só Hidráulica, o meu
+trabalho é fazer esse dia não chegar."
 
 DETALHES: A LISTA IMPRESSA NA MESA · A CANETA CIRCULANDO UM ITEM · MÃOS SEPARANDO TUBOS TIGRE · A ETIQUETA DE BITOLA EM CLOSE
 
-SANDRA (voz off): "Quando a lista de uma obra chega aqui, a gente não separa só o que está escrito. A gente lê como quem
-já viu muita obra parar: confere a bitola, confere a marca que o engenheiro especificou, e pergunta pelo que costuma
-ficar de fora. Por isso a SN é distribuidora oficial Tigre. Quem especifica Tigre não quer surpresa, e a surpresa não
-pode vir da gente."
+SANDRA (voz off): "Quando a lista de uma obra chega aqui, a gente não separa só o que está escrito. A gente lê como
+quem já viu muita obra parar: confere a bitola, confere a marca que o engenheiro especificou, e pergunta pelo que
+costuma ficar de fora. Quem especifica Tigre não quer surpresa. E a surpresa não pode vir da gente."
 
 CAMINHÃO CARREGADO SAINDO DO PORTÃO DA AV. RECIFE · PLANO ABERTO · CORTE PARA A OBRA [MARIA FARINHA OU OBRA ATUAL DE CLIENTE, COM AUTORIZAÇÃO] · MESTRE CONFERINDO A ENTREGA
 
-SANDRA (voz off): "Em Maria Farinha foi assim: a tubulação inteira, o sistema hidráulico e o biodigestor saíram daqui.
-[Sandra: um detalhe real dessa obra, em uma frase, ex.: o que o engenheiro disse quando tudo chegou.]"
+SANDRA (voz off): "Em Maria Farinha foi assim: a tubulação inteira, o sistema hidráulico e o biodigestor saíram
+daqui. [Sandra: um detalhe real dessa obra, em uma frase.]"
 
 RESPIRO · 4 SEGUNDOS SEM FALA · A OBRA ANDANDO: ENCANADOR ENCAIXANDO O TUBO, SERRA, GENTE TRABALHANDO · TRILHA SOBE
 
@@ -86,52 +159,45 @@ CORTE PARA A SANDRA NO GALPÃO, OLHANDO PARA A CÂMERA · PLANO MÉDIO · LUZ DE
 
 SANDRA: "Se a sua obra tem uma próxima etapa, me manda a lista. Eu confiro antes de faltar."
 
-FECHO · VOLTA À BANCADA DA ABERTURA, AGORA COM A OBRA EM ANDAMENTO AO FUNDO · O JOELHO JÁ INSTALADO · LOGO SN DISCRETO E "DISTRIBUIDORA OFICIAL TIGRE"
+FECHO · VOLTA À BANCADA DA ABERTURA, AGORA COM A OBRA EM ANDAMENTO AO FUNDO · O JOELHO JÁ INSTALADO · LOGO SN DISCRETO E "[DISTRIBUIDORA OFICIAL/AUTORIZADA] TIGRE"
 
-**Filmar:** Ellcazo, diária. Galpão no começo do dia [horário real da separação], 40 min; caminhão saindo, 15 min; obra
-autorizada, 1 h (planos de detalhe e do mestre recebendo); Sandra na câmera, 15 min (3 takes); voz off da Sandra
-gravada à parte em sala silenciosa, lapela, lendo em blocos e depois falando com as próprias palavras (fica a versão
-mais natural). Letterbox dentro do 9:16, cor quente e contida, sem grafismo além do fecho.
-**Outras ideias (mesmo material):** 1) corte de 20 s só com a abertura + a frase "o pedreiro chega às sete; o material
-tem que ter chegado antes"; 2) "Maria Farinha" como vídeo de prova com o engenheiro da obra; 3) os planos do galpão com
-o som ambiente para stories de "pedido saindo".
-**Suposição:** horário da separação, detalhe da obra de Maria Farinha e autorização da obra a confirmar.
-**Nota (E):** cliente 2 · papel 2 · gancho 2 · fala 2 · verdade 1,5 (depende de 2 dados a confirmar) = **9,5**.
+**Produção:** cola da Sandra (voz off por blocos): "dia em que a obra para" · "eu sou a Sandra, desde 2012" · "a gente
+lê a lista como quem já viu obra parar" · "Maria Farinha" · "me manda a lista". Derivados: corte de 20 s (abertura +
+"o pedreiro chega às 7"), anúncio de 15 s com ganchos 4/5, story com o caminhão saindo, versão 16:9. Publicação:
+capa "A obra não espera" + rosto da Sandra; 1ª linha "Distribuidora de material hidráulico em Recife: a gente confere
+a sua lista antes de faltar."; CTA nos comentários "Comenta LISTA que a gente te chama no WhatsApp"; pós-vídeo:
+resposta pronta pedindo a etapa e a lista; etiqueta "Instagram".
+**Marcas de autenticidade:** Sandra · 2012/Só Hidráulica · Maria Farinha · galpão da Av. Recife.
+**Notas:** aderência 9 · originalidade 9 · autenticidade 9 · gancho 8,5 · clareza 9 · narrativa 9 · viabilidade 8 ·
+conversão 8 · diversidade 9 → **criativa 8,7** · **fidelidade 8,5** (2 itens a confirmar: "oficial/autorizada" e
+detalhe de Maria Farinha; sobe para 10 com a resposta) · **cego 8,5** ("eu gravaria; o fecho é forte") · conhecimento
+5,3 → **pré-roteiro de validação**.
 
 ---
 
 ## Roteiro 2 · "Vocês não foram os mais baratos" (objeção B2B)
 
-| Ficha | |
+**Por que existe:** a objeção que mais trava construtora é preço linha a linha; o vídeo muda o critério de escolha.
+**Intenção:** sentir-se entendido e respeitado → mandar a lista para comparar.
+
+| Etapa | Saída (resumo) |
 |---|---|
-| Papel | objeção principal (preço × custo da obra) |
-| Linguagem | institucional falado (talking head documental, E2) com 1 cartela de pontuação (E16) |
-| Alvo | comprador de construtora e engenheiro que fecha pela planilha de menor preço |
-| Nasceu de | `sn.js` ("sem briga de preço: prazo certinho, a marca especificada e a lista conferida"); `briefing.publico` ("querem preço, prazo e nota"); `briefing.diferenciais` (oficial Tigre, desde 2012, consultor) |
-| Frase-alma | O comprador deve SENTIR que foi entendido e ACREDITAR que comparar lista completa é mais barato que comparar linha por linha. |
-| Objetivo / ação | tirar a objeção / mandar a lista da próxima etapa para comparar |
-| Duração | ≈ 45 s (≈ 140 palavras ÷ 3,1) |
+| Estrategista | papel: objeção · objetivo: converter · fase 3–4 · persona: comprador de construtora + engenheiro · linguagem: institucional falado documental (E2) + 1 cartela (E16) · perene |
+| Curador | Avis "We're number two. We try harder." (DDB, 1962): admitir a fraqueza verdadeira torna a promessa crível; saiu do prejuízo para o lucro em ~1 ano e a linha durou 50 anos. Nota (2×4 + 5 + 4 + 5 + 4) ÷ 3 = **8,7**. Junto: "ressalva honesta" do estudo da casa. Descartada: Kairoz (6,7) |
+| Copywriter | nível 3–4 · Voss: a objeção dita antes · reenquadrar (Sutherland: mudar a percepção do critério) · FAB: lista volta com o que tem + prazo + o que costuma faltar → compara completo → obra sem viagem extra · CTA convidativo sem pressão |
+| Roteirista | ABT: "e… mas… portanto" · admissão (pratfall) · prova · convite; Sandra se apresenta depois do gancho |
+| Diretor | Ellcazo, 30 min, mesa de conferência, 2 câmeras, lista real com dados borrados (LGPD) |
+| Editor | sem trilha no começo; cartela de 2 s; legenda; fecho seco |
+| Interrogatório (resumo) | Por que admitir que não é a mais barata? é verdade provável e desarma (Avis); [confirmar com a Sandra que ela topa dizer]. Por que "dois itens faltando" e não um número de custo? não há dado; o exemplo é condicional. Se tirar a cartela? perde a frase-resumo para quem vê sem som |
 
-**Referência escolhida:** Avis, "We're number two. We try harder." (DDB, 1962): a marca **admite a fraqueza verdadeira**
-e com isso torna crível a promessa; saiu do prejuízo para o lucro em cerca de um ano e a linha durou 50 anos. Junto, a
-"ressalva honesta" do estudo da casa (`estudo_narrativas.md` §4: os vídeos de maior autoridade admitem o limite).
-Nota: aderência 4 (negócio de serviço comparado por preço, comprador racional) · estrutura 5 · prova 4 · viabilidade
-5 (só a Sandra e uma mesa) · originalidade 4 → **(8 + 5 + 4 + 5 + 4) ÷ 3 = 8,7**.
-Descartada: "Kairo, por que o meu pede arrego?" (`/reel/DfSKE9JAIGe`, diálogo leigo × especialista, 11 mil curtidas) →
-estrutura boa, mas público de IA/B2C e a SN não tem um "leigo" crível para o comprador; aderência 2, nota 6,7.
-
-**Ganchos (3):**
-1. "Um engenheiro me disse: 'Sandra, eu cotei em três lugares e vocês não foram os mais baratos.' Às vezes não somos
-   mesmo."
-2. "A cotação mais barata da sua obra pode ser a mais cara. Eu explico em 30 segundos."
-3. (texto na tela) "Você compara lista de obra linha por linha?"
-
-**Arco:** a objeção dita em voz alta → admitir o que é verdade → trocar o critério (lista completa × linha por linha)
-→ o método da SN → prova → convite sem pressão.
+**Ganchos:** 1) "Um engenheiro me disse: 'Sandra, eu cotei em três lugares e vocês não foram os mais baratos.' Às vezes
+não somos mesmo." 2) "A cotação mais barata da sua obra pode ser a mais cara." 3) (texto) "Você compara lista de obra
+linha por linha?" **Anúncio:** 4) "Comprador de construtora: sua planilha mostra o que falta?" 5) "Preço por item ou
+obra entregue?"
 
 **Roteiro**
 
-SANDRA SENTADA À MESA DE CONFERÊNCIA DO GALPÃO · PLANO MÉDIO · UMA LISTA DE OBRA IMPRESSA E UMA CANETA NA MESA · SEM TRILHA
+SANDRA SENTADA À MESA DE CONFERÊNCIA DO GALPÃO · PLANO MÉDIO · UMA LISTA DE OBRA IMPRESSA E UMA CANETA · SEM TRILHA
 
 SANDRA: "Um engenheiro me disse uma vez: 'Sandra, eu cotei em três lugares e vocês não foram os mais baratos.' E às
 vezes a gente não é mesmo. Eu sou a Sandra, da SN Distribuidora, e eu prefiro te dizer isso do que fingir que não."
@@ -144,11 +210,10 @@ Isso não aparece na planilha. Mas a obra paga."
 
 CARTELA DE 2 SEGUNDOS, FUNDO AREIA, LETRA AZUL PROFUNDO: "LINHA POR LINHA × LISTA COMPLETA" · VOLTA AO PLANO MÉDIO
 
-SANDRA: "Por isso, quando a sua lista chega aqui, ela volta com três coisas: o que a gente tem, o prazo de cada item, e
-o que costuma faltar nessa etapa e não está escrito. Aí sim você compara. É o que a gente faz desde 2012, e é por isso
-que somos distribuidora oficial Tigre: quem especifica a marca não quer trocar na hora da compra."
+SANDRA: "Por isso, quando a sua lista chega aqui, ela volta com três coisas: o que a gente tem, o prazo de cada item,
+e o que costuma faltar nessa etapa e não está escrito. Aí sim você compara. É o que a gente faz desde 2012."
 
-[SANDRA: UM CASO REAL EM UMA FRASE, EX.: UMA LISTA QUE VOLTOU COM O ITEM QUE IA FALTAR APONTADO]
+[SANDRA: UM CASO REAL EM UMA FRASE: UMA LISTA QUE VOLTOU COM O ITEM QUE IA FALTAR APONTADO]
 
 CLOSE · ELA OLHA PARA A CÂMERA · TOM DE CONVITE
 
@@ -157,53 +222,36 @@ pelo menos a sua lista volta mais completa."
 
 FECHO · ELA DEVOLVE A LISTA DOBRADA PARA A MESA · CORTE SECO PARA O LOGO
 
-**Filmar:** Ellcazo, diária, 30 min. 2 câmeras (médio e close), lapela, mesa limpa com uma lista real (dados de
-cliente borrados), luz de janela. Sandra fala em blocos; cada bloco gravado 2–3 vezes; ela pode trocar palavras, o
-pensamento fica.
-**Outras ideias:** 1) "E se faltar item?" com o mesmo formato (a promessa é avisar antes, não "nunca faltar"); 2)
-versão de 15 s só com o gancho 1 + o convite; 3) carrossel "o que costuma faltar em cada etapa da hidráulica" para
-salvar.
-**Suposição:** o caso real da lista conferida vem da Sandra; nenhum número de custo foi inventado (o exemplo é
-condicional).
-**Nota (E):** cliente 2 · papel 2 · gancho 2 · fala 2 · verdade 1,5 (caso a confirmar) = **9,5**.
+**Produção:** cola: "engenheiro: não foram os mais baratos" · "linha por linha × completo" · "volta com 3 coisas" ·
+"o caso" · "compara depois". Derivados: anúncio 15 s (ganchos 4/5 + "volta com 3 coisas" + CTA), LinkedIn da Sandra,
+carrossel "o que costuma faltar em cada etapa". Publicação: capa "Não fomos os mais baratos"; 1ª linha "Cotação de
+material hidráulico para construtora: compare a lista completa, não linha por linha."; CTA "Comenta COMPARAR".
+**Marcas de autenticidade:** Sandra · método de conferência da SN · desde 2012 · [caso real].
+**Notas:** aderência 9,5 · originalidade 8,5 · autenticidade 8 (sobe com o caso real) · gancho 9 · clareza 9 ·
+narrativa 8,5 · viabilidade 9,5 · conversão 9 · diversidade 9 → **criativa 8,9** · **fidelidade 9** (o caso a
+confirmar; "três coisas" depende de a SN de fato informar prazo por item [confirmar]) · **cego 8,5** · pré-roteiro.
 
 ---
 
 ## Roteiro 3 · "Arqueologia da lista" (humor inteligente B2B)
 
-| Ficha | |
+**Por que existe:** profissional de obra compartilha humor de ofício; leva a SN a quem não segue e reforça a oferta
+"manda a lista do jeito que estiver". **Intenção:** riso de reconhecimento ("isso é a minha obra") → envio por DM e
+lista no WhatsApp.
+
+| Etapa | Saída (resumo) |
 |---|---|
-| Papel | comunidade / humor (alcance entre profissionais), reforçando a oferta "manda a lista do jeito que estiver" |
-| Linguagem | esquete com paródia de documentário de descoberta (E18 + H6), câmera séria |
-| Alvo | mestre de obras, encanador e engenheiro de obra (quem escreve a lista na correria) |
-| Nasceu de | `sn.js` (oferta "Manda a lista da obra"; Sandra confere e aponta o que falta); `briefing.publico` (profissionais "querem achar a peça certa e rápido"); referência do briefing de humor de balcão, trocada de leigo para obra |
-| Frase-alma | O profissional deve SENTIR "isso é a minha obra" e ACREDITAR que a SN entende a lista dele de qualquer jeito, e ainda acha o que falta. |
-| Objetivo / ação | compartilhamento entre pares / mandar a lista "do jeito que estiver" |
-| Duração | ≈ 45 s |
+| Estrategista | papel: comunidade/humor · objetivo: alcance + reforço da oferta · fase 2–3 · persona: mestre/encanador/engenheiro de obra · linguagem: esquete com paródia de documentário (E18 + H6) · perene, pode virar série |
+| Curador | Mavic/Techfrio "detetive/exorcismo" (instagram.com/reel/DbGdxziABsQ): paródia de gênero em que o produto vence o mal. Nota (2×3 + 5 + 3 + 4 + 5) ÷ 3 = **7,7**. Descartada: "Nomes estranhos que os clientes pedem" (130 mil, leigo, já virou o card S2): 5,3 |
+| Copywriter | nível 2–3 · CTA suave dentro da ficção ("manda a sua lista do jeito que ela estiver") |
+| Roteirista | premissa: lista de obra no papel de pão (verdade do público) → decifrada com seriedade de cientista (incongruência) → virada séria (decifrar é trabalho nosso + o item que falta) → tag. Violação benigna e inclusiva: o alvo é a situação; a frase séria diz que lista assim está certa |
+| Diretor | Ellcazo, 1 h; Sandra + vendedor + voz de narrador; jaleco, luva, lupa, pincel; papel de pão sujo de verdade; fundo escuro do estoque; campo/contracampo |
+| Editor | trilha de documentário que corta na virada; silêncio de 2 s antes do "registro de pressão"; legenda frase a frase |
+| Checagem de humor | engraçado para o mestre/engenheiro? sim (todo mundo já recebeu essa lista) · alvo = situação · termina no produto (decifrar e achar o que falta é o método da SN) · não envelhece (sem trend) · timing testado em voz alta → **humor 8,5** |
+| Interrogatório (resumo) | Por que papel de pão? imagem reconhecível de canteiro [confirmar com a equipe a "pior lista" real e usar a verdadeira]. Por que "adesivo pra soldar"? exemplo de item que falta [trocar pelo que a Sandra disser]. Se tirar a frase séria? vira piada sobre o cliente → nunca tirar |
 
-**Humor (checklist):** mecanismo-mãe H6 (paródia de gênero: documentário de arqueologia) + H12 (silêncio antes da
-resposta) + H14 (tag). Alvo da piada = **a situação** (lista escrita em pé, em cima do saco de cimento), não o
-profissional: no meio, a Sandra diz que lista assim está certa, obra é corrida, e decifrar é trabalho dela.
-Violação leve e inclusiva. O produto é o fim da piada: decifrar e achar o item que falta é o método da SN.
-
-**Referência escolhida:** Mavic para Techfrio, "detetive/exorcismo" (`https://www.instagram.com/reel/DbGdxziABsQ/`,
-59 s): paródia de gênero em que **o produto é o artefato que vence o mal** (o ar-condicionado é o crucifixo). Estudo
-completo em `video-tools/estilos/estudo_mavic.md` (campeões da Mavic de 2,1 mil a 28,5 mil curtidas; os desse cliente
-têm curtidas ocultas).
-Nota: aderência 3 (varejo local, mas a mecânica é de ofício e funciona com público envolvido) · estrutura 5 · prova 3
-(números da Mavic, não deste vídeo) · viabilidade 4 (2 pessoas da SN + 1 voz) · originalidade 5 → **(6 + 5 + 3 + 4 + 5)
-÷ 3 = 7,7**.
-Descartada: "Nomes estranhos que os clientes pedem" (TikTok @ipgeletricaehidra, 130 mil views) → humor de balcão com
-**leigo**; a SN quer construtora; e já virou o card S2. Aderência 1, originalidade 1: nota 5,3.
-
-**Ganchos (3):**
-1. (texto na tela) "Quando a lista da obra chega num papel de pão…"
-2. NARRADOR: "Avenida Recife, 5536. A equipe da SN acaba de encontrar mais um artefato."
-3. SANDRA (sussurrando, com lupa): "Lápis de carpinteiro. Escrito em pé."
-
-**Arco:** o "artefato" (lista no papel de pão) → a equipe decifra com seriedade de cientista (2 escaladas) → virada:
-a Sandra fala sério por 10 s (lista assim está certa; decifrar e achar o que falta é com a gente) → insert real →
-tag.
+**Ganchos:** 1) (texto) "Quando a lista da obra chega num papel de pão…" 2) NARRADOR: "Avenida Recife, 5536. A equipe
+da SN acaba de encontrar mais um artefato." 3) SANDRA (sussurrando, com lupa): "Lápis de carpinteiro. Escrito em pé."
 
 **Roteiro**
 
@@ -231,37 +279,45 @@ VIRADA · A TRILHA CORTA · A SANDRA TIRA A LUVA E FALA DIRETO PARA A CÂMERA, T
 
 SANDRA: "Brincadeira à parte: obra é corrida, e lista de obra é escrita assim mesmo. Tá certo. Decifrar é trabalho
 nosso. O que dá pra deduzir, a gente deduz; o que não dá, a gente pergunta antes de separar. E ainda avisa o que não
-está aí: nessa aqui faltou o adesivo pra soldar tudo isso."
+está aí: nessa aqui faltou [o item que mais falta, segundo a equipe]."
 
 INSERTS LIMPOS (TROCA DE REGISTRO): MÃOS SEPARANDO TUBOS TIGRE · A LISTA DIGITADA E CONFERIDA SAINDO NO WHATSAPP
 
-NARRADOR (voz normal): "SN Distribuidora. Distribuidora oficial Tigre. Manda a sua lista do jeito que ela estiver."
+NARRADOR (voz normal): "SN Distribuidora. Manda a sua lista do jeito que ela estiver."
 
 TAG (VOLTA AO DOCUMENTÁRIO, 4 SEGUNDOS) · O VENDEDOR, LUPA NA MÃO, APARECE COM OUTRO PAPEL
 
 VENDEDOR: "Sandra… chegou um guardanapo."
 SANDRA (cansada, feliz): "Traz o pincel."
 
-**Filmar:** Ellcazo, diária, 1 h. Sandra + 1 vendedor + 1 voz de narrador; jaleco/luva/lupa/pincel (figurino barato e
-assumido), papel de pão sujo de verdade (arte), lanterna e fundo escuro do estoque para a abertura; lapela nos dois;
-campo/contracampo; 2–3 takes por fala para achar o silêncio. Legenda pequena, frase a frase.
-**Outras ideias:** 1) série "Arqueologia da lista" com artefatos diferentes (áudio de 4 minutos com betoneira ao fundo,
-foto tremida, print de planilha cortada); 2) "Tradutor de obra": o mestre fala o apelido, a Sandra devolve a
-especificação técnica (para engenheiro); 3) comentário fixado: "mande a pior lista que você já recebeu" (gera
-conversa com profissionais).
-**Suposição:** "adesivo PVC faltando" é exemplo de item que costuma faltar; confirmar com a Sandra qual item mais falta
-de verdade e usar esse.
-**Nota (E):** cliente 2 · papel 2 · gancho 2 · fala 1,5 (esquete: fala curta por natureza; a virada séria carrega o
-pensamento) · verdade 2 = **9,5**.
+**Produção:** cola: falas curtas decoradas (esquete) + virada séria em tópicos ("obra é corrida" · "decifrar é com a
+gente" · "pergunta antes de separar" · "o que faltou"). Derivados: série "Arqueologia da lista" (áudio de 4 minutos com
+betoneira, foto tremida, print cortado); story pedindo "manda a pior lista que você já recebeu"; corte de 15 s só da
+virada para anúncio. Publicação: capa "Lista de obra no papel de pão"; 1ª linha "Toda obra tem uma lista assim. Em
+Recife, a SN decifra."; CTA nos comentários "Manda pro mestre que escreve assim 😂" (envio por DM).
+**Marcas de autenticidade:** Av. Recife 5536 · Sandra e o vendedor · o método (perguntar antes de separar) · [a lista
+real da equipe].
+**Notas:** aderência 8,5 · originalidade 9 · autenticidade 8 · gancho 9 · clareza 8 (esquete) · narrativa 9 ·
+viabilidade 8,5 · conversão 8 · diversidade 9,5 · humor 8,5 → **criativa 8,7** · **fidelidade 9** (item que falta e
+lista real a confirmar) · **cego 9** ("mandaria para um mestre de obras") · pré-roteiro.
 
 ---
 
-## Comparação rápida com os cards atuais
+## Plano da diária (os 3 juntos, Ellcazo, ~4 h) [horários a confirmar]
+1. Início da separação (luz da manhã): galpão e detalhes da lista (R1), 40 min · 2. Mesa de conferência: objeção
+(R2), 30 min · 3. Estoque com fundo escuro: esquete (R3), 60 min · 4. Caminhão saindo (R1), 15 min · 5. Sandra na
+câmera do R1, 15 min · 6. Voz off da Sandra (R1) em sala silenciosa, 20 min · 7. Obra autorizada (R1), 60 min
+(deslocamento à parte). Precisam estar: Sandra (todo o período), 1 vendedor (bloco 3), quem lê a voz do narrador,
+motorista e caminhão (bloco 4). Autorizações de imagem: equipe e obra.
+
+## Comparação com os cards atuais
 | | Cards de dezembro | Teste |
 |---|---|---|
+| Leitura do cliente | nenhuma; o portão nem existia | dossiê com fonte, portão 5,3 e 8 perguntas |
 | Linguagens | 1 (Sandra com a peça no celular) | 3 diferentes (cinemático, institucional, esquete) |
-| Público | metade leigo | construtora/engenheiro/profissional, com o decisor nomeado |
-| Cruzamento | nenhum card diz de onde veio | `nasceu_de` com campo do briefing em cada vídeo |
-| Referência | por view, sem critério | nota com 5 critérios, descartadas com motivo |
+| Público | metade leigo | engenheiro, comprador e mestre, com o decisor nomeado |
+| Cruzamento | nenhum card diz de onde veio | `nasceu_de` e marcas de autenticidade em cada vídeo |
+| Referência | por view, sem critério | nota com 5 critérios, descartadas com motivo, 2 de fora do nicho |
 | Fala | uma frase por plano | blocos contínuos, cada frase com função, Sandra se apresenta |
-| Fecho | "manda a lista no WhatsApp" em 13 de 14 | três fechos diferentes, cada um respondendo ao próprio gancho |
+| Fidelidade | não conferida | 2 divergências achadas (oficial × autorizada; número do WhatsApp) |
+| Fecho | "manda a lista no WhatsApp" em 13 de 14 | três fechos diferentes, cada um responde ao próprio gancho |
