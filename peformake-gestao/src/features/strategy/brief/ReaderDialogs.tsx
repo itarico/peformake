@@ -48,12 +48,12 @@ export function VideoEditDialog({ card, onClose, onSaved }: { card: StrategyCard
         <DialogTabs value={tab} onChange={setTab} label="Partes do vídeo" options={[{ id: 'fala', label: 'Fala' }, { id: 'perguntas', label: 'Perguntas', hidden: !hasQ }, { id: 'gravacao', label: 'Gravação' }]} />
         {tab === 'fala' && <>
           <label className="text-[13px] font-semibold">Título<input value={title} onChange={(e) => setTitle(e.target.value)} className={cn(field, 'mt-1 min-h-11 font-semibold')} /></label>
-          <label className="text-[13px] font-semibold">Roteiro <span className="font-normal text-muted">(direção entre [colchetes]; fala com o nome antes)</span>
-            <textarea aria-label="Roteiro" value={text} onChange={(e) => setText(e.target.value)} className={cn(field, 'mt-1 h-[min(46vh,380px)] resize-none py-2')} />
+          <label className="text-[13px] font-semibold" title="Direção entre [colchetes]; a fala com o nome antes (SANDRA: …)">Roteiro <span className="font-normal text-muted">[direção] · NOME: fala</span>
+            <textarea aria-label="Roteiro" value={text} onChange={(e) => setText(e.target.value)} className={cn(field, 'mt-1 h-[max(150px,calc(100dvh-480px))] max-h-[400px] resize-none py-2')} />
           </label>
         </>}
         {tab === 'perguntas' && <label className="text-[13px] font-semibold">Perguntas <span className="font-normal text-muted">(P: pergunta · Pontos: o que lembrar de contar)</span>
-          <textarea aria-label="Perguntas" value={qs} onChange={(e) => setQs(e.target.value)} className={cn(field, 'mt-1 h-[min(52vh,420px)] resize-none py-2')} />
+          <textarea aria-label="Perguntas" value={qs} onChange={(e) => setQs(e.target.value)} className={cn(field, 'mt-1 h-[max(180px,calc(100dvh-400px))] max-h-[440px] resize-none py-2')} />
         </label>}
         {tab === 'gravacao' && <>
           <label className="text-[13px] font-semibold">Tipo do vídeo<input value={formato} onChange={(e) => setFormato(e.target.value)} className={cn(field, 'mt-1 min-h-11')} placeholder="Ex.: Reel (ensinar)" /></label>
