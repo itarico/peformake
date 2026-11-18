@@ -85,8 +85,9 @@ if (require.main === module) (async () => {
       await p.goto(`${BASE}/estrategia/consultoria`, { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
       if (!(await p.locator('[data-passo]').count())) fails.push(`${tag}: lista sem o passo da estratégia`);
       if (await sideScroll(p)) fails.push(`${tag}: lista com rolagem de lado`);
-      if (!(await p.locator('[data-etapas-mini]').count())) fails.push(`${tag}: lista sem as etapas do cliente`);
-      if ((await p.locator('[data-etapas-mini]').first().locator('[data-dot]').count()) !== 4) fails.push(`${tag}: lista sem os 4 ícones das etapas`);
+      // Sem os ícones coloridos das etapas (Italo, 18/11): só a situação em palavras.
+      if (await p.locator('[data-dot]').count()) fails.push(`${tag}: lista ainda com os ícones das etapas`);
+      if (!(await p.locator('[data-situacao]').count())) fails.push(`${tag}: lista sem a situação do cliente`);
       if (await p.getByRole('link', { name: 'Biblioteca' }).count()) fails.push(`${tag}: Biblioteca ainda aparece`);
       if (!(await p.getByRole('link', { name: 'Relatórios' }).count())) fails.push(`${tag}: sem a aba Relatórios na Estratégia`);
       await p.screenshot({ path: `${OUT}/estrategia-lista-${tag}.png` });
@@ -117,6 +118,7 @@ if (require.main === module) (async () => {
       if (!pct || Number(pct) <= 0 || Number(pct) >= 100) fails.push(`${tag}: medidor do briefing estranho (${pct})`);
       if (await sideScroll(p)) fails.push(`${tag}: briefing com rolagem de lado`);
       await p.screenshot({ path: `${OUT}/estrategia-briefing-${tag}.png`, fullPage: true });
+      await p.locator('[data-ver-tudo]').click(); await p.waitForTimeout(150);
       for (const [label, name] of [['Produtos', 'produtos'], ['Links', 'links'], ['Público', 'texto'], ['Concorrentes', 'concorrentes'], ['Referências', 'referencias'], ['Meta', 'meta'], ['Mês passado', 'funcionou']]) {
         await p.locator('[data-briefing] button', { hasText: label }).first().click(); await p.waitForTimeout(350);
         await check(p, tag, name);
@@ -198,32 +200,34 @@ if (require.main === module) (async () => {
       if (!(await p.locator('dialog[open]').getByText('cardapio.jpg').count())) fails.push(`${tag}: anexo não apareceu na resposta`);
       if (!(await p.locator('dialog[open] audio').count())) fails.push(`${tag}: resposta com áudio sem o player`);
       await close(p);
-      // Cards: cada aba, contador, card aberto em cada parte (sem rolar), recusar, refazer e PDF.
+      // Leitura (18/11): cada parte como documento; Editar abre o pop-up do item; Refazer e Mais ideias sem rolagem.
       for (const t of ['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias']) {
         await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=${t}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
-        if (!(await p.locator(`[data-aba-cards="${t}"]`).count())) { fails.push(`${tag}: aba ${t} sem cards`); continue }
-        if (!(await p.locator('[data-contador]').count())) fails.push(`${tag}: aba ${t} sem o contador de aprovados`);
+        if (!(await p.locator(`[data-leitura="${t}"]`).count())) { fails.push(`${tag}: parte ${t} sem a leitura`); continue }
+        if (await sideScroll(p)) fails.push(`${tag}: parte ${t} com rolagem de lado`);
+        await p.screenshot({ path: `${OUT}/estrategia-aba-${t}-${tag}.png`, fullPage: true });
         if (t === 'social') {
-          await p.getByRole('button', { name: 'Mais ideias' }).click(); await p.waitForTimeout(250);
+          await p.getByRole('button', { name: 'Mais opções da estratégia' }).click(); await p.waitForTimeout(150);
+          await p.getByRole('menuitem', { name: 'Mais ideias nesta parte' }).or(p.getByText('Mais ideias nesta parte')).first().click(); await p.waitForTimeout(250);
           if (!(await p.locator('[data-mais-ideias]').count())) fails.push(`${tag}: Mais ideias não abriu`);
           await check(p, tag, 'mais-ideias'); await close(p);
         }
-        if (await sideScroll(p)) fails.push(`${tag}: aba ${t} com rolagem de lado`);
-        await p.screenshot({ path: `${OUT}/estrategia-aba-${t}-${tag}.png`, fullPage: true });
-        const rows = await p.locator('[data-aba-cards] li button').count();
-        for (let r = 0; r < Math.min(rows, t === 'resumo' ? 5 : 2); r++) {
-          await p.locator('[data-aba-cards] li button').nth(r).click(); await p.waitForTimeout(300);
+        if (t === 'referencias') continue;
+        const edits = p.locator(`[data-leitura="${t}"] [data-acoes] button[aria-label^="Editar"]`);
+        for (let r = 0; r < Math.min(await edits.count(), t === 'resumo' ? 5 : 2); r++) {
+          await edits.nth(r).click(); await p.waitForTimeout(300);
           const parts = p.locator('dialog[open] [role=tablist] [role=tab]');
           const np = await parts.count();
           if (!np) await check(p, tag, `${t}-${r}`);
           for (let k = 0; k < np; k++) { await parts.nth(k).click(); await p.waitForTimeout(150); await check(p, tag, `${t}-${r}-parte${k}`) }
-          if (r === 0 && t === 'audiovisual') {
-            await p.locator('dialog[open]').getByRole('button', { name: 'Recusar' }).click(); await p.waitForTimeout(150); await check(p, tag, 'recusar');
-            await p.locator('dialog[open]').getByRole('button', { name: 'Voltar' }).click(); await p.waitForTimeout(150);
-            await p.locator('dialog[open] footer').getByRole('button', { name: /Refazer/ }).click(); await p.waitForTimeout(150); await check(p, tag, 'refazer');
-            if (!(await p.locator('dialog[open]').getByRole('button', { name: 'Outro gancho' }).count())) fails.push(`${tag}: refazer sem os atalhos de pedido`);
-            await p.locator('dialog[open]').getByRole('button', { name: 'Colar card refeito' }).click(); await p.waitForTimeout(150); await check(p, tag, 'refazer-colar');
-          }
+          await close(p);
+        }
+        if (t === 'audiovisual') {
+          await p.locator('[data-leitura] [data-acoes] button[aria-label^="Refazer"]').first().click(); await p.waitForTimeout(200); await check(p, tag, 'refazer');
+          if (!(await p.locator('dialog[open]').getByRole('button', { name: 'Outro gancho' }).count())) fails.push(`${tag}: refazer sem os atalhos de pedido`);
+          await close(p);
+          await p.getByRole('button', { name: 'Ver detalhes' }).first().click(); await p.waitForTimeout(200);
+          const dt = p.locator('dialog[open] [role=tablist] [role=tab]'); for (let k = 0; k < await dt.count(); k++) { await dt.nth(k).click(); await p.waitForTimeout(120); await check(p, tag, `detalhes-${k}`) }
           await close(p);
         }
       }
@@ -248,13 +252,11 @@ if (require.main === module) (async () => {
       await p.locator('dialog[open]').getByRole('button', { name: 'Importar cards' }).click(); await p.waitForTimeout(250);
       if (!(await p.locator('dialog[open] [role=alert]').count())) fails.push(`${tag}: colar resultado não avisou o JSON errado`);
       await close(p);
-      // PDF: com tudo decidido, o botão vira "Aprovar e gerar PDF".
-      const saved = global.BOARD.cards; global.BOARD = { ...global.BOARD, cards: saved.map((c) => ({ ...c, status: 'aprovado' })) };
+      // PDF: "Baixar PDF" sempre no topo (aprova junto o que está no PDF).
       await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=resumo`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
-      const pdfBtn = p.getByRole('button', { name: /Aprovar e gerar PDF/ });
-      if (!(await pdfBtn.count())) fails.push(`${tag}: sem o botão Aprovar e gerar PDF com tudo aprovado`);
+      const pdfBtn = p.getByRole('button', { name: 'Baixar PDF' });
+      if (!(await pdfBtn.count())) fails.push(`${tag}: sem o botão Baixar PDF`);
       else { await pdfBtn.click(); await p.waitForTimeout(300); await check(p, tag, 'pdf'); await close(p) }
-      global.BOARD = { ...global.BOARD, cards: saved };
       if (errs.length) fails.push(`${tag}: erros na página: ${errs.join(' | ')}`);
       await ctx.close();
     }

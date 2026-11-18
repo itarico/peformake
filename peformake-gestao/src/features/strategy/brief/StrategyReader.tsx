@@ -62,11 +62,11 @@ export function StrategyReader({ board, tab, name, onChanged }: { board: Strateg
 
 /** Editar · Refazer · Tirar do PDF (sempre no mesmo lugar, discretos). */
 function ItemActions({ c, onEdit, onRedo, onPdf }: { c: StrategyCard; onEdit: () => void; onRedo: () => void; onPdf: () => void }) {
-  const btn = 'inline-flex min-h-10 cursor-pointer items-center gap-1 rounded-full px-2.5 text-[12.5px] font-semibold text-muted hover:bg-raised hover:text-ink'
+  const btn = 'inline-flex min-h-10 min-w-10 cursor-pointer items-center justify-center gap-1 rounded-full px-2.5 text-[12.5px] font-semibold text-muted hover:bg-raised hover:text-ink'
   return (
     <div className="-mr-1.5 flex shrink-0 items-center" data-acoes>
-      <button type="button" className={btn} onClick={onEdit} aria-label={`Editar ${c.title}`}><PencilLine size={14} aria-hidden="true" /> Editar</button>
-      <button type="button" className={btn} onClick={onRedo} aria-label={`Refazer ${c.title}`}><RefreshCw size={14} aria-hidden="true" /> Refazer</button>
+      <button type="button" className={btn} onClick={onEdit} aria-label={`Editar ${c.title}`}><PencilLine size={14} aria-hidden="true" /><span className="max-sm:hidden">Editar</span></button>
+      <button type="button" className={btn} onClick={onRedo} aria-label={`Refazer ${c.title}`}><RefreshCw size={14} aria-hidden="true" /><span className="max-sm:hidden">Refazer</span></button>
       <button type="button" className={btn} onClick={onPdf} aria-label={c.in_pdf ? `Tirar ${c.title} do PDF` : `Voltar ${c.title} ao PDF`} title={c.in_pdf ? 'Tirar do PDF' : 'Voltar ao PDF'}>
         {c.in_pdf ? <FileMinus size={14} aria-hidden="true" /> : <FilePlus size={14} aria-hidden="true" />}<span className="max-sm:hidden">{c.in_pdf ? 'Tirar do PDF' : 'Voltar ao PDF'}</span>
       </button>

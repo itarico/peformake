@@ -129,6 +129,7 @@ export function videoDoc(c: Pick<StrategyCard, 'title' | 'data'>, index: number)
     const falas = b.items.filter((x) => x.kind === 'fala')
     if (!falas.length || !falas.every((x) => isFreeAnswer(x.text))) return
     for (const x of falas) (x as { livre?: boolean }).livre = true
+    b.items = b.items.filter((x) => x.kind === 'fala')
     const prev = blocks[i - 1]?.items.filter((x) => x.kind === 'fala').pop()
     if (prev && /\?\s*$/.test(prev.text)) (prev as { pergunta?: boolean }).pergunta = true
   })

@@ -125,7 +125,7 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
         {ready && (
           <div data-acoes-topo className="flex w-full flex-wrap gap-2">
             <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> Baixar PDF</Button>
-            <Button variant="secondary" className="min-h-10 flex-1 px-3 text-[13px] sm:flex-none" onClick={send}><Send size={14} aria-hidden="true" /> Enviar ao cliente</Button>
+            <Button variant="secondary" aria-label="Enviar ao cliente" className="min-h-10 flex-1 px-3 text-[13px] sm:flex-none" onClick={send}><Send size={14} aria-hidden="true" /> Enviar<span className="max-sm:hidden"> ao cliente</span></Button>
             <Button variant="secondary" aria-label="Gerar de novo" className="min-h-10 px-3 text-[13px]" onClick={() => setGen(true)}><RefreshCw size={14} aria-hidden="true" /> <span className="max-sm:hidden">Gerar de novo</span></Button>
           </div>
         )}
