@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, CheckCheck, Clapperboard, ClipboardList, Download, ExternalLink, FileText, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, Download, ExternalLink, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -24,7 +24,7 @@ import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { StrategyStrip } from './brief/StrategyStrip'
 import { useBriefProgress } from './brief/briefApi'
-import { CONSULT_PATH, onlyVideo, targetMonth, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, stepDots, strategyProgress, strategyStep, type DotState, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { CONSULT_PATH, targetMonth, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
@@ -69,7 +69,8 @@ export function ConsultoriaPage() {
   const rows = sortByStrategy(list.data ?? [])
   const go = (r: ConsultRow, step: ReturnType<typeof strategyStep> | null) => setParams((c) => {
     const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao', 'parte', 'revisar']) n.delete(k)
-    n.set('cliente', r.client_id); n.set('ver', 'estrategia'); if (step?.go === 'revisar') n.set('revisar', 'todos'); return n
+    // Revisar = ler a estratégia como documento (o "um por um" ficou no ⋯). Briefing abre o briefing.
+    n.set('cliente', r.client_id); n.set('ver', 'estrategia'); if (!step || step.go === 'briefing') n.set('parte', 'briefing'); return n
   })
   return (
     <section aria-label="Consultoria" className="flex flex-col gap-2.5">
@@ -94,7 +95,8 @@ export function ConsultoriaPage() {
                       <b className="truncate text-[14.5px] font-semibold">{r.name.trim()}</b>
                       {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
                     </span>
-                    <StepDots at={(r.monthly?.month ?? '').slice(0, 7) >= targetMonth() ? prog.at : 0} briefPercent={briefs.data?.[r.client_id]?.percent} video={onlyVideo(r)} />
+                    {/* Sem ícones coloridos por etapa (Italo, 18/11: poluíam). Só a situação em palavras, neutra. */}
+                    <span data-situacao className="truncate text-[12.5px] text-muted">{(r.monthly?.month ?? '').slice(0, 7) >= targetMonth() || !r.monthly ? prog.text : 'Estratégia do próximo mês: fazer o briefing'}</span>
                   </span>
                 </button>
                 {step.go !== 'briefing' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px] max-md:hidden" onClick={() => go(r, null)}>Briefing</Button>}
@@ -130,23 +132,6 @@ async function openPublicDeck(clientId: string): Promise<void> {
 
 
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
-
-const DOT_TONE: Record<DotState, string> = {
-  feito: 'bg-accent text-white border-transparent', falta: 'bg-raised text-muted border-transparent',
-  atencao: 'bg-warn-soft text-warn-ink border-warn/40', atrasado: 'bg-[#e5484d] text-white border-transparent',
-}
-const DOT_ICON = { briefing: ClipboardList, gerar: Sparkles, revisar: CheckCheck, pdf: FileText } as const
-const DOT_ICON_VIDEO = { ...DOT_ICON, gerar: Clapperboard } as const
-
-/** As 4 etapas em ícones (Italo, 17/11): azul feito, cinza falta, amarelo perto do prazo (dia 12–15), vermelho depois do dia 15. */
-function StepDots({ at, briefPercent, video }: { at: number; briefPercent?: number; video?: boolean }) {
-  const dots = stepDots(at, briefPercent, new Date(), { video })
-  return (
-    <span data-etapas-mini role="img" aria-label={dots.map((d) => `${d.label}: ${d.state === 'feito' ? 'feito' : d.state === 'atrasado' ? 'atrasado' : d.state === 'atencao' ? 'perto do prazo' : 'falta'}`).join(', ')} className="flex items-center gap-1.5">
-      {dots.map((d) => { const I = (video ? DOT_ICON_VIDEO : DOT_ICON)[d.key as keyof typeof DOT_ICON]; return <span key={d.key} data-dot={d.state} title={d.label} className={cn('grid size-6 place-items-center rounded-full border', DOT_TONE[d.state])}><I size={12} aria-hidden="true" /></span> })}
-    </span>
-  )
-}
 
 const DOT: Record<PartState, string> = { pronto: 'bg-ok', revisar: 'bg-accent', falta: 'bg-warn', andando: 'bg-muted pf-pulse', fora: 'bg-line' }
 
@@ -352,7 +337,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
       {/* O plano do mês antigo foi desligado em 16/11: a Estratégia interativa (briefing → cards → PDF) é o único caminho. */}
-      {<StrategyStrip clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte: parte === 'briefing' ? null : parte, mes: opts[1]!.slice(0, 7) })} />}
+      {<StrategyStrip clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, mes: opts[1]!.slice(0, 7) })} />}
       {(
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}

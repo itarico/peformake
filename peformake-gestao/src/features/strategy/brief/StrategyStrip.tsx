@@ -1,59 +1,52 @@
 import { useState } from 'react'
-import { ChevronRight, ClipboardList, Sparkles } from 'lucide-react'
+import { ClipboardList, FileText, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { cn } from '@/lib/cn'
 import { monthName } from '../monthlyRules'
 import { BriefMeter, useBriefStatus } from './BriefingView'
 import { GenerateDialog } from './CardsView'
-import { boardState, tabCount, type CardTab } from './cardRules'
+import { boardState, type CardTab } from './cardRules'
 import { useBoard } from './strategyApi'
 
-const AREAS: { id: CardTab; label: string }[] = [
-  { id: 'resumo', label: 'Resumo do mês' }, { id: 'audiovisual', label: 'Vídeos' }, { id: 'social', label: 'Social media' },
-  { id: 'trafego', label: 'Tráfego' }, { id: 'atendimento', label: 'Atendimento' }, { id: 'referencias', label: 'Referências' },
+const WHAT: { id: CardTab; one: string; many: string }[] = [
+  { id: 'audiovisual', one: 'vídeo', many: 'vídeos' }, { id: 'social', one: 'peça', many: 'peças' },
+  { id: 'trafego', one: 'campanha', many: 'campanhas' }, { id: 'atendimento', one: 'roteiro de atendimento', many: 'roteiros de atendimento' },
 ]
 
 /**
- * Estratégia do mês no cliente (Italo, 17/11: "o briefing é só briefing; as outras abas ficam embaixo, com opção de gerar").
- * 1ª linha: o Briefing (abre só o briefing). Embaixo, uma linha por área com o que tem e 1 botão (Gerar / Revisar / Abrir).
+ * Estratégia do mês na ficha do cliente: duas linhas só (Italo, 18/11: menos poluição). O Briefing (medidor) e a Estratégia
+ * (o que tem, em palavras, e 1 botão: Gerar ou Abrir). As partes ficam dentro da estratégia, como documento.
  */
-export function StrategyStrip({ clientId, month, onOpen }: { clientId: string; month: string; onOpen: (parte: 'briefing' | CardTab) => void }) {
+export function StrategyStrip({ clientId, month, onOpen }: { clientId: string; month: string; onOpen: (parte: 'briefing' | CardTab | null) => void }) {
   const st = useBriefStatus(clientId, month)
   const board = useBoard(clientId, month)
   const b = board.data
   const s = boardState(b)
   const ready = !!b && ['pronto', 'aprovado'].includes(b.status)
+  const live = (b?.cards ?? []).filter((c) => c.status !== 'recusado')
+  const summary = WHAT.map((w) => { const n = live.filter((c) => c.tab === w.id).length; return n ? `${n} ${n === 1 ? w.one : w.many}` : '' }).filter(Boolean).join(' · ')
   const [gen, setGen] = useState(false)
   return (
     <section data-estrategia-faixa aria-label={`Estratégia de ${monthName(month).toLowerCase()}`} className="flex flex-col gap-1.5">
       <h3 className="px-1 text-[13px] font-semibold uppercase tracking-wide text-muted">Estratégia de {monthName(month).toLowerCase()}</h3>
       <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
         <li data-linha="briefing" className="flex items-center gap-3 px-3 py-2.5">
-          <ClipboardList size={16} aria-hidden="true" className="shrink-0 text-accent-ink" />
+          <ClipboardList size={16} aria-hidden="true" className="shrink-0 text-muted" />
           <div className="min-w-0 flex-1">
             <b className="block text-[14px] font-semibold">Briefing</b>
             {st.ready ? <BriefMeter percent={st.percent} missing={st.missing} compact /> : <span className="text-[12.5px] text-muted">Carregando</span>}
           </div>
-          <Button variant={b ? 'secondary' : 'primary'} className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => onOpen('briefing')}>{st.percent >= 100 ? 'Ver' : 'Preencher'}</Button>
+          <Button variant="secondary" className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => onOpen('briefing')}>{st.percent >= 100 ? 'Ver' : 'Preencher'}</Button>
         </li>
-        {AREAS.map((a) => {
-          const n = tabCount(b?.cards ?? [], a.id)
-          const pending = (b?.cards ?? []).filter((c) => c.tab === a.id && c.status === 'proposta').length
-          const sub = !b ? 'Sai quando gerar a estratégia' : s.busy ? s.label : !ready ? s.label : n.total ? `${n.approved}/${n.total} aprovados` : 'Nenhum card'
-          return (
-            <li key={a.id} data-linha={a.id} className="flex items-center gap-3 px-3 py-2">
-              <button type="button" disabled={!ready} onClick={() => onOpen(a.id)} className="flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-3 text-left disabled:cursor-default">
-                <span className="min-w-0 flex-1">
-                  <b className="block truncate text-[14px] font-semibold">{a.label}</b>
-                  <span className={cn('block truncate text-[12.5px]', pending ? 'font-medium text-accent-ink' : 'text-muted')}>{pending ? `${pending} para revisar · ${sub}` : sub}</span>
-                </span>
-                {ready && <ChevronRight size={16} aria-hidden="true" className="shrink-0 text-muted" />}
-              </button>
-              {!b && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar</Button>}
-              {ready && pending > 0 && a.id !== 'referencias' && <Button className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => onOpen(a.id)}>Revisar</Button>}
-            </li>
-          )
-        })}
+        <li data-linha="estrategia" className="flex items-center gap-3 px-3 py-2.5">
+          <FileText size={16} aria-hidden="true" className="shrink-0 text-muted" />
+          <button type="button" disabled={!b} onClick={() => onOpen(null)} className="flex min-h-11 min-w-0 flex-1 cursor-pointer flex-col justify-center text-left disabled:cursor-default">
+            <b className="block text-[14px] font-semibold">Estratégia</b>
+            <span className="block truncate text-[12.5px] text-muted">{!b ? 'Ainda não gerada' : ready ? summary || 'Pronta' : s.label}</span>
+          </button>
+          {!b
+            ? <Button className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar</Button>
+            : <Button variant={ready ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => onOpen(null)}>{ready ? 'Abrir' : 'Ver'}</Button>}
+        </li>
       </ul>
       {gen && <GenerateDialog clientId={clientId} month={month} missing={st.missing} percent={st.percent} regenerate={false} onClose={() => setGen(false)} onBriefing={() => { setGen(false); onOpen('briefing') }} />}
     </section>

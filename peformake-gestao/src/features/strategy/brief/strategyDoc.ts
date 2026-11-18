@@ -5,6 +5,7 @@
 // Função pura (sem navegador): a tela usa para imprimir/salvar e o agente usa para gerar o PDF com o Chromium.
 import { ellcazoSvg } from '@/components/ui/ellcazoSvg'
 import type { StrategyCard } from './cardRules'
+import { isFreeAnswer, videoDoc } from './scriptRules'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 export interface DocInput {
@@ -17,7 +18,6 @@ const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '
 const nl = (v: unknown) => esc(v).replace(/\n/g, '<br>')
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
 export const monthTitle = (m: string) => `${MESES[Number(m.slice(5, 7)) - 1] ?? ''} de ${m.slice(0, 4)}`
-const FUNIL: Record<string, string> = { atrair: 'Atrair', provar: 'Provar', objecao: 'Objeção', converter: 'Converter' }
 const url = (l?: string) => (!l ? '' : /^https?:\/\//.test(l) ? l : `https://${l}`)
 const ytThumb = (l?: string) => { const m = /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})/.exec(l ?? ''); return m ? `https://i.ytimg.com/vi/${m[1]}/hqdefault.jpg` : '' }
 let TH: Record<string, string> = {}
@@ -43,7 +43,8 @@ export function docName(month: string): string {
   return `Estratégia · 01-${mm} a ${last}-${mm}-${y}`
 }
 
-const meta = (c: StrategyCard) => [c.funnel ? `<span class="tag">${FUNIL[c.funnel]}</span>` : '', c.serves ? `<span class="mut">Serve: ${esc(c.serves)}</span>` : '', c.goal ? `<span class="mut">Meta: ${esc(c.goal)}</span>` : ''].filter(Boolean).join(' ')
+/** Sem selos de funil/serve/meta no documento (Italo, 18/11): o PDF é para ler e gravar. */
+const meta = (_c: StrategyCard) => ''
 const list = (xs: unknown[] | undefined, f: (x: Any, i: number) => string) => (xs ?? []).map(f).join('')
 
 function pfPage(title: string, kicker: string, body: string, dark = false) {
@@ -89,26 +90,32 @@ function referencias(cs: StrategyCard[]) {
   return pfPage('Referências', 'Concorrentes e inspirações', `<div class="grid">${cs.map((c) => `<div class="card"><span class="k">${c.kind === 'concorrente' ? 'Concorrente' : c.kind === 'outro_nicho' ? 'Outro nicho' : c.kind === 'anuncio' ? 'Anúncio' : 'Referência'}</span>${coverOf(c.data.link) ? `<a href="${esc(url(c.data.link))}"><img class="refimg" src="${esc(coverOf(c.data.link))}" alt=""></a>` : ''}<b>${esc(c.title)}</b><p>${esc(c.data.porque)}</p>${c.data.numero ? `<p class="num">${esc(c.data.numero)}</p>` : ''}${c.data.link ? `<p><a href="${esc(url(c.data.link))}">${esc(String(c.data.link).replace(/^https?:\/\/(www\.)?/, '').slice(0, 48))}</a></p>` : ''}</div>`).join('')}</div>`)
 }
 
-/** Audiovisual (Ellcazo): uma página por vídeo; fundo verde-limão e branco intercalados; preto só nos detalhes. */
-function audiovisual(cs: StrategyCard[], logo?: string | null) {
+/**
+ * Audiovisual (Ellcazo), no formato que o cliente grava (o PDF da Rosanne, 18/11): uma página por vídeo, fundo branco,
+ * verde-limão nos detalhes; número e tipo, título grande, quem fala, a fala em parágrafos, direção entre colchetes;
+ * entrevista = pergunta em destaque + pontos pra resposta espontânea. Embaixo, pequeno: a referência (prévia + assistir)
+ * e as outras abordagens, para a equipe.
+ */
+function audiovisual(cs: StrategyCard[], client: string, month: string) {
   return cs.map((c, i) => {
+    const doc = videoDoc(c, i)
     const ref = c.data.referencia?.link ? url(c.data.referencia.link) : c.inspired?.link ? url(c.inspired.link) : ''
     const thumb = coverOf(ref)
-    return `<section class="page ez ${i % 2 ? 'white' : 'lime'}">
-      <header>${logo ? `<img src="${esc(logo)}" alt="Ellcazo" class="ezlogo">` : `<span class="ezmark">${ellcazoSvg('#000', 22)}</span>`}<span class="k">Vídeo ${i + 1} de ${cs.length}${c.data.formato ? ` · ${esc(c.data.formato)}` : ''}</span></header>
-      <h2>${esc(c.title)}</h2>
-      <div class="two">
-        <div>
-          <div class="ezcard"><span class="k">3 ganchos</span><ol>${list(c.data.ganchos, (g) => `<li>${esc(g)}</li>`)}</ol></div>
-          <div class="ezcard"><span class="k">3 ideias de abordagem</span><ol>${list(c.data.outras_ideias, (g) => `<li>${esc(g)}</li>`)}</ol></div>
-          <div class="ezcard"><span class="k">Filmar</span><p>${nl(c.data.filmar)}</p></div>
-        </div>
-        <div>
-          <div class="ezcard ref">${thumb ? `<img src="${esc(thumb)}" alt="">` : '<div class="noimg">Vídeo de referência</div>'}
-            ${ref ? `<a class="btn" href="${esc(ref)}">▶ Assistir a referência</a>` : ''}<p class="mut">${esc(c.data.referencia?.porque ?? c.data.cruzamento ?? '')}</p></div>
-          <div class="ezcard"><span class="k">Roteiro</span>${list(c.data.roteiro, (s, j) => `<p><b>${j + 1}.</b> <span class="mut">${esc(s.cena)}</span><br>${esc(s.fala)}</p>`)}</div>
-        </div>
-      </div>
+    let q = 0
+    const blocks = doc.blocks.map((b) => `${b.speaker ? `<p class="spk">${esc(b.speaker)}</p>` : ''}${b.items.map((it) => it.kind === 'dir' ? `<p class="dir">[${esc(it.text)}]</p>`
+      : it.pergunta ? `<p class="spk">Pergunta ${++q}</p><p class="q">“${esc(it.text)}”</p>`
+      : it.livre || isFreeAnswer(it.text) ? `<p class="pts"><b>Resposta espontânea</b> · ${esc(it.text.replace(/^\(|\)$/g, ''))}</p>`
+      : `<p class="fala">${nl(it.text)}</p>`).join('')}`).join('')
+    const qs = doc.questions.map((x, k) => `<p class="spk">Pergunta ${q + k + 1}</p><p class="q">“${esc(x.pergunta)}”</p>${x.pontos ? `<p class="pts"><b>Pontos pra resposta espontânea</b> · ${esc(x.pontos)}</p>` : ''}`).join('')
+    const ideias = (Array.isArray(c.data.outras_ideias) ? c.data.outras_ideias : []).filter(Boolean)
+    const team = ref || ideias.length ? `<div class="team">${ref ? `<div class="refrow">${thumb ? `<a href="${esc(ref)}"><img src="${esc(thumb)}" alt=""></a>` : ''}<div><span class="k2">Referência</span><a class="btn" href="${esc(ref)}">▶ Assistir a referência</a>${c.inspired?.numero ? `<p class="small">${esc(c.inspired.numero)}</p>` : ''}</div></div>` : ''}${ideias.length ? `<span class="k2">Outras abordagens</span><ol>${list(ideias, (g) => `<li>${esc(g)}</li>`)}</ol>` : ''}</div>` : ''
+    return `<section class="page ez">
+      <header class="ezh"><div><span class="bar"></span><span class="k2">Roteiros · ${esc(monthTitle(month))}</span><b class="who">${esc(client)}</b></div><span class="ezmark">${ellcazoSvg('#B5E61D', 84)}</span></header>
+      <span class="k2 num">${esc(doc.number)} / ${esc(doc.type)}</span>
+      <h2>${esc(doc.title)}</h2>
+      ${blocks}${qs}${!blocks && !qs ? '<p class="fala">(sem fala escrita)</p>' : ''}
+      ${team}
+      <footer class="ezf"><b>ELLCAZO STUDIO</b><span>${esc(doc.number)} / ${String(cs.length).padStart(2, '0')}</span></footer>
     </section>`
   }).join('')
 }
@@ -128,14 +135,20 @@ p{font-size:12.5px;line-height:1.45;margin:4px 0}ol{font-size:12.5px;line-height
 .pf header{border-bottom:3px solid #1FC8DB;margin-bottom:10px;padding-bottom:6px}.pf footer{position:absolute;bottom:8mm;left:15mm;font-size:10px;color:#5c7080}
 .cover{background:#0B3C44;color:#fff;display:flex;flex-direction:column;justify-content:space-between}.cover h1{font-size:40px;line-height:1.08;margin:0}.cover .k{color:#1FC8DB}
 .cover .logos{display:flex;gap:14px;align-items:center}.cover .logos img{height:44px;border-radius:10px;background:#fff;padding:4px}
-.ez{font-family:Inter,Arial,sans-serif;color:#000}.ez.lime{background:#B5E61D}.ez.white{background:#fff}.ez h2{font-size:28px;font-weight:800}
-.ez header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ez .k{color:#000}.ezmark{font-weight:800;letter-spacing:.12em;font-size:13px;border:2px solid #000;border-radius:12px;padding:3px 9px}
-.ezlogo{height:28px}.ezcard{background:#fff;border:2px solid #000;border-radius:14px;box-shadow:4px 4px 0 #000;padding:10px 12px;margin-bottom:12px;break-inside:avoid}
-.ez.white .ezcard{background:#fff}.ezcard.ref img{width:100%;border-radius:12px;border:2px solid #000;display:block;aspect-ratio:16/9;object-fit:cover}
+.ez{font-family:Inter,Arial,sans-serif;color:#1d1f1a;background:#fff;overflow:visible;padding:18mm 18mm 22mm}
+.ezh{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #e2e4df;padding-bottom:12px;margin-bottom:22px}
+.ezh .bar{display:block;width:30px;height:5px;background:#B5E61D;margin-bottom:10px}.ezh .who{display:block;font-size:19px;margin-top:4px}
+.k2{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#4a6b12}.k2.num{margin-bottom:6px}
+.ez h2{font-size:38px;font-weight:800;line-height:1.1;margin:0 0 22px;letter-spacing:-.01em}
+.ez .spk{font-size:12px;font-weight:700;color:#4a6b12;margin:16px 0 6px}.ez .fala{font-size:15.5px;line-height:1.6;margin:0 0 10px}
+.ez .dir{font-size:12.5px;font-style:italic;color:#4a6b12;margin:4px 0 10px}.ez .q{font-size:16px;font-weight:700;line-height:1.45;margin:0 0 6px}
+.ez .pts{font-size:13.5px;line-height:1.5;color:#55594f;margin:0 0 8px}.ez .pts b{color:#3b3e36}
+.team{margin-top:22px;border-top:1.5px solid #e2e4df;padding-top:12px;break-inside:avoid;font-size:12px;color:#55594f}.team ol{font-size:12px;margin:4px 0 0}
+.refrow{display:flex;gap:12px;align-items:center;margin-bottom:10px}.refrow img{width:150px;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block}.small{font-size:11px;margin:2px 0}
+.ezf{position:absolute;bottom:10mm;left:18mm;right:18mm;display:flex;justify-content:space-between;border-top:1.5px solid #e2e4df;padding-top:8px;font-size:10.5px;color:#55594f}.ezf b{color:#1d1f1a}
 .refimg{width:100%;max-height:220px;object-fit:cover;border-radius:12px;display:block;margin:6px 0}
 .noimg{border:2px dashed #000;border-radius:12px;aspect-ratio:16/9;display:grid;place-items:center;font-weight:700}
-.btn{display:inline-block;margin:8px 0 2px;background:#B5E61D;color:#000;border:2px solid #000;border-radius:12px;box-shadow:3px 3px 0 #000;padding:5px 12px;font-weight:800;text-decoration:none;font-size:12px}
-.ez.lime .btn{background:#fff}.ez .mut{color:#333}
+.btn{display:inline-block;margin:6px 0 2px;background:#B5E61D;color:#1d1f1a;border-radius:99px;padding:5px 12px;font-weight:800;text-decoration:none;font-size:12px}
 @media screen{body{background:#e9eef0}.page{margin:12px auto;box-shadow:0 2px 12px #0002}}`
 
 /** HTML completo (abre no navegador, imprime ou vira PDF no Chromium). */
@@ -147,6 +160,6 @@ export function strategyHtml(input: DocInput): string {
     <div><p>${cs.length} itens aprovados: ${['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias'].map((t) => [t, tab(t).length] as const).filter(([, n]) => n).map(([t, n]) => `${n} ${({ resumo: 'do resumo', audiovisual: 'vídeos', social: 'peças de social', trafego: 'campanhas', atendimento: 'roteiros de atendimento', referencias: 'referências' } as Record<string, string>)[t]}`).join(' · ')}</p>
     <div class="logos">${input.peformakeLogoUrl ? `<img src="${esc(input.peformakeLogoUrl)}" alt="Peformake">` : '<b>Peformake</b>'}${input.logoUrl ? `<img src="${esc(input.logoUrl)}" alt="">` : ''}</div></div></section>`
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(docName(input.month))} · ${esc(input.name)}</title><style>${CSS}</style></head><body>
-${cover}${tab('resumo').length ? resumo(tab('resumo')) : ''}${audiovisual(tab('audiovisual'), input.ellcazoLogoUrl)}${social(tab('social'))}${trafego(tab('trafego'))}${atendimento(tab('atendimento'))}${referencias(tab('referencias'))}
+${cover}${tab('resumo').length ? resumo(tab('resumo')) : ''}${audiovisual(tab('audiovisual'), input.name, input.month)}${social(tab('social'))}${trafego(tab('trafego'))}${atendimento(tab('atendimento'))}${referencias(tab('referencias'))}
 </body></html>`
 }
