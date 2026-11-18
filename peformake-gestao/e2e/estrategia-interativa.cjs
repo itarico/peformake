@@ -172,6 +172,7 @@ if (require.main === module) (async () => {
       if (!t2 || t2 === t1) fails.push(`${tag}: Pular não foi para o próximo passo (${t1} → ${t2})`);
       await check(p, tag, 'passo-2'); await close(p);
       if (await p.locator('dialog[open]').count()) fails.push(`${tag}: fechar não saiu dos passos`);
+      if (!(await p.locator('[data-briefing] button', { hasText: 'Concorrentes' }).count())) { await p.locator('[data-ver-tudo]').click(); await p.waitForTimeout(150) }
       // Concorrentes: colar o link e "Não tem concorrente".
       await p.locator('[data-briefing] button', { hasText: 'Concorrentes' }).first().click(); await p.waitForTimeout(300);
       if (!(await p.locator('[data-sem-concorrente]').count())) fails.push(`${tag}: concorrentes sem "Não tem concorrente"`);
