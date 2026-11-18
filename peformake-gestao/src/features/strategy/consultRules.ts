@@ -224,7 +224,7 @@ export function strategyStep(r: Pick<ConsultRow, 'monthly' | 'answers_new'>): St
   if (!m) return { go: 'briefing', label: 'Briefing', sub: 'Estratégia: fazer o briefing', state: 'falta', rank: 2 }
   if (m.status === 'na_fila' || m.status === 'gerando') return { go: 'abrir', label: 'Ver', sub: `Estratégia de ${mes}: o agente está montando`, state: 'andando', rank: 3 }
   if (m.status === 'erro' || m.status === 'limite') return { go: 'abrir', label: 'Gerar de novo', sub: `Estratégia de ${mes}: não deu certo`, state: 'falta', rank: 1 }
-  if (m.status === 'pronto' && m.pending > 0) return { go: 'revisar', label: `Revisar (${m.pending})`, sub: `Estratégia de ${mes}: ${m.pending} ${m.pending === 1 ? 'card' : 'cards'} a revisar`, state: 'revisar', rank: 0 }
+  if (m.status === 'pronto' && m.pending > 0) return { go: 'revisar', label: 'Revisar', sub: `Estratégia de ${mes}: pronta para ler e baixar o PDF`, state: 'revisar', rank: 0 }
   if (m.status === 'pronto') return { go: 'abrir', label: 'Gerar PDF', sub: `Estratégia de ${mes}: revisada, falta o PDF`, state: 'revisar', rank: 1 }
   return { go: 'abrir', label: 'Abrir', sub: `Estratégia de ${mes}: aprovada`, state: 'pronto', rank: 4 }
 }
@@ -247,24 +247,10 @@ export function strategyProgress(r: Pick<ConsultRow, 'monthly' | 'answers_new'>,
   return { at: 4, text: sub }
 }
 
-/** Ícones das etapas na lista (Italo, 17/11): azul = feito, cinza = falta; perto do prazo (dia 12 a 15) amarelo; passou do dia 15 vermelho.
- * A estratégia do mês seguinte tem que estar pronta até o dia 15 (16 dias antes do mês começar). */
-export type DotState = 'feito' | 'falta' | 'atencao' | 'atrasado'
-export const DOT_STEPS = [{ key: 'briefing', label: 'Briefing' }, { key: 'gerar', label: 'Estratégia gerada' }, { key: 'revisar', label: 'Revisada' }, { key: 'pdf', label: 'PDF' }] as const
 /** Cliente só de audiovisual: a estratégia dele é o roteiro dos vídeos (mesmo prazo, dia 15). Italo, 17/11. */
 export const onlyVideo = (r: Pick<ConsultRow, 'areas' | 'consultoria'>) => !!r.areas?.audiovisual && !r.areas.trafego && !r.areas.social && !r.consultoria
-const VIDEO_LABEL: Record<string, string> = { gerar: 'Roteiro gerado', revisar: 'Roteiro revisado', pdf: 'PDF do roteiro' }
 /** O mês que está sendo preparado: o seguinte ao de hoje (a estratégia de dezembro fica pronta até 15/11). */
 export const targetMonth = (today: Date = new Date()) => { const d = new Date(today.getFullYear(), today.getMonth() + 1, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` }
-export function stepDots(at: number, briefPercent: number | undefined, today: Date = new Date(), opts: { video?: boolean } = {}): { key: string; label: string; state: DotState }[] {
-  const day = today.getDate()
-  const late: DotState = day > 15 ? 'atrasado' : day >= 12 ? 'atencao' : 'falta'
-  return DOT_STEPS.map((s, i) => {
-    const done = i < at || (i === 0 && (briefPercent ?? 0) >= 60)
-    return { key: s.key, label: (opts.video && VIDEO_LABEL[s.key]) || s.label, state: done ? 'feito' : late }
-  })
-}
-
 /** Ordem da lista mínima: primeiro o que pede você (revisar, respostas novas), depois briefing, por último o que está em dia. */
 export function sortByStrategy(rows: ConsultRow[]): ConsultRow[] {
   const rank = (r: ConsultRow) => Math.min(strategyStep(r).rank, (r.answers_new ?? 0) > 0 ? 1 : 9)

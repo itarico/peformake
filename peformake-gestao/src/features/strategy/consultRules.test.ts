@@ -151,7 +151,7 @@ describe('lista mínima da estratégia', () => {
   const base = { answers_new: 0 }
   it('um passo por situação', () => {
     expect(strategyStep({ ...base, monthly: null }).go).toBe('briefing')
-    expect(strategyStep({ ...base, monthly: { month: '2026-12-01', status: 'pronto', finished_at: null, pending: 3, suggestions: 0 } })).toMatchObject({ go: 'revisar', label: 'Revisar (3)' })
+    expect(strategyStep({ ...base, monthly: { month: '2026-12-01', status: 'pronto', finished_at: null, pending: 3, suggestions: 0 } })).toMatchObject({ go: 'revisar', label: 'Revisar' })
     expect(strategyStep({ ...base, monthly: { month: '2026-12-01', status: 'gerando', finished_at: null, pending: 0, suggestions: 0 } }).state).toBe('andando')
     expect(strategyStep({ ...base, monthly: { month: '2026-12-01', status: 'aprovado', finished_at: null, pending: 0, suggestions: 0 } }).label).toBe('Abrir')
   })
@@ -162,23 +162,11 @@ describe('lista mínima da estratégia', () => {
   })
 })
 
-import { stepDots } from './consultRules'
-describe('ícones das etapas', () => {
-  it('azul feito, cinza falta; dia 12 a 15 amarelo; depois do 15 vermelho', () => {
-    expect(stepDots(1, 30, new Date(2026, 10, 5)).map((d) => d.state)).toEqual(['feito', 'falta', 'falta', 'falta'])
-    expect(stepDots(0, 70, new Date(2026, 10, 14)).map((d) => d.state)).toEqual(['feito', 'atencao', 'atencao', 'atencao'])
-    expect(stepDots(2, 0, new Date(2026, 10, 17)).map((d) => d.state)).toEqual(['feito', 'feito', 'atrasado', 'atrasado'])
-    expect(stepDots(4, 0, new Date(2026, 10, 20)).every((d) => d.state === 'feito')).toBe(true)
-  })
-})
-
 import { onlyVideo, targetMonth } from './consultRules'
 describe('cliente só de audiovisual', () => {
-  it('é só audiovisual sem tráfego, social nem consultoria; roteiro atrasado fica vermelho depois do dia 15', () => {
+  it('é só audiovisual sem tráfego, social nem consultoria; mês que está sendo preparado', () => {
     expect(onlyVideo({ areas: { audiovisual: true, trafego: false, social: false }, consultoria: false })).toBe(true)
     expect(onlyVideo({ areas: { audiovisual: true, trafego: true, social: false }, consultoria: false })).toBe(false)
-    const d = stepDots(1, 80, new Date(2026, 10, 16), { video: true })
-    expect(d[1]).toEqual({ key: 'gerar', label: 'Roteiro gerado', state: 'atrasado' })
     expect(targetMonth(new Date(2026, 10, 17))).toBe('2026-12')
     expect(targetMonth(new Date(2026, 11, 3))).toBe('2027-01')
   })

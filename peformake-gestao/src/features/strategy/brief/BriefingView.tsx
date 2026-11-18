@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { Children, useState, type ReactNode } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Ban, Bookmark, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, Mic, NotebookPen, Package, Send, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -48,6 +48,7 @@ type Icon = typeof Check
 
 /** Grupo de ícones (sem caixa de texto): o título é só uma palavra. */
 function Group({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
+  if (!Children.toArray(children).length) return null
   return (
     <section className="flex flex-col gap-2">
       <div className="flex min-h-9 items-center gap-2 px-1"><h3 className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">{title}</h3>{right && <span className="ml-auto">{right}</span>}</div>
@@ -101,6 +102,9 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   const st = useBriefStatus(clientId, month)
   const [open, setOpen] = useState<Open>(null)
   const [semComp, setSemComp] = useState(false)
+  // Compacto (Italo, 18/11): mostra só o que falta; o que já está feito fica atrás de "Ver tudo".
+  const [all, setAll] = useState(false)
+  const show = (done: boolean) => all || !done
   // Direcionamento da equipe (o que a IA não acha sozinha): fica aqui no briefing, junto das respostas (Italo, 17/11).
   const consult = useConsultList()
   const direction = consult.data?.find((r) => r.client_id === clientId)?.direction ?? ''
@@ -162,30 +166,31 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
       <div className="flex items-center gap-3">
         <Ring percent={st.percent} />
         <div className="min-w-0 flex-1 text-[13px] text-muted">{todo.length ? <><b className="text-ink">{todo.length}</b> para completar</> : <b className="text-ok-ink">Tudo pronto</b>}</div>
+        <button type="button" data-ver-tudo onClick={() => setAll((v) => !v)} className="min-h-10 shrink-0 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{all ? 'Só o que falta' : 'Ver tudo'}</button>
         {todo.length > 0 && <Button data-completar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /> Completar</Button>}
       </div>
 
       <Group title="O cliente">
-        <Tile icon={Compass} label="Direção" title="Direcionamento da equipe" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />
-        <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />
-        <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />
-        <Tile icon={Link2} label="Links" title="Links importantes" done={links.length >= 2} count={links.length} onOpen={() => setOpen({ kind: 'links' })} />
-        <Tile icon={Users} label="Público" title={TEXT_FIELDS.publico.label} done={!!f.publico} onOpen={() => setOpen({ kind: 'text', key: 'publico' })} />
-        <Tile icon={Star} label="Diferenciais" title={TEXT_FIELDS.diferenciais.label} done={!!f.diferenciais} onOpen={() => setOpen({ kind: 'text', key: 'diferenciais' })} />
-        <Tile icon={Swords} label="Concorrentes" title={f.sem_concorrentes && !comps.length ? 'Não tem concorrente direto' : 'Concorrentes'} done={comps.length > 0 || !!f.sem_concorrentes} count={comps.length} isNew={comps.some((c) => c.novo)} onOpen={() => { setSemComp(!!f.sem_concorrentes); setOpen({ kind: 'concorrentes' }) }} />
-        <Tile icon={Bookmark} label="Referências" title="Referências" done={refs.length > 0} count={refs.length} isNew={refs.some((r) => r.novo)} onOpen={() => setOpen({ kind: 'referencias' })} />
-        <Tile icon={MessageCircle} label="Voz" title={TEXT_FIELDS.voz.label} done={!!f.voz} onOpen={() => setOpen({ kind: 'text', key: 'voz' })} />
-        <Tile icon={Ban} label="Proibidos" title={TEXT_FIELDS.proibidos.label} done={!!f.proibidos} onOpen={() => setOpen({ kind: 'text', key: 'proibidos' })} />
-        <Tile icon={UserRound} label="Quem aparece" title={TEXT_FIELDS.quem_aparece.label} done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'text', key: 'quem_aparece' })} />
-        <Tile icon={Video} label="Quem grava" title={TEXT_FIELDS.quem_grava.label} done={!!f.quem_grava} onOpen={() => setOpen({ kind: 'text', key: 'quem_grava' })} />
-        <Tile icon={Gauge} label="Capacidade" title={TEXT_FIELDS.capacidade.label} done={!!f.capacidade} onOpen={() => setOpen({ kind: 'text', key: 'capacidade' })} />
+        {show(!!direction.trim()) && <Tile icon={Compass} label="Direção" title="Direcionamento da equipe" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />}
+        {show(!!doc) && <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />}
+        {show(prods.some((p) => p.preco)) && <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />}
+        {show(links.length >= 2) && <Tile icon={Link2} label="Links" title="Links importantes" done={links.length >= 2} count={links.length} onOpen={() => setOpen({ kind: 'links' })} />}
+        {show(!!f.publico) && <Tile icon={Users} label="Público" title={TEXT_FIELDS.publico.label} done={!!f.publico} onOpen={() => setOpen({ kind: 'text', key: 'publico' })} />}
+        {show(!!f.diferenciais) && <Tile icon={Star} label="Diferenciais" title={TEXT_FIELDS.diferenciais.label} done={!!f.diferenciais} onOpen={() => setOpen({ kind: 'text', key: 'diferenciais' })} />}
+        {show(comps.length > 0 || !!f.sem_concorrentes) && <Tile icon={Swords} label="Concorrentes" title={f.sem_concorrentes && !comps.length ? 'Não tem concorrente direto' : 'Concorrentes'} done={comps.length > 0 || !!f.sem_concorrentes} count={comps.length} isNew={comps.some((c) => c.novo)} onOpen={() => { setSemComp(!!f.sem_concorrentes); setOpen({ kind: 'concorrentes' }) }} />}
+        {show(refs.length > 0) && <Tile icon={Bookmark} label="Referências" title="Referências" done={refs.length > 0} count={refs.length} isNew={refs.some((r) => r.novo)} onOpen={() => setOpen({ kind: 'referencias' })} />}
+        {show(!!f.voz) && <Tile icon={MessageCircle} label="Voz" title={TEXT_FIELDS.voz.label} done={!!f.voz} onOpen={() => setOpen({ kind: 'text', key: 'voz' })} />}
+        {show(!!f.proibidos) && <Tile icon={Ban} label="Proibidos" title={TEXT_FIELDS.proibidos.label} done={!!f.proibidos} onOpen={() => setOpen({ kind: 'text', key: 'proibidos' })} />}
+        {show(!!f.quem_aparece) && <Tile icon={UserRound} label="Quem aparece" title={TEXT_FIELDS.quem_aparece.label} done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'text', key: 'quem_aparece' })} />}
+        {show(!!f.quem_grava) && <Tile icon={Video} label="Quem grava" title={TEXT_FIELDS.quem_grava.label} done={!!f.quem_grava} onOpen={() => setOpen({ kind: 'text', key: 'quem_grava' })} />}
+        {show(!!f.capacidade) && <Tile icon={Gauge} label="Capacidade" title={TEXT_FIELDS.capacidade.label} done={!!f.capacidade} onOpen={() => setOpen({ kind: 'text', key: 'capacidade' })} />}
       </Group>
 
       <Group title={mes}>
-        <Tile icon={Tag} label="Ofertas" title={MONTH_FIELDS.ofertas.label} done={!!mo.ofertas} onOpen={() => setOpen({ kind: 'month', key: 'ofertas' })} />
-        <Tile icon={Target} label="Meta" title={MONTH_FIELDS.meta.label} done={!!mo.meta} onOpen={() => setOpen({ kind: 'month', key: 'meta' })} />
-        <Tile icon={CalendarX} label="Datas" title={MONTH_FIELDS.datas_travam.label} done={!!mo.datas_travam} onOpen={() => setOpen({ kind: 'month', key: 'datas_travam' })} />
-        <Tile icon={TrendingUp} label="Mês passado" title="O que funcionou no mês passado" done={!!last.data?.summary} onOpen={() => setOpen({ kind: 'funcionou' })} />
+        {show(!!mo.ofertas) && <Tile icon={Tag} label="Ofertas" title={MONTH_FIELDS.ofertas.label} done={!!mo.ofertas} onOpen={() => setOpen({ kind: 'month', key: 'ofertas' })} />}
+        {show(!!mo.meta) && <Tile icon={Target} label="Meta" title={MONTH_FIELDS.meta.label} done={!!mo.meta} onOpen={() => setOpen({ kind: 'month', key: 'meta' })} />}
+        {show(!!mo.datas_travam) && <Tile icon={CalendarX} label="Datas" title={MONTH_FIELDS.datas_travam.label} done={!!mo.datas_travam} onOpen={() => setOpen({ kind: 'month', key: 'datas_travam' })} />}
+        {show(!!last.data?.summary) && <Tile icon={TrendingUp} label="Mês passado" title="O que funcionou no mês passado" done={!!last.data?.summary} onOpen={() => setOpen({ kind: 'funcionou' })} />}
         <MeetingNotes clientId={clientId} name={name} trigger={(o, n) => <Tile icon={NotebookPen} label="Reunião" title={n ? `${n} ajustes da reunião para fazer` : 'Anotar a reunião'} done={false} count={n} onOpen={o} />} />
       </Group>
 
