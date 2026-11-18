@@ -1,7 +1,7 @@
 # Estudo: roteiro de vídeo que converte (Peformake + Ellcazo)
 
-18/11/2026. **Isto é estudo, não regra.** Serve para a IA e a equipe pensarem melhor antes de escrever. A versão
-operacional curta (o que a geração segue) está em `MOTOR-ROTEIRO.md`. Teste aplicado: `TESTE-ROTEIROS-SN.md`.
+18/11/2026. **Isto é estudo, não regra.** Serve para a IA e a equipe pensarem melhor antes de escrever. Espinha: o **MDD** (§2b). A versão
+operacional está em `MOTOR-ROTEIRO.md`, o prompt completo em `PROMPT-ROTEIRO-MASTER.md`, o radar em `RADAR-TENDENCIAS.md` e o teste em `TESTE-ROTEIROS-SN.md`.
 
 Pedido do Italo: a geração de roteiro "ficou bonita, mas não funcional". O roteiro tem que ser o diferencial da casa:
 ideias novas e únicas por cliente, baseadas no que já deu certo (estrutura, gancho, neuromarketing, humor), com a
@@ -689,7 +689,230 @@ pausa, plano, trilha, CTA) declara o porquê, e o card guarda uma **intenção**
    cliente final), para a geração pela API ler o mesmo que o agente.
 
 ---
-## 15. Fontes
+## 15. Vender sem parecer venda (e fechar sem queimar alcance)
+
+Base: MDD §8 (venda invisível, régua 80/20, "invisível é a forma, nunca a verdade"), Mavic V1–V12, Hormozi, Cialdini.
+- **Venda embutida:** o produto aparece **trabalhando** dentro da história ou do ensino (a lista conferida, a peça
+  certa no lugar certo); teste do MDD: tirando toda menção comercial, o vídeo ainda merece existir?
+- **Prova antes da oferta:** demonstração, caso, número; a oferta chega como consequência ("é por isso que…").
+- **Quebra de objeção dentro do conteúdo:** a objeção dita pelo personagem ou pelo público (Voss: auditoria de
+  acusações) e respondida com prova, sem tom defensivo.
+- **Oferta irresistível (Hormozi):** resultado desejado ↑, probabilidade percebida ↑ (prova, garantia cumprível),
+  tempo ↓, esforço ↓ ("manda a lista do jeito que estiver"). Bônus e garantia só se o cliente cumpre.
+- **Escassez e urgência éticas:** só data, vaga ou estoque **verdadeiros** (MDD: "escassez por critério e sempre
+  verdadeira"; rubrica da casa: validade compatível com o Código do Consumidor).
+- **CTA suave × direto:** suave ("comenta", "manda pra quem…", "salva") para fases 1–3 e conteúdo de alcance; direto
+  ("chama no WhatsApp", "pede até sexta") para fases 4–5, oferta e anúncio. Um CTA só. CTA no meio derruba retenção.
+- **Loop aberto para o WhatsApp/direct:** prometer no vídeo um material **maior que o vídeo** ("comenta LISTA que eu
+  te mando o checklist do que mais falta na hidráulica") → automação/atendimento entrega → conversa começa quente.
+- **Fechar sem queimar alcance:** o fecho continua a história (callback, imagem final, tag); a oferta ocupa 2–5 s;
+  nada de 10 s de cartela. 80 % do mês com venda invisível, 20 % explícita (MDD).
+
+## 16. Algoritmo de cada rede (sinais e o que o roteiro faz para provocar)
+
+Conhecimento **rotativo** (MDD): revisar mensalmente, com data. Estado em 18/11/2026.
+- **Instagram (Adam Mosseri, jan/2025 e 2026):** os três sinais que mais pesam são **tempo de visualização, curtidas e
+  envios**; curtidas pesam mais com seguidores, **envios por DM pesam mais para alcançar não seguidores**; métricas a
+  acompanhar: envios por alcance, curtidas por alcance, tempo médio; conteúdo **original** é favorecido (marca d'água
+  de outro app e repost atrapalham); **Trial Reels** mostram o Reel primeiro a não seguidores (testar ideias); Reels
+  até 3 min podem ser recomendados; carrossel rende mais que foto única; agendar não prejudica.
+- **TikTok:** retenção e visualização completa, replays, compartilhamentos, comentários e seguir após ver; busca
+  interna forte (palavra-chave falada e escrita). Métricas de anúncio contam a partir de 2 s.
+- **YouTube Shorts:** visualização completa e loop, engajamento depois de ver; título e palavras-chave pesam na busca.
+- **Facebook/Reels:** mesma família da Meta; público mais velho; compartilhamento em grupos.
+- **LinkedIn (B2B):** tempo de permanência, comentários de qualidade e rede do autor; vídeo nativo com legenda; perfil
+  pessoal do dono costuma alcançar mais que a página (CONSENSO; testar).
+- **Kwai e Pinterest:** Kwai = interior e classes C/D, humor e utilidade; Pinterest = busca visual e "ideia salva"
+  (bom para acabamento, decoração, receita).
+
+| Sinal | O que o roteiro faz para provocar |
+|---|---|
+| Tempo de visualização / retenção | gancho que cumpre, re-gancho a cada 15–20 s, loop aberto fechado no fim, mais curto possível |
+| Envio por DM (compartilhar) | identificação ("isso é a minha obra"), humor de ofício, "manda pro mestre que…", utilidade para um terceiro |
+| Salvar | conteúdo de consulta: lista, tabela, checklist, passo a passo, "salva antes de ir na loja" |
+| Comentar | pergunta de escolha binária, opinião de mercado, palavra-chave por material, "qual a pior lista que você já recebeu?" |
+| Seguir após ver | série com título fixo e promessa de próximo episódio |
+| Replay | final que pede rever (detalhe escondido, loop perfeito) |
+| Busca / SEO social | palavra-chave **dita** nos primeiros segundos, escrita na tela e na 1ª linha da legenda ("distribuidora de tubos em Recife") |
+
+Duração e frequência: o menor tempo que conta a história (estudo da casa: o mesmo conteúdo em 9 s venceu o de 33 s);
+consistência de qualidade (3–5 fortes por semana) > volume fraco (MDD §11).
+
+## 17. Resultado imediato × construção de marca (e rentabilidade)
+
+- **Rápido:** oferta clara + prova + tráfego pago + atendimento pronto (fase 4–5). **Constrói:** autoridade, história,
+  comunidade, humor (fases 1–3). Binet & Field: emocional constrói no longo prazo, racional ativa no curto; os dois.
+- **Mix do mês sugerido:** ~60 % construção (alcance, história, ensino, comunidade) e ~40 % conversão (objeção, prova,
+  oferta), ajustado pela meta do mês e pelo nível de consciência do público. Cliente sem tráfego pago precisa de mais
+  prova/oferta no orgânico; cliente com tráfego pode deixar o orgânico construir e o anúncio converter.
+- **Rentabilidade:** custo por vídeo = horas de roteiro + diária ÷ vídeos da diária + edição. **Reaproveitamento é o
+  que paga a diária:** 1 gravação → vídeo principal + 2–3 cortes + versão de anúncio 15 s com 3–5 ganchos + story +
+  carrossel de quadros + Shorts. No máximo 6 vídeos por diária de 3 h (rubrica da casa).
+
+## 18. Percepção de quem assiste
+
+- **0,5–3 s:** rosto humano ou mão em ação, movimento já acontecendo, contraste forte, texto de 3–7 palavras legível
+  sem som. Nada de logo, abertura lenta ou "oi gente".
+- **Credibilidade:** autenticidade > produção em B2B e local (UGC e cru convertem bem: CONSENSO 2026); cinema só quando
+  a ideia pede (institucional, marca). Produção alta demais em conteúdo de feed pode parecer anúncio e ativar o
+  "escudo".
+- **Carga cognitiva:** uma ideia por frase, um elemento novo por vez na tela, texto que não concorre com a fala.
+- **Legibilidade no celular:** legenda grande o suficiente, fora das áreas da interface (topo e base), contraste alto,
+  no máximo 2 linhas.
+- **Som desligado:** a história se entende pela imagem + texto (teste sem som obrigatório).
+- **Fadiga:** o mesmo rosto, cenário e fecho em todo vídeo cansam (o erro da SN); variar linguagem e plano.
+
+## 19. Capa, título, legenda e SEO social
+Capa com rosto + 3–5 palavras da promessa (a capa precisa ser cumprida no primeiro quadro, MrBeast); 1ª linha da
+legenda = gancho + palavra-chave de busca; legenda completa: contexto → valor → CTA → pergunta; hashtags poucas e
+específicas; palavra-chave dita em voz alta no começo.
+
+## 20. Depois do vídeo: conversa e atribuição
+Palavra-chave para DM/WhatsApp (automação ou atendimento com **roteiro de resposta pronto**: primeira mensagem,
+pergunta de qualificação, entrega do material, próximo passo); link com UTM quando houver página; cupom ou código por
+vídeo/campanha quando fizer sentido; pergunta "como nos conheceu?" no atendimento; etiqueta no WhatsApp Business
+("Instagram", "anúncio") para contar resultado (estudo da SN: meta de 20 listas contadas).
+
+## 21. Direção de não-atores (fazer o dono falar natural)
+Perguntas em vez de texto decorado (entrevista que vira fala); **cola de tópicos** de 3–5 palavras por bloco; takes
+curtos (um bloco por vez); aquecimento de voz e corpo (Giulia: "tudo na vida é treinável"); "conta como se fosse para
+um cliente no balcão"; refazer só o bloco; deixar a pessoa trocar palavras, manter o pensamento; para quem trava,
+começar pela história que ela mais gosta de contar. Ver anexo MDD "atuação e presença magnética".
+
+## 22. Qualidade técnica mínima por nível
+- **Celular (cliente):** luz de janela de frente, lente limpa, 4K/30, microfone de lapela sem fio, enquadramento na
+  altura dos olhos, fundo que prova (estoque, obra), sem contra-luz.
+- **Ellcazo padrão:** 2 câmeras, lapela + boom, luz principal suave + recorte, cor corrigida, −14 LUFS.
+- **Cinemático:** lentes claras, luz motivada, movimento estabilizado, som ambiente gravado, trilha licenciada,
+  grading. (MANUAL_EDICAO, `sound_design.md`.)
+
+## 23. Teste A/B de ganchos e fadiga criativa
+Mesmo corpo, 3–5 ganchos; trocar **uma variável por vez**; decidir por hook rate e depois por custo por resultado com
+volume mínimo de impressões; Trial Reels no orgânico; fadiga: CTR caindo e frequência subindo por 7 dias → trocar
+gancho primeiro, depois ângulo, depois formato (MDD, tráfego: fila de criativos pronta).
+
+## 24. Colaborações, influenciadores locais e UGC de clientes reais
+Par do público (engenheiro, mestre, cliente da loja) vale mais que celebridade; collab no Instagram soma alcance dos
+dois perfis; UGC real exige autorização de imagem por escrito e pode virar anúncio (com permissão de uso).
+
+## 25. Acessibilidade
+Legenda em todo vídeo, contraste alto, fonte legível, não depender só de cor, descrição na legenda quando a imagem
+carrega a informação, ritmo de fala compreensível.
+
+## 26. Limites legais e éticos
+- **LGPD:** nada de dado pessoal de cliente em vídeo (lista com nome/telefone borrados; conversa de WhatsApp só com
+  autorização e anonimizada).
+- **Direito de imagem:** autorização por escrito de quem aparece (cliente, funcionário, criança com responsável).
+- **Música:** só licenciada ou da biblioteca da plataforma; anúncio exige licença comercial.
+- **CONAR:** publicidade identificada como tal (#publi em parceria), sem comparação enganosa, sem denegrir concorrente
+  (regra da casa: concorrente nunca pelo nome).
+- **Conselhos de saúde:** medicina (Resolução CFM 2.336/2023: antes e depois só em caráter educativo e com as regras
+  da norma; dados obrigatórios do médico), odontologia (CFO), estética e demais conselhos: sem promessa de resultado.
+- **Código de Defesa do Consumidor:** preço e condição verdadeiros, validade razoável.
+
+---
+## 27. Humor como pilar (aprofundamento de §7)
+
+**Teorias (por que rimos):** **incongruência** (a expectativa armada é quebrada de um jeito que faz sentido depois);
+**superioridade** (rimos de quem erra; é a mais arriscada para marca: vira "rir DE"); **alívio** (a tensão acumulada
+se solta); **violação benigna** (McGraw & Warren: algo está errado, mas é seguro; leve e inclusiva funciona,
+grave e excludente fere a marca, ver §7 e fontes). Na prática, quase todo humor de marca bom é **incongruência +
+violação benigna inclusiva**.
+
+**Tipos e quando servem:**
+| Tipo | O que é | Serve para | Cuidado |
+|---|---|---|---|
+| Observacional ("só quem trabalha com X sabe") | a verdade do ofício que ninguém fala | identificação e envio por DM (o mais forte para B2B) | precisa de detalhe real do nicho |
+| Situação de balcão/atendimento | o pedido estranho, o cliente apressado | comunidade, objeção leve | rir **com** o cliente, nunca dele |
+| Autodepreciativo | a marca brinca com o próprio defeito periférico | simpatia, quebra do "escudo" | nunca da competência central (MDD) |
+| Absurdo / literalização | a expressão vira cena real | alcance | manter o fio com a dor real |
+| Sátira do nicho | exagera o padrão do mercado (o inimigo-ideia) | posicionamento | atacar a prática, nunca o concorrente nomeado |
+| Personagem fixo com bordão | rosto recorrente (Willy da Mavic) | série, hábito | o personagem precisa funcionar avulso |
+| Ironia / contraste | texto diz uma coisa, imagem outra | objeção, crítica | leitura clara sem som |
+| Paródia de trend / gênero | formato conhecido com conteúdo do cliente | alcance rápido | janela curta; envelhece |
+| Meme | imagem/texto reconhecível | alcance barato | envelhece em semanas |
+
+**Estrutura de piada:** setup (arma a expectativa) → punchline (quebra; a palavra-força no **fim** da frase) → tag
+(piada extra depois). **Regra de três** (dois iguais, o terceiro quebra). **Callback** (a piada do início volta no
+fim). **Timing:** pausa de 1–2 s antes do payoff; o rosto conta a piada (close de reação). **Economia brutal:** cortar
+toda palavra que não serve ao riso. **Especificidade:** o detalhe real e absurdo do nicho é o ouro (MDD §9).
+**Escalada:** cada repetição mais absurda (Mavic H8). Commit total: ninguém pisca para a câmera.
+
+**Humor que carrega a mensagem sem perder credibilidade:** o produto é o fim da piada (V1); uma frase séria curta na
+virada ("brincadeira à parte…") devolve a autoridade; humor mora em relacionamento/engajamento, **nunca na hora da
+prova** (MDD); dose: tempero em até 40 % das peças, 100 % cômicas no máximo 15 % (MDD).
+
+**Nichos sérios (saúde, jurídico, financeiro):** humor só sobre a **situação do paciente/cliente** (a fila, o medo da
+agulha, a mania de pesquisar no Google), nunca sobre doença, resultado ou erro profissional; sem antes/depois em
+piada; respeitar o conselho da profissão.
+
+**Riscos:** ofender (grupo, cliente, região), envelhecer rápido (meme, trend), desviar da marca (a piada lembrada sem
+a marca: teste "trocando a marca, a piada morre?"), parecer infantil para B2B (resolver com humor **de ofício**).
+
+**Como achar o humor de cada cliente (garimpo):** listar 10 situações reais do dia a dia do cliente e do público
+(perguntas estranhas, pedidos impossíveis, erros comuns, jargão, manias, "aquele cliente que…"); perguntar à equipe "o
+que acontece aqui que faz vocês rirem?"; ler comentários e WhatsApp (as palavras reais são piada pronta); escolher a
+que é verdade para o público, segura (benigna) e termina no produto.
+
+**Referências que fazem bem (observação de mercado):** Mavic Produções (Roraima; universo de personagens, venda como
+fim da piada; estudo completo em `estudo_mavic.md`), Porta dos Fundos (esquete; conteúdo de marca com roteiro forte),
+perfis de marca que usam humor de comunidade (ex.: Netflix Brasil). Para B2B, Volvo Trucks (Live Test com humor e
+espetáculo) e o humor de canteiro dos perfis de profissionais de obra.
+
+**Checagem própria de humor (no pipeline):** o crítico responde: (1) é engraçado **para esta persona** (ela riria e
+mandaria para um colega)? (2) o alvo é a situação? (3) a piada termina no produto? (4) envelhece em menos de 1 mês? (5)
+lido em voz alta, o timing funciona? Nota de humor < 8 → reescrever ou trocar de formato.
+
+## 28. Identidade de cada cliente (para todo roteiro soar como AQUELA marca)
+
+**Base:** arquétipos (Jung; Mark & Pearson, *The Hero and the Outlaw*: 12 arquétipos, como o Cuidador, o Sábio, o
+Herói, o Cara Comum, o Criador, o Bobo da Corte); plataforma de marca (propósito, posicionamento, personalidade,
+promessa); tom de voz em **escalas** (formal ↔ informal, sério ↔ divertido, técnico ↔ simples, contido ↔ entusiasmado,
+respeitoso ↔ irreverente); vocabulário próprio e bordões; MDD (onlyness, inimigo-ideia, marca-personagem, Eixo).
+
+**Ficha de identidade audiovisual (uma por cliente):**
+- Arquétipo principal + secundário · propósito · posicionamento (para quem, o quê, diferente de quem) · promessa.
+- Tom em 5 escalas (1–5) · palavras e expressões **que usa** · palavras **proibidas** · bordões e frase-assinatura.
+- Rosto da marca (quem aparece, como fala, o que não faz na câmera) · personagens recorrentes.
+- Visual em vídeo: cores (da marca e do audiovisual), tipografia de legenda e títulos, enquadramentos preferidos,
+  lugares que provam (cenários), luz, ritmo de corte, trilha (gênero, energia), assinatura sonora, fecho fixo.
+- O que nunca: temas, piadas, formatos, concorrentes.
+**Onde guardar (sem tela nova):** `client_brand_voice` (essência, propósito, arquétipo, tom, evitar, expressão,
+regra_teste, pilares) + `client_brand_guides.guide` (visual) + `clients.brand_style` (voz, faça, evite, cores,
+fontes). **O sistema deduz sozinho** arquétipo, escalas de tom e vocabulário a partir do perfil, site, briefing e
+vídeos aprovados; **pergunta** o que só o cliente sabe (o que não pode, quem aparece, bordão que já usa, limites de
+humor). A checagem de fidelidade compara cada roteiro com a ficha.
+
+---
+## 29. Autenticidade obrigatória
+
+Cada cliente soa único; nunca cópia de referência nem de outro cliente.
+1. **Referência é transformada:** só a mecânica (estrutura, ritmo, mecanismo psicológico) é aproveitada; fala,
+   cenário, personagem e piada vêm do dossiê e da identidade do cliente (MDD: "originalidade é enquadramento").
+2. **Teste da troca de logo** (Diferenciação Brutal): trocando só o nome, serve para outra marca? Reprova.
+3. **Pelo menos 2 marcas de autenticidade** por roteiro: história real, bordão, pessoa real, lugar real, dado/número
+   real, situação real do público (palavras reais).
+4. **Similaridade:** comparar ideia, estrutura e gancho com os roteiros do mês, de meses anteriores do cliente
+   (`strategy_cards`, `av_projects`) e dos outros clientes do mesmo mês; parecido demais = refaz.
+5. Nota de **autenticidade** própria no crítico.
+
+## 30. Mapa de frameworks por etapa do motor (qual etapa usa o quê)
+
+| Etapa | Frameworks (fonte) | Para quê, na prática |
+|---|---|---|
+| **0. Dossiê** | **The Mom Test** (Rob Fitzpatrick: perguntar sobre o passado concreto, não opinião sobre o futuro) · social listening · dark social (o que circula em WhatsApp/DM e não aparece em métrica) | perguntas do briefing e da entrevista ("conta a última vez que uma obra parou por material"); ler comentários e conversas |
+| **1. Estrategista** | **Byron Sharp / Ehrenberg-Bass** (*How Brands Grow*: disponibilidade mental, **Category Entry Points** = situações em que o comprador pensa na categoria, **ativos distintivos**) · **regra 95-5** (LinkedIn B2B Institute: só ~5 % dos compradores B2B estão no mercado agora; os outros 95 % precisam lembrar da marca depois) · **Binet & Field 60/40** (marca/ativação) · **See-Think-Do-Care** (Avinash Kaushik) e TOFU/MOFU/BOFU · **Posicionamento** (Ries & Trout) · **Value Proposition Canvas** (Osterwalder: tarefas, dores, ganhos) · JTBD · North Star por cliente · AARRR | escolher para quem e em que momento de entrada na categoria cada vídeo fala ("quando a etapa da obra vai começar"); equilibrar construção e ativação; dar ao vídeo um ativo distintivo fixo (fecho, bordão, cor) |
+| **2. Curador** | **Steal like an artist** (Austin Kleon: roubar de muitas fontes e remixar) · engenharia reversa · camadas regional/nacional/global · "sair da bolha" | trazer referência de fora do nicho e transformar |
+| **3. Ideação** | **SCAMPER** (substituir, combinar, adaptar, modificar, outro uso, eliminar, inverter) · **Seis Chapéus** (De Bono) · volume de ideias + filtro com nota · **Rory Sutherland** (*Alchemy*: a solução psicológica pode valer mais que a lógica; mudar a percepção é mais barato que mudar o produto) · **Fogg B=MAP** (comportamento = motivação × capacidade × gatilho) | gerar 10–15 loglines baratas; aumentar a "capacidade" do cliente agir (ex.: "manda a lista do jeito que estiver" reduz esforço) |
+| **4. Copywriter** | Schwartz (níveis) · **Hormozi** (equação de valor, **Grand Slam Offer**) · psicologia de preço (**âncora**, **decoy**/opção-isca) · **4U** (útil, urgente, único, ultra-específico) · **PAS, PASTOR** (problema, amplificar, história, transformação, oferta, resposta) · **QUEST** (qualificar, entender, educar, estimular, transição) · **Star-Story-Solution** · **FAB** (característica → vantagem → benefício) · **Regra de Um** (uma ideia, uma promessa, uma oferta, um CTA) · **Caples** (títulos testados; o título é o anúncio do anúncio) · Cialdini | gancho, promessa, argumento, oferta e CTA; cada característica traduzida em benefício para a persona |
+| **5. Roteirista** | **Dan Harmon Story Circle** (você, precisa, vai, procura, encontra, paga, volta, muda) · **"mas/portanto"** (Trey Parker & Matt Stone: cenas ligadas por "mas" e "portanto", nunca por "e então"; é o MAS/ENTÃO do MDD) · formas de **Vonnegut** (homem no buraco, Cinderela) · **7 enredos de Booker** (vencer o monstro, da pobreza à riqueza, a busca, viagem e volta, comédia, tragédia, renascimento) · want × need (Truby) · in medias res · **Zeigarnik** (o não terminado fica na memória: loop aberto) · StoryBrand (cliente herói, marca guia) · beat sheet | arco e fala; para documentário: **Errol Morris / Interrotron** (o entrevistado olha nos olhos da câmera; perguntas abertas e silêncio) e **Michael Rabiger** (*Directing the Documentary*: achar a história no material real, ponto de vista do autor) |
+| **6. Diretor** | linguagem audiovisual: tamanho de plano e emoção (geral = contexto; médio = conversa; close = emoção; detalhe = prova) · movimento de câmera (push-in = tensão/importância; travelling = descoberta; fixo = verdade) · lente (grande-angular = proximidade/energia; tele = intimidade/compressão) · regra dos terços · **eixo de 180°** · luz de 3 pontos e **Rembrandt** · cor/grading por marca · **storyboard e shot list como entrega da diária** | plano da diária e decupagem |
+| **7. Editor** | **J/L-cut** · **match cut** · **quebra de padrão a cada 3–5 s** no vídeo curto · hierarquia de texto na tela sem som (1 frase de gancho, legenda, palavra-chave) · trilha e sound design (`sound_design.md`) · Murch · Kuleshov | ritmo, cortes, legenda, trilha |
+| **8. Crítico** | SUCCESs (Heath) · STEPPS (Berger) · checklist neuro e 5 filtros (MDD) · **hook rate, hold rate** · **nota prevista × resultado real** (calibrar o crítico com o que aconteceu) | notas e comparação com benchmarks |
+| **9. Mês** | **pilares de conteúdo** e **70/20/10** (70 % do que já funciona, 20 % variação, 10 % experimento) · séries/franquias (Hero-Hub-Help) · 60/40 | diversidade e equilíbrio do mês |
+
+---
+## 31. Fontes
 
 - Meta for Business: "Adopt a mobile-first creative approach" (facebook.com/business/news/mobile-first-creative) e
   "Video ads: testing what works for mobile feed" (facebook.com/business/news/building-video-for-mobile-feed).
@@ -711,3 +934,16 @@ pausa, plano, trilha, CTA) declara o porquê, e o card guarda uma **intenção**
 - Avis "We try harder" (DDB, 1962), resumo em mynameiskalam.com/case-studies/avis-we-try-harder.
 - Estudos internos: `video-tools/estilos/estudo_narrativas.md`, `estudo_mavic.md`, `catalogo_estilos.md`,
   `video-tools/NARRATIVA.md`, `.claude/skills/roteiro-narrativa/`.
+- Mosseri (Instagram), sinais de ranking jan/2025 e 2026, via Social Media Today e resumo em zoomsphere.com/blog/instagram-algorithm-2026-what-actually-gets-reach; Trial Reels (creators.instagram.com).
+- Hook rate e hold rate: sparkugc.com/resources/creative-metrics-glossary-thumbstop-hook-hold-rate; admakeai.com/blog/hook-rate (Meta: 3-Second Video Plays; TikTok: 2-second views).
+- UGC: Modern Millie, "9 UGC video ideas" (youtube.com/watch?v=4xkWq0brqBk); attnagency.com/blog/tiktok-ugc-ads.
+- MrBeast, "How to succeed in MrBeast production" (documento vazado, comentado em simonwillison.net/2024/Sep/15/how-to-succeed-in-mrbeast-production).
+- Stephens, Silbert & Hasson (2010), "Speaker–listener neural coupling underlies successful communication", PNAS (pnas.org/doi/10.1073/pnas.1008662107).
+- Berger, *Contagious* (STEPPS) (consumerresearcher.com/jonah-berger-contagious).
+- Murch, regra de 6 (gointothestory.blcklst.com/walter-murch-and-the-rule-of-six-47de34be834a); Hitchcock a Truffaut, suspense × surpresa (nofilmschool.com/alfred-hitchcock-and-francois-truffaut-explain-surprise-vs-suspense); efeito Kuleshov (en.wikipedia.org/wiki/Kuleshov_effect).
+- Pixar, 22 regras / Story Spine (aerogrammestudio.com/2013/03/07/pixars-22-rules-of-storytelling).
+- Schwartz, níveis de consciência (betweenthelinescopy.com/blog/stages-of-awareness).
+- Olson, ABT (crtc.wustl.edu/and-but-therefore-the-powerful-narrative-framework-transforming-scientific-communication).
+- Hero-Hub-Help (practicalecommerce.com/the-hero-hub-help-content-marketing-strategy).
+- CFM, Resolução 2.336/2023 sobre publicidade médica (sistemas.cfm.org.br/normas/arquivos/resolucoes/BR/2023/2336_2023.pdf).
+- Livros citados como referência bibliográfica (sem link): Aristóteles, *Poética*; McKee, *Story* (1997); Field, *Screenplay* (1979); Snyder, *Save the Cat* (2005); Campbell, *O herói de mil faces* (1949); Vogler, *A jornada do escritor* (1992); Truby, *The Anatomy of Story* (2007); Egri, *The Art of Dramatic Writing* (1946); Murch, *In the Blink of an Eye* (1995); Hall, *Stories That Stick* (2019); Miller, *Building a StoryBrand* (2017); Dicks, *Storyworthy* (2018); Duarte, *Resonate* (2010); Godin, *This Is Marketing* (2018); Heath & Heath, *Made to Stick* (2007); Kane, *Hook Point* (2020); Eyal, *Hooked* (2014); Hormozi, *$100M Offers* (2021) e *$100M Leads* (2023); Vaynerchuk, *Crushing It!* (2018); Cialdini, *Influence* (1984) e *Pre-Suasion* (2016); Schwartz, *Breakthrough Advertising* (1966); Ogilvy, *Ogilvy on Advertising* (1983); Halbert, *The Boron Letters*; Sugarman, *The Adweek Copywriting Handbook* (2006); Hopkins, *Scientific Advertising* (1923); Kennedy, *The Ultimate Sales Letter*; Voss, *Never Split the Difference* (2016); Camp, *Start with No* (2002); Kahneman, *Rápido e devagar* (2011); Damasio, *O erro de Descartes* (1994); Sapolsky, *Behave* (2017); Barrett, *How Emotions Are Made* (2017); Ekman, *Emotions Revealed* (2003); Zaltman, *How Customers Think* (2003); Lindstrom, *Buyology* (2008); Sharp, *How Brands Grow* (2010); Ries & Trout, *Positioning* (1981); Osterwalder et al., *Value Proposition Design* (2014); Sutherland, *Alchemy* (2019); Fogg, *Tiny Habits* (2019); Fitzpatrick, *The Mom Test* (2013); Booker, *The Seven Basic Plots* (2004); Rabiger, *Directing the Documentary*; Kleon, *Steal Like an Artist* (2012); Mark & Pearson, *The Hero and the Outlaw* (2001); De Bono, *Six Thinking Hats* (1985); Caples, *Tested Advertising Methods* (1932); Christensen, *Competing Against Luck* (2016); Sinek, *Start With Why* (2009); Minto, *The Pyramid Principle* (1987); Kaushik, See-Think-Do-Care (kaushik.net); LinkedIn B2B Institute, regra 95-5 (Dawes, 2021).
