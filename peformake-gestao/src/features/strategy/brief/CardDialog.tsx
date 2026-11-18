@@ -74,7 +74,7 @@ function LinkOut({ href, label }: { href?: string; label?: string }) {
  * Card aberto: tudo dele, em abas (nunca rola). Editar tocando no texto (salva sozinho).
  * Ações sempre no mesmo lugar (rodapé): Aprovar · Recusar · Refazer, e "Incluir no PDF".
  */
-export function CardDialog({ card, onClose, onChanged, viaApi = false, chat }: { card: StrategyCard; onClose: () => void; onChanged: () => void; viaApi?: boolean; chat?: { name: string; clientId: string; month: string } }) {
+export function CardDialog({ card, onClose, onChanged, viaApi = false, chat, editOnly = false }: { card: StrategyCard; onClose: () => void; onChanged: () => void; viaApi?: boolean; chat?: { name: string; clientId: string; month: string }; /** Só editar (leitura da estratégia): sem aprovar/recusar, sem selos. */ editOnly?: boolean }) {
   const [c, setC] = useState(card)
   useEffect(() => setC(card), [card])
   const sections = cardSections(c)
@@ -181,7 +181,8 @@ export function CardDialog({ card, onClose, onChanged, viaApi = false, chat }: {
   }
 
   const hints = REDO_HINTS[c.kind] ?? REDO_HINTS.default!
-  const footer = mode === 'recusar'
+  const footer = editOnly ? <Button className="min-h-10 px-4 text-[13px]" onClick={onClose}>Pronto</Button>
+    : mode === 'recusar'
     ? <div className="flex gap-2"><Button disabled={reject.isPending} onClick={() => reject.mutate()}>{reject.isPending ? 'Recusando' : 'Recusar'}</Button><Button variant="secondary" onClick={() => setMode('ver')}>Voltar</Button></div>
     : mode === 'refazer'
       ? <div className="flex gap-2"><Button disabled={redo.isPending} onClick={() => redo.mutate()}><RefreshCw size={14} aria-hidden="true" className={cn(redo.isPending && 'animate-spin')} /> {redo.isPending ? 'Refazendo' : 'Refazer'}</Button><Button variant="secondary" disabled={redo.isPending} onClick={() => setMode('ver')}>Voltar</Button></div>
@@ -197,18 +198,18 @@ export function CardDialog({ card, onClose, onChanged, viaApi = false, chat }: {
       </div>
 
   return (
-    <Dialog open onClose={onClose} title={KIND_LABEL[c.kind] ?? 'Card'} size="md" footer={footer}>
+    <Dialog open onClose={onClose} title={editOnly ? `Editar: ${KIND_LABEL[c.kind] ?? 'item'}` : KIND_LABEL[c.kind] ?? 'Card'} size="md" footer={footer}>
       <div className="flex flex-col gap-3" data-card-aberto>
         <div className="flex flex-col gap-1">
           <Editable label="Título" value={c.title} rows={2} lines={2} className="text-[15.5px] font-semibold" onSave={(v) => v && save.mutate({ title: v })} />
-          <div className="flex flex-wrap items-center gap-1.5 px-2.5">
+          {!editOnly && <div className="flex flex-wrap items-center gap-1.5 px-2.5">
             <FunnelChip f={c.funnel} />
             {c.status === 'aprovado' && <span className="rounded-full bg-ok-soft px-2 py-0.5 text-[11.5px] font-semibold text-ok-ink">Aprovado</span>}
             {c.status === 'recusado' && <span className="rounded-full bg-raised px-2 py-0.5 text-[11.5px] font-semibold text-muted">Recusado{c.reject_reason ? `: ${c.reject_reason}` : ''}</span>}
             {c.redo_requested_at && <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11.5px] font-semibold text-accent-ink">Na fila para refazer</span>}
             {c.assumed && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-[11.5px] font-semibold text-warn-ink">Suposição</span>}
             {c.serves && <span className="truncate text-[12px] text-muted max-sm:hidden">Serve: {c.serves}</span>}
-          </div>
+          </div>}
         </div>
         {mode === 'recusar' && <label className="text-[13px] font-semibold">Motivo em 1 linha <span className="font-normal text-muted">(vira regra de conteúdo)</span>
           <input autoFocus maxLength={200} value={reason} onChange={(e) => setReason(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') reject.mutate() }} placeholder="Ex.: não mostrar a cozinha" className="mt-1 min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 text-[14px]" /></label>}
