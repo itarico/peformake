@@ -1,0 +1,99 @@
+idioma: pt
+[00:01] Essa sombra tem 104 anos e essa caixa vermelha é uma inteligência artificial
+[00:06] seguindo a sombra 10 vezes por segundo com o filme rodando
+[00:10] ninguém treinou nada a gente só escreveu uma frase a sombra do vampiro com a mão e as garras
+[00:18] depois a gente pediu para ela olhar o filme inteiro sem dizer qual era o filme são 94 minutos
+[00:23] ela terminou em 80 segundos gastou 15 centavos de dólar e apontou sem ajuda as cenas mais assustadoras
+[00:31] nesse vídeo eu quero te mostrar o que as pessoas estão fazendo com isso agora
+[00:35] depois os testes que a gente fez e que eu não vi nenhuma demonstração e no fim como isso funciona por dentro sem termo técnico
+[00:42] o modelo se chama jav da empresa typesafe ele não escreve texto você mostra uma coisa
+[00:48] faz uma pergunta e ele devolve uma decisão em menos de meio segundo
+[00:52] em outubro a typesafe abriu as imagens ainda em modo experimental e criou uma resposta nova chamada box
+[00:59] que aponta onde uma coisa está na foto e uma pergunta sobre uma imagem custa um centésimo de centavo de dólar
+[01:06] dá umas 10 mil imagens por um dólar só que vídeo nada mais é do que foto atrás de foto
+[01:11] então se olhar uma foto fica barato e imediato
+[01:14] analisar vídeo muda de patamar e nas últimas semanas as pessoas começaram a mostrar o que dá para fazer com isso
+[01:20] eu separei os melhores casos e o crédito de cada um aparece na tela
+[01:24] esse aqui transformou fotos de torrada numa régua a cada foto da câmera ele dá uma nota para torrada e no ponto 2 o pão pula
+[01:33] esse aqui é controle de qualidade cada limão é avaliado três vezes enquanto rola na esteira com uma versão aberta do modelo
+[01:40] direto no macbook
+[01:41] agora a box a pessoa mostra uma foto de planta o modelo encontra essa planta na câmera do drone e o código
+[01:48] leva o drone até lá
+[01:50] esse cortou a foto ao meio várias vezes até achar cada caneta em cerca de um segundo
+[01:56] e esse juntou a box com um truque antigo divisão computacional e seguiu um celular em tempo real
+[02:02] tem gente levando isso para o mundo físico
+[02:04] esse aponta o celular para casa e o modelo avisa quando tem uma escada pela frente
+[02:09] esse jogou o jogo do dinossauro do chrome só olhando a tela
+[02:12] e esse aqui acompanhou um resgate no mar com oito perguntas a cada segundo
+[02:17] na tela do computador o modelo já olha decide clica e digita como uma pessoa
+[02:22] e aqui ele confere um aplicativo e enxerga o que o teste automático comum não vê como um texto riscado
+[02:28] no youtube esse teste me chamou atenção
+[02:31] 200 imagens em 4 segundos por 2 centavos de dólar
+[02:35] esse colocou um recíbo lado a lado com um modelo tradicional foi quatro vezes mais rápido e custou 29 vezes menos
+[02:43] e esse descobriu que o próprio gabarito estava errado
+[02:46] tinha um rosto de 40 pixels no canto da imagem e o jeff achou agora
+[02:50] voz o jeff não recebe áudio a fala vira texto e é em cima do texto que ele decide
+[02:56] só que isso já é tão rápido que parece mágica esse aqui controla o celular falando com ações em cerca de 300 mili segundos
+[03:04] esse abre o aplicativo no mac antes de terminar a frase
+[03:08] aqui a roupa muda só com a voz com 620 mili segundos por decisão
+[03:14] e esse pula o patrocínio de um vídeo em tempo real por meio centavo de dólar por vídeo a cloud flare foi além com a clef
+[03:21] omni ela recebe áudio e vídeo direto sem transcrever nada e já indexaram 70 minutos de vídeo por 1 dólar e 69
+[03:29] só tem um cuidado muita demonstração viral era escolha entre opções prontas e não a inteligência artificial criando alguma coisa
+[03:36] por isso a gente resolveu testar com as nossas próprias mãos teste um o filme inteiro
+[03:42] o filme anos ferato de 1922 que está em domínio público a gente separou um quadro a cada dois segundos deu
+[03:50] 2829 imagens e fez duas perguntas para cada uma se é cena ou letreiro e qual assustador é esse quadro
+[03:59] sem título sem sinopse só imagem com 48 conexões ao mesmo tempo o filme inteiro passou em 80 segundos
+[04:07] esse gráfico é o medo do filme minuto a minuto e olha onde cai os maiores picos a sombra das garras em cima da cama
+[04:14] e a mordida do vampiro no final depois a gente fez uma coisa que um player de vídeo comum não faz que é buscar dentro da imagem
+[04:22] ratos
+[04:25] caixão
+[04:27] uma sombra na parede
+[04:30] olha esse caixão aqui pequeno no meio de um cortejo na rua ele achou
+[04:34] e ele também errou ele confundiu o corretor careca com o vampiro e dos 27 quadros de ratos
+[04:40] 21 estavam certos teste 2 ao vivo
+[04:44] a gente mandou 10 quadros por segundo no ritmo real do filme durante um minuto cada quadro recebeu três perguntas
+[04:51] a sombra está aqui em que lugar e qual assustador é isso a resposta típica voltou em
+[04:57] 47 centésimos de segundo uma hora disso custaria menos de dois dólares e é aqui que pra mim a análise de vídeo mudou de patamar
+[05:06] teste 3 e esse é com você
+[05:09] olha essas duas linhas e escolha maior
+[05:15] muita gente escolha de cima só que a de cima é menor essa é a ilusão de miller lyre de
+[05:22] 1889 e ela segue enganando a gente mostrou essa imagem pro jeff e ele também escolheu a de cima com
+[05:28] 91% de certeza depois a gente repetiu isso em 156 imagens trocando as linhas de lugar tirando as setinhas
+[05:36] ele percebe diferenças mínimas com as setinhas a linha pode ser 13% mais curta e ele segue apostando nela
+[05:44] um modelo que nunca teve olhos caiu na mesma ilusão que você eu não vi isso em nenhuma demonstração do jeff e pra mim esse é o resultado mais curioso do vídeo
+[05:54] teste 4 o futuro
+[05:57] essas torres vem de uma simulação de física de verdade são 120 torres metade fica de pé metade desaba
+[06:04] o jeff recebe só uma imagem parada antes de qualquer bloco se mexer e diz pra que lado vai cair
+[06:10] nas 60 torres que caíram ele acertou o lado nas 60 e pra separar as que caem das que ficam ele acertou
+[06:17] 92% teste 5 o que ele perdeu
+[06:21] a gente gerou a mesma frase com três intenções diferentes sincera ironica e irritada com tons bem
+[06:28] diferentes na medição adorei o seu trabalho adorei o seu trabalho adorei o seu trabalho
+[06:37] aqui a gente usou a clef omni que ouve o áudio direto resultado seis acertos em 18 igual a chutar a resposta quase
+[06:45] não mudou de um tom pro outro ela entende o que você diz nesse teste ela não entendeu como você diz
+[06:52] agora como isso funciona por dentro são quatro ideias a primeira um chat escreve uma palavra de cada vez
+[06:59] e cada palavra custa uma rodada inteira do modelo o jeff faz uma rodada só ele olha tudo de uma vez
+[07:05] e devolve uma probabilidade para cada opção que você deu a segunda por isso ele só responde de quatro
+[07:11] jeitos sim ou não uma opção da sua lista uma nota numa escala ou uma caixa em cima da imagem é pouco
+[07:18] mas é exatamente o que um programa precisa pra agir a terceira o jeff não assiste vídeo e não lembra
+[07:24] do quadro anterior cada quadro é uma foto nova quem dá a sensação de vídeo é o seu programa
+[07:29] que manda muitos quadros ao mesmo tempo e lembra do que aconteceu a quarta pra ele uma imagem
+[07:35] de mil pedacinhos que ele lê de uma vez só e a gente conseguiu espiar isso a gente tampou a imagem
+[07:42] em 289 lugares diferentes e mediu quando a resposta caía o calor mostra pra onde ele tava olhando o
+[07:49] caixão e o rosto do vampiro tem dois limites que você precisa conhecer a box nunca diz que não
+[07:55] achou então ela precisa de uma pergunta de sim ou não antes e tudo isso ainda é experimental
+[08:01] pra typesafe avisa que ainda não é pra produção pra mim é isso que mudou analisar vídeo com inteligência
+[08:07] artificial era uma coisa que você fazia depois em lote quando sobrava o orçamento agora dá pra
+[08:13] fazer durante em cada quadro antes de terminar eu preciso te contar uma coisa esse vídeo foi
+[08:19] gerado por inteligência artificial o roteiro a minha voz esse avatar que você está vendo e todas
+[08:26] as informações eu não gravei nada os testes são reais e os números e as fontes estão na descrição
+[08:32] e se você quer criar vídeos assim com inteligência artificial eu quero te convidar pra comunidade
+[08:37] maestros da ia lá dentro tem uma trilha inteira de criação de conteúdo com ia e a fábrica de
+[08:43] conteúdo autônoma um sistema completo de produção de conteúdo hoje são 147 aulas publicadas
+[08:50] uma formação maestros da ia e os cursos de clode code codex e Hermes são 329 recursos
+[08:57] prontos pra copiar e usar sem esquios 56 aplicativos 12 agentes e um arsenal de promptes e templates
+[09:06] toda semana tem live comigo e com a líria e as gravações ficam lá e todo dia tem suporte
+[09:12] técnico pra você nunca ficar travado deu um erro pergunta pro suporte e você não faz isso
+[09:17] não são milhares de pessoas trocando dificuldades projetos e aplicativos e muita gente lá dentro
+[09:24] já formou sociedade para criar produtos com inteligência artificial o link está na descrição
+[09:29] desse vídeo e você tem 7 dias de garantia vai ser um prazer receber você por lá e se você
+[09:34] gostou desse vídeo deixe o seu like e o seu hype e se inscreve no canal um abraço e até a próxima

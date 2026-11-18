@@ -1,0 +1,6 @@
+idioma: pt (0.98)
+[   0.1-   9.6] Abra esse site, faz o login, vai em cloud mcp, pega sua chave de acesso, vai no cloud,
+[   9.6-  14.5] conectores, adicionar o conector personalizado e avançar. Pede pro cloud,
+[  14.5-  19.3] criar um carro o céu de seu nicho e detalhe bem. Dá uma olhada nesse carro o céu que a gente acabou
+[  19.3-  23.8] de fazer em menos de um minuto. Se você quer ter acesso a sua ferramenta, comenta a cloud aqui
+[  23.8-  24.7] que eu te mando ela agora.

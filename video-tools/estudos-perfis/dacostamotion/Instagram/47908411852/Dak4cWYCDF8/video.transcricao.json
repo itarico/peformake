@@ -1,0 +1,576 @@
+{
+ "arquivo": "video.mp4",
+ "idioma": "en",
+ "duracao": 45.025,
+ "segmentos": [
+  {
+   "inicio": 0.05,
+   "fim": 3.51,
+   "texto": "We grew up being told that taking care of ourselves was a priority",
+   "palavras": [
+    {
+     "texto": " We",
+     "inicio": 0.05,
+     "fim": 0.53,
+     "prob": 0.769
+    },
+    {
+     "texto": " grew",
+     "inicio": 0.53,
+     "fim": 0.73,
+     "prob": 0.994
+    },
+    {
+     "texto": " up",
+     "inicio": 0.73,
+     "fim": 0.91,
+     "prob": 0.998
+    },
+    {
+     "texto": " being",
+     "inicio": 0.91,
+     "fim": 1.11,
+     "prob": 0.998
+    },
+    {
+     "texto": " told",
+     "inicio": 1.11,
+     "fim": 1.39,
+     "prob": 0.999
+    },
+    {
+     "texto": " that",
+     "inicio": 1.39,
+     "fim": 1.59,
+     "prob": 0.99
+    },
+    {
+     "texto": " taking",
+     "inicio": 1.59,
+     "fim": 1.87,
+     "prob": 0.984
+    },
+    {
+     "texto": " care",
+     "inicio": 1.87,
+     "fim": 2.23,
+     "prob": 1.0
+    },
+    {
+     "texto": " of",
+     "inicio": 2.23,
+     "fim": 2.33,
+     "prob": 0.999
+    },
+    {
+     "texto": " ourselves",
+     "inicio": 2.33,
+     "fim": 2.67,
+     "prob": 0.997
+    },
+    {
+     "texto": " was",
+     "inicio": 2.67,
+     "fim": 2.87,
+     "prob": 0.997
+    },
+    {
+     "texto": " a",
+     "inicio": 2.87,
+     "fim": 2.97,
+     "prob": 0.997
+    },
+    {
+     "texto": " priority",
+     "inicio": 2.97,
+     "fim": 3.51,
+     "prob": 0.998
+    }
+   ]
+  },
+  {
+   "inicio": 4.35,
+   "fim": 6.87,
+   "texto": "until life started asking for space and",
+   "palavras": [
+    {
+     "texto": " until",
+     "inicio": 4.35,
+     "fim": 4.75,
+     "prob": 0.52
+    },
+    {
+     "texto": " life",
+     "inicio": 4.75,
+     "fim": 5.15,
+     "prob": 0.983
+    },
+    {
+     "texto": " started",
+     "inicio": 5.15,
+     "fim": 5.63,
+     "prob": 0.998
+    },
+    {
+     "texto": " asking",
+     "inicio": 5.63,
+     "fim": 5.93,
+     "prob": 0.999
+    },
+    {
+     "texto": " for",
+     "inicio": 5.93,
+     "fim": 6.15,
+     "prob": 0.999
+    },
+    {
+     "texto": " space",
+     "inicio": 6.15,
+     "fim": 6.53,
+     "prob": 0.998
+    },
+    {
+     "texto": " and",
+     "inicio": 6.53,
+     "fim": 6.87,
+     "prob": 0.312
+    }
+   ]
+  },
+  {
+   "inicio": 7.83,
+   "fim": 12.17,
+   "texto": "What once was a priority kept getting pushed aside for later",
+   "palavras": [
+    {
+     "texto": " What",
+     "inicio": 7.83,
+     "fim": 7.95,
+     "prob": 0.189
+    },
+    {
+     "texto": " once",
+     "inicio": 7.95,
+     "fim": 8.31,
+     "prob": 0.958
+    },
+    {
+     "texto": " was",
+     "inicio": 8.31,
+     "fim": 8.47,
+     "prob": 0.997
+    },
+    {
+     "texto": " a",
+     "inicio": 8.47,
+     "fim": 8.57,
+     "prob": 0.997
+    },
+    {
+     "texto": " priority",
+     "inicio": 8.57,
+     "fim": 9.09,
+     "prob": 0.998
+    },
+    {
+     "texto": " kept",
+     "inicio": 9.09,
+     "fim": 9.83,
+     "prob": 0.967
+    },
+    {
+     "texto": " getting",
+     "inicio": 9.83,
+     "fim": 10.07,
+     "prob": 0.999
+    },
+    {
+     "texto": " pushed",
+     "inicio": 10.07,
+     "fim": 10.29,
+     "prob": 0.998
+    },
+    {
+     "texto": " aside",
+     "inicio": 10.29,
+     "fim": 10.73,
+     "prob": 0.996
+    },
+    {
+     "texto": " for",
+     "inicio": 10.73,
+     "fim": 11.77,
+     "prob": 0.828
+    },
+    {
+     "texto": " later",
+     "inicio": 11.77,
+     "fim": 12.17,
+     "prob": 0.994
+    }
+   ]
+  },
+  {
+   "inicio": 13.15,
+   "fim": 14.43,
+   "texto": "Until it disappeared",
+   "palavras": [
+    {
+     "texto": " Until",
+     "inicio": 13.15,
+     "fim": 13.83,
+     "prob": 0.631
+    },
+    {
+     "texto": " it",
+     "inicio": 13.83,
+     "fim": 14.01,
+     "prob": 0.999
+    },
+    {
+     "texto": " disappeared",
+     "inicio": 14.01,
+     "fim": 14.43,
+     "prob": 0.996
+    }
+   ]
+  },
+  {
+   "inicio": 15.39,
+   "fim": 17.53,
+   "texto": "Coming back feels impossible",
+   "palavras": [
+    {
+     "texto": " Coming",
+     "inicio": 15.39,
+     "fim": 16.07,
+     "prob": 0.861
+    },
+    {
+     "texto": " back",
+     "inicio": 16.07,
+     "fim": 16.41,
+     "prob": 0.998
+    },
+    {
+     "texto": " feels",
+     "inicio": 16.41,
+     "fim": 16.87,
+     "prob": 0.995
+    },
+    {
+     "texto": " impossible",
+     "inicio": 16.87,
+     "fim": 17.53,
+     "prob": 0.995
+    }
+   ]
+  },
+  {
+   "inicio": 18.33,
+   "fim": 22.09,
+   "texto": "Feeling that shiver of being a woman again feels too far away",
+   "palavras": [
+    {
+     "texto": " Feeling",
+     "inicio": 18.33,
+     "fim": 19.01,
+     "prob": 0.851
+    },
+    {
+     "texto": " that",
+     "inicio": 19.01,
+     "fim": 19.27,
+     "prob": 0.999
+    },
+    {
+     "texto": " shiver",
+     "inicio": 19.27,
+     "fim": 19.67,
+     "prob": 0.982
+    },
+    {
+     "texto": " of",
+     "inicio": 19.67,
+     "fim": 19.91,
+     "prob": 0.998
+    },
+    {
+     "texto": " being",
+     "inicio": 19.91,
+     "fim": 20.09,
+     "prob": 0.999
+    },
+    {
+     "texto": " a",
+     "inicio": 20.09,
+     "fim": 20.25,
+     "prob": 0.999
+    },
+    {
+     "texto": " woman",
+     "inicio": 20.25,
+     "fim": 20.43,
+     "prob": 0.997
+    },
+    {
+     "texto": " again",
+     "inicio": 20.43,
+     "fim": 20.71,
+     "prob": 0.99
+    },
+    {
+     "texto": " feels",
+     "inicio": 20.71,
+     "fim": 21.17,
+     "prob": 0.984
+    },
+    {
+     "texto": " too",
+     "inicio": 21.17,
+     "fim": 21.51,
+     "prob": 0.994
+    },
+    {
+     "texto": " far",
+     "inicio": 21.51,
+     "fim": 21.79,
+     "prob": 1.0
+    },
+    {
+     "texto": " away",
+     "inicio": 21.79,
+     "fim": 22.09,
+     "prob": 0.999
+    }
+   ]
+  },
+  {
+   "inicio": 22.85,
+   "fim": 28.29,
+   "texto": "But that path exists and it requires a vow every single day",
+   "palavras": [
+    {
+     "texto": " But",
+     "inicio": 22.85,
+     "fim": 23.31,
+     "prob": 0.545
+    },
+    {
+     "texto": " that",
+     "inicio": 23.31,
+     "fim": 23.51,
+     "prob": 0.999
+    },
+    {
+     "texto": " path",
+     "inicio": 23.51,
+     "fim": 23.89,
+     "prob": 0.979
+    },
+    {
+     "texto": " exists",
+     "inicio": 23.89,
+     "fim": 24.57,
+     "prob": 0.997
+    },
+    {
+     "texto": " and",
+     "inicio": 24.57,
+     "fim": 25.59,
+     "prob": 0.853
+    },
+    {
+     "texto": " it",
+     "inicio": 25.59,
+     "fim": 25.69,
+     "prob": 0.995
+    },
+    {
+     "texto": " requires",
+     "inicio": 25.69,
+     "fim": 26.03,
+     "prob": 0.999
+    },
+    {
+     "texto": " a",
+     "inicio": 26.03,
+     "fim": 26.23,
+     "prob": 0.989
+    },
+    {
+     "texto": " vow",
+     "inicio": 26.23,
+     "fim": 26.51,
+     "prob": 0.981
+    },
+    {
+     "texto": " every",
+     "inicio": 26.51,
+     "fim": 27.35,
+     "prob": 0.951
+    },
+    {
+     "texto": " single",
+     "inicio": 27.35,
+     "fim": 27.83,
+     "prob": 0.999
+    },
+    {
+     "texto": " day",
+     "inicio": 27.83,
+     "fim": 28.29,
+     "prob": 0.999
+    }
+   ]
+  },
+  {
+   "inicio": 29.16,
+   "fim": 32.33,
+   "texto": "Phase by phase the cycle reorganizes",
+   "palavras": [
+    {
+     "texto": " Phase",
+     "inicio": 29.16,
+     "fim": 29.77,
+     "prob": 0.598
+    },
+    {
+     "texto": " by",
+     "inicio": 29.77,
+     "fim": 30.05,
+     "prob": 0.949
+    },
+    {
+     "texto": " phase",
+     "inicio": 30.05,
+     "fim": 30.39,
+     "prob": 0.989
+    },
+    {
+     "texto": " the",
+     "inicio": 30.39,
+     "fim": 30.99,
+     "prob": 0.375
+    },
+    {
+     "texto": " cycle",
+     "inicio": 30.99,
+     "fim": 31.39,
+     "prob": 0.996
+    },
+    {
+     "texto": " reorganizes",
+     "inicio": 31.39,
+     "fim": 32.33,
+     "prob": 0.892
+    }
+   ]
+  },
+  {
+   "inicio": 33.36,
+   "fim": 35.91,
+   "texto": "Neurological hormonal metabolic",
+   "palavras": [
+    {
+     "texto": " Neurological",
+     "inicio": 33.36,
+     "fim": 33.97,
+     "prob": 0.774
+    },
+    {
+     "texto": " hormonal",
+     "inicio": 33.97,
+     "fim": 35.07,
+     "prob": 0.567
+    },
+    {
+     "texto": " metabolic",
+     "inicio": 35.07,
+     "fim": 35.91,
+     "prob": 0.923
+    }
+   ]
+  },
+  {
+   "inicio": 36.42,
+   "fim": 38.31,
+   "texto": "inflammatory behavioral",
+   "palavras": [
+    {
+     "texto": " inflammatory",
+     "inicio": 36.42,
+     "fim": 37.03,
+     "prob": 0.919
+    },
+    {
+     "texto": " behavioral",
+     "inicio": 37.03,
+     "fim": 38.31,
+     "prob": 0.758
+    }
+   ]
+  },
+  {
+   "inicio": 38.98,
+   "fim": 43.89,
+   "texto": "Everything connected everything orbiting around who has always mattered",
+   "palavras": [
+    {
+     "texto": " Everything",
+     "inicio": 38.98,
+     "fim": 39.59,
+     "prob": 0.37
+    },
+    {
+     "texto": " connected",
+     "inicio": 39.59,
+     "fim": 40.21,
+     "prob": 0.994
+    },
+    {
+     "texto": " everything",
+     "inicio": 40.21,
+     "fim": 41.31,
+     "prob": 0.809
+    },
+    {
+     "texto": " orbiting",
+     "inicio": 41.31,
+     "fim": 41.89,
+     "prob": 0.983
+    },
+    {
+     "texto": " around",
+     "inicio": 41.89,
+     "fim": 42.39,
+     "prob": 0.998
+    },
+    {
+     "texto": " who",
+     "inicio": 42.39,
+     "fim": 42.67,
+     "prob": 0.99
+    },
+    {
+     "texto": " has",
+     "inicio": 42.67,
+     "fim": 42.87,
+     "prob": 0.998
+    },
+    {
+     "texto": " always",
+     "inicio": 42.87,
+     "fim": 43.43,
+     "prob": 0.997
+    },
+    {
+     "texto": " mattered",
+     "inicio": 43.43,
+     "fim": 43.89,
+     "prob": 0.99
+    }
+   ]
+  }
+ ]
+}

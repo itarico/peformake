@@ -1,0 +1,15 @@
+idioma: pt
+[00:00] Para de pedir lítio pro Cloud antes de instalar esse skill, eu pedi pra ele uma lista de 50
+[00:04] clínicas de estética em vitória, com um telefone em Instagram e quem eu tenho que
+[00:07] chamar primeiro.
+[00:08] E essa lista inteira custou só 60 centavos.
+[00:11] Enquanto isso, ferramentas brasileiras que entregam esse tipo de dado também cobram
+[00:14] uma fortuna, como por exemplo esse vídeo que custa 719 reais por mês, limitado
+[00:20] a 300 empresas só.
+[00:21] E se você pedisse a mesma coisa pro Cloud do jeito normal, ele inventaria metade da
+[00:25] lista ou traria informação velha.
+[00:27] Para isso eu uso a Glacier, uma skill que dá mais de duas mofontes de informação
+[00:30] verificadas pro meu Cloud buscar.
+[00:32] E eu não preciso pagar a assinatura pra usar ela, eu pago apenas pelo que eu uso.
+[00:35] E pra instalar você literalmente só precisa colar uma linha dentro do seu Cloud.
+[00:39] Comenta a data aqui embaixo que eu te mando link.

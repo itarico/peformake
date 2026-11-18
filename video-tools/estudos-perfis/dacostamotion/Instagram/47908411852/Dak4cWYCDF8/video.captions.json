@@ -1,0 +1,576 @@
+[
+ {
+  "text": " We",
+  "startMs": 50,
+  "endMs": 530,
+  "timestampMs": 290,
+  "confidence": 0.769
+ },
+ {
+  "text": " grew",
+  "startMs": 530,
+  "endMs": 730,
+  "timestampMs": 630,
+  "confidence": 0.994
+ },
+ {
+  "text": " up",
+  "startMs": 730,
+  "endMs": 910,
+  "timestampMs": 820,
+  "confidence": 0.998
+ },
+ {
+  "text": " being",
+  "startMs": 910,
+  "endMs": 1110,
+  "timestampMs": 1010,
+  "confidence": 0.998
+ },
+ {
+  "text": " told",
+  "startMs": 1110,
+  "endMs": 1390,
+  "timestampMs": 1250,
+  "confidence": 0.999
+ },
+ {
+  "text": " that",
+  "startMs": 1390,
+  "endMs": 1590,
+  "timestampMs": 1490,
+  "confidence": 0.99
+ },
+ {
+  "text": " taking",
+  "startMs": 1590,
+  "endMs": 1870,
+  "timestampMs": 1730,
+  "confidence": 0.984
+ },
+ {
+  "text": " care",
+  "startMs": 1870,
+  "endMs": 2230,
+  "timestampMs": 2050,
+  "confidence": 1.0
+ },
+ {
+  "text": " of",
+  "startMs": 2230,
+  "endMs": 2330,
+  "timestampMs": 2280,
+  "confidence": 0.999
+ },
+ {
+  "text": " ourselves",
+  "startMs": 2330,
+  "endMs": 2670,
+  "timestampMs": 2500,
+  "confidence": 0.997
+ },
+ {
+  "text": " was",
+  "startMs": 2670,
+  "endMs": 2870,
+  "timestampMs": 2770,
+  "confidence": 0.997
+ },
+ {
+  "text": " a",
+  "startMs": 2870,
+  "endMs": 2970,
+  "timestampMs": 2920,
+  "confidence": 0.997
+ },
+ {
+  "text": " priority",
+  "startMs": 2970,
+  "endMs": 3510,
+  "timestampMs": 3240,
+  "confidence": 0.998
+ },
+ {
+  "text": " until",
+  "startMs": 4350,
+  "endMs": 4750,
+  "timestampMs": 4550,
+  "confidence": 0.52
+ },
+ {
+  "text": " life",
+  "startMs": 4750,
+  "endMs": 5150,
+  "timestampMs": 4950,
+  "confidence": 0.983
+ },
+ {
+  "text": " started",
+  "startMs": 5150,
+  "endMs": 5630,
+  "timestampMs": 5390,
+  "confidence": 0.998
+ },
+ {
+  "text": " asking",
+  "startMs": 5630,
+  "endMs": 5930,
+  "timestampMs": 5779,
+  "confidence": 0.999
+ },
+ {
+  "text": " for",
+  "startMs": 5930,
+  "endMs": 6150,
+  "timestampMs": 6040,
+  "confidence": 0.999
+ },
+ {
+  "text": " space",
+  "startMs": 6150,
+  "endMs": 6530,
+  "timestampMs": 6340,
+  "confidence": 0.998
+ },
+ {
+  "text": " and",
+  "startMs": 6530,
+  "endMs": 6870,
+  "timestampMs": 6700,
+  "confidence": 0.312
+ },
+ {
+  "text": " What",
+  "startMs": 7830,
+  "endMs": 7950,
+  "timestampMs": 7890,
+  "confidence": 0.189
+ },
+ {
+  "text": " once",
+  "startMs": 7950,
+  "endMs": 8310,
+  "timestampMs": 8130,
+  "confidence": 0.958
+ },
+ {
+  "text": " was",
+  "startMs": 8310,
+  "endMs": 8470,
+  "timestampMs": 8390,
+  "confidence": 0.997
+ },
+ {
+  "text": " a",
+  "startMs": 8470,
+  "endMs": 8570,
+  "timestampMs": 8520,
+  "confidence": 0.997
+ },
+ {
+  "text": " priority",
+  "startMs": 8570,
+  "endMs": 9090,
+  "timestampMs": 8830,
+  "confidence": 0.998
+ },
+ {
+  "text": " kept",
+  "startMs": 9090,
+  "endMs": 9830,
+  "timestampMs": 9460,
+  "confidence": 0.967
+ },
+ {
+  "text": " getting",
+  "startMs": 9830,
+  "endMs": 10070,
+  "timestampMs": 9950,
+  "confidence": 0.999
+ },
+ {
+  "text": " pushed",
+  "startMs": 10070,
+  "endMs": 10290,
+  "timestampMs": 10180,
+  "confidence": 0.998
+ },
+ {
+  "text": " aside",
+  "startMs": 10290,
+  "endMs": 10730,
+  "timestampMs": 10510,
+  "confidence": 0.996
+ },
+ {
+  "text": " for",
+  "startMs": 10730,
+  "endMs": 11770,
+  "timestampMs": 11250,
+  "confidence": 0.828
+ },
+ {
+  "text": " later",
+  "startMs": 11770,
+  "endMs": 12170,
+  "timestampMs": 11969,
+  "confidence": 0.994
+ },
+ {
+  "text": " Until",
+  "startMs": 13150,
+  "endMs": 13830,
+  "timestampMs": 13490,
+  "confidence": 0.631
+ },
+ {
+  "text": " it",
+  "startMs": 13830,
+  "endMs": 14010,
+  "timestampMs": 13920,
+  "confidence": 0.999
+ },
+ {
+  "text": " disappeared",
+  "startMs": 14010,
+  "endMs": 14430,
+  "timestampMs": 14219,
+  "confidence": 0.996
+ },
+ {
+  "text": " Coming",
+  "startMs": 15390,
+  "endMs": 16070,
+  "timestampMs": 15730,
+  "confidence": 0.861
+ },
+ {
+  "text": " back",
+  "startMs": 16070,
+  "endMs": 16410,
+  "timestampMs": 16240,
+  "confidence": 0.998
+ },
+ {
+  "text": " feels",
+  "startMs": 16410,
+  "endMs": 16870,
+  "timestampMs": 16640,
+  "confidence": 0.995
+ },
+ {
+  "text": " impossible",
+  "startMs": 16870,
+  "endMs": 17530,
+  "timestampMs": 17200,
+  "confidence": 0.995
+ },
+ {
+  "text": " Feeling",
+  "startMs": 18330,
+  "endMs": 19010,
+  "timestampMs": 18670,
+  "confidence": 0.851
+ },
+ {
+  "text": " that",
+  "startMs": 19010,
+  "endMs": 19270,
+  "timestampMs": 19140,
+  "confidence": 0.999
+ },
+ {
+  "text": " shiver",
+  "startMs": 19270,
+  "endMs": 19670,
+  "timestampMs": 19470,
+  "confidence": 0.982
+ },
+ {
+  "text": " of",
+  "startMs": 19670,
+  "endMs": 19910,
+  "timestampMs": 19790,
+  "confidence": 0.998
+ },
+ {
+  "text": " being",
+  "startMs": 19910,
+  "endMs": 20090,
+  "timestampMs": 20000,
+  "confidence": 0.999
+ },
+ {
+  "text": " a",
+  "startMs": 20090,
+  "endMs": 20250,
+  "timestampMs": 20170,
+  "confidence": 0.999
+ },
+ {
+  "text": " woman",
+  "startMs": 20250,
+  "endMs": 20430,
+  "timestampMs": 20340,
+  "confidence": 0.997
+ },
+ {
+  "text": " again",
+  "startMs": 20430,
+  "endMs": 20710,
+  "timestampMs": 20570,
+  "confidence": 0.99
+ },
+ {
+  "text": " feels",
+  "startMs": 20710,
+  "endMs": 21170,
+  "timestampMs": 20940,
+  "confidence": 0.984
+ },
+ {
+  "text": " too",
+  "startMs": 21170,
+  "endMs": 21510,
+  "timestampMs": 21340,
+  "confidence": 0.994
+ },
+ {
+  "text": " far",
+  "startMs": 21510,
+  "endMs": 21790,
+  "timestampMs": 21650,
+  "confidence": 1.0
+ },
+ {
+  "text": " away",
+  "startMs": 21790,
+  "endMs": 22090,
+  "timestampMs": 21939,
+  "confidence": 0.999
+ },
+ {
+  "text": " But",
+  "startMs": 22850,
+  "endMs": 23310,
+  "timestampMs": 23080,
+  "confidence": 0.545
+ },
+ {
+  "text": " that",
+  "startMs": 23310,
+  "endMs": 23510,
+  "timestampMs": 23410,
+  "confidence": 0.999
+ },
+ {
+  "text": " path",
+  "startMs": 23510,
+  "endMs": 23890,
+  "timestampMs": 23700,
+  "confidence": 0.979
+ },
+ {
+  "text": " exists",
+  "startMs": 23890,
+  "endMs": 24570,
+  "timestampMs": 24230,
+  "confidence": 0.997
+ },
+ {
+  "text": " and",
+  "startMs": 24570,
+  "endMs": 25590,
+  "timestampMs": 25080,
+  "confidence": 0.853
+ },
+ {
+  "text": " it",
+  "startMs": 25590,
+  "endMs": 25690,
+  "timestampMs": 25640,
+  "confidence": 0.995
+ },
+ {
+  "text": " requires",
+  "startMs": 25690,
+  "endMs": 26030,
+  "timestampMs": 25860,
+  "confidence": 0.999
+ },
+ {
+  "text": " a",
+  "startMs": 26030,
+  "endMs": 26230,
+  "timestampMs": 26130,
+  "confidence": 0.989
+ },
+ {
+  "text": " vow",
+  "startMs": 26230,
+  "endMs": 26510,
+  "timestampMs": 26370,
+  "confidence": 0.981
+ },
+ {
+  "text": " every",
+  "startMs": 26510,
+  "endMs": 27350,
+  "timestampMs": 26930,
+  "confidence": 0.951
+ },
+ {
+  "text": " single",
+  "startMs": 27350,
+  "endMs": 27830,
+  "timestampMs": 27590,
+  "confidence": 0.999
+ },
+ {
+  "text": " day",
+  "startMs": 27830,
+  "endMs": 28290,
+  "timestampMs": 28060,
+  "confidence": 0.999
+ },
+ {
+  "text": " Phase",
+  "startMs": 29160,
+  "endMs": 29770,
+  "timestampMs": 29465,
+  "confidence": 0.598
+ },
+ {
+  "text": " by",
+  "startMs": 29770,
+  "endMs": 30050,
+  "timestampMs": 29910,
+  "confidence": 0.949
+ },
+ {
+  "text": " phase",
+  "startMs": 30050,
+  "endMs": 30390,
+  "timestampMs": 30220,
+  "confidence": 0.989
+ },
+ {
+  "text": " the",
+  "startMs": 30390,
+  "endMs": 30990,
+  "timestampMs": 30689,
+  "confidence": 0.375
+ },
+ {
+  "text": " cycle",
+  "startMs": 30990,
+  "endMs": 31390,
+  "timestampMs": 31189,
+  "confidence": 0.996
+ },
+ {
+  "text": " reorganizes",
+  "startMs": 31390,
+  "endMs": 32330,
+  "timestampMs": 31860,
+  "confidence": 0.892
+ },
+ {
+  "text": " Neurological",
+  "startMs": 33360,
+  "endMs": 33970,
+  "timestampMs": 33665,
+  "confidence": 0.774
+ },
+ {
+  "text": " hormonal",
+  "startMs": 33970,
+  "endMs": 35070,
+  "timestampMs": 34519,
+  "confidence": 0.567
+ },
+ {
+  "text": " metabolic",
+  "startMs": 35070,
+  "endMs": 35910,
+  "timestampMs": 35489,
+  "confidence": 0.923
+ },
+ {
+  "text": " inflammatory",
+  "startMs": 36420,
+  "endMs": 37030,
+  "timestampMs": 36725,
+  "confidence": 0.919
+ },
+ {
+  "text": " behavioral",
+  "startMs": 37030,
+  "endMs": 38310,
+  "timestampMs": 37670,
+  "confidence": 0.758
+ },
+ {
+  "text": " Everything",
+  "startMs": 38980,
+  "endMs": 39590,
+  "timestampMs": 39285,
+  "confidence": 0.37
+ },
+ {
+  "text": " connected",
+  "startMs": 39590,
+  "endMs": 40210,
+  "timestampMs": 39900,
+  "confidence": 0.994
+ },
+ {
+  "text": " everything",
+  "startMs": 40210,
+  "endMs": 41310,
+  "timestampMs": 40760,
+  "confidence": 0.809
+ },
+ {
+  "text": " orbiting",
+  "startMs": 41310,
+  "endMs": 41890,
+  "timestampMs": 41600,
+  "confidence": 0.983
+ },
+ {
+  "text": " around",
+  "startMs": 41890,
+  "endMs": 42390,
+  "timestampMs": 42140,
+  "confidence": 0.998
+ },
+ {
+  "text": " who",
+  "startMs": 42390,
+  "endMs": 42670,
+  "timestampMs": 42530,
+  "confidence": 0.99
+ },
+ {
+  "text": " has",
+  "startMs": 42670,
+  "endMs": 42870,
+  "timestampMs": 42769,
+  "confidence": 0.998
+ },
+ {
+  "text": " always",
+  "startMs": 42870,
+  "endMs": 43430,
+  "timestampMs": 43150,
+  "confidence": 0.997
+ },
+ {
+  "text": " mattered",
+  "startMs": 43430,
+  "endMs": 43890,
+  "timestampMs": 43660,
+  "confidence": 0.99
+ }
+]

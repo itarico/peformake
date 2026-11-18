@@ -1,0 +1,692 @@
+idioma: pt
+[00:00] Acabaram de transformar o Premiere Pro e o Photoshop em todas as ferramentas da Adobe em código aberto,
+[00:05] ou seja, 100% gratuitas. Por isso, nos próximos minutos eu vou abrir o meu fluxo completo de
+[00:11] criação de motion graphics, edição de vídeo e até criação de tambineio perfeita utilizando
+[00:16] apenas o Cloud Code e ferramentas Open Source, sem gastar um único centavo.
+[00:19] E o primeiro passo começa aqui nos repositórios no GitHub. Aqui nós vamos baixar tanto o
+[00:24] do Craft, que é a versão Open Source do Photoshop, quanto também o filmcraft, que é a mesma
+[00:30] versão Open Source feita pela mesma equipe, pela mesma empresa do Premiere Pro. E para baixar essas
+[00:34] duas ferramentas, basta você copiar e colar o link daqueles repositórios no seu Cloud Code ou no
+[00:39] Codex, tanto faz. E é claro que esses links eu vou deixar disponíveis na nossa comunidade gratuita
+[00:43] para você acessar nossa comunidade. Primeiro comentário fixado ou o link que tiver na
+[00:47] descrição. E uma vez então que você colou aqui esses repositórios, basta pedir para o seu
+[00:52] computador instalar para você. Por favor, gostaria que você instalasse esses dois
+[00:55] repositórios aqui no meu computador. Você vai mandar simplesmente isso, dá um enter e aí o seu
+[01:00] modelo já vai fazer tudo para você. E uma vez que esses aplicativos forem instalados,
+[01:03] basta você abrir normalmente. Eu comecei aqui pelo Fotocraft para te mostrar o como ele
+[01:07] pode ser útil para você criar qualquer tipo de imagem. Mas aqui eu vou te mostrar como
+[01:12] que é um fluxo de alguém que quer criar, por exemplo, tambineios e vídeos. Porque assim a
+[01:16] gente seguiria um fluxo completo, como criar as imagens, gerar as tambineios, criar motion
+[01:20] para o vídeo que a gente quer editar. Então por isso eu estou seguindo esse pipeline,
+[01:23] mas ele serve para você criar qualquer tipo de imagem. E para a gente começar a
+[01:26] utilizar ele, basta vir aqui em novo documento, colocar o nome do projeto que a
+[01:30] gente está criando, vou colocar tambineio 2. E aqui a gente pode escolher também o
+[01:34] formato que a gente quer. 1220 x 1080p, que no caso esse que eu vou escolher,
+[01:37] porque é o formato já da tambineio que eu quero. Mas se você quiser mudar
+[01:41] qualquer tipo de dimensão, você pode fazer aqui. Depois eu só vim aqui, apertar
+[01:45] criar e está aqui. Todas as ferramentas que você teria lá no Photoshop aqui para
+[01:49] ver. E antes você me perguntar, Felipe, mas não é mais fácil eu pedir para o modelo
+[01:52] gerar uma imagem, mais fácil pode até ser. Mas eu vou te mostrar aqui o porque é
+[01:56] muito vantajoso você utilizar esse aplicativo uma vez que ele é de graça. E
+[02:00] para começar eu vou pegar uma imagem minha. Essa imagem já foi gerada pelo
+[02:03] próprio Higgs, para fazer uma outra tambineio. Mas eu vou posicionar ela aqui,
+[02:06] veja que a gente tem todas as réguas para a gente garantir que tudo vai estar
+[02:10] bem alinhado. E pronto, coloquei essa imagem aqui. E ao fazer isso você já
+[02:13] percebe uma das vantagens de a gente utilizar o Fotocraft, que é justamente a
+[02:18] liberdade da gente alterar todos os elementos que fazem parte da nossa
+[02:21] tambineio de maneira livre. Sempre precisar mandar um prompt para o modelo ir lá e
+[02:25] alterar alguma coisa. A gente pode simplesmente clicar e alterar. Mudar de
+[02:28] tamanho, diminuir, arrastar. Isso é muito prático. Mas agora imagina que o que eu
+[02:32] quis fazer aqui é um vídeo sobre Instagram, sobre como você pode crescer
+[02:36] o seu Instagram. O que eu faria agora para arrumar essa tambineio?
+[02:40] Obviamente eu vou entrar aqui no meu cloud code, mas de novo isso serve
+[02:43] também para o codex. E vou pedir para ele fazer algumas alterações lá no
+[02:47] Fotocraft, que seriam alterações muito difíceis, custosas e até sinceramente
+[02:51] eu nem saberia fazer. E antes da gente fazer isso, eu vou pedir para ele se conectar
+[02:54] com o Fotocraft. Por favor, conecte-se ao Fotocraft no projeto que eu estou
+[02:58] aberto agora no meu computador. Agora sim, conexão feita, vamos testar.
+[03:02] O que eu vou pedir então, já que é um vídeo que eu vou fazer
+[03:05] supostamente sobre Instagram, eu vou pedir para ele colocar no fundo dessa minha
+[03:08] tambineio o degradê do Instagram. Justamente para ter as cores, chamar
+[03:12] atenção, porque a ideia de uma boa tambineio é você chamar atenção.
+[03:14] Eu gostaria que você acessasse esse projeto então que está aberto no
+[03:17] Fotocraft e colocasse como fundo dessa imagem o degradê com as cores no
+[03:21] Instagram. Exatamente igualzinho o Instagram.
+[03:24] Vamos enviar isso aqui para ele e vamos ver ele fazendo isso na prática.
+[03:27] Vou até voltar a nossa tambineio aqui e ele mesmo vai pegar e aplicar
+[03:31] todas as cores nessa imagem. Aí depois de um único prompt, esse é o resultado
+[03:35] que ele já entregou. E sinceramente isso aqui está ficando legal
+[03:37] demais e veja que a gente não precisou colocar a mão no Photoshop.
+[03:40] A gente não precisa saber mexer em absolutamente nada aqui.
+[03:42] Mas além de uma imagem de um fundo bonito, o que que a nossa tambineio
+[03:45] precisa? Sim, de um título. E o título que eu vou colocar aqui é Instagram.
+[03:49] Eu quero que ele escreva Instagram aqui e esse Instagram passe por trás da minha
+[03:52] cabeça. Eu gostaria agora que você adicionasse a palavra Instagram na
+[03:57] parte superior da imagem. Porém, atrás da minha cabeça, entre a minha imagem
+[04:02] e o fundo. Exatamente na mesma fonte que o Instagram usa ou a mais parecida
+[04:07] que você conseguir. Eu pedi assim porque eventualmente a fonte do Instagram
+[04:11] pode ser que ele não tenha aqui. Eu teria que ir atrás para baixar.
+[04:14] Às vezes é muito complicado. Às vezes é pago e como é só uma tambineio
+[04:16] em um exemplo, eu estou fazendo assim. Mas é claro que se você
+[04:18] quiser a fonte do Instagram tem como você descobrir e pedir para ele
+[04:21] colocar. Inclusive ele já até trouxe aqui a nossa solução.
+[04:24] A fonte do logo do Instagram, ela é uma fonte paga, nenhuma das
+[04:27] 300 e 13 fontes desse Mac é parecida com ela. Mas ele me deu essa
+[04:30] possibilidade de baixar essa Grand Hotel aqui. Eu vou fazer
+[04:32] porque ele está me dizendo que ela é a mais parecida que a gente
+[04:36] vai ter com a letra do Instagram. Então vou fazer isso. Já pedir para ele
+[04:38] baixar aqui para mim. Ele vai baixar essa fonte e ele vai
+[04:40] colocar lá na nossa tambineio. Tá aí, execução feita, o
+[04:43] resultado que nós temos é esse. Tá ficando bem legal, né? E aqui
+[04:47] veja só, eu acho que eu tô muito grande na imagem e aí que a
+[04:50] gente começa a entender de novo e ver na prática qual é a
+[04:53] grande vantagem de utilizar o Photoshop. Porque aqui ele não
+[04:55] tá me entregando uma imagem direto como a gente pede pro
+[04:58] Ríxio de às vezes cria uma tambineio, ele devolve a
+[05:00] tambineio lá do jeito que ele fez. Você não tem poder
+[05:02] de edição, eu não posso por exemplo mudar a fonte, eu não
+[05:04] posso mudar de lugar, eu não posso arrastar, eu não posso
+[05:07] principalmente mudar as camadas. Imagina que eu queira o
+[05:09] escrito aqui por cima e eu reduzir um pouquinho aqui o
+[05:12] meu tamanho e fazer algo mais ou menos assim, eu poderia. Se
+[05:15] eu peço uma imagem estática pro Ríxio de ele não me entrega
+[05:18] isso. Mas tudo bem, vamos voltar pro jeito que tava porque
+[05:21] tem mais alguns detalhes que eu gostaria de colocar aqui na
+[05:23] nossa imagem. Porque agora pra finalizar eu vou pedir pela
+[05:26] colocar a logo do Instagram de um lado e a logo oficial do
+[05:29] Cloud Code do outro lado justamente pra pessoa bater o
+[05:32] olho no vídeo e saber que se trata de Instagram, as cores
+[05:34] vão dizer isso, o título vai dizer isso, mas também
+[05:36] utilizando inteligência artificial. Qual que é a dica que eu
+[05:38] vou dar nisso vai ter ali o símbolo do Instagram com o
+[05:40] símbolo do Cloud Code e aí vai ficar bem claro sobre o que
+[05:43] que é o vídeo. Então é isso que eu vou pedir pro Cloud fazer.
+[05:45] Eu gostaria que você adicionasse do lado direito o
+[05:48] símbolo do Instagram e do lado esquerdo o símbolo oficial do
+[05:51] Cloud Code. Não quero o mascote do Cloud Code, eu quero
+[05:55] o símbolo oficial. Agora vamos aguardar pra ele mesmo
+[05:58] buscar essas imagens e ele mesmo vai lá na internet, pega
+[06:00] essas imagens e traz aqui pra gente e mais uma vez o
+[06:02] Cloud fez o trabalho pra gente e já colocou as duas
+[06:06] logo aqui. De novo a gente pode aumentar essas
+[06:07] logo, aumentá-las de tamanho, diminuir de tamanho,
+[06:10] movimentar elas, colocá-las mais pra cima, colocá-las aqui no
+[06:13] meu rosto e fazer talvez uma brincadeirinha assim, alguma
+[06:15] coisa que chamasse atenção, trocar de lado, a gente não
+[06:18] precisa mandar um prompt, olha por favor troque as
+[06:20] logos de lado, a gente mesmo pode fazer isso, a gente
+[06:22] pode ajustar. Essa é a maior vantagem de você criar
+[06:24] coisas assim utilizando o Photocraft, porque você tem
+[06:27] total liberdade pra alterar absolutamente tudo na
+[06:30] imagem e todos os seus componentes. E tá aí a
+[06:32] nossa thumbnail pra esse vídeo criado. Só um
+[06:35] ponto importante, muitas vezes eu mesmo criou
+[06:37] várias thumbnails ou mesmo eu mudo o título
+[06:40] da thumbnail. Então imagina que aqui eu queira
+[06:41] mudar o título, eu não quero utilizar Instagram, eu
+[06:44] quero mudar por exemplo pra colocar seguidores.
+[06:47] Tudo bem que nessa fonte aqui não ficou legal,
+[06:49] mas você vai entender a ideia. Eu posso fazer
+[06:51] no YouTube, tenho que ter um teste AB onde eu
+[06:53] posso testar várias ideias de thumbnails com
+[06:55] vários títulos, por exemplo, e nesse caso eu
+[06:58] poderia fazer uma thumbnail escrito Instagram e
+[06:59] outra escrito seguidores, testar uma outra fonte,
+[07:02] testar uma outra maneira, testar aqui talvez
+[07:04] símbolos diferentes, cores de fundos
+[07:07] diferentes, aqui com única ferramenta eu
+[07:09] consigo gerar essas mudanças de novo,
+[07:11] sempre precisar ficar gerando e gastando
+[07:12] crédito no HiggsView, porque cada
+[07:14] correção, cada diferença que eu peço
+[07:15] numa thumbnail, ele vai gerar uma thumbnail
+[07:17] diferente, vai gastar nossos créditos no
+[07:19] HiggsView e também nesse caso aqui,
+[07:21] quando a gente tá usando o Photocraft, nem
+[07:23] sequer prompt eu vou gastar, nem créditos
+[07:25] no meu cloud code eu vou gastar porque eu
+[07:26] consigo alterar tudo aqui utilizando o
+[07:28] mouse sem depender de a nenhuma me ajudar.
+[07:31] Agora, como tem muita gente que me
+[07:32] pergunta como que eu faço as thumbnails,
+[07:34] como que eu faço os vídeos, eu vou
+[07:35] mostrar aqui também o jeito que eu
+[07:37] faço, o que eu utilizo na verdade é
+[07:39] o agente que design OS, que é a minha
+[07:41] ferramenta totalmente focada pra
+[07:43] ajudar você a criar designs melhores,
+[07:45] por isso que eu acabo utilizando ela,
+[07:46] inclusive ela tem uma parte que se
+[07:47] chama Studio e aqui a gente pode
+[07:49] criar tudo que a gente imaginar,
+[07:51] imagem, vídeo, website, carro, céu,
+[07:53] apresentação e aqui você vai
+[07:54] entender o por que eu utilizo essa
+[07:55] ferramenta, veja, primeiro que ela
+[07:57] é muito simples, eu mando um único
+[07:58] prompt e o resultado que eu já
+[08:00] obtenho é muito bom, por algumas
+[08:02] razões, primeiro aqui eu consigo
+[08:03] mandar de maneira muito simples
+[08:05] referências, veja essa imagem
+[08:07] minha mesmo pra fazer essa thumbnail,
+[08:08] perceba que essa thumbnail ela já é
+[08:09] um pouco mais complexa, ela tem um
+[08:11] fundo já gerado, mais bonito, ela
+[08:12] tem essas imagens que são 3d,
+[08:14] então a gente percebe que ela é
+[08:16] uma thumbnail com uma maior
+[08:17] complexidade, com a maior qualidade
+[08:18] também, e pra criar ela o que
+[08:20] que eu faço aqui, dentro da própria
+[08:21] ferramenta aqui acima de onde eu
+[08:22] coloco o prompt eu posso vir aqui e
+[08:24] mandar imagens pra usar como
+[08:26] referência, por exemplo, se eu quero
+[08:27] que o Higgs se gere uma imagem do
+[08:29] meu rosto é interessante eu passar
+[08:30] muitas referências pra isso, e o que
+[08:32] que eu posso fazer, eu posso enviar
+[08:33] fotos de referência ou eu posso
+[08:35] importar pastas, que foi justamente
+[08:37] o que já tá aqui, eu tenho uma
+[08:38] pasta com diversas fotos minhas de
+[08:41] rosto, tá vendo? Várias fotos, e aí
+[08:42] com base nisso ele gera uma imagem
+[08:44] mais fiel a mim, então sempre que o
+[08:47] Higgs se for gerar uma imagem pra
+[08:48] ela ficar o mais parecido com o
+[08:50] comigo possível ele já tem bastante
+[08:51] referência, agora além de eu poder
+[08:53] colocar referências do meu rosto eu
+[08:54] também posso colocar referências de
+[08:55] outras Thumb, foi o que eu fiz, basta
+[08:57] vim aqui anexar e mandar o exemplo
+[08:59] que eu quero, se você olhar na
+[09:00] conversa foi exatamente isso que
+[09:02] aconteceu eu mandei aqui uma
+[09:03] referência de Thumb e um prompt
+[09:05] extremamente simples e assim ele já
+[09:07] conseguiu chegar nesse resultado, e o
+[09:08] mais legal desse resultado é que
+[09:10] assim como no photocraft a gente
+[09:12] também pode mexer em todos os
+[09:14] elementos, veja que aqui a gente
+[09:15] tem um elemento gerado meu, tem aqui
+[09:17] esse notebook, tem aqui também as
+[09:19] imagens, eu posso por exemplo me
+[09:21] colocar acima na frente do notebook
+[09:24] depois eu posso voltar o notebook pra
+[09:25] trás, enfim eu posso brincar com isso
+[09:28] daqui o tanto que eu quiser igualzinho
+[09:30] acontece no photocraft, porém aqui eu
+[09:31] consigo gerar imagens um pouco melhores
+[09:33] isso por conta de duas coisas muito
+[09:35] importantes, a primeira delas é porque
+[09:37] aqui eu uso o Higgs Tooth pra gerar
+[09:38] várias imagens, só que aquele segue
+[09:40] um fluxo específico, veja que ele não
+[09:42] me entrega a imagem estática, ele
+[09:43] me entrega os elementos eu consigo
+[09:45] mexer nos elementos, isso me traz
+[09:46] bastante qualidade, a outra coisa
+[09:48] que faz esse resultado ser muito bom
+[09:50] é a skill específica, porque esse
+[09:52] agente que design os, ele vem com
+[09:54] todas as minhas skills que eu utilizo
+[09:55] pra criar meus carro cés, reels, imagens,
+[09:58] vídeos, inclusive essa aqui que é a
+[10:00] skill de design, que faz parte do
+[10:02] estúdio de criação, justamente é o
+[10:03] que me ajuda a chegar em resultados
+[10:05] tão bons assim, e de quebra ainda
+[10:06] que vale pena mencionar, dentro
+[10:08] desse mesmo projeto eu posso criar
+[10:10] utilizando codex, cloud, ou o gem9,
+[10:12] então imagina que eu começo aqui a
+[10:13] criar com o codex e ele gere essa
+[10:16] imagem, eu quero fazer algumas
+[10:17] alterações que eu acho que o op 5.5
+[10:18] vão ser melhor, eu posso vir aqui
+[10:20] trocar o modelo e no mesmo lugar
+[10:22] selecionar aqui e pedir pra ele
+[10:24] fazer as alterações que eu quiser,
+[10:25] então esse é o meu fluxo, inclusive
+[10:27] você pode ter exatamente o agente
+[10:29] que design os que eu tô mostrando
+[10:30] aqui na tela pra você, se você se
+[10:32] interessar é só você passar o seu
+[10:34] celular no car code que tá aparecendo
+[10:35] aqui na tela, porque ele é
+[10:36] disponibilizado na nossa comunidade
+[10:37] do AI verso, que é a nossa comunidade
+[10:39] paga, e dentro do AI verso, além
+[10:41] dessa ferramenta que eu mostrei pra
+[10:42] você, você tem acesso a todo o meu
+[10:44] material, inclusive tem uma parte
+[10:45] aqui que chama caixa preta,
+[10:47] justamente porque eu abro todas as
+[10:48] minhas skills, pipelines, tudo que eu
+[10:50] utilizo pra mim pros meus clientes,
+[10:51] você vai ter acesso, além disso
+[10:53] você vai ter trilhas completas de
+[10:55] cursos que eu criei, como por exemplo
+[10:57] de cloud code, google anti gravity,
+[10:59] n8n e todos os cursos que eu lançar
+[11:02] você tem acesso fazendo parte da
+[11:03] comunidade, então passa a câmera
+[11:04] social no car code tá aparecendo aqui
+[11:05] na tela e vem fazer parte do
+[11:06] AI verso, você vai ser muito bem
+[11:07] vinda ou muito bem vindo, mas calma
+[11:10] aí que ainda não acabou, a gente
+[11:11] precisa ver isso daqui que é o
+[11:12] filmcraft que é o premiere pro
+[11:15] e a gente também tem algumas
+[11:16] vantagens a gente utilizar ele pra
+[11:17] fazer as edições do nosso vídeo,
+[11:19] e aqui eu vou te mostrar exatamente
+[11:20] como eu faço até então
+[11:21] utilizava o premiere pro, mas eu já
+[11:23] estou começando a testar o filmcraft
+[11:25] isso porque tudo que eu faço no
+[11:27] premiere eu consigo fazer aqui, pra
+[11:28] você dar uma olhada eu vou arrastar
+[11:30] esse vídeo, que é um vídeo de
+[11:32] abertura de um conteúdo que eu
+[11:33] falo sobre carroscel, então tá aqui
+[11:35] o nosso vídeo, e esse vídeo aqui é
+[11:37] justamente como eu falei a abertura
+[11:38] de um outro vídeo que eu fiz, então
+[11:39] se você reparar, só eu falando
+[11:41] aqui por enquanto, repare que ele
+[11:42] não é só uma imagem estática
+[11:43] passando pro lado, tudo se movimenta
+[11:45] os textos, os elementos, as
+[11:47] transições, veja que eu tô falando
+[11:49] coisas e nada está acontecendo na
+[11:50] tela, isso porque aqui como no
+[11:52] começo da maioria dos meus vídeos eu
+[11:53] coloco motion graphics pra dar uma
+[11:55] maior dinâmica, e agora você vai
+[11:56] ver como que eu faço isso, e pra
+[11:58] gerar o motion graphics antes que
+[11:59] você falha, ah, mas que que eu
+[12:00] preciso ter, vou gastar dinheiro
+[12:01] não, ele foi 100% gerado com o
+[12:03] cloud code, inclusive aqui mesmo
+[12:05] nessa conversa, a única coisa que
+[12:06] eu fiz foi pedir pra ele me
+[12:07] separar qual é o melhor prompt,
+[12:09] pedir pra ele resumir o meu prompt
+[12:12] pra se você quiser copiar, vou
+[12:14] deixar também esse prompt
+[12:15] disponível, esse na comunidade
+[12:18] o design os é no a i-verse, só pra
+[12:20] você entender do que eu tô
+[12:20] falando, isso aqui eu vou deixar
+[12:21] disponível pra todo mundo, você
+[12:22] pode usar esse mesmo prompt pra
+[12:25] gerar um motion graphics
+[12:26] talvez parecido, nesse prompt eu
+[12:27] peço algumas coisas, eu peço pra
+[12:29] ele criar, tudo isso aqui que ele
+[12:30] criou, que a gente já vai ver que
+[12:31] ficou bem legal, mas eu também
+[12:32] peço pra ele deixar o primeiro
+[12:33] terço do vídeo vazio, porque onde
+[12:35] eu coloco a minha imagem, o pip
+[12:36] que é esse quadradinho que você
+[12:37] tá me vendo aqui, isso aqui é um
+[12:38] pip, eu gosto de colocar a minha
+[12:40] imagem aqui do lado, enquanto
+[12:41] o motion graphics vai acontecendo,
+[12:42] então motion graphics aqui tá
+[12:43] acontecendo, meu rosto aqui do lado
+[12:44] e eu tô falando e passando as
+[12:45] informações, e tudo que eu falo
+[12:47] no vídeo é mostrado aqui nesse
+[12:49] motion graphics, aí dá muito mais
+[12:50] dinâmica pra aquilo que eu tô
+[12:51] falando, mas se você reparar bem
+[12:53] ele vai mudar, veja que aqui
+[12:54] estaria meu pip e agora a imagem
+[12:56] veio pra cá, meu pip teria que
+[12:57] vir pra cá, eu faço isso também
+[12:59] às vezes pra dar alguma dinâmica
+[13:00] de movimentação, às vezes uma
+[13:02] hora o meu pip tá do lado, depois
+[13:03] do outro, depois ele vem aqui
+[13:04] pra cima, eu vou te mostrar como
+[13:06] que eu faço isso lá agora no
+[13:08] filmcraft, mas antes a gente
+[13:10] ir pra lá só pra você entender o
+[13:11] meu fluxo, eu venho aqui, pego
+[13:13] o meu vídeo de abertura que
+[13:14] sou eu só falando, que é aquele
+[13:15] que tá lá no filmcraft por enquanto,
+[13:17] jogo aquele arquivo aqui, peço pra
+[13:19] que ele cria o motion graphics
+[13:21] a partir daquilo que eu estou
+[13:22] falando no vídeo, inclusive eu
+[13:24] falo aqui ó, o vídeo a ser
+[13:25] editado, está com o nome de
+[13:26] abertura.mp4, está dentro da
+[13:28] pasta que arroceu o vídeo, então
+[13:29] eu peço pra ele pegar aquele
+[13:31] documento e com base naquilo, naquilo
+[13:32] que eu estou falando, criar o
+[13:33] motion graphics, é por isso que ele
+[13:34] acerta segundo a segundo de tudo
+[13:36] aquilo que eu falo e fica
+[13:37] totalmente sincronizado, que
+[13:39] exatamente o que você vai ver
+[13:39] agora, então aqui dentro do
+[13:41] filmcraft o que a gente vai
+[13:42] fazer é colocar aquele motion graphics
+[13:43] que eu criei aqui, e só pra
+[13:45] você ver a vantagem da gente
+[13:46] usar o filmcraft pra gente ter
+[13:48] maior possibilidade de edição,
+[13:50] veja só, o modelo me devolveu
+[13:52] uma prévia já com o pip, mas olha
+[13:54] o jeito que ele fez, dá só
+[13:55] uma olhada nesse carro seu aqui,
+[13:57] repara que ele não é só uma imagem
+[13:59] estática, percebe que o meu pip
+[14:00] está grande, está num jeito
+[14:01] diferente, ele não vai ter a
+[14:02] dinâmica que eu quero, que a
+[14:03] dinâmica que você vai ver, então
+[14:05] agora você vai ver a diferença,
+[14:06] que eu vou fazer arrastar a linha
+[14:08] do vídeo pra cima, porque embaixo
+[14:09] do vídeo, ou seja, embaixo dessa
+[14:12] tira aqui, que sou eu falando, só
+[14:13] eu falando, por enquanto, só eu
+[14:15] falando, embaixo disso daqui eu
+[14:17] quero que apareça o motion graphics,
+[14:18] você já vai entender por que, aí
+[14:19] eu venho aqui, pego a versão
+[14:21] final do motion graphics que eu
+[14:22] quero, jogo aqui pro projeto,
+[14:25] e coloco ela aqui embaixo, estando
+[14:28] aqui embaixo a gente não vai
+[14:29] conseguir ver ela, percebe? Porque
+[14:31] a minha imagem comigo falando
+[14:33] está em cima do motion graphics,
+[14:35] então agora eu deveria fazer
+[14:37] o que? Eu deveria transformar
+[14:38] essa imagem em um pip, ou seja,
+[14:39] deixar quadradinho o pequenininho,
+[14:42] veja, se a gente diminui a minha
+[14:43] imagem, olha só o que está aqui
+[14:44] embaixo, eu tenho exatamente aqui
+[14:46] o meu motion graphics, e aí eu
+[14:48] poderia inclusive, pra deixar
+[14:49] o pequenininho, fazer mais ou
+[14:50] menos aqui do como eu fiz,
+[14:52] ajustar o tamanho da imagem,
+[14:53] enfim, ficar mexendo nisso, mas
+[14:54] eu vou fazer de um jeito muito
+[14:55] mais fácil, que é o jeito que
+[14:57] eu faço na vida real, que é
+[14:58] utilizar a minha ferramenta
+[15:00] Premiere Craft, eu tenho
+[15:01] exatamente essa mesma
+[15:02] ferramenta pro Premiere Pro,
+[15:04] que já está disponível lá no
+[15:05] eaverse pros alunos, mas como
+[15:06] surgiu agora o filme craft, que
+[15:08] é gratuito, pra você poder
+[15:09] utilizar a mesma ferramenta,
+[15:11] que você poderia utilizar no
+[15:11] Premiere aqui, de maneira gratuita,
+[15:13] eu também desenvolvi esse software
+[15:15] pra que você consiga utilizar
+[15:16] aqui também no filme craft,
+[15:18] e qual é a vantagem dele, o que ele
+[15:19] faz? Veja só, ele transforma
+[15:21] esse pip pra gente, de maneira
+[15:23] solo, ele faz todo o trabalho,
+[15:25] ele tem toda a dor de cabeça,
+[15:26] a gente só aperta um único
+[15:27] botão, duvida, dá só uma
+[15:28] olhada, eu vou selecionar
+[15:29] meu vídeo bem aqui no começo,
+[15:30] e vou pedir pra ele, colocar
+[15:33] esse pip, exatamente
+[15:35] começando aqui, bem no
+[15:35] comecinho do vídeo, então eu
+[15:36] vou colocar animar até esse
+[15:38] estado, veja aqui, só
+[15:40] clicando nesse botão, ele já
+[15:42] fez a animação, pra você ver
+[15:43] que é verdade, que ele
+[15:44] realmente fez, olha só que
+[15:46] legal, vou dar play no vídeo
+[15:47] agora, dá só uma olhada nesse
+[15:48] carro seu aqui, repara que ele
+[15:50] não é só uma imagem estática
+[15:51] passando pro lado, tudo se
+[15:53] movimenta, os textos, os
+[15:54] elementos, as transições, e
+[15:56] até os efeitos sonoros estão
+[15:57] sincronizados com a música,
+[15:58] e o mais impressionante é que
+[16:00] eu criei tudo isso bem legal,
+[16:01] né, só que agora se você
+[16:02] reparar, o desenho veio pra
+[16:04] cá, pra embaixo do pip,
+[16:05] antes eu só vou arrumar aqui
+[16:06] a proporção, porque a imagem
+[16:08] ela tá em 4k, e aqui ela
+[16:09] tá em 1080p, então o que eu
+[16:11] vou fazer é simplesmente
+[16:13] diminuir um pouquinho essa
+[16:14] escala, prontinho, agora todo
+[16:16] vídeo vai seguir a escala
+[16:17] correta, vou até voltar pra
+[16:18] gente ver, dá só uma olhada
+[16:20] nesse carro seu aqui, repara
+[16:21] que ele não é só uma imagem
+[16:23] estática passando pro lado,
+[16:24] tudo se movimenta, os textos,
+[16:26] os elementos, as transições,
+[16:27] e até os efeitos sonoros,
+[16:29] a proposta nesse vídeo ensino
+[16:30] você a fazer carro séis
+[16:31] incríveis, vou deixar ele
+[16:33] aqui no card pra você assistir
+[16:34] depois, os estão
+[16:35] sincronizados com a música,
+[16:36] e o mais impressionante é que
+[16:37] eu criei tudo isso, veja
+[16:39] agora, nesse exato momento
+[16:41] a transição vai vir pra trás
+[16:42] da minha imagem, eu preciso
+[16:43] dar um jeito então de tirar
+[16:44] meu pip daqui e jogar pro outro
+[16:45] lado, inclusive a gente pode
+[16:46] mudar o formato, veja, meu pip
+[16:48] está aqui, meio retangular
+[16:49] é o jeito que eu gosto com bordas
+[16:50] arredondadas, eu posso achar
+[16:51] essa borda mais arredondada
+[16:52] menos, posso transformar num
+[16:53] círculo, enfim, posso jogar
+[16:54] tudo isso pra lá, eu vou colocar
+[16:55] aqui como círculo, e aqui
+[16:57] nesse canto, porque agora eu
+[16:58] quero que o pip venha pra cá, eu
+[17:00] posso arrastar ele com o mouse,
+[17:01] mas eu acho mais fácil a gente
+[17:02] utilizar essa direção, esse
+[17:04] direcionamento que tem aqui,
+[17:05] porque se a gente não erra
+[17:06] exatamente a proporção, ele fica
+[17:07] sempre retinho, sempre certinho
+[17:09] bom, feito isso que eu vou fazer?
+[17:11] vou por animar até esse estado
+[17:13] e veja que legal que ele faz
+[17:14] agora, nesse momento eu vou
+[17:15] voltar aqui e olha que enquanto
+[17:18] essa imagem vem pra esquerda, ou
+[17:19] seja, vai ficar embaixo desse pip
+[17:21] ele vai jogar o pip lá pro outro
+[17:22] lado, fazendo esse efeito, e até
+[17:23] os efeitos sonoros estão
+[17:24] sincronizados com a música, e o
+[17:26] mais impressionante é que eu
+[17:27] criei tudo isso usando
+[17:28] somente o cloud code, sem gastar
+[17:30] um único centavo com ferramenta
+[17:32] de animação, música ou
+[17:33] efeito sonoros, é exatamente
+[17:35] isso que eu vou te ensinar hoje
+[17:37] aqui, nesse, é exatamente
+[17:38] isso que eu vou te ensinar hoje, a
+[17:39] imagem ela vem e avança pro meio
+[17:41] aqui seria interessante eu colocar
+[17:43] uma transição aqui pra cima, então
+[17:44] vamos lá, mais uma vez agora você
+[17:45] já viu que é bem facinho, a gente
+[17:47] vem, seleciona onde eu quero, eu
+[17:48] quero aqui em cima, vou deixar
+[17:49] ela wide, e vou pedir pra ele
+[17:51] animar até esse estado mais uma
+[17:52] vez, feito isso, mais uma transição
+[17:54] foi aplicada, vamos dar uma olhada
+[17:55] como ela ficou agora, efeito
+[17:56] sonoros, é exatamente isso que eu
+[17:58] vou te ensinar hoje, agora o
+[17:59] mais interessante é que o cloud
+[18:01] code pode girar tudo isso pra você
+[18:02] porém não se engane, muito legal
+[18:05] né, fala verdade, isso aqui é
+[18:05] demais eu utilizo em todos os meus
+[18:07] vídeos, inclusive pra você aí
+[18:08] ficar falando né, você edita
+[18:09] vídeo com iá, não, eu crio
+[18:11] meus motion graphics com o cloud
+[18:12] code, e edito exatamente
+[18:14] desse jeito que eu estou te
+[18:14] mostrando, até porque tudo que
+[18:16] eu quero fazer aqui de edição, eu
+[18:17] consigo utilizar o primeiro craft
+[18:19] por exemplo, se eu quero dar um
+[18:20] highlight, se eu quero destacar
+[18:21] essa parte do meu vídeo, é só
+[18:23] selecionar a parte que eu quero
+[18:24] destacar, até colocar aqui o
+[18:25] microfone, eu posso aumentar o
+[18:26] tamanho da área que eu quero
+[18:27] destacar, vira aqui, criar
+[18:30] highlight, a partir disso, olha
+[18:31] que legal esse efeito, trola
+[18:33] tudo que acontece na animação
+[18:35] segundo a segundo, eu consigo
+[18:37] chamar atenção exatamente pra esse
+[18:38] ponto, isso quando eu estou dando
+[18:40] aula fazendo vídeo, isso é muito
+[18:41] útil, outro efeito muito legal
+[18:42] também, é esse aqui de pop up, esse
+[18:44] eu gosto demais, então eu posso
+[18:46] selecionar uma área de foco, que
+[18:47] vai ser essa daqui, depois eu posso
+[18:49] selecionar uma área de destino do
+[18:51] pop, então eu quero pegar essa
+[18:53] plaquinha do no ar, e deixá-la bem
+[18:55] grandona aqui, quero colocar ela
+[18:57] aparecendo desse jeito, pra isso eu
+[18:59] venho aqui, e crio esse pop up,
+[19:01] olha que legal esse efeito, isso aqui
+[19:02] é um dos efeitos mais legais que
+[19:03] tem, exatamente onde cada
+[19:05] elemente, olha que legal que ele
+[19:06] faz, exatamente, ele recorta
+[19:08] aquele trecho, e aumenta como se fosse
+[19:10] um pop up aparecendo na tela, isso aqui
+[19:11] é muito útil também, e cada elemento
+[19:13] vai aparecer, como ele vai se
+[19:14] movimentar, e em que momento cada
+[19:15] efeito, isso aqui é muito útil
+[19:17] também pra dar aulas, enfim, então
+[19:18] eu tenho todos os recursos que eu
+[19:19] preciso aqui, no meu Premiere, e que
+[19:21] agora é também o Premiere Craft,
+[19:23] nós temos agora as duas versões,
+[19:24] pra você que usa o Premiere, e pra
+[19:25] você que usa o filmcraft, e não
+[19:27] quer gastar pagando ali, uma
+[19:29] assinatura da Adobe, porque agora
+[19:30] você não precisa, além disso ele
+[19:32] também faz cortes, legendas, enfim,
+[19:34] dá zoom no vídeo, tudo aquilo que
+[19:35] você precisar, e mais uma vez eu
+[19:37] reforço, pra você ter acesso é só
+[19:38] passar o celular no QR code que tá
+[19:39] aparecendo aqui na tela, e vim
+[19:40] fazer parte do AI verso, você vai
+[19:41] ter acesso a todas as ferramentas
+[19:43] que eu mostrei aqui, todas minhas
+[19:44] skills, além de todas as trilhas
+[19:45] como eu já falei anteriormente,
+[19:46] mas pra você que não quer nada disso,
+[19:48] você quer só utilizar essas
+[19:49] ferramentas, esse é o fluxo, você
+[19:50] pode criar o seu motion graphic, como
+[19:52] eu mostrei aqui, utilizando somente
+[19:54] o cloud code, não tem rígis na
+[19:55] parada, você não vai gastar dinheiro
+[19:57] com isso, o mesmo vale pra você
+[19:58] criar suas imagens, como a gente
+[19:59] viu aqui, dá pra você fazer tudo
+[20:00] utilizando só a plataforma gratuita,
+[20:02] e o cloud code, e a própria edição
+[20:03] do vídeo você pode pedir pro cloud
+[20:05] já te devolver a edição com o pip
+[20:08] aqui do lado, você não vai ter esse
+[20:09] controle que eu acho muito
+[20:10] interessante, mas você já consegue
+[20:12] ter um resultado bem legal, que é
+[20:13] o exemplo que eu dei desse vídeo aqui,
+[20:14] isso aqui quem me devolveu foi o cloud,
+[20:16] isso sim foi editado com
+[20:17] inteligência artificial, mas como eu
+[20:19] disse eu gosto de ter essa
+[20:20] capacidade de alterar as coisas
+[20:21] porque a gente consegue dar uma maior
+[20:22] dinâmica, mas é claro que o
+[20:24] resultado que ele já entrega por
+[20:25] si só, com um baita motion
+[20:27] graphic criado já é excelente,
+[20:29] e é por isso que agora eu quero
+[20:30] saber de você curtir o vídeo,
+[20:31] te ajudou, vai baixar as suas
+[20:32] ferramentas, vai colocar essas
+[20:34] ferramentas gratuitas agora no
+[20:35] seu pipeline de criação, você viu
+[20:37] aqui que a gente consegue chegar
+[20:38] a resultados tão profissionais
+[20:39] quando se a gente tivesse utilizando
+[20:41] essas ferramentas pagas, também
+[20:42] reforço o convite pra você vim
+[20:43] fazer parte do AIverse, se você
+[20:44] quer ficar muito à frente de seus
+[20:46] concorrentes, o AIverse é o lugar
+[20:47] perfeito pra você, além disso peço
+[20:49] pra que você deixe o like no
+[20:50] vídeo, deixe o high-part também
+[20:51] pra que esse conteúdo seja entregue
+[20:53] pra mais pessoas, esse é o seu
+[20:54] jeito de graça de me ajudar aqui,
+[20:56] porque ajuda demais mesmo, e também
+[20:58] óbvio peço pra que você se inscreva
+[20:59] aqui no canal pra que a gente
+[21:00] continue crescendo, agora vou deixar
+[21:02] você com mais um vídeo aqui de
+[21:03] inteligência artificial pra você
+[21:04] continuar aprendendo, e com isso me
+[21:06] despeço, nos vemos no próximo vídeo,
+[21:08] um grande abraço e falou!

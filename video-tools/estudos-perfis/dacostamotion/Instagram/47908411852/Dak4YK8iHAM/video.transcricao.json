@@ -1,0 +1,895 @@
+{
+ "arquivo": "video.mp4",
+ "idioma": "en",
+ "duracao": 57.796,
+ "segmentos": [
+  {
+   "inicio": 0.0,
+   "fim": 2.66,
+   "texto": "One of the coolest things about this project was the sound effects",
+   "palavras": [
+    {
+     "texto": " One",
+     "inicio": 0.0,
+     "fim": 0.12,
+     "prob": 0.51
+    },
+    {
+     "texto": " of",
+     "inicio": 0.12,
+     "fim": 0.18,
+     "prob": 0.976
+    },
+    {
+     "texto": " the",
+     "inicio": 0.18,
+     "fim": 0.28,
+     "prob": 0.992
+    },
+    {
+     "texto": " coolest",
+     "inicio": 0.28,
+     "fim": 0.94,
+     "prob": 0.774
+    },
+    {
+     "texto": " things",
+     "inicio": 0.94,
+     "fim": 0.94,
+     "prob": 0.804
+    },
+    {
+     "texto": " about",
+     "inicio": 0.94,
+     "fim": 1.14,
+     "prob": 0.773
+    },
+    {
+     "texto": " this",
+     "inicio": 1.14,
+     "fim": 1.22,
+     "prob": 0.816
+    },
+    {
+     "texto": " project",
+     "inicio": 1.22,
+     "fim": 1.58,
+     "prob": 0.959
+    },
+    {
+     "texto": " was",
+     "inicio": 1.58,
+     "fim": 1.9,
+     "prob": 0.879
+    },
+    {
+     "texto": " the",
+     "inicio": 1.9,
+     "fim": 2.1,
+     "prob": 0.759
+    },
+    {
+     "texto": " sound",
+     "inicio": 2.1,
+     "fim": 2.24,
+     "prob": 0.699
+    },
+    {
+     "texto": " effects",
+     "inicio": 2.24,
+     "fim": 2.66,
+     "prob": 0.96
+    }
+   ]
+  },
+  {
+   "inicio": 2.66,
+   "fim": 4.74,
+   "texto": "which was done this way",
+   "palavras": [
+    {
+     "texto": " which",
+     "inicio": 2.66,
+     "fim": 3.7,
+     "prob": 0.073
+    },
+    {
+     "texto": " was",
+     "inicio": 3.7,
+     "fim": 3.84,
+     "prob": 0.673
+    },
+    {
+     "texto": " done",
+     "inicio": 3.84,
+     "fim": 4.04,
+     "prob": 0.379
+    },
+    {
+     "texto": " this",
+     "inicio": 4.04,
+     "fim": 4.32,
+     "prob": 0.415
+    },
+    {
+     "texto": " way",
+     "inicio": 4.32,
+     "fim": 4.74,
+     "prob": 0.995
+    }
+   ]
+  },
+  {
+   "inicio": 4.74,
+   "fim": 7.54,
+   "texto": "we got the main part of the manifesto",
+   "palavras": [
+    {
+     "texto": " we",
+     "inicio": 4.74,
+     "fim": 5.14,
+     "prob": 0.195
+    },
+    {
+     "texto": " got",
+     "inicio": 5.14,
+     "fim": 5.44,
+     "prob": 0.497
+    },
+    {
+     "texto": " the",
+     "inicio": 5.44,
+     "fim": 5.96,
+     "prob": 0.95
+    },
+    {
+     "texto": " main",
+     "inicio": 5.96,
+     "fim": 6.14,
+     "prob": 0.906
+    },
+    {
+     "texto": " part",
+     "inicio": 6.14,
+     "fim": 6.14,
+     "prob": 0.192
+    },
+    {
+     "texto": " of",
+     "inicio": 6.14,
+     "fim": 6.74,
+     "prob": 0.878
+    },
+    {
+     "texto": " the",
+     "inicio": 6.74,
+     "fim": 6.8,
+     "prob": 0.986
+    },
+    {
+     "texto": " manifesto",
+     "inicio": 6.8,
+     "fim": 7.54,
+     "prob": 0.872
+    }
+   ]
+  },
+  {
+   "inicio": 7.54,
+   "fim": 10.9,
+   "texto": "and separated it into three parts",
+   "palavras": [
+    {
+     "texto": " and",
+     "inicio": 7.54,
+     "fim": 8.18,
+     "prob": 0.891
+    },
+    {
+     "texto": " separated",
+     "inicio": 8.18,
+     "fim": 9.02,
+     "prob": 0.6
+    },
+    {
+     "texto": " it",
+     "inicio": 9.02,
+     "fim": 9.38,
+     "prob": 0.963
+    },
+    {
+     "texto": " into",
+     "inicio": 9.38,
+     "fim": 9.94,
+     "prob": 0.59
+    },
+    {
+     "texto": " three",
+     "inicio": 9.94,
+     "fim": 10.44,
+     "prob": 0.743
+    },
+    {
+     "texto": " parts",
+     "inicio": 10.44,
+     "fim": 10.9,
+     "prob": 0.98
+    }
+   ]
+  },
+  {
+   "inicio": 10.9,
+   "fim": 14.22,
+   "texto": "which was the bass, the piano",
+   "palavras": [
+    {
+     "texto": " which",
+     "inicio": 10.9,
+     "fim": 11.18,
+     "prob": 0.585
+    },
+    {
+     "texto": " was",
+     "inicio": 11.18,
+     "fim": 11.46,
+     "prob": 0.636
+    },
+    {
+     "texto": " the",
+     "inicio": 11.46,
+     "fim": 12.18,
+     "prob": 0.851
+    },
+    {
+     "texto": " bass,",
+     "inicio": 12.18,
+     "fim": 12.74,
+     "prob": 0.935
+    },
+    {
+     "texto": " the",
+     "inicio": 13.14,
+     "fim": 13.62,
+     "prob": 0.88
+    },
+    {
+     "texto": " piano",
+     "inicio": 13.62,
+     "fim": 14.22,
+     "prob": 0.996
+    }
+   ]
+  },
+  {
+   "inicio": 14.22,
+   "fim": 20.4,
+   "texto": "and also the beat, the beat that keeps the whole trio",
+   "palavras": [
+    {
+     "texto": " and",
+     "inicio": 14.22,
+     "fim": 14.8,
+     "prob": 0.879
+    },
+    {
+     "texto": " also",
+     "inicio": 14.8,
+     "fim": 15.32,
+     "prob": 0.837
+    },
+    {
+     "texto": " the",
+     "inicio": 15.32,
+     "fim": 16.2,
+     "prob": 0.946
+    },
+    {
+     "texto": " beat,",
+     "inicio": 16.2,
+     "fim": 16.4,
+     "prob": 0.812
+    },
+    {
+     "texto": " the",
+     "inicio": 16.6,
+     "fim": 16.72,
+     "prob": 0.859
+    },
+    {
+     "texto": " beat",
+     "inicio": 16.72,
+     "fim": 16.88,
+     "prob": 0.756
+    },
+    {
+     "texto": " that",
+     "inicio": 16.88,
+     "fim": 17.72,
+     "prob": 0.806
+    },
+    {
+     "texto": " keeps",
+     "inicio": 17.72,
+     "fim": 18.8,
+     "prob": 0.271
+    },
+    {
+     "texto": " the",
+     "inicio": 18.8,
+     "fim": 19.22,
+     "prob": 0.207
+    },
+    {
+     "texto": " whole",
+     "inicio": 19.22,
+     "fim": 19.96,
+     "prob": 0.16
+    },
+    {
+     "texto": " trio",
+     "inicio": 19.96,
+     "fim": 20.4,
+     "prob": 0.379
+    }
+   ]
+  },
+  {
+   "inicio": 20.4,
+   "fim": 24.8,
+   "texto": "and with these three parts we can extract a lot of information",
+   "palavras": [
+    {
+     "texto": " and",
+     "inicio": 20.4,
+     "fim": 20.92,
+     "prob": 0.161
+    },
+    {
+     "texto": " with",
+     "inicio": 20.92,
+     "fim": 21.14,
+     "prob": 0.965
+    },
+    {
+     "texto": " these",
+     "inicio": 21.14,
+     "fim": 21.32,
+     "prob": 0.856
+    },
+    {
+     "texto": " three",
+     "inicio": 21.32,
+     "fim": 21.64,
+     "prob": 0.956
+    },
+    {
+     "texto": " parts",
+     "inicio": 21.64,
+     "fim": 22.0,
+     "prob": 0.754
+    },
+    {
+     "texto": " we",
+     "inicio": 22.0,
+     "fim": 22.34,
+     "prob": 0.896
+    },
+    {
+     "texto": " can",
+     "inicio": 22.34,
+     "fim": 22.7,
+     "prob": 0.758
+    },
+    {
+     "texto": " extract",
+     "inicio": 22.7,
+     "fim": 23.3,
+     "prob": 0.966
+    },
+    {
+     "texto": " a",
+     "inicio": 23.3,
+     "fim": 23.5,
+     "prob": 0.509
+    },
+    {
+     "texto": " lot",
+     "inicio": 23.5,
+     "fim": 23.64,
+     "prob": 0.987
+    },
+    {
+     "texto": " of",
+     "inicio": 23.64,
+     "fim": 24.18,
+     "prob": 0.979
+    },
+    {
+     "texto": " information",
+     "inicio": 24.18,
+     "fim": 24.8,
+     "prob": 0.946
+    }
+   ]
+  },
+  {
+   "inicio": 24.8,
+   "fim": 28.84,
+   "texto": "the piano separated a touch there",
+   "palavras": [
+    {
+     "texto": " the",
+     "inicio": 24.8,
+     "fim": 26.08,
+     "prob": 0.04
+    },
+    {
+     "texto": " piano",
+     "inicio": 26.08,
+     "fim": 26.56,
+     "prob": 0.508
+    },
+    {
+     "texto": " separated",
+     "inicio": 26.56,
+     "fim": 27.38,
+     "prob": 0.152
+    },
+    {
+     "texto": " a",
+     "inicio": 27.38,
+     "fim": 27.88,
+     "prob": 0.631
+    },
+    {
+     "texto": " touch",
+     "inicio": 27.88,
+     "fim": 28.14,
+     "prob": 0.333
+    },
+    {
+     "texto": " there",
+     "inicio": 28.14,
+     "fim": 28.84,
+     "prob": 0.456
+    }
+   ]
+  },
+  {
+   "inicio": 28.84,
+   "fim": 30.26,
+   "texto": "a specific beat",
+   "palavras": [
+    {
+     "texto": " a",
+     "inicio": 28.84,
+     "fim": 29.82,
+     "prob": 0.305
+    },
+    {
+     "texto": " specific",
+     "inicio": 29.82,
+     "fim": 29.94,
+     "prob": 0.903
+    },
+    {
+     "texto": " beat",
+     "inicio": 29.94,
+     "fim": 30.26,
+     "prob": 0.802
+    }
+   ]
+  },
+  {
+   "inicio": 30.8,
+   "fim": 33.72,
+   "texto": "and with this we built the sound effects",
+   "palavras": [
+    {
+     "texto": " and",
+     "inicio": 30.8,
+     "fim": 31.48,
+     "prob": 0.617
+    },
+    {
+     "texto": " with",
+     "inicio": 31.48,
+     "fim": 31.7,
+     "prob": 0.168
+    },
+    {
+     "texto": " this",
+     "inicio": 31.7,
+     "fim": 31.84,
+     "prob": 0.317
+    },
+    {
+     "texto": " we",
+     "inicio": 31.84,
+     "fim": 32.08,
+     "prob": 0.923
+    },
+    {
+     "texto": " built",
+     "inicio": 32.08,
+     "fim": 32.54,
+     "prob": 0.74
+    },
+    {
+     "texto": " the",
+     "inicio": 32.54,
+     "fim": 32.98,
+     "prob": 0.92
+    },
+    {
+     "texto": " sound",
+     "inicio": 32.98,
+     "fim": 33.54,
+     "prob": 0.736
+    },
+    {
+     "texto": " effects",
+     "inicio": 33.54,
+     "fim": 33.72,
+     "prob": 0.988
+    }
+   ]
+  },
+  {
+   "inicio": 33.72,
+   "fim": 37.7,
+   "texto": "which was taking some parts of the track",
+   "palavras": [
+    {
+     "texto": " which",
+     "inicio": 33.72,
+     "fim": 34.3,
+     "prob": 0.16
+    },
+    {
+     "texto": " was",
+     "inicio": 34.3,
+     "fim": 34.48,
+     "prob": 0.446
+    },
+    {
+     "texto": " taking",
+     "inicio": 34.48,
+     "fim": 34.72,
+     "prob": 0.734
+    },
+    {
+     "texto": " some",
+     "inicio": 34.72,
+     "fim": 35.22,
+     "prob": 0.225
+    },
+    {
+     "texto": " parts",
+     "inicio": 35.22,
+     "fim": 36.52,
+     "prob": 0.846
+    },
+    {
+     "texto": " of",
+     "inicio": 36.52,
+     "fim": 37.32,
+     "prob": 0.81
+    },
+    {
+     "texto": " the",
+     "inicio": 37.32,
+     "fim": 37.44,
+     "prob": 0.935
+    },
+    {
+     "texto": " track",
+     "inicio": 37.44,
+     "fim": 37.7,
+     "prob": 0.542
+    }
+   ]
+  },
+  {
+   "inicio": 37.7,
+   "fim": 40.02,
+   "texto": "of the beat, of the bass",
+   "palavras": [
+    {
+     "texto": " of",
+     "inicio": 37.7,
+     "fim": 38.36,
+     "prob": 0.067
+    },
+    {
+     "texto": " the",
+     "inicio": 38.36,
+     "fim": 38.8,
+     "prob": 0.942
+    },
+    {
+     "texto": " beat,",
+     "inicio": 38.8,
+     "fim": 39.2,
+     "prob": 0.793
+    },
+    {
+     "texto": " of",
+     "inicio": 39.54,
+     "fim": 39.62,
+     "prob": 0.43
+    },
+    {
+     "texto": " the",
+     "inicio": 39.62,
+     "fim": 39.78,
+     "prob": 0.971
+    },
+    {
+     "texto": " bass",
+     "inicio": 39.78,
+     "fim": 40.02,
+     "prob": 0.181
+    }
+   ]
+  },
+  {
+   "inicio": 40.02,
+   "fim": 42.04,
+   "texto": "and we modified it",
+   "palavras": [
+    {
+     "texto": " and",
+     "inicio": 40.02,
+     "fim": 40.34,
+     "prob": 0.671
+    },
+    {
+     "texto": " we",
+     "inicio": 40.34,
+     "fim": 40.68,
+     "prob": 0.895
+    },
+    {
+     "texto": " modified",
+     "inicio": 40.68,
+     "fim": 41.44,
+     "prob": 0.466
+    },
+    {
+     "texto": " it",
+     "inicio": 41.44,
+     "fim": 42.04,
+     "prob": 0.428
+    }
+   ]
+  },
+  {
+   "inicio": 42.04,
+   "fim": 43.6,
+   "texto": "some of them we extended",
+   "palavras": [
+    {
+     "texto": " some",
+     "inicio": 42.04,
+     "fim": 42.42,
+     "prob": 0.057
+    },
+    {
+     "texto": " of",
+     "inicio": 42.42,
+     "fim": 42.6,
+     "prob": 0.395
+    },
+    {
+     "texto": " them",
+     "inicio": 42.6,
+     "fim": 43.1,
+     "prob": 0.439
+    },
+    {
+     "texto": " we",
+     "inicio": 43.1,
+     "fim": 43.1,
+     "prob": 0.678
+    },
+    {
+     "texto": " extended",
+     "inicio": 43.1,
+     "fim": 43.6,
+     "prob": 0.014
+    }
+   ]
+  },
+  {
+   "inicio": 43.6,
+   "fim": 45.42,
+   "texto": "others we reduced",
+   "palavras": [
+    {
+     "texto": " others",
+     "inicio": 43.6,
+     "fim": 44.1,
+     "prob": 0.729
+    },
+    {
+     "texto": " we",
+     "inicio": 44.1,
+     "fim": 44.5,
+     "prob": 0.74
+    },
+    {
+     "texto": " reduced",
+     "inicio": 44.5,
+     "fim": 45.42,
+     "prob": 0.908
+    }
+   ]
+  },
+  {
+   "inicio": 45.42,
+   "fim": 48.52,
+   "texto": "so we could extract the maximum of that audio there",
+   "palavras": [
+    {
+     "texto": " so",
+     "inicio": 45.42,
+     "fim": 45.98,
+     "prob": 0.388
+    },
+    {
+     "texto": " we",
+     "inicio": 45.98,
+     "fim": 46.2,
+     "prob": 0.686
+    },
+    {
+     "texto": " could",
+     "inicio": 46.2,
+     "fim": 46.56,
+     "prob": 0.644
+    },
+    {
+     "texto": " extract",
+     "inicio": 46.56,
+     "fim": 46.86,
+     "prob": 0.873
+    },
+    {
+     "texto": " the",
+     "inicio": 46.86,
+     "fim": 47.2,
+     "prob": 0.658
+    },
+    {
+     "texto": " maximum",
+     "inicio": 47.2,
+     "fim": 47.56,
+     "prob": 0.833
+    },
+    {
+     "texto": " of",
+     "inicio": 47.56,
+     "fim": 47.74,
+     "prob": 0.853
+    },
+    {
+     "texto": " that",
+     "inicio": 47.74,
+     "fim": 47.98,
+     "prob": 0.924
+    },
+    {
+     "texto": " audio",
+     "inicio": 47.98,
+     "fim": 48.28,
+     "prob": 0.744
+    },
+    {
+     "texto": " there",
+     "inicio": 48.28,
+     "fim": 48.52,
+     "prob": 0.683
+    }
+   ]
+  },
+  {
+   "inicio": 48.52,
+   "fim": 51.36,
+   "texto": "we managed to get some glitches",
+   "palavras": [
+    {
+     "texto": " we",
+     "inicio": 48.52,
+     "fim": 49.14,
+     "prob": 0.68
+    },
+    {
+     "texto": " managed",
+     "inicio": 49.14,
+     "fim": 49.58,
+     "prob": 0.482
+    },
+    {
+     "texto": " to",
+     "inicio": 49.58,
+     "fim": 49.68,
+     "prob": 0.978
+    },
+    {
+     "texto": " get",
+     "inicio": 49.68,
+     "fim": 49.88,
+     "prob": 0.801
+    },
+    {
+     "texto": " some",
+     "inicio": 49.88,
+     "fim": 50.9,
+     "prob": 0.305
+    },
+    {
+     "texto": " glitches",
+     "inicio": 50.9,
+     "fim": 51.36,
+     "prob": 0.421
+    }
+   ]
+  },
+  {
+   "inicio": 53.76,
+   "fim": 57.44,
+   "texto": "and with that we built our sound effects",
+   "palavras": [
+    {
+     "texto": " and",
+     "inicio": 53.76,
+     "fim": 54.64,
+     "prob": 0.288
+    },
+    {
+     "texto": " with",
+     "inicio": 54.64,
+     "fim": 54.68,
+     "prob": 0.044
+    },
+    {
+     "texto": " that",
+     "inicio": 54.68,
+     "fim": 55.16,
+     "prob": 0.264
+    },
+    {
+     "texto": " we",
+     "inicio": 55.16,
+     "fim": 55.54,
+     "prob": 0.721
+    },
+    {
+     "texto": " built",
+     "inicio": 55.54,
+     "fim": 56.16,
+     "prob": 0.093
+    },
+    {
+     "texto": " our",
+     "inicio": 56.16,
+     "fim": 56.62,
+     "prob": 0.678
+    },
+    {
+     "texto": " sound",
+     "inicio": 56.62,
+     "fim": 57.02,
+     "prob": 0.32
+    },
+    {
+     "texto": " effects",
+     "inicio": 57.02,
+     "fim": 57.44,
+     "prob": 0.892
+    }
+   ]
+  }
+ ]
+}

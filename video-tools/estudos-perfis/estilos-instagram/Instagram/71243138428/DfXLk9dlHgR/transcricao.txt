@@ -1,0 +1,11 @@
+idioma: pt
+[00:00] Esse filme de 6 minutos não tem uma única câmera.
+[00:03] Lemo Opuscar é uma caixa de ferramentas com 66 estilos de cinema, todos escritos em código.
+[00:09] Você escolhe o estilo, traz o tema e o seu agente de código dirige.
+[00:13] Roteiro, quadros, trilha e cortes.
+[00:16] A prova é o Opuscar 98.
+[00:19] Os 98 vencedores de melhor filme redesenhados um a um.
+[00:23] E dá para criar o seu.
+[00:24] Este é o estilo da casa.
+[00:25] É aberto, licença M&T e afinado para o Claude Opus.
+[00:29] Deixei o link do repositório na legenda.

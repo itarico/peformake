@@ -1,0 +1,151 @@
+idioma: en
+[00:00] You can't go too far down the list of YouTube's best documentary filmmakers without getting to James Johnny.
+[00:07] That feeling is really what I love having in the videos.
+[00:10] And it should feel like it's a beautiful garden and there's a bunch of people eating from this tree that has amazing apples on it
+[00:16] and in comes James who's sort of watching this all and going,
+[00:18] okay, hold on, what's going on here?
+[00:21] And so I would start digging around the tree to find the thing that's fueling this tree are dead bodies.
+[00:27] Whoa, whoa, whoa, hold on everyone, this is what's happening underneath the surface.
+[00:31] James' video builds on that feeling of unease.
+[00:35] I've doubled down on more of the investigative, almost that feeling of a conspiracy sort of video.
+[00:41] But how does James tell a story that anyone could tell but with a cinematic quality that should be on Netflix?
+[00:48] In this episode we break down how James uses crazy editing techniques like
+[00:53] editing in a nonlinear way to bring his audience on his emotional journey as a filmmaker.
+[00:59] How James uses cinematic motifs to play with his audience's expectations and keep him watching.
+[01:05] And we get an inside look at James' creative process, how he guides the edit with music
+[01:11] and how he directs his motion graphics team to generate some of the most polished visuals on YouTube.
+[01:17] This is the editing podcast and this interview was recorded with Riverside.
+[01:21] The all-in-one video podcasting tool. If you're new here, please subscribe.
+[01:27] I'm very excited to introduce you to Sam Bankman-Fried, the wealthiest person under 30 in the world.
+[01:35] Sleeping on a beanbag in his office.
+[01:37] You build these people up to be these really interesting people, but you know that their entire world,
+[01:42] their entire foundation is about to crumble.
+[01:44] From a $32 billion company to bankruptcy in a matter of just four days or so.
+[01:49] And any out there who believes it's just a pathological lie.
+[01:51] I feel like that comes down to just the stories that you pick, like inherently are just interesting.
+[01:57] And I think that is a really good analogy. I think for what I'm trying to do with the videos is to give you first like a mystery,
+[02:03] something that's intriguing that has almost again the essence of I think a community around it.
+[02:08] Like with both mega churches, cryptocurrencies, even FTX and especially this new video that I'm working on.
+[02:13] There's this element of like there are a bunch of people that surround this thing that there has a lot of attention around it,
+[02:18] but there's a sense of something isn't quite right.
+[02:21] And I think I'm just naturally hooked to stories like that, which is why I usually gravitate in that direction when I pick ideas.
+[02:28] How do you make us feel that? Like, because yeah, you can show us, hey, look how great Sam Bankman-Fried is,
+[02:32] but I don't trust him already. How did you make us feel that?
+[02:35] With the context in mind that you're watching a video titled The Fake Genius, there's already a feeling of unease with that.
+[02:40] I think in the hook of that video, there was a really important sort of contrasting moment that I wanted to get where you start off the video with this very exciting music.
+[02:49] The wealthiest person under 30 in the world.
+[02:53] Almost too overly optimistic where you sort of hear me saying there's this guy, everybody loves a story about an underdog and a genius.
+[03:03] And then you hear like Sam Bankman-Fried, he's sleeping on beanbags and he's rich and he wants to give all of his money away.
+[03:08] And then you eventually have the switch, which is like literally me going, you know, the equivalent of I'm not like other girls, like this isn't like this is one of those stories.
+[03:16] He wanted to dedicate his life to doing good for the world.
+[03:21] This is not one of those stories.
+[03:24] Launches us into the next segment, which is where we sort of the tone shifts. There's a bit of a darker theme and we get this Mark Cahody's tweet appear, which is just literally the words FTX is a problem.
+[03:36] After having a whole segment of how great this guy is and how amazing he is, just having that moment of someone tweeting FTX is a problem is like, okay, like, all right, what's happening?
+[03:45] Like let me dig into this. And so in the case of the video, there was this common motif that we use, which was these puzzle pieces and a coming together puzzle that had managed to fall so many.
+[03:55] But what I found was a story that left people broken throughout the video.
+[04:00] Throughout the video, you start to see how these puzzle pieces happen as we go to the past or go to the present and we're starting to see slowly as an audience, you're getting a picture of, okay, so I see like this thing is important, this thing is important.
+[04:12] I'm starting to understand how all of this is going to lead up to this big collapse moment. And it's almost like when you when you have those moments, you can feel what it's like to be me in that in the sort of story of trying to piece together what is going on.
+[04:24] Taking the audience through the same journey that you essentially took, it brings in a very interesting narrative. It's like, by throwing us backwards and forwards in time in the same way that you are discovering it yourself in that sense, making us discover it in that for the same way.
+[04:40] Every single time a significant moment happened, it was then bookended with cutting towards the puzzle pieces.
+[04:47] But if you tell someone that there is a box that they can put their money into and that box will return back 10 fold what you gave it, how could you not be tempted from the years of 2020 to 2021, the world of cryptocurrencies had become that box for regular people.
+[05:03] The puzzle pieces though, it was a really satisfying, I was a retention moment of like, I am now understanding the story so much more I'm seeing it being built, but I think the really, really cheeky part of it all is at the start of this video, you start with those puzzle pieces and you broke them away.
+[05:20] And I was like, I was like, wait, no, I wanted to see what that was, but then you started building it back up in the retention editing language that became my dopamine hit, you know, in an old this is working, I am now getting the signal of chapters of like, getting that sense of progression is a very cheeky retention storytelling technique, but it works very well in this context.
+[05:41] This interview was recorded with Riverside, the all in one video podcasting tool. So we've been using Riverside for over a year now, and it's simply because they've been a great supporter in making sure that our show gets me.
+[05:55] Not all of our guests can be in person. So to make sure that we can still make our show, we've been using Riverside for our remote podcast interviews, and the video quality is excellent. You can record up to 4k.
+[06:06] And we've mentioned multiple times before the ease of use of their multi track recording system. And now Riverside has changed the podcasting game again with a new AI enhanced video editor that radically cuts down your editing time.
+[06:19] This just knocks so many hours off like instantly Riverside's editor means you can make the entire podcast just on their site, such as their transcription based editor.
+[06:27] You can simply search a section to cut and delete it in your video immediately. You can also remove silences with just one click. That's like half the podcast already edited. You can automatically add captions and use AI to clip with magic clips.
+[06:41] Magic clips uses AI to identify the best parts of your podcast and then shares them across social platforms. Start using Riverside for your show and use the code edit podcast for 20% off.
+[06:54] The countdown. That then being another sense of progression, another sense of time of what of something for us to then look forward to towards that moment. Why was the countdown so important for you in this story?
+[07:09] Yeah, the countdown thing was it was interesting because that was never in the kind of like original sort of first draft of the video. It only became a concept after in the second draft, especially when I committed to the idea of not telling this story in a linear way.
+[07:24] And when I went and looked at the first draft and this sort of back and forth, it kind of felt jarring. Like something just felt wrong or that it was missing. And I think it was just naturally through the script.
+[07:33] I was like, what if I just add in like a countdown of like 10 months left? And immediately it was like, oh my God, like that that works perfectly because it kind of accompanies even the puzzle pieces element where so not only are you looking in the past and you're piecing together this puzzle, you're constantly reminded that this thing is going to collapse.
+[07:50] There's something is going to fall when it keeps reminding you why you're building those puzzle pieces. It's because you know things are about to end and you want to find out what what the hell is happening because constantly in the story, you're told how great this person is, how amazing the business is.
+[08:03] And you're piecing together the puzzle, but then you're always reminded every single time there's 10, 10 months left. There's five years left in that retention tactics sort of world like that again acts as a moment for someone to be like, I'm here because I want to see how this ends and how this eventually.
+[08:19] Yeah, how this all sort of collapses. I love it. It's a very, very effective way just knowing the end is coming. There's a fantastic feeling about the pre apocalypse.
+[08:30] Right. Yes.
+[08:31] You know that the world's about to end and then that feeling that you can create. And then just that countdown of like this is when the apocalypse is going to happen.
+[08:40] Sam Bingman Fried is the devil. He is the devil in crypto. This guy's literally trying to ruin crypto permanent. And you know what he says? Oh, that's not what I'm doing. You liar. You lie.
+[08:51] Sam Bingman Fried.
+[09:01] So James, the polish of your videos is excellent quality. This is the things that we would see on network television or some of the biggest streaming sites.
+[09:10] The thing that I'm definitely curious of is of course the journey to get to that point. So I'm curious, what does the V1 version of this look like? The assembly cuts.
+[09:21] Let's say you've recorded everything you've got it and what I'll have is somewhat of a storyboard before we jump into the edit. And storyboard will literally be like script is kind of on the left side on the right hand side.
+[09:30] You'll have some of a direction, whether it's motion graphic here, b-roll of this thing here, etc, etc. Gives you some sense of what the edit could look like.
+[09:39] Once you get into the edit, you drop in your a-roll, your facecam, minorating footage, cut it all up, any mistakes and stuff so that you've just got the things that you know you're going to include.
+[09:49] After that's done, you know that there's going to be bits of kind of essential b-roll is what I call it. We know that there's going to be a footage of this thing happening here or this interview here because it's literally in the script and it says so.
+[10:00] We start to put in the essential footage in there. What happens next is where things get a little bit more interesting.
+[10:06] It's where you kind of go into this process of back and forth and it will be now the moment where you start to implement some music.
+[10:13] Music, like I mentioned, is a big part in my videos and what I do. So as soon as I drop a song in, that can dictate a lot about how the footage is going to roll and how everything is going to be paced.
+[10:24] Again, we have a sense of, and there's something I'm still trying to get better at, is having a sense of pacing before you even do that because that's going to help you with your music selection and everything else.
+[10:32] And now we're like, okay, as you like watch through the video, there should be a sense. And again, you can use a storyboard as an example.
+[10:37] We know that, okay, we've got to get a bunch of clips here of people praising San Bangman Fried. But now with the context of the music in there, you can start to be able to shape the clips in a way that it makes sense with the music.
+[10:48] One of the greatest quarterbacks in football history. Well, he's not only an ambassador for FTX now. He's also given equity in the company and the same goes for the Brazilian fashion model and Brady's wife at the time, Giselle Buncher.
+[11:01] This point as well, again, in the storyboard, you'll have a sense of where motion graphics is going to be, which in the timeline in Premiere Pro is what I use. The timeline is literally just going to be a black screen that says insert motion graphics of whatever here.
+[11:13] Once you've got a good sense of, we know the music is right, we have a decent amount of footage, an archive footage that we know we're going to use.
+[11:21] Maybe there's some polishing that needs to be done with it, but whatever. We have a very good sense of what all of that is going to be for a lot of them.
+[11:29] So I have a lot of what I call internet sequences in my videos, which is just anything where it's like clicking on an article or searching someone's name on Google.
+[11:36] It's a very specific thing that I have a lot of the time in my videos. I've got a whole creative brief page that instructs how to go about making those internet sequences from the effects used, including after effects templates, all of this stuff.
+[11:49] And I will generally give that to my motion graphics editors. We had this detective board thing that appeared is what we called it where we showed kind of the piece of the individuals who are important in the kind of San Bankman freed team or FTX in a circle.
+[12:02] Those ones require a bit more storyboarding screen record me really badly, but still somewhat helpful in a paint in the MS paint document and just like drawing what I'm like looking to have happen with the motion graphics.
+[12:15] Once they're done with the motion graphics, they might be a little bit back and forth, but once they've finally locked it in, we just plug it into the sequence and then yeah mixing and mastering kind of happens afterwards, which I'm very terrible at.
+[12:25] Interestingly enough, conversation around like AI, I kind of use mid journey to help with some concept ideas, which I have found like AI to be helpful when it comes like figuring out concepts for stuff.
+[12:37] Like with the detective board shots of this video, I knew I wanted something that looked a bit neon and kind of this orange and blue theme run it through mid journey got some really cool results fed it back to my motion graphics guy and we kind of played around with ideas and eventually, you know, we got we got what we were we were happy with.
+[12:53] In one moment in the FTX video, we had this point in time where it's we're kind of towards the end of the story where customers are trying to withdraw their funds from FTX and there's this big moment where we talk about how.
+[13:06] Imagine being a customer in FTX when you're hearing all of this bad news and you want to withdraw your money. And we initially wanted to do we saw it we were like we have a big motion graphics bit here.
+[13:16] Can we just like, can we just record something? Can we get like some some actual footage like of this? And we tried we did it like a day we tried to to, you know, film something and it didn't work.
+[13:26] We did. We didn't manage to find a good way of doing it. So we went back to the drawing board and was like, OK, let's just actually go and have an animation that is mimicking what it'd be like as a as a person on their computer.
+[13:36] So the animation themselves is like being in a browser clicking and seeing the article and clicking to the tweet and seeing CZ. It's very like not it's kind of on the nose.
+[13:44] Very obvious. But it was a moment where like, OK, cool. This is fine. Like let's move on. And yeah, you'll get moments like that. Try and avoid it.
+[13:50] But that generally is how sort of directional motion graphics will work.
+[13:54] Hey, hold up. Let's take a quick music break. This is nice, isn't it? Music is such a key source of inspiration for me.
+[14:04] Lots of times I put music on and I just sit and I think and I listen. I'm like, is this going to work for a scene on my next project?
+[14:11] Is this going to work in this YouTube video? And doing that research ahead of time is a big deal.
+[14:15] And when I find something that I know I'm going to want to use in a scene, I get pretty stoked, bro. It's kind of exciting.
+[14:20] Music bed is that source of inspiration for me. And recently I have made the switch to music bed for my music needs.
+[14:28] The reason why I like to use music bed as opposed to anybody else is that their curation level is absolutely ridiculous.
+[14:34] I've heard that they literally only let 1% of the music submitted to them on their service.
+[14:39] If it's not a bop, it's not a cop. If you know what I'm saying?
+[14:42] They have any kind of genre, any kind of mood and the producing quality is absolutely ridiculous.
+[14:48] Like off the charts. It sounds so pro. So pro that you might even find artists that you already like on Spotify
+[14:55] and you could use them in your next video with music bed.
+[14:58] So make the switch to music bed today and experience what is only on music bed.
+[15:02] Check the link in our description and get a 14 day free trial right now. Back to the conversation.
+[15:06] What are some of the small moments that are really important for you to pull off in this documentary?
+[15:11] When I do the videos, there's always an element of like, you want to find what the heart of the story is.
+[15:16] Like what's kind of the thing that actually brings the human emotion into it.
+[15:19] Because Sam Bankman Fried is this very larger than life type of character.
+[15:25] You know, you just hear big headlines about how much money he's worth and how much money the FTX collapse cause and all of this stuff.
+[15:31] It's very hard to relate to it maybe on a human and emotional level.
+[15:35] So one of the important things that I really wanted to have was this interview that I had with one of the victims of the FTX collapse.
+[15:42] We had a really like powerful story, which I think humanized everything that was going on.
+[15:47] I was following the situation quite well after all of this and I was horrified.
+[15:54] That it's fun to see a countdown. It's fun to see, you know, oh my God, like this guy is not as what people seem and all of those elements are interesting to watch.
+[16:02] But then I think the thing that I constantly wanted to have was this interview running with like Martin, who was the victim,
+[16:09] and to have him constantly go through his experience and have this moment at the end where I knew I wanted to end kind of the main video on just his own comments and his own thoughts on the whole thing,
+[16:21] which I felt would have been the real way to close it out is, yeah, you hear this story about Sam Bankman Fried, but you're finally reminded at the end of it that there is someone who, you know,
+[16:29] is at the heart of it, the ones who did lose money and had real consequences happened.
+[16:33] And Martin, you know, had this really powerful moment where he's talking about, you know, this is like watching all your Christmas bonuses, all your checks, everything you've worked hard to like seeing it sort of thrown into the wind.
+[16:45] It felt like everything I worked up to this point in my life has been just like there were different memories flashing in my head of all the raises you get at work, of all the money you get, Christmas bonuses.
+[16:58] It would be all the same if I just took those checks and burned them and thrown them into the wind or whatever.
+[17:04] And then this moment where I kind of, I included in the interview where I asked him, you know, what would you say to Sam Bankman Fried if he were, you know, if you could talk to him in him just saying, you know, just try and make it right if he has any humanity left.
+[17:17] I think that was a really big moment to emphasize that it wasn't just about this Bankman Fried character that everyone spoke about, that there were real losses at the end of it all.
+[17:25] And that I think was like kind of the heartbeat of the story, which I think was really important to include.
+[17:30] Otherwise it becomes this funny rollercoaster story of a rich man who, you know, is so great and good and turns out he's not.
+[17:37] Spectacle is fun. It can be entertaining, but the spectacle doesn't hit until you can bring in that human element towards it.
+[17:45] How are you able to allow yourself to be in a place where you don't care how long it is between uploads or you're making sure that you are working on the video until it's actually done?
+[17:56] I'd funny enough, I do care quite a bit about the upload time. It's kind of, it's been my biggest kind of pet peeve at the moment in terms of not being able to consistently upload.
+[18:06] I think again, part of the issue is I still have those areas of perfectionism, which makes me want to continue to draw things out.
+[18:13] Slowly as I've started to begin developing our team or people to help me, like with this FTX video, we hit a point weeks before the actual release where I'm looking at my creative producer and I'm saying to him,
+[18:27] you know, like, bro, I don't think this is ready. Like, there's so much more that I want to add into this.
+[18:31] Like the video is bad. It's terrible. I can't put this out. And he's like, look, we had a conversation about it.
+[18:36] We're like, we need to be happy with 70% of this thing being good and continue and move on from there because truthfully, that perfectionism wanted me to pursue the best possible video in lieu of like the emotional stress and mental fatigue and physical fatigue that would take to get that last bit completed.
+[18:56] And I think it was helpful having again, like someone to actually again fundamentally different to what it was before prior to burning out where I brought a team and thought I had to come with the answers.
+[19:05] This was a moment where I got to sit down and be like, OK, here's how I'm feeling. And we ended up, you know, figuring out the solution in there.
+[19:11] What we've been coming to realize amongst a lot of these conversations is that that last 30 to 20% of details barely 100 people will really notice that detail.
+[19:22] And then that's where you didn't start breaking your mind on that detail that 99.9% of the audiences won't care about.
+[19:29] And as you gain the audience and you gain the pressure of like a reputation of being someone that uploads like high quality content is you I started to lose this principle, which is really important.
+[19:38] I think to me, which is giving yourself permission to be bad. That was like, I wouldn't have even uploaded my first video if I didn't like drill that into my head because, you know, when I was making the first video as I'm recording in my head,
+[19:51] the only thought was this is the worst thing. This is going to be so bad. But it was always like, give yourself permission to be bad. It's going to be OK.
+[19:58] And it was it. And bear in mind, like I didn't have much of like, I didn't have any editing experience really prior to starting this channel.
+[20:04] The only way I slowly improved on that and understood a lot of like what I was doing was again going this video.
+[20:10] There were good moments, couple moments where I think I could have improved. Let's move on to the next one.

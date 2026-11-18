@@ -1,0 +1,830 @@
+idioma: en
+[00:00] So this is wild.
+[00:01] AI is finally getting really good at something that I didn't think it would ever get that
+[00:07] good at, at least not as quickly as it did.
+[00:10] AI can finally edit my videos for me.
+[00:13] I give it some A-roll of a talking head of me.
+[00:17] I give it the prompt, go edit this for me.
+[00:20] And it comes back with a video that I'm pretty happy with.
+[00:23] Now right now I'm pretty much just using it to edit short form videos, but I've
+[00:27] become absolutely obsessed.
+[00:30] With using AI to edit this style of video.
+[00:32] If you check out my Instagram page, you'll notice I've been posting at least one new
+[00:37] short a day, sometimes even two a day, seven days a week.
+[00:40] And some of these videos have been doing quite well.
+[00:42] Like this one's almost hit a million views.
+[00:44] This one was entirely edited with AI.
+[00:47] Here's another one about Tesla's latest car that's done 137,000 views.
+[00:51] And if you look at my YouTube shorts page, very, very similar story.
+[00:55] I'm posting all the same videos to Instagram and YouTube shorts.
+[00:59] This one down here has done 1.8 million views.
+[01:02] Here's another one that did 159,000.
+[01:05] Another one that did 174,000.
+[01:07] Every video that you can see from about this one up, this Tesla one here,
+[01:12] I used AI to edit these videos.
+[01:14] So in this video, I want to walk you through what AI is actually capable of
+[01:18] when it comes to editing and then break down a step by step workflow
+[01:22] that you can follow to set up your own editing process using AI.
+[01:27] This is show me your workflow, me addition.
+[01:34] So for my workflow, I've actually been using Claude with the Opus 5.5 model.
+[01:38] But this absolutely works using Codex and the chat GPT models.
+[01:43] Like Sol works great for this as well.
+[01:45] So here's a quick breakdown of what the workflow I built does.
+[01:49] So for this example, I was making a video about Genie 4.
+[01:52] I gave it a link to the Genie 4 blog post so it can grab the details from there.
+[01:57] I also gave it a little extra context.
+[01:59] There's a lot of videos on that page.
+[02:00] I also record my own b-roll of me testing it.
+[02:03] I gave it a link to where it can find that on my computer.
+[02:07] And then I said, let's use b-roll from both the original source and my b-roll.
+[02:10] So now it has access to look at this website where it can grab all the details
+[02:14] it needs to know about Genie 4.
+[02:16] There's a bunch of videos on this webpage that it can use for b-roll
+[02:20] inside of the final video.
+[02:22] And I linked it to a video on my hard drive where it can show some of the b-roll
+[02:27] that I generated when I had a chance to play around with this tool.
+[02:29] And then what it did was it fired up the vidIQ MCP server.
+[02:33] I'm going to talk about them a little bit more during the setup process.
+[02:36] But it looked on YouTube for other videos talking about Genie 4.
+[02:40] It found Tim from Theoretically Media's video about Genie 4.
+[02:43] It found a couple official videos about Genie 4.
+[02:47] And it basically found, you know, the best performing videos that were out there on Genie 4
+[02:51] to help inform like what content should go into the video itself.
+[02:57] So once it did its analysis using vidIQ, you can see here that it actually did a text analysis.
+[03:03] So it looked at the best performing videos, looked at the transcripts of those videos
+[03:07] to find out what they were talking about, and then used that to inform this little script portion.
+[03:12] It then writes me a script.
+[03:13] Personally, I don't totally love AI-generated scripts.
+[03:16] I feel like you can still tell they're AI-generated.
+[03:18] So I use the script as sort of like a guideline.
+[03:21] I almost never read it word for word, but it did give me a script here.
+[03:24] And the nice thing about the script that it gave me is that it's going to inform me of all the
+[03:29] talking points that I should try to inject in that video because it knows what did well
+[03:34] from other people's videos.
+[03:35] It also gives me a score of how it thinks it'll perform.
+[03:38] So it thinks this one's an eight out of 10.
+[03:40] It gives it some notes here about the actual editing.
+[03:43] And again, all that I started with to get to this point was a link to DeepMind
+[03:47] and then sharing a link to where some of my own existing B-roll was.
+[03:50] If I was making a video about Genie 4, there's a ton of video already that Google's put out.
+[03:55] So I don't even need to make my own B-roll, but because I did have early access,
+[03:58] I opted to use some of it here.
+[03:59] In most of my videos that I do, if I don't have access to the thing,
+[04:03] I don't give it any extra B-roll.
+[04:04] I just give it a link to the resource where it can learn about it.
+[04:07] And then it goes and does more research using vidIQ here.
+[04:11] So once it's got the script, then I'm ready to record my A-roll.
+[04:14] That's when I flip on my camera and just speak into the camera about the thing I'm talking about.
+[04:19] Again, I use this script as a rough guideline, never exactly word for word from the script.
+[04:24] So here's what the raw video looks like when I gave it to Claude.
+[04:28] You'll notice there's still pauses.
+[04:30] I make mistakes and repeat myself.
+[04:33] Now, I don't really think this...
+[04:35] Now, I don't really think this looks like Rainbow Road from Mario Kart that much.
+[04:41] As you can see, it needs edits.
+[04:44] It's got long pauses.
+[04:46] It's got me repeating myself and making mistakes.
+[04:49] But all I have to do is here's the A-roll I generated and a link to that video.
+[04:53] And it knows what to do.
+[04:54] You can see it ran, you know, 67 steps here.
+[04:57] If I open up all the steps it ran, it loaded my skill, the coolest thing.
+[05:02] Edit, set up the cut in A-roll, prepare B-roll clips and music bed,
+[05:06] write a plan and render, QA and deliver.
+[05:08] You can see it went through all of these tasks down here.
+[05:12] It loaded up 11 labs.
+[05:13] That's where it got the background music and any sound effects that might be in it.
+[05:16] It set up and cut the A-roll.
+[05:18] Then it moved on to preparing B-roll clips in the music bed.
+[05:21] And then it did the thing with 11 labs.
+[05:23] Then it loaded Claude and Chrome, tried to run a computer command and failed.
+[05:27] But then, you know, clearly figured out workarounds, pulled some of these images.
+[05:31] And what these images are are actually screenshots from different videos that it was looking at for B-roll.
+[05:36] So it knows exactly what to pull in for B-roll.
+[05:39] This is actually from the B-roll I gave it here.
+[05:42] You can see that it's got timestamps of every little scene inside of this B-roll.
+[05:47] So it knows how to line it up.
+[05:48] And you'll see these screenshots throughout.
+[05:50] It just keeps on double checking its work over and over again.
+[05:53] Down here we can see where it generated music for underneath the video.
+[05:59] Who are you?
+[06:00] My name is Skrillex.
+[06:01] That all used 11 labs.
+[06:02] And then it gave me a summary of what it built.
+[06:05] And we have the final video down here.
+[06:07] When I press play on the video, this is what the video looked like.
+[06:09] This is the coolest thing I saw today.
+[06:11] I typed a giant gorilla, enters the city,
+[06:14] and then it just walked right into the street I was standing in.
+[06:17] This is Genie 4 from Google DeepMind.
+[06:21] Now, if I scrub through it real quick, some things to notice.
+[06:24] These subtitles here, it added those.
+[06:26] I didn't do anything to add those.
+[06:28] It added all of the B-roll you see.
+[06:30] This is actually B-roll that I gave it.
+[06:32] But then some of the B-roll, when I get a little bit further into it,
+[06:35] like the B-roll of the giant tentacle monsters
+[06:38] while these people are on the scooter,
+[06:39] that was actually B-roll that came straight from the DeepMind website.
+[06:43] The background music you heard was generated by 11 labs.
+[06:45] This video here of it typing in an environment and a character,
+[06:49] it actually used hyperframes and generated that itself.
+[06:52] Because I didn't have good B-roll of me typing that.
+[06:55] And this video is really just scratching the surface.
+[06:57] I've improved the workflow even more since this one.
+[07:00] You can actually have it go and generate 3D objects in blender
+[07:03] and pull those 3D objects in.
+[07:05] You can have it generate charts and graphs
+[07:07] as you're talking about things
+[07:08] and add little animations over the B-roll.
+[07:10] We're gonna get into all of that.
+[07:12] But this is just a quick teaser of what you can do with it.
+[07:15] Okay, now to really properly show this off,
+[07:17] I feel like I need to create a brand new clot account.
+[07:20] If I was to go use my existing clot account,
+[07:22] it has all of my skills already in it.
+[07:24] It's got all of my past memory.
+[07:26] It's gonna sort of jump right to being good.
+[07:29] So for this tutorial, I'm gonna bite the bullet
+[07:31] and purchase a second clot account
+[07:33] and walk you through how to do it on a from scratch clot account.
+[07:37] And I'm just gonna use the monthly plan at $20 a month.
+[07:40] I don't wanna do yearly,
+[07:41] because after I do this demo,
+[07:43] I'm gonna cancel this version of clot.
+[07:45] All right, and as you can see down here in the bottom,
+[07:48] it's a pro account,
+[07:49] but you can also see there is zero history.
+[07:51] This is a brand new fresh blank slate clot account.
+[07:55] So step one, we're gonna create a new project.
+[07:57] We're gonna call this project short form video editor.
+[08:00] Now up here for the instructions,
+[08:02] I'm gonna go ahead and click add.
+[08:03] And this is just a sort of general overview
+[08:05] of what this project is for.
+[08:08] So I'll put something like,
+[08:10] you are world class short form video editor,
+[08:11] you take the source material
+[08:12] and turn it into a script that is likely to perform well.
+[08:14] You clean up a roll video to cut out pauses and mistakes.
+[08:16] You edit in b roll from the source material
+[08:17] and from what you find around the web
+[08:18] to make the video highly visually appealing.
+[08:20] I'm also gonna tell it,
+[08:20] you can use all the tools at your disposal,
+[08:24] like vidIQ, blender, hyperframes, ffmpeg, ytdlp.
+[08:29] And as I go through the video,
+[08:30] I'll talk about all of these.
+[08:31] But basically vidIQ is going to look through
+[08:34] existing videos either on your channel
+[08:36] or other people's channels to find
+[08:38] what has a high likelihood of going viral
+[08:40] and it's gonna analyze that.
+[08:41] Blender will help you make sort of 3d objects
+[08:43] and even some animations that can go into your video.
+[08:46] Hyperframes does almost like
+[08:48] after effects style real basic editing.
+[08:50] FFmpeg is actually going to do the editing.
+[08:53] So you don't even need to use something
+[08:55] like DaVinci Resolve or Adobe Premiere.
+[08:57] We're doing this all headless.
+[08:58] So it's not actually going to go use another editor
+[09:01] and take control of your computer.
+[09:02] It's just gonna do the editing behind the scenes.
+[09:04] And then ytdlp is actually a script
+[09:08] that allows it to download videos from the web.
+[09:11] So when it's using that,
+[09:12] it can actually download YouTube videos
+[09:14] and Instagram videos and videos that it finds
+[09:16] and use that for b-roll.
+[09:18] So I'm gonna go ahead and save the instructions here.
+[09:20] And then over under customize on the left,
+[09:23] we wanna make sure we install vidIQ.
+[09:25] This is sort of like the secret sauce
+[09:27] to everything I'm doing here.
+[09:28] So I did a quick search and vidIQ is right here.
+[09:31] So I'll go ahead and click on that
+[09:33] and we'll connect this to Claude.
+[09:35] So we get this dialog here.
+[09:36] I'll click continue connecting.
+[09:38] It's gonna bring me over to vidIQ
+[09:40] and I will go ahead and authorize my vidIQ account.
+[09:43] Now vidIQ has graciously sponsored this video.
+[09:46] But I wanna tell you,
+[09:46] I've been using vidIQ for this process
+[09:49] long before they actually agreed to sponsor this video.
+[09:52] Like I've been using vidIQ in my video creation process.
+[09:55] I told vidIQ,
+[09:57] Hey, I'm gonna make a video about how I edit my videos
+[10:00] and how vidIQ is a big part of it.
+[10:02] And they said, hey, let us sponsor that video.
+[10:04] So that's exactly how that came to be.
+[10:06] So vidIQ is a big part of my workflow.
+[10:09] And you'll see why as I get deeper into this video.
+[10:11] But also when I told them I'm making this video,
+[10:13] they said, hey, let us set you up with a page
+[10:15] where you can offer it for a buck for their first month.
+[10:17] So if you head over to vidIQ.com slash Matt Wolf,
+[10:21] you can actually use the vidIQ MCP
+[10:23] which you'll see throughout this video for just $1.
+[10:26] If you're watching on TV or something,
+[10:27] they also put this QR code that you can use.
+[10:30] Thank you so much to vidIQ for sponsoring this video.
+[10:33] I think it's gonna make a lot of sense
+[10:34] as you watch the rest of this video
+[10:35] as to why I like vidIQ so much.
+[10:38] Now while we're still in this customized tab over here,
+[10:40] let's also add in hyperframes.
+[10:43] This one's gonna help with some of the animations
+[10:45] in the videos.
+[10:45] So we'll go ahead and select this
+[10:47] and we'll connect this one to Claude as well.
+[10:49] It's gonna send you over to your browser
+[10:51] once again to confirm.
+[10:52] And once you do, it will be connected.
+[10:54] All right, let's jump back into our short form video editor here.
+[10:58] And there's a couple ways that we can get started.
+[11:01] If you already have an existing YouTube or Instagram account,
+[11:04] you can have vidIQ go and look at that
+[11:07] and analyze which videos performed well
+[11:10] and have this tool make more videos like that.
+[11:13] That's exactly what I did.
+[11:14] If you don't have one,
+[11:15] you can tell it some examples of YouTube channels
+[11:18] that you really like
+[11:19] and might wanna take some inspiration from.
+[11:21] Since I already have a YouTube channel.
+[11:25] I can say use vidIQ to analyze my short form videos
+[11:28] on my channel.
+[11:29] And then I'll just cut up in parentheses at Mr. E-Flows.
+[11:30] Look at the best performing shorts
+[11:32] and figure out what makes them perform well.
+[11:34] Look at both the script and the visuals
+[11:36] and then create a skill that will generate
+[11:38] similar scripts that are likely to go viral
+[11:40] and another skill that can edit the videos
+[11:42] to look like the existing videos.
+[11:43] The editing skill can use ffmpeg to edit
+[11:45] as well as paperframes and blender
+[11:47] to add some additional visual appeal and polish.
+[11:50] Ideally, the end result is that I give you a URL
+[11:53] to something interesting that I want to make a short about.
+[11:55] Then you write a script that is likely to perform well.
+[11:58] I then record my talking head a roll of that script,
+[12:01] feed it back to you,
+[12:02] and then you edit that video
+[12:03] to look like my existing videos.
+[12:05] Cut out the pauses, cut out the mistakes,
+[12:07] add b-roll, add animations, add subtitles,
+[12:09] add background music and sound effects.
+[12:11] We can use 11 labs or background music and sound effects.
+[12:15] And one thing that I do like to do
+[12:16] when telling it to edit is this.
+[12:18] When editing and doing initial cuts,
+[12:23] use both the transcripts and the waveforms for editing.
+[12:28] And the reason I tell it that
+[12:29] is sometimes it'll read the transcripts,
+[12:31] think it needs to cut it off,
+[12:32] but it'll accidentally cut you off like mid-w-
+[12:34] So it needs to also look at the waveform
+[12:36] to make sure that it's cutting after the sound ends
+[12:40] and not when it just thinks the word is end.
+[12:42] I'm gonna go ahead and submit this,
+[12:44] and it's gonna start building those skills.
+[12:45] And it's gonna work for a little while
+[12:47] to actually create these skills.
+[12:49] But what we'll see it do first
+[12:50] is it's gonna load vidIQ here
+[12:52] and do a bunch of analysis on my existing videos.
+[12:55] To speed this up, I'm gonna come down here
+[12:57] to where it says manual and also set this on auto mode
+[12:59] so it just keeps on running.
+[13:01] And I'm gonna click Always Allow
+[13:02] so it just keeps on doing what it needs to do.
+[13:05] And we can see down here, it's open vidIQ
+[13:08] and it's looking at my videos right now.
+[13:10] You can see it found the outliers.
+[13:12] This one did 3 million views, 1.9, 1 million.
+[13:15] So it's analyzing what made these videos work
+[13:19] so well for me on my channel.
+[13:20] Now, as it does this process,
+[13:22] I will say this is going to be a very iterative process.
+[13:25] It's gonna come back, it's gonna give us both skills,
+[13:27] the scripting skill, and the video editing skill.
+[13:30] The scripting skill will probably be pretty dialed in
+[13:32] from like the first go.
+[13:34] The editing skill will probably give it our A-roll.
+[13:36] It will probably mess it up.
+[13:38] It's probably gonna edit it in a way
+[13:39] that we're not totally happy with.
+[13:41] But then we're gonna tell it what to fix.
+[13:43] And then once we tell it what to fix,
+[13:44] we will then tell it to then update the skill
+[13:47] and we'll keep going back and forth
+[13:49] until the edits get better and better and better.
+[13:51] And eventually you get to the point where you just say,
+[13:53] go edit this for me and it knows exactly what to do.
+[13:56] Okay, so that worked for about 15 minutes.
+[13:58] And we can see that it looked at my top performing videos
+[14:03] and it created two skills.
+[14:04] So the short script and the short editor.
+[14:07] I'm gonna go ahead and save both these skills here.
+[14:09] And then we can review what it did.
+[14:11] So it analyzed the shorts and drafted both skills.
+[14:14] So we can see here what makes your shorts perform.
+[14:17] This is what it figured out by looking at all the vidIQ data.
+[14:20] So physical machines doing something surprising,
+[14:22] things like flying cars, combat robots, body scanners.
+[14:26] The hook that seems to work
+[14:27] is this is the coolest thing I saw today,
+[14:29] which is the name of my series.
+[14:30] So it knows that that's what I start every series with.
+[14:33] Videos where people actually debate
+[14:35] whether or not the thing they're seeing is real or AI.
+[14:38] I only post real stuff unless I say otherwise.
+[14:40] So it's kind of funny.
+[14:41] But if people have to wonder,
+[14:43] that means I probably found a really cool piece of tech.
+[14:45] It also looked at my pacing and the visual style 50-50 split
+[14:48] with B-roll on top, magenta captions,
+[14:51] B-roll changing every 1.8 to 3.6 seconds.
+[14:55] Now it does still need a few things from me
+[14:57] to get this whole workflow working.
+[14:59] It does tell me what I need for MU, connect a folder.
+[15:02] So I need to add a folder for it to use
+[15:05] to put the video files in and things.
+[15:07] I need to add my API key for 11 labs.
+[15:09] And then it wants me to do a test recording.
+[15:11] We could see here some more analysis.
+[15:13] vidIQ's visual analysis described the Tesla
+[15:15] and bodyguard footage as CGI,
+[15:17] while the scripts present them as real demos.
+[15:20] So again, videos where people go,
+[15:22] I feel like that's AI, but it's actually real footage,
+[15:26] seems to do pretty well.
+[15:28] So the first thing it wants me to do is connect a folder.
+[15:30] So I'll click this little plus down here,
+[15:32] click add folder.
+[15:32] I create a folder called clod editor.
+[15:34] So I'll go ahead and open that as our folder.
+[15:36] And I'll just go ahead and send that
+[15:37] so it knows the folder we're working with.
+[15:39] I'm gonna select don't ask again for this folder
+[15:41] on this device will allow that.
+[15:42] Now it wants me to allow network access for 11 labs.
+[15:45] So for that, I'm gonna come to customize
+[15:48] and then I'm just gonna search for 11 labs.
+[15:51] I'll select this and connect to clod.
+[15:54] It's gonna give me a page that looks like this,
+[15:57] asking me to connect in my browser.
+[15:58] I'll click authorize.
+[15:59] But then it's gonna ask me if I want to install
+[16:01] this version or the full version.
+[16:03] And I want to install the full version
+[16:04] because that one's gonna get me access to music
+[16:06] and sound effects and things like that.
+[16:08] We'll go ahead and click continue on this screen here.
+[16:10] And then it's gonna have us sign into our 11 labs account.
+[16:12] So I'll click add.
+[16:13] We'll connect again.
+[16:14] And we'll go ahead and authorize everything.
+[16:16] And now we are connected.
+[16:18] So we've got our folder added.
+[16:19] We've got 11 labs connected.
+[16:21] And now it wants us to send a test recording.
+[16:24] Now it does say one raw a roll take with its scripts.
+[16:27] We'll show how well the cuts work on your real voice.
+[16:29] But I'm not gonna give it a script
+[16:30] because I wanted to pull the script itself
+[16:32] if it doesn't have one.
+[16:34] So I'll tell it when I give you a video,
+[16:36] use 11 labs to get the timestamped script.
+[16:41] And it should update the skill to let it know
+[16:44] to grab it from 11 labs.
+[16:45] So we can see it went ahead and updated the skill.
+[16:48] So I'll go ahead and click update, update, update.
+[16:51] I don't know why you have to click three times.
+[16:52] But now our skill is updated,
+[16:54] knowing that if I just give it a raw video
+[16:56] with no transcript,
+[16:57] it's gonna use 11 labs to grab that transcript.
+[17:00] I'm gonna click back on our project here,
+[17:02] our main project folder.
+[17:03] And under context, I'm gonna go ahead
+[17:05] and add the folder that we made earlier,
+[17:07] just so it always knows it can use that folder.
+[17:09] So this one I called Claude editor.
+[17:11] I'm gonna go ahead and open that and always allow
+[17:13] so it knows it can always use that folder as well.
+[17:17] And now theoretically we're set up
+[17:19] where I could give it a link to anything
+[17:21] and it will go and create a script for me.
+[17:23] Then I can record the a roll for that script,
+[17:26] give it back to a roll,
+[17:27] and then it will edit the whole thing for us.
+[17:29] Again, it probably won't be perfect the first time around.
+[17:32] Well, nobody's perfect.
+[17:34] But it'll get pretty dang close the first time.
+[17:36] And then we just give it feedback.
+[17:38] So let's find something real quick.
+[17:39] So I recently came across this motion bricks out of Nvidia.
+[17:43] And I thought this one would be a cool one
+[17:45] to make a short out of,
+[17:46] because it's got a lot of really cool visuals
+[17:48] that we can pull from.
+[17:49] So it seems like it would really grab attention as a short.
+[17:51] So theoretically all I'm gonna need to do,
+[17:53] copy this URL here, open up Claude.
+[17:55] I'll go to our short form editor project here,
+[17:57] but create a new window.
+[17:59] And I'm just gonna paste this URL in here.
+[18:01] That's it. I'm gonna hit submit.
+[18:02] We can see it's reading the pages.
+[18:04] It just loaded our skill, Mr. E-Flow Short Script.
+[18:07] So it's using that short script skill.
+[18:09] It's reading the archive.org page.
+[18:11] And now it's loading up vidIQ again.
+[18:13] It's reviewing videos that were similar on vidIQ.
+[18:16] It's scoring the animation's visual appeal.
+[18:19] So it's actually looking through what's on the page
+[18:21] to figure out what the most visually appealing aspects are
+[18:25] to use as b-roll in the next phase.
+[18:27] And here's what it came back with.
+[18:28] It's scored it a four out of five.
+[18:30] It's about 50 seconds.
+[18:31] You can see it in a glance. It passes that.
+[18:33] Someone not into AI would stop.
+[18:35] So it doesn't think it's strong if you're not into AI,
+[18:39] but good footage exists.
+[18:40] There's natural debate around it.
+[18:42] Links to something people care about.
+[18:44] Nvidia video games on real engine, et cetera.
+[18:46] It gives me an estimated view range
+[18:48] based on what it found on vidIQ
+[18:50] and everything it has access to.
+[18:52] So game and 3D world shorts on your channel
+[18:54] land around 15 to 30,000 views.
+[18:57] I'd expect this one to fall about that.
+[18:58] It's not a flying car,
+[19:00] but it thinks it should do decent.
+[19:01] And then it gave me the script.
+[19:03] Now it's not following my other script formula
+[19:05] that starts with this is the coolest thing I saw today
+[19:07] because the skill hasn't been taught yet
+[19:10] to write the scripts in that format.
+[19:12] I'm not going to do that for this one
+[19:13] because this is a brand new script designer.
+[19:16] My other skill that I've already built
+[19:18] already writes scripts exactly the way I like them.
+[19:20] So what I would do now is I would read this script.
+[19:22] And if I like the way the script sounds,
+[19:24] I would just say, cool, I'll move on
+[19:26] and record this script as a roll.
+[19:28] If I think the script needs work,
+[19:30] I'm going to give it some feedback.
+[19:31] Quite honestly, I just read this script
+[19:33] and it's pretty solid as is.
+[19:35] A lot of times you get some like AI isms in it.
+[19:37] Like it's not just this, it's that and things like that.
+[19:40] But this one doesn't have any of that.
+[19:42] It doesn't read like a super AI script.
+[19:44] So it did a good job of analyzing my previous scripts
+[19:47] and making one that sounds fairly similar.
+[19:49] It gave us some title suggestions.
+[19:51] Every move here is AI generated.
+[19:52] AI is animating this game live.
+[19:54] Nvidia just replaced game animators.
+[19:56] And then it also made a shot list for B roll.
+[19:58] So that when I move on to the next phase,
+[20:00] it knows what B roll to grab and where to put it.
+[20:04] So my next step would be to go and record this as a roll.
+[20:08] Me talking into a camera and then just feed it back.
+[20:11] So I'm going to go ahead and do that real quick.
+[20:14] Okay. So I went away and recorded the A roll of me
+[20:18] basically reading this script here.
+[20:20] Almost word for word, but I ad libbed a little bit.
+[20:22] Here's what the raw footage looks like.
+[20:24] Look at it walk jog.
+[20:26] Look at it walk jog and then run.
+[20:30] Look at it walk jog and then break into a full run.
+[20:33] So as you can see pauses, mistakes, do overs.
+[20:36] It's all in there.
+[20:37] And here's where the next step is really cool
+[20:40] because all I have to do is take this video
+[20:42] that I just recorded, this video file,
+[20:45] drag and drop it in here.
+[20:46] I don't even need to give any other prompt.
+[20:48] I'm just going to submit that video just like that.
+[20:50] We can see it loaded our skill, the Mr. E-Flow short editor.
+[20:53] It's transcribing our rough cut,
+[20:55] getting B roll and visuals, music, render and review.
+[20:58] So it's going to do all of this for us now.
+[21:01] I just step away and wait.
+[21:02] Okay. So I actually ran into a little issue here
+[21:05] and it stopped before it finished the edit
+[21:07] because of a few blocks.
+[21:08] So if you run into this, this is how you fix that.
+[21:11] It says that 11 labs is not accepting my video to transcribe
+[21:15] and apparently the skill won't let something else transcribe it.
+[21:18] So we need to fix that.
+[21:19] So I'm going to go ahead and tell it
+[21:21] if 11 labs isn't working for transcription,
+[21:25] we should use an alternate tool.
+[21:28] Please update the skill.
+[21:30] It's also saying downloads from NVIDIA site
+[21:32] are blocked on the computer.
+[21:34] Now the fact that it won't read NVIDIA's website,
+[21:37] that should be fixed by me going to settings, capabilities,
+[21:40] and then selecting allow all sites.
+[21:43] So now it should be able to read all sites that I tell it to.
+[21:47] So NVIDIA site should work now.
+[21:50] Okay. So it went ahead and updated the skill.
+[21:53] So we'll go ahead and make sure those updates are added in.
+[21:56] So it doesn't stop if 11 labs isn't working,
+[21:59] but it's telling me I need to use a new session
+[22:02] in order to access the sites.
+[22:04] So it's telling me what to prompt a new session with.
+[22:06] Edit this into the motion bricks short
+[22:09] and then it already shows the URL where the script is.
+[22:12] So we'll go ahead and copy all of that.
+[22:14] We'll just start a new session
+[22:16] and then I'll drag the video file into this new chat.
+[22:18] And hopefully all of our permissions are gonna work now.
+[22:22] Okay. So it actually gave me one last little issue here.
+[22:25] It was saying these URLs were blocked and I went,
+[22:27] I thought I unblocked all this stuff,
+[22:30] but I haven't figured out now.
+[22:31] So if you go into your settings,
+[22:33] so you click on capabilities
+[22:35] and then down here where it says create and edit files,
+[22:37] turn that on, turn on the thing that says use the internet
+[22:40] while making files, make sure that is on.
+[22:42] And then under allowed websites, click on manage here.
+[22:45] And this is where you plug in those URLs
+[22:47] that it's saying are blocked.
+[22:49] So if you see URLs are blocked, go to that screen.
+[22:51] I just showed you and unblock them.
+[22:53] So I did that and I literally prompted,
+[22:55] is it working now?
+[22:56] And then it went off and made my video.
+[22:58] So I haven't watched this yet,
+[23:00] but this is what it did on that first attempt.
+[23:03] Every move this character is making
+[23:04] is being generated by AI live.
+[23:07] This is motion bricks from Nvidia.
+[23:09] Look at it walk jog and then break into a full run.
+[23:13] It vaults over a bench, sits down, picks up a sword
+[23:16] and there's no handmade animation
+[23:19] stitching all that together.
+[23:22] So it's not bad, but there's definitely some issues with it.
+[23:25] It didn't do the background music.
+[23:26] The audio sounded a little bit weird,
+[23:28] like there was some extra compression
+[23:30] or something on my voice audio.
+[23:33] I noticed one of the mistakes that it didn't cut out
+[23:35] and I'd like it to tighten up the gaps
+[23:37] in my speaking even more.
+[23:39] So I'm just gonna give it a bunch of feedback.
+[23:41] So I gave it the feedback,
+[23:42] let's get the background music working.
+[23:43] My vocal audio sounds weird with some weird EQ
+[23:45] or compression.
+[23:45] Let's tighten up the gaps with me speaking.
+[23:46] I also left in some mistakes where I misspoke.
+[23:47] Fix that.
+[23:48] I gave it additional instructions to be sure
+[23:49] you use both transcripts and the waveforms
+[23:50] to ensure you don't cut me off in words.
+[23:51] Let's use hyperframes to add some animations.
+[23:52] Didn't add any extra like animation stuff in there.
+[23:55] And then I finally told it,
+[23:56] make sure these changes are updated in the skills
+[23:58] that are applied to all future videos as well.
+[24:00] So let's have it do another pass with this feedback.
+[24:03] Okay, so it's been about 36 minutes
+[24:05] and we have a new revision.
+[24:07] It's actually still working,
+[24:08] but right now it's just updating the skill files
+[24:10] so that it knows how to do this stuff in the future.
+[24:13] We can see it even created some Python scripts here
+[24:15] so that it can better accomplish these goals
+[24:18] in the future as well.
+[24:19] It created a short edit Python script
+[24:21] and a GFX kit Python script.
+[24:24] Let's go ahead and take a look at this new version here.
+[24:26] Every move this character is making
+[24:27] is being generated by AI live.
+[24:30] This is motion bricks from NVIDIA.
+[24:32] Look at it walk jog and then break into a full run.
+[24:35] It vaults over a bench, sits down, picks up a sword,
+[24:39] and there's no handmade animation
+[24:41] stitching all that together.
+[24:42] Usually game animators need to build
+[24:44] every single one of those transitions by hand.
+[24:49] So that was a much better version.
+[24:50] The audio sounded better.
+[24:51] We had some background music.
+[24:53] It added some more graphics and animations overlaid
+[24:56] and it tightened up the audio gaps
+[24:58] and removed the mistakes that I heard the first time around.
+[25:00] So that is really how you do the video editing.
+[25:03] You keep on going back and forth and back and forth
+[25:05] and we can see it updated our skill
+[25:07] based on this new feedback.
+[25:08] So I can go ahead and tell it to yes, go ahead
+[25:10] and make sure that's in the skill from here on out.
+[25:13] But you can even take this further.
+[25:14] You can add in Blender and have it add 3D objects.
+[25:18] In fact, let me jump over to my other account
+[25:20] and I'll share some additional tips.
+[25:22] In this video that I made for this high NoMess world model here,
+[25:26] if I preview this video here and fast forward a little bit,
+[25:28] you can actually see an instance where it jumped into Blender,
+[25:31] created an animation of a GPU,
+[25:33] and then used hyperframes to add some extra text over it.
+[25:37] So you can tell it to jump into Blender
+[25:39] and make 3D objects if you don't have the B roll.
+[25:42] So if you're making a video that has a really cool concept
+[25:44] but there's not great B roll around the web for it,
+[25:47] tell it to use Blender and generate graphics for you
+[25:50] and animate them and it will actually do that
+[25:52] as part of the B roll.
+[25:53] Here's something I recently came across from Monique Price
+[25:56] who I believe edits for Network Chuck here,
+[25:59] but she talks about how she gave Claude
+[26:01] a sequence that she had in mind and it created this.
+[26:03] And when we watch this video,
+[26:04] you can see it probably made that toilet in Blender
+[26:07] and then the actual text and animations on top,
+[26:10] it probably used something like hyperframes
+[26:12] or even possibly did that in Blender.
+[26:13] So this shows you the type of quality of animations
+[26:17] you can start to put into your videos here
+[26:19] just by prompting Claude.
+[26:21] Now, don't get me wrong, there will be a lot of back and forth
+[26:24] and a lot of iteration to get it exactly where you want it,
+[26:27] but it could do probably most of what you can think of
+[26:31] in the video.
+[26:32] Now another thing I like to do is inside
+[26:34] of my short form video creator project here,
+[26:37] is I'll tell it to review my last 10 YouTube shorts
+[26:40] for outlier videos that performed well
+[26:42] and give me a list of suggestions based on your findings
+[26:45] for how I can improve my scripting and editing skills.
+[26:48] Now I won't even need to tell it what tools to use
+[26:51] and by default, it's likely gonna call upon that vidIQ MCP.
+[26:55] We can see it already pulled in vidIQ here.
+[26:58] I didn't even need to tell it to do that.
+[27:00] You just have the vidIQ MCP installed
+[27:03] and it will review all of your short form videos.
+[27:06] If I click this little arrow here,
+[27:08] I can see this sort of step by step of what it's doing.
+[27:10] So it used vidIQ to pull all the videos from my channel here.
+[27:14] It's looking at my channel analytics.
+[27:16] It's pulling the transcripts from the videos
+[27:18] that it pulled that it found to be the best performers.
+[27:21] It's actually watching the short form.
+[27:23] Again, I know I told you this was sponsored by vidIQ,
+[27:26] but like it really is one of the most powerful tools
+[27:29] if you're using Claude for editing videos.
+[27:31] It's also reading comments on the videos.
+[27:34] So if people are giving feedback on your videos,
+[27:36] it's gonna pull that in as well.
+[27:38] It can look at the retention curves on videos.
+[27:40] And the idea behind this exercise
+[27:42] is that you're almost creating this like reinforcement
+[27:45] learning loop to make your videos better
+[27:47] and better every single time.
+[27:49] So you run this process maybe once a month or so.
+[27:52] Tell it to look at your last month's worth of videos,
+[27:54] find the outliers that performed well,
+[27:56] use that information to update your skills,
+[27:59] and then all of your future videos
+[28:02] will then be a little bit better
+[28:04] based on these findings.
+[28:05] And if you keep on doing this every month,
+[28:07] your videos are only gonna get better and better.
+[28:09] The scripting is gonna get better,
+[28:11] the editing is gonna get better,
+[28:12] and the skills are going to keep on learning
+[28:15] how to make themselves improve
+[28:18] because you're doing this loop
+[28:19] of improving the video process over and over and over again.
+[28:24] And we can see here's the feedback that it gave.
+[28:26] It's looking at things like the opening frame,
+[28:28] opens on a car in midair,
+[28:29] opens on a robot jumping onto a car,
+[28:31] opens on a close up of a guy's face,
+[28:34] GD4 cuts to the prompt typing screen at two seconds.
+[28:37] It tells us where people are dropping off
+[28:38] so we can improve certain areas.
+[28:40] So here's the suggestions for scripting.
+[28:43] Line two says what's physically happening
+[28:45] on the screen and playing words.
+[28:46] In the middle, put something like here it is doing X,
+[28:49] put credentials and specs on title cards,
+[28:51] keep caveats to one clause or cut them.
+[28:54] Editing suggestions down here.
+[28:56] The first frame should always be real footage
+[28:58] of the thing like in action.
+[29:00] It also gives some suggestions for title names.
+[29:02] So as you can see, we've got a lot of feedback here
+[29:05] that I could feedback to my skill.
+[29:07] And now future videos are gonna use this feedback
+[29:09] and ideally get better and better results.
+[29:12] Now my final thoughts on this whole process are,
+[29:15] I have very mixed feelings about this.
+[29:18] I've been a video editor myself for 17 years now,
+[29:21] both editing my own videos
+[29:23] and also editing clients back in the day.
+[29:25] But when it comes to editing this style of video,
+[29:27] like talking head informational short form video,
+[29:31] I feel like AI does a pretty good job at it now.
+[29:34] Now when it comes to long form,
+[29:35] I still like the idea of having an editor
+[29:37] and doing some of the edits myself
+[29:39] and like really getting in there
+[29:41] and fine tuning the way I like it, the old fashioned way.
+[29:44] But when it comes to this kind of short,
+[29:46] I feel like it's pretty easy to just knock them out quickly,
+[29:50] letting AI do a big chunk of the editing work for you.
+[29:52] And the reason I have mixed feelings about that
+[29:54] is I do think, you know, short form editors
+[29:57] are going to have a harder and harder time getting work.
+[30:00] The ones that embrace this might be able to do like,
+[30:03] you know, five times as much work,
+[30:04] which is great for those that embrace it,
+[30:06] but there's also going to be a lot of editors
+[30:07] that could be out of work.
+[30:09] But I think the bigger implication of this
+[30:11] is that we're going to see a lot, a lot,
+[30:13] a lot of flooding of content.
+[30:16] It's gotten so easy and the barrier to entry to create,
+[30:19] especially short form content has gotten so low
+[30:22] that like anybody is going to be able
+[30:24] to just crank out videos constantly.
+[30:26] And I don't really like that.
+[30:28] But as I say that,
+[30:29] it almost kind of feels like eight keeping a little bit
+[30:31] because, you know, I've made a career out of content
+[30:34] for the last 17 years.
+[30:35] So I don't know.
+[30:37] Like I just don't know how to feel about all of this.
+[30:39] I spend a lot of my time these days
+[30:42] finding cool information, reading articles,
+[30:44] learning about cool tech, finding things to share.
+[30:48] And I feel like that's where more and more
+[30:49] of my value has come in,
+[30:51] especially when it comes to this short form content,
+[30:53] isn't like trying to out edit people on the shorts.
+[30:57] It's trying to be somebody that's constantly finding cool stuff
+[31:01] and putting it in front of people
+[31:02] that they may have not otherwise seen.
+[31:04] But I wanted to put this all together, put it out there.
+[31:06] I feel like if people take what I'm doing here
+[31:09] and start using it, and we see more and more
+[31:11] of this type of video, it's only going to cause me
+[31:13] to sort of like up level what I do
+[31:15] and find new ways to stand out
+[31:16] because this kind of thing is becoming commoditized.
+[31:19] So might as well put what I know out about it,
+[31:21] show you how it's done.
+[31:23] I hate the fact that I'm kind of becoming part
+[31:25] of the cause of the commoditization,
+[31:27] but at the same time, it's going to happen regardless.
+[31:31] So might as well share my knowledge.
+[31:32] I want to thank vidIQ once again for sponsoring this video.
+[31:36] It kind of came very, very naturally
+[31:39] for them to be a sponsor.
+[31:40] I told them I was making this video
+[31:42] and they said, hey, let us sponsor it.
+[31:44] And I said, yeah, let's do that
+[31:45] because I was going to talk about vidIQ
+[31:48] whether they sponsored it or not.
+[31:49] But again, thank you so much to them for sponsoring it.
+[31:51] Head over to vidIQ.com slash Matt Wolf
+[31:54] to actually use vidIQ for just $1.
+[31:57] Or you can again scan the QR code
+[31:59] that should be on the screen like right here, maybe.
+[32:01] Or I don't know, the editor should put it somewhere there
+[32:04] or they'll put it somewhere else to like mess with me.
+[32:07] I don't know what, there should be a QR code on the screen.
+[32:09] Thank you so much for hanging out and nerding out with me.
+[32:11] This was probably a bit longer than I thought it would be,
+[32:14] but I wanted to make kind of the exhaustive guide
+[32:16] and also any of the little roadblocks
+[32:18] that I ran into, I wanted to point them out.
+[32:19] So if you run into them,
+[32:20] hopefully you can get over them as well.
+[32:22] And also as a quick reminder,
+[32:23] you can do this with OpenAI inside of Codex as well.
+[32:27] And I have done it with that,
+[32:28] but I've made a lot of videos about OpenAI lately.
+[32:30] So for this one, I wanted to jump in and play around with Claude
+[32:33] to get it to work.
+[32:34] But again, you could use either one.
+[32:36] So whatever plan you already have,
+[32:37] you don't need to go get a different plan.
+[32:39] Thank you for hanging out and nerding out.
+[32:41] I really, really appreciate you.
+[32:42] And hopefully I'll see you in the next one.
+[32:44] Bye-bye.

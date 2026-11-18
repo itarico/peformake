@@ -1,0 +1,14 @@
+idioma: en (0.96)
+[   0.0-   4.3] So you can now make walk style collage animations like this using Claude
+[   4.3-   6.7] without animating a single frame.
+[   6.7-  10.4] The paper cutout style you see in explainer videos and documentaries
+[  10.4-  14.2] and Claude can now build it for you inside a real video editor.
+[  14.2-  15.0] So here is how to do it.
+[  15.0-  17.9] Head over to Invido's MCP page and select Claude.
+[  17.9-  21.8] Hit connect then copy the prompt for your agent and paste it into Claude.
+[  21.8-  23.6] And it will finish the setup by itself.
+[  23.6-  28.3] Now you can drop new reference folders ask it to make it an explainer on any topic you want.
+[  28.3-  29.0] Not only that.
+[  29.0-  30.7] It doesn't just give you a video file.
+[  30.7-  34.6] It builds a full video timeline inside Invido video timeline that you can edit.
+[  34.6-  38.2] If you want the full setup guide, top here in the comments and I'll send them over.

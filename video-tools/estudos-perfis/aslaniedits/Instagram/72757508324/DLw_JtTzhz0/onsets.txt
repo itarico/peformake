@@ -1,0 +1,66 @@
+ 0.10s flux= 162.7 rms=-31.2dB centroide=  5331Hz grave=0.05
+ 0.21s flux=  96.8 rms=-31.9dB centroide=  5013Hz grave=0.06
+ 0.34s flux= 126.8 rms=-19.4dB centroide=  3766Hz grave=0.08
+ 0.43s flux=  74.1 rms=-29.3dB centroide=  2776Hz grave=0.09
+ 1.14s flux= 134.6 rms=-27.8dB centroide=  2770Hz grave=0.04
+ 1.53s flux= 143.8 rms=-23.9dB centroide=  5100Hz grave=0.04
+ 1.68s flux= 104.5 rms=-24.9dB centroide=  2877Hz grave=0.09
+ 1.81s flux=  89.9 rms=-16.6dB centroide=  2002Hz grave=0.04
+ 1.92s flux= 111.1 rms=-26.1dB centroide=  2990Hz grave=0.07
+ 2.53s flux= 118.9 rms=-23.4dB centroide=  5505Hz grave=0.03
+ 2.67s flux= 121.0 rms=-31.3dB centroide=  4686Hz grave=0.04
+ 3.17s flux= 138.5 rms=-25.8dB centroide=  2297Hz grave=0.04
+ 3.59s flux=  75.1 rms=-22.6dB centroide=  1966Hz grave=0.13
+ 3.77s flux=  75.0 rms=-30.8dB centroide=  2722Hz grave=0.05
+ 4.01s flux=  78.3 rms=-26.1dB centroide=  2297Hz grave=0.12
+ 4.23s flux= 139.0 rms=-23.8dB centroide=  5978Hz grave=0.03
+ 4.47s flux= 102.2 rms=-20.4dB centroide=  2217Hz grave=0.16
+ 4.81s flux=  76.4 rms=-30.5dB centroide=  2842Hz grave=0.11
+ 5.58s flux= 156.8 rms=-19.8dB centroide=  6269Hz grave=0.01
+ 5.71s flux= 131.6 rms=-23.3dB centroide=  6776Hz grave=0.01
+ 6.03s flux=  72.1 rms=-22.4dB centroide=  2471Hz grave=0.11
+ 6.49s flux= 172.6 rms=-24.8dB centroide=  5846Hz grave=0.05
+ 6.73s flux= 145.3 rms=-22.2dB centroide=  6322Hz grave=0.01
+ 6.84s flux=  75.8 rms=-29.9dB centroide=  5717Hz grave=0.03
+ 7.31s flux= 100.2 rms=-34.1dB centroide=  3580Hz grave=0.05
+ 7.43s flux=  80.9 rms=-23.2dB centroide=  2943Hz grave=0.09
+ 7.53s flux=  73.6 rms=-17.1dB centroide=  2018Hz grave=0.05
+ 7.64s flux=  92.7 rms=-27.9dB centroide=  3642Hz grave=0.19
+ 7.74s flux= 113.2 rms=-29.0dB centroide=  3941Hz grave=0.15
+ 7.92s flux=  86.4 rms=-28.3dB centroide=  4708Hz grave=0.07
+ 8.36s flux= 108.5 rms=-28.1dB centroide=  5521Hz grave=0.02
+ 8.66s flux=  76.4 rms=-26.2dB centroide=  1833Hz grave=0.07
+ 8.74s flux=  85.9 rms=-22.4dB centroide=  1702Hz grave=0.12
+ 9.28s flux=  72.0 rms=-26.1dB centroide=  1773Hz grave=0.25
+ 9.54s flux= 153.2 rms=-24.6dB centroide=  5315Hz grave=0.07
+ 9.65s flux=  74.1 rms=-21.9dB centroide=  1330Hz grave=0.12
+10.89s flux= 130.8 rms=-26.6dB centroide=  1312Hz grave=0.19
+10.98s flux= 158.4 rms=-18.8dB centroide=  3704Hz grave=0.10
+11.25s flux= 115.5 rms=-24.7dB centroide=  3614Hz grave=0.13
+11.45s flux=  70.6 rms=-35.5dB centroide=  3949Hz grave=0.14
+12.20s flux=  69.6 rms=-30.5dB centroide=  2381Hz grave=0.14
+12.48s flux= 101.6 rms=-28.7dB centroide=  3734Hz grave=0.13
+12.61s flux= 113.0 rms=-16.9dB centroide=  1783Hz grave=0.09
+12.71s flux=  72.2 rms=-18.2dB centroide=  2044Hz grave=0.08
+12.85s flux=  76.5 rms=-18.9dB centroide=  1401Hz grave=0.12
+13.10s flux=  71.2 rms=-29.1dB centroide=  4424Hz grave=0.09
+13.29s flux=  72.7 rms=-30.5dB centroide=  4417Hz grave=0.12
+13.42s flux=  70.5 rms=-19.6dB centroide=  1703Hz grave=0.11
+13.84s flux= 121.5 rms=-23.5dB centroide=  3438Hz grave=0.16
+14.01s flux=  97.1 rms=-25.3dB centroide=  3405Hz grave=0.12
+14.33s flux= 223.3 rms=-26.5dB centroide=  4929Hz grave=0.07
+15.00s flux=  85.7 rms=-24.0dB centroide=  1890Hz grave=0.11
+15.16s flux= 165.7 rms=-22.6dB centroide=  5864Hz grave=0.05
+15.77s flux=  89.0 rms=-22.8dB centroide=  2731Hz grave=0.16
+15.91s flux= 138.4 rms=-23.7dB centroide=  3738Hz grave=0.09
+16.38s flux=  98.0 rms=-30.6dB centroide=  2945Hz grave=0.07
+16.51s flux= 134.0 rms=-25.6dB centroide=  3539Hz grave=0.17
+16.59s flux=  93.8 rms=-22.2dB centroide=  2182Hz grave=0.17
+16.70s flux= 143.8 rms=-28.8dB centroide=  4932Hz grave=0.07
+16.81s flux=  93.8 rms=-28.7dB centroide=  3738Hz grave=0.08
+17.07s flux= 140.9 rms=-21.1dB centroide=  5658Hz grave=0.04
+17.88s flux= 126.6 rms=-19.8dB centroide=  1680Hz grave=0.09
+18.01s flux=  72.3 rms=-23.7dB centroide=  2083Hz grave=0.18
+18.18s flux=  70.8 rms=-19.8dB centroide=  1752Hz grave=0.13
+18.40s flux= 108.6 rms=-23.8dB centroide=  4469Hz grave=0.11
+periodo~1.358s BPM~44.2

@@ -1,0 +1,27 @@
+idioma: en (1.00)
+[   0.0-   2.2] Your brain has a storage limit.
+[   2.2-   4.2] So what happens when it fills up?
+[   4.2-   9.0] The world's top supercomputers do a quintillion calculations every second.
+[   9.0-  12.8] They burn 30 million watts, enough to power a small town.
+[  12.8-  16.2] They need massive cooling systems just to keep from overheating.
+[  16.2-  19.0] And they still can't do what your brain does.
+[  19.0-  21.6] So how much can your brain actually hold?
+[  21.6-  24.2] You have 86 billion neurons.
+[  24.2-  27.0] Each one connects to thousands of other neurons.
+[  27.0-  29.7] That's hundreds of trillions of connections.
+[  29.8-  34.6] And scientists at the Salk Institute found that each one holds a few bits of information.
+[  34.6-  35.5] Add it all up.
+[  35.5-  38.5] And your brain stores at least one petabyte.
+[  38.5-  40.2] That's a million gigabytes.
+[  40.2-  44.1] To fill it, you'd have to film your entire life in HD.
+[  44.1-  47.6] Every second, non-stop for 13 years.
+[  47.6-  49.8] But your brain never lets it get that full.
+[  49.8-  53.0] Because every night while you sleep, it replays your day.
+[  53.0-  56.4] It keeps what matters, like a new name or a lesson you learned.
+[  56.4-  57.8] And it wipes the rest.
+[  57.9-  60.5] Like what the stranger next to you on the bus was wearing.
+[  60.5-  63.0] So by the time you wake up, there's space again.
+[  63.0-  66.6] And it runs all of this on just 20 watts of power.
+[  66.6-  68.0] Less than an old light bulb.
+[  68.0-  71.1] The most powerful computer on earth isn't in a lab.
+[  71.1-  73.9] It's in your head.

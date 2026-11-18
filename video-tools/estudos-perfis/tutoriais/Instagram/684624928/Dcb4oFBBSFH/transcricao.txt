@@ -1,0 +1,10 @@
+idioma: en
+[00:00] Hold on, I just trained my own AI model and it's insane.
+[00:03] Every AI tool gives you the same generic look.
+[00:05] You prompt it and hope it matches your style.
+[00:07] So instead of prompting, I trained a model on my workflow.
+[00:09] Now watch this, every shot carries the same style, the same mood, and feel every time.
+[00:14] And I don't have any coding experience.
+[00:16] I just hold plot exactly what I wanted and they trained a model for me.
+[00:19] The new LTX trainer is now open source and free.
+[00:22] Comment trainer and I'll send it to you.

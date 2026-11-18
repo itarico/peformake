@@ -1,0 +1,23 @@
+idioma: pt (1.00)
+[   0.0-   4.6] Agora você consegue dar um número de WhatsApp pro Cloud e fazer ele atender seus clientes
+[   4.6-   5.6] automaticamente.
+[   5.6-   7.7] Eu vou te mostrar como funciona.
+[   7.7-  12.6] Imagina, duas da manhã e uma cliente manda, tem horário na sexta?
+[  12.6-  16.9] O agente olha sua agenda, mostra os horários livres e já marca pra ela.
+[  16.9-  18.4] E você tava dormindo.
+[  18.4-  22.1] A ferramenta que liga o Cloud no WhatsApp se chama Calso.
+[  22.1-  27.5] Ela usa a PI oficial do WhatsApp e tem plano grátis, com 2 mil mensagens por mês.
+[  27.5-  31.8] E você monta tudo em 3 passos, com o Cloud Code fazendo a parte difícil.
+[  31.8-  35.2] Primeiro, você cria a conta na Capso e conecta um número.
+[  35.2-  36.4] Não tem um sobrando?
+[  36.4-  38.7] Ela te dá um número americano já verificado.
+[  38.7-  42.9] Segundo, você instala as skills de WhatsApp da Capso no Cloud Calde.
+[  42.9-  45.1] Terceiro, você pede do seu jeito.
+[  45.1-  49.1] Cria um atendente que responde meus clientes e marca horário na minha agenda.
+[  49.1-  52.4] Aí o Cloud escreve o agente e liga tudo pra você.
+[  52.4-  55.1] Mas pera, tem coisa que é idêntico.
+[  55.1-  58.1] Esse número grátis é americano, com mais um na frente.
+[  58.1-  62.2] Pra usar o seu, ele tem que ser WhatsApp Business ou um chip só pro atendente.
+[  62.2-  65.3] E a meta cobra a parte quando é você que puxa a conversa.
+[  65.3-  68.6] Manda pra aquele amigo que perde venda porque demora pra responder.
+[  68.6-  71.6] Comenta atendente e eu te mando passo a passo completo.

@@ -1,0 +1,14 @@
+idioma: en (1.00)
+[   0.0-   5.2] He hijacked a plane, collected $200,000,
+[   5.2-   8.5] jumped into a stormy night, and vanished forever.
+[   8.5-  13.6] On November 24, 1971, a man calling himself Dan Cooper
+[  13.6-  16.9] hijacked a Boeing 727 over the United States.
+[  16.9-  20.7] He demanded $200,000 and four parachutes.
+[  20.7-  23.6] After releasing the passengers, the plane took off again.
+[  23.6-  26.3] Cooper jumped into the darkness with the ransom money.
+[  26.3-  28.1] And then he disappeared.
+[  28.1-  31.0] Years later, part of the ransom was found near a river,
+[  31.0-  33.0] but Cooper was never identified.
+[  33.0-  37.9] One man, one daring escape, and a mystery that remains unsolved.
+[  37.9-  40.1] Smart editors don't rebuild this.
+[  40.1-  44.2] They open the project file on earnedits.com.

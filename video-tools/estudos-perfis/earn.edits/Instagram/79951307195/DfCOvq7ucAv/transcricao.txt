@@ -1,0 +1,31 @@
+idioma: en
+[00:00] This is how you can create this trendy smart grid animation in under a minute.
+[00:04] And you don't need multiple layers, keyframes or expressions to do it.
+[00:08] You can create the whole thing with just one After Effects plugin.
+[00:11] Let me show you how.
+[00:12] First, create a new composition and import all your media files into the project panel.
+[00:17] Then open the plugin and click Create Grid.
+[00:20] This will open the grid settings.
+[00:22] Here you can set your media count, format, rows, columns, duration and FPS.
+[00:28] For a smoother animation, you can use 60 FPS.
+[00:31] Once your settings are ready, click Choose Layout.
+[00:34] Now you can click on any block and add your media to it.
+[00:37] Since we selected four images earlier, we can use any four blocks in the grid.
+[00:41] You can also adjust the height and width of each block according to your needs.
+[00:45] Next, click Add Media.
+[00:46] Select the blocks you want and add your images and videos one by one.
+[00:50] To properly position your media inside each block, you can use the level control.
+[00:55] And now comes the final part.
+[00:56] The animation.
+[00:58] Click Explore Motion and you'll get a bunch of ready to use motion presets with easy in
+[01:03] and easy out settings.
+[01:04] You can also create your own manual motion.
+[01:06] And that's not all.
+[01:07] You get additional settings like focus blur, color falloff and parallax.
+[01:11] You can even change the background color and the grid color.
+[01:14] Now explore the rest of the settings yourself and see what you can create with it.
+[01:19] Once you're happy with your setup, click this button.
+[01:21] The plugin will create a new composition inside a new folder in your project panel.
+[01:25] Just drag that composition into your timeline and your effect is ready.
+[01:29] And if you found this useful, send it to an editor who needs it.
+[01:32] Comment grid and we'll send you the plugin for free.

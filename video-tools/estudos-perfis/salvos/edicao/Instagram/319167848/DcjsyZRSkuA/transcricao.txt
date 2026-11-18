@@ -1,0 +1,71 @@
+idioma: pt (0.99)
+[   0.0-   3.0] Eu vou te ensinar como fazer esse efeito que eu apliquei no meu último vídeo.
+[   3.0-   5.0] A primeira coisa que você vai precisar é um tripé.
+[   5.0-   6.7] E sim, são imagens estáticas.
+[   6.7-   8.3] E o melhor de tudo não é um vídeo.
+[   8.3-  11.8] Foram feitas somente fotos com uma técnica chamada stop motion.
+[  11.8-  14.4] E se você não sabe o que é, estude.
+[  14.4-  18.3] Mas basicamente consiste em tirar uma foto, movimentar o objeto.
+[  18.3-  20.0] Tire uma foto, movimento o objeto.
+[  20.0-  23.3] Até que você tenha um monte de foto que vista em sequência,
+[  23.3-  25.0] fique assim, uma pequena animação.
+[  25.0-  26.7] Que por si só, já é interessante.
+[  26.7-  29.6] Mas falta um molho especial.
+[  29.6-  30.6] E você aprende aqui.
+[  30.6-  34.2] Na barra de ferramentas do After Effects, vai em layer, new camera.
+[  34.2-  35.0] Parabéns.
+[  35.0-  36.5] Você criou a sua câmera 3D.
+[  36.5-  40.4] Logo em seguida, levando em consideração que você já colocou suas fotos em sequência,
+[  40.4-  41.9] fez um pre-composal nest.
+[  41.9-  44.3] Vai na sua timeline no seu objeto fotos.
+[  44.3-  46.5] E clique nesse quadradinho aqui.
+[  46.5-  47.0] Pronto.
+[  47.0-  51.5] Agora você acabou de comunicar pro After Effects que isso é um objeto 3D.
+[  51.5-  53.6] Com sua câmera 3D, seu objeto 3D,
+[  53.6-  59.2] você já está pronto para se adentrar nas profundezas da ambientação 3D.
+[  59.2-  62.5] Agora na barra de ferramentas, vai em view, sweet view, layout.
+[  62.5-  63.4] E selecione 4.
+[  63.4-  67.8] E isso vai te dar quatro pontos de vista diferente do movimento que você vai fazer.
+[  67.8-  70.9] E vai te ajudar a acompanhar com mais precisão a sua animação.
+[  70.9-  71.2] Pronto.
+[  71.2-  72.5] Agora me dá a sua mão aqui.
+[  72.5-  73.5] Não solta.
+[  73.5-  73.9] Tá quase.
+[  73.9-  76.4] Pra entender sobre movimentação de câmera no ambiente 3D,
+[  76.4-  78.5] é muito importante que você saiba disso.
+[  78.5-  81.1] Existem três direções que a sua câmera pode movimentar.
+[  81.1-  84.6] Que são indicadas por setas com cores e letras diferentes.
+[  84.6-  85.3] Seta vermelha.
+[  85.3-  85.7] X.
+[  85.7-  87.4] Faz movimentos laterais, horizontais.
+[  87.4-  88.1] Seta verde.
+[  88.1-  88.5] Y.
+[  88.5-  89.9] Movimenta para cima e para baixo.
+[  89.9-  90.3] Vertical.
+[  90.3-  90.9] Seta azul.
+[  90.9-  91.2] Z.
+[  91.2-  93.0] É responsável pela profundidade.
+[  93.0-  94.6] Ou seja, para frente e para trás.
+[  94.6-  96.6] E sabendo disso, meu querido gafanhoto,
+[  96.6-  99.9] crie os seus keyframes iniciais no início da sua sequência.
+[  99.9- 101.6] Avance um pouco na sua timeline.
+[ 101.6- 102.4] Movimento de sua câmera.
+[ 102.4- 104.4] Avance novamente para o próximo ponto.
+[ 104.4- 108.0] E repita até que você esteja satisfeito com os seus movimentos.
+[ 108.0- 108.8] Uma dica extra.
+[ 108.8- 109.4] Em inglês.
+[ 109.4- 110.1] Extra tick.
+[ 110.1- 112.6] Você também pode adicionar mais objetos à sua cena.
+[ 112.6- 115.0] E lembrando sempre de comunicar pro After Effects
+[ 115.0- 116.9] que aquilo é um objeto 3D.
+[ 116.9- 119.6] Ajusta a profundidade dos seus objetos e a posição
+[ 119.6- 122.3] até que você esteja satisfeito com sua composição.
+[ 122.3- 124.1] E bem, eu considero que esse vídeo merecia
+[ 124.1- 126.3] pelo menos 20 minutos de explicação.
+[ 126.3- 127.8] Mas eu deixei aqui os principais pontos
+[ 127.8- 129.1] e acredito que a partir daqui
+[ 129.1- 131.2] você já consiga andar os seus primeiros passos.
+[ 131.2- 133.3] E é muito importante que você salva esse vídeo
+[ 133.3- 135.6] para aplicar depois nos seus futuros projetos.
+[ 135.6- 137.2] Curte, comenta e compartilha.
+[ 137.2- 139.0] Um beijo e até a próxima.

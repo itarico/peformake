@@ -1,0 +1,131 @@
+idioma: en (0.99)
+[  33.1-  36.1] Are you gonna say something?
+[  36.1-  44.5] I've been following you for days in silence.
+[  44.5-  58.6] We're gonna die on this damn island, aren't we?
+[  58.6-  61.7] What do you want me to say, Ann?
+[  61.7-  65.1] I'm a pirate without a crew, without a ship.
+[  66.3-  68.7] The only friend I've ever had in my life
+[  68.7-  71.0] has his brain splattered all over the bay.
+[  72.6-  74.0] Nemo was right.
+[  74.0-  75.0] I'm not a pirate.
+[  76.5-  83.5] I'm just a man.
+[  83.5-  85.4] Oh, poor you.
+[  85.4-  87.1] Nemo killed my best friend.
+[  88.0-  89.8] Killed my men.
+[  89.8-  93.0] Destroyed my ship.
+[  93.0-  93.9] I'm the same.
+[  95.6-  97.8] Look, I'm sorry about Smee.
+[  97.8- 101.3] But this wallowing in the death of your pride or ego
+[ 101.3- 102.2] is a joke.
+[ 103.3- 105.7] All the stories about Captain Hook,
+[ 105.7- 114.2] if they saw you now, what would they say?
+[ 114.2- 116.2] We have to find a way off this island.
+[ 117.2- 118.6] All the ships are gone, Ann.
+[ 120.3- 121.5] Veric's gone too.
+[ 122.5- 125.6] The chance to sneak onto one of his ships went with it.
+[ 125.6- 127.0] So we're marooned?
+[ 128.0- 129.8] We really are gonna die here.
+[ 129.8- 135.3] There's food to hunt and fresh water to drink.
+[ 135.3- 136.4] We can survive.
+[ 137.5- 139.3] But after what's happened, it could be years
+[ 139.3- 141.1] before another ship comes this way.
+[ 142.2- 143.8] Decades even.
+[ 143.8- 165.7] At this point, I might as well throw myself off a cliff.
+[ 166.5- 169.1] Better than spending any more amount of time with you.
+[ 169.1- 171.4] Come on, Ann.
+[ 172.4- 174.1] I got something to show you.
+[ 174.1- 212.4] Lorset had one task.
+[ 212.4- 216.2] Not only did he fail, but he's managed
+[ 216.2- 218.5] to disgrace himself even further.
+[ 218.5- 224.6] What a joke.
+[ 224.6- 239.1] Now he's nothing more than a worthless vampire.
+[ 239.1- 246.4] How many times did I tell him to kill that fairy
+[ 246.4- 248.0] when he had her in chains?
+[ 249.4- 250.9] But no.
+[ 250.9- 253.7] He had to indulge himself in his little games
+[ 253.7- 257.8] and now look at what it's cost.
+[ 257.8- 263.0] Tell Lorset his mission is over.
+[ 263.0- 265.2] He's to return to the Mordain Castle
+[ 265.4- 267.6] where he can spend the rest of his miserable days
+[ 267.6- 269.2] contemplating his failures.
+[ 270.2- 271.4] Yes, my king.
+[ 271.4- 287.0] There is one more thing, my king.
+[ 288.1- 290.0] The Outlaw has a boy traveling with him.
+[ 291.1- 294.3] According to your brother, the child possesses blood magic.
+[ 294.3- 298.4] He's certain of this.
+[ 298.4- 302.2] He used it on your brother, my king.
+[ 303.3- 305.5] Apparently he can see into another's mind.
+[ 306.3- 310.2] He can witness their past.
+[ 310.2- 311.1] Leave.
+[ 312.2- 313.5] And see to it that my brother
+[ 313.5- 315.6] is out of Horn's Canyon by nightfall.
+[ 316.8- 318.8] I don't care how much pain he's in
+[ 318.8- 321.0] or how loudly he protests.
+[ 321.0- 323.3] If he hasn't returned to the capital by week's end,
+[ 323.3- 325.8] he can consider himself no longer a Mordain.
+[ 327.2- 330.0] He should be grateful he's still half of one.
+[ 330.0- 352.1] How is that possible?
+[ 353.9- 366.8] The lineage of blood magic died out almost a century ago.
+[ 366.8- 368.6] They're heading to Neverland.
+[ 368.6- 375.9] If the fairies' wounds are as severe as my brother claims,
+[ 375.9- 383.7] there's only one way she'll recover.
+[ 383.7- 386.1] She'll need to bathe in the picks and dust
+[ 386.1- 387.9] of the last never tree.
+[ 387.9- 393.4] My most loyal knight.
+[ 394.9- 397.6] You've been by my side since my reign began.
+[ 399.2- 401.4] Will I be able to trust you in this moment?
+[ 402.6- 405.5] That you won't be burdened by what we are to face.
+[ 405.5- 422.9] Leave for Neverland.
+[ 422.9- 424.9] The Outlaw's time has come to an end.
+[ 426.2- 428.1] But above all else,
+[ 428.1- 431.7] we bring back the boy.
+[ 431.7- 438.6] Whatever the cost.
+[ 438.7- 440.6] If they've already left Horn's Canyon,
+[ 441.8- 443.1] they are not far from Neverland.
+[ 443.1- 446.5] They could be there in just a few days.
+[ 446.5- 448.6] How could we possibly get there in time?
+[ 448.6- 455.1] Are you that much of a fool?
+[ 455.1- 457.6] Have you forgotten who you've cared for?
+[ 457.6- 466.8] You will stay here, Orla.
+[ 466.8- 468.6] Send a raven to Felenrock.
+[ 470.1- 472.8] Have the army set sail for Neverland.
+[ 472.8- 475.2] Upon their arrival, they must sink their ships
+[ 475.2- 477.6] and stay hidden on the northern outskirts.
+[ 477.6- 480.8] The Outlaw will be approaching from the south.
+[ 480.8- 483.2] They're to remain unseen until my arrival.
+[ 484.2- 485.4] Yes, my king.
+[ 528.4- 531.3] We are supposed to sail one of these back to the realms?
+[ 532.6- 538.1] We might as well kill ourselves now.
+[ 538.1- 540.6] No.
+[ 540.6- 545.6] Dead Man's Bay isn't the only island that pirates call home.
+[ 545.6- 549.6] This is to go to Cannibal's Cove.
+[ 549.6- 551.1] Oh no.
+[ 551.1- 554.8] No, you can't be serious.
+[ 554.8- 557.0] I know for certain Crow has ships.
+[ 557.9- 560.1] Crow is a land pirate.
+[ 560.1- 562.3] They actually eat people for God's sake.
+[ 563.9- 568.0] Without a crew, we'll be dead the moment we set foot on that island.
+[ 568.0- 569.9] And that's even if we get there.
+[ 571.0- 585.8] Cannibal's Cove is surrounded by mermaids.
+[ 585.8- 588.4] What is it with us pirates?
+[ 588.4- 597.6] We must all really want to die.
+[ 597.6- 599.5] We leave at night.
+[ 599.5- 602.5] If we move slowly so as not to disturb the water,
+[ 602.5- 604.4] we should get there without an issue.
+[ 605.6- 615.2] Now you're sounding like the hook they tell stories about.
+[ 615.3- 628.6] Let me see your hand.
+[ 628.6- 629.8] Is this a...
+[ 631.0- 815.5] You'll know when to use it.
+[ 815.5- 826.6] Wake up, Anne!
+[ 826.6- 828.6] I thought I lost you there for a moment.
+[ 828.6- 854.5] Oh, God damn mermaids.
+[ 854.5- 856.1] Well, look at this.
+[ 856.1- 858.3] Captain Hook has himself a lass.
+[ 859.4- 863.7] Been a long time since you crawled these rocks.
+[ 863.7- 865.2] Fingers.
+[ 865.2- 866.7] Crow won't believe it.
+[ 867.8- 871.8] The king of the seas here to visit his long-lost land brothers.
+[ 872.8- 880.5] Though would have expected you to come with a crew.
+[ 880.5- 882.1] Come on, old man.
+[ 882.1- 883.7] We don't want to keep the boys waiting.
+[ 883.7- 885.5] It's almost dinner time.

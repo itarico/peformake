@@ -1,0 +1,7 @@
+idioma: pt (0.99)
+[   0.0-   4.0] Como eu construo sites como esse em 5 Win Notes com o Cloud?
+[   4.0-  15.2] Primeiro, você vai precisar dessa ferramenta para criar sites cinemáticos com IA.
+[  15.2-  20.2] Ela já vem com uma biblioteca gigante de websites e layouts.
+[  20.2-  25.2] É só copiar um pronte, colar na sua IA e vê-la construir.
+[  25.2-  29.2] E o resultado sai assim, não é acreditável, né?
+[  29.2-  36.1] Comenta a Build e Curte mando o link da ferramenta na DM.

@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "DbtPeuDjpVN",
+ "title": "Post by dacostamotion",
+ "description": "gratitude",
+ "channel": "dacostamotion",
+ "uploader_id": "47908411852",
+ "uploader": "José Emanuel | Motion Designer",
+ "timestamp": 1786037006,
+ "like_count": 100,
+ "comment_count": 9,
+ "webpage_url": "https://www.instagram.com/reel/DbtPeuDjpVN/",
+ "webpage_url_basename": "DbtPeuDjpVN",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20260806",
+ "playlist_count": 7,
+ "epoch": 1794151789,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "id": "4Jp0CtfXjz0",
+ "title": "Pare de Usar o Claude Code Sem Esses 14 Mods",
+ "fulltitle": "Pare de Usar o Claude Code Sem Esses 14 Mods",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=4Jp0CtfXjz0",
+ "upload_date": "20261024",
+ "duration": 1545,
+ "duration_string": "25:45",
+ "view_count": 23620,
+ "like_count": 384,
+ "comment_count": 22,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=mods-claude-code-casos-de-uso_raw169\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\nMods do Claude Code: 14 mods que valem a pena instalar e como criar o seu primeiro só descrevendo o que você quer.\n\nOs mods do Claude Code mudam o próprio Claude Code: painéis ao lado do chat, faixas acima da caixa de mensagem, botões e comandos novos, tudo pedido em linguagem natural. Neste vídeo eu começo pelos três mods de amostra que a Anthropic publicou. O Token Weather desenha acima da caixa de mensagem uma previsão da sua janela de contexto. O Blast Radius segura um comando arriscado, mostra o que ele mudaria e deixa você continuar ou cancelar. O Replay Theater cria o comando /replay para rever, uma por uma, as edições da última rodada. Depois vem o You Should Know, que já vem embutido e você liga quando quiser, e os mods que a comunidade está construindo: barra de progresso com os subagentes, temas visuais, painel de arquivos, cronômetro do cache, modo gravação que esconde dados sensíveis da tela, trava contra duas conversas editando o mesmo arquivo, um mod que transforma suas correções em regra e um navegador ao lado do chat.\n\nNa segunda parte eu mostro como criar um mod no Claude Code, da versão certa ao pedido em linguagem natural, e por que pedir para salvar o mod: o que o Claude escreve numa sessão só carrega naquela sessão. Uso um prompt que manda o Claude ler o meu histórico de sessões e sugerir os cinco mods mais úteis para a minha rotina, e crio na hora o guarda créditos, que estima o custo de cada geração paga no OpenArt, no Higgsfield ou no fal.ai e pede aprovação antes de gastar. No fim, falo de quando um mod gasta tokens e do cuidado de segurança: um mod roda com as suas permissões, então instale só de fontes em que você confia.\n\n📌 CAPÍTULOS\n0:00 14 mods do Claude Code que valem a pena instalar\n0:40 Mods de amostra da Anthropic: Token Weather, Blast Radius e Replay Theater\n1:41 You Should Know e o mod que sugere os próximos passos\n3:30 Mods da comunidade: barra de progresso, subagentes e temas visuais\n4:28 Mod do cache: cronômetro para não pagar a conversa inteira de novo\n5:19 Modo gravação, painel de metas e trava contra edição dupla\n6:43 Mod que aprende com suas correções e navegador ao lado do chat\n7:24 Como criar seu primeiro mod no Claude Code\n9:38 Prompt para o Claude ler seu histórico e sugerir 5 mods\n17:44 Criando o mod guarda créditos na prática\n23:10 O mod em ação: custo estimado antes de gerar\n24:14 Quanto custa usar mods e o cuidado com segurança\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ O que fazem os mods de amostra da Anthropic\n✅ 14 ideias de mods para economizar, ganhar tempo e evitar estrago no projeto\n✅ Como criar um mod no Claude Code descrevendo o que você quer\n✅ O prompt que lê seu histórico e sugere os mods certos para a sua rotina\n✅ Por que instalar mods só de fontes em que você confia\n\nEste vídeo mostra uma capa animada gerada por IA.\n\n#claudecode #claudecodemods #inteligenciaartificial",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "14 mods do Claude Code que valem a pena instalar",
+   "end_time": 40
+  },
+  {
+   "start_time": 40,
+   "title": "Mods de amostra da Anthropic: Token Weather, Blast Radius e Replay Theater",
+   "end_time": 101
+  },
+  {
+   "start_time": 101,
+   "title": "You Should Know e o mod que sugere os próximos passos",
+   "end_time": 210
+  },
+  {
+   "start_time": 210,
+   "title": "Mods da comunidade: barra de progresso, subagentes e temas visuais",
+   "end_time": 268
+  },
+  {
+   "start_time": 268,
+   "title": "Mod do cache: cronômetro para não pagar a conversa inteira de novo",
+   "end_time": 319
+  },
+  {
+   "start_time": 319,
+   "title": "Modo gravação, painel de metas e trava contra edição dupla",
+   "end_time": 403
+  },
+  {
+   "start_time": 403,
+   "title": "Mod que aprende com suas correções e navegador ao lado do chat",
+   "end_time": 444
+  },
+  {
+   "start_time": 444,
+   "title": "Como criar seu primeiro mod no Claude Code",
+   "end_time": 578
+  },
+  {
+   "start_time": 578,
+   "title": "Prompt para o Claude ler seu histórico e sugerir 5 mods",
+   "end_time": 1064
+  },
+  {
+   "start_time": 1064,
+   "title": "Criando o mod guarda créditos na prática",
+   "end_time": 1390
+  },
+  {
+   "start_time": 1390,
+   "title": "O mod em ação: custo estimado antes de gerar",
+   "end_time": 1454
+  },
+  {
+   "start_time": 1454,
+   "title": "Quanto custa usar mods e o cuidado com segurança",
+   "end_time": 1545
+  }
+ ],
+ "language": "pt-BR"
+}

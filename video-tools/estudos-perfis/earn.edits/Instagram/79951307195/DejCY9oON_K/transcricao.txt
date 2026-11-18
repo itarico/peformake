@@ -1,0 +1,17 @@
+idioma: en
+[00:00] Your animations might not be boring because they lack effects.
+[00:03] They might be boring because they lack contrast.
+[00:05] Contrast is simply the difference between two things.
+[00:08] If every element is the same size, your eye doesn't know where to look.
+[00:12] Imagine a screen where everything is muted, and then one element suddenly becomes bright.
+[00:17] But here's where motion designers can take contrast even further.
+[00:20] Speed. You can also contrast shapes.
+[00:23] And one of my favorites, density.
+[00:25] And this is the mistake a lot of editors make.
+[00:27] They think making a video more interesting means adding more.
+[00:30] So when your next animation feels flat, don't immediately add another effect.
+[00:34] Good motion design doesn't make everything interesting.
+[00:37] It makes the right thing interesting.
+[00:39] Want to see how these animations are actually made?
+[00:42] Comment, edit, and we'll send you the full tutorial library,
+[00:45] plus project files to study and recreate it yourself.

@@ -1,0 +1,17 @@
+idioma: pt (1.00)
+[   0.0-   2.5] Essa ferramenta acabou de vez com o cloud.
+[   2.5-   3.6] E eu vou te explicar o porquê.
+[   3.6-   9.9] Um desenvolvedor criou uma ferramenta gratuita que promete reduzir até 70% o consumo de tokens do cloud code.
+[   9.9-  11.4] Ela se chama Graphify.
+[  11.4-  14.5] O problema é que quando eu começo uma nova sessão no cloud code,
+[  14.5-  18.6] ele pode precisar analisar vários arquivos do meu projeto pra entender como tudo funciona.
+[  18.6-  20.8] Isso acaba consumindo milhares de tokens.
+[  20.8-  22.1] Mas olha o que o Graphify faz.
+[  22.1-  25.9] Eu executo a ferramenta, ela analisa meu código e cria uma espécie de mapa
+[  25.9-  29.3] mostrando como os arquivos, funções e componentes estão conectados.
+[  29.3-  31.4] Esse mapa é chamado de Knowledge Graph.
+[  31.4-  34.8] Assim, nas próximas sessões, o cloud pode consultar esse mapa
+[  34.8-  36.7] em vez de precisar analisar tudo novamente.
+[  36.7-  40.1] Ou seja, eu consigo economizar tokens e aproveitar melhor meu plano.
+[  40.1-  41.4] Quer testar de forma gratuita?
+[  41.4-  44.1] Comenta token aqui embaixo que eu te mando o link do GitHub.

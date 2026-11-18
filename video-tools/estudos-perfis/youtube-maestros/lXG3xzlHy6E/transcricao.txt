@@ -1,0 +1,400 @@
+idioma: pt
+[00:00] Muitas pessoas ainda usam e há no dia a dia como usavam há um ano ou dois anos atrás.
+[00:04] Você digita o prompt, dá interesse, recebe a resposta, pega a resposta, copia, cola em outro lugar.
+[00:10] Isso já não é mais eficiente.
+[00:11] E a ideia desse vídeo é de passar um framework extremamente eficiente pra você construir agentes,
+[00:15] skills que de fato funcionam e sistemas que trabalham 24 horas por dia pra você.
+[00:21] Bom, essa aqui é uma representação visual de um framework que a gente criou pra que vocês
+[00:26] consigam entender visualmente os conceitos e a lógica por trás do que a gente vai passar.
+[00:32] Se vocês gostarem desse estilo, a gente pode fazer mais vezes, tá?
+[00:35] Bom, primeiro eu vou fazer um overview, depois a gente vai ponto a ponto.
+[00:39] O primeiro passo é escolher o agente.
+[00:41] Então você vai escolher, eu quero criar um agente de design,
+[00:44] eu quero criar um agente gestor de tráfego.
+[00:47] O segundo é você executar a tarefa que você quer, que seja o pipeline principal,
+[00:52] o fluxo de trabalho principal desse agente.
+[00:55] E aí, uma vez que você consegue executar o passo a passo com prontes,
+[00:59] na maneira mais simples possível, faça isso, depois faça aquilo,
+[01:02] depois passe pra etapa seguinte,
+[01:05] aí você gera uma skill baseada nesse fluxo de trabalho executado.
+[01:11] Depois você otimiza as skills.
+[01:13] Essa ideia que a gente gosta muito de que o trabalho começa quando a gente está pronto,
+[01:19] quando a skill está pronto.
+[01:20] Então a gente tem uma skill, só que o trabalho de otimização dessa skill,
+[01:23] de personalização dessa skill, de correção de erros potenciais dessa skill,
+[01:27] é super importante.
+[01:28] E depois que você já tem um nível de confiança muito grande nessa skill,
+[01:31] você vai e agenda uma tarefa diária,
+[01:35] se você quiser que a skill rode diariamente,
+[01:37] pra que você consiga executar esse fluxo sem que você precise ser o gatilho.
+[01:42] E aí a gente acaba o framework.
+[01:44] E agora vamos passo a passo, ponto a ponto.
+[01:47] Nessa primeira etapa, nós temos aqui a escolha do agente.
+[01:52] Como nós vamos escolher o agente?
+[01:54] O agente de A, como definição, tem várias ramificações,
+[01:58] mas a gente vai falar aqui do agente de A como se fosse um funcionário e A.
+[02:01] Funcionário que tem um objetivo, que tem responsabilidades,
+[02:05] que tem um trabalho a ser feito,
+[02:07] como se fosse um cargo em uma empresa.
+[02:10] E aqui a gente vai criar esse agente.
+[02:13] A gente vai definir coisas muito simples,
+[02:15] o que ele faz, quais são as ferramentas dele,
+[02:19] o que ele tem acesso,
+[02:20] quais são as instruções base, o cérebro dele,
+[02:24] um code.md, um agentes.md,
+[02:27] uma coisa bem esqueleto mesmo,
+[02:29] uma molde que a gente vai usar pra depois refinar e tornar-se a gente muito mais robusto.
+[02:34] Então uma pastinha, um arquivozinho aqui,
+[02:37] o cérebro com as instruções primordiais,
+[02:40] talvez um arquivo de configurações, um settings.json,
+[02:44] uma coisa ou outra,
+[02:45] a mais se você tiver uma experiência,
+[02:46] mais se você quiser só colocar o cérebro, o code.md,
+[02:49] o agentes.md, fica super à vontade.
+[02:52] E uma coisa que a gente sempre indica é a leitura dos arquivos que a IA tá criando pra você.
+[02:57] Hoje em dia, infelizmente, é uma coisa que pouca gente faz,
+[03:00] as pessoas deixam a IA criar tudo, não lém uma linha de nada
+[03:03] e quando para de funcionar, vem perguntar pra gente,
+[03:06] o que aconteceu, né, eu construí esse sistema,
+[03:09] mas agora eu peço modificações e as modificações não acontecem.
+[03:13] Muitos dos problemas vem de uma ignorância em relação ao que você criou, né,
+[03:18] você criou uma espécie de Frank Stein sem sentido,
+[03:21] a coisa vai ficar muito mais complexa do que poderia
+[03:24] e aí a obra já se torna algo além do que você queria, né,
+[03:30] ouviram uma espécie de amontoado de coisas difíceis, demais de corrigir.
+[03:35] Enfim, você precisa ter, né,
+[03:38] se você quer aumentar o seu nível de competência e inteligência artificial,
+[03:42] você precisa ler os arquivos e entender como eles funcionam,
+[03:45] não só ler o code.md ou agent.md,
+[03:49] que isso é o básico, não faz nem isso e nunca fez um importante que você faça,
+[03:53] mas também entender como funcionam as interações entre os seus arquivos,
+[03:57] as interações entre as suas ferramentas utilizadas,
+[04:00] né, montar diagramas a partir dos seus agentes, dos seus fluxos de trabalho,
+[04:04] tudo isso é muito importante,
+[04:05] não só para que você tenha resultados melhores no longo prazo,
+[04:08] mas também para que você aumente seu nível de competência e inteligência artificial,
+[04:12] que é uma coisa super legal.
+[04:14] Então agora que já temos o nosso agente definido,
+[04:17] a gente pode pensar em um agente aqui que vai ser responsável
+[04:22] pela análise de dados de uma empresa,
+[04:24] então ele vai ter acesso às APIs, aos tokens, das plataformas,
+[04:29] aos gateitos de pagamento, às plataformas de anúncios, etc.
+[04:32] e ele vai ter essa responsabilidade de analisar os dados
+[04:35] e produzir resultados legais.
+[04:38] Agora a gente vem para a etapa da execução do pipeline principal.
+[04:42] Depois você pode ter vários pipelines, vários workflows,
+[04:45] vários fluxos de trabalho, ações sequenciais,
+[04:49] mas começa com um e preferencialmente mais importante, o mais relevante.
+[04:53] Então, por exemplo, produzir um relatório diário
+[04:57] de performance do dia anterior da sua empresa,
+[04:59] então ele vai ter acesso a tudo e ele vai criar um relatório,
+[05:02] o POTS em PDF, HTML, o que você preferir,
+[05:05] e vai te enviar esse relatório no WhatsApp.
+[05:08] Então, como a gente vai fazer a primeira execução disso?
+[05:11] A gente não vai pedir para ele criar o mais que o que vai fazer A mais B,
+[05:16] depois C, e depois vai concatenar em D.
+[05:19] Não, a gente vai executar Prompete e da Enter.
+[05:21] Prompete e da Enter.
+[05:23] Ah, mas você não falou que as pessoas usam esse tipo de lógica
+[05:26] trabalhando com IA, digitando Prompete, dando Enter,
+[05:29] digitando Prompete, dando Enter,
+[05:30] e aí essa não é mais uma forma eficiente de trabalhar com IA.
+[05:33] Eu falei e eu assino embaixo.
+[05:36] A questão aqui, para construir os seus sistemas,
+[05:39] você precisa passar por esse processo,
+[05:41] justamente para que você não precise mais passar por ele.
+[05:44] É uma forma de fazer uma vez,
+[05:46] e aí depois você deixa IA fazer da maneira correta.
+[05:50] É uma forma de se desvencilhar desse processo,
+[05:52] o que a gente está construindo aqui.
+[05:54] É um sistema autônomo.
+[05:55] Nós não vamos ficar digitando Prompete,
+[05:57] pegando Output, digitando Prompete,
+[05:59] e tava por etapa para sempre.
+[06:00] A gente vai fazer isso para que a IA entenda exatamente
+[06:04] o que fazer, como fazer para que a gente possa corrigir problemas
+[06:06] que aparecem no meio desse caminho.
+[06:09] Então, nós temos aqui o primeiro Prompete,
+[06:12] e aí a gente vai executar a tarefa.
+[06:13] Então, eu quero puxar todas as métricas do dia de ontem
+[06:18] da empresa, de acordo com as plataformas que uso.
+[06:21] E ele vai puxar essa tarefa 1.
+[06:23] Deu um problema em uma API,
+[06:25] precisei trocar aquela API,
+[06:26] ou tem alguma plataforma que precisa fazer o refresh do Tolkien,
+[06:30] a cada cela quantas horas.
+[06:32] Enfim, todos os problemas, essa parte de coleta de dados,
+[06:35] vão aparecer nessa etapa.
+[06:36] Aí você vai corrigindo e às vezes a correção
+[06:38] não está nem no nível do agente,
+[06:40] tá? No nível da plataforma.
+[06:42] Por exemplo, não ter feito um Tolkien permanente da meta.
+[06:45] Enfim, tem vários problemas possíveis,
+[06:47] e aí você resolve os problemas na primeira etapa.
+[06:49] Uma vez que essa etapa foi finalizada,
+[06:51] nós vamos para a parte de análise.
+[06:53] E aí a análise pode acontecer de várias formas.
+[06:55] Você pode comparar com os últimos sete dias,
+[06:57] últimos catorze dias,
+[06:58] mesmo o dia do ano passado,
+[07:00] enfim, pode entender quais são as origens
+[07:04] dessas vendas e fazer uma análise por canal de aquisição.
+[07:07] Tem um milhão de possibilidades.
+[07:08] A análise das métricas do funil, taxa de conversão, etc.
+[07:11] Isso aí fica seu critério.
+[07:13] Mas você conduz essa análise e avalia o resultado.
+[07:16] Aí você não precisa nem do relatório gerado,
+[07:17] você só vê os feedbacks, um CSV,
+[07:20] você pode ter algumas conclusões primárias,
+[07:23] alguns comparativos entre métricas.
+[07:25] Você vai analisar de uma maneira
+[07:27] que ainda não envolve o layout e o design
+[07:30] daquilo que você quer construir.
+[07:32] Uma vez que o processo de análise foi bem feito,
+[07:34] você validou que essa é a forma de analisar correta.
+[07:38] De acordo com as suas necessidades,
+[07:40] aí você vai prestar a parte de produção do relatório.
+[07:43] E quando a gente vai para a parte visual,
+[07:44] existem um milhão de possibilidades.
+[07:46] Você pode usar o mais-quil, um repositório, um agente,
+[07:50] que vai tornar o layout mais agradável, mais curto, mais complexo,
+[07:55] vai inserir inúmeros gráficos, inúmeras tabelas,
+[07:58] ou então vai trazer tudo em uma página só,
+[08:00] tudo isso é 100% personalizável.
+[08:02] E aí você, depois de gerar alguns templates,
+[08:04] uma dica legal é você pedir para gerar cinco templates,
+[08:07] e depois você escolhe o ideal,
+[08:09] ou você vai refinando a partir do ideal,
+[08:11] você pode pedir para gerar cinco templates,
+[08:13] escolhe um, pede para ele refinar e gerar mais cinco.
+[08:15] Aí você vai escolhendo dentre esses cinco outros
+[08:17] e vai gerando mais cinco, enfim, vai gerando vários,
+[08:19] até você fala,
+[08:20] bom, esse aqui está perfeito, exatamente isso que eu preciso.
+[08:23] Demora um pouco mais,
+[08:24] mas pensa que é uma coisa que você vai usar durante muito tempo,
+[08:26] então é muito importante que isso esteja muito bem amarrado,
+[08:29] muito bem construído, muito redondo.
+[08:31] E aí depois que você tem o output ideal,
+[08:34] a gente vai para a próxima etapa, que é a geração da SQL.
+[08:37] E aqui, na geração da SQL, é muito simples,
+[08:39] é só você pedir para o seu agente,
+[08:41] você está conversando lá na sessão com ele,
+[08:43] você fala para ele gerar uma SQL com base
+[08:46] no histórico desse chat.
+[08:48] E aí se você quiser, se ainda mais exigente,
+[08:51] você pode pedir para que cada um dos seus feedbacks
+[08:53] seja considerado uma regra dentro da estrutura
+[08:56] desse agente ou da SQL, enfim, você escolhe,
+[08:59] mas não é um processo difícil,
+[09:01] você pede em linguagem natural e o gente faz para você,
+[09:03] idealmente você vai lá e corrija alguma coisa se precisar,
+[09:06] ler os arquivos do SQL.md
+[09:08] e se tiver alguma ferramenta que ele vai criar
+[09:11] ou alguma outra coisa que ele for criando ao longo do caminho,
+[09:14] geralmente tem, né?
+[09:15] Um arquivo com as suas credenciais,
+[09:17] uma ferramenta em Python que ele criou,
+[09:18] um log de execuções, um memory.md,
+[09:21] ele vai criar da maneira dele com base
+[09:23] naquilo que você pediu para ele,
+[09:26] com base naquilo que o histórico da conversa exigiu.
+[09:29] Ou depois que a SQL foi gerada,
+[09:31] você vai para o processo de otimização dessa SQL,
+[09:34] que é o processo de otimização?
+[09:36] Você vai rodar ela com um contexto novo,
+[09:38] com um contexto fresco, né?
+[09:40] Se você roda no próprio chat,
+[09:42] com o próprio histórico que você usou para construir,
+[09:44] obviamente o resultado vai ser melhor.
+[09:47] Não sei que você esteja estorando o limite de contexto,
+[09:49] mas a tendência aqui é aquela sessão que você usou
+[09:51] para construir a SQL,
+[09:52] que vai ter o seu histórico, todos os feedbacks,
+[09:55] todos a construção toda da SQL,
+[09:57] não é o melhor ambiente para testar a SQL.
+[10:01] Porque talvez o resultado seja melhor
+[10:02] do que em um contexto fresco.
+[10:04] Então é importante que você inicie uma sessão nova
+[10:07] nesse mesmo agente e teste,
+[10:09] rode essa SQL e aí você pode ter um comando,
+[10:11] configurar um comandosinho barra,
+[10:13] e aí um nomezinho para fazer análise de dados, né?
+[10:15] Barra análise de dados diário, barra relatório diário,
+[10:20] enfim, o que você preferir.
+[10:21] E aí tendo esse comando pronto,
+[10:22] você pode simplesmente digitar o comando, barra, comando,
+[10:26] e dá Enter.
+[10:27] Ou então você só pede, rode a SQL,
+[10:29] você coloca o nome da SQL e dá Enter,
+[10:31] e ele vai começar a rodar SQL do zero
+[10:33] e você vai observar o que ele faz.
+[10:35] Nesse processo de monitoramento que é muito importante,
+[10:37] as pessoas acham que a SQL está pronta,
+[10:39] não precisa fazer mais nada,
+[10:40] não, quando a SQL está pronta,
+[10:41] aí que você começa a refinar a SQL
+[10:44] para que ela te traga um resultado impressionante,
+[10:46] personalizado exatamente o que você precisa.
+[10:48] E é aqui que muita gente erra.
+[10:50] E assim que a SQL for finalizada
+[10:51] e você tiver um output relatório nesse caso,
+[10:54] você vai fazer as correções,
+[10:56] você vai entender o que precisa,
+[10:58] será adicionado ao contexto,
+[10:59] informações sobre a empresa que você esqueceu de adicionar,
+[11:01] por exemplo,
+[11:02] você vai também encontrar oportunidades de melhorias.
+[11:07] Às vezes você vai buscar melhorias técnicas, né?
+[11:09] Como executar tudo isso de maneira mais eficiente,
+[11:12] como ter um caminho que vai gastar menos tokens.
+[11:14] Porque ao invés de construir um relatório HTML do zero
+[11:17] toda vez, converter para PDF,
+[11:18] eu não simplesmente tenho um template pronto
+[11:21] que ele vai lá e aplica algumas variáveis,
+[11:23] cria algum gráfico ou outro a mais se precisar,
+[11:26] dependendo do nível do relatório que você precisa,
+[11:28] é só um copicola dentro de um template pronto.
+[11:30] Isso economiza muitos tokens, além de ser muito mais rápido.
+[11:33] E aí você vai rodando essa SQL com um contexto novo do zero
+[11:36] até ela entregar um resultado maravilhoso.
+[11:39] E aí você sabe que a sua SQL
+[11:40] está boa o suficiente para rodar sem a sua supervisão.
+[11:43] E agora vamos para o agendamento da tarefa,
+[11:46] que é a parte mais divertida, né?
+[11:48] É a parte mais simples de configurar, né?
+[11:50] Você pode fazer isso no próprio routine dentro do clode,
+[11:53] dentro dos aplicativos dos harnesses.
+[11:56] Hoje a gente já tem a possibilidade de agendar essas tarefas.
+[11:58] Eles eram um pouco mais difícil, né?
+[12:00] A gente no nosso tema operacional usam servidores em Python,
+[12:03] então é um pouco mais difícil.
+[12:05] A gente gosta de configurar um Chrome,
+[12:06] e aí ele nem aparece nos aplicativos dos Ktobs.
+[12:10] Então tem várias formas, mas a forma mais simples é
+[12:12] abre o seu aplicativo desktop do seu harness,
+[12:15] seja Codex, seja ClodCode.
+[12:18] E aí você configura ali nas tarefas agendadas um horário
+[12:22] para rodar aquela SQL, você abre o seu repositório,
+[12:25] o seu agente, a pasta do seu agente.
+[12:27] E aí você coloca o horário que você quer rodar
+[12:29] e digita o comando da SQL para rodar SQL no determinado horário do dia.
+[12:34] Ou então você simplesmente diga,
+[12:37] roda SQL X, com o nome que você configurou,
+[12:40] e ele vai executar todo dia, por exemplo, a 6 da manhã,
+[12:43] essa SQL do começo ao fim, você vai receber o seu relatório no WhatsApp.
+[12:46] Isso é muito prático.
+[12:47] Às vezes você quer um elemento a mais,
+[12:49] e você precisa perguntar para a IA e tal,
+[12:51] e isso vai consumir um tempo diário,
+[12:53] e você pode ter isso entregue já em PDF,
+[12:56] no seu WhatsApp, e todos os dias sem que você precise digitar nada.
+[13:00] E se você esquecer de digitar o prompt,
+[13:02] de enviar isso, estar com dia corrido, estar viajando, etc.,
+[13:05] vai cair no seu WhatsApp do mesmo jeito.
+[13:07] Uma dica bacana é você colocar nas suas configurações globais
+[13:10] a opção de qualquer sessão,
+[13:12] de qualquer agente poder escalar um problema para um ser humano.
+[13:17] Você consegue configurar dentro de uma ferramenta de envio,
+[13:21] de mensagem de WhatsApp por API.
+[13:23] Tem muita gente que usa WebVolucho API,
+[13:25] tem outras ferramentas pagas,
+[13:26] mas a ideia é que você possibilita o contato com o ser humano.
+[13:30] Qualquer problema que qualquer agente teve,
+[13:32] ele não vai lá e simplesmente resolve ou simplesmente ignora,
+[13:36] ou simplesmente fica travado.
+[13:37] Ele vai te enviar uma mensagem no WhatsApp,
+[13:39] e você recebe a notificação
+[13:41] e vê se vale a pena ou não resolver aquele problema.
+[13:43] Então vamos supor que você queira que o analista de dados
+[13:46] não seja só um analista que vai gerar um relatório.
+[13:49] Você quer que ele reporte problemas no funil,
+[13:52] por exemplo, você está gastando lá seus R$ 10.000 por dia,
+[13:55] levando um monte de gente para um link
+[13:57] que está com uma velocidade de carregamento ruim,
+[13:59] com uma página que está deixando uma grande quantidade de pessoas
+[14:03] sem acessar a página.
+[14:04] Você está perdendo vendas ali e gastando dinheiro.
+[14:07] Então ele vai te notificar no WhatsApp
+[14:09] porque ele vai perceber que isso está acontecendo.
+[14:11] Como? Aí você tem que adicionar algumas ferramentas
+[14:14] dentro do seu agente para possibilitar isso.
+[14:16] Ferramentas de automação de browser,
+[14:18] ferramentas que vão dar acesso a ele a alguns sites
+[14:21] que fazem essas análises de carregamento de página,
+[14:23] vai dar acesso talvez ao GitHub,
+[14:25] se você tivesse os sites construídos no GitHub,
+[14:28] vai dar acesso à ferramenta que faz o deploy do site, etc.
+[14:30] Ele pode não ser só um analista.
+[14:32] Se eu quero dizer, ele pode ser um CRL,
+[14:35] o Conversion Rate Optimization, essas agências
+[14:38] que cobram muito caro para optimizar as metas que é o do seu funil,
+[14:41] você pode ter um agente que faz tudo isso.
+[14:42] Não precisa ser só um agente,
+[14:43] você pode ter uma análise de dados,
+[14:45] pode ter uma analista de páginas,
+[14:47] pode ter uma analista de tráfego,
+[14:50] e aí você queria a equipe que você quiser
+[14:53] da maneira que você achar mais interessante.
+[14:55] Mas eu queria passar esse framework
+[14:56] que eu acho que pode ser muito útil,
+[14:57] muitas pessoas com um pouco perdidas
+[14:59] sobre qual passo a passo ideal,
+[15:01] o que eu passo primeiro,
+[15:02] eu tenho um monte de SQL e não consigo organizar,
+[15:04] eu estou criando um monte de agente,
+[15:06] mas está tudo enrolado numa pasta esquisita,
+[15:08] eu não consigo lembrar onde eu deixei a SQL,
+[15:11] onde eu deixei o agente.
+[15:12] Enfim, é uma bagunça e é normal também,
+[15:14] a gente começa fazendo,
+[15:15] a coisa fica meio bagunçada,
+[15:16] a gente vai entendendo um pouco melhor do que está fazendo
+[15:18] e organiza a casa.
+[15:19] Esse framework foi apresentado para pessoas
+[15:20] que já têm um pouco de experiência
+[15:22] com a agente, com as ferramentas,
+[15:24] mas caso você queira aprender
+[15:25] tudo isso do zero com a gente,
+[15:26] eu te convido para entrar na comunidade
+[15:28] Maestros da IA.
+[15:29] A gente ensina o passo a passo
+[15:30] de como fazer cada uma dessas etapas,
+[15:33] a gente vai clicando junto com você,
+[15:35] a gente vai mostrando a tela,
+[15:36] a gente vai fazendo passo a passo
+[15:38] guiado super didático
+[15:40] em mais de 25 horas de conteúdo,
+[15:41] tem uma formação completa
+[15:42] em inteligência artificial,
+[15:44] curso completo de CodeCode,
+[15:45] toda hora a gente está colocando
+[15:46] aulas novas, cursos novos
+[15:47] que a gente está preparando para vocês,
+[15:49] especialmente para essa nova fase da IA,
+[15:52] que é o maia dos loops e a dos grafos.
+[15:55] Enfim, é um ambiente super legal,
+[15:56] sempre atualizado,
+[15:57] tem agentes novos toda semana,
+[15:59] skills novas toda semana,
+[16:01] tem centenas de recursos
+[16:03] copicola que fazem toda a diferença
+[16:04] no seu fluxo de trabalho.
+[16:06] Além disso, a gente faz lives com vocês
+[16:07] toda semana, a gente tem suporte técnico.
+[16:10] Tem uma série de coisas incríveis
+[16:11] da dentro, a gente tem cada vez mais
+[16:12] orgulho da comunidade,
+[16:13] fica super feliz por receber
+[16:15] vocês da dentro, então vai ser uma alegria
+[16:17] receber você na comunidade Maestros da IA,
+[16:19] como ensinou um pouco melhor você,
+[16:20] e poder ajudar no seu processo
+[16:21] de desenvolvimento e inteligência artificial.
+[16:23] O link está na descrição desse vídeo
+[16:25] e claro, se você gostou desse vídeo
+[16:26] e quer receber mais notificações
+[16:27] do YouTube de vídeos como esse,
+[16:28] você pode se inscrever nesse canal,
+[16:30] dar um hype e um like nesse vídeo também.
+[16:32] Um abraço e até a próxima.

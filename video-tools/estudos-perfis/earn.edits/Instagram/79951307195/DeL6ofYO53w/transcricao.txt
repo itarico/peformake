@@ -1,0 +1,10 @@
+idioma: en
+[00:00] Your AI can actually edit your videos now.
+[00:03] I connected Clawed AI to InVideo Editor using InVideo MCP
+[00:07] and started giving it real editing jobs.
+[00:10] And it did exactly what I asked.
+[00:13] I can tell it to change the background colors,
+[00:17] add subtitles, or even replace the entire background.
+[00:23] And if I wanna change anything,
+[00:25] I just tell it what to do and it updates the same timeline.
+[00:29] Comment in video and I'll send you the MCP link.

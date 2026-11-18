@@ -1,0 +1,23 @@
+idioma: pt (1.00)
+[   0.0-   5.6] Caraca! Agora o Cloud entra no Google Maps e encontra todas as empresas da cidade.
+[   5.6-   7.9] Serve para achar clientes ou fornecedores.
+[   7.9-   9.2] E é de graça!
+[   9.2-  13.0] Basta instalar o repositório Google Maps Scraper Kit.
+[  13.0-  15.6] Ele tem 2 mil estrelas no GitHub.
+[  15.6-  19.6] Se liga o robô dele com um comando no docker e abre a pasta no Cloud Code.
+[  19.6-  21.0] Aí pede do seu jeito.
+[  21.0-  23.4] Lista as clínicas de estética de campinas.
+[  23.4-  27.8] Ele busca no Google Maps, entra no site de cada empresa e caça o e-mail.
+[  27.9-  33.0] E te devolve uma planilha com nome, telefone, e-mail, site, endereço e notas.
+[  33.0-  35.5] Cada busca traz uma 120 empresas.
+[  35.5-  38.8] Para a cidade inteira, você pede para ele dividir o mapa em pedaços.
+[  38.8-  43.4] Antes de chamar, abre o site e confere se a empresa existe e se o telefone bate.
+[  43.4-  46.2] Empresa fechada ou dado errado, você apaga.
+[  46.2-  47.3] Só não exagera.
+[  47.3-  50.7] Busca demais seguida e o Google trava seu acesso por um tempo.
+[  50.7-  56.4] E com o repositório da Evolution API, você ainda pede para o Cloud chamar as empresas no WhatsApp sozinho,
+[  56.4-  57.4] uma por uma.
+[  57.5-  60.0] Com um motivo de verdade em cada mensagem.
+[  60.0-  63.9] Porque, de espaço em massa para quem não pediu, pode bloquear o seu WhatsApp.
+[  63.9-  66.4] Manda para aquele amigo que está precisando de cliente novo.
+[  66.4-  69.2] Comenta leads e eu te mando passo a passo completo.

@@ -1,0 +1,1242 @@
+idioma: pt
+[00:00] Todo o carrossel que nós publicamos nas redes sociais dos maestros da EA
+[00:03] sai de um único comando digitado no Codekulj.
+[00:06] Esse comando chama uma skill,
+[00:08] um manual que eu escrevi uma vez
+[00:10] e que o Codekulj segue toda vez que eu peço um carrossel.
+[00:13] E nesse vídeo eu vou te mostrar como criar essa skill do zero
+[00:16] com um comando que você vai copiar e colar
+[00:18] e seguir o passo a passo junto comigo.
+[00:20] E no final você já vai ter o seu primeiro carrossel pronto para postar
+[00:23] com capa, roteiro, slides e legenda.
+[00:26] Mas antes, vale entender
+[00:28] porque tanto o carrossel feito com inteligência artificial não funciona bem.
+[00:32] Quando você pede, faz um carrossel e não diz mais nada,
+[00:35] o assistente vai usar o que ele sabe de melhor
+[00:37] e vai construir um HTML para você.
+[00:39] O resultado, muitas vezes, é até bem feito,
+[00:42] massage genérico,
+[00:43] com fundo escuro, caixinha redonda
+[00:45] e aquele degradê roxo que você já deve ter visto várias vezes nas redes sociais.
+[00:50] E tem um problema maior que a aparência.
+[00:52] Ninguém disse ao modelo o trabalho de cadastlide.
+[00:54] O carrossel funciona como um funil de slides.
+[00:57] Cadastlide tem sua função.
+[00:58] E se a função falha, a pessoa sai antes de compoir o carrossel.
+[01:02] Você até pode explicar tudo isso no prompt.
+[01:05] Só que aí você vai ter que explicar de novo amanhã
+[01:07] e depois de amanhã
+[01:08] e todas as vezes que você for criar um novo carrossel,
+[01:11] você vai ter que explicar tudo novamente.
+[01:13] A skill serve justamente para sanar essa dor.
+[01:16] Você cria uma vez a skill,
+[01:18] treina ela, vai aprimorando ela com o uso
+[01:20] e depois, sempre que você precisar criar o carrossel,
+[01:23] ele já faz tudo o conforme você esperava.
+[01:26] Aí você consegue otimizar esse tempo,
+[01:29] economizar os seus tokens e ter previsibilidade do resultado.
+[01:32] Na prática, ela é uma pasta com instruções dentro do Cloud Code.
+[01:36] O arquivo principal se chama skill.md.
+[01:39] No topo dele vão dois campos, o nome da skill
+[01:42] e uma descrição de quando ela deve ser utilizada.
+[01:45] O Cloud lê essa descrição o tempo todo
+[01:47] e quando o seu pedido combina com ela,
+[01:49] ele abre esse arquivo e executa.
+[01:50] Então você não precisa basicamente lembrar de nada.
+[01:53] Uma vez que você já criou essa skill,
+[01:55] quando você solicitar um carrossel,
+[01:57] automaticamente a gente já vai puxar essa skill
+[02:00] e executá-la para você.
+[02:01] Mas se você quiser chamar essa skill na mão,
+[02:03] basta você digitar barro do nome da skill
+[02:05] e colocar ali em seguida o tema que você quer gerar.
+[02:09] E antes de começarmos a construir a skill do carrossel
+[02:11] que vai ter o seu gosto, seu estilo e sua identidade,
+[02:14] eu quero te convidar para a comunidade Maestros da Yacht.
+[02:17] Lá nós ensinamos tudo que sabemos sobre inteligência artificial
+[02:19] e automação de uma maneira prática, direta ao ponto
+[02:22] e sem enrolação para logo você começar a criar as suas skills,
+[02:25] os seus agentes e os seus sistemas
+[02:27] para solucionar os seus problemas
+[02:29] ou então os problemas de terceiro.
+[02:31] Lá nós também temos live semanal,
+[02:32] suporte técnico diário e aplicativos prontos para você usar.
+[02:36] Temos também cenais prontos para você copiar e colar
+[02:39] e já copiar os nossos sistemas e sair utilizando,
+[02:42] além de muito mais.
+[02:43] Se você quiser saber mais e entrar na comunidade,
+[02:46] é só clicar no link na descrição deste vídeo.
+[02:48] A skill de carrossel se apoia em seis regras
+[02:50] e ela serve para qualquer tema e qualquer nicho.
+[02:53] A primeira regra é a capa para rolar.
+[02:55] Uma frase grande de até oito palavras
+[02:57] com número ou resultado específico.
+[02:59] Regra 2.
+[03:00] O slide 2 ganha o deslize.
+[03:02] Ele prova que a capa não mentiu.
+[03:04] Nunca vai uma apresentação do tipo
+[03:06] oi eu sou o fulano e etc.
+[03:08] Regra 3.
+[03:09] Todo slide se sustenta sozinho.
+[03:11] É o teste do print.
+[03:12] Se alguém mandar só aquele slide no grupo do WhatsApp,
+[03:15] ele faz sentido.
+[03:16] Regra 4.
+[03:17] Um slide precisa ser salvo.
+[03:19] A skill desenha esse slide primeiro
+[03:21] e monta o resto em volta dele.
+[03:23] Regra 5.
+[03:24] O CTA conquista a ação.
+[03:26] Em vez de pedir o clássico me siga,
+[03:28] você pode pedir para o pessoal comentar uma palavra-chave
+[03:31] e receber o material no direte.
+[03:32] Regra 6.
+[03:33] A ordem é sempre a mesma.
+[03:35] Fátus, brief, geixo, roteiro visual e revisão.
+[03:38] Nada se transforma em imagem
+[03:40] antes do texto final estar decidido.
+[03:43] Além dessas regras, a skill vai trabalhar em etapas.
+[03:45] Conforme ela for terminando uma etapa,
+[03:47] ela vai te mostrar o resultado,
+[03:49] você vai aprovar e ela vai seguindo para a próxima,
+[03:51] e assim por diante até você ter o carro-cel pronto.
+[03:54] Primeiro, a checagem de fatos.
+[03:56] Todo o número que vai entrar no carro-cel
+[03:57] é conferido em fonte oficial
+[03:59] antes de qualquer outra coisa.
+[04:00] Isso vem antes da capa de propósito
+[04:03] porque eu não quero que você gere uma capa linda
+[04:05] que depois você vai ver que os dados não estão batendo
+[04:07] e vai precisar substituir algumas dessas informações
+[04:09] e aí o resultado não vai voltar
+[04:11] exatamente como estava na versão inicial.
+[04:13] Então a gente precisa ter os fatos
+[04:15] verificados, validados e serem verdadeiros.
+[04:17] Depois vem o brief, com a promessa,
+[04:20] a crença que muda do antes pro depois.
+[04:22] Qual é a slide que a pessoa vai ter vontade de salvar
+[04:24] e qual é o CTA que você quer usar?
+[04:26] O CTA, se você não sabe, é o Call to Action,
+[04:29] ou seja, a chamada para ação.
+[04:31] A gente sempre pede para a pessoa
+[04:32] fazer algo em relação ao carro-cel que ela está vendo,
+[04:35] ao post ou então ao vídeo.
+[04:37] Pedir para salvar, para comentar,
+[04:39] isso tudo é o CTA.
+[04:40] Em seguida vem o gancho.
+[04:42] A skill escreve cinco capas.
+[04:44] Cada uma com uma fórmula diferente
+[04:46] e com o seu slide 2
+[04:47] e recomenda alguma para você.
+[04:49] Com a capa escolhida, sai o roteiro em tabela
+[04:51] slide por slide.
+[04:52] A função, o título, o texto de apoio
+[04:55] e a direção visual.
+[04:56] E só no fim vem o visual,
+[04:58] seguido de um checklist de revisão
+[05:00] preenchido antes da entrega.
+[05:01] Na hora do visual, é esse que o de vídeo
+[05:03] trabalha entre duas ferramentas diferentes.
+[05:05] A capa sai de um modelo de imagem de verdade,
+[05:08] porque é ela que decide se a pessoa para ou passa.
+[05:11] Os slides de dentro saem em HTML
+[05:13] porque ele é rápido e barato
+[05:14] e você ajusta quantas vezes quiser.
+[05:16] Inclusive nós temos um vídeo aqui no canal
+[05:19] chamado Codem mais JavaScript
+[05:20] que vai estar aparecendo aqui para você
+[05:22] que mostra exatamente o meio desse caocéu.
+[05:25] Então nós vamos ter uma capa animada
+[05:27] ou então uma capa estática
+[05:29] gerada com modelo de imagem
+[05:30] que vai trazer uma qualidade melhor
+[05:32] para chamar a atenção.
+[05:33] O meio do caocéu vai ser desenvolvido em código
+[05:36] com o código utilizando JavaScript
+[05:38] e o CTA é opcional.
+[05:39] Você pode utilizar tanto o modelo de imagem
+[05:41] que vai chamar atenção
+[05:42] para finalizar ali a pessoa
+[05:44] fazer o Codewaction
+[05:45] ou então você pode continuar com a HTML.
+[05:48] Esse processo, além de ser mais rápido,
+[05:50] ele é econômico
+[05:51] porque você só vai gastar
+[05:52] com modelo de geração de imagem mais caro
+[05:54] para gerar sua capa
+[05:56] e o restante vai ser feito com o código
+[05:58] e na sua assinatura.
+[05:59] O JavaScript é gratuito.
+[06:01] Então quando eu falo que é gratuito
+[06:02] eu não estou me referindo
+[06:03] a assinatura do código,
+[06:04] é essa sim você precisa pagar.
+[06:06] Então quando eu falo que ele é mais barato
+[06:08] eu não estou me referindo a uma opção gratuita.
+[06:11] Essa opção vai fazer com que você gere
+[06:13] algo mais barato economize
+[06:15] na parte de geração de imagem
+[06:16] porque o modelo de geração de imagem
+[06:18] é sempre mais caro.
+[06:19] Então se você já tem uma assinatura do Cloud Code
+[06:21] você não vai precisar gastar
+[06:23] tanto com o modelo de geração de imagem.
+[06:25] Você vai gastar uma única vez, gostou
+[06:27] e aí o restante vai ser feito
+[06:28] apenas com a sua assinatura do Cloud Code
+[06:30] e nada mais.
+[06:31] E dentro dessa página
+[06:32] vem um painel de ajustes
+[06:34] tamanho do título, do texto,
+[06:36] a cor e a fonte.
+[06:37] E no final tudo pode ser exportado
+[06:39] no formato que você preferir.
+[06:41] Se você posta em todas as redes sociais
+[06:43] cada uma delas tem uma especificação de formato.
+[06:46] Então no Instagram vai ser um formato
+[06:48] no TikTok, outro formato
+[06:50] e no YouTube e outro.
+[06:51] Então essa esquilte possibilita
+[06:52] criar os carros 6 para todas as suas redes sociais
+[06:55] ou então para um formato específico
+[06:57] caso você só use o Instagram por exemplo.
+[06:59] E para gerar imagem
+[07:00] você pode conectar uma plataforma
+[07:01] como OpenArte, o Higgs Field,
+[07:04] o Fall AI, o QAI.
+[07:06] Depende da plataforma que você já usa
+[07:08] que você gosta mais
+[07:09] fica seu critério
+[07:10] todas elas vão funcionar.
+[07:11] Lembrando que o Higgs Field e OpenArte
+[07:13] você precisa pagar uma assinatura
+[07:15] Fall AI.
+[07:16] E que AI você só paga
+[07:17] utilizando créditos
+[07:19] e usa esses créditos
+[07:20] quando acabar você repõe.
+[07:21] Antes de começarmos eu vou te mostrar
+[07:23] aqui o esquema que nós vamos seguir.
+[07:24] O passo a passo que nós vamos seguir
+[07:26] tem esse material aqui de apoio
+[07:28] que eu vou deixar disponível
+[07:29] dentro da comunidade dos maestros da AI
+[07:31] mas se você não fala dentro
+[07:32] você pode printar a tela
+[07:34] e utilizar conforme quiser.
+[07:36] Então aqui nós temos
+[07:37] Cria Sua Esquilte Carrossel
+[07:38] com Crompete e Sol.
+[07:40] Aqui eu coloquei as 6 regras
+[07:41] mas é claro que essas regras
+[07:43] são flexíveis.
+[07:44] Isso aqui eu coloquei
+[07:46] porque são regras meio que universais.
+[07:49] Eu pedi para o Clódeo fazer uma análise
+[07:51] e ver os carrosséis
+[07:52] que mais performavam na rede
+[07:53] qual era o padrão que eles seguiam
+[07:55] e através disso ele criou essas 6 regras.
+[07:58] Mas você pode mudar
+[07:59] se você tem um estilo próprio
+[08:01] que já funciona
+[08:01] você pode vir aqui no prompt
+[08:03] e alterar.
+[08:04] Isso aqui eu coloquei
+[08:05] porque eu acho que é universal
+[08:06] pode atender a grande maioria.
+[08:08] Então aqui nós temos a parte inicial
+[08:10] como você vai usar
+[08:11] o passo a passo
+[08:12] que eu vou fazer aqui com vocês.
+[08:14] O bom do importante
+[08:14] você pode escolher um nome específico
+[08:16] para essa esquil
+[08:17] ou então deixar como está
+[08:18] que ela vai se chamar Carrossel.
+[08:20] Você quiser colocar um nome específico
+[08:22] caso você já tenha um esquil com esse nome
+[08:24] é só mudar aqui nessa etapa.
+[08:26] A etapa de colar o prompt.
+[08:27] Aqui nós temos o prompt principal
+[08:29] esse aqui nós vamos copiar
+[08:31] e colar no Clódeo
+[08:33] e aqui nós temos os primeiros testes
+[08:35] para executar essa esquil
+[08:36] para ir refinando ela no tempo.
+[08:39] É óbvio que esse aqui é um vídeo breve
+[08:41] para você criar a sua primeira esquil
+[08:43] mas com o tempo ela vai melhorando.
+[08:45] Então a esquil ela não precisa ser estática.
+[08:48] Você criou uma vez uma esquil de Carrossel
+[08:50] você nunca mais vai mexer nela.
+[08:51] Pelo contrário conforme você for utilizando
+[08:54] for refinando seu gosto
+[08:55] for agulcendo sua percepção
+[08:57] você pode ir melhorando.
+[08:58] A gente vai ficando mais exigente com o tempo
+[09:00] então você pode lá
+[09:02] e modificar algum ponto
+[09:03] e ela vai melhorando
+[09:04] conforme você vai dando o feedback.
+[09:06] Então aqui a gente vai começar
+[09:08] abrindo o Clódeo Code.
+[09:09] Antes de ir colarmos o prompt
+[09:10] eu quero mostrar para vocês
+[09:11] alguns carrosséis que nós postamos nas redes sociais
+[09:14] utilizando essa mesma esquil
+[09:16] que nós vamos construir juntos.
+[09:17] Bom esse aqui foi o primeiro Carrossel
+[09:19] que nós criamos utilizando essa esquil
+[09:21] e você vai observar
+[09:22] como foi melhorando o resultado com o tempo.
+[09:24] Então esse aqui foi o primeiro resultado
+[09:27] inclusive eu usei o JavaScript aqui
+[09:29] para fazer essas animações dos blocos
+[09:31] tudo isso aqui foi feito em código
+[09:33] para economizar
+[09:34] e eu achei que o resultado ficou excelente
+[09:36] claro para o primeiro resultado.
+[09:39] E aqui a gente colocou 8 notícias de A
+[09:41] que mudaram setembro
+[09:42] quatro lançamentos
+[09:43] uma quisição
+[09:44] e uma alerta
+[09:45] e aqui aquela ideia
+[09:46] você coloca um tema chamativo
+[09:49] coloca ali um título
+[09:50] que chama a atenção
+[09:51] ser muito extensa
+[09:52] para a pessoa bater o olho
+[09:53] já identificado que se trata.
+[09:55] E aí a gente vai avançando
+[09:56] e tem aqui a consistência
+[09:59] a gente vê o mesmo personagem
+[10:01] ao lomo do Carrossel
+[10:03] e aqui já vem quatro modelos de ponta
+[10:05] em três dias
+[10:06] já reforçando aquilo que foi dito no início
+[10:09] e aqui vai avançando
+[10:11] vou passar rapidinho
+[10:12] porque são vários calçéis
+[10:15] o Google entrega toda semana
+[10:16] é de graça
+[10:20] aqui a gente tem o Gemini 3.8 Flash
+[10:23] mesmo preço do 3.7
+[10:25] e aí depois foi para ir aberto
+[10:27] agora tem dono
+[10:29] o Hugging Face
+[10:30] que foi comprado pela NVIDIA
+[10:33] e no bolso de quem não usou
+[10:34] que está falando sobre a Siri
+[10:36] depois a gente tem a acabar com a humanidade
+[10:38] de fato, inclusive a gente tem um vídeo sobre isso
+[10:41] sobre o posicionamento do Jacob Coxon
+[10:44] depois de setembro
+[10:46] a gente colocou um resumão
+[10:47] para as pessoas terem a cronologia
+[10:50] do que aconteceu
+[10:51] e nem tinha acabado o mês
+[10:52] isso aqui a gente colocou
+[10:53] porque testou essa SQL
+[10:55] achou que o resultado ficou muito legal
+[10:56] e já quis postar
+[10:58] e aí no final
+[11:00] é aquilo que eu te falei
+[11:01] você pode escolher colocar uma animação
+[11:03] eu acho que fica interessante
+[11:05] às vezes se você tem um budget para gastar
+[11:07] porque eu acho que dá um início meio fim
+[11:09] você tem um início animado
+[11:11] um desenvolvimento
+[11:13] que chama atenção
+[11:13] e aí no final você tem uma animação
+[11:15] que prende atenção de novo para o CTA
+[11:18] e eu gosto dessa conversa
+[11:19] aqui a gente trouxe
+[11:21] essa animação de novo
+[11:24] e o robozinho
+[11:25] e comente setembro
+[11:27] isso aqui era só um teste
+[11:28] então esse daqui foi o primeiro carro CEL
+[11:30] que nós criamos com essa SQL
+[11:32] e agora vou te mostrar o próximo
+[11:34] depois desse carro CEL
+[11:35] nós criamos esse aqui
+[11:37] o GPT-6 Sol e Luna
+[11:39] pela metade do preço
+[11:40] porque setembro
+[11:41] realmente foi uma loucura
+[11:42] eles já estavam lançando novos modelos
+[11:45] e foi um lançamento atrás do outro
+[11:47] e aqui eu também utilizei
+[11:48] esse mesmo critério
+[11:50] eu colquei uma animação
+[11:52] aqui que também foi feita por código
+[11:54] então uma dica essa também
+[11:56] aqui eu usei código
+[11:57] se você não tem um modelo de geração
+[11:58] de imagem agora
+[11:59] não tem um dinheiro para investir
+[12:02] você pode tentar fazer tudo por código
+[12:04] mas o resultado nem sempre vai ficar dos melhores
+[12:07] então por isso a gente gosta de caprichar
+[12:09] bastante na capa
+[12:10] e aqui a gente colocou o Sol e a Lua
+[12:12] depois eu quis trazer de novo
+[12:15] o robo porque eu achei que teve uma interação legal
+[12:17] para um primeiro teste
+[12:18] que a gente fez com o carro CEL anterior
+[12:20] só que eu quis colocar na cor da OpenAI
+[12:22] trazer o azul
+[12:23] ou então o preto e branco
+[12:25] que são cores diferente do aranja
+[12:28] que é a cor da UnTrop
+[12:30] então a gente traz aqui
+[12:31] o robozinho
+[12:32] que vai falando
+[12:33] vai trazendo as informações
+[12:35] e o que ele está fazendo
+[12:36] com o disco
+[12:37] aquilo que está sendo dito
+[12:40] aí admite quando algo falha
+[12:42] aqui tem esse problema
+[12:44] qual de apT6 usar
+[12:47] onde usar a partir de hoje
+[12:50] e aqui eu achei que fica muito legal
+[12:51] porque coloca pago, grátis ou pela PI
+[12:55] e aqui de novo
+[12:56] coloquei em código
+[12:57] essa animação para chamar a atenção
+[12:58] que o pessoal compartilhar
+[13:00] depois nós tivemos esse aqui
+[13:01] que foi o lançamento do Opus 5.5
+[13:04] e esse aqui chamou bastante a atenção
+[13:06] também
+[13:08] é uma capa um pouco mais simples
+[13:09] porque o que seguia a estética
+[13:10] que eles utilizam para os modelos Opus
+[13:13] e aí eu me basei totalmente
+[13:14] no estilo da UnTrop
+[13:16] então na campanha
+[13:17] que eles fizeram de lançamento
+[13:20] e aí também essa imagem aqui animada
+[13:22] foi feita por código
+[13:24] aí a gente tem aqui a prova e números
+[13:26] os detalhes
+[13:28] trazendo novamente
+[13:29] o mesmo robo
+[13:30] que a gente já utilizou na UnTrop
+[13:32] e isso é muito legal
+[13:33] porque a gente vai trazendo uma identidade visual
+[13:37] para as postagens do canal
+[13:38] então as pessoas vão bater o olho
+[13:39] naquele estilo
+[13:40] falar isso aqui é dos maestros da IA
+[13:42] e isso é algo que vale a pena
+[13:43] se tentar postar aí no seu também
+[13:46] aqui a gente tem ele olhando
+[13:48] né
+[13:50] e aí seguindo
+[13:51] eu vou passar um pouco mais rápido
+[13:52] para acelerar
+[13:54] esse já teve bastante percussão
+[13:56] muita gente compartilhou
+[13:57] muita gente salvou
+[13:59] e foi um resultado um feedback
+[14:00] bem legal
+[14:01] porque a gente entendeu
+[14:01] que o estilo estava sendo interessante
+[14:03] né
+[14:03] então aqui o que se trazer
+[14:04] a cor do Jävi para o robô
+[14:05] que é a cor rosa
+[14:07] então a gente vê ele dando um chute
+[14:08] aqui no LLM
+[14:10] para mostrar que ele é diferente
+[14:11] ele é mais barato com LLM
+[14:14] e aí seguindo
+[14:15] nessa explicação
+[14:16] porque são muitas informações
+[14:18] sobre esse modelo de A
+[14:19] e aí é colocar nesse tipo de esqueminha
+[14:22] é algo que
+[14:23] tende a trazer bastante valor para as pessoas
+[14:25] e elas gostam de salvar
+[14:26] compartilhar sempre que precisar
+[14:28] voltar para esse post
+[14:30] então foi basicamente isso
+[14:31] um resumo de como ele funciona
+[14:33] bom aqui eu quis explorar
+[14:34] aquele formato do ex do antigo twitter
+[14:37] porque eu acho que esse estilo de comentário
+[14:39] pode chamar atenção
+[14:40] né então coloquei aqui
+[14:42] parecendo que foi retirado
+[14:43] né de um post de lá
+[14:45] para testar
+[14:46] e aí a gente seguiu
+[14:48] assim por diante
+[14:49] aqui a gente traz a nossa visão
+[14:50] sobre o tema
+[14:51] eu acho que ficou bem interessante
+[14:54] e agora a gente tem o do Hermes
+[14:56] que é um tema muito legal
+[14:58] é uma gente incrível
+[14:59] né open source
+[15:00] então é um agente que eu gosto muito
+[15:03] e aí coloquei também a menininha
+[15:05] essas folhas aqui voando
+[15:07] né os post-chites
+[15:09] os cadernos e tudo mais
+[15:11] e aí assim
+[15:12] foi diante
+[15:13] né ele foi
+[15:13] essas imagens foram criadas com a penarte
+[15:16] e aqui eu coloquei
+[15:17] a bonequinha né
+[15:19] o robôzinho
+[15:20] com o cabelinho da dessa menina
+[15:22] né mas ele é verde
+[15:24] porque é a cor do Hermes
+[15:25] então foi seguindo aqui
+[15:28] esse aqui nós tivemos um investimento um pouco maior
+[15:30] porque a maioria das imagens
+[15:32] foram geradas por modelo de imagem
+[15:36] e aqui a gente consegue ver
+[15:37] de novo o pedido
+[15:38] né a gente tem um tutorial
+[15:40] sobre o Hermes
+[15:40] bem completo aqui no youtube
+[15:42] se você não conhece
+[15:43] esse agente vale a pena conhecer
+[15:45] vai estar aparecendo aqui na tela para você
+[15:47] então nesse aqui
+[15:48] a gente pedia para a pessoa comentar Hermes
+[15:50] e ela era direcionada
+[15:52] para esse vídeo do youtube
+[15:53] isso ajuda as pessoas a conhecerem um novo agente
+[15:56] e também ajuda a gente ter maior
+[15:58] alcance no youtube
+[15:59] né porque as pessoas vão comentar
+[16:00] que no instagram e vão ser direcionadas
+[16:02] para um vídeo que elas podem ter interesse em assistir
+[16:04] e isso vai gerando mais visualização
+[16:06] então é uma estratégia muito legal também
+[16:09] e agora vou mostrar um outro para vocês
+[16:11] que teve muita repercussão também
+[16:13] a gente ficou muito quontente
+[16:14] quando postou esse aqui
+[16:16] e a gente viu que muitas pessoas estavam salvando
+[16:18] estavam compartilhando
+[16:19] e estavam interagindo
+[16:20] a gente postou
+[16:22] bem quase no lançamento do Dots
+[16:24] então isso é um ponto muito importante
+[16:26] se você trabalha com notícias
+[16:28] precisa dar uma notícia rápida
+[16:30] se você tem um nicho voltado para isso
+[16:32] a velocidade conta muito
+[16:34] então quando sai uma notícia
+[16:35] e você já posta
+[16:36] a chance no seu post viralizar é muito grande
+[16:39] então essa é uma dica legal também
+[16:41] aqui a gente postou bem rápido
+[16:42] então muita gente compartilhou, salvou
+[16:44] e isso foi bem legal
+[16:46] aqui a gente colocou os bonequinhos
+[16:48] eu chamo de esponjas
+[16:50] porque parecem esponjas esses Dots
+[16:52] eles animados
+[16:54] e aqui cada um deles depois nos design
+[16:57] explicando um pouco sobre eles
+[16:59] o que eles fazem
+[17:01] e aí foi uma rodada de cada um
+[17:03] e aqui o final para a pessoa
+[17:05] guardar essa comparação
+[17:07] e sempre que ela for usar os Dots
+[17:08] ela dá uma olhada
+[17:10] e aqui nós temos um outro
+[17:11] depois a gente postou por último
+[17:13] esse aqui que foi do Armon
+[17:15] que inclusive vai estar no vídeo do canal
+[17:18] que eu vou mostrar para vocês como eu fiz
+[17:20] e utilizei no caso o OpenArt
+[17:23] e esse aqui ficou muito legal
+[17:25] porque a gente trouxe a cor vermelha
+[17:27] ficou um pouco alaranjado
+[17:28] mas é a cor vermelha do Google
+[17:30] essa era a ideia
+[17:31] e aí foi justamente sobre o Argon
+[17:34] que tinha sido lançado
+[17:35] o Gemini 4 Argon
+[17:37] só que ele não tinha sido liberado
+[17:39] para o público geral
+[17:40] e coincidentemente na hora que eu estava gravando o vídeo
+[17:42] ele tinha acabado de liberar
+[17:44] e aí eu já fiz a postagem na hora
+[17:46] e então também performou muito bem
+[17:50] e aí a gente pegou essa notícia quente
+[17:52] porque justamente no dia que a gente postou
+[17:54] foi o dia que tinha acabado de ser liberado
+[17:56] para o público geral
+[17:57] então aqui atrás as informações sobre ele
+[17:59] achei bem legal o robô
+[18:01] onde ele perde
+[18:03] quando a performance dele não é tão boa
+[18:05] e aqui ele com essa cara
+[18:07] e depois seguindo
+[18:09] então tem uma coerência
+[18:11] é divertido, eu gosto desse estilo
+[18:13] acho que chama atenção, é divertido
+[18:15] tem uma coisa meio cômica
+[18:17] mas ao mesmo tempo ele é didático, ele é instrutivo
+[18:19] e aqui depois pedindo para a pessoa
+[18:21] comentar a Argon
+[18:23] e ela seria direcionada para um vídeo nosso
+[18:25] no canal falando sobre esse modelo
+[18:27] agora sim nós vamos começar a construir esse esquivo
+[18:29] eu quero que você copie comigo esse pronte
+[18:31] eu vou passar o pronte aqui para vocês
+[18:33] caso você queira printar na tela
+[18:35] então esse aqui é o pronte
+[18:37] você pode pausar o vídeo
+[18:40] e fazer o print
+[18:47] se você já estiver na comunidade
+[18:49] você pode copiar aqui o pronte
+[18:51] e colar lá no clode comigo
+[18:53] então a primeira coisa que você precisa fazer
+[18:55] é entrar dentro da sua conta do clode code
+[18:57] criar uma pasta local
+[18:59] chamada carrossel
+[19:01] no meu caso eu quis colocar o nome para facilitar o mesmo nome
+[19:03] e aí você vai vir aqui nessa parte do clode code
+[19:05] numa nova sessão
+[19:07] e agora nós vamos colar o pronte
+[19:09] lembrando que a gente está pedindo
+[19:11] que ele cria uma skill no clode code
+[19:13] chamada carrossel
+[19:15] usa a instrução abaixo, escreva tudo em português do Brasil
+[19:17] e no fim me mostre a árvore de arquivos
+[19:19] e agora eu vou submete-lo
+[19:21] agora é só esperar um pouco
+[19:23] e eu já volto para te mostrar a próxima etapa
+[19:25] aqui falou para mim que eu já tenho uma skill
+[19:27] chamada carrossel
+[19:29] que obviamente é essa que eu vou ensinar para você criar
+[19:31] então eu vou pedir para ele criar uma nova pasta
+[19:33] e não substituir a que eu já tenho
+[19:35] ele já terminou
+[19:38] de construir a skill
+[19:40] e agora nós vamos começar a etapa de refinamento
+[19:42] e treinamento com as nossas referências
+[19:44] antes eu quero só jogar
+[19:46] aqui o pronte que está na sugestão
+[19:48] do material que vai estar na comunidade para vocês
+[19:50] que é para ele fazer um carrossel
+[19:52] eu vou colocar aqui
+[19:54] e ele funciona basicamente assim
+[19:56] carrossel, barra carrossel
+[19:58] que é o comando que a gente usa para acionar
+[20:00] essa skill, só que no meu caso
+[20:02] ela se chama v2
+[20:04] porque eu já tenho a carrossel 1
+[20:06] então para não confundir ele chamar anterior
+[20:08] eu quero que ele chame essa que eu estou criando agora com você
+[20:10] então ele vai chamar carrossel v2
+[20:12] e aí eu coloco cinco erros
+[20:14] e eu vou fazer um anúncio no instagram
+[20:16] não vender, o público
+[20:18] dono de pequenos negócios, objetivo
+[20:20] salvar e comentar, plataforma instagram
+[20:22] cta, comente anúncio
+[20:24] e receba o checklist na DM
+[20:26] então agora eu vou colocar aqui para ele começar a gerar
+[20:30] e olha que bacana, ele não gerou nada
+[20:32] porque? porque nós não trouxemos
+[20:34] as referências, eu não quero que você saia gastando
+[20:36] sem que ele tenha
+[20:38] algum estilo, alguma ideia visual
+[20:40] para ele seguir, para ele se inspirar
+[20:42] senão você vai ter um resultado medíocre
+[20:44] que você não vai gostar e aí vai ficar
+[20:46] litorrando seus tokens sem ter um resultado
+[20:48] satisfatório que você consiga utilizar
+[20:50] então agora nós vamos entrar dentro do instagram
+[20:52] pode ser instagram, pode ser tiktok
+[20:54] a rede social que você preferir e é aquela
+[20:56] que você vai focar mais porque lá
+[20:58] a gente encontra muita inspiração
+[21:00] muito estilo que a gente pode se identificar
+[21:02] e pode gostar e agora você vai
+[21:04] vir aqui na busca
+[21:06] e agora na busca nós vamos colocar
+[21:08] jogo da velha carrossel
+[21:10] e por que eu gosto de colocar em inglês?
+[21:12] porque eu acho que a gente tem uma gama
+[21:14] muito maior de possibilidades
+[21:16] muitas pessoas falam inglês no mundo
+[21:18] então a gente tem um acesso maior
+[21:20] se você quiser colocar só carrossel como a gente escreve
+[21:22] em português você vai atingir
+[21:24] nas publicações do Brasil
+[21:26] então eu quero algo mais dântil
+[21:28] e aí eu vejo aqui que nós temos uma hashtag
+[21:30] carrossel com 2.5 milhões
+[21:32] de postings, então vou clicar nela
+[21:34] bom pessoal, estou clicando aqui na hashtag
+[21:36] carrossel e não está funcionando
+[21:38] teve alguma estabilidade aqui com
+[21:40] instagram, já tem tem a jonella privada
+[21:42] já limpei o cache e ainda assim não funciona
+[21:44] então justamente agora
+[21:46] que estou gravando esse vídeo deu essa estabilidade
+[21:48] mas a ideia é que você entre
+[21:50] no instagram e busque
+[21:52] por hashtag carrossel as referências
+[21:54] do estilo visual que você vai gostar
+[21:56] então você pode trazer 10 referências
+[21:58] 15 referências de estilo visual
+[22:00] e você vai colocar numa pasta
+[22:02] específica que eu já vou mostrar pra você
+[22:04] eu vou mostrar aqui as referências que
+[22:06] eu tapei, só pra você ter uma ideia
+[22:08] do que eu estou falando. O que que eu fiz?
+[22:10] Eu fui no instagram, tirei varias print
+[22:12] de carro sés que eu gostava com essa
+[22:14] hashtag carrossel, fui vendo vários estilos
+[22:16] alguns tinham a ver com iar, outros
+[22:18] não, então você fica
+[22:20] livre pra gostar do estilo visual
+[22:22] não precisa ter nada a ver com seu nicho
+[22:24] aqui a gente só quer pegar uma ideia de referência
+[22:26] depois que você buscar as referências
+[22:28] você vai printando elas e vai
+[22:30] salvando numa pasta
+[22:32] aqui eu coloquei
+[22:34] referências carrossel, coloquei esse
+[22:36] nome e aqui eu tenho as referências
+[22:38] vou mostrar pra vocês
+[22:40] assim fica um pouco mais fácil de
+[22:42] vocês visualizarem, então eu tenho aqui
+[22:44] a primeira
+[22:46] que é essa aqui
+[22:48] aí eu depois peguei
+[22:50] o meio dela também, só pra ele entender
+[22:52] como que era o desenvolvimento
+[22:54] pra entender como fazer
+[22:56] o link, a conexão entre a imagem
+[22:58] da capa e o restante do carrossel
+[23:00] e aí foram essas
+[23:02] são várias referências
+[23:04] aqui já é um outro carrossel que eu peguei
+[23:06] de referência completamente diferente do anterior
+[23:08] aí nesse carrossel eu gostei
+[23:10] porque ele tem uma capa que na minha
+[23:12] concepção é bem chamativa
+[23:14] eu gostei do estilo, eu acho que tem
+[23:16] essa coisa meio lúdica
+[23:18] e aí depois eu peguei também o desenvolvimento dela
+[23:20] e aí
+[23:22] fui printando
+[23:24] pra salvar aqui
+[23:26] vou passar meio rápido, é só pra vocês terem
+[23:28] a ideia do que vocês vão ter que fazer
+[23:30] fazer esse trabalhinho manual
+[23:32] de buscar os que vocês gostarem
+[23:34] dar um trabalho inicial pra desenvolver
+[23:36] qualquer skill, muitas pessoas
+[23:38] acham que inteligência artificial, é só você
+[23:40] ir lá e pedir uma coisa pra ir, aí o resultado sai pronto
+[23:42] mas não, você tem um trabalho
+[23:44] de arquitetura inicial, é um trabalho
+[23:46] às vezes de dias
+[23:48] e aí depois, ou então de meses, e aí depois
+[23:50] que esse trabalho é concluído, aí sim você consegue
+[23:52] automatizar os processos, você consegue
+[23:54] ter mais liberdade
+[23:56] e mais tempo livre
+[23:58] pra poder se dedicar às outras coisas
+[24:00] não é um passo de mágica, exige
+[24:02] um trabalho inicial, então
+[24:04] aqui eu fui buscando, eu gostei dessa referência
+[24:06] também, então eu peguei esse
+[24:08] estilo aqui, e aí vocês podem ver
+[24:10] que tá bem inspirado
+[24:12] o nosso carro saiu nesse estilo
+[24:14] ele lembra um pouco
+[24:17] mais um papel meio antigo
+[24:19] um pouco diferente do nosso
+[24:21] e aí peguei esse outro aqui que eu gostei
+[24:23] muito também
+[24:25] depois ele é mais preto, fundo
+[24:27] um estilo mais simples
+[24:29] tá demorando um pouco pra carregar
+[24:31] mas tá indo, esse outro aqui
+[24:33] que já não tem nada a ver com os anteriores
+[24:37] esse outro, são várias
+[24:39] referências e aí você fica a vontade
+[24:41] pra colocar as suas, tá?
+[24:43] como se não bastasse, eu criei primeiras as suas referências
+[24:45] treinei a skill
+[24:47] e aí eu achei que tava faltando um pouco mais
+[24:49] de personalidade, então eu trouxe
+[24:51] uma segunda passa de referências
+[24:53] e isso você pode fazer, você pode colocar
+[24:55] as passas de referência você quiser
+[24:57] e aí é por isso que eu tenho essa segunda
+[24:59] pasta de carnaçel referências
+[25:01] e aí eu trouxe
+[25:03] essa outra referência nessa segunda pasta
+[25:05] desse site que chama Ivovenhy
+[25:07] que é um site que a gente gosta muito
+[25:09] um site na uma conta do instagram
+[25:11] que a gente curte bastante, que traz
+[25:13] muitas notícias atualizadas
+[25:15] bom, então agora você vai juntar as suas referências
+[25:17] criar a sua pasta, e aí
+[25:19] depois que você terminar de criar as suas referências
+[25:21] e a sua pasta, nós vamos pra próxima etapa
+[25:23] então agora você vai buscar sua pasta de referências
+[25:25] eu tenho aqui a minha pasta
+[25:27] e aí eu vou copiar
+[25:29] o nome dessa pasta
+[25:31] e aí eu vou mencionar ela aqui
+[25:33] e aí nesse caso eu coloquei, use a minha
+[25:35] pasta carnaçel referências no meu
+[25:37] computador para usar como modelo
+[25:39] e aí você vai fazer a mesma coisa no seu caso
+[25:41] você vai criar um nome pra essa pasta
+[25:43] e vai referenciar ela aqui no chat
+[25:45] e aí eu vou submetê-la
+[25:47] a partir de agora ele vai começar a entender
+[25:49] qual é o estilo que eu quero seguir
+[25:51] e ele vai solicitar aqui os próximos passos
+[25:55] e olha que bacana, aqui ele vai fazendo
+[25:57] aquele checklist que eu falei pra vocês
+[25:59] então ele traz localizar a pasta
+[26:01] carrossel referências
+[26:03] depois analisar as referências visuais
+[26:05] depois ele vai pra registrar
+[26:07] o estilo no catálogo e depois
+[26:09] ele vem com fechar a entrada
+[26:11] e aí ele segue, então bem interessante
+[26:13] a gente consegue visualizar aqui
+[26:15] o que ele está fazendo e olha que bacana
+[26:17] ele colocou aqui, revisei a 102 referências
+[26:19] eu estou registrando os estilos no catálogo da
+[26:21] skill e aí ele colocou aqui
+[26:23] via 102 imagens da pasta
+[26:25] e aí ele colocou 71 na raiz
+[26:27] e 31 em carrossel referências 2
+[26:29] e agrupei em 13 estilos
+[26:31] então ele fez uma leitura de todos
+[26:33] aqueles estilos que eu trouxe
+[26:35] separou por 13 estilos principais
+[26:37] ele fez essa categorização
+[26:39] então isso é muito prático
+[26:41] e aí ele colocou o catálogo da skill
+[26:43] era vazio e agora tem 13
+[26:45] com numeração fixa
+[26:47] primeiro estilo é anatomia colorida
+[26:49] preto, magenta e cartões
+[26:51] aí o estilo 2 cell
+[26:53] e natureza cinematográfico
+[26:55] e estilo 3 poster técnico
+[26:57] laranja com mascote voxel
+[26:59] depois o 4 Dark premium
+[27:01] o 5 Sere com numeral gigante
+[27:03] sei neon amarelo tech
+[27:05] 7 surreal cinematográfico
+[27:07] 8 tutorial escuro
+[27:09] com post-it e mascote
+[27:11] 9 tutorial claro com post-it
+[27:13] então se você já tem esse estilo
+[27:15] e você quer criar um agente que faça
+[27:17] os carro cés automatizados no seu estilo
+[27:19] é só colocar sua referência
+[27:21] e não precisa colocar mais nenhuma
+[27:23] e aí ele trouxe também os outros estilos
+[27:25] e agora ele vai pra próxima etapa
+[27:27] as referências entram só como
+[27:29] linguagem visual, logo o arroba
+[27:31] e fotos de outros perfis não vão para os seus slides
+[27:33] pela ordem da skill
+[27:35] você escolhe o estilo na etapa 4
+[27:37] se já tiver um preferido
+[27:39] pode me dizer agora
+[27:41] então é bem legal porque essa skill
+[27:43] ainda falta para fechar a entrada
+[27:45] aí ele poupou animação e créditos
+[27:47] quer alguns slides animado
+[27:49] qual o teto de crédito?
+[27:51] se for tudo em código estilos 4, 5, 9, 10
+[27:53] ou 11 o custo é zero
+[27:55] porque ele faz em código
+[27:57] assinatura que nome e arroba
+[27:59] vão na roda pé e no convite
+[28:01] para seguir, então no caso
+[28:03] ele não sabe que eu quero usar ainda os maestros da IA
+[28:05] e outro ponto interessante
+[28:07] é que ele traz aqui o budget
+[28:09] que você quer gastar, então se você já tem uma conta
+[28:11] no open art, no rexfield
+[28:13] ou então no foiais, se você tem um budget
+[28:15] um orçamento específico, não quero passar
+[28:17] de tantos créditos, ou não quero passar
+[28:19] de tantos dólares, ele vai
+[28:21] se ater a esse valor
+[28:23] e aí ele vai ajustando, pode ficar um pouco mais
+[28:25] econômico, um pouco mais gastão
+[28:27] então tudo isso vai depender
+[28:29] também do seu orçamento e ele pergunta aqui para você
+[28:31] e agora então eu vou especificar
+[28:33] qual vai ser a minha fonte, então vou colocar
+[28:35] a roba maestros da IA
+[28:37] e aí nesse momento você coloca a sua
+[28:39] e aí
+[28:41] o convite vai ser para seguir
+[28:43] vai ser para comentar uma palavra chave
+[28:45] e eu vou colocar aqui que o CTA
+[28:47] eu decido
+[28:49] na hora, na hora de montar
+[28:51] o último slide
+[28:55] por que? porque as vezes eu tenho um vídeo gravado
+[28:57] sobre o tema, eu quero direcionar as pessoas para lá
+[28:59] então eu já tenho um material que eu quero
+[29:01] mudar no direct, tudo isso eu quero decidir
+[29:03] conforme o tema que eu vou pedir para ele gerar
+[29:05] bom, agora eu vou submeter então
+[29:07] e olha que bacana, ele já colocou aqui
+[29:09] estão na checagem de fatos
+[29:11] já confirmei formato
+[29:13] do limite de texto nas páginas oficiais
+[29:15] da meta e agora estou conferindo
+[29:17] a página sobre edições que reiniciam
+[29:19] a fase de aprendizado e aí ele colocou
+[29:21] a aprovação de fatos para montar o brief
+[29:23] e ele trouxe aqui né
+[29:25] e eu vou pedir para ele aprovar
+[29:27] bom, ele colocou que o brief
+[29:29] já está pronto, em carro, céu, erros,
+[29:31] anúncios, imagem e
+[29:33] porque a gente estava falando nesse tema
+[29:35] sobre erros de carro, céu e ele colocou
+[29:37] 9 slides, 5 erros apoiados
+[29:39] em regras da meta, slide 8
+[29:41] como colinha salvável e CTA
+[29:43] provisório, assumir nenhuma animação
+[29:45] e zero créditos
+[29:47] a próxima etapa são as 5 capas
+[29:49] então eu vou aprovar e seguir
+[29:51] eu posso inclusive
+[29:53] abrir aqui o brief
+[29:55] para poder dar uma olhada, então se tem algum ponto
+[29:57] que eu não gostei, eu posso visualizar
+[29:59] aqui, digitite e pedir
+[30:01] para que ele altere, para que ele delete alguma coisa
+[30:03] então é muito prático que você pode ir
+[30:05] abrindo aqui e editando ao mesmo tempo
+[30:07] agora ele terminou
+[30:09] então ele colocou as 5 capas, cada uma com slide 2
+[30:11] estão em carro, céu, erros, anúncios,
+[30:13] gancho, MD, então
+[30:15] só clicar aqui, eu consigo visualizar
+[30:17] o que que ele pensou de
+[30:19] texto para as 5 capas, então a primeira
+[30:21] é número mais resultado, 5 erros
+[30:23] que fazem o seu anúncio não vender
+[30:25] não é falta de verba, são regras
+[30:27] que a própria meta publica no guia
+[30:29] de anúncios e a maioria dos pequenos negócios
+[30:31] que o pessoal se ignora, deslize
+[30:33] e confira um por um, erro comum
+[30:35] aí ele traz aqui aquela parte dos números
+[30:37] 125 caracteres
+[30:39] e seu anúncio somo
+[30:41] aí contra intuitivo, mexer no anúncio
+[30:43] todo dia faz ele piorar
+[30:45] pergunta, anúncio gasta e não vende
+[30:47] 5 motivos, segredo de bastidor
+[30:49] aí ele coloca
+[30:51] os 35% do reels
+[30:53] que devem ficar vazios
+[30:55] e aí ele traz algo que eu tinha mencionado anteriormente
+[30:57] também, que é a recomendação, então ele recomenda
+[30:59] o C, que é essa aqui
+[31:01] que é contra intuitivo
+[31:03] porque vai gerar uma curiosidade
+[31:05] nas pessoas, ou então eu posso escolher
+[31:07] o que eu quiser, mas aqui é só uma recomendação
+[31:09] do Códio, e aí ele traz, contraria
+[31:11] o que o dono de negócio faz por instinto
+[31:13] mexer quando não vem
+[31:15] e eu vou pedir para ele fazer então a versão C
+[31:17] que ele mesmo recomendou, mas eu poderia escolher
+[31:19] qualquer uma, e aí eu coloco aqui
+[31:21] K-C, ou eu poderia digitar outra
+[31:23] K, e agora
+[31:25] ele vai
+[31:27] fazer para a próxima etapa
+[31:29] aí ele coloca aqui as três variantes
+[31:31] do primeiro slide de valor
+[31:33] e as três do CTA foram para o gancho
+[31:35] ponto a medir, recomendo a versão 2
+[31:37] antes e depois que vira
+[31:39] o modelo dos erros, aí ele traz
+[31:41] aqui o gancho, que seria
+[31:43] aqui a versão 2, antes e depois
+[31:45] regra 1, a foto
+[31:47] do produto está no tamanho errado, aí
+[31:49] antes vitrine fotografada
+[31:51] deitada cheia de bordas, e aí
+[31:53] é um comparativo, né
+[31:55] outro exemplo poderia ser regra direta
+[31:57] errum, anunciar com foto quadrada
+[31:59] deitada, e o que a meta recomenda
+[32:01] eu vou optar também
+[32:03] pela versão que ele está sugerindo, mas tudo isso
+[32:05] fica seu critério, você pode escolher
+[32:07] o que você quiser, então
+[32:09] eu vou optar por esse
+[32:11] bom, ele colocou aqui
+[32:15] montei o roteiro com 9 slides
+[32:17] todos dentro do limite de palavras, com
+[32:19] apoio, direção visual e fonte documentadas
+[32:21] em roteiro.md
+[32:23] então ele colocou aqui o roteiro
+[32:25] e nessa etapa é muito importante você
+[32:27] se atentar, se tiver alguma coisa que você
+[32:29] não gostou, você pede para ele trocar aqui
+[32:31] porque depois ele vai na parte de criação
+[32:33] dos slides mesmo, e aí fica difícil
+[32:35] ajustar alguma palavra e tal dentro
+[32:37] da formatação, então ele colocou
+[32:39] aqui o roteiro, eu não vou ficar lendo
+[32:41] todos os detalhes porque isso aqui é só uma
+[32:43] demonstração para vocês, senão vai ficar muito
+[32:45] extensa, então eu vou pedir para ele
+[32:47] seguir, aprovar e seguir.
+[32:49] Se tivesse algum slide para ajustar
+[32:51] eu colocaria ali para ajustar e comentaria
+[32:53] e aí ele faria alteração.
+[32:55] Bom, e olha que legal, agora a gente
+[32:57] vai na parte visual
+[32:59] mesmo do calção, então ele traz essas folhas
+[33:01] de estilo, com base nas referências que eu
+[33:03] trouxe, para eu escolher a
+[33:05] numeração que eu quero, então eu tenho
+[33:07] essas numerações aqui, essas opções
+[33:09] e agora eu preciso escolher qual número
+[33:11] ele vai seguir o estilo, então
+[33:13] eu vou optar
+[33:15] por esse estilo aqui,
+[33:17] o 9, aí eu vou clicar
+[33:19] aqui e escolher outro estilo, quero
+[33:21] o estilo 9.
+[33:25] Pronto, a parte daí ele vai seguir.
+[33:27] Bom, uma observação importante
+[33:29] se você quiser gerar, utilizando
+[33:31] um modelo de geração de imagens,
+[33:33] se você quiser gerar a capa,
+[33:35] é importante que você tenha conectado
+[33:37] aqui, ou OpenArt, ou
+[33:39] Higgs Field, ou FALEI, ou então
+[33:41] algum outro canal de modelos
+[33:43] de geração de imagens, porque
+[33:45] senão ele não vai ter essa função
+[33:47] e ele vai gerar tudo em código, então
+[33:49] eu tenho conectado tanto o Higgs Field quanto
+[33:51] o OpenArt quanto o FALEI, poderia
+[33:53] colocar aqui o QEI, é só também conectar
+[33:55] via API, porque esses são os
+[33:57] principais que nós usamos. Provavelmente
+[33:59] aqui ele vai utilizar o OpenArt, porque
+[34:01] eu já tenho créditos por lá,
+[34:03] então
+[34:05] se ele gerar por lá eu já mostro pra vocês.
+[34:09] E olha que bacana, já terminou gerar slides
+[34:11] do calcél, ele trouxe aqui uma visão
+[34:13] completa do calcél como ele ficaria
+[34:15] e aqui a gente consegue ver slide
+[34:17] por slide, então aqui a gente tem a capa
+[34:19] mexer no anúncio todo dia fazer ele
+[34:21] piorar, cinco erros, regras
+[34:23] da meta, então ele traz
+[34:25] esse gráfico, eu achei que ficou bem interessante
+[34:27] aí aqui ele traz outro, a regra da meta
+[34:29] trocar público ou criativo
+[34:31] reiniciou a prensada do anúncio
+[34:33] a foto do produto está no tamanho errado
+[34:35] e aí a gente precisa sempre manter
+[34:37] a formatação correta
+[34:39] o preço só aparece no fim do texto
+[34:41] preço e telefone embaixo
+[34:43] dos botões do reels, então
+[34:45] às vezes a pessoa acaba tampando isso
+[34:47] e ele fica fora da formatação
+[34:49] mexer no anúncio a cada dois dias
+[34:51] essa recomendação
+[34:53] cliente cai no perfil e não no whatsapp
+[34:55] e assim por diante
+[34:57] achei que ficou bem legal
+[34:59] para um primeiro resultado
+[35:01] treinado com as nossas referências
+[35:03] me diz aqui embaixo o que você achou desse resultado
+[35:05] e agora vamos ver a próxima etapa aqui
+[35:07] e ele coloca aqui, os novos slides
+[35:09] já estão prontos em código no estilo escolhido
+[35:11] com paleta, tipografia e texto
+[35:13] revisados letra por letra
+[35:15] incluindo os ajustes feitos no roteiro
+[35:17] e aí ele coloca a prévia
+[35:19] está em prévia, barra
+[35:21] para personalizar cores, tamanhos e espaçamento
+[35:23] abre o slide html
+[35:25] esporte o jason e me envie para eu aplicar
+[35:27] no código e aí ele coloca
+[35:29] que se eu quero aprovar ou ajustar
+[35:31] algum ponto, vou pedir para aprovar e exportar
+[35:33] então agora ele vai fazer a aprovação
+[35:35] e vai salvar no meu computador
+[35:37] e olha que bacana, ele está fazendo
+[35:39] exportação para o png, vai salvar
+[35:41] a minha pasta de downloads e também
+[35:43] vai escrever a legenda para o post
+[35:45] porque a gente coloca o instagram
+[35:47] e a gente coloca uma descrissão, uma legenda
+[35:49] na postagem e ele já faz tudo isso
+[35:51] para a gente inclusive colocando as hashtags
+[35:53] outro ponto legal dessa skill
+[35:55] é que quando você gera algo sobre um tema
+[35:57] por exemplo, gerei sobre Hermes Agent
+[35:59] ele vai lá e salva
+[36:01] esse carro-cell já gerado
+[36:03] e ele dá um check, então se
+[36:05] é algum momento eu esquecer que eu fiz
+[36:07] um carro-cell sobre Hermes Agent
+[36:09] e quando acontecer a gente gera
+[36:11] muito tema que fala sobre muito assunto
+[36:13] e a gente acaba esquecendo, será que eu já
+[36:15] fiz sobre esse tema, será que eu não fiz
+[36:17] e aí quando a gente pedir novamente para ele
+[36:19] fazer um carro-cell sobre Hermes Agent
+[36:21] ele vai perguntar se a gente realmente quer gerar um outro
+[36:23] porque a gente já fez, então ele vai
+[36:25] guardando isso na memória
+[36:27] e aqui ele pede para, sigo para a
+[36:29] revisão final, então ele traz aqui
+[36:31] os pontos, eu vou falar que sim
+[36:33] ele faz uma última revisão
+[36:35] e agora a gente está quase concluindo
+[36:37] a nossa skill de carro-cell
+[36:39] bom, ele falou que terminou a revisão final
+[36:41] corrigiu o fato sobre
+[36:43] reinício de aprendizado
+[36:45] e aí ele traz aqui e aí ele
+[36:47] cria agora o check list que vai
+[36:49] na DM, eu vou falar que sim, porque ele
+[36:51] cria e agora a gente
+[36:53] está quase finalizando
+[36:55] bom, ele fez aqui
+[36:59] o check list, ele coloca o check list
+[37:01] e a DM está pronto, aí ele fala sobre
+[37:03] PDF
+[37:05] A4, uma página no estilo
+[37:07] de carro-cell, aí
+[37:09] ainda faltam dois pontos da revisão, uma capa
+[37:11] sem números na frase principal
+[37:13] e o faz ele piorar que vai além
+[37:15] das fontes, então vou pedir para ele ajustar
+[37:17] a capa
+[37:19] bom, e olha que bacana, a skill
+[37:21] já terminou de rodar e ela coloca aqui
+[37:23] a capa agora de desmeixer no anúncio
+[37:25] pode zerar os 50 eventos, são 8
+[37:27] palavras com 50 em azul
+[37:29] na linha de destaque, então ficou assim
+[37:31] aos 50 está com uma cor diferente
+[37:33] porque essa frase
+[37:35] tem número na afirmação principal, como
+[37:37] pede a regra, então ele sempre se baseia
+[37:39] em fatos reais, em fatos
+[37:41] de fontes checadas, nunca inventa
+[37:43] uma informação, não vai
+[37:45] além da fonte, a meta diz
+[37:47] que uma edição significativa pode
+[37:49] reiniciar o aprendizado e manda
+[37:51] contar os cerca de 50
+[37:53] eventos a partir da última edição significativa
+[37:55] o que mudou,
+[37:57] ele também ainda gera discussão
+[37:59] o que mudou junto com a capa, um gráfico
+[38:01] da capa, agora mostra a contagem
+[38:03] de eventos voltando a zero
+[38:05] a cada editou, então a gente
+[38:07] tem aqui, ela sobe, editou,
+[38:09] volta para zero, então ela volta na fase
+[38:11] de aprendizado, mexeu
+[38:13] a inteligência volta para fase de aprendizado
+[38:15] editou de novo e assim por diante
+[38:17] então ficou mais coerente
+[38:19] com aquilo que está sendo dito
+[38:21] legenda do post, a primeira linha
+[38:23] repete a capa nova, então
+[38:25] ele corrigiu isso na legenda para a gente
+[38:27] ele coloca tudo, está em download
+[38:29] carrossel e erros anúncio instagram
+[38:31] porque ele salve esse carrossel
+[38:33] como eu te falei, para que a gente
+[38:35] não repita esse mesmo tema
+[38:37] e depois ele coloca, publicação no instagram fica com você
+[38:39] Bom, a partir daqui eu não vou seguir
+[38:41] com você, a parte da publicação
+[38:43] aqui nós temos essa mesma
+[38:45] skill que eu ensinei vocês a fazerem
+[38:47] que já foi utilizada várias vezes, então ela foi se aprimorando
+[38:49] com o tempo e ela faz
+[38:51] as nossas publicações automáticas
+[38:53] mas não é muito difícil você fazer esse tipo
+[38:55] de integração, basta você dar
+[38:57] acesso às suas contas nas redes sociais
+[38:59] para essa skill que ela faz
+[39:01] a publicação automaticamente para vocês
+[39:03] você tem que estar ali no início, fazendo
+[39:05] as permissões, então no nosso caso a gente
+[39:07] publica no TikTok, publica no Youtube
+[39:09] e também publica no Instagram
+[39:11] e aí ela faz por nós automaticamente
+[39:13] eu peço um tema para ela
+[39:15] ou peço para ela pesquisar as últimas notícias
+[39:17] de inteligência artificial e escolho o tema
+[39:19] ela gera o carrossel para mim, eu aprovo
+[39:21] e ela me pergunta em quais
+[39:23] contas, em quais redes sociais eu quero publicar
+[39:25] eu coloco quais ali marco, dou check
+[39:27] e a partir daí ela faz a publicação sozinha
+[39:29] mas aí já é uma outra etapa
+[39:31] fica para um próximo vídeo
+[39:33] e o objetivo desse vídeo era justamente
+[39:35] trazer para vocês a criação
+[39:37] dessa skill de carrosséis virais
+[39:39] recapitulando o que você viu nesse vídeo
+[39:41] uma skill é uma pasta com um manual
+[39:43] que o Clod sempre segue quando seu
+[39:45] pedido combina com a descrição dela
+[39:47] a de carrossel tem seis regras
+[39:49] trabalha em etapas com a sua aprovação
+[39:51] confere os fatos antes da capa
+[39:53] e mostra os custos antes de gerar
+[39:55] cada erro que você registra
+[39:57] vira uma regra nova então
+[39:59] o próximo carrossel que você gerar
+[40:01] sempre será melhor que o anterior
+[40:03] todo material que eu usei para criar
+[40:05] esses skill vai estar dentro da comunidade
+[40:07] dos maestros da EA para entrar
+[40:09] é só conferir aqui no link da descrição
+[40:11] desse vídeo e se você gostou desse vídeo
+[40:13] eu quero te pedir para se inscrever nesse canal
+[40:15] deixar o seu like e o seu hype
+[40:17] e compartilhar com seus amigos
+[40:19] um grande abraço e até o próximo vídeo

@@ -1,0 +1,13 @@
+idioma: pt
+[00:00] O Claude tem mais de 100 mil skills, mas sinceramente você só precisa de sim.
+[00:05] A primeira é a Find Skills. Você só diz o que está construindo e ela busca na biblioteca
+[00:10] a inteira de skills, acha certas pra você e até instala no seu lugar.
+[00:14] A segunda é a Super Powers. Você só dá uma tarefa, ela força o Claude aí mais devagar,
+[00:20] planejar direito e conferir o próprio trabalho antes de mexer no projeto de verdade.
+[00:24] A terceira é o Claude Mem. Ela dá memória pro Claude entre as sessões. Lembra dos seus
+[00:30] projetos e arquivos, o que significa que você nunca mais precisa reesplicar nada.
+[00:34] A quarta é a Impeccable pra Front End. Ela dá um gosto de design de verdade pro Claude,
+[00:40] puxando referências premium pra sua interface parar de ter cara de vibe codada.
+[00:44] E por último tem o Observador de Tarefas, que fica observando em silêncio como você trabalha.
+[00:49] Ele aprende seu estilo e melhora suas outras skills em background com base nisso.
+[00:53] Então se você quer testar essas skills por conta própria, comenta aqui embaixo skills que eu te mando.

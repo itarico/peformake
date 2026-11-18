@@ -1,0 +1,71 @@
+{
+ "id": "5HjN2NytHVE",
+ "title": "Como as pessoas estão gerando vídeos no Claude Code (Remotion Skills)",
+ "fulltitle": "Como as pessoas estão gerando vídeos no Claude Code (Remotion Skills)",
+ "channel": "Deborah Folloni",
+ "channel_id": "UCta1sF9e9YzzNG4OlQgIlXw",
+ "channel_url": "https://www.youtube.com/channel/UCta1sF9e9YzzNG4OlQgIlXw",
+ "uploader": "Deborah Folloni",
+ "uploader_id": "@deborahfolloni",
+ "webpage_url": "https://www.youtube.com/watch?v=5HjN2NytHVE",
+ "upload_date": "20260128",
+ "duration": 1107,
+ "duration_string": "18:27",
+ "view_count": 74624,
+ "like_count": 3169,
+ "comment_count": 100,
+ "channel_follower_count": 74500,
+ "description": "🎬 Semana passada a bolha de AI só falava em uma coisa: Remotion Skills! E eu entendo o hype: agora você pode criar vídeos animados profissionais APENAS com prompts no Claude Code - sem saber NADA de motion design ou edição de vídeo!\n\nNeste vídeo eu mostro meu workflow COMPLETO de ponta a ponta: da estrutura em cenas até o vídeo final renderizado.\n\n⏱️ TIMESTAMPS:\n00:00 - Intro: O que é o Remotion Skills?\n01:03 - O vídeo que eu gerei\n01:49 - Importante: Pense em CENAS\n02:56 - Como funciona a arquitetura do Remotion\n04:48 - Mostrando o meu projeto de código\n09:00 - Meu Workflow Passo a Passo\n10:47 - O prompt que eu usei + Receba ele de graça na minha newsletter!\n11:58 - Como usar o prompt no Claude Code e montar seu vídeo\n16:03 - Conclusão + Se inscreva no canal!\n\n🎯 O QUE VOCÊ VAI APRENDER:\n✅ O que é Remotion Skills\n✅ Como pensar seu vídeo em CENAS e COMPONENTES\n✅ A arquitetura do Remotion: Composition, Scenes e Components\n✅ Estrutura completa de um projeto Remotion (/public e /src)\n✅ O workflow COMPLETO\n✅ O prompt exato que eu usei (disponível na newsletter!)\n✅ Como iterar cena por cena até o resultado perfeito\n✅ Resultado: veja o vídeo que eu criei em ~1 hora!\n\n💡 POR QUE ISSO IMPORTA:\nEm vidas passadas, eu tive uma produtora de vídeos e cobrava R$ 10.000 por MINUTO de animação. Era um trabalho verdade com uma curva de aprendizado gigante no After Effects. Agora? Você consegue criar animações profissionais em 1 hora, mesmo sem experiência. Isso é REVOLUCIONÁRIO!\n\n🔑 O WORKFLOW EM 5 PASSOS:\n1️⃣ Escreva um roteiro\n2️⃣ Transforme em prompt estruturado (cena por cena!)\n3️⃣ Prepare seus assets na pasta /public\n4️⃣ Gere a primeira versão (V1)\n5️⃣ Itere cena por cena até ficar perfeito\n\n👻 SOBRE O EPIC:\nO Epic transforma suas ideias soltas em especificações claras, para que o Lovable acerte a implementação de primeira e construa aplicações rápidas e seguras (mesmo que você não saiba nada de programação). Teste gratuitamente agora mesmo! https://goepic.dev\n\n📱 ME SIGA NAS REDES:\nInstagram: / dfolloni\nLinkedIn: / dfolloni\nTwitter/X: https://x.com/dfolloni\n\n🗞️ ASSINE MINHA NEWSLETTER (DE GRAÇA)\nSubstack: https://dfolloni.substack.com/\n👉 O prompt completo que eu usei está disponível na newsletter!\n\n💬 COMENTE AQUI EMBAIXO:\nVocê já tinha ouvido falar do Remotion Skills? Vai testar? Me conta nos comentários! Leio todos e respondo sempre que posso 👇\n\n🔔 Inscreva-se no canal e ative o sininho para não perder os próximos vídeos!\n\n🙏 Obrigada por assistir! Se este vídeo te ajudou, deixe seu LIKE 👍 e compartilhe com aquele amigo que quer criar vídeos com IA!\n\nTe vejo no próximo vídeo! 🚀",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Intro: O que é o Remotion Skills?",
+   "end_time": 63
+  },
+  {
+   "start_time": 63,
+   "title": "O vídeo que eu gerei",
+   "end_time": 109
+  },
+  {
+   "start_time": 109,
+   "title": "Importante: Pense em CENAS",
+   "end_time": 176
+  },
+  {
+   "start_time": 176,
+   "title": "Como funciona a arquitetura do Remotion",
+   "end_time": 288
+  },
+  {
+   "start_time": 288,
+   "title": "Mostrando o meu projeto de código",
+   "end_time": 540
+  },
+  {
+   "start_time": 540,
+   "title": "Meu Workflow Passo a Passo",
+   "end_time": 647
+  },
+  {
+   "start_time": 647,
+   "title": "O prompt que eu usei + Receba ele de graça na minha newsletter!",
+   "end_time": 718
+  },
+  {
+   "start_time": 718,
+   "title": "Como usar o prompt no Claude Code e montar seu vídeo",
+   "end_time": 963
+  },
+  {
+   "start_time": 963,
+   "title": "Conclusão + Se inscreva no canal!",
+   "end_time": 1107
+  }
+ ],
+ "language": "pt-BR"
+}

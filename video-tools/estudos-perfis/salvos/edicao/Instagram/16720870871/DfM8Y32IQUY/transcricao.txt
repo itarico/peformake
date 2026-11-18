@@ -1,0 +1,7 @@
+idioma: en (0.99)
+[   0.0-   6.0] Here's how I made this.
+[   6.0-   9.5] I connected Higgs Field in Claude, my original video.
+[   9.5-  13.8] I pick the frames, upload them, and tell Claude what each becomes.
+[  13.8-  18.0] It builds them in Higgs Field, Thermal, X-ray, Echo, CRT.
+[  18.0-  20.0] Then I swap them into my video.
+[  20.0-  22.0] Comment Frame for the guide.

@@ -1,0 +1,96 @@
+{
+ "id": "___J8OOGAh8",
+ "title": "Claude Code + Youtube = Canal no Piloto Automático",
+ "fulltitle": "Claude Code + Youtube = Canal no Piloto Automático",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=___J8OOGAh8",
+ "upload_date": "20261026",
+ "duration": 1374,
+ "duration_string": "22:54",
+ "view_count": 17367,
+ "like_count": 360,
+ "comment_count": 25,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=claude-code-canal-piloto-automatico\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\nCanal no piloto automático com Claude Code: o sistema que transforma nossos vídeos longos em cortes publicados todo dia no YouTube, sem gravar nada novo.\n\nHá cerca de dois meses nós ligamos um experimento: o Maestros.mp4, um canal do YouTube no piloto automático que pega os vídeos longos do canal principal, escolhe os melhores trechos com IA e publica os cortes sozinho. A pergunta era simples: dá para ter visualizações, inscritos e vendas sem dedicar nenhum minuto do nosso tempo? Neste vídeo eu abro os números do canal nos últimos 28 dias, mostro de onde veio a inspiração, o canal paralelo do Alex Hormozi, e conto por que esses vídeos mais longos estão convertendo melhor que os projetos de vídeos curtos que já tivemos.\n\nDepois eu mostro o pipeline por dentro, que roda como uma skill do Claude Code: transcrição com o momento exato de cada palavra e um dicionário para os termos em inglês, seleção de trechos de 3 a 8 minutos, corte feito pelo Claude, remoção de promessas que o corte não cumpre, título pensado para ranquear por palavra-chave, descrição com capítulos e UTMs, e agendamento em cinco horários por dia, com uma verificação antes de cada publicação. Do mesmo vídeo longo ainda saem cortes horizontais, Reels e vídeos com avatares de IA.\n\n📌 CAPÍTULOS\n0:00 Canal do YouTube no piloto automático com Claude Code\n1:23 Dá para ter vendas sem gravar nada? O experimento Maestros.mp4\n2:48 Os números do canal nos últimos 28 dias\n3:25 A inspiração: o canal paralelo do Alex Hormozi\n5:46 Por que os vídeos mais longos estão vendendo melhor que os curtos\n6:38 As etapas: transcrição, seleção de trechos, produção e agendamento\n7:23 Um vídeo longo vira cortes, Reels e vídeos com avatares de IA\n9:24 Transcrição com o tempo de cada palavra e dicionário de termos\n11:34 Cortes verticais, ManyChat e regras de agendamento\n13:15 Como funciona o pipeline dos vídeos longos\n16:26 O que faz um bom corte: gancho, promessa cumprida e trechos removidos\n18:04 Título por palavra-chave, descrição, capítulos e UTMs\n19:21 Upload em cinco horários por dia e verificação antes de publicar\n20:28 Resultado do experimento e custo comparado ao tráfego pago\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ Como montar um canal do YouTube no piloto automático a partir dos seus vídeos longos\n✅ Onde o Claude Code entra: transcrição, seleção de trechos, corte, verificação e publicação\n✅ Por que, no nosso caso, os vídeos mais longos converteram melhor que os curtos\n✅ Como escolher títulos que ranqueiam por palavra-chave\n✅ Os critérios que separam um bom corte de um trecho solto\n\nEste vídeo mostra vídeos feitos com avatares de IA.\n\n#maestrosdaia #claudecode #canaldoyoutube",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Canal do YouTube no piloto automático com Claude Code",
+   "end_time": 83
+  },
+  {
+   "start_time": 83,
+   "title": "Dá para ter vendas sem gravar nada? O experimento Maestros.mp4",
+   "end_time": 168
+  },
+  {
+   "start_time": 168,
+   "title": "Os números do canal nos últimos 28 dias",
+   "end_time": 205
+  },
+  {
+   "start_time": 205,
+   "title": "A inspiração: o canal paralelo do Alex Hormozi",
+   "end_time": 346
+  },
+  {
+   "start_time": 346,
+   "title": "Por que os vídeos mais longos estão vendendo melhor que os curtos",
+   "end_time": 398
+  },
+  {
+   "start_time": 398,
+   "title": "As etapas: transcrição, seleção de trechos, produção e agendamento",
+   "end_time": 443
+  },
+  {
+   "start_time": 443,
+   "title": "Um vídeo longo vira cortes, Reels e vídeos com avatares de IA",
+   "end_time": 564
+  },
+  {
+   "start_time": 564,
+   "title": "Transcrição com o tempo de cada palavra e dicionário de termos",
+   "end_time": 694
+  },
+  {
+   "start_time": 694,
+   "title": "Cortes verticais, ManyChat e regras de agendamento",
+   "end_time": 795
+  },
+  {
+   "start_time": 795,
+   "title": "Como funciona o pipeline dos vídeos longos",
+   "end_time": 986
+  },
+  {
+   "start_time": 986,
+   "title": "O que faz um bom corte: gancho, promessa cumprida e trechos removidos",
+   "end_time": 1084
+  },
+  {
+   "start_time": 1084,
+   "title": "Título por palavra-chave, descrição, capítulos e UTMs",
+   "end_time": 1161
+  },
+  {
+   "start_time": 1161,
+   "title": "Upload em cinco horários por dia e verificação antes de publicar",
+   "end_time": 1228
+  },
+  {
+   "start_time": 1228,
+   "title": "Resultado do experimento e custo comparado ao tráfego pago",
+   "end_time": 1374
+  }
+ ],
+ "language": "pt-BR"
+}

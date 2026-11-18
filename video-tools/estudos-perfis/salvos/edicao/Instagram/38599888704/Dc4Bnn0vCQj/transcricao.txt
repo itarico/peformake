@@ -1,0 +1,10 @@
+idioma: en (0.96)
+[   0.0-   4.3] Are you looking for a 2080 payment plan or something that is ready to move in?
+[   4.3-   7.2] Well, I got your back. No delays in the handover.
+[   7.2-   9.7] Stay right now and move into your new home.
+[   9.7-  12.2] Well, location is something that gives me the click.
+[  12.2-  13.9] It's near to the metro station.
+[  13.9-  17.2] Pool is operational and hospital is just near to your home.
+[  17.2-  20.3] Well, if you love shopping, you don't have to go anywhere
+[  20.3-  24.6] because all the retail outlets are just at working the shifts of your home.
+[  24.6-  26.9] Well, for more details, connect us right now.

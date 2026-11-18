@@ -1,0 +1,125 @@
+{
+ "id": "U-AdnIz1jIk",
+ "title": "Automate Your CapCut Editing With Claude (Step by Step + Free Skill)",
+ "fulltitle": "Automate Your CapCut Editing With Claude (Step by Step + Free Skill)",
+ "channel": "Matt Loui",
+ "channel_id": "UCIXwKNbv-AMdlaO6bPBBE7A",
+ "channel_url": "https://www.youtube.com/channel/UCIXwKNbv-AMdlaO6bPBBE7A",
+ "uploader": "Matt Loui",
+ "uploader_id": "@MattLoui",
+ "webpage_url": "https://www.youtube.com/watch?v=U-AdnIz1jIk",
+ "upload_date": "20261023",
+ "duration": 579,
+ "duration_string": "9:39",
+ "view_count": 235442,
+ "like_count": 3968,
+ "comment_count": 203,
+ "channel_follower_count": 251000,
+ "description": "Sign up for Higgsfield here: https://higgsfield.ai/s/mattloui-kBNuih\n\nClaude edited this entire CapCut video. 117 cuts on my talking head, motion graphics, music, zooms and a colour grade, and I didn't edit a single thing. It's all built in a real CapCut project, so you can still tweak anything before you export.\n\nIn this Claude + CapCut tutorial, I'll show you my full workflow step by step: the exact prompt that edits your CapCut project, connecting the Higgsfield MCP so Claude can make motion graphics from a Pinterest reference, adding your human touch, and turning the whole process into a Claude skill you can reuse on every edit.\n\nSerious about CapCut editing? Click here: https://mattloui.com/?cl=DD4EAM79\n\nGet my free Claude skill: https://drive.google.com/file/d/103y1YEyfLMY-sPQOm8Hpv97fvxxZOM4V/view?usp=sharing\n\nCopy the full prompts list: https://docs.google.com/document/d/1qtpbmYCOSuxu_bOT7M5emp1r2YkZAE6Pg5S6RIq--I4/edit?usp=sharing\n\nWhat you need:\n- CapCut desktop (CapCut Web won't work)\n- Claude desktop app on Claude Pro ($17/month on the annual plan, $20 month to month)\n- A Higgsfield subscription to connect the MCP (Starter is $15/month)\n\nThe motion graphics cost $0 in credits, because Claude wrote every one of them as code. I break down the full cost at 8:43.\n\nHeads up: your first project takes Claude around 3 hours to finish (only about 10 minutes of that is you). Once your skill is installed, it's much faster.\n\n0:00 Claude edited this entire CapCut video\n0:41 The timeline Claude edited\n0:57 Set up your CapCut project\n1:27 The prompt that edits CapCut\n2:27 Opus 5.5 + giving Claude file access\n2:47 Claude's finished CapCut edit\n3:09 Add motion graphics: what you need\n3:47 Connect Higgsfield to Claude (MCP setup)\n4:28 Find a motion graphics reference on Pinterest\n5:01 The motion graphics prompt\n5:55 Approve the first graphic, then the rest\n6:14 The finished edit with motion graphics\n6:26 Add your human touch\n7:03 Let Claude learn your changes\n7:22 Turn it into a Claude skill\n7:51 How to install a Claude skill\n8:07 How long this takes\n8:43 How much this video cost to make\n\n#capcut #claude #capcutedit #capcuttutorial #capcutvideoediting #videoediting",
+ "tags": [
+  "claude capcut",
+  "claude video editing",
+  "automate capcut editing",
+  "claude talking head edit",
+  "capcut ai editing",
+  "claude skill",
+  "higgsfield mcp",
+  "ai video editing"
+ ],
+ "categories": [
+  "Education"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Claude edited this entire CapCut video",
+   "end_time": 41
+  },
+  {
+   "start_time": 41,
+   "title": "The timeline Claude edited",
+   "end_time": 57
+  },
+  {
+   "start_time": 57,
+   "title": "Set up your CapCut project",
+   "end_time": 87
+  },
+  {
+   "start_time": 87,
+   "title": "The prompt that edits CapCut",
+   "end_time": 147
+  },
+  {
+   "start_time": 147,
+   "title": "Opus 5.5 + giving Claude file access",
+   "end_time": 167
+  },
+  {
+   "start_time": 167,
+   "title": "Claude's finished CapCut edit",
+   "end_time": 189
+  },
+  {
+   "start_time": 189,
+   "title": "Add motion graphics: what you need",
+   "end_time": 227
+  },
+  {
+   "start_time": 227,
+   "title": "Connect Higgsfield to Claude (MCP setup)",
+   "end_time": 268
+  },
+  {
+   "start_time": 268,
+   "title": "Find a motion graphics reference on Pinterest",
+   "end_time": 301
+  },
+  {
+   "start_time": 301,
+   "title": "The motion graphics prompt",
+   "end_time": 355
+  },
+  {
+   "start_time": 355,
+   "title": "Approve the first graphic, then the rest",
+   "end_time": 374
+  },
+  {
+   "start_time": 374,
+   "title": "The finished edit with motion graphics",
+   "end_time": 386
+  },
+  {
+   "start_time": 386,
+   "title": "Add your human touch",
+   "end_time": 423
+  },
+  {
+   "start_time": 423,
+   "title": "Let Claude learn your changes",
+   "end_time": 442
+  },
+  {
+   "start_time": 442,
+   "title": "Turn it into a Claude skill",
+   "end_time": 471
+  },
+  {
+   "start_time": 471,
+   "title": "How to install a Claude skill",
+   "end_time": 487
+  },
+  {
+   "start_time": 487,
+   "title": "How long this takes",
+   "end_time": 523
+  },
+  {
+   "start_time": 523,
+   "title": "How much this video cost to make",
+   "end_time": 579
+  }
+ ],
+ "language": "en-US"
+}

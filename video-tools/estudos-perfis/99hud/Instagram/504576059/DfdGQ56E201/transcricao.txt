@@ -1,0 +1,13 @@
+idioma: pt
+[00:00] O Google está dando de graça um AI que prevê as vendas à tua empresa.
+[00:03] Se chama Times FM, é open source e já passou de 35 mil estrelas no GitHub.
+[00:08] Ela foi treinada com 100 bilhões de dados reais, tipo boostage do Google e acesso ao
+[00:12] Wikipedia.
+[00:13] Antes pra prever venda, você precisava treinar o modelo por semanas.
+[00:16] Agora você só joga a tua planilha de vendas, estoque ou acesso do site e ela te diz o
+[00:21] que vem nos próximos meses sem treinar nada.
+[00:23] A parte boa, ela te dá o cenário bom e o cenário ruim e ainda considera feriado
+[00:28] em mudança de preço.
+[00:29] Já funciona até dentro do Google Sheets.
+[00:31] Se você quer testar, comenta Google aqui embaixo e me segue que eu te mando passo a
+[00:34] passo completo no Direct.

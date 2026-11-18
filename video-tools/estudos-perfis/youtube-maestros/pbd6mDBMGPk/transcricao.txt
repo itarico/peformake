@@ -1,0 +1,597 @@
+idioma: pt
+[00:00] Eu coloquei o melhor modelo da Antropic à prova com três casos de uso diferentes para edição de
+[00:06] vídeos. O primeiro desafio foi a criação de um vídeo do zero a partir de uma simples notícia.
+[00:11] Esse vídeo deve utilizar o meu avatar e a minha voz clonada, mais imagens que ele vai criar e inserir,
+[00:17] tanto com motions em código quanto com imagens feitas com a generativa.
+[00:21] O segundo desafio foi um teaser, um vídeo promocional de um sistema operacional nosso,
+[00:25] de produtos da empresa, mas baseado simplesmente no código fonte.
+[00:30] E o terceiro desafio foi um clipe, ou seja, um vídeo longo do YouTube que nós já gravamos,
+[00:34] já postamos, mas nós queremos pegar trechos desse vídeo e formar um vídeo curto que tem um
+[00:40] potencial de alcance bacana. E todos esses resultados que você vai ver foram gerados com
+[00:44] apenas um prompt. Bom, para o primeiro teste nós pegamos uma notícia que viralizou no Twitter,
+[00:49] uma notícia sobre Antropic ser considerada uma ameaça segurança nacional.
+[00:52] Eu vou reproduzir o resultado para você. Ah, e depois eu vou te mostrar o resultado desse
+[00:58] vídeo no nosso canal e os comentários das pessoas, porque a gente também pediu um feedback.
+[01:02] Bom, eu vou reproduzir e vou comentar alguns pontos.
+[01:05] O Clod acabou de ser mantido na lista negra do Pentágono por decisão da justiça dos Estados Unidos
+[01:11] e o motivo não é espionagem nem falha de segurança. É uma coisa que a Antropic se recusou a fazer.
+[01:16] Então aqui, até aqui o segundo dez, a gente tem uma série de coisas já acontecendo.
+[01:20] Tem motions que pegam imagens e inserem essas imagens dentro dos elementos visuais de um
+[01:28] template pronto. Aqui é a mesma coisa, não, um template pronto de sublinhar notícias.
+[01:32] E aí tudo isso a gente faz sem gastar e agenerativa. Aqui a gente tem um elemento que usa,
+[01:40] o Sidense 2.5, para criar esse tipo de animação e sempre muito pertinente ao que está sendo dito.
+[01:50] Isso aqui é um avatar criado no Rei Janus, se não me engano é um avatar 4,
+[01:53] porque os 5 em patches que a gente tem feito não tem ido tão bem. E aí outros motions aqui na tela,
+[02:01] que são bem legais também.
+[02:03] Você recusou a fazer. Nesse vídeo eu quero te mostrar o que está por trás.
+[02:07] Eu adoro isso, as notícias aparecendo com coisas sublinhadas, né? Isso é muito legal,
+[02:12] porque aí ela não só pesquisa, mas ela tira o print ou ela pega a frase e insere dentro
+[02:19] do motion. Dá para fazer dos dois jeitos, né? Tanto com o Screenshot quanto refazendo e reescrevendo.
+[02:26] Nesse caso, claramente ela entendeu a notícia, pegou a sade lá e nos trouxe os textos, porque a fonte
+[02:32] aí dente e tal. Mas tem outros momentos em que a gente consegue tirar o print mesmo e inserir dentro
+[02:38] de um motion.
+[02:39] Essa briga. E no final eu vou te contar o que isso muda de verdade para quem usa o
+[02:43] print. O printágono queria usar o Clodio para qualquer uso legal. A Entrop que topou quase tudo,
+[02:49] mas travou em dois pontos. Nada de armas que escolhem e atacam alvos sozinhas,
+[02:54] sem um humano decidindo. E nada de vigiar americanos em massa. O governo não gostou em
+[03:00] março. O secretário de guerra, Pete Hexett, declarou que o Clodio é um risco para a cadeia
+[03:05] de suprimentos militar. Então, você deve estar notando que tem algumas, alguns vídeos que
+[03:12] são claramente gerados por IA e outros que são gerados por código. Então, os dois são
+[03:21] gerados por IA, mas esse aqui é por IA generativa e esses aqui são gerados com templetes prontos.
+[03:28] Então, gastam muito menos.
+[03:29] Clodio é um risco para a cadeia de suprimentos militar. É um rótulo pensado para fornecedores
+[03:34] de países e inimigos. A Entrop que foi para justiça e perdeu por dois votos contra um.
+[03:40] Para os juízes, colocar travas dentro do Clodio é uma forma de manipular o que ele faz.
+[03:44] Para o governo, o risco é a inteligência artificial travar no meio de uma operação militar.
+[03:49] E aqui está a polêmica. De um lado está o governo. Para ele, quem manda nas armas é o país e não quem vende a tecnologia.
+[03:57] Do outro, a Entrop que tem uma inteligência artificial sem limite mirando no alvo errado.
+[04:02] E alvo errado numa guerra é gente morrendo. Então, pensa comigo.
+[04:07] Imagina que você paga todo mês para usar uma inteligência artificial e que esse dinheiro vai para armas que escolhem alvos sem nenhum humano no controle.
+[04:16] Me conta nos comentários se você continuaria pagando e se para você uma empresa tem o direito de dizer não para o exército do próprio país.
+[04:23] Esse é o tipo de motion que hoje em dia já é bem simples, né? Em relação ao que a gente consegue fazer.
+[04:28] Foi um motion um pouco preguiçoso, mas ele compra em seu propósito, né?
+[04:32] E o Avatar em alguns pontos, eu acho ele mais e em outros menos realista.
+[04:36] Não pro exército do próprio país. E aí vem a parte que quase ninguém está contando.
+[04:41] Na praia, é engraçado porque às vezes os gestos não condizem com a frase, né?
+[04:46] Então, termino de falar alguma coisa, Entrop, que é uma empresa que foi muito prejudicada.
+[04:51] E eu fico fazendo uns gestos, nada a ver.
+[04:54] Mas esse tipo de animação aqui eu gosto bastante, essas maquetes tridimensionales.
+[04:58] E para o trabalho das empresas que prestam serviço para ele.
+[05:01] Para você que usa o clon.
+[05:03] Aqui eu não gosto muito de isso, né? Essas coisas ultra realistas, não sei se funcionam tão bem.
+[05:07] Apesar de conseguir mudar, né? Dentro de uma imagem realista, uma frase, isso pode ser interessante, mas não sei.
+[05:13] Acho que em termos de estilo eu não é o que eu mais gosto. O Frodo aqui apareceu.
+[05:18] Pode para trabalhar, nada muda. Em agosto, outra juíza já tinha derrubado uma classificação.
+[05:23] E aí tem coisas que você gasta e a generativa, mas que são meio bestas assim.
+[05:29] Outra juíza já tinha derrubado uma classificação parecida por ver retaliação ilegal na medida.
+[05:34] E a Entrop que ainda pode recorrer. Então pelo menos por enquanto o seu uso do clode não está em risco.
+[05:40] Para mim o ponto mais importante nem é o clode, é ver a Entrop pagando caro por dizer...
+[05:45] Isso aqui também é péssimo.
+[05:47] E caso você não tenha percebido, esse vídeo foi inteiro.
+[05:50] Isso aqui eu achei muito legal, dá uma olhada.
+[05:52] E caso você não tenha percebido, esse vídeo foi...
+[05:55] Essa coisa de rebobelendo, assim...
+[05:57] Para voltar no tempo.
+[05:59] Enteiro gerado por inteligência artificia.
+[06:01] E aí ele trouxe algumas especificações aqui.
+[06:03] Leva Labs, Hidiene aqui, mostrou o King, mas tem bastante coisa que foi feita no Cidense também.
+[06:08] E aí o modelo Ops 5.5 mais o da Vint.
+[06:10] É um experimento dos maestros da IA e eu quero muito saber o que você achou.
+[06:15] Aqui eu gostei também, né?
+[06:16] Essa criatividade de pegar os frames e colocar tudo numa tela.
+[06:20] É um resultado. Me conta nos comentários.
+[06:22] Se você quiser aprender a...
+[06:24] Esse é um exemplo bom do Avatar fazendo coisas meio fake.
+[06:26] Me conta nos comentários, né?
+[06:28] Até faria sentido se ele ia apontar-se para baixo, mas...
+[06:31] Conta nos comentários.
+[06:33] Me conta nos comentários.
+[06:34] É engraçado.
+[06:36] E a voz também ainda entrega um pouco, né?
+[06:40] A gente sabe que a voz está perto de estar perfeita, mas ainda dá para perceber.
+[06:45] Aqui, às vezes ele começa uma frase de um jeito, continua de outro,
+[06:50] e às vezes dá para perceber porque a voz muda um pouco.
+[06:53] Aqui, entre uma frase e outro, o áudio muda em termos de intensidade.
+[06:57] A voz muda, enfim.
+[06:59] Eu acho que se a voz fosse resolvida, se ficasse perfeita,
+[07:02] seria muito mais difícil saber que a IA.
+[07:04] Acho que uma das coisas que mais entrega hoje é a voz.
+[07:06] O Avatar também entrega mais menos.
+[07:09] Se você quiser aprender a fazer vídeos como esse,
+[07:11] clica no link da descrição para entrar na comunidade Maestros da IA.
+[07:15] Espero que você tenha gostado desse vídeo.
+[07:17] Um grande abraço e até o próximo.
+[07:19] Bom, esse foi o resultado do primeiro desafio.
+[07:21] Eu quero te mostrar aqui a performance dele.
+[07:24] Ele teve 4,9 mil visualizações em três dias.
+[07:28] Não é, em relação à média de visualizações por vídeo,
+[07:31] no canal uma coisa muito boa, tá?
+[07:34] É o vídeo que veio depois desse bateu 100 mil visualizações em 48 horas.
+[07:39] Então não foi um vídeo que foi muito bem.
+[07:41] Talvez pela duração, talvez porque o YouTube já esteja detectando vídeos gerados por IA de alguma forma.
+[07:46] E agora a gente pode dar uma olhada nos comentários.
+[07:49] Vim com comentários surreal, absurdo.
+[07:52] Que a IA diga não a tudo absurdo humano e coloca a vida de qualquer espécie em risco.
+[07:57] Então um comentário não falando sobre a edição,
+[07:59] mas sobre o tema do vídeo que é um tema polêmico.
+[08:02] Qualidade do vídeo sensacional, de qualquer forma foi feita a pergunta.
+[08:06] Claro que não vai estar.
+[08:07] Eu quero pegar os comentários que falam sobre o vídeo, não sobre a polêmica em si.
+[08:12] Então a qualidade do vídeo, o resultado do vídeo tá muito bom.
+[08:15] Enfim, a qualidade do vídeo ficou muito boa,
+[08:18] embora os momentos que tem aparecido bem natural,
+[08:20] o meu outro momento ficou bem nítido que a voz.
+[08:22] É isso que eu falei. A voz realmente parece que foi feita por IA em alguns pontos.
+[08:27] Percepção é porque ele já acompanha o canal.
+[08:29] Então ele acha que porque ele já acompanha o canal,
+[08:32] fica mais fácil porque ele conhece a nossa voz no sujeito de falar,
+[08:34] talvez alguém que não conhece e seja vendo pela primeira vez
+[08:36] não consiga nem saber que foi feito por IA.
+[08:38] Eu acho que ele tem razão.
+[08:39] Aí tem um comentário um pouco mais negativo,
+[08:41] que é nitidamente robotizado,
+[08:43] não dá para comparar com a qualidade de um vídeo gravado por seres humanos.
+[08:46] E realmente a comparação fica um pouco desleal,
+[08:50] mas eu acho que tá chegando perto.
+[08:51] Esse comentário aqui é super fofo,
+[08:53] previ os vídeos gravados por vocês sem dúvidas,
+[08:55] tem potencial, mas acho melhor que eu não pareça mais vocês e tal.
+[08:58] Eu gosto disso porque dá um trabalho em gravar vídeo aqui pro YouTube
+[09:02] e é significativo o trabalho.
+[09:04] Tem três refletores, um super set up, câmera de cinema,
+[09:08] um microfone legal pra vocês, quatro editores de vídeo na equipe.
+[09:13] Então é um trabalho significativo.
+[09:14] A gente fica feliz que tudo isso conte.
+[09:16] O nosso trabalho de gravar, a nossa entonação ao gravar,
+[09:20] a gente gosta que isso tem algum valor
+[09:22] se não o que estamos fazendo aqui.
+[09:24] Mas até quando é uma pergunta interessante,
+[09:27] esse vídeo tá com uma qualidade muito bacana.
+[09:29] Ele não veio muitas visualizações,
+[09:32] talvez por ser um vídeo curto,
+[09:33] talvez por ser um vídeo gravado por IA, enfim, não sei.
+[09:35] Mas é um vídeo que tem uma qualidade de edição, de roteiro
+[09:39] que eu acho bem bacana.
+[09:41] Então acho que ainda vai demorar um tempo,
+[09:42] talvez seis meses, talvez um ano,
+[09:45] pra gente ter um resultado muito, muito realista,
+[09:47] impossível de perceber que foi um avatar de IA,
+[09:51] que foi uma voz de IA falando.
+[09:53] Acho que isso vai levar um tempinho.
+[09:55] Mas quando isso acontecer,
+[09:57] você pode ter certeza que as redes sociais
+[10:00] vão mudar pra sempre.
+[10:01] É só você pensar em todas as outras coisas
+[10:03] que a gente não consegue mais dizer,
+[10:05] se foram feitas por IA ou não.
+[10:06] Um exemplo muito bom são os carro cés de Instagram.
+[10:08] Hoje a maior parte dos carro cés que a gente vê,
+[10:10] sem saber, são gerados por sistemas automáticos
+[10:13] de produção de carro cés.
+[10:15] O próprio agente de IA vai lá ver a notícia,
+[10:18] já publica no Instagram,
+[10:20] com toda a personalização necessária,
+[10:22] com todo o layout que a empresa procura,
+[10:25] e a influenciadora procura,
+[10:27] já é gerada no piloto automático e você vê,
+[10:29] você gosta, algumas pessoas fazem isso,
+[10:31] normalmente fazem.
+[10:33] Mas a questão não é se você está fazendo com IA ou não,
+[10:35] a questão é que não dá pra diferenciar mais.
+[10:37] E todos os carro cés que hoje você consegue fazer
+[10:40] com ser humano conduzindo,
+[10:42] você consegue treinar um agente pra fazer também.
+[10:45] Então a percepção do usuário final,
+[10:47] da pessoa que está ali nas redes sociais e vê um carro cés,
+[10:49] ela é uma percepção que já não passa mais
+[10:52] pelo filtro, isso é IA ou não,
+[10:54] o que importa é a informação,
+[10:56] o que importa é o layout.
+[10:58] É o que a pessoa vai obter de conhecimento,
+[11:00] sanar de curiosidade indo pros próximos
+[11:02] carro cés, pros próximos slides.
+[11:04] E hoje um vídeo gerado completamente por IA
+[11:06] ainda causa muita rejeição,
+[11:08] porque você consegue diferenciar.
+[11:10] Esse vídeo foi gerado por IA,
+[11:12] ele é um vídeo que tem ali na voz
+[11:14] um problema ou outro, você consegue
+[11:16] identificar que foi gerado por IA,
+[11:18] isso também atrapalha um pouco a sua compreensão do vídeo,
+[11:20] porque após de não ver o que sabe que foi gerado por IA,
+[11:22] você pare de prestar atenção no vídeo e
+[11:24] começa a avaliar a qualidade da IA que produziu.
+[11:26] E aí é óbvio que tem uma rejeição
+[11:28] a IA como um todo de algumas pessoas,
+[11:30] que vão achar um absurdo, etc.
+[11:32] Mas a grande questão é que a qualidade disso deve aumentar tanto
+[11:34] nos próximos meses e anos,
+[11:36] que você não vai conseguir assistir se falar
+[11:38] que foi feito por IA, talvez você desconfie
+[11:40] que foi feito por IA, mas depois de tantas
+[11:42] vezes vendo vídeos feitos por IA e sempre
+[11:44] aceitando que podem ou não ter sido feitos por IA,
+[11:46] já não vai mais importar.
+[11:48] E quando as pessoas realmente pararem de se importar,
+[11:50] a tendência é que esses vídeos gerados por IA
+[11:52] inundem canais do YouTube, inundem redes sociais,
+[11:54] como já tem inundado.
+[11:56] Mas atualmente como existe esse gap,
+[11:58] essa diferença entre vídeo gerado por humano
+[12:00] tem uma qualidade maior, vídeo gerado por IA
+[12:02] tem uma qualidade menor.
+[12:04] As pessoas ainda entendem que gravar vídeos
+[12:06] faz sentido porque você tem mais retenção,
+[12:08] você tem mais clientes, ou seja, gera mais confiança.
+[12:10] Mas se isso não acontecer mais,
+[12:12] se você possa vir por IA,
+[12:14] ele tem mais visualizações do que o seu vídeo gravado.
+[12:16] Gerar mais clientes, gera mais vendas,
+[12:18] você começa a se perguntar por que eu continuo fazendo isso.
+[12:20] A ideia aqui é te dizer,
+[12:22] esse fenômeno tem acontecido considerando
+[12:24] a direção que as coisas estão caminhando,
+[12:26] isso é praticamente inevitável em alguns anos.
+[12:28] Bom, vamos ao segundo desafio.
+[12:30] Nós geralmente licenciamos esse sistema operacional
+[12:32] dentro da agência para empresas que vêm
+[12:34] com essa demanda de ter um processo
+[12:36] de orquestração de agentes mais coeso
+[12:38] em que a equipe inteira pode trabalhar
+[12:40] em agentes simultaneamente.
+[12:42] Às vezes o uso da IA fica muito confuso,
+[12:44] muito disperso, não existe um sistema de monitoria
+[12:46] muito integrado, uma pessoa
+[12:48] muda as skills de um agente
+[12:50] e não compartilha com as outras
+[12:52] e as outras ficam usando uma skill defasada.
+[12:54] Então, um sistema operacional que consiga
+[12:56] abarcar todos os funcionários de uma empresa
+[12:58] com diferentes departamentos,
+[13:00] com uma estrutura de delegação,
+[13:02] vocês vão ver o teaser
+[13:04] criado pela IA e vai dar para entender melhor.
+[13:06] E a gente está planejando uma versão
+[13:08] um pouco mais acessível desse sistema operacional
+[13:10] uma vez que ele já está validado
+[13:12] para um público um pouco mais amplo.
+[13:14] Eu vou te mostrar o teaser que a IA fez
+[13:16] mas entenda que tudo isso aqui
+[13:18] foi feito simplesmente
+[13:20] com a leitura do código fonte
+[13:22] e a partir disso ele planejou
+[13:24] como ele gravaria o vídeo
+[13:26] e criou tudo do começo ao fim.
+[13:28] Agora mesmo, tem uma empresa inteira
+[13:30] de agentes trabalhando para você.
+[13:32] O Galária transforma seus agentes
+[13:34] em planetas
+[13:36] e a sua operação numa galáxia viva.
+[13:38] O chief delega para o head
+[13:40] e o head delega para o worker
+[13:42] toca na tecla O
+[13:44] e a empresa vira um organograma vivo.
+[13:46] Seleciona um agente
+[13:48] e as skills dele aparecem orbitando como
+[13:50] luas.
+[13:52] Verde é trabalho
+[13:57] Ambar é espera por você.
+[13:59] Galária vai na sessão do vídeo.
+[14:01] Galária me diz como está
+[14:04] aquele render.
+[14:06] Planeta, galáxia, cascata
+[14:08] tudo pulsando em tempo real.
+[14:10] Você comando uma galáxia?
+[14:12] Galáxia.
+[14:22] Galária.
+[14:24] Sua empresa de agentes
+[14:26] à vista.
+[14:31] Eu gostei muito desse resultado.
+[14:33] O legal desse resultado é que ele não se contentou
+[14:35] em falar sobre o produto
+[14:37] e apresentar alguns slides, alguns motions ali.
+[14:39] Ele realmente abriu o Galária
+[14:41] no Playwright MPC.
+[14:43] Imagina o que ele tinha feito isso.
+[14:45] Olhei o processo de construção, o quanto ele estava fazendo, porque a gente deixou o redone durante a madrugada.
+[14:47] E ele experimentou
+[14:49] o app como usuário enquanto gravava
+[14:51] a tela.
+[14:53] Ele entendeu as principais funcionalidades
+[14:55] e os benefícios.
+[14:57] Ele deixou várias funcionalidades de fora
+[14:59] mas é compreensível.
+[15:01] Eu achei que ele realmente capturou a essência
+[15:03] visual do Galária.
+[15:05] Algumas coisas eu adicionaria, algumas eu modificaria
+[15:07] se fosse fazer isso para valer.
+[15:09] Mas eu achei que ele fez um ótimo trabalho
+[15:11] em gerar o desejo.
+[15:13] Eu quero comandar minha própria galáxia.
+[15:15] Eu quero construir minha própria galáxia.
+[15:17] As pessoas, muitas vezes, perguntam como que vocês fazem
+[15:19] para rodar 20, 30, 50, 100 agentes
+[15:21] diariamente,
+[15:23] simultaneamente,
+[15:25] temos um sistema de orquestração muito bom
+[15:27] comandado por vós.
+[15:29] E a gente consegue fazer o deploy de 15 agentes.
+[15:31] Cada um desses 15 pode fazer o deploy de mais 10 sub-agentes.
+[15:33] Claro que tudo isso vai agasando tokens.
+[15:35] Então você tem que fazer isso para projetos que valem a pena.
+[15:37] Mas é assim que a gente tem a capacidade
+[15:39] dentro da nossa empresa de gerar
+[15:41] muita produtividade, muito rápido.
+[15:43] E o grande desafio é juntar tudo isso em um sistema organizado
+[15:45] que qualquer pessoa pode modificar,
+[15:47] qualquer pessoa pode alterar.
+[15:49] Isso vai mudar para todo mundo.
+[15:51] Inclusive, você pode ter vários graus
+[15:53] de hierarquia dentro
+[15:55] dos acessos e permissões que podem ser modificadas
+[15:57] ou não, criadas ou não.
+[15:59] Todos os agentes podem ser personalizados,
+[16:01] novas agentes que podem ser inseridas,
+[16:03] novos agentes que podem ser criados,
+[16:05] uma velocidade muito, muito rápida.
+[16:07] Então eu achei muito bom o resultado,
+[16:09] melhor do que eu esperava, sinceramente.
+[16:11] Eu até usaria isso, se eu gravasse,
+[16:13] de fato, a voz que eu achei que é o principal defeito do vídeo.
+[16:15] Mas aí não é culpa da IACDITOO,
+[16:17] é culpa do 11 Labs.
+[16:19] Talvez a gente possa testar diferentes modelos, diferentes configurações
+[16:21] para melhorar isso, mas eu poderia muito bem
+[16:23] gastar cinco minutos para gravar isso
+[16:25] com a minha voz e ele só insere dentro da edição.
+[16:27] Eu gostei muito do resultado, não tanto pela edição.
+[16:29] A edição está muito boa, mas eu achei muito legal
+[16:31] o conceito e o planejamento
+[16:33] que isso exigiu.
+[16:35] Bom, eu vou pegar o objetivo final,
+[16:37] que é ter um teaser para inserir
+[16:39] em uma campanha.
+[16:41] E eu quero
+[16:43] que a pessoa que esteja vendo o teaser
+[16:45] tenha a experiência de quem está usando o aplicativo.
+[16:47] E, portanto,
+[16:49] eu vou usar o aplicativo enquanto gravo a tela
+[16:51] para poder demonstrar isso no teaser.
+[16:53] Outra coisa muito legal foi ele dando um comando de voz
+[16:55] ali o texto aparecendo
+[16:57] e aí o app
+[16:59] respondendo
+[17:01] é muito legal, você tem a experiência de estar usando, de fato.
+[17:03] Então, além da parte da edição
+[17:05] o fato de a gente ter só enviado
+[17:07] o código fonte disso aqui
+[17:09] para ir se virar
+[17:11] e ela fazer um negócio desse é uma coisa muito impressionante.
+[17:13] Agora vamos ao terceiro teste.
+[17:15] A gente enviou um link, não um vídeo,
+[17:17] não um arquivo, um link
+[17:19] de um vídeo nosso do Youtube
+[17:21] para se virar e criar uma versão
+[17:23] curta, uma versão
+[17:25] para shorts, para reels,
+[17:27] para qualquer tipo de formato vertical
+[17:29] para a gente poder publicar nas redes sociais.
+[17:31] Vamos ver o que ele fez.
+[17:33] Essa mosca não está aprendendo a jogar nada.
+[17:35] Nessa última semana
+[17:37] vídeos de mamô para jogando xadrez,
+[17:39] jogando videogames, comprando e vendendo ações,
+[17:41] usando as redes sociais e até mesmo sendo torturadas
+[17:43] que laram massivamente na internet.
+[17:45] As pessoas estão aparentemente
+[17:47] conseguindo pegar o cérebro de uma mosca
+[17:49] colocando esse cérebro no seu próprio computador
+[17:51] e ensinando essa mosca
+[17:53] a fazer coisas que ela ainda não sabe.
+[17:55] Tudo começa com o mapeamento do cérebro
+[17:57] isso se chama Conectoma
+[17:59] um registro de cada neurônio
+[18:01] e cada conexão entre eles.
+[18:03] Se a gente conduzir um experimento
+[18:05] durante essa última madrugada
+[18:07] nós usamos o Mocopro
+[18:09] e a última madrugada
+[18:11] nós usamos o Mário Bros
+[18:13] o experimento foi dividido em 3 métodos
+[18:15] A, B e C
+[18:17] o método A é uma espécie de controle
+[18:19] aquilo que você normalmente faria
+[18:21] para usar aprendizagem por reforço
+[18:23] o método B é a mosca
+[18:25] é o método hypado
+[18:27] são os neurônios reais do Flywire
+[18:29] e as suas synapses
+[18:31] a gente inseriu a metodologia C
+[18:33] que é idêntica a metodologia B
+[18:35] da mosca
+[18:37] e todos embaralhados
+[18:39] o primeiro lugar claríssimo
+[18:41] é uma estrutura de aprendizagem por reforço
+[18:43] e a mosca coitada das 3 opções
+[18:45] foi
+[18:47] a lanterna a piora mais decepcionante
+[18:49] e o fato de que a metodologia C
+[18:51] superou a metodologia B
+[18:53] prova que o ganho
+[18:55] prático desse hype
+[18:57] é absolutamente zero
+[18:59] ela não cria memórias
+[19:01] ela não entende o Jolo
+[19:03] o que aprende na verdade
+[19:05] aprendizado por reforço
+[19:07] espetado na ponta desse cérebro
+[19:09] isso é manchete, exagero
+[19:11] ou a ignorância
+[19:13] eu gostei bastante
+[19:15] sobretudo porque ele não pegou um trecho
+[19:17] simplesmente e mudou as dimensões
+[19:19] ali pra encaixar no vertical
+[19:21] ele pegou trechos de partos totalmente diferentes
+[19:23] do vídeo
+[19:25] você pode pegar o vídeo no canal se você quiser assistir
+[19:27] é o único vídeo que a gente vai falar de mosca no canal
+[19:29] provavelmente na história
+[19:31] então é bem fácil de achar
+[19:33] ele pegou trechos do começo do vídeo
+[19:35] e trechos do final do vídeo
+[19:37] então ele precisou fazer toda transcrição
+[19:39] nessa ligação entre o timestamp
+[19:41] e cada palavra, a minutagem
+[19:43] ali do vídeo
+[19:45] ele precisou decidir quais trechos ele pegaria
+[19:47] e depois ele foi redimensionando
+[19:49] e colocando esses motions
+[19:51] parte ele pegou do próprio vídeo
+[19:53] parte ele criou
+[19:55] e eu achei que ficou muito bom
+[19:57] achei que ficou legal
+[19:59] óbvio, alguns detalhes
+[20:01] por exemplo
+[20:03] essa imagem com b-roll
+[20:05] eu não sei se foi da edição original
+[20:07] mas eu não gostei muito
+[20:09] a gente tem aqui
+[20:11] a legenda cobrindo o rosto
+[20:13] que é uma coisa que eu não gosto muito
+[20:15] eu colocar isso aqui um pouco mais pra baixo
+[20:17] talvez ele tenha já pensado na dimensão
+[20:19] de alguma das redes sociais
+[20:21] que corta a parte inferior
+[20:23] mas acho que não, só se descuidou a legenda
+[20:25] tá cobrindo o rosto
+[20:27] acho que não é uma coisa muito boa
+[20:29] enfim, achei bem legal esses motions
+[20:31] acho que ficou bem
+[20:33] bacana, tem esse estilo bem
+[20:35] simples de entender né, a gente tem aqui
+[20:37] esses banners
+[20:39] é muito didático
+[20:41] isso aqui também é legal
+[20:43] nada é muito complexo nesse caso
+[20:45] mas ele fez um bom trabalho de
+[20:47] pegar um conteúdo
+[20:49] que não foi feito pra
+[20:51] o formato vertical e transformar um conteúdo
+[20:53] que funciona muito bem no formato vertical
+[20:55] achei que ficou
+[20:57] muito bom, isso aqui eu gostei bastante também
+[20:59] eu acho
+[21:01] tá aqui, isso aqui foi gerado
+[21:03] pelo próprio editor agora
+[21:05] e não pelo vídeo original
+[21:07] mas posso estar enganado
+[21:09] e gostei no geral de tudo
+[21:11] sobretudo da roteirização
+[21:13] acho que é a parte que eu daria o destaque
+[21:15] bom, não sei o que você achou do seu resultado
+[21:17] depois eu quero saber nos comentários
+[21:19] se você achou que são bons resultados
+[21:21] se você achou que a edição foi bem feita
+[21:23] se você achou que teve muitas falhas
+[21:25] e você não conseguiu utilizar esse conteúdo
+[21:27] eu quero saber, é interessante a gente ter essa discussão
+[21:29] até entender onde a IA chegou
+[21:31] em termos de percepção das pessoas
+[21:33] em relação à edição
+[21:35] eu confesso que o que mais me impressionou
+[21:37] não foi o resultado da edição em si, os motions
+[21:39] o que mais me impressionou
+[21:41] foi a capacidade da IA
+[21:43] de entender muito bem os objetivos
+[21:45] e se planejar
+[21:47] muito bem pra fazer exatamente
+[21:49] aquilo que a gente precisava
+[21:51] antes mesmo da edição começar
+[21:53] fazendo de um processo de transcrição
+[21:55] de um vídeo completo longo
+[21:57] de cortes, de pegar
+[21:59] partes diferentes do roteiro
+[22:01] pra fazer com que o vídeo final fosse um vídeo coeso
+[22:03] com começo, meio e fim
+[22:05] e no teaser do galário eu realmente fiquei bem impressionado
+[22:07] com a proatividade do op 5.5
+[22:09] ele abriu como se fosse o usuário
+[22:11] testando ali o app
+[22:13] ele passou por várias das funcionalidades
+[22:15] ele gravou a tela
+[22:17] ele inseriu novas coisas
+[22:19] em cima das gravações de tela
+[22:21] muito muito legal
+[22:23] e o vídeo postado no youtube ficou bem legal também
+[22:25] as pessoas no geral gostaram bastante
+[22:27] e a cara que ainda não chegou no nível aqui
+[22:29] a gente precisa chegar pra ser impossível de dizer
+[22:31] isso foi feito por IA
+[22:33] mas ele cumpre um propósito
+[22:35] ele lança uma notícia, imagina que uma notícia muito especial
+[22:37] saiu agora
+[22:39] eu quero em 30 minutos um vídeo
+[22:41] eu não vou ter tempo de arrumar, ligar todo o set up
+[22:43] eu nem to em casa, mas eu quero postar
+[22:45] eu quero cobrir essa notícia rápido
+[22:47] porque a gente sabe que velocidade importa
+[22:49] e a notícia história feito por inteligência artificial
+[22:51] pode ter um resultado muito melhor
+[22:53] do que um vídeo que a gente foi lá
+[22:55] se arrumou, gravou, enviou pros editores
+[22:57] o vídeo retorna
+[22:59] isso leva 3, 4 dias pra o vídeo ficar pronto
+[23:01] então, por isso que a gente demora tanto tempo
+[23:03] pra cobrir modelos novos
+[23:05] tem um processo que é importante
+[23:07] e as vezes um vídeo gerado por IA
+[23:09] que a gente solta na hora certa
+[23:11] pode ter um resultado bem melhor
+[23:13] e é claro que aqui a gente não tá falando de branding
+[23:15] não tá falando de credibilidade
+[23:17] que não vão comprar, simplesmente
+[23:19] assistindo um vídeo feito por IA
+[23:21] mas existem ganhos inegáveis
+[23:23] e utilidades muito interessantes
+[23:25] pra muitas pessoas
+[23:27] com a qualidade que a gente já tem disponível hoje
+[23:29] eu não sei se você já testou edição de vídeos com opo 5.5
+[23:31] mas caso você não tenha resultados
+[23:33] semelhantes
+[23:35] é porque provavelmente você tá usando agentes de IA
+[23:37] que não são tão bem treinados
+[23:39] pra fazer as edições
+[23:41] e se você quiser acesso aos nossos principais
+[23:43] agentes de edição de vídeo
+[23:45] aos nossos principais pipeline
+[23:47] de produção de conteúdo
+[23:49] tem um pipeline de produção 100% automazada
+[23:51] ele vai e decide a notícia do seu nicho
+[23:53] já posta nas redes sociais depois de produzir
+[23:55] e editar o conteúdo completo
+[23:57] você pode entrar na comunidade Maestros da IA
+[23:59] lá nós temos centenas de agentes
+[24:01] skills e recursos pra você explorar
+[24:03] pra você copiar, colar e começar a usar no mesmo dia
+[24:05] além disso nós temos mais de 30 horas
+[24:07] de conteúdo, curso de code code
+[24:09] de codex, de Hermes
+[24:11] formação completa e inteligência artificial
+[24:13] e você vai ensinar o passo a passo de como criar
+[24:15] o seu avatar de IA
+[24:17] de como colar sua voz, tudo isso
+[24:19] a gente tem também lives toda semana pra conversar com vocês
+[24:21] a gente tem suporte técnico todos os dias
+[24:23] tem uma comunidade maravilhosa
+[24:25] de pessoas engajadas que entram todos os dias pra conversar
+[24:27] pra interagir
+[24:29] pra propor ideias, desafios
+[24:31] várias empresas já foram formadas dentro da comunidade
+[24:33] que sabe seu próximo sócio
+[24:35] não está lá
+[24:37] caso você quer entrar na comunidade, você é um prazer receber você
+[24:39] o link está na descrição desse vídeo
+[24:41] se você gostou do vídeo e quer receber mais recomendações de vídeos como esse
+[24:43] você pode deixar um hype nesse vídeo
+[24:45] um like e é claro se inscrever no canal
+[24:47] um abraço e até a próxima

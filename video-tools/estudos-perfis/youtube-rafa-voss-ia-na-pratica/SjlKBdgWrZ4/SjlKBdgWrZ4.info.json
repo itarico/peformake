@@ -1,0 +1,39 @@
+{
+ "id": "SjlKBdgWrZ4",
+ "title": "Como EDITAR VIDEOS com o CLAUDE CODE (Cortes + Motion)",
+ "fulltitle": "Como EDITAR VIDEOS com o CLAUDE CODE (Cortes + Motion)",
+ "channel": "Rafa Voss | IA na Prática",
+ "channel_id": "UCbSAFcj6mhbAfREWVC5o6PQ",
+ "channel_url": "https://www.youtube.com/channel/UCbSAFcj6mhbAfREWVC5o6PQ",
+ "uploader": "Rafa Voss | IA na Prática",
+ "uploader_id": "@Orafavoss",
+ "webpage_url": "https://www.youtube.com/watch?v=SjlKBdgWrZ4",
+ "upload_date": "20260428",
+ "duration": 774,
+ "duration_string": "12:54",
+ "view_count": 194388,
+ "like_count": 7013,
+ "comment_count": 230,
+ "channel_follower_count": 113000,
+ "description": "Neste vídeo, você vai aprender editar vídeos com Claude Code de forma prática usando dois repositórios open source que mudaram o jogo: Video-Use e HyperFrames.\n\n🔴 Faça sua inscrição no MELHOR CURSO de CLAUDE do MUNDO — ClaudePRO:\n👉 https://www.vossacademy.com.br/claude-pro\n\n--------------------------------------------------------------------------------\n\n📝 SOBRE ESTE CONTEÚDO\n\nEditar vídeo virou conversa. Em vez de arrastar clipes no Premiere ou ficar horas no CapCut, agora dá pra jogar a footage bruta numa pasta, abrir o Claude Code e pedir o vídeo final por chat — corte de filler word, cor, legenda queimada, animação, tudo automatizado. Neste tutorial passo a passo, eu mostro o fluxo completo combinando dois projetos open source que estão bombando no GitHub:\n\n→ Video-Use (do time do browser-use): instala como skill no Claude Code, transcreve a footage com timestamps por palavra via ElevenLabs Scribe, gera uma EDL inteligente, cuida do corte de \"umm\", \"uh\" e silêncios, aplica color grade automático e queima legenda no estilo TikTok. O LLM nunca assiste o vídeo — ele lê o transcript e raciocina em cima disso, o que acelera tudo absurdamente.\n\n→ HyperFrames (do time da HeyGen): renderiza vídeo a partir de HTML, CSS e JS. É tipo um Remotion mais leve e agent-native. Você descreve a animação em linguagem natural, o Claude Code escreve a composição em HTML com timeline e GSAP, e roda `npx hyperframes render` pra exportar MP4 determinístico.\n\nJunto, esses dois repos cobrem o pipeline inteiro: Video-Use cuida do corte e da edição da footage real, HyperFrames cobre as animações, intros, lower thirds e overlays. Conteúdo direto pra criador de conteúdo, marketeiro e qualquer time que produz vídeo em escala.\n\n🔗 Repositórios usados no vídeo:\n👉 Video-Use: https://github.com/browser-use/video-use\n👉 HyperFrames: https://github.com/heygen-com/hyperframes\n\n--------------------------------------------------------------------------------\n\n🤝 PARCEIROS E CONSULTORIA\n\n🎖️ Embaixador Cakto — Crie seus produtos digitais e comece a vender na melhor plataforma de infoprodutos:\n👉 https://www.cakto.me/migracao?utm_source=youtube&utm_medium=parceria&utm_campaign=rafavoss\n\n🚀 Reserve 1 hora com o Rafa Voss (Consultoria):\n👉 https://consultoria-voss.lovable.app/\n\n--------------------------------------------------------------------------------\n\n📺 VÍDEOS RECOMENDADOS\n\n👉 Lovable do Zero: https://youtu.be/fX1SYDRhB2Q\n👉 Claude Cowork: https://www.youtube.com/watch?v=Y9sYXgGxohw\n\n--------------------------------------------------------------------------------\n\n📱 REDES SOCIAIS E HASHTAGS\n\n📸 Me siga no Instagram: @orafavoss\n\n#rafavoss #claudecode #editardevideo #claude #vossacademy",
+ "tags": [
+  "editar video com claude code",
+  "editar video com claude code passo a passo",
+  "editar video com claude code para iniciantes",
+  "editar video com claude code na pratica",
+  "video-use",
+  "hyperframes heygen",
+  "como usar video-use e hyperframes",
+  "rafa voss editar video com ia",
+  "capcut",
+  "adobe premier",
+  "edicao de video",
+  "editor de video",
+  "editar com claude",
+  "claude code"
+ ],
+ "categories": [
+  "Education"
+ ],
+ "language": "pt-BR"
+}

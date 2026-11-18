@@ -1,0 +1,26 @@
+idioma: en (1.00)
+[   0.0-   3.0] This Vox style animation, I made it entirely with Claude.
+[   3.0-   4.8] But here's the part that actually surprised me.
+[   4.8-   6.5] I can open it in a real video editor
+[   6.5-   7.8] and change whatever I want.
+[   7.8-   8.8] Because let's be real,
+[   8.8-  10.5] AI doesn't always get things right.
+[  10.5-  11.5] Here's how it works.
+[  11.5-  14.0] First, connecting video to Claude using this link.
+[  14.0-  15.7] Then give Claude a few reference images
+[  15.7-  16.9] and describe what you want.
+[  16.9-  19.1] For example, I asked it to turn this person's head
+[  19.1-  20.6] into a video editing timeline.
+[  20.6-  22.2] Or take this old TV and turn it
+[  22.2-  23.8] into an endless world of videos.
+[  23.8-  25.5] But instead of being stuck with the result,
+[  25.5-  28.0] I can open everything in video's timeline editor.
+[  28.0-  29.0] Don't like the text?
+[  29.0-  29.8] Change it.
+[  29.8-  30.8] Animation too long?
+[  30.8-  31.8] Shorten it.
+[  31.8-  33.2] You could explain how something works,
+[  33.2-  34.4] show off a new product,
+[  34.4-  36.4] or tell a story with animations like these.
+[  36.4-  38.6] Without learning complicated animation software,
+[  38.6-  41.0] comment in video and I'll send you the connector.

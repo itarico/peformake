@@ -1,0 +1,32 @@
+idioma: pt (0.99)
+[   0.0-   3.6] Hara de pagar a assinatura que já tem versão de graça no GitHub!
+[   3.6-   9.1] São 9 trocas e somando da mais de R$ 1.400 por mês que ficam no teu bolso.
+[   9.1-   9.9] Higgsfield.
+[   9.9-  12.9] Pra gerar imagem e vídeo com IA, tem o OpenHiggsfield.
+[  12.9-  13.8] Eleven Labs.
+[  13.8-  14.4] Pra voz?
+[  14.4-  17.8] O Voice Studio clona a tua voz rodando no teu próprio computador.
+[  17.8-  20.7] O Sam Rush custa quase R$ 140 por mês
+[  20.7-  24.2] e o OpenSO faz a mesma pesquisa de palavra-chave e backlink.
+[  24.2-  26.2] No lugar do Notion, o AppFloey.
+[  26.2-  28.4] No lugar do WhisperFlow, o OpenWhisper.
+[  28.4-  29.5] No lugar do Assana,
+[  29.5-  30.6] o OpenProject.
+[  30.6-  31.7] No lugar do Calendly,
+[  31.7-  34.9] o Cal.dayy, que é a versão aberta do Cal.com.
+[  34.9-  36.9] No lugar do Intercom, o Shackwood.
+[  36.9-  38.6] E no lugar do Loom, o Cap.
+[  38.6-  40.7] E olha que não é projeto de fundo de quintal não.
+[  40.7-  44.3] Esses 9 somam mais de 350 mil estrelas.
+[  44.3-  46.8] Só que presta atenção, porque ninguém te conta isso.
+[  46.8-  48.9] No OpenHiggsfield, o estúdio é de graça.
+[  48.9-  51.6] Mas cada geração você paga na chave da plataforma
+[  51.6-  54.3] e o OpenSO cobra pelos dados que você puxa.
+[  54.3-  56.8] O resto você instala e usa sem pagar nada.
+[  56.8-  58.9] E a regra que vale pra qualquer ferramenta.
+[  58.9-  61.2] Antes de assinar, procura no GitHub o nome dela
+[  61.2-  62.9] com Open Source Alternative.
+[  62.9-  64.4] E vê se alguém já fez de graça.
+[  64.4-  66.1] Comenta a Rapple, que eu te mando no Direct,
+[  66.1-  68.9] o link dos 9 e o passo a passo pra instalar cada um.
+[  68.9-  71.4] Qual dessas assinaturas você cancelaria primeiro?

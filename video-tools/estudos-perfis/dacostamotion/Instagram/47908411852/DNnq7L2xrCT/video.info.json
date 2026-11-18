@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "DNnq7L2xrCT",
+ "title": "Post by dacostamotion",
+ "description": "Segura a animação do Dacostaaa🚀🔥",
+ "channel": "dacostamotion",
+ "uploader_id": "47908411852",
+ "uploader": "José Emanuel | Motion Designer",
+ "timestamp": 1755785297,
+ "like_count": 61,
+ "comment_count": 6,
+ "webpage_url": "https://www.instagram.com/reel/DNnq7L2xrCT/",
+ "webpage_url_basename": "DNnq7L2xrCT",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20250821",
+ "playlist_count": 2,
+ "epoch": 1794152229,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

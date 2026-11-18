@@ -1,0 +1,101 @@
+{
+ "id": "Ct5_C2xC-oo",
+ "title": "Claude Edited This Video (And I'll Teach You How)",
+ "fulltitle": "Claude Edited This Video (And I'll Teach You How)",
+ "channel": "100x Engineers",
+ "channel_id": "UCoch_d78Aosmp14ey1HgGSQ",
+ "channel_url": "https://www.youtube.com/channel/UCoch_d78Aosmp14ey1HgGSQ",
+ "uploader": "100x Engineers",
+ "uploader_id": "@100xEngineers",
+ "webpage_url": "https://www.youtube.com/watch?v=Ct5_C2xC-oo",
+ "upload_date": "20261020",
+ "duration": 578,
+ "duration_string": "9:38",
+ "view_count": 301609,
+ "like_count": 4248,
+ "comment_count": 137,
+ "channel_follower_count": 291000,
+ "description": "Join our Free Weekend Masterclasses on various AI topics: https://class.100xengineers.com/tohqPo\n\nHow To Edit Videos Using Claude Opus 5.5(Tutorial)\n\nIn this video, we break down how to use Claude Opus 5.5 to create complete videos with AI, from motion graphics and animations to fully edited videos. Learn our 6-step workflow for training Claude on your visual style, testing animations, building storyboards, and generating production-ready videos. We’ll also explore how to convert AI-generated videos into editable After Effects projects and connect Claude with Premiere Pro for further editing.\n\nAe-Builder Claude Skill: https://drive.google.com/file/d/1-orDyj1Ib3PoXpMdlmZVDNT7xB1DgKlg/view?usp=drive_link\n\nTimestamps\n\n[00:00] - Intro\n[01:03] - Step 1: Prerequisites\n[02:08] - Step 2: Style Training\n[03:23] - Step 3: Style Testing\n[04:02] - Step 4: Animation Test\n[04:42] - Step 5: Storyboarding\n[05:49] - Step 6: Editing\n[07:22] - Bonus: Converting Videos into Editable After Effects Projects\n[07:40] - Connecting Claude with Premiere Pro\n[08:29] - The Future of AI Video Creation",
+ "tags": [
+  "claude opus 5.5",
+  "claude video editing",
+  "opus 5.5",
+  "edit videos with claude",
+  "ai video editing",
+  "claude code video editing",
+  "claude ai tutorial",
+  "claude code tutorial",
+  "claude opus",
+  "ai motion graphics",
+  "motion graphics with ai",
+  "ai video editor",
+  "edit videos with ai",
+  "claude after effects",
+  "ai after effects",
+  "claude skills",
+  "claude code for creators",
+  "ai for content creators",
+  "anthropic claude",
+  "ai animation",
+  "ai video workflow",
+  "automate video editing",
+  "claude storyboard",
+  "100xengineers"
+ ],
+ "categories": [
+  "Education"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Intro",
+   "end_time": 63
+  },
+  {
+   "start_time": 63,
+   "title": "Step 1: Prerequisites",
+   "end_time": 128
+  },
+  {
+   "start_time": 128,
+   "title": "Step 2: Style Training",
+   "end_time": 203
+  },
+  {
+   "start_time": 203,
+   "title": "Step 3: Style Testing",
+   "end_time": 242
+  },
+  {
+   "start_time": 242,
+   "title": "Step 4: Animation Test",
+   "end_time": 282
+  },
+  {
+   "start_time": 282,
+   "title": "Step 5: Storyboarding",
+   "end_time": 349
+  },
+  {
+   "start_time": 349,
+   "title": "Step 6: Editing",
+   "end_time": 442
+  },
+  {
+   "start_time": 442,
+   "title": "Bonus: Converting Videos into Editable After Effects Projects",
+   "end_time": 460
+  },
+  {
+   "start_time": 460,
+   "title": "Connecting Claude with Premiere Pro",
+   "end_time": 509
+  },
+  {
+   "start_time": 509,
+   "title": "The Future of AI Video Creation",
+   "end_time": 578
+  }
+ ],
+ "language": "en-US"
+}

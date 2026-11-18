@@ -1,0 +1,9 @@
+idioma: en
+[00:00] Base44 lets you build an actual app without knowing how to code.
+[00:04] You can simply describe your idea and Base44 starts turning it into a real app.
+[00:10] From the UI and database to login, backend and features,
+[00:14] you can build it all with simple prompts.
+[00:17] It handles the technical stuff in the background, so you can focus on your idea.
+[00:22] And if you want to change something, just tell Base44.
+[00:26] Editors. Stop reverse engineering it.
+[00:28] The full project file is on earnedits.com

@@ -1,0 +1,19 @@
+idioma: pt
+[00:00] Para todos os nossos alunos do nosso vinho de vídeo, agora o nosso site, a nossa plataforma,
+[00:04] está otimizada para virar um aplicativo de celular.
+[00:08] Como assim?
+[00:09] Está aqui o nosso site, ele já é lindo e maravilhoso.
+[00:11] Beleza, eu vou aqui em área do aluno, por exemplo, isso aqui eu estou utilizando no navegador,
+[00:16] e eu consigo selecionar algum treinamento aqui, por exemplo, projeto filmmaker, vou
+[00:20] acessar ele aqui e aqui está as aulas dos módulos do projeto filmmaker pelo celular.
+[00:26] O que você vai fazer?
+[00:27] Fiquem três pontinhos, vai compartilhar, aí você arrasta aqui para baixo e vai
+[00:33] em adicionar a tela de início.
+[00:36] Só clicar nessa opção aqui, aí você escolhe o que vai colocar na miniatura, beleza, e
+[00:41] vai lá em adicionar, e ele vai criar essa miniatura aqui para vocês ali do vinho de vídeo.
+[00:46] E clicando nela vai ser a mesma coisa que um aplicativo.
+[00:49] Você vai conseguir acessar todos os módulos, todas as aulas aqui, tem que estar conectado
+[00:54] na internet, no futuro o update a gente quer deixar para salvar as aulas no celular, mas
+[00:59] nessa versão aqui tem que estar conectado na internet, ok?
+[01:02] Ficou muito mais legal para você ver as aulas aqui, beleza?
+[01:05] Obrigado a todo mundo, bora estudar.

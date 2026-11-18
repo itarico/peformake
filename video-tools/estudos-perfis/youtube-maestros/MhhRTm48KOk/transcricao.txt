@@ -1,0 +1,728 @@
+idioma: pt
+[00:00] Produção de conteúdo para seres sociais com inteligência artificial é uma das coisas mais
+[00:04] mal exploradas da atualidade.
+[00:05] É totalmente intuitivo criar uma imagem, eventualmente gerar um vídeo com um NHA, um avatar com um NHA,
+[00:12] produzir algumas peças de conteúdo, mas transformar todo esse potencial em algo realmente útil
+[00:18] é um já maior parte das pessoas falha.
+[00:19] Poucos meses atrás a gente criou uma conta no Instagram chamada Maestros da IA HUB
+[00:23] e a gente decidiu que essa conta seria um laboratório em que a própria inteligência
+[00:27] artificial cuidaria de todo o processo de confecção dos conteúdos postagem 100%
+[00:34] desde a pesquisa, decisão sobre os temas, roteirização, tudo seria feito por inteligência
+[00:40] artificial com 0% de interferência humana.
+[00:43] E o que era para ser um simples experimento, a gente sinceramente nem sabia se ia dar certo,
+[00:46] se tornou algo muito maior.
+[00:47] Essa conta hoje nos gera vendas todos os dias e além disso tem mais visibilidade
+[00:53] do que a nossa conta principal, que hoje está com 110 mil seguidores.
+[00:57] Ou seja, o que era para ser uma brincadeira se tornou um canal de aquisição de clientes
+[01:01] extremamente poderoso.
+[01:02] E uma coisa muito legal foi que a partir desse projeto, empresas começaram a nos procurar
+[01:06] para implementar sistemas autônomos de produção de conteúdo em contas secundárias,
+[01:12] em outras contas adjacentes, para que dessa maneira,
+[01:14] eles aumentassem a presença digital da marca e trouxessem mais clientes
+[01:19] sem a necessidade de gastar mais dinheiro contra o Fego Pago
+[01:22] ou então contratar uma equipe inteira para cuidar de uma segunda conta de Instagram.
+[01:26] Eu gosto muito de criar esse tipo de sistema, coisas que trabalham 100%,
+[01:29] sem interferência humana, sem precisar do seu tempo, das suas decisões.
+[01:33] É uma coisa que a gente tem feito cada vez mais e com o avanço da EA tem ficado cada vez melhor.
+[01:38] Recentemente nós criamos um novo sistema autônomo que a gente poderia chamar também de agente
+[01:44] ou de pipeline ou de workflow.
+[01:46] A nomenclatura pouco importa, mas a ideia é você ao invés de ter uma oportunidade
+[01:52] de viralizar um vídeo agora pode ter 10, 20, 50, 100.
+[01:58] Porque postando um conteúdo no YouTube você consegue criar cortes infinitos
+[02:04] para postar em diversas contas das redes sociais.
+[02:08] E você pode até dizer, ah, mas eu já conheço ferramentas que fazem isso
+[02:11] e de fato elas existem e existem há muito tempo.
+[02:14] A questão é que essas ferramentas normalmente têm um custo elevado,
+[02:17] então torna todo o processo menos escalável se você quiser postar 40 vídeos por dia.
+[02:23] Fica difícil de administrar isso porque você precisa de uma justificativa financeira
+[02:27] em termos de retorno de alcance muito boa para conseguir ter esse gasto com as ferramentas.
+[02:33] E além disso é um resultado muito limitado, são templates prontos,
+[02:37] são coisas que não necessariamente estão alinhadas com o tipo de conteúdo que você gosta de postar.
+[02:42] Então a ideia desse vídeo é de mostrar como um dos sistemas autônomos mais poderosos
+[02:46] que nós já criamos está funcionando.
+[02:48] E no final do vídeo eu vou te mostrar como você pode ter acesso a ele.
+[02:51] Bom, então vamos às ilhas do conhecimento.
+[02:54] E esse é um pipeline um pouco mais complexo do que os que a gente tem mostrado aqui.
+[03:00] Mas eu vou fazer ao máximo para simplificar todas as etapas.
+[03:04] Você não precisa entender os termos técnicos,
+[03:06] você precisa entender a lógica por trás do que acontece em cada uma das ilhas,
+[03:11] em cada uma das etapas.
+[03:13] Bom, nós iniciamos aqui a nossa jornada
+[03:16] e dessa vez eu vou entrar no modo de voo diretamente aqui das ilhas do conhecimento.
+[03:22] Se você quiser ter acesso a esse projeto e criar diagramas 3D assim,
+[03:27] você pode entrar na comunidade e basicamente copiar o nosso agente,
+[03:30] baixar o nosso agente e começar a usar para criar diagramas 3D dessa maneira.
+[03:33] A gente acha que é uma forma excelente de visualizar fluxos,
+[03:37] visualizar conceitos e os membros aqui da comunidade, do canal,
+[03:43] enfim, tem gostado bastante.
+[03:44] Bom, o início da nossa jornada já começa com uma etapa de paralelismo
+[03:50] aqui, três coisas acontecendo ao mesmo tempo.
+[03:52] Que é uma coisa muito boa quando você começa a pensar em como otimizar o seu tempo.
+[03:57] E aí você pode ter algumas limitações de potência de máquina e tal,
+[04:01] mas a gente gosta de sempre rodar muitas coisas em paralelo
+[04:06] porque isso economiza muito tempo.
+[04:08] Então a gente tem um etapa inicial que é a definição da palavra chave,
+[04:13] você vai entender melhor sobre essa palavra chave em breve,
+[04:16] porque cada vídeo postado vai ter uma palavra chave para as pessoas comentarem
+[04:21] e uma vez que elas comentam essa palavra,
+[04:23] elas vão receber no Instagram o link do vídeo.
+[04:27] Ou seja, esse canal de aquisição é tão poderoso justamente por isso,
+[04:32] porque você consegue pegar um vídeo no YouTube,
+[04:34] criar infinitos cortes desse vídeo, infinitas variações de edições desses vídeos,
+[04:40] com uma chamada para uma palavra chave específica,
+[04:43] que vai ser comum entre todos esses vídeos postados,
+[04:46] e essa palavra vai levar pessoas para o seu vídeo do YouTube.
+[04:49] Então, sobretudo para quem está no começo do YouTube,
+[04:52] ali com seus 10, 50, 100 views por vídeo,
+[04:56] isso aqui é muito legal porque um vídeo no Instagram que viraliza
+[05:00] desses cortes que você faz,
+[05:01] já tem o potencial de levar milhares de pessoas para o YouTube.
+[05:05] Bom, e além da palavra chave que vai para o Manichet,
+[05:08] nós também temos aqui o áudio,
+[05:10] que vai ser um elemento mais importante do que o vídeo,
+[05:12] por incrível que pareça, porque quando a gente fala de edição com inteligência artificial,
+[05:16] a gente está se basando sobretudo na transcrição do áudio ligada ao timestamp.
+[05:22] Muita gente acha que editar com inteligência artificial
+[05:25] significa colocar o vídeo na mão da Iá,
+[05:28] a Iá vai pegar aquele vídeo, assistir o vídeo
+[05:31] e conseguir fazer as coisas como o ser humano faria.
+[05:33] Mas a maneira mais eficiente da inteligência artificial editar os vídeos
+[05:36] é basicamente como se fosse um revisor de um texto, um editor de um texto.
+[05:41] Só que a cada palavra editada, cortada,
+[05:44] você vai ter também uma edição equivalente no arquivo original.
+[05:49] Então você precisa ter um áudio que vai ter uma precisão muito grande
+[05:53] mostrando em quão minuto e segundo e mili segundo exatos
+[05:59] aquela palavra foi dita no vídeo.
+[06:02] Assim você consegue uma edição muito precisa.
+[06:04] E aí um exemplo é esse aqui.
+[06:07] O upload, etc.
+[06:08] Aí ela já controla o seu browser de maneira muito simples,
+[06:11] mas poderia ser vida de maneira agendada.
+[06:14] Então esse processo de extração, né?
+[06:15] Aqui a gente tem só o áudio e não tem o vídeo.
+[06:17] E aqui dentro das redes do conhecimento,
+[06:20] você aparece em cada etapa como você vai adicionando camadas.
+[06:25] Então aqui a gente tem só o áudio,
+[06:26] depois você vai ver a primeira versão do vídeo, etc.
+[06:28] E aqui a gente tem simplesmente uma verificação de coisas
+[06:33] que são necessárias para o pipeline rodar.
+[06:35] Aqui a gente tem etapa de transcrição,
+[06:37] que é super importante.
+[06:39] Aqui tem um milhão de formas de fazer isso,
+[06:40] você pode fazer localmente, você pode fazer via API.
+[06:43] Basicamente você precisa que o vídeo seja transcrito
+[06:47] para que a gente tenha aqui o lá que foi conversado.
+[06:50] Agora a pouco, uma relação muito íntima entre o tempo e as palavras.
+[06:57] E uma outra coisa muito legal nessa etapa
+[06:59] é que você pode fazer a correção de erros de transcrição.
+[07:02] Não sei se você já tentou usar o ditado do celular.
+[07:06] Geralmente algumas palavras vão sair um pouco do escopo
+[07:11] daquilo que você queria dizer de fato, daquilo que você disse,
+[07:13] porque a transcrição de áudio falha.
+[07:15] E você coloca o maia para revisar o texto
+[07:18] e essa ia vai corrigir essas palavras.
+[07:20] Tudo que fugir muito do contexto,
+[07:22] mas tiver uma semelhança sonora com uma palavra
+[07:24] que está naquele contexto,
+[07:26] a ia vai corrigir para você.
+[07:28] Depois a gente entra nessa etapa aqui
+[07:30] de escolher os hooks, os ganchos, as aberturas.
+[07:33] A gente sabe hoje que o jogo das redes sociais
+[07:36] é dominado pelos primeiros três segundos.
+[07:39] Então se você não tem uma forma bacana de falar,
+[07:42] uma coisa muito interessante, que gera muita curiosidade,
+[07:46] que seja uma opinião forte,
+[07:48] algo desse tipo que gera engajamento,
+[07:50] é muito difícil você ter um alcance potencial interessante.
+[07:54] Então essa etapa se dedica a encontrar os melhores hooks
+[07:57] dentro do vídeo completo.
+[08:00] Ou dentro do tema do vídeo.
+[08:01] E aí a coisa começa a ficar complexa aqui.
+[08:03] Por quê?
+[08:04] Porque esse pipeline específico,
+[08:07] ele vai fazer o seguinte,
+[08:08] ele vai não só fazer cortes do vídeo longo,
+[08:12] mas ele também vai criar vídeos novos completamente do zero,
+[08:16] como se fossem propagandas do seu vídeo.
+[08:18] Então o nosso pipeline usa avatares de A
+[08:22] para criar vídeos que nós não gravamos,
+[08:26] para falar sobre os vídeos que nós de fato gravamos,
+[08:29] para trazer as pessoas para o Youtube.
+[08:30] Então aqui está um exemplo disso.
+[08:32] Você não precisa entender tudo sobre as ferramentas que você vai usar,
+[08:35] nem sobre os sistemas que você vai criar.
+[08:37] Esse é um vídeo que nós não gravamos,
+[08:39] foi o Avatar, Inteligencia Artificial da Líria.
+[08:42] E a partir desses vídeos,
+[08:44] que são como se fossem notícias sobre o tema do vídeo,
+[08:49] para levar pessoas para o vídeo longo,
+[08:51] talvez você até esteja nesse vídeo
+[08:53] por conta de uma dessas propagandas,
+[08:55] em que os nossos avatares vão falar sobre o tema do vídeo,
+[08:59] falar sobre assuntos específicos abordados no vídeo,
+[09:02] para atrair atenção e curiosidade sobre o vídeo,
+[09:05] e no final vão ter uma palavra-chave em comum
+[09:08] para comentarem esses vídeos curtos
+[09:10] para que possam ir até os vídeos longos.
+[09:13] Só que paralelamente a isso,
+[09:15] nós temos também os cortes acontecendo,
+[09:17] por isso que viram um caos aqui, uma confusão.
+[09:20] Por quê?
+[09:21] Porque a gente precisa pegar o vídeo longo
+[09:24] e precisa tornar esse vídeo longo uma série de clips.
+[09:27] Os clipadores, a gente precisa transformar
+[09:31] esse vídeo longo em vários vídeos curtos e na vertical.
+[09:34] Então, tem um trabalho de redimensionamento,
+[09:37] de colocar as legendas no vídeo
+[09:39] e também de escolher trechos que são trechos
+[09:43] que fazem sentido.
+[09:44] Nem todo trecho recortado de um vídeo longo
+[09:46] vai ser um bom vídeo curto.
+[09:47] Enquanto isso está acontecendo,
+[09:50] a gente também está criando as automações
+[09:52] que vão enviar essas mensagens no Manichat.
+[09:55] Então, olha quanta coisa acontecendo ao mesmo tempo.
+[09:58] Isso que é um bom paralelismo.
+[09:59] Estamos produzindo os vídeos dos avatares
+[10:02] que dão hora e um tempo, até eles ficarem prontos.
+[10:05] Estamos decidindo quais são os melhores cortes do vídeo,
+[10:08] executando esses cortes
+[10:10] e estamos montando as automações no Manichat
+[10:13] em duas contas diferentes,
+[10:15] porque são duas contas de Instagram diferentes também,
+[10:17] para enviar pessoas para o vídeo do YouTube.
+[10:20] Então, aqui a gente está fazendo de duas contas,
+[10:22] duas automações do Manichat,
+[10:23] mas você tendo orçamento e fazendo sentido
+[10:26] poderia ter 10, 20, 30, 50 contas de Instagram,
+[10:30] 50 contas de Manichat,
+[10:32] ou dá para fazer tudo isso via API.
+[10:33] Então, o Manichat é só um jeito mais fácil de fazer
+[10:35] que está alinhado com outras funcionalidades
+[10:37] que você pode gostar ou não.
+[10:39] Sinceramente, se você acha mais tranquilo
+[10:41] fazer isso via API e não via Manichat,
+[10:43] você pode por esse caminho.
+[10:44] A gente usa WhatsApp, usa várias outras coisas,
+[10:47] então acaba assinando já a porta fora
+[10:49] para a gente fazer sentido usar lá dentro.
+[10:51] Mas existem vários caminhos para você
+[10:53] mandar automaticamente essas mensagens
+[10:55] a partir dos comentários feitos nos seus posts.
+[10:59] Inclusive, a gente está se planejando
+[11:00] para ter muitas contas extra
+[11:03] que vão fazer justamente isso aqui.
+[11:05] E aí, para isso, obviamente, a gente vai usar
+[11:07] a API oficial do Instagram.
+[11:08] Outra coisa muito legal
+[11:09] na etapa de produção dos avatares
+[11:11] é que a gente tem diferentes etapas.
+[11:12] Eu mostrei aqui a primeira só do avatar,
+[11:15] mas dá uma olhada como a edição faz diferença.
+[11:17] A gente tem aqui a segunda etapa
+[11:19] com o screenshot do vídeo.
+[11:22] Você não precisa entender tudo
+[11:23] sobre as ferramentas que você vai usar.
+[11:26] E esse estilo de mostrar uma headline
+[11:28] logo no começo do vídeo?
+[11:30] Nem sobre os sistemas que você vai criar.
+[11:32] Para de tentar desenhar o...
+[11:34] E o motion também nesse estilo que a gente gosta.
+[11:38] Pipeline perfeito e faz uma pergunta mais simples.
+[11:41] Quais funcionários de inteligência artificial
+[11:43] eu preciso contratar?
+[11:44] Esses Zoom In, Zoom Out, as transições.
+[11:48] Tá. Pensa numa agência.
+[11:50] Split de tela.
+[11:51] Tudo isso é pré-configurado, é refinado.
+[11:53] É uma coisa que a gente levou bastante tempo
+[11:55] até chegar a um resultado legal.
+[11:56] Isso aqui tem um custo muito baixo
+[11:58] porque a gente não está gerando isso aqui
+[12:00] com a generativa para vídeo.
+[12:02] A gente está gerando imagens
+[12:04] e a gente está aplicando motion nessas imagens
+[12:06] para que elas tenham esse pequeno movimento.
+[12:09] A gente pega pelo WhatsApp
+[12:10] então a primeira vaga é um agente de atenção.
+[12:12] Note que são movimentos muito sutis.
+[12:14] Não são b-rolls complexos.
+[12:15] Mento que qualifica e já agenda a reunião.
+[12:18] São imagens geradas por IA
+[12:21] que hoje estão com um custo muito baixo
+[12:24] que vão interagindo com o conteúdo
+[12:27] e vão interagindo entre si também.
+[12:29] Então todo esse motion vai sendo gerado.
+[12:31] Esse é um exemplo melhor.
+[12:32] Três, quatro dias, às vezes uma semana
+[12:35] para mandar um PDF que a...
+[12:36] Foram geradas três imagens aqui
+[12:39] e depois essa linha foi criada
+[12:41] entre as imagens com esse pequeno efeito.
+[12:43] E o custo para fazer isso aqui é praticamente zero
+[12:46] enquanto que o custo para criar isso
+[12:48] com um vídeo feito por IA
+[12:50] talvez um resultado mais impressionante
+[12:52] fosse entre dois e três dólares.
+[12:55] E a gente tem temporadas de postar
+[12:57] mais de 20 vezes por dia
+[12:59] em contas diferentes do Instagram.
+[13:01] Essas são as duas principais
+[13:02] que a gente está postando.
+[13:04] Então quando você começa a pensar
+[13:05] mais de 20 vídeos por dia
+[13:07] em cinco contas, dez contas
+[13:09] isso acaba fazendo com que o custo
+[13:11] fique muito elevado
+[13:12] porque a gente não tem só um vídeo.
+[13:14] A gente tem dezenas de motions
+[13:18] por vídeo, cada um com seu estilo.
+[13:20] Então gerar tudo isso aqui
+[13:21] com a generativa
+[13:23] tem um custo muito, muito elevado
+[13:25] se você começa a colocar isso em escala.
+[13:27] E aí tem a etapa da legenda também
+[13:30] mostrando aqui como fica.
+[13:31] Você não precisa entender tudo
+[13:32] sobre as ferramentas.
+[13:33] Legenda aqui embaixo.
+[13:34] Nem sobre os sistemas que você vai criar.
+[13:36] Para de tentar desenhar o pipeline perfeito
+[13:38] e fazer uma pergunta mais simples.
+[13:40] Quais funcionários de inteligência artificial
+[13:42] eu preciso contratar?
+[13:44] Então a legenda ela aparece aqui embaixo
+[13:45] às vezes ela muda de lugar
+[13:47] e às vezes tem um efeito
+[13:49] em que a legenda aparece
+[13:51] sobrepondo o vídeo.
+[13:53] Nesse vídeo não tem
+[13:54] mas eu posso mostrar
+[13:55] mas ela parece assim
+[13:56] em sincronia perfeita
+[13:58] com o que está sendo dito.
+[14:00] E aí tem a música e os efeitos sonoros.
+[14:02] Dá uma olhada.
+[14:03] Você não precisa entender tudo
+[14:04] sobre as ferramentas
+[14:05] que você vai usar
+[14:06] nem sobre os sistemas
+[14:07] que você vai criar.
+[14:08] Para de tentar.
+[14:09] Não sei se você percebeu
+[14:10] mas tem esse click
+[14:11] acontecendo a cada transição.
+[14:13] Não sei se dá para perceber
+[14:14] mas tem esse efeito
+[14:14] meio crescendo
+[14:16] até o click
+[14:17] como sem introdução
+[14:18] fosse um crescendo contínuo.
+[14:21] Você não precisa entender tudo
+[14:22] sobre as ferramentas
+[14:23] que você vai usar
+[14:24] nem sobre os sistemas
+[14:25] que você vai criar
+[14:26] para de tentar desenhar
+[14:28] o pipeline perfeito
+[14:29] e fazer uma pergunta.
+[14:29] E aqui o nosso agente
+[14:31] vai produzir entre
+[14:32] 1 e 5 vídeos
+[14:33] a depender do tema do vídeo.
+[14:35] Tem vídeos que a gente faz
+[14:36] sobre 20 repositórios do GitHub.
+[14:38] A gente poderia produzir 20 vídeos
+[14:40] cada um para um repositório
+[14:41] todo levando para o vídeo do YouTube.
+[14:42] Tem vídeos que falam sobre
+[14:43] uma atualização muito específica
+[14:45] uma notícia muito específica
+[14:46] e aí provavelmente
+[14:48] se não vai render
+[14:49] tantos vídeos assim.
+[14:50] Então existe essa etapa
+[14:51] de decisão
+[14:53] sobre quantos materiais
+[14:54] vão ser gerados
+[14:55] pelos avatares
+[14:55] e a mesma coisa
+[14:56] com os cortes.
+[14:57] Alguns vídeos
+[14:57] vão render muitos cortes
+[14:58] e outros não vão render cortes.
+[15:01] Alguns têm essa opção inclusive
+[15:03] né.
+[15:04] Alguns não vão render corte algum
+[15:06] e tudo bem.
+[15:07] Aqui tem algumas etapas
+[15:08] de verificação final
+[15:09] que acontece também
+[15:11] paralelamente
+[15:12] e aqui a gente entra
+[15:13] na etapa de composição
+[15:14] e a grande decisão
+[15:15] aqui nessa etapa
+[15:16] é se o vídeo vai ficar assim
+[15:18] né.
+[15:19] Vai ficar na horizontal
+[15:21] com a tela aqui no meio
+[15:23] ou se a gente vai dar esse zoom
+[15:25] e o vídeo vai aparecer
+[15:26] como se fosse um vídeo
+[15:26] gravado na vertical.
+[15:28] Como a gente tem equipamento
+[15:29] grave em 4k até 6k
+[15:31] a gente consegue
+[15:32] sem muita dificuldade
+[15:34] fazer com que um vídeo
+[15:35] gravado na horizontal
+[15:36] fique bom na vertical
+[15:38] mas eu não acho que
+[15:39] hoje isso seja um grande
+[15:41] diferencial para alcance
+[15:43] nascido.
+[15:44] Eu acho que a qualidade do corte
+[15:45] do Hulk da edição
+[15:47] importa muito mais.
+[15:48] Bom logo depois a gente tem
+[15:49] a etapa das legendas
+[15:51] então a gente tem a legenda
+[15:52] tanto em relação
+[15:52] que está sendo dito
+[15:53] quanto essa redline aqui
+[15:56] e aqui a gente tem a geração
+[15:57] do CTA
+[15:58] né que é o
+[15:59] se você quiser assistir
+[16:00] esse vídeo completo
+[16:01] comente X
+[16:03] e X é a palavra chave
+[16:04] que vai levar a pessoa
+[16:05] até o vídeo no YouTube
+[16:07] e aqui está um exemplo
+[16:09] para ver o vídeo completo
+[16:10] comente hype
+[16:11] para ver o vídeo completo
+[16:13] comente hype
+[16:14] e esse áudio
+[16:15] vai estar sincronizado
+[16:16] com um card desses
+[16:18] para ver o vídeo completo
+[16:20] comente hype
+[16:21] e aí quem gostou do conteúdo
+[16:23] quiser assistir mais
+[16:24] vai comentar
+[16:24] e vai receber o link
+[16:25] direto nas mensagens privadas
+[16:27] no Instagram
+[16:27] e aqui a gente tem
+[16:28] um corte completo
+[16:31] 3, 4 dias
+[16:32] às vezes uma semana
+[16:33] para enviar um PDF
+[16:34] que hoje aí a faz
+[16:35] com 30 minutos de trabalho
+[16:37] e você pode até
+[16:38] fazer tudo isso
+[16:39] de maneira automática
+[16:40] você salva seus reuniões
+[16:41] automaticamente uma pasta
+[16:43] você roda uma automação
+[16:44] que vai transcrever
+[16:45] a reunião toda
+[16:46] vai gerar a proposta
+[16:48] baseável
+[16:48] e aqui só para deixar claro
+[16:50] esse é um vídeo
+[16:51] sim gerado por IA
+[16:53] mas ele foi gerado por IA
+[16:55] no vídeo original
+[16:56] no vídeo do YouTube
+[16:57] então aqui a gente está vendo
+[16:58] um trabalho de redimensionamento
+[17:00] porque aqui ó
+[17:01] a gente começa o vídeo
+[17:02] com ele no meio da tela
+[17:04] horizontalmente
+[17:06] aqui a gente tem a versão vertical
+[17:08] do vídeo
+[17:10] aqui ó
+[17:11] mesmo vídeo
+[17:12] só
+[17:13] redimensionado
+[17:14] e aqui
+[17:16] como
+[17:17] essa imagem que aparece
+[17:19] não parece sentido
+[17:20] se a gente desse um super zoom
+[17:22] apareceria só isso aqui
+[17:23] a IA decidiu
+[17:25] deixar isso no meio da tela
+[17:26] como ela decidiu fazer
+[17:28] aqui no começo
+[17:30] então ela vai tomando essas
+[17:31] decisões a depender
+[17:33] do que está
+[17:34] na tela
+[17:35] mas eu achava que a Edic
+[17:36] era feita só com base em texto
+[17:37] é possível fazer só com base em texto
+[17:39] já traz um resultado bem bacana
+[17:41] mas a gente inseriu uma etapa também
+[17:43] de coletar imagens
+[17:46] que aparecem a cada x segundos
+[17:49] se você pensa em um vídeo como
+[17:51] frames, imagens, aparecendo
+[17:53] rapidamente
+[17:55] 24 vezes por segundo
+[17:56] 60 vezes por segundo
+[17:57] que são os chamados
+[17:58] frames por segundo
+[18:00] uma forma clara de pensar sobre isso é
+[18:02] se a IA é capaz de analisar uma imagem
+[18:05] ela pode analisar todas as imagens
+[18:08] que formam o vídeo
+[18:09] a questão é que se você for analisar
+[18:11] 60 imagens por segundo
+[18:12] você vai analisar muita imagens
+[18:14] vai gastar muito estoque
+[18:15] então você pode analisar uma imagem
+[18:17] por segundo
+[18:18] dentre todas as que apareceriam
+[18:20] se você analisasse dentro do contexto
+[18:22] subdividido
+[18:23] ou vamos supor que você precise
+[18:24] de uma precisão maior
+[18:25] é só você ter um sistema em que a IA
+[18:27] analisa 3 imagens por segundo
+[18:29] e aí você tem que fazer essa calibração
+[18:31] entre quantos estoques você vai gastar
+[18:33] qual tempo que isso vai levar
+[18:35] e a precisão que você realmente
+[18:38] necessita de analise daquilo que
+[18:41] está ocorrendo ao longo do vídeo
+[18:43] aqui a gente vai passar para os outros cortes
+[18:45] então a gente tem corte 1, corte 5
+[18:48] nesse caso ele gerou 5 cortes
+[18:50] e aí cada corte é uma oportunidade
+[18:53] de postar não só em uma conta
+[18:55] de instagram mas em várias
+[18:56] para trazer pessoas para os seus vídeos
+[18:58] do youtube
+[18:59] isso sem esforço humano a nenhuma mais
+[19:01] isso que é muito louco
+[19:03] você consegue hoje ter um potencial
+[19:05] de alcance muito maior
+[19:07] com a quantidade de trabalho idêntica
+[19:09] a gente gravou o vídeo como estou gravando
+[19:11] agora para o youtube
+[19:13] eu rodo pipeline automaticamente todos os dias
+[19:16] ele vai, faz todo esse trabalho
+[19:18] posta em todas as redes
+[19:20] e traz pessoas para o youtube
+[19:22] bom aí depois a gente tem o segundo olhar
+[19:24] que é uma etapa de revisão
+[19:26] de verificação e etc
+[19:28] que é sempre importante
+[19:29] depois a gente tem o fechamento
+[19:31] aqui dos cortes
+[19:32] tem as copes que vão precisar entrar
+[19:35] dentro dos vídeos
+[19:37] as descrições, as captions
+[19:39] e aí uma coisa interessante
+[19:41] é que o agendamento a gente programou
+[19:43] para que acontecesse
+[19:45] a cada 30 minutos, depois a cada uma hora
+[19:47] enfim, mas você pode ter cortes
+[19:49] que vão ser postados uma vez por dia
+[19:51] e vão levar todos os dias pessoas novas
+[19:53] para aquele vídeo
+[19:54] tudo depende do seu volume de produção
+[19:56] de conteúdo para o youtube
+[19:57] a gente produz todo dia
+[19:59] posta vídeo no youtube todo dia
+[20:01] então, ter um pipeline que posta 5, 10, 15 vídeos
+[20:04] por dia no nosso instagram
+[20:06] para trazer pessoas para esse vídeo
+[20:08] que foi postado a menos de 24 horas
+[20:09] faz sentido, mas talvez
+[20:10] se você está postando um vídeo por semana no youtube
+[20:12] não faça sentido postar todos no intervalo
+[20:15] muito curto de tempo
+[20:17] outra coisa legal do sistema
+[20:19] é que pode aliviar a dor de muitas pessoas
+[20:21] que conseguem fazer vídeos para o youtube
+[20:23] mas que não tem paciência de ficar postando no instagram
+[20:26] fazendo conteúdo para o instagram
+[20:28] tem essa dificuldade
+[20:30] de ter um conteúdo tão etéreo
+[20:32] um conteúdo que você vai postar
+[20:34] vai dali, uma quantidade de visualizações
+[20:36] pode até e bem viralizar
+[20:38] mas que depois acabou
+[20:40] que você sobe no youtube
+[20:42] pelo menos você tem alguma perenidade
+[20:44] você tem a busca, a pesquisa
+[20:46] pessoas que viram outros vídeos do canal
+[20:48] podem voltar aquele que você gravou
+[20:50] então eu sinto que é menos um desperdício de tempo
+[20:52] do que outras plataformas
+[20:54] e por isso acho que outras plataformas
+[20:56] trabalharem para levar pessoas para o youtube
+[20:58] é um bom uso de redes sociais
+[21:00] que eventualmente são sub-aproveitadas
+[21:02] por muita gente
+[21:04] e depois de agendar tudo isso
+[21:06] a gente atualmente tem ativas etapas de monitoramento
+[21:08] que vão verificando se a postagem foi bem feita
+[21:10] se tudo deu certo
+[21:12] muito porque é uma gente que está em desenvolvimento
+[21:14] mas a última etapa de fato
+[21:16] de toda essa pipeline seria o agendamento
+[21:18] e aí salvar o log do que aconteceu
+[21:20] fazer um relatório e tal
+[21:22] o log final
+[21:24] e garantir que tudo
+[21:26] foi bem registrado
+[21:28] e eventualmente um erro que apareceu
+[21:30] vai entrar em um arquivo de otimização
+[21:32] do repositório, do agente etc
+[21:34] mas o importante
+[21:36] é que tudo seja agendado
+[21:38] para a postagem em um intervalo
+[21:40] de tempo predeterminado
+[21:42] e olha que bacana, a gente tem esse vídeo aqui da Líria
+[21:44] que foi postado ontem
+[21:46] e ontem mesmo, logo depois da publicação do vídeo
+[21:48] esse outro vídeo aqui foi postado
+[21:50] que é um vídeo do avatar
+[21:52] dela falando sobre
+[21:54] o vídeo do youtube
+[21:56] e as pessoas comentam um guide hub
+[21:58] aqui, tem 240 comentários
+[22:00] eu acho
+[22:02] e todas essas pessoas recebem
+[22:04] no privado
+[22:06] o link para o vídeo do youtube
+[22:08] dessa maneira
+[22:10] as pessoas tem um conteúdo bacana para o instagram
+[22:12] e tem também a continuação
+[22:14] desse conteúdo no youtube
+[22:16] e olha que bacana, a gente tem esses 5 vídeos aqui
+[22:18] com a mesma palavra-chave para comentar
+[22:20] framework
+[22:22] e todos levam para o mesmo vídeo do youtube
+[22:24] e as vezes
+[22:26] alguém que teria super curiosidade
+[22:28] de ver um dos vídeos
+[22:30] vê um corte do vídeo
+[22:32] comenta a palavra-chave
+[22:34] e pode assistir a hora que quiser
+[22:36] talvez não veja hoje, talvez não veja amanhã
+[22:38] mas em algum momento pode ir para o youtube
+[22:40] e dessa maneira você tem um aproveitamento
+[22:42] em todas as pernas
+[22:44] você potencializa o youtube e você posta mais no instagram
+[22:46] de vista do algoritmo, você cria mais oportunidades
+[22:48] de todos os canais
+[22:50] viralizarem, isso é muito legal
+[22:52] a gente vai fazer uma coisa que a gente geralmente
+[22:54] não faz para sistemas tão robustos
+[22:56] tão complexos e que
+[22:58] nós utilizamos para ver o infício
+[23:00] das nossas contas, das nossas
+[23:02] redes sociais, dos nossos canais de aquisição
+[23:04] porque durante muito tempo a gente passou por
+[23:06] essa fase de entender que
+[23:08] esses ativos eram muito preciosos
+[23:10] e a gente estava se beneficendo
+[23:12] muito deles para crescer nas redes sociais
+[23:14] só que eu acho que agora a gente está em um momento
+[23:16] com mais de 100 mil seguidores no youtube
+[23:18] em pouíssimo tempo de youtube
+[23:20] e também com uma grande parte das oportunidades
+[23:22] vindo do bitube, não só
+[23:24] do crescimento nas redes
+[23:26] a gente chegou à conclusão de que na hora da gente
+[23:28] ser mais generoso
+[23:30] com as pessoas que confiam no nosso trabalho
+[23:32] e a gente vai disponibilizar
+[23:34] esse agente, esse pipeline completo
+[23:36] na comunidade maestros da IA
+[23:38] você vai encontrar ele em dois agentes diferentes
+[23:40] um mais focado no rei gene
+[23:42] na produção desse pipeline
+[23:44] de produção de conteúdo e edição de conteúdo
+[23:46] e outro
+[23:48] pensando mais nas pessoas que querem
+[23:50] cortes, né
+[23:52] vídeos longos baixados do youtube
+[23:54] usando em estar no seu computador
+[23:56] ele vai e baixa para você
+[23:58] e ele ainda consegue fazer todos os cortes
+[24:00] nesse estilo que você viu
+[24:02] aqui no vídeo, dessa maneira você consegue
+[24:04] tanto juntar os dois agentes se quiser
+[24:06] quanto usar ele de maneira separada
+[24:08] talvez você não queira pagar o rei gene
+[24:10] e queira fazer a sua assinatura
+[24:12] e queira fazer só os cortes
+[24:14] e assim que você instalar
+[24:16] o agente no seu computador e começar a utilizar
+[24:18] ele mesmo vai te guiar através do processo de setup
+[24:20] de tudo que você precise
+[24:22] se você ainda não sabe o que é a comunidade maestros da IA
+[24:24] é um ambiente com milhares de pessoas
+[24:26] hávidas por entender mais, aprender mais
+[24:28] e utilizar mais inteligência artificial
+[24:30] de maneira mais produtiva
+[24:32] mais eficiente para ter resultados reais
+[24:34] você vai ter acesso diretamente a nós
+[24:36] através de lives da comunidade
+[24:38] que acontece em toda semana
+[24:40] você tem suporte técnico todos os dias
+[24:42] você tem dezenas de horas de conteúdo
+[24:44] sempre atualizado com as melhores
+[24:46] e mais relevantes ferramentas
+[24:48] de atualidade
+[24:50] sem contar com centenas de recursos
+[24:52] que os agentes repositórios
+[24:54] tão bons ou até melhores do que esse agente
+[24:56] que eu falei respeito nesse vídeo
+[24:58] de produção de conteúdo
+[25:00] e potencialização de conteúdo
+[25:02] também um agente que produz
+[25:04] esses universos 3D para você entender
+[25:06] conceitos, ao invés de um diagrama simples
+[25:08] que ninguém olha mais hoje em dia
+[25:10] você tem um ambiente interativo
+[25:12] é muito legal para você entender conceitos complexos
+[25:14] e para ensinar também para outras pessoas
+[25:16] mas essa é a ponta da ponta do iceberg
+[25:18] você vai ter centenas de esquios agentes
+[25:20] e outros recursos
+[25:22] para copiar e colar e começar a usar imediatamente
+[25:24] sem falar de uma comunidade ativa
+[25:26] todos os dias entrando
+[25:28] comentando perguntando interagindo
+[25:30] e criando um bom relacionamento com os outros membros
+[25:32] a gente tem visto aplicativos saindo
+[25:34] de parcerias que surgem dentro da comunidade
+[25:36] pessoas que estão já fazendo sociedades
+[25:38] juntas, projetos entusiasmantes
+[25:40] então é um ambiente muito legal
+[25:42] para quem gosta de AI
+[25:44] para quem quer crescer no mundo da AI
+[25:46] aprender tanto profissionalmente quanto como amador
+[25:48] o que a AI pode fazer para você
+[25:50] esse é o ambiente ideal
+[25:52] e a gente vai ficar super feliz de receber você
+[25:54] na comunidade
+[25:56] o link está na descrição desse mesmo vídeo
+[25:58] e claro, se você gostou desse vídeo
+[26:00] e quer continuar recebendo recomendações de vídeos
+[26:02] assim no youtube você pode deixar um hype
+[26:04] e um like nesse vídeo
+[26:06] e é claro se inscrever nesse canal
+[26:08] um abraço e até a próxima

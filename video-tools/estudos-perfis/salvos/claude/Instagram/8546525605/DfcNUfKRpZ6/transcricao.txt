@@ -1,0 +1,19 @@
+idioma: pt (1.00)
+[   0.0-   3.2] Eu não editei e nem gravei um segundo desse vídeo.
+[   3.2-   4.9] Quem fez tudo foi o Cloud.
+[   4.9-   6.9] Não teve Edits, não teve Premiere.
+[   6.9-  11.2] Eu mandei um vídeo de referência para ela pegar o estilo, uma foto do meu rosto
+[  11.2-  12.7] e uma mostra da minha voz.
+[  12.7-  14.7] Agora confere o passo a passo.
+[  14.7-  20.2] Caraca, gente. Esse tipo de resultado aqui, só mandando uma foto.
+[  20.2-  23.7] Para mim isso aqui não é normal, tá? Eu não usei só o Cloud.
+[  23.7-  28.3] Eu usei aqui o novo comando, que é o Higgs Field Shorts Studio.
+[  28.3-  33.3] Primeira coisa é clicar em Conectores, depois aqui, adicionar o Conector personalizado.
+[  33.3-  36.6] Aí você vai colocar o link mcp do Higgs Field.
+[  36.6-  38.3] E aí você ativa ele.
+[  38.3-  39.8] E aí é só fazer o prompt.
+[  39.8-  42.8] Shorts Video é o comando que você vai usar.
+[  42.8-  48.5] Vai colocar aqui o anexo da tua foto, a tua voz e um vídeo com a edição que tu quer.
+[  48.5-  53.1] E vai falar para o Higgs Field fazer aqui esse vídeo com o roteiro que você deseja.
+[  53.1-  55.8] Depois eu só apertar para ele fazer e tá pronto.
+[  55.8-  59.9] Agora digita Shorts para receber o prompt e o link de configuração.

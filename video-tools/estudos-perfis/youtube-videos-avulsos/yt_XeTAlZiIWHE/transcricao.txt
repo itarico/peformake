@@ -1,0 +1,257 @@
+idioma: en
+[00:00] This video that you're watching right now was edited by Claude entirely from end to end.
+[00:05] I built the most cracked, dialed in Claude video editing system on all of YouTube,
+[00:10] and all I have to do is drop in raw footage and Claude does the rest. It makes all the cuts,
+[00:16] it trims out all the dead space, and it even adds really dope motion graphics like this one
+[00:21] right over here. It can also add dynamic visuals like this one right over here, and it
+[00:26] does subtitles too, like these at the bottom of the screen right here. Now look, even if you've
+[00:31] never coded or you've never edited a video in your life, don't worry, I'm gonna make this super duper
+[00:37] simple. Just follow along with this tutorial and by the end you will have Claude editing your videos
+[00:42] while you sleep. So guys, let's not waste any time and let's get straight into the video.
+[00:46] Alright guys, so before we get into the actual tutorial of the video, I am going to explain
+[00:53] what this project is and how it all works. So basically what this project is, is it's simply
+[01:00] just a folder of files on your computer. Here it is right here, it's a video editor folder,
+[01:06] just like any other, you know, normal Claude code project. And as you can see inside here, we have
+[01:10] all the skills, we have all the code, we have all the markdown instructions, we have a bunch of
+[01:16] different workflows, presets, packaging and everything like that. So that's what this project is,
+[01:22] it's just a big folder of files that has all the tools and the instructions for Claude to do what it
+[01:28] needs to do and actually edit the videos. So there's two different ways that you can follow along with
+[01:34] this video. First I'm going to cover the freeway and then we'll cover the paidway. So if you want
+[01:38] to build this for free, you should be able to just follow along with this entire video and
+[01:42] just build it yourself. It might just take a little bit longer and it might not come out
+[01:46] exactly in the polished way that I built because I spent weeks, you know, building this,
+[01:51] perfecting all the code and shipping it out for you guys. So what you can do if you want to build
+[01:57] it for free is you can start off just by taking a screenshot of like, you should be able to just
+[02:01] take a screenshot of this and give it to Claude and that'll kind of build out the entire scaffolding,
+[02:06] you can kind of follow along with the video and build as you go. I'll explain how to build
+[02:10] every step. But if you're someone who values your time and you just want to get straight to it
+[02:15] and have a system that I custom built that you just want to plug and play, get this Claude
+[02:20] video editor working right away, then you can hit the first link down in the description or the pinned
+[02:24] comment to go to my school community, click on the classroom tab and there's this Claude video editor,
+[02:29] you click here and then there's this lesson says download the folder. It's right here. So this is
+[02:34] the secret sauce zip file that has all of the custom built code marked down in this entire project.
+[02:41] So you can just download this and it'll work straight out of the box. You don't need to
+[02:44] build anything yourself. Everything is already done for you. So now I'm going to quickly explain
+[02:49] the seven stages and how this entire system works. So basically the first step is intake.
+[02:54] So you record a raw clip, you drop it into the folder or just tell Claude like hey,
+[03:00] here's the raw footage, and then it's going to start on the rough cut for the rough cut.
+[03:04] We're using whisper X to transcribe the entire raw footage. And from the transcription,
+[03:11] it basically cuts out all the silences cuts out all the bad takes all the filler,
+[03:16] it polishes up the audio even and it basically, you know, based on the transcript,
+[03:21] it decides where to cut and makes the script of the video. Next step is graphics. So you just say,
+[03:26] hey, do the graphics and it's going to plan a graphic for each segment of the video and then
+[03:31] create the graphics. The core engine that we're using for graphics is hyperframes. And if you
+[03:36] want the hyperframes repo that is also free on the internet, that'll also be linked down in
+[03:42] the description. And so once it does a first pass over the graphics, the next step is to kind of refine
+[03:46] it from there. So from there, you can kind of go one by one through each of the graphics and say,
+[03:50] hey, move this to the left, change this to a flow chart graphic or let's add this certain logo or
+[03:57] PNG inside here, you kind of manually kind of prompt it to get the graphics really dialed
+[04:03] in this step really makes the whole difference between AI slop versus like an actually good
+[04:07] edited video. And it's going to require some prompting on your end. Next we do the captions.
+[04:13] So if it's a short form video, then you want captions if it's a long form video, this step
+[04:17] doesn't really apply. Pretty self explanatory there. Next you can add background music,
+[04:21] another super easy step it literally just throws in background music. You can point it to a file
+[04:26] like, hey, I want this song as background music. And then it just puts it over. And then the
+[04:30] last step is to export it. So basically, just makes a copy of the final, you know, edited video
+[04:37] in your downloads folder. Now, here's a bunch of the custom stuff that I built in on top of the
+[04:41] hyperframes engine. We have three different format presets. So we have a preset for short form
+[04:46] explainer videos where it's like the graphics are on the top half, the your face is on the bottom
+[04:51] half and then we have the captions in the middle. And then we have a TikTok raw style. So it's
+[04:55] like text hook. And then it's basically just a raw cut with some captions. And then we also
+[05:00] have a long form preset, which is basically like the intro that you just watched on this video.
+[05:05] And again, a bunch of different skills engine and presets that I custom built into this took me
+[05:10] a long, long time to get it all dialed in. In a nutshell, that's pretty much how this whole project
+[05:15] works and what it is. If you want to build it for free, you can. But if you just want to get
+[05:20] straight to it and get an entire custom built project that works right out of the box, you
+[05:24] can join my school community down at the first link in the description. So with that entire
+[05:29] overview out of the way, we can now get into the tutorial. Let's start building this thing.
+[05:33] All right, so here we are in Claude and let's get to building. So if you're a member of my school
+[05:37] community, then you're just going to go here, download the folder, click this, click download,
+[05:41] it's going to give you the zip file, you can open it up and then double click to unzip. And
+[05:46] it's already ready to go right here. You can just move it to wherever you want. I have a
+[05:51] projects folder. But if you're doing this for free, then what you want to do is just right
+[05:57] click create a new folder and then you're going to name it video dash editor. And then we're going
+[06:04] to start from there. So now we open up Claude, we're going to click down here, we're going to
+[06:08] click open folder, and then we're going to find that project folder that we just created or
+[06:12] downloaded. So I'm going to click that click open. And if you're doing this for free,
+[06:17] you're working with a blank folder. The first thing we need to do is install hyper frames.
+[06:22] Again, if you paid for this in my school community, it already has everything installed,
+[06:25] you don't need to do anything like that. But if you're doing this for free, you will need to
+[06:28] copy this link and give it to Claude and say, Hey, we need to install the hyper frames engine.
+[06:33] There are a couple other prerequisites that you need to have downloaded to like whisperx,
+[06:38] ffmpeg. And you know, if you downloaded the project from a school, it's all going to
+[06:42] walk you through it like very straightforward. So just make sure you have those dependencies
+[06:47] and basic installations covered, hyper frames, whisperx, ffmpeg, anything else you might need.
+[06:52] That's all that you need to do for the setup. It's very minimal. Should only take like five to
+[06:56] 10 minutes. So I'm going to go to my actual project here, open it up, and we're going to start in here.
+[07:03] So the first thing to do is find your raw footage. So here I have this raw clip of me
+[07:09] doing the YouTube intro. This is the one that you were just watching. Here's the raw footage.
+[07:14] And you can see it's a four minute and 10 long raw clip. I made a lot of mistakes. I had a lot
+[07:20] of silences and stuff. And I'm going to actually walk through the entire process of editing the intro
+[07:26] that you just watched at the beginning. So you're going to kind of see how the sausage gets made.
+[07:31] All right, so I'm just going to select the clip here. I'm going to press command option C.
+[07:38] I just want to copy the file path. And then I'm going to paste it in here.
+[07:42] And then I'm going to say start a new project for this raw clip. And let's do the rough cut.
+[07:51] And just for maximum, like highest quality results, I'm going to put it on ultra code. Although I
+[07:58] really don't think it's necessary. I've been playing around with it on just extra effort.
+[08:02] And that'll do the trick. But I'm just going to put it on ultra code. I'm going to send off
+[08:08] this prompt. And this is probably going to take about I'd say probably like 10 to 15 minutes.
+[08:12] So I'm just going to pause and come back when it's done. Okay, so it looks like that just got done
+[08:18] and finished up. And as you can see, it trimmed it all the way down from four minutes,
+[08:22] 10 seconds to only 47 seconds. And if we click this right here, we are able to look at a preview
+[08:29] of what it did for the cuts. So I just watched that over. And it pretty much did it perfectly.
+[08:36] In fact, I don't even need to make any more changes. I think it just got it first try.
+[08:41] It cut out like exactly the parts that I need. And yeah, maybe I'll put a, I'll download this and
+[08:50] show you guys what the rough cut looked like so that you can watch it over and decide for yourself.
+[08:54] This video that you're watching right now was edited by Claude entirely from end to end.
+[09:00] I built the most cracked dialed in Claude video editing system on all of YouTube. And all I
+[09:06] have to do is drop in raw footage and Claude does the rest. It makes all the cuts, it trims out all the
+[09:11] dead space and it even adds really dope motion graphics like this one right over here. It can also add
+[09:17] dynamic visuals like this one right over here. And it does subtitles too, like these at the bottom
+[09:23] of the screen right here. Now look, even if you've never coded or you've never edited a video in
+[09:28] your life, don't worry. I'm going to make this super duper simple. Just follow along with this
+[09:33] tutorial and by the end you will have Claude editing your videos while you sleep. So guys,
+[09:38] let's not waste any time and let's get straight into the video. Now sometimes you'll need to make some
+[09:42] adjustments. Sometimes it cuts off certain words or starts a little bit too early on some cuts. And
+[09:47] in that case you can just be like, Hey, you know, for this line right here, you cut a little too
+[09:51] close to the word. Can we, you know, slightly give it a little bit more space in front or
+[09:57] you left in an extra word here, we need to cut that word out. So you can just natural language
+[10:01] prompt it and it'll make any adjustments that you might need. But it's pretty good because
+[10:07] we're using whisper X with word level timestamps that allows it to make those cuts like super
+[10:12] precisely exactly where it needs to. But yeah, again, this is amazing, great cut right off the bat.
+[10:17] So we're ready to move on to the next step. Next step is graphics. I started a new chat
+[10:24] just to clear the context because we don't really need all that previous context.
+[10:29] And we're going to start working on the graphics. We want to make sure that the rough cut is like
+[10:32] locked in before we move on to graphics, because it's going to be hard to kind of change it afterwards.
+[10:37] And all I have to say now is run the graphics. Okay, it's asking me, obviously it's YouTube.
+[10:43] Yeah, submit. It's probably going to take a really long time. Probably going to take
+[10:47] close to 30 minutes. It's 201pm right now. I'm going to walk away, let this run,
+[10:52] we'll come back when it's done and we'll see what the time is. All right, so we're back.
+[10:55] And this finished seven minutes ago. So that took about 22 minutes, 22 minutes for the entire
+[11:00] graphics pass. And let's take a look. Okay, does the take over. And this is pretty smooth. I like that.
+[11:26] Very cool. So that's a pretty good first pass. I really like it. I think all we need to do now
+[11:33] is just move some things around and do the second pass step, which is going to be next.
+[11:37] But for a first draft, graphics pass that is pretty darn good. All right, now comes time for
+[11:43] the second pass over the graphics. And this is where we're going to need to fix a couple things and
+[11:50] just tell it kind of the direction that we want to go here. So let's start off with the first one.
+[11:55] Obviously, it's up here. And I think it should probably be down here at the bottom. All right,
+[12:01] so for the very first graphic, I think let's actually change the color to the Claude color,
+[12:07] like the Claude orange color. And then can we also add in that PNG of like the Claude mascot guy?
+[12:14] I think we already have that in our assets. And then can we also make it a little bit smaller?
+[12:21] And we have to also move it to the bottom of the screen because right now it's covering my face.
+[12:25] It's on the forehead. So let's move it to the bottom, make it a little bit smaller,
+[12:29] make the color changes and also add in maybe like an animated bouncing and glowing Claude mascot guy.
+[12:36] So you simply just send off a prompt like that. And again, it's going to take some time to edit.
+[12:41] It shouldn't take too long because instead of rendering the entire video over again, I built
+[12:46] it in a specific way. This took a lot of troubleshooting and building on my part. But instead of
+[12:51] rendering the entire video all over again, it should be a little bit faster because all it
+[12:57] needs to render is just that first part because that's the only part we're making changes to.
+[13:01] And that was a specific thing that I built into this project that saves you a lot of time. Okay,
+[13:07] wow, that was actually pretty quick. Okay, that only took about like three minutes around there.
+[13:12] Maybe it's like three and a half. But let's take a look now. Yeah, looks good. I like that.
+[13:20] I like that a lot. So cool. Basically what I'm going to do now, I'm going to go through the
+[13:26] entire rest of the video and just kind of one by one edit each graphic. I'm actually, you know what,
+[13:31] I'm sure that you could also just give it all of the changes that you want in just one long prompt.
+[13:36] And I'm sure that it could just get all of them done in one in one prompt,
+[13:40] you could probably do it that way too. But I'm just going to go through and fix the rest of the
+[13:44] graphics. That was pretty fast and pretty easy. No headaches. So yeah, let's just continue on and
+[13:49] fix all the rest of the graphics. Alright guys, the time is now 4 30. And so I took about
+[13:55] two hours of me like editing, making changes back and forth, which I would say is pretty good,
+[14:01] especially for the quality of editing. And some of you might be like, Oh, like,
+[14:06] fuck that's so long, two hours. But really, dude, if you think about it, I never would have been
+[14:11] able to edit all of this stuff myself. I think honestly, like just this part would have taken
+[14:15] two hours for me with all the animations and everything that it was doing. I still think
+[14:19] it's a huge, huge time savings. But if you don't know how to edit, then like, you just,
+[14:23] you couldn't even do it would have taken what five days to learn how to edit and then edit the video.
+[14:29] Even for me, I do know how to edit, but I just don't know how to do any of these graphics.
+[14:33] And I still think that it saved me a major amount of time and the result
+[14:37] came out amazing too. And I didn't have to spend this long on it. I really just
+[14:41] wanted to get it like super dialed. It was honestly, I could have just left it a lot of
+[14:45] things and done it a lot quicker. It probably only depends on what video you're doing, but
+[14:49] they only take like one, two hours. I think to edit a video like this normally,
+[14:53] for me, it takes probably like four, five hours around there. So I think it's a huge, huge time
+[14:59] save, especially for those that don't know how to edit. Basically, we just went through, I'm like,
+[15:04] all right, change the zoom for the takeover. We can start it a little earlier. Make this change.
+[15:08] It gave me back a draft. Make this change gave me back draft change draft change draft.
+[15:14] And it was pretty fast to make all the edits. So it was a really, it was a really nice editing
+[15:19] experience for me. And that was the intro of this YouTube video. So you literally just kind of watched
+[15:23] me literally make the intro to this video that you just watched. And it was done entirely in
+[15:30] Claude. I didn't touch Premiere at all just for the intro section of this video. So that's pretty
+[15:36] much what you got to do. Just keep making changes until you get done with the result
+[15:39] that you like. And we're done with that. So now we can move on to the next step. All right,
+[15:43] guys. So the next step in the process is adding captions. Now, this really only applies to if you
+[15:49] have a short form video, because really long form videos don't really require any captions. Or if
+[15:55] there are captions, then that's more part of the graphic step. But for short form videos,
+[16:00] typically you like do all the graphics top half bottom half first, then we add it in the captions
+[16:06] like on top in the middle, just like this. So you can see in this example, this is like a
+[16:11] short form video that I edited. It has all the graphics. And we're just doing the captions in the
+[16:17] middle just like that. The process here is really simple. So if you're working on a short form video,
+[16:22] whether it's a tick tock raw style, or if it's a short form explainer like this,
+[16:26] literally all you need to do is just say, okay, let's add captions now. And then
+[16:30] it's going to add all the captions. Again, there are preset templates baked in to the
+[16:35] project that I made if you downloaded it in my paid school community. So I have this template
+[16:41] that is already made. But if you're building this yourself, hyperframes already has the embedded
+[16:47] caption skill, you'll just need to build the preset yourself. And a little ball of knowledge
+[16:52] for you if you're building this yourself for free, the preset that I use uses cool Vedica
+[16:58] as the font. It's like low key ball knowledge. Cool Vedica, cool Vedica is a great font.
+[17:04] And basically what I did is just I have the black text box behind the words. And then I just have
+[17:14] the words kind of animate in. So as you can see, they kind of just animate in like that as I speak
+[17:21] them. And it's able to do that because we already transcribed it, we already have the transcription.
+[17:26] So we don't need to retranscribe anything, we're simply just animating in the captions.
+[17:30] It's very similar to how we do the graphics. So now let's just say here, all you need to
+[17:34] really say is just add captions in. So the final final step here is to add in background music.
+[17:41] Now, if you have Premiere Pro or any other editing software, obviously, you can just drag it in and
+[17:46] do it that way. It's probably honestly probably faster, easier. But I decided to bake this feature in.
+[17:51] So let's do it. The first thing I'm going to do is go and find her and find my background music
+[17:56] that I want to use. And that's going to be melting glass, more ball knowledge for you guys.
+[18:02] So I'm just going to do command option C. And that's going to copy the path. I'm going to paste
+[18:07] the path in here. And I'm going to say add in this background music. And then I think it by default
+[18:14] knows where to put it. But I'm probably just going to specify, let's do it at let's try negative 18.
+[18:22] Okay, so I played it back a couple of times. And I finally settled at negative 23 decibels.
+[18:27] I think for that for this background music specifically, that's perfect. I want to like
+[18:31] barely in the background there. And I think we're finally good. So I think this is done now.
+[18:38] And as a final step, we're all done. So I can just say something like this.
+[18:43] All right, we are finally done with this edit. I think it's good to go. Let's go ahead and export
+[18:49] it. Okay, bet that was really quick. So yeah, as you can see in my downloads folder, here it is.
+[18:54] And there is also a copy in the actual project folder here as well and outputs right here.
+[19:01] And it also kept the entire project intact so that if we do need to re edit or change anything or
+[19:07] reopen this project, we still can. It's not like I deleted all our progress by exporting.
+[19:12] So yeah, we're all good to go. And that is the entire intro done from start to finish.
+[19:18] You just watched me edit the entire intro that was at the beginning of this video.
+[19:23] So guys, there you have it. That's a full video 100% edited by Claude from start to finish.
+[19:29] If you want to watch it over again, you can go back and watch the intro of this video because
+[19:33] that's exactly what I put in there. Truly amazing, isn't it? I mean, what a time that we live in.
+[19:38] And you know, another great thing about this system is that it works with any model.
+[19:42] So you know, as models continue to improve, if we ever get fabled back even then this system just
+[19:48] automatically makes it that much better. Because it works with any model, you could even probably
+[19:53] use this with codecs if you wanted to. Another fun fact is that if you're in my school community,
+[19:59] then you can take that finished video that you just edited and immediately auto post it to all
+[20:04] platforms, Instagram, TikTok, YouTube shorts, using the auto poster skill. And speaking of school,
+[20:11] guys, if you want the full plug and play files with all the custom skills and all the workflows
+[20:15] that I built so that you can just plug and play this entire video editor system into your
+[20:19] own business, that'll be the first link down in the description below or in the pinned comment
+[20:25] as well. Join my school, go here, go classroom, go video editor, and the folder is right here so
+[20:31] that you can just download and get this running right away. Not only do you get the video editor
+[20:36] system, but you get all my other templates, skills, automations, and content creation
+[20:42] knowledge as well. There's even a full cloud code course if you want to get started with
+[20:46] cloud code. I even have twice weekly group calls in here, where I come on live twice a
+[20:52] week and speak with all the members. There's honestly not many people that join so you can get
+[20:57] a lot of one on one time and I pretty much help you out with any problems you have,
+[21:01] whether it's building stuff in cloud or if you just have general questions, business advice,
+[21:05] anything at all. Again, if you want to build it for free, you totally can. One big tip that I
+[21:09] would recommend is just take the transcript of this YouTube video plug it into cloud.
+[21:13] And I already gave you the screenshot and everything earlier in the video. So that
+[21:16] should be enough for you to build out the basic structuring and get it working and editing
+[21:21] videos for you. I spent a lot of hours on this basically like two full weeks of work in like
+[21:29] nonstop and nearly killed me, but the work is done. And to be honest, in my personal opinion,
+[21:35] I think this is the best cloud video editing system I've ever seen on the internet. And I would
+[21:43] know because when I was making this video, I was scouring videos by Nate Herk, Nick Sarayev,
+[21:49] Chase, like all the AI guys, I was looking to see what their editing systems were.
+[21:54] Nate Herk did one, but it's kind of like basic. Genuinely, I think this is probably the
+[22:00] best cloud video editing system that has been built by anyone and published by anyone
+[22:05] that I've seen on the internet so far. If you find a better one, let me know in the comments
+[22:09] down below. I would love to know. Trust me. So again, guys, if you want the full thing,
+[22:14] first link down in the description or in the pinned comment down below. Hopefully I see you
+[22:18] inside of the school community. But anyways, guys, I hope this video was valuable for you.
+[22:23] If you watched all the way till the end, let me know in the comments down below. I appreciate you
+[22:27] and I'll see you guys in the next one. Peace.

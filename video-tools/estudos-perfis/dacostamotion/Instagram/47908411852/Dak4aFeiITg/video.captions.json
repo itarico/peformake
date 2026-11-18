@@ -1,0 +1,51 @@
+[
+ {
+  "text": " Everything",
+  "startMs": 180,
+  "endMs": 840,
+  "timestampMs": 510,
+  "confidence": 0.675
+ },
+ {
+  "text": " orbiting",
+  "startMs": 840,
+  "endMs": 1340,
+  "timestampMs": 1090,
+  "confidence": 0.994
+ },
+ {
+  "text": " around",
+  "startMs": 1340,
+  "endMs": 1800,
+  "timestampMs": 1570,
+  "confidence": 0.99
+ },
+ {
+  "text": " who",
+  "startMs": 1800,
+  "endMs": 2120,
+  "timestampMs": 1960,
+  "confidence": 0.945
+ },
+ {
+  "text": " has",
+  "startMs": 2120,
+  "endMs": 2340,
+  "timestampMs": 2230,
+  "confidence": 0.987
+ },
+ {
+  "text": " always",
+  "startMs": 2340,
+  "endMs": 2820,
+  "timestampMs": 2580,
+  "confidence": 0.982
+ },
+ {
+  "text": " mattered.",
+  "startMs": 2820,
+  "endMs": 3420,
+  "timestampMs": 3120,
+  "confidence": 0.997
+ }
+]

@@ -1,0 +1,310 @@
+idioma: pt
+[00:00] Eu criei uma automação que edita vídeo pra mim em 30 minutos só usando IA, o roteiro a
+[00:04] voz das animações sem abrir o editor.
+[00:06] E hoje você vai aprender a fazer o mesmo usando o chat gpt ou cloud tanto faz.
+[00:11] E não você não precisa saber editar a programar.
+[00:14] Esse estilo de vídeo que a gente vai fazer se chama Motion Graphics.
+[00:17] Ele é perfeito para fazer anúncios, aulas, vídeos no youtube, instagram, tudo.
+[00:21] E todos os prompos estão de graça aqui na descrição.
+[00:24] Sem enrolação.
+[00:25] Bora, passo um.
+[00:26] O seguinte, você vai precisar de duas coisas.
+[00:27] A primeira é conectar o cloud ou chat gpt na openart.
+[00:31] A openart é quem cria as imagens, os vídeos e a voz.
+[00:34] Porque o cloud não gera nada sozinho.
+[00:36] E se você for utilizar o chat gpt já é legal porque o chat gpt gera a imagem então ajuda
+[00:41] a economizar.
+[00:42] Então vamos instalar o mcp da openart que ajuda a criar esses motions.
+[00:45] Copia esse link, abre o cloud ou seu chat gpt, vai em conectores.
+[00:50] Conectores personalizados, deixa assim e pronto.
+[00:52] Para usar esse mcp no cloud grats ele já funciona.
+[00:55] E antes que vocês me perguntem, dá para rodar no cloud grats?
+[00:58] Dá, mas o grats ele acaba muito rápido.
+[01:00] Quantos vídeos eu consigo fazendo plano pro?
+[01:02] De 10 a 15 a cada 5 horas.
+[01:05] Eu testei e as pessoas aqui do comentário do youtube também testaram e estão falando
+[01:09] que está funcionando também.
+[01:11] Depois que você instalou a openart, basta você dar uma rouba openart na conversa
+[01:15] e testa ali para ver se ela está funcionando.
+[01:17] Pronto, agora a soia agora vai começar a criar vídeos, imagens, tudo automaticamente.
+[01:21] E o melhor de tudo, tem um link de 30% de desconto que te permite a gerar mais de 4 mil imagens.
+[01:26] Fora que essas imagens são reutilizáveis, então clica no link aqui abaixo porque ela
+[01:30] está muito barata.
+[01:32] Passo 2, toda a edição ela precisa de um estilo.
+[01:35] E o estilo ela depende da comunicação que você quer passar.
+[01:38] E caso você não entenda muito bem, existem duas ferramentas que te ajudam.
+[01:41] O Pinterest ou o próprio Instagram, é só você pesquisar por motion graphics, reels
+[01:46] ou motion graphics design.
+[01:47] E a regra é você escolher um tipo de vídeo que combina com o seu conteúdo.
+[01:51] Eu escolhi esse aqui, colagem.
+[01:53] Eu gosto muito de utilizar porque ele traz autoridade, traz um tom sério.
+[01:57] Inclusive, é um dos modelos mais difíceis de fazer na edição.
+[02:00] Você que é editor sabe, é um modelo complicado, só que a IA faz muito fácil.
+[02:05] E isso que é incrível.
+[02:06] Então pronto, eu selecionei 4 vídeos aqui, vou jogar para IA e falar para ela
+[02:10] aprender esse estilo de vídeo.
+[02:12] Se você não quiser torrar o seu token mandando esses vídeos para IA analisar frame a frame
+[02:16] gastando muito token, eu deixei uma skill aqui pronta, que ela já tem tudo pré-programado,
+[02:20] já tem todo o workflow.
+[02:22] O nome dela é Edit Labs, ela tem várias estrelas já no GitHub e é de graça, tá bom?
+[02:26] Entra no link, clica nesse botão verde, copia esse código, cola lá no seu cloud, no seu
+[02:30] show de IPT e fala para ele instalar essa skill.
+[02:32] Pronto?
+[02:33] Instalou pessoal, é só a gente seguir para o próximo passo.
+[02:35] Mas se você quer construir o seu próprio estilo de edição, a sua própria skills
+[02:39] do seu jeito, você vai então desmontar esse estilo de edição desses vídeos
+[02:43] que você baixou.
+[02:44] O que seria desmontar?
+[02:45] O cloud não entende o que é uma boa edição, então você vai falar para separar encamadas,
+[02:49] o background, os assets, o estilo de legenda, o corte, tudo isso.
+[02:53] Fala para ele fazer um plano completo.
+[02:54] Ou se quiser pode mandar esse prompt aqui para ele.
+[02:57] Pronto, copia esse prompt, o cloud vai desmantelar certinho e vai criar uma documentação
+[03:01] no final.
+[03:02] Se ele não criar uma documentação no final, é só você pedir, porque aí ele vai extrair
+[03:05] o DNA visual disso, movimentos, cores, enfim, eu já te falei, vai vir completo esse documento.
+[03:10] Mas se você não quiser criar, a gente já tem um documento lá na nossa comunidade
+[03:14] e ela é gratuita, tá bom?
+[03:15] Beleza, agora que você tem tudo, documento, skills, seu próprio estilo de edição, a gente
+[03:19] precisa fazer isso funcionar.
+[03:21] E com a alternativa conectada, ela vai conseguir ler e gerar esse mesmo estilo de foto, o mesmo
+[03:26] estilo de design.
+[03:27] Tudo por causa dessa documentação.
+[03:29] E a alternativa compreende isso muito bem.
+[03:31] Uma ideia prática, olha o estilo de edição do lado esquerdo, olha do direito.
+[03:35] O esquerdo é o original, esse segundo aqui foi o que eu criei, copiando esse vídeo.
+[03:39] Claro que eu não quero falar aqui para você copiar um vídeo, a ideia não é
+[03:42] essa, a ideia é completamente diferente.
+[03:44] E agora eu vou te mostrar quantos de crédito a gente gastou só para fazer essa copia aqui,
+[03:48] como exemplo.
+[03:49] E mais uma coisa, é bom você pegar vídeos de referências do seu nicho, mandar para o
+[03:52] cloud treinar, porque aí ele vai entender o que é uma boa edição.
+[03:55] O cloud não sabe pessoal, ele não sabe, você precisa explicar para ele e mostrar
+[03:59] o objetivo final.
+[04:00] Então não adianta você falar assim, o cloud vai por esse caminho, depois por esse,
+[04:03] depois por esse.
+[04:04] Não, ele não vai ter um bom resultado, é mais fácil você mostrar para ele.
+[04:07] Beleza, agora seu cloud já sabe editar vídeo.
+[04:09] Então agora a gente precisa colocar a carroça para andar.
+[04:11] Passa 4.
+[04:12] Ideia.
+[04:13] Na parte eu vou explicar tudo.
+[04:15] Se você quer fazer anúncio, você vai entrar na biblioteca do Facebook e vai
+[04:19] mandar o cloud minerar os melhores anúncios.
+[04:21] Agora se você quiser produzir rios, você vai entrar no seu Instagram, vai
+[04:24] selecionar a primeira ideia, vai baixar esse vídeo e vai mandar para o cloud.
+[04:27] A mesma coisa nos anúncios, vai baixar e vai mandar para ele.
+[04:29] Só que você precisa criar uma pasta dentro do seu cloud, então você
+[04:32] clica aqui, cria uma página do seu projeto e lembrando, existem dois
+[04:35] tipos de projeto na nuvem e o local, você precisa fazer o local, porque
+[04:38] assim o cloud não precisa ficar pensando toda vez, então ele fica com
+[04:41] todos os pensamentos, todo esse cérebro dentro do seu computador.
+[04:44] Isso é muito melhor do que na nuvem.
+[04:46] Criu o seu projeto, coloca todos esses vídeos lá dentro da pasta.
+[04:49] Se for anúncio, é pasta de anúncios.
+[04:50] Se for real, é pasta de real.
+[04:51] Se for YouTube, passa de YouTube.
+[04:53] E falando em YouTube, essa aqui é a melhor forma se você quiser
+[04:56] criar um canal do YouTube.
+[04:57] E eu falo isso com propriedade, porque eu já cresci em diversos
+[04:59] canais.
+[05:00] O canal da cá que eu tirei do zero, há milhões de visualizações
+[05:03] e milhares de inscritos.
+[05:04] Esse canal aqui também, passei por vários nichos e também eu já tenho
+[05:07] outros canais de viagens também e as pessoas me chamam geralmente
+[05:10] para crescer o canal das empresas dela.
+[05:12] Então eu não estou aqui para fazer grusagem, porque eu entendo do que
+[05:14] eu estou falando e acredito, pessoal, tudo que eu te passar aqui é a mais
+[05:17] pura verdade, sem mentoria, sem papo de guru, tá bom?
+[05:21] E eu gosto de falar do YouTube, porque o YouTube ele paga muito bem.
+[05:24] Eu até quero mostrar quantos de adicentes que eu fiz.
+[05:26] Aí editor, coloquei, a gente está fazendo quase 6 mil.
+[05:28] Acho que esse mês aqui bate uns 8 mil reais por mês.
+[05:31] É pouco, tá bom?
+[05:31] Mas eu vou te mostrar como você pode criar um canal legal sem
+[05:34] aparecer também para a gente utilizar a OpenArt, o cloud, tudo isso junto.
+[05:38] Vasculhando o YouTube, eu encontrei este canal
+[05:40] aqui que postou o primeiro vídeo dele a dois dias atrás com 600 mil visualizações.
+[05:44] E ele também está utilizando o cloud, provavelmente a OpenArt também para
+[05:48] criar esses vídeos e eu vou te provar o porquê.
+[05:50] Como você pode ver, ele mistura o estilo 3D do cloud com esse estilo
+[05:53] colagem que a gente também utiliza aqui, que é o mesmo estilo,
+[05:55] como você pode ver, se você testar aí.
+[05:57] Então ele está utilizando esses dois estilos.
+[05:58] Mas qual que é a big idea aqui desse projeto, pessoal?
+[06:01] A Bynas, eu não sei se vocês sabem o que aconteceu,
+[06:04] mas aconteceu um desastre lá, não quero ficar mencionando.
+[06:06] E ele acabou gerando esse vídeo aqui 100% no cloud,
+[06:10] provavelmente em menos de 5 horas ele conseguiu produzir esse vídeo inteiro.
+[06:13] E agora que a gente entra no passo 5 para estar criando
+[06:15] um vídeo no YouTube, na prática, com esse mesmo estilo de edição.
+[06:18] Cloud, OpenArt e vídeo final.
+[06:20] Seguinte, estamos aqui com essa ideia, então eu vou copiar o link desse vídeo.
+[06:23] Foi um gringo que fez.
+[06:24] Vou entrar nesse site aqui, vou colar o link dele e extrair toda a legenda.
+[06:28] Não se preocupe, se você instalou esse
+[06:29] que o TheDitLabs lá no GitHub, ela também já extraia.
+[06:32] Só você mandar o link lá, que ela já extraia a legenda de tudo.
+[06:34] Mas se você não quiser ficar tocando o token,
+[06:36] é só você entrar nesse site, copiar, extrair a legenda e pronto.
+[06:39] Você vai entrar aqui no cloud e vai falar assim para ele.
+[06:40] Vamos estudar esse roteiro, vão pegar as principais situações
+[06:43] e criar um reels com esse vídeo.
+[06:45] E pronto, pessoal, ele criou um reel simples aqui, sem aqueles ganchos fortes.
+[06:48] Depois eu vou te mostrar como você pode estar utilizando
+[06:50] para pegar aqueles roteiros que engacham, né?
+[06:52] Mas, a princípio, eu quero te mostrar a edição.
+[06:54] Então, primeiro de tudo, cola toda a legenda do vídeo aqui.
+[06:57] E tem dois caminhos que você pode seguir.
+[06:58] Criar um novo vídeo com um novo ponto de visão,
+[07:01] ou seja, um novo ângulo dessa situação,
+[07:03] da Bynas, enfim, do assunto que você for fazer.
+[07:04] Ou você pode criar um reels com outro ângulo também.
+[07:07] E aí desse ângulo, você cria mais três,
+[07:09] ou mais três vídeos com um hook diferente, tá bom?
+[07:12] Porque assim você consegue validar mais vídeos.
+[07:14] Para que seja rápido, eu vou estar criando um reels
+[07:16] para te mostrar que funciona.
+[07:18] Agora que você copiou o roteiro, cola aqui no seu cloud code.
+[07:20] E o prompt com a dêo é o seguinte,
+[07:21] eu quero que você comece a planejar todas as cenas,
+[07:24] todos os assets originais.
+[07:26] As assets originais é o que a OpenArt vai liberar.
+[07:28] Fotos originais também, tem o esquema também,
+[07:30] que o cloud consegue buscar fotos de lado archive.org.
+[07:34] É um lugar onde tem um monte de foto da internet, né?
+[07:37] E você não precisa estar criando do zero.
+[07:38] Ou você pode fazer, ele combinar com a OpenArt
+[07:41] e aumentar a qualidade da foto, às vezes que você quer.
+[07:43] Inclusive, se você tiver a imagem de alguma coisa
+[07:45] que está em baixa qualidade, OpenArt também aumenta a qualidade, tá bom?
+[07:48] Eu vou mandar esse prompt aqui e bora esperar o resultado.
+[07:51] Pessoal, depois de algum tempo, ele vai montar um plano,
+[07:53] como vocês podem ver aqui,
+[07:54] ele girou algumas animações, alguns vídeos,
+[07:57] montou todas as cenas no estilo colagem.
+[08:00] E tá bom, chega de enrolação,
+[08:01] bora mostrar o resultado final.
+[08:02] Lembrando, ainda está sem áudio, tá bom?
+[08:03] Foi um vídeo de 1 minuto e 50, tá?
+[08:07] Pronto, ele planejou aqui, ele criou esse vídeo.
+[08:10] Bem bacana.
+[08:12] Vocês percebem que tá realmente, tipo, no estilo colagem, né?
+[08:15] Tá bem bonito.
+[08:15] Tem uma identidade própria, isso aqui funciona muito bem.
+[08:18] Sabe como funciona melhor ainda?
+[08:20] Você colocar tua imagem embaixo e esse vídeo passar de em cima.
+[08:23] Sabe quem tá utilizando isso muito bem?
+[08:24] O investidor Sardinha, que inclusive a gente fez um tutorial
+[08:27] e eu acho que ele aplicou, porque no TikTok lá,
+[08:29] agora só tem vídeo dele assim, nesse estilo.
+[08:32] Por que você não aplicaria também, né?
+[08:34] E inclusive ele comentou aqui no canal, ó, esse comentário aqui.
+[08:37] Tá, agora você precisa gerar a voz.
+[08:39] E a OpenArt, ela já vem com Eleven Labs.
+[08:41] Você não precisa pagar o Eleven Labs, tá bom?
+[08:42] É só você entrar aqui no site principal deles,
+[08:44] clicar aqui em áudio e aqui você seleciona o Eleven Labs V4.
+[08:48] Então você pega a sua narração, clica aqui,
+[08:51] ou você faz lá dentro do cloud mesmo, tá bom?
+[08:53] Caso não funcione, você vem aqui no site,
+[08:55] tá bom? Que vai tá funcionando da mesma forma.
+[08:57] A gente gera aqui, custa muito baratinho,
+[08:59] você pode escolher a voz aqui, ó, da pessoa.
+[09:01] E é um nó, né?
+[09:01] E aí você também escolhe ser feminino, masculino,
+[09:04] todas as idades, tem tudo, pessoal.
+[09:06] E vozes mais usadas, tá bom?
+[09:08] Inclusive olha que interessante, você pode subir a sua voz também, né?
+[09:11] Você pode gerar com a sua própria voz.
+[09:12] Pessoal, ele gerou aqui e ele ficou bem humano.
+[09:14] Eu não colocaria esse áudio, mas só pra vocês entenderem que...
+[09:17] Tipo assim, ele tá muito orgânico.
+[09:19] E se o maior roubo de cripto custasse menos de um dólar?
+[09:22] Tipo assim, parece que foi uma pessoa aqui na rua.
+[09:24] Mas você pode pegar vozes mais profissionais,
+[09:26] ou você pode dar um tratamento na voz também, ó.
+[09:28] A gente pode alterar aqui e mudar, tá bom?
+[09:30] Beleza, vamos supor que você escolheu essa voz aqui mesmo.
+[09:33] A gente vai baixar, vamos clicar aqui, ó, baixar.
+[09:35] E é só você salvar aqui e jogar aqui dentro do cloud, tá bom?
+[09:38] A narração, você clica aqui, joga aqui dentro, acabou.
+[09:41] Beleza, pessoal, o primeiro estilo feito,
+[09:43] só que agora eu quero misturar um estilo.
+[09:45] Lembre do canal do YouTube que eu mostrei ali, que é esse aqui, na Binance.
+[09:48] Você pode criar um igual com a Open Arts também.
+[09:50] Você mescla o estilo 3D com esse estilo colagem.
+[09:53] Porque o 3D, ele acaba demorando muito pra tá criando ali, tá bom?
+[09:57] Já o colagem é muito mais rápido.
+[09:58] Então se você mesclar 50% 3D, 50% colagem,
+[10:02] sai muito mais rápido.
+[10:03] Ou 10% 3D,
+[10:05] apenas algumas cenas específicas pra descrever o cenário ali,
+[10:08] seria interessante.
+[10:09] E pra fazer isso, eu tô criando aqui uma cena 3D misturada, tá bom?
+[10:12] Olha isso aqui.
+[10:13] Aqui já precisaria de um computadorzinho um pouquinho melhor,
+[10:15] porque ele instala uma extensão do Blender,
+[10:17] que era gratuito também, tá bom?
+[10:19] E aí ele vai gerando, ó.
+[10:20] Ele vai gerar uma cena 3D e uma cena colagem.
+[10:22] E aí o resultado ficou assim.
+[10:24] Três minutos depois, um robô esvaziou 6,3 bilhões.
+[10:30] Ele misturou 3D com a colagem.
+[10:32] E fica muito bom, fica muito dramático.
+[10:35] Só a voz que eu achei que ficou bem legal, mas é isso.
+[10:38] Beleza, agora que você tem todos esses vídeos,
+[10:40] é só falar pro Cloud criar ângulos diferentes da situação.
+[10:43] Ou ir lá no Twitter, ou no Google News,
+[10:45] ou alguma notícia que saiu em algum portal no Twitter,
+[10:48] mandar ali pro Cloud falar pra ele criar uma notícia nesse mesmo estilo.
+[10:52] Aí você pega essa notícia, ele cria o roteiro,
+[10:54] ele acaba criando 10, 20, 30 vídeos.
+[10:56] E pra automatizar isso, você precisa ter esse formato validado.
+[10:59] Ou seja, quando você já postou um vídeo que viralizou,
+[11:02] ou começou a postar, gerou um engajamento ali na rede social.
+[11:05] Beleza, você já entende que isso tá funcionando.
+[11:07] Então agora você transforma em uma skill.
+[11:08] Você volta lá no Cloud da barra Skill,
+[11:10] Creator, dá um nome pra essa skill.
+[11:12] E pronto, agora você tem um fluxo salvo.
+[11:14] Toda vez que você quiser criar algum vídeo nesse mesmo estilo,
+[11:17] você dá a barra o nome da sua skill e chama ela.
+[11:20] Pronto, é só mandar o roteiro,
+[11:21] ou falar pra ela gerar o roteiro com essa notícia,
+[11:23] e ela só vai seguir o fluxo.
+[11:25] Às vezes, você precisa mandar nada,
+[11:26] ou sem gastar crédito, ou dar open art.
+[11:28] Porque você já tem muitos assets,
+[11:30] ou seja, muitos materiais já criados.
+[11:32] O que significa isso?
+[11:33] Por exemplo, se você quer falar de outra coisa
+[11:35] que envolve algum cofre,
+[11:37] você não precisa gerar uma nova imagem de cofre.
+[11:38] Porque ela já existe.
+[11:39] Ou se você quiser gerar alguma outra imagem
+[11:42] que tem aqui, por exemplo, em uma eda do Bitcoin,
+[11:43] essa imagem aqui não precisa,
+[11:45] porque ela já está no seu banco.
+[11:47] Ela vai entender, ela classifica.
+[11:49] Tudo isso aqui é um banco, pessoal.
+[11:50] Tá dentro do seu projeto.
+[11:51] E ele classifica, a 0,5 moeda.
+[11:53] Você não precisa entender,
+[11:54] porque a IA entende tudo por você,
+[11:55] e ela sabe exatamente como alocar isso.
+[11:57] Bom, clica no link aqui abaixo
+[11:59] que você vai ter um desconto na Open Art.
+[12:00] Ela está bem barata.
+[12:01] Até agora, uma das melhores plataformas,
+[12:03] ela integra bem para a gente,
+[12:05] que mexe com moço, mexe com vídeo,
+[12:06] mexe com oferta, cria, vende.
+[12:08] Então, eu recomendo muito.
+[12:09] Ela ajuda muito aqui no workflow.
+[12:11] E esse MCP está bem rápido
+[12:12] e envolve várias ferramentas.
+[12:14] Cara, se inscreve no canal,
+[12:15] tamo junto.
+[12:16] Muito obrigado.
+[12:16] É nóis.

@@ -1,0 +1,668 @@
+1
+00:00:00,160 --> 00:00:03,120
+Há alguns dias, eu estava assistindo e
+
+2
+00:00:03,120 --> 00:00:10,600
+estudando no YouTube e me deparei com vários vídeos de editores que estavam editando,
+
+3
+00:00:10,600 --> 00:00:15,040
+ou melhor, pedindo a uma inteligência artificial, Claude,
+
+4
+00:00:15,040 --> 00:00:21,240
+para realizar alguns processos de edição, principalmente na parte visual, como animações gráficas.  E eu decidi testar
+
+5
+00:00:21,240 --> 00:00:25,920
+também, e vou mostrar aqui para vocês.  Em outro vídeo neste canal, que
+
+6
+00:00:25,920 --> 00:00:31,240
+você pode assistir mais tarde, mostrei como é possível usar
+
+7
+00:00:31,240 --> 00:00:36,440
+inteligência artificial para criar, por exemplo, um contador.  De qualquer forma, posso te mostrar
+
+8
+00:00:36,440 --> 00:00:40,480
+como fazer isso agora.  Então, por exemplo, estou aqui no ChatPT, vou colocar, veja,
+
+9
+00:00:40,480 --> 00:00:55,720
+criar um contador de 0 a 100 em um arquivo SRT.  A mesma coisa que estou fazendo aqui no ChatPT,
+
+10
+00:00:55,720 --> 00:01:01,360
+você poderia fazer no Claude.  Vou mostrar para você entender como é simples.  Aqui,
+
+11
+00:01:01,360 --> 00:01:06,240
+você pode ver que já começou a viagem, então começou a escrever
+
+12
+00:01:06,240 --> 00:01:12,640
+todos os números aqui para mim.  Então eu cheguei e anotei: quero o arquivo gerado.
+
+13
+00:01:12,640 --> 00:01:18,800
+Isso também pode acontecer com a nuvem, mas normalmente você acessa, baixa o arquivo e eu o adiciono ao Capcut.  Vou
+
+14
+00:01:18,800 --> 00:01:25,000
+acessar o texto e, veja só, ele vai adicionar texto.  Vou acessar as legendas locais e importar.
+
+15
+00:01:25,000 --> 00:01:31,480
+Vou abrir a pasta onde salvei o contador.  E veja só, quando eu coloco isso aqui, veja o que
+
+16
+00:01:31,480 --> 00:01:41,440
+já faz por nós.  Possui simplesmente um contador de zero a 100. Portanto, você não precisa
+
+17
+00:01:41,440 --> 00:01:47,600
+perder tempo fazendo todos os cálculos aqui.  Veja como isso é prático para economizar seu tempo.  Eu já
+
+18
+00:01:47,600 --> 00:01:53,080
+mostrei neste tutorial como você pode até mesmo usá-lo para personalizá-lo.  E então você
+
+19
+00:01:53,080 --> 00:02:01,080
+terá controle sobre ele, de forma fácil de usar.  Você viu que eu fiz isso em apenas alguns minutos?
+
+20
+00:02:01,080 --> 00:02:06,120
+Em outras palavras, todas essas ferramentas estão surgindo para nos poupar tempo.  Mas tudo bem,
+
+21
+00:02:06,120 --> 00:02:12,320
+isso é muito simples, é só para você começar a entender.  A partir de agora, as coisas ficam um
+
+22
+00:02:12,320 --> 00:02:18,360
+pouco mais complexas.  Além disso, o que vou mostrar aqui na nuvem requer uma
+
+23
+00:02:18,360 --> 00:02:24,720
+assinatura de pelo menos um mês para usar esse recurso.  Além disso, você precisa ter o serviço de nuvem instalado no
+
+24
+00:02:24,720 --> 00:02:30,840
+seu computador.  Não adianta simplesmente usar o navegador, como eu estava fazendo aqui no chat do EPT.  Ok,
+
+25
+00:02:30,840 --> 00:02:36,800
+estou aqui com Claude na tela do meu computador.  Você verá que é o chat;  Tem o espaço de coworking
+
+26
+00:02:36,800 --> 00:02:44,240
+e o código.  E é aqui que as coisas se complicam.  É aqui que a diversão de verdade vai começar.
+
+27
+00:02:44,240 --> 00:02:49,120
+A primeira coisa que você precisa fazer é acessar o código que estará na
+
+28
+00:02:49,120 --> 00:02:55,800
+descrição do vídeo.  É um código que, como eu disse, outras pessoas
+
+29
+00:02:55,800 --> 00:03:02,560
+também já usaram em outros tutoriais.  Então você só precisa copiar o URL, certo?  Está aqui, basta
+
+30
+00:03:02,560 --> 00:03:12,000
+copiar este URL.  Não há necessidade de toda essa confusão.  Basta copiar isto.  OK?  Copie,
+
+31
+00:03:12,000 --> 00:03:20,000
+volte para a nuvem e cole aqui, veja, Ctrl+V.  E neste caso, eu colei exatamente como
+
+32
+00:03:20,000 --> 00:03:25,760
+vi outras pessoas fazendo.  Você também pode fazer assim, ou simplesmente escrever em português, que
+
+33
+00:03:25,760 --> 00:03:34,120
+acredito que será a mesma coisa.  Mas eu coloquei, por exemplo, "instalar habilidades" e assim por diante, você cola da
+
+34
+00:03:34,120 --> 00:03:40,880
+maneira que achar melhor, ok?  Basta seguir o que estou fazendo para evitar erros.  Certo, depois
+
+35
+00:03:40,880 --> 00:03:46,960
+disso, antes de pressionar Enter, você escolherá a pasta onde deseja salvar o arquivo, certo?  Escolha um local,
+
+36
+00:03:46,960 --> 00:03:52,960
+uma pasta e um nome que você ache interessante.  Tudo o que você fizer
+
+37
+00:03:52,960 --> 00:03:59,840
+acontecerá dentro dessa pasta.  Assim, os arquivos serão enviados para essa pasta.
+
+38
+00:03:59,840 --> 00:04:07,280
+Você também pode enviar arquivos para a nuvem.  Portanto, é importante escolher um lugar que você
+
+39
+00:04:07,280 --> 00:04:13,360
+não esqueça e que também tenha espaço para guardar muitas coisas.  Além disso, aqui no modo,
+
+40
+00:04:13,360 --> 00:04:19,520
+o sistema, o pequeno robô que entende muito aqui, você provavelmente vai colocar, o seu
+
+41
+00:04:19,520 --> 00:04:27,880
+estará lá neste soneto.  Você pode instalar o Opus 4.6.  Lembre-se de que você só poderá fazer
+
+42
+00:04:27,880 --> 00:04:34,920
+isso porque pagou por um plano na nuvem.  Obviamente, não é para qualquer pessoa curiosa.  Ou, se você
+
+43
+00:04:34,920 --> 00:04:40,200
+tiver dinheiro e curiosidade, pode testar e fazer isso.  Mas se você quiser trabalhar com isso,
+
+44
+00:04:40,200 --> 00:04:45,720
+sempre precisará investir seu dinheiro, porque investindo, obviamente, você sempre terá um
+
+45
+00:04:45,720 --> 00:04:54,320
+retorno com o tempo, mais dinheiro e assim por diante.  Assim que você pressionar Enter, o programa começará a ser executado no
+
+46
+00:04:54,320 --> 00:05:00,320
+seu computador.  O programa começará a instalar vários itens aqui.  E o segredo é aprovar tudo.
+
+47
+00:05:00,320 --> 00:05:07,000
+Veja só o que ele está pedindo aqui.  Então, ele está perguntando.  Você pode até mesmo configurá-lo para "sempre permitir", para que seja
+
+48
+00:05:07,000 --> 00:05:13,640
+executado sempre.  Então, você não precisa ficar clicando toda vez, ok?  Continue fazendo isso, continue fazendo e
+
+49
+00:05:13,640 --> 00:05:19,240
+deixe rolar.  Ele vai perguntar várias coisas, pode ser que esteja faltando alguma coisa que precise
+
+50
+00:05:19,240 --> 00:05:24,080
+ser instalada.  Ele vai te dizer: "Olha, isso está faltando no seu computador. Vou instalar,
+
+51
+00:05:24,080 --> 00:05:33,080
+você permite?"  até que finalmente você chegue a esta janela aqui.  Finalmente, você está pronto
+
+52
+00:05:33,080 --> 00:05:38,200
+para vivenciar um novo momento.  Tenho certeza de que em breve muitas pessoas estarão falando
+
+53
+00:05:38,200 --> 00:05:44,440
+sobre isso, porque é uma maneira muito prática de fazer qualquer coisa.  Certo, vamos lá.  A primeira
+
+54
+00:05:44,440 --> 00:05:50,600
+coisa que você verá aqui é esta linha do tempo no seu navegador.  Exatamente.  Você tem
+
+55
+00:05:50,600 --> 00:05:57,760
+aqui uma linha do tempo muito semelhante à do After Effects.  É claro que não possui todos os plugins e recursos que você
+
+56
+00:05:57,760 --> 00:06:04,280
+usa no After Effects, mas temos uma linha do tempo aqui que é basicamente onde
+
+57
+00:06:04,280 --> 00:06:10,880
+veremos tudo acontecer.  Você não vai trabalhar aqui, mas veremos tudo acontecer aqui.
+
+58
+00:06:10,880 --> 00:06:18,040
+Mas onde as coisas ficam interessantes, onde realmente vamos trabalhar, é na nuvem, que é exatamente onde
+
+59
+00:06:18,040 --> 00:06:22,880
+você começará a interagir com ela.  Como eu disse, funcionará como qualquer
+
+60
+00:06:22,880 --> 00:06:29,760
+chat, mas quanto melhor for a sua mensagem, melhores serão os resultados.  Estou fazendo um teste
+
+61
+00:06:29,760 --> 00:06:36,120
+aqui com você.  Grande parte do que farei aqui será seguindo exemplos que vi em outros tutoriais
+
+62
+00:06:36,120 --> 00:06:42,000
+no exterior, de outras pessoas que fazem isso aqui, mas também farei alguns testes em português.
+
+63
+00:06:42,000 --> 00:06:48,000
+Então, em primeiro lugar, vamos usar a nuvem para criar animações gráficas, ou seja, ela
+
+64
+00:06:48,000 --> 00:06:55,040
+animará qualquer coisa que pedirmos, absolutamente qualquer coisa.  Eu tirei essa imagem, que é
+
+65
+00:06:55,040 --> 00:07:00,600
+uma captura de tela do Instagram, certo, dos dados analíticos de seguidores, etc. Vou pedir para
+
+66
+00:07:00,600 --> 00:07:06,200
+ela animar de zero até o número mostrado nesta captura de tela.  Vou pedir para
+
+67
+00:07:06,200 --> 00:07:13,400
+animar o resto das coisas.  Vou escrever de uma forma super simples, certo?  Estou explicando
+
+68
+00:07:13,400 --> 00:07:23,600
+de uma forma bem simples para que você entenda.  Aperte o play.  Agora, resta esperar que funcione.  Ok
+
+69
+00:07:23,600 --> 00:07:27,960
+, enquanto esperamos, aproveite para deixar seu like, o que
+
+70
+00:07:27,960 --> 00:07:33,360
+me ajudará muito a levar esse conteúdo para mais pessoas e fazer o canal crescer ainda mais.  Estou
+
+71
+00:07:33,360 --> 00:07:39,160
+sempre estudando tudo relacionado à criação de vídeos.  Então, este é um lugar onde você
+
+72
+00:07:39,160 --> 00:07:45,680
+será sempre muito bem-vindo, e você não paga nada para receber isso.  Deixe seu like,
+
+73
+00:07:45,680 --> 00:07:51,600
+inscreva-se e, se quiser, deixe um comentário;  Isso vai me ajudar muito, tá bom?  E finalmente,
+
+74
+00:07:51,600 --> 00:08:00,360
+temos um resultado aqui.  Olha só, que animação incrível, que nível de qualidade!  Tem conserto?  É possível
+
+75
+00:08:00,360 --> 00:08:07,760
+pedir para fazer de outra forma?  Claro que pode.  Eu criei uma instrução simples e boba aqui, e obtivemos
+
+76
+00:08:07,760 --> 00:08:13,440
+este resultado.  Pode acontecer, como vi em alguns exemplos em outros vídeos, que
+
+77
+00:08:13,440 --> 00:08:20,680
+simplesmente não crie a imagem exata que você inseriu. Você vai lá e escreve: "Olha,
+
+78
+00:08:20,680 --> 00:08:27,320
+não, eu não gostei. Você não seguiu a minha imagem. Quero que você siga a minha imagem exatamente."
+
+79
+00:08:27,320 --> 00:08:34,520
+E então fará isso de novo.  Lembre-se que, mesmo pagando, você também tem créditos aqui
+
+80
+00:08:34,520 --> 00:08:40,040
+.  Então você pode começar a fazer isso, mas em algum momento, o que acredito que acontecerá comigo
+
+81
+00:08:40,040 --> 00:08:46,080
+em algum momento, o programa vai travar e depois voltar a funcionar no dia seguinte.  De qualquer forma, é claro que tudo
+
+82
+00:08:46,080 --> 00:08:51,480
+isso também depende do plano que você está pagando.  Fazer tudo isso no After Effects,
+
+83
+00:08:51,480 --> 00:08:57,960
+no Capcut, como algumas pessoas fazem no Capcut, levaria pelo menos duas horas.  E o
+
+84
+00:08:57,960 --> 00:09:03,560
+tempo que você está dedicando a isso aqui é original, totalmente original.  Você vai colocar
+
+85
+00:09:03,560 --> 00:09:10,160
+do jeito que quiser.  Portanto, mais uma vez, estamos vivendo em uma era em que isso é uma ferramenta.
+
+86
+00:09:10,160 --> 00:09:16,080
+Não vai tirar nossos empregos, mas está mudando a forma como trabalhamos.
+
+87
+00:09:16,080 --> 00:09:21,640
+Nem todo mundo será capaz de fazer isso, mas se você aprender como fazer, se você se aprofundar e se manter
+
+88
+00:09:21,640 --> 00:09:26,840
+atualizado, com certeza você se destacará e sairá ganhando.  Enfim, a próxima coisa que vou
+
+89
+00:09:26,840 --> 00:09:33,720
+pedir para fazer aqui é adicionar um terço inferior, que é um pequeno texto abaixo do meu nome.  Enfim, vou
+
+90
+00:09:33,720 --> 00:09:39,320
+explicar de uma forma bem simples.  Vamos ver o que isso significa para nós aqui também.  Não sei como
+
+91
+00:09:39,320 --> 00:09:49,160
+vai ser, mas vou explicar de forma simples.  E veja só, ele já fez isso aqui por nós também.  Não. No final,
+
+92
+00:09:49,160 --> 00:09:53,480
+ficou ótimo.  Ele até fez um pequeno corte ali, veja?  Eu teria que pedir a ele para consertar isso
+
+93
+00:09:53,480 --> 00:09:58,120
+.  Não vou dizer para ele mexer nisso agora porque eu realmente não gostei do resultado.  E se
+
+94
+00:09:58,120 --> 00:10:04,400
+eu pedir para ele consertar, ele vai gastar, como eu disse, créditos.  Então, vou deixar como está.  Foi
+
+95
+00:10:04,400 --> 00:10:09,000
+apenas para nós testarmos também.  E eu sei que você deve estar super preocupado(a), querendo entender,
+
+96
+00:10:09,000 --> 00:10:15,800
+ok?  Ele está fazendo tudo isso, mas como ele vai levar isso para um editor de vídeo,
+
+97
+00:10:15,800 --> 00:10:21,120
+um Capcut, um Premiere, um Da20?  Vou te mostrar agora.  Vou até fazer mais alguns testes
+
+98
+00:10:21,120 --> 00:10:26,080
+aqui.  Vou te mostrar o resultado.  Não vou mostrar todo o processo para não ficar
+
+99
+00:10:26,080 --> 00:10:31,440
+muito chato, mas você já deve estar vendo o resultado de algumas coisas que eu fiz.  Bem,
+
+100
+00:10:31,440 --> 00:10:38,320
+depois de ter feito tudo o que queria, você virá aqui para renderizar, onde terá a opção de codec.
+
+101
+00:10:38,320 --> 00:10:47,560
+Então você tem H264, H265 e Proz, e verá que eles serão salvos em uma pasta —
+
+102
+00:10:47,560 --> 00:10:54,160
+a pasta que você criou no início, no local que você escolheu.  Será uma pasta chamada "out",
+
+103
+00:10:54,160 --> 00:10:59,280
+que é simplesmente o local para onde os arquivos são enviados.  Depois disso, você verá várias
+
+104
+00:10:59,280 --> 00:11:04,880
+outras opções aqui que pesquisarei mais tarde, mas depois disso, você renderizará
+
+105
+00:11:04,880 --> 00:11:10,600
+o vídeo e, quando a renderização terminar, verá que
+
+106
+00:11:10,600 --> 00:11:17,440
+seu vídeo já estará salvo naquela pasta.  Eu vou te mostrar.  Ainda tenho o Capcut
+
+107
+00:11:17,440 --> 00:11:24,200
+aberto aqui.  Também vou mostrar outra parte usando o Premiere.  Lembre-se, como sempre digo,
+
+108
+00:11:24,200 --> 00:11:30,720
+todos os softwares de edição são praticamente iguais.  Se você sabe editar em um, sabe editar
+
+109
+00:11:30,720 --> 00:11:35,440
+em qualquer um.  E eu ensino tudo isso em "Hollywood na Palma da Sua Mão", que é meu
+
+110
+00:11:35,440 --> 00:11:41,000
+curso de formação em criação de vídeos para quem quer trabalhar nessa área.  Se você
+
+111
+00:11:41,000 --> 00:11:47,480
+quiser saber mais, o link está na descrição.  Certo, estou aqui na pasta da nuvem, entende
+
+112
+00:11:47,480 --> 00:11:57,480
+?  Tenho o Cloud Remotion e a versão de demonstração aqui, e o resultado está aqui.  Então, salvou aqui, veja, no meu computador.  Eu vou te
+
+113
+00:11:57,480 --> 00:12:07,120
+mostrar.  Eu baixei o vídeo daqui, uma animação simples, como fizemos.  E então eu poderia,
+
+114
+00:12:07,120 --> 00:12:13,840
+por exemplo, pedir para criar um plano de fundo.  E então eu tive que escrever isso ali.  Quero que
+
+115
+00:12:13,840 --> 00:12:19,520
+o fundo seja verde.  Por que?  Posso simplesmente remover o fundo e usá-lo como
+
+116
+00:12:19,520 --> 00:12:26,240
+uma animação em qualquer um dos meus vídeos.  Ou eu poderia fazer uma máscara, não é a melhor
+
+117
+00:12:26,240 --> 00:12:31,320
+coisa do mundo.  Veja, não vai ser a melhor opção porque não ficará exatamente no formato desejado
+
+118
+00:12:31,320 --> 00:12:38,320
+.  Posso até arredondá-lo mais, mas você entende que, seja o que for que você peça para ele fazer,
+
+119
+00:12:38,320 --> 00:12:43,880
+ele fará corretamente, e você pode simplesmente seguir o caminho que eu indiquei.  Então, veja,
+
+120
+00:12:43,880 --> 00:12:50,760
+eu já tenho uma opção interessante.  Se eu quiser seguir este método, posso usá-lo agora em qualquer
+
+121
+00:12:50,760 --> 00:12:57,080
+vídeo que eu desejar.  Olha só, cara, uma animação que, de novo, é original.  Original, porque
+
+122
+00:12:57,080 --> 00:13:02,280
+usei esta imagem.  Eu poderia usar qualquer outra imagem, mas foi algo que eu pedi para ser
+
+123
+00:13:02,280 --> 00:13:07,960
+feito e você pode usá-la em qualquer trabalho que for realizar.  Cara, o tempo que gastei
+
+124
+00:13:07,960 --> 00:13:14,040
+fazendo isso ainda me assusta, porque eu sempre fazia no After Effects e isso levava pelo menos
+
+125
+00:13:14,040 --> 00:13:20,120
+uma hora, pelo menos uma ou duas horas.  Assim, estamos economizando tempo, e isso é muito,
+
+126
+00:13:20,120 --> 00:13:27,080
+muito bom.  A próxima coisa que vou mostrar para vocês é o nível de loucura
+
+127
+00:13:27,080 --> 00:13:35,360
+que essa ferramenta nos revela.  Vou acessar a pasta na nuvem, a demonstração de remoção e as
+
+128
+00:13:35,360 --> 00:13:41,920
+pastas públicas.  Tenho esta pasta aqui.  Fica mesmo ao lado da pasta de saída, que é para onde o arquivo será enviado e
+
+129
+00:13:41,920 --> 00:13:48,760
+exportado, ok?  Então você vai copiar seu vídeo para esta pasta pública.  E
+
+130
+00:13:48,760 --> 00:13:56,160
+eu tenho aqui, veja, com o nome "nuvem de legendas de teste".  OK.  Vou importar este vídeo para o Premiere,
+
+131
+00:13:56,160 --> 00:14:02,440
+mas você pode importá-lo para o Capcut.  Eu só gosto de variar o software por aqui, ok?
+
+132
+00:14:02,440 --> 00:14:11,360
+Abri o Premiere, vou em transcrição e vou pedir para criar as legendas.  Olha só, testando
+
+133
+00:14:11,360 --> 00:14:17,680
+legendas com IA na nuvem.  Chegou a incluir a palavra "nuvem" aqui, o que eu acho que devo ter dito.  É
+
+134
+00:14:17,680 --> 00:14:25,600
+IA na nuvem.  Até hoje não sei exatamente como dizer, mas IA na nuvem, eu dizia assim, IA.  Vou
+
+135
+00:14:25,600 --> 00:14:32,840
+em "criar legendas" e vou selecionar a opção para criar uma legenda.  É a mesma coisa que você faria no Capcut, ou em qualquer
+
+136
+00:14:32,840 --> 00:14:40,320
+outro lugar no Canal 20.  Então, aqui está: testando legendas com IA na nuvem.  Será que...
+
+137
+00:14:40,320 --> 00:14:47,680
+funciona?  Lembre-se: o ideal é ajustar todas essas legendas antes de fazer qualquer coisa
+
+138
+00:14:47,680 --> 00:14:54,680
+.  Verifique se estão corretos, se há algum erro e veja se funciona bem.
+
+139
+00:14:54,680 --> 00:15:01,920
+Vamos testar, vamos ver.  Analise-o.  Esta é uma sugestão para qualquer arquivo de legenda.  Há
+
+140
+00:15:01,920 --> 00:15:07,800
+pessoas que às vezes criam textos sem nem mesmo olhar o que está escrito, e tudo dá errado.  Dê uma olhada,
+
+141
+00:15:07,800 --> 00:15:15,560
+preste muita atenção.  Depois de criar a legenda, você não precisa alterar nenhuma formatação, ok?  Tudo isso
+
+142
+00:15:15,560 --> 00:15:21,080
+será feito na nuvem.  Vou acessar as legendas aqui, no caso do Premiere.  Vou clicar aqui,
+
+143
+00:15:21,080 --> 00:15:30,880
+nesses três pontos, e exportar para arquivo SRT.  Um arquivo SRT, caso você não saiba, é um formato
+
+144
+00:15:30,880 --> 00:15:41,320
+que exporta legendas.  Depois de fazer isso, você exportará essas legendas para esta pasta pública.
+
+145
+00:15:41,320 --> 00:15:47,640
+Então, teste, o nome do vídeo era testsubtitlescloud, ele se tornará testsubtitlescloud.srt.
+
+146
+00:15:47,640 --> 00:15:59,960
+Salvo.  E então você verá aqui, veja.  Aqui está o meu vídeo.  Temos legendas no vídeo simples e também
+
+147
+00:15:59,960 --> 00:16:10,480
+legendas em formato SRT, que é um arquivo normal.  Agora você volta lá e simplesmente diz no chat —
+
+148
+00:16:10,480 --> 00:16:15,480
+estou falando do chat, mas está aqui no código todas as vezes — que quer legendar o vídeo X. Então você
+
+149
+00:16:15,480 --> 00:16:22,280
+diz o nome e a legenda já está lá.  Quero que você coloque na cor X, no estilo X.
+
+150
+00:16:22,280 --> 00:16:29,600
+Se você quiser uma referência de legenda, vá ao YouTube, acesse o Google,
+
+151
+00:16:29,600 --> 00:16:35,120
+tire uma captura de tela do estilo de legenda desejado e envie para nós.  Envie o arquivo para esta pasta, acesse as
+
+152
+00:16:35,120 --> 00:16:41,640
+opções e selecione "Quero este estilo para este vídeo".
+
+153
+00:16:41,640 --> 00:16:46,480
+Isso acontecerá automaticamente.  Vou pedir para fazerem isso aqui.  Não vai criar, não vai ouvir meu vídeo;
+
+154
+00:16:46,480 --> 00:16:53,720
+É simplesmente a leitura de uma parte de outro arquivo que eu incluí.  Como têm
+
+155
+00:16:53,720 --> 00:17:01,720
+o mesmo nome, basta ler, e já está pronto para nós.  Olha que
+
+156
+00:17:01,720 --> 00:17:07,600
+loucura.  É um nível bizarro, mas estamos chegando a esse ponto, e eu acho isso legal.
+
+157
+00:17:07,600 --> 00:17:14,800
+É uma ferramenta interessante porque nos permite dedicar muito menos tempo ao trabalho.
+
+158
+00:17:14,800 --> 00:17:20,840
+Acredito que seja uma opção muito interessante para economizar tempo em animação e
+
+159
+00:17:20,840 --> 00:17:26,640
+motion graphics.  Pessoalmente, eu não usaria isso para adicionar legendas, sabe?  Para isso,
+
+160
+00:17:26,640 --> 00:17:32,160
+posso simplesmente pagar pelo Capcut, pagar por qualquer outro software e
+
+161
+00:17:32,160 --> 00:17:40,320
+fazer ajustes rapidamente na hora.  Mas no nível de motion graphics, no nível de animar
+
+162
+00:17:40,320 --> 00:17:46,200
+coisas maiores, acho que vale a pena investir meu tempo, porque simplesmente oferece algo de qualidade,
+
+163
+00:17:46,200 --> 00:17:50,720
+não oferece qualquer coisa.  Bem, espero sinceramente que este vídeo tenha sido útil
+
+164
+00:17:50,720 --> 00:17:55,960
+para você.  [música] Quando vi isso pela primeira vez, pensei: preciso mostrar isso para todo mundo.
+
+165
+00:17:55,960 --> 00:18:00,440
+Então, sério, se você pudesse deixar um like, um comentário, qualquer coisa,
+
+166
+00:18:00,440 --> 00:18:05,960
+isso ajudaria muito.  Além disso, vou recomendar este vídeo aqui, que acredito que
+
+167
+00:18:05,960 --> 00:18:11,720
+você vai gostar muito e que vai querer continuar acompanhando o canal.  É isso, e nos veremos muito, muito em breve.  Sim.
+

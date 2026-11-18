@@ -1,0 +1,12 @@
+idioma: pt
+[00:00] Seu limite do cloud acaba no meio do dia, instala esses 3 plugins.
+[00:04] Tudo que o cloud lê e escreve é medido em tokens, pedacinhos de palavra.
+[00:09] Quando os tokens do seu plano acabam, ele trava até o limite renovar.
+[00:13] O primeiro é o RTK, que resume o que os comandos do terminal devolvem antes do cloud
+[00:18] ler.
+[00:19] Os criadores falam em até 90% menos tokens.
+[00:22] O segundo é o Context Mode, que guarda fora da conversa o que as ferramentas devolvem
+[00:27] e passa pro cloud só um resumo.
+[00:29] O terceiro é o Headroom, que compre em arquivos, planilhas e dados antes de chegarem no cloud.
+[00:35] Nos testes deles, a economia chega a 95%.
+[00:39] Comenta a token que eu te mando os links pra instalar.

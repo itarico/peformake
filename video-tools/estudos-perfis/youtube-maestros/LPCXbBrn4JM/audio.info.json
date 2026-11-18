@@ -1,0 +1,96 @@
+{
+ "id": "LPCXbBrn4JM",
+ "title": "Criei um agente de IA que posta vídeos virais SOZINHO: 100 mil views em 3 dias",
+ "fulltitle": "Criei um agente de IA que posta vídeos virais SOZINHO: 100 mil views em 3 dias",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=LPCXbBrn4JM",
+ "upload_date": "20261022",
+ "duration": 1520,
+ "duration_string": "25:20",
+ "view_count": 11461,
+ "like_count": 287,
+ "comment_count": 26,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=react-viral-avatar-ia_raw168\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\n100 mil visualizações em 3 dias com vídeos com avatar de IA reagindo a vídeos virais, num pipeline que roda no piloto automático.\n\nNeste vídeo eu abro o YouTube Studio de um experimento novo: um canal de vídeos com avatar de IA que reage a vídeos virais de tecnologia e robôs. Em três dias de projeto ele passou de 100 mil visualizações, sem ninguém da equipe gravar, roteirizar ou editar nada. Eu mostro os vídeos que mais performaram, como o do avião de controle remoto gigante, e o que mais me surpreendeu: nenhum comentário percebeu que quem fala é um avatar.\n\nDepois eu abro o pipeline por dentro: a busca de vídeos virais pela YouTube Data API, com filtros que não gastam tokens e o cálculo de visualizações por hora, a análise da tela que barra o que não serve, o roteiro curto com gancho, contexto e uma pergunta no fim, a voz no ElevenLabs, o avatar no HeyGen com o fundo removido, a legenda original apagada, os créditos para o canal de origem e a verificação antes de postar. Cada vídeo sai em duas versões, uma para o Instagram com CTA e outra para o YouTube sem CTA, e o Claude Code coordena tudo com uma skill e scripts em Python.\n\n📌 CAPÍTULOS\n0:00 100 mil visualizações em 3 dias com vídeos de avatar de IA\n0:46 Os números do experimento no YouTube Studio\n2:30 Os vídeos que mais viralizaram\n4:07 O formato: avatar de IA reagindo a um vídeo viral\n4:43 Nenhum comentário percebeu que era um avatar\n8:57 Os elementos do vídeo: avatar, vídeo viral, legenda, música e créditos\n9:52 Claude Code e duas versões: Instagram com CTA e YouTube sem CTA\n10:49 A busca e os filtros dos vídeos virais\n12:00 Roteiro, voz no ElevenLabs, avatar no HeyGen e fundo removido\n13:54 Critérios da busca: YouTube Data API, filtros sem tokens e views por hora\n16:50 Estrutura do roteiro, verificação da voz e custo do avatar\n18:38 Remoção de fundo, créditos, áudio e CTA\n20:11 Recapitulando o pipeline e as travas de segurança\n22:12 Por que esse formato ganhou tração tão rápido\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ Como funciona um canal de reacts com avatar de IA no piloto automático\n✅ Como achar vídeos virais com filtros que não gastam tokens\n✅ As etapas de produção: roteiro, voz, avatar, fundo removido e legenda\n✅ Por que separar a versão do Instagram da versão do YouTube\n✅ Que travas colocar para o agente não sair do controle\n\nEste vídeo mostra vídeos com avatar e voz gerados por IA.\n\n#maestrosdaia #avatardeia #inteligenciaartificial",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "100 mil visualizações em 3 dias com vídeos de avatar de IA",
+   "end_time": 46
+  },
+  {
+   "start_time": 46,
+   "title": "Os números do experimento no YouTube Studio",
+   "end_time": 150
+  },
+  {
+   "start_time": 150,
+   "title": "Os vídeos que mais viralizaram",
+   "end_time": 247
+  },
+  {
+   "start_time": 247,
+   "title": "O formato: avatar de IA reagindo a um vídeo viral",
+   "end_time": 283
+  },
+  {
+   "start_time": 283,
+   "title": "Nenhum comentário percebeu que era um avatar",
+   "end_time": 537
+  },
+  {
+   "start_time": 537,
+   "title": "Os elementos do vídeo: avatar, vídeo viral, legenda, música e créditos",
+   "end_time": 592
+  },
+  {
+   "start_time": 592,
+   "title": "Claude Code e duas versões: Instagram com CTA e YouTube sem CTA",
+   "end_time": 649
+  },
+  {
+   "start_time": 649,
+   "title": "A busca e os filtros dos vídeos virais",
+   "end_time": 720
+  },
+  {
+   "start_time": 720,
+   "title": "Roteiro, voz no ElevenLabs, avatar no HeyGen e fundo removido",
+   "end_time": 834
+  },
+  {
+   "start_time": 834,
+   "title": "Critérios da busca: YouTube Data API, filtros sem tokens e views por hora",
+   "end_time": 1010
+  },
+  {
+   "start_time": 1010,
+   "title": "Estrutura do roteiro, verificação da voz e custo do avatar",
+   "end_time": 1118
+  },
+  {
+   "start_time": 1118,
+   "title": "Remoção de fundo, créditos, áudio e CTA",
+   "end_time": 1211
+  },
+  {
+   "start_time": 1211,
+   "title": "Recapitulando o pipeline e as travas de segurança",
+   "end_time": 1332
+  },
+  {
+   "start_time": 1332,
+   "title": "Por que esse formato ganhou tração tão rápido",
+   "end_time": 1520
+  }
+ ],
+ "language": "pt-BR"
+}

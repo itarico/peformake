@@ -1,0 +1,369 @@
+idioma: en
+[00:00] People are making over $500 a day selling motion design like this.
+[00:05] And their clients have no idea that it was made with Claude, without opening After Effects,
+[00:10] and without a single keyframe.
+[00:12] Every animation that you're watching is actually code that Claude wrote.
+[00:16] And it takes only one day to make, so you can take on way more clients than any motion
+[00:20] designer out there ever could.
+[00:22] At the end of this video, I'll show you exactly how much profit I kept from the
+[00:26] single project.
+[00:28] But ultimately, is it actually as good as a human pro?
+[00:31] To find out, I hired a real motion designer and gave them the exact same brief,
+[00:36] files, and budget to see just how big the gap between us really is.
+[00:41] Now he asked for five days and Claude got one.
+[00:45] And only one of us actually made the deadline.
+[00:47] So in this video, I'm going to show you everything.
+[00:50] How I found the client, the exact message that got me hired, how Claude built the
+[00:54] video, and ultimately how I got paid.
+[00:57] So without further ado, let's get into it.
+[01:03] So step one is to find a client.
+[01:05] Now there's a lot of motion design styles out there, and not every client is willing
+[01:10] to pay well.
+[01:11] So it's important that if you want to earn more, you need to do the style that pays
+[01:15] the most.
+[01:16] Now today, that style is SaaS or tech launch motion videos.
+[01:20] For just 30 seconds of this kind of motion design, clients pay anywhere from 1500 to
+[01:26] $10,000.
+[01:27] And finding clients here is a lot easier than it might seem.
+[01:30] You can do it with no experience and an empty portfolio.
+[01:34] So here's exactly how to get it done.
+[01:36] I go to Upwork and type SaaS launch video into the search.
+[01:40] And as you can see, there's a ton of jobs here at all kinds of budgets.
+[01:45] And here's the first tip.
+[01:47] Make sure to use different searches to get more jobs to choose from.
+[01:50] You always want to try things like product launch video, UI animation, app promo
+[01:55] video, and SaaS explainer.
+[01:57] But the most important thing is picking the right jobs out of all of these.
+[02:02] Now most people would scroll and literally apply to everything.
+[02:06] That's exactly how you burn your connects and ultimately get zero
+[02:09] replies, which means zero money.
+[02:12] So here's three things that I always check before I apply.
+[02:16] First, you want the client to say payment verified, 10K plus spent,
+[02:21] and a higher rate that's above 50%.
+[02:23] That means that ultimately they actually hire and they actually pay.
+[02:27] So you're not wasting connects on somebody who's going to ghost you.
+[02:30] Second, freshness.
+[02:32] Now you want to sort by newest and always keep refreshing.
+[02:35] I go for posts that are less than 30 minutes old, which means that the
+[02:39] client just posted the job.
+[02:40] So they're probably still online watching proposals come in.
+[02:44] You want to apply in that window and you'll end up being one of the
+[02:46] first people that they see.
+[02:48] Third, the competition.
+[02:50] You want to scroll down to activity on this job.
+[02:53] There you can actually see how many people already applied and how
+[02:57] many of the client is already interviewing.
+[02:59] Fewer than 15 proposals and nobody interviewed yet means that they
+[03:03] haven't picked anybody and your message is actually going to get read.
+[03:07] Fourth, the money.
+[03:09] You want to open their website and check whether they actually just
+[03:12] raised around a freshly funded startup about to launch has both the
+[03:16] budget and the deadline.
+[03:18] So you know they're going to be paying well and fast.
+[03:20] Now, if all four of these things check out, then apply.
+[03:23] If not, skip it and move on.
+[03:26] Now another insider tip.
+[03:28] And yes, it does break my first rule.
+[03:30] You're going to see jobs for $10 or $5 an hour from clients with zero hires.
+[03:36] Most freelancers are going to skip them instantly, but a lot of the time
+[03:39] that's just a brand new client who doesn't know what to put in the
+[03:43] budget field yet.
+[03:44] So make sure to check out their website.
+[03:46] If the company is real, then maybe it's worth applying anyways and quoting
+[03:50] your real price.
+[03:51] There's almost no competition and it's a client who's actively looking.
+[03:55] And here's the most hardcore tip of all, always add cover letter and use
+[04:00] the exact keywords from their post.
+[04:02] Now, if they wrote product launch video and figma, then those words need
+[04:07] to be right in your first lines.
+[04:09] That way the client instantly sees you actually read the post.
+[04:13] My structure here is always the same.
+[04:15] Their task, my solution and a clear deadline.
+[04:18] So that way the client knows exactly what they're getting and when they're
+[04:22] getting.
+[04:22] I'm going to show you the exact template in just a second.
+[04:25] Now, quick pause.
+[04:27] If this is useful, please make sure to subscribe.
+[04:29] This channel is all about making real money with AI tools.
+[04:33] The workflows, the prompts and the experiments just like this one.
+[04:38] And for everything first, follow me on Instagram.
+[04:41] That's where the newest stuff drops before YouTube.
+[04:44] Okay, let's get back to it.
+[04:46] Now you found the job, so let's get hired.
+[04:52] Okay, I've picked five jobs that look promising.
+[04:56] Now I'm going to send each of them a message just like this.
+[04:59] Feel free to pause the video and read it.
+[05:01] This message is written so that the client picks you even if you don't
+[05:05] have a portfolio.
+[05:06] Now, why like this?
+[05:07] Well, first it's because the opening line is actually about them.
+[05:11] On Upwork, the client only sees the first two lines in the preview.
+[05:15] And almost every single proposal out there starts with something like,
+[05:19] Hi, I'm a motion designer with X years of experience.
+[05:23] And honestly, that's boring.
+[05:25] I'm pretty sure that none of you would click on a message like that.
+[05:28] Now, the next reason is that the concept replaces the portfolio.
+[05:32] A portfolio shows what you did for somebody else.
+[05:35] A ready-made concept shows what you'll do for them.
+[05:39] The client can already picture their video and you're the only one who showed it
+[05:42] to them.
+[05:43] And most importantly, the small first milestone.
+[05:47] Because of it, the client takes almost no risk.
+[05:50] With a message like this, clients will start choosing you over your competitors.
+[05:55] Because literally a couple hours later, three out of the five clients
+[05:59] replied already ready to start working with me.
+[06:02] But this project looks the most interesting to me.
+[06:05] It's a startup building an AI powered video recording tool.
+[06:08] And they need to launch video before they go live.
+[06:12] Now, they already have a rough vision that matches mine and their UI is already done in Figma.
+[06:17] So I quoted one day and $1,000 for a 30 second motion video.
+[06:22] Now that's actually not that much.
+[06:24] Since you remembered how much videos like this go for on the market.
+[06:27] We messaged back and forth a bit more and you can actually pause the video and read it.
+[06:31] And that's when they ultimately agreed.
+[06:34] Now we're ready to start generating.
+[06:40] But before we generate anything, remember the challenge from the start of video.
+[06:45] So we need to find a motion designer because I want to know whether AI can actually replace a pro.
+[06:52] So a real motion designer is going to get the exact same task.
+[06:55] Same brief, same Figma files.
+[06:58] Now I'm going to go to Fiverr and search for a SAS motion designer.
+[07:02] And I'll skip everyone who doesn't have UI work in their portfolio.
+[07:06] Character animation and UI motion are actually completely different skills.
+[07:12] I found this guy, Alex.
+[07:13] He has 47 reviews and clean UI work.
+[07:17] And he quoted $1,000 for 30 seconds in five days.
+[07:21] So I sent him the brief.
+[07:23] And a few minutes later, he replies.
+[07:25] Okay, so the deal is done.
+[07:27] The pro gets five days and $1,000.
+[07:30] Claude gets one day in the exact same brief.
+[07:33] Now let's see what Claude can actually do with this.
+[07:40] Now, if you think you can just drop a prompt into Claude and get a masterpiece out of it right away,
+[07:45] then you're dead wrong.
+[07:46] It never works on the first try, but once you've set up the process,
+[07:50] you can actually turn it into a custom skill.
+[07:53] Which is to say it'll become a permanent instruction set
+[07:56] that Claude will follow every single time for this kind of work.
+[07:59] After that, then you can generate everything you need from a single prompt.
+[08:03] And by the way, I've attached my entire motion design skill in the blog post link below
+[08:09] so that you can download it and use it on all of your own projects.
+[08:12] But what's actually inside of it?
+[08:14] Basically, it's everything that a senior motion designer carries around in their head.
+[08:20] First, the story.
+[08:22] Every launch video that I make follows the same exact path.
+[08:26] Grab attention, show the problem, show how the product fixes it,
+[08:30] and finish with the payoff.
+[08:32] Now, if a scene isn't serving one of those four needs, then it's out.
+[08:36] Second, timing.
+[08:38] Anything important stays on screen for about a second and a half.
+[08:42] It's long enough to read, but short enough that nobody's getting bored.
+[08:47] Third, the motion rules.
+[08:49] And this is actually where most of the magic happens.
+[08:51] Nothing ever moves linearly.
+[08:54] Things need to come in over about half a second with a slight overshoot,
+[08:58] and they leave faster than they came in.
+[09:00] Every click gets a tiny press, and the cursor never moves in a straight line.
+[09:05] It moves like an arc as a real hand would.
+[09:09] But the golden rule of smooth animation is this.
+[09:13] Nothing should ever fully stop.
+[09:16] In the skill, I tell Claude to work the way that a motion designer works in After Effects.
+[09:21] Group related elements under a parent, basically a null object,
+[09:25] and move the whole group instead of every piece separately.
+[09:28] Then you want to offset the keyframes.
+[09:30] So each element starts a couple of frames after the one before it.
+[09:34] And start the next move before the last one has ever fully settled.
+[09:39] When the keys overlap like that, then every movement flows into the next one.
+[09:44] Nothing freezes, nothing snaps, and it all feels like one continuous coherent motion.
+[09:50] That's the difference between looks like a website and looks like a real launch video.
+[09:55] And Claude does all of this in code, so you never have to set a single keyframe yourself.
+[10:01] And fourth, the tech specs.
+[10:03] 1920 pixels wide, 1080 pixels high, 60 frames per second.
+[10:08] Plus safe zones, so when you adapt the video to vertical,
+[10:12] everything important stays inside the frame and nothing gets cut off.
+[10:16] Now, right now, I'm just dropping it into the chat.
+[10:19] But before we hit generate, there's two more strict rules that you always need to keep in mind.
+[10:25] Rule number one, storyboard first, then animation.
+[10:29] Without a good storyboard, your output is going to be absolute garbage.
+[10:33] Now, in a bit, I'll show you the same exact video generated with and without a storyboard.
+[10:38] So you can see the difference in quality yourself.
+[10:41] Rule number two, if it's motion, you have to teach it.
+[10:45] You have to feed your UI components, define your easing curves, and give it a solid baseline.
+[10:51] And this next part is important.
+[10:53] Before this project, I spent more than 10 hours testing different setups,
+[10:58] and this is actually the one that worked for me.
+[11:00] So it'll work for you too.
+[11:02] So here's everything that I gave Claude, the brief from the client,
+[11:05] the storyboard seen by scene, breaking out what's on screen,
+[11:09] how long it stays and where the camera goes.
+[11:11] The brand colors and fonts, the background images, and the UI straight from Figma,
+[11:16] exported as SVG, not screenshots.
+[11:20] Now, the part that matters when the camera zooms into a button and
+[11:24] SVG stays razor sharp and a screenshot turns into a blurry mess.
+[11:28] Then one prompt.
+[11:30] Using the motion skill, build this storyboard as a 30 second launch video scene by scene.
+[11:35] Claude starts writing.
+[11:37] Every scene becomes its own block of code.
+[11:40] The tasks pile up, the copy paste grind, the agents kicking in, the payoff, and
+[11:45] the logo.
+[11:46] Then the whole thing renders frame by frame into a video.
+[11:50] So I ended up dropping it all into Claude Opus 5.5 and right away it broke.
+[11:56] Just look at this.
+[11:57] The text is overlapping, the camera pan is way too fast.
+[12:02] Also, the whole layout just explodes off the canvas.
+[12:05] The font at some points fell back to Times New Roman.
+[12:08] The tasks counter jumped to 200 in a single frame and
+[12:11] all of the agents' cards pop in at once, attached on top of each other.
+[12:16] It's total chaos.
+[12:17] Now, this is where most people quit and say AI motion doesn't work.
+[12:22] But almost every single one of these bugs has a simple cause.
+[12:25] And once you know that cause, then the fix is just a single second.
+[12:29] The layout exploded because the Figma screens were designed 1440 pixels wide and
+[12:34] the video we asked for is 1920.
+[12:36] So I need to still Claude lock the canvas to 1920 by 1080 and
+[12:41] position everything relative to the center, not the edges.
+[12:45] The font on the other hand broke because it wasn't loaded before the first frame.
+[12:50] I just need to say load the font before rendering anything.
+[12:53] The counter make the count up last about a second.
+[12:57] Long enough to read, but quick enough that it doesn't drag.
+[13:00] The agent cards, bring them in one by one, a few frames apart,
+[13:05] and let each card land before its check mark appears.
+[13:09] The camera, slow down the pan and give it an easy ease so
+[13:13] it starts and stops softly.
+[13:16] I spent the next hour going back and forth just like this,
+[13:19] debugging it line by line.
+[13:21] The first few versions were all about fixing what's broken.
+[13:25] After that, it became about taste.
+[13:27] The task counter needed a soft red glow as it climbs.
+[13:31] The cursor needed to hesitate between tabs for a second,
+[13:34] as if you're losing track of what you were copying.
+[13:37] Each of those is one sentence to Claude and just a few seconds of waiting.
+[13:42] And every one of those fixes is now actually baked into the skill in the
+[13:46] blog post below.
+[13:48] So when you use it, you skip all of this pain of the first hour.
+[13:52] And then it clicked.
+[13:54] Just look at that.
+[13:55] It's a buttery smooth 60 FPS animation rendered straight from code.
+[14:00] No timeline stretching, no missing plugins, and
+[14:03] I didn't set a single Q frame by hand.
+[14:06] Now, do you remember our first rule?
+[14:09] Here's what happens without a storyboard.
+[14:12] Same assets, same skill, same prompt.
+[14:15] Simply no storyboard.
+[14:17] Claude will start guessing.
+[14:19] Scenes come in in a totally random order.
+[14:22] Everything moves at the same time.
+[14:24] And there's just no coherent story.
+[14:26] It feels like just a bunch of nice looking UI flying around
+[14:30] the screen.
+[14:31] With a storyboard, it's problem, pain, fix, payoff.
+[14:36] Now the same tool, but a completely different output.
+[14:40] And here's why this whole thing takes just a single day.
+[14:44] Say the client comes back and
+[14:45] has to change the task counter from 200 to 999.
+[14:49] In After Effects, that means opening the project,
+[14:52] finding the layer, fixing the keyframes,
+[14:55] and waiting for a re-render.
+[14:57] Here, that's just one line of code.
+[15:00] I patch it up in seconds, and the new version
+[15:02] is ready in just a couple of minutes.
+[15:05] So the total time is under a day.
+[15:08] Total cost is a $20 Claude subscription.
+[15:11] Meanwhile, Alex was still working on his style frames.
+[15:19] Before we watched the full generation,
+[15:22] I checked in with the motion designer,
+[15:23] and they said that they'd make the deadline.
+[15:26] So I'll be back in a couple of days
+[15:27] to show you both results.
+[15:29] Now in the meantime, I sent what we've made to the client,
+[15:33] and here's what they replied.
+[15:35] The same day I sent the final files,
+[15:37] they approved them, and the payment got released.
+[15:43] A full seven days have passed, and we're back.
+[15:46] The main reason for the delay is that the motion designer
+[15:49] missed their deadline.
+[15:50] On the day when they were supposed to send the final video,
+[15:53] they sent me this message, and the next day, this one.
+[15:57] But today, they finally delivered all of the videos,
+[16:01] so we're ready to watch both versions.
+[16:07] All right, let's look at Alex's video first.
+[16:29] Honestly, it's solid.
+[16:31] It hits the brief, the UI looks clean,
+[16:34] and animation is quite smooth.
+[16:36] If I were the client, then I'd be totally fine with this.
+[16:39] But there's two catches.
+[16:40] We waited seven full days for it
+[16:43] because they kept pushing the deadline,
+[16:45] and it cost $1,000.
+[16:47] Now here's our version built entirely in Claude Opus 5.5
+[16:51] using code.
+[17:13] Look at the camera moves,
+[17:14] the photo real background behind the UI,
+[17:17] and how every click has weight.
+[17:19] So which one do you think turned out better?
+[17:22] Ours or Alex's?
+[17:24] Let me know in the comments below.
+[17:30] Okay, let's talk money
+[17:32] because that's probably why you're still watching.
+[17:34] Now the client paid me $1,000,
+[17:37] Claude cost me $20 for the subscription,
+[17:40] and I spent less than a day on it.
+[17:42] And most of that day actually went into the storyboard
+[17:45] and not the actual generation.
+[17:47] After Upwork's fees and the subscription,
+[17:49] I kept $880 for just a single day of work.
+[17:53] And here's a little hack that I didn't use this time,
+[17:56] but you should be aware.
+[17:57] If the client is solid,
+[17:59] and you explain it the right way,
+[18:00] then you can ask them to actually cover the Upwork fee.
+[18:03] Just be upfront with him.
+[18:05] My price is $1,000 and Upwork's fee goes on top.
+[18:09] A client who's happy with your work
+[18:11] will usually say yes without thinking twice.
+[18:14] That's another $100 straight into your pocket.
+[18:17] Now, flip it.
+[18:19] Imagine that you're the client,
+[18:20] your launch is in two weeks,
+[18:22] and you've got two options.
+[18:23] Option one is Alex.
+[18:26] Nothing against this guy,
+[18:27] his video is obviously good,
+[18:29] but if you're looking at a full week
+[18:31] and you're waiting on your prize,
+[18:32] going back and forth on revisions
+[18:34] and hoping that it lands before your launch date,
+[18:37] option two is somebody like me.
+[18:40] It's the same level of quality
+[18:42] but delivered the very next day.
+[18:44] And revisions take one hour, not days.
+[18:47] Who are you hiring?
+[18:49] Exactly.
+[18:50] And here's the part that most people miss.
+[18:52] A SaaS company doesn't need just one video.
+[18:55] They need a launch video,
+[18:56] then a feature update,
+[18:58] then an ad, and then the following launch.
+[19:00] So if I'm the guy who can deliver fast,
+[19:02] whose content looks good,
+[19:04] and I never miss a deadline,
+[19:05] then I'm not just getting one $1,000 job,
+[19:08] I'm becoming their go-to motion guy.
+[19:11] And one client like that
+[19:13] can quickly become an anchor source of income.
+[19:16] And remember, don't treat this as a magic button.
+[19:19] The storyboard and the skill working hand in hand
+[19:22] are what make this work,
+[19:23] and they're both in the blog post linked below.
+[19:26] So here's the bottom line.
+[19:28] Clients aren't buying this
+[19:30] because they care about code
+[19:32] or they care about keyframes.
+[19:33] They buy it because they get a launch ready video
+[19:36] by the very next day.
+[19:38] Everything that I used for this,
+[19:40] the motion skill, the storyboard layout,
+[19:42] and the exact pitch messaging
+[19:44] that landed this job is in the blog post linked below.
+[19:47] Go grab it, run a quick test on your own,
+[19:50] and let me know how it goes.
+[19:52] As always, I'll see you guys in the next one.

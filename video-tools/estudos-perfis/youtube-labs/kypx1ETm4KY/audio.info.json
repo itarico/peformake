@@ -1,0 +1,116 @@
+{
+ "id": "kypx1ETm4KY",
+ "title": "Automatizei 100% a Edição dos Meus Vídeos com Claude Code",
+ "fulltitle": "Automatizei 100% a Edição dos Meus Vídeos com Claude Code",
+ "channel": "LABS",
+ "channel_id": "UC71-YIjjuj6TeVj_cRqQMGQ",
+ "channel_url": "https://www.youtube.com/channel/UC71-YIjjuj6TeVj_cRqQMGQ",
+ "uploader": "LABS",
+ "uploader_id": "@canal-labs",
+ "webpage_url": "https://www.youtube.com/watch?v=kypx1ETm4KY",
+ "upload_date": "20261107",
+ "duration": 738,
+ "duration_string": "12:18",
+ "view_count": 6589,
+ "like_count": 218,
+ "comment_count": 8,
+ "channel_follower_count": 73600,
+ "description": "OpenArt 30%: https://openart.ai/mcp?utm_source=youtube&utm_medium=influencer&utm_campaign=infl-youtube--na-acq-web&ref=labs-mcp2\n\nSKILL PROMPT: https://github.com/paullabs/edit-labs-ai\n\n00:00 Como editar vídeos automaticamente com IA\n00:25 Conectando Claude ou ChatGPT à OpenArt\n01:10 Testando a conexão e gerando imagens\n01:32 Escolhendo um estilo de edição\n02:12 Instalando a Skill Edit Labs gratuitamente\n02:36 Ensinando a IA a copiar um estilo de edição\n03:16 Recriando o estilo com OpenArt\n04:11 Encontrando ideias e referências para vídeos\n04:30 Organizando o projeto no Claude\n05:38 Encontrando formatos de vídeos que viralizam\n06:14 Criando nosso primeiro vídeo na prática\n07:18 Planejando cenas e animações automaticamente\n08:00 Resultado da edição feita com IA\n08:38 Gerando narração com ElevenLabs\n09:42 Misturando animações e efeitos visuais\n10:39 Criando várias versões do mesmo vídeo\n10:57 Automatizando tudo com Skills\n11:25 Reutilizando imagens para economizar créditos\n\n\n📧 Publicidades: contato@investelab.com.br",
+ "tags": [],
+ "categories": [
+  "People & Blogs"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Como editar vídeos automaticamente com IA",
+   "end_time": 25
+  },
+  {
+   "start_time": 25,
+   "title": "Conectando Claude ou ChatGPT à OpenArt",
+   "end_time": 70
+  },
+  {
+   "start_time": 70,
+   "title": "Testando a conexão e gerando imagens",
+   "end_time": 92
+  },
+  {
+   "start_time": 92,
+   "title": "Escolhendo um estilo de edição",
+   "end_time": 132
+  },
+  {
+   "start_time": 132,
+   "title": "Instalando a Skill Edit Labs gratuitamente",
+   "end_time": 156
+  },
+  {
+   "start_time": 156,
+   "title": "Ensinando a IA a copiar um estilo de edição",
+   "end_time": 196
+  },
+  {
+   "start_time": 196,
+   "title": "Recriando o estilo com OpenArt",
+   "end_time": 251
+  },
+  {
+   "start_time": 251,
+   "title": "Encontrando ideias e referências para vídeos",
+   "end_time": 270
+  },
+  {
+   "start_time": 270,
+   "title": "Organizando o projeto no Claude",
+   "end_time": 338
+  },
+  {
+   "start_time": 338,
+   "title": "Encontrando formatos de vídeos que viralizam",
+   "end_time": 374
+  },
+  {
+   "start_time": 374,
+   "title": "Criando nosso primeiro vídeo na prática",
+   "end_time": 438
+  },
+  {
+   "start_time": 438,
+   "title": "Planejando cenas e animações automaticamente",
+   "end_time": 480
+  },
+  {
+   "start_time": 480,
+   "title": "Resultado da edição feita com IA",
+   "end_time": 518
+  },
+  {
+   "start_time": 518,
+   "title": "Gerando narração com ElevenLabs",
+   "end_time": 582
+  },
+  {
+   "start_time": 582,
+   "title": "Misturando animações e efeitos visuais",
+   "end_time": 639
+  },
+  {
+   "start_time": 639,
+   "title": "Criando várias versões do mesmo vídeo",
+   "end_time": 657
+  },
+  {
+   "start_time": 657,
+   "title": "Automatizando tudo com Skills",
+   "end_time": 685
+  },
+  {
+   "start_time": 685,
+   "title": "Reutilizando imagens para economizar créditos",
+   "end_time": 738
+  }
+ ],
+ "language": "pt-BR"
+}

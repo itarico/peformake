@@ -1,0 +1,746 @@
+idioma: pt
+[00:00] Sim, como meses atrás nós decidimos começar a levar o YouTube a sério e recentemente
+[00:04] chegamos ao marco de 100 mil seguidores.
+[00:07] E uma forma bacana de celebrar isso com vocês é compartilhando os principais agentes de
+[00:12] inteligência artificial que nos trouxeram até aqui.
+[00:15] Muita gente acha que o segredo para crescer nas redes sociais é o carisma, é o volume,
+[00:20] é a constância, mas tem uma coisa que importa muito mais que tudo isso, a estratégia.
+[00:25] Ele é desse vídeo é revelar a nossa estratégia e te contar como você pode fazer algo muito similar.
+[00:31] Bom, a gente vai falar sobre três agentes de inteligência artificial.
+[00:34] Um que pesquisa seus concorrentes no mundo todo, pessoas do seu nicho que estão fazendo um conteúdo
+[00:39] relevante e falam sobre temas que você pode querer falar a respeito também,
+[00:45] sobretudo para que o algoritmo trabalhe por você.
+[00:48] Nós temos também um criador de thumbnails que pode ser uma coisa simples, né?
+[00:51] Fazer imagem, cunhar, hoje é uma coisa besta, uma coisa ridícula.
+[00:55] Mas é uma das coisas que mais importam.
+[00:57] Se você não consegue trazer as pessoas pros seus vídeos através da thumbnail do título,
+[01:02] você dificilmente vai conseguir crescer um canal mesmo que o conteúdo seja muito bom.
+[01:06] E temos também um último agente chamado Anti-Flop.
+[01:10] Eu não vou revelar muito mais, eu já te digo que é o agente que eu mais gosto,
+[01:13] é o mais complexo de tudo, mais difícil de fazer,
+[01:16] mas é o que traz os resultados exponenciais para o seu canal, sobretudo no longo prazo.
+[01:21] E detalhe, eu acho, a posta está sendo extremamente prepotente aqui,
+[01:25] mas eu vou correr esse risco, eu acho que esse agente não existe em nenhum outro lugar do mundo.
+[01:30] Nós desenvolvemos ele do zero, nós treinamos ele inúmeras vezes com base em muitos dados.
+[01:37] Enfim, não vou falar muito, mas é especial, só digo isso.
+[01:40] Cada um desses agentes trabalha em uma etapa completamente diferente.
+[01:44] O primeiro agente vai pesquisar os temas que você vai gravar,
+[01:47] quais temas tem ido bem, viralizado,
+[01:50] quais temas as pessoas querem saber a respeito.
+[01:53] O segundo agente vai pensar em como fazer esses vídeos que você já gravou,
+[01:57] ou que você quer gravar com base em tambineio,
+[02:00] são pessoas que queriam a tambineio e depois gravam um vídeo,
+[02:02] porque o Marcelinho vai viralizar, a gente não tem esse costume,
+[02:06] a gente gravou um vídeo depois que ele é tambineio.
+[02:08] Mas essa ideia de como você faz com que o seu conteúdo chegue em mais pessoas
+[02:13] através do interesse gerado.
+[02:15] E aí a gente tem o Anti-Flop, que eu não vou falar muito a respeito ainda, tá?
+[02:19] Mas ele vai servir para que os seus vídeos comece a ter uma performance
+[02:23] cada vez melhor no piloto automático.
+[02:26] Bom, a pesquisa de concorrentes funcionará da seguinte maneira.
+[02:28] Você vai inserir algumas palavras-chave,
+[02:31] informações sobre o seu nicho dentro do agente,
+[02:34] e você vai inserir links, se você quiser, dos seus concorrentes diretos ou indiretos.
+[02:39] E aqui a gente está falando de uma pesquisa de concorrentes internacionais.
+[02:42] Se o seu tema, se o seu nicho, se o seu assunto do canal permitir.
+[02:47] Às vezes você fala de uma coisa muito brasileira,
+[02:49] novelas brasileiras até possível que os canais internacionais cubram esse tema.
+[02:53] Mas é mais difícil que os canais internacionais
+[02:56] sejam mais relevantes sobre esse tema do que os brasileiros.
+[02:59] Mas se você fala sobre nutrição, sobre assuntos médicos, sobre direito,
+[03:04] sobre qualquer coisa, basicamente, que não envolva algo especificamente brasileiro,
+[03:08] você pode fazer uma pesquisa de concorrentes, de competidores,
+[03:12] de canais do mesmo nicho que cubra vários países.
+[03:15] E uma coisa muito importante é que nem sempre o vídeo mais visto
+[03:20] é o melhor para você se inspirar.
+[03:22] Por quê? Porque os canais muito grandes, muito consolidados,
+[03:25] sempre tem muitas visualizações, porque as pessoas conhecem,
+[03:28] estão vendo aquela pessoa há muito tempo,
+[03:30] você já sente uma relação assim de cara meu amigo,
+[03:33] na verdade, todo dia no YouTube, qualquer coisa que ele colocar, eu vou assistir.
+[03:37] Não tem vários exemplos,
+[03:39] tipo pessoas que postam qualquer coisa, sem tambireia, sem título, sem nada,
+[03:42] e todo mundo assiste porque é uma personalidade muito legal,
+[03:45] está nas redes sociais há muito tempo, criou uma audiência muito fiel.
+[03:48] Esse cara vai postar um vídeo e vai ter milhões de visualizações,
+[03:51] centenas de milhares de visualizações, pelo menos.
+[03:53] E você vai lá achando que, nossa, teve uma performance muito legal,
+[03:57] você vai lá copiar o tema e tem dez visualizações.
+[04:00] Por quê? Porque as pessoas não estão assistindo esse vídeo
+[04:02] por conta do tema, sim por causa da pessoa, do canal.
+[04:06] Então, tem uma métrica muito mais interessante do que visualizações absolutas,
+[04:10] que é quantidade de visualizações em comparação à média do canal.
+[04:15] Imagina que tem um canal com mil seguidores que bate 50 mil, 100 mil visualizações.
+[04:20] Esse é um vídeo com muito mais potencial do que o vídeo de um canal
+[04:23] que sempre bate um milhão de visualizações batendo de novo um milhão de visualizações.
+[04:28] Então, eu vou te mostrar o pipeline desse agente, tá?
+[04:31] Primeiro, tem uma pesquisa que vai cobrir o seu canal,
+[04:35] o nosso canal, no caso dos últimos 30 dias,
+[04:37] para entender também o que está indo bem, o que está indo mal,
+[04:40] temas que a gente fala a respeito que vão melhor do que o outro,
+[04:42] apesar de ser um canal de interesse artificial,
+[04:46] a gente pode falar de clode, a gente pode falar de coda,
+[04:47] que a gente pode falar de hérmis, a gente pode falar de mil e um de coisas.
+[04:51] E alguns temas tendem aí melhor, porque a nossa audiência
+[04:53] tem que gostar de determinar os temas mais.
+[04:55] Esses vídeos acabam sendo priorizados, porque ali no começo,
+[04:58] quando o vídeo é mostrado para as pessoas que já conhecem o canal,
+[05:01] mais pessoas clicam, o CTR sobe, enfim.
+[05:03] A ideia é que temas iguais vão ter performance diferente
+[05:06] em canais diferentes, isso é uma coisa meio óbvia.
+[05:08] Mas mesmo assim é legal você fazer uma análise
+[05:11] das coisas que vão bem no seu canal, até para que você grave vídeos
+[05:14] sem ter como base toda essa pesquisa, eventualmente você quer só replicar
+[05:18] temas que você já sabe que vão e bem, porque essa audiência sempre gosta.
+[05:22] E às vezes a gente está falando de assuntos específicos,
+[05:24] mas a gente pode estar falando de formatos específicos também.
+[05:27] Há vídeos de react, eu reagindo a algo,
+[05:31] vídeos em que eu mostro uma coisa meio vlog,
+[05:34] vídeos explicativos, uma apresentação de slides,
+[05:38] como esse vídeo versus uma explicação na ilha do conhecimento,
+[05:43] aquele diagrama tridimensional que a gente mostrou anteriormente.
+[05:47] Então você vai ver o que funciona, o que não funciona.
+[05:49] Além da própria inteligência sobre o nosso canal,
+[05:51] a gente também mapeava 109 concorrentes do mundo todo
+[05:55] para entender o que eles estão fazendo
+[05:56] e quais vídeos tem ido muito bem e quais não têm ido bem.
+[05:59] Também tem uma busca via API em três idiomas,
+[06:02] a gente escolheu inglês, português e espanhol.
+[06:04] E aí tem a busca pelo navegador, pelo browser.
+[06:07] A gente pode estar falando de browser use, playwright msp,
+[06:10] a gente está falando de entrar no browser
+[06:13] como se fosse um usuário do YouTube normal,
+[06:14] alguém que vai assistir um vídeo no YouTube,
+[06:16] colocar algumas palavras-chave ali na pesquisa,
+[06:19] filtrar por mais vistos, depois filtrar por data.
+[06:22] Isso é super legal porque você vai trabalhando junto com o algoritmo do YouTube.
+[06:25] O que ele vai priorizando?
+[06:27] O que ele vai entregando mais para as pessoas?
+[06:28] O que ele vai ranqueando melhor?
+[06:30] O que tem a maior quantidade de visualizações em determinado período
+[06:34] para determinadas palavras-chave, termos de pesquisa?
+[06:36] Geralmente é a abordagem que mais vai fazer sentido
+[06:40] você se inspirar para criar algum tipo de conteúdo.
+[06:43] Então repassando a inteligência do próprio canal,
+[06:46] mais concorrentes mapeados, mais buscas por API,
+[06:49] pela API do YouTube,
+[06:51] mais o navegador como uma ferramenta também
+[06:54] de um usuário que quer assistir vídeos sobre determinados temas
+[06:58] a partir de determinadas palavras-chave.
+[06:59] E aí tem alguns filtros óbvios, no nosso caso só vídeos longos,
+[07:03] no mínimo 10 mil views, porque um vídeo que não pegou 10 mil views
+[07:06] para mim não tem significância estatística.
+[07:08] Tem cinco filtros de relevância que vão bater ali
+[07:12] com alguns critérios que a gente gosta de falar mais,
+[07:14] outros que a gente não fala respeito, apesar de terem a ver com iá.
+[07:17] Aí tem essa métrica super importante, que é medir
+[07:21] a quantidade de visualizações dos vídeos versus a média do canal.
+[07:24] Também tem a tradução e aqui o que a gente já cobriu.
+[07:27] As views são um tema muito bom, mas a gente já falou respeito.
+[07:30] E aí tem a decisão de quais são os temas principais
+[07:34] para a gente falar respeito.
+[07:35] A gente também tem vários critérios, testes de qualidade
+[07:38] em relação ao que a gente pretende receber
+[07:41] como possíveis materiais para se inspirar.
+[07:43] E aí tudo isso é apresentado em um painel,
+[07:46] em um HTML, um PDF, na verdade a gente manda o PDF pelo WhatsApp
+[07:50] e salvo o HTML no computador porque é mais interativo.
+[07:53] Tem alguns filtros legais também, mas o PDF é legal.
+[07:56] Se você estiver na rua e quiser ter ideia de temas,
+[07:58] está lá no WhatsApp e você consegue abrir facilmente.
+[08:00] E aí só para pegar um exemplo, tem uma pesquisa aqui
+[08:03] que coletou 1.175 vídeos.
+[08:07] Então olha que legal.
+[08:08] Imagina uma pessoa que tem uma ideia de um vídeo para gravar
+[08:11] e aí vai lá e grava e o vídeo vai mal.
+[08:13] Ah, que decepção, fiquei muito triste,
+[08:15] eu tive uma ideia, me esforcei, gravei e o vídeo foi mal.
+[08:18] Cara, só a fase de decisão sobre qual vídeo gravar
+[08:23] já envolve uma estratégia para canais sérios
+[08:26] muito mais sofisticada do que uma ideia.
+[08:29] Lógico que você pode ter uma ideia, ela pode muito bem,
+[08:31] mas compara essa estratégia de ter mais de mil vídeos mapeados
+[08:37] com simplesmente a sua intuição.
+[08:39] É difícil ter uma disputa acirrada
+[08:42] quando a gente está comprando uma estratégia muito boa
+[08:45] com uma estratégia horrível.
+[08:48] Tem um livro muito bom, inclusive, que chama Good Strategy, Bad Strategy,
+[08:51] que eu recomendo muito.
+[08:52] Depois desses mil vídeos coletados, a gente vai fazer vários cortes
+[08:56] até que sobram 716.
+[08:58] E aí, para esse processo de scraping, a gente teve predominantemente
+[09:01] vídeos inglês, alguns em português e alguns em espanhol.
+[09:04] E olha que dado interessante, isso aqui eu não sabia.
+[09:08] A mediana de visualizações em português é um pouco mais de 60 mil
+[09:12] e inglês é um pouco menos de 70.
+[09:15] Então não há uma diferença tão grande assim.
+[09:17] Só para você entender como não é fácil você criar um agente
+[09:20] e ele precisa de várias otimizações ao longo do tempo.
+[09:22] Dá uma olhada em todas as que a gente fez com esse agente especificamente.
+[09:26] A gente começou a...
+[09:27] Primeira vez que a gente concebeu esse agente de scraping,
+[09:30] desse detetive online, foi em abril.
+[09:33] Aí, quando a gente começou a levar um pouco mais a série YouTube,
+[09:36] a gente fez algumas modificações.
+[09:38] Dois skills, depois fez outras personalizações.
+[09:42] Treze skills, começou a buscar outras formas de otimizar.
+[09:48] Adicionou outros critérios.
+[09:49] Então a gente foi realmente otimizando esse agente ao longo do tempo.
+[09:55] Ele traz um número que aprecia o histórico, mas na verdade
+[09:59] a gente tem que ter mais de um computador
+[10:01] e ele trouxe as informações feitas nesse computador.
+[10:05] Então é muito maior o número real.
+[10:08] Uma coisa que é legal até para você que gosta de criar agentes,
+[10:11] otimizar agentes, entender.
+[10:13] Toda vez que você tiver um problema,
+[10:14] toda vez que a gente se comportar de uma maneira que você não quer,
+[10:17] você vai otimizar ele com base nesse problema.
+[10:20] Cada problema, cada desconforto incomodo que você tiver com o output,
+[10:23] você pode usar como oportunidade de tornar sua gente mais inteligente.
+[10:27] Então alguns exemplos, o Cloud Code virou código cloud na tradução.
+[10:32] Então tem problemas de tradução.
+[10:34] A busca estourou a cota da API,
+[10:36] e aí a gente tem que fazer o fallback para o browser.
+[10:39] Enfim, não vou ficar entrando em muitos detalhes.
+[10:41] Acho que não é a parte mais importante,
+[10:42] mas são pequenos ajustes que você vai fazendo.
+[10:45] Um dos problemas que a gente teve no começo
+[10:46] é que vídeos com muito poucas views,
+[10:48] tipo 35 visualizações,
+[10:50] estavam sendo vídeos que performavam muito
+[10:52] acima da média do canal,
+[10:53] porque todo vídeo do cara tinha um view,
+[10:56] dois views.
+[10:56] E aí a gente teve que definir esse mínimo de 10 mil views
+[10:59] para considerar aquele vídeo realmente útil
+[11:02] para um processo de scraping.
+[11:03] E aí a gente começou a pensar em como trazer isso para outros nichos.
+[11:06] Então a opção de nos adquirir,
+[11:08] fazer vídeos sobre inteligência artificial,
+[11:10] ela pode querer mudar os critérios de seleção,
+[11:12] pode querer fazer uma série de modificações.
+[11:13] Então na primeira vez que você abre,
+[11:16] esse agente vai fazer uma entrevista,
+[11:18] ele vai olhar o seu perfil,
+[11:20] ele vai instalar todos os programas,
+[11:22] todas as plataformas necessárias,
+[11:23] ele vai pedir os seus acessos
+[11:25] e ele vai fazer um resumo de todo o seu perfil
+[11:29] para que ele possa usar isso nas próximas fases,
+[11:33] nas próximas buscas
+[11:35] e para você ter informações de fato úteis.
+[11:38] Então a ideia é que tudo vai ficar na sua própria máquina,
+[11:40] você não vai dar acesso ao seu YouTube,
+[11:44] as pessoas têm medo de colocar ali o acesso.
+[11:46] Não, não vai ser uma coisa que você vai disponibilizar
+[11:49] para a internet toda,
+[11:51] você pode colocar a autenticação de dois fatores,
+[11:53] enfim, tem várias outras coisas
+[11:55] que você pode fazer para se sentir mais seguro
+[11:58] usando um agente com esse,
+[12:00] mas a ideia é que seja uma gente
+[12:01] que você pode transpor para qualquer nicho.
+[12:04] E essa é a beleza dele, inclusive,
+[12:06] a gente tem ele dentro da comunidade,
+[12:08] maestros da IA,
+[12:09] e muitas pessoas já utilizaram,
+[12:11] já estão crescendo seus canais com ele.
+[12:13] E o legal é que pessoas de nichos
+[12:14] completamente diferentes do nicho da IA
+[12:16] estão conseguindo usar isso com igual eficiência.
+[12:18] Adivogados crescendo em seus canais,
+[12:20] gamers, programadores,
+[12:23] é um agente muito legal para você
+[12:25] ter uma bela noção de tudo que você deve falar respeito,
+[12:28] deve cobrir num canal sobre determinado tema,
+[12:31] ou para você entender o que tem potencial.
+[12:33] Durante muito tempo a gente não conseguia fazer vídeos
+[12:36] com boas performances
+[12:37] que não viessem desse processo de scraping.
+[12:40] A gente fala, cara, toda vez que a gente tenta fazer
+[12:42] um que vem da nossa cabeça,
+[12:44] o vídeo vai mal.
+[12:45] Pô, que saco, né?
+[12:47] Eu queria poder me libertar disso,
+[12:49] mas por que isso acontece?
+[12:50] Porque se teve um vídeo que foi muito bem,
+[12:53] o YouTube, basicamente, está te dizendo
+[12:56] através desse agente,
+[12:57] é isso que você precisa fazer,
+[12:59] é isso que vai ir bem agora.
+[13:01] E se você não quiser ter a melhor performance,
+[13:04] o maior número de pessoas interessadas,
+[13:06] o maior alcance que você não precisa fazer isso.
+[13:09] Isso aqui não é para a pessoa
+[13:10] que quer gravar o vídeo que quiser,
+[13:12] que quer fazer apenas aquilo que a inspiração traz.
+[13:17] Não é.
+[13:17] Isso aqui é para pessoas que querem crescer
+[13:19] com a máxima eficiência, com a máxima velocidade.
+[13:21] E muitas vezes você vai precisar falar sobre temas
+[13:23] que você não está com vontade de falar
+[13:25] se você quiser atingir um público maior.
+[13:28] Isso tudo, obviamente, considerando
+[13:29] que você não vai sair do seu nicho,
+[13:31] você não vai perder sua credibilidade,
+[13:33] você não vai falar sobre coisas
+[13:34] que não tem nada a ver com o que você quer vender,
+[13:38] com o que você quer construir, como reputação.
+[13:40] Você vai seguir aquela linha editorial,
+[13:42] mas dentro daquela linha você vai ter
+[13:44] muitas opções que são já validadas.
+[13:48] Eu penso nisso a gente como
+[13:49] a gente que evita que você perca tempo.
+[13:52] É o agente que faz com que você
+[13:54] dedique o tempo de planejar o teiro,
+[13:57] de fazer a gravação, de editar,
+[14:00] de uma maneira produtiva,
+[14:01] porque ele vai gerar resultados.
+[14:03] Se você pode gravar, cara,
+[14:04] a gente tem uma outra empresa de música,
+[14:07] eu já gravei 100 vídeos todos os dias
+[14:10] para essa outra empresa no canal do YouTube,
+[14:12] que agora deve estar com uns 30 mil seguidores.
+[14:15] Cara, não adiantou nada,
+[14:16] não adiantou nada.
+[14:18] As pessoas acham que constância,
+[14:20] que gravar todo dia, que não parar,
+[14:22] que volume é o segredo, mas não é.
+[14:25] Uma forma inteligente
+[14:26] teria me dado muito mais resultado.
+[14:29] Por quê? Porque eu só acordava,
+[14:30] ficava com vontade de falar sobre um tema,
+[14:32] falava e de repente achava que
+[14:34] o YouTube ia trazer as visualizações para mim.
+[14:37] Até trazia, mas muito poucas.
+[14:39] E hoje com inteligência artificial,
+[14:41] com agentes adequados para isso,
+[14:43] é tão simples, tão rápido de fazer tudo isso,
+[14:46] a gente já chegou a contratar uma pessoa
+[14:48] para empresa de música
+[14:49] só para fazer pesquisa de conteúdo.
+[14:51] Hoje em dia você faz isso com uma gostade muito grande,
+[14:54] com uma precisão muito grande,
+[14:55] e pode usar agentes como esse
+[14:57] para alavancar a quantidade de visualizações,
+[15:00] seguidores, clientes,
+[15:01] canal de aquisição para as empresas,
+[15:04] é muito bom.
+[15:05] E nessa entrevista você vai falando sobre o seu nicho,
+[15:08] canal,
+[15:10] palavras-chave, enfim,
+[15:11] basicamente você conversa com o seu agente
+[15:14] e ele vai mapeando
+[15:15] como ele vai passar pelos processos de
+[15:18] detetive digital,
+[15:21] esse processo de scraping,
+[15:22] ele vai fazer tudo isso com base
+[15:24] em você, no seu canal, naquilo que você quer.
+[15:27] O que você precisa?
+[15:28] Code,
+[15:29] chat.pt, pode ser o aplicativo deste top,
+[15:32] pode ser no terminal Code Code Codex,
+[15:34] uma conta Google para usar API do YouTube
+[15:36] não é absolutamente necessária,
+[15:39] mas ajuda.
+[15:40] E aí Python é super importante também,
+[15:43] porque sem isso a gente não vai funcionar,
+[15:45] mas o agente mesmo vai te guiar
+[15:46] através da instalação.
+[15:47] Bom, vamos para o segundo agente.
+[15:49] E aqui tem uma coisa que já foi um problema
+[15:51] muito grande com criação de imagens
+[15:54] de nada expuriar,
+[15:55] que é escrita,
+[15:57] sobretudo em português,
+[15:58] em inglês já é muito fácil,
+[16:00] há muito tempo, mas em português,
+[16:01] às vezes, ele estava errando,
+[16:02] até hoje ele erra às vezes,
+[16:04] mas aqui é um da fonte
+[16:06] de ter uma identidade visual bacana,
+[16:08] e a gente, enfim,
+[16:09] passou um tempo entendendo
+[16:11] como fazer com que ele não queirasse
+[16:14] texto nas tambineios.
+[16:15] E o agente de tambineio,
+[16:16] ele não vai ser um chat.pt
+[16:19] que você fala,
+[16:20] olá, eu quero uma tambineio
+[16:22] que seja assim assado.
+[16:23] Não, ele vai pedir o seu link,
+[16:26] o seu roteiro,
+[16:27] ou o tema do vídeo,
+[16:28] mas o link é o melhor
+[16:29] porque ele vai transcrever o seu vídeo inteiro
+[16:31] ou pegar a transcrição do vídeo,
+[16:33] e aí a partir disso,
+[16:35] ele vai fazer um apéamento do vídeo,
+[16:37] ele vai trazer 10 conceitos e ângulos
+[16:40] diferentes através da transcrição,
+[16:42] ele vai aplicar alguns filtros,
+[16:45] ele vai trazer um pouco do custo
+[16:47] para gerar, se for via clode,
+[16:49] se for via chat.pt ele vai trazer as imagens
+[16:51] e gerar as imagens,
+[16:52] a gente pode usar a foie,
+[16:53] a I, queia,
+[16:54] a open art,
+[16:56] tem várias opções legais
+[16:57] para você girar imagens
+[16:58] através do clode code,
+[17:00] porque ele não tem o modelo de geração de imagens,
+[17:02] no flop que não tem,
+[17:03] mas a open art tem,
+[17:04] então no codex vai ficar mais fácil,
+[17:06] no app do chat.pt vai ficar mais fácil,
+[17:08] mas usando o clode, clode code,
+[17:11] é só você ligar uma API
+[17:13] que gera imagens hoje em dia não é caro.
+[17:14] E aí tem uma coisa bem legal
+[17:15] que você pode colocar o texto em cima da tambi
+[17:17] sem gerar o texto diretamente na tambi
+[17:21] com o modelo de agenerativa de imagens,
+[17:23] você pode colocar o texto usando o código,
+[17:25] que é uma coisa bem legal até para padronizar.
+[17:28] E aí tem, enfim,
+[17:29] é uma forma de fazer um que seja tudo legível no celular,
+[17:32] porque às vezes você faz um texto com um monte de palavras
+[17:34] que no celular ninguém consegue ler,
+[17:36] e aí ele vai gerar esses 10 títulos e tambi-nails,
+[17:41] ou então só as tambi-nails, enfim,
+[17:42] você pode configurar da maneira que você quiser.
+[17:44] A gente gosta de gerar 10
+[17:45] porque a gente seleciona os melhores 3 dos 10
+[17:48] e pode colocar naquele teste AB
+[17:51] que o YouTube tem como ferramenta.
+[17:52] E aqui tem um exemplo de como a imagem sai
+[17:55] e como o texto entra.
+[17:58] Então a imagem gerada por A é essa,
+[17:59] só que a gente consegue inserir isso aqui via código.
+[18:02] E aí tem algumas validaçõeszinhas que ele vai fazer
+[18:05] para garantir que está tudo certo,
+[18:06] vai conferir isso visualmente se você quiser.
+[18:10] Vai gastar um pouco mais de tokens,
+[18:11] mas também vai evitar que tenham elementos
+[18:12] que você procurevê evitar dentro das suas tambi.
+[18:15] Isso aqui é sempre sinto personalizável.
+[18:18] Aqui a gente criou um template que é super legal para a gente,
+[18:22] mas o seu int pode ser totalmente diferente.
+[18:24] Mas tem princípios, por exemplo,
+[18:26] texto fora do rosto,
+[18:27] que imagino que seriam princípios universais de tambi-nail.
+[18:30] Se você está com uma tambi-nail
+[18:31] e os textos estão cobrendo sua cara,
+[18:33] imagino que isso vá prejudicar o vídeo.
+[18:36] Uma boa leitura do texto é outro princípio
+[18:38] que eu considero universal.
+[18:40] Se você tem letras miudas numa tambi-nail,
+[18:43] é muito difícil você ver isso do celular.
+[18:44] Então tem 8 camadas de validação
+[18:47] para essas tambi-nails ficarem prontas.
+[18:49] E outra coisa legal é que a gente foi adicionando estilos.
+[18:53] Seis estilos primeiro, que a gente viu que eram validados,
+[18:57] a gente vê também os que a gente gosta,
+[18:59] que viralizaram e falam,
+[19:00] esse estilo eu gostei.
+[19:02] Você pega e coloca no agente.
+[19:03] Você pode continuar incrementando isso infinitamente.
+[19:06] Você pode ir em canais que você adora,
+[19:08] que fazem tambi muito boas,
+[19:09] e incrementando os estilos.
+[19:12] E aí o agente, quando você pediu os 10 conceitos,
+[19:14] os 10 estilos, os 10 tambis,
+[19:16] ele vai escolher dentro dos estilos que você tem,
+[19:19] os que mais se adequam ao vídeo que você gravou.
+[19:22] Então a gente passou de 6 para 9 para 11 para 21 estilos.
+[19:26] E aí o agente sempre vê quais são os estilos disponíveis,
+[19:28] poderiam ser 100 estilos, 50 estilos, 2 estilos.
+[19:32] E aí ele vai pegar os estilos disponíveis.
+[19:34] Então quanto mais você se dedica
+[19:36] para adicionar mais estilos,
+[19:39] que sejam interessantes,
+[19:40] que sejam adequados ao seu nicho,
+[19:42] que sejam validados no seu nicho,
+[19:44] ou nichos similares para público similares,
+[19:47] mais chances você tem de construir as tambis com esse agente.
+[19:51] E aí a gente pode excluindo estilos.
+[19:54] Pô, sempre que sai esse estilo aqui, eu não gosto, eu não escolho.
+[19:57] Você vai deletando, então a gente deletou 4 aqui.
+[20:00] E aí você pode também ter uma identidade coesa
+[20:02] que vai unir todos os estilos.
+[20:04] Mas enfim, o importante é que essa parte
+[20:06] que é totalmente personalizável.
+[20:08] E só nesse computador a gente teve 173 tambineios
+[20:12] exportadas após a revisão.
+[20:14] Então a gente teve umas 30, mais ou menos, que foram barradas.
+[20:17] E aí teve uma identidade que a gente chegou,
+[20:19] que a gente gostou bastante, que foi essa aqui.
+[20:21] A gente achou que fez bastante sentido,
+[20:23] que tem a ver com o que a gente gosta,
+[20:27] ponto de vista de design.
+[20:29] E várias das tambias a gente fez nesse estilo
+[20:32] com essa identidade.
+[20:32] E aí novamente, erros geram aprimoramentos.
+[20:37] Um erro que aconteceu, uma tambi que saiu muito usada,
+[20:41] você pega aquele erro e otimiza o agente
+[20:45] para que ele nunca mais cometa aquele erro.
+[20:47] E aqui tem uma coisa muito importante
+[20:48] para quem grava de fato os conteúdos
+[20:50] para canais que não são faceless.
+[20:52] É você colocar suas fotos, você colocar elementos visuais.
+[20:56] Tem pessoas que podem colocar o logo da empresa.
+[20:58] Eu não acho que é muito cara de YouTube
+[21:00] colocar o logo da empresa,
+[21:01] mas você pode colocar o que você quiser.
+[21:04] Elementos visuais que sempre vão estar nas tambias.
+[21:06] No nosso caso, a minha foto, 3 fotos a 5,
+[21:10] fotos diferentes e da Líria também.
+[21:12] E todas essas fotos de referência entram
+[21:14] no modelo de agenerativa de imagem
+[21:17] para produzir uma tambi que pareça com a gente.
+[21:20] Bom, chegamos aqui ao agente principal.
+[21:24] Que não sei se foi o que mais ajudou,
+[21:25] mas é o que eu fico mais orgulhoso de ter construído.
+[21:29] Para você entender esse agente,
+[21:30] você precisa entender o que é o CTR.
+[21:31] É o click to rate.
+[21:33] Vamos supor que 100 pessoas vejam a sua tambi neio
+[21:36] e o seu título,
+[21:37] mas só 10 pessoas dessa 100
+[21:40] clicam de fato no vídeo.
+[21:41] Nesse caso, você tem um CTR de 10%.
+[21:44] Agora, se dessas 100 pessoas
+[21:46] 20 clicaram no vídeo, você tem um CTR de 20%.
+[21:50] Se a cada 100 pessoas uma pessoa clicar no vídeo,
+[21:52] você tem um CTR de 1%.
+[21:54] E um dos principais critérios que o YouTube usa
+[21:57] para determinar se o seu vídeo vai ganhar alcance
+[22:00] e vai ser mostrado para mais pessoas
+[22:02] é justamente a quantidade de pessoas que se interessam pelo vídeo.
+[22:05] Portanto, o seu CTR importa muito.
+[22:08] E diferentes canais, diferentes temas
+[22:11] vão ter diferentes padrões de CTR.
+[22:14] Para gente, um CTR acima de 8% já é muito bom.
+[22:17] Então, o anti flop
+[22:19] é um agente que vai tentar fazer o máximo
+[22:23] com experimentos controlados
+[22:25] para aumentar o CTR de cada um dos nossos vídeos.
+[22:28] Então, nós temos aqui um vídeo, por exemplo, com 4.4% do CTR,
+[22:32] só que a nossa meta é 8%.
+[22:34] O nosso agente vai trabalhar.
+[22:36] Se o vídeo é lançado, já bate 10%, 12% do CTR,
+[22:40] aí o agente vai ficar parado, só observando
+[22:44] até que haja uma queda.
+[22:45] E se ele notar uma queda, que seja abaixo de 8%,
+[22:49] aí ele vai começar a trabalhar.
+[22:50] E um detalhe é que esse agente vai funcionar muito bem
+[22:53] nas primeiras 24 horas após a publicação do vídeo.
+[22:57] Ele pode ser usado também, já usou várias vezes,
+[22:59] para vídeos mais antigos,
+[23:01] mas ele vai brilhar nas primeiras 24 horas
+[23:03] depois que você postou o vídeo.
+[23:05] Bom, a primeira coisa que a gente vai fazer
+[23:06] é analisar o seu CTR.
+[23:08] Se estiver muito bom, ele não vai fazer nada, está aqui.
+[23:10] Não mexe.
+[23:11] Se estiver ruim,
+[23:12] ele vai para a próxima verificação.
+[23:14] E a próxima verificação é muito simples,
+[23:16] e o YouTube mostra a performance do vídeo
+[23:18] em relação aos últimos 10 vídeos do seu canal.
+[23:21] E é muito legal quando o último vídeo
+[23:23] é o melhor dentre os últimos 10,
+[23:26] porque aparece um, tem fogo já difícil
+[23:28] que o YouTube solta para você.
+[23:30] E a ideia é que se o vídeo que você acabou de postar
+[23:32] está entre os top 3 em performance
+[23:34] dentre os últimos 10,
+[23:36] ele também não vai fazer nada
+[23:37] porque ele entende que existe potencial
+[23:39] mesmo que o CTR esteja um pouco baixo.
+[23:41] Vamos supor que o seu vídeo seja o 10 de 10.
+[23:44] O pior dentre os 10 últimos que você postou
+[23:46] e o CTR está abaixo da meta.
+[23:49] Aí ele vai criar 10 variações de conceitos de título
+[23:52] e thumbnail, porque a thumbnail importa,
+[23:55] mas o título mais thumbnail
+[23:56] formam um conjunto importantíssimo.
+[23:59] Um complementa o outro.
+[24:01] E aí em seguida, então alguns filtros,
+[24:04] mais para além disso,
+[24:06] a gente vai pegar os top 3 dentre esses 10 gerados,
+[24:10] aí ele vai avaliar os top 3 títulos mais thumbnails
+[24:14] para começar a testar.
+[24:16] E aí o nosso agente vai publicar,
+[24:18] ele vai tomar liberdade de mudar o seu título
+[24:20] e mudar sua thumbnail.
+[24:21] Ele vai mudar totalmente, às vezes,
+[24:23] a razão pela qual as pessoas se interessariam pelo vídeo.
+[24:26] Ele vai pegar uma frase no meu do vídeo
+[24:28] que eu acho muito boa,
+[24:29] que tem a ver com o conteúdo, logicamente,
+[24:31] e ele vai expor,
+[24:33] ressaltar de uma maneira que você nem pensaria.
+[24:35] E aí, a cada 30 minutos,
+[24:37] ele vai avaliar se aquela thumbnail,
+[24:39] aquele título que ele colocou,
+[24:40] tiveram primeiro mais de mil impressões,
+[24:42] porque assim, se você não tem significância estatística nenhuma,
+[24:45] não importa, né?
+[24:46] Os dados, quando você está falando de 50 pessoas
+[24:50] que viram a thumbnail, não importa.
+[24:51] Você tem que ter pelo menos mais de mil pessoas
+[24:53] que viram para ele entender que tem ou não potencial.
+[24:55] Então, ele vai esperar até que você tenha mil impressões
+[24:59] a partir do momento da troca da thumbnail.
+[25:01] Então, às vezes isso vai durar 30 minutos,
+[25:04] às vezes, dependendo do seu canal,
+[25:05] pode durar algumas horas,
+[25:06] até chegar a mil impressões a mais.
+[25:08] Aí, quando a thumbnail título bater em mil impressões,
+[25:11] ele vai avaliar o CTR de novo.
+[25:13] E se o CTR estiver ruim,
+[25:15] tiver tido uma queda em relação
+[25:18] a o que já estava acontecendo antes,
+[25:20] ele vai mudar novamente,
+[25:21] e ele vai continuar mudando a cada mil impressões
+[25:24] se o resultado não melhorar.
+[25:27] Caso ele realmente esteja batendo a meta,
+[25:30] então, mil impressões,
+[25:32] como que está o CTR? Tá bom?
+[25:34] Beleza, vamos manter.
+[25:35] Mais mil impressões, como que está o CTR?
+[25:37] Ah, tá bom de novo.
+[25:38] Vamos manter.
+[25:39] Terceira vez, depois de mais mil,
+[25:41] ou seja, 3 mil impressões no total.
+[25:43] Como que está esse CTR?
+[25:44] Ainda está bom? Pronto, definimos.
+[25:45] Essa é a thumbnail.
+[25:47] Está batendo a meta e a gente vai deixar essa aqui.
+[25:50] E aí, a cada avaliação nova do CTR,
+[25:52] considerando que a gente bateu as mil impressões,
+[25:54] se a performance da thumbnail não está boa ainda,
+[25:56] o que ele vai fazer?
+[25:57] Ele vai publicar o próximo vídeo do Top 3.
+[26:01] E aí, você pode pensar,
+[26:02] mas ele fez 10 thumbnails,
+[26:04] as próximas 10 já estão prontas.
+[26:06] Não.
+[26:06] Por quê? Porque dentro de 10 variações de títulos e thumbnails,
+[26:10] nem sempre as ideias são boas.
+[26:12] Quando a gente pede variações pra ir às vezes,
+[26:14] as coisas vêm muito boas, às vezes não.
+[26:16] Então, a cada 3, ele vai criar mais 10 thumbnails
+[26:20] e vai selecionar as Top 3
+[26:22] dentro das próximas 10.
+[26:23] Então, a gente está falando de lotes de 10 thumbnails,
+[26:27] em que a IA vai gerar 10,
+[26:29] mas ela vai selecionar 3 títulos mais thumbnails.
+[26:33] E aí, depois das primeiras 24 horas,
+[26:36] a gente vai ter, não só o resultado do vencedor,
+[26:41] caso você tenha conseguido bater a meta com uma thumbnail específica,
+[26:44] mas a gente vai ter também todo um gráfico de CTR ao longo do tempo
+[26:49] e cada thumbnail vai ter uma métrica específica.
+[26:52] Cada thumbnail vai ter um número que é o CTR,
+[26:54] que aquela thumbnail, aquele título,
+[26:57] puderam oferecer pro seu canal.
+[26:59] E aí, depois das primeiras 24 horas,
+[27:01] a gente vai começar o teste AB do YouTube
+[27:04] com os 3 títulos e as 3 thumbnails que foram melhor
+[27:07] durante esse período de 24 horas desde a postagem do vídeo.
+[27:11] Pra você entender melhor isso aqui, dá uma olhada.
+[27:14] A gente tem aqui uma thumbnail de um vídeo,
+[27:17] que está em 6,75.
+[27:18] Aí, a gente muda de thumbnail,
+[27:20] passaram as mil impressões, muda de thumbnail.
+[27:22] Foi pra 7,5, depois desceu de novo na outra,
+[27:26] depois subiu um pouquinho, mas não muito,
+[27:27] depois subiu bastante, aí desceu de novo.
+[27:30] A gente não está batendo a meta,
+[27:31] não está chegando em 8% nem acima.
+[27:34] Mas dá uma olhada, aqui tem algumas thumbnails
+[27:36] que foram bem melhores que outras.
+[27:37] O CTR delas ficou bem melhor.
+[27:39] E aí, o que acontece?
+[27:40] A gente vai selecionar essas 3 que tiveram maior CTR
+[27:45] durante as primeiras 24 horas.
+[27:47] Então, se o teste AB, o YouTube permite
+[27:50] que você selecione 3 títulos e 3 thumbnails
+[27:52] pra ele mesmo rodar um teste AB,
+[27:54] ele é feito de uma maneira muito mais interessante,
+[27:57] com base em muito mais dados,
+[27:59] do que se você simplesmente chutasse
+[28:01] quais 3 thumbnails, quais 3 títulos
+[28:03] poderiam ir bem no seu canal.
+[28:05] E alguns cenários que você pode ter,
+[28:07] um CTR baixo, mas você escolhe o menos pior.
+[28:10] Alguns que têm uma variação um pouco maior,
+[28:13] outros que conseguem chegar perto da meta,
+[28:15] mas não atingem, mas mesmo assim,
+[28:16] são interessantes.
+[28:18] E aí, alguns que realmente bateram a meta.
+[28:20] Isso aqui é interessante porque o primeiro foi o melhor.
+[28:23] Então, a primeira thumbnail escolhida
+[28:24] pelo teste foi aqui venceu,
+[28:26] mas vale a pena testar todas as outras,
+[28:28] porque muitas vezes a primeira não vai vencer.
+[28:30] E aqui a gente tem um exemplo bacana também,
+[28:32] que é, bom, não bater uma meta,
+[28:33] mas a diferença do CTR foi muito significativa
+[28:37] em relação ao pior caso dentre as thumbnails escolhidas.
+[28:42] E algumas modificações que a gente foi fazendo
+[28:44] também ao longo do tempo,
+[28:46] no começo, eles chamavam de antislop,
+[28:47] não antiflop,
+[28:49] porque eram a gente de criação de thumbnails
+[28:51] que tinha a ideia de criar thumbnails
+[28:54] com menos cara de A.
+[28:56] E aí, várias outras modificações ao longo do tempo.
+[29:00] E isso aqui pode continuar.
+[29:02] A gente consegue colocar muitas outras variações,
+[29:07] análises, metodologias
+[29:10] para fazer um que a gente fique ainda melhor.
+[29:12] E uma notícia muito boa para quem está na comunidade,
+[29:14] esses três agentes agora estão disponíveis para vocês.
+[29:18] É só vocês irem na aba de agentes prontos
+[29:20] e no mesmo dia vocês já conseguem fazer toda a instalação,
+[29:22] todas as configurações,
+[29:23] e vocês podem começar a utilizar isso aqui.
+[29:25] E para quem ainda não está na comunidade,
+[29:27] eu faço esse convite,
+[29:28] nós temos além desses três agentes
+[29:30] centenas de outros recursos,
+[29:31] agentes, skills, arcenais, repositórios,
+[29:34] coisas que você instala no seu computador
+[29:36] e começa a usar no mesmo dia
+[29:38] e já obtém resultados incríveis em diversas áreas.
+[29:41] A gente está falando aqui de YouTube,
+[29:43] mas a gente tem pipelines automatizados
+[29:45] para todas as redes sociais.
+[29:47] A gente ensina você a criar avatárias de A
+[29:49] que vão fazer o conteúdo para você do zero,
+[29:51] sem necessidade de gravar conteúdo.
+[29:53] A gente tem mais de 30 horas de conteúdo
+[29:55] sobre code, sobre code, sobre codex, sobre Hermes,
+[29:58] sobre as principais ferramentas.
+[29:59] A gente tem uma formação completa para você entender
+[30:01] as bases da AI e tem uma formação sólida
+[30:04] com os conceitos fundamentais.
+[30:06] Além disso, a gente faz lives toda semana
+[30:09] e tem suporte técnico todos os dias,
+[30:10] além de uma comunidade de milhares de pessoas
+[30:13] que os ouem no seu dia a dia, nas suas empresas,
+[30:15] nas empresas que estão pensando em criar
+[30:17] e muitos sás, muitos projetos, aplicativos
+[30:19] já surgiram com parcerias de dentro da comunidade.
+[30:22] Então, quem sabe o seu próximo sócio ou sócio
+[30:25] você está na comunidade, Maestros da AI.
+[30:26] Para entrar na comunidade, é só clicar no primeiro link
+[30:28] na descrição desse vídeo.
+[30:30] E se você gosta de vídeos como esse
+[30:32] que é receber mais recomendações de vídeos assim no seu YouTube,
+[30:34] você pode deixar um hype nesse vídeo,
+[30:36] um like, além de se inscrever no canal.
+[30:38] Um abraço e até a próxima.

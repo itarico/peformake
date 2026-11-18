@@ -1,0 +1,557 @@
+idioma: pt
+[00:00] Esse vídeo é para confessar que eu virei usuário do Clown.
+[00:04] Faz uma semana que eu contratei o pacote mais básico do Clown,
+[00:07] algumas experiências minhas me frustraram as expectativas,
+[00:11] mas outras foi muito melhor do que as minhas expectativas.
+[00:15] Eu pontuei algumas coisas, eu trouxe aqui alguns pontos que eu acho que não é tudo isso que a galera fala,
+[00:21] mas também tem outros pontos que a gente pode analisar que sim podem facilitar muito a nossa vida.
+[00:27] Aqui trazia um pouquinho da minha opinião sobre o Clown e, óbvio, mais especificamente,
+[00:33] sobre o Clown de Code, sobre a função que ele executa dentro do seu computador.
+[00:38] Eu vou explicar um pouquinho melhor sobre isso.
+[00:40] Mas se você não me conhece, eu sou o DaviLops e por aqui você vai encontrar um pouco da minha opinião
+[00:45] sobre tecnologias, audiovisual e coisas que podem facilitar a nossa vida.
+[00:50] Por isso eu já peço desde já que se você gostar do conteúdo lá no final,
+[00:54] você pode deixar o seu like e se inscrever também no canal.
+[00:57] E o ponto que eu quero começar é justamente esse.
+[01:00] Eu não sou um programador e nunca fui de fuçar muito no computador.
+[01:05] Eu uso computador para aquilo que eu preciso do meu trabalho,
+[01:07] mas nunca fui de ficar colocando muito plug-in,
+[01:10] encher muito computador,
+[01:11] também nunca fui muito de jogar até no computador,
+[01:13] então eu nunca fui muito habilidoso, vamos dizer assim.
+[01:16] Eu também não me considero um editor rápido.
+[01:18] A minha qualidade no audiovisual talvez seja mais fora,
+[01:22] câmera na mão do que necessariamente dentro do computador,
+[01:24] mas eu acho que isso é conteúdo para outro vídeo.
+[01:27] O que eu quero que você entenda aqui é que apesar de eu estar usando o Cloud Code,
+[01:31] eu não sou programador e isso muda completamente.
+[01:34] Porque o que é o Cloud Code?
+[01:35] Qual é a diferença do Cloud normal, do chat do Cloud para o Cloud Code?
+[01:39] O chat do Cloud é a mesma coisa que você usar o chat PT ou o Gemini.
+[01:44] Agora o chat do Gemini,
+[01:47] você pergunta coisas para ele ou você pede
+[01:50] e ele só vai gerar respostas para você
+[01:53] ou arquivos de vídeo, arquivos de áudio,
+[01:56] mas ele não vai executar nada para você dentro do seu computador.
+[02:01] Ele pode fazer planilhas, ele pode fazer Excel,
+[02:04] ele pode fazer apresentações,
+[02:06] inclusive a Manus é excelente para fazer isso,
+[02:10] mas nenhuma delas executa dentro do seu computador,
+[02:13] pega os arquivos do seu computador para fazer
+[02:16] e essa justamente é proposta que eu consigo fazer
+[02:18] por dentro do Cloud Code ou do Cloud Code Work.
+[02:21] Pelo que eu entendi, o Cloud Code para o Cloud Code Work,
+[02:25] é que o Cloud Code você mexe nos códigos mesmo
+[02:28] para você que é programador e tal.
+[02:30] E o Cloud Code Work,
+[02:32] você fala na linguagem natural do jeito que você entende
+[02:35] o que você quer fazer e ele executa,
+[02:38] inclusive te pedindo para, tipo assim,
+[02:40] eu posso entrar nessa pasta,
+[02:41] eu posso renomear isso,
+[02:43] eu posso colocar esse arquivo aqui
+[02:44] e você vai dizendo sim, não,
+[02:47] ou você vai escrevendo as outras opções.
+[02:49] Ah, sim, mas não todos os arquivos,
+[02:52] coloca só metade, coloca aqui e tal,
+[02:54] você vai escrevendo ali.
+[02:55] Então isso é excelente nesse ponto,
+[02:59] eu não tenho, inclusive me surpreendeu assim,
+[03:02] até ele não é tão rápido.
+[03:05] E olha que eu tenho uma máquina rápida,
+[03:06] eu tenho o MacBook Pro, M5,
+[03:09] então é um computador super novo,
+[03:10] com bastante memória,
+[03:12] mas ele não é tão rápido
+[03:14] quanto se você, por exemplo,
+[03:15] estiver acostumado a usar o GIMNA
+[03:17] e o Chat EPPT da vida,
+[03:19] que é a resposta em menos de um segundo,
+[03:21] é muito rápido,
+[03:22] o Cloud demora um pouquinho mais.
+[03:24] Não no Chat,
+[03:25] eu estou falando no Cloud Code para executar,
+[03:27] justamente por conta disso,
+[03:28] porque ele está executando algumas tarefas para você.
+[03:31] Mas isso não é uma coisa ruim,
+[03:32] porque de uma semana que eu estou fazendo isso,
+[03:34] eu estou fazendo isso todos os dias,
+[03:36] eu estou pedindo para ele,
+[03:37] fazendo bastante coisa.
+[03:38] Em nenhuma vez,
+[03:40] em nenhuma pasta,
+[03:41] houve erro,
+[03:42] para a separação de arquivo,
+[03:44] para nomear cliente, para colocar...
+[03:46] Cara, o nível de acerto dele,
+[03:48] eu achei absurdo,
+[03:50] porque por mais que tenha aquela frase que todo mundo sabe,
+[03:53] ah, tal site é uma a,
+[03:56] pode cometer erro.
+[03:57] Eu, particularmente nessa separação de arquivos,
+[04:00] e no uso que eu estou fazendo há uma semana,
+[04:02] eu não percebi nenhum erro.
+[04:04] E eu estou fazendo várias vezes isso ao dia,
+[04:06] porque um dos meus trabalhos também é um ser um pouco logger,
+[04:10] então que é onde eu pego os arquivos da câmera
+[04:12] e eu preciso separar em vários materiais,
+[04:14] subir em vários drives, fazer várias coisas.
+[04:16] Eu programei o Cloud para fazer isso.
+[04:18] Cara, deu super certo, super certo.
+[04:20] Inclusive, até que a integração com o meu Google Drive,
+[04:24] aí você pensa que você não tem que ficar fazendo vários backups,
+[04:28] para gente que é editor de vídeo, isso é maravilhoso.
+[04:31] Presta atenção,
+[04:32] você pega o seu cartão, conecta no computador,
+[04:34] e dali você passa para um lugar só.
+[04:37] Você pede para o Cloud Code,
+[04:38] ou para o Cloud Code Working.
+[04:40] Olha, eu quero que você faça isso daqui, coloque nesse SSD,
+[04:44] peço que jogue para esse HD também,
+[04:47] e ainda suba para um terceiro lugar,
+[04:50] que é o meu Google Drive,
+[04:52] porque eu preciso do backup assim, assim, assim, por cliente,
+[04:56] pela função, eu quero que esteja na pasta brutos,
+[04:59] porque é o projeto X, é o processo e tal,
+[05:01] e tu vai falando, cara, ele executa perfeitamente,
+[05:05] ele pode demorar.
+[05:06] Inclusive, para subir no Google Drive,
+[05:07] vai dependendo da sua internet também,
+[05:09] mas é fantástico, eu não vi nenhum erro.
+[05:12] Aí você imagina,
+[05:14] toda é sua pressão que você tinha que fazer,
+[05:17] antes pressão no sentido de atenção,
+[05:19] todo o seu tempo que você gastava,
+[05:21] olhando que, cara, se eu gravei 12 takes,
+[05:24] se aqui tem 12 takes, aqui tem 12 takes,
+[05:26] e no Drive tem 12 takes,
+[05:27] e tudo passou,
+[05:29] abrir os arquivos depois que gravou para ver se realmente copiou para outro lugar,
+[05:33] esse tempo você consegue reduzir por menos da metade,
+[05:37] porque agora você tem um prompt que você pode criar uma skill,
+[05:40] e aí você sempre ativa essa skill na hora que você injeta o cartão no computador,
+[05:45] pronto, você ativa essa skill e ela já sabe o que tem que fazer.
+[05:48] Cara, isso é maravilhoso,
+[05:50] então eu não sei quanto a gente conseguiu passar tanto tempo sem isso.
+[05:55] Esse é uma das funções que eu estou fazendo com o Cloud Code.
+[05:59] O segundo ponto legal que eu acho falar
+[06:01] é que muita coisa você aprende fuçando,
+[06:04] mexendo, pedindo, será que tem como,
+[06:06] será que não tem?
+[06:07] Porque até um exemplo assim,
+[06:09] eu queria editar o vídeo,
+[06:11] inclusive eu descobri o Cloud Code pelo canal aqui no YouTube,
+[06:15] Ratos de Iá,
+[06:16] e ele falou que ele não editava mais os vídeos dele,
+[06:18] porque ele usava Cloud Code editando dentro do Palmier Pro,
+[06:23] não é Premiere, é Palmier Pro.
+[06:25] Cara, eu achei muito legal,
+[06:26] inclusive eu copiei exatamente o que ele estava fazendo.
+[06:29] Eu baixei, installei tudo o que precisava,
+[06:31] colei ele, faço o teste,
+[06:33] aí eu gravei um vídeo rapidinho,
+[06:35] inclusive peguei as minhas reações que eu fui assistir,
+[06:37] eu me aranhei um novo dia,
+[06:39] e pedi para ele, olha,
+[06:40] faça isso, tira esse trecho e tal,
+[06:42] pro como teste,
+[06:43] e rodou tudo liso.
+[06:44] De novo, demorou um pouco,
+[06:46] mas ele rodou liso até o final,
+[06:48] e assim, eu não precisei nem importar o arquivo pra dentro do projeto,
+[06:52] porque ele fez tudo sozinho.
+[06:54] Eu achei isso maravilhoso,
+[06:55] porém eu tenho uma questão
+[06:57] que eu até posso trazer mais profundo em outro vídeo,
+[07:00] que eu tenho já mais de 10 anos editando no Premiere Pro,
+[07:03] da Adobe.
+[07:04] Então a minha memória muscular já está muito a fim,
+[07:07] eu não tenho mais dúvida,
+[07:09] cara, eu quero fazer tal coisa,
+[07:11] como é que se faz?
+[07:12] Eu não preciso mais pensar dentro do Premiere.
+[07:14] Desde o princípio até o final,
+[07:16] até tudo o que eu quero executar dentro do Premiere,
+[07:18] eu já sei.
+[07:19] A parada vem,
+[07:21] meus dedos já fazem sozinho,
+[07:22] eu não preciso nem pensar.
+[07:23] E aí, uma mudança de software,
+[07:25] eu estava me batendo muito pra fazer isso.
+[07:27] Então, pro Palm Air Pro também,
+[07:29] eu queria fazer coisas super simples,
+[07:31] mudar a legenda, fazer coisas assim,
+[07:33] e ele não me deixava.
+[07:34] Inclusive, esse vídeo que eu falei das reações,
+[07:37] eu pedi a legenda.
+[07:38] Ele legendou automático,
+[07:40] fez animações inclusive,
+[07:41] mas uma coisa que é um ponto de atenção,
+[07:43] eu não consegui mexer na legenda.
+[07:46] Talvez tenha algum jeito e tal,
+[07:47] eu que não consegui,
+[07:49] mas enfim, eu não consegui alterar a legenda ali.
+[07:52] Eu achei que ficou num formato nada a ver,
+[07:55] eu não conseguia mexer nas sombras, por exemplo.
+[07:57] Eu não conseguia mexer em alguma questão do aspecto.
+[08:00] Eu sei que ficou um pouco truncado,
+[08:02] e eu escolhi exportar o corte,
+[08:06] importei no Premiere,
+[08:07] legendei do jeito que eu sempre legendo,
+[08:08] e postei da maneira que eu desejava.
+[08:11] Então, eu consegui finalizar tudo pelo Clown?
+[08:14] Não, não consegui.
+[08:15] Esse é o próximo ponto que eu quero falar,
+[08:16] mas ele me adiantou uma boa parte.
+[08:19] Isso sim.
+[08:19] Se você chegou nesse ponto do vídeo,
+[08:21] você já percebeu que eu gostei bastante.
+[08:23] Existe coisas que não me agradaram muito,
+[08:26] e eu vou falar sobre isso,
+[08:27] mas a gente está num ponto que a gente precisa,
+[08:30] eu particularmente,
+[08:32] com o Cloud Code em específico,
+[08:34] aprender a usar e para o que eu consigo usar,
+[08:36] do que necessariamente se é difícil a ferramenta ou não.
+[08:39] Porque se a ferramenta pode executar,
+[08:42] eu sei que ela pode.
+[08:43] Agora, inclusive, essa semana teve algo engraçado,
+[08:47] porque é mais, às vezes, falha do meu comando,
+[08:50] do que necessariamente da ação dela.
+[08:53] Por exemplo,
+[08:54] eu queria executar, inclusive para testar,
+[08:56] porque agora estou vendo bastante vídeo sobre isso,
+[08:58] inteligência artificial nativa no meu computador.
+[09:02] Porque hoje, se você não sabe se a gente usa o GM,
+[09:06] o chat PT, a gente usa os servidores deles,
+[09:09] e a gente apenas tem um acesso via navegador a esses assuntos.
+[09:12] Inclusive, tem várias notícias de pessoas que foram investigadas,
+[09:17] de algumas pessoas que foram, inclusive, presas,
+[09:19] devido às suas conversas com o chat PT
+[09:23] ou com alguma inteligência artificial.
+[09:25] Tem bastante notícia sobre isso.
+[09:27] Então, existe sim uma análise por trás daquilo que a gente conversa
+[09:32] com inteligências artificiais de modo online,
+[09:35] porque a gente não está no nosso servidor,
+[09:37] a gente está no servidor de terceiros.
+[09:39] Mas você tendo uma inteligência artificial dentro do seu computador,
+[09:43] essa conversa vira 100% anônima.
+[09:46] E eu falei, cara, imagina eu tendo uma inteligência artificial
+[09:50] dentro do meu computador,
+[09:51] ou seja, o servidor dessa inteligência artificial sendo meu computador,
+[09:55] e eu conseguindo usar inteligência artificial junto com o Cloud Code,
+[09:59] tipo, pedindo para ele executar coisas e ir pensando junto,
+[10:02] e eu falei, cara, isso é absurdo, deixa eu tentar baixar.
+[10:05] E aí eu fui pesquisar um vídeo de novo, fui tentar baixar,
+[10:08] só que eu estava me batendo num modelo,
+[10:09] modelo que eu podia baixar e tal,
+[10:11] aí eu até teve uma hora que eu lembrei assim,
+[10:13] tá, por que que eu estou fazendo isso manualmente?
+[10:15] Eu estava tirando dúvidas sobre qual modelo baixar,
+[10:18] sobre o que fazer e tal, no Cloud.
+[10:21] Aí eu só mudei a binha para o Cloud Code com o Work
+[10:24] e falei assim, execute você então,
+[10:26] tudo que a gente está falando aqui,
+[10:28] baixa qual é a melhor versão para mim,
+[10:30] é isso que eu quero executar,
+[10:32] faça aí você, levou ali seus 9 minutos, 10 minutos,
+[10:36] mas ele executou, ele baixou exatamente o que eu queria,
+[10:39] já programou, e aí no momento que abriu,
+[10:41] eu já pude sair usando,
+[10:43] eu já pude fazer os testes,
+[10:45] por que? Porque eu já tinha baixado,
+[10:46] já tinha instalado, já tinha testado,
+[10:48] era só literalmente abrir e usar.
+[10:50] Cara, nem a coisa mais,
+[10:52] uma das coisas mais fázicas que tem no computador,
+[10:54] que é baixar algo e instalar no computador,
+[10:57] não precisa mais executar,
+[10:58] eu falei, cara, execute você,
+[10:59] eu falei exatamente assim,
+[11:01] execute você,
+[11:02] pronto, o negócio virou,
+[11:03] e instalou no meu computador,
+[11:05] eu já consegui fazer os testes,
+[11:06] então assim, é literalmente mais o hábito
+[11:08] da gente usar e pedir para ele executar algo,
+[11:11] do que necessariamente,
+[11:13] o erro da própria IA,
+[11:15] e isso é muito bizarro.
+[11:19] E o que a gente precisa prestar atenção,
+[11:21] que eu até comecei falando antes,
+[11:23] é que eu pesquisei no chat PT,
+[11:26] se era possível usar um Cloud,
+[11:28] ou Cloud Code conectado ao Premiere Pro,
+[11:31] que é o que eu já uso há bastante tempo,
+[11:33] ou o da Vinci Resolve,
+[11:35] para eu poder executar,
+[11:36] porque eu estou querendo,
+[11:37] nesse momento, migrar de Premiere Pro da Vinci,
+[11:40] mas isso também é outro vídeo,
+[11:41] e o chat PT me disse,
+[11:42] não, não tem como,
+[11:44] eu perguntei exatamente,
+[11:45] exatamente,
+[11:46] exatamente,
+[11:47] e eu perguntei exatamente a mesma coisa,
+[11:50] para o Gemini,
+[11:51] e ele falou, cara, não tem como,
+[11:52] porque ele não trabalha através do script,
+[11:57] eles são programas fechados e tal,
+[12:00] e deu uma explicação,
+[12:01] que eu de fato não entendo,
+[12:02] mas ele falou que não tinha como.
+[12:04] É até, eu e no Cloud Code,
+[12:05] eu pedi, cara,
+[12:07] eu gostei dessa edição,
+[12:09] que você fez dentro do Palmier,
+[12:11] mas a minha memória muscular,
+[12:13] está toda dentro do Premiere,
+[12:15] e aí, eu consigo executar aqui dentro,
+[12:16] e ele falou, consegue,
+[12:18] você só precisa baixar tal coisa,
+[12:20] e ele me deu o caminho,
+[12:21] aí eu falei a mesma coisa,
+[12:23] que eu acabei de contar na história,
+[12:24] faça você,
+[12:25] eu falei, baixa isso tal,
+[12:26] eu que precisar e tal,
+[12:27] ele só vai me perguntando assim,
+[12:29] deseja executar,
+[12:30] deseja um desejo,
+[12:31] sim, vai, tá tudo,
+[12:32] vai, vai embora.
+[12:33] E no final das contas,
+[12:34] eu consegui testar nos dois,
+[12:36] eu baixei o da Vince Resolve,
+[12:37] não tenho pago ainda,
+[12:38] baixei a versão gratuita,
+[12:39] mas eu consegui executar os dois.
+[12:42] O vídeo que eu queria legendar,
+[12:43] das reações do filme,
+[12:45] eu consegui legendar no Premiere,
+[12:47] o meio do Cloud Code,
+[12:49] e no da Vince,
+[12:50] eu peguei um outro projeto,
+[12:52] que é um vídeo aqui do YouTube da minha esposa,
+[12:54] inclusive,
+[12:54] eu pedi pra ele assim,
+[12:56] ó, tá aqui os arquivos brutos dentro do cartão,
+[12:58] eu quero que você jogue na pasta tal,
+[13:00] eu quero que você crie um projeto,
+[13:02] esse projeto é no da Vince,
+[13:04] quero que você tire todos os silêncios do vídeo,
+[13:07] e todas as vezes que a gente repete,
+[13:09] que a gente erre e tal,
+[13:09] eu quero que você elimine isso,
+[13:11] ele executou perfeitamente.
+[13:13] Depois dele ter executado,
+[13:14] eu falei, agora,
+[13:15] eu quero que você crie a sua narrativa,
+[13:19] porque eram dois dias diferentes que a gente tinha gravado,
+[13:21] então tinha momentos que a gente ia precisar encaixar as falas,
+[13:24] eu falei, você tem total liberdade pra excluir o que você quiser,
+[13:27] pra montar do jeito que você quiser,
+[13:29] cria sua narrativa,
+[13:30] e assim,
+[13:31] em questão de narrativa,
+[13:32] ficou perfeito,
+[13:34] ficou perfeito,
+[13:34] eu não mexi na narrativa do vídeo,
+[13:36] eu mexi em outro ponto,
+[13:38] que é uma das coisas que eu não gostei,
+[13:39] que eu vou falar mais pra frente,
+[13:40] mas o vídeo ficou perfeito,
+[13:42] foi eu fazer alguns ajustes ali,
+[13:45] e cara,
+[13:46] já ficou muito bom,
+[13:47] tipo assim,
+[13:48] o que eu teria antes,
+[13:49] desde os tempos de criar pasta,
+[13:51] importar projeto,
+[13:52] esperar carregar,
+[13:54] importar projeto não é,
+[13:56] importar os arquivos,
+[13:57] nos esperar carregar,
+[13:58] cara, ele não precisou nada disso,
+[14:00] eu só pedi,
+[14:02] ele executou,
+[14:03] e foi maravilhoso,
+[14:04] ele executou,
+[14:05] e eu precisei de ajustes finais,
+[14:06] que é um pouco sobre isso,
+[14:08] que eu não curti muito,
+[14:09] porque vamos lá,
+[14:10] na edição de vídeo,
+[14:11] como é que o Cloud Code trabalha?
+[14:12] Ele não vê o seu vídeo,
+[14:15] o seu arquivo de vídeo,
+[14:16] ele somente transcreve o áudio,
+[14:19] e a partir do áudio,
+[14:21] ele toma algumas decisões,
+[14:22] que são os momentos onde tão falado,
+[14:24] que de fato, constrói a narrativa,
+[14:26] então, quando eu falei,
+[14:27] ele construa uma narrativa,
+[14:29] o que que ele fez?
+[14:30] Ele pegou todo o texto que tinha,
+[14:31] e ele montou um texto,
+[14:33] intercalando as vozes,
+[14:35] pessoas falando e tal,
+[14:36] e só trouxe isso de volta pro vídeo.
+[14:39] E qual é o ponto ruim disso?
+[14:41] Porque como ele não tá vendo a imagem,
+[14:43] às vezes ele fala,
+[14:45] ele corta de modo impreciso,
+[14:48] ele corta na metade,
+[14:49] às vezes você tá fazendo alguma frase,
+[14:52] às vezes você tá numa linha de pensamento,
+[14:54] e ele corta no meio da linha de pensamento,
+[14:57] você não concluiu aquela linha de pensamento,
+[14:59] você não concluiu aquela frase,
+[15:01] como ele não tá interpretando as suas nuances,
+[15:05] que a gente tem na voz,
+[15:06] ele só tá interpretando a palavra,
+[15:09] crua, ali né,
+[15:10] conforme ela tá vindo igual o arquivo de texto,
+[15:14] enfim,
+[15:14] ele não tem essas noções de nuances,
+[15:17] às vezes fica estranho.
+[15:18] Eu assistindo, editando,
+[15:20] eu até tive a impressão,
+[15:22] e eu entendi o que que ele fez,
+[15:23] porque a narrativa das falas tava certa,
+[15:26] mas as emoções estavam completamente diferente,
+[15:28] falando alto, falando baixo,
+[15:30] um dano risado aí,
+[15:31] cortar pra um trecho sério,
+[15:32] então não ficou legal algumas partes,
+[15:35] porque dava alguns cortes muito abruptos,
+[15:37] muito secos.
+[15:38] E também,
+[15:39] além disso,
+[15:40] por mais que o som seja quase completamente a nossa palavra,
+[15:46] tem vezes que ele corta antes da gente finalizar a palavra,
+[15:49] o tempo de vídeo mesmo,
+[15:51] porque como ele tá transcrevendo,
+[15:53] e ele não sabe exatamente o tempo do take,
+[15:56] a minha sensação é que, por exemplo,
+[15:58] eu levei 10 segundos pra falar uma frase,
+[16:01] ele corta um pouco antes de eu finalizar,
+[16:04] o pensamento já vai pro próximo,
+[16:05] porque ele tirou um pouco de espaço aqui.
+[16:07] Então assim,
+[16:08] são coisas que no final,
+[16:10] tu percebe que aquilo ali tá meio,
+[16:12] cara, o corte não tá exato, sabe?
+[16:14] Só que não é todas as vezes.
+[16:16] Eu não sei se tem algumas vogais
+[16:19] que ele não pega direito,
+[16:20] algumas vezes que a gente fala,
+[16:21] eu não tô um pouco mais baixo que ele não pega,
+[16:23] eu não sei se algumas vezes,
+[16:24] algumas palavras não ficam claras,
+[16:26] e é por isso que isso acontece,
+[16:27] mas eu percebi que isso não foi apenas em uma gravação.
+[16:31] Foi em áudio de celular,
+[16:32] o áudio com câmera aqui,
+[16:33] como eu tô fazendo com áudio,
+[16:35] eu gravei em modelos diferentes,
+[16:36] e eu pedi pra ele executar exatamente a mesma coisa,
+[16:39] e sempre houve o mesmo erro.
+[16:41] Independente se for no Premiere,
+[16:42] dependente se fosse no Palm Air,
+[16:44] independente se fosse no DaVinci Resolve,
+[16:46] nos três sistemas de edição,
+[16:49] aconteceu exatamente a mesma coisa.
+[16:52] Então se você tá pensando em baixar o Cloud Code,
+[16:55] e pedir pra ele executar 100%,
+[16:57] que ele vai fazer 100% pra você,
+[16:59] dá pra renderizar de olho fechado,
+[17:01] e tá tudo certo?
+[17:01] Não,
+[17:02] mesmo sendo arquivos grandes,
+[17:04] cara, vai precisar revisar.
+[17:05] Porém,
+[17:06] é uma coisa até que...
+[17:08] O meu cunhado viu,
+[17:10] depois de eu fazer os testes,
+[17:12] ele viu eu editando na mão alguns trechos dele,
+[17:15] e eu não quer mais usar inteligência artificial,
+[17:18] aí eu falei,
+[17:19] não é uma questão de querer,
+[17:20] é uma questão que agora o refino final
+[17:22] precisa ser na mão,
+[17:24] mas o tempo que ele me economizou,
+[17:26] que eu ia estar aqui,
+[17:28] tendo que assistir tudo,
+[17:29] montando a melhor forma e tal,
+[17:32] agora ele já fez tudo automático,
+[17:33] tipo assim,
+[17:34] antes eu ia precisar de um,
+[17:35] dois dias pra editar um trecho,
+[17:37] sei lá, de 30 a 40 minutos,
+[17:39] agora eu consigo talvez fazer numa manhã,
+[17:41] porque a parte mais difícil ele já fez pra mim,
+[17:44] levou, sei lá, 30 a 40 minutos,
+[17:46] mas já tá pronto,
+[17:46] agora é só eu sentar e finalizar,
+[17:48] toda a narrativa,
+[17:49] todos os cortes de silêncio,
+[17:51] importar pra dentro do projeto,
+[17:53] selecionar a cor que eu uso
+[17:55] nesse tipo de material,
+[17:56] C-Log, C-S-Log,
+[17:58] 3, 2, enfim,
+[18:00] como ele adianta muito o meu trabalho,
+[18:02] eu posso ficar naquilo que a edição
+[18:04] realmente tem diferencial,
+[18:06] que é no timing,
+[18:07] que é na velocidade dessa narrativa,
+[18:10] que é nos inserites,
+[18:11] eu posso brincar mais com a edição,
+[18:13] e isso me dá mais liberdade,
+[18:15] então pra mim,
+[18:16] é isso que a IA tá sendo tão incrível
+[18:18] na hora de editar os vídeos,
+[18:20] ela vai substituir todo o editor de vídeo,
+[18:23] pode ser que num ponto futuro,
+[18:26] isso talvez de fato aconteça,
+[18:28] mas no momento,
+[18:30] eu acho que agora,
+[18:31] é o que vai dividir os homens dos meninos,
+[18:35] a galera que só faz o corte,
+[18:37] a galera que só bota uma transição,
+[18:38] não sei o que e tal,
+[18:39] e acha que é isso a edição de vídeo,
+[18:41] a IA vai tomar conta,
+[18:43] agora,
+[18:44] você de fato trazer uma narrativa diferente,
+[18:48] fazer uma construção diferente
+[18:49] com aquele conteúdo,
+[18:50] cara, isso é o único,
+[18:52] e essa autenticidade
+[18:54] é que o mercado vai perceber
+[18:56] a diferença nesses profissionais,
+[18:58] que sabem usar a IA a seu favor,
+[19:00] então é isso,
+[19:01] se você falou,
+[19:02] poxa, agora eu vou testar o Cloud Code,
+[19:03] achei legal,
+[19:04] ou se isso não é pra mim,
+[19:06] se eu somei alguma coisa na sua vida,
+[19:08] deixe aqui nos comentários,
+[19:09] eu quero saber,
+[19:10] comenta o que você acha,
+[19:11] se você já usa também,
+[19:12] se isso te ajudou alguma coisa,
+[19:14] se você é editor de vídeo,
+[19:16] tem alguma sete ali fazendo,
+[19:18] cara, compartilha aqui com a gente,
+[19:19] vamos criar uma comunidade
+[19:21] de ajuda aqui,
+[19:22] como é que a IA tá ajudando no seu workflow,
+[19:25] isso vai ser bem legal de saber,
+[19:26] e eu te espero no próximo vídeo,
+[19:28] valeu,
+[19:29] deixa o seu gostei.

@@ -1,0 +1,15 @@
+idioma: pt (1.00)
+[   0.0-   5.1] E se eu te disser que esse vídeo que você está vendo foi 100% editado com o IA?
+[   5.1-   6.3] Você acreditaria?
+[   6.3-   7.5] Não, né?
+[   7.5-  12.7] Cada corte, cada legenda, cada movimento na tela, quem fez foi uma IA.
+[  12.7-  14.2] Eu só escrevi o que queria.
+[  14.2-  15.1] E ela editou.
+[  15.1-  18.6] E tem gente passando a madrugada inteira para entregar um vídeo assim.
+[  18.6-  20.4] Você não precisa saber editar.
+[  20.4-  21.8] Precisa saber pedir.
+[  21.8-  23.2] Meu robô editor IA.
+[  23.2-  26.3] Eu te ensino do zero, mesmo se você nunca editou nada.
+[  26.3-  28.4] Agora é só clicar no link aí embaixo.
+[  28.4-  30.5] Ou continuar editando de madrugada.
+[  30.5-  31.5] Você que sabe.

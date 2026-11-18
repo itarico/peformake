@@ -1,0 +1,276 @@
+idioma: en
+[00:10] What if you could produce high-end motion graphics without touching After Effects or any kind of design software?
+[00:16] People are claiming cloud motion with Opus 5.5 is good enough to replace motion designers entirely.
+[00:23] So today, I'm putting cloud directly against my motion designer friend
+[00:27] to see if that's true or it's all just marketing and hype.
+[00:31] Hey, I'm Karima and welcome back to my creative space.
+[00:34] By the end of this video, you won't just understand how motion design works inside cloud,
+[00:39] you will have an exact, repeatable workflow to turn any idea into pro-level visuals,
+[00:44] saving you time, money, and giving you advantage as a creator.
+[00:49] If you follow me on Instagram, you know I make viral AI content.
+[00:52] Those are videos that hit millions of views, trends which are recreated by thousands
+[00:57] and breakdowns of the latest AI tools.
+[01:00] I was skeptical when everyone started showing off these cool animations created in minutes with cloud.
+[01:05] So I wanted to put it through a real test on my own content.
+[01:09] But here's why this matters for you.
+[01:11] Brands pay real money for UTC ads, product breakdowns, and sponsored videos.
+[01:17] But they don't want a simple boring video, right?
+[01:19] They want dynamic motion graphics.
+[01:21] And that's where creators get stuck.
+[01:24] Because you either spend a month learning After Effects,
+[01:27] or you have to pay a motion designer hundreds of dollars.
+[01:30] But if cloud can do this for you, that wall disappears.
+[01:34] You save hundreds of dollars and pitch fully designed videos,
+[01:37] even if you've never touched its design up.
+[01:40] So today, we're testing cloud on two real examples.
+[01:43] My goal isn't handing you a magic prompt to go copy-based.
+[01:47] I want you to measure how to direct cloud,
+[01:49] so you can take this exact workflow and adapt it to your own channel,
+[01:53] style, and projects that you may have.
+[01:55] Stick around until the end for my exact prompts, assets,
+[01:58] and the secret skill I use to write master prompts on the first try.
+[02:03] Grab your drink, open your laptop, and let's get into it.
+[02:06] Step one, editing on top of raw footage.
+[02:09] Before we jump straight into prompting,
+[02:11] I want to break down how cloud works,
+[02:13] because this is the part that confused me the most.
+[02:16] You don't need any technical setup like cloud code or After Effects for this.
+[02:21] Literally, just open up the regular cloud chat bot.
+[02:24] Go to artifacts, click on motion, and we're good to go.
+[02:27] Now here's a golden rule nobody tells you about.
+[02:30] If you give cloud a lazy one-sentence prompt,
+[02:33] like add emotion graphics to my clip,
+[02:35] you are going to get basic and boring results.
+[02:38] People getting mind-blowing visuals understand that the prompt is 90% of the work.
+[02:44] So you need to feed it references, brand assets, and actual direction.
+[02:49] And don't worry if that sounds like a lot.
+[02:51] At the end of the video,
+[02:52] I'm giving you my secret skill that writes my master prompts for you on the first try.
+[02:57] Okay, now that we covered the basics,
+[02:59] we can now proceed to the prompting part.
+[03:01] I have a raw video where I talk about cloud opens 5.5,
+[03:05] and I know, I know, I'm asking cloud to edit a video about cloud.
+[03:09] Weird, right?
+[03:09] And as I have mentioned at the very beginning of the video,
+[03:12] we are putting this to ultimate test.
+[03:15] So I gave the same video to my motion designer friend,
+[03:17] and now I'm handing it to cloud.
+[03:20] So that's years of hands-on design experience versus AI code.
+[03:23] Let's find out if cloud can actually match the quality of a real pro.
+[03:27] So first, we can add tick-sold MCPs straight into cloud.
+[03:31] The secret to true high-performing creative videos
+[03:33] is mixing raw footage with custom AI generations.
+[03:36] In this connection, let's cloud build visual elements and media directly inside your chat.
+[03:41] Then I drop in the raw, unedited video, and my script,
+[03:45] so cloud maps out every phrase I say.
+[03:47] Third, we need visual references.
+[03:49] Like I mentioned, uploading multiple reference clips
+[03:52] is the secret to walking in your exact visual direction.
+[03:55] And I finally attach my custom AI skill into the chat.
+[04:00] It acts as an automated prompt generator that feeds cloud
+[04:03] all the motion design rules and code structures behind the scenes,
+[04:06] so the output looks high-end from the first try.
+[04:09] Then, in simple sentences,
+[04:10] I describe what exactly I'm going for in the video.
+[04:13] So I'm specifying parts and some important details.
+[04:17] And I also mentioned that I can use Higgsville to generate some visuals.
+[04:20] Then I choose Opus 5.5 as my modal.
+[04:23] And that's it.
+[04:24] Notice I'm not saying anything technical.
+[04:26] I'm not naming a single tool.
+[04:28] I'm just talking to it exactly how I text and describe it in real life.
+[04:32] Okay.
+[04:33] And hit send.
+[04:35] Okay, while cloud works, here's a quick thought.
+[04:38] People hear AI edits your video
+[04:40] and they think the creative part is gone.
+[04:43] It's actually quite the opposite.
+[04:45] I pick the graphics.
+[04:46] I set the vibe and style.
+[04:47] So think of AI as your digital key brush
+[04:51] while you still remain as the artist.
+[04:53] And it's done.
+[04:54] Okay, look, it gave me a file.
+[04:56] So right here in the chat, I just click download.
+[05:00] And let's watch.
+[05:02] While tech CEOs are publicly debating AI safety
+[05:05] and telling us we need to slow down
+[05:07] and Thropic just launched Cloud Opus 5.5,
+[05:10] basically it acts like a real visual engineer.
+[05:13] It can build and render complex 2D and 3D animations
+[05:17] directly in HTML.
+[05:18] Now, is it perfect on the first try?
+[05:21] Of course it's not.
+[05:22] It never is.
+[05:23] And this is why we test.
+[05:25] AI is a trial and error process.
+[05:28] And the first version is usually draft.
+[05:30] And by the way, you don't have to go back
+[05:32] and redo everything from scratch.
+[05:34] Just write your iterations straight to cloud.
+[05:36] Here's the one thing I want to change.
+[05:38] Basically, I'm locking everything that already works
+[05:41] but I want to change the grain,
+[05:43] make all the visuals in one style
+[05:45] and slightly improve the text animation.
+[05:47] I also send some more references
+[05:48] so cloud can better understand the style I'm going for.
+[05:51] Cloud goes back into work
+[05:53] and changes exactly that.
+[05:55] It builds a whole video again
+[05:57] and gives me a new file.
+[05:58] Okay, so let's watch.
+[05:59] Quick thing before we reveal the results.
+[06:02] Only 10% of you watching right now
+[06:04] actually subscribed.
+[06:05] So if you want to keep learning
+[06:07] how to use these new AI tools
+[06:08] and stay ahead of trends,
+[06:10] make sure you hit that subscribe button right now.
+[06:13] Okay, so my captions are in place
+[06:16] and what I like most
+[06:18] is how well it built the graphics.
+[06:20] So everything is extremely clear.
+[06:23] The gradients matched what I was going for
+[06:26] and it did an incredible job
+[06:27] matching my personal visual style.
+[06:30] Looks perfect, right?
+[06:32] Now look closer.
+[06:33] How precisely it was able to match the wording
+[06:36] and take a look at the b-rolls it generated.
+[06:39] I think this video turned out really well.
+[06:41] Now the moment of truth.
+[06:44] Like I promised at the very start,
+[06:46] we put in cloud head-to-head
+[06:47] against a real professional.
+[06:49] Quick context, it took cloud only 34 minutes
+[06:52] to render the whole video.
+[06:54] However, it took five hours for my friend
+[06:57] to complete this same task.
+[06:58] Okay, looking at both of these,
+[07:00] I'm genuinely not sure which one wins.
+[07:02] So they both bring something
+[07:04] completely different to the table.
+[07:06] Drop a comment below
+[07:07] and tell me whose edit you'd actually stop
+[07:09] and watch because I don't think the gap
+[07:12] is as big as people make it seem to be.
+[07:15] So that's how cloud handles footage edits.
+[07:17] Next, we're testing something even crazier.
+[07:20] That's pure motion design built from complete scratch,
+[07:24] meaning no raw video at all,
+[07:26] just cloud creating every single visual element from zero.
+[07:29] Stick around until the end
+[07:31] because I'm putting both options side by side
+[07:33] to break down the cost between
+[07:35] hiring a motion designer
+[07:37] and running this in side-cloud.
+[07:38] Step two, launch style motion graphics.
+[07:41] Now let me show you why brands actually buy motion graphics.
+[07:45] Whenever a company launches a new product
+[07:47] drops an update or runs a massive ad campaign,
+[07:50] they need high-end launch style motion design.
+[07:53] So these are smooth transitions with sleek UI elements
+[07:56] and brands pay thousands of dollars
+[07:58] for a 15-second launch video
+[08:00] because graphics instantly elevates the product look.
+[08:04] But building these from scratch usually takes days or even weeks.
+[08:07] Now listen, if cloud can generate
+[08:09] launch style motion graphics from complete scratch,
+[08:12] that changes everything for creators and agencies.
+[08:16] In fact, remember the intro at the very start of video?
+[08:19] I created that entire intro using cloud.
+[08:22] Let me show you the exact workflow.
+[08:24] Since there's no raw footage,
+[08:26] this time we're doing this purely from nothing.
+[08:29] So first, I gather my references.
+[08:31] So I look for a few high-end launch videos.
+[08:36] And here are some elements I found on Pinterest.
+[08:39] Second, I upload my custom motion design skill.
+[08:42] And third, I describe what I want
+[08:45] in very simple plain English.
+[08:47] Notice I'm not using any technical terms here.
+[08:50] I'm literally just describing the vibe
+[08:52] same as I would when talking to my motion designer.
+[08:55] Okay, hit send and let's see what happens.
+[08:58] It's ready, so let's download the clip and check it out.
+[09:01] Okay, this looks crazy good for a first attempt.
+[09:05] But I want the pacing to feel even snappier
+[09:08] and I want the text to pop a bit more.
+[09:11] Just like before, we don't start over again.
+[09:13] I just type my quick feedback straight into the prompt box.
+[09:17] Okay, cloud updates, regenerates the visual
+[09:19] and gives me version two.
+[09:21] Let's see what it cooked.
+[09:22] Okay, wow.
+[09:24] Now this is clean.
+[09:26] Look at this tile.
+[09:28] It looks like paper cutouts from magazines.
+[09:31] And the transitions between scenes are so clean.
+[09:35] And what I like most is the general creative vibe
+[09:38] and the color gradients it chose.
+[09:40] Now for the final verdict.
+[09:41] Is AI good enough to handle high-end motion design
+[09:44] or are we still way better off hiring a pro?
+[09:48] I send this exact brief to my designer
+[09:50] to build in after effects
+[09:51] and now we're putting both versions head-to-head.
+[09:54] Let's see who takes the crowd.
+[09:55] Motion designers' version has these smooth, subtle human touches
+[10:00] like custom lighting flares and micro-digiles
+[10:03] that make it look ultra polished.
+[10:05] But looking at clouds version, the camera depth,
+[10:08] the glowing accents and the typography are crazy clean.
+[10:12] If I didn't know an AI generated this,
+[10:14] I would 100% assume it was created by hand
+[10:17] by a real motion designer.
+[10:18] When you look at the general outcome,
+[10:20] the fact that one was built purely through text
+[10:23] inside a chat window in 20 minutes,
+[10:25] it's just mind-blowing.
+[10:27] Drop a comment below.
+[10:28] Which intro would you like to use for your channel?
+[10:31] So what's the real bottom line here?
+[10:33] Let's break down the exact math.
+[10:35] On average, a motion designer charges
+[10:36] a few hundred dollars for an edit like the first one
+[10:39] and the custom launch video like the second one
+[10:42] goes into thousands of dollars easily.
+[10:44] But with Claude, it's one subscription a month
+[10:47] for unlimited videos.
+[10:49] Just think about it.
+[10:50] If we're being real, Claude wins hands down
+[10:53] on speed and price and honestly editing visuals
+[10:57] just by typing simple messages is a game changer.
+[11:00] But my motion designer friend brings on taste.
+[11:03] He knows my brand, he feels my audience
+[11:06] and makes creative choices I wouldn't even think to put
+[11:09] inside a prompt in the first place.
+[11:11] And that human touch is what I'm actually paying for.
+[11:14] So is Claude replacing motion designers?
+[11:16] For me, not yet.
+[11:18] But here's a secret brands don't want you to know about
+[11:21] and this is the whole reason I made this video.
+[11:24] Brands do not care about who edits your videos.
+[11:27] They all care that it looks good.
+[11:29] If you're a comic creator who can't edit
+[11:31] or you're doing UGC for brands and every edit
+[11:33] it's your profit or you're just starting out
+[11:36] and can't afford a motion designer, this is your way in.
+[11:39] All of my prompts, the whole workflow is in the free guide
+[11:42] in the description below.
+[11:43] So don't bother writing anything down.
+[11:46] Take them and test them out today.
+[11:48] And as a little thank you for sticking around until the end
+[11:51] I dropped a custom AI skill inside that free guide for you.
+[11:55] It basically acts as your personal prompt generator.
+[11:58] So Claude can draft cleaner, way better results in seconds.
+[12:02] And tell me in the comments whose energy you like more,
+[12:04] Claude's or my motion designers.
+[12:06] And let me know what else you'd like me to make a video about.
+[12:09] Drop a like if this made AI a little less confusing.
+[12:12] Subscribe to my creative space for more breakdowns
+[12:15] and tag me, Kai Creatives, if you try this
+[12:17] because I really really want to see your works.
+[12:19] Now go make some art and I'll see you in the next one.
+[12:22] Goodbye everyone.

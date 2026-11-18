@@ -1,0 +1,125 @@
+{
+ "id": "J-S1JqGaY1s",
+ "title": "Automatizei a edição dos meus vídeos com Claude Code (passo a passo)",
+ "fulltitle": "Automatizei a edição dos meus vídeos com Claude Code (passo a passo)",
+ "channel": "Chiara Costa",
+ "channel_id": "UC5yn_hADczkiX2Nav-hXdag",
+ "channel_url": "https://www.youtube.com/channel/UC5yn_hADczkiX2Nav-hXdag",
+ "uploader": "Chiara Costa",
+ "uploader_id": "@a_chiaraa",
+ "webpage_url": "https://www.youtube.com/watch?v=J-S1JqGaY1s",
+ "upload_date": "20261016",
+ "duration": 729,
+ "duration_string": "12:09",
+ "view_count": 78323,
+ "like_count": 1475,
+ "comment_count": 57,
+ "channel_follower_count": 53700,
+ "description": "🎥 Higgsfield ➜ https://higgsfield.ai/s/general-a_chiaraa-EHGfGD \n\n📚 Material da aula: estruturas de prompts, referências e skill de edição ➜ https://go.chiaracosta.com/material-244\n\n🎯 Quer usar IA no seu negócio ou trabalho? Descubra o melhor caminho pra você ➜ https://go.chiaracosta.com/244\n\n🎬 Skill HyperFrames ➜ https://github.com/heygen-com/hyperframes\n\n🎞️ Remotion ➜ https://github.com/remotion-dev/remotion\n\n🎨 Site de referências de vídeos de apresentação ➜ https://whatships.com/\n\n\nVeja como criar vídeos com animações no Claude Code usando HyperFrames e vibe coding. Mostro apresentações de produto, narração com voz clonada, cenas realistas com Higgsfield e edição de vídeos gravados com uma skill reutilizável, um fluxo de automação com inteligência artificial para produzir vídeos com sua identidade visual.\n\n📌 O que você vai aprender nesse vídeo:\n00:00 - Animações e vídeos editados com Claude\n00:43 - Exemplo de apresentação de produto com motion graphics\n01:38 - O prompt e o contexto usados para criar o vídeo\n02:19 - Claude Code e os programas necessários\n03:27 - HyperFrames e animações feitas com código\n03:58 - Como instalar HyperFrames ou Remotion\n04:45 - Narração com voz clonada no HeyGen\n06:14 - Como estruturar o prompt e usar referências\n07:23 - Higgsfield para criar cenas realistas\n08:04 - Como conectar Higgsfield ao Claude\n08:21 - Planejar a cena e aprovar a imagem antes do vídeo\n09:20 - Resultado e consumo de uso no Claude\n10:03 - Como editar seus vídeos gravados com HyperFrames\n10:48 - Criar uma skill para reutilizar seu estilo de edição\n11:47 - Material da aula e recursos para baixar  \n\n*CONTATOS*\n📩 Parcerias ➜ contato@paginasnapratica.com.br",
+ "tags": [
+  "vibe coding",
+  "vibe coding na prática",
+  "inteligência artificial",
+  "Claude Code",
+  "vídeos com Claude",
+  "animações com IA",
+  "edição de vídeo com IA",
+  "criar vídeos com IA",
+  "HyperFrames",
+  "Remotion",
+  "motion graphics",
+  "Higgsfield",
+  "narração com IA",
+  "vídeos de produto",
+  "edição automática",
+  "automação de vídeos",
+  "skills Claude",
+  "animação com código",
+  "edição de video com ia",
+  "edição de vídeo com claude",
+  "claude motion graphics",
+  "motion graphics com ia",
+  "animações com ia"
+ ],
+ "categories": [
+  "Education"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Animações e vídeos editados com Claude",
+   "end_time": 43
+  },
+  {
+   "start_time": 43,
+   "title": "Exemplo de apresentação de produto com motion graphics",
+   "end_time": 98
+  },
+  {
+   "start_time": 98,
+   "title": "O prompt e o contexto usados para criar o vídeo",
+   "end_time": 139
+  },
+  {
+   "start_time": 139,
+   "title": "Claude Code e os programas necessários",
+   "end_time": 207
+  },
+  {
+   "start_time": 207,
+   "title": "HyperFrames e animações feitas com código",
+   "end_time": 238
+  },
+  {
+   "start_time": 238,
+   "title": "Como instalar HyperFrames ou Remotion",
+   "end_time": 285
+  },
+  {
+   "start_time": 285,
+   "title": "Narração com voz clonada no HeyGen",
+   "end_time": 374
+  },
+  {
+   "start_time": 374,
+   "title": "Como estruturar o prompt e usar referências",
+   "end_time": 443
+  },
+  {
+   "start_time": 443,
+   "title": "Higgsfield para criar cenas realistas",
+   "end_time": 484
+  },
+  {
+   "start_time": 484,
+   "title": "Como conectar Higgsfield ao Claude",
+   "end_time": 501
+  },
+  {
+   "start_time": 501,
+   "title": "Planejar a cena e aprovar a imagem antes do vídeo",
+   "end_time": 560
+  },
+  {
+   "start_time": 560,
+   "title": "Resultado e consumo de uso no Claude",
+   "end_time": 603
+  },
+  {
+   "start_time": 603,
+   "title": "Como editar seus vídeos gravados com HyperFrames",
+   "end_time": 648
+  },
+  {
+   "start_time": 648,
+   "title": "Criar uma skill para reutilizar seu estilo de edição",
+   "end_time": 707
+  },
+  {
+   "start_time": 707,
+   "title": "Material da aula e recursos para baixar",
+   "end_time": 729
+  }
+ ],
+ "language": "pt-BR"
+}

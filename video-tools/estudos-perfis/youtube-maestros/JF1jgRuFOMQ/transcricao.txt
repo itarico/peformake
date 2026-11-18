@@ -1,0 +1,258 @@
+idioma: pt
+[00:00] Pra gente gosta de inteligência artificial, o GitHub é um grande podício, ilimitado e infinito de possibilidades.
+[00:07] Você tem skills, você tem agentes, você tem projetos inteiros e dentro desses projetos, dezenas de skills e agentes.
+[00:16] E tudo isso é parte de uma comunidade gigantesca, pessoas que fazem upload daquilo que criam e colocam todos os dias no GitHub.
+[00:25] Além disso, no GitHub você pode subir seus projetos, tanto para compartilhar com os outros,
+[00:29] mas mais do que isso, para manter o histórico de cada modificação ao longo do tempo,
+[00:34] para retornar para os anteriores, para trabalhar em equipes, mesmo equipes grandes, em um projeto só.
+[00:40] Mas o importante aqui é a parte do rodizio, é a parte em que você entende que dentro dessa biblioteca infinita e livre,
+[00:49] publica grátis, você pode baixar muitas coisas, obviamente tomando certo cuidado, porque qualquer pessoa pode subir qualquer coisa,
+[00:57] mas uma vez que você tem acesso a isso, o que baixar? Eu tenho infinito conhecimento, infinitos recursos, infinitos repositórios,
+[01:08] que são os projetos no GitHub, o que eu devo baixar, o que eu devo aproveitar de fato?
+[01:13] Se você pudesse escolher três livros, qualquer livro já escrito na história da humanidade,
+[01:18] primeira edição do Don Quichote, qualquer livro, qual livro você escolheria? Ou então quais dez livros você escolheria?
+[01:26] As possibilidades são tantas que provavelmente você ficaria um pouco perdido nessa decisão no começo.
+[01:31] Mas como a maior parte das pessoas compra livros e não lê, você pode pensar em habilidades.
+[01:36] Imagina que você está no mundo meio Matrix e você pode fazer o download de uma habilidade,
+[01:41] que era aprender uma arte marcial, que era aprender a falar um idioma, que era aprender sobre iluminação de cinema,
+[01:46] que era aprender sobre raikai, que era aprender cara, se inventa o que você quer.
+[01:52] História antiga, histologia, cara, visão de raio-xi, sei lá, o que você quiser.
+[01:58] Tocar um instrumento, qualquer coisa. Se você pudesse escolher qualquer habilidade,
+[02:03] aí vamos falar de habilidades factíveis, não superpoderes, mas quais você escolheria?
+[02:08] Ter o GitHub à sua disposição hoje. É mais ou menos isso.
+[02:13] Só que ao invés de trazer habilidades e competências para você como indivíduo,
+[02:17] você vai trazer essas habilidades e competências para o seu ecossistema de inteligência artificial.
+[02:22] Vamos supor que você tenha um agente que escreve muito bem, mas que às vezes apresenta algumas informações erradas,
+[02:27] algumas informações desatualizadas. Tem dezenas, se não centenas, de skills,
+[02:31] para você fazer a verificação dos fatos. Ou então você tem um agente de design,
+[02:35] mas o resultado não está saindo da maneira que você espera, não está vindo com aquele bom gosto
+[02:40] que você olha nos sites profissionais. Tem dezenas, se não centenas de skills para você resolver esse problema.
+[02:47] A mais fombosa de tudo é sendo front-end designer da própria Anthropic.
+[02:50] É tanta coisa que você encontra no GitHub que às vezes é até difícil você filtrar,
+[02:56] entender o que você deve usar, o que faz sentido você instalar.
+[02:59] Mas você tem desde skills que fazem com que o modelo de agente possa ser usado em computadores
+[03:04] com uma RAM de 8 GB, 16 GB, até projetos super consolidados de automação de browser da Microsoft.
+[03:12] São coisas muito diversas e durante muito tempo era um lugar que só deves frequentar.
+[03:19] Só que agora no mundo da inteligência artificial, a gente está falando de uma biblioteca pública
+[03:23] para você baixar recursos e começar a usar com os seus modelos de A, com o seu harness,
+[03:29] com as IaaS que você tem no seu computador.
+[03:31] Só que com a A era da IaaS, o GitHub se tornou um lugar que pessoas não técnicas também frequentam.
+[03:36] Baixam repositórios, baixam agentes, skills e começam a utilizar com comandos de texto,
+[03:41] às vezes até ditados. Só que é muita coisa.
+[03:44] Então você tem que tomar certo cuidado porque já viu vários casos de pessoas que saem baixando tudo por aí
+[03:49] e aí de repente acabam baixando coisas maliciosas, coisas que propositamente foram colocadas no GitHub,
+[03:56] pensando que você iria baixar no seu computador e iria executar com uma IaaS
+[04:00] e a partir disso, enfim, tem infinitas possibilidades do que pode acontecer de ruim,
+[04:05] caso a intenção de alguém não tenha sido a melhor.
+[04:10] Os repositórios que a gente vai falar respeitando esse vídeo somam mais de 1 milhão de estrelas.
+[04:14] A estrela é a curtida do GitHub.
+[04:17] Bom, para quem tem a demanda de editar vídeos ou criar vídeos com inteligência artificial
+[04:21] ou criar motion graphics, tem dois repositórios que são muito úteis,
+[04:25] que foram muito importantes já e foram unânimes dentro do contexto de motion graphics para vídeos,
+[04:31] edição de vídeos com IaaS, clode code, mais edição de vídeos.
+[04:35] E o primeiro de todos se chama Remotion e depois veio o Hyper Frames.
+[04:40] Os dois são muito bons, eles escrevem um em React e outro em HTML
+[04:44] e eles transformam um código em vídeo, basicamente.
+[04:48] O Hyper Frames vai ser mais útil para gerar motions do que editar, de fato,
+[04:54] para o vídeo quebrar, limpar, descluir.
+[04:56] O Remotion já tem funcionalidades mais voltadas também para edição em si.
+[05:02] Como o Remotion vai trabalhar com React e TypeScript,
+[05:05] ele vai ser mais pesado, vai gastar mais tokens do que o Hyper Frames,
+[05:10] que trabalha com CSS, com JavaScript e com HTML.
+[05:14] E a gente tem vídeos aqui no canal sobre as duas ferramentas
+[05:17] e também tem outra forma de fazer motions, simplesmente com JavaScript e clode code,
+[05:22] porque os modelos novos estão muito bons, então os resultados que vem logo de cara
+[05:26] já são excelentes e ferramentas adicionais podem nem ser necessárias,
+[05:29] dependendo do que você quer fazer, mas se você usa as ferramentas cohetas,
+[05:34] mais um framework trabalhado para a construção de uma coisa mais robusta,
+[05:38] uma gente mais refinada, você tende a ter resultados melhores.
+[05:42] Tem um repositório que quando todo mundo começou a falar respeito
+[05:44] eu fiquei um pouco desconfiado e achei que não funcionaria,
+[05:47] pelo menos não em português, chamado Voice Studio.
+[05:51] Basicamente é um 11 Labs Gratio Open Source.
+[05:54] Ele permite que você clone a sua voz e crie áudios a partir da sua voz clonada.
+[06:00] E uma coisa muito interessante do Voice Studio é que ele pode pegar um vídeo de um idioma
+[06:04] e traduzir para outro.
+[06:06] Ou seja, você consegue basicamente dublar o vídeo de maneira gratuita no seu computador,
+[06:11] com a sua voz é muito louco assim.
+[06:13] E realmente eu não esperava, não dava muito, achei que era ruim,
+[06:18] mas a gente testou e o resultado foi surpreendente.
+[06:21] É melhor do que as opções pagas?
+[06:24] Não, sinceramente não é. A gente ainda usa para todos os projetos sérios
+[06:27] as opções pagas, as assinaturas que vão rodar em torno de 100 dólares.
+[06:32] Mas para quem precisa de alternativas gratuitas, open source e limitadas,
+[06:36] que querem colocar isso numa VPS, querem colocar um pipeline 24 horas por dia para rodar,
+[06:42] para postar 100 vídeos por dia, talvez seja uma alternativa.
+[06:46] Bom, o próximo repositório é o Paperclip.
+[06:48] A gente já fez um vídeo completo sobre ele.
+[06:50] Em poucas palavras, o Paperclip é a maneira mais fácil, simples, barata,
+[06:56] na verdade é gratuito, de criar um ecossistema completo de agentes
+[07:03] que trabalham ao mesmo tempo, que conversam entre si e todos com contextos separados,
+[07:09] com obrigações separadas, trabalhando em função de um mesmo projeto
+[07:14] para fazer uma entrega.
+[07:15] Você pode também criar de uma maneira muito simples um conselho de diferentes modelos de A
+[07:20] que vão debatendo sobre um certo tópico para gerar um resultado final refinado.
+[07:25] E é realmente a forma mais simples que eu conheço de trabalhar com a orquestração de agentes,
+[07:30] assim, em meia hora.
+[07:32] Você decide que quer começar a orquestrar agentes, vai lá,
+[07:35] dá uma olhada no Paperclip, instala, pede uma ajuda para o Clod, se você precisar.
+[07:40] Depois da própria interface do Paperclip, você consegue fazer tudo de uma maneira
+[07:44] muito intuitiva, se quiser mais diferença, você pode assistir o vídeo aqui do canal,
+[07:49] mas é realmente muito simples.
+[07:51] Para os programadores, temos os Super Powers.
+[07:53] Muita gente já conhece, ficou muito conhecido, mas ele foi atualizado recentemente,
+[07:57] se torna muito mais eficiente.
+[07:59] É um dos projetos mais legais que tem para você planejar, construir,
+[08:02] revisar e testar todos os seus projetos.
+[08:06] E finalmente, chegamos ao repositório da Vaze, o Reverse Engineer Anything.
+[08:10] Nós temos vídeos aqui do canal também, testando e explicando exatamente como ele funciona,
+[08:14] mas basicamente é um projeto que permite que você clone qualquer aplicativo.
+[08:20] Você pede para ele iniciar um processo de clonagem, ele vai trazer
+[08:24] várias informações de diferentes fontes com alguns kits de ferramentas interessantes
+[08:29] para fazer essa coleta e aí ele vai pegar essas informações todas e
+[08:33] começar um processo de desenvolvimento.
+[08:35] A gente testou várias vezes e a gente concluiu, sinceramente,
+[08:39] que o processo de coleta de informações é muito bacana,
+[08:42] ele resolve um problema real de uma maneira muito simples e elegante,
+[08:46] mas o processo de desenvolvimento em si do aplicativo não era lá grande coisa,
+[08:52] sobretudo quando a gente começa a entender as horas mais sofisticadas
+[08:55] de trabalhar com a agente.
+[08:57] E aí nós criamos uma versão inspirada totalmente no Reverse Engineer Anything,
+[09:03] mas com certos aprimoramentos, sobretudo na etapa de desenvolvimento.
+[09:06] Quem é membro da comunidade pode vir aqui em agentes prontos
+[09:09] e vocês vêm aqui em espelho de apps.
+[09:11] Recentemente nós adicionamos vários agentes de produção de conteúdo,
+[09:15] um que viraliza vídeos com muita facilidade.
+[09:19] A gente conseguiu um resultado muito bom de 100 mil views em três dias
+[09:22] com esse exato agente.
+[09:25] Nós temos também o finalizador especialista em motion design
+[09:28] com uma biblioteca completa de motions prontos
+[09:31] para você gastar menos tokens, enquanto cria resultados interessantes.
+[09:36] Temos também agentes de criação de thumbnail,
+[09:38] agentes de aprimoramento de performance de canal de YouTube,
+[09:42] editores de vídeo dedicados,
+[09:45] temos clipadores que pegam vídeo longo e transformam em vários vídeos curtos
+[09:49] e já possam nas redes sociais.
+[09:51] E aqui na aba Skills Prontas nós temos diversos outros recursos para você também.
+[09:57] E os meus dois favoritos são esses aqui, o Maestro Mode e o AR Board,
+[10:01] pelo menos nesse momento, o Veredit.
+[10:04] A ideia aqui, e essas que a gente desenvolveu completamente no zero,
+[10:07] sem nenhuma referência prévia,
+[10:09] é que você tem uma metodologia de aprovação e planejamento mais eficiente.
+[10:14] Toda vez que você precisa escolher entre diversas opções,
+[10:16] você pode usar essas aqui. Ou seja, para um site,
+[10:18] eu quero criar um site, mas eu quero diferentes templates,
+[10:21] paletas de cores ou fontes,
+[10:24] ou quero que você faça o mood board,
+[10:27] ou que você crie pequenas versões das primeiras sessões,
+[10:30] quero dez variações.
+[10:31] E aí eu escolho entre uma delas para você gerar o site final.
+[10:34] Ele vai apresentar dentro de um painel dez versões,
+[10:37] você vai apertando para o lado e vai aprovando ou reprovando o que você gostou,
+[10:41] o que você não gostou, comentando e ele vai criar um site adaptado
+[10:44] às respostas que você deu de uma maneira muito bacana.
+[10:48] Ou então você tem um aplicativo e você quer atualizar ele,
+[10:50] otimizar ele, adicionar melhorias,
+[10:52] mas você não quer fazer isso simplesmente dizendo para ir melhorar,
+[10:55] porque ela vai tomar decisões que talvez não sejam aquilo que você deseja.
+[10:58] Então você pode pedir para ela criar um AR Board
+[11:01] para apresentar todas as sugestões de modificação.
+[11:04] E aí você com uma tecla, aprova ou reprova,
+[11:07] e aí depois de dez minutos, no máximo,
+[11:09] se você tinha 50, 100 modificações possíveis ali,
+[11:13] você já aprovou e rejetou todas,
+[11:14] e aí você volta para o chat e fala,
+[11:16] acabei, pode implementar e ele implementa tudo.
+[11:18] É muito mais fácil, tipo, dez vezes mais fácil
+[11:22] do que ficar lá no chat, olhando, lendo cada uma das modificações,
+[11:25] ou então pedindo um arquivo HTML com relatório,
+[11:28] que já é uma forma um pouco mais legal,
+[11:30] mas não é assim ficar lendo um HTML longo,
+[11:32] uma coisa que já não faz mais tanto sentido
+[11:35] se você quer otimizar as coisas.
+[11:36] E tem também o Maestro Mode, que é uma versão aprimorada dos Gauntlet Loops.
+[11:40] Caso você não conheça o Gauntlet Loops,
+[11:42] é uma lógica de prompt, que depois vira SQL, vira agente,
+[11:45] vira o que você quiser,
+[11:46] mas basicamente é uma forma de execução de tarefas,
+[11:50] com inteligência artificial,
+[11:51] que tem etapas de execução, etapas de revisão e várias rodadas,
+[11:55] que na medida que os supervisores, os críticos vão
+[11:59] reprovando o resultado dos trabalhadores,
+[12:02] novas rodadas surgem para resolver os problemas e melhorar,
+[12:06] e a expectativa dos supervisores e a que o resultado seja surpreendente.
+[12:11] Então, o seu resultado não pode ser surpreendente,
+[12:13] ele volta para a fila mesmo que tenha sido um resultado funcional.
+[12:15] Só que quando a gente testou o Gauntlet Loops da maneira clássica, digamos,
+[12:18] a gente teve vários problemas,
+[12:20] desde tarefas gastando muitos tokens,
+[12:22] que eram triviais e não impactavam em nada
+[12:25] a experiência do usuário final em certos projetos,
+[12:27] até o contrário,
+[12:29] coisas que precisavam de mais dedicação,
+[12:31] não sendo devidamente supervisionadas.
+[12:35] Uma coisa que a gente sentiu muita falta também,
+[12:36] era uma forma de pedir para ele parar de uma maneira eficiente
+[12:40] que não quebrasse todo o processo.
+[12:42] Ele não maestro o molde se ele está trabalhando
+[12:44] durante 4, 5, 8 horas.
+[12:45] Você fala, não, quero que está bom já para mim,
+[12:47] já deu tempo, meus tokens estão acabando.
+[12:49] Você pode falar para ele encerrar o projeto,
+[12:51] aí ele vai fazer isso da maneira,
+[12:53] gastando alguns tokens ali, da maneira devida,
+[12:57] e aí ele vai te entregar a versão pronta até o momento.
+[12:59] E às vezes já é excepcional.
+[13:01] Nessa mesma linha, nós temos aplicativos,
+[13:02] mais de 50 aplicativos exclusivos
+[13:04] para os membros da comunidade, como o Graph Builder.
+[13:07] Você tem aqui uma estrutura de Node,
+[13:08] se você vai controlando seus trabalhadores,
+[13:10] seus supervisores, as suas entregas,
+[13:13] você vai criando mais trabalhadores,
+[13:15] vai criando mais supervisores
+[13:17] e vai controlando os seus grafos.
+[13:20] Se você quer criar sistemas agentes,
+[13:22] enfim, tudo isso,
+[13:23] o princípio de como isso aqui funciona,
+[13:25] a gente ensina dentro da comunidade nas aulas,
+[13:28] caso você ainda não tenha assistido,
+[13:29] mas temos aqui também ferramentas para te auxiliar.
+[13:32] Você cria a sua estrutura,
+[13:34] apreende o que cada trabalhador vai fazer,
+[13:36] e assim você controla o gasto de tokens,
+[13:38] a priorização de cada tarefa.
+[13:40] E você pode exportar em vários formatos diferentes
+[13:44] e pode enviar para a sua EA executar
+[13:46] de uma maneira muito mais precisa e controlada.
+[13:49] Isso ainda não está na comunidade,
+[13:50] fica o convite,
+[13:51] nós temos lives toda semana
+[13:53] para você tirar dúvidas diretamente conosco,
+[13:55] suporte técnico todos os dias,
+[13:57] além de todo o conteúdo que você precisa para ir do zero
+[14:00] até o nível avançado e inteligência artificial.
+[14:02] Tiveram várias pessoas que começaram do zero no mundo da EA
+[14:05] e hoje já tem seu SaaS,
+[14:06] já tem mil clientes recorrentes,
+[14:08] já tem uma série de produtos de inteligência artificial
+[14:11] para a própria empresa,
+[14:12] para os novos empreendimentos,
+[14:14] para oferecer para o mercado.
+[14:16] Muitas pessoas também fazem parcerias.
+[14:17] São especialistas em algo
+[14:19] e tem uma pessoa um pouco mais técnica
+[14:21] que já entende um pouco mais sobre como fazer isso
+[14:24] e eu quero facilitar esse processo.
+[14:26] Você pode se conectar com essas pessoas,
+[14:28] tanto as que têm a demanda por implementação
+[14:31] quanto as que querem implementar.
+[14:32] Então se você gosta aqui dos vídeos do canal,
+[14:34] tenho certeza que você vai adorar a comunidade.
+[14:36] Dá uma olhada no link na descrição desse vídeo.
+[14:38] E é claro, se você gostou do vídeo
+[14:39] quer receber mais recomendações de vídeos
+[14:41] como esse no seu YouTube,
+[14:43] não esqueça de deixar o seu hype,
+[14:45] o seu like e é claro, se inscrever no canal.
+[14:47] Um abraço e até a próxima.

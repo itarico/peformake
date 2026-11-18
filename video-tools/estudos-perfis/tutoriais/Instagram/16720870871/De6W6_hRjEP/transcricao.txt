@@ -1,0 +1,13 @@
+idioma: en
+[00:01] How to create this cinematic transition effect?
+[00:04] Screenshot the last and first frames.
+[00:06] Upload them to chat.gbt with this prompt.
+[00:09] Common X-ray and all sender to you.
+[00:10] And duplicate both sides of the cut.
+[00:12] Mask the subjects.
+[00:13] Boost the exposure.
+[00:14] Set it to difference.
+[00:16] Repeat for the second frame.
+[00:17] Add the X-ray frames.
+[00:19] Place them beside the negative frames.
+[00:20] And finish with sound effect.

@@ -1,0 +1,104 @@
+{
+ "id": "EIj7WPiKmOE",
+ "title": "Como editar vídeos com IA usando o Claude Code (passo a passo)",
+ "fulltitle": "Como editar vídeos com IA usando o Claude Code (passo a passo)",
+ "channel": "Marcos Lemos",
+ "channel_id": "UCnroRJFT98r5JJ8R_3CD0Wg",
+ "channel_url": "https://www.youtube.com/channel/UCnroRJFT98r5JJ8R_3CD0Wg",
+ "uploader": "Marcos Lemos",
+ "uploader_id": "@MarcosLemosExpert",
+ "webpage_url": "https://www.youtube.com/watch?v=EIj7WPiKmOE",
+ "upload_date": "20261026",
+ "duration": 1015,
+ "duration_string": "16:55",
+ "view_count": 100096,
+ "like_count": 3416,
+ "comment_count": 425,
+ "channel_follower_count": 337000,
+ "description": "Edite seus vídeos com IA, do zero ao vídeo pronto para o YouTube. Tutorial completo para iniciantes que querem criar vídeos incríveis com o Claude Code.\n\n👉 Faça uma análise completa do seu canal no YouTube https://marcoslemos.com/auditoria\n\nEste vídeo foi editado por inteligência artificial. Neste tutorial passo a passo, você aprende a editar vídeos com IA usando o Claude Code, mesmo sem saber nada: da instalação das skills à transcrição automática, criação de animações e montagem da timeline, até o render final pronto para o YouTube. Mostro dois caminhos: tudo dentro do Claude Code ou com o DaVinci Resolve Studio.\n\n👉 ENTRAR na comunidade de Criadores https://clube.formulayoutuber.expert/ \n\n📖 Baixar E-book: Como Criar Conteúdo de Impacto e ter Um plano de Negócio Digital https://formulayoutuber.expert/e-book\n\n🛒 Equipamentos que recomendo para YouTubers: https://www.amazon.com.br/shop/ferramentasblog\n\n🎬 Este vídeo foi gravado com:\n🎤 Microfone HyperX QuadCast 2 https://amzn.to/3tNop1l\n🎥 Câmera Logitech BRIO 4K https://amzn.to/38l6q3L\n💡 Iluminação Key Light Elgato https://amzn.to/47dFSR9\n\n--- PROMPT de instalação das Skills ---\nQuero editar meus vídeos do YouTube com você. Prepare este computador e esta pasta:\n1. Verifique e, se faltar, instale FFmpeg, Node.js (versão LTS) e Python 3, usando winget no Windows ou Homebrew no Mac. Me peça permissão antes de cada instalação.\n2. Instale o Whisper para transcrição local e gratuita e teste com um áudio curto.\n3. Crie nesta pasta as subpastas: bruto, estilo, trabalho e final.\n4. Instale a skill HyperFrames: npx skills add heygen-com/hyperframes\n5. Use a skill skill-creator para criar duas skills minhas:\n   a) \"transcricao\": transcreve o vídeo da pasta bruto com o Whisper, em português, e salva em trabalho/ o texto com o tempo de cada frase.\n   b) \"plano-de-edicao\": lê a transcrição e o arquivo estilo/ESTILO.md, entende o assunto, sugere cortes (pausas longas, repetições, retomadas) e lista onde entram letreiros, gráficos, listas e zooms, com início, fim e descrição. Salva em trabalho/plano.json e sempre me mostra o plano para aprovação antes de criar qualquer coisa.\n6. No fim, me explique em linguagem simples o que foi instalado e como eu uso cada skill.\n\n------------------------------\n\n00:00 - Introdução: Edição de vídeo 100% com IA\n00:38 - Requisitos, ferramentas e custos (Claude Pro e DaVinci)\n02:02 - O mapa do fluxo em 6 etapas\n03:12 - Passo 1: Como assinar e configurar o Claude Code\n04:18 - Passo 2: Organização das pastas no computador\n05:13 - Passo 3: Instalando as skills essenciais (FFmpeg, Whisper, Hyperframes)\n06:55 - Passo 4: Criando seu guia de estilo visual\n09:00 - Passo 5: Transcrição e planejamento de cortes automáticos\n10:26 - Passo 6: Criação dos elementos visuais e animações\n11:21 - Opção 1: Montagem automática direto no Claude Code\n12:05 - Opção 2: Edição profissional integrada com DaVinci Resolve\n13:35 - Revisão final e exportação para o YouTube\n15:00 - Resumo prático e dicas para dominar a automação",
+ "tags": [
+  "claude code",
+  "editar video com claude",
+  "como editar video com claude",
+  "editando video com claude",
+  "como editar videos no claude",
+  "claude",
+  "editar video claude",
+  "como usar o claude code",
+  "edição de video com ia",
+  "como editar videos com o claude",
+  "claude code tutorial",
+  "claude editando vídeo"
+ ],
+ "categories": [
+  "Education"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Introdução: Edição de vídeo 100% com IA",
+   "end_time": 38
+  },
+  {
+   "start_time": 38,
+   "title": "Requisitos, ferramentas e custos (Claude Pro e DaVinci)",
+   "end_time": 122
+  },
+  {
+   "start_time": 122,
+   "title": "O mapa do fluxo em 6 etapas",
+   "end_time": 192
+  },
+  {
+   "start_time": 192,
+   "title": "Passo 1: Como assinar e configurar o Claude Code",
+   "end_time": 258
+  },
+  {
+   "start_time": 258,
+   "title": "Passo 2: Organização das pastas no computador",
+   "end_time": 313
+  },
+  {
+   "start_time": 313,
+   "title": "Passo 3: Instalando as skills essenciais (FFmpeg, Whisper, Hyperframes)",
+   "end_time": 415
+  },
+  {
+   "start_time": 415,
+   "title": "Passo 4: Criando seu guia de estilo visual",
+   "end_time": 540
+  },
+  {
+   "start_time": 540,
+   "title": "Passo 5: Transcrição e planejamento de cortes automáticos",
+   "end_time": 626
+  },
+  {
+   "start_time": 626,
+   "title": "Passo 6: Criação dos elementos visuais e animações",
+   "end_time": 681
+  },
+  {
+   "start_time": 681,
+   "title": "Opção 1: Montagem automática direto no Claude Code",
+   "end_time": 725
+  },
+  {
+   "start_time": 725,
+   "title": "Opção 2: Edição profissional integrada com DaVinci Resolve",
+   "end_time": 815
+  },
+  {
+   "start_time": 815,
+   "title": "Revisão final e exportação para o YouTube",
+   "end_time": 900
+  },
+  {
+   "start_time": 900,
+   "title": "Resumo prático e dicas para dominar a automação",
+   "end_time": 1015
+  }
+ ],
+ "language": "pt-BR"
+}

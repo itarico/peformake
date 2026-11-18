@@ -1,0 +1,14 @@
+idioma: pt
+[00:00] Deu limite do Cloud Code, some rápido por três motivos, e nenhum deles é o plano.
+[00:03] O primeiro é a conversa longa.
+[00:05] A cada mensagem, o Cloud Code reenvia a conversa inteira, então uma pergunta de uma linha numa
+[00:09] sessão aberta o dia todo pesa tudo aqui.
+[00:12] Trocou de assunto digita a barra Clear que não custa nada.
+[00:14] O segundo é o Cloud.md, ele carrega em toda a sessão mesmo quando não serve pra nada.
+[00:19] A própria Anthrop se recomenda ficar abaixo dos 200 linhas e mandar o resto pra skins
+[00:23] que só carregam quando precisa.
+[00:25] O terceiro é servidor mcp ligado sem um.
+[00:28] Com o parado ele ocupa espaço no contexto, desliga o que você não usa, e o melhor, o
+[00:32] comando barra USA, que mostra o que mais tá gastando.
+[00:35] Se você quer o checklist completo comenta o contexto ali embaixo e me segue o que eu
+[00:38] te mando no teu direct.

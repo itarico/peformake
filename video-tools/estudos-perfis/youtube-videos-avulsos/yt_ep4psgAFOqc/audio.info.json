@@ -1,0 +1,82 @@
+{
+ "id": "ep4psgAFOqc",
+ "title": "How I Get Claude To Edit My Videos (Step-By-Step)",
+ "fulltitle": "How I Get Claude To Edit My Videos (Step-By-Step)",
+ "channel": "Matt Wolfe",
+ "channel_id": "UChpleBmo18P08aKCIgti38g",
+ "channel_url": "https://www.youtube.com/channel/UChpleBmo18P08aKCIgti38g",
+ "uploader": "Matt Wolfe",
+ "uploader_id": "@mreflow",
+ "webpage_url": "https://www.youtube.com/watch?v=ep4psgAFOqc",
+ "upload_date": "20261104",
+ "duration": 1965,
+ "duration_string": "32:45",
+ "view_count": 78579,
+ "like_count": 1318,
+ "comment_count": 106,
+ "channel_follower_count": 1030000,
+ "description": "Try vidIQ for only $1 https://vidiq.com/mattwolfe/\n\nLearn how to edit videos with Claude AI, work with Premiere Pro, and turn your footage into short-form content.\n\nIn this guide, I walk through how to use Claude to help with video editing, from working with your existing footage to creating clips for Shorts and Reels. We’ll explore how Claude fits into an Adobe Premiere Pro workflow and where AI can help with the editing process.\n\nThe focus is on making useful content from your own videos, with creative control over the results. Less repetitive work, without filling your feed with AI slop.\n\nSharing the latest news and advancements in AI\n\nDiscover More:\n🛠️ Explore AI Tools & News: https://futuretools.io/\n📰 Weekly Newsletter: https://futuretools.io/newsletter\n\nSocials:\n❌ Twiter/X: https://x.com/mreflow\n🖼️ Instagram: https://instagram.com/mr.eflow\n🧵 Threads: https://www.threads.net/@mr.eflow\n🟦 LinkedIn: https://www.linkedin.com/in/matt-wolfe-30841712/\n👍 Facebook: https://www.facebook.com/mattrwolfe\n\nLet’s work together!\n- Brand, sponsorship & business inquiries: business@mattwolfe.com\n\n#AINews #AITools #ArtificialIntelligence\n\nTime Stamps:\n\nLearn how I use claude video editing to automate my production workflow. This process generates scripts and handles B-roll selection.\n\nI demonstrate the full setup using Claude Opus 5.5, VidIQ, and 11 Labs to build a specialized system. By connecting these tools, I created a pipeline for claude ai video editing that turns raw A-roll into finished content. We explore how to configure these capabilities to refine audio and pacing without manual intervention.\n\nThis workflow is perfect for anyone looking to master claude code video editing by building an iterative feedback loop. I also cover troubleshooting API errors and how to use data-driven insights to improve future output. Whether you want to streamline your production or understand the potential for youtube automation, this guide breaks down the entire technical process.\n\nSubscribe for weekly AI workflow breakdowns and comment below if you want to see the specific Python scripts used in this setup.\n\n00:00 Editing Videos With Claude\n02:29 Researching Video Ideas With vidIQ\n04:11 From Script to AI Video Edit\n07:15 Setting Up Claude for Video Editing\n09:21 Connecting vidIQ to Claude\n10:55 Building Claude Skills for Your Channel\n17:38 MotionBricks Demo\n21:02 Refining the Edit and What’s Next",
+ "tags": [
+  "Claude video editing",
+  "how to edit videos with Claude",
+  "Claude AI video editing tutorial",
+  "Claude AI tutorial",
+  "Claude Premiere Pro",
+  "AI video editing",
+  "Adobe Premiere Pro AI",
+  "edit videos with AI",
+  "AI video editing tutorial",
+  "create reels with AI",
+  "Matt Wolfe",
+  "claude video editing",
+  "claude ai video editing",
+  "claude code video editing",
+  "youtube automation"
+ ],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Editing Videos With Claude",
+   "end_time": 149
+  },
+  {
+   "start_time": 149,
+   "title": "Researching Video Ideas With vidIQ",
+   "end_time": 251
+  },
+  {
+   "start_time": 251,
+   "title": "From Script to AI Video Edit",
+   "end_time": 435
+  },
+  {
+   "start_time": 435,
+   "title": "Setting Up Claude for Video Editing",
+   "end_time": 561
+  },
+  {
+   "start_time": 561,
+   "title": "Connecting vidIQ to Claude",
+   "end_time": 655
+  },
+  {
+   "start_time": 655,
+   "title": "Building Claude Skills for Your Channel",
+   "end_time": 1058
+  },
+  {
+   "start_time": 1058,
+   "title": "MotionBricks Demo",
+   "end_time": 1262
+  },
+  {
+   "start_time": 1262,
+   "title": "Refining the Edit and What’s Next",
+   "end_time": 1965
+  }
+ ],
+ "language": "en-US"
+}

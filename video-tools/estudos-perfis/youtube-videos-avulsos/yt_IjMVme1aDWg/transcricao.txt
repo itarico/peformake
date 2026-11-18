@@ -1,0 +1,179 @@
+idioma: en
+[00:00] Johnny Harris is one of the most recognizable documentary storytellers on YouTube.
+[00:04] His videos are packed with stunning visuals, dynamic animations,
+[00:07] and a signature editing style that keeps viewers hooked from start to finish.
+[00:11] The way he blends motion graphics, maps, and cinematic effects
+[00:14] makes his documentaries feel both engaging and high-quality.
+[00:18] It's a rollover gallant men and women,
+[00:23] but the record shows that our restraint is not inexhaustible.
+[00:28] Today, in this video, I'll break down a specific scene
+[00:31] from one of Johnny Harris' videos that showcases one of his best editing works.
+[00:35] This scene is nearly one minute long and consists of 18 clips.
+[00:38] It features various elements such as map animations,
+[00:41] textured overlays, transitions,
+[00:43] and well-placed text design that enhanced the storytelling.
+[00:46] We'll go step-by-step on how you can recreate it using CapCut.
+[00:50] So, if you want to take your editing skills to the next level
+[00:52] and learn how to edit documentaries like Johnny Harris,
+[00:55] make sure to watch this video until the end
+[00:57] and don't forget to subscribe to this channel.
+[00:59] And if you want to dive deeper into my editing process,
+[01:02] get access to the exact assets I used,
+[01:04] download my project files,
+[01:06] and have direct conversations with me about anything related to editing in the community chat.
+[01:10] You can join my Patreon, the link in the description.
+[01:13] Now, let's get jumped to the first clip.
+[01:15] In this first clip, we're going to create a text animation like this.
+[01:20] First, add a text layer to the timeline, then type in the text you want.
+[01:29] For the font, I'm using CapCut's default font called Intellect-a-Typewriter.
+[01:34] After that, go to Animation,
+[01:36] choose the Retro-Typer animation as the in animation
+[01:39] and set the duration to 3 seconds.
+[01:43] Next, move forward to 1 second before the last frame,
+[01:46] then press CTRL plus B to split the text layer.
+[01:50] Go back 1 second and add a keyframe on Transform.
+[01:56] Now move forward to the last frame of this layer
+[01:58] and slightly reduce the scale to create a zoom-out effect.
+[02:05] Now, select the Split text layer and increase its scale like this.
+[02:10] After that, compound both text layers.
+[02:17] Here, I'll add a film dust overlay for the background
+[02:20] and the result looks like this.
+[02:23] Add an adjustment layer and set the contrast to minus 18.
+[02:37] Now, let's move on to the second clip.
+[02:40] For the second clip, I'll add some assets,
+[02:42] which are photos of these figures,
+[02:44] then change them to black and white
+[02:45] by lowering the saturation to the lowest level.
+[02:48] I'll also insert a memo cutout between them.
+[03:10] Next, I'll add some effects.
+[03:11] The first effect is called 90s
+[03:19] and here are the settings.
+[03:32] Also, I'll add an adjustment layer
+[03:37] and only modify the whites to minus 34.
+[03:44] Now, select all layers in clip 2, then compound them.
+[03:48] After that, I just need to speed it up
+[03:50] by going to the Speed settings
+[03:51] and setting it to 10x speed.
+[03:54] The result looks like this.
+[04:01] Now, I'll create a transition to smooth out the cut.
+[04:04] First, I'll insert this film roll overlay,
+[04:07] then position and trim it exactly at the cut
+[04:09] between these two clips.
+[04:11] Change the blending mode to screen.
+[04:14] That's not all.
+[04:15] I'll also add some effects to make the transition more dynamic.
+[04:19] The first effect is TV warble.
+[04:22] Place it before the text layer cut
+[04:24] and match its duration with the first clip.
+[04:27] Use these settings.
+[04:36] The second effect is bad TV 2.
+[04:38] Put it on the second text layer
+[04:39] and match its duration with the first effect.
+[04:42] Now, let's move on to clip 3.
+[04:45] First, I'll reuse the same film dust background
+[04:48] from before.
+[04:49] Then, I'll add this memo.
+[04:52] For this memo, first, I'll invert its colors
+[04:54] by going to adjustment and then curve,
+[04:56] then flipping the curve upside down.
+[04:59] Once that's done, I'll add a white stroke around it.
+[05:02] First, slightly reduce the scale.
+[05:04] Then, add a white background.
+[05:07] After that, go to mask,
+[05:09] then adjust it until it forms a stroke effect
+[05:11] around the memo.
+[05:15] Now, compound both layers
+[05:16] and position them properly.
+[05:25] As we know, this memo consists of three pages,
+[05:28] so we just need to duplicate it three times.
+[05:35] To change the pages,
+[05:36] just double-click the compound clip,
+[05:38] replace the old memo page with the new one,
+[05:40] align it, and select replace clip.
+[05:42] Now, the page is changed
+[05:44] without having to redo the edits.
+[05:45] Repeat the same steps for page 3.
+[05:53] After that, select all the compound layer
+[05:55] and compound the again.
+[05:57] Now, I'm going to make a zoom-out effect
+[05:59] at the first second using keyframes.
+[06:08] Now, press Alt and K and change the keyframes curves
+[06:10] to ease to smooth the motion.
+[06:15] Lastly, I'll copy-paste the adjustment layer
+[06:17] from before and place it on this clip.
+[06:19] And the result is going to look like this.
+[06:23] Once done, let's move on to clip 4.
+[06:30] So, let's begin by making the rough cut for clip 4.
+[06:33] Here, I will add a white background.
+[06:36] Then, add a text layer to create a title.
+[06:47] For the font, I will use typewriter.
+[06:52] Next, select retro typewriter
+[06:54] as the inanimation and set its duration to one second.
+[06:59] Then, choose slide-up as the out animation.
+[07:03] For clip 5, I only need to insert a photo of a historical figure.
+[07:12] Then, lower the saturation to the minimum
+[07:14] to create a black and white effect.
+[07:16] Moving on to clip 6.
+[07:19] First, use the white background again.
+[07:22] You can duplicate it from the previous clip
+[07:24] that uses the same background color.
+[07:25] Then, I will also add the same historical figures photo
+[07:28] as in the previous clip.
+[07:30] However, for this image,
+[07:31] I will modify it using the masking tool.
+[07:34] So, go to mask, select rectangle
+[07:36] and adjust the mask like this.
+[07:47] Then, adjust the round corner setting to create rounded edges.
+[07:51] Position the image here.
+[07:59] After that, add a text layer to display the figure's name and their role.
+[08:05] For the name, I will use the cerebold font.
+[08:08] And for the other text layers, I will use cereregular.
+[08:13] Additionally, add a vertical text on the edge of the image.
+[08:24] For clip 7, I will be adding a map animation.
+[08:27] First, import the map into the timeline.
+[08:29] By the way, I created this map using snazzy map in photo P.
+[08:33] To add a 3D effect to the map,
+[08:35] you need to apply an effect called player 3.
+[08:40] For the setting, set the texture to the lowest setting
+[08:43] and simply adjust the rotation within the effect settings
+[08:45] and also in the video settings until you get this perspective.
+[08:50] Now, as you can see, in the first few seconds,
+[08:53] there is a fade-in effect caused by the player 3 effect.
+[08:56] Since I don't need it, I will remove it.
+[08:58] First, compound the layer, then simply trim the fade duration.
+[09:03] Now that it's like this, I will add a line animation
+[09:05] using a line asset that I created in photo P.
+[09:10] Then, change the blend mode to multiply.
+[09:21] Now, let's animate it using masking.
+[09:24] Go to mask, then select split.
+[09:26] Rotate the mask 90 degrees.
+[09:28] Then position it to the right until the line disappears.
+[09:31] Now, add a keyframe.
+[09:34] Move forward a few seconds, then shift the mask to the left
+[09:37] until the line fully appears.
+[09:39] So it's going to look like this.
+[09:42] Now I will create a cross-line animation
+[09:44] and the steps are almost the same as before.
+[10:04] After animating it, compound the layer, then duplicate it.
+[10:09] Flip the duplicated layer.
+[10:11] Now, select both cross-line layers and compound them again.
+[10:14] Then, just position them in the desired place.
+[10:21] Now, select all the layers in this clip
+[10:23] and compound them again because here,
+[10:25] I will be adding a zoom-in effect.
+[10:27] I will position the playhead a few seconds before the last frame,
+[10:30] then add a keyframe in the transform settings.
+[10:33] Move forward to the end of the frame,
+[10:34] increase the scale and reposition it to focus on the cross-mark.
+[10:41] Finally, press Alt plus K, right-click on the last keyframe
+[10:45] and change all curves to ease.
+[10:55] And here's the result.
+[11:01] And that's the tutorial for today.
+[11:03] In the next part of the tutorial, I will continue to create clip 8
+[11:06] until clip 18th and also the finishing process
+[11:08] where I will add some effects and texture
+[11:10] which is going to make the video cooler.
+[11:12] Thank you guys for watching,
+[11:13] leave a like if this video helped you,
+[11:15] and also thanks to my Patreon for always support this channel.
+[11:18] And I'll see you in the next part video.

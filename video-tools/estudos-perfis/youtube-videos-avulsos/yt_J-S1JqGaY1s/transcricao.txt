@@ -1,0 +1,142 @@
+idioma: pt
+[00:00] Eu sempre tive uma grande limitação no meu negócio e era criar animações para os meus vídeos como
+[00:06] essa que vai estar aparecendo agora. E também eu não conseguia produzir vídeos curtos para
+[00:11] apostar nas redes sociais porque a edição era demorada e era muito difícil. Mas hoje eu consigo
+[00:16] gravar vídeos como esse 100% editados pelo cloud e que me geram esse tipo de resultado. Mais de 76.000
+[00:24] animações orgânicas e o perfil que eu tinha menos de mil seguidores. E hoje eu vou te mostrar
+[00:30] todo o sistema que eu uso para criar vídeos com animações, efeitos sonoros, narração de voz,
+[00:36] com apresentador, sem apresentador. Enfim, vou te mostrar todas as ferramentas que você precisa para
+[00:42] criar os seus vídeos com cloud. O primeiro tipo de vídeo que dá para criar com cloud e que é
+[00:46] super fácil de fazer são esses vídeos de apresentação de produto. Tem muitos exemplos
+[00:51] de vídeo aí rolando no X, mas esse aqui foi o que eu consegui criar com o prompt bastante simples.
+[00:56] Ele tem uns efeitos sonoros e ele vai mostrar todo o conceito desse produto aqui, que é uma extensão
+[01:03] do Google Chrome e mostra exatamente como o produto funciona. Inclusive essa estética aqui é
+[01:09] exatamente igual a da extensão e eu não preciso gravar nada disso. Ele foi pegando as telas,
+[01:14] ele foi entendendo o sentido do produto e foi montando essas telas de apresentação. Esse
+[01:19] resultado ficaria melhor se tivesse uma narração por trás, porém eu não forneci a voz, mas eu consegui
+[01:27] colocar a narração em outra versão. Mas esse resultado inicial para mim já foi muito satisfatório,
+[01:32] ele conseguiu apresentar perfeitamente a ideia do produto e conseguiu tangibilizar exatamente o
+[01:37] que ele faz, como ele funciona. E aqui foi o prompt que eu enviei para ele fazer isso. Cri um
+[01:42] vídeo de apresentação desse produto e aqui eu coloquei a pasta desse produto no meu computador,
+[01:47] com todos os códigos e documentos dessa extensão. Então a partir disso ele tinha todo o contexto do que
+[01:53] essa ferramenta fazia. Então por isso também que o meu prompt simples aqui funcionou. A única coisa
+[01:58] que eu adicionei e que foi importante foi colocar isso aqui. Use motion graphics e mostre todo o seu
+[02:03] potencial para a produção de vídeo. Daí ele leu todo o arquivo do produto e gerou esse vídeo
+[02:09] sozinho. Com efeitos sonoros, as animações todas corretas, mas eu consegui esse resultado
+[02:14] porque primeiro eu dei o contexto necessário e segundo eu já tinha aqui as ferramentas instaladas.
+[02:19] No caso, para fazer isso aqui você precisa obviamente do cloud, mas não é o cloud code,
+[02:24] é o cloud code. E para gerar esse tipo de resultado eu utilizei o modelo opus na versão mais recente,
+[02:30] mais atualizada que a gente tem que é o 5.5 e o esforço que eu coloquei foi o esforço alto.
+[02:35] Se você puder sempre utilizar o opus para esse tipo de trabalho aqui que envolve motion graphics,
+[02:40] o cloud design escolha ele porque ele é o melhor. E uma explicação rápida técnica,
+[02:44] o que você precisa também em termos de tecnologia para rodar isso aqui, você precisa do node.js
+[02:50] instalado, você precisa do fmpeg instalado e você precisa do Python que é o que vai fazer a leitura
+[02:55] do áudio e a transcrição das falas e temporizar quando essas falas acontecem. Se você não tem
+[03:01] isso, o próprio cloud vai pedir para você instalar e se você quiser certificar você já pode
+[03:05] ter uma acessão pedindo para ele instalar ou atualizar esses pacotes. E por que o cloud precisa desses
+[03:11] pacotes? Porque o cloud ele não é um modelo de geração de vídeo, ele faz tudo através de
+[03:16] código, todas essas animações são códigos. É html e Java script aqui por trás e no final
+[03:22] renderiza com o mp4, como vídeo. Então o cloud precisa das ferramentas para processar esse
+[03:27] código. Então além disso que eu já mencionei, eu também estou utilizando uma skill que se
+[03:31] chama Hyperframes. Essa skill ajuda o cloud a criar esses motion graphics. Além de criar as
+[03:38] animações gerando esse código, o cloud também pode interagir com algum modelo de geração de
+[03:44] vídeo, só que nesse caso você vai precisar plugar esse modelo de geração de imagem, mas
+[03:48] assim você também aumenta muito as capacidades de geração de animação do cloud. Eu vou
+[03:53] mostrar as duas formas aqui. A primeira forma só com o cloud code e utilizando uma skill.
+[03:58] Primeiro você precisa instalar essa skill vindo aqui em personalização na parte de plugins. Você
+[04:04] pode procurar aqui pela Hyperframes, que essa skill do rei jen é ela que eu uso, é a que eu mais
+[04:09] gosto, eu acho os resultados dela bem melhor. Mas também tem as do Remotion. As duas funcionam
+[04:14] de forma bem semelhante, mas o resultado final sempre varia um pouco. Você pode instalar
+[04:19] qualquer uma das duas clicando aqui em adicionar. Depois que essa skill tiver instalada,
+[04:23] depois que você pedir para o cloud gerar motion graphics, gerar vídeos de animação,
+[04:29] ele vai recorrer a essa skill. Não precisa nem você mencionar ela como foi o caso aqui,
+[04:33] eu não mencionei e depois eu até perguntei para ele para confirmar. Você fez tudo isso usando
+[04:38] Hyperframes? Sim, o vídeo inteiro foi feito com Hyperframes que renderiza vídeo a partir
+[04:43] de HTML. Cada cena é um arquivo de HTML. No caso desse meu vídeo, eu pedi também para
+[04:48] uma narração de áudio que eu poderia ter feito com um áudio gerado pela própria IA
+[04:54] através de alguma API como a do 11 Labs. Esse primeiro resultado já ficou muito bom,
+[04:58] mas eu queria uma narração por cima, então eu pedi para ele gerar isso e ele me deu
+[05:02] algumas opções. Eu posso seguir com o rei jen ou com 11 Labs, que são as
+[05:07] ferramentas que geram áudio. Eu optei por seguir com o rei jen e conei a minha
+[05:11] voz lá dentro e aí ele criou o vídeo narrado com a minha voz clonada e ficou dessa forma
+[05:16] conheça o resposta pronta uma extensão do Chrome que responde seus e-mails com IA
+[05:21] ela lê a conversa aberta você clica em gerar resposta e o rascunho aparece em
+[05:30] segundos mais um clique e ele já está no seu e-mail e a resposta vem certa porque
+[05:37] ela já sabe do seu negócio preços horários seu tom sua assinatura você
+[05:43] escreve uma vez e nunca mais repete e aí você achou parecido com a minha voz
+[05:47] eu achei que ficou parecido mas em alguns momentos dá para você ver que é e-a então nesse caso
+[05:52] aqui em específico ou eu faria a narração e vieria o áudio para ele sincronizar aqui com
+[05:56] a apresentação ou eu colocaria uma outra voz de e-a uma voz que não fosse clonada
+[06:01] mas é super possível fazer isso também eu fiz tudo dentro aqui do mesmo chat como o
+[06:05] Hyper Frames é do próprio rei jen então ele tem uma integração perfeita com esse modelo
+[06:10] de geração de voz então funcionou super bem foi super rápido aqui para fazer a sensação
+[06:14] eu mostrei o prompt que eu usei para criar esse show eu fui bem simples porque a pasta do
+[06:19] projeto já trazia todo o contexto mas no seu caso se você não tem isso você pode
+[06:24] seguir essa estrutura aqui faz aquele pedido no início e depois embaixo você dá o
+[06:28] contexto necessário para ele criar esse vídeo e claro quanto mais contexto você
+[06:33] der melhor vai sair o resultado não chegue lá com uma ideia solta dizendo
+[06:36] cloud é dite com perfeição não cometa nenhum erro e uma coisa que ajuda muito
+[06:40] é você dá junto com o contexto uma referência de como você quer que esse vídeo fique então nesse
+[06:46] site aqui que eu vou disponibilizar no material da aula você consegue ver vários
+[06:50] exemplos de vídeo de apresentação então tem esse aqui por exemplo você pode dar uma
+[06:54] olhada e ver se algum estilo que agrada e enviar ele com referência então por
+[07:01] exemplo eu gostei desse vídeo aqui e aí vamos fazer um bom jeito de trabalhar
+[07:07] então acho que dá para melhorar aquele vídeo do resposta certa com algum tipo de
+[07:16] animação assim onde tem uma pessoa real onde tem uma cena real daquilo acontecendo em um cenário
+[07:22] onde o público ao vai se identificar esse tipo de vídeo como eu expliquei o cloud não consegue
+[07:27] fazer onde tem uma pessoa onde tem cenas reais acontecendo para isso a gente vai precisar de um
+[07:32] modelo de geração de imagem o riggs field é uma ferramenta que reúne todos os principais
+[07:37] modelos de geração de imagem e de vídeo é uma ferramenta paga então você vai precisar
+[07:41] contratar um dos planos o plano que a gente vai precisar que contém os modelos de geração
+[07:46] de vídeo é o plano plus além dos modelos conhecidos como o cling ou sidenso o próprio
+[07:51] riggs field tem o modelo deles inclusive é mais barato para usar do que esses outros modelos
+[07:56] como uma conta no riggs field você consegue conectar ele diretamente aqui no cloud code e
+[08:01] aí é só informar para o cloud como que é o tipo de vídeo que a gente quer que ele vai
+[08:04] fazer para fazer essa conexão é só vir em personalização clicar em conectores e procurar
+[08:10] o riggs field meu caso aqui eu já estou conectada você dá todas as permissões necessárias para
+[08:14] poder fazer a geração de vídeo e clica para logar com a sua conta do riggs field para
+[08:19] autorizar a utilização dele aqui dentro do cloud com tudo configurado eu vou iniciar uma nova
+[08:23] conversa aqui no cloud vou apontar para o vídeo que já existia e estou pedindo para ele criar
+[08:28] um vídeo com uma pessoa que vai aparecer no início da apresentação e aí eu estou colocando
+[08:33] uma característica um homem de 30 anos em um cenário de trabalho no computador essa cena
+[08:38] inicial vai apresentar o problema e logo em seguida ele retoma com a apresentação que ele
+[08:43] tinha feito antes que mostra como que a ferramenta funciona e aí sempre quando eu estou usando o
+[08:47] riggs field eu gosto de pedir para ele gerar uma imagem de como que vai ser o vídeo que ele vai
+[08:51] gerar porque a partir dessa imagem eu sei se ele está indo na direção que eu quero ou não
+[08:55] eu não espero ele ter todo o trabalho de gerar o vídeo gastar esses créditos para depois
+[09:00] e aí ele me deu essa imagem aqui que para mim está mais do que aprovada então vou só
+[09:04] confirmar e pedir para ele gerar agora o vídeo no seu prompt de geração de vídeo sempre peça
+[09:09] essa imagem primeiro essa imagem de base para você ver se ele está indo no sentido que você quer
+[09:15] no prompt que eu enviei eu coloquei isso a estrutura desse prompt também vai estar no
+[09:19] material da aula e esse aqui foi o resultado os mesmos valores os mesmos horários você já
+[09:25] tem esse e-mail antes são as mesmas perguntas de novo e de novo conheça o resposta pronta
+[09:35] uma extensão do crome que responde seus e-mails com ia ficou muito bom e o vídeo ficou bem
+[09:41] realista então isso é uma forma de você mesclar a geração de vídeo com as animações criadas
+[09:46] através de código e aqui já dá para ter uma noção de custo que quando eu iniciei essa
+[09:50] edição eu estava com 35% e agora eu estou com 45% então ele gastou 10% para editar esse
+[09:57] vídeo eu usei o opo 5.5 no alto e o meu plano aqui é o plano de 100 reais eu considero muito
+[10:03] econômico agora o vídeo que eu mostrei no início que foi o que me deu mais de 76 mil visualizações
+[10:08] no orgânico no instagram esse vídeo foi todo editado pelo cloud só utilizando o hyperframes
+[10:14] nesse caso o que eu fiz aqui eu joguei o roteiro do vídeo segundo por segundo fala por fala e
+[10:20] eu coloquei um vídeo que é a referência que eu queria que ele usasse para essa edição então
+[10:25] eu queria para ele assistir esse vídeo e entender como que eu queria que ele editasse o
+[10:29] meu e eu abri aqui esse projeto dentro da pasta onde eu tinha os vídeos que eu gravei os takes
+[10:35] para para ele juntar e fazer o vídeo final daí ele editou aqui para mim a primeira versão já
+[10:40] ficou boa mas eu precisei fazer algumas alterações fui pedindo para ele consertar alguns erros e
+[10:46] aí a versão final foi aquela que eu postei lá no instagram esse estilo de edição e as
+[10:50] alterações que eu pedi para ele fazer viraram regras e aí eu criei uma esquio para eu
+[10:54] utilizar em outros momentos inclusive agora eu estou editando uns vídeos para anúncio onde eu só
+[11:00] estou colocando apontando para ele a pasta onde estão os arquivos brutos os vídeos curtos estou chamando
+[11:06] essa esquio e do algum orientação a mais que seja necessário daí ele planeja todo o vídeo
+[11:12] antes de gerar então isso é muito bom porque eu consigo ler cena por cena o que que ele
+[11:16] pretende fazer e aqui eu já posso captar alguma alteração que eu quero antes mesmo dele
+[11:21] e o vídeo então foi exatamente isso que eu fiz nesse segundo prompt depois ele seguiu para cortar
+[11:26] editar gerar as animações e o resultado final ficou perfeito ou quase perfeito pedi mais uma
+[11:31] alteração e aí sim ele produziu resultado final que é esse vídeo aqui eu estou usando aqui a minha
+[11:36] identidade visual mas no seu caso você vai apontar a sua própria identidade visual ou se
+[11:41] você tem algum vídeo de referência que você quer que ele faça a edição exatamente
+[11:45] daquele jeito você aponta para aquele vídeo essa esquio que eu criei vai estar disponível
+[11:49] no material da aula o link para baixar vai estar aqui na descrição assim como todos os recursos
+[11:54] que eu mencionei no vídeo inclusive o link da Higgsfield que é parceira aqui do canal então
+[11:59] considere se inscrever na ferramenta usando nosso link se você gostou desse vídeo se inscreva
+[12:04] no canal para não perder os próximos conteúdos por esse vídeo é isso te vejo no próximo

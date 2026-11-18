@@ -1,0 +1,270 @@
+idioma: pt
+[00:00] 100 mil visualizações em apenas 3 dias, esse foi o resultado que eu vou te mostrar nesse vídeo
+[00:06] com um pipeline de produção de conteúdo 100% automatizado. Aqui no canal nós já falamos sobre
+[00:12] nossa conta de Instagram, maestros da IA-HUB, que chegou em 30 mil seguidores com zero esforço
+[00:18] humano, um pipeline que a gente ligou uma vez e continuou gerendo visualizações seguidores
+[00:23] e Vendas, que é o mais importante, no piloto automático. Nós já falamos também sobre o
+[00:28] Vendas.mp4, um canal no YouTube de vídeos longos que roda 100% no piloto automático,
+[00:33] sem precisar de nenhum esforço, nenhum tempo, nenhuma atenção da nossa parte. Só que hoje nós
+[00:39] vamos falar sobre um outro experimento que gerou resultado de uma maneira mais veloz do que todos
+[00:46] os outros experimentos que nós já conduzimos até hoje. Se a gente vem aqui no YouTube Studio,
+[00:51] no flash pra você saber que é verdadeiro, a gente vai abrir essa mesma página e olha isso,
+[00:57] 126.680 visualizações nas últimas 48 horas, isso aqui atualizado em tempo real. E olha que bacana,
+[01:07] a gente postou um vídeo no dia 16, que teve 1300 visualizações, já é um número interessante,
+[01:12] o segundo vídeo postado teve 35.400 visualizações. Você tem ideia do quão absurdo é isso,
+[01:20] o primeiro dia foi um vídeo experimental, já batemos as visualizações interessantes,
+[01:25] mas nada surpreendente. No segundo dia, dezenas de milhares de visualizações com o segundo vídeo
+[01:30] postado nesse formato. E esses vídeos são gravados pelos nossos avatares dia. A gente não grava,
+[01:37] a gente não roteiriza, a AI faz tudo do começo ao fim de maneira automática. Piloto automático 100%
+[01:43] a gente nem precisa olhar o que está acontecendo e ele continua crescendo esse canal.
+[01:49] No meio de 18 de outubro que a gente começou a rodar o pipeline, esses vídeos eram só de refinamento,
+[01:54] esse aqui tem outro tópico, não tem nada a ver, é claramente o início de projeto aqui e eu esperava
+[02:00] fazer esse vídeo para vocês daqui a um tempo, algumas semanas, alguns meses, mas o resultado está
+[02:05] tão bom logo no começo que eu fiquei com vontade de falar sobre isso porque acho que
+[02:09] pode ser útil para muita gente. E a gente está aqui no dia 18, o terceiro dia do experimento
+[02:13] e já temos um vídeo que vai ter mais de 50 mil visualizações. Hoje eu quero te mostrar
+[02:18] o que é esse que está indo tão bem, que está realizando tão rápido, gerando resultados em termos
+[02:22] de alcance tão eficientes quando comparados a outros métodos e outros formatos e que
+[02:28] quero te explicar também como esse pipeline todo de produção de conteúdo funciona.
+[02:32] Então eu vou reproduzir o vídeo para vocês darem uma olhada e esse é o que foi melhor até agora.
+[02:35] Esse avião é de controle remoto, mas o motor é de verdade e para ligar é no braço. Repara,
+[02:42] o rapaz de Luba dá um tranco na LSE, de novo e de novo e o outro segura firme.
+[02:47] São uns 40 segundos de tentativa, até que o motor ruge. É uma réplica gigante do zero,
+[02:54] o caça japonês da Segunda Guerra. Nesse tamanho a LSE pode machucar feio, por isso a Luba.
+[03:00] Me conta se você teria coragem de por a mão nessa LSE.
+[03:04] É um vídeo que tem uma curiosidade e também você acaba preen cima para ver se o cara vai se
+[03:14] pegar e tem uma coisa meio nova. Não conhecemos esse tipo de mini avião e dá uma olhada nisso.
+[03:22] 1.3000 likes, não são visualizações, são likes. E um vídeo que não demandou um segundo do meu
+[03:31] tempo. Vou te mostrar um outro aqui, esse bateu quase mil likes.
+[03:34] Essa nave foi para o espaço, desceu no meio do oceano e voltou para casa em cima de um navio.
+[03:41] 2. A Star Ship da SpaceX, deitada no converse chegando no Texas.
+[03:46] Olha o escudo térmico de perto, com várias placas arrancadas. Em julho ela pousou
+[03:52] inteira no oceano índico. Foi a primeira vez que a SpaceX recuperou uma dessas naves depois de um voo.
+[03:58] Ela passou 75 dias no mar, quase um mês puxada por barcos e depois nesse navio até em casa.
+[04:05] Me conta o que você faria com ela.
+[04:08] Você já deve estar entendendo como esses vídeos funcionam. Você basicamente reage a um vídeo que teve
+[04:15] um alcance muito bom. Então a gente tem um processo de coletar vídeos muito virais da internet.
+[04:20] Esses vídeos vêm para dentro desse canal. Aqui o nicho de tecnologia, de robôs e coisas assim.
+[04:29] Mas poderia ser qualquer nicho. A gente até está testando o ar que deu certo com vários outros.
+[04:34] Mas o interessante é que é muito simples o formato. Um roteiro pronto, um avatar lendo,
+[04:39] remover o fundo e colocou o vídeo que viralizou atrás. Muito simples.
+[04:44] E o que mais me surpreendeu é que nenhum dos comentários até agora suspeitou que esse vídeo
+[04:49] foi gerado por ar. Nenhum. A pergunta no final me quebrou. As perguntas no final realmente são
+[04:56] complicadas. E aí tem gente que teve experiência com aeromodelos.
+[05:02] Aquele vídeo aqui é você para vocês. Nenhum vídeo fala sobre inteligência artificial.
+[05:09] Ah, esse vídeo foi gerado por ar. Todo mundo fala sobre o assunto do vídeo em si.
+[05:14] O único comentário, até para provar que eu não deletei nenhum, foi esse aqui.
+[05:19] Só que ele fala sobre a e a do vídeo. Não eu comentando como avatar de ar.
+[05:24] Esse vídeo aqui é de uma saltadora que não existe. E aí ele comenta que é a generativa
+[05:32] que gerou o vídeo que eu estou comentando e a e a e foi mal feito. Então ele está criticando
+[05:38] uma e a sem saber que ele foi enganado por uma e a. E eu vou reproduzir aqui só para você
+[05:42] entender o contexto. Essa saltadora não existe. E o salto dela já passou de um milhão e meio de
+[05:48] visualizações. Repara, ela tem um braço só e uma prótesis na perna. Corre com a vara
+[05:53] com a mão. A vara dobra quase ao meio e ela passa de cabeça para baixo. Só que o salto com vara
+[05:59] nem é prova das paralimpíadas e não há registro nenhum. Ele estava comentando desse ponto aqui,
+[06:07] né? Que ela vem e ele de repente ela muda. Ela está com a cabeça virada para baixo. De repente
+[06:16] ela vem com a cabeça totalmente invertida, né? Cabeça aqui de repente cabeça aqui. Realmente.
+[06:29] E aí a gente pode descendo mais nenhum comentário falando sobre o fato de ter sido feito por um
+[06:41] avatar de a. Então é isso cara, nenhum comentário fala suspeita, comenta que eu, né? O meu avatar,
+[06:52] a pessoa falando foi gerada por a. É muito, muito louco isso. Porque as pessoas que assistem esse
+[06:58] canal estão com um olho treinado para a inteligência artificial. Então quando a gente solta um
+[07:03] vídeo longo, né? Um modelo novo sai, a gente quer soltar uma notícia rápido e um vídeo
+[07:08] 100% por a sai no canal. Muitos gostam, muitos nem reparam, mas muitas pessoas falam,
+[07:13] a gente foi gerado por a. Então eu também sempre falo, a gente sempre fala que o vídeo foi gerado
+[07:17] por a. Quando foi, vocês vão saber no final do vídeo que o vídeo foi gerado por a. Até agora a
+[07:22] gente nunca soltou vídeos que foram gerados por a aqui para o canal, vídeos longos e não
+[07:28] falou a respeito disso. Seria até interessante fazer esse experimento, né? Soltar um vídeo
+[07:33] de avatar e ver se as pessoas realmente conseguem pegar. Muitas vezes as pessoas acham que os vídeos
+[07:38] aqui do canal são gerados por a, 100% mas muitas vezes acontece o contrário, vídeos que a gente
+[07:43] realmente sentou, gravou, editou com a nossa equipe, eles são publicados e as pessoas falam,
+[07:49] esse vídeo foi gerado por a e não foram, né? Que engraçado. Bom, então agora vamos falar um
+[07:53] pouco sobre como esse pipeline funciona. E esse é só um dos exemplos, tá? A gente tem
+[07:56] desinas de pipelines rodando para a gente, para outros clientes, para empresas que
+[08:01] são 100% no piloto automático. Você cria uma vez, você ajusta, você refina,
+[08:06] você personaliza para que ele gere os melhores vídeos possíveis e aí você deixa ele rodando
+[08:10] e nunca mais se preocupa. Caso você tenha interesse em trabalhar com a gente para a criação de um
+[08:15] pipeline, de um sistema autônomo, de um agente que roda no piloto automático 100% do tempo,
+[08:20] para você de maneira extremamente personalizada com toda a experiência que a gente já traz,
+[08:23] com todos os projetos, a bagagem que a gente já tem fazendo isso muitas e muitas vezes,
+[08:28] você pode clicar no link na descrição do vídeo, tem um link para empresas,
+[08:32] você preenche o formulário, a nossa equipe entra em contato. O detalhe importante é que no formulário
+[08:36] você vai ver que a gente só trabalha com empresas que faturam mais de 10 milhões por ano,
+[08:41] mas se você quiser pedir uma exceção para esse pipeline, para a construção de um sistema
+[08:45] autônomo de produção de conteúdo, a gente consegue abrir exceções. Obviamente,
+[08:49] uma implementação de inteligência artificial não é para qualquer empresa, não é para
+[08:52] qualquer pessoa, mas por isso eu vou trazer aqui um pouco do conhecimento por trás desse
+[08:57] pipeline. Então, nós temos aqui um princípio muito simples, um avatar que fica aqui reagindo
+[09:04] ao vídeo e o vídeo atrás. Geralmente são vídeos que viralizaram, mas isso é personalizável.
+[09:10] E aqui a gente definiu de 25 a 35, mas poderia ser um vídeo bem maior. Então, tem o vídeo original,
+[09:17] tem o avatar, tem uma legenda, só que tem um detalhe aqui que é bem legal, você consegue
+[09:23] remover as legendas do vídeo original. Então, às vezes você quer pegar um vídeo em outro idioma
+[09:28] ou então não quer usar simplesmente uma legenda, já que eu glinarrando um vídeo,
+[09:32] então você consegue remover e inserir a sua legenda. E aí temos músicas de domínio público
+[09:38] que são inseridas também dentro do vídeo. E por fim, temos os créditos. Acho que é até
+[09:45] uma boa prática em termos de política de privacidade, não ter a conta banida, etc.
+[09:48] Mas de qualquer maneira, a gente acha que é mais que justo dar os créditos para o canal original.
+[09:53] Resumidamente, a gente tem um comando que vai iniciar o pipeline,
+[09:58] depois o nosso amigo Cloud Code vai fazer o trabalho pesado. Obviamente, a gente vai ter
+[10:04] skills, você consegue ver que não é assim, mas que o gigantesco, 340z linhas, não é um
+[10:10] número absurdo, mas tem várias recursos legais, tem várias ferramentas, tem várias automações
+[10:15] e um Python que também ajudam muito nesse processo. E aí, o vídeo fica pronto em duas versões,
+[10:20] uma para Instagram e outra para o YouTube. Por quê? Porque a gente notou ao longo do tempo,
+[10:24] depois de vários experimentos, que quando você coloca um CTA no final dos vídeos do YouTube,
+[10:29] eles tendem a identificar isso e diminuir o alcance do vídeo, da conta,
+[10:34] e aí um copy cola sem a reformatação por plataforma não funcionar tão bem.
+[10:39] E aí tem uma espécie de log de execuções, um diário do agente, para que ele consiga
+[10:45] voltar para projetos antigos, entender o que aconteceu, se teve algum erro, também é fácil de corrigir.
+[10:50] Agora vamos mergulhar um pouco mais fundo. Temos aqui uma primeira fase, que é basicamente uma fase
+[10:56] em que um Detetive Online IA vai buscar esses vídeos virais, vai escolher as melhores opções
+[11:03] para que a gente tenha uma coleta de vídeos que tiveram uma boa performance.
+[11:08] Depois que a seleção, os filtros já foram aplicados, e esses são filtros de performance,
+[11:14] mas são filtros também que identificam certos padrões, tem tipo de vídeos que a gente não vê
+[11:20] sentido em reagir, em criar vídeos nesse estilo mail react, porque a gente acha que não vai funcionar.
+[11:27] Um exemplo são vídeos em que metade do vídeo é um texto gigante, e uma imagem que é repetida
+[11:34] mil vezes ou um vídeo muito curto que não leva a ninguém a lugar nenhum, esse tipo de vídeo é barrado.
+[11:40] E aí o processo de refinamento dessa etapa de filtro é super importante para que você não receba
+[11:45] vários vídeos e produza vários vídeos que não tem nada a ver com o que você quer postar.
+[11:49] Aí tem o trabalho de download, obviamente, e aí obviamente tem o trabalho de baixar o vídeo
+[11:55] e limpar, deixar o vídeo pronto para as próximas etapas. Depois a gente vai ter a roteirização,
+[12:01] que é um processo bem legal, um processo que precisa, assim, quando a gente vai fazer
+[12:07] implementações em empresas. É uma das coisas que a gente gosta mais de refinar para seguir exatamente
+[12:12] o tipo de linguajar, a forma de dizer, tem pessoas que gostam de se comunicar com mais gírias,
+[12:18] tem pessoas que gostam de se comunicar de maneira mais formal, tudo isso é super importante.
+[12:22] Frases mais curtas, frases mais longas, palavras mais complexas, sofisticadas, palavras que até
+[12:29] são necessárias de 10 anos poderiam entender sem problema algum. Depois a voz é girada com 11 Labs,
+[12:34] o vídeo vai ser gerado com o Ray-GEN e a gente vai remover o fundo. Por que? Porque se avatar
+[12:40] originalmente foi gravado aqui em casa? Eu vou até mostrar aqui no Ray-GEN como que ele aparece.
+[12:46] Esse aqui é o fundo do vídeo original, onde ele realmente foi gravado. Então esse fundo
+[12:51] todo é removido para que a gente tenha o vídeo que viralizou no fundo. Depois a gente vai
+[12:58] colocar as duas coisas, a gente vai editar o vídeo, colocar as legendas. Depois tem etapa de conferir
+[13:04] tudo que foi feito, que é super importante, tem algumas etapas aqui bem importantes para que a
+[13:10] gente não publique vídeos que não atendem todos os critérios que a gente precisa. Sobre
+[13:17] tudo que é automatizado, então sempre existe um risco de postagem de coisas que talvez você
+[13:23] não sinta que faça tanto sentido em relação a como você quer se posicionar. Mas é muito
+[13:27] importante que você tenha uma boa etapa que confere e verifica se está tudo certo e garante que nada
+[13:33] vai sair daquilo que você espera. Aí tem no CTA, que para o Instagram a gente vai colocar
+[13:38] pro YouTube não, como eu falei anteriormente, e a postagem a gente pode fazer por Playwright
+[13:43] Team SP ou por algumas ferramentas que a gente já falou bastante aqui no canal, na comunidade,
+[13:49] mas tem duas que são os principais, o Metricul e Blotator, que saírem para você postar via API
+[13:53] de uma maneira muito estável. Agora vou te mostrar alguns dos critérios que a gente usa
+[13:56] para fazer uma base de boost online, isso que a gente chama de scraping. Primeiro a gente vai usar
+[14:03] a YouTube Data API, que é basicamente um recurso que YouTube tem para você conseguir fazer uma
+[14:08] série de coisas dentro da plataforma, dentre elas pegar uma quantidade de vídeos sobre determinado
+[14:13] tema. Isso aqui poderia ser facilmente substituído por outras metodologias, o EpiFi é uma boa
+[14:19] opção, tem outras opções gratuitas também que você pode tentar. Aí tem alguns filtros que
+[14:24] exigem tokens, filtros determinísticos, uma barreira que você coloca entre a fase de coletar
+[14:31] centenas de vídeos e analisar esses vídeos, porque senão você vai gastar tokens para
+[14:36] caramba e o custo disso vai ser muito maior do que precisa. Então você precisa de uma barreira,
+[14:42] em pés que você gaste tokens a rodo. E alguns desses critérios são o número de
+[14:48] expressões e coisas similares. Principalmente performance aqui, você poderia incluir vários
+[14:56] outros filtros. Eu quero que esse vídeo tenha uma performance melhor em comparação aos outros
+[15:00] vídeos daquele canal, daquela conta. Tem vários outros tipos de filtros que a gente insere,
+[15:05] outras formas de ter os vídeos mais prontos chegando para análise. E tem uma questão de velocidade
+[15:13] que é o VPH, que basicamente são os views por hora, que vai determinar se o vídeo não só teve
+[15:22] um bom alcance, mas se o tema do vídeo é pertinente hoje e ainda está ganhando visualizações. E aí tem
+[15:26] alguns arquivos de memória que são importantes sempre, porque às vezes você vai correr o risco
+[15:32] de postar um vídeo que você já postou, que é uma coisa que você quer evitar. Aí depois a gente
+[15:37] vai entrar o download, o download do vídeo e vai entrar num processo de análise, de coleta de
+[15:46] informações. E aqui a gente pode usar uma série de cursos interessantes. E aqui a gente ainda não
+[15:52] está analisando o texto, transcrevendo o texto. A gente está analisando a tela, um screenshot do que
+[15:59] tem na tela. E aqui a gente vai definir só se tem música, se não é porque a gente não quer
+[16:02] ver o vídeo de gente dançando. Então tem uma camada de reprovação que vai barrar uma série de
+[16:11] vídeos que não tem nada a ver com uma proposta. E aí a gente vai para uma etapa final, que alguns
+[16:18] são escolhidos e depois um só vai ser escolhido para realmente ir para a próxima fase para ser
+[16:26] publicado. Aqui eu vou deixar para quem quiser pesquisar mais a respeito todas as coisas que a
+[16:31] gente está usando desde FFMPEG, até como a gente baixa os vídeos, tem o Apple Vision,
+[16:38] tem OCR, que é uma metodologia de análise de imagens. Tem uma série de coisas, eu vou deixar aqui na
+[16:44] tela quem quiser tirar um print para depois pesquisar mais a respeito sobre cada uma das coisas.
+[16:49] Acho que para quem vai criar pipeline assim é super legal. E aí obviamente tem uma estrutura
+[16:54] de roteiro, um gancho para as pessoas ficarem interessadas. Aí tem a cena em si, o contexto.
+[17:01] E aí o encerramento. É para ser uma coisa bem curta, bem simples, bem fácil de entender e bem
+[17:07] fácil de digerir. A voz é uma das coisas mais importantes hoje na geração de avatares de
+[17:12] ar porque tende a ser o que mais entrega. Por isso a gente tem umas etapas bem importantes aqui
+[17:19] para a verificação do áudio gerado. As vezes as palavras saem de um jeito esquisito. Então tem
+[17:25] algumas etapas legais para a gente garantir que esse áudio vai sair da maneira que a gente quer.
+[17:31] Nem sempre funciona sempre com o 100, mas é bem melhor que simplesmente tentar sorte com a Levan Labs.
+[17:37] Para os avatares a gente está usando o Ray-GN e nem precisa ser o avatar 5. A gente está usando
+[17:42] 13 e está funcionando super bem como a gente precisa de conteúdo em escala. Às vezes é melhor
+[17:46] priorizar uma redução de custo para conseguir multiplicar isso do que focar em ter o resultado
+[17:54] e até porque você viu com o avatar e ninguém percebe que é a. Aí tem questão do look,
+[17:58] basicamente você pode criar vídeos de 2 minutos e cada um desses vídeos vira uma versão
+[18:04] diferente do seu avatar. Aí tem uma opção que acho que é bem legal para quem quer economizar,
+[18:08] que é fazer tudo via Playwright MCP. Vai ser um pouco mais instável, vai ser um pouco mais
+[18:14] complicado dependendo do que você vai fazer, mas tende a ser mais barato dependendo do plano
+[18:18] do Ray-GN do que fazer tudo via API. Aí tem as especificações de renderização,
+[18:26] tem algumas travas para ele sempre usar o avatar 3, sempre criar uma cena, enfim, coisas que você vai
+[18:33] inserindo ao longo do processo de otimização que ficam gravadas dentro do projeto.
+[18:37] Um processo que é bem interessante é esse de remoção do fundo, porque você tem que
+[18:43] ver exatamente onde está o avatar, a pessoa. Você parece a pessoa do fundo da imagem original
+[18:51] e a pessoa que foi acortada fica ali naquele estilo para parecer que ela está reagindo
+[18:57] e é um sistema que funciona muito bem. Pessoal de um certo refinamento,
+[19:01] mas não foi nada de outro mundo. E aí tem várias camadas que a gente vai percorrer
+[19:06] ao longo desse pipeline, coisas simples, colocar um arrobazinho para dar os créditos,
+[19:11] a questão dos decibéis é importante para o áudio ter uma coerência, coisa do tratamento
+[19:18] de áudio punhar hoje já é bem interessante, tem as transcrições, enfim, uma série de coisas
+[19:23] que são importantes e que vão acontecendo camada por camada. Aí tem a inserção do CTAzinho
+[19:28] para o Instagram, então a gente vai ter o CTA fixo, isso aqui é um pre-gravado,
+[19:35] que ele só vai basicamente juntar o que ele acabou de fazer com o CTA padrão,
+[19:41] comentar e a pessoa comenta e ela vai para uma automação e recebe um recurso ou uma informação
+[19:48] sobre algum produto que você vende e é basicamente assim que o vídeo termina com esse CTA no Instagram
+[19:55] e no YouTube de uma outra maneira. E eu esqueci de comentar, mas esses vídeos também estão sendo
+[19:59] postados no Instagram, ainda sem tantos resultados, ficarão batendo ali mil, duas mil views,
+[20:04] que já é um resultado legal para um projeto que começou recentemente, mas quando começar a ganhar
+[20:09] uma atração aí eu volto para falar mais sobre o Instagram. Então retomando um pouco o pipeline,
+[20:14] a gente faz a busca por um vídeo viral, o avatar é gravado, a gente tira o que é tipo de legenda
+[20:21] ou ruído visual e aí o recorte é feito do avatar em relação ao fundo e tal, o remove
+[20:30] background e aí tem o contexto, então a gente precisa às vezes até pesquisar, a gente até pesquisa
+[20:36] sobre o que está sendo mostrado, aí é a voz, o ruído, a música e aí a postagem depois que tudo
+[20:43] é finalizado e aí a gente tem algumas leis também, que vão mais no sentido de o rei
+[20:52] de N sem fazer o upgrade, na coisa que a gente não quer que ele realmente faça, porque a gente
+[20:58] não quer que ele comece a comprar créditos nas plataformas autonomamente, você pode até
+[21:04] poder demandar isso dele e ele faria, mas é uma coisa legal colocar uma trava nesse sentido,
+[21:09] também tem uma questão de RAM aqui, de memória unificada, enfim, você não quer que vários
+[21:15] pipelines rodem ao mesmo tempo se o seu computador não permitir e também você vai postar um a cada
+[21:20] que, meia hora, duas horas, uma hora, se você rodar vários anos do tempo e postar todos
+[21:24] os tempos, não sei se vai fazer tanto sentido e a gente já explicou como fazer essa separação
+[21:29] entre processo de scraping, processo de produção e processo de postagem, que é uma coisa bem
+[21:33] legal para pipelines mais sérios e consolidados, como isso aqui é um experimento, a gente
+[21:36] gosta de rodado como é só ao fim sempre que complexifica o trabalho de entender, modificar
+[21:41] e otimizar, então a gente vai encontrar, vai filtrar, vai preparar o vídeo para o processo,
+[21:48] vai escrever o roteiro, vai criar o Outro in the Lab, vai colocar o avatarzinho, vai recortar
+[21:57] o avatar, vai montar, tudo vai passar pelos gates de os filtros, as verificações finais,
+[22:06] vai colocar o CTA, vai fazer entrega e apostagem de todo o material.
+[22:13] O que mais me surpreendeu nesse formato é a velocidade em que isso ganhou tração,
+[22:17] você pegar o que o algoritmo já valia dois, só comentar algo em cima, mas a estratégia
+[22:21] que muita gente usa e realmente faz na mão isso, só que fazer isso com o avatar é tão
+[22:25] mais fácil e eu acho que eu me sentiria meio idiota, lendo esses textos e reagindo a umas
+[22:29] coisas aleatórias a troco de não sei o que, porque o nosso tempo é muito valioso, o
+[22:35] tempo de todos, porque se você vai dedicar tempo para viralizar na sede sem nenhum
+[22:40] ponto de conversão no futuro é muito difícil você querer fazer coisas assim, mas se
+[22:45] você pode criar vários projetos recreativos, adiacentes a sua área ou então diretamente
+[22:50] ligados a sua área, para conseguir eventualmente vender serviços, vender produtos, vender uma
+[22:56] série de coisas, pode ser uma mudança drástica em relação a como você lida com a sua rotina
+[23:01] hoje, como você lida com a sua empresa, o seu negócio hoje, um canal de aquisição
+[23:06] no autopilot automático que de fato funciona, a gente dá uma liberdade infinita, uma
+[23:10] liberdade para basicamente não ter um canal de aquisição que exige o seu tempo
+[23:15] e aí você consegue vendas, tem o autopilot automático, consegue uma série de coisas
+[23:18] que demandariam muito tempo, muito esforço e essa grande mágica disso que o que mais
+[23:23] realmente me impressionou foi a velocidade cara, 3 dias de projetos, 100 mil visualizações,
+[23:28] não é uma coisa normal. Uma excelente notícia para quem está na comunidade Maestros
+[23:32] Daia, nós estamos disponibilizando esse agente dentro da comunidade para você
+[23:35] baixar e começar a usar imediatamente. E para quem não está na comunidade ainda,
+[23:40] eu me pedi você a se juntar a essa comunidade com milhares de pessoas, pessoas ativas todos os dias
+[23:46] comentando, ajudando uns aos outros, indo nas lives, acionando o suporte técnico que é diário,
+[23:52] aproveitando os mais de 50 aplicativos, centenas de agentes, centenas de skills
+[23:56] para você realmente só baixar e ter um resultado, uma mudança drástica nas
+[24:01] coisas que você faz hoje em dia no seu trabalho, na sua empresa. É uma coisa que
+[24:05] realmente é simbólica, o valor é totalmente simbólico em relação ao que
+[24:10] você parece. Aqui no YouTube a gente traz a informação para quem quer baixar o vídeo,
+[24:15] transcrever, tentar criar algo parecido, é super possível com a informação que a
+[24:18] gente traz. Na comunidade a gente traz o recurso pronto mastigado para você não
+[24:23] perder tempo. E obviamente para quem tem uma empresa e não tem tempo nem de
+[24:27] implementar, refinar e personalizar, que é um trabalho significativo, vocês podem
+[24:32] contratar a nossa implementação, a gente cria uma fábrica de conteúdo para vocês,
+[24:36] de uma maneira extremamente dedicada, refinada, completa, a gente adora criar
+[24:41] sistemas autônomos de produção de conteúdo. Então se você tem uma empresa ou se você tem um produto
+[24:45] para vender e quer construir a sua fábrica com a gente, dá uma olhada também no link na descrição,
+[24:50] tanto a comunidade quanto o link para negócios estão na descrição desse vídeo.
+[24:54] E eu espero que vocês tenham gostado desse vídeo, se você quer receber mais
+[24:58] recomendações de vídeos como esse no seu YouTube, você pode deixar um hype nesse vídeo,
+[25:01] um like e é claro se inscrever no canal. Um abraço e até a próxima.

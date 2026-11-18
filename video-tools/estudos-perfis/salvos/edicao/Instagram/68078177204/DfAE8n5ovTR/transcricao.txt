@@ -1,0 +1,6 @@
+idioma: en (1.00)
+[   0.0-   2.6] What's the difference between a home inspection and an appraisal?
+[   2.6-   6.0] When you get under agreement on a property, you get your offer accepted and have the ability
+[   6.0-   7.4] to have your own home inspection.
+[   7.4-  10.6] And what that means is that you're going to hire your own home inspector, check the
+[  10.6-  13.4] heating, cooling, all the different components of a house to make sure that...

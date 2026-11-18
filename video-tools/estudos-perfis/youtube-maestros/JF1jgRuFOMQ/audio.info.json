@@ -1,0 +1,71 @@
+{
+ "id": "JF1jgRuFOMQ",
+ "title": "Testei 100+ Repos do Github. Esses são os MELHORES",
+ "fulltitle": "Testei 100+ Repos do Github. Esses são os MELHORES",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=JF1jgRuFOMQ",
+ "upload_date": "20261027",
+ "duration": 904,
+ "duration_string": "15:04",
+ "view_count": 14354,
+ "like_count": 308,
+ "comment_count": 6,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=repos-do-github-para-ia_raw173\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\nOs repositórios do GitHub que valem a pena para quem usa IA: vídeo a partir de código, clone de voz grátis, orquestração de agentes e recriação de apps.\n\nO GitHub deixou de ser um lugar só de programadores e virou uma biblioteca pública e gratuita de skills, agentes e projetos inteiros para o seu ecossistema de IA. Neste vídeo eu mostro os repositórios do GitHub que eu recomendo hoje: Remotion e HyperFrames, que transformam código em vídeo e motion graphics (um em React, o outro em HTML); o VoiceStudio, uma alternativa open source e local ao ElevenLabs para clonar a sua voz e dublar vídeos no seu computador; o Paperclip, para orquestrar um time de agentes de IA, cada um com o seu contexto e a sua função; o Superpowers, para planejar, construir, revisar e testar projetos de código; e o Reverse Engineer Anything, que investiga como um aplicativo funciona para o seu agente recriá-lo.\n\nTambém falo do cuidado antes de baixar qualquer coisa: qualquer pessoa pode publicar um repositório, e um projeto malicioso executado pela sua IA no seu computador pode causar estrago. No fim, mostro o que criamos na comunidade Maestros da IA a partir dessas ideias: o Espelho de Apps, inspirado no Reverse Engineer Anything, com uma etapa de desenvolvimento mais caprichada; o AR Board, para aprovar ou rejeitar uma por uma as sugestões da IA; o Maestro Mode, nossa versão do Gauntlet Loop, com rodadas de execução e revisão; e o Graph Builder, para montar sistemas de agentes com trabalhadores e supervisores.\n\n📌 CAPÍTULOS\n0:00 GitHub para quem usa IA: skills, agentes e projetos grátis\n3:42 Cuidado com repositórios maliciosos no GitHub\n4:16 Remotion e HyperFrames: editar vídeo e criar motion com IA\n5:41 VoiceStudio: clonar voz e dublar vídeos de graça\n6:46 Paperclip: orquestração de agentes de IA\n7:51 Superpowers: planejar, construir, revisar e testar código\n8:05 Reverse Engineer Anything e o Espelho de Apps\n9:55 AR Board e Maestro Mode: aprovar e revisar o trabalho da IA\n13:01 Graph Builder e a comunidade Maestros da IA\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ A diferença entre Remotion e HyperFrames para criar vídeos e motion graphics com código\n✅ Uma alternativa open source e local ao ElevenLabs para clonar voz e dublar vídeos\n✅ Qual repositório usar para orquestrar um time de agentes de IA no mesmo projeto\n✅ Por que tomar cuidado antes de baixar e executar um repositório com a sua IA\n✅ Como aprovar ou rejeitar, uma por uma, as sugestões da IA com o AR Board\n\n#maestrosdaia #github #inteligenciaartificial",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "GitHub para quem usa IA: skills, agentes e projetos grátis",
+   "end_time": 222
+  },
+  {
+   "start_time": 222,
+   "title": "Cuidado com repositórios maliciosos no GitHub",
+   "end_time": 256
+  },
+  {
+   "start_time": 256,
+   "title": "Remotion e HyperFrames: editar vídeo e criar motion com IA",
+   "end_time": 341
+  },
+  {
+   "start_time": 341,
+   "title": "VoiceStudio: clonar voz e dublar vídeos de graça",
+   "end_time": 406
+  },
+  {
+   "start_time": 406,
+   "title": "Paperclip: orquestração de agentes de IA",
+   "end_time": 471
+  },
+  {
+   "start_time": 471,
+   "title": "Superpowers: planejar, construir, revisar e testar código",
+   "end_time": 485
+  },
+  {
+   "start_time": 485,
+   "title": "Reverse Engineer Anything e o Espelho de Apps",
+   "end_time": 595
+  },
+  {
+   "start_time": 595,
+   "title": "AR Board e Maestro Mode: aprovar e revisar o trabalho da IA",
+   "end_time": 781
+  },
+  {
+   "start_time": 781,
+   "title": "Graph Builder e a comunidade Maestros da IA",
+   "end_time": 904
+  }
+ ],
+ "language": "pt-BR"
+}

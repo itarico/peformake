@@ -1,0 +1,101 @@
+{
+ "id": "Ckuo9Bvy3zk",
+ "title": "Minha NOVA SKILL Favorita do Claude Code",
+ "fulltitle": "Minha NOVA SKILL Favorita do Claude Code",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=Ckuo9Bvy3zk",
+ "upload_date": "20261011",
+ "duration": 1681,
+ "duration_string": "28:01",
+ "view_count": 49446,
+ "like_count": 776,
+ "comment_count": 36,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=ar-board-treinar-agentes\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\nA skill que eu mais uso no dia a dia: um painel de aprovar e rejeitar (AR board) que acelera decisões e treina seus agentes de IA pelas suas preferências.\n\nNeste vídeo eu mostro o AR board na prática com quatro exemplos: microtemplates de um site, sugestões para a arquitetura de um agente, ideias de novas features para um app e temas de vídeo para o canal. Você aprova com a tecla A, rejeita com a tecla R e ainda comenta o porquê de cada escolha. O painel fica conectado à sua sessão no Claude Code: quando você diz que terminou, o agente entende o que foi aprovado e rejeitado e se aprimora com base nas suas preferências.\n\n📌 CAPÍTULOS\n0:00 A skill que eu mais uso no dia a dia\n0:53 Por que decidir bem ainda é o seu papel\n3:14 Os 4 exemplos que vou testar com a skill\n4:08 Exemplo 1: microtemplates para um site\n5:02 Aprovando e rejeitando com as teclas A e R\n5:44 Como o painel conversa com a sessão do Claude Code\n6:35 Aprovar tudo, aprovar nada ou usar o AR board\n7:42 Exemplo 2: novas features para um aplicativo\n12:48 Exemplo 3: aprimorar a arquitetura de um agente\n18:38 Exemplo 4: temas de vídeo para o canal\n20:35 Por que comentar cada aprovação e rejeição\n21:00 Construindo um site guiado pelos seus critérios\n23:35 Treinando um agente de carrosséis do zero\n25:05 Por que essa skill simples virou a que mais uso\n26:47 Como pegar a skill pela comunidade\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ O que é o AR board e como aprovar e rejeitar item por item\n✅ Como o painel se conecta à sua sessão no Claude Code\n✅ Como treinar um agente de IA pelas suas preferências e comentários\n✅ Quando usar aprovação manual em vez de deixar o agente rodar sozinho\n\n#arboard #agentesdeia #claudecode",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "A skill que eu mais uso no dia a dia",
+   "end_time": 53
+  },
+  {
+   "start_time": 53,
+   "title": "Por que decidir bem ainda é o seu papel",
+   "end_time": 194
+  },
+  {
+   "start_time": 194,
+   "title": "Os 4 exemplos que vou testar com a skill",
+   "end_time": 248
+  },
+  {
+   "start_time": 248,
+   "title": "Exemplo 1: microtemplates para um site",
+   "end_time": 302
+  },
+  {
+   "start_time": 302,
+   "title": "Aprovando e rejeitando com as teclas A e R",
+   "end_time": 344
+  },
+  {
+   "start_time": 344,
+   "title": "Como o painel conversa com a sessão do Claude Code",
+   "end_time": 395
+  },
+  {
+   "start_time": 395,
+   "title": "Aprovar tudo, aprovar nada ou usar o AR board",
+   "end_time": 462
+  },
+  {
+   "start_time": 462,
+   "title": "Exemplo 2: novas features para um aplicativo",
+   "end_time": 768
+  },
+  {
+   "start_time": 768,
+   "title": "Exemplo 3: aprimorar a arquitetura de um agente",
+   "end_time": 1118
+  },
+  {
+   "start_time": 1118,
+   "title": "Exemplo 4: temas de vídeo para o canal",
+   "end_time": 1235
+  },
+  {
+   "start_time": 1235,
+   "title": "Por que comentar cada aprovação e rejeição",
+   "end_time": 1260
+  },
+  {
+   "start_time": 1260,
+   "title": "Construindo um site guiado pelos seus critérios",
+   "end_time": 1415
+  },
+  {
+   "start_time": 1415,
+   "title": "Treinando um agente de carrosséis do zero",
+   "end_time": 1505
+  },
+  {
+   "start_time": 1505,
+   "title": "Por que essa skill simples virou a que mais uso",
+   "end_time": 1607
+  },
+  {
+   "start_time": 1607,
+   "title": "Como pegar a skill pela comunidade",
+   "end_time": 1681
+  }
+ ],
+ "language": "pt-BR"
+}

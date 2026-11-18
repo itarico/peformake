@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "DCPZOVMx3_N",
+ "title": "Post by dacostamotion",
+ "description": "Logo da Golden Chichen animado 🐔🧡\n\nTrabalho realizado junto com a empresa @howverlab.\n\nMe conta oque achou nos comentários.\n#dacostamotion #logoanimation",
+ "channel": "dacostamotion",
+ "uploader_id": "47908411852",
+ "uploader": "José Emanuel | Motion Designer",
+ "timestamp": 1731348390,
+ "like_count": 63,
+ "comment_count": 10,
+ "webpage_url": "https://www.instagram.com/reel/DCPZOVMx3_N/",
+ "webpage_url_basename": "DCPZOVMx3_N",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20241111",
+ "playlist_count": 3,
+ "epoch": 1794152441,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

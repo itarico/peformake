@@ -1,0 +1,13 @@
+idioma: es
+[00:00] Si usas Cloud o Codex para hacer vídeos ya puedes clonar tu voz gratis y sin salir de tu ordenador.
+[00:05] Se llama Voice Studio, es de código abierto y este mes ha ganado más de 24.000 estrellas en GitHub,
+[00:11] que son como los me gusta de los programadores.
+[00:14] Clona tu voz a partir de una grabación limpia, te deja diseñar voces nuevas y dobla tus vídeos a otro idioma,
+[00:20] con la voz al ritmo del vídeo.
+[00:22] Todo pasa en tu ordenador, así que tu voz no sale de ahí.
+[00:25] Cloud o Codex lo puedes manejar por ti, así que le pides el audio y te lo hace.
+[00:30] Para instalarlo copias una frase que viene en el repositorio y se la das a Cloud Code o a Codex.
+[00:35] Él mismo mira qué ordenador tienes, elige el motor que mejor le va y te pregunta antes de bajar nada.
+[00:41] Eso sí, necesita un ordenador con cierta potencia y en un antiguo puede ir lento.
+[00:47] Y si haces vídeos para clientes en varios idiomas te puede ahorrar el doblaje.
+[00:51] Comenta la palabra voz y te mando el enlace.

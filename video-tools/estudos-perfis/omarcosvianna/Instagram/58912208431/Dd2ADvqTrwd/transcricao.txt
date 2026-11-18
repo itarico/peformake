@@ -1,0 +1,3 @@
+idioma: pt
+[00:00] Perno vai pra lá e pra lá.
+[00:02] Pra lá e pra lá.

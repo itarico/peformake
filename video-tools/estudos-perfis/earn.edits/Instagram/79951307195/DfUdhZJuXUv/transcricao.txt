@@ -1,0 +1,12 @@
+idioma: en
+[00:00] The next Tesla might look less like a car and more like a spacecraft on wheels.
+[00:05] For years, flying cars have been promised as transportation's future.
+[00:09] Now, Elon Musk is pushing that dream with Tesla's next generation Roadster
+[00:13] and its teased SpaceX-inspired rocket thrusters.
+[00:17] The idea is acceleration like a rocket launch.
+[00:20] But rocket thrust doesn't automatically make a car fly,
+[00:23] and Tesla hasn't proven the Roadster can fly.
+[00:25] Still, one thing is clear.
+[00:27] The boundary between science fiction and engineering is becoming harder to imagine.
+[00:32] Editors, stop reverse engineering it.
+[00:34] The full project file is on earnedits.com.

@@ -1,0 +1,21 @@
+idioma: en
+[00:00] Suddenly you're dealing with broken payments,
+[00:02] complicated authentication, security issues,
+[00:05] and endless debugging.
+[00:07] That's where Blink comes in.
+[00:09] Blink doesn't just build apps,
+[00:11] it helps you build real functional products.
+[00:14] From full stack SaaS platforms to mobile apps,
+[00:17] Chrome extensions, and AI agents,
+[00:20] all from a simple prompt.
+[00:22] And the best part, the hard stuff is built in.
+[00:25] Authentication, payments, databases,
+[00:27] integrations, and hosting.
+[00:30] Even when something breaks,
+[00:31] Blink can read the logs,
+[00:33] find the issue, and help fix it.
+[00:35] So you can spend less time debugging,
+[00:37] and more time bringing your ideas to life.
+[00:39] If you've ever thought someone should build this,
+[00:42] now you can.
+[00:43] Comment Blink and I'll send you the link.

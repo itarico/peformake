@@ -1,0 +1,8 @@
+idioma: en
+[00:00] What if I told you that with just one prompt, you could build an entire website like the one you're seeing right now?
+[00:06] Just describe your idea and Blink helps turn it into a real working product.
+[00:12] From secure databases and built-in authentication to strike payments, and when something breaks,
+[00:17] Blink can help you find and fix the issue.
+[00:20] Your idea deserves to be real.
+[00:22] Build it with Blink.
+[00:24] Comment Blink to get the link.

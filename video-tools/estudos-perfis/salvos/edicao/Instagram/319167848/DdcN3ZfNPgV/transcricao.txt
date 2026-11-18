@@ -1,0 +1,26 @@
+idioma: pt (0.99)
+[   0.0-   1.0] Vem cá.
+[   1.0-   3.2] E se eu te falar que eu criei essa animação com apenas um clique?
+[   3.2-   4.2] Ou melhor, um prompt.
+[   4.2-   8.8] É isso aí amigo, com a nova funcionalidade AI Motion Design da Hicksfield você pode
+[   8.8-  13.0] criar animações em Motion Graphic com controle total em segundos.
+[  13.0-  14.0] Quer saber como fazer?
+[  14.0-  15.5] Vem comigo meu anjo.
+[  15.5-  19.9] Primeiro passo adicional, plugin da Hicksfield no chat de PTA e de GT, Hicksfield, Use
+[  19.9-  20.9] After Effects.
+[  20.9-  23.3] Agora descreva o estilo de motion que você quer trabalhar.
+[  23.3-  28.0] Enquanto isso de forma automática ele cria todas as layers, camadas e pastas
+[  28.0-  29.8] dentro de um projeto no After Effects.
+[  29.8-  34.3] Mas como mágica você acabou de poupar horas de vetorização e organização de
+[  34.3-  37.2] projeto pulando 100% aquela parte chata de edição.
+[  37.2-  40.4] Mas se você é assim como eu e gosta de animar manualmente você ainda tem
+[  40.4-  44.5] total controle sobre seus objetos e vetores criando seus keyframes e animando.
+[  44.5-  45.5] E tem mais.
+[  45.5-  48.3] Sabe aquelas horas que você perderia redimensionando o projeto para vertical,
+[  48.3-  50.7] horizontal e mais 20 formatos diferentes?
+[  50.7-  51.7] Agora é assim.
+[  51.7-  52.9] Chat, redimensiona esse projeto.
+[  52.9-  55.8] E assim você tem todos os formatos que você precisa.
+[  55.8-  58.8] E se você quer saber mais sobre essa nova ferramenta comenta Motion
+[  58.9-  61.0] IA que eu te mando o link pra você dar uma olhada.
+[  61.0-  61.5] Até a próxima.

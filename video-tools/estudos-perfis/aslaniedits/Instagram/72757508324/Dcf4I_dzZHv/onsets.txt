@@ -1,0 +1,13 @@
+ 0.13s flux= 247.7 rms=-23.6dB centroide=  5575Hz grave=0.04
+ 0.50s flux= 195.8 rms=-23.6dB centroide=  5280Hz grave=0.06
+ 0.79s flux=  68.1 rms=-23.1dB centroide=   463Hz grave=0.53
+ 1.14s flux=  92.4 rms=-20.0dB centroide=  1041Hz grave=0.46
+ 1.47s flux= 147.7 rms=-16.1dB centroide=  1692Hz grave=0.33
+ 1.60s flux=  60.8 rms=-14.0dB centroide=  1567Hz grave=0.51
+ 2.82s flux= 124.9 rms=-16.2dB centroide=  1512Hz grave=0.35
+ 3.84s flux=  67.3 rms=-21.1dB centroide=  1086Hz grave=0.45
+ 4.17s flux= 127.6 rms=-19.3dB centroide=  1469Hz grave=0.41
+ 5.51s flux= 255.8 rms=-22.3dB centroide=  2455Hz grave=0.21
+ 5.69s flux= 118.3 rms=-17.4dB centroide=  2149Hz grave=0.24
+ 5.86s flux=  91.9 rms=-17.1dB centroide=  2215Hz grave=0.21
+periodo~1.347s BPM~44.6

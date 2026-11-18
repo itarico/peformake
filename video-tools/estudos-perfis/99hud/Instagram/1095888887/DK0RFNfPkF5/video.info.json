@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "DK0RFNfPkF5",
+ "title": "Post by maria.mayse",
+ "description": "Obrigada por escolher todos os dias continuar regando, plantando e colhendo a vida que decidimos construir juntos. ♥️\n\nFeliz Dia dos Namorados, meu amor, meu marido, meu parceiro... \n\nTe amo pra sempre e mais um dia!",
+ "channel": "maria.mayse",
+ "uploader_id": "1095888887",
+ "uploader": "Mayse Araújo | Marketing & Negócios",
+ "timestamp": 1749765504,
+ "like_count": 142,
+ "comment_count": 16,
+ "webpage_url": "https://www.instagram.com/reel/DK0RFNfPkF5/",
+ "webpage_url_basename": "DK0RFNfPkF5",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20250612",
+ "playlist_count": 3,
+ "epoch": 1794365501,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

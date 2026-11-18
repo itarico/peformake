@@ -1,0 +1,13 @@
+idioma: en (1.00)
+[   0.0-   1.5] Looks cinematic, right?
+[   1.5-   3.1] Remove those three layers.
+[   3.1-   4.1] Feels flat.
+[   4.1-   7.2] This type of effect is mostly used in documentaries.
+[   7.2-   9.7] First added compound blur around the edges
+[   9.7-  10.9] to give it that depth.
+[  10.9-  14.4] Next added CC vignette to get focus to midpoint.
+[  14.4-  17.0] And on top of that, I added a texture I picked up
+[  17.0-  18.0] from texture labs.
+[  18.0-  20.0] Changed the blending mode to screen
+[  20.0-  21.7] and adjusted the levels a bit.
+[  21.7-  22.8] And that's it.

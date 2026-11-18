@@ -1,0 +1,119 @@
+idioma: en
+[00:00] If you're feeling overwhelmed by trying to edit your first documentary, you're not alone.
+[00:05] Over seven years ago, when I started editing documentaries, there was this huge gap between
+[00:12] how to edit little videos for local businesses and understanding how to put together a documentary.
+[00:18] Well, today I want to hopefully help close that gap a little bit by showing you the difference in
+[00:25] philosophy, the difference in approach that a video editor takes when it comes to editing,
+[00:31] versus someone who edits documentaries. Number one, don't jump into a timeline. When you're editing
+[00:38] shorter videos, usually what you do when you get back from the shoot is you throw all your footage
+[00:44] into a timeline, find a piece of music that you like and start cutting your video. When
+[00:50] you're working on your first documentary, you might have many days of shooting over many months,
+[00:57] with many different interviews with different characters. So to throw everything into a timeline
+[01:02] and expect to know what story you're trying to tell and edit it together in one go is unrealistic
+[01:12] and is causing you a lot of harm and frustration. So what does the documentary editor do? They
+[01:17] understand that they might not know the story yet. So before they ever hop into an editing timeline,
+[01:24] they figure out their story first. Now, the most common way to do this is to transcribe all of
+[01:31] your interviews. You create a big text document full of all the quotes from all of your characters
+[01:37] in the different interviews, and you start going through all of these quotes and highlighting
+[01:42] things, figuring out different themes that people talk about, coming up with different ideas that
+[01:49] or topics that people cover and figuring out your story in what's known as a paper edit,
+[01:55] which is essentially an edit of your film that exists solely with these transcripts. When you
+[02:02] have this story laid out on paper, when you finally decide to hop into an editing timeline,
+[02:09] you're reducing a lot of that friction that it takes to get started with editing. You already
+[02:16] loosely know the story you're trying to tell. And now it's more a matter of
+[02:20] implementing that story rather than trying to find it within your editing software,
+[02:26] which brings me to number two, which is to build your audio first and worry about your B-roll
+[02:32] When you get used to editing shorter videos, you rely heavily on B-roll, because in the world we
+[02:40] live in today, most of the buzzy content that we see online is trying to grab your attention
+[02:48] visually. So as editors, we get used to leaning on different little tricks, cutting to cool music,
+[02:54] coming up with creative transitions, maybe there's cool graphics, but none of these techniques
+[03:00] apply to documentary. Documentary relies on different techniques to grab and keep your attention,
+[03:08] and the biggest technique we lean on is storytelling. In documentary, storytelling occurs
+[03:14] not through B-roll, but largely through our interviews. So the documentary editor compared
+[03:20] to the video editor actually flips the process and starts their edit with only audio. This is
+[03:27] a technique called the assembly cut. And what an assembly cut is, is essentially an audio version,
+[03:33] almost like a podcast version of your film. You take all of your interviews, you figure out your
+[03:40] story and your paper edit, and then you string out all these interviews onto a timeline with no
+[03:46] music, no visuals, no B-roll, it's just purely your interviews. And the goal of this process
+[03:53] of making an assembly cut is to make sure that your story structure is figured out before you start
+[03:59] getting distracted by adding music and B-roll and all these other elements. You want to make sure that
+[04:06] the foundation to your story is interesting enough on its own. If your story isn't interesting when
+[04:12] you're listening to this version of it with audio only, there's not really any amount of polish
+[04:17] you can add through visuals that's going to make your documentary compelling. So start with your audio
+[04:24] first, and then once you have this dialed, once you've figured out your story structure, then you
+[04:30] can start layering on B-roll and graphics and music, which leads me to point three, which is to make
+[04:36] cuts invisible, not flashy. When you're making shorter, buzzier social media-based content,
+[04:43] it's all about being flashy. It's all about grabbing attention. In the documentary world, when you use
+[04:50] fancy transitions, when you use, you know, visual trickery, it actually takes the audience
+[04:57] out of the story, because all of a sudden the audience now realizes that they're watching
+[05:04] an edit, that they're watching something that someone sat down and crafted, and they're
+[05:09] thinking about that cool thing that you did, or that interesting video technique, or that weird
+[05:15] thing that caught their eye, rather than just being immersed in the story. So the video editor tries
+[05:21] to create flashy things, tries to draw people's eyes to the edits, whereas the documentary editor
+[05:28] wants to actually make those edits disappear. And one of the more common ways to smooth out your
+[05:34] edits, to make them disappear to the audience, is to learn the techniques of L cuts and J cuts.
+[05:40] Now there's plenty of videos online about these two types of cuts, but just to quickly
+[05:45] summarize them, L cuts and J cuts overlap audio from one clip as we cut to the next clip. So for
+[05:53] example, with a J cut, you'll hear the audio from an interview come in before we actually cut to
+[05:59] the interview. And I had this love of climbing, I dropped out of high school, and it was really
+[06:03] just a chase after mountain climbing. And this is mimicking the fact that when we hear someone
+[06:08] talk next to us, we hear them talk first, and then we look over, we don't look over right as
+[06:14] they're beginning to talk. And so if you cut right at the moment the person's talking, it feels
+[06:20] unnatural. When we add this slight overlap, it actually makes most of these cuts disappear.
+[06:26] Our audience forgets that they're watching a film and they can let themselves be immersed in
+[06:30] the story. So get rid of all the flashy transitions, unless you have a very specific reason to use them.
+[06:37] And instead focus your time on how to make all of your cuts disappear. Number four is to break
+[06:43] it up into scenes. Editing a three minute film is totally feasible in one timeline. Making
+[06:51] three minutes entertaining is usually not much of a problem. But when you start to get into
+[06:57] 10 minute timelines, 20 minute timelines, even the 90 minute timeline for a feature film,
+[07:03] waking up in the morning, and looking at a 90 minute timeline and figuring out how to keep it
+[07:10] entertaining for the audience, how to keep them engaged, how to hold that entire 90 minute
+[07:17] story in your head while you're scrubbing through a timeline becomes a total nightmare and
+[07:22] basically impossible. So the solution to this, what the documentary editor does is they break
+[07:28] up their film into scenes. And scenes actually have a very practical and pragmatic benefit, but
+[07:36] they also have a very important storytelling benefit as well. The practical benefit of scenes is
+[07:42] similar to when you break down an overwhelming to do list task into simpler, more bite size pieces.
+[07:50] When you're only editing two minutes versus 40 minutes, and you wake up in the morning and that's
+[07:56] your task for the day, your motivation to complete it is a lot higher because it seems well within
+[08:01] your reach. It seems like something that you can actually reasonably accomplish. If you edit
+[08:07] one scene one day, and then another scene the next day, and another scene the next day after that,
+[08:12] before you know it, you'll have a full length 40 minute film. It's just only a matter of time.
+[08:18] So breaking things down this way just keeps your motivation up. It keeps you going. It keeps
+[08:24] everything within reach. But not only that, scenes also help you keep your film entertaining.
+[08:31] And this is the storytelling benefit to breaking down your film into scenes. Because when you're
+[08:36] focused on just a three minute chunk, it's easy to keep that three minute chunk entertaining.
+[08:42] And if you have a bunch of a series of these individual entertaining scenes, it means that
+[08:48] you're keeping your micro story your moment to moment story entertaining over the course of telling
+[08:55] your macro story, your big story. So if you can keep the audience engaged in these little
+[09:01] micro bursts of engagement of entertainment, then all of those scenes will add up to a film that on
+[09:08] the whole is interesting and engaging. So break your film up into scenes, it'll keep you motivated,
+[09:14] and it will honestly make you a better storyteller. And last but not least, number five, focus on
+[09:20] why and not the what. One of the biggest mistakes I see new documentary editors make when they're
+[09:26] trying to bridge that gap between editing corporate videos to documentaries is that they focus way too
+[09:32] much on the what of the story and completely ignore the why of it all. When you come from making event
+[09:40] videos, when you're capturing a day and trying to create a highlight reel from it, you're focused so
+[09:47] much on what actually occurred, what you captured through your lens. And you basically want to try
+[09:54] and tell the best version of those events that unfolded. But the difference between a video and
+[09:59] a documentary is that a documentary editor will dig a layer deeper. Instead of just asking what
+[10:07] happened that day, they're asking themselves why those events occurred. In documentaries, we have
+[10:13] more time to explore to dig deeper into the human condition. And that's ultimately what makes people
+[10:22] hooked to documentaries. It's why we're so fascinated by documentaries is because we get to
+[10:27] learn more about people, places, cultures that we don't experience in our day to day lives.
+[10:36] And the only way you get to those emotions that resonate with people through a camera
+[10:42] is by asking why. So a videographer, for example, might focus on a marathon that happened in
+[10:48] their hometown and a runner that broke the local record. And that is their overall peak of their
+[10:56] story. Whereas a documentary editor, on the other hand, is filled with all these questions about
+[11:02] what motivates him. What is he sacrificing by trying to spend all this time training to become better
+[11:09] and better and better? Who was he as a kid? And why did that shape him into this competitive
+[11:14] athlete that he is today? What is he running from? Is he scared of something? Is he not facing
+[11:21] something in his personal life? All of these questions are questions about the human condition.
+[11:26] These are the types of questions that get your audience hooked, get your audience interested
+[11:32] in characters and make them want to learn more. This is the fuel for turning a small story about
+[11:39] a local runner at a local race into a bigger, longer story that digs into a more human issue
+[11:48] that we all face that's universal. When we only focus on what happened in a story, it's boring.
+[11:55] We don't care. We don't relate to it. But when we dig deeper and ask why, that's where we get to
+[12:01] all the juicy stuff that people care about. So there you have it. Those are the five main
+[12:06] differences that I see between being a video editor versus being a documentary editor. And if you're
+[12:13] curious about where to start with editing your own documentary, check out this video here where I
+[12:18] break down the process of turning raw footage into a documentary. That's it for me today, guys,
+[12:24] and I will see you in the next one. Later.

@@ -1,0 +1,719 @@
+{
+ "meta": {
+  "nome": "earn.edits_DfZoBRQuHwq",
+  "legenda_post": "🧊 A glacier melted... and revealed a murder scene 5,300 years old 😳\n\n📼 This retro-style motion piece tells the story of Ötzi. In September 1991, two hikers found a body emerging from melting ice in the Ötztal Alps, near the Austria–Italy border. At first they thought it was a recently deceased mountaineer. The truth was far more extraordinary: he had lived around 3300 BCE 🏔️\n\n🔬 The glacier had preserved his clothing, leather footwear, tools, weapons, and even traces of his last meals, giving scientists an unmatched look at life in the Copper Age 🪓\n\n🏹 But then came the disturbing part. An arrowhead embedded in his left shoulder showed he had died violently. Who attacked him? Why? And what happened in his final hours? 🔍\n\n🎞️ Built with a vintage documentary look: archival-inspired imagery, frozen landscapes, vintage textures, animated typography, and atmospheric transitions that build toward a mystery preserved in ice\n\n💭 A man frozen in time, and a question that thousands of years haven’t answered\n\n🎬 Full project file inside EarnEdits\n🔗 EarnEdits.com 👈\n\n#EarnEdits #MotionDesign #VideoEditing #RetroEdit #AfterEffects",
+  "id": "DfZoBRQuHwq",
+  "canal": "earn.edits",
+  "autor": "EarnEdits.com",
+  "curtidas": 716,
+  "comentarios": 12,
+  "visualizacoes": null,
+  "data": "2026-11-06"
+ },
+ "metricas": {
+  "duracao_s": 37.06,
+  "resolucao": "1080x1920",
+  "fps": 16.0,
+  "n_cortes": 9,
+  "cortes_por_min": 14.6,
+  "plano_medio_s": 3.71,
+  "plano_mais_curto_s": 1.19,
+  "plano_mais_longo_s": 5.44,
+  "cortes_nos_3s_iniciais": 1,
+  "primeiro_corte_s": 1.188,
+  "lufs_integrado": -14.3,
+  "n_transientes_audio": 58,
+  "cortes_em_pico_de_audio": 6,
+  "pct_cortes_no_pico": 67,
+  "idioma": "en",
+  "palavras": 91,
+  "palavras_por_s": 2.46,
+  "pct_tempo_com_fala": 89,
+  "gancho_3s": "A glacier revealed a death scene older than almost anything"
+ },
+ "cortes": [
+  1.188,
+  3.0,
+  5.375,
+  10.812,
+  16.125,
+  20.188,
+  22.938,
+  26.812,
+  31.938
+ ],
+ "planos": [
+  1.19,
+  1.81,
+  2.38,
+  5.44,
+  5.31,
+  4.06,
+  2.75,
+  3.87,
+  5.13,
+  5.12
+ ],
+ "transientes": [
+  0.03,
+  0.18,
+  0.8,
+  1.02,
+  1.16,
+  1.58,
+  1.93,
+  2.29,
+  2.48,
+  2.95,
+  4.09,
+  4.58,
+  5.33,
+  6.84,
+  7.64,
+  10.07,
+  11.17,
+  11.45,
+  11.87,
+  12.34,
+  12.5,
+  12.65,
+  13.22,
+  14.38,
+  14.97,
+  15.62,
+  16.1,
+  17.48,
+  17.72,
+  18.31,
+  18.45,
+  18.75,
+  19.08,
+  20.15,
+  20.49,
+  21.74,
+  22.02,
+  22.88,
+  23.86,
+  24.1,
+  24.37,
+  24.68,
+  25.28,
+  25.91,
+  28.15,
+  30.21,
+  30.74,
+  32.62,
+  32.89,
+  33.12,
+  33.32,
+  34.38,
+  34.78,
+  35.52,
+  35.8,
+  36.36,
+  36.59,
+  36.91
+ ],
+ "frames": [
+  {
+   "t": 0.05,
+   "rotulo": "gancho",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0000.05s.jpg"
+  },
+  {
+   "t": 0.5,
+   "rotulo": "gancho",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0000.50s.jpg"
+  },
+  {
+   "t": 0.59,
+   "rotulo": "plano 1",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0000.59s.jpg"
+  },
+  {
+   "t": 1.0,
+   "rotulo": "gancho",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0001.00s.jpg"
+  },
+  {
+   "t": 2.0,
+   "rotulo": "gancho",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0002.00s.jpg"
+  },
+  {
+   "t": 2.09,
+   "rotulo": "plano 2",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0002.09s.jpg"
+  },
+  {
+   "t": 3.0,
+   "rotulo": "gancho",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0003.00s.jpg"
+  },
+  {
+   "t": 4.19,
+   "rotulo": "plano 3",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0004.19s.jpg"
+  },
+  {
+   "t": 8.09,
+   "rotulo": "plano 4",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0008.09s.jpg"
+  },
+  {
+   "t": 13.47,
+   "rotulo": "plano 5",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0013.47s.jpg"
+  },
+  {
+   "t": 18.16,
+   "rotulo": "plano 6",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0018.16s.jpg"
+  },
+  {
+   "t": 21.56,
+   "rotulo": "plano 7",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0021.56s.jpg"
+  },
+  {
+   "t": 24.88,
+   "rotulo": "plano 8",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0024.88s.jpg"
+  },
+  {
+   "t": 29.38,
+   "rotulo": "plano 9",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0029.38s.jpg"
+  },
+  {
+   "t": 34.5,
+   "rotulo": "plano 10",
+   "arquivo": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\frames\\f_0034.50s.jpg"
+  }
+ ],
+ "transcricao": {
+  "idioma": "en",
+  "segmentos": [
+   {
+    "inicio": 0.0,
+    "fim": 5.0,
+    "texto": "A glacier revealed a death scene older than almost anything humans had ever investigated.",
+    "palavras": [
+     {
+      "texto": " A",
+      "inicio": 0.0,
+      "fim": 0.14
+     },
+     {
+      "texto": " glacier",
+      "inicio": 0.14,
+      "fim": 0.44
+     },
+     {
+      "texto": " revealed",
+      "inicio": 0.44,
+      "fim": 0.94
+     },
+     {
+      "texto": " a",
+      "inicio": 0.94,
+      "fim": 1.14
+     },
+     {
+      "texto": " death",
+      "inicio": 1.14,
+      "fim": 1.36
+     },
+     {
+      "texto": " scene",
+      "inicio": 1.36,
+      "fim": 1.7
+     },
+     {
+      "texto": " older",
+      "inicio": 1.7,
+      "fim": 2.14
+     },
+     {
+      "texto": " than",
+      "inicio": 2.14,
+      "fim": 2.38
+     },
+     {
+      "texto": " almost",
+      "inicio": 2.38,
+      "fim": 2.78
+     },
+     {
+      "texto": " anything",
+      "inicio": 2.78,
+      "fim": 3.22
+     },
+     {
+      "texto": " humans",
+      "inicio": 3.22,
+      "fim": 3.78
+     },
+     {
+      "texto": " had",
+      "inicio": 3.78,
+      "fim": 4.02
+     },
+     {
+      "texto": " ever",
+      "inicio": 4.02,
+      "fim": 4.38
+     },
+     {
+      "texto": " investigated.",
+      "inicio": 4.38,
+      "fim": 5.0
+     }
+    ]
+   },
+   {
+    "inicio": 5.42,
+    "fim": 10.72,
+    "texto": "In 1991, hikers discovered a human body emerging from melting ice in the Alps.",
+    "palavras": [
+     {
+      "texto": " In",
+      "inicio": 5.42,
+      "fim": 5.52
+     },
+     {
+      "texto": " 1991,",
+      "inicio": 5.52,
+      "fim": 6.18
+     },
+     {
+      "texto": " hikers",
+      "inicio": 6.68,
+      "fim": 6.98
+     },
+     {
+      "texto": " discovered",
+      "inicio": 6.98,
+      "fim": 7.46
+     },
+     {
+      "texto": " a",
+      "inicio": 7.46,
+      "fim": 7.62
+     },
+     {
+      "texto": " human",
+      "inicio": 7.62,
+      "fim": 7.92
+     },
+     {
+      "texto": " body",
+      "inicio": 7.92,
+      "fim": 8.34
+     },
+     {
+      "texto": " emerging",
+      "inicio": 8.34,
+      "fim": 8.82
+     },
+     {
+      "texto": " from",
+      "inicio": 8.82,
+      "fim": 9.16
+     },
+     {
+      "texto": " melting",
+      "inicio": 9.16,
+      "fim": 9.54
+     },
+     {
+      "texto": " ice",
+      "inicio": 9.54,
+      "fim": 9.9
+     },
+     {
+      "texto": " in",
+      "inicio": 9.9,
+      "fim": 10.16
+     },
+     {
+      "texto": " the",
+      "inicio": 10.16,
+      "fim": 10.28
+     },
+     {
+      "texto": " Alps.",
+      "inicio": 10.28,
+      "fim": 10.72
+     }
+    ]
+   },
+   {
+    "inicio": 10.92,
+    "fim": 15.58,
+    "texto": "Scientists identified him as Bootsy, a man who lived around 3300 BCE.",
+    "palavras": [
+     {
+      "texto": " Scientists",
+      "inicio": 10.92,
+      "fim": 11.22
+     },
+     {
+      "texto": " identified",
+      "inicio": 11.22,
+      "fim": 11.8
+     },
+     {
+      "texto": " him",
+      "inicio": 11.8,
+      "fim": 12.24
+     },
+     {
+      "texto": " as",
+      "inicio": 12.24,
+      "fim": 12.52
+     },
+     {
+      "texto": " Bootsy,",
+      "inicio": 12.52,
+      "fim": 13.04
+     },
+     {
+      "texto": " a",
+      "inicio": 13.22,
+      "fim": 13.32
+     },
+     {
+      "texto": " man",
+      "inicio": 13.32,
+      "fim": 13.48
+     },
+     {
+      "texto": " who",
+      "inicio": 13.48,
+      "fim": 13.72
+     },
+     {
+      "texto": " lived",
+      "inicio": 13.72,
+      "fim": 13.92
+     },
+     {
+      "texto": " around",
+      "inicio": 13.92,
+      "fim": 14.18
+     },
+     {
+      "texto": " 3300",
+      "inicio": 14.18,
+      "fim": 15.2
+     },
+     {
+      "texto": " BCE.",
+      "inicio": 15.2,
+      "fim": 15.58
+     }
+    ]
+   },
+   {
+    "inicio": 16.18,
+    "fim": 22.28,
+    "texto": "His body, clothes and tools survived for thousands of years, but an arrow wound revealed a violent",
+    "palavras": [
+     {
+      "texto": " His",
+      "inicio": 16.18,
+      "fim": 16.28
+     },
+     {
+      "texto": " body,",
+      "inicio": 16.28,
+      "fim": 16.64
+     },
+     {
+      "texto": " clothes",
+      "inicio": 16.9,
+      "fim": 17.24
+     },
+     {
+      "texto": " and",
+      "inicio": 17.24,
+      "fim": 17.62
+     },
+     {
+      "texto": " tools",
+      "inicio": 17.62,
+      "fim": 18.02
+     },
+     {
+      "texto": " survived",
+      "inicio": 18.02,
+      "fim": 18.56
+     },
+     {
+      "texto": " for",
+      "inicio": 18.56,
+      "fim": 18.86
+     },
+     {
+      "texto": " thousands",
+      "inicio": 18.86,
+      "fim": 19.36
+     },
+     {
+      "texto": " of",
+      "inicio": 19.36,
+      "fim": 19.62
+     },
+     {
+      "texto": " years,",
+      "inicio": 19.62,
+      "fim": 19.96
+     },
+     {
+      "texto": " but",
+      "inicio": 20.16,
+      "fim": 20.32
+     },
+     {
+      "texto": " an",
+      "inicio": 20.32,
+      "fim": 20.5
+     },
+     {
+      "texto": " arrow",
+      "inicio": 20.5,
+      "fim": 20.78
+     },
+     {
+      "texto": " wound",
+      "inicio": 20.78,
+      "fim": 21.18
+     },
+     {
+      "texto": " revealed",
+      "inicio": 21.18,
+      "fim": 21.6
+     },
+     {
+      "texto": " a",
+      "inicio": 21.6,
+      "fim": 21.84
+     },
+     {
+      "texto": " violent",
+      "inicio": 21.84,
+      "fim": 22.28
+     }
+    ]
+   },
+   {
+    "inicio": 22.28,
+    "fim": 22.68,
+    "texto": "death.",
+    "palavras": [
+     {
+      "texto": " death.",
+      "inicio": 22.28,
+      "fim": 22.68
+     }
+    ]
+   },
+   {
+    "inicio": 22.94,
+    "fim": 26.5,
+    "texto": "Even today, scientists continue investigating his final hours.",
+    "palavras": [
+     {
+      "texto": " Even",
+      "inicio": 22.94,
+      "fim": 23.16
+     },
+     {
+      "texto": " today,",
+      "inicio": 23.16,
+      "fim": 23.52
+     },
+     {
+      "texto": " scientists",
+      "inicio": 23.84,
+      "fim": 24.12
+     },
+     {
+      "texto": " continue",
+      "inicio": 24.12,
+      "fim": 24.84
+     },
+     {
+      "texto": " investigating",
+      "inicio": 24.84,
+      "fim": 25.52
+     },
+     {
+      "texto": " his",
+      "inicio": 25.52,
+      "fim": 25.78
+     },
+     {
+      "texto": " final",
+      "inicio": 25.78,
+      "fim": 26.1
+     },
+     {
+      "texto": " hours.",
+      "inicio": 26.1,
+      "fim": 26.5
+     }
+    ]
+   },
+   {
+    "inicio": 26.5,
+    "fim": 31.3,
+    "texto": "A man frozen in time, carrying secrets from the dawn of civilization.",
+    "palavras": [
+     {
+      "texto": " A",
+      "inicio": 26.5,
+      "fim": 26.92
+     },
+     {
+      "texto": " man",
+      "inicio": 26.92,
+      "fim": 27.26
+     },
+     {
+      "texto": " frozen",
+      "inicio": 27.26,
+      "fim": 27.8
+     },
+     {
+      "texto": " in",
+      "inicio": 27.8,
+      "fim": 28.1
+     },
+     {
+      "texto": " time,",
+      "inicio": 28.1,
+      "fim": 28.46
+     },
+     {
+      "texto": " carrying",
+      "inicio": 28.76,
+      "fim": 29.04
+     },
+     {
+      "texto": " secrets",
+      "inicio": 29.04,
+      "fim": 29.64
+     },
+     {
+      "texto": " from",
+      "inicio": 29.64,
+      "fim": 29.98
+     },
+     {
+      "texto": " the",
+      "inicio": 29.98,
+      "fim": 30.14
+     },
+     {
+      "texto": " dawn",
+      "inicio": 30.14,
+      "fim": 30.46
+     },
+     {
+      "texto": " of",
+      "inicio": 30.46,
+      "fim": 30.62
+     },
+     {
+      "texto": " civilization.",
+      "inicio": 30.62,
+      "fim": 31.3
+     }
+    ]
+   },
+   {
+    "inicio": 31.76,
+    "fim": 34.6,
+    "texto": "Editors learn faster inside a real project file.",
+    "palavras": [
+     {
+      "texto": " Editors",
+      "inicio": 31.76,
+      "fim": 32.18
+     },
+     {
+      "texto": " learn",
+      "inicio": 32.18,
+      "fim": 32.44
+     },
+     {
+      "texto": " faster",
+      "inicio": 32.44,
+      "fim": 32.94
+     },
+     {
+      "texto": " inside",
+      "inicio": 32.94,
+      "fim": 33.3
+     },
+     {
+      "texto": " a",
+      "inicio": 33.3,
+      "fim": 33.54
+     },
+     {
+      "texto": " real",
+      "inicio": 33.54,
+      "fim": 33.78
+     },
+     {
+      "texto": " project",
+      "inicio": 33.78,
+      "fim": 34.22
+     },
+     {
+      "texto": " file.",
+      "inicio": 34.22,
+      "fim": 34.6
+     }
+    ]
+   },
+   {
+    "inicio": 34.76,
+    "fim": 36.8,
+    "texto": "Grab yours on earnedits.com.",
+    "palavras": [
+     {
+      "texto": " Grab",
+      "inicio": 34.76,
+      "fim": 34.88
+     },
+     {
+      "texto": " yours",
+      "inicio": 34.88,
+      "fim": 35.24
+     },
+     {
+      "texto": " on",
+      "inicio": 35.24,
+      "fim": 35.64
+     },
+     {
+      "texto": " earnedits",
+      "inicio": 35.64,
+      "fim": 36.28
+     },
+     {
+      "texto": ".com.",
+      "inicio": 36.28,
+      "fim": 36.8
+     }
+    ]
+   }
+  ]
+ },
+ "video": "D:\\FERRAMENTAS\\ig_teste\\earn.edits_DfZoBRQuHwq.mp4",
+ "folha_contato": "D:\\FERRAMENTAS\\referencias\\earn.edits_DfZoBRQuHwq\\folha_contato.jpg"
+}

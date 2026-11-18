@@ -1,0 +1,32 @@
+idioma: pt (0.98)
+[   0.0-   3.5] Tem uma skill do Cloud que encontra o B-Row perfeito para o teu vídeo.
+[   3.5-   7.3] B-Row, para quem não sabe, é aquela imagem de apoio que entra quando você está falando alguma coisa.
+[   7.3-   9.1] E essa parada se chama Get B-Rows.
+[   9.1-  11.9] Foi um brasileiro que criou o Bruno Moreira e é completamente igreja.
+[  11.9-  13.2] Você qualquer um pode baixar.
+[  13.2-  13.9] Funciona assim.
+[  13.9-  15.8] Descreve o que você vai falar, trecho por trecho,
+[  15.8-  19.3] e aí a vai pesquisar os vídeos e as imagens que ilustram cada um dos pedaços.
+[  19.3-  20.8] E ele monta um Storyboard.
+[  20.8-  23.1] Basicamente uma página com a prévia de cada trecho,
+[  23.1-  25.4] o motivo da escolha, o autor e de onde veio.
+[  25.4-  27.8] E aí é só você aprovar e pedir algum ajuste,
+[  27.8-  30.5] ou se eu reprovar um por um antes de baixar qualquer uma das coisas.
+[  30.5-  33.6] E o melhor de tudo é que ela procura a fonte de verdade que você cita.
+[  33.6-  35.9] Então se você fala de uma pessoa, de um produto ou de uma notícia,
+[  35.9-  40.6] ela vai atrás para você e não busca simplesmente um vídeo genérico de um banco de imagens qualquer, tá?
+[  40.6-  43.4] O banco de imagens ele só entra se você pedir.
+[  43.4-  45.8] Eu separei o link e o caminho para você instalar essa parada
+[  45.8-  48.3] só conversando com o Cloud tudo completo aqui embaixo.
+[  48.3-  51.4] Então por isso comenta e há que eu vou te mandar essa parada no detalhe
+[  51.4-  53.2] para você conferir lá dentro da minha newsletter.
+[  53.2-  55.8] A parte boa disso é que ele roda dentro do Cloud Code,
+[  55.8-  59.8] no Codex, no Mac, no Windows, enfim, independente você consegue utilizar.
+[  59.8-  62.6] Ela está disponível completamente de graça lá dentro do GitHub,
+[  62.6-  65.1] mas basicamente ela começa a buscar, por exemplo, se eu falar,
+[  65.1-  67.7] confeitaria, ela vai buscar uma imagem falando sobre confeitaria.
+[  67.7-  71.1] Se eu falar advogado, ela vai buscar uma imagem falando sobre algum advogado.
+[  71.1-  73.2] Carro, ela vai buscar alguma imagem falando sobre cá.
+[  73.2-  75.4] Enfim, B-Roll é essas imagens aqui que aparece
+[  75.4-  77.9] e com certeza você vai utilizar nas suas edições de vídeo.
+[  77.9-  80.5] Por isso comenta e há que embaixo que eu vou te mandar o link dessa parada agora.

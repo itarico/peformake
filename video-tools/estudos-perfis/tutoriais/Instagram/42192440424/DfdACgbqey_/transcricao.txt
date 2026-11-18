@@ -1,0 +1,17 @@
+idioma: pt
+[00:00] Todo dia surge uma nova forma de criar vídeos incríveis com Cloud 5.5.
+[00:05] Mas você já reparou como todos estão ficando cada vez mais parecidos?
+[00:10] Um prompt mestre, uma esquio revolucionária, um repositório secreto.
+[00:15] São tantas alternativas e o resultado é quase sempre o mesmo.
+[00:20] O problema é que muita gente usa os mesmos recursos prontos.
+[00:25] Como aquela biblioteca de prompts que você provavelmente já salvou.
+[00:29] Mas basta tentar mudar um efeito, criar um elemento novo ou fazer uma animação diferente
+[00:34] que tudo começa a desmoronar.
+[00:36] Porque usar uma animação pronta é uma coisa.
+[00:39] Agora entender como ela foi construída,
+[00:42] desde as primeiras camadas até os movimentos e efeitos, é outra.
+[00:46] E é justamente essa parte que ninguém te ensina.
+[00:50] Quando você entende isso, deixa de depender tanto do que já vem pronto
+[00:54] e começa a ter liberdade para criar.
+[00:57] Ficou curioso para entender como tudo isso funciona?
+[01:00] Dá uma olhadinha no que deixei disponível para você aqui na legenda.

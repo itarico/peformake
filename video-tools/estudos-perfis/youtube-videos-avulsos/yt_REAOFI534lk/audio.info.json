@@ -1,0 +1,66 @@
+{
+ "id": "REAOFI534lk",
+ "title": "I taught Claude how to edit videos and it's INSANE",
+ "fulltitle": "I taught Claude how to edit videos and it's INSANE",
+ "channel": "Duncan Rogoff | Learn Claude Code",
+ "channel_id": "UC37JpWP5PxLSma2lh79HU9A",
+ "channel_url": "https://www.youtube.com/channel/UC37JpWP5PxLSma2lh79HU9A",
+ "uploader": "Duncan Rogoff | Learn Claude Code",
+ "uploader_id": "@duncanrogoff",
+ "webpage_url": "https://www.youtube.com/watch?v=REAOFI534lk",
+ "upload_date": "20261021",
+ "duration": 545,
+ "duration_string": "9:05",
+ "view_count": 77485,
+ "like_count": 1100,
+ "comment_count": 75,
+ "channel_follower_count": 96000,
+ "description": "Master Claude Code in 45 days + all my resources. Only $9.\n👉 https://www.skool.com/claudecodeclub\n\nI taught Claude Code to edit my videos, and I never touched an editing timeline. I walk through the six jobs I gave it, one step at a time, and what to try in your own project for each one. You'll also see exactly what this edit cost in tokens and hours. The starter version of my editing skill is inside the Club.\n\n0:00 Claude Edited This Video\n1:51 Step 1: Hooks and Script\n2:20 Step 2: Cut the Raw Footage\n3:03 Step 3: Design\n4:17 Step 4: Build With Subagents\n5:45 Step 5: Check the Work\n6:18 Step 6: Learn From Notes\n7:04 What This Edit Cost\n\n#ClaudeCode",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Claude Edited This Video",
+   "end_time": 111
+  },
+  {
+   "start_time": 111,
+   "title": "Step 1: Hooks and Script",
+   "end_time": 140
+  },
+  {
+   "start_time": 140,
+   "title": "Step 2: Cut the Raw Footage",
+   "end_time": 183
+  },
+  {
+   "start_time": 183,
+   "title": "Step 3: Design",
+   "end_time": 257
+  },
+  {
+   "start_time": 257,
+   "title": "Step 4: Build With Subagents",
+   "end_time": 345
+  },
+  {
+   "start_time": 345,
+   "title": "Step 5: Check the Work",
+   "end_time": 378
+  },
+  {
+   "start_time": 378,
+   "title": "Step 6: Learn From Notes",
+   "end_time": 424
+  },
+  {
+   "start_time": 424,
+   "title": "What This Edit Cost",
+   "end_time": 545
+  }
+ ],
+ "language": "en-US"
+}

@@ -1,0 +1,106 @@
+{
+ "id": "bKI-YvBuu2Y",
+ "title": "DIRETRIZ: A Skill Perfeita Para Construir Qualquer Coisa com IA",
+ "fulltitle": "DIRETRIZ: A Skill Perfeita Para Construir Qualquer Coisa com IA",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=bKI-YvBuu2Y",
+ "upload_date": "20261031",
+ "duration": 1560,
+ "duration_string": "26:00",
+ "view_count": 9756,
+ "like_count": 242,
+ "comment_count": 10,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=diretriz-skill-entrevista-ia_raw176\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\nDiretriz: a skill que faz a IA entrevistar você antes de construir, com resposta sugerida, microfone e conversa por voz, para o resultado sair do seu jeito.\n\nNa maior parte das vezes o problema não é a IA, é a instrução genérica que deixa a IA decidir no seu lugar. Neste vídeo eu apresento a Diretriz, a nossa versão da grill-me do Matt Pocock: uma skill de entrevista que pergunta o que ficou de fora do seu prompt antes de a IA começar a construir. Em vez de responder pergunta por pergunta no terminal, você responde numa página própria, clica na resposta sugerida, dita pelo microfone, responde pelo celular na mesma rede Wi-Fi ou faz a entrevista inteira conversando por voz. No fim, a entrevista vira um escopo em arquivo markdown, pronto para passar para qualquer IA.\n\nPara testar, usei a skill Diretriz para planejar um editor de vídeos minimalista no estilo CapCut, nativo para Mac e rodando localmente. Com o escopo definido na entrevista, o app ficou pronto em cerca de uma hora e meia, e eu mostro ele funcionando: cortes, um vídeo vertical feito a partir de um horizontal, legendas geradas no próprio computador com o Whisper, texto chamativo e exportação. Também mostro o AR Board, o nosso painel para aprovar ou rejeitar resultados da IA com as teclas A e R, e explico por que reduzir o atrito é o que faz você usar essas skills todos os dias.\n\n📌 CAPÍTULOS\n0:00 O problema é a IA ou a sua instrução?\n0:38 Comunicação clara com a IA, o conselho do Matt Pocock\n1:58 Grill-me: a IA entrevista você antes de construir\n3:06 Por que planejar antes: a analogia da construção de uma casa\n4:26 Por que o processo de entrevista gera atrito\n6:48 AR Board: aprovar ou rejeitar resultados da IA com A e R\n9:02 Diretriz, a nossa versão da grill-me\n9:45 Entrevista na prática: planejando um editor de vídeos para Mac\n13:46 Microfone, celular e modo de conversa por voz\n16:06 O escopo final em markdown, pronto para qualquer IA\n16:44 O app criado a partir da entrevista: tempo e tokens\n18:42 Testando o editor: cortes e vídeo vertical\n20:51 Legendas automáticas com Whisper dentro do app\n21:54 Texto chamativo e exportação do vídeo\n23:58 Planejar com menos atrito, várias vezes por dia\n24:56 Comunidade Maestros da IA\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ Por que um prompt genérico faz a IA tomar decisões que deveriam ser suas\n✅ Como uma entrevista antes de construir deixa o planejamento mais completo\n✅ Como responder mais rápido com resposta sugerida, microfone e conversa por voz\n✅ Como transformar as suas respostas em um escopo em markdown para qualquer IA\n✅ Como revisar resultados da IA em lote com o AR Board\n\n#maestrosdaia #skillsdeia #inteligenciaartificial",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "O problema é a IA ou a sua instrução?",
+   "end_time": 38
+  },
+  {
+   "start_time": 38,
+   "title": "Comunicação clara com a IA, o conselho do Matt Pocock",
+   "end_time": 118
+  },
+  {
+   "start_time": 118,
+   "title": "Grill-me: a IA entrevista você antes de construir",
+   "end_time": 186
+  },
+  {
+   "start_time": 186,
+   "title": "Por que planejar antes: a analogia da construção de uma casa",
+   "end_time": 266
+  },
+  {
+   "start_time": 266,
+   "title": "Por que o processo de entrevista gera atrito",
+   "end_time": 408
+  },
+  {
+   "start_time": 408,
+   "title": "AR Board: aprovar ou rejeitar resultados da IA com A e R",
+   "end_time": 542
+  },
+  {
+   "start_time": 542,
+   "title": "Diretriz, a nossa versão da grill-me",
+   "end_time": 585
+  },
+  {
+   "start_time": 585,
+   "title": "Entrevista na prática: planejando um editor de vídeos para Mac",
+   "end_time": 826
+  },
+  {
+   "start_time": 826,
+   "title": "Microfone, celular e modo de conversa por voz",
+   "end_time": 966
+  },
+  {
+   "start_time": 966,
+   "title": "O escopo final em markdown, pronto para qualquer IA",
+   "end_time": 1004
+  },
+  {
+   "start_time": 1004,
+   "title": "O app criado a partir da entrevista: tempo e tokens",
+   "end_time": 1122
+  },
+  {
+   "start_time": 1122,
+   "title": "Testando o editor: cortes e vídeo vertical",
+   "end_time": 1251
+  },
+  {
+   "start_time": 1251,
+   "title": "Legendas automáticas com Whisper dentro do app",
+   "end_time": 1314
+  },
+  {
+   "start_time": 1314,
+   "title": "Texto chamativo e exportação do vídeo",
+   "end_time": 1438
+  },
+  {
+   "start_time": 1438,
+   "title": "Planejar com menos atrito, várias vezes por dia",
+   "end_time": 1496
+  },
+  {
+   "start_time": 1496,
+   "title": "Comunidade Maestros da IA",
+   "end_time": 1560
+  }
+ ],
+ "language": "pt-BR"
+}

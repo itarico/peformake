@@ -1,0 +1,8 @@
+idioma: en (1.00)
+[   0.0-   3.7] If there's no video, your event never happened.
+[   3.7-   6.4] You've been planning this event for months.
+[   6.4-  10.5] We're talking thousands on the people, the venue, the food.
+[  10.5-  14.6] We're not settling for three blurry stories that expired at noon.
+[  14.6-  16.7] An event is one mess.
+[  16.7-  19.3] But the content, that's the self the next one.
+[  19.3-  24.7] We are Bar Soul Media, and we make sure everyone knows it happened.

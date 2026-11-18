@@ -1,0 +1,590 @@
+1
+00:00:00,120 --> 00:00:03,760
+Todo este vídeo foi editado pelo Claude.\h
+Estes elementos que está a ver na tela,\h\h
+
+2
+00:00:03,760 --> 00:00:07,280
+o texto dando ênfase ao que eu\h
+falo, esta animação em ecrã completo,\h\h
+
+3
+00:00:07,280 --> 00:00:12,160
+os zooms da câmara, os cortes e até mesmo\h
+os efeitos sonoros. E o melhor de tudo é que\h\h
+
+4
+00:00:12,160 --> 00:00:16,160
+ainda consegue adaptar isso a qualquer\h
+estilo ou identidade visual que desejar.
+
+5
+00:00:16,160 --> 00:00:19,920
+Só que claro, ainda não estamos no ponto de\h
+escrever um único prompt e receber um resultado\h\h
+
+6
+00:00:19,920 --> 00:00:23,960
+desse. Eu passei um bom tempo a criar um\h
+processo de 8 passos que lhe vou mostrar\h\h
+
+7
+00:00:23,960 --> 00:00:28,760
+neste vídeo hoje. E no final ainda te vou dar\h
+gratuitamente uma skill que te guia para criar o teu,\h\h
+
+8
+00:00:28,760 --> 00:00:31,160
+sem passar por todos os testes\h
+e problemas que passei.
+
+9
+00:00:31,160 --> 00:00:33,320
+Então já te aviso antes que\h
+se tá procurando um prompt\h\h
+
+10
+00:00:33,320 --> 00:00:36,240
+mágico que te entrega um vídeo\h
+medíocre, como muita gente faz,\h\h
+
+11
+00:00:36,240 --> 00:00:40,040
+o lugar não é aqui. Eu prefiro dar-te um\h
+sistema que coloca um pouco do seu tempo,\h\h
+
+12
+00:00:40,040 --> 00:00:43,440
+coloca um pouco da sua atenção, mas\h
+obtém um vídeo bem acima da média.
+
+13
+00:00:43,440 --> 00:00:46,800
+Para quem não me conhece, eu sou o Lucas\h
+Leite, sou filmmaker há mais de 10 anos,\h\h
+
+14
+00:00:46,800 --> 00:00:50,200
+e por isso sempre fui muito\h
+receoso em utilizar IA na minha edição,\h\h
+
+15
+00:00:50,200 --> 00:00:54,440
+porque até ao momento sempre vi alguns vídeos\h
+do pessoal a editar com IA, mas sempre achei o\h\h
+
+16
+00:00:54,440 --> 00:00:59,240
+resultado bastante fraco. Porém agora, como vocês\h
+podem reparar, as coisas mudaram bastante.
+
+17
+00:00:59,240 --> 00:01:01,280
+Então vamos lá, para fazer toda a\h
+esta edição que estão a ver,\h\h
+
+18
+00:01:01,280 --> 00:01:06,760
+vocês só precisam de duas coisas. A primeira é\h
+a assinatura Pro do Claude. E a segunda é o Claude\h\h
+
+19
+00:01:06,760 --> 00:01:10,600
+Code instalado no seu computador. O Claude\h
+Code, para quem não sabe, é o que permite a\h\h
+
+20
+00:01:10,600 --> 00:01:14,080
+Claude trabalhar diretamente nos arquivos do seu\h
+computador. E isso é totalmente importante.
+
+21
+00:01:14,080 --> 00:01:18,560
+E só mais dois pormenores importantes antes de nós\h
+ir para as etapas. O primeiro: o fluxo que vou\h\h
+
+22
+00:01:18,560 --> 00:01:22,760
+usar aqui é para um vídeo no YouTube, assim como\h
+este que está a ver aqui, uma pessoa a falar\h\h
+
+23
+00:01:22,760 --> 00:01:26,800
+de frente para a câmera. Mas depois, com a skill que\h
+eu vou entregar-vos, consegues criar o\h\h
+
+24
+00:01:26,800 --> 00:01:29,880
+o seu fluxo e adaptar a qualquer tipo de\h
+vídeo que desejar. Pode ser um fluxo\h\h
+
+25
+00:01:29,880 --> 00:01:33,880
+só para os Reels do Instagram, pode ser um fluxo só\h
+para vídeo narrado, pode ser o que quiseres.
+
+26
+00:01:33,880 --> 00:01:37,920
+A segunda é que eu por opção decidi rever\h
+tudo pelo Premiere, porque já era um programa\h\h
+
+27
+00:01:37,920 --> 00:01:41,080
+que sempre usei. Mas pode usar o que\h
+preferir, pode usar qualquer outro\h\h
+
+28
+00:01:41,080 --> 00:01:44,760
+programa ou não utilizar nenhum programa que o\h
+O Claude já te consegue entregar o vídeo pronto.
+
+29
+00:01:44,760 --> 00:01:47,160
+Antes de fazer qualquer edição tem\h
+uma parte que é muito importante,\h\h
+
+30
+00:01:47,160 --> 00:01:50,680
+que é você passar algumas referências\h
+do que gostas para o Claude analisar.\h\h
+
+31
+00:01:50,680 --> 00:01:55,040
+Para fazer isso é só você jogar alguns trechos de\h
+animações que gosta na pasta que o Claude\h\h
+
+32
+00:01:55,040 --> 00:02:00,520
+O Code está a trabalhar e pedir para ele analisar ali\h
+o estilo, as animações, a velocidade, o ritmo,\h\h
+
+33
+00:02:00,520 --> 00:02:04,640
+e ele vai conseguir fazer uma análise completa para\h
+você. Sem isso, a tendência é para que o resultado saia\h\h
+
+34
+00:02:04,640 --> 00:02:08,320
+mais genérico, mesmo tendo um fluxo porreiro. Mas\h
+a boa notícia é que esta parte só faz uma\h\h
+
+35
+00:02:08,320 --> 00:02:11,680
+vez ou qualquer outra vez que queira\h
+atualizar o seu estilo ou algo do género.
+
+36
+00:02:11,680 --> 00:02:15,240
+Com o Claude treinado vem o fluxo,\h
+que como já disse anteriormente, tem 8 etapas.\h\h
+
+37
+00:02:15,240 --> 00:02:19,920
+Cada etapa é uma skill que criei, ou seja,\h
+um ficheiro de instruções ensinando o Claude a\h\h
+
+38
+00:02:19,920 --> 00:02:23,320
+fazer uma tarefa sempre da mesma forma.\h
+E presta muita atenção ao passo 4,\h\h
+
+39
+00:02:23,320 --> 00:02:26,920
+porque é aí que o vídeo vai ficar\h
+bom ou mau. Vamos lá pras duas primeiras.
+
+40
+00:02:26,920 --> 00:02:30,640
+As duas primeiras etapas são a preparação. A\h
+primeira, o Claude pede-me um briefing. Qual\h\h
+
+41
+00:02:30,640 --> 00:02:35,000
+é o vídeo? Qual é a direção geral? Se eu tiver\h
+algum comentário? E depois ele vai e identifica os\h\h
+
+42
+00:02:35,000 --> 00:02:39,080
+ficheiros que coloquei na pasta. Na segunda,\h
+irá transcrever o seu vídeo. Para isso,\h\h
+
+43
+00:02:39,080 --> 00:02:43,320
+ele vai usar o WhisperX, que é um modelo gratuito\h
+que corre diretamente no seu computador. O Claude usa\h\h
+
+44
+00:02:43,320 --> 00:02:47,160
+ele a transcrever tudo, marcando o tempo\h
+exato de cada palavra. E essa vai ser a base\h\h
+
+45
+00:02:47,160 --> 00:02:50,560
+para a nossa edição completa. Mas fica tranquilo,\h
+não precisa de se preocupar com nada disso.\h\h
+
+46
+00:02:50,560 --> 00:02:54,880
+Todos estes programas que aqui vou referir, como\h
+esse WhisperX, o Claude instala-o sozinho para ti.
+
+47
+00:02:54,880 --> 00:02:58,480
+E depois indo para a próxima etapa, com a\h
+transcrição pronta, vêm os cortes.\h\h
+
+48
+00:02:58,480 --> 00:03:04,080
+O Claude identifica as pausas, as falas e todo o\h
+texto. E só aí então corta os erros e monta\h\h
+
+49
+00:03:04,080 --> 00:03:07,960
+uma estrutura completa do nosso vídeo. É nessa\h
+altura em que, se colocou um guião na pasta,\h\h
+
+50
+00:03:07,960 --> 00:03:11,280
+usa como base, mas não é necessário.\h
+Esta etapa é a primeira que costumo\h\h
+
+51
+00:03:11,280 --> 00:03:15,320
+rever. Ele entrega-me um ficheiro que eu\h
+abro no Premiere e, se tiver algum pormenor,\h\h
+
+52
+00:03:15,320 --> 00:03:18,520
+peço para ele corrigir ou eu próprio\h
+corrijo no Premiere e devolvo-lhe.
+
+53
+00:03:18,520 --> 00:03:23,760
+E agora o passo 4, o motion mapa. Essa é a que\h
+mais pede a sua atenção. Motion, para quem não\h\h
+
+54
+00:03:23,760 --> 00:03:28,800
+sabe, são as animações que aparecem no seu ecrã. E\h
+o mapa vai ser o planeamento de tudo isto. O que\h\h
+
+55
+00:03:28,800 --> 00:03:33,360
+vai aparecer, em que momento, qual o ritmo, qual\h
+o estilo. Ele ainda não vai animar nada agora,\h\h
+
+56
+00:03:33,360 --> 00:03:36,800
+é só o planeamento. E esta etapa é muito\h
+importante porque é aqui que se poupa\h\h
+
+57
+00:03:36,800 --> 00:03:41,720
+tokens, que é o que mede a sua utilização no Claude. Se\h
+acerta no plano certinho, a hipótese de sair um\h\h
+
+58
+00:03:41,720 --> 00:03:46,880
+resultado legal na etapa seguinte é muito maior e\h
+necessita de menos alterações e menos revisões.\h\h
+
+59
+00:03:46,880 --> 00:03:51,080
+É nesta fase também que vai falar ao Claude\h
+se pretende menos animações ou mais animações\h\h
+
+60
+00:03:51,080 --> 00:03:55,240
+durante o seu vídeo. No meu caso em concreto,\h
+o mapa também já define alguns movimentos de\h\h
+
+61
+00:03:55,240 --> 00:03:59,560
+câmara. Porque eu gosto que o meu motion converse\h
+com a câmara. Se uma animação entrar com um zoom,\h\h
+
+62
+00:03:59,560 --> 00:04:03,200
+a câmara faz um zoom antes da transição e\h
+torna-se mais dinâmica, como puderam ver.
+
+63
+00:04:03,200 --> 00:04:07,880
+Depois vem a etapa dos assets, que são os ficheiros\h
+que as animações necessitam. Ícones, impressões,\h\h
+
+64
+00:04:07,880 --> 00:04:12,800
+gravações de ecrã, imagens, qualquer coisa. O\h
+Claude olha para o mapa e enumera tudo o que falta.\h\h
+
+65
+00:04:12,800 --> 00:04:16,920
+Ele vai tentar buscar tudo sozinho primeiro, e o\h
+que ele não conseguir apanhar, ele pede-lhe.
+
+66
+00:04:16,920 --> 00:04:21,360
+Agora, com o plano e os ficheiros na mão, ele\h
+chega finalmente à etapa em que ele vai criar\h\h
+
+67
+00:04:21,360 --> 00:04:26,480
+as animações. E para isso, utiliza o HyperFrames,\h
+que é outro programa extra, que o Claude vai\h\h
+
+68
+00:04:26,480 --> 00:04:30,960
+instalar para si sozinho, que transforma o seu\h
+código em vídeo. E no meu caso, é aqui que eu\h\h
+
+69
+00:04:30,960 --> 00:04:35,240
+gosto de dar a segunda revisão ao Premiere Pro.\h
+Ele entrega-me o ficheiro e eu já vejo os motions\h\h
+
+70
+00:04:35,240 --> 00:04:40,480
+no tempo certo. E depois é só aprovar ou pedir um ajuste.\h
+Na minha experiência, com um fluxo bem treinado,\h\h
+
+71
+00:04:40,480 --> 00:04:44,080
+uma ou duas revisões no máximo, já\h
+consegue chegar a um resultado muito bom.
+
+72
+00:04:44,080 --> 00:04:47,200
+E depois depois de todos os motions\h
+aprovados, vêm os zooms,\h\h
+
+73
+00:04:47,200 --> 00:04:50,640
+que é aqui que o Claude trabalha toda esta\h
+movimentação de câmara que está a ver\h\h
+
+74
+00:04:50,640 --> 00:04:54,600
+até agora. Utiliza a diferença de zoom para\h
+disfarçar os cortes, faz zooms dinâmicos,\h\h
+
+75
+00:04:54,600 --> 00:04:59,120
+acompanha as animações e faz zoom nas ênfases. E\h
+um detalhe muito giro que gosto de adicionar\h\h
+
+76
+00:04:59,120 --> 00:05:02,040
+é fazer com que a câmara acompanhe o meu rosto,\h
+como está a ver aqui. Acho que fica\h\h
+
+77
+00:05:02,040 --> 00:05:06,920
+bastante dinâmico e para isso utiliza o YuNet, que é\h
+um outro modelo que rastreia rostos no vídeo.
+
+78
+00:05:06,920 --> 00:05:11,320
+Chegando à última etapa, que são os efeitos\h
+sonoros. O Claude identifica os movimentos,\h\h
+
+79
+00:05:11,320 --> 00:05:16,120
+tanto nos motions como na câmara, e coloca um\h
+som para cada um. No meu caso ele procura primeiro\h\h
+
+80
+00:05:16,120 --> 00:05:20,640
+numa pasta de efeitos sonoros que tenho, se\h
+houver algum que esteja a faltar, ele já vai e baixa\h\h
+
+81
+00:05:20,640 --> 00:05:24,520
+para mim diretamente no Epidemic Sound, que assino.\h
+No seu caso, recomendo que primeiro pergunte\h\h
+
+82
+00:05:24,520 --> 00:05:28,560
+pro Claude que efeitos sonoros seria giro você\h
+ter numa pasta. E depois vai atrás de alguns\h\h
+
+83
+00:05:28,560 --> 00:05:33,280
+gratuitos, monta essa pasta para teres a tua primeira\h
+base. Agora, se já quiser um caminho muito mais\h\h
+
+84
+00:05:33,280 --> 00:05:37,520
+rápido, só tem de subscrever o Epidemic Sound e o\h
+O Claude já descarrega tudo para si diretamente pela API.
+
+85
+00:05:37,520 --> 00:05:42,160
+Então vamos lá, recapitulando todas as\h
+etapas, todas as skills que este fluxo utiliza:\h\h
+
+86
+00:05:42,160 --> 00:05:49,640
+iniciar e preparar, cortes, motion map, assets,\h
+motion render, zooms e sound effects. Essas são\h\h
+
+87
+00:05:49,640 --> 00:05:54,720
+as oito etapas, ou oito competências. E eu sei que pode\h
+parecer muita coisa, muita etapa, muito complexo.\h\h
+
+88
+00:05:54,720 --> 00:05:59,640
+Mas fica descansado, porque à volta de tudo isso\h
+tem uma skill mestra. Chama-se ela uma vez e ela\h\h
+
+89
+00:05:59,640 --> 00:06:04,000
+mesma vai chamando etapa a etapa para si, te\h
+guiando pelo que tem de fazer em cada uma.
+
+90
+00:06:04,000 --> 00:06:08,240
+E aqui vem uma dica extra para você poupar\h
+ainda mais tokens. A cada etapa que for\h\h
+
+91
+00:06:08,240 --> 00:06:13,120
+fazendo, limpa o seu chat com barra clear ou\h
+inicie um novo. Assim o histórico não vai ficando\h\h
+
+92
+00:06:13,120 --> 00:06:17,280
+gigante e não torra o seu limite à toa. E a\h
+skill mestra também te ajuda nisso, porque ela te\h\h
+
+93
+00:06:17,280 --> 00:06:22,200
+avisa a hora de limpar. Depois é só chamar-lhe\h
+novo e ela identifica em que etapa parou,\h\h
+
+94
+00:06:22,200 --> 00:06:26,560
+mesmo num chat novo. E mais uma vez, vale muito a pena\h
+fazer desta forma, porque o resultado fica muito\h\h
+
+95
+00:06:26,560 --> 00:06:30,880
+melhor e muito mais personalizado. Com certeza,\h
+se fizéssemos uma única skill para fazer tudo\h\h
+
+96
+00:06:30,880 --> 00:06:34,480
+isso de uma só vez, o resultado não chegaria nem\h
+perto disto tudo aqui que estão a ver.
+
+97
+00:06:34,480 --> 00:06:39,320
+E ainda por detrás de tudo isto há a parte que\h
+para mim é a mais poderosa deste fluxo. Conforme\h\h
+
+98
+00:06:39,320 --> 00:06:43,840
+vou dando feedbacks e corrigindo algumas\h
+coisas, o Claude vai anotando tudo num ficheiro\h\h
+
+99
+00:06:43,840 --> 00:06:47,960
+de aprendizagens dentro da pasta. E a qualquer\h
+momento posso pedir para ver o que ele anotou,\h\h
+
+100
+00:06:47,960 --> 00:06:51,680
+e depois posso escolher o que se torna regra\h
+permanente e o que sai. Dessa forma,\h\h
+
+101
+00:06:51,680 --> 00:06:55,280
+a cada vídeo que edita, vai\h
+compreendendo cada vez mais o seu gosto e\h\h
+
+102
+00:06:55,280 --> 00:06:59,480
+melhora ainda mais o nível das suas animações.\h
+Assim, todo o próximo vídeo vai sair melhor.
+
+103
+00:06:59,480 --> 00:07:04,280
+Ok, mas deve estar a pensar, quanto custa\h
+isso? Pessoal, varia muito de vídeo para vídeo,\h\h
+
+104
+00:07:04,280 --> 00:07:09,880
+mas para terem uma noção, um vídeo deste\h
+aqui gasta entre 20% a 30% do limite semanal da\h\h
+
+105
+00:07:09,880 --> 00:07:14,520
+assinatura do Claude Pro. Ou seja, nós\h
+conseguiria fazer uns 15 a 20 vídeos deste\h\h
+
+106
+00:07:14,520 --> 00:07:19,120
+por mês, apenas com a assinatura do Claude Pro. Tendo\h
+isso em mente, gastamos mais ou menos 1 dólar\h\h
+
+107
+00:07:19,120 --> 00:07:25,200
+a 1 dólar e meio por vídeo deste, que é\h
+absurdamente de graça. Um vídeo deste, com um\h\h
+
+108
+00:07:25,200 --> 00:07:45,360
+editor profissional a entregar com essa qualidade\h
+que estamos a ver, seria no mínimo 3 mil reais.
+
+109
+00:08:01,840 --> 00:08:05,920
+E agora, como prometido, a skill gratuita que eu\h
+criei para ti. Ela vai guiá-lo passo a passo para\h\h
+
+110
+00:08:05,920 --> 00:08:10,440
+construir um fluxo personalizado para o estilo de\h
+vídeo que desejar. E ela já vem com os bons\h\h
+
+111
+00:08:10,440 --> 00:08:15,400
+costumes e o treino geral do que eu acho\h
+que precisa de ter para fazer boas animações e um\h\h
+
+112
+00:08:15,400 --> 00:08:20,560
+bom fluxo. O link do GitHub está na descrição.\h
+Copias, colas no teu Claude e pedes pra ele\h\h
+
+113
+00:08:20,560 --> 00:08:25,640
+instalar para si. Depois disso é só digitar barra\h
+fluxo de edição no chat e ele começa a orientar-te.
+
+114
+00:08:25,640 --> 00:08:30,840
+Portanto, é isso, o Claude faz o trabalho mecânico,\h
+mas quem define o estilo, aprova o mapa e diz o\h\h
+
+115
+00:08:30,840 --> 00:08:35,320
+que está bom ou não é você. E é por isso que eu acho\h
+que a IA não vai substituir os editores, só\h\h
+
+116
+00:08:35,320 --> 00:08:40,000
+vai mudar muito a forma como trabalhamos,\h
+e quem não aprender acabará por ficar para trás.
+
+117
+00:08:40,000 --> 00:08:42,240
+Agora conta-me aqui nos comentários\h
+se houve alguma parte deste vídeo\h\h
+
+118
+00:08:42,240 --> 00:08:45,840
+que acharam que ficou a parecer\h
+muito IA, que não ficou nada bem. Valeu!
+

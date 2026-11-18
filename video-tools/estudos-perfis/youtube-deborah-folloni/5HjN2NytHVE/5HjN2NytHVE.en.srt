@@ -1,0 +1,5280 @@
+1
+00:00:00,080 --> 00:00:02,149
+ 
+Last week, everyone in the AI ​​bubble was talking about one thing,
+
+2
+00:00:02,149 --> 00:00:02,159
+Last week, everyone in the AI ​​bubble was talking about one thing,
+ 
+
+3
+00:00:02,159 --> 00:00:04,510
+Last week, everyone in the AI ​​bubble was talking about one thing,
+and that thing was
+
+4
+00:00:04,510 --> 00:00:04,520
+and that thing was
+ 
+
+5
+00:00:04,520 --> 00:00:05,990
+and that thing was
+Emotion Skills.  For those who
+
+6
+00:00:05,990 --> 00:00:06,000
+Emotion Skills.  For those who
+ 
+
+7
+00:00:06,000 --> 00:00:08,750
+Emotion Skills.  For those who
+don't already know, Emotion is a library that allows
+
+8
+00:00:08,750 --> 00:00:08,760
+don't already know, Emotion is a library that allows
+ 
+
+9
+00:00:08,760 --> 00:00:10,549
+don't already know, Emotion is a library that allows
+you to create animations with React.
+
+10
+00:00:10,549 --> 00:00:10,559
+you to create animations with React.
+ 
+
+11
+00:00:10,559 --> 00:00:12,669
+you to create animations with React.
+But last week the team released
+
+12
+00:00:12,669 --> 00:00:12,679
+But last week the team released
+ 
+
+13
+00:00:12,679 --> 00:00:15,230
+But last week the team released
+Emotion Skills, which basically turns
+
+14
+00:00:15,230 --> 00:00:15,240
+Emotion Skills, which basically turns
+ 
+
+15
+00:00:15,240 --> 00:00:18,029
+Emotion Skills, which basically turns
+Clot Code into an expert at generating animations
+
+16
+00:00:18,029 --> 00:00:18,039
+Clot Code into an expert at generating animations
+ 
+
+17
+00:00:18,039 --> 00:00:20,550
+Clot Code into an expert at generating animations
+with emotion, like this video you
+
+18
+00:00:20,550 --> 00:00:20,560
+with emotion, like this video you
+ 
+
+19
+00:00:20,560 --> 00:00:22,550
+with emotion, like this video you
+'re seeing here on the side.  All of this is
+
+20
+00:00:22,550 --> 00:00:22,560
+'re seeing here on the side.  All of this is
+ 
+
+21
+00:00:22,560 --> 00:00:24,349
+'re seeing here on the side.  All of this is
+based solely on the premise, okay?  Without you needing any
+
+22
+00:00:24,349 --> 00:00:24,359
+based solely on the premise, okay?  Without you needing any
+ 
+
+23
+00:00:24,359 --> 00:00:26,029
+based solely on the premise, okay?  Without you needing any
+knowledge of
+
+24
+00:00:26,029 --> 00:00:26,039
+knowledge of
+ 
+
+25
+00:00:26,039 --> 00:00:28,550
+knowledge of
+video editing or motion design, like we used to
+
+26
+00:00:28,550 --> 00:00:28,560
+video editing or motion design, like we used to
+ 
+
+27
+00:00:28,560 --> 00:00:30,830
+video editing or motion design, like we used to
+have.  This is
+
+28
+00:00:30,830 --> 00:00:30,840
+have.  This is
+ 
+
+29
+00:00:30,840 --> 00:00:32,790
+have.  This is
+completely absurd to me, because
+
+30
+00:00:32,790 --> 00:00:32,800
+completely absurd to me, because
+ 
+
+31
+00:00:32,800 --> 00:00:34,990
+completely absurd to me, because
+in past lives I had a video production company
+
+32
+00:00:34,990 --> 00:00:35,000
+in past lives I had a video production company
+ 
+
+33
+00:00:35,000 --> 00:00:36,990
+in past lives I had a video production company
+and to make a video like the ones
+
+34
+00:00:36,990 --> 00:00:37,000
+and to make a video like the ones
+ 
+
+35
+00:00:37,000 --> 00:00:38,670
+and to make a video like the ones
+you're seeing here, I
+
+36
+00:00:38,670 --> 00:00:38,680
+you're seeing here, I
+ 
+
+37
+00:00:38,680 --> 00:00:41,590
+you're seeing here, I
+charged R$10,000, or R$1,000 per minute of
+
+38
+00:00:41,590 --> 00:00:41,600
+charged R$10,000, or R$1,000 per minute of
+ 
+
+39
+00:00:41,600 --> 00:00:44,110
+charged R$10,000, or R$1,000 per minute of
+animation.  Whether you believe it or
+
+40
+00:00:44,110 --> 00:00:44,120
+animation.  Whether you believe it or
+ 
+
+41
+00:00:44,120 --> 00:00:45,670
+animation.  Whether you believe it or
+not, this
+
+42
+00:00:45,670 --> 00:00:45,680
+not, this
+ 
+
+43
+00:00:45,680 --> 00:00:47,869
+not, this
+was actually a lot of work to do, and the
+
+44
+00:00:47,869 --> 00:00:47,879
+was actually a lot of work to do, and the
+ 
+
+45
+00:00:47,879 --> 00:00:49,270
+was actually a lot of work to do, and the
+designers made a lot of money
+
+46
+00:00:49,270 --> 00:00:49,280
+designers made a lot of money
+ 
+
+47
+00:00:49,280 --> 00:00:50,670
+designers made a lot of money
+doing this kind of work.  That's why
+
+48
+00:00:50,670 --> 00:00:50,680
+doing this kind of work.  That's why
+ 
+
+49
+00:00:50,680 --> 00:00:51,990
+doing this kind of work.  That's why
+in today's video I'm going to tell
+
+50
+00:00:51,990 --> 00:00:53,549
+in today's video I'm going to tell
+ 
+
+51
+00:00:53,549 --> 00:00:53,559
+
+ 
+
+52
+00:00:53,559 --> 00:00:55,790
+ 
+you a little more about this new feature and explain
+
+53
+00:00:55,790 --> 00:00:55,800
+you a little more about this new feature and explain
+ 
+
+54
+00:00:55,800 --> 00:00:57,310
+you a little more about this new feature and explain
+the best way to create
+
+55
+00:00:57,310 --> 00:00:57,320
+the best way to create
+ 
+
+56
+00:00:57,320 --> 00:01:00,349
+the best way to create
+videos with emotional intelligence using just a
+
+57
+00:01:00,349 --> 00:01:00,359
+videos with emotional intelligence using just a
+ 
+
+58
+00:01:00,359 --> 00:01:03,069
+videos with emotional intelligence using just a
+few pre-made templates, okay?  So let's go.
+
+59
+00:01:03,069 --> 00:01:03,079
+few pre-made templates, okay?  So let's go.
+ 
+
+60
+00:01:03,079 --> 00:01:04,310
+few pre-made templates, okay?  So let's go.
+Let's begin.  I'm going to start this video
+
+61
+00:01:04,310 --> 00:01:04,320
+Let's begin.  I'm going to start this video
+ 
+
+62
+00:01:04,320 --> 00:01:05,710
+Let's begin.  I'm going to start this video
+a little differently than I do with
+
+63
+00:01:05,710 --> 00:01:05,720
+a little differently than I do with
+ 
+
+64
+00:01:05,720 --> 00:01:07,230
+a little differently than I do with
+my other videos. I'll
+
+65
+00:01:07,230 --> 00:01:07,240
+my other videos. I'll
+ 
+
+66
+00:01:07,240 --> 00:01:09,030
+my other videos. I'll
+begin by showing you the
+
+67
+00:01:09,030 --> 00:01:09,040
+begin by showing you the
+ 
+
+68
+00:01:09,040 --> 00:01:11,190
+begin by showing you the
+final result, and then I'll show you throughout the
+
+69
+00:01:11,190 --> 00:01:11,200
+final result, and then I'll show you throughout the
+ 
+
+70
+00:01:11,200 --> 00:01:12,789
+final result, and then I'll show you throughout the
+video how I got here
+
+71
+00:01:12,789 --> 00:01:12,799
+video how I got here
+ 
+
+72
+00:01:12,799 --> 00:01:14,429
+video how I got here
+so you can understand the step-by-step process,
+
+73
+00:01:14,429 --> 00:01:14,439
+so you can understand the step-by-step process,
+ 
+
+74
+00:01:14,439 --> 00:01:15,990
+so you can understand the step-by-step process,
+okay?  So the demonstration video I made looks like this
+
+75
+00:01:15,990 --> 00:01:16,000
+okay?  So the demonstration video I made looks like this
+ 
+
+76
+00:01:16,000 --> 00:01:18,510
+okay?  So the demonstration video I made looks like this
+.  It doesn't
+
+77
+00:01:18,510 --> 00:01:18,520
+.  It doesn't
+ 
+
+78
+00:01:18,520 --> 00:01:20,469
+.  It doesn't
+have any sound effects, but I'll start
+
+79
+00:01:20,469 --> 00:01:20,479
+have any sound effects, but I'll start
+ 
+
+80
+00:01:20,479 --> 00:01:24,590
+have any sound effects, but I'll start
+with a scene here that talks about the problem.   Then
+
+81
+00:01:24,590 --> 00:01:24,600
+with a scene here that talks about the problem.   Then
+ 
+
+82
+00:01:24,600 --> 00:01:26,030
+with a scene here that talks about the problem.   Then
+I'll tell him that he can create
+
+83
+00:01:26,030 --> 00:01:26,040
+I'll tell him that he can create
+ 
+
+84
+00:01:26,040 --> 00:01:27,910
+I'll tell him that he can create
+videos in cloud code.  I present
+
+85
+00:01:27,910 --> 00:01:27,920
+videos in cloud code.  I present
+ 
+
+86
+00:01:27,920 --> 00:01:30,749
+videos in cloud code.  I present
+removal skills.  Here I explain how
+
+87
+00:01:30,749 --> 00:01:30,759
+removal skills.  Here I explain how
+ 
+
+88
+00:01:30,759 --> 00:01:37,230
+removal skills.  Here I explain how
+Remotion Skills works.
+
+89
+00:01:37,230 --> 00:01:37,240
+
+ 
+
+90
+00:01:37,240 --> 00:01:40,190
+ 
+And then I end the video by showing
+
+91
+00:01:40,190 --> 00:01:40,200
+And then I end the video by showing
+ 
+
+92
+00:01:40,200 --> 00:01:41,310
+And then I end the video by showing
+which command the person
+
+93
+00:01:41,310 --> 00:01:41,320
+which command the person
+ 
+
+94
+00:01:41,320 --> 00:01:43,630
+which command the person
+needs to run in their terminal to
+
+95
+00:01:43,630 --> 00:01:43,640
+needs to run in their terminal to
+ 
+
+96
+00:01:43,640 --> 00:01:45,709
+needs to run in their terminal to
+test the removal skills.  So that
+
+97
+00:01:45,709 --> 00:01:45,719
+test the removal skills.  So that
+ 
+
+98
+00:01:45,719 --> 00:01:47,510
+test the removal skills.  So that
+'s basically the video, and now I'm going to
+
+99
+00:01:47,510 --> 00:01:47,520
+'s basically the video, and now I'm going to
+ 
+
+100
+00:01:47,520 --> 00:01:48,670
+'s basically the video, and now I'm going to
+explain to you how I got there
+
+101
+00:01:48,670 --> 00:01:48,680
+explain to you how I got there
+ 
+
+102
+00:01:48,680 --> 00:01:50,149
+explain to you how I got there
+, okay?  The first thing that's
+
+103
+00:01:50,149 --> 00:01:50,159
+, okay?  The first thing that's
+ 
+
+104
+00:01:50,159 --> 00:01:52,030
+, okay?  The first thing that's
+important for you to understand in this video,
+
+105
+00:01:52,030 --> 00:01:52,040
+important for you to understand in this video,
+ 
+
+106
+00:01:52,040 --> 00:01:53,469
+important for you to understand in this video,
+because it will make it much easier for you
+
+107
+00:01:53,469 --> 00:01:53,479
+because it will make it much easier for you
+ 
+
+108
+00:01:53,479 --> 00:01:55,190
+because it will make it much easier for you
+to understand how remotion works,
+
+109
+00:01:55,190 --> 00:01:55,200
+to understand how remotion works,
+ 
+
+110
+00:01:55,200 --> 00:01:56,830
+to understand how remotion works,
+is to start breaking it down into
+
+111
+00:01:56,830 --> 00:01:56,840
+is to start breaking it down into
+ 
+
+112
+00:01:56,840 --> 00:01:58,510
+is to start breaking it down into
+scenes.  So, in this video that I showed
+
+113
+00:01:58,510 --> 00:01:58,520
+scenes.  So, in this video that I showed
+ 
+
+114
+00:01:58,520 --> 00:02:00,630
+scenes.  So, in this video that I showed
+you here, it has six scenes in
+
+115
+00:02:00,630 --> 00:02:00,640
+you here, it has six scenes in
+ 
+
+116
+00:02:00,640 --> 00:02:02,709
+you here, it has six scenes in
+total.  So, the first scene is when
+
+117
+00:02:02,709 --> 00:02:02,719
+total.  So, the first scene is when
+ 
+
+118
+00:02:02,719 --> 00:02:04,950
+total.  So, the first scene is when
+we say "no video skills, no
+
+119
+00:02:04,950 --> 00:02:04,960
+we say "no video skills, no
+ 
+
+120
+00:02:04,960 --> 00:02:06,709
+we say "no video skills, no
+problem," and it has these two acts, right?
+
+121
+00:02:06,709 --> 00:02:06,719
+problem," and it has these two acts, right?
+ 
+
+122
+00:02:06,719 --> 00:02:08,270
+problem," and it has these two acts, right?
+So, first, no video skills, then
+
+123
+00:02:08,270 --> 00:02:08,280
+So, first, no video skills, then
+ 
+
+124
+00:02:08,280 --> 00:02:10,270
+So, first, no video skills, then
+no problem.  Then we show scene
+
+125
+00:02:10,270 --> 00:02:10,280
+no problem.  Then we show scene
+ 
+
+126
+00:02:10,280 --> 00:02:11,550
+no problem.  Then we show scene
+two, which is a scene where I show a
+
+127
+00:02:11,550 --> 00:02:11,560
+two, which is a scene where I show a
+ 
+
+128
+00:02:11,560 --> 00:02:13,750
+two, which is a scene where I show a
+Capcut screen saying that editing
+
+129
+00:02:13,750 --> 00:02:13,760
+Capcut screen saying that editing
+ 
+
+130
+00:02:13,760 --> 00:02:16,350
+Capcut screen saying that editing
+videos manually is very boring.  Then I
+
+131
+00:02:16,350 --> 00:02:16,360
+videos manually is very boring.  Then I
+ 
+
+132
+00:02:16,360 --> 00:02:17,990
+videos manually is very boring.  Then I
+come in with scene three, where we
+
+133
+00:02:17,990 --> 00:02:18,000
+come in with scene three, where we
+ 
+
+134
+00:02:18,000 --> 00:02:19,589
+come in with scene three, where we
+throw some confetti and I say that you
+
+135
+00:02:19,589 --> 00:02:19,599
+throw some confetti and I say that you
+ 
+
+136
+00:02:19,599 --> 00:02:22,309
+throw some confetti and I say that you
+can edit videos in clot code, then
+
+137
+00:02:22,309 --> 00:02:22,319
+can edit videos in clot code, then
+ 
+
+138
+00:02:22,319 --> 00:02:24,509
+can edit videos in clot code, then
+we introduce Remotion Skills, then
+
+139
+00:02:24,509 --> 00:02:24,519
+we introduce Remotion Skills, then
+ 
+
+140
+00:02:24,519 --> 00:02:26,270
+we introduce Remotion Skills, then
+we move on to scene five, where I
+
+141
+00:02:26,270 --> 00:02:26,280
+we move on to scene five, where I
+ 
+
+142
+00:02:26,280 --> 00:02:27,750
+we move on to scene five, where I
+describe how Remotion Skills
+
+143
+00:02:27,750 --> 00:02:27,760
+describe how Remotion Skills
+ 
+
+144
+00:02:27,760 --> 00:02:30,470
+describe how Remotion Skills
+works.  So you need to describe
+
+145
+00:02:30,470 --> 00:02:30,480
+works.  So you need to describe
+ 
+
+146
+00:02:30,480 --> 00:02:31,710
+works.  So you need to describe
+what you want, it will generate the
+
+147
+00:02:31,710 --> 00:02:31,720
+what you want, it will generate the
+ 
+
+148
+00:02:31,720 --> 00:02:33,910
+what you want, it will generate the
+code, and then Remotion will render
+
+149
+00:02:33,910 --> 00:02:33,920
+code, and then Remotion will render
+ 
+
+150
+00:02:33,920 --> 00:02:35,350
+code, and then Remotion will render
+your video.  And then, finally, comes a
+
+151
+00:02:35,350 --> 00:02:35,360
+your video.  And then, finally, comes a
+ 
+
+152
+00:02:35,360 --> 00:02:37,670
+your video.  And then, finally, comes a
+call-to-action scene with the command you
+
+153
+00:02:37,670 --> 00:02:37,680
+call-to-action scene with the command you
+ 
+
+154
+00:02:37,680 --> 00:02:40,270
+call-to-action scene with the command you
+need to use to apply the removal, right?
+
+155
+00:02:40,270 --> 00:02:40,280
+need to use to apply the removal, right?
+ 
+
+156
+00:02:40,280 --> 00:02:42,509
+need to use to apply the removal, right?
+So, basically, these are the scenes
+
+157
+00:02:42,509 --> 00:02:42,519
+So, basically, these are the scenes
+ 
+
+158
+00:02:42,519 --> 00:02:45,070
+So, basically, these are the scenes
+that we identified, and in this video
+
+159
+00:02:45,070 --> 00:02:45,080
+that we identified, and in this video
+ 
+
+160
+00:02:45,080 --> 00:02:46,750
+that we identified, and in this video
+here that I showed you.  And that's why it
+
+161
+00:02:46,750 --> 00:02:46,760
+here that I showed you.  And that's why it
+ 
+
+162
+00:02:46,760 --> 00:02:48,949
+here that I showed you.  And that's why it
+'s important for you to understand and
+
+163
+00:02:48,949 --> 00:02:48,959
+'s important for you to understand and
+ 
+
+164
+00:02:48,959 --> 00:02:52,110
+'s important for you to understand and
+have this perspective on the scene, okay?  Because that's how
+
+165
+00:02:52,110 --> 00:02:52,120
+have this perspective on the scene, okay?  Because that's how
+ 
+
+166
+00:02:52,120 --> 00:02:53,869
+have this perspective on the scene, okay?  Because that's how
+you'll understand, in
+
+167
+00:02:53,869 --> 00:02:53,879
+you'll understand, in
+ 
+
+168
+00:02:53,879 --> 00:02:56,990
+you'll understand, in
+quotes, the architecture of Remotion.  So
+
+169
+00:02:56,990 --> 00:02:57,000
+quotes, the architecture of Remotion.  So
+ 
+
+170
+00:02:57,000 --> 00:02:59,070
+quotes, the architecture of Remotion.  So
+the video you're going to generate,
+
+171
+00:02:59,070 --> 00:02:59,080
+the video you're going to generate,
+ 
+
+172
+00:02:59,080 --> 00:03:01,190
+the video you're going to generate,
+in Remotion's terminology, is considered
+
+173
+00:03:01,190 --> 00:03:01,200
+in Remotion's terminology, is considered
+ 
+
+174
+00:03:01,200 --> 00:03:02,830
+in Remotion's terminology, is considered
+a composition, which is
+
+175
+00:03:02,830 --> 00:03:02,840
+a composition, which is
+ 
+
+176
+00:03:02,840 --> 00:03:04,350
+a composition, which is
+similar to the terminology we
+
+177
+00:03:04,350 --> 00:03:04,360
+similar to the terminology we
+ 
+
+178
+00:03:04,360 --> 00:03:06,589
+similar to the terminology we
+use in the world of video editing
+
+179
+00:03:06,589 --> 00:03:06,599
+use in the world of video editing
+ 
+
+180
+00:03:06,599 --> 00:03:07,670
+use in the world of video editing
+, which we call
+
+181
+00:03:07,670 --> 00:03:07,680
+, which we call
+ 
+
+182
+00:03:07,680 --> 00:03:10,309
+, which we call
+composition.  A composition, which would be
+
+183
+00:03:10,309 --> 00:03:10,319
+composition.  A composition, which would be
+ 
+
+184
+00:03:10,319 --> 00:03:12,149
+composition.  A composition, which would be
+your video, is made up of several
+
+185
+00:03:12,149 --> 00:03:12,159
+your video, is made up of several
+ 
+
+186
+00:03:12,159 --> 00:03:13,830
+your video, is made up of several
+scenes, which are precisely these scenes
+
+187
+00:03:13,830 --> 00:03:13,840
+scenes, which are precisely these scenes
+ 
+
+188
+00:03:13,840 --> 00:03:15,430
+scenes, which are precisely these scenes
+that I showed you here.  And
+
+189
+00:03:15,430 --> 00:03:15,440
+that I showed you here.  And
+ 
+
+190
+00:03:15,440 --> 00:03:17,710
+that I showed you here.  And
+within that scene, we have
+
+191
+00:03:17,710 --> 00:03:17,720
+within that scene, we have
+ 
+
+192
+00:03:17,720 --> 00:03:19,309
+within that scene, we have
+components.  So, for example, if I
+
+193
+00:03:19,309 --> 00:03:19,319
+components.  So, for example, if I
+ 
+
+194
+00:03:19,319 --> 00:03:20,830
+components.  So, for example, if I
+go in here, let's give an example here,
+
+195
+00:03:20,830 --> 00:03:20,840
+go in here, let's give an example here,
+ 
+
+196
+00:03:20,840 --> 00:03:22,630
+go in here, let's give an example here,
+look, this scene here, we have two
+
+197
+00:03:22,630 --> 00:03:22,640
+look, this scene here, we have two
+ 
+
+198
+00:03:22,640 --> 00:03:24,550
+look, this scene here, we have two
+components.  We have the title here,
+
+199
+00:03:24,550 --> 00:03:24,560
+components.  We have the title here,
+ 
+
+200
+00:03:24,560 --> 00:03:26,830
+components.  We have the title here,
+which is a component, and I have this little
+
+201
+00:03:26,830 --> 00:03:26,840
+which is a component, and I have this little
+ 
+
+202
+00:03:26,840 --> 00:03:28,229
+which is a component, and I have this little
+video of Capcut here, which is
+
+203
+00:03:28,229 --> 00:03:28,239
+video of Capcut here, which is
+ 
+
+204
+00:03:28,239 --> 00:03:30,350
+video of Capcut here, which is
+another component.  If we look here,
+
+205
+00:03:30,350 --> 00:03:30,360
+another component.  If we look here,
+ 
+
+206
+00:03:30,360 --> 00:03:31,589
+another component.  If we look here,
+I have the title, which is another
+
+207
+00:03:31,589 --> 00:03:31,599
+I have the title, which is another
+ 
+
+208
+00:03:31,599 --> 00:03:33,149
+I have the title, which is another
+component here, and I also have this little
+
+209
+00:03:33,149 --> 00:03:33,159
+component here, and I also have this little
+ 
+
+210
+00:03:33,159 --> 00:03:34,670
+component here, and I also have this little
+terminal, another
+
+211
+00:03:34,670 --> 00:03:34,680
+terminal, another
+ 
+
+212
+00:03:34,680 --> 00:03:36,589
+terminal, another
+component.  So, it's important for you to understand
+
+213
+00:03:36,589 --> 00:03:36,599
+component.  So, it's important for you to understand
+ 
+
+214
+00:03:36,599 --> 00:03:38,910
+component.  So, it's important for you to understand
+that emotion has
+
+215
+00:03:38,910 --> 00:03:38,920
+that emotion has
+ 
+
+216
+00:03:38,920 --> 00:03:41,750
+that emotion has
+scenes, and we have components.  The scene
+
+217
+00:03:41,750 --> 00:03:41,760
+scenes, and we have components.  The scene
+ 
+
+218
+00:03:41,760 --> 00:03:43,670
+scenes, and we have components.  The scene
+is nothing more than a combination of
+
+219
+00:03:43,670 --> 00:03:43,680
+is nothing more than a combination of
+ 
+
+220
+00:03:43,680 --> 00:03:45,030
+is nothing more than a combination of
+components.  It is still a
+
+221
+00:03:45,030 --> 00:03:45,040
+components.  It is still a
+ 
+
+222
+00:03:45,040 --> 00:03:46,509
+components.  It is still a
+component, but it's important to understand
+
+223
+00:03:46,509 --> 00:03:46,519
+component, but it's important to understand
+ 
+
+224
+00:03:46,519 --> 00:03:48,229
+component, but it's important to understand
+that an entire video is
+
+225
+00:03:48,229 --> 00:03:48,239
+that an entire video is
+ 
+
+226
+00:03:48,239 --> 00:03:50,229
+that an entire video is
+made up of several smaller scenes, and each
+
+227
+00:03:50,229 --> 00:03:50,239
+made up of several smaller scenes, and each
+ 
+
+228
+00:03:50,239 --> 00:03:52,869
+made up of several smaller scenes, and each
+scene contains several smaller components
+
+229
+00:03:52,869 --> 00:03:52,879
+scene contains several smaller components
+ 
+
+230
+00:03:52,879 --> 00:03:54,990
+scene contains several smaller components
+within it.  And then, for each of these
+
+231
+00:03:54,990 --> 00:03:55,000
+within it.  And then, for each of these
+ 
+
+232
+00:03:55,000 --> 00:03:57,350
+within it.  And then, for each of these
+components, these scenes, you can
+
+233
+00:03:57,350 --> 00:03:57,360
+components, these scenes, you can
+ 
+
+234
+00:03:57,360 --> 00:03:59,270
+components, these scenes, you can
+assign animations to them.  So you
+
+235
+00:03:59,270 --> 00:03:59,280
+assign animations to them.  So you
+ 
+
+236
+00:03:59,280 --> 00:04:01,069
+assign animations to them.  So you
+can assign entrance animation,
+
+237
+00:04:01,069 --> 00:04:01,079
+can assign entrance animation,
+ 
+
+238
+00:04:01,079 --> 00:04:02,429
+can assign entrance animation,
+exit animation, you can
+
+239
+00:04:02,429 --> 00:04:02,439
+exit animation, you can
+ 
+
+240
+00:04:02,439 --> 00:04:04,229
+exit animation, you can
+assign a transition between one scene and
+
+241
+00:04:04,229 --> 00:04:04,239
+assign a transition between one scene and
+ 
+
+242
+00:04:04,239 --> 00:04:06,190
+assign a transition between one scene and
+another, you can animate color,
+
+243
+00:04:06,190 --> 00:04:06,200
+another, you can animate color,
+ 
+
+244
+00:04:06,200 --> 00:04:09,789
+another, you can animate color,
+position, rotation, opacity, scale,
+
+245
+00:04:09,789 --> 00:04:09,799
+position, rotation, opacity, scale,
+ 
+
+246
+00:04:09,799 --> 00:04:12,910
+position, rotation, opacity, scale,
+you can animate all of that.  And
+
+247
+00:04:12,910 --> 00:04:12,920
+you can animate all of that.  And
+ 
+
+248
+00:04:12,920 --> 00:04:14,789
+you can animate all of that.  And
+in the code, right, which is how you do it
+
+249
+00:04:14,789 --> 00:04:14,799
+in the code, right, which is how you do it
+ 
+
+250
+00:04:14,799 --> 00:04:16,830
+in the code, right, which is how you do it
+in CSS, when you're creating a
+
+251
+00:04:16,830 --> 00:04:16,840
+in CSS, when you're creating a
+ 
+
+252
+00:04:16,840 --> 00:04:19,390
+in CSS, when you're creating a
+page, for example, you can specify
+
+253
+00:04:19,390 --> 00:04:19,400
+page, for example, you can specify
+ 
+
+254
+00:04:19,400 --> 00:04:23,030
+page, for example, you can specify
+in the code which component comes before
+
+255
+00:04:23,030 --> 00:04:23,040
+in the code which component comes before
+ 
+
+256
+00:04:23,040 --> 00:04:24,790
+in the code which component comes before
+another, in relation to the
+
+257
+00:04:24,790 --> 00:04:24,800
+another, in relation to the
+ 
+
+258
+00:04:24,800 --> 00:04:28,469
+another, in relation to the
+layer order using CSS and the DOM, okay?  So, that
+
+259
+00:04:28,469 --> 00:04:28,479
+layer order using CSS and the DOM, okay?  So, that
+ 
+
+260
+00:04:28,479 --> 00:04:30,070
+layer order using CSS and the DOM, okay?  So, that
+'s more or less how removal
+
+261
+00:04:30,070 --> 00:04:30,080
+'s more or less how removal
+ 
+
+262
+00:04:30,080 --> 00:04:32,390
+'s more or less how removal
+works, and it's very important that you have
+
+263
+00:04:32,390 --> 00:04:32,400
+works, and it's very important that you have
+ 
+
+264
+00:04:32,400 --> 00:04:34,350
+works, and it's very important that you have
+this understanding, because when you ask
+
+265
+00:04:34,350 --> 00:04:34,360
+this understanding, because when you ask
+ 
+
+266
+00:04:34,360 --> 00:04:35,870
+this understanding, because when you ask
+him to do things for you, if you do
+
+267
+00:04:35,870 --> 00:04:35,880
+him to do things for you, if you do
+ 
+
+268
+00:04:35,880 --> 00:04:38,189
+him to do things for you, if you do
+n't have this understanding, you're going to get
+
+269
+00:04:38,189 --> 00:04:38,199
+n't have this understanding, you're going to get
+ 
+
+270
+00:04:38,199 --> 00:04:40,590
+n't have this understanding, you're going to get
+very confused when you ask
+
+271
+00:04:40,590 --> 00:04:40,600
+very confused when you ask
+ 
+
+272
+00:04:40,600 --> 00:04:42,189
+very confused when you ask
+him to do things.  So I just wanted to
+
+273
+00:04:42,189 --> 00:04:42,199
+him to do things.  So I just wanted to
+ 
+
+274
+00:04:42,199 --> 00:04:43,590
+him to do things.  So I just wanted to
+give you this overview here,
+
+275
+00:04:43,590 --> 00:04:43,600
+give you this overview here,
+ 
+
+276
+00:04:43,600 --> 00:04:45,430
+give you this overview here,
+because this is very important, but it
+
+277
+00:04:45,430 --> 00:04:45,440
+because this is very important, but it
+ 
+
+278
+00:04:45,440 --> 00:04:46,830
+because this is very important, but it
+will become a little clearer now that
+
+279
+00:04:46,830 --> 00:04:46,840
+will become a little clearer now that
+ 
+
+280
+00:04:46,840 --> 00:04:48,230
+will become a little clearer now that
+I'm going to show you the project I did
+
+281
+00:04:48,230 --> 00:04:48,240
+I'm going to show you the project I did
+ 
+
+282
+00:04:48,240 --> 00:04:50,590
+I'm going to show you the project I did
+.  So, just to show you what
+
+283
+00:04:50,590 --> 00:04:50,600
+.  So, just to show you what
+ 
+
+284
+00:04:50,600 --> 00:04:53,710
+.  So, just to show you what
+a Remotion project looks like, okay?
+
+285
+00:04:53,710 --> 00:04:53,720
+a Remotion project looks like, okay?
+ 
+
+286
+00:04:53,720 --> 00:04:55,029
+a Remotion project looks like, okay?
+First of all, we have a
+
+287
+00:04:55,029 --> 00:04:55,039
+First of all, we have a
+ 
+
+288
+00:04:55,039 --> 00:04:57,590
+First of all, we have a
+public folder here, and we use this folder to
+
+289
+00:04:57,590 --> 00:04:57,600
+public folder here, and we use this folder to
+ 
+
+290
+00:04:57,600 --> 00:04:59,350
+public folder here, and we use this folder to
+store the assets that we'll
+
+291
+00:04:59,350 --> 00:04:59,360
+store the assets that we'll
+ 
+
+292
+00:04:59,360 --> 00:05:01,390
+store the assets that we'll
+use in our videos, excluding
+
+293
+00:05:01,390 --> 00:05:01,400
+use in our videos, excluding
+ 
+
+294
+00:05:01,400 --> 00:05:03,350
+use in our videos, excluding
+components that we'll create here
+
+295
+00:05:03,350 --> 00:05:03,360
+components that we'll create here
+ 
+
+296
+00:05:03,360 --> 00:05:05,310
+components that we'll create here
+in Cloud Code.  So, if you look
+
+297
+00:05:05,310 --> 00:05:05,320
+in Cloud Code.  So, if you look
+ 
+
+298
+00:05:05,320 --> 00:05:07,110
+in Cloud Code.  So, if you look
+here, I have sources that I used.  I did
+
+299
+00:05:07,110 --> 00:05:07,120
+here, I have sources that I used.  I did
+ 
+
+300
+00:05:07,120 --> 00:05:08,790
+here, I have sources that I used.  I did
+n't use all of those sources, did I?  But I
+
+301
+00:05:08,790 --> 00:05:08,800
+n't use all of those sources, did I?  But I
+ 
+
+302
+00:05:08,800 --> 00:05:11,110
+n't use all of those sources, did I?  But I
+imported the Cocoguz family, which is the
+
+303
+00:05:11,110 --> 00:05:11,120
+imported the Cocoguz family, which is the
+ 
+
+304
+00:05:11,120 --> 00:05:13,350
+imported the Cocoguz family, which is the
+font I'm using here.  Well, we
+
+305
+00:05:13,350 --> 00:05:13,360
+font I'm using here.  Well, we
+ 
+
+306
+00:05:13,360 --> 00:05:14,950
+font I'm using here.  Well, we
+have some images that we're going to use
+
+307
+00:05:14,950 --> 00:05:14,960
+have some images that we're going to use
+ 
+
+308
+00:05:14,960 --> 00:05:16,270
+have some images that we're going to use
+here.  So, for example, there's the
+
+309
+00:05:16,270 --> 00:05:16,280
+here.  So, for example, there's the
+ 
+
+310
+00:05:16,280 --> 00:05:17,629
+here.  So, for example, there's the
+Capcut logo here, which I don't know if
+
+311
+00:05:17,629 --> 00:05:17,639
+Capcut logo here, which I don't know if
+ 
+
+312
+00:05:17,639 --> 00:05:19,590
+Capcut logo here, which I don't know if
+you can see clearly.  There's a
+
+313
+00:05:19,590 --> 00:05:19,600
+you can see clearly.  There's a
+ 
+
+314
+00:05:19,600 --> 00:05:23,270
+you can see clearly.  There's a
+blank version, there's the Cloud Code logo, there's
+
+315
+00:05:23,270 --> 00:05:23,280
+blank version, there's the Cloud Code logo, there's
+ 
+
+316
+00:05:23,280 --> 00:05:25,830
+blank version, there's the Cloud Code logo, there's
+the Cloud Code chat,
+
+317
+00:05:25,830 --> 00:05:25,840
+the Cloud Code chat,
+ 
+
+318
+00:05:25,840 --> 00:05:28,189
+the Cloud Code chat,
+there's a small logo, there's the Remotion logo, and there's a
+
+319
+00:05:28,189 --> 00:05:28,199
+there's a small logo, there's the Remotion logo, and there's a
+ 
+
+320
+00:05:28,199 --> 00:05:29,230
+there's a small logo, there's the Remotion logo, and there's a
+blank Remotion logo.  So,
+
+321
+00:05:29,230 --> 00:05:29,240
+blank Remotion logo.  So,
+ 
+
+322
+00:05:29,240 --> 00:05:30,670
+blank Remotion logo.  So,
+I've put all the images we
+
+323
+00:05:30,670 --> 00:05:30,680
+I've put all the images we
+ 
+
+324
+00:05:30,680 --> 00:05:33,309
+I've put all the images we
+used in our video here.  And here on the
+
+325
+00:05:33,309 --> 00:05:33,319
+used in our video here.  And here on the
+ 
+
+326
+00:05:33,319 --> 00:05:35,230
+used in our video here.  And here on the
+page, in this folder of
+
+327
+00:05:35,230 --> 00:05:35,240
+page, in this folder of
+ 
+
+328
+00:05:35,240 --> 00:05:37,309
+page, in this folder of
+videos, I also put this little GIF of
+
+329
+00:05:37,309 --> 00:05:37,319
+videos, I also put this little GIF of
+ 
+
+330
+00:05:37,319 --> 00:05:39,390
+videos, I also put this little GIF of
+Capcut, which I also use in this video.  And it
+
+331
+00:05:39,390 --> 00:05:39,400
+Capcut, which I also use in this video.  And it
+ 
+
+332
+00:05:39,400 --> 00:05:41,230
+Capcut, which I also use in this video.  And it
+makes sense that this folder should be the first
+
+333
+00:05:41,230 --> 00:05:41,240
+makes sense that this folder should be the first
+ 
+
+334
+00:05:41,240 --> 00:05:43,189
+makes sense that this folder should be the first
+thing you do before you even
+
+335
+00:05:43,189 --> 00:05:43,199
+thing you do before you even
+ 
+
+336
+00:05:43,199 --> 00:05:45,510
+thing you do before you even
+start making your video.  You
+
+337
+00:05:45,510 --> 00:05:45,520
+start making your video.  You
+ 
+
+338
+00:05:45,520 --> 00:05:47,550
+start making your video.  You
+'ll understand why soon enough, okay?  But the
+
+339
+00:05:47,550 --> 00:05:47,560
+'ll understand why soon enough, okay?  But the
+ 
+
+340
+00:05:47,560 --> 00:05:48,749
+'ll understand why soon enough, okay?  But the
+first folder we have here is the
+
+341
+00:05:48,749 --> 00:05:48,759
+first folder we have here is the
+ 
+
+342
+00:05:48,759 --> 00:05:50,430
+first folder we have here is the
+public folder.  The second folder
+
+343
+00:05:50,430 --> 00:05:50,440
+public folder.  The second folder
+ 
+
+344
+00:05:50,440 --> 00:05:52,430
+public folder.  The second folder
+we have here is the source folder.  And here in
+
+345
+00:05:52,430 --> 00:05:52,440
+we have here is the source folder.  And here in
+ 
+
+346
+00:05:52,440 --> 00:05:53,870
+we have here is the source folder.  And here in
+this source folder we'll
+
+347
+00:05:53,870 --> 00:05:53,880
+this source folder we'll
+ 
+
+348
+00:05:53,880 --> 00:05:55,990
+this source folder we'll
+basically have the components and the scenes.
+
+349
+00:05:55,990 --> 00:05:56,000
+basically have the components and the scenes.
+ 
+
+350
+00:05:56,000 --> 00:05:58,430
+basically have the components and the scenes.
+So, the scenes import the
+
+351
+00:05:58,430 --> 00:05:58,440
+So, the scenes import the
+ 
+
+352
+00:05:58,440 --> 00:06:00,350
+So, the scenes import the
+components that are in this folder
+
+353
+00:06:00,350 --> 00:06:00,360
+components that are in this folder
+ 
+
+354
+00:06:00,360 --> 00:06:03,309
+components that are in this folder
+here and the assets that are in this
+
+355
+00:06:03,309 --> 00:06:03,319
+here and the assets that are in this
+ 
+
+356
+00:06:03,319 --> 00:06:05,629
+here and the assets that are in this
+publish folder.  So, for example, if we
+
+357
+00:06:05,629 --> 00:06:05,639
+publish folder.  So, for example, if we
+ 
+
+358
+00:06:05,639 --> 00:06:08,790
+publish folder.  So, for example, if we
+take this bubble menu here, uh,
+
+359
+00:06:08,790 --> 00:06:08,800
+take this bubble menu here, uh,
+ 
+
+360
+00:06:08,800 --> 00:06:09,950
+take this bubble menu here, uh,
+you can't understand it because it
+
+361
+00:06:09,950 --> 00:06:09,960
+you can't understand it because it
+ 
+
+362
+00:06:09,960 --> 00:06:11,230
+you can't understand it because it
+'s a bunch of code, but just to make it
+
+363
+00:06:11,230 --> 00:06:11,240
+'s a bunch of code, but just to make it
+ 
+
+364
+00:06:11,240 --> 00:06:13,350
+'s a bunch of code, but just to make it
+tangible what it is, the bubble menu
+
+365
+00:06:13,350 --> 00:06:13,360
+tangible what it is, the bubble menu
+ 
+
+366
+00:06:13,360 --> 00:06:15,230
+tangible what it is, the bubble menu
+is this:  So, this is the bubble
+
+367
+00:06:15,230 --> 00:06:15,240
+is this:  So, this is the bubble
+ 
+
+368
+00:06:15,240 --> 00:06:19,230
+is this:  So, this is the bubble
+bubble menu, right?  These are the pills here,
+
+369
+00:06:19,230 --> 00:06:19,240
+bubble menu, right?  These are the pills here,
+ 
+
+370
+00:06:19,240 --> 00:06:21,950
+bubble menu, right?  These are the pills here,
+right?  So, when I come here to scene
+
+371
+00:06:21,950 --> 00:06:21,960
+right?  So, when I come here to scene
+ 
+
+372
+00:06:21,960 --> 00:06:23,950
+right?  So, when I come here to scene
+one,
+
+373
+00:06:23,950 --> 00:06:23,960
+one,
+ 
+
+374
+00:06:23,960 --> 00:06:26,710
+one,
+what do we have?  The bubble menu,
+
+375
+00:06:26,710 --> 00:06:26,720
+what do we have?  The bubble menu,
+ 
+
+376
+00:06:26,720 --> 00:06:28,950
+what do we have?  The bubble menu,
+right?  So, we always follow this
+
+377
+00:06:28,950 --> 00:06:28,960
+right?  So, we always follow this
+ 
+
+378
+00:06:28,960 --> 00:06:30,790
+right?  So, we always follow this
+logic.  We have the components,
+
+379
+00:06:30,790 --> 00:06:30,800
+logic.  We have the components,
+ 
+
+380
+00:06:30,800 --> 00:06:32,189
+logic.  We have the components,
+we have the assets, and we have the
+
+381
+00:06:32,189 --> 00:06:32,199
+we have the assets, and we have the
+ 
+
+382
+00:06:32,199 --> 00:06:34,070
+we have the assets, and we have the
+scenes that import components and assets,
+
+383
+00:06:34,070 --> 00:06:34,080
+scenes that import components and assets,
+ 
+
+384
+00:06:34,080 --> 00:06:37,430
+scenes that import components and assets,
+whether they are images, videos,
+
+385
+00:06:37,430 --> 00:06:37,440
+whether they are images, videos,
+ 
+
+386
+00:06:37,440 --> 00:06:41,029
+whether they are images, videos,
+fonts, music, audio, and so on.  So in
+
+387
+00:06:41,029 --> 00:06:41,039
+fonts, music, audio, and so on.  So in
+ 
+
+388
+00:06:41,039 --> 00:06:44,150
+fonts, music, audio, and so on.  So in
+our video, what we have is a
+
+389
+00:06:44,150 --> 00:06:44,160
+our video, what we have is a
+ 
+
+390
+00:06:44,160 --> 00:06:46,430
+our video, what we have is a
+combination of all these scenes, right?  right?
+
+391
+00:06:46,430 --> 00:06:46,440
+combination of all these scenes, right?  right?
+ 
+
+392
+00:06:46,440 --> 00:06:47,710
+combination of all these scenes, right?  right?
+So, we have scene one, scene two,
+
+393
+00:06:47,710 --> 00:06:47,720
+So, we have scene one, scene two,
+ 
+
+394
+00:06:47,720 --> 00:06:50,230
+So, we have scene one, scene two,
+scene three, four, five, six, and seven here, and we have
+
+395
+00:06:50,230 --> 00:06:50,240
+scene three, four, five, six, and seven here, and we have
+ 
+
+396
+00:06:50,240 --> 00:06:52,710
+scene three, four, five, six, and seven here, and we have
+these scenes organized and
+
+397
+00:06:52,710 --> 00:06:52,720
+these scenes organized and
+ 
+
+398
+00:06:52,720 --> 00:06:55,110
+these scenes organized and
+properly imported into our
+
+399
+00:06:55,110 --> 00:06:55,120
+properly imported into our
+ 
+
+400
+00:06:55,120 --> 00:06:56,710
+properly imported into our
+Remotion Skills Promo.  So, this
+
+401
+00:06:56,710 --> 00:06:56,720
+Remotion Skills Promo.  So, this
+ 
+
+402
+00:06:56,720 --> 00:06:58,390
+Remotion Skills Promo.  So, this
+file here, the Remotion Skills Promo,
+
+403
+00:06:58,390 --> 00:06:58,400
+file here, the Remotion Skills Promo,
+ 
+
+404
+00:06:58,400 --> 00:07:00,830
+file here, the Remotion Skills Promo,
+it's basically putting together all the
+
+405
+00:07:00,830 --> 00:07:00,840
+it's basically putting together all the
+ 
+
+406
+00:07:00,840 --> 00:07:02,869
+it's basically putting together all the
+scenes that I just described to
+
+407
+00:07:02,869 --> 00:07:02,879
+scenes that I just described to
+ 
+
+408
+00:07:02,879 --> 00:07:04,749
+scenes that I just described to
+you.  And he's saying how a
+
+409
+00:07:04,749 --> 00:07:04,759
+you.  And he's saying how a
+ 
+
+410
+00:07:04,759 --> 00:07:06,510
+you.  And he's saying how a
+scene comes in, how it comes out.  And you're
+
+411
+00:07:06,510 --> 00:07:06,520
+scene comes in, how it comes out.  And you're
+ 
+
+412
+00:07:06,520 --> 00:07:08,070
+scene comes in, how it comes out.  And you're
+seeing here, look, scene one, scene two, scene
+
+413
+00:07:08,070 --> 00:07:08,080
+seeing here, look, scene one, scene two, scene
+ 
+
+414
+00:07:08,080 --> 00:07:11,230
+seeing here, look, scene one, scene two, scene
+three, four, five.  And then I skipped to scene
+
+415
+00:07:11,230 --> 00:07:11,240
+three, four, five.  And then I skipped to scene
+ 
+
+416
+00:07:11,240 --> 00:07:12,390
+three, four, five.  And then I skipped to scene
+six, because I ended up removing it and
+
+417
+00:07:12,390 --> 00:07:12,400
+six, because I ended up removing it and
+ 
+
+418
+00:07:12,400 --> 00:07:14,790
+six, because I ended up removing it and
+scene seven.  So, when it's time to render
+
+419
+00:07:14,790 --> 00:07:14,800
+scene seven.  So, when it's time to render
+ 
+
+420
+00:07:14,800 --> 00:07:15,990
+scene seven.  So, when it's time to render
+my video, what am I going to do?  I'm
+
+421
+00:07:15,990 --> 00:07:16,000
+my video, what am I going to do?  I'm
+ 
+
+422
+00:07:16,000 --> 00:07:18,790
+my video, what am I going to do?  I'm
+going to render this file here and it
+
+423
+00:07:18,790 --> 00:07:18,800
+going to render this file here and it
+ 
+
+424
+00:07:18,800 --> 00:07:21,390
+going to render this file here and it
+will export this file to this folder
+
+425
+00:07:21,390 --> 00:07:21,400
+will export this file to this folder
+ 
+
+426
+00:07:21,400 --> 00:07:23,510
+will export this file to this folder
+.  So, if I click here, I
+
+427
+00:07:23,510 --> 00:07:23,520
+.  So, if I click here, I
+ 
+
+428
+00:07:23,520 --> 00:07:24,909
+.  So, if I click here, I
+can see the file that it just
+
+429
+00:07:24,909 --> 00:07:24,919
+can see the file that it just
+ 
+
+430
+00:07:24,919 --> 00:07:27,909
+can see the file that it just
+rendered for me from these scenes and
+
+431
+00:07:27,909 --> 00:07:27,919
+rendered for me from these scenes and
+ 
+
+432
+00:07:27,919 --> 00:07:29,749
+rendered for me from these scenes and
+this Remotion Skills Promo file that
+
+433
+00:07:29,749 --> 00:07:29,759
+this Remotion Skills Promo file that
+ 
+
+434
+00:07:29,759 --> 00:07:31,710
+this Remotion Skills Promo file that
+you saw here.  So, that's basically how it
+
+435
+00:07:31,710 --> 00:07:31,720
+you saw here.  So, that's basically how it
+ 
+
+436
+00:07:31,720 --> 00:07:34,110
+you saw here.  So, that's basically how it
+works, and as you
+
+437
+00:07:34,110 --> 00:07:34,120
+works, and as you
+ 
+
+438
+00:07:34,120 --> 00:07:35,990
+works, and as you
+develop your video, you can
+
+439
+00:07:35,990 --> 00:07:36,000
+develop your video, you can
+ 
+
+440
+00:07:36,000 --> 00:07:38,350
+develop your video, you can
+see everything you're doing in your
+
+441
+00:07:38,350 --> 00:07:38,360
+see everything you're doing in your
+ 
+
+442
+00:07:38,360 --> 00:07:39,589
+see everything you're doing in your
+Emotion Studio, which is what I
+
+443
+00:07:39,589 --> 00:07:39,599
+Emotion Studio, which is what I
+ 
+
+444
+00:07:39,599 --> 00:07:40,869
+Emotion Studio, which is what I
+showed you here, right?  So this
+
+445
+00:07:40,869 --> 00:07:40,879
+showed you here, right?  So this
+ 
+
+446
+00:07:40,879 --> 00:07:43,070
+showed you here, right?  So this
+runs on your local host, right?
+
+447
+00:07:43,070 --> 00:07:43,080
+runs on your local host, right?
+ 
+
+448
+00:07:43,080 --> 00:07:44,589
+runs on your local host, right?
+As you can see, I'm running it
+
+449
+00:07:44,589 --> 00:07:44,599
+As you can see, I'm running it
+ 
+
+450
+00:07:44,599 --> 00:07:46,629
+As you can see, I'm running it
+here on my local host, and that's great
+
+451
+00:07:46,629 --> 00:07:46,639
+here on my local host, and that's great
+ 
+
+452
+00:07:46,639 --> 00:07:48,550
+here on my local host, and that's great
+because you can see what
+
+453
+00:07:48,550 --> 00:07:48,560
+because you can see what
+ 
+
+454
+00:07:48,560 --> 00:07:49,990
+because you can see what
+you're doing without having to
+
+455
+00:07:49,990 --> 00:07:50,000
+you're doing without having to
+ 
+
+456
+00:07:50,000 --> 00:07:51,950
+you're doing without having to
+render your video, because
+
+457
+00:07:51,950 --> 00:07:51,960
+render your video, because
+ 
+
+458
+00:07:51,960 --> 00:07:54,149
+render your video, because
+that takes a lot of work, right?  So it's
+
+459
+00:07:54,149 --> 00:07:54,159
+that takes a lot of work, right?  So it's
+ 
+
+460
+00:07:54,159 --> 00:07:56,589
+that takes a lot of work, right?  So it's
+good that you're doing things in the code
+
+461
+00:07:56,589 --> 00:07:56,599
+good that you're doing things in the code
+ 
+
+462
+00:07:56,599 --> 00:07:57,869
+good that you're doing things in the code
+and then coming back here to see how it's
+
+463
+00:07:57,869 --> 00:07:57,879
+and then coming back here to see how it's
+ 
+
+464
+00:07:57,879 --> 00:07:59,869
+and then coming back here to see how it's
+turning out.  So, thinking from a
+
+465
+00:07:59,869 --> 00:07:59,879
+turning out.  So, thinking from a
+ 
+
+466
+00:07:59,879 --> 00:08:01,589
+turning out.  So, thinking from a
+prompt perspective, when you're making
+
+467
+00:08:01,589 --> 00:08:01,599
+prompt perspective, when you're making
+ 
+
+468
+00:08:01,599 --> 00:08:03,589
+prompt perspective, when you're making
+your video, what do you want in your
+
+469
+00:08:03,589 --> 00:08:03,599
+your video, what do you want in your
+ 
+
+470
+00:08:03,599 --> 00:08:05,230
+your video, what do you want in your
+prompt? You have to tell it like this
+
+471
+00:08:05,230 --> 00:08:05,240
+prompt? You have to tell it like this
+ 
+
+472
+00:08:05,240 --> 00:08:07,430
+prompt? You have to tell it like this
+: "I want to generate this video
+
+473
+00:08:07,430 --> 00:08:07,440
+: "I want to generate this video
+ 
+
+474
+00:08:07,440 --> 00:08:08,950
+: "I want to generate this video
+here."  So you're going to give the specs for your
+
+475
+00:08:08,950 --> 00:08:08,960
+here."  So you're going to give the specs for your
+ 
+
+476
+00:08:08,960 --> 00:08:11,309
+here."  So you're going to give the specs for your
+video, right?  I want to do it in Full HD, I
+
+477
+00:08:11,309 --> 00:08:11,319
+video, right?  I want to do it in Full HD, I
+ 
+
+478
+00:08:11,319 --> 00:08:13,230
+video, right?  I want to do it in Full HD, I
+want to do it in these dimensions here.
+
+479
+00:08:13,230 --> 00:08:13,240
+want to do it in these dimensions here.
+ 
+
+480
+00:08:13,240 --> 00:08:14,550
+want to do it in these dimensions here.
+Finally, you're going to give this type of
+
+481
+00:08:14,550 --> 00:08:14,560
+Finally, you're going to give this type of
+ 
+
+482
+00:08:14,560 --> 00:08:16,710
+Finally, you're going to give this type of
+guidance.  But more importantly than anything else,
+
+483
+00:08:16,710 --> 00:08:16,720
+guidance.  But more importantly than anything else,
+ 
+
+484
+00:08:16,720 --> 00:08:19,390
+guidance.  But more importantly than anything else,
+you have to describe the
+
+485
+00:08:19,390 --> 00:08:19,400
+you have to describe the
+ 
+
+486
+00:08:19,400 --> 00:08:22,430
+you have to describe the
+scenes in your video, and within each scene,
+
+487
+00:08:22,430 --> 00:08:22,440
+scenes in your video, and within each scene,
+ 
+
+488
+00:08:22,440 --> 00:08:24,390
+scenes in your video, and within each scene,
+you need to specify which components are involved
+
+489
+00:08:24,390 --> 00:08:24,400
+you need to specify which components are involved
+ 
+
+490
+00:08:24,400 --> 00:08:27,110
+you need to specify which components are involved
+and roughly describe
+
+491
+00:08:27,110 --> 00:08:27,120
+and roughly describe
+ 
+
+492
+00:08:27,120 --> 00:08:29,350
+and roughly describe
+the animation style you want for those
+
+493
+00:08:29,350 --> 00:08:29,360
+the animation style you want for those
+ 
+
+494
+00:08:29,360 --> 00:08:31,110
+the animation style you want for those
+components in that scene.  Because if you
+
+495
+00:08:31,110 --> 00:08:31,120
+components in that scene.  Because if you
+ 
+
+496
+00:08:31,120 --> 00:08:33,630
+components in that scene.  Because if you
+don't do that, fine, it will still generate a
+
+497
+00:08:33,630 --> 00:08:33,640
+don't do that, fine, it will still generate a
+ 
+
+498
+00:08:33,640 --> 00:08:35,509
+don't do that, fine, it will still generate a
+video, but maybe that video will be a
+
+499
+00:08:35,509 --> 00:08:35,519
+video, but maybe that video will be a
+ 
+
+500
+00:08:35,519 --> 00:08:37,310
+video, but maybe that video will be a
+little different from what you had
+
+501
+00:08:37,310 --> 00:08:37,320
+little different from what you had
+ 
+
+502
+00:08:37,320 --> 00:08:38,389
+little different from what you had
+in mind.  Why am I saying
+
+503
+00:08:38,389 --> 00:08:38,399
+in mind.  Why am I saying
+ 
+
+504
+00:08:38,399 --> 00:08:39,430
+in mind.  Why am I saying
+this?  Because the first time I
+
+505
+00:08:39,430 --> 00:08:39,440
+this?  Because the first time I
+ 
+
+506
+00:08:39,440 --> 00:08:43,029
+this?  Because the first time I
+tested Remotion, uh, I fell for the
+
+507
+00:08:43,029 --> 00:08:43,039
+tested Remotion, uh, I fell for the
+ 
+
+508
+00:08:43,039 --> 00:08:45,949
+tested Remotion, uh, I fell for the
+clickbait that you can generate a
+
+509
+00:08:45,949 --> 00:08:45,959
+clickbait that you can generate a
+ 
+
+510
+00:08:45,959 --> 00:08:48,710
+clickbait that you can generate a
+video with a one-line prompt, and that's
+
+511
+00:08:48,710 --> 00:08:48,720
+video with a one-line prompt, and that's
+ 
+
+512
+00:08:48,720 --> 00:08:50,829
+video with a one-line prompt, and that's
+not how you can.  That's the truth.   I
+
+513
+00:08:50,829 --> 00:08:50,839
+not how you can.  That's the truth.   I
+ 
+
+514
+00:08:50,839 --> 00:08:52,269
+not how you can.  That's the truth.   I
+mean, you can do it,
+
+515
+00:08:52,269 --> 00:08:52,279
+mean, you can do it,
+ 
+
+516
+00:08:52,279 --> 00:08:55,190
+mean, you can do it,
+right?  You can achieve many things, but will it be
+
+517
+00:08:55,190 --> 00:08:55,200
+right?  You can achieve many things, but will it be
+ 
+
+518
+00:08:55,200 --> 00:08:57,509
+right?  You can achieve many things, but will it be
+good?  No. So, to be good at it,
+
+519
+00:08:57,509 --> 00:08:57,519
+good?  No. So, to be good at it,
+ 
+
+520
+00:08:57,519 --> 00:08:58,670
+good?  No. So, to be good at it,
+you have to think the way I
+
+521
+00:08:58,670 --> 00:08:58,680
+you have to think the way I
+ 
+
+522
+00:08:58,680 --> 00:09:00,750
+you have to think the way I
+explained to you here, which is to think
+
+523
+00:09:00,750 --> 00:09:00,760
+explained to you here, which is to think
+ 
+
+524
+00:09:00,760 --> 00:09:02,470
+explained to you here, which is to think
+in terms of the scene.  That being said, here's how I
+
+525
+00:09:02,470 --> 00:09:02,480
+in terms of the scene.  That being said, here's how I
+ 
+
+526
+00:09:02,480 --> 00:09:04,389
+in terms of the scene.  That being said, here's how I
+recommend you make your video
+
+527
+00:09:04,389 --> 00:09:04,399
+recommend you make your video
+ 
+
+528
+00:09:04,399 --> 00:09:06,670
+recommend you make your video
+, okay?  You have to follow this
+
+529
+00:09:06,670 --> 00:09:06,680
+, okay?  You have to follow this
+ 
+
+530
+00:09:06,680 --> 00:09:08,389
+, okay?  You have to follow this
+process here, at least for now.
+
+531
+00:09:08,389 --> 00:09:08,399
+process here, at least for now.
+ 
+
+532
+00:09:08,399 --> 00:09:09,630
+process here, at least for now.
+This was the best process I
+
+533
+00:09:09,630 --> 00:09:09,640
+This was the best process I
+ 
+
+534
+00:09:09,640 --> 00:09:12,190
+This was the best process I
+found, which is to first write
+
+535
+00:09:12,190 --> 00:09:12,200
+found, which is to first write
+ 
+
+536
+00:09:12,200 --> 00:09:13,990
+found, which is to first write
+a script for your video.  So, it's
+
+537
+00:09:13,990 --> 00:09:14,000
+a script for your video.  So, it's
+ 
+
+538
+00:09:14,000 --> 00:09:15,190
+a script for your video.  So, it's
+basically describing: "I want a
+
+539
+00:09:15,190 --> 00:09:15,200
+basically describing: "I want a
+ 
+
+540
+00:09:15,200 --> 00:09:16,550
+basically describing: "I want a
+video like this, it has to talk about
+
+541
+00:09:16,550 --> 00:09:16,560
+video like this, it has to talk about
+ 
+
+542
+00:09:16,560 --> 00:09:18,790
+video like this, it has to talk about
+this, this, this."  Describe and explain what
+
+543
+00:09:18,790 --> 00:09:18,800
+this, this, this."  Describe and explain what
+ 
+
+544
+00:09:18,800 --> 00:09:21,750
+this, this, this."  Describe and explain what
+you want to do.  So what you
+
+545
+00:09:21,750 --> 00:09:21,760
+you want to do.  So what you
+ 
+
+546
+00:09:21,760 --> 00:09:25,430
+you want to do.  So what you
+need to do is transform that script into a
+
+547
+00:09:25,430 --> 00:09:25,440
+need to do is transform that script into a
+ 
+
+548
+00:09:25,440 --> 00:09:28,190
+need to do is transform that script into a
+prompt for the removal skills.  So,
+
+549
+00:09:28,190 --> 00:09:28,200
+prompt for the removal skills.  So,
+ 
+
+550
+00:09:28,200 --> 00:09:30,110
+prompt for the removal skills.  So,
+in this little
+
+551
+00:09:30,110 --> 00:09:30,120
+in this little
+ 
+
+552
+00:09:30,120 --> 00:09:32,190
+in this little
+scene, such and such is going to happen?  In scene
+
+553
+00:09:32,190 --> 00:09:32,200
+scene, such and such is going to happen?  In scene
+ 
+
+554
+00:09:32,200 --> 00:09:33,350
+scene, such and such is going to happen?  In scene
+two, such and such will happen; in scene
+
+555
+00:09:33,350 --> 00:09:33,360
+two, such and such will happen; in scene
+ 
+
+556
+00:09:33,360 --> 00:09:35,590
+two, such and such will happen; in scene
+three, such and such will happen.  So the prompt you
+
+557
+00:09:35,590 --> 00:09:35,600
+three, such and such will happen.  So the prompt you
+ 
+
+558
+00:09:35,600 --> 00:09:37,470
+three, such and such will happen.  So the prompt you
+'ll use with Nur Motion Skills isn't the
+
+559
+00:09:37,470 --> 00:09:37,480
+'ll use with Nur Motion Skills isn't the
+ 
+
+560
+00:09:37,480 --> 00:09:40,269
+'ll use with Nur Motion Skills isn't the
+script; it is the script, but already with the
+
+561
+00:09:40,269 --> 00:09:40,279
+script; it is the script, but already with the
+ 
+
+562
+00:09:40,279 --> 00:09:42,310
+script; it is the script, but already with the
+necessary specifications for the scenes
+
+563
+00:09:42,310 --> 00:09:42,320
+necessary specifications for the scenes
+ 
+
+564
+00:09:42,320 --> 00:09:44,550
+necessary specifications for the scenes
+you want in your video.  Next, you can
+
+565
+00:09:44,550 --> 00:09:44,560
+you want in your video.  Next, you can
+ 
+
+566
+00:09:44,560 --> 00:09:46,870
+you want in your video.  Next, you can
+decorate this prompt a bit with the
+
+567
+00:09:46,870 --> 00:09:46,880
+decorate this prompt a bit with the
+ 
+
+568
+00:09:46,880 --> 00:09:49,110
+decorate this prompt a bit with the
+assets you've already placed in the
+
+569
+00:09:49,110 --> 00:09:49,120
+assets you've already placed in the
+ 
+
+570
+00:09:49,120 --> 00:09:50,069
+assets you've already placed in the
+public folder.  So, for example, if you
+
+571
+00:09:50,069 --> 00:09:50,079
+public folder.  So, for example, if you
+ 
+
+572
+00:09:50,079 --> 00:09:53,350
+public folder.  So, for example, if you
+say to him, use, I don't know, the little
+
+573
+00:09:53,350 --> 00:09:53,360
+say to him, use, I don't know, the little
+ 
+
+574
+00:09:53,360 --> 00:09:56,030
+say to him, use, I don't know, the little
+Capcut video, which by the way
+
+575
+00:09:56,030 --> 00:09:56,040
+Capcut video, which by the way
+ 
+
+576
+00:09:56,040 --> 00:09:58,350
+Capcut video, which by the way
+is in the public folder, right?  So you tell
+
+577
+00:09:58,350 --> 00:09:58,360
+is in the public folder, right?  So you tell
+ 
+
+578
+00:09:58,360 --> 00:09:59,790
+is in the public folder, right?  So you tell
+him, so he knows exactly which
+
+579
+00:09:59,790 --> 00:09:59,800
+him, so he knows exactly which
+ 
+
+580
+00:09:59,800 --> 00:10:01,949
+him, so he knows exactly which
+component you want him to use.
+
+581
+00:10:01,949 --> 00:10:01,959
+component you want him to use.
+ 
+
+582
+00:10:01,959 --> 00:10:04,430
+component you want him to use.
+Then you'll generate a V1 version of a video that
+
+583
+00:10:04,430 --> 00:10:04,440
+Then you'll generate a V1 version of a video that
+ 
+
+584
+00:10:04,440 --> 00:10:06,110
+Then you'll generate a V1 version of a video that
+won't be exactly how you want it,
+
+585
+00:10:06,110 --> 00:10:06,120
+won't be exactly how you want it,
+ 
+
+586
+00:10:06,120 --> 00:10:08,470
+won't be exactly how you want it,
+and that's okay, but it's something you
+
+587
+00:10:08,470 --> 00:10:08,480
+and that's okay, but it's something you
+ 
+
+588
+00:10:08,480 --> 00:10:10,590
+and that's okay, but it's something you
+can see and start from
+
+589
+00:10:10,590 --> 00:10:10,600
+can see and start from
+ 
+
+590
+00:10:10,600 --> 00:10:13,230
+can see and start from
+somewhere.  And then you start creating
+
+591
+00:10:13,230 --> 00:10:13,240
+somewhere.  And then you start creating
+ 
+
+592
+00:10:13,240 --> 00:10:15,470
+somewhere.  And then you start creating
+interactions scene by scene.  So you
+
+593
+00:10:15,470 --> 00:10:15,480
+interactions scene by scene.  So you
+ 
+
+594
+00:10:15,480 --> 00:10:16,750
+interactions scene by scene.  So you
+watch a scene, and you don't
+
+595
+00:10:16,750 --> 00:10:16,760
+watch a scene, and you don't
+ 
+
+596
+00:10:16,760 --> 00:10:19,110
+watch a scene, and you don't
+like it, and you ask him to change it.
+
+597
+00:10:19,110 --> 00:10:19,120
+like it, and you ask him to change it.
+ 
+
+598
+00:10:19,120 --> 00:10:20,230
+like it, and you ask him to change it.
+Watch the second one, what didn't you
+
+599
+00:10:20,230 --> 00:10:20,240
+Watch the second one, what didn't you
+ 
+
+600
+00:10:20,240 --> 00:10:21,870
+Watch the second one, what didn't you
+like?  Ask him to change.  And now,
+
+601
+00:10:21,870 --> 00:10:21,880
+like?  Ask him to change.  And now,
+ 
+
+602
+00:10:21,880 --> 00:10:24,509
+like?  Ask him to change.  And now,
+moving on from this, we're going to
+
+603
+00:10:24,509 --> 00:10:24,519
+moving on from this, we're going to
+ 
+
+604
+00:10:24,519 --> 00:10:25,870
+moving on from this, we're going to
+the best part, which is
+
+605
+00:10:25,870 --> 00:10:25,880
+the best part, which is
+ 
+
+606
+00:10:25,880 --> 00:10:27,310
+the best part, which is
+finally making the video.  To
+
+607
+00:10:27,310 --> 00:10:27,320
+finally making the video.  To
+ 
+
+608
+00:10:27,320 --> 00:10:29,190
+finally making the video.  To
+make the video, I generated a prompt for
+
+609
+00:10:29,190 --> 00:10:29,200
+make the video, I generated a prompt for
+ 
+
+610
+00:10:29,200 --> 00:10:30,829
+make the video, I generated a prompt for
+us to create it.  And I'm going to show
+
+611
+00:10:30,829 --> 00:10:30,839
+us to create it.  And I'm going to show
+ 
+
+612
+00:10:30,839 --> 00:10:32,590
+us to create it.  And I'm going to show
+you what this prompt looks like and how it
+
+613
+00:10:32,590 --> 00:10:32,600
+you what this prompt looks like and how it
+ 
+
+614
+00:10:32,600 --> 00:10:34,069
+you what this prompt looks like and how it
+aligns with everything I've just
+
+615
+00:10:34,069 --> 00:10:34,079
+aligns with everything I've just
+ 
+
+616
+00:10:34,079 --> 00:10:35,550
+aligns with everything I've just
+talked about here.  And just so you don't
+
+617
+00:10:35,550 --> 00:10:35,560
+talked about here.  And just so you don't
+ 
+
+618
+00:10:35,560 --> 00:10:37,190
+talked about here.  And just so you don't
+forget, this prompt will be in
+
+619
+00:10:37,190 --> 00:10:37,200
+forget, this prompt will be in
+ 
+
+620
+00:10:37,200 --> 00:10:39,389
+forget, this prompt will be in
+my newsletter, debpt, the largest
+
+621
+00:10:39,389 --> 00:10:39,399
+my newsletter, debpt, the largest
+ 
+
+622
+00:10:39,399 --> 00:10:41,550
+my newsletter, debpt, the largest
+AI newsletter in Brazil.  So if
+
+623
+00:10:41,550 --> 00:10:41,560
+AI newsletter in Brazil.  So if
+ 
+
+624
+00:10:41,560 --> 00:10:42,550
+AI newsletter in Brazil.  So if
+you haven't already subscribed to my
+
+625
+00:10:42,550 --> 00:10:42,560
+you haven't already subscribed to my
+ 
+
+626
+00:10:42,560 --> 00:10:44,470
+you haven't already subscribed to my
+newsletter, look for the link to my
+
+627
+00:10:44,470 --> 00:10:44,480
+newsletter, look for the link to my
+ 
+
+628
+00:10:44,480 --> 00:10:46,670
+newsletter, look for the link to my
+Substack in the video description and subscribe –
+
+629
+00:10:46,670 --> 00:10:46,680
+Substack in the video description and subscribe –
+ 
+
+630
+00:10:46,680 --> 00:10:48,389
+Substack in the video description and subscribe –
+you won't regret it.  Okay, so what
+
+631
+00:10:48,389 --> 00:10:48,399
+you won't regret it.  Okay, so what
+ 
+
+632
+00:10:48,399 --> 00:10:49,910
+you won't regret it.  Okay, so what
+'s this prompt all about, guys?  We're
+
+633
+00:10:49,910 --> 00:10:49,920
+'s this prompt all about, guys?  We're
+ 
+
+634
+00:10:49,920 --> 00:10:51,150
+'s this prompt all about, guys?  We're
+basically saying here that I want to
+
+635
+00:10:51,150 --> 00:10:51,160
+basically saying here that I want to
+ 
+
+636
+00:10:51,160 --> 00:10:52,949
+basically saying here that I want to
+create a 32-second promotional video
+
+637
+00:10:52,949 --> 00:10:52,959
+create a 32-second promotional video
+ 
+
+638
+00:10:52,959 --> 00:10:54,550
+create a 32-second promotional video
+.  I'll send you the
+
+639
+00:10:54,550 --> 00:10:54,560
+.  I'll send you the
+ 
+
+640
+00:10:54,560 --> 00:10:56,389
+.  I'll send you the
+video resolution and frames per second right now.
+
+641
+00:10:56,389 --> 00:10:56,399
+video resolution and frames per second right now.
+ 
+
+642
+00:10:56,399 --> 00:10:58,470
+video resolution and frames per second right now.
+And here I am going through it scene by scene,
+
+643
+00:10:58,470 --> 00:10:58,480
+And here I am going through it scene by scene,
+ 
+
+644
+00:10:58,480 --> 00:11:01,030
+And here I am going through it scene by scene,
+explaining each one of them.  So each
+
+645
+00:11:01,030 --> 00:11:01,040
+explaining each one of them.  So each
+ 
+
+646
+00:11:01,040 --> 00:11:03,750
+explaining each one of them.  So each
+scene has a duration.  Well, we specify
+
+647
+00:11:03,750 --> 00:11:03,760
+scene has a duration.  Well, we specify
+ 
+
+648
+00:11:03,760 --> 00:11:06,230
+scene has a duration.  Well, we specify
+the background color of the scene, right?  And
+
+649
+00:11:06,230 --> 00:11:06,240
+the background color of the scene, right?  And
+ 
+
+650
+00:11:06,240 --> 00:11:07,430
+the background color of the scene, right?  And
+we also specify what the
+
+651
+00:11:07,430 --> 00:11:07,440
+we also specify what the
+ 
+
+652
+00:11:07,440 --> 00:11:09,230
+we also specify what the
+elements are, that is, the components that
+
+653
+00:11:09,230 --> 00:11:09,240
+elements are, that is, the components that
+ 
+
+654
+00:11:09,240 --> 00:11:12,750
+elements are, that is, the components that
+need to be in that scene.  I'll give you
+
+655
+00:11:12,750 --> 00:11:12,760
+need to be in that scene.  I'll give you
+ 
+
+656
+00:11:12,760 --> 00:11:14,550
+need to be in that scene.  I'll give you
+some instructions on how I want
+
+657
+00:11:14,550 --> 00:11:14,560
+some instructions on how I want
+ 
+
+658
+00:11:14,560 --> 00:11:15,949
+some instructions on how I want
+these elements, how I want
+
+659
+00:11:15,949 --> 00:11:15,959
+these elements, how I want
+ 
+
+660
+00:11:15,959 --> 00:11:17,509
+these elements, how I want
+them to appear, how I want
+
+661
+00:11:17,509 --> 00:11:17,519
+them to appear, how I want
+ 
+
+662
+00:11:17,519 --> 00:11:20,350
+them to appear, how I want
+them to be animated, and what the
+
+663
+00:11:20,350 --> 00:11:20,360
+them to be animated, and what the
+ 
+
+664
+00:11:20,360 --> 00:11:23,230
+them to be animated, and what the
+transition should be between one scene and another.  Same
+
+665
+00:11:23,230 --> 00:11:23,240
+transition should be between one scene and another.  Same
+ 
+
+666
+00:11:23,240 --> 00:11:25,590
+transition should be between one scene and another.  Same
+thing for scene two, same thing for
+
+667
+00:11:25,590 --> 00:11:25,600
+thing for scene two, same thing for
+ 
+
+668
+00:11:25,600 --> 00:11:30,310
+thing for scene two, same thing for
+scene three, same thing for scene four, five,
+
+669
+00:11:30,310 --> 00:11:30,320
+scene three, same thing for scene four, five,
+ 
+
+670
+00:11:30,320 --> 00:11:32,509
+scene three, same thing for scene four, five,
+until we finish here.  Finally,
+
+671
+00:11:32,509 --> 00:11:32,519
+until we finish here.  Finally,
+ 
+
+672
+00:11:32,519 --> 00:11:34,750
+until we finish here.  Finally,
+we'll add some
+
+673
+00:11:34,750 --> 00:11:34,760
+we'll add some
+ 
+
+674
+00:11:34,760 --> 00:11:37,069
+we'll add some
+global settings and some animation guidelines
+
+675
+00:11:37,069 --> 00:11:37,079
+global settings and some animation guidelines
+ 
+
+676
+00:11:37,079 --> 00:11:38,949
+global settings and some animation guidelines
+here.  So, this prompt is quite comprehensive,
+
+677
+00:11:38,949 --> 00:11:38,959
+here.  So, this prompt is quite comprehensive,
+ 
+
+678
+00:11:38,959 --> 00:11:40,590
+here.  So, this prompt is quite comprehensive,
+and as I said in my newsletter, I
+
+679
+00:11:40,590 --> 00:11:40,600
+and as I said in my newsletter, I
+ 
+
+680
+00:11:40,600 --> 00:11:41,910
+and as I said in my newsletter, I
+'ll leave this prompt here.  So, if
+
+681
+00:11:41,910 --> 00:11:41,920
+'ll leave this prompt here.  So, if
+ 
+
+682
+00:11:41,920 --> 00:11:43,030
+'ll leave this prompt here.  So, if
+you want to make any kind of
+
+683
+00:11:43,030 --> 00:11:43,040
+you want to make any kind of
+ 
+
+684
+00:11:43,040 --> 00:11:46,430
+you want to make any kind of
+adaptation for your project, just
+
+685
+00:11:46,430 --> 00:11:46,440
+adaptation for your project, just
+ 
+
+686
+00:11:46,440 --> 00:11:48,150
+adaptation for your project, just
+use this structure here, which will work
+
+687
+00:11:48,150 --> 00:11:48,160
+use this structure here, which will work
+ 
+
+688
+00:11:48,160 --> 00:11:49,629
+use this structure here, which will work
+very well, and that's what I'm going to show
+
+689
+00:11:49,629 --> 00:11:49,639
+very well, and that's what I'm going to show
+ 
+
+690
+00:11:49,639 --> 00:11:51,670
+very well, and that's what I'm going to show
+you now.  So, to
+
+691
+00:11:51,670 --> 00:11:51,680
+you now.  So, to
+ 
+
+692
+00:11:51,680 --> 00:11:53,590
+you now.  So, to
+start, we're going to copy this here.  It's
+
+693
+00:11:53,590 --> 00:11:53,600
+start, we're going to copy this here.  It's
+ 
+
+694
+00:11:53,600 --> 00:11:55,670
+start, we're going to copy this here.  It's
+important that you
+
+695
+00:11:55,670 --> 00:11:55,680
+important that you
+ 
+
+696
+00:11:55,680 --> 00:11:57,389
+important that you
+install Emotion Skills first using this
+
+697
+00:11:57,389 --> 00:11:57,399
+install Emotion Skills first using this
+ 
+
+698
+00:11:57,399 --> 00:11:59,150
+install Emotion Skills first using this
+command here.  So, we're going to come
+
+699
+00:11:59,150 --> 00:11:59,160
+command here.  So, we're going to come
+ 
+
+700
+00:11:59,160 --> 00:12:00,910
+command here.  So, we're going to come
+here to the cloud code and I'm going to paste this
+
+701
+00:12:00,910 --> 00:12:00,920
+here to the cloud code and I'm going to paste this
+ 
+
+702
+00:12:00,920 --> 00:12:03,190
+here to the cloud code and I'm going to paste this
+prompt, okay?  We just copied it and
+
+703
+00:12:03,190 --> 00:12:03,200
+prompt, okay?  We just copied it and
+ 
+
+704
+00:12:03,200 --> 00:12:05,190
+prompt, okay?  We just copied it and
+we're going to send it to you and see what
+
+705
+00:12:05,190 --> 00:12:05,200
+we're going to send it to you and see what
+ 
+
+706
+00:12:05,200 --> 00:12:07,030
+we're going to send it to you and see what
+it does.  So, just to remind you all, what
+
+707
+00:12:07,030 --> 00:12:07,040
+it does.  So, just to remind you all, what
+ 
+
+708
+00:12:07,040 --> 00:12:08,550
+it does.  So, just to remind you all, what
+I'm doing here is creating
+
+709
+00:12:08,550 --> 00:12:08,560
+I'm doing here is creating
+ 
+
+710
+00:12:08,560 --> 00:12:11,470
+I'm doing here is creating
+a first version of my video.  It won't
+
+711
+00:12:11,470 --> 00:12:11,480
+a first version of my video.  It won't
+ 
+
+712
+00:12:11,480 --> 00:12:13,189
+a first version of my video.  It won't
+be 100% the way I want it, but
+
+713
+00:12:13,189 --> 00:12:13,199
+be 100% the way I want it, but
+ 
+
+714
+00:12:13,199 --> 00:12:15,030
+be 100% the way I want it, but
+starting with this first version I'll
+
+715
+00:12:15,030 --> 00:12:15,040
+starting with this first version I'll
+ 
+
+716
+00:12:15,040 --> 00:12:16,870
+starting with this first version I'll
+begin making changes to the scenes until
+
+717
+00:12:16,870 --> 00:12:16,880
+begin making changes to the scenes until
+ 
+
+718
+00:12:16,880 --> 00:12:18,230
+begin making changes to the scenes until
+it's exactly the way I
+
+719
+00:12:18,230 --> 00:12:18,240
+it's exactly the way I
+ 
+
+720
+00:12:18,240 --> 00:12:20,030
+it's exactly the way I
+want it, okay?  He's going to work
+
+721
+00:12:20,030 --> 00:12:20,040
+want it, okay?  He's going to work
+ 
+
+722
+00:12:20,040 --> 00:12:21,389
+want it, okay?  He's going to work
+here for a little while, and we'll be
+
+723
+00:12:21,389 --> 00:12:21,399
+here for a little while, and we'll be
+ 
+
+724
+00:12:21,399 --> 00:12:22,670
+here for a little while, and we'll be
+back soon to see how the first
+
+725
+00:12:22,670 --> 00:12:22,680
+back soon to see how the first
+ 
+
+726
+00:12:22,680 --> 00:12:24,430
+back soon to see how the first
+version of the video is going.  Okay, so now we're
+
+727
+00:12:24,430 --> 00:12:24,440
+version of the video is going.  Okay, so now we're
+ 
+
+728
+00:12:24,440 --> 00:12:26,430
+version of the video is going.  Okay, so now we're
+going to see what this first
+
+729
+00:12:26,430 --> 00:12:26,440
+going to see what this first
+ 
+
+730
+00:12:26,440 --> 00:12:27,949
+going to see what this first
+version of the video he made was like, and we're
+
+731
+00:12:27,949 --> 00:12:27,959
+version of the video he made was like, and we're
+ 
+
+732
+00:12:27,959 --> 00:12:29,509
+version of the video he made was like, and we're
+going to find out if it's good or
+
+733
+00:12:29,509 --> 00:12:29,519
+going to find out if it's good or
+ 
+
+734
+00:12:29,519 --> 00:12:33,350
+going to find out if it's good or
+not.  So, it
+
+735
+00:12:33,350 --> 00:12:33,360
+
+ 
+
+736
+00:12:33,360 --> 00:12:36,189
+ 
+started like this,
+
+737
+00:12:36,189 --> 00:12:36,199
+started like this,
+ 
+
+738
+00:12:36,199 --> 00:12:39,350
+started like this,
+scene, okay?  OK.
+
+739
+00:12:39,350 --> 00:12:49,509
+scene, okay?  OK.
+ 
+
+740
+00:12:49,509 --> 00:12:49,519
+
+ 
+
+741
+00:12:49,519 --> 00:12:53,509
+
+Ready for emotional intelligence training?
+
+742
+00:12:53,509 --> 00:12:53,519
+
+ 
+
+743
+00:12:53,519 --> 00:12:55,470
+ 
+I thought it turned out okay, but I think it could be
+
+744
+00:12:55,470 --> 00:12:55,480
+I thought it turned out okay, but I think it could be
+ 
+
+745
+00:12:55,480 --> 00:12:57,829
+I thought it turned out okay, but I think it could be
+improved.  So, looking at it from here,
+
+746
+00:12:57,829 --> 00:12:57,839
+improved.  So, looking at it from here,
+ 
+
+747
+00:12:57,839 --> 00:13:00,150
+improved.  So, looking at it from here,
+what would I change?  I think this one, "no
+
+748
+00:13:00,150 --> 00:13:00,160
+what would I change?  I think this one, "no
+ 
+
+749
+00:13:00,160 --> 00:13:01,990
+what would I change?  I think this one, "no
+video skills, no problem," is pretty good
+
+750
+00:13:01,990 --> 00:13:02,000
+video skills, no problem," is pretty good
+ 
+
+751
+00:13:02,000 --> 00:13:04,389
+video skills, no problem," is pretty good
+.  This manual editing
+
+752
+00:13:04,389 --> 00:13:04,399
+.  This manual editing
+ 
+
+753
+00:13:04,399 --> 00:13:06,069
+.  This manual editing
+sucks, I think we could
+
+754
+00:13:06,069 --> 00:13:06,079
+sucks, I think we could
+ 
+
+755
+00:13:06,079 --> 00:13:07,910
+sucks, I think we could
+animate this, right?  So this manual
+
+756
+00:13:07,910 --> 00:13:07,920
+animate this, right?  So this manual
+ 
+
+757
+00:13:07,920 --> 00:13:10,870
+animate this, right?  So this manual
+editing, instead of being like this, you know,
+
+758
+00:13:10,870 --> 00:13:10,880
+editing, instead of being like this, you know,
+ 
+
+759
+00:13:10,880 --> 00:13:12,870
+editing, instead of being like this, you know,
+kind of static, it comes in a
+
+760
+00:13:12,870 --> 00:13:12,880
+kind of static, it comes in a
+ 
+
+761
+00:13:12,880 --> 00:13:15,150
+kind of static, it comes in a
+slightly more animated way.  I don't think this is the
+
+762
+00:13:15,150 --> 00:13:15,160
+slightly more animated way.  I don't think this is the
+ 
+
+763
+00:13:15,160 --> 00:13:17,030
+slightly more animated way.  I don't think this is the
+reason he's acting like this
+
+764
+00:13:17,030 --> 00:13:17,040
+reason he's acting like this
+ 
+
+765
+00:13:17,040 --> 00:13:18,550
+reason he's acting like this
+, as you can see.  So,
+
+766
+00:13:18,550 --> 00:13:18,560
+, as you can see.  So,
+ 
+
+767
+00:13:18,560 --> 00:13:20,550
+, as you can see.  So,
+I think he could be normal here.
+
+768
+00:13:20,550 --> 00:13:20,560
+I think he could be normal here.
+ 
+
+769
+00:13:20,560 --> 00:13:21,829
+I think he could be normal here.
+I think we could throw
+
+770
+00:13:21,829 --> 00:13:21,839
+I think we could throw
+ 
+
+771
+00:13:21,839 --> 00:13:23,389
+I think we could throw
+some confetti here, right?  I don't know if you guys have ever
+
+772
+00:13:23,389 --> 00:13:23,399
+some confetti here, right?  I don't know if you guys have ever
+ 
+
+773
+00:13:23,399 --> 00:13:25,509
+some confetti here, right?  I don't know if you guys have ever
+used that Reacts confetti.  We
+
+774
+00:13:25,509 --> 00:13:25,519
+used that Reacts confetti.  We
+ 
+
+775
+00:13:25,519 --> 00:13:26,790
+used that Reacts confetti.  We
+can place it here; I think it will
+
+776
+00:13:26,790 --> 00:13:26,800
+can place it here; I think it will
+ 
+
+777
+00:13:26,800 --> 00:13:29,590
+can place it here; I think it will
+add a nice movement to the scene and
+
+778
+00:13:29,590 --> 00:13:29,600
+add a nice movement to the scene and
+ 
+
+779
+00:13:29,600 --> 00:13:31,670
+add a nice movement to the scene and
+look beautiful.
+
+780
+00:13:31,670 --> 00:13:31,680
+look beautiful.
+ 
+
+781
+00:13:31,680 --> 00:13:34,069
+look beautiful.
+Oh, I didn't like this part.  I think that
+
+782
+00:13:34,069 --> 00:13:34,079
+Oh, I didn't like this part.  I think that
+ 
+
+783
+00:13:34,079 --> 00:13:35,470
+Oh, I didn't like this part.  I think that
+'s a bit redundant, right?  because
+
+784
+00:13:35,470 --> 00:13:35,480
+'s a bit redundant, right?  because
+ 
+
+785
+00:13:35,480 --> 00:13:37,670
+'s a bit redundant, right?  because
+we have remotion remotion.  So I'm
+
+786
+00:13:37,670 --> 00:13:37,680
+we have remotion remotion.  So I'm
+ 
+
+787
+00:13:37,680 --> 00:13:39,189
+we have remotion remotion.  So I'm
+going to try to make this a little
+
+788
+00:13:39,189 --> 00:13:39,199
+going to try to make this a little
+ 
+
+789
+00:13:39,199 --> 00:13:42,430
+going to try to make this a little
+better.
+
+790
+00:13:42,430 --> 00:13:42,440
+
+ 
+
+791
+00:13:42,440 --> 00:13:44,509
+ 
+Yeah, it's nice here.  I just think
+
+792
+00:13:44,509 --> 00:13:44,519
+Yeah, it's nice here.  I just think
+ 
+
+793
+00:13:44,519 --> 00:13:45,509
+Yeah, it's nice here.  I just think
+we could add a little more
+
+794
+00:13:45,509 --> 00:13:45,519
+we could add a little more
+ 
+
+795
+00:13:45,519 --> 00:13:47,189
+we could add a little more
+contrast, right?  So maybe leaving
+
+796
+00:13:47,189 --> 00:13:47,199
+contrast, right?  So maybe leaving
+ 
+
+797
+00:13:47,199 --> 00:13:50,350
+contrast, right?  So maybe leaving
+these black pills here with the
+
+798
+00:13:50,350 --> 00:13:50,360
+these black pills here with the
+ 
+
+799
+00:13:50,360 --> 00:13:53,069
+these black pills here with the
+white font is
+
+800
+00:13:53,069 --> 00:13:53,079
+white font is
+ 
+
+801
+00:13:53,079 --> 00:13:54,629
+white font is
+how he could have finished, right?  Like,
+
+802
+00:13:54,629 --> 00:13:54,639
+how he could have finished, right?  Like,
+ 
+
+803
+00:13:54,639 --> 00:13:59,590
+how he could have finished, right?  Like,
+create a video for my product.  Great,
+
+804
+00:13:59,590 --> 00:13:59,600
+create a video for my product.  Great,
+ 
+
+805
+00:13:59,600 --> 00:14:02,350
+create a video for my product.  Great,
+your videos are ready.   Okay
+
+806
+00:14:02,350 --> 00:14:02,360
+your videos are ready.   Okay
+ 
+
+807
+00:14:02,360 --> 00:14:05,030
+your videos are ready.   Okay
+, so now I'm testing the terminal, which I
+
+808
+00:14:05,030 --> 00:14:05,040
+, so now I'm testing the terminal, which I
+ 
+
+809
+00:14:05,040 --> 00:14:06,870
+, so now I'm testing the terminal, which I
+think looks good, but because of the
+
+810
+00:14:06,870 --> 00:14:06,880
+think looks good, but because of the
+ 
+
+811
+00:14:06,880 --> 00:14:08,069
+think looks good, but because of the
+contrast, I think we could
+
+812
+00:14:08,069 --> 00:14:08,079
+contrast, I think we could
+ 
+
+813
+00:14:08,079 --> 00:14:10,829
+contrast, I think we could
+leave the terminal black.  I would
+
+814
+00:14:10,829 --> 00:14:10,839
+leave the terminal black.  I would
+ 
+
+815
+00:14:10,839 --> 00:14:12,389
+leave the terminal black.  I would
+also remove this tilt here, you know, it's a
+
+816
+00:14:12,389 --> 00:14:12,399
+also remove this tilt here, you know, it's a
+ 
+
+817
+00:14:12,399 --> 00:14:14,910
+also remove this tilt here, you know, it's a
+little tilted here,
+
+818
+00:14:14,910 --> 00:14:14,920
+little tilted here,
+ 
+
+819
+00:14:14,920 --> 00:14:16,310
+little tilted here,
+I think I would remove it too and
+
+820
+00:14:16,310 --> 00:14:16,320
+I think I would remove it too and
+ 
+
+821
+00:14:16,320 --> 00:14:17,710
+I think I would remove it too and
+leave it black to make it look more like a
+
+822
+00:14:17,710 --> 00:14:17,720
+leave it black to make it look more like a
+ 
+
+823
+00:14:17,720 --> 00:14:19,389
+leave it black to make it look more like a
+terminal.  So, these are
+
+824
+00:14:19,389 --> 00:14:19,399
+terminal.  So, these are
+ 
+
+825
+00:14:19,399 --> 00:14:20,550
+terminal.  So, these are
+small tasks that we have to
+
+826
+00:14:20,550 --> 00:14:20,560
+small tasks that we have to
+ 
+
+827
+00:14:20,560 --> 00:14:23,069
+small tasks that we have to
+do, but just to tell you that
+
+828
+00:14:23,069 --> 00:14:23,079
+do, but just to tell you that
+ 
+
+829
+00:14:23,079 --> 00:14:25,910
+do, but just to tell you that
+even so, this first prompt has already
+
+830
+00:14:25,910 --> 00:14:25,920
+even so, this first prompt has already
+ 
+
+831
+00:14:25,920 --> 00:14:28,790
+even so, this first prompt has already
+given us a good start.  Okay, I'm
+
+832
+00:14:28,790 --> 00:14:28,800
+given us a good start.  Okay, I'm
+ 
+
+833
+00:14:28,800 --> 00:14:30,749
+given us a good start.  Okay, I'm
+just going to make a few changes here and
+
+834
+00:14:30,749 --> 00:14:30,759
+just going to make a few changes here and
+ 
+
+835
+00:14:30,759 --> 00:14:32,670
+just going to make a few changes here and
+I'll be right back to show you
+
+836
+00:14:32,670 --> 00:14:32,680
+I'll be right back to show you
+ 
+
+837
+00:14:32,680 --> 00:14:34,710
+I'll be right back to show you
+how the video turned out, okay?  So,
+
+838
+00:14:34,710 --> 00:14:34,720
+how the video turned out, okay?  So,
+ 
+
+839
+00:14:34,720 --> 00:14:36,550
+how the video turned out, okay?  So,
+drum roll please, because I'm back and I'm
+
+840
+00:14:36,550 --> 00:14:36,560
+drum roll please, because I'm back and I'm
+ 
+
+841
+00:14:36,560 --> 00:14:37,990
+drum roll please, because I'm back and I'm
+going to show you what the
+
+842
+00:14:37,990 --> 00:14:38,000
+going to show you what the
+ 
+
+843
+00:14:38,000 --> 00:14:39,509
+going to show you what the
+final version of this video turned out like.  I hope
+
+844
+00:14:39,509 --> 00:14:39,519
+final version of this video turned out like.  I hope
+ 
+
+845
+00:14:39,519 --> 00:14:41,910
+final version of this video turned out like.  I hope
+you like it.  Keep in mind that I
+
+846
+00:14:41,910 --> 00:14:41,920
+you like it.  Keep in mind that I
+ 
+
+847
+00:14:41,920 --> 00:14:43,949
+you like it.  Keep in mind that I
+must have done this in just over an
+
+848
+00:14:43,949 --> 00:14:43,959
+must have done this in just over an
+ 
+
+849
+00:14:43,959 --> 00:14:46,509
+must have done this in just over an
+hour, including the itinerary that I showed
+
+850
+00:14:46,509 --> 00:14:46,519
+hour, including the itinerary that I showed
+ 
+
+851
+00:14:46,519 --> 00:14:49,310
+hour, including the itinerary that I showed
+you here.  So, Mr. Designer,
+
+852
+00:14:49,310 --> 00:14:49,320
+you here.  So, Mr. Designer,
+ 
+
+853
+00:14:49,320 --> 00:14:51,230
+you here.  So, Mr. Designer,
+Mr. Motion Designer, who loves to come
+
+854
+00:14:51,230 --> 00:14:51,240
+Mr. Motion Designer, who loves to come
+ 
+
+855
+00:14:51,240 --> 00:14:53,910
+Mr. Motion Designer, who loves to come
+here and say that the video isn't up to
+
+856
+00:14:53,910 --> 00:14:53,920
+here and say that the video isn't up to
+ 
+
+857
+00:14:53,920 --> 00:14:56,150
+here and say that the video isn't up to
+Disney or Pixar quality, it's obvious
+
+858
+00:14:56,150 --> 00:14:56,160
+Disney or Pixar quality, it's obvious
+ 
+
+859
+00:14:56,160 --> 00:14:57,790
+Disney or Pixar quality, it's obvious
+that it's not up to Disney
+
+860
+00:14:57,790 --> 00:14:57,800
+that it's not up to Disney
+ 
+
+861
+00:14:57,800 --> 00:15:00,310
+that it's not up to Disney
+or Pixar quality.  However, for people who
+
+862
+00:15:00,310 --> 00:15:00,320
+or Pixar quality.  However, for people who
+ 
+
+863
+00:15:00,320 --> 00:15:02,389
+or Pixar quality.  However, for people who
+lack motion
+
+864
+00:15:02,389 --> 00:15:02,399
+lack motion
+ 
+
+865
+00:15:02,399 --> 00:15:05,030
+lack motion
+design skills or who cannot hire a
+
+866
+00:15:05,030 --> 00:15:05,040
+design skills or who cannot hire a
+ 
+
+867
+00:15:05,040 --> 00:15:07,230
+design skills or who cannot hire a
+motion designer, this is better
+
+868
+00:15:07,230 --> 00:15:07,240
+motion designer, this is better
+ 
+
+869
+00:15:07,240 --> 00:15:08,949
+motion designer, this is better
+than anything that person
+
+870
+00:15:08,949 --> 00:15:08,959
+than anything that person
+ 
+
+871
+00:15:08,959 --> 00:15:10,790
+than anything that person
+could do on their own.  I'm
+
+872
+00:15:10,790 --> 00:15:10,800
+could do on their own.  I'm
+ 
+
+873
+00:15:10,800 --> 00:15:12,710
+could do on their own.  I'm
+sure of that, okay?  So I'm going to show
+
+874
+00:15:12,710 --> 00:15:12,720
+sure of that, okay?  So I'm going to show
+ 
+
+875
+00:15:12,720 --> 00:15:14,749
+sure of that, okay?  So I'm going to show
+you how it turned out and let's see if
+
+876
+00:15:14,749 --> 00:15:14,759
+you how it turned out and let's see if
+ 
+
+877
+00:15:14,759 --> 00:15:17,910
+you how it turned out and let's see if
+this is really good.  So, look,
+
+878
+00:15:17,910 --> 00:15:17,920
+this is really good.  So, look,
+ 
+
+879
+00:15:17,920 --> 00:15:19,509
+this is really good.  So, look,
+I started this scene here, I made a small
+
+880
+00:15:19,509 --> 00:15:19,519
+I started this scene here, I made a small
+ 
+
+881
+00:15:19,519 --> 00:15:21,829
+I started this scene here, I made a small
+change just in the timing here and also
+
+882
+00:15:21,829 --> 00:15:21,839
+change just in the timing here and also
+ 
+
+883
+00:15:21,839 --> 00:15:25,629
+change just in the timing here and also
+in the colors, you know, of these pills.
+
+884
+00:15:25,629 --> 00:15:25,639
+in the colors, you know, of these pills.
+ 
+
+885
+00:15:25,639 --> 00:15:29,910
+in the colors, you know, of these pills.
+So here we go with the Cap Cut, and I
+
+886
+00:15:29,910 --> 00:15:29,920
+So here we go with the Cap Cut, and I
+ 
+
+887
+00:15:29,920 --> 00:15:31,550
+So here we go with the Cap Cut, and I
+removed the tilt, which I mentioned to
+
+888
+00:15:31,550 --> 00:15:31,560
+removed the tilt, which I mentioned to
+ 
+
+889
+00:15:31,560 --> 00:15:34,870
+removed the tilt, which I mentioned to
+you, so I made that small change.
+
+890
+00:15:34,870 --> 00:15:34,880
+you, so I made that small change.
+ 
+
+891
+00:15:34,880 --> 00:15:36,710
+you, so I made that small change.
+Then I threw the confetti here that I
+
+892
+00:15:36,710 --> 00:15:36,720
+Then I threw the confetti here that I
+ 
+
+893
+00:15:36,720 --> 00:15:38,910
+Then I threw the confetti here that I
+said I was going to throw, adjusted this scene
+
+894
+00:15:38,910 --> 00:15:38,920
+said I was going to throw, adjusted this scene
+ 
+
+895
+00:15:38,920 --> 00:15:39,829
+said I was going to throw, adjusted this scene
+because I thought it had become
+
+896
+00:15:39,829 --> 00:15:39,839
+because I thought it had become
+ 
+
+897
+00:15:39,839 --> 00:15:42,269
+because I thought it had become
+redundant to have remotion with remotion, and
+
+898
+00:15:42,269 --> 00:15:42,279
+redundant to have remotion with remotion, and
+ 
+
+899
+00:15:42,279 --> 00:15:43,949
+redundant to have remotion with remotion, and
+added this little animation here so it would
+
+900
+00:15:43,949 --> 00:15:43,959
+added this little animation here so it would
+ 
+
+901
+00:15:43,959 --> 00:15:45,590
+added this little animation here so it would
+n't be too static.  And I even added a "
+
+902
+00:15:45,590 --> 00:15:45,600
+n't be too static.  And I even added a "
+ 
+
+903
+00:15:45,600 --> 00:15:48,389
+n't be too static.  And I even added a "
+powered by cloud codes" option.  So here we
+
+904
+00:15:48,389 --> 00:15:48,399
+powered by cloud codes" option.  So here we
+ 
+
+905
+00:15:48,399 --> 00:15:49,829
+powered by cloud codes" option.  So here we
+completed it, right? Because it was "create a
+
+906
+00:15:49,829 --> 00:15:49,839
+completed it, right? Because it was "create a
+ 
+
+907
+00:15:49,839 --> 00:15:53,949
+completed it, right? Because it was "create a
+video form," and then it became "product."  So here we
+
+908
+00:15:53,949 --> 00:15:53,959
+video form," and then it became "product."  So here we
+ 
+
+909
+00:15:53,959 --> 00:15:55,030
+video form," and then it became "product."  So here we
+increased the
+
+910
+00:15:55,030 --> 00:15:55,040
+increased the
+ 
+
+911
+00:15:55,040 --> 00:15:57,629
+increased the
+contrast, we made it black.
+
+912
+00:15:57,629 --> 00:15:57,639
+contrast, we made it black.
+ 
+
+913
+00:15:57,639 --> 00:15:59,430
+contrast, we made it black.
+And here we also brought in a
+
+914
+00:15:59,430 --> 00:15:59,440
+And here we also brought in a
+ 
+
+915
+00:15:59,440 --> 00:16:01,069
+And here we also brought in a
+black terminal to have a little
+
+916
+00:16:01,069 --> 00:16:01,079
+black terminal to have a little
+ 
+
+917
+00:16:01,079 --> 00:16:02,269
+black terminal to have a little
+more contrast, to make it look a bit
+
+918
+00:16:02,269 --> 00:16:02,279
+more contrast, to make it look a bit
+ 
+
+919
+00:16:02,279 --> 00:16:04,150
+more contrast, to make it look a bit
+more like a terminal.  Well,
+
+920
+00:16:04,150 --> 00:16:04,160
+more like a terminal.  Well,
+ 
+
+921
+00:16:04,160 --> 00:16:06,110
+more like a terminal.  Well,
+this was the result of the animation
+
+922
+00:16:06,110 --> 00:16:06,120
+this was the result of the animation
+ 
+
+923
+00:16:06,120 --> 00:16:07,629
+this was the result of the animation
+we created here with Motion.  I was
+
+924
+00:16:07,629 --> 00:16:07,639
+we created here with Motion.  I was
+ 
+
+925
+00:16:07,639 --> 00:16:10,389
+we created here with Motion.  I was
+really happy with the result, considering the effort
+
+926
+00:16:10,389 --> 00:16:10,399
+really happy with the result, considering the effort
+ 
+
+927
+00:16:10,399 --> 00:16:12,509
+really happy with the result, considering the effort
+I put into making
+
+928
+00:16:12,509 --> 00:16:12,519
+I put into making
+ 
+
+929
+00:16:12,519 --> 00:16:15,230
+I put into making
+this video, especially taking
+
+930
+00:16:15,230 --> 00:16:15,240
+this video, especially taking
+ 
+
+931
+00:16:15,240 --> 00:16:17,710
+this video, especially taking
+into account the effort I've already put into
+
+932
+00:16:17,710 --> 00:16:17,720
+into account the effort I've already put into
+ 
+
+933
+00:16:17,720 --> 00:16:19,430
+into account the effort I've already put into
+animation in the past.  So, if anyone
+
+934
+00:16:19,430 --> 00:16:19,440
+animation in the past.  So, if anyone
+ 
+
+935
+00:16:19,440 --> 00:16:22,710
+animation in the past.  So, if anyone
+here has ever used After Effects, they know that the
+
+936
+00:16:22,710 --> 00:16:22,720
+here has ever used After Effects, they know that the
+ 
+
+937
+00:16:22,720 --> 00:16:25,590
+here has ever used After Effects, they know that the
+After Effects UI is very, very, very
+
+938
+00:16:25,590 --> 00:16:25,600
+After Effects UI is very, very, very
+ 
+
+939
+00:16:25,600 --> 00:16:28,150
+After Effects UI is very, very, very
+complex.  Like all those
+
+940
+00:16:28,150 --> 00:16:28,160
+complex.  Like all those
+ 
+
+941
+00:16:28,160 --> 00:16:29,949
+complex.  Like all those
+layer buttons, nobody knows what each one is for
+
+942
+00:16:29,949 --> 00:16:29,959
+layer buttons, nobody knows what each one is for
+ 
+
+943
+00:16:29,959 --> 00:16:32,230
+layer buttons, nobody knows what each one is for
+.  The learning curve is really
+
+944
+00:16:32,230 --> 00:16:33,430
+.  The learning curve is really
+ 
+
+945
+00:16:33,430 --> 00:16:35,470
+
+ 
+
+946
+00:16:35,470 --> 00:16:35,480
+
+ 
+
+947
+00:16:35,480 --> 00:16:39,069
+ 
+steep if you're going to use professional software like After Effects.  And I don't see a layperson
+
+948
+00:16:39,069 --> 00:16:39,079
+steep if you're going to use professional software like After Effects.  And I don't see a layperson
+ 
+
+949
+00:16:39,079 --> 00:16:41,670
+steep if you're going to use professional software like After Effects.  And I don't see a layperson
+using After Effects and making a video
+
+950
+00:16:41,670 --> 00:16:41,680
+using After Effects and making a video
+ 
+
+951
+00:16:41,680 --> 00:16:43,189
+using After Effects and making a video
+of the quality I showed
+
+952
+00:16:43,189 --> 00:16:43,199
+of the quality I showed
+ 
+
+953
+00:16:43,199 --> 00:16:45,829
+of the quality I showed
+you here in just over an hour, right?
+
+954
+00:16:45,829 --> 00:16:45,839
+you here in just over an hour, right?
+ 
+
+955
+00:16:45,839 --> 00:16:48,069
+you here in just over an hour, right?
+That doesn't exist.  I don't think it's suitable for a
+
+956
+00:16:48,069 --> 00:16:48,079
+That doesn't exist.  I don't think it's suitable for a
+ 
+
+957
+00:16:48,079 --> 00:16:49,509
+That doesn't exist.  I don't think it's suitable for a
+beginner user, right?  Perhaps if you
+
+958
+00:16:49,509 --> 00:16:49,519
+beginner user, right?  Perhaps if you
+ 
+
+959
+00:16:49,519 --> 00:16:50,870
+beginner user, right?  Perhaps if you
+'re an experienced motion designer,
+
+960
+00:16:50,870 --> 00:16:50,880
+'re an experienced motion designer,
+ 
+
+961
+00:16:50,880 --> 00:16:52,910
+'re an experienced motion designer,
+you might be able to do something similar,
+
+962
+00:16:52,910 --> 00:16:52,920
+you might be able to do something similar,
+ 
+
+963
+00:16:52,920 --> 00:16:54,389
+you might be able to do something similar,
+but if you're not, I think it's quite
+
+964
+00:16:54,389 --> 00:16:54,399
+but if you're not, I think it's quite
+ 
+
+965
+00:16:54,399 --> 00:16:56,710
+but if you're not, I think it's quite
+difficult.  So, considering the effort and the
+
+966
+00:16:56,710 --> 00:16:58,030
+difficult.  So, considering the effort and the
+ 
+
+967
+00:16:58,030 --> 00:16:58,040
+
+ 
+
+968
+00:16:58,040 --> 00:16:59,829
+ 
+minimal learning curve I experienced, I'm very happy with the
+
+969
+00:16:59,829 --> 00:16:59,839
+minimal learning curve I experienced, I'm very happy with the
+ 
+
+970
+00:16:59,839 --> 00:17:01,670
+minimal learning curve I experienced, I'm very happy with the
+result, okay?  So, if you want to
+
+971
+00:17:01,670 --> 00:17:01,680
+result, okay?  So, if you want to
+ 
+
+972
+00:17:01,680 --> 00:17:03,590
+result, okay?  So, if you want to
+test and make your own video with
+
+973
+00:17:03,590 --> 00:17:03,600
+test and make your own video with
+ 
+
+974
+00:17:03,600 --> 00:17:05,630
+test and make your own video with
+Emotion Skills, all you need to do is
+
+975
+00:17:05,630 --> 00:17:05,640
+Emotion Skills, all you need to do is
+ 
+
+976
+00:17:05,640 --> 00:17:07,870
+Emotion Skills, all you need to do is
+first download the clutch code to
+
+977
+00:17:07,870 --> 00:17:07,880
+first download the clutch code to
+ 
+
+978
+00:17:07,880 --> 00:17:09,990
+first download the clutch code to
+your computer and pay, right?  You have to
+
+979
+00:17:09,990 --> 00:17:10,000
+your computer and pay, right?  You have to
+ 
+
+980
+00:17:10,000 --> 00:17:11,390
+your computer and pay, right?  You have to
+pay because Cloud Code is only
+
+981
+00:17:11,390 --> 00:17:11,400
+pay because Cloud Code is only
+ 
+
+982
+00:17:11,400 --> 00:17:14,189
+pay because Cloud Code is only
+available for the paid versions of
+
+983
+00:17:14,189 --> 00:17:14,199
+available for the paid versions of
+ 
+
+984
+00:17:14,199 --> 00:17:16,350
+available for the paid versions of
+Cloud, but I swear to God, it's worth every
+
+985
+00:17:16,350 --> 00:17:16,360
+Cloud, but I swear to God, it's worth every
+ 
+
+986
+00:17:16,360 --> 00:17:18,630
+Cloud, but I swear to God, it's worth every
+penny, not only for making videos, but also
+
+987
+00:17:18,630 --> 00:17:18,640
+penny, not only for making videos, but also
+ 
+
+988
+00:17:18,640 --> 00:17:20,270
+penny, not only for making videos, but also
+for coding, which is what
+
+989
+00:17:20,270 --> 00:17:20,280
+for coding, which is what
+ 
+
+990
+00:17:20,280 --> 00:17:23,230
+for coding, which is what
+I use it for the most.  And then you're going to run the
+
+991
+00:17:23,230 --> 00:17:23,240
+I use it for the most.  And then you're going to run the
+ 
+
+992
+00:17:23,240 --> 00:17:24,350
+I use it for the most.  And then you're going to run the
+command I gave
+
+993
+00:17:24,350 --> 00:17:24,360
+command I gave
+ 
+
+994
+00:17:24,360 --> 00:17:25,750
+command I gave
+you here, so it installs Emotion
+
+995
+00:17:25,750 --> 00:17:25,760
+you here, so it installs Emotion
+ 
+
+996
+00:17:25,760 --> 00:17:28,270
+you here, so it installs Emotion
+Skills, which is kind of like the
+
+997
+00:17:28,270 --> 00:17:28,280
+Skills, which is kind of like the
+ 
+
+998
+00:17:28,280 --> 00:17:30,110
+Skills, which is kind of like the
+animation creation playbooks with Emotion Skills,
+
+999
+00:17:30,110 --> 00:17:30,120
+animation creation playbooks with Emotion Skills,
+ 
+
+1000
+00:17:30,120 --> 00:17:32,070
+animation creation playbooks with Emotion Skills,
+so it can learn how to do
+
+1001
+00:17:32,070 --> 00:17:32,080
+so it can learn how to do
+ 
+
+1002
+00:17:32,080 --> 00:17:34,110
+so it can learn how to do
+everything correctly.  And then you're going to go through
+
+1003
+00:17:34,110 --> 00:17:34,120
+everything correctly.  And then you're going to go through
+ 
+
+1004
+00:17:34,120 --> 00:17:35,750
+everything correctly.  And then you're going to go through
+this process that I explained
+
+1005
+00:17:35,750 --> 00:17:35,760
+this process that I explained
+ 
+
+1006
+00:17:35,760 --> 00:17:38,230
+this process that I explained
+to you here, of creating the script, and
+
+1007
+00:17:38,230 --> 00:17:38,240
+to you here, of creating the script, and
+ 
+
+1008
+00:17:38,240 --> 00:17:40,470
+to you here, of creating the script, and
+then transforming that script into this prompt
+
+1009
+00:17:40,470 --> 00:17:40,480
+then transforming that script into this prompt
+ 
+
+1010
+00:17:40,480 --> 00:17:42,750
+then transforming that script into this prompt
+that says what each scene needs to have.
+
+1011
+00:17:42,750 --> 00:17:42,760
+that says what each scene needs to have.
+ 
+
+1012
+00:17:42,760 --> 00:17:45,590
+that says what each scene needs to have.
+Then you'll generate the initial version of
+
+1013
+00:17:45,590 --> 00:17:45,600
+Then you'll generate the initial version of
+ 
+
+1014
+00:17:45,600 --> 00:17:47,590
+Then you'll generate the initial version of
+your video using this prompt, and then
+
+1015
+00:17:47,590 --> 00:17:47,600
+your video using this prompt, and then
+ 
+
+1016
+00:17:47,600 --> 00:17:49,590
+your video using this prompt, and then
+you'll make small adjustments scene by scene
+
+1017
+00:17:49,590 --> 00:17:49,600
+you'll make small adjustments scene by scene
+ 
+
+1018
+00:17:49,600 --> 00:17:51,789
+you'll make small adjustments scene by scene
+until your video is the way
+
+1019
+00:17:51,789 --> 00:17:51,799
+until your video is the way
+ 
+
+1020
+00:17:51,799 --> 00:17:53,549
+until your video is the way
+you want it.  Remember that you
+
+1021
+00:17:53,549 --> 00:17:53,559
+you want it.  Remember that you
+ 
+
+1022
+00:17:53,559 --> 00:17:56,350
+you want it.  Remember that you
+can also add voice-over, sound effects, and
+
+1023
+00:17:56,350 --> 00:17:56,360
+can also add voice-over, sound effects, and
+ 
+
+1024
+00:17:56,360 --> 00:17:58,350
+can also add voice-over, sound effects, and
+music to make this video look
+
+1025
+00:17:58,350 --> 00:17:58,360
+music to make this video look
+ 
+
+1026
+00:17:58,360 --> 00:18:00,510
+music to make this video look
+even more professional than the one
+
+1027
+00:18:00,510 --> 00:18:00,520
+even more professional than the one
+ 
+
+1028
+00:18:00,520 --> 00:18:01,870
+even more professional than the one
+I showed you here.  Well,
+
+1029
+00:18:01,870 --> 00:18:01,880
+I showed you here.  Well,
+ 
+
+1030
+00:18:01,880 --> 00:18:03,549
+I showed you here.  Well,
+that was the end of another video on
+
+1031
+00:18:03,549 --> 00:18:03,559
+that was the end of another video on
+ 
+
+1032
+00:18:03,559 --> 00:18:05,110
+that was the end of another video on
+my channel.  If you enjoyed this video,
+
+1033
+00:18:05,110 --> 00:18:05,120
+my channel.  If you enjoyed this video,
+ 
+
+1034
+00:18:05,120 --> 00:18:07,110
+my channel.  If you enjoyed this video,
+please leave a like here so I
+
+1035
+00:18:07,110 --> 00:18:07,120
+please leave a like here so I
+ 
+
+1036
+00:18:07,120 --> 00:18:09,029
+please leave a like here so I
+know you liked it.  If you
+
+1037
+00:18:09,029 --> 00:18:09,039
+know you liked it.  If you
+ 
+
+1038
+00:18:09,039 --> 00:18:10,669
+know you liked it.  If you
+really, really liked it, go ahead and
+
+1039
+00:18:10,669 --> 00:18:10,679
+really, really liked it, go ahead and
+ 
+
+1040
+00:18:10,679 --> 00:18:12,549
+really, really liked it, go ahead and
+share your hype, because that way this video
+
+1041
+00:18:12,549 --> 00:18:12,559
+share your hype, because that way this video
+ 
+
+1042
+00:18:12,559 --> 00:18:14,909
+share your hype, because that way this video
+will reach even more people.  And if
+
+1043
+00:18:14,909 --> 00:18:14,919
+will reach even more people.  And if
+ 
+
+1044
+00:18:14,919 --> 00:18:16,350
+will reach even more people.  And if
+you haven't subscribed to my
+
+1045
+00:18:16,350 --> 00:18:16,360
+you haven't subscribed to my
+ 
+
+1046
+00:18:16,360 --> 00:18:18,310
+you haven't subscribed to my
+channel yet, stop what you're doing
+
+1047
+00:18:18,310 --> 00:18:18,320
+channel yet, stop what you're doing
+ 
+
+1048
+00:18:18,320 --> 00:18:19,789
+channel yet, stop what you're doing
+and click the subscribe button here
+
+1049
+00:18:19,789 --> 00:18:19,799
+and click the subscribe button here
+ 
+
+1050
+00:18:19,799 --> 00:18:21,190
+and click the subscribe button here
+so you don't miss my
+
+1051
+00:18:21,190 --> 00:18:21,200
+so you don't miss my
+ 
+
+1052
+00:18:21,200 --> 00:18:22,990
+so you don't miss my
+next videos, okay?  So, once again
+
+1053
+00:18:22,990 --> 00:18:23,000
+next videos, okay?  So, once again
+ 
+
+1054
+00:18:23,000 --> 00:18:24,510
+next videos, okay?  So, once again
+, thank you very much for
+
+1055
+00:18:24,510 --> 00:18:24,520
+, thank you very much for
+ 
+
+1056
+00:18:24,520 --> 00:18:28,600
+, thank you very much for
+your attention and until next time.  I went.
+

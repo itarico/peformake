@@ -1,0 +1,401 @@
+idioma: pt
+[00:00] Só esse computador hoje rodou centenas de skills.
+[00:03] Ao longo desse ano nós experimentamos mais de mil skills.
+[00:06] E tem uma, que é que eu tenho usado ultimamente, mais do que todas as outras.
+[00:10] Às vezes a gente acha que uma skill perfeita é aquela que permite que você faça o impossível.
+[00:15] Permite que você rode três, quatro, cinco dias seguidos, um prompt só e venha com resultado milagroso.
+[00:22] Ou então você acha que a skill perfeita é aquela que resolve o seu grande problema.
+[00:28] Aiá tem um problema e nós vamos resolver com essa skill.
+[00:31] Isso tudo pode até ser verdade.
+[00:33] Mas as skills que mais fazem diferença são aquelas que entram no seu fluxo de trabalho do dia a dia.
+[00:40] Não aquelas que você vai usar uma vez a cada três meses.
+[00:43] E às vezes o mais complexo, o mais sofisticado, o mais ambicioso não é o mais útil.
+[00:49] Às vezes menos é mais, às vezes o simples te traz um retorno inesperado.
+[00:55] E a skill sobre a qual quero falar com vocês hoje é uma skill que permite que vocês tom em decisões melhores.
+[01:00] A gente sabe que inteligência artificial hoje é 100% capaz de tocar um negócio inteiro,
+[01:05] todo operacional, os processos, sem nenhuma interferência humana.
+[01:09] E aí a pergunta óbvia se torna.
+[01:10] Então o que eu estou fazendo aqui?
+[01:12] Se a Iá faz tudo isso?
+[01:14] Por que eu estou aqui na frente do computador digitando prompt, tomando decisão,
+[01:18] pedindo pra Iá fazer uma coisa ou outra?
+[01:20] Por que ela não está fazendo isso sem a minha participação?
+[01:23] E muitas pessoas respondem a todas essas indagasções de uma maneira muito simples e defensiva.
+[01:27] A Iá não faz aquilo que eu faço tão bem quanto eu.
+[01:31] E você pode até estar certo quando a gente está falando de um prompt enviado para o modelo dia.
+[01:36] Mas quando a gente começa a falar de construção de agentes, de orquestração de agentes,
+[01:40] de grafos, de gauntlet loops, a coisa muda de figura sobretudo quando você consegue treinar um agente
+[01:47] suficientemente bem para que ele tenha os mesmos critérios de qualidade e as mesmas preferências que você.
+[01:53] A gente está em um momento em que não faz mais sentido questionar a qualidade da Iá.
+[01:56] A Iá já está resolvendo problemas matemáticos que os maiores especialistas no campo não conseguiram.
+[02:01] Agora o que muita gente esquece é que a conjectura Jacobiânico,
+[02:05] que a gente fez um vídeo aqui no canal a respeito, foi resolvida por uma Iá,
+[02:10] mas quem conduziu o processo de resolução foi um matemático que trabalha para o Antropiq.
+[02:16] Ou seja, a Iá tem o potencial de fazer as coisas que você faria melhor que você.
+[02:22] Agora ela precisa de alguém que vá treinar ela para atingir esse potencial
+[02:29] e de preferência alguém que entenda o que está fazendo,
+[02:32] que entenda daquele assunto domínio-campo-área.
+[02:36] E é por isso que não foi o time de marketing da Antropiq que resolveu a conjectura Jacobiânica.
+[02:41] É por isso que os aplicativos que escalam mais rápido na era da Iá
+[02:45] geralmente têm sócios, fundadores que têm experiência com programação.
+[02:49] Então o potencial da inteligência artificial hoje não está só no modelo,
+[02:53] está na competência das pessoas que vão refinar o comportamento desses agentes.
+[02:58] E é isso que eu vou te mostrar hoje.
+[03:00] Ela foi criada para treinar agentes da maneira mais simples possível e mais eficiente possível.
+[03:08] Só que ela se mostrou tão útil que eu estou usando ela para diversas outras coisas.
+[03:12] Eu vou te mostrar exatamente como ela funciona.
+[03:14] Bom, eu testei ela com quatro prompts para você entender exatamente como ela funciona.
+[03:18] Basicamente a gente tem aqui barra AR Board, Approval Rejection Board.
+[03:25] Esse é o nome da SKIW.
+[03:26] Primeiro a gente está falando de uma pesquisa de temas virais no início de inteligência artificial
+[03:31] e a gente quer que dez temas sejam apresentados para a gente poder cobrir no canal.
+[03:36] Nesse segundo prompt a gente vai usar essa SKIW para receber dez sugestões de aprimoramento
+[03:41] na arquitetura de um dos nossos agentes.
+[03:44] Nesse caso, agente de Motion Graphics.
+[03:47] Nesse exemplo aqui a gente quer recomendações de novas features para um aplicativo e nesse
+[03:53] último exemplo a gente quer dez micro templates de sites para uma loja de instrumentos
+[03:59] musicais.
+[04:00] E aí todos os prômetros estão usando a SKIW AR Board.
+[04:04] Bom, eu pedi dez micro templates para um site de uma loja de instrumentos musicais.
+[04:11] E olha que interessante.
+[04:13] A gente tem aqui dez pequenos exemplos com variações significativas e que são esboços.
+[04:25] Vamos para que eu queira criar um site, mas eu não quero pedir para ir a fazer o site
+[04:29] do começo ao fim, mas eu também não sei exatamente como eu posso começar esse
+[04:33] projeto.
+[04:34] Se eu peço dentro de um painel de aprovação como esse, templates que eu gostei e que
+[04:41] eu não gostei e coisas que eu quero me basear para começar o projeto, eu tenho um caminho
+[04:46] muito mais sólido.
+[04:47] Aqui a gente tem uma paleta muito mais escura, aqui a gente tem um layout muito mais ousado,
+[04:55] fontes todas em capsiloc.
+[04:56] Enfim, todos são bem diferentes entre si e a gente pode fazer o seguinte, a gente
+[05:04] pode reprovar alguns e aprovar outros.
+[05:06] Então eu gostei desse, eu não gostei desse, eu não gostei desse e aí você vai fazendo isso
+[05:11] só apertando a ou r, a para aprovar e r para rejeitar.
+[05:16] Reprovado, esse aqui vamos ver, aprovado, esse aqui eu vou reprovar, né?
+[05:21] Eu nem estou olhando muito, só estou te mostrando como isso funciona.
+[05:25] E aí eu venho aqui rejeitado, esse aqui eu vou rejeitar também e esse aqui
+[05:32] eu vou rejeitar também.
+[05:33] Então tiveram dois aprovados esse último rejeitar também, então tiveram dois aprovados,
+[05:37] número um e número cinco.
+[05:38] E aí o que a gente vai fazer com isso?
+[05:40] A gente tem aqui um servidor, né?
+[05:42] E isso aqui não é um arquivo que eu simplesmente fiquei brincando, um HTML, não, isso aqui
+[05:50] tem conexão direta com a sessão do CodeCode ou de qualquer harness em que nós estávamos.
+[05:57] Então se eu volto aqui na sessão e falo terminei, ele vai entender que eu terminei o processo
+[06:04] de aprovação e reprovação e vai entender que os micro templates dos sites aprovados
+[06:13] foram número um e número cinco, sem que eu precise dizer isso para ele.
+[06:19] Exatamente, número um e número cinco.
+[06:22] E aí a gente pode agora construir sites baseados nesses templates.
+[06:28] E aí eu posso continuar trabalhando em cima desse site de uma maneira muito precisa.
+[06:34] Hoje em dia a gente tem as pessoas que digitam um prompt, aciona uma lógica de modo maestro
+[06:39] é quem está na comunidade sabe do que eu estou falando e deixa o AIá trabalhando
+[06:42] três, quatro, cinco dias seguidos até o resultado ficar perfeito.
+[06:46] E não tem nada de errado nisso, só que gasta muito mais tokens.
+[06:49] Outras pessoas gostam de aprovar cada passo do caminho.
+[06:53] Você vai ali e cara, vinte segundos de trabalho, você precisa aprovar uma coisa, precisa revisar
+[06:59] outra, precisa mudar o planejamento de aula.
+[07:01] E aí você até economiza tokens, mas você perde muito tempo.
+[07:05] Esse SQL permite que você tenha um controle muito grande sobre o desenvolvimento dos
+[07:09] seus projetos.
+[07:10] Então vamos supor que a gente queira a primeira sessão.
+[07:11] Eu posso falar agora que era uma nova AR board apenas com a hero, a sessão inicial ali e quero
+[07:25] dez variações.
+[07:27] Eu vou falar para ele usar o SQL front end design.
+[07:31] Ele vai entender.
+[07:32] E ele vai começar a trabalhar em criar essa nova AR board para a gente aprovar.
+[07:37] Quando ele está trabalhando, a gente pode abrir outro exemplo aqui.
+[07:42] Esse exemplo vai cobrir dez sugestões de novas features para um aplicativo.
+[07:46] E a primeira sugestão dele já é super legal.
+[07:48] Deixa eu mostrar para vocês.
+[07:49] A gente tem aqui um aplicativo que basicamente consegue escutar tudo que a gente está
+[07:55] falando, ele está escutando agora e ele consegue sugerir algumas coisas.
+[08:01] Primeiro conceitos importantes ele vai trazer aqui.
+[08:04] Então se eu falo sobre repositórios ele vai pegar esse termo e ele vai colocar aqui
+[08:11] para que caso você não entenda o que são repositórios, aqui ó repositórios ele
+[08:16] vai explicar para você aqui.
+[08:18] Então isso é super legal.
+[08:19] A gente consegue ativar e desativar esse modo.
+[08:21] E a gente pode falar de qualquer conceito, eventos históricos.
+[08:25] A gente pode falar de qualquer pessoa e ele vai trazer aqui um resumo sobre essa
+[08:30] pessoa.
+[08:31] É um ajudante que fica escutando o que você faz, o que você fala sobre tudo e ele
+[08:38] vai reagindo a isso como se fosse um assistente, sabe?
+[08:42] É só para você ver, eu vou falar alguns conceitos seguidos, meio aleatórias, para
+[08:46] você ver como ele funciona.
+[08:47] Eu estou sem as mãos do computador.
+[08:49] Posso falar sobre idiosincrasia.
+[08:52] Posso falar também sobre o filósofo Cante.
+[08:58] Posso falar também sobre outras coisas como por exemplo escala pentatônica.
+[09:05] Tá vendo?
+[09:06] Olha, já trouxe tudo.
+[09:07] Praticamente em tempo real.
+[09:09] Idiosincrasia, trouxe Cante.
+[09:11] Não sei se ele vai trazer.
+[09:12] Acho que ele vai trazer sim escala pentatônica.
+[09:15] E pentatônica, pronto.
+[09:17] Trouxe, tudo certo.
+[09:18] E aí ele faz isso e ele é um ajudante.
+[09:21] A gente está ainda colocando outras funcionalidades legais nele.
+[09:26] É um projeto recreativo.
+[09:28] Por enquanto não é uma coisa que a gente está super planejando colocar no mercado, mas tem
+[09:34] vários casos de uso.
+[09:35] Por exemplo, o Call de Vendas, um vendedor que está sendo treinado e precisa de sugestões
+[09:39] para falar durante a Call, entrevista de emprego.
+[09:42] É uma coisa que as pessoas têm viralizado muito com ferramentas parecidas.
+[09:46] Mas a ideia não é entrar com uma ferramenta concorrente ao Clule, que é uma ferramenta
+[09:52] que viralizou uma época.
+[09:54] Não sei quem foi nessa época.
+[09:56] Mas a ideia é um projeto recreativo e a gente vai levar isso aqui mais para uma lógica
+[10:01] do debate, da argumentação, pelo menos esse é o projeto.
+[10:04] Ele vai detectar falácias, ele vai verificar os fatos, tudo isso em tempo real na medida
+[10:09] que uma conversa vai acontecendo.
+[10:11] Isso para a gente é bem legal.
+[10:14] Então posso ativar e desativar esse modo.
+[10:16] Vou desativar agora para ele parar de escutar.
+[10:19] E qual foi a sugestão primeira aqui sobre esse aplicativo?
+[10:23] Ele sugiriu que as conversas sejam gravadas, sejam armazenadas, na verdade, porque é uma
+[10:30] coisa importante.
+[10:31] Até para a gente saber qual a qualidade do aplicativo.
+[10:33] A gente pode pegar as conversas e avaliar, analisar as conversas para ir aprimorando
+[10:38] o aplicativo.
+[10:39] Então gostei dessa sugestão e vou dar um A aqui.
+[10:41] Então foi aprovada essa sugestão.
+[10:43] Segunda sugestão, ajudante ouvindo o áudio do sistema, não só o microfone.
+[10:47] Então se eu estou reproduzindo um vídeo, ele poderia eventualmente ouvir o que
+[10:52] eu estou falando e etc.
+[10:53] Ou se eu estou numa call, numa reunião, eu coloco o fone de ouvido, mas ele vai escutar a voz
+[10:59] também de alguém do outro lado da chamada.
+[11:02] Não é uma coisa que eu quero agora, até entendo a utilidade, mas vou rejeitar.
+[11:07] Memória de longo prazo, então um arquivo que o aplicativo vai reunir sozinho ao longo
+[11:13] das falas.
+[11:14] E aí ele pode, enfim, ser um arquivo editável, etc.
+[11:19] Eu vou evitar isso aqui por enquanto porque eu acho que tenho umas implicações de contexto
+[11:22] aí que eu não quero mexer no momento.
+[11:24] E aí, enfim, tem várias outras que a gente poderia, eu adoraria fazer isso sinceramente
+[11:28] com vocês aqui no vídeo, mas acho que não é a coisa mais útil para você nesse momento.
+[11:32] Então eu vou passar rapidamente por todas, vou rejeitar, aprovar, rejeitar, fazer
+[11:36] o unidunite aqui.
+[11:37] E o que acontece?
+[11:38] Eu posso vir aqui na minha sessão que iniciou esse servidor e eu posso falar
+[11:45] implemente as novas features.
+[11:49] Só isso.
+[11:50] E aí eu sei exatamente o que ele vai fazer.
+[11:53] Exatamente.
+[11:54] E aí isso não serve só para novas features, mas para qualquer coisa que você está desenvolvendo.
+[11:59] Muitas vezes você tem que resolver um problema, você tem vários jeitos de resolver esse problema.
+[12:05] E dependendo da maneira que você resolve esse problema, outros problemas vão surgir.
+[12:09] Então quanto mais experiência você tem, mais legal usar isso aqui.
+[12:12] Aqui eu não vou enviar, obviamente porque eu dei um aprovar, rejeitar no aleatório, nem sei
+[12:16] o que eu estou aprovando.
+[12:17] E eu não vou fazer isso com o meu app.
+[12:20] Um outro exemplo bem legal é esse aqui.
+[12:23] Eu estou falando para ele abrir porque ele é um servidor que morre com o tempo, então
+[12:30] a gente precisa pedir para ele...
+[12:32] Tá vendo?
+[12:34] Ele morreu e está tudo certo.
+[12:36] Ele está configurado para morrer porque às vezes a gente queria vários de isso que
+[12:39] ele não ia ter sujeito de fechar, a gente falou cara, bota um timer aí e morre depois
+[12:42] de 30 minutos, mas a gente vai começar um novo, ele vai abrir agora, ele vai abrir
+[12:50] e vai funcionar provavelmente.
+[12:51] Pronto, aqui ele já reiniciou e está tudo funcionando.
+[12:55] E aí a gente tem aqui a arquitetura do Motion Designer.
+[13:00] A gente pode aprimorar essa arquitetura e tem 10 sugestões.
+[13:04] Só para você ter uma ideia do tipo de Motion que a gente queria, isso aqui não é video gerado
+[13:10] por a generativa de acidez, não, isso aqui é código.
+[13:16] Vamos ver.
+[13:17] A gente tem esse Motion aqui.
+[13:19] Olha que legal.
+[13:20] A gente navega pelo ambiente.
+[13:23] Vamos ver alguns outros aqui.
+[13:26] Tem uns muito bons.
+[13:27] Agora vai ser difícil achar, mas...
+[13:30] Ah, esse é legal.
+[13:31] Você vai se navegando pelo espaço e isso é para demonstrar um fluxoograma simples, mas
+[13:38] de uma maneira super bacana.
+[13:39] E aqui tem vários assim, eu estou clicando no menu aleatório, mas olha que legal.
+[13:44] Você vai escalando uma montanha e vai vendo um fluxograma.
+[13:48] Isso é muito legal.
+[13:49] E aí a câmera vai me mudando, isso aqui é muito, muito bacana.
+[13:53] É principalmente para vídeos aqui no YouTube, aulas, conteúdo didático, gastando
+[13:58] uma quantidade de tokens pequena, uma vez que você tem os assets criados.
+[14:03] É muito bacana.
+[14:04] Então a gente está criando um agente que basicamente é responsável por criar esse tipo de elemento
+[14:10] visual.
+[14:11] E aí a gente pode aprovar ou reprovar sugestões que foram dadas para aprimorar esse agente.
+[14:16] Bom, aqui é basicamente uma camada de proteção a mais que está surgindo, uma blindagem
+[14:20] a mais para que os cortes já aprovados não sejam tocados.
+[14:23] Eu vou aprovar isso aqui.
+[14:25] Ele está dando uma sugestão bem bacana, que é justamente o que eu estava esperando.
+[14:30] A gente criou um agente, a gente está treinando esse agente a um bom tempo sem parar e ele
+[14:36] mesmo tem a autonomia de reescrever o próprio código dos seus arquivos, o seu próprio
+[14:42] código.md.
+[14:43] Então a gente que trabalha de maneira muito pesada com o auto aprimoramento e aqui
+[14:46] claramente ele não está pensando nos nossos tokens, ele está sobrecarregando de
+[14:49] contexto de palavras que nem sempre seriam necessárias dentro do código.md.
+[14:53] Ele está basicamente tendo muita coisa inútil para 90% das situações dentro do principal
+[15:00] arquivo do cérebro que vai ser carregado o tempo todo.
+[15:02] Então é muito mais interessante e inteligente carregar as coisas que não vão ser uma constante
+[15:09] em arquivos referenciados que a gente pode puxar quando quiser e não toda vez que a
+[15:14] gente estiver usando em cada sessão, em cada interação.
+[15:17] Então isso aqui vai ser evidentemente aprovado.
+[15:20] Aqueles trouxemos um assunto bem interessante que é a última que eu vou comentar aqui sobre
+[15:24] esse agente porque também não quero que fique muito técnico o vídeo.
+[15:27] A gente tem várias formas de inserir dentro de um agente um pipeline, uma sequência de
+[15:33] ações para, por exemplo, criar um vídeo do começo ao fim.
+[15:37] Você precisa de procedimentos de protocolos sequenciais.
+[15:42] Primeiro eu quero que o vídeo passe por um tratamento de cor, por exemplo.
+[15:47] Depois eu quero fazer a transcrição toda do arquivo.
+[15:51] Depois eu quero que essa transcrição seja transformada de x, y formas.
+[15:56] Depois eu quero passar essa transcrição por três revisores diferentes que vão fazer
+[16:00] uma edição via texto.
+[16:02] Tem várias camadas até a gente chegar no ponto dos cortes, até chegar na pós-produção,
+[16:07] tratamento de áudio, etc.
+[16:09] Talvez se começar com um tratamento de cor não tenha sido mais natural.
+[16:12] Mas o importante é que são etapas sequenciais que você precisa estipular.
+[16:16] Muitas vezes a gente constrói agentes, a gente tem diferentes etapas que a gente quer no
+[16:22] pipeline principal executado.
+[16:24] E como isso ao fim, a gente quer ter autonomia para executar uma parte desse pipeline.
+[16:29] Então um agente que começa a editar um vídeo e termina, a gente quer também que
+[16:33] se a gente possa simplesmente colocar motions, colocar b-rolls, colocar legendas em um vídeo.
+[16:38] Então o que ele está propondo aqui é basicamente que a gente não use mais uma linguagem natural
+[16:45] aberta à interpretação e ele quer que a gente tenha um protocolo mais rígido de execução.
+[16:52] Assim, vai acontecer dessa maneira e não vai ser suscetível a uma falha de interpretação
+[16:59] de determinado modelo.
+[17:01] Então, assim, ele quer transformar algo mais solto em algo mais rígido.
+[17:06] Eu não vejo isso como um risco, apesar de parecer que um formato estruturado é algo mais
+[17:13] problemático para você ter flexibilidade.
+[17:16] Nesse caso não, porque apesar dele ser estruturado para o pipeline principal, ele vai ter essa
+[17:20] flexibilidade, vai compreender as nuances de cada etapa e eu confio hoje em dia nos
+[17:26] modelos o suficiente para fazer isso, apesar de ser uma tarefa pouco complexa.
+[17:31] E novamente eu não vou passar por todas as opções com você, mas olha que bacana,
+[17:35] você não só vai vendo as sugestões sobre como melhorar os seus agentes, mas você aprendendo
+[17:41] com isso, porque você tem aqui uma informação que às vezes não vai estar clara para você.
+[17:45] É você pesquisa sobre os conceitos, você entende melhor como está a arquitetura de
+[17:49] seus projetos, você entende melhor como interagir com seus agentes.
+[17:53] É um processo de aprendizado constante, esse de trabalhar com a nova forma de fazer
+[17:57] as coisas que são lançadas todos os dias, você tem que entender o que de fato é útil,
+[18:01] o que de fato não é, o que é útil para outra pessoa, mas para os seus projetos
+[18:04] não. E essa é uma excelente oportunidade para isso, você vai desenvolvendo as coisas,
+[18:09] você vai criando, construindo e vai aprendendo sobre o que você está construindo.
+[18:12] Ah, mas eu sou que é uma pessoa que gosta de escrever o prompt da
+[18:16] inter e dormir, ir para a academia e jogar videogame, não gosta de ficar ali,
+[18:20] tem que supervisionar. Perfeito, você faz isso aqui uma vez, você faz isso com
+[18:24] atenção, com foco, com dedicação e pede para executar se quiser, aplica uma lógica
+[18:29] de Gauntlet Loop, ele vai ficar 8, 10 horas fazendo isso aqui.
+[18:33] E aí você simplesmente desliga e deixa ele rodar, você desliga e deixa ele ligado
+[18:39] e vai dar certo, só que ele vai fazer coisas muito melhores e você vai entender o que ele está fazendo,
+[18:44] isso é o mais importante. Bom, temos aqui também um outro caso de uso bacana,
+[18:47] ah, eu quero gravar um vídeo, produz um conteúdo, etc. 10 sugestões de temas.
+[18:52] E aí a partir desses temas, os que eu aprovar, ele pode gerar um roteiro.
+[18:55] E aí eu venho aqui em YouTube, apagou canais de YouTube, peitos por ar, vou rejeitar.
+[19:02] É, o IPO da Antropi e 518 bilhões, não, não quero falar sobre isso.
+[19:08] O novo produto da bolha da eá, não, compra do World Labs, não quero falar.
+[19:13] OpenM atou a API do Sora, não, Higgs Field, Startup de a mais buscada do mundo,
+[19:20] não quero falar disso. O governo dos Estados Unidos rodando em Gemini e Grock,
+[19:23] também não. Audio e vídeo nativos juntos em 2K, também não.
+[19:28] O canal Faceless sobrevive em 2026, o canal Faceless não morreu,
+[19:33] vamos por qualquer coisa falar disso. O novo 2016 feito com eá.
+[19:37] Bom, importante aqui, a gente tem aqui um aprovado e eu posso voltar na minha sessão
+[19:43] e posso falar pra ele criar um roteiro, né?
+[19:48] Cri roteiro em HTML, uma frase por slide, né?
+[19:55] Esse tipo pra ele gerar um roteiro pra que eventualmente eu possa gravar um vídeo.
+[19:59] Posso falar aqui que eu quero com todo vertical até 2 minutos, né?
+[20:04] Coisas assim. E pode parecer um caso de uso bobo, né?
+[20:07] Mas a gente tá falando de 10. Então é fácil você olhar pra uma lista de 10 e aprovar.
+[20:11] Mas imagina se você tivesse que aprovar 100. A gente já fez o aprimoramento de agentes
+[20:15] ligados ao mundo visual, né? O mundo do Power Point, dos carro 6, etc.
+[20:20] O processo de refinamento não é assim 10, gente, não, são 500, né?
+[20:25] Templates pra você ir aprovando e rejeitando. Aí você vai fazendo ciclos de treinamento
+[20:30] com centenas de elementos visuais, vai aprovando e rejeitando, aprovando e rejeitando.
+[20:35] E outra coisa importante é que você pode comentar, né?
+[20:39] Por que você aprovou aqui? Porque é um tema que trata de...
+[20:45] Ou por que você rejeitou aqui? Porque, enfim, aí você vai justificando e dentro de um processo
+[20:52] de treinamento de um agente, você vai conseguindo realmente fazer com que ele entenda
+[20:58] as razões pelas quais você decidiu aprovar ou rejeitar e possa passar por um processo
+[21:03] de aprimoramento guiado por você e pelos seus comentários.
+[21:06] E aí, voltando pra Hero Section, o site que lá atrás a gente começou a fazer,
+[21:12] temos aqui, compre o silêncio de volta, não entendi essa redline pra um site de instrumentos
+[21:17] musicais, né? Então eu vou rejeitar. Aqui eu achei ruim, né? Um ícone de uma guitarra,
+[21:23] não quero, tudo começa numa bota em branco com uma partitura aqui. Achei em razoa, vou deixar aqui,
+[21:29] pra ver se tem alguma coisa melhor. Faça barulho direito, não gostei.
+[21:33] Isso aqui parece site tech, né? Não parece equipamento sem aditivo.
+[21:37] Não gostei. Isso aqui tá mais interessante, instrumento não é produto, a mão que o ajusta.
+[21:41] Vou deixar ele aqui em stand by, se a gente modificar a imagem, né?
+[21:44] Um instrumento de uma vida inteira, não sei não. Ele tem potencial, mas não gostei muito não.
+[21:51] Esse aqui não gostei também não, esse aqui eu gostei até. Escolha pelo que você sente no peito,
+[21:56] se botar um efeitinho aqui, gostei. Esse aqui não, não gostei, só se fosse pra instrumento de
+[22:03] esse aqui, então vou rejeitar. Esse aqui eu vou aprovar, né? Rejeitei, rejeitei.
+[22:08] E aqui que eu posso fazer? Agora eu posso criar a próxima dobra dos dois,
+[22:11] pedir pra ele gerar mais dez variações da próxima dobra. Ele vai mostrando, né?
+[22:15] Primeira, segunda, aí você vai editando. E aí é a mesma coisa, você pode comentar, né?
+[22:20] Coloque efeito de ondas, né? Aqui, né? Você pode pegar aqui, fazer a mesma coisa.
+[22:28] Notas, efeito de notas em sync com música, na pauta, né? Coisas assim que podem ficar super legais.
+[22:39] Você vai experimentando, vai pedir pra ele gerar variações. E você vai construindo um site
+[22:43] ativamente, né? Um site guiado pelos seus critérios de qualidade, pela sua tomada de
+[22:49] decisão e que no final provavelmente vai ser um site muito mais alinhado com o que você quer.
+[22:56] Porque hoje em dia, a IA não é mais só sobre fazer uma coisa muito bem. Ela já
+[23:02] faz sites extraordinários. Mas ela tá sempre sendo alinhada com a sua identidade visual,
+[23:07] com as suas preferências, com as suas escolhas estéticas, com as suas decisões, com os riscos que
+[23:15] você quer, né? Quando a gente tá falando do ambiente profissional, com os riscos que você
+[23:18] tá disposto a correr e com as certezas que você quer trabalhar pra mitigar. E a gente não vai
+[23:24] fazer um processo de treinamento do zero de um agente com essa metodologia porque é um processo lento, tá?
+[23:28] Você precisa dar um feedback, esperar o agente trabalhar em cima do feedback, e aí você dá
+[23:33] outro feedback. Mas imagina o seguinte, você quer um agente pra fazer com a Roussell
+[23:38] e expressar a grana. É um exemplo simples, visual, fácil de entender. E você precisa
+[23:43] que tenha um estilo muito próprio, né? Que tenha um bom gosto, aquele paladar
+[23:48] refinado, mas você não sabe expressar, mas você não tem talvez experiência
+[23:52] em design suficiente pra expressar de maneira realmente certeira o que você quer,
+[23:58] mas você tem uma boa intuição. Você tem um paladar que você olhando sabe, né? E pra
+[24:04] tudo que é visual, isso aqui vai funcionar muito bem, mas pra o que não é visual
+[24:07] também. E aí você pede 50 variações de carroçéis, por exemplo. E você vai aprovando
+[24:11] se você gosta, rejeitando se você não gosta, colocando os motivos pelos quais
+[24:15] você tá aprovando e rejeitando. E aí você insere na hora que você for falar com
+[24:20] a pessoa, a gente novamente é que terminou a aprovação e rejeição, esse processo de
+[24:25] comentários e tal. Você fala, terminei que era com você usar o feedback pra aprimorar
+[24:30] esse agente. E aí ele vai não só entender o seu feedback, mas ele vai se auto
+[24:35] aprimorar com base nas suas preferências. E aí depois você pode pedir
+[24:39] gerar, né? Ou no mesmo promp, pode pedir pra ele gerar um outro AR board. E aí
+[24:44] você passa por esse processo novamente, vai passando por esses ciclos até que
+[24:48] 20% mais, 95% mais 100% daquilo que ele vai te devolver no AR board, seja
+[24:55] ao que você possa aprovar dentro das coisas que você quer gerar com, né, suas
+[25:01] contas de redes sociais. Todos esses calçais eu acho o máximo, todos esses eu
+[25:05] postarei nas minhas redes. Aí você concluiu um treinamento de um agente que
+[25:10] não só faz o que eles provavelmente vai fazer bem, mas ele faz bem pra
+[25:14] o seu contexto. Então apesar de ser uma ideia muito simples, mas que é
+[25:17] literalmente assim o que eu mais tô usando, estou aumentando a minha
+[25:20] produtividade em vários contextos em 10 vezes. Pegue esses exemplos de
+[25:25] aprimoramento de app e aprimoramento de agentes. Cara, o tempo que eu levava pra
+[25:30] passar por um processo de aprimoramento era muito maior, né? Com medo de
+[25:34] mexer em algo que já tá funcionando muito bem, eu pedi um relatório
+[25:38] completo em PDF detalhado, um relatório técnico. E aí eu precisava
+[25:43] ler ponto por ponto, né? A gente até gosta de ler. Esses PDFs e tal, mas demorava.
+[25:48] E às vezes você não precisa ler tudo, você precisa só tomar uma decisão
+[25:52] específica sobre uma modificação. Você não precisa entender o contexto
+[25:56] geral de todos os, né? Todas as ramificações, toda a arquitetura. Então a gente
+[26:02] acabou fazendo muito menos modificações por dia. E às vezes nem sabia
+[26:06] exatamente quais modificações eram dependendo do nível de cansaço que
+[26:10] a gente tava ali no período da aprovação, né? Às vezes você tá cansado, você tem
+[26:14] um problema, você quer resolver, você joga um prompt, você dita um prompt
+[26:17] em linguagem natural, mas você não sabe o que tá acontecendo, você não sabe
+[26:20] como ele vai mudar, você não sabe o resultado disso, as consequências
+[26:23] disso. Esse processo de aprovação torna tudo muito mais fácil, mais leve,
+[26:27] mas assim, é difícil explicar a experiência de só apertar um botão e
+[26:33] aprovar ou reprovar uma decisão importante que vai ter consequências
+[26:37] muito bacanas em projetos relevantes pra você. É uma sensação muito boa,
+[26:42] assim. E agora eu tô usando isso aqui todos os dias, várias vezes por dia.
+[26:46] Se você quiser pegar toda a transcrição desse vídeo, jogar na AI, pedir pra ela
+[26:50] criar algo muito parecido, fica à vontade, é um caminho viável. Se você
+[26:54] quiser exatamente a skill que nós estamos utilizando e demonstrando,
+[26:57] e as skills que realmente, né, são um copicola do que a gente usa,
+[27:03] você pode entrar na comunidade Mestre da AI que nós disponibilizamos
+[27:07] lá. Pra quem não conhece a comunidade, nós temos curso de code,
+[27:10] Xcode, code, Hermes, formação completa, inteligência artificial,
+[27:14] temos mais de 30 horas de aulas gravadas, sem contar com as lives que
+[27:18] acontecem toda semana, temos um suporte técnico todos os dias
+[27:21] e centenas de recursos pra você copiar e colar com mais skill.
+[27:24] Temos agentes, skills, repositórios, enfim, tem muito
+[27:28] material muito bacana, o link tá na descrição desse vídeo, vai ser um
+[27:32] prazer receber você na comunidade o Maestro da AI.
+[27:35] Caso você tenha gostado desse vídeo, não se esqueça de dar um hype,
+[27:38] um like e se inscrever no canal. Sobre todos você quer continuar
+[27:41] recebendo vídeos como esse no seu Youtube. Um abraço e até a próxima.

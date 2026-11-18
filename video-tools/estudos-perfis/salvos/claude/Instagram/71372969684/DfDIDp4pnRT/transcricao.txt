@@ -1,0 +1,18 @@
+idioma: pt (0.99)
+[   0.0-   4.8] Pedi pro Claude prever os meus próximos 5 anos e ele foi assustadoramente preciso.
+[   4.8-   6.6] Nada de astrologia nem horóscopo.
+[   6.6-   8.6] Só o que ele lembra das nossas conversas.
+[   8.6-   9.6] Primeiro prompt.
+[   9.6-  14.2] Com base em todas as nossas conversas, me fala 5 coisas sobre mim que eu nunca te contei,
+[  14.2-  15.2] mas que você percebeu.
+[  15.2-  18.2] Segundo, que padrões eu sigo quando tomo decisões.
+[  18.2-  19.8] Eu quem estou evitando?
+[  19.8-  20.8] Esses dois já impressionam.
+[  20.8-  22.7] Mas o terceiro é brutal.
+[  22.7-  25.4] Preveu os meus próximos 5 anos sem nada mudar.
+[  25.4-  28.2] Depois, preve-se eu largar o meu pior hábito.
+[  28.2-  30.2] Um lado a lado, a diferença é óbvia.
+[  30.2-  31.2] E o último?
+[  31.2-  35.0] Com base no que você sabe sobre mim, escreve um parágrafo até eu ler toda manhã.
+[  35.0-  37.2] Só funciona com a memória do Claude ligada.
+[  37.2-  40.2] Comenta futuro e segue que eu te mando os 4 prompts pra copiar.

@@ -1,0 +1,13 @@
+idioma: pt (1.00)
+[   0.0-   2.7] Eu sou o primeiro brasileiro a ter o carro voador da Tesla.
+[   2.7-   8.5] Esse carro faz de zero a 100 em menos de um segundo, pode chegar a 370 kmh e ter uma autonomia
+[   8.5-  10.8] de 500 km com apenas uma carga.
+[  10.8-  14.6] Mas antes de continuar, você pode estar se perguntando como é que eu tenho esse carro?
+[  14.6-  16.9] A resposta é simples, inteligência é artificial.
+[  16.9-  22.6] Quando eu posso mudar cenários, iluminação, objetos, eu realmente posso mudar o que eu quiser.
+[  22.6-  23.8] Isso é sensacional.
+[  23.8-  27.7] E o melhor de tudo isso é que agora você pode contar histórias de uma forma imersiva,
+[  27.7-  33.2] como por exemplo, está andando dentro de um prédio que ainda nem existe.
+[  33.2-  37.6] Eu sei que você ficou interessado, então me manda uma mensagem agora porque ninguém
+[  37.6-  38.6] está fazendo isso.
+[  38.6-  41.5] E você pode ser literalmente o primeiro a fazer.

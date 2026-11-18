@@ -1,0 +1,410 @@
+idioma: pt
+[00:00] Todo mundo recentemente está mostrando o Cloud Code e criar motion graphics animações,
+[00:03] mas ninguém está mostrando como pegar uma gravação bruta como essa e transformar em
+[00:07] um reels completo, super bem editado como esse que você está vendo agora.
+[00:10] E hoje eu vou te mostrar exatamente como transformar o Cloud Code no seu editor de reels particular.
+[00:15] Ele vai pegar o seu vídeo cru, fazer os cortes, gerar as imagens para ilustrar o
+[00:18] que você está falando ao longo do vídeo e te entregar uma edição completa mesmo
+[00:22] que você seja um completo iniciante.
+[00:23] E sim, vai ter skill para você baixar gratuitamente, além de um segredinho meu que eu utilizo
+[00:27] para fazer as minhas edições.
+[00:28] E quando a gente fala de fazer edições profissionais com o Cloud, é disso daqui que eu estou falando.
+[00:33] De você simplesmente mandar o seu vídeo bruto e ele entregar tudo isso pronto do jeitinho que
+[00:37] você está vendo.
+[00:38] Mas para a gente alcançar esse nível de resultado não é necessariamente tão simples assim.
+[00:42] Não basta a gente ir lá e mandar o único prompt e um vídeo bruto e pedir para o
+[00:45] Cloud editar.
+[00:46] Prova disso é que eu mesmo fiz para te mostrar.
+[00:49] Esse reels foi editado dessa forma.
+[00:51] Com o único prompt eu mandei ele editar o vídeo e transformar isso no reels.
+[00:54] Então vamos dar uma olhada no trabalho que ele fez.
+[00:55] Vou lançar 3 ferramentas de a totalmente gratuitas que podem fazer você economizar centenas
+[01:00] de dólares por ano.
+[01:01] Elas se chamam Slides, Docs e Designing e ficam dentro do chat que você já utiliza.
+[01:06] E para utilizar é muito fácil, é só você pedir para ele aquilo que você quer construir
+[01:10] como por exemplo uma apresentação comercial para o seu negócio.
+[01:12] A partir daí então ele vai preparar todos os slides para você.
+[01:15] Depois com seus slides prontos você pode exportar a apresentação inteira para
+[01:19] a Power Point ou para a Google Slides.
+[01:21] Mas a novidade não para só nos slides.
+[01:22] Na mesma conversa por exemplo você pode...
+[01:24] Pois é, um resultado bem diferente do que a gente viu.
+[01:26] É verdade que aquele mandou muito bem cortando os erros, as pausas.
+[01:29] Ele tentou fazer um tratamento de som que não ficou muito legal.
+[01:31] Mas o corte do vídeo em si ficou muito bom.
+[01:33] Mas ainda que isso aqui tenha seus méritos, não é isso que a gente busca
+[01:36] quando a gente está tentando editar um reels realmente para ser um reels viral,
+[01:39] para que as pessoas gostem e tenham curtidas.
+[01:41] Veja, aqui a gente tem as imagens paradas aqui em cima, ou seja, não tem um motion graphic.
+[01:46] Ele não tem ritmo nos cortes.
+[01:47] É um vídeo simplesmente eu falando com algumas imagens estáticas.
+[01:50] Então não é isso que a gente busca.
+[01:52] O que a gente busca depende daquilo que eu chamo de motor de edição.
+[01:56] Que são seis elementos que tem que participar dos ser reels para deixar ele dinâmico.
+[02:00] Que é primeiro os cortes, depois as transições,
+[02:03] os efeitos que vão aparecer, os motion graphics,
+[02:06] que é justamente a parte mais legal do nosso reels,
+[02:09] a legenda que ela precisa ser dinâmica e os sons,
+[02:12] que vão dar ali também a dinâmica e o ritmo do vídeo.
+[02:14] E é justamente esse motor de edição que é o responsável para a gente sair de um resultado
+[02:18] como esse que a gente acabou de ver, para um resultado desse daqui.
+[02:21] Como motion graphics, um vídeo muito mais bem editado, muito mais dinâmico.
+[02:24] O cloud acabou de lançar três ferramentas de a totalmente gratuitas
+[02:27] que podem fazer você economizar centenas de dólares por ano.
+[02:30] Além dos efeitos, além do áudio melhor, da dinâmica, dos uns e dos cortes, enfim.
+[02:34] É muito claro que esse resultado aqui é infinitamente melhor.
+[02:37] Mas passar essas ideias desses motores para o nosso cloud
+[02:40] é mais difícil do que parece.
+[02:41] Para você ter uma noção, eu utilizei 111 mil palavras de instruções
+[02:46] e mais de 12 rodadas no ajustes em um só reel para chegar naquele nível que você viu.
+[02:51] Ou seja, demanda muito tempo, muito trabalho, muito token
+[02:54] para que a gente consiga refinar o cloud e deixar ele como realmente um editor muito bom.
+[02:59] Mas é todo esse trabalhão que eu justamente não quero que você tenha
+[03:01] e por isso eu criei essa skill gratuita para você baixar.
+[03:03] E a gente vai fazer isso para que a gente consiga então fazer uma edição de reels
+[03:07] e chegar em resultados melhores.
+[03:08] E para você ter acesso a esse skill,
+[03:09] basta você entrar na nossa comunidade gratuita,
+[03:12] no link que está na descrição escrito lá,
+[03:14] na comunidade gratuita, pegue o material dessa aula
+[03:17] e também no primeiro comentário fixado.
+[03:18] Depois é só você abrir o repositório no GitHub,
+[03:21] copiar o link do repositório,
+[03:24] abrir o seu cloud code e colar esse link.
+[03:27] Junto com isso, a gente vai mandar uma instrução para que ele estale a skill.
+[03:31] Eu gostaria que você instalasse esse skill para edição de reels.
+[03:34] Simples assim e você vai enviar a partir de então
+[03:37] o seu cloud vai fazer toda a instalação do skill para você.
+[03:39] Agora, para você ver a diferença de qualidade
+[03:41] quando a gente aplica skill,
+[03:43] eu enviei o vídeo bruto
+[03:44] e pedi para editar esse reels com a skill para a gente ver a qualidade,
+[03:46] pedi para que ele usasse a skill reels.
+[03:48] Antes, eu vou te mostrar esse vídeo bruto para você ver que é realmente
+[03:51] o vídeo lá com erros, com pausas,
+[03:52] com um monte de coisa que o próprio editor iria ter que cortar.
+[03:55] Alô, alô.
+[03:56] Veja que aqui é um vídeo de 2 minutos e 33 segundos
+[03:59] que no final, depois dos cortes, ele vai lá para 40 segundos.
+[04:01] Mas veja que eu erro, que eu falo um monte de vezes,
+[04:03] que eu recomeço, tudo isso,
+[04:05] ele vai dar um jeito de cortar e entregar uma qualidade muito boa.
+[04:08] Então, está aqui o vídeo bruto que eu enviei,
+[04:10] o prompt extremamente simples,
+[04:12] porque toda a complexidade já está dentro da skill.
+[04:14] E com base nisso, ele está falando que vai rodar a skill.
+[04:16] Olha só, isso aqui é tudo que ele me mandou
+[04:18] e depois de alguns minutos, ele vai gerar esse quadro me mostrando,
+[04:21] se eu quero arrumar alguma coisa, se eu quero editar alguma coisa.
+[04:24] E aí, chegamos nesse resultado aqui.
+[04:26] Veja que é um resultado infinitamente melhor do que a gente tinha antes.
+[04:29] O Cloud acabou de lançar três ferramentas de ar totalmente gratuitas
+[04:32] que podem fazer você economizar centenas de dólares por ano.
+[04:35] Elas se chamam Slides, Docs e Designing
+[04:37] e ficam dentro do chat que você já utiliza.
+[04:40] E para utilizar é muito fácil,
+[04:41] é só você pedir o que você quer construir,
+[04:43] como por exemplo, uma apresentação comercial para o seu negócio
+[04:45] e ele prepara todos os Slides para você.
+[04:47] Depois, com seus Slides prontos,
+[04:49] você pode exportar a apresentação inteira para a PowerPoint ou para a Google Slides.
+[04:52] Mas essa novidade não para só nos Slides.
+[04:54] Na mesma conversa, você pode pedir também
+[04:56] que ele escreva um documento de uma página.
+[04:58] Ele pode até criar carrosséis no Instagram para acompanhar esse material.
+[05:01] Então, em vez de você pagar pelo Gama ou pelo Canva,
+[05:03] você tem tudo em uma única conversa.
+[05:05] Comenta Slides e eu te vi um link para você conhecer.
+[05:08] Infinitamente melhor.
+[05:09] Quando eu digo melhor, não é só os motion graphics,
+[05:11] é todo corte, é toda dinâmica, é todos efeitos.
+[05:13] Isso aqui realmente está no nível muito bom.
+[05:15] E você viu que utilizando a Skill,
+[05:17] eu mandei um prompt absolutamente ridículo de simples
+[05:20] e ele fez isso aqui em 10 minutos.
+[05:22] Ou seja, se você utilizar a Skill e melhorar o prompt,
+[05:24] mandar alguns screenshots para que ele use
+[05:27] na criação dos motion graphics,
+[05:28] que você faça algumas correções,
+[05:29] ele chega em resultados ainda melhores.
+[05:31] E você vai lembrar lá no começo do vídeo
+[05:33] que eu falei que eu tinha um segredinho.
+[05:34] Eu vou mostrar isso daqui a pouco,
+[05:35] mas presta atenção no que eu vou te mostrar agora,
+[05:37] porque essa é uma dúvida que muita gente me manda.
+[05:39] Como que eu crio os meus reels, as minhas edições
+[05:42] e é isso que eu vou te mostrar agora,
+[05:43] como eu faço no meu dia a dia.
+[05:44] E é lógico que se você já acompanha os vídeos aqui do canal,
+[05:46] você já irá imaginar que eu faço as minhas edições dos meus reels
+[05:50] utilizando o agente que design OS.
+[05:52] Eu venho aqui na minha aba de reels
+[05:54] e aqui ele me permite enviar um arquivo bruto,
+[05:56] que é aquele mesmo arquivo,
+[05:57] que a gente acabou de ver que o Claudio cortou e fez as edições,
+[05:59] que inclusive é aquele mesmo que eu acabei de enviar aqui,
+[06:02] só que agora ele me mostra várias opções.
+[06:05] Por exemplo, eu tenho a opção aqui de corte e áudio.
+[06:08] Então eu posso pedir para que ele corte o meu vídeo
+[06:10] e também que ele faça ou não um tratamento de áudio.
+[06:13] Se eu já acho que o meu áudio saiu bom,
+[06:14] porque nesse reels eu gravei com o meu microfone e tudo mais,
+[06:17] eu simplesmente desabilito isso.
+[06:19] E eu faço isso de uma maneira muito simples,
+[06:20] só vindo aqui e selecionando.
+[06:22] Ele também me dá e aqui é o ouro que me ajuda demais.
+[06:26] Os estilos.
+[06:27] Aqui tem quatro estilos por enquanto,
+[06:29] eu vivo testando novos estilos,
+[06:31] mas quando eu gosto de um estilo,
+[06:32] quando eu valido um estilo, eu coloco ele aqui,
+[06:34] porque assim eu posso selecionar ele depois
+[06:36] para que ele crie algo com a mesma qualidade,
+[06:39] com o mesmo motor de edição,
+[06:41] só que eu ainda continuo podendo personalizar.
+[06:43] Por exemplo, as fontes, eu posso escolher o que eu quero,
+[06:45] as cores que eu quero das letras, das palavras.
+[06:47] Eu posso usar a nativa do estilo,
+[06:50] lembra que eu acabei de escolher um estilo?
+[06:51] Eu posso deixar aquilo que já vem com aquele estilo,
+[06:53] ou utilizar uma paleta pronta,
+[06:54] ou utilizar o meu design system,
+[06:56] ou até mesmo eu alterar as cores por aqui.
+[06:58] Além disso, a gente pode também vir aqui em corda de imagem,
+[07:01] que ele vai fazer o color grading da sua imagem.
+[07:02] Então, olha só, você pode selecionar mais quente, mais frio,
+[07:05] pode selecionar uma cor mais viva,
+[07:07] e também aumentar ou diminuir a intensidade aqui.
+[07:10] Que seria praticamente aqueles filtros do Instagram,
+[07:12] a gente pode partir para o próximo, que é o som,
+[07:15] e aqui a gente pode colocar música,
+[07:17] eu posso pedir para ele criar uma música para o vídeo,
+[07:19] e eu posso escolher essa música para ser discreta, presente, marcante,
+[07:22] posso arrastar aqui um arquivo MP3
+[07:23] para que ele utiliza uma música específica que eu queira,
+[07:25] e também posso pedir efeitos sonoros,
+[07:27] posso pedir pouco efeito, médio ou muito.
+[07:29] Depois eu posso passar algumas referências para ele,
+[07:30] seja de vídeo, seja de motion graphics,
+[07:32] seja até mesmo de logos e imagens que eu quero que ele utilize,
+[07:35] e no final ele vai me trazer a entrega do meu reels.
+[07:38] E justamente para você ver como funciona essa entrega,
+[07:39] vou mostrar esse projeto aqui que está pronto,
+[07:41] a gente vem aqui em entrega,
+[07:43] veja que antes de entregar, ele me passa uma lista aqui de cards
+[07:46] para que eu aprove ou não, para que eu peça alguma correção,
+[07:48] e depois que eu aprovo tudo, ele me dá a versão final.
+[07:51] Que no caso eu posso ver aqui,
+[07:52] veja que eu tenho a versão Bruto e a Previa V1.
+[07:54] Quando eu solto a Previa...
+[07:55] Isso aumenta de a totalmente gratuitas
+[07:57] que podem fazer você economizar centenas de dólares por ano.
+[08:00] Elas se chamam Slides, Docs e Designing
+[08:03] e ficam dentro do chat que você já utiliza.
+[08:05] E para utilizar é muito fácil,
+[08:07] é só você pedir para ele aquilo que você quer construir,
+[08:09] como por exemplo uma apresentação comercial para o seu negócio.
+[08:11] A partir daí, ele vai preparar todos os slides para você.
+[08:14] Depois com os seus slides prontos,
+[08:16] enfim, que você já conhece o Reels, viu a edição,
+[08:18] como ficou muito boa,
+[08:19] e aqui embaixo tem um lugar para a gente colocar o prompt,
+[08:22] ou seja, se a gente quiser mudar alguma coisa,
+[08:23] reditar alguma coisa,
+[08:25] a gente pode mandar aqui através do prompt,
+[08:27] é lógico que eu, para tudo isso que a gente fez,
+[08:29] sempre utilizo o OPPO 5.5 no esforço alto,
+[08:32] porque foi exatamente nessa configuração
+[08:34] que eu cheguei nos melhores resultados.
+[08:35] E se você gostou do design OS,
+[08:37] quer ficar na frente dos seus concorrentes para criar Reels,
+[08:39] carro 6 e até mesmo Motion Graphics,
+[08:42] tendo acesso a toda a minha biblioteca
+[08:43] para você utilizar e chegar em resultados muito bons,
+[08:45] é só você passar a câmera do seu celular
+[08:47] porque é o code que está aparecendo aqui na tela
+[08:48] e vim fazer parte da nossa comunidade AI verso.
+[08:50] Lá você tem acesso a uma comunidade inteira
+[08:53] com as minhas ferramentas, com as minhas skills,
+[08:55] e é lógico que além de tudo isso,
+[08:56] você tem acesso a uma trilha completa de cloud,
+[08:58] Google, anti-gravy, N8n, e todos os cursos
+[09:01] que eu ainda vou lançar.
+[09:02] Então, não perde tempo, passa a câmera do seu celular
+[09:03] no QR Code que está aparecendo aqui na tela,
+[09:04] você vai ser muito bem-vindo e muito bem-vinda.
+[09:06] Mas voltando aqui, porque eu ainda nem te passei o segredinho
+[09:09] que eu mesmo utilizo para fazer minhas edições,
+[09:11] e como a gente está falando em melhorar a qualidade,
+[09:13] tem uma coisa que eu falo sempre aqui no canal,
+[09:14] quer melhorar a qualidade de algo que você está criando,
+[09:17] você precisa usar referências.
+[09:20] E eu trouxe aqui esses dois exemplos de Reels,
+[09:22] é o mesmo Reels, então o texto é o mesmo,
+[09:24] mas olha a qualidade do Motion Graphics que ele criou.
+[09:27] Olha a edição como está diferente,
+[09:29] como está legal, como está bonita,
+[09:31] e eu consegui chegar nesses resultados
+[09:32] passando uma boa referência.
+[09:34] E a referência que eu passei
+[09:35] foi uma referência de Motion Graphics
+[09:38] que fica nesse site aqui que eu gosto demais.
+[09:41] E sim, vou admitir, ele é o meu segredo.
+[09:43] Então aqui você tem uma biblioteca
+[09:44] cheia de Motion Graphics,
+[09:46] mas não são quaisquer Motion Graphics.
+[09:48] Aqui são Motion Graphics criados por OPPO 5.5.
+[09:51] E por que que eu estou te falando isso?
+[09:52] Porque quando você passa para o seu OPPO 5.5,
+[09:55] o Motion Graphics que foi criado com o OPPO 5.5,
+[09:57] ele consegue replicar no detalhe
+[10:00] a qualidade daquilo que você está vendo.
+[10:01] Então sim, você consegue personalizar muito mais
+[10:04] os seus Reels
+[10:05] quando você passa uma boa referência de Motion Graphics,
+[10:08] que foi exatamente o que eu fiz nesses dois exemplos.
+[10:10] Isso daqui, ele fez todo esse desenho,
+[10:12] toda essa edição com base no Motion Graphics
+[10:14] que eu passei para ele, e também,
+[10:15] claro, utilizando toda a skill.
+[10:17] Porque lembra que Motion Graphics
+[10:18] é só uma das coisas importantes
+[10:20] na hora de fazer os seus Reels.
+[10:21] E é lógico que eu vou deixar o link desse site
+[10:22] no material da aula,
+[10:24] que é o mesmo material que você acessou
+[10:25] para pegar a nossa skill lá do GitHub.
+[10:27] Mas agora ainda tem um nível acima
+[10:30] de tudo aquilo que a gente viu.
+[10:31] Tem como trazer um resultado ainda mais legal.
+[10:33] Porém, esse aqui vai gastar um pouco mais.
+[10:35] Vai gastar um pouco mais de créditos no seu Cloud Code,
+[10:38] mas também vai gastar créditos no Higgs Field.
+[10:40] Porque é justamente essa ferramenta,
+[10:42] o Higgs Field, que vai fazer com que você
+[10:44] consiga elevar o nível ainda mais
+[10:46] daquele Reel que você está criando.
+[10:48] Prova disso é essa edição aqui.
+[10:50] O Cloud acabou de lançar três ferramentas de A
+[10:52] totalmente gratuitas
+[10:53] que podem fazer você economizar
+[10:54] centenas de dólares por ano.
+[10:56] Elas se chamam Slides, Docs e Designing
+[10:58] e ficam dentro do chat que vocês já utilizam.
+[11:00] E para utilizar é muito fácil,
+[11:02] é só você pedir para ele aquilo que você quer construir,
+[11:04] como por exemplo uma apresentação comercial
+[11:05] para o seu negócio.
+[11:06] Partir daí, então,
+[11:07] ele vai preparar todos os slides para você.
+[11:09] Depois, com seus slides prontos,
+[11:10] você pode exportar a apresentação inteira
+[11:12] para a Power Point ou para o Google Slide.
+[11:14] Mas a novidade não para só nos slides.
+[11:15] Na mesma conversa, por exemplo,
+[11:16] você pode pedir para ele criar um roteiro
+[11:19] que depois ele consegue transformar em carro 6 Instagram
+[11:21] com base nesse material.
+[11:22] Então, em vez de você pagar pelo Gama ou pelo Canva,
+[11:25] você tem tudo em uma única conversa.
+[11:27] Comenta slides e eu te vim o link para você conhecer.
+[11:29] O Cloud acabe que aqui ele criou várias imagens
+[11:33] diferentes daquilo que a gente vinha
+[11:34] vendo anteriormente.
+[11:35] E ele fez isso justamente utilizando o Higgsud
+[11:37] para gerar essas imagens.
+[11:39] Então, aqui sim, a gente vai ter um gasto maior,
+[11:41] como eu disse, de tokens do próprio Cloud
+[11:43] e também de créditos gerando essas imagens no Higgsud.
+[11:46] Portanto, se você fala,
+[11:47] Felipe, a qualidade é o que é o mais preso.
+[11:49] Eu aconselho sim que você conecte o Higgsud
+[11:52] no seu Cloud e peça então para ele criar
+[11:54] essas imagens para você.
+[11:55] E para fazer isso é muito simples.
+[11:57] Eu vou deixar esse link também no material da aula
+[11:58] onde você pode vir aqui, selecionar Cloud Code,
+[12:01] copiar isso daqui.
+[12:02] E com base nisso, ele já vai te indicar
+[12:04] como você pode fazer a conexão com o MCP.
+[12:06] Claro que você vai precisar da sua conta,
+[12:08] você cria uma conta antes
+[12:09] e depois manda isso aqui para o Cloud.
+[12:10] E a partir disso, ele já vai conseguir acessar o Higgsud
+[12:13] para gerar esse tipo de imagem.
+[12:14] Mas antes que você fique aí,
+[12:15] ah, então, para eu ter um Rhewge, muita qualidade,
+[12:17] eu vou necessariamente precisar do Higgsud.
+[12:19] Eu vou colocar um Rhewz aqui,
+[12:21] que é um dos que eu mais gosto
+[12:22] dessas versões todas que a gente criou
+[12:24] e também está disponível lá no DesignOS,
+[12:26] como um dos estilos que você pode criar.
+[12:28] E saiba que aqui a gente não utilizou o Higgsud
+[12:31] para gerar absolutamente nada.
+[12:33] Olhe o resultado que a gente consegue chegar.
+[12:34] O Cloud acabou de lançar três ferramentas de a
+[12:36] totalmente gratuitas que podem fazer você economizar
+[12:39] centenas de dólares por ano.
+[12:41] Elas se chamam Slides, Docs e Design
+[12:43] e ficam dentro do chat que você já utiliza.
+[12:46] E para utilizar é muito fácil,
+[12:47] é só você pedir para ele aquilo que você quer construir.
+[12:49] Então eu vou, por exemplo, uma apresentação comercial
+[12:51] para o seu negócio.
+[12:52] A partir daí, então, ele vai preparar
+[12:53] todos os slides para você.
+[12:55] Depois, com seus slides prontos,
+[12:56] você pode exportar a apresentação inteira
+[12:58] para a PowerPoint ou para a Google Slides.
+[13:00] Mas a novidade não para só nos slides.
+[13:02] Na mesma conversa, por exemplo,
+[13:03] você pode pedir para ele criar um roteiro
+[13:05] que depois ele consegue transformar em carrosséis
+[13:07] no Instagram com base nesse material.
+[13:09] Então, em vez de você pagar pelo Gama ou pelo Canva,
+[13:11] você tem tudo em uma única conversa.
+[13:13] Comenta slides e eu te vim o link para você conhecer.
+[13:16] Pois é, legal demais, né?
+[13:17] E tudo isso foi feito apenas utilizando as minhas skills,
+[13:20] o design OS e referências de imagens.
+[13:23] Por exemplo, a fumaça que está atrás de mim,
+[13:24] ele não criou, foi uma referência.
+[13:26] Algumas das imagens que ele colocou aqui
+[13:28] como os dólares caindo,
+[13:29] foi também uma referência.
+[13:30] E todas as outras imagens que ele criou
+[13:32] que você viu aí, são imagens que o próprio Cloud
+[13:34] conseguiu fazer sem gastar um único crédito
+[13:36] usando o Higgs Field.
+[13:37] Portanto, você consegue sim chegar em resultados
+[13:40] como esses apenas utilizando
+[13:42] da maneira correta o Cloud Code.
+[13:43] Mas agora eu quero saber de você,
+[13:45] o que você achou desse vídeo, gostou?
+[13:47] Vai utilizar, me conta aí nos comentários.
+[13:49] Aproveito também e reforço,
+[13:50] se você quer sair à frente dos seus concorrentes
+[13:52] e criar carros SES, Motion Graphics, Reels, imagens, sites,
+[13:56] melhor do que todo mundo utilizando o design OS,
+[13:58] que é o mesmo sistema que eu utilizo,
+[14:00] é só você passar a câmera do seu celular no Cloud Code,
+[14:02] está aparecendo aqui na tela,
+[14:03] e vim fazer parte do AI Verso,
+[14:05] que é uma comunidade onde você encontrar
+[14:06] muita coisa além dessas ferramentas que eu utilizo.
+[14:09] E de novo, eu garanto que você vai ser muito bem-vindo
+[14:11] e muito bem-vinda.
+[14:13] No mais, eu peço para que você deixe o like no vídeo
+[14:15] se você gostou, deixe o high-par,
+[14:16] porque é seu jeito gratuito de me ajudar.
+[14:18] Que essa mensagem chegue para mais pessoas
+[14:19] e o canal continue crescendo.
+[14:20] E também, óbvio, peço a sua inscrição.
+[14:22] Se você gostou, se inscreve aqui no canal
+[14:24] porque todas as semanas eu trago vídeos como esses daqui.
+[14:27] Então agora eu me despeço,
+[14:28] vou deixar você aqui com um vídeo desse lado
+[14:31] para que você continue aprendendo sobre inteligência artificial.
+[14:33] Nos vemos no próximo vídeo.
+[14:34] Um grande abraço e falou!

@@ -1,0 +1,107 @@
+idioma: en
+[00:00] Look at these two videos. This one has over 4.6 million views, and it's from a channel that
+[00:05] started just a few weeks ago. And this other one? I created it entirely using Clod Code,
+[00:12] without spending a single dollar on any other AI tool. That's right. No Higgsfield plugins,
+[00:18] no expensive AI video generators, none of that. Clod Code literally created every single frame
+[00:24] of this video using 3D coding. And here's the crazy part. I've seen creators selling this exact
+[00:30] method for hundreds of dollars. But I'm not going to do that. Instead, I'm going to show you the entire
+[00:36] process step by step, completely for free. Once you learn this method, you can apply it to pretty
+[00:43] much any niche you want, and start creating videos in this exact style. And there are already several
+[00:49] channels doing this successfully. For example, this short channel called Rix Clips, another one
+[00:55] called Ifverse, and even this brand new channel called Capital Case. They're all using a similar
+[01:02] visual style. And the reason it works so well is that these 3D animations are incredibly engaging,
+[01:09] visually satisfying, and genuinely interesting to watch. And the best part? You can create this
+[01:15] type of content yourself using Clod Code without relying on expensive AI video generators. Okay,
+[01:21] now to get started, we need to install two tools, 3.js and Remotion. 3.js is what we're going to use
+[01:31] to create the 3D animations and Remotion will help us put everything together, including captions,
+[01:37] audio, and the final video. But don't worry, you don't have to install these manually.
+[01:43] Clod Code can handle the entire setup for you. All you need to do is open Clod Code and type something
+[01:49] like this. I want to create 3D animated videos. For that, I need 3.js for 3D animations and
+[01:56] Remotion for captions, audio, and video rendering. Please install and set up everything I need.
+[02:03] And that's it. Clod Code will take care of the setup. And once everything is installed,
+[02:08] we're ready to start creating our first video. Now the next thing you need to do is grab the
+[02:12] plugin I've provided in the description and install it in Clod Code. Here's what I actually did. I
+[02:18] downloaded several videos in this animation style, took screenshots of different scenes,
+[02:23] and used those references to develop a custom plugin that can create similar 3D animations,
+[02:28] frame by frame. So basically, I've already done the most complicated part for you. You don't
+[02:33] need to figure out the coding, animation techniques, or how to recreate this visual
+[02:37] style from scratch. The plugin is designed to handle all of that for you. All you need to do is install
+[02:43] it and you're ready to start creating your own 3D animated videos. Once you download the plugin,
+[02:49] simply upload the zip file to Clod and ask it to install the plugin and use it for the next
+[02:54] steps. That's literally all you need to do. Clod will handle the setup and once everything
+[03:00] is ready, we can move on to creating our first 3D animated video. As I mentioned earlier,
+[03:05] you can use this method for pretty much any niche you want, whether it's history, psychology,
+[03:10] wealth, or even what if videos. But for this tutorial, I'm going to go with the money niche.
+[03:17] And if you want to try this niche yourself, I've included a master prompt in the description
+[03:21] that you can use to generate video ideas and scripts. So here's exactly what I'm going to do.
+[03:27] Okay, first I'm going to copy the master prompt, paste it into Clod, and run it. Now it's
+[03:33] going to generate 10 unique video ideas for our money niche. All I need to do is pick the one I like
+[03:39] and enter it into the chat. Next, Clod is going to ask how long I want the video to be. I think 6
+[03:45] minutes would be a good starting point. And as you can see here, it's already generating the
+[03:50] script for our video. Now once the script is ready, there's one more thing we need before
+[03:55] activating our plugin. And that's the voiceover. For this, I'm going to split the script into
+[04:00] three different parts and generate the voiceovers using 11 labs. By the way, if you want to try 11
+[04:06] labs, I've included a link in the description and you might be able to get some discounts through
+[04:10] that link. Alright, now that the voiceover for our first part is ready, I'm just going to upload it
+[04:15] to Clod and ask it to generate the 3d animated video using the custom skill we installed earlier.
+[04:22] And now let's see what Clod code can actually create. The first part of the video has been
+[04:27] generated. And now let's take a look at it. For years, one number supposedly explained how much
+[04:33] money you needed to be happy. $75,000 a year. Below that, more money helped. Above it,
+[04:41] happiness apparently stopped improving. Congratulations, your emotions had a salary cap.
+[04:48] Then another researcher checked. His results disagreed. So he teamed up with one of
+[04:53] the scientists behind the original finding. And together, they discovered that the question
+[04:57] wasn't just how much money you made. It was which kind of happiness they were measuring.
+[05:03] And whose. In 2010, Daniel Kahneman and Angus Deaton published research examining more than
+[05:10] 450,000 survey responses from Americans. But they separated two things we usually squeeze into
+[05:17] word. Happiness. First, how you feel while living your life. Did you experience enjoyment
+[05:24] yesterday? Worry, sadness. Second, how you evaluate your life when you step back and think about it.
+[05:32] Those aren't identical. You can be proud of your career while spending Tuesday arguing with a
+[05:37] printer. That looks great. Now, if you're not happy with the character style or the colors
+[05:43] you're getting, don't worry. You can always ask Claude to suggest some different character designs.
+[05:48] For example, I'm going to type, can you suggest some unique character designs with more details?
+[05:54] I also need visual examples so I can see what each style looks like. And just like that,
+[06:00] Claude will give us different character design ideas to choose from. So instead of sticking
+[06:04] with the default style, we can experiment with different looks until we find something that
+[06:09] perfectly fits our channel. As you can see here, we've got some pretty cool stick figure styles.
+[06:15] And even some more detailed humanoid character designs. And that's one of the best things
+[06:20] about this master prompt. You're not stuck with just one animation style. You can easily
+[06:25] customize the characters, colors, and overall visual style to match your niche and make your
+[06:31] videos look unique. So yeah, I'm going to go ahead and add the remaining voiceover parts.
+[06:36] Let Claude generate the rest of the animations. And once everything is done,
+[06:41] let's see how the final video turns out. Okay guys, the video is finally complete.
+[06:46] And here's the crazy part. This whole process didn't take days or even several hours. It only
+[06:52] took around 45 minutes to generate the entire video. And we're not just talking about some
+[06:58] basic slideshow with a few moving images. We've got proper animations, smooth transitions,
+[07:04] motion graphics, and even sound effects all generated automatically. Think about how much
+[07:09] time this would normally take if you were doing everything manually. You have to create the
+[07:14] characters, animate every single scene, add transitions, find suitable sound effects,
+[07:20] and then put everything together in a video editor. That could easily take hours,
+[07:25] especially if you're a beginner. But with this Claude plugin and the master prompt,
+[07:29] we managed to simplify pretty much the entire process. And the best part is, you don't need to
+[07:35] know anything about coding or professional animation to get started. Now you already know how to install
+[07:40] the plugin, use the master prompt, generate your script, add your voiceovers, and customize the
+[07:46] animation styles. But here's something even more important. Just because you can create these
+[07:51] videos doesn't mean you should start making random content. You need to choose the right
+[07:56] niche. And that's where things get interesting, because this animation style isn't limited to just
+[08:02] one type of content. You can use it for psychology videos, where you explain human behavior, emotions,
+[08:08] and why people think the way they do. Or you can create self-improvement videos about confidence,
+[08:14] discipline, and building better habits. You can even take this into the finance niche and explain
+[08:20] complicated money concepts using simple animated characters. Topics like why people stay broke,
+[08:26] how inflation affects everyday life, or what would happen if everyone earned the same salary.
+[08:32] And if you prefer educational content, you can explore history, science, or even what-if scenarios.
+[08:38] Imagine explaining historical events or crazy scientific situations
+[08:42] using these simple animations and motion graphics. There are so many possibilities here,
+[08:48] and you don't have to copy what everyone else is already doing.
+[08:51] My suggestion is to pick one broad niche. Find a unique sub-niche within it, and build your channel
+[08:57] around that specific topic. That way, you can develop a recognizable style and give people
+[09:03] a reason to keep coming back for more videos. And remember, the AI is just a tool. Your ideas,
+[09:10] storytelling, and the way you present your content are what will make your channel stand out.
+[09:15] And with that, we've reached the end of today's video. Now you know how to create these amazing
+[09:21] 3D animated videos using Claude code, without spending hundreds of dollars on expensive
+[09:27] AI video generators or plugins. And before you go, I'm actually working on something even more
+[09:34] exciting right now. It's a completely new animation style that I haven't seen anyone
+[09:39] else using on YouTube yet. And trust me, I can't wait to show you guys how it works.
+[09:44] So, if you don't want to miss that tutorial, make sure to subscribe to the channel and turn on
+[09:49] notifications. And if you found this video helpful, drop a like and let me know in the comments
+[09:55] what niche you're planning to try with this method. Thanks for watching, and I'll see you
+[09:59] guys in the next one.

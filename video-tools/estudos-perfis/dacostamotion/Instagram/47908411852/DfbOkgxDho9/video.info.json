@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "DfbOkgxDho9",
+ "title": "Post by dacostamotion",
+ "description": "Always trying to be better, always moving forward.",
+ "channel": "dacostamotion",
+ "uploader_id": "47908411852",
+ "uploader": "José Emanuel | Motion Designer",
+ "timestamp": 1794022484,
+ "like_count": 122,
+ "comment_count": 11,
+ "webpage_url": "https://www.instagram.com/reel/DfbOkgxDho9/",
+ "webpage_url_basename": "DfbOkgxDho9",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20261107",
+ "playlist_count": 6,
+ "epoch": 1794151596,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

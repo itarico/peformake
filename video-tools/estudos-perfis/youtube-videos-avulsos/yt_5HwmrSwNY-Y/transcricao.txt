@@ -1,0 +1,284 @@
+idioma: pt
+[00:00] Esses vídeos aqui foram 100% feitos com o cloud, sem editor de vídeo e sem entender nada.
+[00:04] E tem canais lá fora faturando de 10 a 15 mil reais por mês, só com esse formato que
+[00:09] começou a viralizar.
+[00:10] E sim, tá acontecendo agora.
+[00:12] Mas presta atenção, porque esse formato não serve só pra viralizar.
+[00:16] Dá pra criar vídeos de curiosidades, até explicar assuntos difíceis, como anatomia
+[00:20] humana, vídeos de medicina, várias coisas.
+[00:23] E é por isso que dá até pra você vender esse serviço.
+[00:26] E eu passei dias testando isso até fazer funcionar sem pagar outra ferramenta,
+[00:30] utilizando só o cloud, até que eu descobri.
+[00:33] E hoje eu vou te mostrar tudo do zero.
+[00:35] Então a única coisa que eu te peço é pra deixar o like e se inscrever.
+[00:38] Bora!
+[00:39] Então abre o cloud e pede o seguinte pra ele.
+[00:42] Eu quero construir um sistema automatizado pra criar vídeos curtos de curiosidades
+[00:46] em 3D.
+[00:47] O sistema precisa gerar personagens, cenários, animações, movimentos de câmera e renderizar
+[00:52] os vídeos.
+[00:53] Você vai ter que fazer isso por código sem depender de um editor de vídeo.
+[00:56] Pronto, você já enviou o contexto do seu projeto.
+[00:59] Agora bora pro próximo passo.
+[01:00] Aqui você não vai enviar mais nenhum prompt pro cloud.
+[01:03] O que ele precisa é de imagem, vídeo, referência, qualquer coisa que facilita ele entender
+[01:07] o resultado final.
+[01:08] Então vamos entrar no Pinterest e você cola todas essas palavras-chaves.
+[01:12] Sai baixando todo tipo de imagem, foto que você quer, salva a nossa pasta e manda
+[01:17] pro cloud.
+[01:18] E você vai digitar esse prompt que tá aqui na minha tela.
+[01:20] Presta atenção aqui, porque agora o cloud já entendeu tudo que você quer.
+[01:23] Então pede pra ele fazer um personagem teste pra você.
+[01:26] E ele vai te entregar algo mais ou menos assim.
+[01:28] O meu personagem veio assim, sim eu sei ele tá feio mas eu quis ele assim.
+[01:32] Se você quiser ele mais forte, mais baixo, mais alto, você pode personalizar e ele consegue
+[01:36] deixar exatamente do jeito que você quer.
+[01:38] Tá bom?
+[01:39] Eu preferi deixar o meu assim porque você vai ver o que eu vou fazer.
+[01:41] Até agora você percebeu que pra criar um personagem 3D é etapa por etapa e
+[01:45] nunca cloud cria isso aqui pra mim.
+[01:48] Errado.
+[01:49] Porque agora vem o próximo passo que é a personalização no seu personagem.
+[01:52] O meu veio assim, só que agora eu quero deixar ele igual morre do rick morre.
+[01:56] Vestindo a mesma mochila, a mesma calça e aí que entra a personalização.
+[01:59] Mas você pode fazer por conta própria também.
+[02:01] E como você viu ele tá deixando o morre parecido.
+[02:04] Só que você percebeu que o olho não tá tão parecido?
+[02:07] Mostra você mandar esse prompt.
+[02:08] Cloud eu quero exatamente igual.
+[02:10] Os olhos, a boca, o formato do corpo e o resultado ficou assim.
+[02:15] Claro ainda não tá finalizado, não tá bom eu posso refinar.
+[02:18] Mas bora pra próxima etapa porque aqui que fica interessante meu amigo.
+[02:23] Agora que você criou o seu primeiro personagem você precisa dar vida à história dele.
+[02:27] Porque apenas um personagem não funciona.
+[02:30] Então vamos começar a criar os elementos que compõem esse personagem.
+[02:33] Os objetos, os cenários.
+[02:35] E pra isso olha o prompt que eu vou mandar.
+[02:37] Cloud eu quero que você crie todos os objetos e todos os cheats.
+[02:41] Cheats é como se fosse o mapa do seu corpo de frente e de lado.
+[02:44] Assim como também os objetos que você tá segurando.
+[02:46] Celular, luz, microfone, câmera.
+[02:49] Tudo que o personagem vai interagir naquela história.
+[02:52] E presta atenção nesse detalhe.
+[02:53] Eu quero focar em um apocalipse zumbi estilo The Walking Dead.
+[02:56] Ah lembrando Cloud eu quero que tenha o segundo personagem principal.
+[03:00] Que vai ser o amigo dele.
+[03:01] Eu mandei a foto aqui do amigo dele.
+[03:03] Acho que vocês conhecem também.
+[03:04] Vou mandar e ele vai tá criando tudo e eu vou mostrar pra vocês.
+[03:07] Bom pessoal ligeiro aqui como vocês podem vir na minha tela.
+[03:10] Todos os personagens, todos os elementos que vão aparecer aqui na nossa série de zumbi.
+[03:14] E até os zumbis né.
+[03:16] Eu fui modificando o personagem aqui um pouquinho como você pode ver.
+[03:19] Ah tira isso, coloca isso, coloca isso e pronto.
+[03:22] Agora a gente chegou no momento mais importante.
+[03:24] Que é o roteiro.
+[03:25] E existem dois modelos.
+[03:26] O primeiro é o de história.
+[03:28] Onde tem uma pergunta muito impactante.
+[03:30] Que fica martelando na mente da pessoa.
+[03:32] E ela só é respondida no final.
+[03:34] Já o segundo modelo é o modelo por etapas.
+[03:37] E também tem uma premissa muito forte.
+[03:39] Por exemplo.
+[03:39] Imagino que você acabou de voltar 500 mil anos no passado.
+[03:42] E olha o que vai acontecer.
+[03:44] Primeira etapa um pterodátil passa na sua cabeça.
+[03:47] Já na segunda etapa acontece tal coisa.
+[03:49] E isso vai viciando pra que a pessoa se assista até o final.
+[03:51] Bom se você não entendeu eu deixei um prompt aqui abaixo.
+[03:53] Só pra você copiar e colar.
+[03:55] Inclusive é o prompt da aula inteira.
+[03:57] Tá bom?
+[03:57] É só você copiar tudo, mandar pro seu cloud que ele vai entender tudo.
+[04:00] Bora pro próximo passo.
+[04:01] Agora a gente só precisa criar história.
+[04:03] E não, você não precisa ter nenhuma ideia.
+[04:05] É só você escolher o modelo de história.
+[04:07] Inclusive tem vários outros que eu deixei nesse documento.
+[04:09] Você escolhe o modelo e fala pro cloud de ideias.
+[04:12] Eu já peguei aqui várias ideias.
+[04:14] E se o apocalipse zumbi durasse um ano.
+[04:16] E se você cavasse até o centro da terra.
+[04:18] E várias outras ideias.
+[04:19] Vamos escolher qualquer uma.
+[04:20] Eu estou escolhendo de apocalipse zumbi porque eu já tinha essa ideia em mente.
+[04:24] Mas é interessante que você saiba a história antes de você começar a gerar todos aqueles objetos de contexto.
+[04:29] Porque antes a gente tinha gerado ali o zumbi e tudo mais.
+[04:32] Mas bora ver o resultado aqui.
+[04:34] Pronto, agora você já criou o roteiro.
+[04:35] Então você analisa, veja o que tem que trocar e aprova.
+[04:39] Agora pro próximo passo.
+[04:40] Que é a hora da voz.
+[04:41] E tem duas formas.
+[04:42] A primeira é você fazer com uma voz de inteligência artificial.
+[04:46] E a segunda é você fazer com a sua própria voz.
+[04:48] Eu recomendo você fazer com a sua própria voz.
+[04:50] Porque é gratuito e consegue sair na entornação que você gostaria.
+[04:54] De a segunda forma tem duas formas.
+[04:56] É a paga e a gratuita.
+[04:58] A gratuita é muito ruim.
+[05:00] Ela só serve para marcação.
+[05:02] Para você conseguir colocar a voz ali certinho em cada ponto que está sendo dito.
+[05:07] Para depois você utilizar a voz paga.
+[05:09] Que é a do 11 Labs.
+[05:10] Aí sim é a voz boa.
+[05:13] Ela é uma voz expressiva com inteligência artificial e humana.
+[05:16] Então vamos lá, primeiro de tudo.
+[05:17] Coloca para instalar um negocinho no cloud chamado Whisper.
+[05:20] Ele é essa voz de robô que sai mais ou menos assim.
+[05:23] O domando o mandalakabu.
+[05:25] So sovereign bakke iyozika.
+[05:27] Eu sei, é meio estranho.
+[05:29] Você não vai subir seu rioz com essa voz.
+[05:31] Ela só serve para marcação, como eu disse.
+[05:33] A voz que você vai subir é muito mais profissional.
+[05:36] Mas depois que você aprova essa cena.
+[05:38] Aí sim a gente manda gerar no 11 Labs.
+[05:40] E pronto pessoal, ele criou o vídeo.
+[05:41] Bora analisar.
+[05:44] É, ficou legalzinho.
+[05:48] Ah, legal aqui.
+[05:49] Todos os materiais que ele precisa para o item de sobrevivência.
+[05:53] Eu não vou colocar tudo não, né?
+[05:54] Porque está com essa voz esquisita.
+[05:56] Mas com um vídeo bem completo, cara.
+[05:58] Vários cenários mostrando cada situação.
+[06:00] E aí, qual que é o segredo aqui?
+[06:01] É a gente corrigindo aos poucos.
+[06:04] E aqui que está o ouro, meus amigos.
+[06:06] Tudo o que você for corrigir, você fala para o cloud que é o seguinte.
+[06:09] Anote as correções e os acertos para no final nós criarmos uma skill.
+[06:13] O que que é uma skill?
+[06:14] É um manual para o cloud seguir e não cometer erros.
+[06:18] Nunca mais.
+[06:18] Inclusive, quando você for subir no YouTube,
+[06:22] eu vou te dar uma dica de skill para você conseguir subir em massa.
+[06:25] Sem ficar perdendo tempo.
+[06:26] O cloud está subindo meus 60 vídeos para o shorts.
+[06:28] Vai colocar meu título, vai colocar minha descrição.
+[06:31] Vai subir aqui, vai programar.
+[06:33] E os 60 vídeos vão ser publicados aí ao decorrer desse mês.
+[06:36] Eu não estou fazendo absolutamente nada, como vocês viram.
+[06:39] Pois é, pessoal.
+[06:40] Aqui a gente fala e mostra também.
+[06:42] Então se inscreve no canal que aqui tem muito mais.
+[06:46] Muito mais mesmo.
+[06:47] Vou até abrir aqui o cloud.
+[06:48] Você vai ver que o único própter que eu mandei.
+[06:50] Quero que você acesse meu navegador.
+[06:52] Pegue todos os últimos vídeos que nós produzimos e poste.
+[06:54] E pronto.
+[06:55] Tá bom?
+[06:56] Aqui acessa meu canal aqui.
+[06:57] Eu acabei de criar também.
+[06:59] E é isso.
+[07:01] Mas bora para o próximo passo.
+[07:02] Depois que você fez as mudanças que tinha que fazer,
+[07:04] por exemplo, aqui eu já mandei ele aprovar.
+[07:06] Você pode entrar aqui no 11 Labs e escolher essa voz aqui.
+[07:10] Eleve em quatro.
+[07:11] Só que aqui é pago, né, pessoal?
+[07:13] Ou você pode gravar o seu próprio áudio narrando o seu roteiro.
+[07:16] Aí é você quem escolhe.
+[07:17] E você coloca todo o seu roteiro aqui.
+[07:19] Copie, cola aqui e clica em baixar.
+[07:22] Depois que você baixou, pessoal, é só você puxar o áudio.
+[07:24] Jogar aqui dentro e fala para ele sincronizar a fala com o vídeo.
+[07:28] E bom, pessoal, o resultado final com o áudio ficou assim.
+[07:31] Hoje de manhã só sobraram você e o Zeta.
+[07:36] Esse painel é subscrito.
+[07:37] O Zeca é o Mori ali, né?
+[07:40] Ele não quis utilizar o nome do Mori.
+[07:42] Mas enfim, ficou bem mais profissional, tá bom?
+[07:44] Agora eu quero te mostrar outra coisa que dá para você fazer.
+[07:47] Dá para você criar vídeos sobre anatomia, sobre medicina e sobre luta.
+[07:51] Agora que você finalizou o primeiro vídeo,
+[07:53] você precisa automatizar esse formato.
+[07:56] E para fazer isso, você vai dar barra Skill Creator
+[07:59] para ficar mais ou menos assim na sua tela e você dar um nome.
+[08:02] Ele vai salvar o processo.
+[08:03] Agora é só você ter ideia de personagem,
+[08:05] ideia de qualquer história que ele vai trazer um modelo assim.
+[08:08] Eu tive uma ideia e tá incrível.
+[08:10] Inclusive eu já postei, tô postando em massa lá.
+[08:13] Só que agora eu quero te mostrar mais um formato viral,
+[08:15] que não é tão parecido como esse.
+[08:17] Que é o de Esport. Lembra que eu te falei?
+[08:18] Anatomia, tudo mais.
+[08:20] O bom desse formato é que ele é nichado.
+[08:22] E se você quiser vender algum produto, ou ebooks,
+[08:25] ou alguma coisa específica, você pode.
+[08:27] Porque o Cláudio vai conseguir repetir os movimentos,
+[08:29] vai conseguir demonstrar aquilo de uma forma eficaz.
+[08:32] Você tem que tomar cuidado, porque se você não foi especialista,
+[08:35] você precisa ver bem o que você vai fazer ali.
+[08:37] Mas bora para a prática.
+[08:39] No mesmo projeto, você vai abrir uma nova sessão.
+[08:41] A sessão é como se fosse um chat
+[08:43] dentro do mesmo projetinho que você salvou.
+[08:46] Então você clica aqui em mais, ele vai ficar salvo aqui,
+[08:49] na mesma passa que nós criamos,
+[08:50] e basta você mandar o seguinte prompt.
+[08:52] Agora eu quero que você elabore um personagem
+[08:54] muito parecido com um ser humano.
+[08:55] Porém, um personagem que luta a box.
+[08:58] E a única coisa que vai brilhar,
+[08:59] vão ser as cores da luva e dos shorts.
+[09:01] Para sinalizar o personagem rival e tudo mais.
+[09:05] Pessoal, depois disso, ele mandou um documento completo,
+[09:07] detalhando todo o processo.
+[09:09] E ele começou a criar e ele acertou bem.
+[09:12] O personagem não ficou 100% igual,
+[09:14] porque ele está destacando os músculos do corpo.
+[09:16] Então ele quer destacar tudo isso.
+[09:18] Então quando vocês forverem, não está bem certinho,
+[09:20] mas os movimentos estão iguais.
+[09:22] Eu já testei aqui e está funcionando.
+[09:24] Como vocês podem ver, está aí certinho.
+[09:26] Está meio estranho, mas isso aqui não importa,
+[09:28] porque a gente quer focar nos movimentos.
+[09:30] E aqui nesses músculos,
+[09:31] porque ainda dá para você puxar também
+[09:33] para fazer exercício físico, academia e tudo mais.
+[09:36] Quando fica destacado, a gente consegue ver.
+[09:38] E a parada mais interessante é que
+[09:40] eu nem falei para ele buscar nada,
+[09:41] mas ele pegou vários golpes aqui,
+[09:44] como o gancho, o direto, o jab e vários outros.
+[09:48] Só que agora eu falei para ele criar um reels narrado
+[09:50] do que acontece quando a pessoa leva um pou.
+[09:53] Bem aqui, o que acontece?
+[09:55] Que na mente da pessoa, enfim,
+[09:57] são algumas curiosidades.
+[09:59] E aí ele está criando um reel aqui agora.
+[10:01] Eu mandei um texto simples e vocês vão ver o resultado final.
+[10:04] E pessoal, depois que ele criar, chegar nesse resultado,
+[10:06] você vai criar uma outra skill para esse formato.
+[10:09] Você pode colocar Sport, Box.
+[10:11] Aí você separa por cada skill.
+[10:12] Olha, eu quero criar uma skill para Box,
+[10:14] uma skill para academia e uma skill para tal coisa.
+[10:17] Beleza.
+[10:17] Agora é só você ativar essa skill
+[10:20] e só falar o tipo de vídeo que você quer.
+[10:21] E ele vai começar a criar.
+[10:22] Só que agora a gente precisa postar em massa esses vídeos.
+[10:25] E para isso você vai falar assim para o Cloud.
+[10:27] Suba esse vídeo no YouTube para mim.
+[10:29] E depois que você finalizar, postar o vídeo.
+[10:32] Eu quero que você salva isso como uma skill de upload do YouTube.
+[10:35] E pronto, está feito.
+[10:36] Ele vai começar a subir automaticamente todos os vídeos.
+[10:39] É só você falar quantos vídeos você quer subir,
+[10:41] que ele vai subir todos.
+[10:43] Se você não quiser seguir nenhum passo, pessoal,
+[10:45] eu deixei um link aqui que você pode estar adquirindo.
+[10:48] Tá bom?
+[10:48] De tudo isso aqui, eu torrei praticamente o meu plano inteiro.
+[10:51] O meu é o 20 Max do Cloud.
+[10:53] Lembra, não foi só nesse projeto.
+[10:54] São vários outros projetos que a gente está criando aqui
+[10:57] para ensinar a galera.
+[10:58] Tá bom?
+[10:58] Se inscreve no canal, deixa o like e bora.

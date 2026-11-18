@@ -1,0 +1,5 @@
+idioma: en (0.99)
+[   1.2-   3.2] This guy's responding to my last message
+[   4.1-   7.9] This is how I interact with my agents by the way. Also, I can just
+[   8.4-  13.6] Talk to them and they will hear me. Hey, can you make sure that we're using screen capture to?
+[  14.6-  17.8] Go QA our apps that we're building

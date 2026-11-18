@@ -1,0 +1,18 @@
+idioma: pt
+[00:00] O Cloud agora faz animações desenhadas à mão como essas,
+[00:03] porque eu achei um repositório grátis no GitHub que transforma o Cloud num artista de animação à mão.
+[00:09] E o melhor, você não precisa saber nada de animação pra criar isso.
+[00:13] Deixa eu te mostrar como funciona.
+[00:14] Primeiro, abre o Cloud e passa esse repositório pra ele.
+[00:18] Agora é só descrever a animação que você quer.
+[00:20] Por exemplo, pede uma animação desenhada a lápis, um esboço em carvão ganhando vida,
+[00:25] ou até uma aquarela linda.
+[00:27] E olha só esses resultados.
+[00:29] Dá pra criar ilustrações animadas, vídeos com história, transições artísticas
+[00:34] e motion graphics únicos pro seu conteúdo.
+[00:36] Ele vem com 11 tipos de pincel, então você testa visuais diferentes
+[00:40] e cria animações que não parecem aquele vídeo típico feito por EA.
+[00:44] E o mais doido, é totalmente grátis e de código aberto.
+[00:48] Dá até pra usar em projeto comercial.
+[00:50] Salve esse vídeo!
+[00:51] Se você quer esse repositório, comenta pincel que eu te mando tudo no Direct.

@@ -1,0 +1,9 @@
+idioma: en
+[00:00] Every time you buy something, you probably look at it without thinking.
+[00:04] Those little black lines are one of the reasons modern shopping works the way it does.
+[00:08] Before barcodes, products had to be priced and tracked by hand.
+[00:13] Then, in 1974, a pack of chewing gum became the first product ever scanned.
+[00:18] It seemed almost insignificant, but suddenly, every product could have its own digital identity.
+[00:24] Check out became faster, inventory became easier to track,
+[00:28] and those little black lines became the language of modern retail.
+[00:33] Editors, your next client job starts inside this project file, earnedits.com.

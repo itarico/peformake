@@ -1,0 +1,19 @@
+idioma: pt
+[00:00] Como responder todos os leads que ficaram esquecidos no seu WhatsApp usando o cloud?
+[00:04] E o melhor, sem precisar criar um bot ou uma automação complicada.
+[00:07] Olha só como funciona.
+[00:08] Primeiro, eu abro a Chrome Web Store e instala a extensão do cloud.
+[00:11] No meu caso, uso o Comet, que é o navegador da perplexi.
+[00:14] Depois, abro o WhatsApp Web, ativo o cloud e envio um comando bem simples.
+[00:18] Peço para ele analisar minhas conversas dos últimos 30 dias
+[00:21] e identificar possíveis clientes que demonstraram interesse,
+[00:24] mas ficaram sem resposta.
+[00:25] E agora vem a parte mais interessante.
+[00:27] O cloud analisa o contexto de cada conversa e prepara uma resposta personalizada,
+[00:32] usando o meu jeito de falar e as informações do meu negócio.
+[00:34] Antes de enviar qualquer mensagem, eu reviso e aprovo.
+[00:37] Assim, consigo recuperar oportunidades que poderiam ficar esquecidas no WhatsApp
+[00:41] sem precisar procurar conversa por conversa.
+[00:43] E tudo isso sem configurar uma automação complexa.
+[00:46] Quer receber o prompt e o passo a passo para fazer isso também?
+[00:49] Comenta o WhatsApp aqui embaixo que eu te mando o guia completo.

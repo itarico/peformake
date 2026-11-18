@@ -1,0 +1,11 @@
+idioma: en
+[00:00] This is the text animation you've been seeing everywhere.
+[00:03] And the best part? It only takes 15 seconds to make and you don't even need plugins.
+[00:08] This is how you can make it. Add your text, expand the layer options.
+[00:12] From the animator menu, add opacity and position.
+[00:16] Set opacity to 0 and position to plus 100.
+[00:19] Go to range selector, advance, change units to words and shape to ramp up.
+[00:24] Set easy height to negative 50 and easy load to 100.
+[00:27] Then finally animate offset from negative 100 to plus 100.
+[00:32] And you're done. It's that simple.
+[00:33] And if you want the exact project file, common project and I'll DM it to you.

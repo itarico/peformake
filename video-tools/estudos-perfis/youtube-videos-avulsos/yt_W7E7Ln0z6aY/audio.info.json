@@ -1,0 +1,139 @@
+{
+ "id": "W7E7Ln0z6aY",
+ "title": "Como eu edito meus vídeos com Claude Code (fluxo completo)",
+ "fulltitle": "Como eu edito meus vídeos com Claude Code (fluxo completo)",
+ "channel": "Lucas Leite",
+ "channel_id": "UC47m2tl4YdPUVzQqhEhryiA",
+ "channel_url": "https://www.youtube.com/channel/UC47m2tl4YdPUVzQqhEhryiA",
+ "uploader": "Lucas Leite",
+ "uploader_id": "@LucasLeiteFilms",
+ "webpage_url": "https://www.youtube.com/watch?v=W7E7Ln0z6aY",
+ "upload_date": "20261103",
+ "duration": 526,
+ "duration_string": "8:46",
+ "view_count": 57718,
+ "like_count": 2050,
+ "comment_count": 216,
+ "channel_follower_count": 3900,
+ "description": "Edição de vídeo com IA usando o Claude Code: o meu fluxo completo de edição com IA, do bruto ao vídeo pronto, em 8 etapas. E no final, uma skill gratuita pra você criar o seu.\n\n🔗 Skill gratuita \"Fluxo de edição\": https://github.com/LeiteZ/fluxo-de-edicao\n🎵 Epidemic Sound: https://share.epidemicsound.com/sfbn38\n\nEste vídeo foi inteiro editado pelo Claude: cortes, motion graphics, zooms de câmera e efeitos sonoros. Mas não com um prompt mágico. Eu mostro o fluxo de 8 etapas que eu criei no Claude Code, onde eu reviso tudo no Premiere, e o Claude aprende com cada feedback e melhora a cada vídeo.\n\n📌 Capítulos\n0:00 Este vídeo foi editado pelo Claude\n0:59 O que você precisa\n1:13 Antes de começar\n1:44 O treinamento (você só faz uma vez)\n2:11 As 8 etapas do fluxo\n2:26 Etapas 1 e 2: iniciar e transcrever\n2:54 Etapa 3: cortes\n3:18 Etapa 4: motion mapa (a mais importante)\n4:03 Etapa 5: assets\n4:16 Etapa 6: motion graphics\n4:44 Etapa 7: zooms de câmera\n5:06 Etapa 8: efeitos sonoros\n5:37 Recap e a skill mestra\n6:34 O Claude aprende com você\n6:59 Quanto custa\n08:01 Skill gratuita\n08:25 A IA vai substituir editores?\n\n🛠️ Ferramentas do vídeo\n• Claude (assinatura Pro) + Claude Code\n• WhisperX: transcrição gratuita\n• HyperFrames: animações feitas com código\n• YuNet: rastreio de rosto\n• Epidemic Sound: efeitos sonoros\n• Adobe Premiere: revisão\n\n\nEu sou o Lucas Leite, filmmaker há mais de 10 anos. Aqui no canal eu mostro, na prática e com honestidade, como usar IA pra criar vídeos melhores e mais rápido.\n\n#ClaudeCode #EdiçãoDeVídeo #IA",
+ "tags": [
+  "lucas leite films",
+  "lucas leite",
+  "llfilms",
+  "videomaker",
+  "edição de video",
+  "claude code",
+  "edição de vídeo com ia",
+  "edição com ia",
+  "claude code video editing",
+  "claude",
+  "motion graphics com ia",
+  "editar vídeo com ia",
+  "edição de vídeo",
+  "criação de conteúdo",
+  "audiovisual",
+  "claude code tutorial",
+  "claude ai",
+  "skills claude code",
+  "fluxo de edição",
+  "edição de vídeo para youtube",
+  "premiere pro",
+  "ia para youtube",
+  "automação de vídeo",
+  "whisperx",
+  "hyperframes",
+  "como editar videos com o claude",
+  "claude videos"
+ ],
+ "categories": [
+  "Education"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Este vídeo foi editado pelo Claude",
+   "end_time": 59
+  },
+  {
+   "start_time": 59,
+   "title": "O que você precisa",
+   "end_time": 73
+  },
+  {
+   "start_time": 73,
+   "title": "Antes de começar",
+   "end_time": 104
+  },
+  {
+   "start_time": 104,
+   "title": "O treinamento (você só faz uma vez)",
+   "end_time": 131
+  },
+  {
+   "start_time": 131,
+   "title": "As 8 etapas do fluxo",
+   "end_time": 146
+  },
+  {
+   "start_time": 146,
+   "title": "Etapas 1 e 2: iniciar e transcrever",
+   "end_time": 174
+  },
+  {
+   "start_time": 174,
+   "title": "Etapa 3: cortes",
+   "end_time": 198
+  },
+  {
+   "start_time": 198,
+   "title": "Etapa 4: motion mapa (a mais importante)",
+   "end_time": 243
+  },
+  {
+   "start_time": 243,
+   "title": "Etapa 5: assets",
+   "end_time": 256
+  },
+  {
+   "start_time": 256,
+   "title": "Etapa 6: motion graphics",
+   "end_time": 284
+  },
+  {
+   "start_time": 284,
+   "title": "Etapa 7: zooms de câmera",
+   "end_time": 306
+  },
+  {
+   "start_time": 306,
+   "title": "Etapa 8: efeitos sonoros",
+   "end_time": 337
+  },
+  {
+   "start_time": 337,
+   "title": "Recap e a skill mestra",
+   "end_time": 394
+  },
+  {
+   "start_time": 394,
+   "title": "O Claude aprende com você",
+   "end_time": 419
+  },
+  {
+   "start_time": 419,
+   "title": "Quanto custa",
+   "end_time": 481
+  },
+  {
+   "start_time": 481,
+   "title": "Skill gratuita",
+   "end_time": 505
+  },
+  {
+   "start_time": 505,
+   "title": "A IA vai substituir editores?",
+   "end_time": 526
+  }
+ ],
+ "language": "pt-BR"
+}

@@ -1,0 +1,150 @@
+idioma: en
+[00:00] This entire CapCut video was edited by Claude.
+[00:03] 117 cuts on my talking head, motion graphics, music, zooms, color grade, and I didn't edit a single thing.
+[00:10] What's also cool for an editor like myself is this is actually built in a real CapCut project,
+[00:15] meaning I can make any tweaks before exporting the final video.
+[00:19] And these Claude edits really do work.
+[00:21] Claude edited all the motion graphics in one of my latest videos, and it's gained almost 600,000 views in a week and a half.
+[00:28] In this video, I'll show you exactly how you can automate your CapCut editing using Claude step by step,
+[00:34] but better yet, how you can turn this into something that you can repeat for every single edit,
+[00:39] so you avoid doing the setup every time.
+[00:41] So here's the entire CapCut timeline that Claude edited.
+[00:44] It's a talking head video.
+[00:46] I've also run this test on a 51 minute recording with lots of errors and a screen recording,
+[00:51] and Claude cut it down to 18 minutes, perfectly synced.
+[00:55] Let me show you exactly how to do this.
+[00:57] All you need is your raw video recording and any additional assets.
+[01:01] Those additional assets could be imagery, pictures, motion graphics, videos, whatever you want.
+[01:06] Go ahead and place those in a fresh CapCut project.
+[01:10] Once they're in the media folder, rename your project to something you'll remember.
+[01:13] Close that CapCut project and make sure that name reads in your main CapCut window.
+[01:18] Once it does, you can go ahead and close CapCut all together.
+[01:22] When your CapCut is closed, this is when we told Claude that we wanted to edit that project for us using a prompt.
+[01:27] Here's the exact prompt that I used.
+[01:29] Hi Claude, I want you to edit my CapCut project.
+[01:32] This is where you get to put your project name.
+[01:34] Claude plus CapCut edit one.
+[01:36] Here are your tasks.
+[01:38] Sync any screen recordings to the video at the right moment.
+[01:41] Make cuts to remove repeats, errors, long pauses and anything out of place.
+[01:46] Cut between me and the screen recording when necessary.
+[01:49] Add an adjustment layer with some saturation, contrast and lower shadows.
+[01:53] Add slow, smooth zooms on my camera when an intriguing point happens.
+[01:58] Add music from my creative folder, and I put in brackets here, intrigue.
+[02:02] You can direct Claude to whatever folder or creative folder that you have on your computer that you wanted to use.
+[02:07] Any generated assets need to work in CapCut right correctly for CapCut to be able to access these files.
+[02:13] We'll build the motion graphics for this entire video once complete.
+[02:17] Do not use computer use or open CapCut.
+[02:19] Build the timeline by writing the project files directly through file access to my Mac,
+[02:24] and finally ask me any questions to confirm.
+[02:27] Before hitting send, I'm using Opus 5.5 on extra effort.
+[02:31] I've had incredible results with this model at this effort level.
+[02:35] Then you hit send, wait a moment and Claude will ask you for permission to access your CapCut folder
+[02:40] and any hard drive your footage is saved on.
+[02:43] The project name is important because it directs Claude to the exact project that we wanted edited.
+[02:47] Give Claude some time and now let's return to our timeline.
+[02:50] Reopening CapCut, we have an edited timeline with the ability to customize anything.
+[02:55] Now I've made no tweaks, but I can if I wanted.
+[02:58] And sometimes there's one or two files that don't link.
+[03:01] Just relink them quickly using the pop-up window that CapCut gives you.
+[03:04] This edit took exactly 58 minutes for Claude to edit inside of CapCut.
+[03:08] But how do we turn this into something that's an actual solid edit with motion graphics and some imagery
+[03:13] so our video isn't just a talking head?
+[03:16] We're going to need three things.
+[03:17] Claude and CapCut, which we already have, and our actual media generator, Higgsfield.
+[03:22] At the end of this video, I'll reveal exactly how much this project costs to make.
+[03:26] Now, in the same Claude chat that we used to edit our CapCut video,
+[03:30] we're going to generate some professional motion graphics.
+[03:32] And this doesn't have to necessarily be motion graphics.
+[03:35] If you want historical imagery, photos, actual videos, etc.
+[03:38] just ask Claude and it'll generate those for you instead of motion graphics.
+[03:42] We're just running the motion graphics exercise because this is what I've been using in my videos.
+[03:46] The first thing you need to do is connect the Higgsfield MCP to Claude.
+[03:50] This allows Claude to create those motion graphics.
+[03:53] Set up an account with Higgsfield.
+[03:54] If you don't have one already, there's a link in the description to sign up.
+[03:58] Once you're inside of Higgsfield, click on MCP and copy this link.
+[04:02] Inside of Claude at the bottom left, go to Settings, Connectors, Add, Add Custom Connector.
+[04:09] You can change this name to Higgsfield and then paste that MCP server URL that you copied.
+[04:14] Sign in and connect to Higgsfield using the prompts that'll pop up.
+[04:17] And now your Claude can edit motion graphics, imagery, videos, and even voice if you need it to.
+[04:23] Once your Higgsfield is connected, this is truly when it gets crazy.
+[04:26] Let me show you how to make those motion graphics.
+[04:28] The first thing you're going to do is go to Pinterest and find some motion graphics
+[04:31] that you like for your videos or your client's videos.
+[04:34] Some inspiration of what to search could be documentary style motion graphics,
+[04:38] smooth UI motion graphics, stop motion style animations, or typography motion graphics.
+[04:45] Once you've found a reference that you like, go ahead and copy that link
+[04:48] and search on Google for a Pinterest video downloader.
+[04:52] I'm going to go ahead and click on the first result and we can just paste that link in this bar
+[04:56] and go ahead and click download and download that video directly onto my computer.
+[05:00] Then upload that reference to Claude.
+[05:02] I'm going to upload some of my own references and type in this prompt.
+[05:05] If you want to go ahead and copy the prompts that I show you in this video,
+[05:08] there's a prompt document in the description that you can access using a link
+[05:11] and it'll show you all the prompts that I use.
+[05:13] It's much easier just to copy and paste them.
+[05:15] I've attached inspiration for the style of motion graphics I want created for this video.
+[05:20] Using Higgsfield motion editor MCP create motion graphics for this video you edited in CapCut.
+[05:26] Place the animations at all the important points in the video, helping explanations and ideas.
+[05:32] Generate the first animation for my approval, asking me questions about the visual and creative direction.
+[05:39] Once approved, move on to the rest, applying the same design and thinking.
+[05:43] Any generated assets need to work in CapCut, right correctly for CapCut to be able to access these files.
+[05:50] Once all are generated, import and place them into the CapCut project at the right times.
+[05:55] Claude will then create that first motion graphic for you based on that reference that you sent.
+[06:01] You can go ahead and view that and approve it or make any changes that you need.
+[06:05] Once you're happy with that first motion graphic, you can tell Claude to create the rest of the graphics.
+[06:10] And once all of them are complete, Claude will import those into your CapCut project.
+[06:14] Let's go ahead and open that project one more time and this is what we see.
+[06:18] This is the before project without those motion graphics and now that Claude's added those motion graphics and some sound effects,
+[06:24] this is what the project looks like.
+[06:26] Now before exporting this video, what I would recommend doing is making any tweaks.
+[06:30] This adds your level of personal touch.
+[06:32] Now you don't have to be a professional editor, but if we see here, we see a jump cut and then the motion graphic kicks in,
+[06:39] which just isn't professional.
+[06:40] So I'm going to go ahead and move that motion graphic up a little bit so that we have a cut that looks like this.
+[06:45] That is so much smoother.
+[06:47] There may be a moment that Claude missed removing a pause or a stutter or like you just saw there with the graphic.
+[06:53] Or maybe you want to make some tweaks to your color over that adjustment clip.
+[06:56] You can just go ahead and click on that, turn up your contrast, bring down your shadows or make any tweak that you deem necessary.
+[07:03] Then once all the changes are done for your project, let's go ahead and close CapCut one more time.
+[07:07] And then in the same Claude Chat, ask it to reanalyze that project now that you've made those changes.
+[07:13] What Claude will do incredibly is analyze the before and after and make note of any changes that you made
+[07:19] so that it understands the style of editing that you like.
+[07:22] And now that Claude understands how you like your videos edited and how you like your motion graphics,
+[07:27] the music, the sound effects, the pacing, ask it to use this chat and the workflow that you established
+[07:32] to create a skill that you can use for future projects.
+[07:35] Claude will take all the context, the editing, the prompts, the changes that you made in CapCut
+[07:40] and write a skill for itself that you can use whenever you want a video edited by Claude.
+[07:45] I've made a skill according to this workflow and if you want to access that and install it in your Claude,
+[07:49] there's a link in the description.
+[07:50] Once you've made your own skill or downloaded the one that I created, installing it is super easy.
+[07:55] Inside your Claude, go to the bottom left, go to settings, go to skills, add and upload a skill.
+[08:01] You can then drag and drop that skill directly into the skill file section and install it.
+[08:06] Now something that's important to mention, this process does take time.
+[08:10] Don't think that this is going to take five minutes.
+[08:12] You're going to make a cup of tea and come back to an edited project.
+[08:15] On average, when I started a fresh new project, it took about three hours from being edited.
+[08:19] Three hours from beginning to end.
+[08:21] Now this is obviously not three hours of actual editing time.
+[08:24] It probably takes about 10 minutes of active time from our part,
+[08:27] but Claude itself, while it's editing and building those motion graphics, will take time.
+[08:31] Once you have that first project done and your skill installed,
+[08:34] the time it takes Claude is significantly less,
+[08:37] but don't feel like you've done something wrong if this is your first time generating the project
+[08:41] and it does take some time to complete.
+[08:43] So how much did editing this video actually cost?
+[08:46] In total, $0 of actual credits.
+[08:49] Claude using Higgs Field Motion Editor MCP used no credits because it wrote all the code.
+[08:55] But to connect Higgs Field to Claude using the MCP, we do have to have a Higgs Field subscription.
+[09:00] So there's that cost.
+[09:01] You also need Claude Pro, which is more than sufficient as it's edited all the motion graphics in my video.
+[09:06] This is $17 a month if you're on the annual plan and $20 a month if you're paying month to month.
+[09:11] So yes, you do need subscriptions for both platforms,
+[09:14] but for someone like myself who includes a lot of motion graphics in their edits
+[09:17] and who does a lot of editing, the time saving completely negates the cost.
+[09:21] I'd estimate I save probably 20 to 30 hours per project because Claude is running this process.
+[09:27] Again, if you'd like to try this entire setup that we discussed for yourself,
+[09:31] there's a link in the description for Higgs Field.
+[09:33] Go ahead and sign up to Claude, get CapCut,
+[09:35] and you can make your own videos the exact same way that we made this one.

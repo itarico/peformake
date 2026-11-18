@@ -1,0 +1,24 @@
+idioma: pt (1.00)
+[   0.0-   4.8] Um cara fez engenharia reversa no opusclip e escreveu isso aqui no topo do projeto dele.
+[   4.8-   7.7] A ferramenta se chama supoclip e faz a mesma coisa.
+[   7.7-  11.9] Você joga um vídeo longo, joga um podcast, uma live e ele te retorna com cortes prontos
+[  11.9-  14.3] no formato pra reels, tiktok e tudo mais.
+[  14.3-  17.5] E o mais engraçado é que ele realmente admite que o opusclip é bom.
+[  17.5-  19.1] Só que o problema é o resto.
+[  19.1-  22.7] Você paga por plano, alguns vídeos ainda saem com marca d'água e o seu conteúdo
+[  22.7-  24.3] fica no servidor deles.
+[  24.3-  27.6] Só que com essa ferramenta não tem marca d'água e não tem limite.
+[  27.6-  28.6] Vamos embora.
+[  28.6-  30.9] Abre o cloud code e cola esse prompt que está aqui na tela.
+[  30.9-  33.5] Ele vai baixar o projeto, vai instalar tudo no seu computador.
+[  33.5-  37.7] Depois você abre no navegador, cola o link do youtube ou sobe o seu próprio vídeo.
+[  37.7-  40.2] Depois você escolhe o estilo da legenda e manda cortar.
+[  40.2-  41.4] E olha o que ele te entrega.
+[  41.4-  46.4] De 3 a 7 cortes na vertical, com nota de viralidade, legenda palavra por palavra,
+[  46.4-  49.0] título de gancho e o seu rosto sempre no centro.
+[  49.0-  50.5] Mas agora que vem o pulo do gato.
+[  50.5-  55.1] Dá pra rodar 100% local, com o whisper transcrevendo e o olama escolhendo os cortes.
+[  55.1-  58.7] Tudo isso sem chave de API, sem assinatura e sem crédito acabando.
+[  58.7-  60.4] O limite é o seu computador.
+[  60.4-  63.7] Comenta aqui embaixo o corte, que eu mando o link dessa ferramenta no seu direct.
+[  63.7-  64.4] E já me segue aí.

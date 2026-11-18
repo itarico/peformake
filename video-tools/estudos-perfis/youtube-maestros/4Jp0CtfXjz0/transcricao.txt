@@ -1,0 +1,578 @@
+idioma: pt
+[00:00] Os mods do CodeCode já estão no ar e nesse vídeo eu vou direto ao ponto,
+[00:03] eu quero te trazer 14 mods que valem a pena instalar.
+[00:07] Se você não sabe o que é mod, não sabe do que eu estou falando,
+[00:10] eu fiz um vídeo confleto aqui no canal falando tudo sobre mods
+[00:13] que vai estar aparecendo aqui na tela pra você.
+[00:15] Mas de modo geral, de uma maneira grosseira,
+[00:17] rapidamente o mod é um complemento que muda o próprio CodeCode.
+[00:22] Você consegue inserir botões, painéis, avisos novos,
+[00:25] criados só descrevendo aquilo que você quer.
+[00:28] Eles chegaram no dia 1º de outubro de 2026 na versão 2.1.287.
+[00:34] Primeiro, eu vou trazer os exemplos oficiais da própria Antropi
+[00:37] e depois os que a comunidade que usa o Code está criando.
+[00:40] Antropi publicou três mods de amostra
+[00:43] e o primeiro se chama Talking Watter.
+[00:45] Ele mostra uma espécie de previsão do tempo da sua janela de contexto
+[00:49] e se posiciona acima da caixa de mensagem.
+[00:52] Através dele, você vê quanto da memória da conversa já foi ocupado.
+[00:56] O segundo é o Blast Radials e ele pode salvar o seu projeto inteiro.
+[00:59] Quando o Clod vai rodar algo arriscado, como, por exemplo,
+[01:02] apagar um arquivo importante ou alguma pasta sua,
+[01:05] o mod para tudo e mostra quais arquivos serão deletados.
+[01:09] Quando esse mod roda, aparecem dois botões importantes,
+[01:12] o Continuar e o Cancelar.
+[01:14] E aí você decide se quer cancelar ou continuar.
+[01:17] Já teve muita história de gente que apagou documentação importante sem querer.
+[01:21] O terceiro é Replay Theater.
+[01:23] Ele cria o comando barra Replay.
+[01:25] Quando o Clod termina uma rodada, você aperta o Replay e revei cada edição,
+[01:30] uma por uma mostrando antes e depois de cada arquivo.
+[01:33] E isso não serve só para código.
+[01:35] Se o Clod revisou o seu artigo, você vê onde ele editou
+[01:38] cada uma das linhas texto por texto.
+[01:40] E tem um ainda que já vem embutido que se chama You Should Know.
+[01:43] Ele roda um segundo agente ao lado lendo o que o Clod escreve.
+[01:47] Quando a resposta é muito densa, tem muito texto,
+[01:50] ele puxa para cima o ponto importante que você não pode esquecer.
+[01:53] Como, por exemplo, um aviso de custo escondido.
+[01:56] Ele faz um destaque para isso.
+[01:57] Só se atente a usar esse mod porque ele usa um segundo agente,
+[02:01] então isso acaba consumindo mais token.
+[02:03] E você liga ele quando quiser, só ditar barra, plugin, enable
+[02:07] e colocar o nome do mod.
+[02:08] E o quinto é o Next Steps, criado por um engenheiro da própria Anthropi.
+[02:12] No fim de cada rodada, ele sugere três próximos passos.
+[02:16] Corrigir aquele bug e juntar as mudanças e rodar o teste.
+[02:19] Ou então você descarta e segue do seu jeito.
+[02:21] Antes de te mostrar mais casos de uso dos mods,
+[02:24] eu quero te convidar para a comunidade Maestro de Daia.
+[02:27] Lá nós ensinamos tudo que sabemos sobre inteligência artificial
+[02:29] e automação de uma maneira prática, direta ao ponto e sem relação
+[02:33] para logo você criar suas skills, seus agentes, seus sistemas
+[02:37] e começar a solucionar os seus problemas ou então de terceiros.
+[02:41] Temos também suporte técnico diário, live, semanais,
+[02:44] aplicativos prontos para você utilizar um arsenal completo de skills,
+[02:49] ferramentas prontes para você copiar e colar e muito mais.
+[02:53] Se você quiser entrar na comunidade, é só clicar no link na descrição desse vídeo.
+[02:57] Além disso, todo o material que vou mostrar nesse vídeo com todos os prontes
+[03:00] para criar esses mods, eu vou deixar disponibilizado dentro da comunidade
+[03:05] dos Maestros daia.
+[03:06] Lá a gente sempre traz um material de apoio extra
+[03:08] quando tem um vídeo relevante aqui no YouTube,
+[03:11] que a gente sente que precisa de um material de apoio,
+[03:13] então que a gente está compartilhando algo importante, algo especial.
+[03:17] A gente traz um material mais minucioso para o pessoal da comunidade
+[03:20] valorizando quem acompanha a gente e quem gosta do nosso trabalho que aprender com a gente.
+[03:25] Então, se você quiser também entrar na comunidade, ser um membro,
+[03:29] é só clicar no link aqui embaixo.
+[03:30] Agora, eu vou trazer os mods que a comunidade que usa o code já está construindo.
+[03:35] O sexto é uma barra de progresso acima da mensagem
+[03:38] mostrando o quanto falta para o code terminar.
+[03:40] Quando o trabalho é dividido em sub-agentes, que são ajudantes
+[03:43] que o agente principal cria,
+[03:45] ele coloca uma barra lateral mostrando cada um desses sub-agentes.
+[03:49] Para cada ajudante, você vê o modelo usado, o andamento e quanto ele está custando.
+[03:54] E você também pode personalizá-los,
+[03:56] pedir um mascote para cada um desses ajudantes.
+[03:58] O sétimo mod é o mais seguro para você começar.
+[04:01] São os temas visuais.
+[04:03] Ele troca as cores e os ícones das ferramentas sem mexer no seu fluxo.
+[04:07] Já existem temas prontos como Draco, a Toquianite,
+[04:10] mas você pode fornecer a paleta da sua marca
+[04:13] e pedir para o próprio clode montar para você.
+[04:15] O oitavo coloca um painel de arquivos na lateral.
+[04:18] O arquivo que o clode está mexendo brilha
+[04:20] e quando a mudança é salva, ele fica verde.
+[04:23] E serve também para quem não programa.
+[04:25] Numa pasta de documentos de imposto de renda,
+[04:27] você consegue ver o que foi aberto e o que foi alterando.
+[04:30] O nono mod pode economizar o seu dinheiro,
+[04:33] mas é importante que você entenda primeiramente o que é o cache.
+[04:36] O cache é uma memória de curto prazo da conversa.
+[04:39] Com ele, o code não precisa releer tudo a preço cheio
+[04:42] a cada mensagem que você manda.
+[04:44] Só que o problema é que depois de um tempo ele esfria.
+[04:47] Nas assinaturas dentro do limite do plano dura cerca de uma hora,
+[04:50] mas na API o padrão é 5 minutos.
+[04:53] O problema é que quando o cache esfria,
+[04:55] a sua próxima mensagem faz com que o code leia toda a sua conversa desde o início.
+[05:00] Numa sessão longa, isso consome o seu limite de uso.
+[05:03] Esse mod te mostra um cronômetro do cache.
+[05:05] Ele te avisa 5 minutos antes de esfriar
+[05:08] e estima qual é o custo que a sua mensagem vai ter
+[05:10] caso o cache esfria.
+[05:12] Também dá pra ele mandar uma mensagem mínima antes do prazo
+[05:15] pra manter o cache quente
+[05:17] ou um botão que passa a sessão para uma conversa nova.
+[05:20] O décimo é ótimo pra quem grava a tela.
+[05:22] O modo gravação.
+[05:23] Quando você aciona esse mod,
+[05:25] o clode troca dados sensíveis por tags, por marcadores.
+[05:29] Então você pode expor informações importantes
+[05:32] que na gravação da tela elas não irão aparecer.
+[05:34] Elas estarão ocultas,
+[05:36] aparecendo apenas uma marcação.
+[05:38] E o mais legal é que ele só não vai expor essa informação,
+[05:41] mas ele vai estar trabalhando com a informação real.
+[05:43] Só a tela que fica protegida você desliga
+[05:46] e as informações voltam a aparecer normalmente.
+[05:49] O décimo primeiro é pra quem usa o comando barra-goal
+[05:51] que deixa o clode trabalhando até cumprir uma meta.
+[05:54] O mod abre um painel com a meta, o tempo decorrido,
+[05:57] a lista de tarefa e a porcentagem concluída.
+[06:00] Com várias sessões rodando, você vê tudo em um único lugar.
+[06:04] O décimo segundo evita que duas conversas editem o mesmo arquivo
+[06:07] e uma pague o trabalho da outra.
+[06:09] Eu não sei se você já teve esse problema,
+[06:11] mas em alguns momentos quando a gente está fazendo testes aqui
+[06:14] comparando um modelo contra o outro,
+[06:17] às vezes a gente coloca o mesmo pronte.
+[06:19] E aí uma conversa, a gente abre dois terminais,
+[06:22] e uma conversa que a gente está tendo com um
+[06:24] cria um arquivo com um nome que estava ali no pronte
+[06:27] e o outro também.
+[06:28] E aí acaba se sobrepondo às vezes um arquivo com outro.
+[06:32] E aí esse mod resolve esse problema.
+[06:34] Antes de cada edição, ele confere se o arquivo foi mexido
+[06:37] nos últimos 30 minutos.
+[06:38] Se estiver dentro desse tempo, ele te pergunta se você quer
+[06:41] continuar, separar uma cópia de trabalho ou então cancelar.
+[06:45] O décimo terceiro aprende com as suas correções.
+[06:47] Quando você pede para o Clod fazer alguma coisa
+[06:49] e não fica como você gostaria,
+[06:51] ou no meio do caminho você diz que não está certo,
+[06:54] aparece um banner te perguntando se você quer salvar
+[06:57] aquela correção como regra ou não.
+[06:59] Se você clicar em salvar, o Clod escreve essa regra
+[07:01] no seu clod.md ou na skill.
+[07:04] Dessa forma, na próxima vez que você usar uma skill
+[07:06] específica ou então o Clod como um todo,
+[07:09] esse problema não vai mais aparecer.
+[07:11] O décimo quarto abre um navegador de verdade
+[07:13] ao lado do chat no terminal.
+[07:15] O Clod criou uma página, você revisa ali mesmo.
+[07:18] E serve também para revisar pull requests do GitHub.
+[07:21] Tudo fica num lugar só, sem ficar pulando de janela
+[07:24] em janela.
+[07:25] Agora, como criar o seu primeiro mod?
+[07:27] A primeira coisa é atualizar o Clod Code.
+[07:30] Bom, então vou te mostrar como criar o seu primeiro mod.
+[07:32] Primeira coisa é checar qual é a sua versão do Clod.
+[07:35] Então você vai colocar Clod Update e submeter aqui,
+[07:40] lembrando que eu estou numa nova sessão no Clod Code.
+[07:43] Bom, maravilha, já trouxe aqui pra mim
+[07:46] qual é a minha versão do Clod.
+[07:48] E eu tenho a 2.1.305.
+[07:52] E aqui ele já atualiza pra mim.
+[07:54] Então no meu caso, eu já estou na versão superior a necessária.
+[07:57] A gente precisa da versão 2.1.287 pra cima
+[08:02] pra poder usar os mod.
+[08:03] Bom, aqui como vocês podem observar, eu tenho aquele mod que eu falei pra vocês,
+[08:06] que mostra a previsão e quanto eu tenho de limite de Clod pra usar.
+[08:10] Então tá aqui em cima e ele fica exatamente acima da caixa de mensagem.
+[08:15] Lembrando que eu estou utilizando o Clod Code no aplicativo,
+[08:19] mas você também pode utilizar o mod no VS Code se você preferir.
+[08:23] O segundo passo é você descrever o mod que você quer criar.
+[08:26] Então você pode simplesmente linguagem natural,
+[08:30] pedir ali pro Clod criar um mod pra você,
+[08:33] e específico pra suas necessidades.
+[08:35] Então isso fica seu critério, você pode soltar sua criatividade ali
+[08:39] e ver qual é a sua necessidade real do dia a dia
+[08:41] e pedir pra ele criar um personalizado pra você.
+[08:44] Clod Code já vem com uma skill chamada Plug-in Outputing,
+[08:46] que já sabe como o mod é montado.
+[08:48] E ele também já vai te perguntar se você quer ligar o Hot Reload.
+[08:52] Se você disser que sim, isso vai fazer com que o mod apareça na mesma sessão
+[08:56] assim que ele estiver pronto.
+[08:57] Assim que ele criar, se você não gostar de algo, é muito simples.
+[09:00] Você pode inclusive editar ali em linguagem natural,
+[09:04] falando pra ele que você quer mudar algumas coisas.
+[09:06] Aí você coloca todos os pontos que você quer alterar e submete,
+[09:10] e ele faz esses ajustes pra você.
+[09:12] Um ponto muito importante,
+[09:13] o modo criado numa sessão é temporário por padrão.
+[09:17] Então se você gostar do resultado,
+[09:19] se você quiser usar outras vezes esse mesmo mod que você acabou de criar,
+[09:23] é sempre importante que você peça pro Clod salvar
+[09:26] e ele vai instalar ele como um Plug-in.
+[09:28] Dessa forma, toda vez que você abrir o Clod Code,
+[09:31] ele vai acionar esse mod pra você.
+[09:33] Mas é importante que você peça isso pra ele
+[09:36] assim que você criara pela primeira vez.
+[09:38] E aqui vai o pulo gato, uma dica muito bacana pra vocês.
+[09:41] Peça para o Clod, leira os seus históricos de sessão
+[09:44] e pra ele criar cinco mods que te ajudariam no seu dia a dia.
+[09:47] Ele enxerga o que você repete,
+[09:48] quais tarefas você faz toda semana e onde você perde tempo.
+[09:52] Então se você ainda não está entendendo o que é o mod,
+[09:54] qual é o valor real dele,
+[09:56] esse é um bom ponto de partida pra você criar o seu primeiro mod.
+[09:59] Eu vou mostrar aqui um prompt pra vocês,
+[10:02] que pede exatamente isso, pra ele analisar o meu histórico de sessão
+[10:06] e criar cinco mods pra mim que seriam os mais úteis.
+[10:09] Então eu vou colocar aqui o prompt.
+[10:11] Esse prompt é muito simples, eu vou ler aqui basicamente o que ele diz.
+[10:15] Leia os meus históricos de sessão do Clod Code,
+[10:17] os mais recentes que você conseguir acessar,
+[10:20] identifique o que eu repito com mais frequência,
+[10:23] quais tarefas faço toda semana,
+[10:25] onde perco tempo e onde já tive erros caros.
+[10:28] Com base nisso, surgira os cinco mods do Clod Code
+[10:31] que mais me ajudariam a economizar dinheiro,
+[10:34] andar mais rápido e me manter organizado.
+[10:36] Para cada um, nome o que ele mostra na tela,
+[10:40] qual evento ele escuta, se gasta tokens,
+[10:43] ou é só código e um prompt pronto pra eu pedir a criação.
+[10:46] Não crie nada ainda, só lista.
+[10:49] E olha que bacana, eu já tenho aquele mod que eu falei pra vocês
+[10:52] que aparece perguntando se eu quero salvar essa correção
+[10:56] como uma regra ou não.
+[10:58] Eu vou ignorar agora, mas só pra mostrar pra vocês
+[11:00] que eu tenho vários mod instalados aqui no Clod Code,
+[11:03] e eu uso bastante esse recurso, eu gosto muito
+[11:06] porque eu sou uma pessoa bem visual
+[11:08] e gosto bastante de ter tudo ali sob controle.
+[11:10] Então eu vou pedir pra ele ignorar nesse momento.
+[11:13] Aqui também outro mod que apareceu,
+[11:14] que é aquele que eu falei pra vocês
+[11:16] que fica aparecendo a previsão
+[11:17] e quanto eu tenho do meu limite de uso.
+[11:20] Bom, ele vai fazer essa análise, eu já volto pra mostrar pra vocês
+[11:22] quais são os cinco mod que ele sugeriu.
+[11:26] Ele traz aqui, já li os históricos,
+[11:28] setenta sessões dos últimos cinquenta dias aproximadamente,
+[11:32] e os erros. Agora eu estou conferindo os mods
+[11:33] que você já tem para não sugerir repetido.
+[11:37] Detalhe que ele só faz a leitura do histórico
+[11:39] do que eu usei aqui dentro do aplicativo, tá?
+[11:42] Ele colocou aqui, li cerca de setenta sessões principais
+[11:45] do dia 16 do 9, 20 do 10, em seis pastas.
+[11:49] Então aqui ele colocou as pastas,
+[11:51] também cruzei o que você pediu com os erros de ferramentas,
+[11:53] antes de sugerir, conferi os mods que você já tem
+[11:56] para não repetir nenhum.
+[11:58] Clima com texto, trava perigo, anti-colisão, reflexão,
+[12:01] replay edições, modo gravação e tema maestros.
+[12:05] O que os históricos mostram?
+[12:07] O que você repete com frequência?
+[12:09] Mudou as frases, checou os fatos, estatualizado?
+[12:12] Eu sempre gosto de checar isso mesmo.
+[12:14] Então ele colocou umas vinte e três vezes
+[12:16] em quase toda a sessão de teleprônter.
+[12:18] Aí ele colocou aqui o open, abre o último teleprônter,
+[12:21] Open Last Content Version,
+[12:23] porque eu também sempre peço para ele abrir a última,
+[12:26] se for o último teleprônter que a gente gera,
+[12:29] depois que a gente gera uma, duas, três,
+[12:30] a gente vai sempre modificando um pouco esse teleprônter,
+[12:33] e aí eu peço para ele abrir sempre para mim
+[12:35] a última versão atualizada.
+[12:36] E aí ele colocou umas vinte e duas vezes,
+[12:38] ele encontrou essa mesma frase.
+[12:40] Cada vez é uma rodada inteira do modelo,
+[12:42] só para achar o arquivo mais novo em download.
+[12:45] Uma dessas sessões, leu 725 mil tokens de cash
+[12:49] só para abrir um arquivo.
+[12:50] Aí vem, o terminou, pronto, quanto tempo já está subindo?
+[12:54] Isso também porque a gente tem um agente
+[12:56] que sobe os nossos vídeos,
+[12:58] os bros dos nossos vídeos para a edição.
+[13:01] Então a gente sempre tem um agente que fica checando,
+[13:04] se já terminou de subir,
+[13:05] e aí ele manda para a gente uma notificação.
+[13:08] Aqui ele trouxe esses pontos,
+[13:09] o que você faz toda semana,
+[13:11] o teleprônter, o carro-cel.
+[13:13] A gente tem o carro-cel com o carro animado,
+[13:15] subir os bros.
+[13:17] Aqui o deploy na Netflix Fire
+[13:18] porque a gente sempre gera
+[13:19] um material de apoio para o pessoal da comunidade,
+[13:22] e aí a gente disponibiliza isso,
+[13:24] e precisa fazer o deploy desse projeto
+[13:26] para compartilhar, para ficar legal,
+[13:27] poderia ser um PDF também,
+[13:29] mas a gente gosta de deixar compartilhável.
+[13:32] Então a gente sempre faz isso também.
+[13:34] Então onde perde tempo?
+[13:36] Postagem pelo Playwright,
+[13:38] sessão de carro-cel enorme,
+[13:40] esperas, erros caros,
+[13:43] e aí ele traz aqui quais são os pontos.
+[13:45] Aqui foram testes que a gente fez,
+[13:47] tem vários pontos aqui que ele aponta,
+[13:49] mas que são testes necessários
+[13:51] que a gente faz para os vídeos do YouTube.
+[13:52] Então isso realmente não tem muito como evitar.
+[13:56] Mas para um uso normal,
+[13:58] para quem usa para o dia-a-dia, para o trabalho,
+[14:01] é um recurso excelente esse aqui.
+[14:04] E aí os cinco mods estão em ordem de impacto,
+[14:07] nenhum gasta Tolkien do Cod,
+[14:09] são só código e rodam fora do modelo.
+[14:11] Então o primeiro seria guarda créditos,
+[14:13] o que aparece na tela.
+[14:15] Aí uma faixa acima do prompt,
+[14:17] aí ele traz o ponto,
+[14:19] antes de cada direção paga uma confirmação com o modelo,
+[14:22] e o custo estimado de quantas vezes
+[14:25] você já tentou essa mesma peça.
+[14:27] Imagina que você tenha o Higgs Field,
+[14:28] você também coloca créditos no FAL-EI.
+[14:31] E aí você não sabe onde vai sair mais barato,
+[14:33] se você gera pela sua assinatura
+[14:35] ou se você gera colocando créditos.
+[14:37] Ali no mod ele já vai puxar essa informação para você
+[14:39] e vai estar aparecendo para você tomar esse exemplo.
+[14:41] Aí ele faz um evento tool call nas ferramentas de geração,
+[14:45] aí segue assim por diante,
+[14:47] e aí ele traz aqui o prompt para criar esse mod.
+[14:51] Eu vou criar esse mod, eu achei muito legal,
+[14:53] e aí ele coloca assim guarda créditos,
+[14:55] achei interessante.
+[14:56] Os nomes dos meus mods,
+[14:58] geralmente eu peço para o próprio Cloud colocar.
+[15:00] O próximo é trava publicação,
+[15:03] o que aparece na tela.
+[15:04] Antes de publicar um cartão com arquivo exato,
+[15:07] que vai sair nome, versão e data,
+[15:10] o destino maestros.ya.com,
+[15:12] ou a roba maestros.ya,
+[15:14] por quê?
+[15:15] Porque às vezes a gente quer fazer um deploy.
+[15:17] Então é um deploy dentro do domínio maestros.ya.com.
+[15:22] E aí eu posso escolher qual é o canal que eu quero acessar,
+[15:25] se é o canal do Netlify,
+[15:27] se é o canal do Instagram, a roba maestros.ya,
+[15:30] se é o nosso canal paralelo do Instagram,
+[15:33] a roba maestros.ya hub,
+[15:34] um dos nossos das nossas contas.
+[15:38] Aí tem o TikTok, o YouTube, o Gmail,
+[15:41] então a sugestão dele é colocar onde vai ser publicada essa informação.
+[15:45] Achei bem legal, isso economizaria bastante tempo também.
+[15:48] E aí ele faz um checklist que você marca.
+[15:50] Então eu marco ali quais são as opções
+[15:52] de onde eu quero publicar determinada informação,
+[15:55] um carro cell, post, vídeo e assim por diante.
+[15:59] O próximo é o radar jobs,
+[16:01] e aí ele coloca o que aparece na tela.
+[16:03] Um painel lateral, com cada trabalho rodando em segundo plano.
+[16:06] Então o upload do bra, ele coloca ali,
+[16:09] se o vídeo está subindo, qual a porcentagem, velocidade, tempo restante,
+[16:13] render do motion.js, quadros feitos, barra total,
+[16:18] vídeos do open art, barra, foal e fila.
+[16:21] Quando um termina o trava, chega uma notificação no Mac
+[16:24] e toca um som.
+[16:25] Gostei desse aqui também, é muito útil,
+[16:27] porque assim a gente consegue monitorar o tempo de upload.
+[16:31] Por que a gente usa esse recurso?
+[16:33] Porque às vezes a gente grava vários bras, vários vídeos no mesmo dia.
+[16:37] E aí a gente coloca eles em fila
+[16:39] e não dá pra a gente ficar ali em cima monitorando.
+[16:42] Como a gente depende muito da internet pra fazer upload,
+[16:45] a gente tem uma internet muito boa aqui,
+[16:47] mas apesar disso tem estabilidade, ela cai.
+[16:51] A gente não tem como ficar o tempo inteiro ali em cima monitorando.
+[16:54] Às vezes já aconteceu de ficar uma hora subindo um vídeo,
+[16:57] e aí do nada teve uma estabilidade,
+[17:00] o vídeo foi corrompido, caiu e a gente teve começar de novo.
+[17:03] Isso acontece com certa frequência.
+[17:04] Se tem uma tempestade, se tem alguma alteração ali na rede,
+[17:08] e a gente coloca um agente pra fazer esse upload
+[17:10] e saber quanto já foi feito, qual já foi o progresso,
+[17:15] é muito importante pra gente às vezes pra avisar uma edição,
+[17:18] pra avisar o pessoal da equipe.
+[17:20] Então isso funciona muito pra gente.
+[17:21] Aí tem outras sugestões dele aqui.
+[17:24] Só pra trazer um exemplo pra vocês, pra não ficar tão extenso,
+[17:27] eu vou criar um aqui rapidamente, um desses aqui que ele sugeriu,
+[17:30] que eu acho que vai ser muito útil e já mostro pra vocês,
+[17:33] eu vou mostrar aqui o passo a passo.
+[17:35] Só vou ler aqui o que ele trouxe no final,
+[17:37] então ele li cerca de 70 sessões nos últimos 50 dias,
+[17:41] coloquei, montei a lista dos 5 mods com prontes prontos,
+[17:44] nada foi criado.
+[17:45] Então, qual mod você quer criar primeiro?
+[17:47] Eu posso optar pra que ele faça todos um seguido atrás do outro,
+[17:51] ou então começar pelo primeiro.
+[17:53] Eu vou pedir pra ele fazer o guarda créditos.
+[17:55] Vocês conseguiram perceber, é muito fácil criar um mod muito intuitivo,
+[18:00] é algo bem prático.
+[18:01] Inclusive nós temos o Mod Maestros,
+[18:03] que eu mostrei pra vocês no vídeo do Mods,
+[18:06] o primeiro vídeo que a gente trouxe no canal sobre esse tema,
+[18:08] que é um que monitora ali quantos carroçais foram gerados.
+[18:12] Então toda vez que eu gera um novo carroçal,
+[18:14] ele mostra pra mim uma barra lateral de carroçais que já foram criados.
+[18:18] Então isso é muito prático também.
+[18:21] Quando ele está criando esse Mods,
+[18:22] eu quero mostrar pra vocês um material que eu vou deixar
+[18:24] dentro da comunidade,
+[18:26] é um resumão de todos os mods que eu trouxe aqui,
+[18:28] com os prontes pra vocês instalarem dentro do código de vocês.
+[18:33] Então prontes pra criar qualquer mod no CodeCode.
+[18:36] E aí comece por aqui,
+[18:38] aqui é o prontes que eu usei pra fazer esse,
+[18:40] dos 5 melhores mods pra cada um dos casos.
+[18:43] Aí pro seu caso vai ser diferente do meu.
+[18:45] Salvar como um plugin permanentemente
+[18:48] e revisar um mod antes de instalar.
+[18:50] Então a gente faz esse passo a passo aqui,
+[18:52] só pra concluir um mod se a gente gostar do resultado
+[18:55] e quiser ter ele permanentemente, sempre que precisar.
+[18:59] O próximo é biblioteca de mods.
+[19:01] Então aqui eu trago todos os oficiais,
+[19:05] os inspirados nos oficiais,
+[19:07] o visual que traz informação visual,
+[19:10] banner e detalhes,
+[19:12] o que vai visar economia,
+[19:15] o que vai visar produtividade
+[19:18] e o que vai visar a segurança.
+[19:20] Então todos os mods que eu mencionei
+[19:22] vão estar com prontes prontos pra você copiar e colar no Code
+[19:25] e ir construindo ali com ele.
+[19:27] E aqui colocando todos,
+[19:28] você tem um resumão de todos os que foram mencionados
+[19:34] e um mod universal, um prontes universal pra você criar
+[19:37] qualquer outro mod
+[19:39] pra além desses que eu trouxe aqui de exemplo pra vocês.
+[19:42] Bom, ele tá quase terminando de gerar aqui o mod
+[19:44] e ele tá me perguntando se eu quero que ele traga uma explicação
+[19:48] sobre como esse mod vai funcionar
+[19:49] ou então se eu já quero deixar ele ativo.
+[19:51] Eu já vou pedir pra ele ativar
+[19:54] e agora ele já tá
+[19:57] terminando aqui de implementar.
+[20:00] Ele colocou aqui o mod guarda créditos,
+[20:02] está pronto, a validação e a checagem de tipos passaram
+[20:06] e os quatro testes automáticos também.
+[20:08] Ainda não testei com uma geração de verdade
+[20:10] pra não gastar os seus créditos.
+[20:12] E o que ele faz?
+[20:13] Antes de cada geração paga no OpenArte,
+[20:15] no Rigsfield ou no FALL,
+[20:17] aparece o cartão de aprovação do app
+[20:20] com uma linha como esta.
+[20:22] Então ele traz aqui os pontos, ó,
+[20:24] o custo de cada um deles pra gerar o carro CEL,
+[20:27] pra gerar a animação, pra gerar o que a gente quiser
+[20:30] e sem a sua aprovação nada gerado,
+[20:32] nem no modo automático.
+[20:33] Se a estimativa falhar, ele pergunta do mesmo jeito.
+[20:36] Depois da geração ele compara o saldo antes e depois,
+[20:40] OpenArte e Rigsfield para saber quanto foi cobrado de fato.
+[20:43] Quando o saldo não ajuda,
+[20:45] usa a estimativa e marca como estimado.
+[20:48] Em seguida ele mostra um arquivo rápido.
+[20:50] E aí ele traz aqui uma faixa com cartãozinho de crédito,
+[20:53] inclusive ele coloca uma espécie de uma emoji aqui
+[20:57] e coloca assim, hoje OpenArte,
+[20:59] ele coloca quantos créditos foram gastos,
+[21:01] então 45 créditos e Rigsfield,
+[21:04] 12 créditos pro carro CEL, água,
+[21:06] isso aqui é só uma simulação pra gente ver como esse modificaria.
+[21:09] E aí, mesmo a peça repetida, ele vai fazendo assim, né?
+[21:12] E o histórico fica guardado entre sessões
+[21:15] e o projeto é o nome da pasta onde a conversa roda.
+[21:19] Então, por exemplo, o carro CEL Argo vai salvar lá.
+[21:22] Tokis não foi gasto nenhum,
+[21:24] as consultas de custo e saldo vão direto ao serviço
+[21:27] sem passar pelo modelo.
+[21:29] Bem interessante, ele traz as limitações também.
+[21:32] Então, aqui a gente consegue ver que ele tá ativo,
+[21:34] ele colocou que hoje não foi gasto nada,
+[21:37] então por isso não tá aparecendo aqui nenhuma das opções.
+[21:40] E ele trouxe, você ativou modis e o guarda crédito
+[21:43] já está carregado nessa CCEL,
+[21:44] a faixa hoje, e ele coloca o cartão, né?
+[21:46] Na frente, deve aparecer acima do pronte.
+[21:49] Depois que ele carregou a checagem de tipos,
+[21:51] acusou um erro com os 680 ferramentas mcp conectados,
+[21:56] o TypeScript não dava conta de conferir os chipos.
+[21:58] Era só uma reútecagem, o mod não deixava de funcionarem,
+[22:01] corrigia assim, então ele já corrigiu esse problema.
+[22:04] A checagem de tipos passa sem erros
+[22:06] e os quatro testes continuam passando.
+[22:08] Ele vai aparecer na próxima vez que eu,
+[22:10] ou outra conversa com os modos ligados,
+[22:14] foi gerar imagem ou vídeo no OpenArte,
+[22:17] Higgs Field ou Foul AI.
+[22:19] Antes de gastar, você verá o cartão de aprovação
+[22:22] com custo estimado.
+[22:23] Então aqui ele vai mostrar pra gente
+[22:25] qual é o custo estimado pra gerar determinado projeto.
+[22:28] Eu vou testar aqui rapidinho pra mostrar pra vocês,
+[22:31] só que não vou gerar nada,
+[22:33] mas eu vou mostrar aqui ele funcionando,
+[22:35] eu quero que apareça, né?
+[22:36] Então vou ditar, barra cá o céu.
+[22:40] Só pra gente fazer um teste breve,
+[22:42] gere um carrossel sobre os mods do código.
+[22:50] Pronto.
+[22:51] Só pra ele estimar aqui pra gente.
+[22:54] Inclusive, se você tem interesse em aprender a fazer a sua própria
+[22:57] skill de carrossel,
+[22:58] nós temos um vídeo completo aqui no YouTube
+[23:01] ensinando esse passo a passo.
+[23:02] Eu vou pedir pra deixar aparecendo pra você,
+[23:04] caso você tenha interesse em criar a sua própria skill
+[23:07] de carrossel seguindo o nosso passo a passo.
+[23:10] Bom, pessoal, ele terminou de gerar aqui o mod
+[23:13] e também aproveitei pra fazer o carrossel.
+[23:15] Então só pra mostrar pra vocês como ele fica aparecendo.
+[23:18] Então hoje eu optei pra fazer pelo FALL-E-I
+[23:20] porque tava saindo mais barato,
+[23:22] segundo as estimativas do mods que trouxe aqui pra mim.
+[23:26] Então eu usei 17 centavos de dólar pra fazer
+[23:29] essa capa animada.
+[23:32] Deixa eu colocar aqui pra vocês.
+[23:35] Do carrossel.
+[23:37] E também pra fazer esse CTA animado.
+[23:44] Ficou bem legal, vou fazer de novo aqui.
+[23:47] Dando um tchauzinho.
+[23:49] E aqui a gente tem o mod aparecendo,
+[23:52] então isso é muito prático.
+[23:53] Coloca aqui o quanto eu consumi hoje,
+[23:55] qual que era a estimativa do FALL,
+[23:58] qual que era a estimativa do OpenArch,
+[24:00] de 100 créditos por clip,
+[24:02] e no ReaksField ele não conseguiu puxar essa informação.
+[24:04] Você daria ficar aqui iterando um pouco ele
+[24:06] trabalhando em cima disso,
+[24:08] mas eu só queria mostrar pra vocês
+[24:09] como esse recurso é útil.
+[24:11] E você tem várias formas de utilizá-la.
+[24:14] Agora vamos falar sobre valores.
+[24:16] Quanto custa pra usar mods?
+[24:18] Os mods em si não cobram nada mais,
+[24:20] mas você precisa de um plano que implua o CodeCode.
+[24:23] O mod que chama o modelo por trás
+[24:25] usa o seu limite igual a qualquer outra mensagem.
+[24:27] A grande maioria, porém, usa só código
+[24:30] e não gasta tokens.
+[24:31] E um cuidado importante,
+[24:33] os mods não rodam isolados.
+[24:35] Eles têm o mesmo acesso que o CodeCode,
+[24:37] inclusive as suas chaves.
+[24:39] Foi isso, é muito importante que você só instale
+[24:41] modes confiáveis de fontes confiáveis
+[24:44] e sempre peça pro Code fazer uma auditoria
+[24:47] antes de instalar qualquer mod que você copie e cole.
+[24:51] Recapulando o que você viu nesse vídeo.
+[24:53] Os mods transformam o CodeCode
+[24:55] em uma ferramenta submedida.
+[24:56] Aviso os painéis, travas de segurança,
+[24:59] tudo descrito em linguagem natural.
+[25:01] A minha dica é que você comece por mods simples
+[25:04] como o de tema ou de progresso.
+[25:06] E depois você segue pros que economizam tempo e dinheiro.
+[25:09] Lembrando que todos os promoços dos mods
+[25:11] que eu mencionei nesse vídeo
+[25:12] vão estar dentro da comunidade dos maestros da IA
+[25:15] pra você copiar e colar e personalizar como quiser.
+[25:18] Se você gostou desse vídeo,
+[25:19] eu quero te pedir pra se inscrever nesse canal,
+[25:21] deixar o seu like e o seu hype.
+[25:23] Comenta aqui embaixo qual mod você vai criar primeiro.
+[25:27] Um grande abraço e até o próximo vídeo.

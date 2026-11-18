@@ -1,0 +1,24 @@
+idioma: pt (1.00)
+[   0.0-   2.9] O Google cobra caro pra você gerar vídeo com IA.
+[   2.9-   6.1] Aí a China foi lá e soltou um melhor, de graça.
+[   6.1-   8.3] Se chama Minimax H3.
+[   8.3-  12.0] É um modelo aberto de vídeo com áudio mais forte que existe hoje.
+[  12.0-  15.2] E nos rankings ele já deixou os modelos do Google pra trás.
+[  15.2-  18.5] Aberto, gratuito e sem censura nenhuma.
+[  18.5-  19.4] Funciona assim.
+[  19.4-  22.6] Você joga um texto, uma imagem ou um vídeo que você já tem
+[  22.6-  24.5] e ele te devolve o vídeo pronto.
+[  24.5-  28.2] Com voz realista, boca sincronizada, falando até em português
+[  28.2-  30.4] e com uma trilha que combina com a cena.
+[  30.4-  34.6] Nada de gerar imagem num lugar, o áudio em outro e depois ficar colando tudo.
+[  34.6-  36.7] Sai tudo junto, de uma vez.
+[  36.7-  38.5] E ele roda no seu computador.
+[  38.5-  41.3] Uma placa de vídeo de 8 GB já segura.
+[  41.3-  45.2] Então o vídeo nasce na sua máquina, sem depender do servidor de ninguém.
+[  45.2-  46.3] Quer testar antes?
+[  46.3-  48.6] Tem no site oficial deles, o Hailu.
+[  48.6-  51.0] Agora, se você quer instalar no seu computador,
+[  51.0-  54.2] comenta H3 que eu te mando passo a passo no Direct.
+[  54.2-  58.4] E manda esse vídeo pra aquele amigo que ainda paga a mensalidade de gerador de vídeo.
+[  58.4-  61.7] Eu sou Henrique e aqui eu compartilho novidades do mundo da IA.
+[  61.7-  64.8] Salva esse post e segue o meu perfil pra não perder nenhuma.

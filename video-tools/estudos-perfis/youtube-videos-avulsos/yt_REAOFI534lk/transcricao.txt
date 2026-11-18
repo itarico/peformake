@@ -1,0 +1,104 @@
+idioma: en
+[00:00] Claude Code edited this entire video and people are racking up tons of engagement across social
+[00:05] media with systems like these. The captions, the motion graphics, the cards flying out from behind
+[00:09] me, I didn't touch an editing timeline once. I was a video editor for 15 years for brands like
+[00:15] Apple, PlayStation, and Nissan, so I know what a cheap AI edit looks like and this isn't one.
+[00:20] So here's the part that you can copy today. I stopped asking Claude for a finished video
+[00:26] and I gave it six jobs, one at a time. In this video, I'll walk you through all six,
+[00:31] step by step, what to tell Claude, what to check, and what to do in your own project.
+[00:35] And at the end, I'll show you exactly what this edit costs. Now, is it perfect? No. A great human
+[00:41] editor would still beat it on some shots and you'll need to give notes and try again like the
+[00:46] same way you would with a person. But this is the worst it will ever be. Every video you make
+[00:52] teaches the system something, so the next one comes out better, faster, and cheaper.
+[00:56] So here's why it takes six steps. When I first asked AI to edit one of my videos, I could tell right
+[01:02] away that it just looked cheap. If you've ever tried it, you know exactly what I mean.
+[01:06] Most AI edits have that same generic AI look and I kept at it for about five months and two
+[01:12] things finally changed. The Claude model's got a lot better and I built a better system for
+[01:17] making polished videos. But one thing made the biggest difference. I stopped trying to
+[01:22] one-shot everything. It was too much for Claude to handle, so it just made bad choices. Instead,
+[01:28] I split the work into six jobs. Scripting, editing, design, motion graphics, review,
+[01:33] and feedback. Then I saved all six into a skill. A skill is a safe set of instructions that teaches
+[01:39] Claude how to do one job and mine gets better every time I use it. If you want to get access
+[01:44] to the Claude Editor Starter Kit, along with all my other skills and resources already done for you,
+[01:49] the link is in the description. A cool video won't perform well if the script sucks. So have Claude
+[01:56] study the best videos in your topic and pull out the hooks and formats that they use. Then save
+[02:01] those in a library that you can use over and over again. So try this. Ask Claude for the hooks
+[02:07] and format from three videos in your niche that beat their channel's usual views. Save them
+[02:12] in a library and then have it write your scripts the same way. When the script is done, you read it to
+[02:18] the camera, which is exactly what I'm doing right now. Next comes the footage and raw footage is a
+[02:22] mess. You trip over a word, restart a sentence, or sit in silence. So give Claude your raw footage
+[02:28] and ask it to transcribe it using whisper. Claude will download whisper from the internet on
+[02:33] its own and it's free to use. It's going to create a timestamp for every single word that
+[02:38] you said and now Claude understands how to do the edit. It's going to keep your last clean take of
+[02:44] every line and cut the rest using another free program called ffmpeg. So try this. Film one
+[02:50] short take with a few mistakes on purpose, give Claude the file and ask it to transcribe it with
+[02:55] whisper, cut the retakes and list everything it removed. But a clean take is still just me talking.
+[03:01] So next is the fun part. Step three is design. If you ask for graphics with no plan, you get
+[03:07] boring PowerPoint slides. Claude does that because nobody told it what good looks like. So pick videos
+[03:13] from editors you love and tell Claude to take screenshots of them, then ask it what makes them
+[03:18] work. It will notice things like how text moves in and how one scene transitions to the next.
+[03:23] A really good place to find examples is a site called promptmotion.com. It's full of motion
+[03:28] graphics people made with Claude and each one actually shows the exact prompt behind it. Once
+[03:34] you have the design, Claude now needs a game plan called a beat map. A beat map is just a list of every
+[03:40] idea in your script and what's on screen while you say it. So make Claude build that map before
+[03:46] it builds any graphics because changing a plan costs almost nothing and changing a finished
+[03:50] graphic costs a lot. Actually recently added a new rule that came from the comments on my last
+[03:55] video before nearly every sentence got its own graphic and many of you said it was just too
+[04:00] much. So now instead each idea gets one graphic and it stays up long enough to read. So try this,
+[04:07] take screenshots of the things you love and either have Claude write design guidelines from them or
+[04:11] have it mimic what it sees. You can also give Claude a screen recording or a video file. Once
+[04:17] the plan exists the work piles up fast. A long video can have dozens of graphics so I split the
+[04:23] video into sections and I tell Claude to give each section to its own sub agent. A sub agent
+[04:28] is just a helper which is another copy of Claude but it has one narrow job. This lets Claude work on
+[04:34] many things at once. They don't open any editing software. Each graphic is built with code using
+[04:40] a free tool from Hagen called hyperframes which turns a web page into real video. That's also how
+[04:46] you get captions that light up word by word. I put the stronger more expensive models like Claude,
+[04:50] Opus and Fable on the thinking. So the planning and the creative direction like all the design
+[04:55] choices. The cheaper faster models like Sonnet do all the building. There is one big thing to watch
+[05:01] out for and it almost crashed my computer. So a render is the moment that code becomes actual
+[05:06] video and it can really slow your computer down. I once let nine sub agents render at the same time
+[05:12] and they maxed out my machine and started canceling each other's work. Now the system
+[05:16] only renders four at a time and I also render overnight so my machine isn't bogged down
+[05:21] while I'm trying to work. I also like to keep my draft small so while I'm giving notes Claude will
+[05:25] render everything at half size so the drafts come out much faster. Full quality renders only happen
+[05:31] after I approve the whole cut. So try this. Ask Claude to build one graphic as a web page first
+[05:37] then turn the rest into a storyboard. Look at it, fix it and only then turn it into video. This
+[05:42] will save you a ton on time and tokens in the long run. Step five is arguably the most
+[05:47] important part. Have Claude check its own work. So here's how I do it. Claude checks 10 frames every
+[05:53] second and there are six mistakes that it looks for. An animation that plays twice, a graphic that
+[05:58] flashes for a split second, text that lands too late to read, a graphic sitting on my face, a word
+[06:03] I said two times in a row and my lips drifting away from my voice. Make Claude check like a
+[06:08] person not like a computer. So try this. Write down the three mistakes you always catch when
+[06:13] you watch your own videos and hand that checklist to Claude to watch out for. The last thing that Claude
+[06:18] does is save all of my feedback and improve the skill with each round. So every time you watch a
+[06:23] cut you're gonna have notes, the same ones that you would give to a human editor. Claude fixes the
+[06:28] video and then it goes one step further. It finds the instruction that should have prevented the
+[06:33] mistake and it rewrites it so future videos won't have the same problem. No single prompt made
+[06:38] this video about five months of notes did. So try this. After your next cut give Claude your notes
+[06:44] and ask which instruction would have prevented each one. That's the whole system. Scripting,
+[06:49] editing, design, motion graphics, review and feedback. I still film every video and I make
+[06:53] the final call because your choices and your taste was what's gonna set you apart. But I never
+[06:58] have to open an editing timeline or After Effects again which feels crazy to say after 15 years.
+[07:04] So what did this actually cost? Well, Claude used about 600 million tokens, roughly 100 million of
+[07:09] those went to Opus which did the planning and the design direction and about 500 million went to
+[07:14] Sonnet which did all the building. At API prices that works out to about 160 dollars but I'm on
+[07:20] the Claude Bax 20x plan so for me it's just part of the monthly subscription. So from the first bit
+[07:25] of research to the final video Claude worked for about six hours doesn't count the time I spent
+[07:30] watching cuts and giving notes. My first AI video took about 1.4 billion tokens and about 12 hours. So
+[07:37] this video used less than half the tokens and about half the hours because I reused a lot of the
+[07:42] graphics the tools and the skill from the first one. So here's a tip build a library of reusable
+[07:48] assets as you go it will cut down on your costs and tokens on every video after that. So compare
+[07:54] this with doing video editing the traditional way. Someone has to write a script map every be create
+[08:00] a storyboard do designs animate each graphic mix the audio and add sound effects when I did that for a
+[08:05] living a video like this would take three days to a week and I was pretty fast if you're a
+[08:11] professional video editor you'd still probably do some of these shots better and I would too but
+[08:15] this is the worst it will ever be and it's already good enough that I keep handing more and more
+[08:20] of my editing over to AI. Honestly it's fun and I like a new challenge if you want to try it
+[08:25] for yourself the starter version of my editing skill is inside the Claude code club it does the same
+[08:30] jobs but in a simpler way it cleans up your recording adds word by word captions builds simple
+[08:36] graphics and checks its own work it won't look like this on day one because mine took five months of
+[08:41] notes but it keeps your notes the same way so it improves each time you use it and it's all
+[08:46] tailored to your brand and your taste if you want to master Claude code in 45 days and get the
+[08:51] starter kit plus all my skills and resources already done for you come join over 8 000 builders
+[08:56] inside the Claude code club it's only nine dollars a month and the links to my description if this
+[09:01] helped hit like and subscribe it really does help the channel a ton I'll see you in the next one

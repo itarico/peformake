@@ -1,0 +1,329 @@
+idioma: pt
+[00:00] Esse vídeo inteiro foi editado pelo Cloud.
+[00:02] Esses elementos que você está vendo na tela,
+[00:03] o texto dando ênfase no que eu falo,
+[00:05] essa animação em tela cheia,
+[00:07] os uns da câmera, os cortes
+[00:09] e até mesmo os efeitos sonoros.
+[00:11] E o melhor de tudo é que você ainda consegue adaptar isso
+[00:13] para qualquer estilo
+[00:14] ou identidade visual que você quiser.
+[00:16] Só que claro, a gente não está no ponto de escrever um único pronte
+[00:19] e receber um resultado desse.
+[00:20] Eu passei um bom tempo criando um processo de 8 etapas
+[00:23] que vou te mostrar nesse vídeo hoje.
+[00:24] E no final eu ainda vou te dar de graça
+[00:26] uma skill que te guia para criar o seu.
+[00:28] Sem passar por todos os testes e problemas que eu passei.
+[00:31] Então, eu já te aviso antes
+[00:32] que se você está procurando um pronte mágico
+[00:33] que te entrega um vídeo medíocre
+[00:34] com o muito a gente faz,
+[00:36] o lugar não é aqui.
+[00:37] Eu prefiro te dar um sistema
+[00:38] que você coloca um pouco do seu tempo,
+[00:39] coloca um pouco da sua tensão,
+[00:41] mas você recebe um vídeo bem acima da média.
+[00:43] Para quem não me conhece, eu sou o Lucas Leite,
+[00:44] eu sofri o e-mail que era mais de 10 anos
+[00:46] e por isso eu sempre fui muito receoso
+[00:48] em usar IA na minha edição.
+[00:50] Porque até o momento eu sempre vi alguns vídeos
+[00:52] do pessoal editando com IA,
+[00:53] mas eu sempre achei o resultado bem fraco.
+[00:55] Porém agora, como vocês podem perceber,
+[00:57] as coisas mudaram bastante.
+[00:59] Então, vamos lá.
+[00:59] Para fazer toda essa edição que vocês estão vendo,
+[01:01] vocês precisam de apenas duas coisas.
+[01:02] A primeira é a assinatura Pro do Cloud.
+[01:05] E a segunda é o Cloud Code instalado no seu computador.
+[01:08] O Cloud Code, para quem não sabe,
+[01:09] é o que permite o Cloud trabalhar direto
+[01:11] nos arquivos do seu computador.
+[01:12] E isso é totalmente importante.
+[01:14] E só mais dois detalhes importantes
+[01:15] antes de a gente ir para as etapas.
+[01:17] O primeiro, o fluxo que eu vou usar aqui
+[01:19] é para um vídeo no YouTube,
+[01:20] assim como esse que você está vendo aqui,
+[01:21] uma pessoa falando de frente para a câmera.
+[01:23] Mas depois, qual é a skill que eu vou entregar para vocês,
+[01:25] você consegue criar o seu fluxo
+[01:27] e adaptar para qualquer tipo de vídeo que você queira.
+[01:29] Pode ser um fluxo só para a Rio do Instagram,
+[01:30] pode ser um fluxo só para vídeo narrado,
+[01:32] pode ser o que você quiser.
+[01:33] A segunda é que eu, por opção,
+[01:35] decidi revisar tudo pelo Premiere,
+[01:37] porque já era um programa que eu sempre usei.
+[01:38] Mas você pode usar o que você preferir.
+[01:40] Você pode usar qualquer outro programa
+[01:41] ou não usar nenhum programa
+[01:42] que o Cloud já consegue entregar o vídeo pronto.
+[01:44] Antes de fazer qualquer edição,
+[01:45] tem uma parte que é muito importante,
+[01:47] que é você passar algumas referências
+[01:48] do que você gosta para o Cloud analisar.
+[01:50] Para fazer isso, é só você jogar
+[01:52] alguns trechos de animações
+[01:53] que você gosta na pasta
+[01:54] que o Cloud Code está trabalhando
+[01:56] e pedir para ele analisar o estilo,
+[01:58] as animações, a velocidade, o ritmo,
+[02:00] e ele vai conseguir fazer uma análise completa para você.
+[02:02] Sem isso, a tendência é que o resultado
+[02:04] saia mais genérico,
+[02:05] mesmo tendo um fluxo legal.
+[02:06] Mas a boa notícia é que essa parte
+[02:07] você só faz uma vez
+[02:08] ou qualquer outra vez que você queira atualizar
+[02:10] o seu estilo ou algo do tipo.
+[02:11] Com o Cloud treinado, vem o fluxo,
+[02:13] que como eu falei antes, tem 8 etapas.
+[02:15] Cada etapa é uma skill que eu criei,
+[02:16] ou seja, um arquivo de instruções
+[02:18] ensinando o Cloud a fazer uma tarefa
+[02:20] sempre do mesmo jeito.
+[02:21] E presta muita atenção na etapa 4,
+[02:23] porque é ali que o vídeo vai ficar bom ou ruim.
+[02:25] Bora para as duas primeiras.
+[02:26] As duas primeiras etapas são a preparação.
+[02:28] A primeira, o Cloud me pede um briefing.
+[02:30] Qual é o vídeo?
+[02:31] Qual é a direção geral?
+[02:32] Se eu tenho algum comentário?
+[02:33] E aí ele vai identificar os arquivos
+[02:35] que eu coloquei na pasta.
+[02:36] Na segunda, ele vai transcrever o seu vídeo.
+[02:38] Para isso, ele vai usar o Whisper X,
+[02:40] que é um modelo gratuito
+[02:41] que roda direto no seu computador.
+[02:42] O Cloud usa ele para transcrever tudo,
+[02:44] marcando o tempo exato de cada palavra,
+[02:46] e essa vai ser a base para nossa edição completa.
+[02:48] Mas fica tranquilo,
+[02:49] você não precisa se preocupar com nada disso.
+[02:50] Todos os programas que você está aqui
+[02:52] como o Whisper X,
+[02:53] o Cloud ele instala sozinho para você.
+[02:54] E ainda para a próxima etapa,
+[02:56] com a transcrição pronta,
+[02:57] vem os cortes.
+[02:58] O Cloud identifica as pausas,
+[02:59] as falas e todo o texto.
+[03:01] E só aí então ele corta os erros
+[03:03] e monta uma estrutura completa do nosso vídeo.
+[03:05] É nessa hora que se você colocou o roteiro na pasta,
+[03:07] ele usa como base,
+[03:08] mas não é necessário.
+[03:09] Essa etapa é a primeira que eu costumo revisar.
+[03:11] Ele me entrega um arquivo que eu abro no Premiere,
+[03:14] e se tiver algum detalhe,
+[03:15] eu peço para ele corrigir
+[03:16] ou eu mesmo corrigir no Premiere
+[03:17] e devolvo para ele.
+[03:18] E agora a etapa 4,
+[03:19] o Motion Mapa.
+[03:21] Essa é a que mais pede a sua atenção.
+[03:22] Motion, para quem não sabe,
+[03:24] são as animações que aparecem na sua tela.
+[03:26] E o mapa vai ser o planejamento de tudo isso.
+[03:28] O que vai aparecer, em que momento,
+[03:30] qual o ritmo, qual o estilo,
+[03:32] ele ainda não vai animar nada agora,
+[03:33] é só o planejamento.
+[03:34] E essa etapa é muito importante
+[03:35] porque é aqui que você economiza tokens,
+[03:37] que é o que mede o seu uso no Cloud.
+[03:39] Se você acerta o plano certinho,
+[03:40] a chance de sair um resultado legal na próxima etapa
+[03:43] é muito maior
+[03:44] e você precisa de menos alterações e menos revisões.
+[03:46] É nessa etapa também
+[03:48] que você vai falar para o Cloud
+[03:48] se você quer menos animações
+[03:50] ou mais animações durante seu vídeo.
+[03:51] No meu caso em específico,
+[03:53] o mapa também já define alguns movimentos de câmera.
+[03:55] Porque eu gosto que o meu Motion conversa com a câmera.
+[03:57] Se uma animação entra com zoom,
+[03:59] a câmera dá um zoom antes da transição
+[04:01] e fica mais dinâmica como vocês puderam ver.
+[04:03] Depois vem a etapa de assets,
+[04:04] que são os arquivos que as animações precisam.
+[04:06] Ícones, printes, gravações de tela, imagens, qualquer coisa.
+[04:10] O Cloud olha o mapa
+[04:11] e lista tudo o que falta.
+[04:12] Ele vai tentar buscar tudo sozinho primeiro
+[04:14] e o que ele não conseguir pegar,
+[04:16] ele pede para você.
+[04:16] Agora com o plano e os arquivos na mão,
+[04:18] ele finalmente chega na etapa
+[04:20] em que ele vai criar as animações.
+[04:22] E para isso, ele usa o HyperFrames,
+[04:24] que é outro programa extra
+[04:25] que o Cloud vai instalar para você sozinho
+[04:27] e transforma o seu código em vídeo.
+[04:29] E no meu caso,
+[04:30] é aqui que eu gosto de dar a segunda revisada no Premiere Pro.
+[04:32] Ele me entrega o arquivo
+[04:33] e eu já vejo os motions no tempo certo.
+[04:35] E aí é só eu aprovar ou pedir ajuste.
+[04:38] Na minha experiência com um fluxo bem treinado,
+[04:40] uma ou duas revisões no máximo,
+[04:42] você já consegue chegar a um resultado muito bom.
+[04:44] E aí depois de todos os motions aprovados,
+[04:46] vem os uns.
+[04:47] Que é aqui que o Cloud trabalha
+[04:48] toda essa movimentação de câmera
+[04:50] que você está vendo até agora.
+[04:51] Ele usa a diferença de zoom
+[04:52] para disfarçar os cortes,
+[04:53] faz uns dinâmicos,
+[04:54] acompanha as animações
+[04:55] e dá zoom nas ênfases.
+[04:57] E um detalhe muito legal
+[04:58] que eu gosto de adicionar
+[04:59] é fazer a câmera seguir o meu rosto
+[05:00] como você está vendo aqui.
+[05:01] Acho que fica bem dinâmico
+[05:02] e para isso,
+[05:03] ele usa o UNET,
+[05:04] que é um outro modelo
+[05:05] que rastreio arroços no vídeo.
+[05:06] Chegando na última etapa,
+[05:08] que são os efeitos sonoros.
+[05:09] O Cloud identifica os movimentos
+[05:11] tanto nos motions quanto na câmera
+[05:13] e coloca um som para cada um.
+[05:14] No meu caso, ele procura primeiro
+[05:16] uma pasta de efeitos sonoros que eu tenho.
+[05:17] Se tiver alguma que está faltando,
+[05:19] ele já vai e baixa para mim
+[05:20] direto na Epidemic Sound
+[05:22] que eu assino.
+[05:22] No seu caso,
+[05:23] eu recomendo você primeiro
+[05:24] perguntar pro Cloud
+[05:25] quais efeitos sonoros
+[05:26] seria legal você ter uma pasta.
+[05:27] E aí você vai atrás de alguns gratuitos,
+[05:29] monta essa pasta
+[05:30] para ter a sua primeira base.
+[05:31] Agora, se você já quiser
+[05:32] um caminho bem mais rápido,
+[05:33] é só você assinar o Epidemic Sound
+[05:35] e o Cloud já baixa tudo para você
+[05:36] direto pela API.
+[05:37] Então, vamos lá recapitulando
+[05:38] todas as etapas,
+[05:40] todas as skills que esse fluxo usa.
+[05:42] Iniciarei preparar,
+[05:43] cortes, motion map,
+[05:45] assets, motion render,
+[05:47] zooms e sound effects.
+[05:49] Essas são as 8 etapas
+[05:50] ou 8 skills.
+[05:51] E eu sei que pode parecer muita coisa,
+[05:53] muita etapa, muito complexo.
+[05:54] Mas fica tranquilo
+[05:55] porque em volta de tudo isso
+[05:56] tem uma skill mestre.
+[05:57] Você chama ela uma vez
+[05:59] e ela mesma vai chamando
+[06:00] etapa por etapa para você,
+[06:01] te guiando pelo que você tem que fazer
+[06:03] em cada uma.
+[06:04] E aqui vem uma dica extra
+[06:05] para você economizar ainda mais tokens.
+[06:06] A cada etapa que você for fazendo
+[06:08] limpa o seu chat com barra clear
+[06:10] ou comece um novo.
+[06:11] Assim, o histórico não vai ficando gigante
+[06:13] e você não torra o seu limite à toa.
+[06:15] E a skill mestre também te ajuda nisso
+[06:16] porque ela te avisa a hora de limpar.
+[06:18] Depois é só chamar ela de novo
+[06:19] e ela identifica em qual etapa você parou.
+[06:22] Mesmo num chat novo.
+[06:23] E de novo, vale muito a pena fazer dessa forma
+[06:25] porque o resultado fica muito melhor
+[06:27] e muito mais personalizado.
+[06:28] Com certeza se a gente fizesse uma única skill
+[06:30] para fazer tudo isso de uma vez,
+[06:31] o resultado não chegaria nem perto
+[06:33] disso tudo aqui que vocês estão vendo.
+[06:34] E ainda, por trás de tudo isso,
+[06:36] tem a parte que pra mim
+[06:37] é a mais poderosa desse fluxo.
+[06:38] Conforme eu vou dando feedbacks
+[06:40] e corrigindo algumas coisas,
+[06:42] o Cloud vai anotando tudo
+[06:43] num arquivo de aprendizados dentro da pasta.
+[06:45] E a qualquer momento eu posso pedir pra ver
+[06:46] o que ele anotou
+[06:47] e aí eu posso escolher o que vira regra permanente
+[06:50] e o que sai.
+[06:50] Dessa forma, a cada vídeo que você edita
+[06:52] ele vai entendendo cada vez mais o seu gosto
+[06:55] e melhora ainda mais o nível das suas animações.
+[06:57] Então todo o próximo vídeo vai saindo melhor.
+[06:59] Tá, mas você deve estar pensando
+[07:00] quanto custa isso?
+[07:02] Pessoal, varia muito de vídeo pra vídeo.
+[07:04] Mas pra vocês terem uma noção,
+[07:05] um vídeo desse aqui gasta entre 20% a 30%
+[07:08] do limite semanal da assinatura do Cloud Pro.
+[07:11] Ou seja, a gente conseguiria fazer uns 15 a 20 vídeos
+[07:14] desse por mês.
+[07:15] Só com assinatura do Cloud Pro.
+[07:16] Tendo isso em mente, a gente gasta mais ou menos
+[07:18] um dólar a um dólar e meio por vídeo desse
+[07:21] que é absurdamente de graça.
+[07:23] Um vídeo desse com um editor profissional
+[07:26] entregando com essa qualidade que a gente tá vendo
+[07:28] seria no mínimo R$ 3.000.
+[07:30] Na verdade, agora aqui eu do futuro
+[07:33] terminando de editar aqui esse vídeo,
+[07:35] essas contas que eu tinha feito
+[07:36] foi com base em um vídeo anterior
+[07:38] que eu tinha editado,
+[07:38] mas que tinha muito menos animação.
+[07:40] Esse aqui, como eu fiz com bem cheio de animação,
+[07:42] um valor mais realista pra esse tipo de vídeo
+[07:45] seria algo em torno de 5 a 10 vídeos
+[07:47] por mês de Cloud Pro,
+[07:49] que isso de qualquer forma dá tipo 2 a 4 dólares por vídeo,
+[07:52] que é absurdamente barato.
+[07:53] E se você quiser fazer mais vídeos do que isso,
+[07:55] é só você pegar um plano maior do Cloud
+[07:57] que daí você vai ter vídeo infinito.
+[07:58] Queria só alinhar pra não passar informação falsa,
+[08:00] mas bora com as dúvidas.
+[08:01] E agora com o prometido,
+[08:02] é isso que gratuita que eu criei pra você.
+[08:04] Ela vai te guiar passo a passo
+[08:05] pra construir um fluxo personalizado
+[08:07] pro estilo de vídeo que você quiser.
+[08:09] E ela já vem com os bons costumes
+[08:11] e o treinamento geral do que eu acho que precisa ter
+[08:13] pra fazer boas animações e um bom fluxo.
+[08:15] O link do GitHub tá na descrição.
+[08:17] Você copia, cola no seu Cloud
+[08:19] e pede pra ele instalar pra você.
+[08:21] Depois disso, é só digitar barra fluxo de edição no chat
+[08:24] e ele começa a te guiar.
+[08:25] Então é isso.
+[08:26] O Cloud faz o trabalho mecânico,
+[08:27] mas quem define o estilo, aprova um mapa
+[08:30] e diz o que tá bom ou não é você.
+[08:32] E é por isso que eu acho que a IA
+[08:33] não vai substituir os editores.
+[08:34] Ela só vai mudar muito a maneira como a gente trabalha.
+[08:37] E quem não aprender vai acabar ficando pra trás.
+[08:39] Agora me conta aqui nos comentários
+[08:41] se teve alguma parte desse vídeo
+[08:42] que vocês acharam que ficou parecendo muito IA,
+[08:44] que não ficou legal.
+[08:45] Valeu!

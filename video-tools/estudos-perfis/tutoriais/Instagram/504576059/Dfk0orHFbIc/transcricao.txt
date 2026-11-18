@@ -1,0 +1,15 @@
+idioma: pt
+[00:00] Agora dá pra deixar o Cloud Code sem limite com antivírus e lendo a internet inteira com
+[00:04] esses 5 tubinhos de graça.
+[00:05] O primeiro é o Free LLM API que te dá mais de 7 bilhões de tokens grátis por mês em
+[00:10] mais de 600 modelos.
+[00:12] Estourou o limite, ele troca sozinho pro próximo.
+[00:14] O segundo é o Agent Wish que já passou de mais de 100 mil estrelas no GitHub.
+[00:18] Ele deixou o Cloud ler e pesquisar no Reddit, Youtube e Twitter sem pagar apenas 1.
+[00:23] O terceiro é o Skill Specter da Enivilla.
+[00:25] É tipo antivírus pra 2 skills.
+[00:27] Ele acha cóbimo alicioso antes de você instalar.
+[00:30] O quarto é o Lemur Opuskar que ensina o Cloud a animar vídeo em 66 estilos diferentes.
+[00:35] E por último, o Pone Enteiro que corta mais de 50% do gacho de tokens sem perder qualidade.
+[00:40] Se você quer testar, comenta set up aqui embaixo e me segue continuando passo a passo
+[00:43] completo pra você instalar os 5.

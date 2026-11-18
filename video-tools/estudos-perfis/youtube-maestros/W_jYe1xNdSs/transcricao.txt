@@ -1,0 +1,900 @@
+idioma: pt
+[00:00] Esse carrossel está no ar no nosso Instagram. A capa é animada e o texto continua nítido do início ao fim.
+[00:06] E esse aqui é um anúncio de produto em vídeo pronto para rodar.
+[00:38] Eu fiz esse carrossel e esse anúncio com OpenArt. Eu vou te mostrar tudo do início ao fim para você também fazer um igual.
+[00:44] E como utilizar o OpenArt para extrair o melhor dele?
+[00:47] Esse fluxo de criação de carrossel é exatamente o mesmo que nós usamos para criar os nossos carrosséis para os redes sociais.
+[00:54] Se você entrar dentro da conta dos maestros da IA no Instagram, você vai ver que nós temos alguns carrosséis
+[00:59] e todos eles foram feitos desta mesma forma utilizando o OpenArt.
+[01:03] Para obter esse resultado é simples. O primeiro passo é você escolher o tema do carrossel que você quer gerar.
+[01:08] Em seguida você vai pedir para o código de escrever o conteúdo do carrossel para você
+[01:13] e depois na mesma conversa o OpenArt vai animar a capa e construir os slides do carrossel.
+[01:19] Eu também quero te mostrar um recurso muito interessante que tem dentro do OpenArt que se chama Director Mode.
+[01:24] Você consegue transformar uma conversa em um anúncio completo.
+[01:28] Para quem não conhece o OpenArt é uma plataforma que reúne vários modelos de imagem e vídeo em uma única conta.
+[01:34] Então com uma única assinatura você tem vários modelos disponíveis para você utilizar.
+[01:39] Isso é muito prático porque você não precisa ficar pagando esses modelos assinando esses modelos separadamente.
+[01:45] Lá dentro da plataforma estão os melhores modelos da atualidade de geração de imagem e vídeo.
+[01:50] Nós temos o Nano Banana Pro, o GPT IMAG2, Cdream, Kling, Cdence, entre outros.
+[01:56] E o mais legal é que o OpenArt possui MCP, então você pode conectá-lo ao pod pod, ao codex, ao cursor.
+[02:03] Fica seu critério que você gostar mais. Ele consegue ter compatibilidade.
+[02:07] Então você não precisa utilizar o PlayWrite MCP.
+[02:09] Por exemplo, que acaba às vezes ficando um pouco mais pesado, um pouco mais caro, consumindo mais os seus créditos.
+[02:14] Via MCP fica tudo mais simplificado.
+[02:17] Na prática, depois de conectado, o Cloud pode gerar imagens e vídeos dentro do OpenArt
+[02:22] e devolver o resultado para você ali dentro do próprio Cloud.
+[02:26] Depois de conectado, ele também consegue listar os modelos disponíveis de geração de imagem e vídeo,
+[02:31] enviar imagens de referência, organizar projetos e consultar quantos créditos você ainda tem dentro da plataforma para usar.
+[02:38] O crédito é a moeda da plataforma. Cada imagem ou vídeo gerado disponta um valor do seu saldo.
+[02:43] Ok, você deve estar se perguntando, e onde isso entra no meu fluxo?
+[02:47] Bem no meio. O Cloud cuida do texto e da estratégia. O OpenArt cuida da imagem e do vídeo e você para de copiar um prompt de uma aba para outra.
+[02:55] O ganho está no contexto. O assistente que escreve o roteiro do carrossel é o mesmo que escreve o prompt de cada slide,
+[03:01] então a imagem sai coerente com o texto.
+[03:04] Bom, vou te mostrar como fazer a conexão MCP do OpenArt com o Cloud, mas isso vai funcionar para o chat apt, para o cursor ou então outro agente que você queira.
+[03:13] Está vai funcionar da mesma maneira, você vai utilizar a mesma loja.
+[03:16] Bom, a primeira coisa que você precisa fazer é entrar dentro da sua conta do Cloud, aqui eu já estou dentro da minha conta,
+[03:22] e aí você pode vir aqui em mais e clicar em Connectors, ou então você pode vir aqui em Serens e depois Connectors.
+[03:30] Em seguida, aqui você já vai ver que eu tenho conectado o OpenArt, né?
+[03:34] Mas se você não tiver, você vai vir aqui em Adicionar, adicionar um conector customizado,
+[03:41] e aí você vai colocar aqui o nome da ferramenta, é mais fácil para você identificar depois, então vou colocar OpenArt,
+[03:47] e aqui eu coloco o servidor MCP.
+[03:50] Então eu venho dentro do site da OpenArt e copio aqui essa conexão MCP.
+[03:55] Você pode copiar essa URL e voltar aqui no Cloud e colar.
+[04:00] Depois você clica aqui em Continuar.
+[04:03] Como eu já tenho ela conectada, eu vou desconectar aqui, eu tenho para conectar novamente.
+[04:07] Então a gente vai vir aqui, no meu caso, eu vou desconectar e fazer todo passo a passo com vocês de novo.
+[04:14] Bom, então vou reconectar aqui com vocês novamente, só para você ver o passo a passo.
+[04:18] Você vai vir aqui em mais, vai vir aqui em Connectors, depois adicionar um conector e adicionar um conector customizado.
+[04:26] Aí você vai colocar aqui o nome da ferramenta, OpenArt, e aqui a URL do MCP do OpenArt,
+[04:33] e aí vai clicar aqui em Continuar.
+[04:36] Em seguida você pode deixar assim como está e clicar aqui em Adicionar.
+[04:42] Automaticamente ele já vai abrir aqui para mim no browser a conexão que eu preciso fazer,
+[04:46] preciso logá dentro da minha conta do OpenArt para que ele faça integração,
+[04:50] autoriza a integração, então vou clicar aqui em Continuar conectando.
+[04:55] E agora eu posso dar acesso total, então vou clicar aqui em acesso total para autorizar.
+[05:03] Bom, ele já está conectado aqui, OpenArt, e agora nós vamos começar a usar a nossa SQL,
+[05:09] eu já vou mostrar para vocês como ela funciona.
+[05:11] Para usar a SQL é muito simples, mas antes eu preciso fornecer um tema aqui para o CodeCode.
+[05:17] Claro que essa SQL funciona assim, mas você poderia fazer uma SQL que já busca a informação à última notícia
+[05:23] e já gera o carro CEL automaticamente sem a sua interferência.
+[05:26] É que aqui nesse caso eu gosto de ter a ideia do carro CEL, eu gosto de ter um controle sobre o tema,
+[05:32] mas eu vou pedir para o CodeCode buscar notícias de inteligência artificial, as últimas notícias,
+[05:37] e a partir daí a gente vai gerar o carro CEL com essa SQL, então eu vou falar aqui para ele fazer essa busca.
+[05:42] Busque as últimas notícias sobre inteligência artificial, a minha ideia é gerar um carro CEL
+[05:48] sobre uma notícia que tenha sido relevante, que esteja no hype, ou que seja uma notícia
+[05:56] de uma novidade muito importante. Então, busque as notícias para que eu escolha o tema mais quente
+[06:01] para gerar um carro CEL sobre isso e postar nas redes sociais. Pronto, agora ele vai começar a
+[06:07] fazer essa busca. E olha que interessante, ele já fez uma varridura, já buscou as últimas notícias
+[06:15] sobre inteligência artificial e trouxe aqui um esqueminha organizado visualmente para que a gente
+[06:21] consiga tomar melhor decisão. Então, ele colocou aqui do Bill Gates, trouxe aqui também do
+[06:27] Gemini 4 Argon que foi lançado. Eu acho que eu vou falar sobre o Gemini 4 Argon, a gente já fez um vídeo
+[06:35] sobre ele aqui no canal, mas eu vou fazer um carro CEL sobre ele que a gente ainda não postou nas
+[06:41] redes sociais. Bom, então eu vou copiar aqui essa aqui, inclusive a recomendação dele de uma
+[06:46] notícia que teve bastante relevância. Então, vou pedir para que ele use esse tema aqui para
+[06:50] gerar o nosso carro CEL. Então, eu copiei aqui o pedido e aí eu já vou utilizar aqui a SQL. Então,
+[06:56] eu venho aqui, coloco barra carro CEL e aí eu coloco aqui o pedido, todas as informações que ele mesmo
+[07:04] tinha trazido. Então, tema Google lança o Gemini 4 Argon e a partir daí ele vai filtrar, ele vai
+[07:10] gerar o conteúdo que a gente vai colocar nos slides, tudo isso eu vou aprovando e vou mostrando
+[07:16] aqui para vocês. Então, eu já coloquei aqui o tema, o foco do carro CEL, acionei aqui a SQL,
+[07:23] inclusive quando ele já gerou ali o prompt para eu copiar e com lá ele já trouxe aqui o comando
+[07:29] de chamar SQL. Então, isso é muito interessante porque está tudo integrado e aí eu vou vir aqui em
+[07:34] Submitter. O interessante é que essa SQL checa os fatos, ela vê se não tem nenhum sensacionalismo,
+[07:40] se não tem nenhuma fake news, eu sempre pedi para que ela checasse os fatos antes de gerar
+[07:44] qualquer informação. Então, ele trouxe aqui fato checado de salvos, ele colocou em fontes.mdi,
+[07:49] fez que dizem nas páginas oficiais do Google e um agente independente reabriu cada fonte,
+[07:54] nenhuma capa foi escrita ainda. Então, ele não vai gastando os nossos créditos dentro do Open
+[07:59] Art sem a nossa aprovação. Fatos confirmados, lançamento e acesso, colocou aqui os dados. Na
+[08:05] tabela do próprio Google, o Argon lidera sozinho em 13 de 19 linhas, empata em uma e perde em 5.
+[08:12] E assim por diante, traz aqui também demonstrações, toda segundo o Google sem auditoria, corrigidos
+[08:18] de carregagem. Ele traz aqui quais eram os pontos que estavam a mais, que não eram informações
+[08:23] de fato verdadeiras ou um pouco aumentadas, colocou aqui os detalhes, ficaram de fora codinomes,
+[08:32] 100 mil funcionários usam todo mês, essas informações não ser gerais de todas as
+[08:39] empresas, então isso aqui ele colocou. E ele sugere aqui a estrutura do caos céu. Então,
+[08:44] aqui é um dos padrões que vou assumir. Público, quem o usar no trabalho no Brasil e
+[08:49] quer saber se vale trocar ou assinar, o objetivo, salvamentos e autoridade. Então,
+[08:54] para gente gerar pessoas compartilhando, salvando, como nos carros saídos do Soder 5.5 e do GPT-6.1 Sol.
+[09:02] Plataforma, Instagram, aí ele coloca a formata seu, um detalhe muito importante na hora da
+[09:08] geração dessa skill, foi que ela conseguisse gerar a já automaticamente no formato do TikTok,
+[09:14] no formato do Instagram e também no formato do YouTube, porque são formatos um pouco diferentes.
+[09:19] Então, ele já faz essa adaptação para cada uma das plataformas. O CTA para salvar e
+[09:25] postar e a gente também pode alterar isso na skill, para sempre colocar um call to action
+[09:30] para comentar alguma informação. Isso nós não colocamos, porque aí eu precisaria
+[09:36] integrar com uma outra skill que nós temos, que é uma skill que faz uma automação de
+[09:41] cario. Então, você comenta jeve, por exemplo, e ele te manda toda uma explicação do jeve,
+[09:46] eu te mando o link do vídeo do jeve. Nesse caso, aqui nós não temos, inclusive temos,
+[09:51] nós temos um vídeo do árvore, então eu vou pedir para aquele coloque que é um CTA
+[09:55] chamando para o árvore e aí a pessoa comenta a árvore e aí a gente encaminha o vídeo,
+[10:00] essa é uma opção. Nesse caso do vídeo aqui, que eu estou fazendo de uma maneira
+[10:04] mais breve, eu não vou mostrar isso porque eu preciso criar essa automação com uma outra
+[10:08] nossa, mas eu quero ter essa opção, só te mostrando, falando que isso é possível
+[10:13] fazer de uma maneira automatizada. Aqui nós temos então um slide
+[10:16] salvável e aí ele coloca aqui uma tabela de comparação, um visual e aí a gente
+[10:23] escolhe um ponto interessante que eu não queria gastar, indiscriminadamente,
+[10:27] os meus créditos dentro do OpenArt. Eu queria fazer o carro céu o mais
+[10:32] possível, então eu sempre peço para ele gerar para mim ideias, estilos visuais com base
+[10:38] no treinamento que eu fiz nele e a partir desses estilos eu escolho qual slide eu
+[10:44] quero seguir, qual paleta de cor, qual estilo visual e aí ele gera os slides
+[10:50] gastando os créditos depois disso, depois dessa decisão. Então ele sempre faz
+[10:55] para gente um painel visual com as opções e a capa eu sempre pedi que a capa
+[11:00] é animada porque isso gera mais engajamento, gera maior retenção, chama mais
+[11:05] atenção e eu acho que fica mais bonita visualmente. Então eu quero uma animação
+[11:10] na capa e eu também gostava de por uma animação no CTA, só que nem sempre fica
+[11:14] legal e às vezes acaba consumindo um pouco mais de crédito, então a capa é
+[11:18] obrigatória a estar animada e o último slide, o CTA é opcional. Então a
+[11:23] animação só a capa, enrasco e inocidense com um custo confirmado antes
+[11:28] de ir animando. Então sempre que ele for gerar o carro-celo ele também me traz
+[11:31] integrado ao penarte o quanto de crédito eu vou gastar e aí fica uma decisão mais
+[11:36] consciente, eu consigo ter um controle maior e se eu achar que o valor está um
+[11:40] pouco acima, se eu quiser gastar menos créditos eu posso ir ajustando o estilo
+[11:44] visual. Eu vou pedir para ele seguir e também para ele inserir o CTA.
+[11:47] Pode seguir com essa ideia, me traga as cinco ideias de capas e pode colocar o
+[11:53] link do vídeo do YouTube para as pessoas saberem um pouco mais sobre esse
+[11:59] modelo. Pronto, agora eu vou submeter e agora ele vai gerar esse material e eu já
+[12:06] mostro para você. Bom, olha que interessante, ele já terminou, ele colocou aqui
+[12:11] promessa em dez slides, então a gente vai gerar dez slides, ele coloca a
+[12:16] crença hoje, sai um modelo novo do Google, deve ser o melhor de todos, ele coloca
+[12:20] crença aqui ou depois, ele é o melhor em algumas coisas, perde em outras, então o
+[12:25] conteúdo que vai ser inserido em cada um dos slides são cinco opções de capas,
+[12:30] então a primeira opção seria o número mais resultado, 13 vitórias, cinco derrotas,
+[12:35] o placar do argon, Gemini 4 Argon lidera hoje e aí na tabela essa comparação.
+[12:40] Na segunda opção de capa, contrário ao esperado, Gemini 4 chegou de graça,
+[12:45] ele traz, porque que não é? Gemini 4 Argon só para assinantes, no aplicativo
+[12:51] Gemini só entra quem assina o Pro ou o Ultra, então ele tá liberado só para
+[12:56] esses planos, pelo menos por enquanto na data da gravação desse vídeo, resultado
+[13:01] mais prova e aí ele traz uma recomendação que seria essa quarta aqui,
+[13:06] a curiosidade com lacuna, o Google superou este modelo por 13 dias e aí coloca
+[13:11] Gemini 4 Argon liberado hoje em 39 e eu vou seguir a recomendação dele, optar
+[13:17] pela versão 4 e também ele traz aqui três variantes do primeiro slide de
+[13:22] valor, então quem pode usar no Brasil, ele levide o longo melhor que os rivais,
+[13:28] o que ele já fez dentro do Google e a recomendação também dele é a, então
+[13:33] é a quarta capa, a recomendação é a quem pode usar no Brasil e as variantes
+[13:39] da QA, então eu vou pedir aqui para ele usar todas as opções
+[13:45] recomendadas e olha que bacana, uma das coisas que eu mais gosto dessa
+[13:51] skill é que ela traz para gente um painel com várias referências, referências
+[13:56] que eu alimentei e referências que nós já usamos dentro da nossa conta,
+[14:00] então ela trouxe essas referências aqui de estilo visual e a partir daí cada
+[14:05] uma dessas referências tem um número e aí eu posso escolher aqui no índice
+[14:09] número eu gostaria de gerar qual estilo e a partir daí ela vai seguir essa
+[14:13] identidade visual, então isso encurta muito nosso caminho e faz com que a gente tenha
+[14:18] mais preciso um resultado e economize os créditos lá dentro do OpenArch.
+[14:22] Eu acho que eu vou usar esse estilo aqui do Jeff, que é o mesmo estilo mais
+[14:26] ou menos do que a gente utilizou adaptando as cores do robô para falar da OpenAI,
+[14:32] para falar da Antropi com laranja da OpenAI com azul e do Jeff com rosa,
+[14:36] com cores da logo deles, então eu vou pedir para usar esse estilo,
+[14:42] uma combinação deles e nesse caso eu pedir para aquele coque vermelho,
+[14:48] que é a cor do Google, do G do Google, então vou pedir para ele criar esse robô
+[14:52] vermelho, vou colocar aqui de referência, eu vou falar também, ele faz uma pergunta
+[14:57] para mim sobre o vídeo, o que que eu coloquei no vídeo, então no vídeo
+[15:01] quando falei sobre o Argon, eu trouxe Bintmark, trouxe também uma
+[15:05] questão geral sobre esse lançamento, então já coloquei aqui, vou ditar aqui para
+[15:10] ficar mais fácil. Eu quero usar o estilo de capa do Jeff, número 11 e também uma
+[15:18] mescla com número 1 e 2 que segue mais ou menos a mesma ideia do robô,
+[15:23] só que eu quero que esse robô seja vermelho, que represente a cor do Google,
+[15:28] porque a gente está falando do lançamento do Argon e o G do Google é vermelho,
+[15:32] é aquela mesma cor criando esse estilo do robô que é o que acabou gerando bastante
+[15:39] engajamento, ótimo e aqui ele faz então uma confirmação do roteiro dos slides
+[15:47] e ele traz aqui os estilos, o catálogo dos 14 estilos está acima e aí a sugestão
+[15:53] dele é a 13 na capa, mais 10 nos interos, então aqui tem a referência de capa
+[15:59] e a referência do que vai no meio dos slides, então ele traz aqui
+[16:03] sugestão de capa a 10 e a 13, mas eu gostei mais da ideia da 11 e o recheio,
+[16:10] o meio dos slides a gente puxa algo mais para o estilo da 10, acho que fica
+[16:16] interessante ou o estilo do próprio Jeff, que ele tem tudo isso armazenado dentro
+[16:20] de uma pasta de referências, então quando ele gera um carro cell ele salva esse
+[16:25] carro cell em referências, então toda vez que eu preciso gerar um novo
+[16:28] carro cell ele puxa todo o histórico que eu tenho e me mostra ele sem precisar
+[16:33] gerar algo do zero, eu já tenho essas referências guardadas, então eu vou enfatizar
+[16:36] para que ele use o estilo visual dos slides que vão no meio baseado nesse estilo do
+[16:41] Jeff, então só enfatizando eu quero que você use a capa com robô vermelho do
+[16:47] estilo do Jeff e também da referência 1 e 2, mas eu quero que o meio do carro cell
+[16:53] os outros slides, inclusive o slide do CTA do último, seja um estilo também do Jeff
+[17:01] ou então o estilo da OpenAI ou da um drop que eu gostei que vai aparecendo o robô
+[17:07] em outras posições e que faz sentido com a mesma paleta de cores,
+[17:12] agora nós vamos ficar aqui em submeter e aguardar ele trazer os próximos passos
+[17:17] enquanto o Claude está gerando aqui os carro cells com OpenArt, eu quero
+[17:22] mostrar para vocês como é dentro da plataforma do OpenArt porque obviamente
+[17:26] você pode utilizar diretamente por lá, você não precisa fazer todo esse esquema com
+[17:30] Claude, mas isso te ajuda muito porque aqui você tem um assistente, um agente que
+[17:35] trabalha para você com essa ferramenta de geração de imagem video integrada,
+[17:39] mas se você não quiser ter toda essa configuração inicial, todo esse preparo
+[17:43] você pode utilizar diretamente o OpenArt na plataforma, então vou mostrar aqui
+[17:47] para vocês como funciona a plataforma e olha que legal, essa aqui é a
+[17:50] plataforma, esse é o OpenArt, assim que você faz a sua conta você tem esse
+[17:54] painel aqui para acessar e aqui nós temos como conversar diretamente, pedir
+[18:00] algo aqui no chat diretamente para ele, aqui você pode observar que nós já
+[18:03] temos imagens dos nossos carros cells do Hermes aparecendo aqui, todas elas foram
+[18:08] feitas com OpenArt, você tem o Director Mode que eu já vou mostrar para você
+[18:12] como ele funciona, é muito prático, inclusive eu vou mostrar para vocês
+[18:15] um vídeo que eu gerei utilizando o Director Mode, um anúncio que eu
+[18:19] queria fazer para uma loja de matcha que a gente conheceu na Tailândia, que é uma
+[18:25] loja muito legal que faz um matcha incrível e que se chama Slush Matcha, que é
+[18:30] um matcha muito diferente que a gente nunca tinha provado em outro lugar, que é
+[18:33] feito com água de coco, então era água de coco ali congelada, fazer o Slush e
+[18:39] colocava o matcha por cima, é uma combinação incrível e aí eu usei essa
+[18:43] loja como referência para criar esse anúncio, se chamava Commonly Matcha
+[18:47] na Tailândia em Bangkok e aí eu vim no Google e coloquei Commonly Matcha que era o
+[18:52] nome desse estabelecimento que vendia matcha lá em Bangkok e aí eu tirei vários
+[18:56] prints da fachada, tirei prints aqui do preparo do matcha, tirei prints também
+[19:03] aqui, vários prints para ele utilizar como referência e aí a partir dessas
+[19:09] imagens eu pedi para que o Clod fizesse um pronte para a gente utilizar o
+[19:14] Director Mode e aí ele gerou esse resultado aqui que eu vou mostrar para vocês
+[19:18] com simples pronte utilizando o Director Mode que fez toda a diferença, esse aqui
+[19:22] foi o passo a passo, eu vim em Director Mode e coloquei as referências
+[19:27] que eu tinha printado dessa Commonly Matcha e aí ele foi gerando várias
+[19:32] imagens para complementar esse anúncio, para criar todo esse anúncio e aí com
+[19:37] base nessas imagens de referência ele gerou esses personagens, então ele
+[19:41] gerou a atendente que tem as características de Bangkok que eu
+[19:45] queria que fosse bem realista e ele utilizou o Nano Banana 2 em 2K, uma resolução de 2K
+[19:53] gerou essa personagem aqui que é a nossa atendente e também gerou esse
+[19:57] personagem aqui que é o cliente que vai entrar dentro da Commonly Matcha e
+[20:02] aí ele também utilizou aqui o Nano Banana 2 2K, então ele criou esses
+[20:06] 2 personagens utilizando todas as referências que eu trouxe, a referência
+[20:12] da fachada porque eu queria que tivesse a fachada e a partir dessas imagens, dessas
+[20:17] referências e do pronte ele trouxe esse resultado aqui e detalhes eu coloquei no
+[20:32] print que eu queria um lo-fi que eu queria que o personagem entrasse e
+[20:36] aparecer esse afachado da Commonly Matcha, ele entrasse dentro dessa loja de
+[20:40] matcha, ele fizesse o pedido e depois ele saísse com o matcha dele pronto,
+[20:45] o slush matcha, saísse e aparecesse novamente a Commonly Matcha, então
+[20:49] todos esses detalhes de sequência eu que solistei e a partir daí ele criou tudo isso.
+[20:55] Então é muito interessante porque nós conseguimos inclusive editar o resultado
+[20:59] aqui dentro desse director mode, isso é muito legal porque ele funciona como se
+[21:03] fosse um diretor mesmo, um diretor de sequência, ele escolhe o melhor
+[21:07] ângulo, ele faz tudo isso pra você, então aqui eu vou começar a produzir
+[21:11] novamente pra gente ver os detalhes.
+[21:13] Até o barulho do passo dele, isso é muito legal.
+[21:24] E aí, matcha Commonly, que foi muito legal.
+[21:27] Eu achei esse personagem muito realista, inclusive a gente consegue ver que ele tem
+[21:52] acne, ele tem umas espinhas, ele tem cravo, tem textura de pele e isso deixa o resultado
+[21:58] muito natural. Eu achei muito legal poder usar isso aqui de propaganda dessa
+[22:04] família, não sei como se fala esse estabelecimento que vem de matcha, então
+[22:07] achei muito interessante, vou mostrar essa parte do final.
+[22:11] E o interessante também é que ele faz uma sincronização da música com o que
+[22:27] está acontecendo na tela, isso é bem legal, é uma coisa que um diretor faria e
+[22:32] aqui no director mode a gente já tem tudo isso.
+[22:34] E outro recurso legal do director mode é que se você não gostou de algum
+[22:38] trecho, você pode vir aqui cortar diretamente nessa timeline.
+[22:42] Então, por exemplo, aqui essa parte, eu achei que foi um leve erro aqui da IA,
+[22:48] essa parte que mostra o cliente dentro, atrás do balcão.
+[22:52] Isso aqui não acontece normalmente.
+[22:55] Então, como eu não gostei dessa parte do cliente aparecendo atrás do
+[22:58] balcão, eu posso vir aqui diretamente, selecionar o espaço que
+[23:02] eu quero recortar e aí eu posso tanto aspar essa barra aqui, quanto
+[23:08] pedir aqui pra que ele mesmo faça esse corte.
+[23:10] Então, eu posso vir aqui marcar na linha do tempo, por exemplo,
+[23:13] dos 13 segundos até os, deixa eu ver aqui, quantos segundos a gente
+[23:19] tem, até os 17 segundos.
+[23:22] Eu posso pedir aqui pra que ele remove.
+[23:23] Então, eu venho aqui, copio essa minutagem e copio aqui essa
+[23:28] parte inicial até onde eu quero ir, então dessa parte até a
+[23:32] outra e aí eu posso pedir pra que ele remova, remova esse
+[23:38] trecho do vídeo.
+[23:40] Posso fazer tanto assim quanto arrastando aqui, essa barra,
+[23:44] poderia arrastar essa barra, vira até aqui, e aí remover.
+[23:49] Mas eu quero manter o áudio tudo certinho, então vou pedir
+[23:52] pra que ele faça essa remoção.
+[23:55] E agora ele vai começar a editar o vídeo pra gente.
+[23:59] Isso é muito prático, porque eu não sei você, mas as
+[24:03] vezes a gente gera um vídeo, ele não fica tão legal e aí
+[24:06] você quer aproveitar 80% dele.
+[24:09] Você pode baixar o vídeo, levar pro cap cut e fazer os
+[24:13] cortes manualmente.
+[24:14] Aqui nesse recurso é muito mais simples, porque dentro da
+[24:18] própria plataforma você consegue selecionar o trecho,
+[24:21] é como se você tivesse uma timeline de linha de edição,
+[24:24] claro que mais simplificada, mas você consegue resolver
+[24:26] tudo aqui dentro e aí você só faz o download do vídeo
+[24:29] completo e pronto da maneira que você queria.
+[24:32] E olha que bacana, ele já removeu, inclusive eu poderia
+[24:35] ter ditado aqui, eu quero que você remova do trecho
+[24:38] 13 segundos aos 17 segundos e aí ele iria fazer ali pra mim.
+[24:42] Então são várias maneiras de editar o vídeo, você pode
+[24:45] fazer por comando de voz, você pode editar, você pode
+[24:47] fazer manualmente, fica seu critério.
+[24:49] Ele já fez aqui, então vamos ver o resultado.
+[24:52] Eu não sei você, mas eu achei esse resultado muito legal,
+[25:32] muito impressionante, foi gerado rapidamente.
+[25:35] Então você pode fazer tudo dentro da plataforma,
+[25:38] do OpenArch, ou então utilizar o Cloud como
+[25:41] seu assistente de produção de conteúdo.
+[25:43] Outro recurso bacana é que você pode vir aqui em cenas
+[25:46] e aí você pode modificar essa cena,
+[25:49] ah, não gostei desse início, mas eu gostei de todo o resto.
+[25:52] Você pode pedir pra ele regerar uma nova cena de introdução
+[25:56] até ficar do seu gosto, você pode subir
+[25:59] novas referências ou gerar uma separadamente,
+[26:02] se você já tiver um início, você pode subir aqui.
+[26:05] Isso é muito legal porque quando a gente rodava um volume
+[26:08] grande de anúncios na nossa empresa de música,
+[26:11] a gente testava muitos anúncios e a gente via
+[26:14] os campeões, os anúncios que mais performavam,
+[26:17] pegava às vezes a introdução, o início, o rook
+[26:20] desse anúncio e colocava o desenvolvimento
+[26:23] e o CTA de um outro anúncio. Então a gente pegava os que
+[26:26] é o melhor, a parte inicial conseguia criar
+[26:28] várias ações, colocando desenvolvimento
+[26:30] diferente, um CTA diferente.
+[26:32] Isso é muito prático porque você pode ter
+[26:34] vários anúncios prontos e ir inserindo
+[26:36] aqui introduções diferentes, desenvolvimento
+[26:39] diferente, gerando o início com a, gerando o meio
+[26:42] você pode fazer uma mescla, tudo isso aqui dentro
+[26:44] do OpenArt, fazendo upload aqui da parte inicial
+[26:47] e ele já faz essa junção do vídeo pra você.
+[26:49] Então funciona mesmo como um editor de vídeos
+[26:52] dentro da plataforma e geração de vídeo com a,
+[26:55] geração de imagem. E só pra você ter uma ideia de
+[26:57] quantos créditos eu gastei, eu gastei 4.560 créditos
+[27:02] pra gerar esse vídeo aqui, esse anúncio,
+[27:05] esse anúncio ele tem, deixa eu ver quantos segundos
+[27:09] ele tem 36 segundos, então com 4.516
+[27:13] créditos eu gerei esse anúncio. E olha que bacana
+[27:16] nossa skil de carrossel já gerou a ideia visual
+[27:19] de todos os nossos slides do carrossel e ela
+[27:22] gerou essa ideia visual aqui antes de
+[27:24] gerar qualquer um desses slides lá dentro
+[27:27] pra eu aprovar a formatação, aprovar
+[27:29] o estilo visual, as cores, então ela é
+[27:32] muito legal, essa skil, porque ela vai liberando
+[27:35] pra gente em etapas, pra gente ir aprovando
+[27:37] pra ela entendendo como funciona. Claro que
+[27:39] como eu já e terei muito ela, eu posso pedir
+[27:42] pra simplesmente ele gerar com o bypass
+[27:45] ali deixando ele fazer tudo autonomamente
+[27:47] sem ter a minha interferência. Mas como eu estou
+[27:49] mostrando pra você, eu acho que no início
+[27:51] quando você tá criando uma skil é muito importante
+[27:53] que você vá fazendo ela em etapas, que você vá
+[27:55] validando, testando e aprimorando
+[27:59] o resultado, refinando o resultado que ela vai te trazendo
+[28:01] porque chega um momento em que ela tá
+[28:03] tão boa, que ela tá perfeita e aí você
+[28:05] tem confiança de deixá-la fazer tudo sozinho.
+[28:08] Nesse caso, como eu estou mostrando pra
+[28:10] vocês eu passo a passo, eu quero ir mostrando
+[28:12] cada uma das etapas, mas é uma skil que eu
+[28:14] já poderia pedir pra ele ir aprovando,
+[28:16] falar sempre pra ele gerar no estilo,
+[28:18] ele vai fazendo tudo automaticamente.
+[28:20] Então ele trouxe aqui, a capa vai ser
+[28:23] animada, então provavelmente esses
+[28:25] letreiros talvez têm algum tipo de
+[28:27] animação, essa parte aqui inicial,
+[28:29] ele já traz aqui como vai ser gerado
+[28:31] esse robô lá dentro da OpenArte,
+[28:33] então um robô segurando um cadeado
+[28:35] aberto e aí depois o robô com cartão
+[28:37] de assinante, ele vai trazendo pra cada
+[28:39] um dos slides a ideia de como vai estar
+[28:41] esse robô e eu posso vir aqui,
+[28:43] digitar no chat que eu quero mudar o
+[28:45] formato de algum robô, então quero
+[28:47] aprovar tudo. Ele é um robô erguém do
+[28:49] troféu, um robô com etiqueta de
+[28:51] preço, um robô arremessando um
+[28:53] saquinho, um robô
+[28:55] coçando a cabeça
+[28:57] e assim por diante, aqui um outro
+[28:59] um robô apontando para a palavra
+[29:01] segurando o celular. Eu gostei
+[29:03] da ideia, acho que ficou muito
+[29:05] interessante, eu vou pedir pra que ele
+[29:07] gere. E olha que bacana, ele também traz
+[29:09] aqui quantos créditos eu vou consumir
+[29:11] no OpenArte pra eu confirmar se eu quero
+[29:13] gastar esses créditos sim ou não,
+[29:15] então ele trouxe aqui, pra
+[29:17] gerar esse
+[29:19] calcel, eu vou gastar um total
+[29:21] de 760 créditos,
+[29:23] então eu vou aprovar e ele traz
+[29:25] aqui também qual é o meu saldo
+[29:27] que eu tenho um plano pro e
+[29:29] eu tenho 5.035
+[29:31] créditos pra gastar, então
+[29:33] eu tenho um limite necessário e aqui quanto
+[29:35] vai sobrar, isso é muito prático, isso é
+[29:37] muito legal porque a gente consegue ter
+[29:39] um controle também, ele pode ajustar, se eu
+[29:41] quiser gastar menos ele vai ajustar um pouco
+[29:43] o design desse robô, ele vai colocar em
+[29:45] menos slides, então isso é muito legal.
+[29:47] E eu vou pedir pra ele continuar.
+[29:49] Eu vou mostrar pra vocês,
+[29:51] enquanto ele tá gerando aqui
+[29:53] as imagens que a gente gerou lá dentro
+[29:55] da OpenArte. E olha que bacana,
+[29:57] aqui nós temos a biblioteca
+[29:59] de todo o material que nós já geramos
+[30:01] aqui dentro da OpenArte, então isso é muito
+[30:03] prático porque eu posso baixar um robô
+[30:05] específico e subir, pedir, prediosar
+[30:07] mesmo pra ele não gastar novamente os
+[30:09] créditos, tudo fica salvo,
+[30:11] todo o histórico de utilização
+[30:13] da plataforma, então eu tenho aqui todos
+[30:15] os robôs que a gente já fez,
+[30:17] aqui todos os slides do carrossel
+[30:19] do Hermes, foram gerados
+[30:21] aqui dentro, e olha que bacana, essa
+[30:23] animação que vai
+[30:25] direcionando pra moça, aquela menina
+[30:27] que aparece no Hermes,
+[30:29] que é exatamente essa aqui,
+[30:31] exatamente essa animação aqui que
+[30:33] está direcionando pra menina, então
+[30:35] são esses papéis, esses
+[30:37] post-its animados, esse aviãozinho
+[30:39] de papel, tudo isso a gente gerou
+[30:41] aqui dentro, e pra vocês terem uma
+[30:43] ideia a gente utilizou o Sidence 2.0
+[30:45] que
+[30:47] teve um resultado muito legal,
+[30:49] e outra formatação
+[30:51] porque a gente precisa adaptar pra outras redes sociais
+[30:53] então
+[30:55] tudo isso foi gerado aqui, os fundos
+[30:57] as imagens
+[30:59] que nós utilizamos de fundo
+[31:01] aqui a animação
+[31:03] do Jeff que ficou muito legal
+[31:05] achei muito bonitinha essa ideia
+[31:07] ele também animou tudo aqui utilizando
+[31:09] tá carregando aqui, olha que legal
+[31:11] ele dá um chute
+[31:13] no modelo antigo
+[31:15] então no LLM antigo
+[31:17] é bem interessante
+[31:19] essas outras animações
+[31:21] todas nós geramos aqui dentro
+[31:23] então esse outro caucel
+[31:25] aqui, esse no caso é o CTA
+[31:27] então a gente fez um CTA animado
+[31:29] tudo isso foi
+[31:31] gerado dentro com OpenArt
+[31:33] nós
+[31:35] gostamos bastante e ele tem
+[31:37] trazido um resultado muito consistente
+[31:39] muito bom entre
+[31:41] os slides, tem uma
+[31:43] consistência muito boa, claro que a gente
+[31:45] sempre tem utilizado junto com o Cod
+[31:47] bom, aqui tem mais resultado
+[31:49] todas as animações
+[31:51] feitas aqui
+[31:53] vou mostrar aqui pra vocês até os anteriores
+[31:55] que a gente utilizou pra ir
+[31:57] testando essa skill
+[31:59] pra ir desenvolvendo ela e aprimorando
+[32:01] a gente faz de algo nesse estilo
+[32:03] aqui, só, era um pouquinho mais feio
+[32:05] e aí a gente foi
+[32:07] aprimorando
+[32:09] não que seja feio, mas que eu acho que
+[32:11] não tem tanto a ver com
+[32:13] tecnologia, um slide ficou muito bonito
+[32:15] mas
+[32:17] acho que tem uma coisa mais de bem estar
+[32:19] de wellness e assim por diante
+[32:21] todos foram gerados aqui dentro
+[32:23] bom, e olha que interessante
+[32:25] ele já trouxe aqui as referências
+[32:27] como você pode observar tudo isso
+[32:29] dentro do OpenArt, foram esses três
+[32:31] aqui que ele trouxe pra gente escolher
+[32:33] então ele colocou aqui
+[32:35] as três variantes do Robovermelho
+[32:37] estão sendo gerados, aí ele já tinha gerado
+[32:39] foram consumindo 90 acréditos
+[32:41] estou só esperando o resultado ficar pronto
+[32:43] aí ele já trouxe
+[32:45] e aqui eu posso escolher
+[32:47] qual vai ser o estilo do Robovermelho
+[32:49] eles estão bem parecidos, mas tem um detalhe
+[32:51] outro que muda, então esse aqui é menorzinho
+[32:53] ele tem uma cabeça maior
+[32:55] esse aqui é um pouco mais magro
+[32:57] e esse aqui ele é médio
+[32:59] então eu também gostei mais
+[33:01] da primeira, eu acho que essa
+[33:03] desproporção da cabeça e o corpo ficou
+[33:05] interessante, vou escolher a primeira
+[33:07] a primeira
+[33:09] bom, e agora ele começou a gerar
+[33:11] chamando OpenArt, e assim que ele terminar
+[33:13] eu volto pra mostrar o resultado pra você
+[33:15] e olha que legal, ele já terminou
+[33:17] de trazer aqui a ideia da capa
+[33:19] e aí eu preciso escolher qual
+[33:21] das duas eu quero, então
+[33:23] aqui são mínimos detalhes
+[33:25] aqui a gente vê que ele está um pouquinho distante
+[33:27] aqui a gente vê que o pé dele
+[33:29] está coberto pelo título
+[33:31] aqui pelo texto
+[33:33] nós temos a posição
+[33:35] do cadeado um pouco diferente
+[33:37] e ele coloca aqui o primeiro frame
+[33:39] da capa com o título a esquerda
+[33:41] e b a direita
+[33:43] então o primeiro
+[33:45] frame da capa está pronto nas duas
+[33:47] variantes, já com o título por cima
+[33:49] e a esquerda, cofre de banco
+[33:51] com porta redonda
+[33:53] e aqui na direita nós temos
+[33:55] um cofre de banco com uma porta mais
+[33:57] retangular, ele só coloca o cofre
+[33:59] quadrado com a porta escancarada
+[34:01] cadeado aberto corrente primeiro plano
+[34:03] o robô é maior e a ideia de
+[34:05] estava trancado saiu, fica mais claro
+[34:07] de bater o olho na a
+[34:09] a gente tem o robô fica menor e sobra
+[34:11] mais respira em volta do título
+[34:13] bom, eu gostei mais da opção b
+[34:15] do cofre retangular, então vou pedir pra ele gerar
+[34:17] um cofre b, tá
+[34:19] aquele já testa o gêne, então
+[34:21] escolha o ab pode animar
+[34:23] bom, enquanto isso o openart
+[34:25] está gerando e nós temos aqui
+[34:27] todas as imagens que ele trouxe, né
+[34:29] de referência pra gente escolher
+[34:31] então eu acho assim muito prático
+[34:33] as integrações de gmcp porque
+[34:35] é complicado, às vezes você tá
+[34:37] abrindo a plataforma, tá mexendo
+[34:39] você quer ajustar algum ponto, aí
+[34:41] você tem que escrever todo pronto, é muito mais fácil
+[34:43] se você integrar ele com um quad, com cursor
+[34:45] ou então com chatpt
+[34:47] assim eu sinto que eu consigo ganhar mais velocidade
+[34:49] e um resultado mais preciso
+[34:51] enquanto ele está finalizando o caosel, eu quero te fazer
+[34:53] um convite especial pra entrar na comunidade
+[34:55] Maestros da EA, lá nós assinamos
+[34:57] tudo que sabemos sobre inteligência artificial e automação
+[34:59] de uma maneira prática, direta ao ponto
+[35:01] e sem relação pra você colocar
+[35:03] em prática a inteligência artificial
+[35:05] a seu favor e começar a ter resultado
+[35:07] o quanto antes, além disso
+[35:09] nós disponibilizamos material de apoio extra
+[35:11] então sempre que tem um conteúdo no youtube
+[35:13] que a gente acha muito relevante
+[35:15] a gente compartilhar algo extra
+[35:17] dentro da comunidade e também
+[35:19] disponibilizamos as nossas skills
+[35:21] mostradas aqui dentro do youtube, inclusive
+[35:23] essa skill de geração de carro selvo
+[35:25] deixar dentro da comunidade
+[35:27] disponível pros alunos pra vocês
+[35:29] copiarem e começarem a utilizar
+[35:31] dentro do sistema de vocês
+[35:33] pra postagem de conteúdo, ou então
+[35:35] se vocês prestam serviço pra terceiros
+[35:37] fica mais fácil de automatizar
+[35:39] a produção de conteúdo. Então se você quiser
+[35:41] saber mais e quiser entrar na comunidade
+[35:43] o link está abaixo na descrição
+[35:45] desse vídeo, lembrando que atualmente
+[35:47] a comunidade está com planos
+[35:49] de assinatura, então você pode assinar
+[35:51] ficar quanto tempo você quiser
+[35:53] e cancelar, funciona basicamente
+[35:55] como uma Netflix, então isso é muito prático
+[35:57] porque você não se compromete
+[35:59] por um longo tempo, caso você não tenha muito tempo
+[36:01] você pode entrar e sair sempre que quiser
+[36:03] bom, terminou de gerar a capa animada
+[36:05] e eu vou mostrar o resultado pra você
+[36:07] e olha que prático, a gente consegue visualizar tudo dentro do clode
+[36:09] sem precisar entrar no site da Alpenarte
+[36:11] tudo via MCP
+[36:13] a gente consegue clicar aqui
+[36:15] e visualizar
+[36:20] olha que legal, acho que ficou bem interessante
+[36:22] bom, não sei se você gostou
+[36:27] desse resultado, mas eu gostei muito
+[36:29] eu acho que fica bem interessante
+[36:31] é um estilo visual que eu curto bastante
+[36:33] e eu acho que chama bastante atenção
+[36:35] assim que ele faz a capa, ele me confirma
+[36:37] se eu gostei e se ele pode
+[36:39] seguir gerando os próximos
+[36:41] então eu aprovo a capa e vou pedir pra ele
+[36:43] gerar os próximos slides
+[36:45] as próximas poves do robô
+[36:47] lá dentro do Alpenarte pra colocar
+[36:49] em cada um dos slides
+[36:51] e olha que bacana, ele já gerou o robô
+[36:53] em diferentes posições, todas aquelas
+[36:55] que ele tinha sugerido
+[36:57] e aqui dentro do clode
+[36:59] nós conseguimos ver o resultado final
+[37:01] então ele traz aqui pra gente
+[37:03] a posição
+[37:05] de cada um dos slides
+[37:07] como ficou o resultado
+[37:09] e se a gente aprova ou não
+[37:11] aprovando, ele vai formatar
+[37:13] pro TikTok e também pro Youtube
+[37:15] porque isso aqui é a formatação
+[37:17] do Instagram
+[37:19] então eu vou aprovar
+[37:21] e ele até sugere, né, aprova o carro céu
+[37:23] pode abrir o menu de publicação, eu vou aprovar
+[37:25] e aí ele já vai começar
+[37:27] a adaptar
+[37:29] e gerar pra outras redes sociais
+[37:31] então o carro céu aprovado
+[37:33] onde você quer publicar, eu vou colocar
+[37:35] Instagram, Youtube
+[37:37] e TikTok
+[37:39] e aí eu vou clicar aqui em Submetendo
+[37:41] tudo isso foi criado dentro
+[37:43] da Skill, todas essas opções de adaptação
+[37:45] a partir daí ele vai
+[37:47] começar a adaptar
+[37:49] então no TikTok a capa vai animada
+[37:51] eu vou colocar aqui sim
+[37:53] e aí ele pergunta aqui qual áudio
+[37:55] que ele vai utilizar, aquele está sugerindo
+[37:57] e puxando áudios que nós já utilizamos
+[37:59] em outros carros 6
+[38:01] mas eu não quero utilizar o mesmo áudio
+[38:03] então eu vou vir aqui no Instagram e vou ver
+[38:05] quais opções de áudio nós temos
+[38:07] então eu vou colocar aqui um Story Alertório
+[38:09] só pra eu escutar áudios diferentes
+[38:39] eu acho que eu gostei dessa
+[38:41] chama Galax
+[38:43] Afro Low-Fi
+[38:45] então eu vou colocar aqui
+[38:47] Galax
+[38:49] Afro
+[38:51] Low-Fi
+[38:53] e aí se não tiver uma música
+[38:55] com esse nome, específico
+[38:57] no TikTok porque muda o nome
+[38:59] da música do TikTok pro Instagram
+[39:01] ele vai buscar uma que seja mais ou menos
+[39:03] da mesma pegada
+[39:05] e o vídeo do Youtube sobre o Argon já está publicado
+[39:07] sim, já está no ar
+[39:09] e aí ele já vai
+[39:11] seguir nessa adaptação
+[39:13] outro recurso muito legal
+[39:16] são vários detalhes nessa Skill
+[39:18] porque realmente ela foi refinada
+[39:20] e pensada para um uso prático
+[39:22] que ele vai
+[39:24] e checa no nosso canal do Youtube
+[39:26] se realmente existe um vídeo do
+[39:28] Gemini Argon, então ele vai lá no Youtube
+[39:30] verifica se tem um vídeo com esse
+[39:32] nome pra ele poder publicar o carrossel
+[39:34] porque se não tivesse
+[39:36] isso geraria uma frustração né, as pessoas
+[39:38] veriam comentar Argon e não apareceriam
+[39:40] então ele verifica isso pra gente
+[39:42] são detalhes que fazem muita
+[39:44] diferença
+[39:46] e olha que bacana, ele já começou a publicar
+[39:48] aqui, ele mesmo está mexendo, ele está fazendo
+[39:50] toda essa edição
+[39:52] e aqui a gente vai acompanhando
+[39:54] ele está trabalhando
+[39:56] ele está ajustando a formatação
+[39:58] do carrossel
+[40:00] ajustando a capa
+[40:02] ele mesmo vai gerar a descrição
+[40:04] do carrossel, colocar as hashtags
+[40:06] tudo isso é feito
+[40:08] de maneira automática
+[40:10] com essa Skill
+[40:12] eu não estou fazendo absolutamente nada
+[40:14] aqui, ele está mexendo aqui no computador
+[40:16] e ele é o Cloud Code
+[40:18] então é muito
+[40:20] prático, porque você pode deixar o computador
+[40:22] ligado, mandar um WhatsApp
+[40:24] você pode conversar com ele via WhatsApp
+[40:26] e pedir pra ele ativar
+[40:28] essa Skill e publicar um carrossel
+[40:30] de última hora, se você viu uma notícia
+[40:32] interessante, isso otimiza muito
+[40:34] ou então você pode programar
+[40:36] o momento do dia em que ele
+[40:38] faz esse scraping de conteúdo
+[40:40] e publica o carrossel
+[40:42] e olha que legal, ele já
+[40:44] publicou o carrossel na nossa conta
+[40:46] principal dos maestros da IA
+[40:48] e agora ele vai trocar pra nossa outra
+[40:50] conta, que é a Maestros da IA Hub
+[40:52] porque nós temos várias contas no Youtube
+[40:54] e ele já vai fazer essa troca
+[40:56] automaticamente, porque eu já forneci pra ele
+[40:58] e já configurei na Skill que eu tinha
+[41:00] duas contas, que eu gostaria de publicar
+[41:02] nessas duas contas, então ele está
+[41:04] abrindo ali, e já vai fazer
+[41:06] a troca, nós temos várias contas
+[41:08] no Instagram, ele mesmo já vai
+[41:10] selecionar a conta que a gente quer alugar
+[41:12] e ele já entrou na Maestros da IA Hub
+[41:16] e agora ele está
+[41:18] selecionando o carrossel, vai fazer
+[41:20] todo passo a passo
+[41:28] e olha que bacana, ele já publicou nos
+[41:30] dois Instagrams, nas duas contas
+[41:32] e agora ele já está abrindo o Youtube
+[41:34] pra fazer também a publicação no Youtube
+[41:36] em formato de post, e depois ele vai
+[41:38] partir pro TikTok
+[41:42] e olha que bacana, ele já fez aqui
+[41:44] a descrição e a publicação
+[41:46] desse carrossel no post do Youtube
+[41:48] e ele já está fazendo vídeo pra facilitar
+[41:50] na hora que o usuário for ler
+[41:52] sobre o carrossel, ele já tem o link
+[41:54] pra clicar, e agora ele está
+[41:56] partindo pro TikTok, e olha, ele já
+[42:00] está selecionando aqui a música
+[42:02] que eu tinha pedido, que era a Galaxy
+[42:04] Afro or Fai, ele já está buscando
+[42:06] aqui, e ele já encontrou, então
+[42:08] ele está terminando de ajustar esses detalhes
+[42:10] no TikTok, enquanto isso eu vou mostrar pra vocês
+[42:12] como ficou no Instagram,
+[42:14] então ele fez aqui a postagem
+[42:16] um único ponto de observação
+[42:18] quando você pede pra ele postar
+[42:20] aqui via browser, né
+[42:22] ele não consegue no Instagram
+[42:24] selecionar música, isso é uma limitação
+[42:26] do próprio Instagram, então quando eu quero
+[42:28] colocar uma música, eu preciso entrar dentro do aplicativo
+[42:30] do Instagram e inserir a música
+[42:32] que eu quiser, essa é uma limitação
+[42:34] do próprio Instagram que o TikTok não tem
+[42:36] então só pra você saber
+[42:38] que isso acontece, né, e olha que bacana, nós
+[42:40] temos o nosso carrossel publicado
+[42:42] eu vou pedir pra edição
+[42:44] colocar aqui o carrossel parecendo
+[42:46] na lateral pra vocês
+[42:48] ele realmente é navegável
+[42:50] a gente consegue
+[42:52] visualizar aqui
+[42:54] tudo isso foi feito agora
+[42:56] utilizando o Cloud e o OpenArte
+[42:58] porque não sei se você sabe
+[43:00] mas o Cloud não gera
+[43:02] imagem e vídeo, então a gente
+[43:04] consegue gerar tudo através de uma outra
+[43:06] plataforma, né, ainda melhor do que
+[43:08] você ter uma plataforma que funciona
+[43:10] como um hub, com diferentes modelos
+[43:12] em que você consegue, através de uma
+[43:14] criatura, ter acesso a vários modelos
+[43:16] em um único lugar. E é isso que eu mostro
+[43:18] aqui pra gente que ela terminou, que ela
+[43:20] postou nos dois Instagrams, no Instagram
+[43:22] Maestros da IA, Maestros da IA Hub
+[43:24] que ela colocou também no YouTube
+[43:26] e que também colocou no TikTok
+[43:28] e aí traz quantos créditos
+[43:30] nós gastamos pra tudo isso dentro
+[43:32] do OpenArte, que foi 760 créditos
+[43:34] e aqui nós temos, como eu falei pra vocês
+[43:36] dentro do OpenArte, o material pra
+[43:38] re-afrobeitar e re-utilizar sempre
+[43:40] se você vai gerar novamente caso
+[43:42] queira e tudo isso postado
+[43:44] nas nossas redes sociais. Aqui dentro
+[43:46] do TikTok, então
+[43:48] nós temos o carrossel publicado
+[43:50] uma limitação do TikTok, que ele
+[43:54] não consegue, diferentemente
+[43:56] de do Instagram, colocar um carrossel
+[43:58] com animação, então precisa ser
+[44:00] um vídeo que é animado,
+[44:02] um vídeo que vai mudando os vides
+[44:04] automaticamente, que acontece aqui.
+[44:06] Ao não ser que eu quisesse
+[44:09] postar um carrossel estático,
+[44:11] sem nenhuma capa animada, então eu gosto
+[44:13] de fazer nesse formato no TikTok
+[44:15] e no YouTube ele não fica animado
+[44:17] ele fica como um post estático
+[44:19] essa é uma alimentação da própria plataforma.
+[44:21] Outro recurso legal é a geração
+[44:23] de tambineios, então você pode gerar tambineios
+[44:25] com OpenArte, que é algo que a gente gosta
+[44:27] muito, porque nós postamos vídeos
+[44:29] todos os dias e ficar tirando foto, ficar fazendo
+[44:31] uma tambineia nossa, demoraria
+[44:33] mais tempo, consumiria um tempo
+[44:35] que não é necessário. Então a gente
+[44:37] pode utilizar essa dashboard
+[44:39] aqui que nós já mostramos aqui no canal
+[44:41] para vocês, com essa Dash
+[44:43] de aprovação e rejeição. Então ele faz
+[44:45] um scrape nas redes sociais, buscando
+[44:47] quais foram os vídeos viralizados
+[44:49] ou os vídeos que tiveram um melhor
+[44:51] performance de vários outros canais sobre um tema
+[44:53] específico que nós estamos falando.
+[44:55] Por exemplo, a gente está falando sobre
+[44:57] Fable 5.1, ele vai buscar
+[44:59] todos os vídeos de Fable 5.1 e os
+[45:01] que tiveram melhor performance, ele traz
+[45:03] aqui as tambineios de referência, porque
+[45:05] a gente sabe que aquilo funcionou. E a partir
+[45:07] daí ele traz essa dashboard, a gente
+[45:09] aprova e rejeita e aí
+[45:11] quando a gente aprova algumas tambineios
+[45:13] específicas, ele gera no OpenArt
+[45:15] com a nossa foto, com a nossa
+[45:17] imagem nas tambineios. Então
+[45:19] a gente consegue vir aqui, aprovar
+[45:21] e rejeitar e aí depois que ele aprova
+[45:23] e rejeita, por exemplo aqui
+[45:25] a gente está falando sobre o Quimi
+[45:27] versus o Clod, que já foi um vídeo postado. Eu posso
+[45:29] vir aqui e gostei dessa tambineio?
+[45:31] Ou não gostei? Não gostei, então eu coloco
+[45:33] rejeitar. Essa aqui também
+[45:35] não gostei, também não gostei.
+[45:37] Essa aqui não gostei, não gostei.
+[45:39] Essa aqui eu já achei interessante,
+[45:41] então posso vir aqui e aprovar. Essa aqui
+[45:43] eu não gostei, rejeitar. Não gostei,
+[45:45] não gostei.
+[45:47] Também não gostei.
+[45:49] É, não gostei.
+[45:51] Não gostei.
+[45:53] Achei interessante, então
+[45:55] eu venho aprovado, aí rejeitado.
+[45:57] Rejeitei também.
+[45:59] Achei interessante.
+[46:01] Ah, gostei disso, mas não
+[46:03] está muito dentro do que eu falei, posso vir aqui
+[46:05] e eu vou rejeitar. E aí
+[46:07] conforme eu preencho tudo isso,
+[46:09] quando eu terminar de preencher todas as opções
+[46:11] eu peço pro Cod gerar
+[46:13] essas tambineios adaptadas, de acordo
+[46:15] com a transcrição do nosso vídeo
+[46:17] adaptar para essa ideia de layout
+[46:19] que a gente vai aprovar ou rejeitar
+[46:21] e com base nas aprovadas, ele gera
+[46:23] no OpenArt tambineios
+[46:25] com a nossa foto. E aí vocês podem ver
+[46:27] no vídeo do canal que nossas tambineios
+[46:29] foram geradas dessa forma, aprovando
+[46:31] uma leva de ideias que a gente gostou
+[46:33] de ver o vídeo layout que a gente achou que funcionou
+[46:35] e aí com base nessas aprovadas
+[46:37] ele gera no OpenArt colocando a nossa
+[46:39] foto e aí
+[46:41] está pronta a tambineios. A gente precisa
+[46:43] às vezes fazer uns testes, a gente coloca
+[46:45] geralmente três tambineios para o mesmo vídeo
+[46:47] para ver qual forma melhor. Então fica
+[46:49] uma geração de tambineio ilimitada
+[46:51] o que vai limitar é o seu budget.
+[46:53] Se você quer testar esse fluxo
+[46:55] e começar a gerar tambineios
+[46:57] carro 6, postes para as redes sociais
+[46:59] ou então vídeos UDC
+[47:01] fazendo uma propaganda de algum produto
+[47:03] que você tenha ou então de produtos que
+[47:05] você vende como afiliado
+[47:07] eu te convido a testar o OpenArt, o link
+[47:09] vai estar aqui na descrição desse vídeo
+[47:11] e se você gostou desse vídeo, quero te pedir para se inscrever
+[47:13] nesse canal, deixar o seu like e o seu hype
+[47:15] e compartilhar com seus amigos.
+[47:17] Um grande abraço e até o próximo vídeo.

@@ -1,0 +1,16 @@
+idioma: en
+[00:00] Doctors were unknowingly killing their own patients
+[00:03] until one man discovered a simple habit that could save lives.
+[00:07] His name was Igna Semmelweis.
+[00:10] In the 1840s, he noticed women were dying from childbirth
+[00:13] fever at alarming rates.
+[00:15] He discovered that doctors were going from autopsies
+[00:18] to patients without washing their hands.
+[00:20] So he introduced hand disinfection.
+[00:22] The death rate dropped dramatically.
+[00:25] But doctors rejected his idea.
+[00:27] Years later, germ theory proved why he was right.
+[00:30] He didn't know about bacteria, but he discovered
+[00:33] that clean hands could save lives.
+[00:35] The editors making work like this started with a project file
+[00:38] from earnedits.com.

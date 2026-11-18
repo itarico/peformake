@@ -1,0 +1,374 @@
+idioma: en
+[00:00] One of the biggest problems I see with new narrative editors is their inability to create the specific thing that audiences are addicted to.
+[00:12] Intrigue and mystery.
+[00:14] An inexperienced editor will do this by telling the viewer way too much and way too quickly, especially at the start of a film.
+[00:25] Great editing is so often about withholding information and delaying key points of revelation.
+[00:33] So in this first episode of Watch Me Edit, I'm going to show you a real documentary opening sequence that isn't working.
+[00:41] I'll go through exactly what the problems are and then I'll rebuild it from scratch in a much more cinematic way.
+[00:50] Okay, so this is Dave. Dave is an ex-Roll Marine commando and lives completely off the grid in the south coast of England.
+[01:03] His tent is perched up on top of a cliff right on the seafront looking out towards France.
+[01:10] The documentary tells the story of his life in the Marines and how he struggled to adapt back into civilian life after serving over 20 years in the military.
+[01:23] Now, Dave is a very intriguing character with a really powerful story. Perfect ingredients for a short biopic documentary.
+[01:33] So here it is. It's about 25 seconds long. So here we go.
+[01:41] Hi, my name's Dave. This is my place of residence at the moment.
+[01:46] I choose to be here and it's not through circumstance.
+[01:50] I've been here for nearly three years now. I did a number of years at Roll Marines. It was a good time in my life, you know.
+[02:05] Okay, now it's time to do the diagnosis, the analysis. What do we like about this and what do we not like about this?
+[02:15] So what's going on with this car? Well, I think there's a number of things. Let's go through them.
+[02:22] Firstly, I think that the information that we're allowing the character to say is just relentless.
+[02:31] It's my name's Dave. I was in the Green Berets. I live here. I've been here three years. It's just relentless.
+[02:40] And it is happening at such a speed that the profound nature of his story is not being felt by the audience.
+[02:50] Secondly, the first thing he says, look at this. Hi, my name's Dave.
+[02:55] That's not a very cinematic way to introduce a character. It sounds a bit more like, you know, a corporate video or a news report.
+[03:03] It's like immediately I'm going to tell you who I am. Also, I think the images are just too quick.
+[03:11] There's no mystery in the structure of the pictorial arc across the whole sequence.
+[03:17] So, you know, what's the duration of each one of these? Let's have a look.
+[03:21] Two seconds. One and a half seconds. They're very, very quick. It's much more like a high-paced YouTube type or actuality type cutting pattern.
+[03:33] So the result of this is, you know, all of this information feels like we've just thrown up all these facts like, on the timeline.
+[03:42] And it's kind of disorientating for the viewer. It doesn't pull them in by dropping little narrative clues as to who this person is and what he's doing here, which is infinitely more cinematic.
+[03:58] The other thing is here, I don't really like this music as well. It's a lovely track, but it's not right for this character, this location.
+[04:08] It's just a bit nice. There's no mystery to it or there's no wonder. So I think we need to change that as well.
+[04:15] So the key question is, do we recut this or should I just start again? And to be honest, I think I'm just going to start again and take it really, really slowly and build this cinematic arc over a much longer piece of time.
+[04:33] Okay, here we go. Blank canvas. Let's get going. So let's start checking out the rushes here. What have we got?
+[04:46] So we got all these beautiful sunrise shots. Very, very nice. And then we've got all of this B-roll and sort of moving into observational footage here.
+[05:03] Let's just have a quick scan. I always have a quick scan through just to see what we got. Okay, so he's making some food. He's making some coffee. Nice. Okay.
+[05:19] And there's that shot of his tent. Sausage and tomato sandwich. There's his tent there, some actuality.
+[05:28] And then there's those shots of him sitting in his chair looking out to see what else we've got in here. And then we got the interview. Okay.
+[05:37] So these are kind of nice shots here. These look like setup shots to me. So I'm going to take these down onto the timeline and just chop them up a bit.
+[05:52] Here we go. Okay, so there's varying frame sizes. We've got sort of wider one, closer one. You know, a big close up there.
+[06:06] And then we've got kind of extreme close up. So that's kind of nice. Okay. Then we've got these shots here. These are really nice. I really like these.
+[06:21] So I think there's a little pattern here. I think we could do a little intercut at the start, which I think would be quite nice because I think you could go close to close, wide to wide.
+[06:39] Let's try that out. That sounds like fun. So let's get this shot first here and I'm just going to subtract. So a little bit of an exposure change there.
+[06:49] So he starts talking. Okay. Let's get rid of all of that there. And that's this. That looks cool there. Let's cut that up.
+[07:12] And what are we talking here? We're talking at six seconds. Okay, that's cool. Now let's get the wider one because the wider one was quite nice actually.
+[07:25] So that was a bit, doesn't show us enough of the background. There we go. That's nice. So what's going on in this shot? So it's quite short actually.
+[07:35] Okay. So where does it start? So the camera moves there. Okay. So everything before this is not actually that interesting. Let's get rid of that.
+[07:44] And let's see how long we got on this shot before he does something. Okay, he looks off. So how long was that? That is four seconds, five seconds.
+[07:54] That might be enough. Let's take that out there. Okay, we can get rid of that. So we've got a swat these around actually because I'm going to do it like that.
+[08:12] Okay. Now this little pattern looks good. So we've got a seagull there going in the background. So I like that. Let's sort of come in there.
+[08:30] Where does it get good? Okay, that's nice. Seagull goes, whoa, didn't let the seagull clear the frame. Disaster.
+[08:43] Okay, so let's start with that one. I'm going to put that in there. And then let's go to the wider shot from that frame.
+[08:53] Okay, where does it settle down? It's a bit of camera movement. It's a bit of exposure change. Whoa.
+[09:01] Then it just pans around to this. Where's the last moment for it pans? Let's work backwards. Okay, that's probably long enough.
+[09:15] Seven seconds. Okay, so we've got down here. Let's look at this. We've got a closer shot. Then we've got him watching.
+[09:33] Then we can have this wider shot. Just go back to the start there and put that in. And then we can go to the wider shot there.
+[09:44] Okay, we don't like any of this audio because it's all just sort of front of camera mic and it's really windy.
+[09:53] So when I'm watching it through, I always like getting rid of the left hand monitor so I can just focus my eye on this.
+[10:00] Right, that's kind of nice. Slower. Yeah, I kind of like that. That's really nice. Maybe a bit long.
+[10:17] Let's just cut a little bit out of that. And then him watching here. Okay, that's kind of nice. Let's do that.
+[10:28] Right, so I want to layer this up here. So I found some good audio for the C.
+[10:38] Okay, now I'm going to bring that in first. Let's see what that sounds like.
+[10:47] Here, just take this down here and I am going to...just going to fade it up a bit. I'm going to fade that up a bit.
+[11:11] Take it down. It's a bit loud. That's nice. And then we've got that C girl coming in.
+[11:20] So the wave noise is coming in first. Then I'm going to bring...I found this C girl.
+[11:26] That's kind of nice. So let's go back there and I'm going to put that in about there. See what happens there.
+[11:42] I'll put that down here on this track. We'll take it down.
+[11:53] Okay, and we'll fade that one in as well. Nice long slow fade.
+[12:04] Jutter there I think. At the end of that shot. Let's just take that out.
+[12:30] Okay, this is starting to look really nice. I'm going to now go and find some dialogue to just sort of add in here.
+[12:46] Now, I don't want...Hi my name's Dave. I'm this, I'm this, I'm this.
+[12:50] Remember the problems that we looked at in the analysis?
+[12:53] I want to find a much more of a kind of a poetic first couple of lines of dialogue from him.
+[13:04] So let's look. I actually did look through before and I found some really nice dialogue this bit here.
+[13:13] So I've always... See what you think of this?
+[13:18] I've always been drawn to the sea.
+[13:21] I've always been drawn to the sea.
+[13:23] Or water. When I, when I sort of like, even when I was in the Marines.
+[13:32] Okay, so he's giving away too much information but this is a really nice poetic start.
+[13:36] I've always been drawn to the sea.
+[13:39] So I'll just take that.
+[13:41] We'll move this B-roll up one channel so that we can put our video in here and audio here.
+[13:50] Now, there's a bit of a stutter at the start. Let's just go in and clean that up.
+[13:58] I've always been drawn to the sea.
+[14:02] I've always been drawn to the sea.
+[14:07] I've always been drawn to the sea.
+[14:12] Okay, maybe we can just put a little small dissolve on that.
+[14:17] Start it off to just clean it up a bit.
+[14:21] I've always been drawn to the sea.
+[14:23] There you go. Just a small like two or three frame dissolve starting at the cut.
+[14:28] I've always been drawn to the sea.
+[14:35] Okay, that's nice. Let's now put this under.
+[14:54] I've always been drawn to the sea.
+[14:57] Okay, that's looking good.
+[14:59] I've found another piece of sink actually that could add on to the end of that which was...
+[15:07] He says it's sanctuary.
+[15:09] As the nuclear warning goes off, it's sanctuary for me.
+[15:22] I'm a furious...
+[15:24] sanctuary for me.
+[15:29] That's really nice. Look at that.
+[15:32] So let's pull that down.
+[15:35] Do we need to tidy that up?
+[15:38] It's sanctuary for me.
+[15:41] I think that's all right.
+[15:43] So maybe what we'll do is we'll put the first line on his close up.
+[15:47] So I've always been drawn to the sea and then we cut to the sea.
+[15:54] And then he's on the wide shot and then we could go it's sanctuary.
+[15:58] Now we're going to have to do a little bit of mixing here because it's a bit loud.
+[16:03] And I think we probably have to just balance the channels.
+[16:11] There we go. Let's just listen to that.
+[16:16] We'll solo that.
+[16:18] I've always been drawn to the sea.
+[16:20] Great.
+[16:22] It's sanctuary for me.
+[16:26] Right.
+[16:28] So let's just do a bit of a mix here.
+[16:32] Now I'm just going to mix these two just coming in and out like that just before and just afterwards.
+[16:41] So we just take the sound down and we can hear him better.
+[16:47] And then we can take these down.
+[16:53] Where are we?
+[16:54] Okay. Let's take that down to maybe minus 18.
+[17:00] I'll copy that and then we can paste all those attributes so they all go down and then we'll just,
+[17:10] whoa, we'll just make a smooth ride in and out of all of these different levels by adding a default transition.
+[17:25] So let's get rid of that.
+[17:28] Let's watch this through. See how it's going.
+[17:31] I don't know. It kind of looks interesting, but what I'm trying to do is slow everything down and give us a more poetic start.
+[17:51] I've always been drawn to the sea sanctuary for me.
+[18:07] Okay. That's working pretty nicely.
+[18:09] I want to address this issue with the music.
+[18:13] The track that we used before that was in the cut before it was nice, but it just wasn't quite right as we talked about.
+[18:21] Now I found a different track actually, which was pretty nice.
+[18:28] Listen to this. See what you think.
+[18:30] It's got much more of a romantic and mysterious and emotional chord structure.
+[18:48] So let's try that out.
+[18:51] We won't bring it in at the start.
+[18:53] So we're going to just basically layer in all of these elements.
+[18:56] So we've got, first of all, we've got the strong waves.
+[19:00] Then we've got the slow fade up on the first shot here.
+[19:03] Then we've got the seagull when you can actually see the seagull coming in.
+[19:08] And so we're gradually introducing each one of these elements.
+[19:11] I think, I think let's try introducing the music here. See what happens.
+[19:20] It's a bit loud. So let's take it down a bit.
+[19:34] Obviously this is all unmixed and we're going to have to sort of fairly decent mix on it all.
+[19:38] But let's just get the idea of a tone. Is it working?
+[19:42] I think this is still too loud. Let's go down a bit.
+[19:52] Let's just watch it full screen. See what happens.
+[19:55] That's kind of nice. Right. Let's do the same thing now and just mix down the music.
+[20:14] So let's get rid of that.
+[20:19] Let's go out to that razor blade tool.
+[20:22] We'll chop that roughly there.
+[20:25] We'll take a few frames and let's take that down to, yeah, something like that.
+[20:30] Let's have a listen.
+[20:32] I've always been drawn to that. I've always been drawn to that.
+[20:40] Bit loud. Let's take this down a bit more.
+[20:43] I've always been drawn to the sea.
+[20:50] Sea gulls going a bit crazy here. It's like the invasion of the sea gulls.
+[21:00] So let's take that down. I'm just doing a rough mix here.
+[21:04] I mean, we'll do that. We'll do that in more detail now.
+[21:07] We're just trying to get the tone and the feel of the piece.
+[21:11] And then let's mix that down as well there and there.
+[21:15] Whatever that DB was there, we can copy and paste that there.
+[21:20] Okay, great. And then we can just...
+[21:28] There we go. This is looking kind of nice.
+[21:32] Let's see what we got. We'll watch it again full screen.
+[21:48] I've always been drawn to the sea. Sanctuary for me.
+[22:03] That's really nice. It's really starting to work and we're gradually layering in with this little intercut.
+[22:09] It's not really a close of the sun, but it's certainly a closer shot.
+[22:14] And then the extreme close of a pym and then the wider shot and the wider shot of him.
+[22:20] The wider shot of the beach, wider shot of the pym.
+[22:23] So what's the result of this?
+[22:25] So the result of this is, well, we don't know anything about him yet.
+[22:29] All we know is this is a guy looking out to sea, telling you how attracted he is to the sea.
+[22:36] So now the audience isn't being told this, this, this, this, this, this and this about him.
+[22:42] So now the key question is now, do we want to give away that he's living there yet?
+[22:48] Or is this just a guy who's out on a nice early dawn morning drinking a cup of coffee and staring out in the sea?
+[22:56] No, I think what we do is we don't come in straight away and show the shot of the tent
+[23:03] because that's the one that really gives it away.
+[23:05] I think we drop, drip feed a few more clues for the audience.
+[23:10] So let's go over here and look at, okay, was it this roll?
+[23:18] I don't think it was this one.
+[23:20] So what's the least obvious B roll, piece of B roll of this place that doesn't tell them that he lives here?
+[23:34] And all this nice little birdie birdie there. Nice.
+[23:38] That's nice. I like that.
+[23:42] That's a beautiful kind of peaceful shot.
+[23:47] Don't need the audio. I'm going to try that out. Let's see what happens there.
+[23:51] Okay, that's kind of working.
+[24:11] We don't really know what's this here.
+[24:14] The audience will be thinking, what's this here?
+[24:16] Is that, that's just some water and is that food?
+[24:19] Oh, there's a bird there.
+[24:20] We haven't shown the tent.
+[24:21] We haven't shown any of his life in there.
+[24:24] We're just slowly revealing and then maybe the next one we want is a little bit more revealing.
+[24:31] Ah, that's good. Look at that.
+[24:33] Coffee mugs and a coffee maker hung from a tree.
+[24:39] That's kind of interesting because now it's like,
+[24:41] Oh, hold on a minute. Is someone living here?
+[24:43] It's not confirmation, but it's a clue as opposed to just showing the tent.
+[24:50] Well, we got there four seconds. Let's try that out.
+[24:56] Move it up to V2.
+[25:01] Okay, this is all a bit loud.
+[25:03] Let's take this way down.
+[25:05] Just distracting.
+[25:07] Maybe not.
+[25:09] Okay, what are the durations of these shots here?
+[25:17] So that's more like three seconds, three seconds, five seconds, five seconds.
+[25:24] You see it's way longer than the second and a half to two seconds.
+[25:28] We're slowing it right down.
+[25:30] So, okay, so we've got this nice little intercut here.
+[25:33] One, two, one, two.
+[25:35] And then we've got a revelation, a clue leading to a revelation.
+[25:41] Sanctuary for me.
+[25:50] That's looking really nice.
+[25:51] So now, now I think we can reveal that he lives there.
+[25:55] But look at the duration.
+[25:56] We're already way over at 30 seconds.
+[25:59] In the previous cut, we told all of this information in less than 25 seconds.
+[26:03] And yet in 30 seconds now, we're only just starting to sow in the idea that he is living here.
+[26:11] So let's get that nice tent shot, which was, where was it?
+[26:16] Was it there?
+[26:20] No, was it the start of roll three?
+[26:23] Yes, there we go.
+[26:24] Right, let's find out where this is.
+[26:27] So there's sort of two variations.
+[26:30] There's that one, but you can see him walking around.
+[26:34] And then there's this one.
+[26:36] And he's got this kind of nice makeshift stuff here.
+[26:41] So I think let's take, let's take this one here.
+[26:48] Okay, let's put that one in there.
+[26:51] So that there, right there, that's the moment of revelation.
+[26:55] That's the moment of, ah, this guy lives here.
+[26:58] So let's find some sink that now backs that up, which I found, where was it?
+[27:04] This is my place of residence.
+[27:07] That's, that's the one.
+[27:08] This is my place of residence at the moment.
+[27:15] Choose to be here.
+[27:17] It's not through circumstance.
+[27:19] It's idyllic.
+[27:24] Idyllic.
+[27:28] That's really nice.
+[27:30] You couldn't wish for a better place really.
+[27:34] Idyllic.
+[27:35] It's nice to come out on idyllic.
+[27:36] So let's put this down here.
+[27:39] Put it, slide it underneath there.
+[27:46] But there's a bit of a pause going on here.
+[27:48] The delivery is not really fast, but that's not a problem.
+[27:52] The natural pace of the environment and him and the way he talks.
+[27:57] We want to kind of replicate that, but I think there's a big pause here.
+[28:00] Look at that, that big pause in the, in the waveform.
+[28:04] So we might be able to get rid of that bit.
+[28:06] This is my, actually let's just sort the audio out there.
+[28:18] Play up.
+[28:19] Here we go.
+[28:21] This is my place of residence at the moment.
+[28:25] Choose to be here.
+[28:27] It's not through circumstance.
+[28:29] He's got an ur there.
+[28:31] I'm going to cut that out just to speed it up because then this pause we could leave in.
+[28:39] Choose to be here.
+[28:40] It's not through circumstance.
+[28:42] So I'm going to put that in and back it up there.
+[28:48] So let's just look at this now.
+[28:52] This is my place of residence at the moment.
+[28:55] That's just so low that so we don't hear the music.
+[29:00] Okay.
+[29:01] So what is the audience thinking here?
+[29:02] They're thinking, okay, gradually we're revealing as soon as that hits, we know what's going on.
+[29:09] So I think it should hit this is my and then somewhere around here as the audience registers
+[29:16] that, oh, that's a tent.
+[29:18] Then you bring in the sync.
+[29:20] So not straight away.
+[29:21] So we want to move that.
+[29:22] We want to see the shot first process it and then hear the, the dialogue.
+[29:27] So let's just see that.
+[29:32] This is my place of residence.
+[29:34] Maybe even more.
+[29:35] I think actually let's just turn that on a bit there.
+[29:39] This is my place of residence at the moment.
+[29:45] Choose to be here.
+[29:47] It's not through circumstance.
+[29:48] Okay.
+[29:49] That's nice.
+[29:50] That's really working.
+[29:51] Let's just take that down here and now let's bring all the other effects in.
+[29:56] Let's see what's going on here.
+[30:00] Right.
+[30:01] Let's just mix this down.
+[30:02] Let's take off our magnet thingy or mix this down.
+[30:12] Whatever that was there.
+[30:14] Whoops.
+[30:15] So whatever that was there or copy and paste that level there.
+[30:19] Okay.
+[30:23] Cool.
+[30:24] And then whatever that was there, we'll put it over to these two here so we can just
+[30:29] dip it down and really hear what he's saying.
+[30:32] So and then let's just make sure that's a smooth transition between those two ambient
+[30:39] levels.
+[30:40] Place of residence.
+[30:45] And then we want to make him a bit louder, don't we?
+[30:48] Obviously this is a rough mix.
+[30:51] I'm just sort of mixing on the fly so we can hear it and get the mood and the tone.
+[30:57] This is my place of residence at the moment.
+[31:00] Choose to be here.
+[31:02] It's not through circumstance.
+[31:04] Yeah.
+[31:05] That's kind of working.
+[31:07] Let's watch it from the start.
+[31:09] See how it flows all together.
+[31:11] I've always been drawn to the sea.
+[31:36] It's sanctuary for me.
+[31:47] This is my place of residence at the moment.
+[31:50] Choose to be here.
+[31:51] It's not through circumstance.
+[31:53] Idyllic.
+[31:57] Let's just finish off by putting in, he says idyllic so let's get a nice idyllic.
+[32:06] Idyllic.
+[32:07] Let's get a nice idyllic shot that's of the landscape but that's different from
+[32:12] this.
+[32:13] Where we got?
+[32:15] That's the same.
+[32:21] That's that shot, isn't it?
+[32:23] Oh, that's nice.
+[32:37] Let's put that in there.
+[32:48] Okay.
+[32:50] We don't need the audio because it's really windy.
+[32:56] Whoa.
+[32:58] Wrong button.
+[33:06] And then obviously let's mix that all up again and we can copy and paste roughly
+[33:20] attributes from here to here again.
+[33:24] Here we go.
+[33:26] Boom, boom, boom, boom.
+[33:28] And we'll take that one there.
+[33:32] One, two, paste attributes, bang.
+[33:37] And then there we go.
+[33:44] Idyllic.
+[33:45] You know what might be nice here actually is just a really subtle zoom in which we
+[33:55] didn't do obviously.
+[33:57] Let's just put it in at the end here.
+[34:02] We will maybe make it 101.10, something like that.
+[34:21] Just really subtle.
+[34:23] So let's look at this now.
+[34:25] Let's have a final viewing and see what we think.
+[34:29] Obviously the mix isn't perfect.
+[34:33] There's a few little things that we can do to it for sure but let's just see what
+[34:39] we think.
+[34:40] And then we'll see what we can do to make sure that it has it accomplished
+[34:56] our goal.
+[35:06] I've always been drawn to the sea sanctuary for me.
+[35:18] It's my place of residence at the moment.
+[35:24] It used to be here.
+[35:25] It's not through circumstance.
+[35:36] Idyllic.
+[35:37] I think that's looking pretty good.
+[35:39] Now if you've enjoyed this deep dive into creative editing theory,
+[35:43] dear friend, then you'll love this, the periodic table of editing
+[35:48] terminology.
+[35:49] It's a cutting room.
+[35:51] It contains 50 of the most used high-end editing terms used in the
+[35:56] pro world.
+[35:57] Just click on the link below and head on over to inside
+[36:00] theEllit.com to download it right now.
+[36:05] So there we go.
+[36:07] That's working so much better.
+[36:09] Now is it a final cut of this?
+[36:11] No.
+[36:12] Is it the only way to cut this intro?
+[36:15] Definitely not.
+[36:16] But it is slower.
+[36:18] It's more cinematic.
+[36:19] It's mysterious for the viewer and above all, it is layered.
+[36:23] We are not rushing in and revealing everything straight away.
+[36:27] In this cut, we're now pulling the audience into the narrative
+[36:32] in a far more intriguing way.
+[36:35] Thank you for your kind attention, dear friend.
+[36:42] My name's Patty Bird and this is Inside the Edit.

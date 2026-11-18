@@ -1,0 +1,211 @@
+idioma: en
+[00:00] Everything you're seeing in this video was edited by my Claude code system while I was asleep.
+[00:05] Every cut, every sound, every animation, like this one, or this one, or this one,
+[00:15] was made without touching a timeline and no I don't know how to code.
+[00:18] So today I'm going to pull the curtain and show you exactly how I built this expert editor
+[00:23] step by step. The tools, how to set them up, how I taught it my style, the exact cost,
+[00:28] and how I'm saving thousands of dollars a month. Let's go.
+[00:31] Okay, so making a video like this one used to take a small team and to be clear I still have one job
+[00:36] to hit record and also to provide feedback. But in my system every other job goes to a different
+[00:41] tool so I'm going to break these down for you one by one. Now the first one is the editor.
+[00:46] That's the person who sits in front of the timeline for hours. They watch every clip,
+[00:50] they pick the ones they like, cut out the ones that they don't, decides where every zoom
+[00:55] goes and also figures out the graphics and animations that they want and where.
+[00:59] Now in my system, Claude Code is the tool that does all of that. Think of this role like the
+[01:03] project manager of the entire video. Now I personally use the desktop version of Claude,
+[01:08] it works perfectly there. And Claude Code can work locally, which means that it actually
+[01:13] uses my computer for me. It can access the files, it uses other programs, and finally it's able
+[01:18] to put the output inside of a folder on my computer. Now that's actually important because Claude
+[01:23] actually is the coordinator of all the other tools here. There's one catch here, Claude can't
+[01:28] actually hear my videos. So how does it know what I said and where I messed up to be able to cut the
+[01:33] whole thing together? Now that's the second job that we have in this list. It is the job of the
+[01:37] transcriber. Now this is a person who listens to all the footage, transforms that, types it out
+[01:42] into text and puts timestamps on these. And the tool that does that is called Parakeet.
+[01:47] It's a completely free tool and it was built by Nvidia, which is the leading manufacturer of
+[01:52] chips. No, not Doritos or Leys, I mean like the chips, right? For AI. Chips. Get back to it.
+[01:58] So Parakeet does the transcription and then Claude is able to actually read the timestamps and
+[02:03] exactly what is being said and is able to then use that for the next step of the process.
+[02:08] This is how we're able to identify and chop up the footage so that we have the right takes.
+[02:11] Job three is actually the animator. This is the person who builds every single title,
+[02:16] every logo that pops in and emotion graphics. And in the old world, this was done with After Effects.
+[02:22] You literally had to use one tool just to do these things. And this is exactly where Hyperframes comes
+[02:27] in. Tool number three. Now this again is a free tool developed by HeyGen, which is the video
+[02:32] platform. Claude writes each animation like a tiny website. And then Hyperframe turns that into
+[02:38] a 4k video. So now the animations can look sharp even on a large TV. It all runs on my own
+[02:43] computer. So it actually costs me nothing. However, in videos, sometimes I'll say things like open AI
+[02:49] just announced blah, blah, blah. And when I say that, I actually need the fourth person,
+[02:53] which is the researcher, someone who goes out and is able to find a screenshot of that announcement
+[02:59] or a post on X or a research paper that proves the point that I'm actually illustrating and
+[03:04] turns that into what we call b-roll. Things that you show on top of a video that are
+[03:08] basically outside footage. And the thing that does that is something we all actually have already
+[03:12] on our laptops, which is a browser. So in my case, I use Google Chrome and then Claude is able to
+[03:18] actually use the browser to go out there and do that research. And in the background, Claude,
+[03:22] my researcher is able to grab screenshots or record video scrolling down a website. And then it can
+[03:28] do things like highlight lines or actually zoom in to specific sections of those pages. And the
+[03:33] great thing is that it only shows you exact facts. So it's really taking the original X post
+[03:38] or the actual webpage. So I can just say what happens and the proof shows up on screen. Now the
+[03:43] fifth job is the screen editor. Now this is mainly because I love making simple tutorials, teaching
+[03:48] people how to use AI tools, how to make money with them. But I use screen sharing a lot. And that's
+[03:53] why I used a tool called tele tele records my face and my screen at the same time. And because
+[03:58] tele has a connector called an MCP, I can connect it directly into Claude code. And it's able to
+[04:04] do all the things it does inside of the software, the cuts, the zooms, the layout, the formatting,
+[04:10] everything that you can do inside the software you're able to do via Claude code. So I literally
+[04:15] only just have to record through it and it does the rest. But up until now, we've just been talking
+[04:19] about the visuals of this video. Every great video team has what we call a sound designer.
+[04:24] This is a person who decides what music goes on each clip, what sound effects go in when
+[04:29] specific things happen and make sure that these are also on brand because you probably don't want
+[04:34] music styles that make you want to sleep when you're teaching a tutorial, for example. So for this,
+[04:38] I have a sound base called Epidemic Sound. It is something I pay for. We'll talk about pricing
+[04:43] at the end. And I'm also able to connect it to Claude and it's going to be able to go out,
+[04:47] search for sounds. And the cool thing is that I can train it on what I like. Usually I like
+[04:51] having the hook be a little bit suspenseful. And then I go into some kind of upbeat music
+[04:55] that's kind of like low-fi hip hop and have it very, very low. And so yeah, sound effects also
+[05:00] have their own rules. I'll talk about how I set up all of this right after. And now the seventh
+[05:04] member of the team is actually the finisher. This is the person who joins all the pieces together
+[05:08] and looks to see if there's no mistakes. This tool is called FFM peg. It's free and it's been
+[05:13] cutting videos for more than 20 years. In fact, it's under the hood of pretty much every editing
+[05:18] software that exists today. So Claude uses it and it's responsible for cutting out any black
+[05:22] screens. Check that there's nothing off with audio sync before I ever get to even see the video.
+[05:28] So those are the seven tools or jobs that have to be done. But none of those actually know what my
+[05:32] video is supposed to look like. That's probably the most important thing and it's called the
+[05:36] skill. A skill is simply just a file of instructions that Claude reads before it does the job.
+[05:42] And it's pretty much my editing style broken down into specifics. The colors, the fonts,
+[05:47] the animations, the sounds with a bunch of details that are basically my preferences.
+[05:52] Mine is called YouTube edit and it's about 1400 lines. But the great thing is that Claude
+[05:57] code actually built this whole thing for me. So pretty much Claude runs all of the tools.
+[06:01] And then I tell Claude what good looks like. Now I'm not technical and you probably aren't
+[06:05] either. So I'm going to show you exactly how to set this up. It's super easy. Okay,
+[06:08] so the first step to set this up is to download Claude. Now you can go to
+[06:12] Anthropics website and you can download the desktop app. That's what I recommend.
+[06:16] It's what I use. And once you've properly installed that, it's going to ask you to
+[06:20] create an account. You're going to have to use either Google or your username and
+[06:23] password to do that. And if it is the first time you download Claude in general,
+[06:27] it will try to set you up. I do recommend you go through that. I have a full other video on
+[06:32] how to get set up properly. You don't actually need that here. Now for this, you do need to have
+[06:36] a paid plan. I would upgrade to the $20 plan. No need to go for higher than that at this point.
+[06:41] Now when you hit the main interface, it's going to look something like this. It might look a
+[06:45] little different just because things change constantly. But basically, if you click on
+[06:49] new, you're going to be able to start a new session inside of Claude. Now up here on the left,
+[06:54] we have Claude, which is the normal version, which is chat and co-work. And right here,
+[06:58] we have Claude code. So for this, you want to be on Claude code. And then there are a couple
+[07:03] of setup steps you need to do before we actually move forward. First off, you want to make sure
+[07:07] that you are on local, meaning that it's using your computer to do this. Next up, you need
+[07:12] to actually determine the folder in which you are going to be working. For this, you can just
+[07:16] click on this. As you can see, I'm already connected to my Claude code folder, but you can
+[07:21] basically click on this one and you can add a completely new folder. You can create one here,
+[07:26] and then you attach it. After that, you want to turn the permissions on auto so that it can run
+[07:30] without you having to say yes, no to thousands of things. And then you're going to want to
+[07:34] switch the model to one of the latest models just because the setup is an important step.
+[07:39] After that, it will be able to run on a cheaper model. And finally, you do want to come
+[07:42] down here to the left and you want to go inside of settings. You need to go to Claude code. And here
+[07:48] you can copy the exact settings that I have here, or you can just decide to basically turn on one
+[07:54] very important thing for us to be able to browse the internet, which is to turn that on. And that's
+[08:00] done right here. When you're done, you can pretty much close this and you can go back to the main
+[08:05] menu, click on you then Claude code is actually going to be very good at setting this up itself.
+[08:10] So in this case, I'll give it a prompt like this. Could you please create a video editing system for
+[08:16] me? I'd like to use hyperframes, ffmpeg, tella and epidemic sounds for this system. Run me through
+[08:23] how to set it up step by step. So one route is simply to get it to guide you through the process.
+[08:28] Now the other way to do this, Claude should be able to download and install everything that it
+[08:32] needs and it can, it will ask you to actually connect a couple of these tools as well. You
+[08:37] come here to the left and you go into customize and you go into connectors. And then you can pretty
+[08:43] much select the tool. So in this case, I'll go and look for tella, which is my screen recording device.
+[08:48] As you can see, I've already attached this. If not, you can just click on the plus button right
+[08:52] there. And for epidemic sounds, it's the same thing. Look for epidemic sounds. There you go.
+[08:57] It is the music and sound effects. And you can go ahead and turn this on. It'll ask you to
+[09:01] log in in the separate browser. Once you've done that, you'll see this checkmark. Now all the
+[09:05] other things it needs, it'll download itself. But if it doesn't find hyperframes for any reason,
+[09:10] you can simply Google hyperframes. You'll find the link to the repo, but you can also find hyperframes
+[09:15] inside of the connectors too. Now once you've connected all those things, you want to make sure
+[09:19] that it saves them as a skill on your computer. And once that has actually saved inside that one
+[09:25] chat or thread, you want to open a new thread and give it a first test. Now as you can see,
+[09:29] setting these things up is pretty straightforward. What takes time is to basically fine tune
+[09:33] the look and feel. And if you'd like to just download my skill and use that, you can feel free
+[09:38] to do so inside my free community. Link is below. But now let's jump into how I actually taught it
+[09:42] my style. Well, at first I pretty much gave it notes on every single thing I made. And I started
+[09:48] with small clips, usually just the hook of a video. And when it gave me a first edit, I would
+[09:52] basically give it very specific time stamped feedback on the work it had done. And then 10
+[09:57] days in, I actually took one of the hooks and started just implementing sound. I had to try a
+[10:02] bunch of different sound effects on one hook. And I had to go through about eight to 10 different
+[10:06] sounds until I found something that really worked for what I enjoyed, because what it had made was
+[10:11] a little too busy for my liking. So this was mainly used for sound effects, right? When
+[10:15] something pops up, you could have a little pop. When something's clicked on, you can have the
+[10:19] little clicking sound. And as it started making decisions on how to use the different sounds
+[10:23] I gave it access to, I basically told it, okay, let's reduce the sound of that. Okay, I think
+[10:28] that I don't like this sound at all. Just take it completely out. And slowly but surely,
+[10:32] it was learning exactly what I liked. Now, here's the absolute key to all of this. When you
+[10:37] actually give it feedback and after that, you tell it to save what it's learned to the actual
+[10:42] skill itself. That way, when you create a new edit, you'll constantly be improving your editing
+[10:47] system. Then I created a new session where I had this updated skill. And I basically put
+[10:51] another hook. This time I love that it had gone out and grabbed a specific logo and used the
+[10:56] sound effect to show it. But I wanted it to be shown slightly larger. I also didn't really like
+[11:01] the color palette it was using for some sections or some animations. So I decided to switch it up a
+[11:06] little bit. And the more videos I made and provided feedback on the better it got. And today,
+[11:10] my skill has 36 different rules that it has to abide to. Then I started discovering really cool
+[11:15] new animations. And I started deciding which ones would make sense for the content that I
+[11:19] actually made. And so slowly I started adding more of these every time I use them, I would fine
+[11:24] tune them. And the awesome thing is that every note that I gave it the next time it never made
+[11:29] that same mistake again, meaning that I basically was getting exactly the output that I was looking
+[11:34] for. All right, my friends, enough talking. Let me actually show you this in action. Okay,
+[11:38] so we're back inside cloud code now. And since I've already created the skill or a first
+[11:42] version of it, I can pretty much run it at any time. I'll come here. I'm going to basically
+[11:47] add a raw file. So here I have a hook that I recorded earlier today for this specific video
+[11:55] I'm going to go ahead and open this one. Then I'm going to tell it this,
+[11:59] please use my YouTube editing skill to edit this hook for my YouTube video. I can also choose to
+[12:05] add any additional things I'd like if there are specific things I'd like it to do inside the hook.
+[12:10] So in this case, when I say things like zoom, you can actually show a zoom when I talk about a
+[12:17] sound effect, you can make a sound effect. And then when I talk about the different
+[12:22] animations, you can basically showcase three of the most impressive animations,
+[12:26] either that I've already done in the past, or that you really like from the library that we
+[12:31] have inside the skill. So those are just instructions that I'm giving it because I
+[12:34] know the hook I recorded and I'd like to actually show the editing skill inside the hook as well.
+[12:39] But you can give it pretty much any instructions at this point, I'm going to pretty much
+[12:43] just press enter. And let's see what Claude actually does running the skill YouTube edits,
+[12:48] as I said, so it finds the skill and it just starts running it probing the clip and listing. Okay,
+[12:54] now just to be clear, this is a completely unedited thing. So basically I make lots of
+[12:59] mistakes. I stop in the middle of the hook and look at my notes. It is basically cutting it up.
+[13:04] So it's copying the clip, transcribing it using para key, which is the tool that we talked
+[13:09] about earlier now that will install automatically in the setup as we talked about. Now because
+[13:14] this process will take anywhere from 10 to maybe 20 minutes, I'll show you the v1 of the hook.
+[13:19] Everything you're seeing in this video was edited by my Claude code system while I was asleep.
+[13:24] Every cut, every sound, every animation like this one, or this one, or this one
+[13:34] was made without touching a timeline and no, I don't know how to code. Boom. So as you see,
+[13:39] there's a couple things I would change from this, but it's pretty much spot on. It basically
+[13:43] says that it cut down two minutes and 46 of raw footage into 31 seconds, which is absolutely great.
+[13:49] And there are some little edits, right that I want to make. So basically what I'll say are things
+[13:54] like this. Edit number one will be something like, could you please add some suspense sound
+[14:00] throughout this? I'd like for you to pick a track and add it to this hook.
+[14:05] I usually like to go through the entire clip and basically give it timestamps like, oh,
+[14:10] I saw the second 22, you did this, I'd like for it to be like that. It could be anything from the
+[14:15] look to sound to kind of the overall feel or the way it's cutting things. And again, at the end of
+[14:21] all this, I can basically tell it, Hey, could you please, you know, make this a little bit better?
+[14:26] And of course, at the end of this, what's cool is I can just say, Hey, can you learn from what
+[14:30] we just did and add it to the skill? So that was a one shot. What you see at the beginning
+[14:34] of this video is the actual final product. And before I used to do this by sections, now I do
+[14:38] this, I just dump the entire footage inside. And if I've also recorded inside of tele, I'm going to
+[14:44] tell it, Hey, here are the names of the files because since it has direct access, I don't need to upload
+[14:49] the actual documents. Because yes, there is a human in the loop, and it's me and I actually love it.
+[14:54] And after shooting this right now, I fed this entire raw footage to the cloud code. And tomorrow
+[14:59] I'm going to wake up and see exactly what you've seen on screen tomorrow morning. I get to just
+[15:03] watch it, give a couple notes and get the final version. So I'm the director, clouds the
+[15:07] editor and I didn't have to edit any, which is great because I actually don't know how to edit at
+[15:11] all. So at this point, everyone asked me about the cost. So let's break it down to the dollar.
+[15:15] First off, I'm on Claude. I'm on the max plan. It cost me $200 a month. Now that's a flat fee,
+[15:20] but I actually use this for all of my work, not just my video editing. So what I did is that I got
+[15:24] Claude to actually measure the number of tokens that it used, and I have a certain limit of tokens
+[15:29] per month. Now my last video after calculations cost me $24 to build. And that's at most.
+[15:35] Now the great thing is that hyperframes is completely for free. So is parakeet. So nothing to pay for
+[15:40] there for tell. I'm on the annual plan. It cost me $13 per month, which is roughly $2 per video.
+[15:46] Epidemic sounds, which is where I get all of my sound effects and the music as well cost me
+[15:51] $9.99. Again, I'm on the annual plan. So let's add an extra dollar to that. So all in, I'm
+[15:57] pretty much paying $27 per video. Now the reality is that for YouTube editors, a good editor costs
+[16:02] anywhere between $250 and $1,000 plus per video, meaning that I'm saving hundreds of dollars per
+[16:09] video. But the huge benefit for me is actually the speed of execution. I'm now able to plan,
+[16:15] shoot, edit and release a video same day. Whereas before it took me anywhere between
+[16:20] three and seven days depending on which editor I was working with. And the revisions usually went
+[16:26] back forth, back forth. And because of human error, I actually oftentimes had to repeat things
+[16:31] that I was seeing that hadn't been changed from one video to the next. Now because I don't want you
+[16:35] to suffer through all the same things I did, I'm going to be giving you this skill for free inside
+[16:40] of my free community. It's called We Are No Code. You can find the link below. Now if you want to
+[16:44] both see the editing skill in action for a full video and also get a full breakdown of what was
+[16:49] announced for OpenAI Dev Day, you can check out this video right here. Hope you enjoyed this
+[16:54] video. I'll see you guys in the next one. Let's go!

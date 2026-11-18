@@ -1,0 +1,850 @@
+1
+00:00:00,040 --> 00:00:05,680
+Tudo o que estás a ver neste vídeo aqui, cada\h
+corte, cada animação, cada letreiro foi editado\h\h
+
+2
+00:00:05,680 --> 00:00:11,280
+por uma inteligência artificial. Eu próprio não\h
+abri nenhum programa de edição. Eu gravei, claro,\h\h
+
+3
+00:00:11,280 --> 00:00:17,600
+e entreguei esse ficheiro e dei apenas as instruções.\h
+E agora vou mostrar-te passo a passo como é que\h\h
+
+4
+00:00:17,600 --> 00:00:22,440
+também pode ter todos os seus vídeos do\h
+o seu canal de YouTube ou para qualquer rede\h\h
+
+5
+00:00:22,440 --> 00:00:28,440
+social editados pelo Cloud Code. E o melhor,\h
+mesmo que nunca tenha feito nada do género\h\h
+
+6
+00:00:28,440 --> 00:00:33,400
+ou não compreender como funcionam as inteligências\h
+artificiais que editam vídeos, não precisa\h\h
+
+7
+00:00:33,400 --> 00:00:38,720
+saber programar e vou mostrar-lhe do zero até ao\h
+ficheiro pronto para você subir no YouTube. Agora,\h\h
+
+8
+00:00:38,720 --> 00:00:43,200
+antes de mais, entenda que isto aqui\h
+não é gratuito, tem os seus custos. Então,\h\h
+
+9
+00:00:43,200 --> 00:00:48,880
+para seguir este tutorial que lhe vou mostrar no\h
+Cloud Code, vai precisar de pelo menos fazer a\h\h
+
+10
+00:00:48,880 --> 00:00:56,760
+assinatura Pro. Custa mais ou menos 20. aqui\h
+no Brasil ronda os 100 a R$ 110, mas você\h\h
+
+11
+00:00:56,760 --> 00:01:03,560
+consegue fazer a subscrição anual com um determinado\h
+desconto. Sai por aproximadamente R$ 92 a R$ 94.\h\h
+
+12
+00:01:03,560 --> 00:01:09,400
+Não vou falar de preços aqui específicos porque\h
+isso varia bastante, mas precisa sim de pelo menos\h\h
+
+13
+00:01:09,400 --> 00:01:15,240
+aquela assinatura mais básica. E uma sugestão, faz\h
+esta assinatura pelo seu computador, o browser\h\h
+
+14
+00:01:15,240 --> 00:01:20,400
+do seu computador, e não pela aplicação do\h
+telemóvel, porque tem o Cloud Code para telemóvel,\h\h
+
+15
+00:01:20,400 --> 00:01:25,320
+mas não faça a sua assinatura por aí, porque pode\h
+custar um pouco mais caro. Este plano do cloud já\h\h
+
+16
+00:01:25,320 --> 00:01:30,960
+é suficiente para editares os teus vídeos, mas\h
+vou mostrar-te também um segundo passo que utiliza\h\h
+
+17
+00:01:30,960 --> 00:01:36,680
+um editor de vídeo como ferramenta. Isso dá-te um\h
+pouco mais de controlo. No caso seria o Da Vince\h\h
+
+18
+00:01:36,680 --> 00:01:42,680
+Resolve Stúo, que também precisa de ser pago, não\h
+dá para usar o Da Vince Resolve gratuito e ele\h\h
+
+19
+00:01:42,680 --> 00:01:49,520
+tem um custo aproximado de $, mas é pagamento\h
+único e fica dono dessa aplicação. Pode\h\h
+
+20
+00:01:49,520 --> 00:01:55,200
+atualizar as vezes que quiser. Aí é lógico, você\h
+vai precisar de um computador com Windows ou Mac.\h\h
+
+21
+00:01:55,200 --> 00:02:00,000
+Não dá para fazer isso pelo telemóvel. todo o\h
+resto, todas as outras aplicações e o que\h\h
+
+22
+00:02:00,000 --> 00:02:05,840
+mais for necessário é gratuito. Então agora vamos\h
+para o mapa para não se perder nesse caminho.\h\h
+
+23
+00:02:05,840 --> 00:02:12,440
+O processo tem seis etapas. O primeiro, você\h
+grava o vídeo da forma que já grava. Hoje em dia,\h\h
+
+24
+00:02:12,440 --> 00:02:17,240
+vai fazer exatamente os mesmos processos que\h
+faz sempre. O segundo passo, a inteligência\h\h
+
+25
+00:02:17,240 --> 00:02:22,960
+artificial, ela transcreve tudo o que disseste\h
+no seu vídeo com o tempo exato de cada frase.\h\h
+
+26
+00:02:22,960 --> 00:02:28,920
+Terceiro, essa mesma inteligência artificial,\h
+ela vai ler esta transcrição, perceber o assunto,\h\h
+
+27
+00:02:28,920 --> 00:02:33,800
+quais os pontos principais, onde vale\h
+um gráfico, um destaque, um letreiro, uma\h\h
+
+28
+00:02:33,800 --> 00:02:40,040
+legenda. Quarto passo, ela cria estes elementos\h
+visuais animados, lógico, de acordo também com\h\h
+
+29
+00:02:40,040 --> 00:02:45,080
+algumas instruções que vai passar. Quinto,\h
+ela vai montar tudo isto numa linha do tempo,\h\h
+
+30
+00:02:45,080 --> 00:02:52,160
+o seu vídeo por baixo e as animações por cima. E\h
+sexto, ela renderiza o ficheiro final e este estará\h\h
+
+31
+00:02:52,160 --> 00:02:58,320
+pronto no seu computador. Agora, a melhor parte\h
+é que não faz nada disso. Tudo é feito pela\h\h
+
+32
+00:02:58,320 --> 00:03:03,200
+inteligência artificial. Não coloca a mão\h
+em nada, hora nenhuma. A sua única participação,\h\h
+
+33
+00:03:03,200 --> 00:03:11,040
+para além de gravar o vídeo, vai ser pedir as edições,\h
+as revisões, aprovar e aguardar o resultado. Agora\h\h
+
+34
+00:03:11,040 --> 00:03:17,880
+vamos pelo caminho completo. O primeiro passo é\h
+subscrever e instalar o cloud. Vai entrar no\h\h
+
+35
+00:03:17,880 --> 00:03:26,120
+website cloud.aiaai, crie a sua conta e escolha\h
+o plano pro. É ele que liberta o cloud code,\h\h
+
+36
+00:03:26,120 --> 00:03:31,600
+que é a parte do cloud que consegue trabalhar\h
+com ficheiros no seu computador, abrir, criar e\h\h
+
+37
+00:03:31,600 --> 00:03:36,400
+executar todos os programas, tudo o que mandar\h
+ele fazer. Depois de fazer a sua assinatura,\h\h
+
+38
+00:03:36,400 --> 00:03:42,360
+vai instalar, vai descarregar a aplicação do\h
+cloud e instalar no seu computador, como já\h\h
+
+39
+00:03:42,360 --> 00:03:48,320
+faz com qualquer outro programa. Ou seja, não se\h
+vai usar o cloud no seu browser, vai usar\h\h
+
+40
+00:03:48,320 --> 00:03:53,480
+-lo como um software dentro do seu computador.\h
+A primeira vez que abrir o cloud, vai fazer\h\h
+
+41
+00:03:53,480 --> 00:03:59,240
+todas as configurações. É bastante simples, rápido\h
+e prático. Vai reparar que existe uma aba\h\h
+
+42
+00:03:59,240 --> 00:04:05,840
+chamada code. É aqui que a magia vai acontecer.\h
+Não precisa de abrir o terminal, nem de digitar\h\h
+
+43
+00:04:05,840 --> 00:04:12,560
+comandos estranhos, nada. é uma janela de conversa\h
+igual ao chat de qualquer inteligência artificial,\h\h
+
+44
+00:04:12,560 --> 00:04:18,640
+só que com o poder de mexer nos ficheiros dentro do\h
+o seu computador e executar todos os seus comandos.\h\h
+
+45
+00:04:18,640 --> 00:04:24,560
+O segundo passo, ele é também fundamental porque\h
+passa pela organização. Tudo precisa de ser muito\h\h
+
+46
+00:04:24,560 --> 00:04:31,040
+bem planeado. Então vai organizar uma\h
+pasta dentro do seu computador. Parece disparatado,\h\h
+
+47
+00:04:31,040 --> 00:04:35,840
+mas vai fazer toda a diferença no final paraa\h
+execução de cada processo. Então vai lá ao teu\h\h
+
+48
+00:04:35,840 --> 00:04:43,880
+computador e cria uma pasta chamada edição com IA.\h
+Dentro dela vão outras quatro pastas. A primeira\h\h
+
+49
+00:04:43,880 --> 00:04:51,320
+vai chamar-lhe bruto, onde coloca o vídeo\h
+gravado. A segunda vai chamar-se estilo, onde se\h\h
+
+50
+00:04:51,320 --> 00:04:59,040
+vai colocar aí o seu guia visual. A terceira deu\h
+o nome de trabalho, onde a IA guarda os ficheiros\h\h
+
+51
+00:04:59,040 --> 00:05:06,440
+intermédios e a última pasta vai chamar final,\h
+para onde vai o vídeo pronto. No Cloud Code, vai\h\h
+
+52
+00:05:06,440 --> 00:05:11,840
+escolher a pasta como local de trabalho. É\h
+a partir daí que a inteligência artificial vai\h\h
+
+53
+00:05:11,840 --> 00:05:19,680
+trabalhar, só ali dentro. O terceiro passo vai ser\h
+instalar as skills. Skills são habilidades. É como\h\h
+
+54
+00:05:19,680 --> 00:05:25,600
+se fosse um manual de instruções que entrega\h
+para a inteligência artificial. Em vez de explicar\h\h
+
+55
+00:05:25,600 --> 00:05:32,520
+tudo de raiz, cada vez, vai instalar\h
+essa skill, essa habilidade, e o cloud vai\h\h
+
+56
+00:05:32,520 --> 00:05:39,800
+saber sempre fazer aquela tarefa da forma certa.\h
+A única coisa é copiar o prompt de instalação que\h\h
+
+57
+00:05:39,800 --> 00:05:46,960
+deixei aqui na descrição deste vídeo e colar\h
+aqui. Pede ao Cloud Code para instalar tudo o que\h\h
+
+58
+00:05:46,960 --> 00:05:55,440
+é necessário. Primeiro instala as ferramentas\h
+de base, o FFMPEG, que corta e junta os vídeos,\h\h
+
+59
+00:05:55,440 --> 00:06:03,120
+o Node que corre as animações, o Whisper que faz a\h
+transcrição aqui mesmo no seu computador gratuitamente.\h\h
+
+60
+00:06:03,120 --> 00:06:09,120
+E durante este processo, o Cláudio vai pedir ao\h
+a sua permissão algumas vezes. É só ler e autorizar.\h\h
+
+61
+00:06:09,120 --> 00:06:15,720
+Depois vai montar as três skills essenciais.\h
+A primeira é a da transcrição. Ela transforma a\h\h
+
+62
+00:06:15,720 --> 00:06:23,240
+o seu discurso em texto com o tempo de cada frase. A\h
+segunda é um plano de edição. Ela lê este texto,\h\h
+
+63
+00:06:23,240 --> 00:06:29,440
+compreende o conteúdo e decide o que ilustrar e\h
+em que momento exibir essas ilustrações. E a\h\h
+
+64
+00:06:29,440 --> 00:06:37,240
+terceira é o Hyperframe, uma skill, uma habilidade\h
+gratuita e de código aberto que cria as animações,\h\h
+
+65
+00:06:37,240 --> 00:06:43,840
+gráficos, letreiros, listas, ecrãs simulados, tudo\h
+feito em código e transformado em vídeo. No final\h\h
+
+66
+00:06:43,840 --> 00:06:49,800
+deste processo de instalação, ele vai mostrar-lhe\h
+todas as skills instaladas e ele só precisa de fazer\h\h
+
+67
+00:06:49,800 --> 00:06:55,200
+isso uma única vez. Ela vai ser utilizada todas as\h
+as outras vezes em qualquer outro projeto que lhe\h\h
+
+68
+00:06:55,200 --> 00:07:01,440
+tiver. Nós já estamos no quarto passo e eu preciso\h
+muito que preste muita atenção a este passo,\h\h
+
+69
+00:07:01,440 --> 00:07:05,760
+porque ele é que vai separar o vídeo\h
+genérico de um vídeo com a sua cara,\h\h
+
+70
+00:07:05,760 --> 00:07:10,800
+com o seu estilo. Se não disser para\h
+inteligência artificial qual o seu estilo,\h\h
+
+71
+00:07:10,800 --> 00:07:16,920
+ela vai inventar um e depois todo o vídeo vai parecer\h
+feito pela mesma máquina. Nesse ponto, vai\h\h
+
+72
+00:07:16,920 --> 00:07:23,320
+necessitar de criar um guia de estilo. Eu vou dar-te\h
+um exemplo. Imagina um canal de finanças pessoais.\h\h
+
+73
+00:07:23,320 --> 00:07:30,600
+A pessoa ela escreve em linguagem normal como quer\h
+o visual. Cores verde escuro e branco com dourado\h\h
+
+74
+00:07:30,600 --> 00:07:37,640
+apenas para destaque e vermelho. Só quando o número\h
+for negativo. Letras, títulos grossos, sem serifa,\h\h
+
+75
+00:07:37,640 --> 00:07:42,840
+animação, entradas rápidas e discretas,\h
+gráficos sempre que falo de números\h\h
+
+76
+00:07:42,840 --> 00:07:49,520
+ou fizer comparações. E também o que ela não quer.\h
+Vai dizer o que não quer. Nada de emoji,\h\h
+
+77
+00:07:49,520 --> 00:07:56,000
+nada de transição a rodar e explicas qual é\h
+o seu estilo. Esta é uma forma de o fazer. Agora,\h\h
+
+78
+00:07:56,000 --> 00:08:02,600
+se tiver referências visuais, é melhor os\h
+os seus estilos de thumbnail, o seu logótipo ou imagens\h\h
+
+79
+00:08:02,600 --> 00:08:08,840
+de vídeos que admira, acha interessante.\h
+Coloca tudo nessa pasta de estilo. Pode ser\h\h
+
+80
+00:08:08,840 --> 00:08:13,960
+imagens de todos os elementos que achar\h
+interessante. Basta fazer uma pequena pesquisa,\h\h
+
+81
+00:08:13,960 --> 00:08:18,640
+mete lá na pasta estilo. E o cloud é como\h
+qualquer outra inteligência artificial. Basta\h\h
+
+82
+00:08:18,640 --> 00:08:24,000
+você escrever com linguagem natural o que\h
+que deseja. Pede-lhe, por exemplo,\h\h
+
+83
+00:08:24,000 --> 00:08:29,720
+cria três quadros de amostra com este estilo, com\h
+um modelo que ele vai criar com base nas instruções\h\h
+
+84
+00:08:29,720 --> 00:08:35,600
+que passar. A inteligência artificial mostra,\h
+faz os ajustes e quando ficar à sua maneira,\h\h
+
+85
+00:08:35,600 --> 00:08:40,160
+ela guarda-o como o seu padrão. No futuro,\h
+se quiser adicionar outras referências\h\h
+
+86
+00:08:40,160 --> 00:08:44,800
+e outros estilos, basta pedir para fazer as\h
+mudanças. E vejam só a diferença, mesmo gráfico,\h\h
+
+87
+00:08:44,800 --> 00:08:51,160
+mesma informação. À esquerda, o padrão da IA.\h
+à direita com o guia de estilo. Este guia vale\h\h
+
+88
+00:08:51,160 --> 00:08:55,760
+para todos os seus próximos vídeos. Você só\h
+faz isso uma única vez. Neste vídeo aqui,\h\h
+
+89
+00:08:55,760 --> 00:09:01,560
+por exemplo, o estilo que encomendei foi inspirado\h
+nas próprias janelas da cloud. O quinto passo,\h\h
+
+90
+00:09:01,560 --> 00:09:06,880
+sim, vamos lá, mãos à obra. Vamos trabalhar no seu\h
+vídeo. Vai gravar o seu vídeo normalmente,\h\h
+
+91
+00:09:06,880 --> 00:09:14,040
+como já faz aí no seu dia a dia. Coloca esse\h
+ficheiro na pasta em bruto. Aí envia um pedido\h\h
+
+92
+00:09:14,040 --> 00:09:20,720
+simples. Transcreva o vídeo da pasta em bruto e crie\h
+o plano de edição segundo o meu guia de estilo. E\h\h
+
+93
+00:09:20,720 --> 00:09:27,280
+assim a skill de transcrição vai entrar em ação.\h
+Em poucos minutos tem tudo o que disse em\h\h
+
+94
+00:09:27,280 --> 00:09:33,120
+texto com o tempo de cada frase. Isto pronto. Logo\h
+de seguida, a skill do plano de edição, vai\h\h
+
+95
+00:09:33,120 --> 00:09:39,440
+ler tudo e mostra uma lista. Em que minuto\h
+entra um letreiro, em tal minuto um gráfico,\h\h
+
+96
+00:09:39,440 --> 00:09:46,520
+aqui vale uma lista animada, aqui um zoom ou o seu\h
+rosto para dar ênfase. E ela também sugere cortes,\h\h
+
+97
+00:09:46,520 --> 00:09:52,480
+pausas longas, frases repetidas, aqueles excertos\h
+que regravou. Ela vai selecionar tudo isto,\h\h
+
+98
+00:09:52,480 --> 00:09:57,960
+limpar para si. E é exatamente essa a parte\h
+que mais gosto. Antes de criar qualquer coisa,\h\h
+
+99
+00:09:57,960 --> 00:10:03,120
+vai rever esse plano. Você vai ter\h
+informação sobre qual foi o planeamento que\h\h
+
+100
+00:10:03,120 --> 00:10:08,560
+a inteligência artificial fez com base em tudo o que\h
+fala no seu vídeo. Não gostou de um gráfico,\h\h
+
+101
+00:10:08,560 --> 00:10:14,560
+não gostou de um letreiro ou de alguma parte, não\h
+ficou do seu agrado, basta pedir para trocar.\h\h
+
+102
+00:10:14,560 --> 00:10:19,520
+dá as instruções, o que é que gostaria que\h
+fosse feito naquele momento e ela vai lá e executa\h\h
+
+103
+00:10:19,520 --> 00:10:24,080
+o que pedir de acordo com o seu estilo. É\h
+a inteligência artificial que está a trabalhar,\h\h
+
+104
+00:10:24,080 --> 00:10:29,480
+mas ela está a fazer o que você manda. No sexto\h
+passo, o seu plano já está aprovado. Você pediu\h\h
+
+105
+00:10:29,480 --> 00:10:34,720
+para fazer todas as alterações, agora já\h
+pede para criar os elementos. Nesse ponto,\h\h
+
+106
+00:10:34,720 --> 00:10:40,920
+o Hyper Frames, gera cada animação como\h
+se fosse um pequeno vídeo já no tamanho certo,\h\h
+
+107
+00:10:40,920 --> 00:10:46,680
+na proporção que pedir, 1920 por 1080, por\h
+exemplo, para vídeos Full HD. Inclusive, você\h\h
+
+108
+00:10:46,680 --> 00:10:53,000
+pode solicitar para ver uma antevisão das primeiras\h
+animações antes de mandar fazer todas. Desse modo,\h\h
+
+109
+00:10:53,000 --> 00:10:58,280
+também consegue pedir alguma alteração.\h
+Se o estilo estiver certo nas três primeiras,\h\h
+
+110
+00:10:58,280 --> 00:11:03,440
+por exemplo, vai estar certo em todas as outras.\h
+Depois basta pedir-lhe que corrija alguma coisa\h\h
+
+111
+00:11:03,440 --> 00:11:08,400
+ou outra ou aprovar da forma que está. Quando você\h
+está a mandar editar os seus primeiros vídeos pela\h\h
+
+112
+00:11:08,400 --> 00:11:14,280
+inteligência artificial, é bom que avalie cada\h
+uma das etapas, principalmente para ter a certeza\h\h
+
+113
+00:11:14,280 --> 00:11:19,600
+de que tudo está a ser feito do jeito que você quer.\h
+Depois pode automatizar esse processo. Mas agora,\h\h
+
+114
+00:11:19,600 --> 00:11:25,040
+no início é bom analisar cada detalhe. Agora vamos\h
+lá. Precisamos de montar tudo isso e transformar\h\h
+
+115
+00:11:25,040 --> 00:11:32,360
+num vídeo. O cloud precisa de editar o seu vídeo.\h
+Esse é o caminho um. tudo dentro do Cloud Code\h\h
+
+116
+00:11:32,360 --> 00:11:39,280
+utilizando o FFM PEG. Ele corta as pausas, coloca\h
+as animações por cima do seu vídeo nos momentos\h\h
+
+117
+00:11:39,280 --> 00:11:45,920
+certos e mantém o seu áudio contínuo por baixo.\h
+É exatamente o que um editor de vídeo faria na\h\h
+
+118
+00:11:45,920 --> 00:11:50,960
+timeline. A diferença é que não arrasta\h
+nada e nem consegue ver essa timeline. Tudo é\h\h
+
+119
+00:11:50,960 --> 00:11:57,520
+feito no código ali dentro do Cloud Code. Ele vai\h
+entregar-te uma antevisão. Você assiste, anota o que\h\h
+
+120
+00:11:57,520 --> 00:12:03,680
+quer alterar e envia em texto de novo, explicando\h
+que precisa de ser corrigido. E ele vai lá e faz\h\h
+
+121
+00:12:03,680 --> 00:12:09,680
+a correção. O teu vídeo ainda não está pronto. Agora\h
+tem uma segunda opção de edição deste vídeo, onde\h\h
+
+122
+00:12:09,680 --> 00:12:15,160
+vai ter um pouco mais de controlo. E esse\h
+caminho é pelo da Vince Resolve. Eu prefiro muito\h\h
+
+123
+00:12:15,160 --> 00:12:20,280
+mais este processo. Por esta via, o Cloud\h
+Code, ele não vai montar o seu vídeos sozinho,\h\h
+
+124
+00:12:20,280 --> 00:12:27,320
+vai ligar ao da Vince por um conector\h
+chamado MCP e monta a timeline lá dentro do\h\h
+
+125
+00:12:27,320 --> 00:12:33,440
+programa, como se de um editor de vídeo se tratasse, uma\h
+pessoa a atuar no editor da Vin Resolve. Você vai\h\h
+
+126
+00:12:33,440 --> 00:12:38,880
+ver cada peça ali aparecer. Ele importa o seu vídeo,\h
+faz os cortes, coloca cada uma das animações que\h\h
+
+127
+00:12:38,880 --> 00:12:44,040
+foram criadas numa faixa separada e marca os\h
+pontos mais importantes. A vantagem é que quando\h\h
+
+128
+00:12:44,040 --> 00:12:50,440
+ele termina, só precisa de abrir o Davin resolve\h
+encontrar tudo organizado em faixas editáveis.\h\h
+
+129
+00:12:50,440 --> 00:12:56,280
+Pode mexer por conta própria ou pode mandar\h
+alguma coisa ao Cloud Code para ele fazer as\h\h
+
+130
+00:12:56,280 --> 00:13:02,120
+alterações por si. Se quiser fazer alguma\h
+alteração de cor, ajuste em algum corte ou algum\h\h
+
+131
+00:13:02,120 --> 00:13:08,760
+quadro específico, tratar o áudio ou colocar uma\h
+faixa de música, pode fazê-lo manualmente\h\h
+
+132
+00:13:08,760 --> 00:13:13,840
+a partir da ferramenta do Da Vince ou pode\h
+simplesmente solicitar que o Cloud Code faça estas\h\h
+
+133
+00:13:13,840 --> 00:13:18,120
+correções e vai ver isso acontecer no ecrã do\h
+o seu computador. Ora, como eu falei no início do\h\h
+
+134
+00:13:18,120 --> 00:13:24,200
+vídeo, este só funciona na versão stúdio, na\h
+versão paga. A versão gratuita, bloqueia\h\h
+
+135
+00:13:24,200 --> 00:13:29,760
+este acesso externo a partir de outras ferramentas. E\h
+para instalar o conector é o mesmo esquema.\h\h
+
+136
+00:13:29,760 --> 00:13:35,960
+Pede ao Cloud Code para configurar e ele guia-o.\h
+Independentemente do caminho que escolher, agora\h\h
+
+137
+00:13:35,960 --> 00:13:42,320
+já estamos na reta final. Antes de mandar\h
+renderizar o vídeo, assiste-se ali a uma pré-visualização\h\h
+
+138
+00:13:42,320 --> 00:13:47,160
+inteiro, pelo menos uma vez, para ter a certeza\h
+de que está tudo certo. Confira principalmente os\h\h
+
+139
+00:13:47,160 --> 00:13:52,880
+textos em ecrã, porque aí pode haver algum erro de\h
+digitação que aparece. Inteligências artificiais\h\h
+
+140
+00:13:52,880 --> 00:13:59,720
+também erram. e ouça o áudio. Ele não pode ter\h
+cortes no meio de palavras. Tudo certinho? Agora\h\h
+
+141
+00:13:59,720 --> 00:14:04,760
+a gente parte para a aprovação. Do mesmo modo, você\h
+vai escrever ali algum comando a dizer o que é que é\h\h
+
+142
+00:14:04,760 --> 00:14:11,760
+o render final, renderização final desse vídeo\h
+num formato para o YouTube, 1920 por 1080, o mesmo\h\h
+
+143
+00:14:11,760 --> 00:14:19,120
+número de fotogramas por segundo em que gravou,\h
+o codec H264, o áudio AAC, tudo o que já estamos\h\h
+
+144
+00:14:19,120 --> 00:14:24,560
+habituado para solicitar na renderização de um\h
+ficheiro que vai ser enviado para o YouTube. Agora,\h\h
+
+145
+00:14:24,560 --> 00:14:30,080
+se não sabe nada disto, é só dizer\h
+também pro cloud Code: "Renderiza este vídeo\h\h
+
+146
+00:14:30,080 --> 00:14:35,280
+no formato final de acordo com as recomendações\h
+e diretrizes do YouTube." Pronto, ele vai lá e\h\h
+
+147
+00:14:35,280 --> 00:14:40,200
+vai executar isso por si e vai entregar-lhe o\h
+vídeo final. Se seguiu o caminho um, o Cloud\h\h
+
+148
+00:14:40,200 --> 00:14:46,560
+Code renderiza e guarda o ficheiro nessa pasta\h
+que nomeou como final. No caminho dois, ele\h\h
+
+149
+00:14:46,560 --> 00:14:53,320
+pode mandar o próprio Davin renderizar-se ou você\h
+renderiza depois de fazer os seus ajustes. Aí você\h\h
+
+150
+00:14:53,320 --> 00:14:59,000
+decide o que for melhor. Independentemente do caminho,\h
+pronto, o seu vídeo está concluído. É só apanhá-lo\h\h
+
+151
+00:14:59,000 --> 00:15:04,640
+e publicar no YouTube. Agora vamos lá, vamos fazer\h
+um resumo de tudo o que foi falado. Você assina o\h\h
+
+152
+00:15:04,640 --> 00:15:12,160
+Cloud Pro, instala a aplicação no seu computador,\h
+organiza uma pasta paraa edição dos seus vídeos,\h\h
+
+153
+00:15:12,160 --> 00:15:19,960
+instala as skills, as habilidades com um único\h
+prompt, ensina o seu estilo e a partir daí cada\h\h
+
+154
+00:15:19,960 --> 00:15:27,280
+vídeo é uma conversa: transcrever, planificar,\h
+criar, montar e renderizar. Você só precisa\h\h
+
+155
+00:15:27,280 --> 00:15:33,360
+fazê-lo algumas vezes para apanhar o jeito, o\h
+Cloud Code, perceber o que gosta e depois\h\h
+
+156
+00:15:33,360 --> 00:15:38,480
+automatizar este processo. E agora lembra-se o\h
+que eu falei logo no início? Todo este vídeo aqui\h\h
+
+157
+00:15:38,480 --> 00:15:44,360
+foi editado por uma inteligência artificial, tudo\h
+pelo Cloud Code. Exatamente da maneira que eu te\h\h
+
+158
+00:15:44,360 --> 00:15:49,640
+ensinei aqui. O mais importante disto tudo é ter\h
+paciência. Vai demorar um tempinho para acertar o\h\h
+
+159
+00:15:49,640 --> 00:15:56,080
+estilo e isso é normal. Eu próprio demorei bastante\h
+e ainda vou fazendo pequenos ajustes na edição de\h\h
+
+160
+00:15:56,080 --> 00:16:01,160
+todos os meus vídeos. Mas depois de acertar\h
+isso, vai ganhar muitas horas por semana,\h\h
+
+161
+00:16:01,160 --> 00:16:05,720
+os seus vídeos vão ter muito mais qualidade e\h
+vai valer o investimento da assinatura desta\h\h
+
+162
+00:16:05,720 --> 00:16:11,480
+ferramenta. O seu trabalho mesmo vai ser só\h
+pensar em ter ideias, gravar os seus vídeos,\h\h
+
+163
+00:16:11,480 --> 00:16:17,000
+criar os seus conteúdos e pedir à inteligência\h
+artificial fazer o resto do trabalho. O prompt\h\h
+
+164
+00:16:17,000 --> 00:16:22,640
+instalação das skills está logo aqui em baixo na\h
+descrição. Testa e diz-me nos comentários como\h\h
+
+165
+00:16:22,640 --> 00:16:28,000
+foi o seu primeiro vídeo editado com inteligência\h
+artificial. Se tiver alguma dúvida também, deixe\h\h
+
+166
+00:16:28,000 --> 00:16:32,760
+aqui em baixo nos comentários que vou tentar\h
+ajudar-te em responder de alguma forma. E eu vou\h\h
+
+167
+00:16:32,760 --> 00:16:37,680
+colocar aqui no meu ecrã sugestão de vídeos do\h
+o meu canal, porque o meu objetivo aqui é ensinar\h\h
+
+168
+00:16:37,680 --> 00:16:43,200
+sobre como dominar o YouTube, que lhe vão mostrar\h
+exatamente o que fiz e como tem ficado a edição\h\h
+
+169
+00:16:43,200 --> 00:16:49,760
+dos meus vídeos feitos pelo cloud. Se gostou\h
+deste recurso também deixa o teu like, subscreve\h\h
+
+170
+00:16:49,760 --> 00:16:55,160
+no canal que te vou ajudar a dominar o YouTube.\h
+Eu espero por ti nestes vídeos. Até à próxima. M.
+

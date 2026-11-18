@@ -1,0 +1,23 @@
+idioma: pt
+[00:00] E se existisse uma forma de você editar as suas fotos praticamente sem você precisar encostar
+[00:04] no seu mouse?
+[00:05] Pois é, que eu uso o D200X da Ulanzi pra gravar as minhas aulas e pra configurar alguns atalhos
+[00:10] específicos aqui pro meu fluxo de trabalho, você já sabe.
+[00:13] Pra quem não conhece, o D200X da Ulanzi é uma Stream Deck com 14 botões configuráveis,
+[00:19] sendo possível colocar diversos atalhos ao seu fluxo de trabalho e também com a possibilidade
+[00:24] de você conseguir fazer lives e acessar as cenas do seu OBS, pausar, iniciar a gravação
+[00:29] e até mesmo controlar a luz do seu ambiente.
+[00:31] Mas uma coisa que eu não imaginava que dava pra fazer com ele é também editar foto.
+[00:35] E o que eu fiz foi justamente configurar o D200X pra trabalhar com a Evoto, que é um editor
+[00:40] de fotos com inteligência artificial.
+[00:41] Na prática fica assim, uma tecla chama a seleção automática do Evoto que analisa as fotos
+[00:46] e separa as que variam a pena.
+[00:48] Com o Nob eu vou passando foto por foto e confiro.
+[00:51] Outra tecla, aplica o retoque de pele que o Evoto faz por ir a mantém na textura.
+[00:55] Achou o tratamento certo numa foto?
+[00:58] Uma tecla sincroniza com o resto do ensaio.
+[01:00] E se tu tem uma foto de referência e quer chegar naquela cor, o Evoto copia a cor dela.
+[01:05] E eu deixei isso aqui em um botão também.
+[01:07] Então se tu trabalha muito com a edição de fotos, o Evoto, juntamente com o D200X,
+[01:12] pode ser uma combinação fantástica pra esse teu processo criativo.
+[01:15] Mas me conta aqui nos comentários, tu já conhecia essa ferramenta?

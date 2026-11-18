@@ -1,0 +1,21 @@
+idioma: pt
+[00:00] Coisas não tão óbvias que você deveria saber sobre o Premiere.
+[00:02] Quando você estiver editando um vídeo, onde tem vários vídeos que você precisa analisar
+[00:07] para poder arrastar para a sua timeline, a melhor forma de você fazer isso é quando você
+[00:11] consegue visualizar exatamente aqui a numeração de cada gravação, de cada cena, né?
+[00:16] Porque assim você consegue ter exatamente aí os arquivos em ordem ali que foram gravados
+[00:21] na câmera.
+[00:22] E esse formato meio que só é possível aqui pelo formato de lista, onde você não
+[00:26] tem um preview aqui pela aba do projeto.
+[00:28] Para você ter o preview da aba do projeto, você precisa trocar para a visualização
+[00:32] de ícone, porém normalmente por padrão, dessa forma que ele costuma vir totalmente
+[00:37] fora de ordem, tá vendo?
+[00:38] Totalmente fora de ordem.
+[00:39] Para você colocar isso aqui em ordem numérica do arquivo da câmera, basta vir aqui
+[00:43] nessa opção de menu de hambúrguer.
+[00:45] Clica aqui e você vai lá em cima e coloca por ListViewSort.
+[00:49] E agora você vai ter a visualização de todos os arquivos aqui em ordem numérica
+[00:53] que foi gravado na câmera.
+[00:54] É um detalhezinho simples, mas que eu sei que muita gente não sabe e que pode
+[00:57] salvar um bom tempo aí nas suas edições.
+[00:59] Então já salva aí para não esquecer.

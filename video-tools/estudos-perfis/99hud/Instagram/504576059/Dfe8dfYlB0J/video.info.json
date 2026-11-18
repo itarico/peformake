@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "Dfe8dfYlB0J",
+ "title": "Post by 99hud",
+ "description": "Comenta “RTK” que eu te mando o passo a passo no direct 👇\n\nInstalei o RTK no meu Claude Code e ele já cortou 123,6 milhões de tokens que iam só pra ler saída de terminal.\n\nNum git log de 15 commits, 225 linhas viraram 76. O filtro roda antes da saída chegar no modelo e o teu jeito de usar continua igual. Minha média ficou em 50,6%, bem longe dos 90% do melhor caso, e ainda assim são milhões de tokens a menos.\n\nSem trocar de ferramenta. Sem mudar como você pede. Sem log inteiro comendo teu limite.\n\n📌 Salva pra quando o limite acabar no meio da tarefa e manda pra aquele amigo que vive estourando a cota do Claude.\n\n#claude #inteligenciaartificial #claudecode #programacao #produtividade",
+ "channel": "99hud",
+ "uploader_id": "504576059",
+ "uploader": "Hudson Brendon | Claude, IA & Automação",
+ "timestamp": 1794147215,
+ "like_count": 293,
+ "comment_count": 221,
+ "webpage_url": "https://www.instagram.com/reel/Dfe8dfYlB0J/",
+ "webpage_url_basename": "Dfe8dfYlB0J",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20261108",
+ "playlist_count": 8,
+ "epoch": 1794365524,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

@@ -1,0 +1,19 @@
+idioma: pt (1.00)
+[   0.0-   4.4] fizeram o Higgs Field Open Source que roda no seu PC sem pagar crédito nenhum.
+[   4.4-   9.5] Chama Open Field, é um estúdio completo de video, imagem e 3D que roda na sua placa de
+[   9.5-  10.8] video pelo Confiwire.
+[  10.8-  14.3] Cada ferramenta dele é um workflow do Confiwire com uma interface bonita por cima.
+[  14.3-  18.2] E olha a história, o Higgs Field prometeu abrir o código da plataforma e não abrir.
+[  18.2-  20.0] Aí o Confiwire falou, beleza, a gente ajuda.
+[  20.0-  24.2] Lançou uma competição de 25 mil dólares junto com a Nvidia Run Pod Minimax para
+[  24.2-  26.2] a galera construir isso Open Source.
+[  26.2-  28.0] O Open Field saiu dessa competição.
+[  28.0-  33.0] Tem texto e imagem para video com 28 movimentos de câmera, tem um diretor que escolhe lente,
+[  33.0-  37.4] luz, película e até a década do visual, você monta a cena em 3D com bloquinhos e ele renderiza
+[  37.4-  40.9] o plano seguindo a câmera, dá pra filmar o movimento no celular e passar pra qualquer
+[  40.9-  45.2] personagem e tem efeitos upscale, loop perfeito e remover fundo.
+[  45.2-  48.5] E legal é que cada video que você gera abre também um workflow exato que cria
+[  48.5-  50.9] o Higgs Field para você mexer dentro do Confiwire.
+[  50.9-  52.9] Tudo roda local com modelos abertos.
+[  52.9-  53.9] E aí, gostou da novidade?
+[  53.9-  55.2] Não esquece de me seguir para mais.

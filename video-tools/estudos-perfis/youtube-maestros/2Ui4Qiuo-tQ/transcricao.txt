@@ -1,0 +1,441 @@
+idioma: pt
+[00:00] Por último, as últimas semanas eu fiquei completamente obcecado pelo Jeff pensando em todas as soluções possíveis,
+[00:05] todos os problemas possíveis para resolver, todas as coisas que ele desbloqueia.
+[00:08] E hoje eu quero te mostrar um caso de uso bem legal, extremamente útil, uma solução verdadeira para o mercado, mas acima de qualquer outra coisa,
+[00:15] uma forma de você entender exatamente como o Jeff pode ser inserido em uma solução conjunta,
+[00:20] que envolve inteligência artificial, que envolve código, e que obviamente envolve o Jeff.
+[00:26] Qual a diferença entre usar essas três coisas quando elas devem encaixar dentro das soluções que você está criando?
+[00:32] E nesse vídeo a demonstração vai cobrir uma das peças centrais da venda online.
+[00:38] Qualquer pessoa que já vendeu online conhece muito bem os formulários.
+[00:42] E se você nunca vendeu usando formulários, você provavelmente já comprou usando formulários.
+[00:47] Eles estão por toda parte.
+[00:49] Ou então você faz um quiz para descobrir qual é o seu que e, e depois de responder todas as perguntas,
+[01:02] você precisa preencher um formulário com seus dados.
+[01:04] Ou então você entra em uma página para comprar um produto que você de fato gosta,
+[01:07] você vai rolando ali para baixo, quando você clica no botão de compra,
+[01:11] aparece um formulário antes do checkout.
+[01:13] Caso você não sabe a utilidade disso, é muito simples.
+[01:16] A empresa que pediu para você preencher um formulário vai continuar atingindo campanhas,
+[01:22] novos produtos e oportunidades de compra durante semanas, meses ou até anos.
+[01:28] Da se maneira, eles não perdem a oportunidade de te vender algo se você por acaso desiste no momento da compra.
+[01:35] Você deixa de ser um peixe ali navegando no oceano gigantesco das redes sociais,
+[01:40] e é capturado pela rede da empresa e eventualmente esse peixinho que é um lead vai se tornar um cliente.
+[01:47] E quando a gente fala de formulário, sobretudo no mundo B2B,
+[01:50] né, business to business, quando você está vendendo de uma empresa para outra,
+[01:54] você precisa passar por um processo de qualificação.
+[01:57] E a qualificação serve para você não perder tempo ou para sua equipe não perder tempo
+[02:01] com pessoas que não têm potencial de fato de adquirir o seu produto ou serviço.
+[02:07] Imagine que você e um amigo acabaram de abrir uma agência de marketing,
+[02:10] você precisa de novos clientes e você vai lá e roda a tráfego na meta.
+[02:13] Os clientes começam a chegar, você gasta ali seus mil reais por dia ou mil reais por mês,
+[02:18] dependendo do seu budget, mas esses clientes vão começar a chegar no seu WhatsApp, por exemplo.
+[02:24] E você marca as reuniões com esses clientes.
+[02:26] Você vai em algum momento perceber que muitas dessas reuniões são desnecessárias,
+[02:32] porque você vai estar falando com várias pessoas que não têm nem interesse de fato
+[02:37] e nem têm a capacidade de fazer um investimento no seu serviço nesse momento.
+[02:41] Então a sua agenda começa a ficar cada vez mais lotada e o seu tempo começa a ser cada vez mais desperdiçado.
+[02:46] Você sente que você vende mal, mas na verdade você não tem um bom processo de qualificação.
+[02:51] Eu sei que a gente pode extrapolar muito esse universo específico,
+[02:54] eu só quero trazer para as pessoas que não estão nesse mundo das vendas online e dos formulários
+[02:59] uma bela noção de como essa história toda funciona.
+[03:02] Primeiro vou te mostrar como o formulário funciona e depois a gente entra nos detalhes.
+[03:05] Eu tenho aqui uma pergunta óbvia, uma primeira pergunta super tranquila de entender qual o seu nome
+[03:12] e você vai lá e preenche o seu nome. Todo formulário vai ter uma coisa assim.
+[03:16] Qual o nome da sua empresa? A gente está vindo para outra empresa, então provavelmente uma empresa que vai querer contratar.
+[03:22] Eu posso colocar aqui uma empresa, uma utramontina.
+[03:27] Legal. Até agora nenhuma novidade, já tem muitos formulários que fazem isso aqui e esse layout não é nada demais.
+[03:34] Aliás o foco aqui foi totalmente no que acontece por trás e não no front-end, que é a interface com a qual você enterar.
+[03:42] E aí pegando o nosso exemplo, as empresas podem contratar implementação com estrutura, treinamento, palestras e publicidades.
+[03:48] Vamos supor que eu queira uma implementação.
+[03:50] Olha que bacana, aqui a gente já tem o jav atuando. Se você ainda não entendeu, mas já tem uma familiaridade com jav,
+[03:57] tenta dar uma pausada no vídeo para adivinhar. Pode ser um bom exercício.
+[04:01] Eu vou te explicar. Aqui na segunda pergunta a gente teve como resposta a tramontina.
+[04:07] E toda vez que alguém preencher o nome de qualquer empresa aqui, a gente já vai enviar automaticamente uma mensagem para o jav.
+[04:15] Ele vai responder em milissegundos e basicamente a gente vai enviar o nome da empresa para o jav.
+[04:20] E a gente vai perguntar para o jav usando o nome como input, o nome da empresa, quais dessas categorias, quais desses segmentos,
+[04:30] essa empresa provavelmente se encaixa melhor. E aí o jav vai trazer as três mais prováveis aqui para o topo.
+[04:38] E todas as vezes que a gente testou com empresas mais conhecidas, com empresas menos conhecidas, ele acertou.
+[04:43] Aqui no caso, tramontina obviamente é indústria. E aí fica mais fácil do usuário preencher.
+[04:49] Ele não precisa nem digitar e nem ficar procurando aqui embaixo. É uma experiência bem bacana.
+[04:54] Então vou clicar aqui indústria até aqui uma pequena novidade, mas nada impressionante.
+[04:59] Agora vem a parte que começa a ficar mais interessante. Por quê? Porque vem a pergunta principal.
+[05:06] O que você gostaria de resolver na tramontina com inteligência artificial?
+[05:10] Eu estou trazendo esses ímpimos, mas você adapte ao seu contexto.
+[05:14] Eu posso escrever qualquer coisa. Eu tenho vários problemas, eu posso escolher alguns, posso escolher mais de um.
+[05:20] Eu vou escrever uma coisa bem simples aqui. Queremos automatizar a produção de conteúdo da empresa
+[05:31] e criar mais 20 contas para aumentar o alcance da marca.
+[05:41] As contas devem rodar no piloto automático.
+[05:47] Pois assim, só para vocês verem.
+[05:50] Imediatamente ele já fez uma anotação muito rapidamente. Não teve nenhum quarto no vídeo.
+[05:57] Ele já trouxe elementos visuais pertinentes e relacionados com o que a pessoa acabou de escrever.
+[06:05] Como a gente conseguiu fazer isso de uma maneira tão rápida?
+[06:08] Com o Jeff, se a gente tivesse feito isso com o IA, teria demorado mais, a pessoa teria ficado esperando aqui.
+[06:14] Então a gente já tem tanto as anotações, automatizar a produção de conteúdo, criar mais 20 contas.
+[06:20] Fica super legal a experiência. Acabei de escrever uma coisa e já me deu um resultado bacana.
+[06:26] Aqui a gente tem elementos visuais relacionados com o que a pessoa preencheu há poucos segundos no formular.
+[06:31] Tem indústria, tem os cartinhos, tem um celular que emete as redes sociais.
+[06:36] Você pode pensar, se o Jeff não traz output em linguagem natural, como você escreveu isso aqui?
+[06:42] É muito simples. O Jeff realmente não vai escrever esse texto aqui.
+[06:47] Enquanto a pessoa está digitando, o Jeff vai definindo se aquele escopo já é suficiente para ele enviar para um modelo de inteligência artificial,
+[06:56] para que esse modelo possa criar uma frase pequena.
+[06:59] Então, quando a pessoa terminou de escrever, vários itens daquilo que ela digitou já foram criados por modelos como haiku,
+[07:07] modelos rápidos, leves, baratos.
+[07:10] E aí a gente tem aqui um processo de milissegundos do momento que a pessoa digita a inter até o momento em que essas anotações acontecem.
+[07:19] Depois que a gente terminar de preencher o formular, eu vou te mostrar em detalhes como isso funciona.
+[07:24] Aqui tem uma pergunta padrão, fundador sócio se e ou se leva, quantidade de pessoas na empresa e aí tem uma coisa legal.
+[07:32] Se a gente clica mais de mil, qualquer uma das opções ele já monta nessa artesinha meio pixel.
+[07:37] As pessoas já vão ter escolhido um número menor, mas aqui a gente tem de fato mil personinhas andando pelos prédios.
+[07:45] E essa etapa que correlaciona a quantidade de funcionários da empresa com essa artesinha bem simples,
+[07:51] é uma etapa totalmente determinística, ou seja, eu clico em mais de mil, mil bonequinhos vão aparecer,
+[07:58] eu clico menos de dez, dez bonequinhos vão aparecer,
+[08:01] coisas assim que não tem muito que pensar em termos de inteligência artificial.
+[08:05] Aí esse cardzinho vai trazer as opções anteriores selecionadas.
+[08:11] Aí tem o faturamento anual, qual o faturamento anual da outra montina?
+[08:15] Mais de um bilhão com certeza.
+[08:17] E aí ele já modifica o card em cima, tudo isso de maneira determinista com código, tá não com IA.
+[08:23] E por que maestros da IA e não outra empresa a gente pode colocar porque gosta dos vídeos.
+[08:29] E aí tem uma etapa muito interessante, porque todo mundo que já teve formulários para fazer qualificação
+[08:37] passa por uma dificuldade que é falta de profundidade nessas respostas.
+[08:41] Muitas pessoas estão numa correria ou acham que vão entrar em contato com um time de vendas chato
+[08:46] e começam a se desanimar logo no processo de preenchimento do formulário.
+[08:51] Então tem perguntas que vão fazer com que a pessoa se engaja um pouco mais em relação ao formulário
+[08:58] e seja mais específica em relação ao seu problema e o que ela quer de fato fazer.
+[09:03] Então uma pergunta aqui feita totalmente por inteligência artificial.
+[09:07] A ver a revisão humana antes de publicar nas mais de 20 contas
+[09:12] e a gente pode colocar que eu não quero revisão humana, sempre sendo automático sem revisão.
+[09:17] Beleza.
+[09:18] Como a operação vai monitorar e conter eventuais erros graves publicados?
+[09:23] E aí a pessoa pode escolher, pode escrever que não sabe, que prefere pular também.
+[09:28] A gente pode ter um exuramento por... continuo por alertas, enfim.
+[09:33] E aí ele vai trazer um palpite e nem sempre ele traz, ele pode trazer ou não.
+[09:38] Hoje a produção de conteúdo depende de poucas pessoas do time
+[09:41] ou que limita o volume que a empresa consegue girar.
+[09:43] Acertei?
+[09:44] Eu posso falar não, é outra coisa e posso preencher.
+[09:47] Aqui na verdade queremos mais escala.
+[09:52] E todas essas informações estão sendo processadas.
+[09:56] Aí ele vai trazer algumas outras frases criadas, com e a partir do que foi pensado.
+[10:01] Aí outras perguntas que você pode inserindo.
+[10:05] Aqui a gente pode inserir que tem o budget e olha o que aparece, um diagrama.
+[10:11] Isso aqui é feito de uma maneira extremamente rápida, graças ao Java.
+[10:15] E aí você pode pensar, mas você preencheu faz tempo as especificações, o problema,
+[10:20] o texto foi escrito faz um tempo, então o Maia poderia realmente processar isso
+[10:24] e entregar esse resultado enquanto a pessoa preenche as outras perguntas.
+[10:28] E é verdade.
+[10:29] Mas olha que bacana, eu posso querer mexer com outras coisas,
+[10:33] eu quero alterar esse plano, eu posso adicionar outras camadas.
+[10:37] Quero também um sistema operacional para coordenar
+[10:46] os agentes que o time de TI usa.
+[10:52] Uma outra demanda.
+[10:53] E aí eu do enter e imediatamente, olha isso, o diagrama foi refeito com base naquilo que eu enviei.
+[11:02] Vamos supor que eu queira adicionar mais coisas ao plano.
+[11:05] Também preciso de agentes de WhatsApp para atender demandas 24 horas por dia
+[11:19] e bote no site para resolver tickets e problemas.
+[11:27] E aí ele vai muito rapidamente, pronto, nem terminei a frase, ele já reconstruiu o diagrama.
+[11:34] Então olha que bacana, você está preenchendo um formulário e você se surpreende a cada etapa desse formulário
+[11:39] porque você sente que é muito personalizado.
+[11:42] Quem que te entrega um diagrama em tempo real antes de você terminar de preencher o formulário
+[11:47] sobre o problema que você descreveu.
+[11:49] E essa experiência aqui é possível graças ao Drive.
+[11:51] E o papel do Drive aqui é muito interessante, porque ele não vai escrever as frases,
+[11:55] mas ele vai definir o que entra no diagrama e quando você pede para corrigir,
+[11:59] ele vai decidir também se ele retira algum dos nodes, se ele coloca outros nodes baseado naquilo que a pessoa disse.
+[12:07] Às vezes você escreve um parágrafo gigantesco, tem pessoas que preenchem formulários com muitos e muitos parágrafos,
+[12:12] sobretudo quando é uma dor real da empresa.
+[12:14] E a decisão sobre o que entra e o que sai do diagrama em ajustes
+[12:18] ou mesmo a primeira construção é uma decisão do Drive.
+[12:21] E aí é escrita do que vai dentro de cada node, é com modelos de há baratos e rápidos.
+[12:26] Bom, e aí depois que você responde que está tudo certo, você vai preencher o seu e-mail,
+[12:32] o e-mail da empresa, o seu WhatsApp, vou preencher aqui, concordo, e aí eu vejo o meu caminho.
+[12:39] E aí nessa última parte você pode colocar o que você quiser,
+[12:41] nesse caso a gente está colocando um pouco do nosso trabalho.
+[12:44] E uma coisa muito especial, que é aqui o logo da marca, da empresa, o site,
+[12:52] e aqui ele tirou um print com um pop-up, mas são coisas para ajustar.
+[12:57] E aí ele traz as confirmações de que essa mesma empresa e é uma decisão super legal,
+[13:04] né, você preenche o formulário, no final do formulário você tem as informações da sua empresa,
+[13:08] o Instagram, site, etc.
+[13:10] E você pode confirmar.
+[13:11] E aí quando você confirma aparece essa artezinha em pixel aqui
+[13:15] e os bonequinhos caminhando com o logo da marca.
+[13:18] E agora eu vou te mostrar um dia a gente está usando o Jeff,
+[13:21] vou preencher de novo o formulário com você, dessa vez te mostrando isso aqui para ficar ainda mais claro.
+[13:26] Em alguns momentos a gente só vai usar código, outros momentos a gente vai usar o Jeff
+[13:30] e outros momentos a gente vai usar LLMs.
+[13:32] E para quem não lembra LLMs são os large language models,
+[13:35] que são os modelos mais conhecidos, são os quais a gente conversa em linguagem natural.
+[13:39] Então a gente pode preencher novamente o formulário,
+[13:42] meu nome dessa vez vai ser Jeff.
+[13:46] O nome da empresa, vou pegar uma outra empresa, Hardestation.
+[13:52] E aí o que a gente procura, vou pegar a implementação de novo para vocês entenderem melhor,
+[13:58] porque algumas das outras opções têm menos uso do Jeff.
+[14:02] Então implementação, ele já trouxe aqui, lembra que a gente estava falando,
+[14:06] que ele já traz as três principais opções,
+[14:10] ele já trouxe tecnologia e software.
+[14:13] Então se a gente vem aqui, a primeira etapa, o nome é só código, não tem nada,
+[14:18] é só preencher armazenar.
+[14:20] E aí o nome da empresa vai imediatamente para o Jeff,
+[14:24] e aí o Jeff vai decidir quais são as três opções que vão aparecer destacadas
+[14:30] aqui em cima, nesse estágio, e aí ele acertou novamente.
+[14:36] Então a gente pode clicar aqui em tecnologia e software.
+[14:39] E aqui a gente tem os momentos de descoberta,
+[14:42] nos momentos em que a pessoa está preenchendo o formulário e se surpreende.
+[14:45] É muito legal você ver que tem um sistema inteligente
+[14:49] que já consegue pelo nome da sua empresa puxar o segmento.
+[14:53] Aí vem uma das partes mais importantes, que é o problema.
+[14:57] Enquanto eu vou digitando, o Jeff já vai atuando,
+[15:00] então eu posso digitar aqui, e aí já vão aparecer alguns elementos embaixo.
+[15:07] Eu posso querer, né, que é um sistema de CRO,
+[15:17] Conversion Rate Optimization, sólido para o tráfego pago,
+[15:27] que rode no piloto automático.
+[15:32] E o legal aqui é que apesar de eu não ter enviado ainda,
+[15:35] quando eu pressar Enter vai ser muito rápido a resposta,
+[15:38] porque ele já transcreveu, ele já processou, ele já fez a anotação.
+[15:42] Isso é muito legal, por que?
+[15:44] Porque é uma sensação de que algo acontece imediatamente,
+[15:47] mas que tem uma inteligência por trás.
+[15:49] Se eu mando Enter, aí começa a processar,
+[15:51] demora para responder e aí fala,
+[15:53] tá usando um Maya qualquer.
+[15:55] Mas se eu do Enter aqui, e imediatamente ele já traz
+[15:59] uma pequena anotação e já traz aqui elementos visuais,
+[16:03] olha que bacana, que tem uma correlação com aquilo que eu escrevi,
+[16:08] um funil aqui, uma página web aqui,
+[16:11] uma espécie de gráfico aqui com uma moedinha,
+[16:14] tudo a ver com o que eu acabei de escrever e de maneira imediata.
+[16:18] E se eu tivesse escrito muito mais coisas,
+[16:21] ele teria feito de maneira tão rápida quanto.
+[16:24] Por que? Porque enquanto eu fui escrevendo,
+[16:26] ele já foi montando isso para mim.
+[16:28] Essa sensação da IA imediata é muito bacana.
+[16:31] Você consegue ver que o Java vai decidindo,
+[16:35] com base naquilo que vai ser escrito em tempo real,
+[16:37] que ele envia para a IA, e aí o Haiku vai criando os tópicos ao vivo
+[16:42] e vai criando o resumo curto.
+[16:44] Então, todos os elementos que vão ser gerados imediatamente,
+[16:47] na verdade, foram gerados enquanto a pessoa digitava.
+[16:50] Só que o Java foi determinando que ele enviava para a IA ou não,
+[16:53] para que se tornasse um elemento visual no formular.
+[16:56] Aí a gente tem o cargo, número de funcionários,
+[16:59] no cargo não tem nada, o cargo não tem nada muito especial.
+[17:04] A gente não vai colocar nem o Java nem LLM,
+[17:07] e aí tem número de funcionários.
+[17:09] E aqui é bacana porque a gente vai girar essa descoberta do pixel art.
+[17:15] E a ideia é transformar isso aqui na quantidade de funcionários.
+[17:19] Eu vou colocar aqui um número muito menor do que a empresa realmente tem de funcionários,
+[17:22] só para você ver a diferença.
+[17:24] Se eu coloco 10 até 10 funcionários,
+[17:28] olha que bacana, tudo se transforma em uma empresa de 10 funcionários
+[17:35] e a gente consegue ver eles trabalhando em movimento.
+[17:38] Então você vai vendo os elementos visuais na sua frente
+[17:41] e transformando em coisas ainda mais legais.
+[17:43] Aqui em faturamento no AL, a gente vai usar para definir os caminhos
+[17:48] que a gente pode enviar esse lead.
+[17:50] Por quê? Porque no final de todo o formular,
+[17:53] você pode fazer várias coisas com essa pessoa,
+[17:55] várias coisas, vários caminhos.
+[17:57] Você pode já permitir que essa pessoa agente uma reunião.
+[18:00] Você pode dar o seu número pessoal para essa pessoa.
+[18:03] Você pode dar um número de alguém no seu time.
+[18:06] Você tem várias pessoas no time e pode deixar esse número com uma pessoa
+[18:10] que é eventualmente a pessoa que mais converte da equipe
+[18:14] e você pega esse lead, que é o melhor lead, e envia para ela.
+[18:17] Caso seja um lead que preenche tudo de uma maneira mais ou menos,
+[18:22] que não tem tanto potencial, que não tem tanto budget,
+[18:26] também não tem uma empresa tão sólida,
+[18:28] você pode enviar para outros vendedores da equipe.
+[18:31] E aí eu estou estipulando critérios totalmente arbitrários.
+[18:34] Você pode usar o critério de seleção que você preferir.
+[18:36] O que eu quero trazer essa possibilidade de fazer com que
+[18:39] todas as respostas entrem em um mesmo contexto
+[18:42] e o dive vai decidir para onde ele envia essa pessoa.
+[18:46] Vai fazer isso muito rápido.
+[18:48] Então ela pode ir para o agente da venta,
+[18:50] ir para outros produtos.
+[18:52] Às vezes a pessoa não tem o fatoramento que você precisa
+[18:54] que ela tenha para entrar no seu serviço.
+[18:56] E aí você pode enviá-la para outros produtos menores.
+[18:59] Quanto mais produtos você tem, quanto maior o seu time,
+[19:02] mais isso aqui é útil porque você consegue,
+[19:05] a partir de todas essas respostas, não só criar uma super experiência
+[19:08] bacana para quem está preenchendo, mas você consegue enviar
+[19:11] a pessoa exatamente para onde você quer,
+[19:14] com base em uma inteligência artificial
+[19:16] que de fato pensa sobre cada uma dessas respostas.
+[19:19] Então a pessoa pode ir para o agendamento,
+[19:22] tem muito formulário assim,
+[19:24] a fatura é mais de x, a fatura mais de x já vai para o agendamento.
+[19:27] Mas a pessoa pode ter preenchido o formulário da maneira mais meia,
+[19:30] a boca possível.
+[19:32] Muitas pessoas que preenchem que tem um certo fatoramento não têm.
+[19:35] Então essa conjuntura, inclusive o tempo para preencher um formulário
+[19:38] é uma outra variável.
+[19:40] Se a pessoa se dedicou de fato para fazer aquilo,
+[19:42] então tem várias coisas que o dive considera
+[19:44] para direcionar essa pessoa para o lugar certo.
+[19:46] Então, normalmente a gente pode colocar qualquer um também,
+[19:49] só para vocês verem, e ele aparece aqui, isso tudo,
+[19:52] é via código, a gente não precisa de um maiar para pegar
+[19:55] uma série de números e letras e colocar em um certo lugar na página.
+[20:01] E aí tem essa pergunta aqui que é importante,
+[20:03] não necessariamente formulada dessa maneira,
+[20:05] mas você entende se é que a pessoa realmente quer trabalhar com você,
+[20:08] com a sua empresa,
+[20:10] ou ela está prospectando, fazendo orçamentos,
+[20:12] vai pelo mais barato eventualmente,
+[20:15] quando a gente entra na conversa de time comercial,
+[20:18] tudo isso acaba virando uma história completamente diferente,
+[20:22] mas quando você tem uma empresa que não tem um time comercial gigantesco,
+[20:26] que está super preparado para quebrar objeções
+[20:29] e com tácticas superagressivas de venda e etc,
+[20:32] você quer entender se aquela pessoa vale o seu tempo.
+[20:35] Você é uma pessoa que nunca ouviu falar da minha empresa,
+[20:38] que nunca ouviu falar do que eu faço,
+[20:40] e ela nem tem um faturamento tão relevante em relação aos meus outros clientes,
+[20:46] talvez eu não queira entrar em uma reunião com ela,
+[20:48] talvez eu queira enviar essa pessoa para um outro produto
+[20:51] um pouco mais barato, para que ela possa fazer ascensão
+[20:54] dentro do meu portfólio de produtos até que ela chegue em um serviço.
+[20:57] E você consegue ver que o Jeff, ele está sendo utilizado aqui,
+[21:01] então eu posso dizer que estou buscando orçamentos,
+[21:07] não conhecia a empresa, não conhecia os maestros,
+[21:11] simplesmente está buscando orçamentos.
+[21:14] E aí as perguntas feitas por IA,
+[21:17] e nessa etapa a gente vai usar tanto obviamente LLMs
+[21:22] para formar as perguntas, mas a gente vai usar o Jeff também,
+[21:25] porque obviamente essas respostas vão contribuir para a gente entender o perfil desse lead.
+[21:29] A gente tem até aqui uma coisa bacana,
+[21:32] que é o perfil do lead organizado de uma forma visualmente interessante.
+[21:37] Isso aqui a gente confesso que não dedicou muito tempo,
+[21:40] mas é uma coisa que é legal porque a pessoa vai vendo também
+[21:43] para onde ela está indo e dependendo das respostas.
+[21:46] Eu não sei se é legal colocar isso ou não no formulário,
+[21:48] mas talvez seja uma coisa de vaidade.
+[21:51] Respostas simples demais podem ir tirando pontos aqui
+[21:55] e deixando essas arestas mais para o centro
+[21:59] e a pessoa fica querendo dar respostas mais qualificadas,
+[22:03] mais dedicadas ao longo do formulário, é possível.
+[22:06] E aí uma pergunta super bacana,
+[22:07] que você espera que o piloto automático faça,
+[22:09] o piloto automático vão ter um muito amplo.
+[22:11] Então eu quero que ele ajuste as páginas e anúncios.
+[22:15] Por exemplo, eu posso também escrever,
+[22:16] posso escrever com as minhas palavras,
+[22:17] qual ajuste hoje costuma tomar mais tempo?
+[22:20] Vou colocar aqui criar novas páginas.
+[22:22] Alpide, hoje a otimização depende de alguém analisar manualmente os dados
+[22:26] antes de agir. Acertei?
+[22:28] Achei um bom chute.
+[22:29] Vou colocar aqui na mosca.
+[22:31] Talvez não seja a terminologia ideal, mas é interessante.
+[22:35] E ele vai trazer aqui, mais justamente,
+[22:37] algumas informações que fazem um breve resumo do projeto,
+[22:40] automatizar essa análise e pode liberar tempo
+[22:42] e dar consistência ao processo.
+[22:44] Então a gente está simplesmente reafirmando aquilo
+[22:47] que o lid mesmo nos trouxe,
+[22:49] mas que também encontra um papel de confirmar
+[22:52] que a decisão dele de procurar a gente foi boa.
+[22:55] E é isso aqui, é interessante também, porque ele
+[22:57] inaltesse o problema, analisar as páginas e ajustar elas manualmente
+[23:01] consome muito tempo, deixa a conversão dos anúncios vulneráveis,
+[23:04] auxilações. Então isso aqui é bem legal.
+[23:08] Gargalo de conversão, gargalo da conversão.
+[23:11] Difícuta de transformar visitantes pagos em resultado de forma constante
+[23:14] e autônoma. A parte autônoma aqui é super importante.
+[23:17] A gente poderia até mexer com o capsilock,
+[23:20] com palavra-chave em outras cores, mas enfim.
+[23:24] Eu vou clicar em sim aqui e olha que bacana,
+[23:26] em tempo absolutamente imediato ele já monta um diagrama.
+[23:31] Eu acho que é muito legal você ver um diagrama
+[23:34] de uma coisa que você acabou de escrever, acabou de preencher.
+[23:37] E aí o diagrama, o mapa, ele vai usar o jav e vai usar ia também,
+[23:41] obviamente, porque o jav não vai te devolver texto e linguagem natural.
+[23:45] E nesse caso eu não vou ajustar porque eu achei que está muito bom.
+[23:48] Aqui tem a questão central, que é a falta de um sistema
+[23:52] de aumento de taxa de conversão no teu automático.
+[23:55] Aqui a gente tem um pouco do que a gente quer ajustar
+[23:58] as páginas e os anúncios sozinhos, porque a criação de páginas
+[24:02] toma tempo e a análise manual trava as decisões.
+[24:06] E aí nós queremos chegar aqui, por isso que é legal um pequeno fluxograma,
+[24:11] então a gente quer automatizar a otimização do tráfego pago
+[24:16] e o primeiro passo, começar por um apiamento do processo de criação de páginas.
+[24:20] Achei justo, não é o fluxograma mais elaborado do mundo,
+[24:25] mas eu achei que funciona. E aí você pode ajustar se quiser,
+[24:27] porque é super legal também com a experiência para quem está preenchendo.
+[24:30] E aí você pode colocar o seu e-mail, WhatsApp, check e ver o meu caminho.
+[24:35] E aí você vai ver o seu diagrama todo de novo
+[24:38] e você tem a experiência de colocar o que você quiser nessa última etapa.
+[24:41] E aí a gente poderia ter enviado essa empresa para vários caminhos,
+[24:44] mas nesse caso a gente decidiu simplesmente lidar com isso via e-mail
+[24:49] por várias questões.
+[24:51] É uma pessoa que, o Javi deve ter decidido porque é uma pessoa que
+[24:55] não conhecia a empresa, é uma pessoa que tem um fatoramento que não é impressionante,
+[25:01] uma pessoa que tem poucos funcionários na empresa.
+[25:05] E uma coisa muito legal é que eu coloquei o nome de uma empresa conhecida,
+[25:09] mas eu coloquei muito menos funcionários do que a empresa realmente tem.
+[25:14] E aí ele barrou a sugestão da empresa, porque ele colocaria que
+[25:19] essa é sua empresa, que colocaria redes sociais, que nem acontecia no caso anterior.
+[25:23] Mas nesse caso, como tinha um problema,
+[25:26] a Real Estate Show mais 10 pessoas, fatoramento de 10 a 50 milhões,
+[25:32] ele barrou porque ele achou que a probabilidade de ser a empresa
+[25:36] que ele encontrou primeiro era muito baixa.
+[25:39] Eu vou preencher novamente para a gente testar se essa tese é correta
+[25:42] e se o Javi realmente fez esse filtro com base nas incoerências,
+[25:46] o que é muito legal nesse feature feito.
+[25:48] Então vou colocar aqui Artur, vou colocar a Real Estate Show como empresa,
+[25:53] implementação, tecnologia e software.
+[25:57] Vou colocar aqui literalmente qualquer coisa,
+[26:00] criar sistema autônomo de follow-up, qualquer coisa, literalmente.
+[26:08] E aí ele traz aqui de novo imagens parecidas com as anteriores,
+[26:12] porque cai numa mesma categoria.
+[26:14] Vou colocar C Level e aqui, eu acho que o número mais realista
+[26:18] está por aqui, ou aqui talvez, acho que está mais para cá,
+[26:23] 200 a 1000 mais de 1000, não sei, vou colocar aqui, 200 a 1000,
+[26:27] para te mostrar também a diferença de colocar 200 a 1000 e mais de 1000.
+[26:32] Faturamento, ele está por aqui, porque sim,
+[26:36] estamos bem rápido, não estou olhando,
+[26:38] só para ver se ele vai trazer aquilo que a gente falou,
+[26:44] logo e etc.
+[26:46] Vamos ver, está chegando, vai montar o diagrama,
+[26:50] quero ver se ele vai realmente montar.
+[26:53] Vamos ver, diagrama, se agora, hein?
+[26:56] Vamos ver. Boa!
+[26:58] Olha que bacana, a gente tem aqui a Real Estate Show,
+[27:01] porque agora os dados batem, agora os dados fazem sentido.
+[27:06] Antes a gente tinha uma incongruência muito grande
+[27:09] entre o faturamento, o número de funcionários e o nome da empresa
+[27:12] que a gente tinha capturado lá no começo do formulário.
+[27:16] Então olha essa inteligência, que legal.
+[27:18] E aí quando eu clico aqui em sim, essa é minha empresa,
+[27:22] o logo já aparece aqui em cima junto com os prédios em pixel.
+[27:27] É importante lembrar que isso aqui é um protótipo,
+[27:29] você pode fazer o que você quiser com isso,
+[27:31] você pode pegar essa ideia e fazê-la 100 vezes melhor,
+[27:34] 100 vezes mais bonita, colocar na sua empresa
+[27:37] com a cara da sua empresa,
+[27:39] só que é só uma versão funcional para explorar um pouco de Java
+[27:42] e para explicar para você a diferença entre as partes
+[27:45] que não precisam do Java, as partes que precisam de uma IA
+[27:48] que não é o Java e onde cada coisa entra
+[27:51] dentro de um projeto específico.
+[27:53] E para os membros da comunidade de Maestro da IA
+[27:55] a gente já disponibilizou esse projeto completo,
+[27:57] então vocês podem pegar isso e explorar a vontade.
+[28:00] Caso você ainda não esteja na comunidade,
+[28:03] eu te convido a explorar esse projeto
+[28:05] e centenas de outros recursos, agentes, skills,
+[28:09] mais de 50 aplicativos exclusivos para vocês
+[28:12] sem contar com mais de 30 horas de aula
+[28:14] sobre Codex, CodeCode, Hermes, Java
+[28:17] e também uma formação completa
+[28:20] inteligência artificial para você entender a base
+[28:22] da inteligência artificial, além das lives,
+[28:25] além do suporte técnico, o link está na descrição
+[28:28] e tenho certeza que se você gosta aqui do canal
+[28:30] você vai adorar entrar na comunidade.
+[28:32] E caso você tenha gostado desse vídeo
+[28:34] e quer receber mais recomendações de vídeos
+[28:36] como esse no seu YouTube,
+[28:37] você pode dar um hype nesse vídeo,
+[28:39] um like e se inscrever no canal.
+[28:41] Um abraço e até a próxima.

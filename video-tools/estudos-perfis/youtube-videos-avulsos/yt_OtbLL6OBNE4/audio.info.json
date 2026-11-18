@@ -1,0 +1,89 @@
+{
+ "id": "OtbLL6OBNE4",
+ "title": "How to Make Viral Animated Shorts Using Claude (Full Workflow)",
+ "fulltitle": "How to Make Viral Animated Shorts Using Claude (Full Workflow)",
+ "channel": "Mr omi",
+ "channel_id": "UCRj1ZF-nLuCK5NFFo2Qkzyg",
+ "channel_url": "https://www.youtube.com/channel/UCRj1ZF-nLuCK5NFFo2Qkzyg",
+ "uploader": "Mr omi",
+ "uploader_id": "@mr_omix",
+ "webpage_url": "https://www.youtube.com/watch?v=OtbLL6OBNE4",
+ "upload_date": "20261101",
+ "duration": 712,
+ "duration_string": "11:52",
+ "view_count": 750911,
+ "like_count": 19054,
+ "comment_count": 927,
+ "channel_follower_count": 13000,
+ "description": "How to make viral animated shorts with Claude, step by step. I gave Claude a channel's latest 20 shorts, it studied them frame by frame at 30 fps, and then it built a full animated short with our own story: 2D characters in a colourful 3D world, made with three.js on my own PC. No AI video generator.\n\nIn this video:\n• Claude watches 20 shorts at 30 fps and writes a style bible\n• The script formula it found, and why the hook is one sentence\n• Picking our own story: the bridge that fell for a song\n• Building the town, the characters and the camera in three.js\n• Why the first version looked cheap\n• Seven agents comparing our frames with the reference, one topic each\n• What they found: ink lines, lens blur, camera glides and shadow colours\n• The free skill, so you can make the same type of short\n\nFree skill (copy it into your Claude and it learns the whole process):\nhttps://github.com/mromidev/claude-animated-shorts\n\nMore skills + realistic 3D (paid community): https://www.skool.com/mromi\n\n\nChapters\n0:00 Two videos\n0:34 20 shorts at 30 fps\n1:35 The workflow\n3:50 Our own story\n4:55 Building it\n6:44 Why it looked cheap\n7:35 The agent team\n8:35 What they found\n9:44 The free skill\n\nMusic: Lukrembo - bread\n\n#ClaudeAI #AIAnimation #threejs",
+ "tags": [
+  "ai animation",
+  "claude code animation",
+  "ai content creation",
+  "claude animation",
+  "ai cartoon animation",
+  "animated shorts",
+  "claude 3d animation",
+  "ai animated shorts",
+  "claude ai",
+  "opus 5.5",
+  "claude 3d",
+  "claude code",
+  "claude code tutorial",
+  "claude workflow",
+  "three.js animation",
+  "ai shorts",
+  "opus 5.5 video"
+ ],
+ "categories": [
+  "Entertainment"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Two videos",
+   "end_time": 34
+  },
+  {
+   "start_time": 34,
+   "title": "20 shorts at 30 fps",
+   "end_time": 95
+  },
+  {
+   "start_time": 95,
+   "title": "The workflow",
+   "end_time": 230
+  },
+  {
+   "start_time": 230,
+   "title": "Our own story",
+   "end_time": 295
+  },
+  {
+   "start_time": 295,
+   "title": "Building it",
+   "end_time": 404
+  },
+  {
+   "start_time": 404,
+   "title": "Why it looked cheap",
+   "end_time": 455
+  },
+  {
+   "start_time": 455,
+   "title": "The agent team",
+   "end_time": 515
+  },
+  {
+   "start_time": 515,
+   "title": "What they found",
+   "end_time": 584
+  },
+  {
+   "start_time": 584,
+   "title": "The free skill",
+   "end_time": 712
+  }
+ ],
+ "language": "en"
+}

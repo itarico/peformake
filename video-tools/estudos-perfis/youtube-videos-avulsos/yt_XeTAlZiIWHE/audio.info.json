@@ -1,0 +1,76 @@
+{
+ "id": "XeTAlZiIWHE",
+ "title": "How I Fully Automated My Video Editing (Claude Code)",
+ "fulltitle": "How I Fully Automated My Video Editing (Claude Code)",
+ "channel": "Jason Cooperson",
+ "channel_id": "UCN3tZfcySn-VVeSRdGFIYOA",
+ "channel_url": "https://www.youtube.com/channel/UCN3tZfcySn-VVeSRdGFIYOA",
+ "uploader": "Jason Cooperson",
+ "uploader_id": "@jasoncooperson",
+ "webpage_url": "https://www.youtube.com/watch?v=XeTAlZiIWHE",
+ "upload_date": "20260629",
+ "duration": 1351,
+ "duration_string": "22:31",
+ "view_count": 255574,
+ "like_count": 5596,
+ "comment_count": 292,
+ "channel_follower_count": 19300,
+ "description": "🚀 Plug-and-play files + full Claude Code course ⤵️\nhttps://www.skool.com/leveragelab/about\n\n🎁 The FREE system map (paste it into Claude to build your own Claude video editor) ⤵️\nhttps://claude.ai/artifact/BYH6Mcma5to3kt2KogkEzB\n\n🔗 HyperFrames (the free open-source toolkit I install in the video) ⤵️\nhttps://github.com/heygen-com/hyperframes\n\nLike, subscribe, and drop a comment if you want more honest AI builds like this!\n\n⏰ TIMESTAMPS\n\n0:00 Intro\n0:46 How The System Works\n5:33 The Setup\n6:57 The Rough Cut\n10:19 Graphics\n11:42 Second Pass\n15:43 Captions\n17:36 Background Music\n18:40 Export\n19:23 Final Thoughts\n\nFollow me on other platforms\n📸 Instagram: https://www.instagram.com/jasoncooperson/\n🎞️ TikTok: https://www.tiktok.com/@jasoncooperson\n\nSummary ⤵️\n\nThe entire video you just watched was edited by Claude — end to end. I dropped in one raw recording, and Claude made every cut, trimmed the dead space, added the motion graphics, dropped in the dynamic elements, and burned in the captions. No After Effects. No timeline. No editor.\n\nI spent weeks building this thing and it's 100% custom. So in this video I break down the exact system, step by step, so you can build it yourself for free — or skip the building and grab the plug-and-play files inside my Skool (first link above).\n\nHere's the actual machine: Raw file → Rough Cut → Graphics → Second Pass → Captions + Music → Export. The rough-cut skill runs WhisperX for word-level timestamps, transcribes the whole video, cuts every filler word and dead pause, always keeps your last/best take, and polishes the audio. Then graphics get layered on with my saved brand presets (fonts, colors, animations all baked in). The part I'm most proud of: a custom render system that only re-renders the tiny part you changed instead of the whole video — which is what makes editing in Claude actually usable and roughly 10x faster.\n\nFrom there you fine-tune the graphics one by one in the Second Pass (this is what separates real editing from generic AI slop), auto-add perfectly-timed captions that fix the words AI always botches — \"ChatGPT,\" \"Hormozi,\" all of it — drop in background music, and export. You can stop in Claude or push the whole thing into Premiere with the Premiere MCP.\n\nEven if you've never coded or edited a video in your life, this tutorial walks you through every step. By the end you'll have Claude editing videos for you while you sleep.\n\nWhat I cover ⤵️\n\n- The full end-to-end machine: how raw footage becomes a finished, captioned, graphics-loaded video\n- How to install HyperFrames for free and spin up your own video-editor project in Claude\n- The Rough Cut skill: WhisperX timestamps, auto-cutting filler + dead space, always grabbing your best take\n- Adding motion graphics with saved brand presets — fonts, colors, and animations baked in\n- The Second Pass: the partial-render trick that makes editing 10x faster and actually usable\n- Auto-captions that fix the words AI normally gets wrong (ChatGPT, Hormozi, etc.)\n- Background music, final export, and pushing the cut into Premiere with the Premiere MCP\n- Every prompt you need to build the whole thing yourself — for free\n\nIf you're into using AI to build stuff that actually makes you money and saves you time — not just tips and tutorials — come learn how to build automations like this with me. I run a community of high-level builders with 2 group calls a week, plug-and-play systems, and a full Claude Code course (including my entire Content OS + this exact video editor + the auto-poster that posts finished videos to every platform). First link down below. 👇",
+ "tags": [],
+ "categories": [
+  "People & Blogs"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Intro",
+   "end_time": 46
+  },
+  {
+   "start_time": 46,
+   "title": "How The System Works",
+   "end_time": 333
+  },
+  {
+   "start_time": 333,
+   "title": "The Setup",
+   "end_time": 417
+  },
+  {
+   "start_time": 417,
+   "title": "The Rough Cut",
+   "end_time": 619
+  },
+  {
+   "start_time": 619,
+   "title": "Graphics",
+   "end_time": 702
+  },
+  {
+   "start_time": 702,
+   "title": "Second Pass",
+   "end_time": 943
+  },
+  {
+   "start_time": 943,
+   "title": "Captions",
+   "end_time": 1056
+  },
+  {
+   "start_time": 1056,
+   "title": "Background Music",
+   "end_time": 1120
+  },
+  {
+   "start_time": 1120,
+   "title": "Export",
+   "end_time": 1163
+  },
+  {
+   "start_time": 1163,
+   "title": "Final Thoughts",
+   "end_time": 1351
+  }
+ ],
+ "language": "en-US"
+}

@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "Dd7WDYXnA-a",
+ "title": "Post by costa.emanu3l",
+ "description": "always moving.",
+ "channel": "costa.emanu3l",
+ "uploader_id": "49375995003",
+ "uploader": "José Emanuel",
+ "timestamp": 1790805181,
+ "like_count": 108,
+ "comment_count": 5,
+ "webpage_url": "https://www.instagram.com/reel/Dd7WDYXnA-a/",
+ "webpage_url_basename": "Dd7WDYXnA-a",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20260930",
+ "playlist_count": 9,
+ "epoch": 1794151704,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

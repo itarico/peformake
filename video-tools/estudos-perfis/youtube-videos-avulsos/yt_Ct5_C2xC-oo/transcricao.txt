@@ -1,0 +1,186 @@
+idioma: en
+[00:00] This intro section you're watching is fully edited by Claude, like literally all of it.
+[00:05] This is a game changer for content creators and marketers.
+[00:08] These things that you see on screen floating around done by Claude.
+[00:11] I can put text in front of me like this and I can also take it behind me like this.
+[00:15] And with a snap, I can change the fonts too.
+[00:18] How about this one?
+[00:19] And it can nail any design style be it retro gradient, 8-bit pixel,
+[00:24] SAS explainer, or hand-drawn animation.
+[00:30] It can even add captions into your video.
+[00:32] And if you really want to go a level further,
+[00:34] you can edit these videos in After Effects or Premiere Pro for making final tweaks.
+[00:39] In this video, I will show you a six-step process that you can use to create videos using Claude.
+[00:43] Our team at 100x has been using this extensively and we found out the perfect workflow that
+[00:47] guarantees the best outputs.
+[00:49] And if you stay till the end, I'll share my personal views on what this actually means for creators
+[00:53] and why I think we are entering a completely different era of content creation.
+[00:57] So hit that subscribe button and let's dive in.
+[01:03] Step 1, the prerequisites.
+[01:06] There are two prerequisites here.
+[01:08] Number one is a Claude subscription.
+[01:10] If you want to try this thing out, a $20 subscription will suffice.
+[01:13] But if you regularly want to create videos, you might have to get a higher plan.
+[01:16] And the second prerequisite is your starting assets.
+[01:19] Depending on the kind of content that you want to create,
+[01:21] the materials you gather will differ.
+[01:23] Some of you might start with just a script,
+[01:25] while some of you will have a recorded footage of a talking head.
+[01:28] Some of you might just have a voiceover.
+[01:30] Regardless of what your starting point is, gather all those files together.
+[01:33] In this example, I have a talking head video with a script.
+[01:36] Basically, a video of me talking in front of the camera,
+[01:38] this intro of the video that you just saw initially,
+[01:41] and it's script in text format.
+[01:43] By the way, if you want to learn how to use Claude to script viral Instagram reels,
+[01:47] we have a video on that which I'm going to link right here.
+[01:49] And if you want to learn how to create your own AI avatar using Haygen,
+[01:53] I've linked that over here as well.
+[01:54] Once you've gathered the files, open the Claude app and switch to Claude code.
+[01:58] Don't worry, there's no coding here.
+[02:00] This process generally works better with Claude code.
+[02:02] And if you have the desktop app, Claude can also access local files
+[02:05] on your computer that you give it access to.
+[02:07] Step 2, style training.
+[02:10] Now, before you even think about editing a video,
+[02:13] before you even think about uploading your footage and just typing,
+[02:16] hey Claude, edit my video, you need to teach Claude the art style that you want to go for.
+[02:21] The best way to do this is to upload references for your art style.
+[02:24] I'm going for this pretty cool looking style called pastel neo brutalism.
+[02:28] And I have about 15 to 20 pictures of random things in this particular style.
+[02:32] It does not matter what these images really contain.
+[02:35] The idea is to teach Claude what this artistic style really looks like,
+[02:39] what kind of elements there are, what kind of colors there are,
+[02:41] what kinds of textures there are, etc.
+[02:44] You can get these reference images from websites like Pinterest and Cosmos.
+[02:47] Once I've uploaded these references, I'm going to type a simple prompt.
+[02:51] I'm about to upload some raw footage and I'll ask you to edit that into a video
+[02:57] with motion graphics and animations.
+[02:59] But before that, I want to teach you the style I want the motion graphics and animations in.
+[03:04] Here are a few reference images of the style I want my video in.
+[03:08] For now, I don't want you to edit the video.
+[03:10] I just want you to understand the style and tell me what you understood about it.
+[03:15] Okay, so Claude has basically described this art style for us.
+[03:18] So far it looks kind of good.
+[03:19] So I'm just going to say approved.
+[03:22] Let's move on to step three, witcher style testing.
+[03:25] Now I'll just copy paste the script of my video
+[03:27] and I'll paste it over here in the prompt bar
+[03:30] and I'll type in another prompt.
+[03:31] This is the script of the video I want you to edit.
+[03:35] For now, all I want you to do is create three static images
+[03:38] in my desired style based on any three pointers from my script.
+[03:42] Now this is something I'm doing just to check whether Claude has truly understood the artistic style
+[03:47] and in a couple of minutes I have these outputs ready.
+[03:49] Okay, that actually looks pretty good.
+[03:51] The key here is to give it consistent reference images.
+[03:53] Your reference images shouldn't look too different from one another in terms of style.
+[03:57] And if you've done that, you will get good outputs like these.
+[04:00] Now let's move on to step four, the animation test.
+[04:05] Here's my prompt.
+[04:06] Take the first image you created and animate it according to what is mentioned in that line of the script.
+[04:13] Let's send it.
+[04:14] This process again is just for me to check whether Claude is actually on the right track or not.
+[04:19] I know these are a lot of tests but after creating hundreds of videos like this,
+[04:22] we've found out that you get the best outputs when there are multiple checkpoints.
+[04:26] Plus through this process, you also end up saving a lot of tokens as you're giving Claude
+[04:29] multiple rounds of feedback before the token heavy task, which is putting together the video
+[04:33] itself.
+[04:34] All right, so we have an output.
+[04:35] I'm just gonna play it.
+[04:39] Awesome.
+[04:39] I'm pretty satisfied with that.
+[04:41] Let's move on to step five, which is the storyboard.
+[04:43] There are two ways you can go about this.
+[04:45] The first is giving Claude your script and asking it to generate the storyboard.
+[04:49] You can read the storyboard, iterate on it, cut down ideas that you don't like,
+[04:53] and add your ideas onto it, and then you can probably finalize that storyboard.
+[04:56] Or the second way is you can create the storyboard yourself and ask Claude to critique it.
+[05:01] Now, since the video that I'm actually editing over here is the intro of the video that you
+[05:05] just saw, I thought it was better that we came up with a custom storyboard initially
+[05:09] and asked Claude for suggestions.
+[05:11] Now, for example, remember this frame where we added a few elements on Claude while I was
+[05:15] talking?
+[05:15] I had to manually write what exactly to add on the screen and this is what the storyboarding
+[05:20] of that part actually looked like.
+[05:21] And after that comes a line where I go, I can put text in front of me like this and
+[05:26] I can also take it behind me like this.
+[05:28] And here, I basically had to describe what exactly I wanted to happen on screen while
+[05:33] I was saying these lines, which is, I want a text to come in front of me and I want
+[05:36] the text to go behind me.
+[05:37] And I repeated this process for the entire script.
+[05:40] And once I was done with my inputs, I asked Claude to give me suggestions and after a few
+[05:44] loops of iterations, we had the final storyboard ready.
+[05:48] And finally, we move on to step six, the editing.
+[05:50] Here's my prompt.
+[05:51] Using the storyboard that I finalized above, my script and the art style create the final
+[05:57] video for me.
+[05:58] That's it.
+[05:59] A super simple prompt.
+[06:00] Now, before sending this prompt, I'll just make sure that I've chosen the right
+[06:03] model.
+[06:04] At the time of recording this video, Opus 5.5 is the best model for this use case.
+[06:08] So I'm going to set it to Opus 5.5 and I will execute this at medium effort.
+[06:12] You usually don't need anything more than medium, but high effort sometimes can give
+[06:16] you better outputs.
+[06:17] Now, to get an output, it can take anywhere between 20 minutes to maybe 90 minutes as
+[06:22] well, depending on the kind of effort that Claude needs to put in order to generate
+[06:25] your output.
+[06:26] So if your video was, let's say, 60 seconds long and that's the video that
+[06:30] you wanted to get animated, if the animations were super simple and just had
+[06:34] basic text, it would take only about 20 to 25 minutes.
+[06:36] But if you had much more complex animations and things like that, it would take much
+[06:41] longer.
+[06:41] Also, another recommendation of mine would be to avoid putting videos longer than
+[06:46] one minute to two minutes into Claude directly.
+[06:49] Do it in smaller chunks and edit in smaller chunks rather than giving it long videos.
+[06:54] Now, this is the part where most people stop.
+[06:56] You see the first draft and you either use it or you give up.
+[06:59] The key is to keep iterating.
+[07:01] The first draft is only a first draft.
+[07:03] If you see here, we've gone through multiple changes and iteration cycles to get the
+[07:07] output that we wanted.
+[07:09] Just see the amount of chat that we had to go through.
+[07:11] This feedback process, this back and forth loop between you and Claude is critical
+[07:15] to get an output that is production ready and this is where your judgment comes into play.
+[07:20] Now, here's a bonus tip.
+[07:21] We've created a Claude skill called AE Builder which converts these MP4
+[07:25] outputs into editable After Effects files.
+[07:27] We've linked it in the description for you to install it and just install it as a new skill.
+[07:31] If you're unfamiliar with that, we have an entire video and everything you need to know
+[07:35] about Claude skills.
+[07:36] You can learn more about how to install a skill over there.
+[07:38] If you want to go one step further, you can also connect Claude to Premiere Pro by creating a custom
+[07:43] MCP.
+[07:43] So I can just go on to Claude and I can say that create a custom MCP that connects
+[07:49] Claude code onto my Premiere Pro which lets me edit my videos on Premiere.
+[07:54] Now Claude is going to ask you for some permissions for the integration.
+[07:57] You just need to click allow and authorize on all of these.
+[08:00] And your Premiere Pro and Claude code is also connected.
+[08:02] Now, what this allows you to do is you can control Premiere Pro using Claude directly.
+[08:07] You can just go to Claude and say, hey, I want you to create a new project and paste this video
+[08:12] and it'll paste that video for you.
+[08:14] You can add captions onto your video.
+[08:16] You can adjust the sound levels.
+[08:17] Basically, whatever you do on Premiere Pro manually,
+[08:19] you can use Claude in order to do the same thing but faster.
+[08:22] And with that, you can now edit all Claude outputs directly on Premiere Pro or even After Effects.
+[08:28] Video creation has just gone through a fundamental shift.
+[08:31] I can get a 60 second Instagram real edited by Claude in under 30 minutes and less than $2.
+[08:36] The time, money and technical skills required to turn an idea into a finished video are completely
+[08:41] collapsing.
+[08:42] You can create 10 versions of the same video, test them, iterate on what works and do all of it
+[08:47] in a fraction of the time it used to take.
+[08:49] But here's the interesting part.
+[08:51] I don't think this makes creativity less valuable.
+[08:53] I think it makes your creativity more valuable because when execution becomes cheap,
+[08:57] ideas become the differentiator.
+[08:58] Your taste, your judgment, your ability to know what looks good, what feels right
+[09:03] and what will make someone stop scrolling.
+[09:05] Claude can create the video, but it doesn't know what you want to say.
+[09:09] And that's the crazy part about where we are headed.
+[09:11] You don't need to be an editor, animator or motion designer to bring an idea to life anymore.
+[09:15] You just need the idea, the taste to recognize a great output
+[09:19] and the judgment to keep iterating until you get there.
+[09:21] The tools are becoming insanely powerful and that means the ceiling for what a
+[09:26] single creator can do has never been higher.

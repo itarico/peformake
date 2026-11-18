@@ -1,0 +1,262 @@
+idioma: pt
+[00:00] O GitHub virou o melhor lugar para conseguir vantagem competitiva real na era dos agentes.
+[00:05] As ferramentas que todo mundo vai usar daqui a seis meses estão disponíveis lá hoje de graça.
+[00:10] Então, eu separei 15 repositórios mais relevantes do momento e organizei em seis blocos,
+[00:15] do mais fundamental ao mais divertido.
+[00:17] Tem sistema operacional com agente embutido, agente que mexe no seu celular,
+[00:22] scanner de segurança da NVIDIA e CRM que trabalha sozinho.
+[00:26] E por fim, como transformar tudo isso em render? Então fica comigo até o final desse vídeo.
+[00:31] O primeiro bloco é a base, eu não poderia começar diferente.
+[00:35] O primeiro é o Deepsea Harness, que foi lançado no dia 13 de agosto de 2026.
+[00:40] Em menos de um mês, já passou de 215 mil estrelas e nas primeiras 48 horas ele já tinha 100 mil estrelas.
+[00:46] Ele foi considerado o repositório que mais cresceu na história do GitHub.
+[00:50] E ele faz uma coisa que o Cloud Code e o Codex não fazem,
+[00:53] que é deixar você customizar o seu próprio Harness.
+[00:56] E o lema dele é tudo é plugin, modelo, ferramentas, log de sessão
+[01:01] e até mesmo o loop do agente são peças que você troca por configuração.
+[01:05] Na prática você pode rodar um modelo de ar que você quiser,
+[01:08] pode ser da Deepsea, da OpenAI, da Anthropiq,
+[01:10] o modelo local na sua máquina ou centenas de outros via OpenRouter.
+[01:14] E o que não existir você pode criar um plugin para isso, inclusive personalizar a interface.
+[01:20] Nós temos um vídeo aqui no canal fazendo um passo a passo de como instalar o Deepsea Harness
+[01:25] e também como utilizá-lo.
+[01:27] Vou pedir para deixar aparecendo aqui na tela para você.
+[01:29] No Cloud Code você aproxima isso com Rooks e Skills, mas a estrutura interna continua fechada.
+[01:34] Já no Deepsea Harness você altera o funcionamento de fato,
+[01:37] mas atenção, ele ainda está em preview, então alguma estabilidade ainda pode acontecer.
+[01:42] Mas se você é uma pessoa criativa ou então que gosta de ter tudo ao seu controle
+[01:46] ou que gosta de saber como as coisas funcionam, esse pode ser o seu laboratório.
+[01:51] O segundo é o Walmart distribuição Linux do DHH, criador do Ruby on Rails.
+[01:56] Ele combina o Arch Linux com agentes de A, já são quase 40 mil estrelas no GitHub.
+[02:01] O Walmart entrega o relatório do Crash para o seu agente de agnoticar.
+[02:05] Codex, Cloud Code, Gemini, o que você escolheram.
+[02:08] A versão 4, de 14 de agosto de 2026, vem com nove agentes pré-configurados.
+[02:14] E o uso de cada um aparece na barra de status.
+[02:17] A versão 4.0, 0.3 saiu no dia 8 de setembro e ele tem financiamento sério por trás.
+[02:23] A Fundação Omakon já passou de 13 milhões de dólares em caixa.
+[02:27] E além disso, ele tem mais de 18 milhões de dólares prometidos por patronos
+[02:31] como Adele, Shopify e A Stripe.
+[02:33] Se você nunca usou o Linux, saiba que a curva de aprendizado é um pouco extensa.
+[02:37] Mas se você já utilizou e gosta de inteligência artificial, então vale muito a pena conhecer.
+[02:43] Fechando a base, um que surpreende é o Phone Harness.
+[02:46] Ele foi criado pelo Shampooana, que saiu da Browser Use para fazer isso
+[02:50] e conecta o agente a um celular de verdade.
+[02:52] Muita coisa só acontece no celular, mas muitos aplicativos não possuem API.
+[02:57] Com esse repositório, o agente vê a tela, toca, digita e desliza a página.
+[03:02] No iPhone, ele faz via experimento do MacOS e no Android via ADB,
+[03:07] sem jailbreak e sem instalar nada no aparelho.
+[03:10] O uso óbvio é qualidade, um agente testando cadastro, um boarding e check-out
+[03:14] num aparelho real, tirando print de onde trava.
+[03:17] Todo time devia fazer quase nenhum faz.
+[03:20] Mas existem alguns limites, não tem Face ID, não tem câmera e não tem multitalk.
+[03:25] E vídeo com DRM aparece preto.
+[03:27] Mas a direção é clara, os agentes estão saindo de responder uma pergunta
+[03:32] para operar as ferramentas.
+[03:33] Esse é um projeto de uma pessoa só com um mês de vida
+[03:36] que já está quase batendo 2.700 estrelas no GitHub.
+[03:39] O segundo bloco são os ambientes para rodar vários agentes ao mesmo tempo.
+[03:44] E o quarto repositório é o Hurder para quem vive no terminal.
+[03:48] É o seu terminal normal, mas um painel lateral com os agentes rodando
+[03:52] e os workspaces deles, organizados como pastas de projeto.
+[03:56] Você divide os painéis, vê tudo na mesma tela e ele salva o estado.
+[04:00] Fecha, abre de novo e o layout está lá, com os agentes retomando de onde pararam.
+[04:05] É um binário único em Rush, sem Electron, com uns 20 megabytes
+[04:09] e decolou 37 mil estrelas, mais de mil plugins da comunidade.
+[04:13] E o criador, John Chalick, entrou na Y Combinator.
+[04:16] O quinto é o Orca da Stable EA, que já bateu 65 mil estrelas no GitHub.
+[04:22] Eles chamam de ADE, Ambiente de Desenvolvimento para Agentes.
+[04:26] É basicamente o que o VS Code seria se ele tivesse nascido para agentes GA.
+[04:31] Você manda um prompt para 5 agentes de uma vez.
+[04:34] Cada um roda um Work Tree isolado com Git em paralelo, sem um interferir no código do outro.
+[04:41] Tem App Compendium para celular, tem CLI própria e tem um design mode.
+[04:45] Você clica num elemento da tela e ele manda um HTML, um CSS e um print para o agente GA.
+[04:51] Ele é compatível com MacOS, Windows e Linux.
+[04:55] Se você gostou da ideia do Herder, mas não gosta de mexer no terminal, o Orca é pra você.
+[05:00] E antes de seguirmos para os próximos repositórios, eu quero fazer um convite especial
+[05:04] para entrar na comunidade Maestros da EA.
+[05:07] Lá nós ensinamos tudo que sabemos sobre inteligência artificial e automação.
+[05:11] Temos diversos cursos dentro da comunidade e sempre estamos trazendo novidades,
+[05:15] além de termos aplicativos, skills prontes para você copiar e usar,
+[05:20] além de muito mais live, semanal, suporte técnico diário.
+[05:24] Se você quiser saber mais e entrar na comunidade,
+[05:26] é só clicar no link na descrição desse vídeo.
+[05:28] Agora vamos para o bloco mais importante do vídeo, a qualidade e a segurança.
+[05:33] O sexto é o Clodex Loop, uma skil para clode code e clodex.
+[05:37] Em breve nós vamos trazer um vídeo completo sobre ela.
+[05:40] E ele resolve um problema muito conhecido.
+[05:42] A EA é péssima para avaliar o próprio trabalho.
+[05:45] Então uma EA executa o trabalho e uma segunda EA vem para avaliar
+[05:50] e dar uma nota para o resultado final.
+[05:52] E ela funciona em quatro fases.
+[05:54] A primeira é o reconhecimento com busca na web.
+[05:57] Em seguida ela faz perguntas para você.
+[05:59] E depois uma revisão adversarial do plano em que o clode e o codex se alternam em até cinco rodadas.
+[06:06] E por fim um executa e o outro inspeciona.
+[06:09] E a regra de ouro desse sistema, um grande diferencial,
+[06:12] é que o modelo que constrói nunca é o modelo que dá a nota.
+[06:16] Dessa forma você ganha um par de olhos, gasta menos token
+[06:19] e quebra o ciclo de construir, quebrar e iterar.
+[06:22] O sétimo e não menos importante é da NVid se chama Skill Spectre
+[06:26] e tem 17 mil estrelas no GitHub.
+[06:28] Esse eu considero um repositório obrigatório.
+[06:31] Hoje todo mundo está lá, Skill e servidor mcp do GitHub.
+[06:34] Só que Skill não é só texto.
+[06:36] Ela pode trazer scripts, dependências, hooks e acesso a ferramentas.
+[06:40] E o risco é real.
+[06:42] Em fevereiro de 2026 a SNEK analisou quase 4 mil skills publicadas.
+[06:47] Mais de um terço tinham falhas de segurança
+[06:49] e 76 eram maliciosas de propósito.
+[06:52] O Skill Spectre escaneia antes de você instalar.
+[06:55] São 71 padrões em 17 categorias de prompt injection a exfiltração de dados.
+[07:00] Seu arquivo for sensível você roda com a flag no LLM.
+[07:05] E a análise fica só na sua máquina.
+[07:07] E o projeto está ativo.
+[07:09] A versão 2.11 saiu em 28 de agosto e a 2.11.1 no dia 7 de setembro de 2026.
+[07:16] A regra é uma só.
+[07:18] Antes de dar uma ferramenta ao agente, escanei a ferramenta.
+[07:22] O oitavo é para texto.
+[07:23] O No Way Eyes Lop do Peter Young com quase 8 mil estrelas no GitHub.
+[07:28] O texto de A costuma vir com a gramática certa mas com uma marca reconhecível.
+[07:32] Polido demais, simétrico demais e o clássico.
+[07:35] Não é X, é Y.
+[07:37] O leitor percebe e confia menos, mesmo sem saber explicar o porquê.
+[07:42] A Skill funciona como um editor.
+[07:44] Ela identifica mais de 20 padrões,
+[07:46] remove um por um preservando a sua voz.
+[07:49] E no fim lista o que mudou.
+[07:51] Também tem um modo que só a audita aponta os trechos sem reescrever.
+[07:55] E ela funciona em vários harness, como o CodeCode, o Codex e o Cursor.
+[08:00] E o jeito certo de usar é você mesmo escrever o texto e depois passar pela Skill.
+[08:05] Assim ela vai fazer o colimento, mas sem tirar a sua identidade.
+[08:09] No quarto bloco nós temos os dados e o nono repositório é o N-Doc da FireCrawl
+[08:14] com 21 mil estrelas no GitHub.
+[08:16] É uma biblioteca em Rust que converte o Word, PowerPoint, Excel, PDF em Markdown,
+[08:22] que é um formato que a inteligência artificial adora.
+[08:24] Os números vêm da própria FireCrawl, então valem um pé atrás.
+[08:28] Mas são impressionantes.
+[08:29] Mediana de 4,4 ms por documento.
+[08:33] Pra você ter uma ideia, o LibraryOffice da mesma tarefa leva a mais de 1.100.
+[08:37] Foi a única ferramenta que converteu os 14 formatos testados
+[08:41] e ficou em primeiro em todos eles na avaliação a cegas feita por um juiz de A.
+[08:46] Se você tem milhares de documentos antigos para ir a trabalhar,
+[08:49] então essa é a ferramenta ideal.
+[08:51] O décimo é o Archfile que já tem 56 mil estrelas
+[08:54] e foi o repositório que mais cresceu nessa semana no GitHub.
+[08:58] Ele é uma Skill, o agente leu seu codebase
+[09:01] e o Archfile transforma tudo em um mapa visual, interativo e compartilhável.
+[09:06] É o único arquivo HTML com animações mostrando o fluxo dos dados.
+[09:10] São cinco tipos de diagrama, de arquitetura, a sequência
+[09:14] e exporta em png, svg e vídeo.
+[09:18] É perfeito para aquele codebase que aí a escreveu quase inteiro
+[09:22] e para explicar o sistema para quem é menos técnico.
+[09:24] O décimo primeiro é o CRM da Comp.EI.
+[09:27] É um CRM open source feito para agentes
+[09:30] e já passou de 10 mil estrelas no GitHub.
+[09:32] O problema de todo CRM é que ele depende de você
+[09:35] e ele vira um arquivo que ninguém abre com receita esquecida lá dentro.
+[09:39] Mas aqui essa lógica é invertida.
+[09:42] O CRM passa a ser o ambiente de trabalho do agente.
+[09:45] Ele pesquisa contatos, enriquece os dados, agende os próprios follow-ups
+[09:50] e mantém as notas sozinho.
+[09:51] Cada contato tem uma aba mostrando o que a gente fez
+[09:54] e por que inclusive os leads que ele descartou.
+[09:58] Evidência forte, ele grava.
+[10:00] Evidência fraca, vira sugestão para um humano decidir.
+[10:03] E a minha sugestão é que você não sai correndo
+[10:05] para substituir os salesforce ou então um CRM que você utilize.
+[10:09] Pelo contrário, você faça um teste pequeno
+[10:11] com o pipeline dos seus leads mais aquecidos
+[10:14] e peça para esse agente acompanhar e monitorar.
+[10:17] Ele instala com BUN e DOCKER.
+[10:18] Não é uma instalação super rápida com um clique,
+[10:21] mas é um produto bem maduro.
+[10:22] O quinto bloco é o vídeo.
+[10:24] E o décimo segundo é o Open Montage.
+[10:26] É um estúdio de produção inteiro
+[10:28] dentro do seu assistente de código com 57 mil estrelas.
+[10:32] Ele te guia por pesquisa, proposta, roteiro e store-bod.
+[10:36] E pede a sua aprovação para cada decisão criativa.
+[10:39] Para tirar o máximo, você precisa da pay de modelos de topo
+[10:42] com Ocidense 2.5 ou Vio,
+[10:44] mas dá para começar de graça com o Remotion, Hyper Frames
+[10:48] e banco de imagens livre.
+[10:49] São 12 pipelines, um por formato explicativo, animado,
+[10:53] fábrica de clips, screen demo, talking head,
+[10:56] documentário do Bodge.
+[10:58] É uma porta de entrada completa para vídeo com EA.
+[11:01] O décimo terceiro é o video-use
+[11:03] da equipe da Browser Use com 24 mil estrelas.
+[11:06] É a edição de vídeo conversando com a gente.
+[11:09] Você coloca o material bruto numa pasta e pede.
+[11:12] Ele corta vícios de linguagem, tira espaço morto,
+[11:15] legenda, faz a cor, renderiza
+[11:17] e ainda confere o próprio corte, até três vezes se achar problema.
+[11:21] O diferencial é que o modelo não assiste o vídeo, ele lê.
+[11:25] Ele faz uma transcrição com time-stamp por palavra.
+[11:28] Por isso, o corte é cirúrgico.
+[11:30] Um aviso importante, a transcrição usa a API do Eleven Labs,
+[11:33] que é paga depois de uma cota pequena.
+[11:36] Então, o repositório é grátis, mas a dependência não.
+[11:39] E a minha sugestão é que você não sai correndo
+[11:40] e automatize um canal inteiro da noite para o dia.
+[11:43] Escolha o formato repetível,
+[11:45] por exemplo, um vídeo longo cortado em três partes.
+[11:48] E uma vez que esse sistema estiver funcionando,
+[11:50] ou seja, o vídeo longo cortado em três shorts,
+[11:52] que façam sentido, que tem um início, um meio e um fim,
+[11:55] aí você escala ou, então, vende esse serviço.
+[11:58] É algo que tem bastante demanda.
+[12:00] Agora, vamos ao último bloco.
+[12:01] O décimo quarto é o OmniRoute com 63 mil estrelas no GitHub.
+[12:05] Ele é um Gateway de ARC que funciona sem custo.
+[12:08] Ele é um ponto único de acesso com mais de 350 provedores,
+[12:11] sendo que 150 deles são gratuitos.
+[12:14] E ele funciona sem chave nenhuma logo na instalação.
+[12:17] Ele tem um recurso chamado Combo.
+[12:19] É uma fila de modelos na ordem que você preferir.
+[12:22] Acabou o limite do primeiro?
+[12:23] Ele pula para o próximo sozinho.
+[12:25] Dá para montar uma fila só de modelos grátis
+[12:28] e escolher como ele distribui as chamadas.
+[12:31] São 19 estratégias prontas, tipo prioridade,
+[12:34] rotizio ou menor custo.
+[12:35] E se você quer os modelos mais fortes,
+[12:37] tipo Cloud ou GPT, também dá.
+[12:39] Você conecta o OmniRoute no Cloud Code,
+[12:42] no Codex ou no Cursor e define quem vem primeiro na fila.
+[12:46] Dos 15 repositórios de hoje,
+[12:48] essa sua prioridade é gastar o mínimo possível
+[12:50] como é esse.
+[12:51] E, por último, o Cloud of Tanks.
+[12:53] Tem menos de 400 estrelas, quase ninguém conhece,
+[12:56] mas é impressionante.
+[12:57] O Kevin Lee criou um jogo no estilo World of Tanks
+[13:00] em 3.js puro,
+[13:02] usando um pipeline de agentes Codex e Codex.
+[13:05] São mais de 160 Tanks,
+[13:07] 30 mapas destrutíveis,
+[13:09] Killcam de Hylx
+[13:11] e Multiplayer no navegador.
+[13:12] Em julho começou com 121 Tanks e 20 mapas.
+[13:16] Em 6 semanas cresceu tudo isso.
+[13:18] É a prova viva do que dá para construir com a gente hoje.
+[13:21] Vale experimentar.
+[13:23] Recapitulando os 6 blocos que você viu nesse vídeo.
+[13:25] A base, os ambientes, a qualidade e segurança.
+[13:29] Dados, vídeo, grátis e diversão,
+[13:31] classificando esses 15 repositórios.
+[13:34] E a receita de 3 passos.
+[13:36] Instala em montão fluxo pequeno.
+[13:38] Faça funcionar até gerar valor e se pergunta.
+[13:41] Outras pessoas pagariam por isso?
+[13:43] Testar app, manter CRM vivo,
+[13:45] editar vídeo de nicho.
+[13:47] Tudo isso pode virar serviço de assinatura.
+[13:49] Para saber se vai dar certo, você precisa começar.
+[13:52] Me diz aqui qual desses repositórios
+[13:54] você vai instalar primeiro.
+[13:56] E se você gostou desse vídeo,
+[13:57] eu quero te pedir para se inscrever nesse canal,
+[13:59] deixar o seu like e o seu hype
+[14:01] e compartilhar com seus amigos.
+[14:03] Um grande abraço e até o próximo vídeo.

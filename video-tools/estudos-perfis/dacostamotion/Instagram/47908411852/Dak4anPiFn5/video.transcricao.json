@@ -1,0 +1,560 @@
+{
+ "arquivo": "video.mp4",
+ "idioma": "en",
+ "duracao": 27.703,
+ "segmentos": [
+  {
+   "inicio": 0.0,
+   "fim": 3.48,
+   "texto": "One of the things that helped a lot in the process of creating this manifesto",
+   "palavras": [
+    {
+     "texto": " One",
+     "inicio": 0.0,
+     "fim": 0.18,
+     "prob": 0.591
+    },
+    {
+     "texto": " of",
+     "inicio": 0.18,
+     "fim": 0.24,
+     "prob": 0.91
+    },
+    {
+     "texto": " the",
+     "inicio": 0.24,
+     "fim": 0.32,
+     "prob": 0.977
+    },
+    {
+     "texto": " things",
+     "inicio": 0.32,
+     "fim": 0.48,
+     "prob": 0.975
+    },
+    {
+     "texto": " that",
+     "inicio": 0.48,
+     "fim": 0.74,
+     "prob": 0.966
+    },
+    {
+     "texto": " helped",
+     "inicio": 0.74,
+     "fim": 1.2,
+     "prob": 0.947
+    },
+    {
+     "texto": " a",
+     "inicio": 1.2,
+     "fim": 1.6,
+     "prob": 0.477
+    },
+    {
+     "texto": " lot",
+     "inicio": 1.6,
+     "fim": 1.68,
+     "prob": 0.99
+    },
+    {
+     "texto": " in",
+     "inicio": 1.68,
+     "fim": 1.84,
+     "prob": 0.76
+    },
+    {
+     "texto": " the",
+     "inicio": 1.84,
+     "fim": 1.88,
+     "prob": 0.891
+    },
+    {
+     "texto": " process",
+     "inicio": 1.88,
+     "fim": 2.06,
+     "prob": 0.69
+    },
+    {
+     "texto": " of",
+     "inicio": 2.06,
+     "fim": 2.32,
+     "prob": 0.968
+    },
+    {
+     "texto": " creating",
+     "inicio": 2.32,
+     "fim": 2.54,
+     "prob": 0.385
+    },
+    {
+     "texto": " this",
+     "inicio": 2.54,
+     "fim": 2.74,
+     "prob": 0.505
+    },
+    {
+     "texto": " manifesto",
+     "inicio": 2.74,
+     "fim": 3.48,
+     "prob": 0.864
+    }
+   ]
+  },
+  {
+   "inicio": 3.48,
+   "fim": 8.58,
+   "texto": "was that the team, the people who were involved, already had consciousness",
+   "palavras": [
+    {
+     "texto": " was",
+     "inicio": 3.48,
+     "fim": 3.98,
+     "prob": 0.641
+    },
+    {
+     "texto": " that",
+     "inicio": 3.98,
+     "fim": 4.66,
+     "prob": 0.914
+    },
+    {
+     "texto": " the",
+     "inicio": 4.66,
+     "fim": 4.88,
+     "prob": 0.935
+    },
+    {
+     "texto": " team,",
+     "inicio": 4.88,
+     "fim": 5.24,
+     "prob": 0.888
+    },
+    {
+     "texto": " the",
+     "inicio": 5.54,
+     "fim": 5.66,
+     "prob": 0.82
+    },
+    {
+     "texto": " people",
+     "inicio": 5.66,
+     "fim": 6.04,
+     "prob": 0.987
+    },
+    {
+     "texto": " who",
+     "inicio": 6.04,
+     "fim": 6.24,
+     "prob": 0.182
+    },
+    {
+     "texto": " were",
+     "inicio": 6.24,
+     "fim": 6.64,
+     "prob": 0.971
+    },
+    {
+     "texto": " involved,",
+     "inicio": 6.64,
+     "fim": 7.28,
+     "prob": 0.993
+    },
+    {
+     "texto": " already",
+     "inicio": 7.66,
+     "fim": 7.76,
+     "prob": 0.388
+    },
+    {
+     "texto": " had",
+     "inicio": 7.76,
+     "fim": 7.98,
+     "prob": 0.922
+    },
+    {
+     "texto": " consciousness",
+     "inicio": 7.98,
+     "fim": 8.58,
+     "prob": 0.475
+    }
+   ]
+  },
+  {
+   "inicio": 8.58,
+   "fim": 12.8,
+   "texto": "and even worked with motion, so it was much easier",
+   "palavras": [
+    {
+     "texto": " and",
+     "inicio": 8.58,
+     "fim": 9.34,
+     "prob": 0.063
+    },
+    {
+     "texto": " even",
+     "inicio": 9.34,
+     "fim": 9.62,
+     "prob": 0.711
+    },
+    {
+     "texto": " worked",
+     "inicio": 9.62,
+     "fim": 9.94,
+     "prob": 0.945
+    },
+    {
+     "texto": " with",
+     "inicio": 9.94,
+     "fim": 10.4,
+     "prob": 0.806
+    },
+    {
+     "texto": " motion,",
+     "inicio": 10.4,
+     "fim": 10.86,
+     "prob": 0.376
+    },
+    {
+     "texto": " so",
+     "inicio": 11.24,
+     "fim": 11.64,
+     "prob": 0.815
+    },
+    {
+     "texto": " it",
+     "inicio": 11.64,
+     "fim": 11.98,
+     "prob": 0.978
+    },
+    {
+     "texto": " was",
+     "inicio": 11.98,
+     "fim": 12.06,
+     "prob": 0.984
+    },
+    {
+     "texto": " much",
+     "inicio": 12.06,
+     "fim": 12.3,
+     "prob": 0.81
+    },
+    {
+     "texto": " easier",
+     "inicio": 12.3,
+     "fim": 12.8,
+     "prob": 0.979
+    }
+   ]
+  },
+  {
+   "inicio": 12.8,
+   "fim": 15.4,
+   "texto": "because they already had the consciousness of what they had to deliver",
+   "palavras": [
+    {
+     "texto": " because",
+     "inicio": 12.8,
+     "fim": 13.26,
+     "prob": 0.359
+    },
+    {
+     "texto": " they",
+     "inicio": 13.26,
+     "fim": 13.44,
+     "prob": 0.947
+    },
+    {
+     "texto": " already",
+     "inicio": 13.44,
+     "fim": 13.52,
+     "prob": 0.941
+    },
+    {
+     "texto": " had",
+     "inicio": 13.52,
+     "fim": 13.68,
+     "prob": 0.957
+    },
+    {
+     "texto": " the",
+     "inicio": 13.68,
+     "fim": 13.76,
+     "prob": 0.279
+    },
+    {
+     "texto": " consciousness",
+     "inicio": 13.76,
+     "fim": 14.14,
+     "prob": 0.844
+    },
+    {
+     "texto": " of",
+     "inicio": 14.14,
+     "fim": 14.34,
+     "prob": 0.876
+    },
+    {
+     "texto": " what",
+     "inicio": 14.34,
+     "fim": 14.52,
+     "prob": 0.933
+    },
+    {
+     "texto": " they",
+     "inicio": 14.52,
+     "fim": 14.76,
+     "prob": 0.812
+    },
+    {
+     "texto": " had",
+     "inicio": 14.76,
+     "fim": 14.98,
+     "prob": 0.871
+    },
+    {
+     "texto": " to",
+     "inicio": 14.98,
+     "fim": 15.1,
+     "prob": 0.995
+    },
+    {
+     "texto": " deliver",
+     "inicio": 15.1,
+     "fim": 15.4,
+     "prob": 0.698
+    }
+   ]
+  },
+  {
+   "inicio": 15.4,
+   "fim": 20.78,
+   "texto": "I had to deliver the storyboard, I had to deliver the materials separately",
+   "palavras": [
+    {
+     "texto": " I",
+     "inicio": 15.4,
+     "fim": 15.84,
+     "prob": 0.048
+    },
+    {
+     "texto": " had",
+     "inicio": 15.84,
+     "fim": 16.0,
+     "prob": 0.546
+    },
+    {
+     "texto": " to",
+     "inicio": 16.0,
+     "fim": 16.12,
+     "prob": 0.997
+    },
+    {
+     "texto": " deliver",
+     "inicio": 16.12,
+     "fim": 16.42,
+     "prob": 0.965
+    },
+    {
+     "texto": " the",
+     "inicio": 16.42,
+     "fim": 16.7,
+     "prob": 0.518
+    },
+    {
+     "texto": " storyboard,",
+     "inicio": 16.7,
+     "fim": 17.44,
+     "prob": 0.915
+    },
+    {
+     "texto": " I",
+     "inicio": 17.76,
+     "fim": 17.76,
+     "prob": 0.739
+    },
+    {
+     "texto": " had",
+     "inicio": 17.76,
+     "fim": 17.8,
+     "prob": 0.952
+    },
+    {
+     "texto": " to",
+     "inicio": 17.8,
+     "fim": 17.96,
+     "prob": 0.998
+    },
+    {
+     "texto": " deliver",
+     "inicio": 17.96,
+     "fim": 18.28,
+     "prob": 0.955
+    },
+    {
+     "texto": " the",
+     "inicio": 18.28,
+     "fim": 19.24,
+     "prob": 0.92
+    },
+    {
+     "texto": " materials",
+     "inicio": 19.24,
+     "fim": 20.44,
+     "prob": 0.474
+    },
+    {
+     "texto": " separately",
+     "inicio": 20.44,
+     "fim": 20.78,
+     "prob": 0.446
+    }
+   ]
+  },
+  {
+   "inicio": 20.78,
+   "fim": 22.34,
+   "texto": "so it was much easier",
+   "palavras": [
+    {
+     "texto": " so",
+     "inicio": 20.78,
+     "fim": 21.24,
+     "prob": 0.274
+    },
+    {
+     "texto": " it",
+     "inicio": 21.24,
+     "fim": 21.34,
+     "prob": 0.986
+    },
+    {
+     "texto": " was",
+     "inicio": 21.34,
+     "fim": 21.6,
+     "prob": 0.987
+    },
+    {
+     "texto": " much",
+     "inicio": 21.6,
+     "fim": 21.84,
+     "prob": 0.929
+    },
+    {
+     "texto": " easier",
+     "inicio": 21.84,
+     "fim": 22.34,
+     "prob": 0.99
+    }
+   ]
+  },
+  {
+   "inicio": 22.34,
+   "fim": 27.34,
+   "texto": "When we have a team that already knows how it works in the process, everything becomes easier",
+   "palavras": [
+    {
+     "texto": " When",
+     "inicio": 22.34,
+     "fim": 22.76,
+     "prob": 0.563
+    },
+    {
+     "texto": " we",
+     "inicio": 22.76,
+     "fim": 22.96,
+     "prob": 0.953
+    },
+    {
+     "texto": " have",
+     "inicio": 22.96,
+     "fim": 23.18,
+     "prob": 0.988
+    },
+    {
+     "texto": " a",
+     "inicio": 23.18,
+     "fim": 23.32,
+     "prob": 0.933
+    },
+    {
+     "texto": " team",
+     "inicio": 23.32,
+     "fim": 23.56,
+     "prob": 0.993
+    },
+    {
+     "texto": " that",
+     "inicio": 23.56,
+     "fim": 23.76,
+     "prob": 0.821
+    },
+    {
+     "texto": " already",
+     "inicio": 23.76,
+     "fim": 24.06,
+     "prob": 0.97
+    },
+    {
+     "texto": " knows",
+     "inicio": 24.06,
+     "fim": 24.48,
+     "prob": 0.961
+    },
+    {
+     "texto": " how",
+     "inicio": 24.48,
+     "fim": 24.68,
+     "prob": 0.934
+    },
+    {
+     "texto": " it",
+     "inicio": 24.68,
+     "fim": 24.84,
+     "prob": 0.468
+    },
+    {
+     "texto": " works",
+     "inicio": 24.84,
+     "fim": 25.06,
+     "prob": 0.627
+    },
+    {
+     "texto": " in",
+     "inicio": 25.06,
+     "fim": 25.18,
+     "prob": 0.677
+    },
+    {
+     "texto": " the",
+     "inicio": 25.18,
+     "fim": 25.18,
+     "prob": 0.982
+    },
+    {
+     "texto": " process,",
+     "inicio": 25.18,
+     "fim": 25.72,
+     "prob": 0.996
+    },
+    {
+     "texto": " everything",
+     "inicio": 26.08,
+     "fim": 26.34,
+     "prob": 0.787
+    },
+    {
+     "texto": " becomes",
+     "inicio": 26.34,
+     "fim": 26.78,
+     "prob": 0.941
+    },
+    {
+     "texto": " easier",
+     "inicio": 26.78,
+     "fim": 27.34,
+     "prob": 0.978
+    }
+   ]
+  }
+ ]
+}

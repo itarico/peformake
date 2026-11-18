@@ -1,0 +1,71 @@
+1
+00:00:00,000 --> 00:00:02,660
+One of the coolest things about this project was the sound effects
+
+2
+00:00:02,660 --> 00:00:04,740
+which was done this way
+
+3
+00:00:04,740 --> 00:00:07,540
+we got the main part of the manifesto
+
+4
+00:00:07,540 --> 00:00:10,900
+and separated it into three parts
+
+5
+00:00:10,900 --> 00:00:14,220
+which was the bass, the piano
+
+6
+00:00:14,220 --> 00:00:20,400
+and also the beat, the beat that keeps the whole trio
+
+7
+00:00:20,400 --> 00:00:24,800
+and with these three parts we can extract a lot of information
+
+8
+00:00:24,800 --> 00:00:28,840
+the piano separated a touch there
+
+9
+00:00:28,840 --> 00:00:30,260
+a specific beat
+
+10
+00:00:30,800 --> 00:00:33,720
+and with this we built the sound effects
+
+11
+00:00:33,720 --> 00:00:37,700
+which was taking some parts of the track
+
+12
+00:00:37,700 --> 00:00:40,020
+of the beat, of the bass
+
+13
+00:00:40,020 --> 00:00:42,040
+and we modified it
+
+14
+00:00:42,040 --> 00:00:43,600
+some of them we extended
+
+15
+00:00:43,600 --> 00:00:45,420
+others we reduced
+
+16
+00:00:45,420 --> 00:00:48,520
+so we could extract the maximum of that audio there
+
+17
+00:00:48,520 --> 00:00:51,360
+we managed to get some glitches
+
+18
+00:00:53,760 --> 00:00:57,440
+and with that we built our sound effects

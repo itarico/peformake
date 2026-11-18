@@ -1,0 +1,10 @@
+idioma: pt
+[00:00] Agora dá pra usar o Cloud Code sem pagar a assinatura.
+[00:02] Um cara no GitHub criou Free Cloud Code, e ele já passou de 67 mil estrelas.
+[00:08] Funciona assim, ele fica no meio do caminho e manda os pedidos do Cloud Code pra outros modelos.
+[00:13] São 61 provedores e os planos gratuitos somam mais de 1 bilhão de tokens por mês.
+[00:18] Deixa claro, não é um modelo da Antropoc de Graça, é a interface do Cloud Code rodando
+[00:23] com outros modelos.
+[00:24] A parte boa, quando um provedor cai ou bate em limite, ele troca sozinho pro próximo.
+[00:28] E funciona no Mac, Linux e Windows.
+[00:31] Se você quer testar, comenta grátis aqui embaixo e me segue, que eu te mando passo a passo completo.

@@ -1,0 +1,13 @@
+{
+ "id": "De6W6_hRjEP",
+ "title": "Video by melikazaghari",
+ "fulltitle": "Video by melikazaghari",
+ "channel": "melikazaghari",
+ "uploader": "Melika Zaghari",
+ "uploader_id": "16720870871",
+ "webpage_url": "https://www.instagram.com/reel/De6W6_hRjEP/",
+ "upload_date": "20261025",
+ "like_count": 1831,
+ "comment_count": 687,
+ "description": "FULL TUTORIAL ↓\n\n«Comment “XRAY” and I’ll send you the prompt.»\n\nHere’s how I created this X-RAY transition in DaVinci Resolve:\n\n1. Pick your frames\nTake a screenshot of the last frame of Clip 1 and the first frame of Clip 2.\n\n2. Create the X-RAY frames\nUpload both screenshots to ChatGPT or Nano Banana and use the X-RAY prompt.\nMake sure the original composition, lighting, colors and background stay unchanged.\n\n3. Duplicate both sides of the cut\nDuplicate a few frames from the end of Clip 1 and the beginning of Clip 2 and place them on a layer above.\n\n4. Isolate the subject\nUse Magic Mask to remove the background and keep only the main subject.\n\n5. Create the negative look\nGo to Curves and boost the exposure until you get that inverted / negative-style look.\n\n6. Change the blend mode\nSet the duplicated layer’s Composite Mode to Difference.\n\n7. Repeat on the second clip\nApply the same mask, exposure and Difference settings to the other side of the transition.\n\n8. Add the AI X-RAY frames\nPlace the generated X-RAY images next to their matching negative frames on both sides of the cut.\n\n9. Add sound design\nFinish it with a short whoosh, scan or impact SFX and sync it to the transition.\n\nAnd that’s it. ⚡️\n\n#davinciresolve #videoediting #transition"
+}

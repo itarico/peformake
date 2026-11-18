@@ -1,0 +1,671 @@
+idioma: pt
+[00:00] Bom, eu tenho uma notícia boa e uma notícia ruim.
+[00:02] A notícia boa é que, como talvez você já saiba,
+[00:04] os modelos mais avançados da Antropiq e da OpenAI
+[00:08] foram lançados há poucos dias
+[00:10] e eles já estão estourando todas as benchmarks,
+[00:13] ou seja, são os melhores modelos da atualidade.
+[00:15] E a notícia ruim é que enquanto todo mundo foca nesses lançamentos
+[00:19] no modelo mais recente, no modelo mais avançado,
+[00:22] esses modelos podem não ter relevância alguma pra você.
+[00:26] Eu tenho certeza que 80% das pessoas
+[00:28] que usam inteligência artificial no dia a dia
+[00:30] não precisam desses modelos.
+[00:32] Enquanto muitas pessoas ficam presas nesse hype
+[00:35] daquilo que é novidade, elas não focam naquilo que elas deveriam focar.
+[00:39] E a gente fala isso com muita propriedade,
+[00:40] porque a gente dá treinamentos pra empresas, consultorias, mentorias,
+[00:44] a gente tem uma comunidade de milhares de pessoas
+[00:46] e a gente vê que as pessoas estão muito focadas
+[00:49] em qual é o melhor modelo pra cada tarefa.
+[00:51] Será que eu devo usar o modelo da OpenAI?
+[00:54] Será que eu devo mudar pro Codex?
+[00:55] Será que eu devo mudar pro Cloud Code?
+[00:57] Já construir todos os meus agentes?
+[00:59] Cara, é muita ansiedade pra saber qual modelo,
+[01:02] qual empresa, qual ferramenta você vai usar.
+[01:05] E muito por conta desse hype das redes sociais,
+[01:07] que é natural, os lançamentos são legais,
+[01:09] são fogos de artifício que aparecem
+[01:11] e é legal você saber sobre isso,
+[01:13] mas existe um foco muito grande nesse tipo de coisa,
+[01:16] enquanto a própria estrutura dos seus próprios agentes,
+[01:20] das suas próprias skills, dos seus próprios fluxos de trabalho
+[01:23] ainda não estão devidamente configurados, construídos.
+[01:28] É mais ou menos como se você focasse no casamento
+[01:31] dos príncipes da Inglaterra
+[01:32] ao invés de melhorar coisas no seu próprio casamento.
+[01:35] É isso que está acontecendo com muita gente de IA hoje em dia,
+[01:38] que gosta de IA, que usa IA no dia a dia,
+[01:40] e que fica só pensando nos novos lançamentos,
+[01:43] mas nem constrói skills direito,
+[01:45] nem tem seus próprios agentes trabalhando 24 horas por dia,
+[01:49] nem construiu fluxos de trabalho
+[01:51] para rodarem todos os dias de maneira automatizada.
+[01:54] Então a ideia desse vídeo é tirar um pouco essa ansiedade
+[01:58] que o pai era no ar, de que você precisa sempre
+[02:00] estar usando o melhor modelo,
+[02:02] que vai entregar melhor performance para cada tipo de tarefa.
+[02:06] Se você não trabalha com inteligência artificial,
+[02:08] se você não é programador,
+[02:10] se você não constrói sistemas complexos,
+[02:14] você não precisa usar os melhores modelos,
+[02:17] até porque tem uma questão de eficiência de tokens de custo,
+[02:21] que é importante ser considerada.
+[02:22] Então a ideia desse vídeo é trazer o passo a passo
+[02:24] para você organizar a sua casa,
+[02:26] para você entender os princípios de como as pessoas
+[02:28] que usam IA de maneira eficiente
+[02:30] utilizam para realmente ter resultados com IA
+[02:33] e não ficar só gastando tokens com os modelos mais recentes.
+[02:37] E antes de começar a subir esses degraus,
+[02:39] eu quero que você entenda o seguinte,
+[02:40] não existe um modelo ideal para cada domínio,
+[02:44] para cada área.
+[02:45] Por quê?
+[02:46] Porque cada área tem uma quantidade de tarefas muito grande.
+[02:50] E se você tem o budget infinito,
+[02:54] se você tem tokens infinitos para gastar,
+[02:57] você pode usar o melhor modelo sempre.
+[02:59] Mas na maior parte das vezes,
+[03:00] você vai querer se preocupar com eficiência de tokens,
+[03:04] com custo-benefício.
+[03:06] Então ao invés de pensar,
+[03:07] ah, para tudo que é programação, eu vou usar esse modelo.
+[03:10] Para tudo que é design, eu vou usar esse outro modelo.
+[03:12] Para tudo que é pesquisa na internet,
+[03:14] eu vou usar esse outro modelo até essa outra ferramenta.
+[03:17] Geralmente essa concepção vem dos benchmarks.
+[03:19] Qual o melhor modelo para programação?
+[03:21] Qual o melhor modelo para construir sites?
+[03:23] Qual o melhor modelo para tarefas agênticas?
+[03:26] Mas isso não significa que todas as tarefas agênticas
+[03:29] precisam usar esse modelo.
+[03:31] Que todas as tarefas que você vai usar dentro do seu software,
+[03:35] dentro da construção dos seus projetos de SaaS,
+[03:37] vão precisar do melhor modelo sempre.
+[03:40] É importante você entender
+[03:41] que você pode escolher usar modelos mais baratos
+[03:45] para tarefas mais simples.
+[03:47] E muitas pessoas acabam usando esses modelos mais recentes,
+[03:50] que são obviamente mais caros,
+[03:52] para coisas banais,
+[03:54] para coisas que já faziam antes com os modelos anteriores.
+[03:56] Que não faz nenhum sentido.
+[03:57] Se estava funcionando antes,
+[03:59] com modelos mais baratos,
+[04:00] continue fazendo com os modelos mais baratos.
+[04:02] Agora, se você precisa subir o nível de complexidade,
+[04:05] se você precisa de uma entrega melhor
+[04:08] do que as entregas que você tem obtido
+[04:10] com os modelos anteriores,
+[04:11] aí sim você pode considerar fazer essa transição
+[04:14] para os modelos mais avançados.
+[04:16] E por consequência mais caros.
+[04:18] Agora a gente vai mapear os seus próximos passos
+[04:21] para que você que talvez não esteja obtendo os resultados
+[04:24] em produtividade,
+[04:25] em termos de output,
+[04:27] o que você consegue gerar com IA,
+[04:29] possa entender que esse processo
+[04:32] talvez não seja tão simples quanto você pensa,
+[04:35] mas pode gerar resultados muito melhores
+[04:37] do que você espera,
+[04:38] se você de fato sabe como fazer.
+[04:40] Bom, o primeiro estágio, o primeiro degrau,
+[04:42] é aquele em que você observa as coisas que você faz,
+[04:45] que poderiam ser feitas por IA,
+[04:47] muitas pessoas até hoje baixam documentos,
+[04:49] analisam documentos com IA,
+[04:51] e aí sobem na plataforma da empresa, por exemplo.
+[04:54] Que é uma coisa que poderia ser feita
+[04:56] não só de maneira muito mais simples,
+[04:59] sem a necessidade de fazer o download,
+[05:01] fazer o upload, etc.
+[05:02] Aí ela já controla o seu browser de maneira muito simples,
+[05:05] mas poderia ser feita de maneira agendada,
+[05:07] e a gente vai chegar nessa parte.
+[05:09] Mas muitas pessoas esperam de muito tempo do dia
+[05:12] com coisas que a IA poderia fazer por elas.
+[05:14] Então é importante você mapear quais coisas são essas.
+[05:17] E às vezes você não sabe ainda
+[05:19] quais coisas a IA consegue fazer por você,
+[05:21] talvez você não entenda ainda o nível que a IA chegou,
+[05:24] e acha que tem coisas que só você consegue fazer.
+[05:26] Mas mesmo para tarefas que você tem certeza
+[05:28] que só você consegue fazer,
+[05:29] porque são tarefas extremamente complexas,
+[05:32] tem o seguinte exercício,
+[05:34] quebre essa tarefa em muitas pequenas tarefas.
+[05:38] E aí depois de quebrar nessas sub-tarefas,
+[05:40] nessas mini etapas,
+[05:42] pense,
+[05:43] quais dessas mini etapas a IA poderia fazer por mim.
+[05:46] E às vezes você não vai se desvencelhar de todo aquele trabalho,
+[05:49] a IA não vai fazer 100% por você,
+[05:51] mas você pode ficar com 10%
+[05:53] ou com 20% enquanto a IA faz todo o resto.
+[05:55] Então pense na seguinte pergunta,
+[05:57] o que eu faço hoje que a IA não consegue fazer por mim?
+[06:00] E você deve focar nisso.
+[06:02] Isso é o seu diferencial.
+[06:04] Essa é a forma que você vai realmente construir
+[06:07] a sua carreira, a sua empresa,
+[06:09] o resto que a IA já faz.
+[06:11] Hoje em dia,
+[06:12] muitas pessoas, muitos concorrentes,
+[06:14] já estão fazendo com IA,
+[06:16] mesmo que você ainda não esteja.
+[06:18] Então para permitir que você foque naquilo que é mais fundamental,
+[06:21] deixa a IA fazer tudo aquilo que não é fundamental que você faz.
+[06:25] E esse primeiro momento é um aumento de descoberta,
+[06:27] em que você vai entendendo o que a IA pode fazer para você,
+[06:29] vai testando as possibilidades dentro das suas IAs,
+[06:33] vendo o que elas fazem bem e o que elas não fazem bem,
+[06:35] e você vai criando os seus workflows,
+[06:37] os seus pipeline,
+[06:39] os seus fluxos de trabalho com IA.
+[06:41] Vamos supor que eu tenho uma conta de Instagram.
+[06:43] E todos os dias eu posto um carro-cel e um vídeo gravado.
+[06:46] Vamos pensar, bom, mas uma conta de Instagram é uma coisa muito particular,
+[06:50] é muito criativa,
+[06:52] eu não acho que o IA consiga fazer isso por mim.
+[06:56] Mas isso é a gente começar a quebrar isso em etapas.
+[06:59] Bom, eu posto um carro-cel por dia.
+[07:01] Como eu faço a pesquisa do conteúdo que vai nesse carro-cel?
+[07:05] A IA consegue fazer isso por mim?
+[07:06] A gente tem hoje ferramentas de scraping,
+[07:08] que vasculham toda a internet, sites de notícias,
+[07:11] Instagram de concorrentes,
+[07:13] até chegar num resultado que você pode se inspirar
+[07:17] para falar a respeito.
+[07:18] Agora, e a produção do carro-cel?
+[07:20] Não, porque eu tenho um estilo muito particular,
+[07:22] eu tenho uma paleta de cores que eu gosto,
+[07:24] eu tenho uma fonte que eu gosto.
+[07:26] Tudo isso hoje é banal para a inteligência artificial.
+[07:29] Geração de imagens para carro-cel,
+[07:30] é uma coisa que você consegue imprimir a sua marca,
+[07:33] imprimir a sua identidade.
+[07:35] E aí, a IA vai conseguir replicar exatamente aquele estilo.
+[07:39] Existem formas mais baratas,
+[07:41] com templates prontos, editáveis, reconfiguráveis,
+[07:44] num PowerPoint, por exemplo.
+[07:45] Existem formas mais caras, que não são tão caras assim,
+[07:48] você vai gerando uma imagem por slide,
+[07:51] com as IAs mais avançadas,
+[07:52] com uma série de especificações sobre o seu layout.
+[07:56] E tudo isso você pode partir dos postes que você já fez.
+[07:59] Então, é só você enviar para aí as suas referências,
+[08:01] podem ser do seu Instagram ou de outros Instagrams,
+[08:05] para ele criar um manual de como gerar imagens similares
+[08:08] com as referências que você enviou.
+[08:10] E o legal é quando você começa a conectar tudo isso.
+[08:12] Então, eu consigo fazer imagens exatamente como eu quero
+[08:15] para os meus carro-céis com IA.
+[08:17] E consigo fazer pesquisa de conteúdo do jeito que eu quero.
+[08:19] Por que eu não conecto essas duas coisas?
+[08:21] Eu faço o scraping, eu pesquiso no internet o tema,
+[08:24] tenho um filtro para que seja um tema realmente alinhado
+[08:28] com o tipo de conteúdo que eu posto
+[08:30] e já queria o carro-cel automaticamente
+[08:32] e ele já é postado automaticamente.
+[08:34] Muitas empresas, muitas pessoas acham que não dá para fazer
+[08:37] um carro-cel que vai gerar engajamento com IA,
+[08:40] não dá para ter esse fluxo completamente automatizado.
+[08:42] Mas várias vezes a gente já construiu sistemas assim
+[08:44] para empresas e os resultados foram melhores
+[08:47] do que os resultados que eles estavam gerando manualmente.
+[08:50] E obviamente depois você tem a opção de gerar roteiros
+[08:53] a partir desse carro-cel para você mesmo gravar
+[08:55] ou você pode gerar com a batalhes de IA,
+[08:57] você pode editar com IA, colocar motions com IA,
+[09:00] bill rolls com IA, enfim,
+[09:02] o universo que você pode explorar é muito grande
+[09:05] e você pode ter um fluxo sempre sendo automatizado
+[09:07] do começo ao fim que vai crescendo,
+[09:09] seus seguidores que vai crescendo,
+[09:11] as suas vendas do produto, do serviço que você vende,
+[09:14] a gente inclusive tem algumas contas,
+[09:16] uma delas é o Maestro Zaheer Hab,
+[09:18] em que a gente roda sempre centro no piloto automático
+[09:21] e todo dia gera vendas com ela.
+[09:23] E essa aqui é a parte menos entusiasmante,
+[09:25] o primeiro degrau, o primeiro estágio,
+[09:27] é o momento em que você começa a explorar o básico.
+[09:30] Uma vez que você tem isso consolidado,
+[09:32] uma vez que você passou por vários ciclos de interação,
+[09:35] a gente vai falar disso em breve,
+[09:37] você vai realmente ter a confiança de que a IA
+[09:41] pode fazer coisas para você que você estava fazendo
+[09:44] por simples ignorância.
+[09:47] E quando você vai percebendo esse potencial,
+[09:49] você naturalmente vai cair em um segundo estágio,
+[09:51] que é o seguinte pensamento.
+[09:53] Bom, o que eu poderia fazer com IA,
+[09:56] que antes seria impossível.
+[09:58] O que eu posso construir hoje,
+[10:00] que dois, três anos atrás seria impossível,
+[10:03] não conseguiria, seria enviável, não teria tempo,
+[10:06] não teria o capital para investir
+[10:09] e muitas pessoas, a partir desse pensamento,
+[10:12] já construíram, já estão faturando
+[10:15] com negócios novos, com aplicativos novos,
+[10:18] com sás novos, com várias coisas que antes
+[10:21] não teriam tempo, capacidade, competência,
+[10:24] equipe para criar.
+[10:25] Um exemplo que a gente já viu acontecendo muito
+[10:27] são pessoas que trabalham no CLT
+[10:29] e querem abrir uma agência, uma agência de marketing,
+[10:32] uma agência de inteligência artificial.
+[10:34] E esse processo todo antes da IA seria muito difícil.
+[10:37] Porque como você vai trabalhar 8 horas por dia,
+[10:39] ficar fora de casa 10 horas por dia,
+[10:42] dependendo da cidade, do trânsito,
+[10:44] como você vai chegar em casa e ter tempo
+[10:45] para construir um negócio do zero.
+[10:47] Hoje isso é 100% viável,
+[10:49] a gente já viu esse movimento acontecendo
+[10:51] várias vezes e não são só pessoas
+[10:53] que trabalham com uma carga, o lugar é flexível,
+[10:55] não é só o Uber, também tem,
+[10:57] mas tem médicos, tem engenheiros
+[10:59] que estão deixando suas profissões
+[11:01] para trabalhar com IA,
+[11:02] porque agora elas têm tempo de construir
+[11:04] esse ecossistema enquanto continuam
+[11:06] tocando o trabalho,
+[11:08] até que isso não é mais necessário
+[11:10] e aí elas fazem a transição.
+[11:11] Eu sei que pode parecer uma coisa meio surreal
+[11:13] para algumas pessoas,
+[11:14] o cara deixou a engenharia,
+[11:15] deixou a medicina para trabalhar com IA,
+[11:16] mas a verdade é que IA é um mercado
+[11:17] muito aquecido de muita demanda
+[11:20] e muitas empresas têm muito budget
+[11:22] para investir em redução de custo
+[11:24] e aumento de produtividade.
+[11:26] E no Brasil é um mercado muito, muito imaturo.
+[11:29] Poucas pessoas sabem entrar numa empresa
+[11:31] e fazer uma implementação.
+[11:32] Então se você realmente entende o que você está fazendo,
+[11:34] realmente resolve o madrugador do mercado,
+[11:36] essa transição de um CLT,
+[11:39] de uma profissão mais estável,
+[11:42] para a vida de empresário,
+[11:43] uma vez que você enxerga os números,
+[11:45] uma vez que você consegue validar isso,
+[11:47] é uma transição natural.
+[11:49] E claro que pessoas que trabalham
+[11:50] em profissões mais estáveis
+[11:51] têm um budget maior para investir em ferramentas,
+[11:54] eventualmente em equipe para ajudar.
+[11:56] Você não precisa entender tudo,
+[11:58] sobre todas as ferramentas que você vai usar,
+[11:59] sobre todos os sistemas que você vai criar,
+[12:01] você pode contratar alguém de IA,
+[12:03] quem tem um pouco mais que você,
+[12:05] para te ajudar nesse processo,
+[12:06] uma coisa que muita gente está fazendo hoje.
+[12:08] E aí você fala, bom, beleza,
+[12:09] mas eu quero abrir uma agência,
+[12:10] eu ainda vou ter um trabalho gigantesco,
+[12:12] nem sei por onde começar,
+[12:14] nem sei como usar IA para fazer tudo isso.
+[12:16] Uma maneira muito saudável de pensar
+[12:18] e mais fácil também do que pensar
+[12:20] em pipeline super complexos,
+[12:22] é pensar em quais agentes você precisa,
+[12:25] quais funcionários de IA você precisa
+[12:27] para tocar uma agência.
+[12:29] Eu vou atender os meus leads da agência,
+[12:31] os possíveis clientes,
+[12:32] através do WhatsApp.
+[12:33] Então eu preciso do quê?
+[12:34] Preciso de um agente de WhatsApp
+[12:35] que faça o atendimento,
+[12:36] qualificação,
+[12:37] eventualmente agente,
+[12:38] as reuniões para mim,
+[12:40] dessa maneira,
+[12:40] todo esse trabalho de ficar ali,
+[12:42] responder num WhatsApp,
+[12:43] não é mais necessário.
+[12:44] Olha quanto tempo eu já coloquei.
+[12:46] Outra coisa que me dá trabalho na agência
+[12:47] é gerar propostas comerciais.
+[12:49] O momento da reunião é um pouco difícil
+[12:51] você delegar para IA,
+[12:53] você pode até delegar
+[12:54] para um closer eventualmente,
+[12:56] mas é uma coisa que,
+[12:57] no começo, é importante que você faça
+[12:59] até para você entender um pouco esse jogo.
+[13:00] Depois da reunião,
+[13:01] talvez você queira enviar uma proposta comercial,
+[13:04] eventualmente um contrato,
+[13:05] se tudo der certo,
+[13:06] mas vamos focar na proposta comercial.
+[13:08] Hoje em dia,
+[13:09] tem muitas agências,
+[13:11] muitas empresas,
+[13:12] muitos prensadores de serviço
+[13:14] que demoram dias
+[13:15] para enviar uma proposta comercial.
+[13:17] E eu não estou falando de poucos dias, não.
+[13:19] Às vezes demoram três, quatro dias,
+[13:21] às vezes uma semana para enviar um PDF
+[13:23] que hoje a IA faz com 30 minutos de trabalho.
+[13:26] E você pode até fazer tudo isso de maneira automática.
+[13:28] Você salva seus reuniões
+[13:30] automaticamente numa pasta,
+[13:31] você roda uma automação
+[13:33] que vai transcrever a reunião toda,
+[13:34] vai gerar a proposta
+[13:36] baseada na sua tabela de preços,
+[13:38] nas suas linhas de negociação,
+[13:39] no que foi conversado durante a reunião,
+[13:42] essa proposta pode ser enviada
+[13:43] diretamente para o cliente
+[13:44] ou para você,
+[13:45] para que você possa revisar
+[13:47] e a partir dessa revisão,
+[13:48] se estiver tudo certo,
+[13:49] você envia para o cliente.
+[13:50] Mas olha quanto tempo você poupou.
+[13:52] E aí tem um milhão de outras possibilidades,
+[13:54] a geração de contas do para-redo sociais,
+[13:56] para aquisição de clientes,
+[13:57] para ter novas pessoas interessadas
+[13:59] nos seus serviços.
+[14:00] Ou não, eu quero rodar tráfego pago
+[14:01] e crescer com tráfego pago.
+[14:03] Você precisa de um gestor de tráfego IA.
+[14:04] Aí, eventualmente, você precisa de um gerador de conteúdo,
+[14:07] de um criador de vídeos,
+[14:09] criador de anúncios para você rodar no tráfego pago.
+[14:12] Ou então você vai querer gravar seus próprios anúncios,
+[14:14] aí você precisa de uma editoria
+[14:15] que vai colocar as legendas,
+[14:17] vai editar no formato que você quer.
+[14:19] Enfim, você vai criando seus agentes
+[14:21] com base nas necessidades que você tem.
+[14:23] Eu dei o modelo da agência
+[14:24] porque é um modelo muito comum,
+[14:26] mas também porque é um modelo que
+[14:27] poucas pessoas enxergam
+[14:29] a quantidade de trabalho desperdiçado
+[14:31] feito no dia a dia
+[14:32] e o tempo que gastam
+[14:33] com coisas que podem ser muito rápidas e eficientes.
+[14:36] Então hoje você ter uma agência
+[14:39] com um trabalho humano mínimo
+[14:41] é muito viável.
+[14:42] Sua responsabilidade se torna
+[14:44] entrar nas reuniões
+[14:45] e cuidar das implementações.
+[14:46] Mas eventualmente, você pode também
+[14:48] contratar pessoas para delegar
+[14:50] a parte da implementação,
+[14:51] delegar a parte do fechamento
+[14:53] das vendas nas reuniões
+[14:54] e aí você começa a ter um negócio
+[14:56] que funciona sem a sua participação ativa.
+[14:59] E a grande dificuldade de tudo isso
+[15:01] está na construção desses sistemas.
+[15:03] Você saber que você pode fazer
+[15:05] é uma coisa, você saber como fazer
+[15:08] é outra completamente diferente.
+[15:10] E se você entende a lógica por trás de tudo isso,
+[15:12] entende como isso pode beneficiar
+[15:14] o seu projeto atual,
+[15:15] os seus projetos futuros,
+[15:16] mas ainda não sabe exatamente como fazer,
+[15:18] você pode entrar na comunidade Maestros da IA.
+[15:21] O link está na descrição desse vídeo lá,
+[15:23] nós temos lives toda semana,
+[15:24] 25 horas de conteúdo sempre atualizados,
+[15:27] sempre colocando aulas novas
+[15:28] com que existe de melhora
+[15:30] e inteligência artificial.
+[15:31] Temos suporte técnico todos os dias
+[15:32] para você nunca atravainha uma implementação em um agente
+[15:35] e nunca ficar com nenhuma dúvida.
+[15:36] Nós estaremos lá para ajudar você
+[15:38] nos seus projetos,
+[15:39] nas suas implementações.
+[15:41] E temos além de tudo isso,
+[15:42] aplicativos exclusivos para vocês,
+[15:44] para os membros da comunidade,
+[15:46] muitos dos recursos,
+[15:46] inclusive aqui do YouTube,
+[15:48] nós coloquemos lá na comunidade
+[15:49] de uma maneira super fácil
+[15:50] para você utilizar.
+[15:52] Você baixa um arquivo,
+[15:53] já começa a usar com um copia e cola
+[15:56] ridiculamente simples.
+[15:57] E muitas pessoas já relataram que um simples agente
+[16:00] mudou totalmente o jogo para elas,
+[16:01] uma agente que nós criamos especialmente para vocês,
+[16:04] que nós disponibilizamos
+[16:06] para vocês usarem à vontade
+[16:08] e você simplesmente demoram cinco minutos para instalar
+[16:11] e pode mudar o jogo
+[16:12] daquilo que vocês estão construindo.
+[16:13] Então nós temos vários agentes,
+[16:15] várias opções,
+[16:16] tem muita coisa legal.
+[16:17] Além de milhares de pessoas
+[16:18] que interagem diariamente,
+[16:20] que trocam ideias,
+[16:22] que trocam experiências,
+[16:23] trocam desafios
+[16:24] e se ajudam então a uma comunidade
+[16:26] de cada vez mais engajada.
+[16:27] Cada vez mais,
+[16:27] nós temos um grande orgulho
+[16:28] em fomentar esse projeto.
+[16:30] Então se você gosta desse canal,
+[16:31] se você gosta da maneira que a gente te comunica,
+[16:33] você vai adorar fazer parte
+[16:34] da comunidade Maestros da IA.
+[16:36] Link na descrição desse vídeo
+[16:38] e vamos em frente.
+[16:39] Uma vez que você já se viu livre
+[16:40] de várias coisas que você fazia
+[16:42] de maneira repetitiva, manual
+[16:45] e totalmente um desperdício de tempo
+[16:46] e hoje a IA faz por você.
+[16:48] E você já está fazendo coisas que
+[16:50] jamais conseguiria ter tempo
+[16:51] de fazer sem inteligência artificial,
+[16:53] você vai começar a organizar tudo isso.
+[16:56] E a maneira mais simples de organizar tudo isso
+[16:58] é por agentes.
+[16:59] Você tem um agente
+[17:01] que tem uma responsabilidade,
+[17:02] tem um escopo de ferramentas,
+[17:04] de instruções definidas,
+[17:06] pode ser um agente totalmente cru.
+[17:08] A ideia é que você entenda
+[17:09] o que a gente vai fazer,
+[17:10] qual vai ser o nome dele,
+[17:11] quais vão ser as responsabilidades,
+[17:12] as ferramentas,
+[17:13] o escopo geral desse agente.
+[17:15] Vamos supor que seja o agente
+[17:16] que vai gerar as propostas comerciais
+[17:18] baseadas nas transcrições
+[17:20] das nossas reuniões.
+[17:21] Esse agente, ele primeiro,
+[17:23] vai ter o objetivo dele,
+[17:25] o escopo de coisas que ele vai fazer,
+[17:27] tudo isso dentro do seu cérebro,
+[17:29] do seu arquivo que vai ser o clode.md,
+[17:31] agency.md,
+[17:33] enfim, depende da ferramenta
+[17:34] que você está utilizando.
+[17:35] Depois que você tem o esqueleto
+[17:36] desse agente, você vai começar
+[17:38] a construir as suas skills
+[17:39] dentro desse agente.
+[17:41] Porém, o erro de muita gente
+[17:42] é pedir para o nosso trabalhador
+[17:45] e a criar a sua própria skill do zero.
+[17:48] Quero que você crie uma skill
+[17:50] que vai pegar as transcrições,
+[17:53] das reuniões e depois vai
+[17:55] fazer uma proposta comercial,
+[17:57] depois vai enviar para o meio do cliente, etc.
+[17:58] Não vai ficar bom.
+[18:00] Não vai ficar bom, essa é a verdade.
+[18:01] Por quê? Porque você precisa
+[18:02] supervisionar cada uma das etapas.
+[18:04] Então primeiro você pede para ele
+[18:06] acessar a sua conta do Google Drive
+[18:08] e ele vai te guiar pela implementação.
+[18:10] Depois você vai pedir
+[18:12] para ele fazer o download
+[18:13] e fazer a transcrição da reunião.
+[18:15] Aí a análise dessa transcrição.
+[18:18] Depois tem o procedimento de cruzar isso
+[18:20] com as informações da empresa.
+[18:22] Quais são os valores?
+[18:24] Quais são as linhas de negociação?
+[18:26] O que foi conversado em reunião?
+[18:28] O que o cliente vai querer etc.
+[18:29] Depois tem todo o template
+[18:31] que você vai utilizar para
+[18:32] gerar a proposta comercial.
+[18:34] Qual vai ser a paleta de cores?
+[18:35] O que você vai colocar em cada slide?
+[18:37] E tudo isso ele pode gerar uma versão,
+[18:39] mas o ideal é que ele gere várias versões,
+[18:41] vários templates para você escolher
+[18:43] e refinar.
+[18:44] E aí uma vez que você tem,
+[18:46] depois de muitas interações no chat,
+[18:48] depois de um trabalho ativo, significativo,
+[18:50] uma versão final de uma proposta comercial
+[18:54] que você realmente gostou,
+[18:55] finalize informações sobre a sua empresa,
+[18:57] sobre a sua agência,
+[18:58] a forma que vocês trabalham,
+[18:59] deadlines, enfim, o que você quiser.
+[19:02] Aí sim você vai pedir
+[19:03] para ele gerar uma skill.
+[19:05] Por quê? Porque ele vai ter
+[19:07] todo o histórico dos feedbacks que você enviou.
+[19:10] Você pode pedir de uma maneira simples.
+[19:12] Gere uma skill nesse repositório, nesse agente,
+[19:15] com base no histórico desse chat.
+[19:17] E ele vai gerar uma skill
+[19:19] dentro da lógica da ferramenta que você está usando.
+[19:22] Se você estiver usando o code,
+[19:23] o code vai gerar dentro da estrutura de arquivos do code.
+[19:26] Se estiver usando o code, é que isso é a mesma coisa.
+[19:28] Você pode pedir isso em linguagem natural,
+[19:29] não precisa saber a lógica
+[19:32] de organização das pastas e arquivos.
+[19:33] Ele vai criar isso para você de uma forma muito natural.
+[19:36] Só que aí você vai testar isso.
+[19:38] Ele criou a skill.
+[19:39] Você começa uma sessão nova
+[19:41] naquele mesmo repositório, naquele mesmo agente
+[19:43] e perde para ele executar aquela skill do começo ao fim.
+[19:46] E aí com essa execução sem a memória do contexto anterior,
+[19:50] você vai entender se ele realmente entregou o resultado que você quer.
+[19:53] Se ele entregou, ótimo, a skill está pronta.
+[19:56] E aí você vai testar ela na vida real algumas vezes
+[19:59] e vai refinando aos poucos.
+[20:00] Se não for resultado ideal,
+[20:02] não tem problema, é normal
+[20:03] que a primeira vez com um contexto limpo
+[20:05] a skill não esteja perfeita ainda.
+[20:07] Você vai refinando ela, vai otimizando ela,
+[20:09] até que ela consiga entregar esse resultado de uma maneira bacana.
+[20:12] Para a maior parte das skills,
+[20:14] o processo de otimização é mais importante
+[20:16] do que o processo de criação.
+[20:18] A criação é basicamente você entender um fluxo de trabalho,
+[20:21] uma sequência de ações.
+[20:23] Você estruturar isso dentro de uma lógica que faça sentido,
+[20:26] dando acesso às ferramentas
+[20:28] e a tudo que a IA precisa para executar.
+[20:31] Mas a otimização é onde o jogo realmente fica interessante.
+[20:34] Onde você consegue ultra-personalizar tudo cada etapa,
+[20:38] colocar etapas determinísticas,
+[20:41] que são rígidas e sempre vão acontecer daquela maneira.
+[20:44] Outras etapas que a IA vai decidir o que fazer,
+[20:47] que vão ter várias informações específicas.
+[20:50] É muito legal quando você entende
+[20:52] que você tem infinitos níveis de personalização
+[20:55] dentro dos fluxos de trabalho que você pode criar.
+[20:59] E aí você vai querer modificar,
+[21:01] criar variações.
+[21:02] Tem várias coisas a partir desse,
+[21:04] mesmo a gente que nós poderíamos criar.
+[21:06] Dependendo do tipo de empresa,
+[21:08] a gente muda paleta de cores, muda layout, muda fonte,
+[21:11] ter cinco ou seis opções de templates e não apenas um.
+[21:15] A gente poderia inclusive incluir um outro ciclo de otimização
+[21:18] que é bem interessante, não sei se muito funcional,
+[21:21] mas interessante com certeza
+[21:23] em que ele teria acesso a seu banco ou seu gate de pagamentos, enfim.
+[21:29] E ele saberia quais clientes fecharam com você
+[21:32] e poderia priorizar o design, os templates, as fontes
+[21:36] que fecharam aquela venda,
+[21:38] não que seja a única variável,
+[21:39] inclusive acho que dentre todas as variáveis é uma das menores,
+[21:43] mas de qualquer forma não custa
+[21:45] ter um processo de otimização de proposta comercial
+[21:48] baseado em vendas reais.
+[21:50] E obviamente você poderia criar um outro agente
+[21:52] para fazer o follow-up das propostas já enviadas
+[21:54] e ainda não responder, enfim,
+[21:56] uma série de coisas que você vai fazendo de maneira autônoma,
+[21:58] você vai construir esses sistemas
+[22:00] que trabalham por você,
+[22:01] sem a necessidade da sua interferência.
+[22:03] E aí que mora a última etapa que eu queria falar nesse vídeo
+[22:07] que são as tarefas programadas, as tarefas agendadas,
+[22:10] tem muitas formas de fazer isso, desde servidores em Python,
+[22:14] até a ferramenta do desktop do Codex, do Codecode,
+[22:18] que hoje você já consegue ir lá no routines, por exemplo,
+[22:21] e agendar uma tarefa de uma maneira muito fácil.
+[22:23] E aí esse mesmo fluxo roda automaticamente por você
+[22:27] sem a necessidade de nenhuma interferência humana.
+[22:30] Olha que legal.
+[22:31] Logo que você, para confiar o suficiente na IA para fazer isso,
+[22:34] precisa ter passado por muitos ciclos de interação,
+[22:38] muita tentativa e erro,
+[22:39] até você chegar no ponto que você achou ideal.
+[22:43] Não porque a IA não vai conseguir fazer de primeira,
+[22:44] mas porque a maneira que ela faz não é necessariamente
+[22:46] a maneira que você quer, a maneira que você se identifica,
+[22:49] a maneira que a marca precisa.
+[22:51] Então entenda que o modelo de IA que você usa hoje
+[22:54] não é o fator que vai definir seu ganho de produtividade,
+[22:56] sua redução de custo,
+[22:58] a quantidade de coisas que você vai conseguir fazer
+[23:00] que você não faz.
+[23:01] O que faz a diferença hoje são os sistemas de IA que você criou.
+[23:04] Os modelos já são excepcionais, eles já são incríveis,
+[23:07] eles já fazem quase tudo o que você precisa.
+[23:10] Você não precisa focar nos melhores modelos
+[23:12] para ter os melhores resultados.
+[23:14] E aí se você junta as duas coisas, obviamente,
+[23:16] você vai conseguir resultados extraordinários.
+[23:18] Os melhores modelos com os melhores fluxos de trabalho,
+[23:22] com os melhores agentes, com o melhor harness,
+[23:24] tudo isso, obviamente, vai tirar uma vantagem competitiva gigantesca.
+[23:28] Se você quer entender na prática como tudo isso funciona,
+[23:31] com passo a passo guiado, compartilho no hotel ou do computador,
+[23:33] você pode entrar na comunidade Maestros da IA,
+[23:35] o link está na descrição.
+[23:36] Se você gostou desse vídeo e quer receber mais recomendações de vídeos como esse,
+[23:39] eu te convido a dar um hype e um like nesse vídeo,
+[23:42] além de se inscrever no canal.
+[23:44] Um abraço e até o próximo.

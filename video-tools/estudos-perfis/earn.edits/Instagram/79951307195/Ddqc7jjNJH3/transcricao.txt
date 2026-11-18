@@ -1,0 +1,11 @@
+idioma: en
+[00:00] You see this entire transition?
+[00:01] It made with an AI editing agent.
+[00:04] I uploaded the reference to NVIDIA editor,
+[00:07] added my own clips and told the agent to recreate it between every shot.
+[00:11] It took the reference, applied the transition across my footage
+[00:15] and built everything directly on the editable timeline.
+[00:18] So instead of building the whole thing from scratch,
+[00:20] I just told the agent what I wanted.
+[00:22] NVIDIA editor is completely free.
+[00:24] Comment NVIDIA and I'll send you the link to sign up.

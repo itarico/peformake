@@ -1,0 +1,161 @@
+idioma: pt
+[00:00] Eu coloquei o Cloud para criar e editar meus vídeos.
+[00:03] E eu já adianto que o resultado me surpreendeu.
+[00:06] Nesse vídeo a gente vai fazer três testes.
+[00:08] O primeiro eu vou jogar um vídeo sem edição nenhuma no Cloud
+[00:12] e vou pedir para ele editar por mim.
+[00:14] No segundo eu vou pedir para ele criar do zero um vídeo no estilo Motion Graphic.
+[00:20] E não só isso eu quero que esse vídeo tenha efeito sonoro e música de fundo.
+[00:24] E por fim, o mais promissor de todos,
+[00:27] eu quero que ele crie uma animação 3D.
+[00:29] E todos esses vídeos vão ser criados e editados
+[00:33] inteiramente dentro do Cloud com um prompt só.
+[00:36] Sem eu ter que fazer nenhum tipo de edição
+[00:39] e também sem usar nenhum tipo de conector pago.
+[00:42] Então, bora começar aqui pessoal com o primeiro teste
+[00:44] onde eu vou pegar um vídeo sem edição nenhuma
+[00:47] e vou jogar no Cloud pedir para ele editar por mim.
+[00:50] E eu já estou aqui com o meu vídeo sem nenhum tipo de edição.
+[00:54] Vocês podem ver que eu somente peguei as partes
+[00:56] e juntei elas em sequência.
+[00:58] Mas não tem nenhum tipo de edição nem mesmo corte a gente tem aqui.
+[01:03] E agora o que eu vou fazer é abrir aqui o meu Cloud
+[01:06] pegar aquele vídeo sem nenhum tipo de edição
+[01:09] e subir aqui no meu ambiente de trabalho.
+[01:12] Logo depois disso, eu vou copiar e colar esse prompt gigantesco aqui.
+[01:17] Eu não vou ficar passando parte por parte aqui nesse prompt
+[01:21] porque ele é gigantesco, mas se você quiser, você pode dar uma lida depois.
+[01:25] Mas o que você tem que saber
+[01:27] é que ele pega o seu vídeo tanto vertical quanto na horizontal
+[01:31] e transforma num vídeo vertical pronto para postar ali no TikTok e no Instagram.
+[01:36] Enfim, depois eu vou vir aqui e selecionar o modelo mais avançado.
+[01:41] Aqui no meu caso o OPPO 5.5.
+[01:44] E graças a esse lançamento da Antropiq
+[01:47] a gente consegue fazer esse tipo de edição
+[01:50] magnífica que eu já vou mostrar como fica para vocês.
+[01:53] E selecionar o modelo é muito importante a gente selecionar o esforço máximo
+[01:58] para que ele consiga gerar com a melhor qualidade possível.
+[02:02] E antes de eu colocar o Cloud para editar esse vídeo aqui,
+[02:05] você pode ver que aqui no prompt eu menciono esse Hyper Frames.
+[02:09] Para você que não sabe, o Hyper Frames é esse repositório aqui
+[02:13] que permite a gente criar vídeos a partir de código.
+[02:16] E é graças a ele que a gente vai conseguir editar e criar os nossos vídeos.
+[02:21] Para isso você vai ter que ter ele instalado no seu Cloud Code.
+[02:25] Então é só copiar esse link aqui, eu vou deixar aí na descrição para vocês pegarem
+[02:29] e jogar no seu Cloud e pedir para ele instalar.
+[02:32] Não tem segredo.
+[02:33] Depois eu já volto aqui e invio isso daqui para o Cloud.
+[02:37] Ele já vai começar aqui a editar o meu vídeo
+[02:40] e daqui a um tempo eu volto com vocês para a gente ver o resultado.
+[02:43] E bom pessoal, depois de mais de 50 minutos trabalhando aqui
+[02:47] o Cloud finalmente entregou para a gente o vídeo editado.
+[02:50] Então vamos ver como ficou esse resultado final.
+[02:53] Esse vídeo aqui foi inteiramente editado pelo Cloud.
+[02:56] Eu simplesmente subi o meu vídeo e ele fez todo o resto.
+[02:59] Mas calma que se você abrir seu Cloud agora e subir um vídeo lá
+[03:02] ele não vai conseguir editar para você.
+[03:04] Isso porque tem um método que a gente utiliza para o Cloud
+[03:06] conseguir editar os vídeos dessa forma que você está vendo.
+[03:09] E se você quer acessar esse método e começar a editar seus vídeos com o Cloud
+[03:13] comenta a palavra vídeo que eu vou te enviar na DM.
+[03:16] Pessoal, acho que eu nem preciso comentar nada.
+[03:18] Vocês podem ver que o resultado ficou excepcional.
+[03:21] Se vocês falassem um mês atrás para mim que o Cloud editou esse vídeo aqui
+[03:25] eu ia falar que você estava mentindo, tá?
+[03:27] Mas cara, olha esse resultado que sensacional que ficou.
+[03:31] E você pode ver que ele faz até esse efeito de sobreposição aqui
+[03:34] onde parece que você está inserido nesse espaço branco aqui
+[03:38] e dá um efeito de profundidade no vídeo.
+[03:40] Ele também coloca essas legendas muito bonitas com essas fontes
+[03:44] e também faz essas animações que eu não preciso falar nada
+[03:47] que são sensacionais.
+[03:49] Terminando de gravar aqui, eu já vou pegar esse vídeo
+[03:51] e jogar lá no meu Instagram se eu precisar nem abrir editor de vídeo.
+[03:55] E bom, pessoal, partindo para o segundo teste desse vídeo,
+[03:58] eu vou pedir aqui para o Cloud criar um Motion Graph
+[04:00] que totalmente do zero para mim.
+[04:02] Para isso, eu vou colar esse prompt aqui,
+[04:05] que é um prompt relativamente menor comparado ao anterior.
+[04:09] E o que ele vai fazer?
+[04:10] Ele vai basicamente criar um trailer
+[04:12] para o lançamento do Cloud Opo 5.5,
+[04:16] que é exatamente o modelo que a gente está utilizando
+[04:18] para criar e editar esses vídeos aqui.
+[04:21] Então, é só o da Enter aqui
+[04:22] e esperar alguns minutos para ele gerar aqui para mim.
+[04:25] E bom, pessoal, finalizado aqui,
+[04:27] esse daqui demorou um pouco menos,
+[04:29] cerca de 30 minutos se passaram aí.
+[04:31] E vamos ver como que ficou o resultado desse vídeo aqui.
+[04:35] Vamos vir aqui para baixo e dar o play para ver como que ficou.
+[04:56] Ficou realmente impressionante esse resultado aqui.
+[04:59] E o que mais me impressionou nessa geração aqui
+[05:02] foi a sincronização do áudio.
+[05:04] A sincronização está literalmente perfeita,
+[05:07] se a gente reparar, por exemplo,
+[05:10] aqui nessa parte ele começa o beat
+[05:14] e sincroniza perfeitamente aqui com o áudio.
+[05:18] É simplesmente perfeito, pessoal.
+[05:20] E dá para fazer muita coisa com isso daqui,
+[05:22] algo que antes demandava um conector externo,
+[05:25] como, por exemplo, o conector da Higgs Sword,
+[05:27] para gerar esse tipo de motion graphic.
+[05:29] Agora a gente consegue fazer inteiramente pelo cloud.
+[05:33] E por fim aqui o terceiro e último teste
+[05:36] que eu confesso que é o que eu mais estou animado
+[05:39] para ver o resultado
+[05:40] onde a gente vai pedir para o cloud
+[05:42] gerar uma animação 3D totalmente do zero.
+[05:46] Para isso eu vou colar esse prompt aqui,
+[05:49] que também é um prompt um pouco menor.
+[05:51] E o que eu peço aqui para ele
+[05:53] é criar uma animação do cloud.
+[05:55] Para você que não sabe, o que é o cloud
+[05:57] é basicamente o mascote do cloud.
+[06:00] Esse carinho aqui que fica aqui do lado
+[06:03] acompanhando você enquanto você trabalha ali com o cloud code.
+[06:06] E sem mais enrolação, já bora enviar aqui para o cloud
+[06:09] porque eu confesso que eu estou muito animado
+[06:11] para ver o resultado disso aqui.
+[06:12] E depois de pouco mais de 40 minutos
+[06:15] trabalhando aqui nessa animação 3D,
+[06:17] o cloud finalmente terminou
+[06:20] e entregou o resultado final aqui para a gente.
+[06:22] Vamos ver aqui então como que ficou.
+[06:45] Pessoal, acho que eu também não preciso falar nada.
+[06:47] Isso daqui dispensa comentários, tá?
+[06:50] Olha a qualidade dessa animação
+[06:53] que o cloud acabou de gerar para a gente.
+[06:56] Se você me falasse que isso daqui
+[06:57] foi um designer profissional que fez,
+[07:00] eu com certeza acreditaria, tá?
+[07:02] Mas isso daqui foi o cloud
+[07:04] em um pouco mais de 40 minutos
+[07:06] que fez com um único prompt.
+[07:09] Isso daqui é simplesmente bizarro.
+[07:11] E o processo muito bacana
+[07:12] da gente observar que no processo de criação
+[07:14] dessa animação é isso daqui.
+[07:17] Ele basicamente criou um storyboard
+[07:19] com basicamente todos os frames importantes
+[07:23] que ele deve seguir quando ele for criar
+[07:25] essa animação aqui.
+[07:27] E bom, pessoal, estou simplesmente impressionado
+[07:29] com o resultado que ele entregou aqui para a gente
+[07:30] tanto na edição de vídeo
+[07:32] quanto na criação de vídeo.
+[07:34] Me conta aí nos comentários o que você achou
+[07:36] e só lembrando todos os prompts
+[07:38] que eu utilizei nesse vídeo,
+[07:39] o que eu vou estar disponíveis aí na descrição
+[07:41] para vocês copiarem e colarem
+[07:43] de forma totalmente gratuita, tá, pessoal?
+[07:46] E aqui fica o meu convite
+[07:47] caso você queira ser acompanhado individualmente por mim.
+[07:50] Eu vou deixar um link aí na descrição
+[07:52] para você preencher o nosso formulário
+[07:54] da mentor individual.
+[07:55] Então é isso, pessoal.
+[07:56] Se você curtiu o vídeo, deixe o seu like,
+[07:58] se inscreve aí no canal
+[07:59] e tamo junto. Até a próxima.

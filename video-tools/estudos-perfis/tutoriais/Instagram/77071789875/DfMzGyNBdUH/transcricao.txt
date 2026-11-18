@@ -1,0 +1,7 @@
+idioma: en
+[00:00] Anyone can generate an image now.
+[00:01] Nobody can generate taste.
+[00:03] The machine gives you a thousand options.
+[00:05] Choosing the right one, that's you.
+[00:07] Timing, instinct, feeling, none of it comes from a prompt.
+[00:11] Stay irreplaceable.

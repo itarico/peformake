@@ -1,0 +1,12 @@
+idioma: pt
+[00:00] Esses 9 projetos no GitHub vão te fazer economizar mais de 15 mil reais por ano em software pago.
+[00:05] O primeiro é o Open Headsfield, um estúdio aberto para criar imagem e vídeo com IAR no lugar do Headsfield.
+[00:10] O segundo é o Voice Studio, que se substituiu 11 Labs e clona a voz direto no teu computador.
+[00:15] Terceiro, o Open SEO, no lugar do Senrush, posição do Google, Backlinks e auditoria de site em um só lugar.
+[00:22] Quarto, o AppFlowey, que substituiu Notion e ainda roda a local de graça.
+[00:26] Quinto, o Open Whisper, no lugar do WhisperFlowey. Você fala e o texto aparece em quase qualquer app com ou sem internet.
+[00:33] Sexto, o Open Project, que gerencia projeto e tarefa sem pagar o Asana.
+[00:37] Sétimo, o CaldeIUI, a versão aberta do Cal.com, que se substituiu o Calendar e sincroniza com Google, Agenda e Outlook.
+[00:44] Oitavo, o ChatUt, no lugar do Intercom, WhatsApp, Instagram e e-mail dos clientes em uma caixa só.
+[00:50] E por último, o Cap, no lugar do Lone, para gravar tua tela e mandar o link na hora.
+[00:55] Se você quer testar todos, comenta GitHub aqui embaixo e me segue, que eu te mando o link 2.9 no Direct.

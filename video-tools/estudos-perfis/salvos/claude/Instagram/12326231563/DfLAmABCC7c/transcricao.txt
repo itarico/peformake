@@ -1,0 +1,6 @@
+idioma: pt (0.99)
+[   0.2-   7.7] Cláudia agora cria um carro-cel automático em menos de um minuto e eu vou te mostrar como fazer isso.
+[   7.7-  13.2] Abra o cláudio, vai em Conectores, adicionar Conector personalizado, abre esse site aqui,
+[  13.2-  19.1] vai em Cláudia MCP, pega a sua chave de acesso e cola no cláudio. Pete pro cláudio criar um
+[  19.1-  25.0] carro-cel de seu nicho e detalhe bem. Dá uma olhada nesse carro-cel que a gente fez em menos de um minuto.
+[  25.0-  29.0] Se você quer ter acesso a essa ferramenta, comenta a cláudia aqui que eu te mando ela agora.

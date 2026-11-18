@@ -1,0 +1,425 @@
+idioma: pt
+[00:00] Um canal do YouTube que roda no piloto automático. Um canal que traz visualizações, inscritos,
+[00:05] leads e vendas para seus produtos ou para sua empresa. Um canal que, uma vez monetizado,
+[00:10] pode gerar uma renda extra para você e para sua família. Hoje eu quero mostrar para vocês
+[00:15] um experimento que nós comecemos alguns meses atrás e agora estamos colhendo alguns
+[00:20] flutos do experimento, então podemos compartilhar com vocês. Uma das coisas que a gente mais
+[00:24] implementa hoje são sistemas autônomos de produção de conteúdo. Esses sistemas têm com
+[00:30] o objetivo trazer clientes no piloto automático, com 0% de esforço humano e com uma escala potencial
+[00:37] gigantesca. Hoje em dia, quase todas as empresas já entendem que gravar conteúdo para os seus
+[00:42] sociais não é um luxo, não é um divertimento pro time de marketing, é uma necessidade para
+[00:47] você conseguir estabelecer uma reputação forte, estabelecer o chamado branding e também
+[00:53] alcançar, ganhar visibilidade. Clientes, se você também tendo uma boa presidência na
+[00:58] setocense, consegue baratear muito seu caque quando rodando o tráfego pago. E hoje em dia,
+[01:02] muitas empresas já não têm mais a necessidade de rodar um volume muito alto em tráfego,
+[01:07] justamente porque tem uma presidência digital nas redes muito fortes. Só que o esforço que isso
+[01:11] demanda algum grudempo vai fazendo com que você se desanime em relação ao projeto,
+[01:15] às vezes demória para você conseguir de fato tirar algum dinheiro disso e você não tem
+[01:20] energia, força, tempo para continuar investindo. Mas e se todo esse esforço, todo esse trabalho
+[01:25] ativo fosse simplesmente anulado? Você não precisasse mais gravar absolutamente nada,
+[01:31] você tivesse um ativo que vai crescendo no piloto automático. Aproximadamente dois meses
+[01:37] nós iniciamos um experimento chamado maestros.mp4. E nossa ideia é responder uma simples
+[01:42] pergunta. Será que sem nenhum esforço, sem nenhum minuto do nosso tempo dedicado,
+[01:47] mas ligando o nosso sistema e deixando ele lá esquecendo dele, nós conseguiríamos ter
+[01:53] visualizações inscritos e obviamente vendas a partir de um canal que roda 100% no piloto automático.
+[02:02] Talvez alguns de vocês já tenham visto que a gente já fez esse experimento para o Instagram
+[02:06] e conseguimos passar de 30 mil seguidores no piloto automático na conta maestros da IA Hub.
+[02:12] Então a gente já tinha validado que um sistema autônomo era capaz de gerar vendas
+[02:17] nos últimos dias através de conteúdos verticais e curtos. Mas e conteúdos longos?
+[02:23] Será que é viável fazer algum tipo de conteúdo longo que de fato é o que converte melhor?
+[02:29] Acho que todo mundo praticamente vive isso. Os conteúdos longos têm uma
+[02:33] retenção maior que um grau de confiança, a maior acaba vendendo mais do que conteúdos
+[02:38] disputados em um fídica, a pessoa vê 3 segundos, 5 segundos de arrola para o próximo.
+[02:42] Então a ideia era validar se a gente conseguiria fazer algo parecido com conteúdos longos.
+[02:48] Bom, vou abrir os números aqui para vocês. Nos últimos 28 dias nós tivemos um pouco
+[02:52] mais de 45 mil visualizações, mais de 250 horas. Então as pessoas passaram mais de 250
+[02:59] horas nesse período assistindo esses vídeos do canal e mais de 150 inscritos novos.
+[03:04] Se a gente pega só os dados aqui das últimas 48 horas, a gente consegue ver que só nos
+[03:09] 60 minutos tivemos 135 visualizações e nas últimas 48 horas quase 3.400 visualizações.
+[03:18] Uma coisa que me surpreendeu bastante é que muitas pessoas acabaram descobrindo esse
+[03:22] canal sem que a gente tivesse divulgado em lugar nenhum. E nossa inspiração para criar o
+[03:26] Maestros.vp4 foi esse canal aqui, MoreMose. O Alex Hormose tem um outro canal que é o
+[03:32] principal que tem 4.5 milhões de inscritos e aí esse canal foi criado como um canal adjacente.
+[03:39] Em certo momento ele falou que esse canal, apesar de muito menor, 30 vezes menor
+[03:44] aproximadamente, estava trazendo mais vendas do que o canal principal. E dá uma
+[03:49] olhada na frequência de postagem. Se a gente pega os vídeos aqui, a partir de 15 horas atrás,
+[03:55] 1, 2, 3, 4, né, de 15 a 16 horas atrás ele postou já 4 vídeos, 5, 6, 7, 8, 9, 10, 11, 12, 13.
+[04:06] Quantos vídeos por dia? 14, 15, 16, 17, 18. 18 vídeos em um só dia, talvez até mais.
+[04:15] Tem dias aqui que a gente vê um dia atrás. Olha quantos vídeos estão a um dia atrás
+[04:20] postados, dois dias atrás. A gente tem aqui muitos vídeos, dois dias atrás.
+[04:26] Só que já são 10. Mais de 10 vídeos ou 10 vídeos por dia nesse canal que apenas
+[04:34] uma pessoa do time toca inteiro. Então um funcionário com inteligência artificial
+[04:39] conseguiu ser responsável por um canal de aquisição novo, completo e aparentemente
+[04:43] extremamente eficiente. E a maior parte dos vídeos publicados vão ser o que ele
+[04:48] chama de mids, que não é nenhum shorts, um reels, um vídeo curto, vertical,
+[04:53] rápido para a pessoa assistir ali em 30 a 60, segundo os dois minutos que sejam.
+[04:57] Nem um vídeo longo do começo ao fim que tem uma narrativa completa. É como se fosse
+[05:03] uma dose rápida de um conteúdo um pouco maior. Um argumento, um raciocínio,
+[05:10] uma dica extraída de um contexto mais amplo. Por exemplo, uma palestra, um
+[05:16] treinamento, uma pergunta que alguém fez dentro de um evento ou mesmo de um vídeo
+[05:21] que ele realmente gravou e postou no canal original, que vai ser cortado em
+[05:25] pedaços para que esses pedaços sejam aproveitados. E olha que vai querer um
+[05:30] projeto desse novo canal de 1.700 visualizações, o que é um número
+[05:34] significativo para um canal recente. Trouxe um alcance, uma visibilidade, vendas
+[05:38] potenciais que nós não teríamos e que teriam sido desperdiçadas se nós não
+[05:43] estivássemos rodando esse fluxo no piloto automático. Esse projeto novo já
+[05:47] começou a fazer pelo menos uma venda por dia. Porque apesar de não ter
+[05:50] tantas visualizações, como são vídeos um pouco mais longos para um público que
+[05:55] quer realmente entender mais sobre a, ele tem convertido muito melhor do que
+[05:59] outros projetos que a gente já teve de vídeos curtos. O conteúdo curto é muito
+[06:03] bom, ele viraliza muito rápido, você consegue um alcance muito bom com
+[06:07] vídeo girados por e a inclusive, mas é muito difícil você pegar esse conteúdo
+[06:11] virais e transformar eles em vendas de fato. É mais fácil eventualmente você
+[06:15] monetizar e ganhar o dinheiro ali do AdSense, mas se você tem uma empresa e
+[06:19] quer tocar um negócio que vai escalar e quer enfim colocar isso dentro de uma
+[06:22] estrutura mais robusta, é importante você entender que isso precisa ser um
+[06:25] canal de conversão para você. E o mais legal de tudo é que a gente não
+[06:28] precisou ter trabalho nenhum para rodar esse canal inteiro até esse ponto e vai
+[06:33] continuar subindo quantidade de inscritos e seguidores sem nenhum esforço ativo da
+[06:37] nossa parte. Eu vou te mostrar como a gente faz isso e quais são as etapas que
+[06:42] permitem que esse canal rode de fato no piloto automático. A primeira etapa é de
+[06:46] transcrição, então a gente pega vídeos longos que a gente gravou para o
+[06:49] canal principal e transcreve esses vídeos. Depois a nossa IA seleciona os
+[06:54] melhores trechos desses vídeos, precisam ser vídeos que não sejam
+[06:58] literalmente a réplica do vídeo original, para ser um trecho específico
+[07:02] dentro do vídeo original. Depois entra a fase de produção, depois a fase de
+[07:07] agendamento, para a gente ter uma quantidade de vídeos postados por dia, que seja de
+[07:13] pelo menos cinco. Então basicamente a partir da transcrição tem trechos que
+[07:17] vão ser selecionados de três minutos a oito minutos e aí a vai editar, vai
+[07:22] conferir e vai publicar. Então olha que bacana, um vídeo de 22 minutos rendeu
+[07:27] quatro vídeos com avatares, então a gente vai gerar vídeos com avatares de
+[07:33] A que não estão dentro do escopo de recortes e clips. São vídeos que realmente
+[07:37] não se usavam atares de A, vão gravar e o processo de edição vai ser o processo
+[07:42] parecido com do maestro da IA Hub. Além disso três cortes do vídeo longo
+[07:47] foram gerados para que eles se tornassem pilas de conteúdo, horizontais que
+[07:52] têm uma retenção mais interessante, as pessoas passam mais tempo assistindo do
+[07:56] vídeo que é um vídeo curto. Além disso a gente distribui isso em duas
+[08:00] contas, eu estou falando de uma conta específica, mas pense que esse mesmo
+[08:03] conteúdo pode ser modificado, reeditado e você pode espalhar isso para dezenas de
+[08:08] contas e canais e é realmente muito ampla a possibilidade de coisas que você
+[08:12] consegue fazer. Esses exemplos que a gente traz aqui para vocês, o maestro da
+[08:15] IA Hub e o maestro do Ponto MV4, são só a ponta do iceberg do que a gente
+[08:19] está construindo, em breve a gente vai mostrando cada vez mais coisas,
+[08:22] inclusive a gente tem vários clientes para os quais a gente já está construindo
+[08:26] sistemas autônomos de produção de conteúdo e muitos deles já estão
+[08:29] prontos, já estão gerando resultado, a gente só não compartilha aqui por razões
+[08:33] óbvias, eventualmente a gente pode até pedir para algum dos clientes, a gente
+[08:36] pode compartilhar, alguns até ficariam felizes, mas por enquanto a gente
+[08:39] traz os nossos cases, que eu acho que já são interessantes para você
+[08:43] entender que é possível. E aí no total a gente tem também 14 reels
+[08:46] agendados, então olha quantas coisas você consegue fazer a partir de um
+[08:50] vídeo. Imagina que você publica um vídeo todo dia no youtube e isso é todo
+[08:55] o trabalho que você tem em termos de produção de conteúdo. Ou então você gera um
+[08:58] vídeo com inteligência artificial, a gente já gerou vários aqui para o canal,
+[09:02] vocês inclusive já sabem, vocês acompanham, tem vídeos que já passaram de 40 mil
+[09:06] visualizações, foram 100% gerados com nossos avatários de IA, 100% gerados
+[09:10] com nossa voz IA, com nosso editor de vídeos IA e que foram bem.
+[09:14] Então você pode fazer esse pipeline inteiro rodar, gravando de fato os
+[09:17] vídeos ou então com o vídeo original longo, horizontal, sendo gerado por
+[09:23] inteligência artificial. E a fase de transcrição ela não é nem um bicho de
+[09:26] sete cabeças, a gente vai baixar o vídeo, a gente baixa direto do youtube, a gente não
+[09:29] mantém ele num drive, depois baixa, então na teoria isso pode ser feito com
+[09:34] qualquer canal, não precisa nem ser com o nosso. Tem a fase de transcrição que você
+[09:38] pode usar uma API de transcrição, pode rodar um modelo local para transcrever,
+[09:43] pode, enfim, tem várias formas de fazer isso, pode colocar numa VPS, um modelo
+[09:47] local e é rodar transcrição através da VPS. Mas não se importe muito com isso,
+[09:51] importante você entender a lógica. Isso aqui é super importante, porque a
+[09:56] gente precisa entender exatamente onde cada palavra dita está dentro do roteiro,
+[10:02] no que a gente chama de timestamp com legendas. Então a gente tem as legendas
+[10:07] atreladas a um momento específico no vídeo, a uma minutagem. Então a gente tem
+[10:12] uma palavra, sol foi dita em dois minutos e 48 segundos. Isso por quê? Porque
+[10:18] depois o nosso editor vai usar essas referências para poder fazer os cortes.
+[10:22] E depois a gente tem já o texto pronto, timestamp todo já criado e aqui no
+[10:26] nosso caso tem um metáculo interessante de refinamento que é trabalhar um pouco
+[10:30] essa etapa de transcrição para que algumas palavras que a gente fala não
+[10:33] seja interpretada de maneira equivocada. Então quando a gente fala uma palavra
+[10:37] que é um termo em inglês, mas que todo mundo fala no português, tipo
+[10:40] um opte, a gente quer que isso seja compreendido pela transcrição e você
+[10:45] consegue criar uma espécie de dicionário para que a use como referência de
+[10:50] coisas que se ela escutar a gente vai muito fora de contexto ela vai substituir
+[10:54] pela palavra correta. No caso dos vídeos curtos tem uma estrutura de hooks,
+[10:58] de juízes que vão avaliar a qualidade da edição, o corte tem que ter até 60
+[11:05] segundos no nosso caso, você poderia editar isso e aí tem essa etapa de
+[11:09] um que a gente considera bem importante para que o vídeo não saia meio
+[11:12] problemático assim, seja publicado e pelo menos uma revisão de IA é
+[11:18] interessante se você não vai revisar de maneira humana que é uma coisa que você
+[11:22] quer evitar se você vai rodar esses pipelines, muito conteúdo para você
+[11:25] ficar assistindo, revisando e não vai sentido você seguir por essa linha
+[11:29] porque se você vai rodar um sistema autônomo e vai precisar ficar revisando
+[11:33] ele já não é mais autônomo. Aqui eu vou passar brevemente pela etapa dos
+[11:36] vérticais e curtos porque esse vídeo longo ele vai virar vários vídeos curtos
+[11:40] e isso vai poder ser postado em várias redes sociais e tal mas eu quero
+[11:44] chegar na parte dos vídeos longos. Então para você ter uma ideia é assim que os
+[11:48] vídeos curtos verticais vão ser recortados e essas são as especificações
+[11:53] e aí tem a questão da automação e já falou disso em outros vídeos mas a
+[11:57] gente usa o Manichate para poder comentar alguma coisa no Instagram, a
+[12:01] pessoa recebe de volta nas mensagens privadas e pode clicar no recurso
+[12:06] que você receu no vídeo, pode comprar um produto, pode se cadastrar para uma newsletter
+[12:10] pode enfim ir para ação que você deseja e tudo isso é feito por uma automação
+[12:15] que poderia ser feito sem o Manichate mas a gente acaba usando o Manichate para
+[12:18] outras coisas ele aprova template de WhatsApp super rápido então faz sentido
+[12:21] para a gente. E aí tem algumas questões de agendamento porque a gente não quer
+[12:24] postar todos os vídeos em um intervalo muito pequeno então a gente vai
+[12:26] querendo pequenos intervalos para essas postagens. E essas aqui são as
+[12:30] regrinhas de agendamento que a gente tem para nunca postar com intervalo menor de 30
+[12:36] minutos em relação a anterior enfim mais uma série de outras regrinhas.
+[12:40] Também tem uma questão de sobrecarga de RAM porque edição, renderização, até
+[12:47] transcrição é uma coisa que dependendo do computador que você tem pode ser uma
+[12:50] preocupação então existe uma preocupação do agente também que
+[12:53] está fazendo isso. Só que o foco do Maestros.mp4 não é o
+[12:57] mais vertical agora que a gente começou a postar um pouco de conteúdo vertical
+[13:01] nele mas o foco é o conteúdo horizontal você já entendeu muito bem que
+[13:05] está a pegar um vídeo longo e criar uma série de cortes vídeos feitos com
+[13:09] avatários a gente já falou bastante disso aqui no canal a gente tem várias
+[13:13] aulas sobre isso dentro da comunidade caso você queira aprender.
+[13:16] O que eu quero que você entenda nesse vídeo é como os vídeos longos
+[13:19] funcionam como esse pipeline. Então imagina que a gente tem um vídeo
+[13:22] longo que vai daqui até aqui a gente pode pegar três trechos diferentes
+[13:27] vídeos longo e que viram três vídeos relativamente longos.
+[13:31] No primeiro a gente pode estar falando sobre playwright mcp explicando o que que é
+[13:35] depois a gente fala sobre o epi-fi e depois sobre produção de conteúdo com
+[13:38] ar imagina que esses foram os três temas do vídeo se a gente dividir ele em
+[13:42] segmentos aí a gente pode agendar cada um desses cortes
+[13:46] para um horário diferente no mesmo dia beleza mas como que tudo isso
+[13:49] funciona a gente tem a escolha do vídeo específico né tem vídeos que
+[13:53] são muito curtos tem vídeos que falam só sobre um tema e eles não
+[13:56] vão ser selecionados estão em critérios de seleção dos vídeos que
+[13:59] vão entrar para o pipeline tem preparação do material.
+[14:03] Depois o Clódio vai cortar os trechos específicos selecionados.
+[14:08] Depois a gente vai validar a palavra chave porque esse canal ele vai
+[14:13] focar em ranqueamento por palavra chave eu não quero que ele estône um
+[14:17] canal que vira lisa vídeos muito rápido eu quero que ele se
+[14:20] torne um canal que quando a pessoa procurar por certos termos
+[14:23] certas ferramentas os vídeos vão estar aparecendo na primeira
+[14:26] página. Então a gente tem que pensar para poder ranquear
+[14:29] qual vai ser o título tem que pensar na descrição uma
+[14:32] série de coisas né e tem um setezinho que a gente insere no
+[14:36] final de todo vídeo a descrição do vídeo obviamente a
+[14:40] thumbnail né e tem protocolos diferentes para a escrita da
+[14:43] descrição escrita da thumbnail que são protocolos que
+[14:46] cada canal vai decidir como fazer de acordo com certa
+[14:49] linha editorial e isso varia muito de pessoa pra pessoa de
+[14:52] empresa pra empresa né a identidade visual é uma coisa
+[14:55] muito particular e aí tá pra final é a publicação dentro
+[14:58] da agenda como um projeto relativamente novo a gente
+[15:00] tá se limitando a cinco vídeos por dia mas se ele começa
+[15:03] a pegar uma atração bacana a gente começa a aumentar
+[15:06] aumentar aumentar chegar em dez por dia quinze por dia
+[15:09] vinte por dia e você pode criar variações ao longo
+[15:11] do tempo quebrar em partes ainda menores pegar vídeos
+[15:14] antigos pegar treinamentos pegar trechos de lives né
+[15:18] coisas assim que podem servir como conteúdo inclusive
+[15:22] a gente pode colocar um motion super legal em cima de
+[15:25] conteúdos que não tem talvez uma edição tão boa
+[15:28] então tem um milhão de possibilidades e ramificações
+[15:30] que esse projeto pode trazer e tem um processo de download
+[15:34] né a gente precisa dos vídeos baixados pra poder
+[15:36] trabalhar em cima deles e a gente não quer vídeos
+[15:39] muito curto a gente quer vídeos que a gente ainda não
+[15:41] publicou e ele vai baixar em mil e oitenta então
+[15:45] tudo isso aqui a gente não usa nem do acesso ao nosso
+[15:47] canal né a gente poderia fazer isso com um canal de
+[15:50] outra pessoa se quiser eu lógico que talvez
+[15:52] tem alguns problemas de direitos autorais de políticas
+[15:55] do youtube etc como a gente tá fazendo do nosso
+[15:56] próprio canal tá tudo certo e aquela ideia que eu
+[15:59] tava falando pra vocês do time tempo tá alinhado a uma
+[16:01] frase uma palavra específica é assim que a ela vai
+[16:04] editar o vídeo porque tem um roteiro algumas coisas
+[16:07] desse roteiro ela vai querer cortar algumas
+[16:09] coisas ela vai poder trazer pra um outro momento
+[16:11] do vídeo né então tem essa capacidade também
+[16:12] não são só cortes fixos né que você poderia
+[16:15] fazer rapidamente ela também vai ter essa
+[16:18] inteligência de pegar um trecho talvez do final
+[16:21] do vídeo e trazer pra um corte pra ele fazer mais
+[16:25] sentido do que ele faria e tem alguns critérios
+[16:27] que a gente acha que faz muito sentido né o vídeo
+[16:29] ali se sustenta ou ele é só um hook sem nenhum
+[16:33] conteúdo depois né ele entrega o que promete
+[16:36] né a gente precisa falar uma coisa no começo
+[16:38] do vídeo que seja uma espécie de hook obviamente
+[16:40] vai ser um super hook porque foi um recorde
+[16:43] ele é um recorde de um vídeo mais longo
+[16:45] mas pode começar com a frase que vai
+[16:47] gerar interesse e essa frase no final tem
+[16:50] uma expectativa que é rompida né que é
+[16:53] quebrada se for aí a gente não quer porque
+[16:56] a gente acaba sacrificando uma reputação
+[16:59] né uma confiança da audiência e aí tem
+[17:02] outras especificações de abertura né de
+[17:04] enfim duração mas a ideia toda é que
+[17:06] os vídeos postados no canal que gerando
+[17:08] pelo automático sejam vídeos bem
+[17:10] selecionados bem recortados eventualmente
+[17:12] com ediçãozinho aqui ou outra pra que
+[17:14] eles sirvam com uma experiência bacana
+[17:16] pra quem está assistindo e outra coisa
+[17:18] legal é que o nosso agente deleta trechos
+[17:20] que prometem coisas que vão acontecer
+[17:22] depois ou coisas que fazem com que a
+[17:25] pessoa saia desse ambiente de estou
+[17:28] assistindo um vídeo em um canal do youtube
+[17:30] né e não recorte simplesmente né uma
+[17:34] experiência por exemplo que começa o
+[17:36] vídeo falando no final do vídeo de falar
+[17:37] sobre x ou y e aí o corte não pega
+[17:40] esse trecho não vai fazer sentido pra
+[17:42] quem está assistindo porque você não
+[17:44] prometeu aquilo lá atrás e aí que
+[17:46] aconteceu o vídeo acabou pela metade
+[17:47] essa é a situação que a gente quer
+[17:48] evitar nem sempre é possível né
+[17:50] porque tem os desafios todos de fazer
+[17:52] cortes mas a gente consegue remover
+[17:54] também trechos que estão ali no
+[17:57] meio do vídeo e que são identificados
+[18:00] com problemáticos dentro da narrativa
+[18:02] que a gente quer construir com aquele
+[18:03] corte pra decidir o título também
+[18:05] tem algumas estratégias bem simples
+[18:07] tá a gente não criou nada muito
+[18:09] sofisticado mas a ideia é pegar
+[18:11] a palavra chave que tem o volume de
+[18:12] pesquisa e trazer um título que
+[18:14] possa coincidir com essa
+[18:17] pesquisa que as pessoas têm interesse
+[18:19] nas vezes é uma ferramenta às vezes é
+[18:21] uma técnica específica às vezes enfim
+[18:24] é um lançamento de um modelo
+[18:26] então a ideia é trazer essa palavra
+[18:29] chave como protagonista pra que a
+[18:30] gente possa ter uma chance de
+[18:31] ranquear no longo prazo e tem algumas
+[18:33] coisas que você vai considerar também
+[18:35] que é a trilha sonora né se você
+[18:37] tem muita música rolando o tempo
+[18:39] todo é difícil você criar cortes
+[18:41] que sejam naturais dentro de um
+[18:42] por ser a sedeção de vídeos
+[18:44] então você geralmente consegue fazer
+[18:46] esses cortes nos intervalos que a
+[18:49] pessoa termina uma frase antes de ela
+[18:50] começar outra e aí também tem o
+[18:52] protocolo de thumbnails né que eu
+[18:53] acho que não é tão pertinente
+[18:55] porque é uma coisa muito particular
+[18:56] mas uma coisa legal são as utm's
+[18:58] assim que a gente sabe de onde as
+[19:00] vendas vieram a gente também
+[19:02] tem as keywords na descrição né
+[19:05] porque é legal você ter a palavra
+[19:07] chave que você quer colocar no
+[19:09] título e ranquear né dentro da
+[19:11] descrição e aí tem os capítulos
+[19:13] para ser uma experiência mais
+[19:16] bacana para quem está assistindo né
+[19:17] a pessoa pode pular para um trecho
+[19:18] direto se ela quiser saber uma
+[19:19] informação muito específica e aí
+[19:21] tem o upload do vídeo né a gente
+[19:23] vai entender quais vídeos já foram
+[19:26] agendados quais dias já estão
+[19:28] lotados né com esse limite de cinco
+[19:31] vídeos por dia e aí com base na
+[19:33] que o que já foi agendado ele vai
+[19:35] preenchendo os horários livres que
+[19:38] são pré-estabelecidos né são cinco
+[19:40] horários por dia e aí os horários
+[19:43] que ainda não estivarem preenchidos
+[19:44] podem ser preenchidos pelo pipeline
+[19:46] e tem uma etapa bacana de
+[19:47] verificação de tudo para ver se
+[19:49] não existe nada problemático isso aqui
+[19:52] pode ser feito via e a via automação
+[19:54] tem muito jeito de fazer
+[19:56] mas a gente basicamente tem
+[19:59] algumas etapas de verificação para
+[20:00] garantir que todos os pré-requisitos
+[20:02] dentro do processo de produção
+[20:04] daqueles cortes foram atendidos
+[20:07] e caso tudo isso realmente tenha sido
+[20:09] feito a gente vai lá e segue publica
+[20:11] caso não tenha sido feito aí a gente
+[20:13] vai volta e conserta né o agente vai
+[20:16] fazer esse retorno ao ponto que quebrou
+[20:19] para ver o que aconteceu e aí ele vai
+[20:21] passar de novo por essa verificação
+[20:23] e aí quando ele for aprovado ele vai
+[20:25] seguir para a publicação e vai
+[20:27] parar de trabalhar ao todo já foram
+[20:29] mais de 350 cortes publicados mais de
+[20:33] 119 vídeos cortados e todo esse
+[20:37] trabalho isso é o mais inacreditável
+[20:39] não precisou em absoluto do nosso tempo
+[20:42] isso que é incrível isso faz com que seja
+[20:44] escalável também porque se a gente
+[20:46] consegue fazer isso com um canal porque
+[20:47] não fazer com várias às vezes com
+[20:49] pequenas variações né
+[20:50] mas é um canal de distribuição um
+[20:53] canal de aquisição incrível e com
+[20:55] custo muito baixo né em comparação
+[20:58] a por exemplo rodar tráfego
+[20:59] na meta ou no google pra quem está
+[21:00] na comunidade o maestro daí é uma
+[21:02] ótima notícia se a gente já está
+[21:04] lá dentro você pode começar a utilizar
+[21:06] hoje mesmo e para as pessoas que querem
+[21:07] tudo de graça e ficam chateadas
+[21:09] porque a gente disponibiliza esses
+[21:10] recursos dentro da comunidade a gente
+[21:13] precisa valorizar as pessoas que estão
+[21:15] na comunidade as pessoas que interagem
+[21:17] que contribuem que participam das lives
+[21:20] são pessoas que decidiram confiar no
+[21:21] nosso trabalho óbvio que a gente valoriza
+[21:23] muitas pessoas que assistem todos vídeos
+[21:24] aqui do canal mesmo não estando na
+[21:26] comunidade
+[21:27] mas as pessoas que estão na comunidade
+[21:29] que estão interagindo que estão
+[21:30] aprendendo que estão confiando na gente
+[21:33] para guiar essa jornada de aprendizado
+[21:35] em a que estão utilizando os aplicativos
+[21:37] que nós desenvolvemos que estão
+[21:39] utilizando nossos agentes nossas skills
+[21:41] nós precisamos priorizar as pessoas
+[21:43] que estão dentro do nosso
+[21:45] ecossistema e sinceramente o valor da
+[21:46] comunidade é um valor simbólico a gente
+[21:48] poderia cobrar dez vinte vezes mais
+[21:51] e ainda é continuaria vendendo todos
+[21:52] os dias talvez até ganhando mais
+[21:54] mas a gente tem feito questão de
+[21:55] manter o preço como ele está
+[21:57] porque simplesmente a gente acredita
+[21:59] que ter uma comunidade viva de
+[22:00] inteligência artificial que interage
+[22:02] que troca experiências é uma coisa
+[22:04] muito valiosa e que quanto mais membros
+[22:07] a gente tem mais rica vai ser a experiência
+[22:09] de todo mundo
+[22:10] então se você gosta dos vídeos aqui do
+[22:11] canal tem certeza que você vai adorar
+[22:13] entrar na comunidade
+[22:14] o link está na descrição desse vídeo
+[22:16] se você tem uma empresa que é
+[22:17] implementar esse tipo de sistema na
+[22:18] sua empresa
+[22:19] você pode também clicar no link na
+[22:21] descrição
+[22:21] nós temos uma agência de implementação
+[22:23] e já implementamos sistemas autônomos
+[22:25] de produção de conteúdo para várias
+[22:26] empresas
+[22:27] e é claro se você gostou do vídeo
+[22:28] eu te convido a deixar um hype
+[22:30] e um like para que você continue
+[22:31] recebendo notificações e
+[22:32] recomendações do youtube de vídeos
+[22:34] como esse
+[22:34] além disso você pode também se inscrever
+[22:36] no canal
+[22:36] um abraço
+[22:37] e até a próxima

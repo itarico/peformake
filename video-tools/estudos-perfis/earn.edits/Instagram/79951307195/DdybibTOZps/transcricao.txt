@@ -1,0 +1,7 @@
+idioma: en
+[00:00] I saved this flicker transition because I wanted to try it, so I asked NVIDIA to build it for me.
+[00:04] Sent NVIDIA editor the reference clip and let it study exactly how those squares strobed.
+[00:09] Broke down the timing, dropped in shape layers, zero manual work from me.
+[00:13] I nudged blink rate, tightened rectangle size and pushed contrast up straight inside chat.
+[00:18] My footage now snaps and lands just like the reel I'd bookmarked months ago.
+[00:22] Comment NVIDIA and I'll send a link for up to 50% off on annual plans.

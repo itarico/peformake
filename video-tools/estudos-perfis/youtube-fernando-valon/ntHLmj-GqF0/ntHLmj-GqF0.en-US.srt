@@ -1,0 +1,668 @@
+1
+00:00:00,160 --> 00:00:03,120
+A few days ago, I was watching and
+
+2
+00:00:03,120 --> 00:00:10,600
+studying on YouTube and I came across several videos of editors who were editing,
+
+3
+00:00:10,600 --> 00:00:15,040
+or rather, asking an artificial intelligence, Claude,
+
+4
+00:00:15,040 --> 00:00:21,240
+to do some editing processes, mostly in the visual part, like motion graphics. And I decided to test it
+
+5
+00:00:21,240 --> 00:00:25,920
+too, and I'm going to show you here. In another video on this channel, which
+
+6
+00:00:25,920 --> 00:00:31,240
+you can watch later, I showed how you can use
+
+7
+00:00:31,240 --> 00:00:36,440
+artificial intelligence to create, for example, a counter. Anyway, I can show you
+
+8
+00:00:36,440 --> 00:00:40,480
+how to do that now. So, for example, I'm here in ChatPT, I'm going to put, look,
+
+9
+00:00:40,480 --> 00:00:55,720
+create a counter from 0 to 100 in an SRT file. The same thing I'm doing here in ChatPT,
+
+10
+00:00:55,720 --> 00:01:01,360
+you could do in Claude. I'll show you just so you understand how simple it is. Here,
+
+11
+00:01:01,360 --> 00:01:06,240
+you can see that it's already started to take a trip, so it started writing
+
+12
+00:01:06,240 --> 00:01:12,640
+all the numbers here for me. Then I came and wrote it down, I want the generated file.
+
+13
+00:01:12,640 --> 00:01:18,800
+This might happen with the cloud too, but normally you come, download it, and I'll put it in Capcut. I'll
+
+14
+00:01:18,800 --> 00:01:25,000
+go to text and, look, it will add text. I'll go to local subtitles, import.
+
+15
+00:01:25,000 --> 00:01:31,480
+I'll open the folder where I saved the counter. And look, when I put it here, look what
+
+16
+00:01:31,480 --> 00:01:41,440
+it already does for us. It simply has a counter from zero to 100. So you don't need
+
+17
+00:01:41,440 --> 00:01:47,600
+to spend your time doing all the numbers here. Look how practical it is to save you time. I've already
+
+18
+00:01:47,600 --> 00:01:53,080
+shown in this tutorial how you can even use it to customize it. And then you'll
+
+19
+00:01:53,080 --> 00:02:01,080
+have control over it, easily to use. Did you see that I did this in just a few minutes?
+
+20
+00:02:01,080 --> 00:02:06,120
+In other words, all these tools are coming to save our time. But okay,
+
+21
+00:02:06,120 --> 00:02:12,320
+this is very simple, it's just for you to start understanding. From now on, things get a
+
+22
+00:02:12,320 --> 00:02:18,360
+little more complex. Also, what I'm going to show you here in the cloud requires at
+
+23
+00:02:18,360 --> 00:02:24,720
+least a one-month subscription to use this feature. And besides that, you have to have the cloud installed on
+
+24
+00:02:24,720 --> 00:02:30,840
+your computer. It's no use just going through the browser, like I was doing here with the EPT chat. Okay,
+
+25
+00:02:30,840 --> 00:02:36,800
+I'm here with Claude on my computer screen. You'll see it's the chat; it has the cowork
+
+26
+00:02:36,800 --> 00:02:44,240
+and the code. And this is where things get tricky. This is where we're going to start having some real fun.
+
+27
+00:02:44,240 --> 00:02:49,120
+The first thing you'll have to do is access this code that will be in the
+
+28
+00:02:49,120 --> 00:02:55,800
+video description. It's code that, as I told you, other people have
+
+29
+00:02:55,800 --> 00:03:02,560
+also used in other tutorials. So you simply need to copy its URL, right? It's simply here,
+
+30
+00:03:02,560 --> 00:03:12,000
+copy this URL. No need for all the confusion. You just need to copy this. OK? Copy it,
+
+31
+00:03:12,000 --> 00:03:20,000
+go back to the cloud and paste it here, see, Ctrl+V. And in this case, I pasted it exactly as
+
+32
+00:03:20,000 --> 00:03:25,760
+I saw other people doing it. You can do it this way too, or just put it in Portuguese, which
+
+33
+00:03:25,760 --> 00:03:34,120
+I believe will be the same. But I put, for example, "install skills," and so on, you'll paste
+
+34
+00:03:34,120 --> 00:03:40,880
+it however you think is best, okay? Just follow what I'm doing to avoid mistakes. Okay, after
+
+35
+00:03:40,880 --> 00:03:46,960
+doing that, before pressing enter, you'll choose the folder where you want to save it, right? A location,
+
+36
+00:03:46,960 --> 00:03:52,960
+choose a folder, whatever name you think is interesting. Everything you
+
+37
+00:03:52,960 --> 00:03:59,840
+do will happen within that folder. So, files will be sent to that folder.
+
+38
+00:03:59,840 --> 00:04:07,280
+You can also send files to the cloud. So, it's important to choose a place where you
+
+39
+00:04:07,280 --> 00:04:13,360
+won't forget and also a place that can hold a lot of things. Also, here in the mode,
+
+40
+00:04:13,360 --> 00:04:19,520
+the system, the little robot that understands a lot here, you'll probably put, yours
+
+41
+00:04:19,520 --> 00:04:27,880
+will be there in this sonet. You can put Opus 4.6. Remember that you'll only be able to do
+
+42
+00:04:27,880 --> 00:04:34,920
+this because you paid for a cloud plan. So, obviously, it's not for just anyone curious. Or if you
+
+43
+00:04:34,920 --> 00:04:40,200
+have the money and are curious, you can test it and do it. But if you want to work with this,
+
+44
+00:04:40,200 --> 00:04:45,720
+you always need to invest your money, because by investing, obviously, you'll always get a
+
+45
+00:04:45,720 --> 00:04:54,320
+return in time, more money, and so on. Once you press enter, it will start running on
+
+46
+00:04:54,320 --> 00:05:00,320
+your computer. It will start installing various things here. And the trick is to approve everything.
+
+47
+00:05:00,320 --> 00:05:07,000
+What he's asking for here, look. So, he's asking. You can even set it to "always allow" so it always
+
+48
+00:05:07,000 --> 00:05:13,640
+runs. So, you don't need to keep clicking every time, okay? Just keep doing that, keep doing it and
+
+49
+00:05:13,640 --> 00:05:19,240
+let it run. He'll ask several things, there might be something missing that needs
+
+50
+00:05:19,240 --> 00:05:24,080
+to be installed. He'll tell you: "Look, this is missing on your computer. I'm going to install it,
+
+51
+00:05:24,080 --> 00:05:33,080
+do you allow it?" until finally you get to this window here. Finally, you're ready
+
+52
+00:05:33,080 --> 00:05:38,200
+to experience a new moment. I'm sure that soon many people will be talking
+
+53
+00:05:38,200 --> 00:05:44,440
+about this, because it's a very practical way to do anything. Okay, let's go. The first
+
+54
+00:05:44,440 --> 00:05:50,600
+thing you'll see here is this timeline in your browser. Exactly. You have a
+
+55
+00:05:50,600 --> 00:05:57,760
+timeline here very similar to After Effects. Of course, it doesn't have all the plugins and everything you
+
+56
+00:05:57,760 --> 00:06:04,280
+use in After Effects, but we have a timeline here that's basically where we
+
+57
+00:06:04,280 --> 00:06:10,880
+'ll see everything happen. You won't work here, but we'll see everything happen here.
+
+58
+00:06:10,880 --> 00:06:18,040
+But where things get interesting, where we'll really work, is within the cloud, which is exactly where
+
+59
+00:06:18,040 --> 00:06:22,880
+you'll start interacting with it. So, as I said, it will function like any
+
+60
+00:06:22,880 --> 00:06:29,760
+chat, but the better your prompt, the better your results. I'm doing a test
+
+61
+00:06:29,760 --> 00:06:36,120
+here with you. A lot of what I'm going to do here is following examples I've seen from other tutorials
+
+62
+00:06:36,120 --> 00:06:42,000
+abroad, from other people doing it here, but I'll also do some tests in Portuguese.
+
+63
+00:06:42,000 --> 00:06:48,000
+So, first thing, we're going to use the cloud to create motion graphics, that is, it will
+
+64
+00:06:48,000 --> 00:06:55,040
+animate anything we ask for, anything at all. I took this image, which is
+
+65
+00:06:55,040 --> 00:07:00,600
+a screenshot from Instagram, right, of the follower analytics data, etc. I'm going to ask
+
+66
+00:07:00,600 --> 00:07:06,200
+it to animate from zero to the number shown in this screenshot. I'm going to ask it to
+
+67
+00:07:06,200 --> 00:07:13,400
+animate the rest of the things. I'm going to write it in a super simple way, right? I'm putting it here
+
+68
+00:07:13,400 --> 00:07:23,600
+in a very simple way so you understand. Press play. Now we wait for it to work. Okay
+
+69
+00:07:23,600 --> 00:07:27,960
+, while we wait, this is the time for you to leave your like, which will
+
+70
+00:07:27,960 --> 00:07:33,360
+greatly help me deliver this content to more people and make the channel grow even more. I
+
+71
+00:07:33,360 --> 00:07:39,160
+'m always studying everything related to video creation. So this is a place where you'll
+
+72
+00:07:39,160 --> 00:07:45,680
+always be very welcome, and you don't pay anything to receive this. Just leave your like,
+
+73
+00:07:45,680 --> 00:07:51,600
+subscribe, and if you want, leave a comment; it will help me a lot, okay? And finally,
+
+74
+00:07:51,600 --> 00:08:00,360
+we have a result here. Look at that, how cool this animation is, the level of this! Can it be fixed? Can it
+
+75
+00:08:00,360 --> 00:08:07,760
+be asked to do it another way? Of course it can. I made a simple, silly prompt here, and we got
+
+76
+00:08:07,760 --> 00:08:13,440
+this result. It can happen, as I've seen in some examples in other videos, that it
+
+77
+00:08:13,440 --> 00:08:20,680
+simply doesn't create the exact image you put in. You go there and write to it: "Look,
+
+78
+00:08:20,680 --> 00:08:27,320
+no, I didn't like it. You didn't follow my image. I want you to follow my image exactly."
+
+79
+00:08:27,320 --> 00:08:34,520
+And then it will do it again. Remember that even though you pay, you also have credits here
+
+80
+00:08:34,520 --> 00:08:40,040
+. So you can start doing it, but at some point, which I believe will happen to me
+
+81
+00:08:40,040 --> 00:08:46,080
+at some point, it will freeze and then release later the next day. Anyway, of course, all of
+
+82
+00:08:46,080 --> 00:08:51,480
+this also depends on the plan you're paying for. To do all of this in After Effects,
+
+83
+00:08:51,480 --> 00:08:57,960
+in Capcut, which some people do in Capcut, would take at least two hours. And the
+
+84
+00:08:57,960 --> 00:09:03,560
+time you're spending doing this here is original, totally original. You'll put it
+
+85
+00:09:03,560 --> 00:09:10,160
+the way you want. So, again, we're living in an era where this is a tool.
+
+86
+00:09:10,160 --> 00:09:16,080
+It won't take our jobs, but it's changing the way we work.
+
+87
+00:09:16,080 --> 00:09:21,640
+Not just anyone will be able to do this, but if you learn how to do it, if you get in and
+
+88
+00:09:21,640 --> 00:09:26,840
+update yourself, you'll definitely get ahead, you'll come out ahead. Anyway, the next thing I'm going to
+
+89
+00:09:26,840 --> 00:09:33,720
+ask it to do here is lower thirds, which is a little text below my name. Anyway, I'll
+
+90
+00:09:33,720 --> 00:09:39,320
+put it in a very simple way. Let's see what it does for us here too. I don't know how
+
+91
+00:09:39,320 --> 00:09:49,160
+it's going to be, but I'll put it simply. And, look, he's already done it here for us too. No
+
+92
+00:09:49,160 --> 00:09:53,480
+It turned out great. He even made a little cut there, see? I'd have to ask him to fix this
+
+93
+00:09:53,480 --> 00:09:58,120
+. I'm not going to tell him to mess with it now because I didn't really like the result. And if
+
+94
+00:09:58,120 --> 00:10:04,400
+I ask him to fix it, he'll spend, as I said, credits. So, I'll leave it as is. It was
+
+95
+00:10:04,400 --> 00:10:09,000
+just for us to test it too. And I know you must be super worried, wanting to understand,
+
+96
+00:10:09,000 --> 00:10:15,800
+okay? He's doing all this, but how is he going to bring this to a video editor,
+
+97
+00:10:15,800 --> 00:10:21,120
+a Capcut, a Premiere, a Da20? I'll show you now. I'm even going to do some more tests
+
+98
+00:10:21,120 --> 00:10:26,080
+here. I'll show you the result. I'm not going to show you the whole process so it doesn't get
+
+99
+00:10:26,080 --> 00:10:31,440
+too boring, but you should already be seeing the result of some things I did. And well,
+
+100
+00:10:31,440 --> 00:10:38,320
+after you've done everything you wanted, you'll come here to render, you have the codec option.
+
+101
+00:10:38,320 --> 00:10:47,560
+So you have H264, H265, and Proz, and you'll see that it will be saved in a folder—
+
+102
+00:10:47,560 --> 00:10:54,160
+the folder you created at the beginning, a place you chose. It will be a folder called "out,"
+
+103
+00:10:54,160 --> 00:10:59,280
+which is simply where it sends the files. After that, you'll see several
+
+104
+00:10:59,280 --> 00:11:04,880
+other options here that I'll research later, but after that, you'll render
+
+105
+00:11:04,880 --> 00:11:10,600
+the video, and when it finishes rendering, you'll see that
+
+106
+00:11:10,600 --> 00:11:17,440
+your video will already be saved in that folder. I'll show you. I still have Capcut
+
+107
+00:11:17,440 --> 00:11:24,200
+open here. I'll also show you another part using Premiere. Remember, as I always say,
+
+108
+00:11:24,200 --> 00:11:30,720
+all editing software is practically the same. If you know how to edit in one, you know how to edit
+
+109
+00:11:30,720 --> 00:11:35,440
+in any. And I teach all of this in "Hollywood in the Palm of Your Hand," which is my
+
+110
+00:11:35,440 --> 00:11:41,000
+video creation training, for those who want to work in this field. If you
+
+111
+00:11:41,000 --> 00:11:47,480
+want to learn more, the link is in the description. Okay, I'm here in the cloud folder, you see
+
+112
+00:11:47,480 --> 00:11:57,480
+? I have Cloud Remotion and Demo here, and it has the output here. So it saved here, see, my comp. I'll
+
+113
+00:11:57,480 --> 00:12:07,120
+show you. I pulled the video here, simply animated, like we did. And then I could,
+
+114
+00:12:07,120 --> 00:12:13,840
+for example, tell it to make a background. And then I had to write that there. I want
+
+115
+00:12:13,840 --> 00:12:19,520
+the background to be green. Why? I can simply remove the background and use it as
+
+116
+00:12:19,520 --> 00:12:26,240
+an animation within any of my videos. Or I could make a mask, it's not the best
+
+117
+00:12:26,240 --> 00:12:31,320
+thing in the world. Here, see, it won't be the best thing because it won't be in the exact shape there,
+
+118
+00:12:31,320 --> 00:12:38,320
+see. I can even make it more rounded, but, you understand that whatever you ask it to do,
+
+119
+00:12:38,320 --> 00:12:43,880
+it will do correctly, and you could simply follow the way I said. So here, see,
+
+120
+00:12:43,880 --> 00:12:50,760
+I already have an interesting option. If I want to follow this, I can use it now within any
+
+121
+00:12:50,760 --> 00:12:57,080
+video I want. Look, man, an animation that, again, is original. Original, because
+
+122
+00:12:57,080 --> 00:13:02,280
+I used this image. I could use any other image, but it's something I asked to be
+
+123
+00:13:02,280 --> 00:13:07,960
+done and you can use it in any work you're going to do. Man, the time I spent
+
+124
+00:13:07,960 --> 00:13:14,040
+doing this still scares me, because I always did it in After Effects and that took at least
+
+125
+00:13:14,040 --> 00:13:20,120
+an hour, at least 1 or 2 hours. So we're saving time and that's very,
+
+126
+00:13:20,120 --> 00:13:27,080
+very good. Next thing I'm going to show you, and then we'll start to see the level of craziness
+
+127
+00:13:27,080 --> 00:13:35,360
+that this tool shows us. I'm going to go to the cloud folder itself, the remotion demo and
+
+128
+00:13:35,360 --> 00:13:41,920
+public folders. I have this folder here. It's even next to the out folder, which is where it will send and
+
+129
+00:13:41,920 --> 00:13:48,760
+export your file, okay? So you're going to copy your video into this public folder. And
+
+130
+00:13:48,760 --> 00:13:56,160
+I have it here, look, with the name "test subtitles cloud". OK. I'm going to pull this video into Premiere,
+
+131
+00:13:56,160 --> 00:14:02,440
+but you could pull it into Capcut. I just like to vary the software here, okay?
+
+132
+00:14:02,440 --> 00:14:11,360
+I opened Premiere, I'm going to go to transcript and I'm going to tell it to create the subtitles. Look, testing
+
+133
+00:14:11,360 --> 00:14:17,680
+subtitles with Cloud AI. It even put "cloud" here, which I think I must have said. It's Cloud
+
+134
+00:14:17,680 --> 00:14:25,600
+AI. To this day I don't know exactly how to say it, but Cloud AI, I said it like this, AI. I'm going to go
+
+135
+00:14:25,600 --> 00:14:32,840
+to "create captions" and I'm going to tell it to create a subtitle. Same thing you would do in Capcut,
+
+136
+00:14:32,840 --> 00:14:40,320
+anywhere else in Channel 20, anyway. So, here it is, testing subtitles with Cloud AI. I wonder if...
+
+137
+00:14:40,320 --> 00:14:47,680
+Does it work? Remember, ideally you should adjust all these subtitles before doing anything
+
+138
+00:14:47,680 --> 00:14:54,680
+. Check if they are correct, if there are any errors, see if it works well.
+
+139
+00:14:54,680 --> 00:15:01,920
+Let's test it, let's see. Analyze it. This is a suggestion for any subtitle file. There are
+
+140
+00:15:01,920 --> 00:15:07,800
+people who sometimes create them without even looking at what's written, and everything goes wrong. Take a look,
+
+141
+00:15:07,800 --> 00:15:15,560
+pay close attention. Once you've created the subtitle, you don't need to change any subtitle formatting, okay? All of this
+
+142
+00:15:15,560 --> 00:15:21,080
+will be done within the cloud. I'll go to captions here, in the case of Premiere. I'll click here,
+
+143
+00:15:21,080 --> 00:15:30,880
+on these three dots, export to srt file. An srt file, in case you don't know, is a format
+
+144
+00:15:30,880 --> 00:15:41,320
+that exports subtitles. Once you do that, you'll export these subtitles into this public folder.
+
+145
+00:15:41,320 --> 00:15:47,640
+So, test, the video name was testsubtitlescloud, it will become testsubtitlescloud.srt.
+
+146
+00:15:47,640 --> 00:15:59,960
+Saved. And then you'll see here, look. There, we have my video. We have subtitles with the simple video, and
+
+147
+00:15:59,960 --> 00:16:10,480
+we have the subtitle in SRT format, which is a normal file. Now you go back there and simply tell the chat—
+
+148
+00:16:10,480 --> 00:16:15,480
+I'm talking about the chat, but it's here in the code every time—I want you to subtitle my video X. So you
+
+149
+00:16:15,480 --> 00:16:22,280
+say the name, and it already has the subtitle. I want you to put it in X color, in X style.
+
+150
+00:16:22,280 --> 00:16:29,600
+If you want a subtitle reference, you go to YouTube, you go to Google,
+
+151
+00:16:29,600 --> 00:16:35,120
+take a screenshot of the subtitle style you want, and send it along. Send it here in the folder, go
+
+152
+00:16:35,120 --> 00:16:41,640
+to options here and say, "I want this style for this video."
+
+153
+00:16:41,640 --> 00:16:46,480
+It will automatically do it. I'll ask it to do it here. It won't create, it won't listen to my video;
+
+154
+00:16:46,480 --> 00:16:53,720
+it's simply reading a part from another file I put along. So, since they have
+
+155
+00:16:53,720 --> 00:17:01,720
+the same names, it's simply reading, and it's already ready for us. Look how
+
+156
+00:17:01,720 --> 00:17:07,600
+crazy. It's a bizarre level, but we're getting to that point, and I think it's cool.
+
+157
+00:17:07,600 --> 00:17:14,800
+It's a tool, it's interesting because we're spending much less time on our work.
+
+158
+00:17:14,800 --> 00:17:20,840
+I believe it's a very interesting option to save time in animation and
+
+159
+00:17:20,840 --> 00:17:26,640
+motion graphics. I personally wouldn't use it for adding subtitles, you know? For that,
+
+160
+00:17:26,640 --> 00:17:32,160
+I can simply pay for Capcut, pay for any other software, and I
+
+161
+00:17:32,160 --> 00:17:40,320
+can adjust it quickly on the spot. But at the level of motion graphics, at the level of animating
+
+162
+00:17:40,320 --> 00:17:46,200
+larger things, I think it's worth my time, because it's simply offering something of quality,
+
+163
+00:17:46,200 --> 00:17:50,720
+it's not just offering anything. Well, I truly hope this video was useful
+
+164
+00:17:50,720 --> 00:17:55,960
+for you. [music] When I saw this for the first time, I said, I need to show this to everyone.
+
+165
+00:17:55,960 --> 00:18:00,440
+So, really, if you could leave a like, a comment, whatever,
+
+166
+00:18:00,440 --> 00:18:05,960
+it would help a lot. And besides that, I'm going to recommend this video here, which I believe will be very
+
+167
+00:18:05,960 --> 00:18:11,720
+cool for you to continue here on the channel. That's it, and we'll see each other very, very soon. Yeah.
+

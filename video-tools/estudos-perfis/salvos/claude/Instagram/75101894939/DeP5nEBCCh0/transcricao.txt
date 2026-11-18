@@ -1,0 +1,14 @@
+idioma: pt (1.00)
+[   0.0-   3.6] Alguém acabou de criar a skill mais poderosa do cloud que eu já vi e ninguém está usando
+[   3.6-   4.6] ela de verdade.
+[   4.6-   8.3] Um engenheiro da Versial criou uma skill que encontra todas as skills que você pode precisar
+[   8.3-   9.3] por você.
+[   9.3-  12.8] Funciona assim, ela tem um banco de dados com todas as melhores skills do mundo e aí
+[  12.8-  16.7] quando você digita o que você quer fazer ela vai lá e varre todas as skills que ela
+[  16.7-  20.8] tem e encontras que mais fazem sentido pra você, seja conteúdo ou qualquer outra
+[  20.8-  21.8] coisa.
+[  21.8-  25.1] Ela identifica as melhores skills exatamente pra aquele momento, baixa e já coloca dentro
+[  25.1-  26.1] do seu setup.
+[  26.1-  29.8] E a parte mais insana é que essa skill já passa por mais de 3 milhões de instalações.
+[  29.8-  33.8] Ou seja, você está literalmente ficando pra trás, você precisa pegar ela agora.
+[  33.8-  35.7] Então comenta as skills aqui embaixo que eu te mando no vídeo.

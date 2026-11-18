@@ -1,0 +1,590 @@
+1
+00:00:00,120 --> 00:00:03,760
+This entire video was edited by Claude.
+These elements that you're seeing on the screen,
+
+2
+00:00:03,760 --> 00:00:07,280
+the text emphasizing what I'm
+saying, this full-screen animation,
+
+3
+00:00:07,280 --> 00:00:12,160
+the camera zooms, the cuts, and even
+the sound effects.  And the best part is that
+
+4
+00:00:12,160 --> 00:00:16,160
+you can still adapt this to any
+style or visual identity you want.
+
+5
+00:00:16,160 --> 00:00:19,920
+Of course, we're not yet at the point where we can
+write a single prompt and receive a result like that
+
+6
+00:00:19,920 --> 00:00:23,960
+.  I spent a good amount of time creating an
+8-step process that I'm going to show you
+
+7
+00:00:23,960 --> 00:00:28,760
+in today's video.  And in the end, I'll even give you
+a free skill that guides you to create your own,
+
+8
+00:00:28,760 --> 00:00:31,160
+without going through all the tests
+and problems I went through.
+
+9
+00:00:31,160 --> 00:00:33,320
+So I'm warning you upfront that
+if you're looking for a
+
+10
+00:00:33,320 --> 00:00:36,240
+magic prompt that delivers a
+mediocre video, like many people do, this
+
+11
+00:00:36,240 --> 00:00:40,040
+isn't the place for you.  I prefer to give you a
+system where you put in a little of your time,
+
+12
+00:00:40,040 --> 00:00:43,440
+a little of your attention, but
+you receive a video that is well above average.
+
+13
+00:00:43,440 --> 00:00:46,800
+For those who don't know me, I'm Lucas
+Leite, I've been a filmmaker for over 10 years,
+
+14
+00:00:46,800 --> 00:00:50,200
+and that's why I've always been very
+hesitant to use AI in my editing,
+
+15
+00:00:50,200 --> 00:00:54,440
+because until now I'd always seen videos
+of people editing with AI, but I always thought the
+
+16
+00:00:54,440 --> 00:00:59,240
+results were quite weak.  But now, as you
+can see, things have changed quite a bit.
+
+17
+00:00:59,240 --> 00:01:01,280
+So, to do all
+this editing that you're seeing,
+
+18
+00:01:01,280 --> 00:01:06,760
+you only need two things.  The first is
+Claude's Pro subscription.  And the second is Claude
+
+19
+00:01:06,760 --> 00:01:10,600
+Code installed on your computer.  Claude
+Code, for those who don't know, is what allows
+
+20
+00:01:10,600 --> 00:01:14,080
+Claude to work directly on your computer's files
+.  And that's absolutely important.
+
+21
+00:01:14,080 --> 00:01:18,560
+And just two more important details before we
+move on to the steps.  First, the workflow I'm going to
+
+22
+00:01:18,560 --> 00:01:22,760
+use here is for a YouTube video, just like the one
+you're seeing here, a person speaking
+
+23
+00:01:22,760 --> 00:01:26,800
+directly to the camera.  But then, with the skill
+I'm going to teach you, you'll be able to create
+
+24
+00:01:26,800 --> 00:01:29,880
+your own flow and adapt it to any type of
+video you want.  It can be a stream
+
+25
+00:01:29,880 --> 00:01:33,880
+just for Instagram Reels, it can be a stream just
+for narrated videos, it can be whatever you want.
+
+26
+00:01:33,880 --> 00:01:37,920
+The second reason is that I chose to review
+everything using Premiere, because it was a program
+
+27
+00:01:37,920 --> 00:01:41,080
+I had always used.  But you can use whatever
+you prefer, you can use any other
+
+28
+00:01:41,080 --> 00:01:44,760
+program or not use any program at all, and
+Claude can already deliver the finished video to you.
+
+29
+00:01:44,760 --> 00:01:47,160
+Before making any edits, there's
+a very important part:
+
+30
+00:01:47,160 --> 00:01:50,680
+you need to give Claude some references
+of things you like to analyze.
+
+31
+00:01:50,680 --> 00:01:55,040
+To do this, all you have to do is drop some clips of
+animations that you like into the folder that Claude
+
+32
+00:01:55,040 --> 00:02:00,520
+Code is working on and ask him to analyze
+the style, the animations, the speed, the rhythm,
+
+33
+00:02:00,520 --> 00:02:04,640
+and he will be able to do a complete analysis for
+you.  Without this, the result tends to be
+
+34
+00:02:04,640 --> 00:02:08,320
+more generic, even if it has a legal workflow.  But
+the good news is that you only do this part
+
+35
+00:02:08,320 --> 00:02:11,680
+once, or any other time you want to
+update your style or something like that.
+
+36
+00:02:11,680 --> 00:02:15,240
+With Claude being trained comes the flow,
+which, as I said before, has 8 stages.
+
+37
+00:02:15,240 --> 00:02:19,920
+Each step is a skill that I created, that is,
+a file of instructions teaching Claude how to
+
+38
+00:02:19,920 --> 00:02:23,320
+perform a task in the same way every time.
+And pay close attention to step 4,
+
+39
+00:02:23,320 --> 00:02:26,920
+because that's where the video will either be
+good or bad.  Let's move on to the first two.
+
+40
+00:02:26,920 --> 00:02:30,640
+The first two stages are preparation.
+First, Claude asks me for a briefing.  Which
+
+41
+00:02:30,640 --> 00:02:35,000
+video is it?  What is the general direction?  Do I have
+any comments?  And then it goes and identifies the
+
+42
+00:02:35,000 --> 00:02:39,080
+files that I put in the folder.  On Monday,
+he will transcribe his video.  To do this,
+
+43
+00:02:39,080 --> 00:02:43,320
+he will use WhisperX, which is a free model
+that runs directly on your computer.  Claude uses
+
+44
+00:02:43,320 --> 00:02:47,160
+it to transcribe everything, marking the
+exact time of each word.  And this will be the basis
+
+45
+00:02:47,160 --> 00:02:50,560
+for our complete edition.  But don't worry,
+you don't need to worry about any of that.
+
+46
+00:02:50,560 --> 00:02:54,880
+All these programs that I'm going to mention here, like
+WhisperX, Claude installs them automatically for you.
+
+47
+00:02:54,880 --> 00:02:58,480
+And then, moving on to the next stage, with the
+transcript ready, comes the editing.
+
+48
+00:02:58,480 --> 00:03:04,080
+Claude identifies the pauses, the dialogue, and the entire
+text.  Only then does he correct the errors and assemble
+
+49
+00:03:04,080 --> 00:03:07,960
+a complete structure for our video.  This is the
+time when, if you put a script in the folder,
+
+50
+00:03:07,960 --> 00:03:11,280
+it uses it as a base, but it's not necessary.
+This step is the first one I usually
+
+51
+00:03:11,280 --> 00:03:15,320
+review.  He hands me a file that I
+open in Premiere, and if there are any issues,
+
+52
+00:03:15,320 --> 00:03:18,520
+I ask him to correct them, or I
+correct them myself in Premiere and send it back to him.
+
+53
+00:03:18,520 --> 00:03:23,760
+And now for step 4, the motion map.  This is the one that
+demands your attention the most.  Motion graphics, for those who don't
+
+54
+00:03:23,760 --> 00:03:28,800
+know, are the animations that appear on your screen.  And
+the map will be the plan for all of this.  What
+
+55
+00:03:28,800 --> 00:03:33,360
+will appear, when, at what pace, what
+style?  He's not going to announce anything right now,
+
+56
+00:03:33,360 --> 00:03:36,800
+it's just the planning stage.  And this step is very
+important because this is where you save
+
+57
+00:03:36,800 --> 00:03:41,720
+tokens, which is what measures your usage in Claude.  If
+you get the plan right, the chance of getting a
+
+58
+00:03:41,720 --> 00:03:46,880
+good result in the next step is much higher, and
+you'll need fewer changes and revisions.\h\h  This
+
+59
+00:03:46,880 --> 00:03:51,080
+is also the stage where you'll tell Claude
+if you want fewer or more animations
+
+60
+00:03:51,080 --> 00:03:55,240
+in your video.  In my specific case,
+the map also defines some
+
+61
+00:03:55,240 --> 00:03:59,560
+camera movements.  Because I like my motion graphics to interact
+with the camera.  If an animation starts with a zoom,
+
+62
+00:03:59,560 --> 00:04:03,200
+the camera zooms in before the transition and
+becomes more dynamic, as you could see.
+
+63
+00:04:03,200 --> 00:04:07,880
+Next comes the assets stage, which are the files
+that the animations need.  Icons, screenshots,
+
+64
+00:04:07,880 --> 00:04:12,800
+screen recordings, images, anything.
+Claude looks at the map and lists everything that is missing.
+
+65
+00:04:12,800 --> 00:04:16,920
+He'll try to get everything by himself first, and
+what he can't get, he'll ask you for.
+
+66
+00:04:16,920 --> 00:04:21,360
+Now, with the plan and files in hand, he
+finally arrives at the stage where he will create
+
+67
+00:04:21,360 --> 00:04:26,480
+the animations.  And for that, he uses HyperFrames,
+which is another extra program that Claude will
+
+68
+00:04:26,480 --> 00:04:30,960
+install for you himself, which transforms your
+code into video.  And in my case, this is where I
+
+69
+00:04:30,960 --> 00:04:35,240
+like to do a second review in Premiere Pro.
+It gives me the file and I can already see the motions
+
+70
+00:04:35,240 --> 00:04:40,480
+in the right time.  Then it's just a matter of approving it or requesting adjustments.
+In my experience, with a well-trained workflow,
+
+71
+00:04:40,480 --> 00:04:44,080
+one or two revisions at most, and you
+can already achieve a very good result.
+
+72
+00:04:44,080 --> 00:04:47,200
+And then, after all the motion shots are
+approved, come the zooms,
+
+73
+00:04:47,200 --> 00:04:50,640
+which is where Claude works on all the
+camera movement you've been seeing
+
+74
+00:04:50,640 --> 00:04:54,600
+so far.  He uses zoom differences to
+disguise cuts, performs dynamic zooms,
+
+75
+00:04:54,600 --> 00:04:59,120
+follows animations, and zooms in on key areas.  And
+a really cool detail that I like to add
+
+76
+00:04:59,120 --> 00:05:02,040
+is having the camera follow my face,
+as you can see here.  I think it looks
+
+77
+00:05:02,040 --> 00:05:06,920
+very dynamic, and for that, it uses YuNet, which is
+another model that tracks faces in video.
+
+78
+00:05:06,920 --> 00:05:11,320
+Reaching the final stage, which is the
+sound effects.  Claude identifies the movements,
+
+79
+00:05:11,320 --> 00:05:16,120
+both in the motion graphics and on the camera, and assigns a
+sound to each one.  In my case, it first searches through a
+
+80
+00:05:16,120 --> 00:05:20,640
+folder of sound effects I have, and if there's one
+that's missing, it downloads it
+
+81
+00:05:20,640 --> 00:05:24,520
+directly to Epidemic Sound, which I subscribe to.
+In your case, I recommend you first ask
+
+82
+00:05:24,520 --> 00:05:28,560
+Claude what sound effects would be nice for you to
+have in a folder.  And then you go looking for some
+
+83
+00:05:28,560 --> 00:05:33,280
+free ones, put together this folder to have your first
+base.  Now, if you want a much faster way
+
+84
+00:05:33,280 --> 00:05:37,520
+, just subscribe to Epidemic Sound and
+Claude will download everything for you directly through the API.
+
+85
+00:05:37,520 --> 00:05:42,160
+So let's recap all the
+steps and skills this workflow uses:
+
+86
+00:05:42,160 --> 00:05:49,640
+starting and preparing, cuts, motion map, assets,
+motion render, zooms, and sound effects.  These are
+
+87
+00:05:49,640 --> 00:05:54,720
+the eight stages, or eight skills.  And I know it may
+seem like a lot, a lot of steps, very complex.
+
+88
+00:05:54,720 --> 00:05:59,640
+But don't worry, because behind all of this
+there's a master skill.  You call her once and she
+
+89
+00:05:59,640 --> 00:06:04,000
+herself will call you step by step,
+guiding you through what you have to do in each one.
+
+90
+00:06:04,000 --> 00:06:08,240
+And here's an extra tip to help you save
+even more tokens.  After each step you
+
+91
+00:06:08,240 --> 00:06:13,120
+complete, clear your chat using the clear bar or
+start a new one.  This way, your history won't become
+
+92
+00:06:13,120 --> 00:06:17,280
+huge and you won't waste your limit unnecessarily.  And the
+master skill also helps you with this, because it
+
+93
+00:06:17,280 --> 00:06:22,200
+tells you when it's time to clean.  Then you just call her
+again and she'll identify which step you left off at,
+
+94
+00:06:22,200 --> 00:06:26,560
+even in a new chat.  And again, it's definitely worth
+doing it this way, because the result is much
+
+95
+00:06:26,560 --> 00:06:30,880
+better and much more personalized.  Certainly,
+if we were to create a single skill to do all of
+
+96
+00:06:30,880 --> 00:06:34,480
+this at once, the result wouldn't even come
+close to what you're seeing here.
+
+97
+00:06:34,480 --> 00:06:39,320
+And behind all of this, there's what
+I consider the most powerful part of this flow.  As
+
+98
+00:06:39,320 --> 00:06:43,840
+I give feedback and correct some
+things, Claude notes everything down in a
+
+99
+00:06:43,840 --> 00:06:47,960
+learning log file inside the folder.  And at any
+time I can ask to see what he wrote down,
+
+100
+00:06:47,960 --> 00:06:51,680
+and then I can choose what becomes a
+permanent rule and what is removed.  In this way,
+
+101
+00:06:51,680 --> 00:06:55,280
+with each video you edit, it will
+understand your taste more and more and
+
+102
+00:06:55,280 --> 00:06:59,480
+further improve the quality of your animations.
+So every subsequent video will turn out better.
+
+103
+00:06:59,480 --> 00:07:04,280
+Okay, but you must be thinking, how much does
+this cost?  Guys, it varies a lot from video to video,
+
+104
+00:07:04,280 --> 00:07:09,880
+but to give you an idea, a video like this one
+uses between 20% and 30% of the weekly limit of the
+
+105
+00:07:09,880 --> 00:07:14,520
+Claude Pro subscription. In other words, we
+could make about 15 to 20 videos like this
+
+106
+00:07:14,520 --> 00:07:19,120
+per month, just with the Claude Pro subscription. Keeping
+that in mind, we spend about $1
+
+107
+00:07:19,120 --> 00:07:25,200
+to $1.50 per video like this, which is
+absurdly free.  A video like this, with a
+
+108
+00:07:25,200 --> 00:07:45,360
+professional editor delivering the quality
+we're seeing, would cost at least 3,000 reais.
+
+109
+00:08:01,840 --> 00:08:05,920
+And now, as promised, the free skill I
+created for you.  She will guide you step-by-step to
+
+110
+00:08:05,920 --> 00:08:10,440
+build a customized workflow for the style of
+video you want.  And she already comes with the good
+
+111
+00:08:10,440 --> 00:08:15,400
+habits and general training that I think is
+necessary to create good animations and a
+
+112
+00:08:15,400 --> 00:08:20,560
+good flow.  The GitHub link is in the description.
+You copy and paste it into your Claude software and ask it to
+
+113
+00:08:20,560 --> 00:08:25,640
+install it for you.  After that, just type "
+editing flow" in the chat and it will start guiding you.
+
+114
+00:08:25,640 --> 00:08:30,840
+So that's it, Claude does the mechanical work,
+but you're the one who defines the style, approves the map, and decides
+
+115
+00:08:30,840 --> 00:08:35,320
+what's good or not.  And that's why I think
+AI won't replace editors; it
+
+116
+00:08:35,320 --> 00:08:40,000
+will only drastically change the way we work,
+and those who don't learn will end up falling behind.
+
+117
+00:08:40,000 --> 00:08:42,240
+Now tell me in the comments
+if there was any part of this video
+
+118
+00:08:42,240 --> 00:08:45,840
+that you thought looked
+too AI-like, that didn't turn out well.  It cost!
+

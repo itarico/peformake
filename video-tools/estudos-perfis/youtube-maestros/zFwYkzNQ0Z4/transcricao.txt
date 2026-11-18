@@ -1,0 +1,382 @@
+idioma: pt
+[00:00] Qual é a melhor skill para a criação dos sites com inteligência artificial?
+[00:03] Talvez você já tenha criado um, dois, vinte, cem sites com inteligência artificial.
+[00:08] Talvez você tenha usado Vault, Lovel, Base 44 e várias skills para CodeCode.
+[00:14] Mas a grande verdade é que pouquíssima gente testa diferentes skills até chegar em um veredito.
+[00:20] Essa é a melhor skill para eu criar os meus sites.
+[00:23] Existem centenas de skills para criação dos sites e se você não escolha skills certas,
+[00:28] você pode gastar uma grande quantidade de tokens, além de não ter um resultado ideal.
+[00:33] A ideia desse vídeo é iniciar uma batalha entre diferentes skills e julgar o resultado de cada uma delas.
+[00:40] O prompt vai ser exatamente o mesmo para cada uma das skills.
+[00:42] Nós temos aqui uma landing page da fábrica de conteúdo que é um produto da nossa agência.
+[00:47] A ideia é que nós estruturamos uma fábrica do zero para empresas que querem postar conteúdo no piloto automático.
+[00:54] Tem algumas especificações, mas o principal é que cada uma das skills tem total liberdade criativa.
+[01:03] Então ela pode interpretar da maneira que achar melhor.
+[01:05] Cada uma das skills tem um orçamento de até 20 dólares de hiagem errativa, tanto para vídeos quanto para imagens.
+[01:11] E nós iremos usar o Ops 5.5 com esforço baixo.
+[01:15] A ideia é tentar controlar as variáveis.
+[01:17] A gente usa um modelo só, um nível de esforço só e uma skill diferente para cada teste.
+[01:22] Caso o contrário, caso a gente mudasse o modelo e o nível de esforço, seria um teste meramente entretenimento.
+[01:29] Não adiantaria nada, a gente não conseguiria chegar a nenhuma conclusão.
+[01:32] Bom, para a gente ter um controle, esse aqui é o resultado do Clod Ops 5.5 sem nenhuma skill no esforço baixo.
+[01:40] É um resultado, e vou passar rapidamente porque é só um controlzinho,
+[01:46] é um resultado que eu esperaria de um lovable nos seus primeiros meses, de um bolt nos seus primeiros meses.
+[01:52] É algo sem muito trabalho, sem nada que surpreenda, mas todos os elementos, pelo menos, fazendo sentido.
+[02:01] Nada muito mal formatado, nada muito complicado, mas também, enfim, nada que pareça um erro grotesco.
+[02:10] Bom, agora vamos usar uma das skills mais conhecidas da história humana, com a skill fosse um negócio secular, né?
+[02:18] Que é a skill front-end design, uma das skills com uma quantidade de pessoas usando, enfim,
+[02:25] é uma das principais skills da Uncharted, tá?
+[02:27] E quando ela foi lançada foi um boom, mudou completamente a forma que muita gente fazia sites.
+[02:34] Porque as pessoas simplesmente iam lá e pediam para o Clod e aí não dava certo,
+[02:38] só que aí ela de repente tinha um manual de instruções e o front-end design resolveu a dor de muita gente.
+[02:44] Então a gente tem aqui um resultado um pouco mais interessante, se a gente tivesse em esforço máximo,
+[02:50] certamente seria melhor.
+[02:51] Mas note a diferença, né, entre a primeira sessão, a primeira dobra e a segunda,
+[02:56] já tem aqui alguns elementos, formas, eu não vou perder muito tempo com copo e texto, tá?
+[03:03] Mas a gente tem aqui uma coisa meio institucional, meio corporativa, né? Um pouco simples demais.
+[03:10] E aí a gente tem aqui algo que eu esperaria dentro de um PDF, talvez mais aqui com alguns botões,
+[03:18] que não são clicar, mas que são arredondados, são as tags, enfim, achei interessante.
+[03:25] E aí uma outra variação, né? Você vê que cada dobra tem a sua personalidade,
+[03:30] mas de alguma maneira elas dialogam. A gente tem aqui um elemento interativo,
+[03:35] a gente consegue descartar, a gente consegue aprovar, enfim, gostei.
+[03:40] Prazo em investimento, o valor, né? Da fábrica, uma deadline aqui, quatro semanas.
+[03:48] E aí a gente tem aqui algumas outras informações. É um resultado decepcional?
+[03:54] Não, tá longe de ser decepcional e nem a ideia, tá? Porque a gente tá usando esforço mais baixo.
+[03:58] Se você botar front-end design no esforço máximo, o resultado vai ser muito, muito melhor.
+[04:03] E quando eu digo muito, muito melhor, assim, dez vezes melhor, 50 vezes melhor.
+[04:07] Mas eu quero entender o diferencial do SQL no custo mais baixo justamente,
+[04:10] porque no custo mais alto tem várias ideias, várias implementações de recursos interativos,
+[04:16] várias coisas que vão vir pro site que não são só SQL.
+[04:20] Não que isso seja puramente SQL, mas quanto mais alto o nível de esforço,
+[04:25] mais a IAO os modelos já vão inventar moda.
+[04:27] E aí a gente perde um pouco, a gente se desloca um pouco da origem.
+[04:31] Eu quero entender a particularidade de cada SQL.
+[04:34] Bom, aqui a gente tem um SQL chamado Taste SQL,
+[04:37] que é uma SQL bastante utilizada também.
+[04:40] E aqui a gente vai ver um conceito totalmente diferente.
+[04:43] Olha que bacana.
+[04:44] Tem um elemento interativo aqui, parece uma coisa meio revista,
+[04:50] meio uma coisa mais ousada, a fonte.
+[04:56] Enfim, achei interessante.
+[04:57] Tem um elemento interativo aqui já no começo.
+[05:00] Não é tão interativo, parece interativo, mas quando eu clico aqui,
+[05:03] os botões não funcionam, exemplo, ilustrativo.
+[05:07] Aí a gente tem aqui a fábrica de conteúdo,
+[05:09] os perfis da empresa no próprio tom publicando sem parar,
+[05:13] e aí dá pra pedir um diagnóstico, não vou clicar ainda porque senão vai jogar a gente lá pra baixo.
+[05:18] Isso aqui eu achei bem legal, bem criativo, eu achei bem criativo.
+[05:22] Trazer coisas assim antigas, uma máquina de impressão,
+[05:28] umas coisas bem antigas mesmo.
+[05:30] E aí aqui uma ideia meio de revista.
+[05:35] Eu achei bem legal.
+[05:37] E aqui eu achei que foi ousado, a imagem de uma fábrica.
+[05:41] Eu achei que tem uma personalidade muito interessante.
+[05:45] ousada, assim, é algo que se alguém me apresentasse,
+[05:49] eu falei, é bom, esse conceito é interessante.
+[05:51] Não sei se eu gosto ou não, não sei se é apropriado ou não,
+[05:54] mas o conceito ele definitivamente tem personalidade.
+[06:00] Aí aqui a gente tem algumas coisas, a fase de prototipagem,
+[06:05] quando você começa a gerar os resultados pro cliente,
+[06:09] depois você passa pra construção da fábrica,
+[06:13] como se você provasse bolos,
+[06:15] você prova bolos de uma confeitaria,
+[06:18] só que você não tá comprando o bolo, você tá comprando a fábrica.
+[06:23] Depois que a pessoa aprova todos os sabores exatamente o que ela quer,
+[06:27] aí você passa a construir a fábrica,
+[06:30] comprar maquinário, trazer funcionários,
+[06:33] estruturar processos pra que a pessoa seja a dona de uma fábrica em si,
+[06:37] que vai gerar bolos 24 horas por dia
+[06:39] e não apenas possa degustar de um bolo ou outro.
+[06:43] A pessoa não investe em um conteúdo,
+[06:46] mas sim na possibilidade de gerar infinitos conteúdos
+[06:50] ao longo do tempo em um ativo que é dela.
+[06:52] Eu tô trazendo esse exemplo porque atualmente
+[06:54] é a implementação maior demanda na agência.
+[06:57] Bom, a gente tem aqui outra utilização de tamanho de fonte bem ousada,
+[07:02] personalidade não faltou.
+[07:06] Definitivamente, personalidade india,
+[07:10] conceito visual coerente,
+[07:13] você pode gostar ou não, mas você vê que faz sentido dentro da proposta.
+[07:20] A gente tem um faquezinho aqui super diferente,
+[07:22] eu nunca vi esse tipo de faque,
+[07:24] mas achei divertido, um faque interativo
+[07:27] que vai descendo de graus, achei interessante.
+[07:31] Aí tem um formuláriozinho pra pedir um diagnóstico,
+[07:35] achei bem interessante.
+[07:37] A gente tem aqui a possibilidade de preencher,
+[07:41] enviar, receber o diagnóstico,
+[07:43] ir um fulterzinho, gostei.
+[07:46] Eu achei que ele mostra a que veio.
+[07:49] Ele decidiu o que ia fazer e fez um negócio.
+[07:52] Se você gosta, se é apropriado,
+[07:54] se você usaria a nossa empresa, é uma outra história.
+[07:57] Eu certamente não usaria esse layout
+[07:59] pra vender esses produtos especificamente
+[08:01] por uma série de razões,
+[08:03] mas porque principalmente eu acho que o nosso cliente
+[08:06] não vai se identificar muito com o layout.
+[08:08] Mas uma coisa bacana é perceber
+[08:11] com diferentes os resultados que tem sido.
+[08:13] E a gente tá no teste 2,
+[08:14] porque apesar de ser o terceiro site que eu mostro,
+[08:16] a gente teve com o primeiro teste,
+[08:19] simplesmente o Cloud gerando sem SQL nenhuma,
+[08:21] e a gente foi pro front-end design, agora a gente tá em test.
+[08:24] E esses são resultados completamente diferentes.
+[08:26] E isso é muito bacana, porque você pode escolher
+[08:30] a sua SQL, não só com base em qual é o melhor.
+[08:33] Isso é muito vago, o que é o melhor, o que é o pior.
+[08:36] Você também escolhe a sua SQL
+[08:38] com base naquilo que você precisa.
+[08:40] Agora temos uma outra SQL chamada UIUX Pro Max.
+[08:45] Uma SQL levemente pretensiosa,
+[08:49] que traz aqui já um estilo um pouco mais tech,
+[08:54] que tem aqui uma segunda dobra, que enfim...
+[08:59] É interessante, né?
+[09:01] Estou descendo meio rápido,
+[09:04] não tava impressionando, sinceramente.
+[09:08] Eu gosto, gosto disso.
+[09:11] Não sei se é exatamente o público,
+[09:13] mas eu acho que, enfim...
+[09:17] É interessante.
+[09:20] Estou passando rápido, depois a gente pode viver com calma.
+[09:24] Eu gosto, ao mesmo tempo, não gosto.
+[09:27] Eu acho que, apesar de alguns elementos
+[09:32] terem uma certa personalidade,
+[09:36] outros deixam um pouco a desejar, só que, né...
+[09:39] Não sei, esses iconesinhos bem padronizados
+[09:42] com cara de IA, cara de Zinson, cara de IA,
+[09:46] é tudo cria, se não sair do diálogo,
+[09:49] mas não me chama muita atenção.
+[09:53] Não é uma coisa que eu falo,
+[09:54] pô, essa SQL eu preciso usar, né?
+[09:58] Mas tá tudo bem explicado.
+[10:00] A gente tem aqui o fase de prototipagem,
+[10:04] né, claramente tem uma estética que fala
+[10:07] com pouco e com pouco mais tech.
+[10:11] Não necessariamente um desenvolvedor,
+[10:13] né, umas pessoas que estão ligadas a uma outra tecnologia.
+[10:16] Bom, tem um elemento interativo aqui, né?
+[10:18] Ah, não, não é interativa, só uma imagem.
+[10:20] Parece que é interativo, mas eu não consigo clicar.
+[10:23] Do protótipo, a fábrica rodando,
+[10:25] né, aí tem o preço.
+[10:27] E o formulário é, enfim, bem padrão.
+[10:30] No geral, achei que não impressiona, não decepciona.
+[10:35] Pode ser o começo de algo mais elaborado,
+[10:38] mas compro o que promete, né, um site funcional
+[10:41] que explica minimamente como o produto funciona,
+[10:46] como o serviço funciona.
+[10:49] E apesar de não ser uma coisa que você navega e fala,
+[10:52] olha, é incrível esse layout,
+[10:55] você também fica com poucas dúvidas, acho, né?
+[10:57] Enfim, teria que dar uma lida com calma no texto,
+[11:01] que é uma coisa que eu acho que não precisa priorizar,
+[11:02] porque isso vai variar muito de projeto para projeto,
+[11:05] mas no geral, acho que tem uma personalidade mais contida,
+[11:11] o que pode ser bom.
+[11:13] Agora estamos usando o Open Design.
+[11:15] É importante dizer que esse repositório não é uma skill, tá?
+[11:18] Ele é muito conhecido, ele é muito recomendado,
+[11:21] a gente recomendou várias vezes,
+[11:22] e ele tem um diferencial bacana,
+[11:25] que é ele é um projeto com muitas referências de marca
+[11:29] já conhecidas.
+[11:29] Então você quer fazer um site como Airbnb,
+[11:32] como site da Apple, ele tem referências em HTML,
+[11:35] tem referências em PNG também, se eu não me engano,
+[11:38] tem uma estrutura bacana,
+[11:40] tem assim, é um grande kit de ferramentas para você utilizar,
+[11:44] e aqui eu não vou fazer justo a complexidade,
+[11:48] ao gostei do repositório,
+[11:50] porque a gente consegue mostrar apenas um exemplo,
+[11:53] mas você pode assim, explorar em profundidade o Open Design,
+[11:57] é realmente um repositório bem bacana.
+[12:01] A gente já vê aqui uma personalidade,
+[12:04] uma redação inteira para cada perfil.
+[12:08] Eu gosto desse layout,
+[12:10] eu acho interessante, já um CTAzinho lá em cima,
+[12:14] canais de mais, gente de menos.
+[12:17] Cada perfil da sua empresa tem público,
+[12:19] linditorial e ritmos próprios,
+[12:20] e a equipe não, o resultado é conhecível.
+[12:22] Eu gosto bastante desse layout,
+[12:25] o gargalo não é ideia nem talento,
+[12:26] é volume de trabalho repetitivo,
+[12:27] entra palta e a peça pronta.
+[12:29] Eu gosto de ter vontade de ler,
+[12:32] eu acho que como você tem espaço para respirar,
+[12:35] você consegue ler com mais facilidade,
+[12:37] você quer com vontade de ler, olha essa redline.
+[12:39] Quatro fontes, um só cérebro,
+[12:41] uma coisa fácil, você bate o olho e vê.
+[12:43] E aí tem, enfim, outras coisas,
+[12:46] que vão aparecendo sempre naquele mesmo formato,
+[12:48] mas antes eram caixas fechadas,
+[12:50] e aqui são abertas em cima e embaixo.
+[12:52] Aí a gente tem uma outra parte,
+[12:56] todas com uma coerência de layout,
+[12:59] muito similar,
+[13:01] não fugindo muito disso,
+[13:03] talvez aqui fugir um pouco,
+[13:05] o que foi apresentado anteriormente,
+[13:07] mas não de uma maneira que fique estranho,
+[13:09] acho que faz sentido.
+[13:11] Aqui a gente tem um exemplo ilustrativo,
+[13:14] que eu acho legal.
+[13:17] Como a gente está usando o esforço mais baixo,
+[13:18] ele não vai se dedicar muito
+[13:21] para trazer elementos interativos super interessantes,
+[13:24] mas você vê que esse elemento interativo ele funciona,
+[13:26] aprovar, ajustar, descartar.
+[13:29] E eu gosto desses elementos assim,
+[13:33] que tem essa sombrinha embaixo.
+[13:36] Eu achei que fez bastante sentido.
+[13:39] O faque é bem bonitinho também,
+[13:41] tem nada muito espetacular,
+[13:43] mas teria pouquíssimas coisas para reclamar.
+[13:48] Achei bem bom no geral, achei bem, bem bom.
+[13:53] Para um esforço baixo,
+[13:55] talvez você não tenha assistido ainda,
+[13:57] o vídeo sobre o mesmo site sendo feito
+[14:00] com diferentes níveis de esforço.
+[14:01] A diferença entre os esforços mais baixos
+[14:04] e o max é absurda.
+[14:07] É uma diferença entre algo amador feito nas coxas
+[14:11] e algo extremamente profissional
+[14:12] pronto para rodar em uma campanha de trafeiro pago.
+[14:15] Então entenda que esse resultado
+[14:17] ele é fruto do menor investimento possível,
+[14:22] no termo de tempo, e tokens.
+[14:24] E eu achei que funciona muito bem.
+[14:26] Então a gente testou as que o front end design,
+[14:29] taste skill,
+[14:30] yux pro max,
+[14:32] e open design.
+[14:33] Eu quero saber qual você achou melhor
+[14:37] e qual você achou pior.
+[14:38] Você pode deixar nos comentários.
+[14:40] Os designers sempre apresentam uma opinião
+[14:42] bastante interessante sobre os resultados que a gente traz.
+[14:46] Então se quiserem opinar, fica em supera vontade
+[14:50] sobre o resultado que ficou mais legal,
+[14:52] o resultado que vocês gostaram mais.
+[14:54] Às vezes eu falo, esse foi o que eu mais gostei
+[14:57] e um designer fala, não, isso é horrível,
+[14:59] isso é péssimo.
+[15:00] Vigilmente eu gosto dos que tem mais brincadeira dentro.
+[15:03] Tem um elemento interativo,
+[15:05] mesmo que o site não tenha coerência nenhuma,
+[15:07] eu falo, não, isso é o melhor.
+[15:08] Dá para clicar no negócio e mexe uma figura,
+[15:11] e eu já falo, não, isso é o que eu mais gostei.
+[15:14] Eu vou pelo aspecto recreativo do site,
+[15:17] não pelo conceito,
+[15:19] não pela coerência dos elementos,
+[15:21] não pelos princípios de design,
+[15:23] aqui provavelmente um designer.
+[15:24] Olha e fala, não, isso aqui faz sentido, isso aqui não faz.
+[15:27] Eu não tenho informação nenhuma no modo do design,
+[15:30] mas podia ter rodado muito o tráfego,
+[15:33] milhões e milhões de reais em tráfego
+[15:35] para levar as pessoas para certos sites,
+[15:37] analisando o que funciona, o que não funciona,
+[15:40] tendo equipe de design, rubber designer.
+[15:43] Assim, a gente tem algum tipo de olhar,
+[15:46] e o meu olhar sempre vai no sentido mais da conversão,
+[15:50] do que, da qualidade do ponto de vista do design.
+[15:53] Mas se eu tiver que escolher, eu escolho o open design.
+[15:56] Eu gostei bastante do open design.
+[15:58] Eu achei que o taste skill merece uma nota de ousadia, eu gostei.
+[16:05] O front-end design, é importante dizer,
+[16:07] gera resultados espetaculares.
+[16:08] Nesse caso ele acabou não gerando,
+[16:10] provavelmente porque o esforço foi muito baixo.
+[16:12] Mas a gente já usou muito esse skill
+[16:13] e pode recomendar sem nenhum problema.
+[16:16] Ela é realmente muito boa.
+[16:18] Tem alguns templates ali que são cara de front-end design
+[16:21] que quem já usou muito esse skill consegue identificar.
+[16:23] Mas ela resolve muito o problema
+[16:26] de quem não está usando nenhuma skill.
+[16:27] E essa aqui, a UI o X-Pro Max,
+[16:29] eu confesso que não me chamou muito atenção.
+[16:32] Pode ser que ela funciona melhor para fazer sites de SaaS,
+[16:35] de aplicativos, produtos para o mundo dev.
+[16:39] Pode ser.
+[16:40] Mas enfim, você pode explorar todas essas skills.
+[16:43] Elas estão disponíveis no GitHub, elas são gratuitas.
+[16:46] E você pode tanto explorar a fundo essas
+[16:49] como testá-las em diferentes níveis de esforço.
+[16:52] Pode injetar metodologias no seu processo
+[16:56] de desenvolvimento dos sites.
+[16:58] Que não precisam ser só nível de esforço máximo
+[17:00] e melhor modelo.
+[17:01] Você pode inserir Gauntlet Loops.
+[17:03] Você pode inserir etapa de verificação,
+[17:06] que é uma coisa sempre saudável para fazer
+[17:08] dentro do próprio agente que constrói websites.
+[17:11] Você pode ter um agente que constrói sites
+[17:13] e várias skills diferentes nesse mesmo agente.
+[17:16] E você pode ter diferentes designers,
+[17:19] dependendo do projeto, do escopo, do cliente
+[17:22] que você está trabalhando.
+[17:24] É assim, muito legal criar em torno dessas skills
+[17:28] uma arquitetura bacana para que você tenha sempre
+[17:31] um resultado previsível.
+[17:33] Para que você não gaste muitos tokens
+[17:35] e acabe se decepcionando no futuro.
+[17:37] E uma coisa que eu recomendo muito é que você,
+[17:39] antes de criar um site do zero sem ter ideia
+[17:41] de como ele vai ficar, peça para o seu repositório,
+[17:44] para o seu agente, para a sua skill,
+[17:46] te dá algumas ideias.
+[17:49] Apresentar cinco variações simples em HTML.
+[17:52] E aí você vai poder avaliar cada uma e falar
+[17:54] não, essa é a direção que eu quero seguir.
+[17:56] E aí ela não construiu o site todo,
+[17:58] não colocou no seu domínio, é só um projetinho
+[18:01] simples, só da hero section ali
+[18:04] ou da dobra seguinte,
+[18:06] para você olhar e falar,
+[18:07] esse estilo eu gosto mais, esse estilo eu gosto menos.
+[18:10] Porque se você pedir para uma esquil dessas
+[18:12] criar qualquer coisa,
+[18:13] ela vai tomar a maior parte das decisões
+[18:15] e aí no final você pode gostar ou pode não gostar.
+[18:18] Se você gostou desse vídeo e gosta da maneira
+[18:20] que a gente ensina aqui no YouTube,
+[18:21] dá uma olhada no link na descrição desse vídeo
+[18:22] para entrar na comunidade Maestro Daia
+[18:24] onde você vai encontrar lives toda semana,
+[18:26] suporte técnico todos os dias,
+[18:28] dezenas de horas de conteúdo sempre com
+[18:30] aquilo que existe de mais relevante no mundo
+[18:32] da inteira de inserte oficial,
+[18:34] além de mais de 50 aplicativos exclusivos,
+[18:36] centenas de agentes, de skills
+[18:38] que a gente desenvolveu não só skills
+[18:40] que já estão públicas no YouTube,
+[18:41] mas skills que nós fizemos pensando em vocês
+[18:44] da comunidade exclusivas
+[18:46] para os membros da comunidade premium
+[18:47] e centenas de outros recursos e conversas
+[18:50] e pessoas que interagem todos os dias
+[18:52] e formam parceria, SaaS,
+[18:53] pessoas que começaram do zero
+[18:55] e hoje já tem SaaS
+[18:56] que tem mais de mil pessoas assinando.
+[18:58] É um ambiente muito legal, muito rico
+[19:00] para criar conexões,
+[19:01] para aprender mais sobre a,
+[19:03] para conversar com a gente nas lives,
+[19:04] é realmente um ambiente que a gente
+[19:06] gosta muito de preservar, de fomentar
+[19:09] e se você gosta aqui do canal
+[19:11] tem certeza que você vai adorar a comunidade.
+[19:13] O link está na descrição e é claro
+[19:14] se você gostou desse vídeo
+[19:15] e quer receber mais recomendação de vídeos
+[19:17] como esse, você pode deixar um like,
+[19:18] um hype e se inscrever no canal.
+[19:20] Um abraço e até a próxima.

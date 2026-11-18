@@ -1,0 +1,71 @@
+{
+ "id": "x67v6Ftah6I",
+ "title": "Testei o clone grátis do Photoshop e do Premiere. Dá pra largar a Adobe?",
+ "fulltitle": "Testei o clone grátis do Photoshop e do Premiere. Dá pra largar a Adobe?",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=x67v6Ftah6I",
+ "upload_date": "20261016",
+ "duration": 867,
+ "duration_string": "14:27",
+ "view_count": 14259,
+ "like_count": 215,
+ "comment_count": 20,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=artcraft-clones-adobe\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\nArtCraft: os clones gratuitos e de código aberto do Photoshop, do Premiere e de outros apps da Adobe, feitos com IA e testados na prática.\n\nO ArtCraft é uma família de apps de código aberto, escritos em Rust, que recriam ferramentas da Adobe como Photoshop, Lightroom, InDesign e Premiere e rodam no Mac, no Windows e no Linux sem custo. Neste vídeo eu mostro o PhotoCraft, o LightCraft e o DesignCraft, e passo mais tempo no FilmCraft, o clone do Premiere: arrastar takes para a linha do tempo, mutar e bloquear trilhas, acelerar um clipe, animar texto, sincronizar áudio, cortar fechando o espaço, aplicar desfoque, corrigir cor, usar modelos prontos e exportar. No fim eu falo do que isso significa para a Adobe e para quem quer empreender com software: se qualquer app pode ser recriado com IA e distribuído de graça, o seu negócio precisa de um diferencial difícil de copiar. Os apps são do programador Brandon Thomas, que os desenvolve com a ajuda do Claude.\n\n📌 CAPÍTULOS\n0:00 Clonaram o Photoshop, o Premiere e outros apps da Adobe\n0:29 O que é o ArtCraft: apps de código aberto feitos em Rust\n1:06 PhotoCraft e LightCraft: clones do Photoshop e do Lightroom\n2:38 DesignCraft, o clone do InDesign para diagramação\n3:23 FilmCraft, o clone do Premiere, testado na prática\n6:12 Sincronia de áudio, cortes, desfoque e correção de cor\n9:34 Como baixar os apps de graça\n10:19 A Adobe vai ruir? O que torna um negócio difícil de copiar\n12:19 Quem criou os apps e como a IA entrou nisso\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ O que é o ArtCraft e quais apps da Adobe ele já recriou\n✅ Como o clone do Premiere se sai nas tarefas do dia a dia de quem edita vídeo\n✅ Onde baixar os apps de graça para Mac, Windows e Linux\n✅ Por que um negócio de software precisa de um diferencial que a IA não consiga copiar\n\n#artcraft #codigoaberto #inteligenciaartificial",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Clonaram o Photoshop, o Premiere e outros apps da Adobe",
+   "end_time": 29
+  },
+  {
+   "start_time": 29,
+   "title": "O que é o ArtCraft: apps de código aberto feitos em Rust",
+   "end_time": 66
+  },
+  {
+   "start_time": 66,
+   "title": "PhotoCraft e LightCraft: clones do Photoshop e do Lightroom",
+   "end_time": 158
+  },
+  {
+   "start_time": 158,
+   "title": "DesignCraft, o clone do InDesign para diagramação",
+   "end_time": 203
+  },
+  {
+   "start_time": 203,
+   "title": "FilmCraft, o clone do Premiere, testado na prática",
+   "end_time": 372
+  },
+  {
+   "start_time": 372,
+   "title": "Sincronia de áudio, cortes, desfoque e correção de cor",
+   "end_time": 574
+  },
+  {
+   "start_time": 574,
+   "title": "Como baixar os apps de graça",
+   "end_time": 619
+  },
+  {
+   "start_time": 619,
+   "title": "A Adobe vai ruir? O que torna um negócio difícil de copiar",
+   "end_time": 739
+  },
+  {
+   "start_time": 739,
+   "title": "Quem criou os apps e como a IA entrou nisso",
+   "end_time": 867
+  }
+ ],
+ "language": "pt-BR"
+}

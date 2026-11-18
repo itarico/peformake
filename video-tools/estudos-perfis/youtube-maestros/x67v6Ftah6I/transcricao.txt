@@ -1,0 +1,233 @@
+idioma: pt
+[00:00] Clonaram o Premiere, o Photoshop e os aplicativos mais caros e importantes do ecossistema da Adobe.
+[00:06] Eu sinceramente achei que seria um desses projetos recreativos e não muito útil pro dia a dia,
+[00:12] mas felizmente eu estava enganado.
+[00:15] Nós estamos entrando em uma era muito surreal, em que você pode usar VibeCoding para clonar alguns dos
+[00:21] aplicativos mais completos e consolidados do mercado.
+[00:25] Então, afivelem os sintos que nós já iremos começar com as demonstrações.
+[00:30] Bom, aqui temos os programas clonados, que vão desde o Photoshop a Adobe Premiere.
+[00:38] Temos também Word, Excel, AutoCAD, tem muita coisa legal que foi clonada já por esse mesmo
+[00:46] Artcraft, que é esse projeto que basicamente sonha com o Lisa.
+[00:52] Esses clones de maneira open source, que é muito legal, então você pode baixar hoje mesmo
+[00:58] no seu computador tudo isso e começar a usar tudo a peito em Rust e vai funcionar no Mac,
+[01:03] Windows, Linux, enfim, e é muito, muito legal mesmo.
+[01:07] Bom, temos o Photocraft, que é o cloninho do Photoshop e a gente pode ver que a sensação
+[01:13] é muito parecida, parece bem completa, pode importar uma imagem.
+[01:18] A gente pode testar, primeiro uma coisa simples, select, subject, e aí você pode selecionar o
+[01:24] objeto, tem um detalhe ali no canto inferior direito, mas a princípio foi uma seleção
+[01:29] bem feita e aí você pode clicar em Select, Inverse Selection para mudar a cor do fundo.
+[01:34] Então, depois de mudar a cor você vai em Layer, New Fill Layer e Solid Color e aí você
+[01:39] tem uma mudança em uma nova camada aqui no canto direito, você consegue ver que
+[01:45] tem uma nova camada que mudou o fundo e você pode desabilitar também se você quiser ver
+[01:49] a versão original, o que é muito legal. Obviamente, esse não vai ser um tutorial de
+[01:53] como utilizar cada uma dessas ferramentas em detalhes, então vou passar de uma maneira
+[01:57] meio rápida o objetivo é que você veja o que elas são capazes de fazer.
+[02:00] Bom, temos aqui o clone do Lightroom, o Lightcraft, e a gente pode fazer um teste
+[02:06] simples com uma imagem em RAW, uma imagem que vem com um formato um pouco
+[02:12] tratado, não é aquela imagem de iPhone padrão, é uma imagem que você precisa
+[02:17] realmente tratar, então dá para a gente aumentar a exposição, sombras,
+[02:21] a gente consegue selecionar o céu também e agora o céu já foi detectado e a gente
+[02:28] pode aumentar o azul, a gente pode diminuir a exposição e aqui fica bem
+[02:31] clara a diferença, a imagem da esquerda versus a imagem da direita, da direita
+[02:36] realmente teve um upgrade significativo. Bom, temos aqui o Design Craft,
+[02:41] que é um clone do InDesign e basicamente vai ser usado para diagramação,
+[02:47] então você pode modificar o texto com muita facilidade, visualmente é bem claro,
+[02:53] bem interessante, tem um recurso aqui muito legal, se você pega um dos elementos
+[02:58] e move, olha isso que legal, o texto se adapta à mudança de posicionamento
+[03:05] desse elemento, isso aqui é muito, muito legal e acho que é um recurso
+[03:08] que facilita muito o trabalho de quem vai criar uma revista, por exemplo, é muito
+[03:13] mais fácil você usar esse recurso do que você modificar manualmente para ter que
+[03:18] visualizar outras formas de se fazer, então um recurso que funciona super bem,
+[03:21] você pode ficar à vontade para explorar todos os outros. Bom, agora vamos ao
+[03:24] Film Craft, um editor de vídeos baseado no Premiere, que é provavelmente
+[03:29] a ferramenta mais aguardada para quem edita vídeos, você pode instalar no
+[03:32] Linux o Windows Mac, mas também tem o pacote web e funciona mais
+[03:38] bem como o Premiere, visualmente é muito parecido, não sei se você já utilizou,
+[03:42] mas é muito parecido, o layout, se você tem uma tarde de produção, linha do tempo,
+[03:47] tudo isso é configurável, tem a barra de volume, você pode cortar vídeos
+[03:53] com muita facilidade, com comando simples, pode adicionar transições,
+[03:57] V-rolls, pode adicionar crossfades, e aí as opções de exportação,
+[04:02] é muito, muito parecido com o Premiere. Então o primeiro teste, um teste
+[04:07] de arrastar os takes para a linha do tempo, parece uma besteira, mas muitos
+[04:11] apps vibe codados acabam falhando no drag and drop, então se a gente pega que
+[04:17] não tem qualquer inserimento na linha, o tempo ele funciona perfeitamente,
+[04:20] responsabilidade ótima, o track de áudio embaixo vira em cima,
+[04:24] também se você arrasta mais takes, eles funcionam bem com essa lógica
+[04:31] de um, depois do outro, nessa lógica sequencial, isso já é super bacana.
+[04:36] Agora o próximo teste é mutar e desligar um clip, é bloquear um clip,
+[04:41] que isso é bem útil quando você vai trabalhar com várias tracks,
+[04:45] a gente consegue mutar com muita facilidade e a barra de áudio funciona
+[04:50] muito bem responsível em relação a isso, são comandos que parecem básicos,
+[04:54] mas aqui não é tão simples fazer, e agora a gente consegue bloquear,
+[04:58] desligar um track para que ele deixe de aparecer, o que é muito legal.
+[05:03] Agora vamos testar o Hyperlapse, que é um recurso bastante utilizado hoje em dia,
+[05:08] a gente pode clicar no track aqui e a gente pode modificar a velocidade,
+[05:13] vamos tentar 8x mais rápido, pronto, a gente conseguiu aumentar a velocidade
+[05:20] de maneira muito rápida, e é isso, muito simples, muito tranquilo,
+[05:25] funcionou perfeitamente e o Hyperlapse ele definitivamente é funcional.
+[05:31] Agora é um teste mais complexo, vamos adicionar um texto e vamos tentar adicionar
+[05:36] movimentos a esse texto, a gente pode tentar selecionar aqui o início,
+[05:43] a posição de início e a posição final desse movimento,
+[05:49] e a gente vê se o texto realmente se move, na medida que o vídeo
+[05:53] é reproduzido, vamos ver, a gente tem que realmente definir o ponto A
+[05:59] e o ponto B, e basicamente ele vai começar no ponto A e terminar no ponto B,
+[06:02] funciona perfeitamente, esses são os recursos que eu estava em dúvida
+[06:06] se daria certo ou não, um recurso que é muito utilizado na edição do Premiere
+[06:11] e ele funciona super bem.
+[06:14] Bom, vamos testar o recurso de sincronia de áudio,
+[06:16] que é um dos recursos mais úteis na edição de vídeos,
+[06:19] o dia a dia do editor vai usar esse curso com muita frequência,
+[06:23] você tem várias câmeras, microfone e câmera e tal, você precisa fazer a sync,
+[06:27] e você precisa que seja rápido, durante muito tempo alguns programas de edição
+[06:31] até cobravam mais caro, tinham planos superiores,
+[06:34] só para você ter acesso a esse curso, ou tendo esse curso como o principal elemento
+[06:39] desses planos mais caros, então a gente pode testar aqui para ver se funciona.
+[06:44] Cliente Clipe, e aí sincronizar, a gente sincroniza pela faixa de áudio, pronto,
+[06:49] foi super rápido, absolutamente rápido, e você vê que a faixa de áudio já mudou aqui para frente,
+[06:56] já funcionou perfeitamente e foi super rápido.
+[06:59] Agora vamos a uma funcionalidade muito útil no dia a dia de quem edita os vídeos
+[07:04] e precisa editar muitos vídeos de maneira rápida.
+[07:06] Eu venho aqui e vejo um trítico que eu quero cortar,
+[07:09] corto na entrada, corto a saída, e aí ao deletar o take do meio,
+[07:14] eu quero que os dois se juntem para eu não precisar,
+[07:16] aí pronto, já se juntaram, se não precisaria juntar os dois manualmente,
+[07:21] ou enfim deletar o espaço no meio,
+[07:23] mas não precisou porque esse recurso já funciona muito bem.
+[07:26] Agora vamos testar um efeito de vídeo, um efeito de desfoque,
+[07:30] que é um dos efeitos mais utilizados, mais úteis,
+[07:33] a gente pode vir aqui nos efeitos, a gente encontra o efeito de desfoque,
+[07:38] e a gente arrasta para o take de vídeo,
+[07:44] e aí a gente controla o nível do desfoque aqui na esquela.
+[07:46] Excelente, funcionou super bem, a gente consegue ativar e desativar o efeito,
+[07:50] é super legal e funciona exatamente como a experiência de usar o Premiere.
+[07:54] Você tem experiência com o Premiere?
+[07:55] Eu já tive muita experiência com o Premiere,
+[07:57] funciona exatamente da mesma maneira,
+[07:59] quem usa o Premiere vai cair aqui e vai se sentir em casa,
+[08:02] porque a diferença, a objetiva é muito pequena.
+[08:04] Agora vamos para a correção de cor,
+[08:06] que é uma coisa que os editores têm preferido fazer no DaVinci,
+[08:09] mas a gente pode testar aqui como isso funciona no clone do Adobe Premiere.
+[08:17] A gente pode aqui modificar alguns elementos, temperatura,
+[08:23] a gente vai ver que ele responde, exposição,
+[08:26] ele também responde, os gráficos mudam.
+[08:30] Eu não sou especialista em tratamento de cor, obviamente,
+[08:32] então eu não vou me adentrar profundamente em todos os recursos
+[08:35] e não vou entender e avaliar devidamente se cada uma das mudanças
+[08:41] precisa o suficiente ou nada disso,
+[08:43] mas o que eu pude notar é que funciona muito bem,
+[08:46] de acordo com as mudanças que você vai fazendo ali nas barras
+[08:51] para aumentar e diminuir determinados elementos.
+[08:54] Bom, tem outro recurso que eu não sei se muita gente usa,
+[08:58] como parece que eu utilizava muito pouco quando eu editava com o Premiere,
+[09:02] que são esses modelos prontos, são práticos, de certa maneira,
+[09:05] se você criar esses modelos e editar vídeos corporativos
+[09:10] que têm uma editorial, você pode utilizar e funcionar aqui
+[09:15] da mesma maneira que vai funcionar no Premiere.
+[09:18] Você pode simplesmente inserir um template e modificar o texto.
+[09:23] Então, mais um recurso bacana.
+[09:25] E aí, obviamente, a exportação.
+[09:27] Se tudo funcionar menos a exportação do vídeo real, não adianta nada.
+[09:31] Então, a gente pode usar as especificações de exportação padrão.
+[09:35] Para você instalar esses aplicativos e começar a usar sem custo,
+[09:38] algum, temos aqui o getartcraft.com.app,
+[09:42] onde você vai encontrar todos esses aplicativos,
+[09:45] eles são grátis, estão open source,
+[09:49] e tem vários detalhes aqui sobre cada um deles,
+[09:54] caso você queira entender melhor a respeito.
+[09:57] Você pode instalar, você pode ir no GitHub também
+[10:02] para visualizar o projeto,
+[10:05] você pode ter mais informações aqui no GitHub,
+[10:08] alguns templates, alguns resultados que ele produziu,
+[10:12] as especificações técnicas.
+[10:14] Então, tem bastante coisa bem bacana que você pode explorar
+[10:18] e é um projeto que realmente tem a no muito a visibilidade.
+[10:21] E talvez isso signifique que o modelo de negócios da Adobe
+[10:24] e de várias outras empresas está prestes a ruir.
+[10:27] Se alguém pode criar, recriar qualquer aplicativo consolidado
+[10:31] em pouco tempo com o VibeCode e disponibilizar isso para todo mundo de graça,
+[10:36] as pessoas não precisam aprender a fazer isso do zero.
+[10:39] Assim, a gente instala uma versão pronta
+[10:41] e tem tanta gente no mundo que alguém vai acabar fazendo isso
+[10:45] para todas as plataformas mais consolidadas.
+[10:47] E apesar dessa ser uma ótima notícia para o usuário final,
+[10:49] talvez não seja uma excelente notícia
+[10:51] para quem quer empreender, para quem quer criar o SaaS, o app.
+[10:54] O que a gente tem conversado com frequência
+[10:56] com os membros da comunidade
+[10:58] é que os aplicativos, as soluções, os agentes que eles fazem,
+[11:01] eles precisam de algo difícil de replicar, difícil de copiar.
+[11:06] Às vezes, é sua reputação, a sua experiência,
+[11:09] o seu currículo indeterminado à área
+[11:11] que empresta credibilidade para um projeto de confiança.
+[11:14] Às vezes, é uma solução proprietária e realmente muito única
+[11:18] que só você tem e que você não vai abrir para o mundo,
+[11:20] que é muito difícil de fazer engenharia reversa.
+[11:23] Às vezes, é o suporte personalizado,
+[11:26] é o nível de entrega do seu CS.
+[11:29] Às vezes, é uma experiência como um todo,
+[11:32] um grau de relação que você cria com seus clientes,
+[11:36] muito bom, um nível de confiança que se estabelece.
+[11:38] Tem que ter um diferencial, essa é a questão.
+[11:40] Ou você tem um canal de aquisição muito forte,
+[11:43] que qualquer coisa que você lança vai funcionar,
+[11:45] pensando um influenciador que tem centenas de milhões de seguidores.
+[11:49] Qualquer coisa que ele divulgar vai vender em maior ou menor medida.
+[11:53] Mas não necessariamente esse vai ser um modelo de negócio
+[11:56] sustentável ao longo do tempo.
+[11:58] Então você precisa pensar,
+[12:00] mesmo que você tenha um bom canal de aquisições
+[12:01] ou domínio, meta-ads, Google Ads,
+[12:04] quais são os negócios que vão sobreviver ao tempo,
+[12:07] vão ter um LTV bacana,
+[12:08] que vão realmente fazer com que o usuário adore aquele produto
+[12:13] e esse produto não seja simplesmente substituível
+[12:15] por uma solução muito parecida e de graça.
+[12:18] Se você tem dúvidas em relação a quem criou,
+[12:20] como isso foi feito,
+[12:21] a gente pode fazer um vídeo só sobre isso se você tiver interesse,
+[12:24] mas o criador foi o Brandon Thomas.
+[12:26] A gente até preparou um vídeo só sobre isso.
+[12:28] Queria entrar nesse vídeo,
+[12:29] mas acabou ficando um pouco mais longo do que eu imaginava.
+[12:31] Então a gente pode deixar para um outro caso vocês tenham interesse.
+[12:33] O Brandon Thomas é um programador,
+[12:35] e ele diz que não escreve código à mão desde fevereiro desse ano.
+[12:40] Então realmente essa programada foi vibe codada.
+[12:43] Ela foi escrita como vibe coding,
+[12:46] porém é importante salientar que é um programador
+[12:49] orientando a inteligência artificial
+[12:52] que criou todos esses projetos.
+[12:54] E ele utilizou o Cloud Code,
+[12:57] um ecossistema da Antrop,
+[12:58] que provavelmente variando modelos ao longo do tempo,
+[13:02] porque os modelos vão se atualizando,
+[13:03] vão mudando, vão chegando modelos novos.
+[13:06] Em breve nós vamos lançar um vídeo aqui no canal
+[13:08] sobre um repositório que faz engenharia reversa de aplicativos.
+[13:11] Dependendo da data em que você está assistindo a esse vídeo,
+[13:13] ele já até foi lançado, você pode procurar no canal.
+[13:16] Basicamente, é um repositório que tem com o objetivo
+[13:19] fazer o que esse projeto fez,
+[13:21] pegar aplicativos que já existem e clonar esses aplicativos.
+[13:25] E caso você queira aprofundar seus conhecimentos
+[13:27] em inteligência artificial para aprender a fazer coisas assim,
+[13:30] com profundidade,
+[13:31] com conhecimento de maneira que você entende de fato
+[13:34] o que você está fazendo, ele não fica só digitando ou falando
+[13:37] com a sua IA e não tem ideia do que ela está fazendo,
+[13:39] se você quiser de fato entender sobre inteligência artificial,
+[13:42] eu quero te convidar para a comunidade Maestros da IA,
+[13:44] o link está na descrição,
+[13:45] lá nós fazemos lives toda semana,
+[13:47] temos suporte técnico todos os dias,
+[13:49] temos 50 aplicativos, mais de 50,
+[13:51] para você utilizar exclusivos para os membros da comunidade,
+[13:53] centenas de agentes e skills
+[13:55] para você copiar, colar e utilizar imediatamente.
+[13:58] E temos também lives toda semana em que a gente conversa com vocês,
+[14:01] então é um ambiente muito bacana
+[14:03] e se você gosta aqui do canal, tem certeza que você vai adorar a comunidade,
+[14:05] vai ser muito bem-vindo ou bem-vinda lá dentro.
+[14:07] O link está na descrição e espero que você tenha gostado desse vídeo.
+[14:10] Um abraço e até a próxima.

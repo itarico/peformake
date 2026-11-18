@@ -1,0 +1,45 @@
+idioma: pt (1.00)
+[   0.0-   2.5] Você sabe fazer esse tipo de animação aqui?
+[   2.5-   4.7] Eu vou te ensinar a fazer em um minuto!
+[   4.7-   5.4] Olha isso!
+[   5.4-   7.4] Primeira coisa aqui, já colocar o efeito
+[   7.4-   8.4] Houg Neds
+[   8.4-   9.7] Ele já deformou a fonte
+[   9.7-  11.2] Aqui em borda a gente pode aumentar
+[  11.2-  12.8] Olha como é que o testinho já fica
+[  12.8-  15.8] Com a camadinha do texto, vou marcar o formato da silhueta do corpo
+[  15.8-  17.7] Marcar aqui embaixo, dando um espaçamento do braço
+[  17.7-  18.6] Vai ficar aqui
+[  19.2-  21.0] Então vou dar um salto aqui pra frente agora
+[  21.0-  23.0] Eu vou clicar e arrastar um pouco essa máscara
+[  23.0-  24.3] E vou fazer alguns movimentos
+[  24.3-  25.8] Pronto, olha como é que ele já é um movimento
+[  25.8-  27.8] Mas calma aí, você ainda não curtiu esse vídeo?
+[  27.8-  29.0] Você não tá me seguindo?
+[  29.0-  31.0] Aproveita agora, aperta os botões aqui embaixo, vamos embora!
+[  31.0-  33.0] Veja que essa linha não é um shape
+[  33.0-  34.0] Isso é uma máscara
+[  34.0-  36.0] Por isso tá aqui, mas que clica pra descer aqui
+[  36.0-  37.0] Vamos em texto
+[  37.0-  38.0] Agora, Path Options
+[  38.0-  39.5] A gente vai marcar
+[  39.5-  40.0] Mask 1
+[  40.0-  42.0] E olha como o texto se move
+[  42.0-  43.5] Agora que eu vou fazer uma animação
+[  43.5-  45.0] Em texto, Path Options
+[  45.0-  47.0] Eu vou colocar a marcação
+[  47.0-  48.5] E aqui eu vou puxar pra trás
+[  48.5-  50.0] Olha o que já vai acontecer
+[  50.0-  51.5] Esse como é um texto branco
+[  51.5-  53.0] E tem uma região aqui
+[  53.0-  54.0] Que é branco no fundo
+[  54.0-  55.0] Vem em mod
+[  55.0-  56.5] Seleciona diferença, tá vendo?
+[  56.5-  58.5] Aonde tem o fundo preto, ficou branco
+[  58.5-  60.5] E aonde tem o fundo branco, ficou preto
+[  60.5-  62.5] Se você quiser assistir essa aula completa no YouTube
+[  62.5-  64.5] Comenta eu quero aqui embaixo
+[  64.5-  66.5] Que eu vou te mandar um link agora no direte
+[  66.5-  68.5] E se você quiser aprender tudo sobre edição de video motion design
+[  68.5-  69.5] Inteligência artificial
+[  69.5-  71.5] Me segue pra muito mais

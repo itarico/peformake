@@ -1,0 +1,559 @@
+idioma: pt
+[00:00] A dura realidade é que na maior parte das vezes o problema é você e não a inteligência artificial.
+[00:06] Muitas pessoas reclamam que a IA ainda não chegou no nível que elas precisam, que a IA ainda erra muito,
+[00:12] que a IA não é capaz de fazer o que elas querem.
+[00:14] Só que quando nós vemos, de fato, analisar o processo de desenvolvimento, de construção de algo com IA,
+[00:21] que essa pessoa que reclamou está conduzindo com inteligência artificial,
+[00:27] nós notamos que é um processo falho, que é um processo extremamente genérico,
+[00:33] que é basicamente como se a pessoa quisesse que a inteligência artificial lesse a mente dela.
+[00:39] Recentemente nós fizemos um vídeo falando sobre um dos maiores educadores de inteligência artificial no mundo,
+[00:45] um engenheiro do software que trabalhou para o Vercel,
+[00:48] e hoje tem uns repositórios com a maior quantidade de estrelas que cobrem as skills que ele criou.
+[00:54] E o Matt fala que um dos principais problemas que ele nota e um dos principais conselhos que ele deixa
+[01:00] é que as pessoas precisam se comunicar com mais clareza com a inteligência artificial.
+[01:04] Precisam entender exatamente como instruir a IA de maneira correta e não de maneira extremamente ampla
+[01:11] e com expectativas querendo que a IA gere um resultado final que não condiz com aquilo que foi dito,
+[01:18] com aquilo que foi explicado.
+[01:19] Isso é muito normal, é muito natural.
+[01:21] Você vai criar um aplicativo pela primeira vez com o VibeCode.
+[01:25] Você obviamente não vai conseguir inserir todos os detalhes no primeiro prompt.
+[01:30] Mesmo que você use uma lógica mais obsticada de loops, graps, gounted loops,
+[01:35] tem elementos ali da versão final que você vai esquecer de colocar, de especificar,
+[01:41] de decidir a respeito.
+[01:42] E às vezes eram até elementos importantes.
+[01:44] E quando você não especifica, a IA decide por você.
+[01:48] E muitas dessas decisões vão ser conduzidas, segundo critérios,
+[01:52] diferentes dos seus.
+[01:53] E por consequência, o resultado final pode não te agradar tanto.
+[01:57] Uma das skills do Matt que mais viralizou, que as pessoas mais utilizam hoje,
+[02:02] se chama GrillMe.
+[02:04] A ideia é que a IA vai entrevistar você
+[02:07] antes de começar a construir algo significativo.
+[02:10] E essa entrevista vai fazer perguntas sobre o seu projeto
+[02:14] que você não inseriu no seu primeiro prompt, que você ainda não especificou,
+[02:18] e que vão te ajudar a refinar o resultado final
+[02:21] antes do processo de construção daquilo que você quer.
+[02:24] E aí a gente obviamente está falando de apps, de software,
+[02:27] mas a gente também está falando de sistemas agênticos, de sites,
+[02:31] qualquer coisa que envolve uma grande quantidade de tomadas de decisões ao longo do caminho.
+[02:37] Isso vai ser especialmente útil e eficiente quando você tiver
+[02:40] uma tarefa longa, duas horas, quatro horas, oito horas,
+[02:43] alguns dias rodendo sem parar.
+[02:45] Porque aí você não vai desperdiçar tokens para construir coisas
+[02:48] que no final você vai ter que modificar.
+[02:50] Uma coisa bacana é que os modelos de IA da atualidade são muito bons
+[02:54] e identificadas lacunas naquilo que você pediu.
+[02:57] Então eles podem te perguntar coisas que você não estava nem considerando,
+[03:00] mas que você talvez preferisse em relação à instrução que você mesmo enviou.
+[03:04] Ou seja, um processo de planejamento bem estruturado.
+[03:07] Uma boa analogia é a construção de uma casa.
+[03:10] Você precisa de uma planta, de um projeto, das medidas corretas.
+[03:13] Quando está tudo 100% definido ou na boa parte, muito bem definida,
+[03:18] aí a construção da casa se torna algo mais fácil.
+[03:21] Obviamente que não vai ser fácil, mas é algo que é mais simples
+[03:26] do que se você simplesmente chega no terreno e fala,
+[03:29] vamos construir algo, eu quero uma casa de dois andares.
+[03:33] Instrução super genérica.
+[03:34] Eu quero três switches, enfim, qualquer coisa.
+[03:38] Não vai dar certo.
+[03:39] Ou vai dar certo, mas vai ser muito mais complexo,
+[03:42] vai gastar mais recursos, a organização disso vai ser mais confusa.
+[03:46] E muitas tomadas de decisão vão ser feitas ali meio na hora, sem contexto.
+[03:52] Algumas decisões que talvez você, como uma pessoa que vai morar na casa,
+[03:58] tivesse tomado, as pessoas que estão construindo e responsáveis pela construção,
+[04:03] vão tomar de maneira totalmente diferente,
+[04:05] e você sente consultar, é um pouco isso que acontece
+[04:08] quando você dá uma instrução muito genera que pede para construir algo mais complexo.
+[04:12] Então a SQ do Met é legal porque ele estrutura isso de uma maneira interessante,
+[04:16] não é a pessoa que criou a ideia, o conceito, a metodologia de entrevistas
+[04:20] antes da construção de algo com emata, isso já era feito há muito tempo,
+[04:25] mas ele organizou isso e ele popularizou isso.
+[04:28] Eu confesso que eu até utilizei essa SQ do Met durante um tempo,
+[04:31] mas eu não peguei o hábito de utilizar
+[04:35] e o próprio processo de entrevista acaba sendo um processo que gera um certo atrito,
+[04:39] sobretudo para quem usa muito inteligência artificial.
+[04:42] Uma coisa é, vou construir um aplicativo por semana
+[04:46] e eu quero que fique excepcional.
+[04:47] Aí você gastar ali cinco a vinte minutos em um processo de entrevista,
+[04:51] é uma coisa óbvia que você tem que fazer,
+[04:54] não tem nem discussão porque você vai gastar muito Tolkien,
+[04:57] tem um projeto que é único, ele tem um tempo significativo para você concluir
+[05:04] e é o projeto da sua semana, então você tem que fazer tudo da melhor forma o tempo todo mesmo.
+[05:08] Só que se você roda dez, vinte, trinta gente simultâneos,
+[05:12] sem ter nas tarefas por dia, trabalha com muitos clientes, pode ser mais complexo,
+[05:17] eu não estou falando nem só de quem trabalha com emata,
+[05:19] às vezes você tem muitas coisas no seu colo, muitas demandas,
+[05:22] você está em um ambiente de trabalho que é disperso,
+[05:26] que você tem que atender demandas dos outros tempos todo,
+[05:28] então ficar concentrado ali durante um certo tempo
+[05:32] pode ser que gere uma certa preguiça, pode ser que gere uma certa resistência,
+[05:37] eu sei que algumas pessoas podem pensar,
+[05:39] ah, mas esse é um pensamento muito mimado, um pensamento muito preguiçoso,
+[05:42] a questão toda da produtividade gera em torno, em grande parte, de redução de atriz.
+[05:47] Um exemplo prático muito bom é o HTML.
+[05:50] A diferença entre você ler um relatório em texto corrido, um TXT ou mesmo um markdown,
+[05:58] é muito diferente de você pegar um relatório todo bonitinho em HTML
+[06:03] com coisas que facilitam a sua compreensão com títulos maiores,
+[06:07] sub-títulos menores, coloridos, elementos interativos,
+[06:12] coisas que vão facilitar a sua compreensão.
+[06:15] Vamos fazer com que você perca menos tempo olhando para aquele material
+[06:19] e entendendo aquele material.
+[06:20] E outro ponto importante é que nem sempre você vai fazer isso só uma vez por semana,
+[06:24] às vezes você quer fazer isso cinco, dez, quinhentos vezes por dia,
+[06:27] porque você está construindo pequenas coisas,
+[06:29] adicionando pequenos elementos ao seu projeto,
+[06:31] mas esses pequenos elementos exigem uma camada de decisões importantes.
+[06:36] E às vezes você não vai usar isso em grandes projetos apenas,
+[06:39] você quer usar isso dez, quinhentos vezes por dia para coisas menores.
+[06:43] E nesse cenário, quanto menos tempo você gasta com isso,
+[06:46] mais produtiva o seu dia é.
+[06:48] E a gente já criou muitas vezes queus pensando no seu bem-estar,
+[06:51] no dia a dia de trabalho com o Iá.
+[06:53] Uma das que hoje faz mais sucesso na comunidade é o veredito,
+[06:56] que a gente chama também de AR Board.
+[06:58] Basicamente você tem um painel em slides que você pode aprovar ou rejeitar cada elemento,
+[07:04] e no final, a Iá consegue ler isso e fazer exatamente o que você pediu,
+[07:07] você pode adicionar comentários também.
+[07:09] É muito bom caso você queira, por exemplo, ter dez ideias de sites diferentes,
+[07:13] de layouts diferentes, antes de construir o seu site.
+[07:16] Você vai gerar thumbnails para os seus vídeos.
+[07:19] Então você vai adicionar novas features para o seu app,
+[07:21] mas você ainda não tem certeza quais.
+[07:23] Você pode também ter toda a especificação técnica de cada uma,
+[07:27] antes de adicionar.
+[07:28] Você pode também decidir entre opções de arquitetura, de infraestrutura.
+[07:32] E o caso de uso que eu mais acho interessante é o treinamento de agentes.
+[07:37] Vamos supor que você tenha um agente que gera thumbnails,
+[07:39] um exemplo bem prático e simples.
+[07:41] Esse agente precisa ser refinado,
+[07:44] muitas vezes até que ele chegue a um resultado bacana
+[07:46] e que sempre gere o tipo de thumbnails que você quer, o que o seu time gosta.
+[07:51] Ao invés de ficar gerando uma thumbnail,
+[07:53] aprovando ou reprovando, dando feedback, gerando outra e fazendo isso centenas
+[07:57] ou milhares de vezes, ele vai girar 50, 100,
+[08:00] quantas você quiser também, usar o mesmo tempo.
+[08:03] E aí você vai aprovando ou rejeitando com uma tecla A ou R,
+[08:06] A para aprovar, R para rejeitar.
+[08:08] E você vai passando, você tinha pro lado
+[08:10] e você reduz o tempo de revisão em dez vezes, no mínimo.
+[08:14] E você consegue treinar e refinar um agente
+[08:17] em muito menos tempo de uma maneira muito mais fácil, mais fluida.
+[08:21] E a sensação é quase como se você estivesse jogando ali um jogo,
+[08:24] uma coisa muito leve, muito tranquila
+[08:27] e não um trabalho em causa daquela resistência de puts.
+[08:31] Agora vem aquela revisão de milhares de outputs.
+[08:34] E o veredito foi uma criação 100% nossa
+[08:37] do zero, baseado nas nossas necessidades,
+[08:39] inclusive por essa demanda de ter que treinar
+[08:41] muitos agentes para os nossos clientes.
+[08:43] Mas em alguns casos, a gente também pega esses que já existem,
+[08:46] dando os créditos como estou fazendo agora,
+[08:49] e faz com que elas fiquem ou melhores,
+[08:52] ou tenham uma outra camada ali que talvez não fosse tão relevante
+[08:57] à audiência, ao público, ao alvo de quem criou skill,
+[09:00] mas eu acho que é relevante para nós.
+[09:02] E a gente acabou criando uma nova versão
+[09:04] dessa skill do Matt, chamada diretriz.
+[09:06] A ideia é que você tenha um processo de entrevista
+[09:09] muito, muito facilitado.
+[09:11] Ao invés de falar no terminal,
+[09:13] e aí ele manda uma pergunta e aí você responde a pergunta,
+[09:16] da entre, ele pensa, ele pergunta outra coisa,
+[09:19] aí você vai lá ler, às vezes você está trabalhando
+[09:22] com seis, uma divisão de tela de seis terminais,
+[09:25] e você tem que ver que que era,
+[09:27] e você vai lá digita, da entre, e aí demora, esquece,
+[09:30] aí vai almoçar, aí volta, está lá na pergunta ainda.
+[09:33] Esse processo que pode não ser o mais eficiente,
+[09:37] você é apresentado com um ambiente próprio
+[09:40] para esse entrevista acontecer.
+[09:42] Então esse skill vai te apresentar uma pergunta dessa forma aqui.
+[09:45] Então você vai ter ali em cima a pergunta em si.
+[09:48] Nesse caso a gente está construindo uma versão minimalista
+[09:51] de um cap cut, de um editor, de vídeos para Mac.
+[09:55] E aí a gente quer que ele rode 100% localmente,
+[09:58] e aí ele pergunta aqui,
+[10:00] quem vai usar o editor, só você ou outras pessoas?
+[10:03] Que é uma coisa que eu não coloquei no prompt inicial.
+[10:06] E isso é super importante,
+[10:08] isso determina uma quantidade muito grande de escolhas
+[10:11] que ele vai fazer, de coisas que ele vai construir.
+[10:13] Então aqui ele já dá uma sugestão embaixo,
+[10:17] que é só você.
+[10:18] E a gente pode clicar um botão,
+[10:21] e aí ele já usa essa sugestão,
+[10:23] o que é muito mais baixo do que ter que digitar ali.
+[10:27] Quais funções entram na primeira função?
+[10:29] E aí a gente pode tanto usar a sugestão,
+[10:31] ou decidir por outra alternativa,
+[10:34] dentre as alternativas que ele já inseriu aqui embaixo.
+[10:38] Olha, a gente tem aqui usar a sugestão novamente.
+[10:43] A gente pode ir variando as respostas,
+[10:45] brincando com isso,
+[10:47] mas o legal é que é muito mais rápido
+[10:50] você responder dessa maneira.
+[10:52] É como o editor roda.
+[10:53] Web, app nativo e tal.
+[10:55] E aqui ele sugeriu web.
+[10:58] Só que a gente quer que ele rode
+[11:02] como um app nativo.
+[11:03] E aí a gente pode escolher outra coisa
+[11:05] que não foi o que ele recomendou aqui,
+[11:06] clicando na opção assinalada
+[11:10] que corresponde a aquilo que a gente quer.
+[11:13] E aí tem a quarta.
+[11:16] Transcrição das agendas, embutido ou externo.
+[11:20] A gente pode usar a sugestão,
+[11:21] pode escolher tanto a recomendada
+[11:23] que embaixo escolha quanto clicar em usar sugestão
+[11:28] para a gente ver se vai fazer a transcrição
+[11:31] por fora de um servidor externo,
+[11:33] vai usar ver um API,
+[11:35] ou vai fazer isso tudo usando o próprio computador.
+[11:39] Isso vai depender de várias questões,
+[11:41] mas se você tem um computador minimamente potente,
+[11:44] você consegue usar os modelos de transcrição
+[11:46] no próprio computador.
+[11:47] Então aqui a gente vai clicar em
+[11:49] na opção recomendada, na opção 1,
+[11:52] que é usar dentro do próprio aplicativo.
+[11:58] E ele pensa para a próxima pergunta,
+[11:59] porque as perguntas seguintes dependem
+[12:01] das respostas anteriores,
+[12:02] mas é um processo super rápido.
+[12:04] Formato principal dos vídeos
+[12:05] que o editor precisa suportar bem.
+[12:08] Aí tem vertical, até 3 minutos,
+[12:10] horizontal, até 4K.
+[12:13] A gente trabalha com 4 e 6K,
+[12:16] então eu vou colocar aqui até 4K.
+[12:18] Então a gente pode escrever qualquer formato.
+[12:21] Vamos colocar os formatos mais convencionais.
+[12:24] Valide em 1920 por 1080,
+[12:29] que é o horizontal.
+[12:32] É 1080 por 1920.
+[12:35] E aí 4K, para ele saber que precisa
+[12:37] e que tem isso em alta resolução também se precisar.
+[12:39] E a gente não está falando de nada técnico,
+[12:41] a gente não está falando de proxy,
+[12:43] não está falando de nada.
+[12:44] Qual o projeto mais pesado que deve rodar
+[12:46] fluido, duração máxima, tá beleza?
+[12:49] Então agora ele está perguntando
+[12:50] o que a gente vai fazer basicamente.
+[12:52] É tudo feito de maneira amigável
+[12:55] para que não tem nenhuma experiência técnica.
+[12:59] Dá para responder tudo com muita tranquilidade.
+[13:02] Qual é o Mac de referência?
+[13:03] E aí a gente pode colocar aqui um...
+[13:06] Enfim, pode ser qualquer um.
+[13:07] A gente poderia pegar um de 48 de RAM,
+[13:12] M4, nada absurdo,
+[13:15] mas também que tem uma potência bacana.
+[13:17] E a gente está respondendo aqui à entrevista,
+[13:19] note com pouquíssimas linhas,
+[13:22] a partir de 48 de RAM e M4.
+[13:27] Então a gente vai escrevendo aqui
+[13:30] de uma maneira muito leve, muito tranquila,
+[13:32] e ele vai passando pelas perguntas,
+[13:34] tem uma barra de progresso ali em cima,
+[13:37] com as números de prova que o editor está pronto.
+[13:40] Aí, enfim, a gente pode seguir
+[13:42] uma recomendação, pode especificar.
+[13:45] Uma coisa muito bacana é que a gente tem ali,
+[13:49] talvez você tenha notado,
+[13:51] um botão de microfone embaixo.
+[13:52] E aí dá para a gente clicar para ditar
+[13:54] aquilo que a gente quer.
+[13:55] Então a gente não precisa escrever necessariamente.
+[13:58] E aí isso vai funcionar,
+[14:00] você pode configurar isso para funcionar
+[14:03] em um link, que é o link do IP,
+[14:07] em qualquer computador.
+[14:09] Então você pode ter um computador
+[14:11] que funciona como um servidor, enfim.
+[14:13] Então a ideia é que você tenha um link
+[14:14] que é criado em um computador específico,
+[14:17] ou em um servidor, mas vamos pensar
+[14:19] na maior parte das pessoas,
+[14:20] você crie um computador específico,
+[14:21] ele gera um link,
+[14:23] que é basicamente um link que vai ser acessível
+[14:26] por todo mundo que usa o mesmo Wi-Fi.
+[14:27] E aí você pode entrar nesse link pelo celular
+[14:29] ou por qualquer outro dispositivo
+[14:31] conectado ao mesmo arredo,
+[14:32] e aí você pode responder as perguntas
+[14:34] pelo celular e aí você só avisa o seu agente
+[14:36] que acabou e ele vai ler todas as respostas
+[14:39] e começar a construir.
+[14:40] A gente tinha inserido em algum momento
+[14:42] uma opção nesse tipo de interação,
+[14:45] não exatamente nessa esquiu,
+[14:46] mas nesse tipo de interação
+[14:48] em que um servidor é criado,
+[14:49] as respostas são dadas, etc.
+[14:51] A gente tinha inserido uma verificação
+[14:53] a cada 30 minutos, ou a cada 10 minutos,
+[14:55] para realmente checar se a pessoa
+[14:57] já tinha respondido,
+[14:57] para que você nem precisasse dizer para a gente
+[14:59] que terminou.
+[15:00] Mas a gente se deparou com outro problema
+[15:01] porque às vezes o veredito,
+[15:03] o airboard, era gerado
+[15:04] e a gente esquecia
+[15:06] e aí ele ficava lá checando infinitamente
+[15:08] e não era legal.
+[15:10] Então a gente modificou
+[15:12] para que seja um processo ativo,
+[15:14] esse de você terminar de preencher
+[15:16] e você avisa o agente,
+[15:18] que é uma coisa natural
+[15:19] já que você já está ali no computador mesmo.
+[15:20] Pulando algumas perguntas,
+[15:21] a gente tem aqui
+[15:23] uma questão de definição de prazos e tal,
+[15:26] poderia até ter definição de tokens,
+[15:28] eu vou para ele não se preocupar com isso,
+[15:30] para ele só continuar construindo.
+[15:32] Note que ali em cima,
+[15:33] em conversar por voz do lado de escrever,
+[15:36] a gente tem um outro modo.
+[15:37] Esse processo é muito bacana
+[15:38] porque ele vai conduzir a entrevista de maneira oral.
+[15:40] Ele vai perguntar as coisas,
+[15:42] você responde com a sua fala
+[15:45] e ele vai transcrever, entender e seguir
+[15:47] por todo esse processo
+[15:48] e você precisar de digital, clicar em nada.
+[15:51] Pode ser que o tempo absoluto
+[15:53] para você concluir a entrevista
+[15:55] seja um pouco maior
+[15:55] porque ele vai narrar tudo,
+[15:57] depois você vai falar
+[15:59] e é mais fácil você clicar em uma opção recomendada,
+[16:01] muitas vezes, do que você falar a resposta inteira,
+[16:04] mas não deixa de ser uma opção bacana.
+[16:06] E aí depois que a gente terminar todo o questionário,
+[16:08] ele vai gerar um texto
+[16:13] e aí você vai poder exportar de algumas formas.
+[16:17] Aqui, editor de vídeo local nativo para Mac.
+[16:21] Ele em todo o escopo,
+[16:23] bem organizado,
+[16:25] tudo de uma maneira muito bacana,
+[16:27] muito legal.
+[16:29] Você pode tanto copiar quanto baixar o Markdown.
+[16:31] Se você baixar o Markdown, você já insere em uma sessão.
+[16:34] Você vê aqui que a gente tem o ponto MD.
+[16:38] Você pega esse arquivo
+[16:40] e joga dentro de qualquer IA
+[16:42] e pede para construir o que você bem entender.
+[16:46] E aí esse foi o aplicativo criado a partir desse questionário.
+[16:50] Ele nomeou de Corte.
+[16:52] E ele é assim.
+[16:55] A gente levou um tempo muito menor do que a gente levaria com o Gauntlet Loop
+[17:00] para finalizar esse app,
+[17:02] que é um MVP estilo CapCut,
+[17:05] que é um editor de vídeos simples.
+[17:08] Eu quero até ver o quanto tempo e o quanto Tolkien gastou.
+[17:11] Eu fui checar a quantidade de Tolkien gastos e o tempo
+[17:15] e fiquei bem surpreso, sinceramente.
+[17:17] O tempo eu já tinha uma noção,
+[17:18] uma hora e meia mais ou menos para construir o app,
+[17:21] porque é muito menos do que se você for usar uma lógica de Gauntlet Loops
+[17:25] usando lógicas de grafos mais complexos
+[17:29] e muito mais Tolkien.
+[17:31] E essa foi a parte que me surpreendeu,
+[17:32] porque aqui a informação que me trouxe
+[17:35] é que a gente gastou 100 mil Tolkien aproximadamente.
+[17:38] Eu vou até abrir aqui para você, para mostrar essa parte dos Tolkien.
+[17:42] Foram 13,9 milhões,
+[17:44] só que Tolkien gerados foram 100 mil, 103 mil.
+[17:48] É uma quantidade muito menor do que eu esperava.
+[17:50] E o custo, caso isso fosse feito via API,
+[17:52] seria de aproximadamente 6 dólares,
+[17:55] o que é um custo muito baixo.
+[17:56] Então, quando isso é melhor do que fazer coisas
+[18:02] que atualmente estão em metodologias de fronteira
+[18:06] para construir coisas com e.a.
+[18:07] coisas mais sofisticadas, mais interessantes,
+[18:10] coisas que a gente gosta.
+[18:11] Tem muito de falar aqui no canal,
+[18:13] trazendo coisas que a gente levou dias e dias para construir,
+[18:17] ininterruptamente,
+[18:18] com a ir trabalhando com um método super legal.
+[18:20] Quando você tem que fazer uma coisa mais simples
+[18:22] e quer fazer isso de maneira mais barata e mais precisa,
+[18:25] note que se eu tivesse falado no processo de entrevista
+[18:27] que esse editor de vídeo seria para o mercado,
+[18:30] teria gastado muito mais.
+[18:32] Se eu tivesse falado que a gente precisava
+[18:34] de todo o securso do CapCut,
+[18:36] ele gastaria muito mais tempo.
+[18:37] Então, é uma pora onde terminar uma tarefa
+[18:39] de maneira relativamente rápida e gastando muito menos.
+[18:42] Bom, só para a gente dar uma breve experimentada
+[18:45] no editor de vídeos,
+[18:47] a gente pode vir aqui
+[18:50] e abrir justamente o vídeo,
+[18:52] a já foi para o timeline,
+[18:54] o vídeo que a gente comenta sobre o Matt Polcock aqui.
+[18:58] Vamos tentar cortar essa parte.
+[19:01] Primeira tarefa aqui é cortar essa parte.
+[19:05] Primeiro corte foi com Command B.
+[19:09] Segundo corte foi...
+[19:11] Foi.
+[19:12] Bom, agora eu consigo deletar, consigo juntar.
+[19:15] Vamos ver se...
+[19:15] Aí ele já junta, que nem o CapCut,
+[19:17] você aproxima, ele tem uma certa sensibilidade,
+[19:20] um magnetismo aqui e já junta as duas coisas.
+[19:23] Vamos ver se o áudio está funcionando.
+[19:24] Conta com mais de 300 mil...
+[19:27] Boa, está funcionando.
+[19:29] Vamos supor que a gente queira criar um vídeo vertical
+[19:32] de uma parte desse vídeo horizontal.
+[19:34] Sem muita análise, vou pegar um trecho qualquer
+[19:39] e aí eu vou tentar fazer rapidamente
+[19:42] um vídeo ultra curto vertical
+[19:44] baseado no vídeo todo.
+[19:47] Eu quero começar com essa parte aqui,
+[19:49] nem sei o que está sendo dito,
+[19:51] mas vamos tentar.
+[19:53] Eu tenho aqui a possibilidade de deletar tudo isso,
+[19:56] ter a possibilidade de deletar isso aqui.
+[19:59] Vamos lá, vídeo vertical.
+[20:01] Aí eu tenho que mudar as dimensões em algum lugar,
+[20:04] porque a gente fica aqui embaixo.
+[20:07] Aqui deve ser esse.
+[20:09] Ah, boa, aqui eu tenho formato vertical.
+[20:11] Legal, ele já trouxe aqui o vertical,
+[20:14] eu já consigo mexer a telinha.
+[20:16] Eu não consigo pegar ele e arrastar aqui,
+[20:18] mas eu consigo mudar a escala dele.
+[20:20] Aí, mudando a escala,
+[20:23] eu consigo ajustar para tornar ele vertical.
+[20:28] Aqui eu estou fazendo tudo de maneira meio grosseira,
+[20:31] mas só para você entender que ele funciona.
+[20:34] Aí tenho aqui uma parte,
+[20:37] os bíoros estão dando certo até.
+[20:40] Aí, vamos ver onde a gente quer parar.
+[20:44] Bom, está bom, aqui.
+[20:45] A gente parar aqui.
+[20:49] Legal, temos um vídeo curto a partir do vídeo longo.
+[20:53] Eu queria ver se ele realmente funciona.
+[20:55] É a questão dos legendas, eu queria ver se ele faz.
+[20:59] Ah, ele está baixando o modelo de legendas.
+[21:02] Então, ele vai configurar agora o whisper
+[21:07] dentro do aplicativo.
+[21:09] Eu quero ver se funciona.
+[21:11] Pronto, ele já baixou e já fez toda a transcrição.
+[21:16] Vamos ver se deu certo.
+[21:17] Deus podem ficar cada vez melhores,
+[21:19] podem ter um potencial infinito de performance e inteligência.
+[21:23] Legal, ele realmente transgraveu, está tudo sincronizado.
+[21:28] Está super bom.
+[21:28] Eu devo usar, então.
+[21:30] É uma frustração constante.
+[21:32] Posso posicionar aqui melhor, né?
+[21:35] Posso também cortar para posicionar o vídeo.
+[21:39] Gostei bastante.
+[21:40] Em relação a não conseguir realizar determinada tarefa com a...
+[21:44] E...
+[21:45] Obviamente, o modelo de transcrição vai trazer alguns errinhos,
+[21:49] como sempre,
+[21:50] aí você pode inserir uma camada IA para melhorar isso.
+[21:54] Vamos ver o que mais a gente pode fazer aqui.
+[21:55] A gente pode adicionar texto,
+[21:57] aquele texto que fica lá no começo,
+[22:00] aquela headline bem chamativa.
+[22:04] Talvez melhore.
+[22:06] Eu tenho que selecionar por aqui,
+[22:07] e aí eu digito aqui.
+[22:09] Aqui, nem o capquete.
+[22:11] Texto chamativo.
+[22:14] Eu posso mudar a cor?
+[22:17] Legal, eu gosto de mudar a cor, assim.
+[22:21] Bom, vamos ver se foi.
+[22:23] Foi, bom.
+[22:24] Vou mudar a cor,
+[22:25] vou mudar a sombra,
+[22:28] contorno, na verdade.
+[22:32] Consegui mudar o contorno aqui também.
+[22:36] Vamos ver.
+[22:37] Ah, consigo aumentar o tamanho da caixa.
+[22:39] Consegui colocar tudo o minúsculo, o maiúsculo.
+[22:44] Vamos ver se consigo mudar a fonte.
+[22:46] Consego, super fácil.
+[22:49] Eu não tenho nenhum erro.
+[22:51] É um editor de vídeos totalmente funcional.
+[22:55] Gostei bastante.
+[22:57] Não tenho nada a reclamar, absolutamente nada.
+[23:00] Poderia adicionar novas features, obviamente.
+[23:03] Gostei muito de como foi feito.
+[23:06] Super intuitivo.
+[23:07] Se para quem já editou vídeos com qualquer programa,
+[23:10] é uma coisa que você pega, bate o olho e sabe como fazer.
+[23:13] Temos as funções mais básicas,
+[23:15] mas algumas coisas eu talvez nem tenha explorado.
+[23:19] Vamos tentar exportar isso aqui para ver como fica.
+[23:23] Estou exportando em 1080 x 1920, 30 fps.
+[23:28] Aí tem configuração de formato também aqui, se a gente quiser mudar.
+[23:32] Pode ver e mostrar no Finder.
+[23:34] Aí ele já traz na pastinha certa.
+[23:37] Vamos dar uma olhada.
+[23:40] Deus podem ficar cada vez melhores,
+[23:42] podem ter um potencial infinito de perfó...
+[23:45] Ficou ótimo.
+[23:46] Não vale a pena assistir o vídeo todo?
+[23:48] Estou...
+[23:49] Tigo...
+[23:51] Isso.
+[23:52] Porque esse modelo...
+[23:53] Legal, gostei.
+[23:54] Não vou botar o vídeo todo porque não faz sentido.
+[23:56] Tudo que a gente precisava validar já foi validado.
+[23:59] Então você já entendeu como a diretriz funciona,
+[24:01] como esse processo de entrevista funciona,
+[24:02] para uma construção mais direto ao ponto,
+[24:05] mais econômica, mais eficiente, mais rápida.
+[24:07] Se você é programador ou tem experiência técnica,
+[24:09] eu sugiro que você dê uma olhada no repositório do GitHub do MacPoco,
+[24:13] que tem várias skills além do Grilme, que são muito boas.
+[24:16] O que a gente tentou fazer com a skill diretriz foi trazer isso
+[24:19] para um mundo que vai para além do mundo deve,
+[24:23] e também fazer com que o processo de entrevista fosse facilitado,
+[24:27] interação por áudio, interação por ditado,
+[24:30] recomendações muito fáceis,
+[24:32] opções entre as opções mais prováveis,
+[24:34] comentários de um jeito muito bacana,
+[24:37] é uma forma de você conseguir fazer isso muitas vezes por dia,
+[24:40] com um atrito muito menor,
+[24:41] sendo um processo gostoso, tranquilo, rápido,
+[24:45] ao invés de ser um processo que talvez fizesse com que você aos poucos
+[24:48] desistisse de usar a skill.
+[24:50] E no fundo é uma metodologia muito simples,
+[24:52] você é entrevistado antes de construir algo,
+[24:54] e aí a construção daquilo que você vai fazer
+[24:56] se torna mais bem planejado.
+[24:58] Os membros da comunidade Maestro Daia
+[25:00] já têm essa skill disponível dentro da skill prontas,
+[25:03] e caso você ainda não esteja na comunidade queira acessar essa skill
+[25:06] e centenas de outras skills agentes, mais de 50 aplicativos,
+[25:11] só para os membros da comunidade,
+[25:13] além de suporte técnico diário, lives toda semana,
+[25:16] uma comunidade de milhares de pessoas
+[25:19] que interagem diariamente,
+[25:21] que conversam sobre seus projetos,
+[25:22] muitas pessoas já encontraram sócios para projetos de sas,
+[25:27] enfim, é um ambiente muito legal,
+[25:28] a gente tem muito orgulho de tocar esse projeto,
+[25:30] e se você gosta aqui do canal, você vai adorar entrar na comunidade,
+[25:33] o link está na descrição,
+[25:34] e claro, se você gostou do vídeo
+[25:36] e quer receber mais recomendações de vídeos
+[25:37] como esse no seu YouTube,
+[25:39] deixe o seu hype, o seu like,
+[25:41] e não se esqueça de se inscrever no canal.
+[25:43] Um abraço e até a próxima.

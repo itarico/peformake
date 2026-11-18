@@ -1,0 +1,155 @@
+idioma: en
+[00:00] Claude Coat just turned this long form MrBeast video into 7 separate clips ready to post.
+[00:05] All I did was post one link, it watched the whole thing, found the best moments and cut
+[00:10] them out by itself.
+[00:11] And it doesn't stop there, it edits every single clip too, the captions, the zooms and
+[00:17] it's done.
+[00:18] This free Claude skill can clip any long form video.
+[00:21] It's the same clipping system from my last video, the one running my Instagram that
+[00:26] posts 20 reels a day.
+[00:28] My name is Eddie and in this video I'll show you exactly how to set this up.
+[00:31] And don't worry if you've never opened Claude Coat or used AI before, this is a complete
+[00:36] beginner's guide.
+[00:37] I'll show you how it picks the best moments with the strongest hooks, how to install it
+[00:42] with a single prompt and why it costs you nothing extra compared to paying for a clipping
+[00:47] tool every single month.
+[00:49] I'll also link the full skill link down below so you can follow along, let's dive
+[00:53] in.
+[00:54] So here's the video.
+[00:55] It's released on a podcast and it's almost two hours long.
+[00:58] Finding the good parts in something this long usually means scrubbing the full video
+[01:02] yourself.
+[01:03] So I copy the link, open Claude Coat in the Clipper folder and type one line.
+[01:08] Run the Clipper skill for this video and then I attach the link.
+[01:12] And send.
+[01:13] That's the whole prompt.
+[01:15] From here it works through four steps all on its own.
+[01:18] It starts by going through the whole video and picks out the best moments.
+[01:22] It cuts them vertical and it edits every single one.
+[01:25] On a two hour video like this one the whole thing took only around 30 minutes.
+[01:30] And I didn't touch anything after I sent the prompt.
+[01:32] I'll break down exactly how it picks these moments in a bit.
+[01:35] But before here's what it handed me back.
+[01:38] Seven clips each with its own title and a caption you can post with it.
+[01:42] Take this one.
+[01:43] Here's the raw moment in the original video and here's the fully cut up clip.
+[01:47] It found the exact hook and started the clip right there.
+[01:50] And every time the camera cuts it re-centers the frame on whoever's on the screen so now
+[01:55] nobody ends up half cut off.
+[01:57] But these are just raw cuts.
+[01:58] Here's where it gets better.
+[02:00] This is the same clip before and after.
+[02:02] Claude edited this one completely on its own.
+[02:05] First it adds the zooms.
+[02:07] It reads the transcript to figure out where a zoom actually makes sense.
+[02:10] Like here.
+[02:11] Right when Mr. Beast finishes a point.
+[02:14] Then it clicks at the frame and zooms in around his face so nothing important ever
+[02:18] gets cut off.
+[02:19] It takes the transcript and puts it on the screen just 2-3 words at a time so it's easy to follow.
+[02:25] And then the words that matter like billionaire and million get highlighted so they stand out.
+[02:30] And to finish it off it adds these sound effects like these bushes.
+[02:34] Here listen closely.
+[02:35] So it is then anyone else even gets on the deepest mode.
+[02:40] Like there's a reason no one makes videos.
+[02:41] And it edited all these 7 clips in only 7 minutes.
+[02:45] Now let's say you want something different.
+[02:48] You just tell Claude.
+[02:49] Every Claude extract only the best clip and keep it under 30 seconds with no sound effects.
+[02:55] Also use a blue color for the captions.
+[02:57] Send it and Claude does the full edit for you.
+[03:00] There we go.
+[03:01] It's now blue under 30 seconds and has no sound effects.
+[03:04] So now that we know this works let me show you how you can set this up on your own
+[03:08] computer.
+[03:09] Ok so to run this you only need these 2 things.
+[03:12] Claude code which you can download for free and a paid Claude plan.
+[03:16] The pro plan works fine.
+[03:18] Anything else Claude will set up for you.
+[03:20] Then you just need the skill itself.
+[03:22] I'll leave it down in the description below.
+[03:24] It's in my school community which is free to join for 7 days.
+[03:27] So here's a full skill file for my community.
+[03:30] I'm just going to right click this and extract everything here.
+[03:33] This basically has all the files Claude needs to work with.
+[03:37] So I'm just going to press extract and let Claude do the work.
+[03:40] There we go.
+[03:41] Once it's extracted over here these are all the contents that Claude is going to
+[03:44] work with over here.
+[03:45] So now we're just going to open Claude code, select the folder over here that we just
+[03:49] created and then send the simple prompt.
+[03:52] Hey Claude can you set up this folder repository for me?
+[03:55] And send that.
+[03:56] It installs everything it needs completely on its own so you don't have to do a single
+[04:00] thing.
+[04:01] If it asks for any permissions just click allow.
+[04:04] After a few minutes it will say the setup is complete and that's it.
+[04:07] We are done and you only do this setup once.
+[04:10] So now that the setup is complete all I have to do is copy this prompt over here and
+[04:14] just give Claude a YouTube video to clip for you.
+[04:18] So I'm just going to grab one of my videos on my YouTube channel.
+[04:21] So I'm just going to share this and then copy the link over here.
+[04:24] Then go into Claude code and just paste this over here and then send that.
+[04:28] Then very first time it may take a little longer just because it has to download
+[04:32] the whisper which transcribes your videos so that it can make those beautiful edits.
+[04:37] So if it takes a little longer don't worry about that it's completely fine.
+[04:40] So as you can see it's getting to work and it's going to take two to four
+[04:43] minutes to clip everything.
+[04:45] So now while that's running let me show you how it actually clips the best moments in
+[04:49] a video.
+[04:50] So this is the part where Claude really acts like your editor.
+[04:53] It reads the whole transcript of the video start to finish and it's looking for moments
+[04:58] that work on their own.
+[04:59] Something a total stranger could watch with zero context and fully understand.
+[05:03] Take this clip.
+[05:05] Right before it MrBeast is kind of rambling so Claude skips all of that and starts
+[05:10] to clip exactly on this hook.
+[05:13] To go viral you have to do something that's never done before.
+[05:17] Now that's the first thing you hear and it ends on the payoff so the clip actually
+[05:21] feels finished instead of just cutting me through.
+[05:23] It also knows the types of hooks that work on shorts like the surprising fact or a
+[05:28] bold claim or the start of the story and every clip has to open with one of them.
+[05:34] Then it gives every clip a score out of ten and ranks them so the best one is always
+[05:38] first and this is how it does all the clipping.
+[05:41] Now let's get into how it actually edits that.
+[05:44] Once Claude picks the clip it hands them off to a few python scripts inside of the
+[05:48] skill that do the actual editing all right from your computer.
+[05:52] So remember Whisperer?
+[05:53] It doesn't just write down what's being said it saves the exact moment every
+[05:57] single word is spoken and that's how each caption pops in and out right on time.
+[06:02] And so for the zooms it uses face detection to find the face in every single shot and
+[06:07] then it places each zoom at the end of the sentence every few seconds.
+[06:12] It even changes the framing on every camera cut so the jump doesn't feel too harsh.
+[06:16] And for the caption color it tries the creator's brand color first.
+[06:20] Now if it's not sure what the color is it just pulls the color from the video
+[06:25] so everything matches based off the video's branding.
+[06:27] Then for the sound effects I gave it these three sound files in the scale
+[06:31] file so it adds a couple of rooshes on every zoom and once the full workflow
+[06:36] is done it renders the final clip in 1080p.
+[06:39] Now you're probably wondering how much it was all of this cost.
+[06:43] Now most clipping tools charge you by the minute.
+[06:45] For example Opus Clip is the biggest clipping tool out there and it gives you
+[06:49] 150 minutes a month for $15.
+[06:53] So just this one MrBeast podcast would use up to two-thirds of your whole month.
+[06:58] This scale doesn't use credits at all.
+[07:00] The download, Whisperer, the cutting, the editing all run from your own computer,
+[07:06] completely free.
+[07:07] The only part that actually uses AI is only when Claude is picking the moments to cut.
+[07:13] And all of that already runs on your Claude plan you're already paying for.
+[07:17] So to put it simply even Opus Clip's $29 plan only covers about three podcasts
+[07:23] this long every single month.
+[07:24] On the $20 Claude plan you could clip around five long podcasts like this one every single week
+[07:31] and you still get to use Claude for everything else.
+[07:33] You just paste one link and Claude watches the whole video, picks the best moments,
+[07:38] cuts them and edits every single one of them.
+[07:41] If you want this running on your own computer the full course is linked below inside my community.
+[07:46] It walks you through everything step by step for your own videos and for your own clients.
+[07:51] And if you get stuck anywhere I'm inside my community every day so I'll just help you
+[07:55] set it up one on one so don't worry about that.
+[07:57] It's free for seven days with a money back guarantee so there's really no real reason
+[08:02] for you not to join.
+[08:04] Links down below in the description and I'll see you inside.
+[08:07] And once you've got your clips the next step is posting them.
+[08:10] In this six minute video here or here I'll show you the exact system I'm using to automate
+[08:15] my Instagram to post 20 reels a day.
+[08:18] I'll see you there.

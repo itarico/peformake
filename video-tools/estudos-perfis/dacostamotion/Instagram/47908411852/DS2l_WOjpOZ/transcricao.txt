@@ -1,0 +1,17 @@
+idioma: pt
+[00:00] Você é prestador de serviços?
+[00:03] Receba serviços próximos de você.
+[00:06] Veja quem está chamando a avaliação do cliente e o tipo de serviço antes de aceitar.
+[00:12] Você decide qual serviço pegar.
+[00:15] Aceite, recuse e gerencie suas oportunidades do seu jeito.
+[00:21] Emergências em tempo real.
+[00:23] Chamados urgentes aparecem na hora, com localização e detalhes completos.
+[00:29] Converse direto com o cliente.
+[00:31] Tire dúvidas, combine detalhes e avise quando estiver a caminho.
+[00:37] Acompanhe seus serviços.
+[00:39] Tenha controle do histórico, serviços finalizados e ganhos.
+[00:43] Construa sua reputação.
+[00:45] Ganhe avaliações, elogios e aumente suas chances de novos chamados.
+[00:52] Beacow.
+[00:53] Mais serviços, mais controle, mais ganhos.
+[00:58] Desculpe.

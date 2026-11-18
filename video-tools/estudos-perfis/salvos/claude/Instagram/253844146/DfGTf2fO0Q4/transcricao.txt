@@ -1,0 +1,20 @@
+idioma: pt (1.00)
+[   0.0-   4.9] Agora eu consigo usar o cloud para criar aplicativos de iPhone e instalar eles diretamente no meu
+[   4.9-   5.9] celular.
+[   5.9-   6.9] E olha só como funciona.
+[   6.9-  10.7] Encontraram uma ferramenta gratuita e de código aberto chamada X2, que permite ao
+[  10.7-  14.3] cloud criar, compilar e instalar aplicativos na App Store.
+[  14.3-  18.5] Basicamente, em vez de só pedir para a inteligência artificial escrever o código, eu consigo
+[  18.5-  21.5] usar ela para desenvolver um aplicativo completo em Swift.
+[  21.5-  23.6] E a parte mais interessante vem agora.
+[  23.6-  27.6] Depois de configurar tudo, eu posso instalar o aplicativo no meu próprio iPhone e testar
+[  27.6-  28.6] como ele funciona.
+[  28.6-  31.1] Se eu quiser mudar alguma coisa, é só falar com o cloud.
+[  31.1-  34.5] Por exemplo, muda essa tela, adiciona um botão e melhora o design.
+[  34.5-  38.5] Ele altera o código, compila novamente e me ajuda a instalar a versão atualizada.
+[  38.5-  42.2] Claro que preciso configurar as ferramentas da Apple e a autenticação de desenvolvedor
+[  42.2-  43.2] primeiro.
+[  43.2-  46.3] Mas imagina ter uma ideia de aplicativo pela manhã e conseguir testar uma versão
+[  46.3-  48.4] funcionando no iPhone no mesmo dia.
+[  48.4-  49.4] Quer aprender a fazer isso?
+[  49.4-  52.8] Comenta X2 aqui embaixo que eu te mando o link e o passo a passo.

@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "DLYTKyax99J",
+ "title": "Post by dacostamotion",
+ "description": "Animação dessa marca linda Emilia🍃\nMe conta oque achou?\n\nBrand: @vicgario \nMotion: @dacostamotion",
+ "channel": "dacostamotion",
+ "uploader_id": "47908411852",
+ "uploader": "José Emanuel | Motion Designer",
+ "timestamp": 1750974558,
+ "like_count": 44,
+ "comment_count": 10,
+ "webpage_url": "https://www.instagram.com/reel/DLYTKyax99J/",
+ "webpage_url_basename": "DLYTKyax99J",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20250626",
+ "playlist_count": 11,
+ "epoch": 1794152340,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

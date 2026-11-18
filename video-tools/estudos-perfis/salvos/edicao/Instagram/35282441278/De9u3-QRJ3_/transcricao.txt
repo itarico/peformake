@@ -1,0 +1,3 @@
+idioma: pt (1.00)
+[   0.0-   2.4] O Claudio acabou de chegar no nível bizarro.
+[   2.4-   3.8] Olha essa edição que ele fez.

@@ -1,0 +1,482 @@
+idioma: pt
+[00:00] Se você já tentou criar vídeos com inteligência artificial,
+[00:02] você deve ter se deparado com o problema do custo.
+[00:05] Hoje você vai fazer um vídeo em altíssima qualidade, extremamente realista.
+[00:09] É uma coisa custosa, é uma coisa cara,
+[00:10] é uma coisa que se você vai fazer em escala, vai pesar no bolso.
+[00:13] Você pode até criar um vídeo viral de 8 segundos, 15 segundos, 30 segundos,
+[00:19] mas se você quiser se fazer um vídeo inteiro, um vídeo longo,
+[00:22] com inteligência artificial,
+[00:23] ou se você quiser se criar as imagens de cobertura, os famosos b-rolls,
+[00:28] os motions, com inteligência artificial, qual a melhor forma de fazer isso?
+[00:32] A ideia desse vídeo é mostrar algumas bibliotecas de motion open source,
+[00:36] que significa isso.
+[00:37] Quando você gera um vídeo com inteligência artificial usando, por exemplo, cedentes,
+[00:41] ele vai te cobrar um valor por segundo.
+[00:44] Então você gera 15 segundos, vai pagar ali entre 2 e 10 dólares, dependendo do modelo,
+[00:49] e se você quiser criar vídeos mais longos,
+[00:51] você vai gastar significativamente mais que isso por vídeo.
+[00:54] Só que os modelos de ar se tornaram tão bons que para vários casos de uso,
+[00:58] você pode usar motions,
+[01:00] que são animações feitas em código,
+[01:02] e isso gasta muito menos do que você pagaria para gerar vídeos do zero com ar.
+[01:08] Primeiro porque você pode usar a própria assinatura que você já paga,
+[01:12] provavelmente, para gerar esses motions.
+[01:14] E segundo porque você pode ter templates prontos,
+[01:17] e só adaptar algumas variáveis, como por exemplo, um texto.
+[01:21] Se um motion foi feito pensado em uma empresa,
+[01:24] você quer adaptar isso a sua empresa,
+[01:25] você só troca o nome da empresa e todo o resto continua igual.
+[01:29] Aqui no canal nós já trouxemos vários vídeos gerados,
+[01:31] 100% com inteligência artificial,
+[01:33] como experimento para vocês sempre deixando claro no final do vídeo,
+[01:36] que é um vídeo gerado por ar,
+[01:37] que eu vou avatar, a gente faz com rei gen,
+[01:39] a voz com 11 labs,
+[01:41] só que as imagens que aparecem por cima do vídeo,
+[01:44] para deixar ele mais dinâmico, são feitas tanto através de código,
+[01:47] com motions feitos pelos modelos dantropic,
+[01:50] quanto com a generativa de vídeo.
+[01:52] Muitas vezes, o motion fica melhor, mais didático, mais interessante,
+[01:56] do que a imagem que você gastou de 2 a 10 dólares para gerar.
+[02:00] E para você entender perfeitamente tudo isso,
+[02:02] eu vou te mostrar algumas bibliotecas de motion
+[02:03] e o resultado que elas são capazes de produzir.
+[02:06] Você pode, hoje, imediatamente, baixar todas elas
+[02:09] e começar a usar esses templates.
+[02:11] Nós selecionamos 15 repositórios,
+[02:13] o link fica aqui,
+[02:15] e a gente fez alguns motions com base nos templates prontos,
+[02:20] e isso aqui pode ser adaptado, todo texto pode ser adaptado,
+[02:23] os números, os elementos que aparecem,
+[02:26] e vou dar um play aqui para você ter uma noção.
+[03:00] Ficou super legal, né?
+[03:01] Imagina que você pode colocar esse tipo de motion em qualquer vídeo.
+[03:06] Bom, terminal,
+[03:09] coisas que você vai escrever no terminal,
+[03:11] qualquer vídeo de demonstração,
+[03:13] você beneficia muito desse template aqui,
+[03:15] que está no repositório do próprio rei gen aqui,
+[03:19] Hyper Frames Launches.
+[03:22] E esse é só um dos exemplos, né?
+[03:24] Você pode quebrar tudo isso em pequenos elementos,
+[03:28] pequenos templates para utilizar pontualmente,
+[03:30] você pode pegar
+[03:33] só essa parte aqui que aparecem
+[03:36] os avatares, os ícones das pessoas,
+[03:38] e você pode mudar essa fotinha, mudar o nome.
+[03:41] Tem vários elementos que você pode adaptar
+[03:44] com muita facilidade a outros contextos.
+[03:47] Uma das principais vantagens de você criar
+[03:49] sua biblioteca de motions é que você define
+[03:51] sua linha estética também.
+[03:53] Você pode pedir para o seu modelo de A
+[03:55] criar 100, 200 mil motions, pode,
+[03:58] mas é trabalhoso esse processo de refinamento.
+[04:02] Quais motions ficaram legais, quais ficaram muito simples,
+[04:05] quais ficaram muito infantis,
+[04:07] tudo isso você vai filtrando a depender do seu projeto.
+[04:09] E você pode ter bibliotecas diferentes
+[04:11] para projetos diferentes.
+[04:13] Bom, o próximo repositório,
+[04:15] que é o de A, tem pouquíssimas estrelas, por enquanto,
+[04:18] mas ele pode ser bem útil em alguns contextos,
+[04:21] vou mostrar aqui.
+[04:48] Para fazer demos de produtos, demos de apps,
+[04:51] ícones aparecendo, é super legal.
+[04:54] Rankings, olha que bacana.
+[04:57] Bordas arredondadas, uma estética mais minimalista,
+[05:00] uma coisa meio Apple, né?
+[05:02] Eu achei bem legal os motions
+[05:05] desse repositório, achei que seriam
+[05:08] são recursos úteis.
+[05:10] Nós temos aqui um outro que é uma estética totalmente diferente.
+[05:14] Dá uma olhada.
+[05:16] É muito legal esse estilo.
+[05:49] A ideia aqui não era fazer uma historinha,
+[05:51] mas era mostrar
+[05:54] os elementos, essa coisa meio recorte de papel,
+[05:58] essa estética que está sendo bem usada em alguns contextos hoje,
+[06:02] que permite que você conte histórias.
+[06:05] E muitas vezes é melhor mostrar uma coisa assim
+[06:09] do que coisas ultra realistas,
+[06:11] imagens super realistas cinematográficas.
+[06:14] As vezes isso aqui vai engajar mais e vai ser mais didático,
+[06:17] dependendo do contexto.
+[06:19] Às vezes o simples é mais útil de fato
+[06:23] do que uma coisa ultra realista.
+[06:25] Então esse aqui é um outro repositório bem bacana
+[06:29] no GitHub, Animate.
+[06:32] Esse aqui é o link.
+[06:34] Que pode ser bem útil para vocês.
+[06:36] Temos aqui um outro repositório
+[06:39] com templates legais.
+[06:42] Nesse caso eu não coloquei trilha sonora.
+[06:46] São motions mais padrão, assim, são.
+[06:51] Mas isso aqui, por exemplo, é bem legal.
+[06:53] É você ter um efeito como esse.
+[06:56] É legal para vídeos,
+[06:59] de repente colocar uma VSL,
+[07:01] essa coisa mais chamativa,
+[07:03] mais brilhante.
+[07:06] Não é uma estética que eu gosto muito,
+[07:08] mas ele está com mais de 1000 estrelas já no GitHub.
+[07:11] Achei que poderia ser útil para algumas pessoas.
+[07:13] Tem esse outro repositório, que é HTML video.
+[07:16] Nexo.io, que é muito legal.
+[07:18] Porque se você tem um site ou um projeto em HTML,
+[07:21] você quer transformar isso em um vídeo
+[07:23] ou mesmo tornar o conteúdo de um HTML mais didático,
+[07:26] ele transforma um HTML em um vídeo para você.
+[07:30] Tem um exemplo que a gente criou, foi esse aqui.
+[07:32] É bem aquela estética de HTML das skills mais conhecidas,
+[07:38] front-end design.
+[07:42] Só que você consegue animar isso,
+[07:45] colocar isso em uma espécie de apresentação de slides animada.
+[07:49] Mas você consegue explorar isso de várias formas.
+[07:51] Aqui o exemplo é bem simples,
+[07:53] mas é um recurso bacana.
+[07:55] E a forma que eu mais gosto de usar
+[07:57] essa biblioteca de motions
+[07:59] é importando tudo primeiro para um agente
+[08:01] que vai ser especializado nisso.
+[08:03] Você pode ter vários agentes de motion,
+[08:05] mas pode começar com um agente
+[08:07] e você pede para ele gerar uma versão em vídeo
+[08:11] de todos os assets ou pelo menos os principais
+[08:13] para você aprovar ou reprovar.
+[08:15] Nós temos um vídeo sobre uma skill
+[08:17] que atualmente a gente mais usa,
+[08:19] que é o AR-BORD.
+[08:21] Que basicamente permite que você bata o olho,
+[08:24] veja um vídeo rapidinho e aprove ou reprove.
+[08:27] Se você aprova, o agente imediatamente já entende
+[08:31] que é um template que ele vai continuar usando
+[08:34] e se você reprova ele simplesmente vai deletado e repositório.
+[08:37] Vou deixar o vídeo que a gente fala dessa skill
+[08:40] que é extremamente útil para treinamento
+[08:42] e refinamento de agentes aqui em cima.
+[08:44] Mas você pode também ir dando os feedbacks.
+[08:46] Ah, esse motion eu gostei por causa disso,
+[08:48] esse eu não gostei por causa disso.
+[08:50] E é quando você tiver algumas dezenas de motions
+[08:53] em templates prontas,
+[08:55] você pode pedir para ele gerar os primeiros vídeos
+[08:57] tentando usar esses motions
+[08:59] para fazer os mais pertinentes.
+[09:01] Eu vou te mostrar o último resultado
+[09:03] que a gente teve com o nosso agente de motion
+[09:05] para vocês entenderem como isso funciona na prática.
+[09:07] É um vídeo que chegou em 25 mil visualizações.
+[09:10] Não é um número impressionante,
+[09:12] mas não é um número péssimo também,
+[09:14] para um vídeo que a gente teve zero trabalho.
+[09:17] E eu vou dar o play aqui
+[09:20] e ir pausando para explicar algumas coisas.
+[09:22] Isso aqui, por exemplo, já é um motion.
+[09:24] Está vendo? É um template.
+[09:26] Eu vou fazer essa diferenciação entre
+[09:28] os motion versus os vídeos gerados
+[09:31] com a generativa, como por exemplo,
+[09:34] Cidence, Cling, etc.
+[09:36] A Antropiq e a OpenAI
+[09:38] acabaram de lançar modelos
+[09:40] que cobram exatamente o mesmo preço.
+[09:42] Isso é muito legal, porque o trabalho
+[09:44] de fazer esse manual mente seria muito grande,
+[09:46] mas com o template pronto,
+[09:48] fica muito mais fácil você conseguir fazer isso
+[09:50] em sincronia com o que está sendo dito.
+[09:52] E aí, como que ele insere
+[09:54] esses prints, esses screenshots?
+[09:56] O template já tem
+[09:58] partes em que imagens vão ser colocadas,
+[10:00] então ele só vai inserir
+[10:02] novas imagens a depender do contexto.
+[10:04] Esna saída.
+[10:06] E isso diz muito dessa briga.
+[10:08] Esse aqui é o Rey Jenner com 11 Labs,
+[10:10] o avatar mais áudio.
+[10:12] Vocês não estão disputando quem tem
+[10:14] um modelo mais inteligente.
+[10:16] Eles estão disputando quem sai
+[10:18] mais barato no fim do mês.
+[10:20] E aí, esses recursos,
+[10:22] o calendário que aparece aqui,
+[10:24] esses efeitos de texto mesmo,
+[10:28] são muito naturais hoje
+[10:30] para um maia, tanto criar
+[10:32] quanto utilizar os templates prontos.
+[10:34] Do mês.
+[10:36] E para você, essa notícia é excelente.
+[10:38] Isso aqui eu acho que já foi.
+[10:40] Ou ele pegou de uma biblioteca
+[10:42] de Be-Rolls,
+[10:44] mas eu acho que é a mais prova
+[10:46] que ele tenha gerado isso com
+[10:48] um modelo de ia generativa de vídeo.
+[10:51] Isso é excelente.
+[10:53] Para provar isso, isso já é totalmente motion.
+[10:56] É um template que você vai ver como
+[10:58] isso se adapta. Esse exemplo é muito bom,
+[11:00] porque você vai ver como
+[11:02] o mesmo motion,
+[11:04] o mesmo template de motion,
+[11:06] pode se adaptar a vários contextos.
+[11:08] Então a gente tem Sony aqui, tem um avatarzinho ali.
+[11:10] Eu coloquei o CloudSonic 5.5
+[11:12] contra o de...
+[11:14] Tá vendo?
+[11:15] Mesma ideia, só que mudou aqui.
+[11:17] Simples, bem simples,
+[11:19] mudou aqui o nome.
+[11:21] Ele continuou com o mesmo bonequinho,
+[11:23] só que o fundo mudou.
+[11:25] Agora.
+[11:27] Aí esse aqui variou um pouco mais.
+[11:29] Está vendo ele manter o fundo.
+[11:31] Mas...
+[11:33] Aqui ele está procurando o insetinho,
+[11:35] o bug e o título mudou.
+[11:37] Então a posição do avatar mudou.
+[11:39] Isso é mais fácil
+[11:41] fazer uma modificação assim,
+[11:43] em que criar um template todo do zero.
+[11:46] De verdade, complacar.
+[11:48] Outro avatarzinho diferente,
+[11:50] e aí provavelmente
+[11:52] isso aqui foi criado
+[11:54] pela demanda do texto.
+[11:56] Ele não tem um milhão infinitos
+[11:58] de bonequinhos fazendo um cada coisa.
+[12:00] Ele vai criando e modificando
+[12:02] a partir do template original.
+[12:04] E aí se você quiser salvar isso depois,
+[12:06] você pode.
+[12:07] Mas a ideia é que você tenha uma base
+[12:09] para que...
+[12:11] Você não precisa fazer isso do zero,
+[12:13] para que você tenha um direcionamento estético
+[12:15] daquilo que você gosta, daquilo que você quer.
+[12:17] E às vezes ele vai criar um template
+[12:19] novo para um caso específico
+[12:21] se você permitir que a gente faça isso.
+[12:23] E às vezes ele vai usar quando for pertinente
+[12:25] a biblioteca que você já tem.
+[12:27] Tomático.
+[12:28] E no final...
+[12:29] Tudo isso é o mesmo template
+[12:31] que está sendo modificado.
+[12:33] Vou te mostrar quanto cada um custou.
+[12:35] Olha que legal.
+[12:37] Esse número me surpreendeu.
+[12:39] Os dois recebem...
+[12:41] Aí screenshot,
+[12:43] que é sempre modificável
+[12:45] de uma página.
+[12:47] Então, aos poucos, isso aqui ele faz.
+[12:49] Ele vai tirar um screenshot de uma página,
+[12:51] ele vai fazer esse movimento de...
+[12:53] Parece que nós scrolldown, mas na verdade
+[12:55] ele tira a foto e vai descendo aos poucos.
+[12:57] Um mesmo briefing em pasta separada.
+[12:59] Isso aqui é muito legal.
+[13:01] Normalmente seria muito trabalhoso,
+[13:03] mas ele rapidamente identifica,
+[13:05] através de uma análise da imagem,
+[13:07] o que está sendo dito, qual é a parte
+[13:09] daquela página que é pertinente.
+[13:11] Ele já vai dar um zoom
+[13:13] e já sublinha e já...
+[13:15] É muito legal.
+[13:16] Isso aqui é muito prático e é muito didático.
+[13:18] Às vezes você mostra uma página, assim,
+[13:20] compartilhando a tela aqui.
+[13:22] Ninguém vai pausar o vídeo para ler exatamente
+[13:24] o que está escrito.
+[13:25] Então, isso aqui é muito legal.
+[13:27] Tem cara de documentário de jornalistas,
+[13:29] uma investigação
+[13:31] em documentos antigos.
+[13:33] Isso aqui talvez não seja um melhor exemplo.
+[13:35] Mas me lembra muito alguns documentários
+[13:37] ou alguns canais no YouTube
+[13:39] que trabalham com investigação
+[13:41] e que às vezes tem que passar para uma série de documentos
+[13:43] e para mostrar onde foi encontrado
+[13:45] e qual documento e tal tem efeitos parecidos.
+[13:52] Só que, né, ninguém responde a dúvida.
+[13:54] Ele já vai para a parte da página
+[13:56] que remete a isso
+[13:58] e provar que funcionava.
+[14:00] Ele já faz isso de uma maneira muito mais legal
+[14:02] do que se você simplesmente tivesse o texto chapado
+[14:04] inteiro que ninguém ia ler.
+[14:06] Bom, continuando.
+[14:08] O primeiro teste foi caçar bugs.
+[14:10] Está vendo esses terminais que aparecem,
+[14:12] e é muito legal.
+[14:14] Cada modelo recebeu um app de agendamentos
+[14:16] e pagamentos com 8 bugs escondidos.
+[14:18] 5 vinham com reclamação de usuário.
+[14:20] Uma dizia que o mesmo pedido...
+[14:22] O custor, né, vindo, mexendo, tal...
+[14:24] Isso é muito bacana também.
+[14:26] Cobrado duas vezes.
+[14:28] Os outros três ninguém tinha relatado.
+[14:30] E sublinhando exatamente
+[14:32] os trechos que são pertinendo
+[14:34] daquilo que a gente quer
+[14:36] que a gente está falando a respeito,
+[14:38] é muito legal.
+[14:40] Ah, do secreto, fazendo novo.
+[14:42] Vou pegar aqui, vou pular, caso você queira assistir o vídeo completo,
+[14:45] você pode ir nos vídeos do canal,
+[14:47] mas eu vou tentar pegar exemplos diferentes
+[14:49] para não ser muito repetitivo.
+[14:51] Esse é um outro estilo.
+[14:53] Esse é um outro estilo que é um motion que aparece
+[14:55] sobre o vídeo.
+[14:57] Você grava um vídeo e o motion ele aparece
+[14:59] aqui como se estivesse flutuando sobre o background.
+[15:02] Que é um outro estilo bem legal também.
+[15:04] Em várias formas de fazer isso aqui.
+[15:06] Dá para fazer com geração de vídeos
+[15:08] e a generativa também.
+[15:10] Só você colocar o fundo verde
+[15:12] e aí você fala para a gente dia
+[15:14] colocar um chroma aqui
+[15:16] e remover o fundo, etc.
+[15:18] Primeiro empate.
+[15:20] O segundo teste foi construir um porta-vídeo.
+[15:22] Escapelo.
+[15:24] Esse é um vídeo que a gente demonstra muita coisa.
+[15:26] Tem um... tem... tem... tem plays repetidos.
+[15:29] Essa ideia de ir mexendo na sua erra,
+[15:31] etc.
+[15:33] Estou entendo a achar alguns outros motions.
+[15:35] Aquele está usando templates relativamente parecidos, né.
+[15:37] Mas mudando o vídeo.
+[15:41] O vídeo gravado na demonstração.
+[15:43] Aqui a mesma coisa.
+[15:45] É, a gente tem aqui
+[15:48] uma série de
+[15:50] repetições.
+[15:52] Esse aqui é um outro.
+[15:54] Esse é um template.
+[15:56] Vou para mostrar.
+[15:58] O placar final ficou 2x0 para o sol
+[16:00] com 2...
+[16:02] É isso aqui.
+[16:04] Ele vai fazendo esse giro do placar.
+[16:06] Esse é um template que a gente já usou em vários vídeos
+[16:08] e a gente tem que criar do 100% e por aí.
+[16:10] Porque está na biblioteca de motions, entendeu?
+[16:12] Esse aqui é um outro.
+[16:14] Dois cobram o mesmo por Tolkien.
+[16:16] Só que o Sunet escreveu
+[16:18] de 12 a 24 vezes mais...
+[16:20] É legal, tá vendo, tem uma referência
+[16:22] clara, visual e animada
+[16:24] de um comparativo
+[16:26] e que dentro de um template
+[16:28] é só mudar aqui a quantidade de
+[16:30] folhas que aparece, a quantidade de a...
+[16:32] Os Tolkien, no caso,
+[16:34] pode ser qualquer comparação entre qualquer coisa
+[16:36] diferentes, né, número diferentes, mas você poderia mudar esse texto, mudar, inclusive
+[16:42] o ícone que aparece aqui, né, e todo o resto.
+[16:46] Aí tem alguns outros mojos bem simples, né, esse aqui, né, mostrar um número, mas
+[16:51] o número vai subindo até chegar no número que você quer.
+[16:54] 8 dólares no Sun, no Sol, menos de 4.
+[16:59] De novo, esse efeito, né, de subindo, esse efeito aqui eu gosto bastante, é um flow
+[17:05] chart, né, mas é um flow chart que você vai seguindo os nodes.
+[17:08] O token é só metade da conta.
+[17:10] A outra metade é o quanto cada modelo gasta pra resolver o seu problema.
+[17:14] E aqui é uma imagem girada por IA que não precisava, né, o motion tá muito mais didático,
+[17:18] muito mais legal aqui, mas é isso, eu gosto desses flowcharts que você vai vendo e ele
+[17:22] vai sendo criado na medida que você vê, tudo isso é bem legal, e aqui um exemplo de um
+[17:28] motion que tá sobre o avatar, né.
+[17:34] São templates prontos, ele vai modificando as variáveis, ali o texto, os números, a cor,
+[17:40] eventualmente, e fica assim.
+[17:43] E os comentários pra vocês terem uma ideia são bem bons, ó, esse efeito de vídeo
+[17:48] que realmente acrescenta o seguidor, o espectador, parabéns.
+[17:51] Cara, é um comentário que teve 20 likes e que realmente valoriza um vídeo sempre sendo
+[17:58] gerado por inteligência artificial desde que ele acrescente valor.
+[18:03] Alguns pessoas gostando, outras falando que perceberam imediatamente, né, o avatar do
+[18:07] rei de ainda não é aquela coisa, né.
+[18:10] Ainda não chega naquele nível, aí muita gente gostando, manda mais favor, acho
+[18:16] fenomenal a criação de vídeos, 100% significa que só deram uma
+[18:21] entrada e fizeram o upload.
+[18:22] Sim, cara, a gente literalmente já respondendo o comentário, acho que é,
+[18:26] se é uma dúvida aqui, pode ser uma dúvida pra quem tá assistindo esse outro
+[18:29] vídeo, é um prontos, né.
+[18:31] Esses vídeos que a gente posta gerados por EA, a gente tem algumas contições,
+[18:35] a gente tem um agente muito bem treinado pra isso, ele executa todos os testes
+[18:39] que a gente pede ou ele dialoga com outro agente que faz isso, né.
+[18:44] A gente já fez dos dois jeitos, a gente tem um, a gente tem muitos agentes,
+[18:47] de edição de vídeo, mas a gente tem um agente que faz os testes, conduz os
+[18:51] testes dos modelos novos, imediatamente grava os testes sendo executados e
+[18:56] consegue criar o vídeo inteiro do zero.
+[18:58] A gente já tenta estor e é o que tem funcionado melhor agora, sinceramente,
+[19:01] separar um agente que só faz os testes e outro que só grava os testes
+[19:08] e outro que finaliza o vídeo, né.
+[19:10] Depende de muita gente já tá experimentando um pouco com isso, eu confesso,
+[19:13] mas o agente de motion ele vai pegar os materiais de input, né,
+[19:18] ele vai muitas vezes pensar em elaborar um roteiro, vai colocar esse vídeo
+[19:22] dentro de uma linha narrativa que faz sentido e vai inserir a parte mais
+[19:25] importante, né, os motions por cima daquele vídeo.
+[19:29] Você pode dar um vídeo pronto, você pode dar um vídeo curto, né,
+[19:32] tem várias coisas que você consegue fazer.
+[19:36] E aí algumas pessoas que falam isso, né, quando percebo que é tudo EA,
+[19:40] me desconecta um pouco e é super natural, né, é uma tendência que existe,
+[19:44] uma realidade, as pessoas vêm que é sempre 100% EA e acham que aquilo tem menos
+[19:48] valor de alguma forma, é um viés conhecido esse, né.
+[19:53] Teve até um caso famoso em que um cara simplesmente pegou um quadro real
+[19:58] do Monet e postou no Twitter.
+[20:00] Eu gerei esse quadro aqui como se fosse do Monet por inteligência
+[20:04] artificial, quero saber o que vocês acham, né.
+[20:06] E as pessoas começaram a falar, né, isso aí tá horrível,
+[20:08] não tem nada a ver com a obra do Monet e tal e era de fato um quadro do Monet.
+[20:12] Então o viés, ele muitas vezes sobrepõe a realidade objetiva.
+[20:17] Por que é feito por EA?
+[20:18] Porque as pessoas acham ou sabem que é feito por EA e superam de valor
+[20:22] imediatamente independentemente do resultado objetivo para muita gente.
+[20:25] Bom, as outras 10 bibliotecas de motion nós não teremos tempo de cobrir
+[20:28] nesse vídeo, mas se vocês quiserem mais vídeos que cubram outras bibliotecas
+[20:32] e outros casos de uso e outros cases de vídeos sendo gerados por EA,
+[20:36] o canal inteiro que são gerados por EA, vocês podem comentar nesse vídeo.
+[20:39] A gente pode falar mais a respeito.
+[20:40] De qualquer maneira, eu vou deixar todos os 15 repositórios
+[20:43] dentro da comunidade maestros da Air Premium, onde você vai encontrar também
+[20:48] todos os nossos agentes de criação de vídeos, geração de vídeos com EA,
+[20:52] pipeline 100% automatizado.
+[20:54] Nós temos conta de Instagram com mais de 30 mil seguidores
+[20:57] que cresceram do absoluto zero, só com conteúdos 100% gerados por EA
+[21:01] dentro de um pipeline automatizado.
+[21:04] Então o trabalho humano foi literalmente zero, a gente ligou ele e ele começou
+[21:08] a gerar seguidores, vendas, visualizações.
+[21:12] Ele bate mais ou menos um milhão de visualizações por mês, novescentos e
+[21:15] alguma coisa da última vez que eu chequei pelo menos.
+[21:19] E ele gera vendas todos os dias, ele gera seguidores todos os dias.
+[21:22] E é só uma das contas que a gente tem aqui, eu compartilho aqui no canal.
+[21:26] As vezes é o maestro da Air Hub e o pipeline completo para produzir
+[21:30] esse tipo de conteúdo e montar esse tipo de pipeline está dentro da comunidade.
+[21:34] E caso você ainda não esteja na comunidade maestros da Air,
+[21:37] eu quero deixar o convite para que você clique no link na descrição
+[21:39] desse vídeo. Na comunidade nós temos lives toda semana.
+[21:43] Nós temos mais de 30 horas de conteúdo sempre com que existir de melhor
+[21:46] a inteligência artificial do zero absoluto até o nível avançado.
+[21:49] Pessoas que não soubeu nada de inteligência artificial entraram
+[21:52] na comunidade com o conhecimento que eu tiveram ali, montaram
+[21:55] empresa GA que já tem mais de mil assinantes recorrentes todo mês.
+[21:59] Nós compartilhamos todos os agentes exclusivos, esquivos exclusivas.
+[22:02] Temos mais de 50 aplicativos exclusivos só para os menos da comunidade.
+[22:06] Temos milhares de pessoas envolvidas com inteligência artificial
+[22:09] com o que você pode conversar.
+[22:11] Então é um ambiente maravilhoso.
+[22:12] Se você quiser saber mais, dá uma olhada na descrição desse vídeo.
+[22:15] Se você gostou desse vídeo quer receber mais notificações de vídeos
+[22:18] como esse, você pode se inscrever nesse canal.
+[22:20] Além de deixar um hype e um like.
+[22:22] Um abraço e até a próxima.

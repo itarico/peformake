@@ -1,0 +1,35 @@
+idioma: pt
+[00:00] Cairo, como o Cloud Code de todo mundo roda o dia inteiro sem bater no limite e o meu pede
+[00:05] arrego em 10 minutos, porque você tá usando o Cloud Code errado, é por isso.
+[00:10] Existem 5 plugins grátis que transformam o seu Cloud num monstro.
+[00:14] Tá, pera, você tá dizendo que a solução é só 5 plugins?
+[00:18] Isso!
+[00:19] O primeiro é o Awesome Free LLMA-PAIs.
+[00:22] Ele dá pro seu Cloud Code mais de 7 bilhões de tokens de IA grátis por mês de mais
+[00:28] de 600 modelos.
+[00:30] Quando você bate no limite de uso, ele troca sozinho pro próximo melhor modelo.
+[00:34] Aí as suas sessões duram muito mais.
+[00:36] Então o meu Cloud finalmente para de me deixar no vácuo no meio da tarefa.
+[00:40] Exatamente.
+[00:41] O segundo é o Strix.
+[00:43] Ele ataca o seu próprio app feito no VibeCoding como um hacker de verdade, acha as brechas
+[00:48] de segurança que você deixou pra trás e te ajuda a corrigir.
+[00:51] Pera, então ele acha todas as vulnerabilidades e me conta.
+[00:55] Praticamente.
+[00:56] O terceiro é o Cloud Mem.
+[00:58] Ele dá memória pro Cloud em todas as sessões.
+[01:01] Aí ele lembra dos seus projetos e dos seus arquivos e você nunca mais precisa explicar
+[01:05] nada de novo.
+[01:06] Então o Cloud finalmente lembra das coisas.
+[01:09] Isso.
+[01:10] O quarto é o Agent Reach.
+[01:12] Ele deixa o seu agente ler a internet, até x, Reddit, Instagram e LinkedIn sem pagar
+[01:17] nada de API.
+[01:18] Então eu posso parar de copiar e colar thread do Reddit no Cloud como se fosse 2015.
+[01:23] Exatamente.
+[01:24] E o último é o Cloud Code Setup, um plugin oficial da Anthropic.
+[01:29] Ele analisa sua base de código e recomenda as melhores skills, hooks, sub-agentes e servidores
+[01:34] mcp pro seu projeto.
+[01:36] Tá, isso é até meio assustador.
+[01:38] Mas como eu pego 5?
+[01:40] É só olhar meu canal de transmissão e o Telegram da minha bio.

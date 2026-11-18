@@ -1,0 +1,4298 @@
+1
+00:00:00,160 --> 00:00:01,470
+ 
+A few days ago, I
+
+2
+00:00:01,470 --> 00:00:01,480
+A few days ago, I
+ 
+
+3
+00:00:01,480 --> 00:00:03,909
+A few days ago, I
+was watching and studying on
+
+4
+00:00:03,909 --> 00:00:03,919
+was watching and studying on
+ 
+
+5
+00:00:03,919 --> 00:00:07,309
+was watching and studying on
+YouTube and I came across several videos
+
+6
+00:00:07,309 --> 00:00:07,319
+YouTube and I came across several videos
+ 
+
+7
+00:00:07,319 --> 00:00:10,589
+YouTube and I came across several videos
+of editors who were editing,
+
+8
+00:00:10,589 --> 00:00:10,599
+of editors who were editing,
+ 
+
+9
+00:00:10,599 --> 00:00:12,789
+of editors who were editing,
+or rather, asking
+
+10
+00:00:12,789 --> 00:00:12,799
+or rather, asking
+ 
+
+11
+00:00:12,799 --> 00:00:15,030
+or rather, asking
+an artificial intelligence, the cloud, to
+
+12
+00:00:15,030 --> 00:00:15,040
+an artificial intelligence, the cloud, to
+ 
+
+13
+00:00:15,040 --> 00:00:17,390
+an artificial intelligence, the cloud, to
+do some of the editing processes, mostly
+
+14
+00:00:17,390 --> 00:00:17,400
+do some of the editing processes, mostly
+ 
+
+15
+00:00:17,400 --> 00:00:20,230
+do some of the editing processes, mostly
+in the visual part, like motion graphics.  And
+
+16
+00:00:20,230 --> 00:00:20,240
+in the visual part, like motion graphics.  And
+ 
+
+17
+00:00:20,240 --> 00:00:22,029
+in the visual part, like motion graphics.  And
+I decided to test it too, and I'm going to
+
+18
+00:00:22,029 --> 00:00:22,039
+I decided to test it too, and I'm going to
+ 
+
+19
+00:00:22,039 --> 00:00:24,310
+I decided to test it too, and I'm going to
+show you here.  In another
+
+20
+00:00:24,310 --> 00:00:24,320
+show you here.  In another
+ 
+
+21
+00:00:24,320 --> 00:00:26,070
+show you here.  In another
+video on this channel, which
+
+22
+00:00:26,070 --> 00:00:26,080
+video on this channel, which
+ 
+
+23
+00:00:26,080 --> 00:00:27,189
+video on this channel, which
+you can watch [music] after
+
+24
+00:00:27,189 --> 00:00:27,199
+you can watch [music] after
+ 
+
+25
+00:00:27,199 --> 00:00:29,550
+you can watch [music] after
+a tutorial, I showed how you
+
+26
+00:00:29,550 --> 00:00:29,560
+a tutorial, I showed how you
+ 
+
+27
+00:00:29,560 --> 00:00:31,910
+a tutorial, I showed how you
+can use
+
+28
+00:00:31,910 --> 00:00:31,920
+can use
+ 
+
+29
+00:00:31,920 --> 00:00:33,869
+can use
+artificial intelligence to create, for example, a
+
+30
+00:00:33,869 --> 00:00:33,879
+artificial intelligence to create, for example, a
+ 
+
+31
+00:00:33,879 --> 00:00:35,750
+artificial intelligence to create, for example, a
+counter.  Finally, I can show you
+
+32
+00:00:35,750 --> 00:00:35,760
+counter.  Finally, I can show you
+ 
+
+33
+00:00:35,760 --> 00:00:37,869
+counter.  Finally, I can show you
+how to do it right now.  So, for
+
+34
+00:00:37,869 --> 00:00:37,879
+how to do it right now.  So, for
+ 
+
+35
+00:00:37,879 --> 00:00:39,549
+how to do it right now.  So, for
+example, I'm here in the EPT chat, I'm going to
+
+36
+00:00:39,549 --> 00:00:39,559
+example, I'm here in the EPT chat, I'm going to
+ 
+
+37
+00:00:39,559 --> 00:00:43,350
+example, I'm here in the EPT chat, I'm going to
+put, look, create a counter
+
+38
+00:00:43,350 --> 00:00:43,360
+put, look, create a counter
+ 
+
+39
+00:00:43,360 --> 00:00:48,630
+put, look, create a counter
+from 0 to 100 in a file.
+
+40
+00:00:48,630 --> 00:00:48,640
+from 0 to 100 in a file.
+ 
+
+41
+00:00:48,640 --> 00:00:50,470
+from 0 to 100 in a file.
+
+42
+00:00:50,470 --> 00:00:50,480
+
+ 
+
+43
+00:00:50,480 --> 00:00:53,270
+
+SRT file.
+
+44
+00:00:53,270 --> 00:00:53,280
+SRT file.
+ 
+
+45
+00:00:53,280 --> 00:00:54,750
+SRT file.
+The same thing I'm doing here in
+
+46
+00:00:54,750 --> 00:00:54,760
+The same thing I'm doing here in
+ 
+
+47
+00:00:54,760 --> 00:00:57,430
+The same thing I'm doing here in
+chatpt, you could do in the cloud.  I'll
+
+48
+00:00:57,430 --> 00:00:57,440
+chatpt, you could do in the cloud.  I'll
+ 
+
+49
+00:00:57,440 --> 00:01:00,150
+chatpt, you could do in the cloud.  I'll
+show you just so you understand how
+
+50
+00:01:00,150 --> 00:01:00,160
+show you just so you understand how
+ 
+
+51
+00:01:00,160 --> 00:01:01,750
+show you just so you understand how
+simple it is.  Here, you can see
+
+52
+00:01:01,750 --> 00:01:01,760
+simple it is.  Here, you can see
+ 
+
+53
+00:01:01,760 --> 00:01:03,950
+simple it is.  Here, you can see
+he's already started rambling, so
+
+54
+00:01:03,950 --> 00:01:03,960
+he's already started rambling, so
+ 
+
+55
+00:01:03,960 --> 00:01:06,230
+he's already started rambling, so
+he started writing
+
+56
+00:01:06,230 --> 00:01:06,240
+he started writing
+ 
+
+57
+00:01:06,240 --> 00:01:08,429
+he started writing
+all the numbers down for me.  So I came here and
+
+58
+00:01:08,429 --> 00:01:08,439
+all the numbers down for me.  So I came here and
+ 
+
+59
+00:01:08,439 --> 00:01:11,429
+all the numbers down for me.  So I came here and
+wrote it; I want the generated file.  It's possible
+
+60
+00:01:11,429 --> 00:01:11,439
+wrote it; I want the generated file.  It's possible
+ 
+
+61
+00:01:11,439 --> 00:01:13,510
+wrote it; I want the generated file.  It's possible
+that this can happen with the cloud too,
+
+62
+00:01:13,510 --> 00:01:13,520
+that this can happen with the cloud too,
+ 
+
+63
+00:01:13,520 --> 00:01:16,830
+that this can happen with the cloud too,
+but normally you come here, download it,
+
+64
+00:01:16,830 --> 00:01:16,840
+but normally you come here, download it,
+ 
+
+65
+00:01:16,840 --> 00:01:18,950
+but normally you come here, download it,
+and then I'll play it within Capcut.  I'm going to come
+
+66
+00:01:18,950 --> 00:01:18,960
+and then I'll play it within Capcut.  I'm going to come
+ 
+
+67
+00:01:18,960 --> 00:01:21,109
+and then I'll play it within Capcut.  I'm going to come
+here in text and, oh, you're going to
+
+68
+00:01:21,109 --> 00:01:21,119
+here in text and, oh, you're going to
+ 
+
+69
+00:01:21,119 --> 00:01:22,870
+here in text and, oh, you're going to
+add text here.  I'll
+
+70
+00:01:22,870 --> 00:01:22,880
+add text here.  I'll
+ 
+
+71
+00:01:22,880 --> 00:01:26,670
+add text here.  I'll
+import the local subtitles.  I'm going to open the folder where
+
+72
+00:01:26,670 --> 00:01:26,680
+import the local subtitles.  I'm going to open the folder where
+ 
+
+73
+00:01:26,680 --> 00:01:29,670
+import the local subtitles.  I'm going to open the folder where
+I saved the counter.  And look,
+
+74
+00:01:29,670 --> 00:01:29,680
+I saved the counter.  And look,
+ 
+
+75
+00:01:29,680 --> 00:01:31,789
+I saved the counter.  And look,
+when I play here, look what he's
+
+76
+00:01:31,789 --> 00:01:31,799
+when I play here, look what he's
+ 
+
+77
+00:01:31,799 --> 00:01:35,550
+when I play here, look what he's
+already doing for us.  It simply has
+
+78
+00:01:35,550 --> 00:01:35,560
+already doing for us.  It simply has
+ 
+
+79
+00:01:35,560 --> 00:01:40,830
+already doing for us.  It simply has
+a counter from zero to 100. So you
+
+80
+00:01:40,830 --> 00:01:40,840
+a counter from zero to 100. So you
+ 
+
+81
+00:01:40,840 --> 00:01:43,429
+a counter from zero to 100. So you
+don't need to spend your time doing
+
+82
+00:01:43,429 --> 00:01:43,439
+don't need to spend your time doing
+ 
+
+83
+00:01:43,439 --> 00:01:45,630
+don't need to spend your time doing
+all the numbers here.  Look how
+
+84
+00:01:45,630 --> 00:01:45,640
+all the numbers here.  Look how
+ 
+
+85
+00:01:45,640 --> 00:01:47,469
+all the numbers here.  Look how
+practical this is for saving you time.  I've
+
+86
+00:01:47,469 --> 00:01:47,479
+practical this is for saving you time.  I've
+ 
+
+87
+00:01:47,479 --> 00:01:49,109
+practical this is for saving you time.  I've
+already shown in this tutorial here how
+
+88
+00:01:49,109 --> 00:01:49,119
+already shown in this tutorial here how
+ 
+
+89
+00:01:49,119 --> 00:01:51,230
+already shown in this tutorial here how
+you can even use it for
+
+90
+00:01:51,230 --> 00:01:51,240
+you can even use it for
+ 
+
+91
+00:01:51,240 --> 00:01:53,630
+you can even use it for
+customization.  And then you'll have
+
+92
+00:01:53,630 --> 00:01:53,640
+customization.  And then you'll have
+ 
+
+93
+00:01:53,640 --> 00:01:57,870
+customization.  And then you'll have
+control over it, you can
+
+94
+00:01:57,870 --> 00:01:57,880
+control over it, you can
+ 
+
+95
+00:01:57,880 --> 00:01:59,389
+control over it, you can
+use it easily.  Did you see that I did this in just
+
+96
+00:01:59,389 --> 00:01:59,399
+use it easily.  Did you see that I did this in just
+ 
+
+97
+00:01:59,399 --> 00:02:01,870
+use it easily.  Did you see that I did this in just
+a few minutes?  In other words, all
+
+98
+00:02:01,870 --> 00:02:01,880
+a few minutes?  In other words, all
+ 
+
+99
+00:02:01,880 --> 00:02:04,350
+a few minutes?  In other words, all
+these tools are coming to
+
+100
+00:02:04,350 --> 00:02:04,360
+these tools are coming to
+ 
+
+101
+00:02:04,360 --> 00:02:06,389
+these tools are coming to
+save us time.  Okay, this
+
+102
+00:02:06,389 --> 00:02:06,399
+save us time.  Okay, this
+ 
+
+103
+00:02:06,399 --> 00:02:09,589
+save us time.  Okay, this
+is very simple, it's just to help you start
+
+104
+00:02:09,589 --> 00:02:09,599
+is very simple, it's just to help you start
+ 
+
+105
+00:02:09,599 --> 00:02:11,910
+is very simple, it's just to help you start
+to understand.  From now on, things
+
+106
+00:02:11,910 --> 00:02:11,920
+to understand.  From now on, things
+ 
+
+107
+00:02:11,920 --> 00:02:13,830
+to understand.  From now on, things
+get a little more complex.
+
+108
+00:02:13,830 --> 00:02:13,840
+get a little more complex.
+ 
+
+109
+00:02:13,840 --> 00:02:15,910
+get a little more complex.
+Also, what I'm going to show you here
+
+110
+00:02:15,910 --> 00:02:15,920
+Also, what I'm going to show you here
+ 
+
+111
+00:02:15,920 --> 00:02:18,630
+Also, what I'm going to show you here
+in the cloud requires you to pay for at least
+
+112
+00:02:18,630 --> 00:02:18,640
+in the cloud requires you to pay for at least
+ 
+
+113
+00:02:18,640 --> 00:02:21,110
+in the cloud requires you to pay for at least
+one month to use this
+
+114
+00:02:21,110 --> 00:02:21,120
+one month to use this
+ 
+
+115
+00:02:21,120 --> 00:02:23,030
+one month to use this
+feature.  And in addition, you need to
+
+116
+00:02:23,030 --> 00:02:23,040
+feature.  And in addition, you need to
+ 
+
+117
+00:02:23,040 --> 00:02:24,869
+feature.  And in addition, you need to
+have the cloud installed on your
+
+118
+00:02:24,869 --> 00:02:24,879
+have the cloud installed on your
+ 
+
+119
+00:02:24,879 --> 00:02:27,350
+have the cloud installed on your
+computer.  It's no use just going through the
+
+120
+00:02:27,350 --> 00:02:27,360
+computer.  It's no use just going through the
+ 
+
+121
+00:02:27,360 --> 00:02:29,509
+computer.  It's no use just going through the
+browser, like I was doing here
+
+122
+00:02:29,509 --> 00:02:29,519
+browser, like I was doing here
+ 
+
+123
+00:02:29,519 --> 00:02:32,229
+browser, like I was doing here
+with the EPT chat.  Well, I'm here with the cloud
+
+124
+00:02:32,229 --> 00:02:32,239
+with the EPT chat.  Well, I'm here with the cloud
+ 
+
+125
+00:02:32,239 --> 00:02:34,390
+with the EPT chat.  Well, I'm here with the cloud
+on my computer screen.  You'll see
+
+126
+00:02:34,390 --> 00:02:34,400
+on my computer screen.  You'll see
+ 
+
+127
+00:02:34,400 --> 00:02:37,509
+on my computer screen.  You'll see
+that it's the chat; it has the coworking space and the
+
+128
+00:02:37,509 --> 00:02:37,519
+that it's the chat; it has the coworking space and the
+ 
+
+129
+00:02:37,519 --> 00:02:40,630
+that it's the chat; it has the coworking space and the
+code here.  And this is where things get tricky.  This is where
+
+130
+00:02:40,630 --> 00:02:40,640
+code here.  And this is where things get tricky.  This is where
+ 
+
+131
+00:02:40,640 --> 00:02:43,430
+code here.  And this is where things get tricky.  This is where
+we're going to start having some real fun
+
+132
+00:02:43,430 --> 00:02:43,440
+we're going to start having some real fun
+ 
+
+133
+00:02:43,440 --> 00:02:44,949
+we're going to start having some real fun
+.  Okay, the first thing you
+
+134
+00:02:44,949 --> 00:02:44,959
+.  Okay, the first thing you
+ 
+
+135
+00:02:44,959 --> 00:02:47,470
+.  Okay, the first thing you
+'ll have to do is enter this code,
+
+136
+00:02:47,470 --> 00:02:47,480
+'ll have to do is enter this code,
+ 
+
+137
+00:02:47,480 --> 00:02:49,550
+'ll have to do is enter this code,
+which will be in the video description.
+
+138
+00:02:49,550 --> 00:02:49,560
+which will be in the video description.
+ 
+
+139
+00:02:49,560 --> 00:02:51,509
+which will be in the video description.
+It's a code that, as I told you,
+
+140
+00:02:51,509 --> 00:02:51,519
+It's a code that, as I told you,
+ 
+
+141
+00:02:51,519 --> 00:02:54,350
+It's a code that, as I told you,
+other people, you know, other tutorials out there, a
+
+142
+00:02:54,350 --> 00:02:54,360
+other people, you know, other tutorials out there, a
+ 
+
+143
+00:02:54,360 --> 00:02:57,149
+other people, you know, other tutorials out there, a
+lot of people have also done.  So you
+
+144
+00:02:57,149 --> 00:02:57,159
+lot of people have also done.  So you
+ 
+
+145
+00:02:57,159 --> 00:03:00,550
+lot of people have also done.  So you
+'ll simply need to copy
+
+146
+00:03:00,550 --> 00:03:00,560
+'ll simply need to copy
+ 
+
+147
+00:03:00,560 --> 00:03:03,149
+'ll simply need to copy
+its URL, right?  Just copy
+
+148
+00:03:03,149 --> 00:03:03,159
+its URL, right?  Just copy
+ 
+
+149
+00:03:03,159 --> 00:03:06,750
+its URL, right?  Just copy
+this URL.  No need, oh my,
+
+150
+00:03:06,750 --> 00:03:06,760
+this URL.  No need, oh my,
+ 
+
+151
+00:03:06,760 --> 00:03:09,550
+this URL.  No need, oh my,
+all this confusion isn't necessary.  You just need to copy this
+
+152
+00:03:09,550 --> 00:03:09,560
+all this confusion isn't necessary.  You just need to copy this
+ 
+
+153
+00:03:09,560 --> 00:03:14,589
+all this confusion isn't necessary.  You just need to copy this
+here.  OK?  He copied it, went back to the cloud, and is going to
+
+154
+00:03:14,589 --> 00:03:14,599
+here.  OK?  He copied it, went back to the cloud, and is going to
+ 
+
+155
+00:03:14,599 --> 00:03:17,470
+here.  OK?  He copied it, went back to the cloud, and is going to
+put it here, see, Ctrl+V. And in
+
+156
+00:03:17,470 --> 00:03:17,480
+put it here, see, Ctrl+V. And in
+ 
+
+157
+00:03:17,480 --> 00:03:19,990
+put it here, see, Ctrl+V. And in
+this case, I put it exactly as
+
+158
+00:03:19,990 --> 00:03:20,000
+this case, I put it exactly as
+ 
+
+159
+00:03:20,000 --> 00:03:22,589
+this case, I put it exactly as
+I saw other people doing it.  You
+
+160
+00:03:22,589 --> 00:03:22,599
+I saw other people doing it.  You
+ 
+
+161
+00:03:22,599 --> 00:03:24,430
+I saw other people doing it.  You
+can do it that way too, or just
+
+162
+00:03:24,430 --> 00:03:24,440
+can do it that way too, or just
+ 
+
+163
+00:03:24,440 --> 00:03:26,390
+can do it that way too, or just
+put it in Portuguese, which I believe will be
+
+164
+00:03:26,390 --> 00:03:26,400
+put it in Portuguese, which I believe will be
+ 
+
+165
+00:03:26,400 --> 00:03:28,550
+put it in Portuguese, which I believe will be
+the same.  But I put, for
+
+166
+00:03:28,550 --> 00:03:28,560
+the same.  But I put, for
+ 
+
+167
+00:03:28,560 --> 00:03:30,830
+the same.  But I put, for
+example, "install
+
+168
+00:03:30,830 --> 00:03:30,840
+example, "install
+ 
+
+169
+00:03:30,840 --> 00:03:32,390
+example, "install
+skills,"
+
+170
+00:03:32,390 --> 00:03:32,400
+skills,"
+ 
+
+171
+00:03:32,400 --> 00:03:34,990
+skills,"
+and so on; you'll put it there in whatever way
+
+172
+00:03:34,990 --> 00:03:35,000
+and so on; you'll put it there in whatever way
+ 
+
+173
+00:03:35,000 --> 00:03:38,229
+and so on; you'll put it there in whatever way
+you think is best, okay?  Just
+
+174
+00:03:38,229 --> 00:03:38,239
+you think is best, okay?  Just
+ 
+
+175
+00:03:38,239 --> 00:03:40,149
+you think is best, okay?  Just
+follow what I'm doing so you don't make any
+
+176
+00:03:40,149 --> 00:03:40,159
+follow what I'm doing so you don't make any
+ 
+
+177
+00:03:40,159 --> 00:03:42,710
+follow what I'm doing so you don't make any
+mistakes.  Okay, so you've done that. Before pressing
+
+178
+00:03:42,710 --> 00:03:42,720
+mistakes.  Okay, so you've done that. Before pressing
+ 
+
+179
+00:03:42,720 --> 00:03:44,789
+mistakes.  Okay, so you've done that. Before pressing
+enter, you're going to choose the folder where
+
+180
+00:03:44,789 --> 00:03:44,799
+enter, you're going to choose the folder where
+ 
+
+181
+00:03:44,799 --> 00:03:47,350
+enter, you're going to choose the folder where
+you want to save it, right?  Choose a location, select
+
+182
+00:03:47,350 --> 00:03:47,360
+you want to save it, right?  Choose a location, select
+ 
+
+183
+00:03:47,360 --> 00:03:50,070
+you want to save it, right?  Choose a location, select
+a folder, whatever name
+
+184
+00:03:50,070 --> 00:03:50,080
+a folder, whatever name
+ 
+
+185
+00:03:50,080 --> 00:03:52,670
+a folder, whatever name
+you think is interesting.  Everything
+
+186
+00:03:52,670 --> 00:03:52,680
+you think is interesting.  Everything
+ 
+
+187
+00:03:52,680 --> 00:03:55,589
+you think is interesting.  Everything
+you do will happen within this
+
+188
+00:03:55,589 --> 00:03:55,599
+you do will happen within this
+ 
+
+189
+00:03:55,599 --> 00:03:58,309
+you do will happen within this
+folder.  So, files will be sent
+
+190
+00:03:58,309 --> 00:03:58,319
+folder.  So, files will be sent
+ 
+
+191
+00:03:58,319 --> 00:04:01,069
+folder.  So, files will be sent
+to that folder.  You'll also be able to send
+
+192
+00:04:01,069 --> 00:04:01,079
+to that folder.  You'll also be able to send
+ 
+
+193
+00:04:01,079 --> 00:04:04,750
+to that folder.  You'll also be able to send
+files to the cloud.  So, it's
+
+194
+00:04:04,750 --> 00:04:04,760
+files to the cloud.  So, it's
+ 
+
+195
+00:04:04,760 --> 00:04:07,270
+files to the cloud.  So, it's
+interesting to have a place that you, you know,
+
+196
+00:04:07,270 --> 00:04:07,280
+interesting to have a place that you, you know,
+ 
+
+197
+00:04:07,280 --> 00:04:09,789
+interesting to have a place that you, you know,
+won't forget, and also a place that can
+
+198
+00:04:09,789 --> 00:04:09,799
+won't forget, and also a place that can
+ 
+
+199
+00:04:09,799 --> 00:04:12,710
+won't forget, and also a place that can
+hold a lot of things.  Furthermore, here in this
+
+200
+00:04:12,710 --> 00:04:12,720
+hold a lot of things.  Furthermore, here in this
+ 
+
+201
+00:04:12,720 --> 00:04:16,069
+hold a lot of things.  Furthermore, here in this
+mode, you know, the system, the little robot that
+
+202
+00:04:16,069 --> 00:04:16,079
+mode, you know, the system, the little robot that
+ 
+
+203
+00:04:16,079 --> 00:04:18,629
+mode, you know, the system, the little robot that
+understands quite a bit here, you'll
+
+204
+00:04:18,629 --> 00:04:18,639
+understands quite a bit here, you'll
+ 
+
+205
+00:04:18,639 --> 00:04:20,430
+understands quite a bit here, you'll
+probably put yours in there in that
+
+206
+00:04:20,430 --> 00:04:20,440
+probably put yours in there in that
+ 
+
+207
+00:04:20,440 --> 00:04:22,469
+probably put yours in there in that
+sonnet.
+
+208
+00:04:22,469 --> 00:04:22,479
+sonnet.
+ 
+
+209
+00:04:22,479 --> 00:04:25,550
+sonnet.
+You can install Opus 4.6.  Remember that
+
+210
+00:04:25,550 --> 00:04:25,560
+You can install Opus 4.6.  Remember that
+ 
+
+211
+00:04:25,560 --> 00:04:28,550
+You can install Opus 4.6.  Remember that
+you'll only be able to do this
+
+212
+00:04:28,550 --> 00:04:28,560
+you'll only be able to do this
+ 
+
+213
+00:04:28,560 --> 00:04:31,710
+you'll only be able to do this
+because you paid for a cloud plan.
+
+214
+00:04:31,710 --> 00:04:31,720
+because you paid for a cloud plan.
+ 
+
+215
+00:04:31,720 --> 00:04:33,710
+because you paid for a cloud plan.
+So, obviously, it's not for the
+
+216
+00:04:33,710 --> 00:04:33,720
+So, obviously, it's not for the
+ 
+
+217
+00:04:33,720 --> 00:04:35,629
+So, obviously, it's not for the
+curious.  Or if you have the money and you're
+
+218
+00:04:35,629 --> 00:04:35,639
+curious.  Or if you have the money and you're
+ 
+
+219
+00:04:35,639 --> 00:04:37,870
+curious.  Or if you have the money and you're
+curious, you'll try it and you'll do it.
+
+220
+00:04:37,870 --> 00:04:37,880
+curious, you'll try it and you'll do it.
+ 
+
+221
+00:04:37,880 --> 00:04:39,909
+curious, you'll try it and you'll do it.
+But if you want to work with this,
+
+222
+00:04:39,909 --> 00:04:39,919
+But if you want to work with this,
+ 
+
+223
+00:04:39,919 --> 00:04:42,790
+But if you want to work with this,
+you always need to invest your
+
+224
+00:04:42,790 --> 00:04:42,800
+you always need to invest your
+ 
+
+225
+00:04:42,800 --> 00:04:44,830
+you always need to invest your
+money, because by investing, obviously,
+
+226
+00:04:44,830 --> 00:04:44,840
+money, because by investing, obviously,
+ 
+
+227
+00:04:44,840 --> 00:04:46,749
+money, because by investing, obviously,
+you'll always get a return in terms of
+
+228
+00:04:46,749 --> 00:04:46,759
+you'll always get a return in terms of
+ 
+
+229
+00:04:46,759 --> 00:04:49,350
+you'll always get a return in terms of
+time, more money, and so on.  Press
+
+230
+00:04:49,350 --> 00:04:49,360
+time, more money, and so on.  Press
+ 
+
+231
+00:04:49,360 --> 00:04:53,550
+time, more money, and so on.  Press
+enter, now it will start running
+
+232
+00:04:53,550 --> 00:04:53,560
+enter, now it will start running
+ 
+
+233
+00:04:53,560 --> 00:04:55,390
+enter, now it will start running
+on your computer.  He's going to
+
+234
+00:04:55,390 --> 00:04:55,400
+on your computer.  He's going to
+ 
+
+235
+00:04:55,400 --> 00:04:57,790
+on your computer.  He's going to
+start installing various things here.  And
+
+236
+00:04:57,790 --> 00:04:57,800
+start installing various things here.  And
+ 
+
+237
+00:04:57,800 --> 00:05:00,430
+start installing various things here.  And
+the trick is for you to approve everything
+
+238
+00:05:00,430 --> 00:05:00,440
+the trick is for you to approve everything
+ 
+
+239
+00:05:00,440 --> 00:05:02,550
+the trick is for you to approve everything
+he asks for here, see?  So, he's
+
+240
+00:05:02,550 --> 00:05:02,560
+he asks for here, see?  So, he's
+ 
+
+241
+00:05:02,560 --> 00:05:04,790
+he asks for here, see?  So, he's
+asking.  You can even add "
+
+242
+00:05:04,790 --> 00:05:04,800
+asking.  You can even add "
+ 
+
+243
+00:05:04,800 --> 00:05:08,310
+asking.  You can even add "
+always allow" so that it always runs.  So,
+
+244
+00:05:08,310 --> 00:05:08,320
+always allow" so that it always runs.  So,
+ 
+
+245
+00:05:08,320 --> 00:05:10,150
+always allow" so that it always runs.  So,
+you don't need to keep clicking every
+
+246
+00:05:10,150 --> 00:05:10,160
+you don't need to keep clicking every
+ 
+
+247
+00:05:10,160 --> 00:05:12,830
+you don't need to keep clicking every
+time, okay?  Keep doing it, keep
+
+248
+00:05:12,830 --> 00:05:12,840
+time, okay?  Keep doing it, keep
+ 
+
+249
+00:05:12,840 --> 00:05:14,590
+time, okay?  Keep doing it, keep
+doing it, and keep letting it go.  He's going to
+
+250
+00:05:14,590 --> 00:05:14,600
+doing it, and keep letting it go.  He's going to
+ 
+
+251
+00:05:14,600 --> 00:05:17,029
+doing it, and keep letting it go.  He's going to
+ask several things; there's probably
+
+252
+00:05:17,029 --> 00:05:17,039
+ask several things; there's probably
+ 
+
+253
+00:05:17,039 --> 00:05:19,430
+ask several things; there's probably
+something missing that needs to be
+
+254
+00:05:19,430 --> 00:05:19,440
+something missing that needs to be
+ 
+
+255
+00:05:19,440 --> 00:05:21,230
+something missing that needs to be
+installed.  He'll tell you: "Hey,
+
+256
+00:05:21,230 --> 00:05:21,240
+installed.  He'll tell you: "Hey,
+ 
+
+257
+00:05:21,240 --> 00:05:23,309
+installed.  He'll tell you: "Hey,
+this is missing from your computer. I'm
+
+258
+00:05:23,309 --> 00:05:23,319
+this is missing from your computer. I'm
+ 
+
+259
+00:05:23,319 --> 00:05:25,629
+this is missing from your computer. I'm
+going to install it, is that okay?"  until
+
+260
+00:05:25,629 --> 00:05:25,639
+going to install it, is that okay?"  until
+ 
+
+261
+00:05:25,639 --> 00:05:29,189
+going to install it, is that okay?"  until
+finally you'll reach this window
+
+262
+00:05:29,189 --> 00:05:29,199
+finally you'll reach this window
+ 
+
+263
+00:05:29,199 --> 00:05:33,070
+finally you'll reach this window
+here.  Finally, you are ready
+
+264
+00:05:33,070 --> 00:05:33,080
+here.  Finally, you are ready
+ 
+
+265
+00:05:33,080 --> 00:05:35,830
+here.  Finally, you are ready
+to experience a new moment.  I'm
+
+266
+00:05:35,830 --> 00:05:35,840
+to experience a new moment.  I'm
+ 
+
+267
+00:05:35,840 --> 00:05:37,590
+to experience a new moment.  I'm
+sure that soon a lot of people
+
+268
+00:05:37,590 --> 00:05:37,600
+sure that soon a lot of people
+ 
+
+269
+00:05:37,600 --> 00:05:39,870
+sure that soon a lot of people
+will be talking about this, because it's a
+
+270
+00:05:39,870 --> 00:05:39,880
+will be talking about this, because it's a
+ 
+
+271
+00:05:39,880 --> 00:05:42,550
+will be talking about this, because it's a
+very, very practical way to do
+
+272
+00:05:42,550 --> 00:05:42,560
+very, very practical way to do
+ 
+
+273
+00:05:42,560 --> 00:05:44,189
+very, very practical way to do
+anything.  Okay, let's go.  The
+
+274
+00:05:44,189 --> 00:05:44,199
+anything.  Okay, let's go.  The
+ 
+
+275
+00:05:44,199 --> 00:05:45,870
+anything.  Okay, let's go.  The
+first thing you'll see here is
+
+276
+00:05:45,870 --> 00:05:45,880
+first thing you'll see here is
+ 
+
+277
+00:05:45,880 --> 00:05:49,469
+first thing you'll see here is
+this timeline in your browser.
+
+278
+00:05:49,469 --> 00:05:49,479
+this timeline in your browser.
+ 
+
+279
+00:05:49,479 --> 00:05:50,990
+this timeline in your browser.
+Exactly.  Here you have a
+
+280
+00:05:50,990 --> 00:05:51,000
+Exactly.  Here you have a
+ 
+
+281
+00:05:51,000 --> 00:05:53,830
+Exactly.  Here you have a
+timeline that's very similar to After Effects.
+
+282
+00:05:53,830 --> 00:05:53,840
+timeline that's very similar to After Effects.
+ 
+
+283
+00:05:53,840 --> 00:05:56,870
+timeline that's very similar to After Effects.
+Of course, it doesn't have all the plugins and
+
+284
+00:05:56,870 --> 00:05:56,880
+Of course, it doesn't have all the plugins and
+ 
+
+285
+00:05:56,880 --> 00:05:59,510
+Of course, it doesn't have all the plugins and
+everything you use in After Effects,
+
+286
+00:05:59,510 --> 00:05:59,520
+everything you use in After Effects,
+ 
+
+287
+00:05:59,520 --> 00:06:01,950
+everything you use in After Effects,
+but we have a timeline here
+
+288
+00:06:01,950 --> 00:06:01,960
+but we have a timeline here
+ 
+
+289
+00:06:01,960 --> 00:06:04,469
+but we have a timeline here
+that's basically where we'll
+
+290
+00:06:04,469 --> 00:06:04,479
+that's basically where we'll
+ 
+
+291
+00:06:04,479 --> 00:06:06,830
+that's basically where we'll
+see everything happen.  You won't be
+
+292
+00:06:06,830 --> 00:06:06,840
+see everything happen.  You won't be
+ 
+
+293
+00:06:06,840 --> 00:06:08,950
+see everything happen.  You won't be
+working here, but we'll see
+
+294
+00:06:08,950 --> 00:06:08,960
+working here, but we'll see
+ 
+
+295
+00:06:08,960 --> 00:06:11,870
+working here, but we'll see
+everything happen here.  But where
+
+296
+00:06:11,870 --> 00:06:11,880
+everything happen here.  But where
+ 
+
+297
+00:06:11,880 --> 00:06:14,110
+everything happen here.  But where
+the real work begins
+
+298
+00:06:14,110 --> 00:06:14,120
+the real work begins
+ 
+
+299
+00:06:14,120 --> 00:06:16,670
+the real work begins
+, is within the cloud, which is
+
+300
+00:06:16,670 --> 00:06:16,680
+, is within the cloud, which is
+ 
+
+301
+00:06:16,680 --> 00:06:19,510
+, is within the cloud, which is
+exactly where you'll start
+
+302
+00:06:19,510 --> 00:06:19,520
+exactly where you'll start
+ 
+
+303
+00:06:19,520 --> 00:06:21,230
+exactly where you'll start
+interacting with it.  So, as I said,
+
+304
+00:06:21,230 --> 00:06:21,240
+interacting with it.  So, as I said,
+ 
+
+305
+00:06:21,240 --> 00:06:23,990
+interacting with it.  So, as I said,
+it will work like any chat, but
+
+306
+00:06:23,990 --> 00:06:24,000
+it will work like any chat, but
+ 
+
+307
+00:06:24,000 --> 00:06:26,870
+it will work like any chat, but
+the better your prompt, the
+
+308
+00:06:26,870 --> 00:06:26,880
+the better your prompt, the
+ 
+
+309
+00:06:26,880 --> 00:06:29,510
+the better your prompt, the
+better your result.  I'm doing a
+
+310
+00:06:29,510 --> 00:06:29,520
+better your result.  I'm doing a
+ 
+
+311
+00:06:29,520 --> 00:06:31,350
+better your result.  I'm doing a
+test here with you guys.  Much of what I'm
+
+312
+00:06:31,350 --> 00:06:31,360
+test here with you guys.  Much of what I'm
+ 
+
+313
+00:06:31,360 --> 00:06:34,110
+test here with you guys.  Much of what I'm
+going to do here is based on examples
+
+314
+00:06:34,110 --> 00:06:34,120
+going to do here is based on examples
+ 
+
+315
+00:06:34,120 --> 00:06:36,950
+going to do here is based on examples
+I've seen in other tutorials from abroad, from
+
+316
+00:06:36,950 --> 00:06:36,960
+I've seen in other tutorials from abroad, from
+ 
+
+317
+00:06:36,960 --> 00:06:39,670
+I've seen in other tutorials from abroad, from
+other people doing it here, but I'll
+
+318
+00:06:39,670 --> 00:06:39,680
+other people doing it here, but I'll
+ 
+
+319
+00:06:39,680 --> 00:06:41,990
+other people doing it here, but I'll
+also do some tests in Portuguese.
+
+320
+00:06:41,990 --> 00:06:42,000
+also do some tests in Portuguese.
+ 
+
+321
+00:06:42,000 --> 00:06:43,230
+also do some tests in Portuguese.
+So, first of all, we're going to use
+
+322
+00:06:43,230 --> 00:06:43,240
+So, first of all, we're going to use
+ 
+
+323
+00:06:43,240 --> 00:06:47,070
+So, first of all, we're going to use
+the cloud to create motion graphics,
+
+324
+00:06:47,070 --> 00:06:47,080
+the cloud to create motion graphics,
+ 
+
+325
+00:06:47,080 --> 00:06:50,230
+the cloud to create motion graphics,
+meaning it will animate anything
+
+326
+00:06:50,230 --> 00:06:50,240
+meaning it will animate anything
+ 
+
+327
+00:06:50,240 --> 00:06:53,029
+meaning it will animate anything
+we ask for, anything at all
+
+328
+00:06:53,029 --> 00:06:53,039
+we ask for, anything at all
+ 
+
+329
+00:06:53,039 --> 00:06:55,189
+we ask for, anything at all
+.  I grabbed this image, which is a
+
+330
+00:06:55,189 --> 00:06:55,199
+.  I grabbed this image, which is a
+ 
+
+331
+00:06:55,199 --> 00:06:57,710
+.  I grabbed this image, which is a
+screenshot from Instagram,
+
+332
+00:06:57,710 --> 00:06:57,720
+screenshot from Instagram,
+ 
+
+333
+00:06:57,720 --> 00:07:00,110
+screenshot from Instagram,
+showing the follower analytics data.
+
+334
+00:07:00,110 --> 00:07:00,120
+showing the follower analytics data.
+ 
+
+335
+00:07:00,120 --> 00:07:01,749
+showing the follower analytics data.
+I'm going to ask him to create an animation
+
+336
+00:07:01,749 --> 00:07:01,759
+I'm going to ask him to create an animation
+ 
+
+337
+00:07:01,759 --> 00:07:04,589
+I'm going to ask him to create an animation
+from zero up to the number shown in this
+
+338
+00:07:04,589 --> 00:07:04,599
+from zero up to the number shown in this
+ 
+
+339
+00:07:04,599 --> 00:07:06,270
+from zero up to the number shown in this
+screenshot.  I'll ask him to
+
+340
+00:07:06,270 --> 00:07:06,280
+screenshot.  I'll ask him to
+ 
+
+341
+00:07:06,280 --> 00:07:08,589
+screenshot.  I'll ask him to
+animate the rest of the stuff.  I'm going to
+
+342
+00:07:08,589 --> 00:07:08,599
+animate the rest of the stuff.  I'm going to
+ 
+
+343
+00:07:08,599 --> 00:07:12,550
+animate the rest of the stuff.  I'm going to
+write it in a super simple way, okay?
+
+344
+00:07:12,550 --> 00:07:12,560
+write it in a super simple way, okay?
+ 
+
+345
+00:07:12,560 --> 00:07:15,510
+write it in a super simple way, okay?
+I'm putting it here in a very simple way so
+
+346
+00:07:15,510 --> 00:07:17,749
+I'm putting it here in a very simple way so
+ 
+
+347
+00:07:17,749 --> 00:07:17,759
+
+ 
+
+348
+00:07:17,759 --> 00:07:21,909
+ 
+you can understand.  He pressed play.  Now we
+
+349
+00:07:21,909 --> 00:07:21,919
+you can understand.  He pressed play.  Now we
+ 
+
+350
+00:07:21,919 --> 00:07:23,790
+you can understand.  He pressed play.  Now we
+wait for him to get to work.  So,
+
+351
+00:07:23,790 --> 00:07:23,800
+wait for him to get to work.  So,
+ 
+
+352
+00:07:23,800 --> 00:07:25,390
+wait for him to get to work.  So,
+while we wait, this is the time
+
+353
+00:07:25,390 --> 00:07:25,400
+while we wait, this is the time
+ 
+
+354
+00:07:25,400 --> 00:07:26,990
+while we wait, this is the time
+for you to leave your like, which
+
+355
+00:07:26,990 --> 00:07:27,000
+for you to leave your like, which
+ 
+
+356
+00:07:27,000 --> 00:07:29,070
+for you to leave your like, which
+will greatly help me deliver this
+
+357
+00:07:29,070 --> 00:07:29,080
+will greatly help me deliver this
+ 
+
+358
+00:07:29,080 --> 00:07:30,869
+will greatly help me deliver this
+content to more people and make
+
+359
+00:07:30,869 --> 00:07:30,879
+content to more people and make
+ 
+
+360
+00:07:30,879 --> 00:07:33,510
+content to more people and make
+the channel grow even more.  I'm
+
+361
+00:07:33,510 --> 00:07:33,520
+the channel grow even more.  I'm
+ 
+
+362
+00:07:33,520 --> 00:07:36,270
+the channel grow even more.  I'm
+always studying everything related to
+
+363
+00:07:36,270 --> 00:07:36,280
+always studying everything related to
+ 
+
+364
+00:07:36,280 --> 00:07:38,469
+always studying everything related to
+video creation.  So this is a place
+
+365
+00:07:38,469 --> 00:07:38,479
+video creation.  So this is a place
+ 
+
+366
+00:07:38,479 --> 00:07:40,670
+video creation.  So this is a place
+where you will always be very welcome,
+
+367
+00:07:40,670 --> 00:07:40,680
+where you will always be very welcome,
+ 
+
+368
+00:07:40,680 --> 00:07:43,790
+where you will always be very welcome,
+and you don't pay anything to receive this
+
+369
+00:07:43,790 --> 00:07:43,800
+and you don't pay anything to receive this
+ 
+
+370
+00:07:43,800 --> 00:07:45,830
+and you don't pay anything to receive this
+here.  Just leave a like,
+
+371
+00:07:45,830 --> 00:07:45,840
+here.  Just leave a like,
+ 
+
+372
+00:07:45,840 --> 00:07:47,550
+here.  Just leave a like,
+subscribe, and if you want to leave a
+
+373
+00:07:47,550 --> 00:07:47,560
+subscribe, and if you want to leave a
+ 
+
+374
+00:07:47,560 --> 00:07:50,149
+subscribe, and if you want to leave a
+comment, it will help me a lot, okay?
+
+375
+00:07:50,149 --> 00:07:50,159
+comment, it will help me a lot, okay?
+ 
+
+376
+00:07:50,159 --> 00:07:52,950
+comment, it will help me a lot, okay?
+And there you have it, finally we have a
+
+377
+00:07:52,950 --> 00:07:52,960
+And there you have it, finally we have a
+ 
+
+378
+00:07:52,960 --> 00:07:55,670
+And there you have it, finally we have a
+result.  Look at that, how cool this
+
+379
+00:07:55,670 --> 00:07:55,680
+result.  Look at that, how cool this
+ 
+
+380
+00:07:55,680 --> 00:07:59,749
+result.  Look at that, how cool this
+animation is, the level of this is incredible.  Can it be
+
+381
+00:07:59,749 --> 00:07:59,759
+animation is, the level of this is incredible.  Can it be
+ 
+
+382
+00:07:59,759 --> 00:08:01,309
+animation is, the level of this is incredible.  Can it be
+fixed?  Is it possible to ask for it to be done
+
+383
+00:08:01,309 --> 00:08:01,319
+fixed?  Is it possible to ask for it to be done
+ 
+
+384
+00:08:01,319 --> 00:08:03,550
+fixed?  Is it possible to ask for it to be done
+another way?  Of course it's possible.  I created
+
+385
+00:08:03,550 --> 00:08:03,560
+another way?  Of course it's possible.  I created
+ 
+
+386
+00:08:03,560 --> 00:08:08,110
+another way?  Of course it's possible.  I created
+a simple, silly prompt here, and this is the
+
+387
+00:08:08,110 --> 00:08:08,120
+a simple, silly prompt here, and this is the
+ 
+
+388
+00:08:08,120 --> 00:08:10,189
+a simple, silly prompt here, and this is the
+result we got.  It can happen, as I've
+
+389
+00:08:10,189 --> 00:08:10,199
+result we got.  It can happen, as I've
+ 
+
+390
+00:08:10,199 --> 00:08:12,710
+result we got.  It can happen, as I've
+seen in some examples in other videos, that
+
+391
+00:08:12,710 --> 00:08:12,720
+seen in some examples in other videos, that
+ 
+
+392
+00:08:12,720 --> 00:08:16,550
+seen in some examples in other videos, that
+it simply doesn't create the
+
+393
+00:08:16,550 --> 00:08:16,560
+it simply doesn't create the
+ 
+
+394
+00:08:16,560 --> 00:08:18,830
+it simply doesn't create the
+exact image you provided.  You go there and
+
+395
+00:08:18,830 --> 00:08:18,840
+exact image you provided.  You go there and
+ 
+
+396
+00:08:18,840 --> 00:08:21,629
+exact image you provided.  You go there and
+write to him: "Look, no, I didn't
+
+397
+00:08:21,629 --> 00:08:21,639
+write to him: "Look, no, I didn't
+ 
+
+398
+00:08:21,639 --> 00:08:24,230
+write to him: "Look, no, I didn't
+like it. You didn't follow my image.
+
+399
+00:08:24,230 --> 00:08:24,240
+like it. You didn't follow my image.
+ 
+
+400
+00:08:24,240 --> 00:08:26,469
+like it. You didn't follow my image.
+I want you to follow
+
+401
+00:08:26,469 --> 00:08:26,479
+I want you to follow
+ 
+
+402
+00:08:26,479 --> 00:08:28,589
+I want you to follow
+my image exactly."  And then he'll do it again
+
+403
+00:08:28,589 --> 00:08:28,599
+my image exactly."  And then he'll do it again
+ 
+
+404
+00:08:28,599 --> 00:08:31,110
+my image exactly."  And then he'll do it again
+.  Remember that even though you
+
+405
+00:08:31,110 --> 00:08:31,120
+.  Remember that even though you
+ 
+
+406
+00:08:31,120 --> 00:08:34,509
+.  Remember that even though you
+pay, you also have credits here
+
+407
+00:08:34,509 --> 00:08:34,519
+pay, you also have credits here
+ 
+
+408
+00:08:34,519 --> 00:08:37,509
+pay, you also have credits here
+.  So you can keep doing it, but
+
+409
+00:08:37,509 --> 00:08:37,519
+.  So you can keep doing it, but
+ 
+
+410
+00:08:37,519 --> 00:08:39,350
+.  So you can keep doing it, but
+at some point, which I believe will
+
+411
+00:08:39,350 --> 00:08:39,360
+at some point, which I believe will
+ 
+
+412
+00:08:39,360 --> 00:08:41,190
+at some point, which I believe will
+happen to me at some point, it
+
+413
+00:08:41,190 --> 00:08:41,200
+happen to me at some point, it
+ 
+
+414
+00:08:41,200 --> 00:08:44,310
+happen to me at some point, it
+will freeze and then unfreeze later the
+
+415
+00:08:44,310 --> 00:08:44,320
+will freeze and then unfreeze later the
+ 
+
+416
+00:08:44,320 --> 00:08:46,269
+will freeze and then unfreeze later the
+next day.  Ultimately, of course, all of this
+
+417
+00:08:46,269 --> 00:08:46,279
+next day.  Ultimately, of course, all of this
+ 
+
+418
+00:08:46,279 --> 00:08:48,190
+next day.  Ultimately, of course, all of this
+also depends on the plan you're
+
+419
+00:08:48,190 --> 00:08:48,200
+also depends on the plan you're
+ 
+
+420
+00:08:48,200 --> 00:08:50,190
+also depends on the plan you're
+paying for.  To do all of this
+
+421
+00:08:50,190 --> 00:08:50,200
+paying for.  To do all of this
+ 
+
+422
+00:08:50,200 --> 00:08:53,070
+paying for.  To do all of this
+in After Effects, or Capcut (which some
+
+423
+00:08:53,070 --> 00:08:53,080
+in After Effects, or Capcut (which some
+ 
+
+424
+00:08:53,080 --> 00:08:56,310
+in After Effects, or Capcut (which some
+people do), would take you at
+
+425
+00:08:56,310 --> 00:08:56,320
+people do), would take you at
+ 
+
+426
+00:08:56,320 --> 00:08:58,430
+people do), would take you at
+least two hours.  And the time
+
+427
+00:08:58,430 --> 00:08:58,440
+least two hours.  And the time
+ 
+
+428
+00:08:58,440 --> 00:09:00,590
+least two hours.  And the time
+you're spending doing this here is something
+
+429
+00:09:00,590 --> 00:09:00,600
+you're spending doing this here is something
+ 
+
+430
+00:09:00,600 --> 00:09:03,190
+you're spending doing this here is something
+original, totally original.  You'll
+
+431
+00:09:03,190 --> 00:09:03,200
+original, totally original.  You'll
+ 
+
+432
+00:09:03,200 --> 00:09:04,990
+original, totally original.  You'll
+put it up the way you want.  So, once again
+
+433
+00:09:04,990 --> 00:09:05,000
+put it up the way you want.  So, once again
+ 
+
+434
+00:09:05,000 --> 00:09:06,750
+put it up the way you want.  So, once again
+, we're living in an era
+
+435
+00:09:06,750 --> 00:09:06,760
+, we're living in an era
+ 
+
+436
+00:09:06,760 --> 00:09:10,509
+, we're living in an era
+where this is just a tool.  She's not
+
+437
+00:09:10,509 --> 00:09:10,519
+where this is just a tool.  She's not
+ 
+
+438
+00:09:10,519 --> 00:09:13,389
+where this is just a tool.  She's not
+going to take our jobs, but she's
+
+439
+00:09:13,389 --> 00:09:13,399
+going to take our jobs, but she's
+ 
+
+440
+00:09:13,399 --> 00:09:16,069
+going to take our jobs, but she's
+changing the way we work.
+
+441
+00:09:16,069 --> 00:09:16,079
+changing the way we work.
+ 
+
+442
+00:09:16,079 --> 00:09:18,190
+changing the way we work.
+Not just anyone can do this
+
+443
+00:09:18,190 --> 00:09:18,200
+Not just anyone can do this
+ 
+
+444
+00:09:18,200 --> 00:09:20,710
+Not just anyone can do this
+here, but if you learn how to do it, if you
+
+445
+00:09:20,710 --> 00:09:20,720
+here, but if you learn how to do it, if you
+ 
+
+446
+00:09:20,720 --> 00:09:22,750
+here, but if you learn how to do it, if you
+come in and update your skills, you'll
+
+447
+00:09:22,750 --> 00:09:22,760
+come in and update your skills, you'll
+ 
+
+448
+00:09:22,760 --> 00:09:24,870
+come in and update your skills, you'll
+definitely get ahead and come out
+
+449
+00:09:24,870 --> 00:09:24,880
+definitely get ahead and come out
+ 
+
+450
+00:09:24,880 --> 00:09:26,710
+definitely get ahead and come out
+ahead.  Finally, the next thing I'm
+
+451
+00:09:26,710 --> 00:09:26,720
+ahead.  Finally, the next thing I'm
+ 
+
+452
+00:09:26,720 --> 00:09:28,389
+ahead.  Finally, the next thing I'm
+going to ask him to do here is lower
+
+453
+00:09:28,389 --> 00:09:28,399
+going to ask him to do here is lower
+ 
+
+454
+00:09:28,399 --> 00:09:32,230
+going to ask him to do here is lower
+thirds, which is a little text below
+
+455
+00:09:32,230 --> 00:09:32,240
+thirds, which is a little text below
+ 
+
+456
+00:09:32,240 --> 00:09:34,310
+thirds, which is a little text below
+my name.  Finally, I'll put it in a
+
+457
+00:09:34,310 --> 00:09:34,320
+my name.  Finally, I'll put it in a
+ 
+
+458
+00:09:34,320 --> 00:09:36,350
+my name.  Finally, I'll put it in a
+very simple way.  Let's see what
+
+459
+00:09:36,350 --> 00:09:36,360
+very simple way.  Let's see what
+ 
+
+460
+00:09:36,360 --> 00:09:39,110
+very simple way.  Let's see what
+he can do for us here too.  I don't know
+
+461
+00:09:39,110 --> 00:09:39,120
+he can do for us here too.  I don't know
+ 
+
+462
+00:09:39,120 --> 00:09:41,310
+he can do for us here too.  I don't know
+how it's going to be,
+
+463
+00:09:41,310 --> 00:09:41,320
+how it's going to be,
+ 
+
+464
+00:09:41,320 --> 00:09:44,590
+how it's going to be,
+but I'll put it simply.  And
+
+465
+00:09:44,590 --> 00:09:44,600
+but I'll put it simply.  And
+ 
+
+466
+00:09:44,600 --> 00:09:48,150
+but I'll put it simply.  And
+look at that!  He's done it here for
+
+467
+00:09:48,150 --> 00:09:48,160
+look at that!  He's done it here for
+ 
+
+468
+00:09:48,160 --> 00:09:50,389
+look at that!  He's done it here for
+us before too.  It didn't turn out very well.  He even
+
+469
+00:09:50,389 --> 00:09:50,399
+us before too.  It didn't turn out very well.  He even
+ 
+
+470
+00:09:50,399 --> 00:09:52,389
+us before too.  It didn't turn out very well.  He even
+made a little cut there, see.  I would have to
+
+471
+00:09:52,389 --> 00:09:52,399
+made a little cut there, see.  I would have to
+ 
+
+472
+00:09:52,399 --> 00:09:54,230
+made a little cut there, see.  I would have to
+ask him to fix this.  I'm not
+
+473
+00:09:54,230 --> 00:09:54,240
+ask him to fix this.  I'm not
+ 
+
+474
+00:09:54,240 --> 00:09:55,710
+ask him to fix this.  I'm not
+going to tell him to change that now,
+
+475
+00:09:55,710 --> 00:09:55,720
+going to tell him to change that now,
+ 
+
+476
+00:09:55,720 --> 00:09:57,030
+going to tell him to change that now,
+because I didn't really like the
+
+477
+00:09:57,030 --> 00:09:57,040
+because I didn't really like the
+ 
+
+478
+00:09:57,040 --> 00:09:58,790
+because I didn't really like the
+result.  And if I ask him to
+
+479
+00:09:58,790 --> 00:09:58,800
+result.  And if I ask him to
+ 
+
+480
+00:09:58,800 --> 00:10:01,590
+result.  And if I ask him to
+fix it, he'll spend, as I said,
+
+481
+00:10:01,590 --> 00:10:01,600
+fix it, he'll spend, as I said,
+ 
+
+482
+00:10:01,600 --> 00:10:04,630
+fix it, he'll spend, as I said,
+credits.  So, I'll leave it at that.  It was just
+
+483
+00:10:04,630 --> 00:10:04,640
+credits.  So, I'll leave it at that.  It was just
+ 
+
+484
+00:10:04,640 --> 00:10:07,030
+credits.  So, I'll leave it at that.  It was just
+for us to test it out too.  And I know
+
+485
+00:10:07,030 --> 00:10:07,040
+for us to test it out too.  And I know
+ 
+
+486
+00:10:07,040 --> 00:10:08,269
+for us to test it out too.  And I know
+you must be super worried,
+
+487
+00:10:08,269 --> 00:10:08,279
+you must be super worried,
+ 
+
+488
+00:10:08,279 --> 00:10:10,230
+you must be super worried,
+wanting to understand, okay?  He's
+
+489
+00:10:10,230 --> 00:10:10,240
+wanting to understand, okay?  He's
+ 
+
+490
+00:10:10,240 --> 00:10:12,630
+wanting to understand, okay?  He's
+doing all this, but how is he going to
+
+491
+00:10:12,630 --> 00:10:12,640
+doing all this, but how is he going to
+ 
+
+492
+00:10:12,640 --> 00:10:15,910
+doing all this, but how is he going to
+bring it to a video editor, a
+
+493
+00:10:15,910 --> 00:10:15,920
+bring it to a video editor, a
+ 
+
+494
+00:10:15,920 --> 00:10:18,110
+bring it to a video editor, a
+CapCut, a Premiere, a Da20?  I'll
+
+495
+00:10:18,110 --> 00:10:18,120
+CapCut, a Premiere, a Da20?  I'll
+ 
+
+496
+00:10:18,120 --> 00:10:20,310
+CapCut, a Premiere, a Da20?  I'll
+show you now.  I'm also going to run some more
+
+497
+00:10:20,310 --> 00:10:20,320
+show you now.  I'm also going to run some more
+ 
+
+498
+00:10:20,320 --> 00:10:22,350
+show you now.  I'm also going to run some more
+tests here.  I'll show
+
+499
+00:10:22,350 --> 00:10:22,360
+tests here.  I'll show
+ 
+
+500
+00:10:22,360 --> 00:10:24,230
+tests here.  I'll show
+you the result.  I'm not going to go into
+
+501
+00:10:24,230 --> 00:10:24,240
+you the result.  I'm not going to go into
+ 
+
+502
+00:10:24,240 --> 00:10:26,310
+you the result.  I'm not going to go into
+the whole process to avoid making it too
+
+503
+00:10:26,310 --> 00:10:26,320
+the whole process to avoid making it too
+ 
+
+504
+00:10:26,320 --> 00:10:28,509
+the whole process to avoid making it too
+boring, but you should already be seeing
+
+505
+00:10:28,509 --> 00:10:28,519
+boring, but you should already be seeing
+ 
+
+506
+00:10:28,519 --> 00:10:30,509
+boring, but you should already be seeing
+the results of some of the things I've
+
+507
+00:10:30,509 --> 00:10:30,519
+the results of some of the things I've
+ 
+
+508
+00:10:30,519 --> 00:10:33,230
+the results of some of the things I've
+done.  Okay, after you've done everything
+
+509
+00:10:33,230 --> 00:10:33,240
+done.  Okay, after you've done everything
+ 
+
+510
+00:10:33,240 --> 00:10:35,190
+done.  Okay, after you've done everything
+you wanted, you'll come here to
+
+511
+00:10:35,190 --> 00:10:35,200
+you wanted, you'll come here to
+ 
+
+512
+00:10:35,200 --> 00:10:38,550
+you wanted, you'll come here to
+render, and you have the option of choosing the codec.  So
+
+513
+00:10:38,550 --> 00:10:38,560
+render, and you have the option of choosing the codec.  So
+ 
+
+514
+00:10:38,560 --> 00:10:42,069
+render, and you have the option of choosing the codec.  So
+you have H264, H265,
+
+515
+00:10:42,069 --> 00:10:42,079
+you have H264, H265,
+ 
+
+516
+00:10:42,079 --> 00:10:44,550
+you have H264, H265,
+and Proz, and you'll see that it
+
+517
+00:10:44,550 --> 00:10:44,560
+and Proz, and you'll see that it
+ 
+
+518
+00:10:44,560 --> 00:10:47,710
+and Proz, and you'll see that it
+will be saved in a folder that was the
+
+519
+00:10:47,710 --> 00:10:47,720
+will be saved in a folder that was the
+ 
+
+520
+00:10:47,720 --> 00:10:50,629
+will be saved in a folder that was the
+folder you created at the beginning, a
+
+521
+00:10:50,629 --> 00:10:50,639
+folder you created at the beginning, a
+ 
+
+522
+00:10:50,639 --> 00:10:52,870
+folder you created at the beginning, a
+place you chose.  It will be a
+
+523
+00:10:52,870 --> 00:10:52,880
+place you chose.  It will be a
+ 
+
+524
+00:10:52,880 --> 00:10:55,110
+place you chose.  It will be a
+folder called "out," which is simply a
+
+525
+00:10:55,110 --> 00:10:55,120
+folder called "out," which is simply a
+ 
+
+526
+00:10:55,120 --> 00:10:57,790
+folder called "out," which is simply a
+place where he sends it outside.  Once that's done
+
+527
+00:10:57,790 --> 00:10:57,800
+place where he sends it outside.  Once that's done
+ 
+
+528
+00:10:57,800 --> 00:10:59,629
+place where he sends it outside.  Once that's done
+, you'll see there are several other little
+
+529
+00:10:59,629 --> 00:10:59,639
+, you'll see there are several other little
+ 
+
+530
+00:10:59,639 --> 00:11:01,269
+, you'll see there are several other little
+options here that I'll look into later
+
+531
+00:11:01,269 --> 00:11:01,279
+options here that I'll look into later
+ 
+
+532
+00:11:01,279 --> 00:11:03,430
+options here that I'll look into later
+, but after that, you'll
+
+533
+00:11:03,430 --> 00:11:03,440
+, but after that, you'll
+ 
+
+534
+00:11:03,440 --> 00:11:06,470
+, but after that, you'll
+render the video and when it
+
+535
+00:11:06,470 --> 00:11:06,480
+render the video and when it
+ 
+
+536
+00:11:06,480 --> 00:11:08,910
+render the video and when it
+finishes rendering, you'll see that
+
+537
+00:11:08,910 --> 00:11:08,920
+finishes rendering, you'll see that
+ 
+
+538
+00:11:08,920 --> 00:11:11,590
+finishes rendering, you'll see that
+it will be rendering, and your video
+
+539
+00:11:11,590 --> 00:11:11,600
+it will be rendering, and your video
+ 
+
+540
+00:11:11,600 --> 00:11:14,670
+it will be rendering, and your video
+will already be saved inside that folder.   I
+
+541
+00:11:14,670 --> 00:11:14,680
+will already be saved inside that folder.   I
+ 
+
+542
+00:11:14,680 --> 00:11:17,430
+will already be saved inside that folder.   I
+'ll show you.  I'm still here with the hood
+
+543
+00:11:17,430 --> 00:11:17,440
+'ll show you.  I'm still here with the hood
+ 
+
+544
+00:11:17,440 --> 00:11:20,110
+'ll show you.  I'm still here with the hood
+open.  I'll show you another part
+
+545
+00:11:20,110 --> 00:11:20,120
+open.  I'll show you another part
+ 
+
+546
+00:11:20,120 --> 00:11:22,949
+open.  I'll show you another part
+using Premiere as well.  Remember,
+
+547
+00:11:22,949 --> 00:11:22,959
+using Premiere as well.  Remember,
+ 
+
+548
+00:11:22,959 --> 00:11:25,509
+using Premiere as well.  Remember,
+as I always say, all
+
+549
+00:11:25,509 --> 00:11:25,519
+as I always say, all
+ 
+
+550
+00:11:25,519 --> 00:11:28,509
+as I always say, all
+editing software is practically the same.  If
+
+551
+00:11:28,509 --> 00:11:28,519
+editing software is practically the same.  If
+ 
+
+552
+00:11:28,519 --> 00:11:30,710
+editing software is practically the same.  If
+you know how to edit in one, you know how to edit
+
+553
+00:11:30,710 --> 00:11:30,720
+you know how to edit in one, you know how to edit
+ 
+
+554
+00:11:30,720 --> 00:11:33,269
+you know how to edit in one, you know how to edit
+in any of them.  And I teach all of that
+
+555
+00:11:33,269 --> 00:11:33,279
+in any of them.  And I teach all of that
+ 
+
+556
+00:11:33,279 --> 00:11:34,990
+in any of them.  And I teach all of that
+inside Hollywood in the palm of your hand,
+
+557
+00:11:34,990 --> 00:11:35,000
+inside Hollywood in the palm of your hand,
+ 
+
+558
+00:11:35,000 --> 00:11:37,870
+inside Hollywood in the palm of your hand,
+which is my video creation training
+
+559
+00:11:37,870 --> 00:11:37,880
+which is my video creation training
+ 
+
+560
+00:11:37,880 --> 00:11:39,750
+which is my video creation training
+, for videomakers, for those of you who want to
+
+561
+00:11:39,750 --> 00:11:39,760
+, for videomakers, for those of you who want to
+ 
+
+562
+00:11:39,760 --> 00:11:41,269
+, for videomakers, for those of you who want to
+work in this field.  If you'd like to
+
+563
+00:11:41,269 --> 00:11:41,279
+work in this field.  If you'd like to
+ 
+
+564
+00:11:41,279 --> 00:11:44,389
+work in this field.  If you'd like to
+learn more, the link is in the description.
+
+565
+00:11:44,389 --> 00:11:44,399
+learn more, the link is in the description.
+ 
+
+566
+00:11:44,399 --> 00:11:47,110
+learn more, the link is in the description.
+Okay, I'm here in the cloud folder, see
+
+567
+00:11:47,110 --> 00:11:47,120
+Okay, I'm here in the cloud folder, see
+ 
+
+568
+00:11:47,120 --> 00:11:50,629
+Okay, I'm here in the cloud folder, see
+?  I'm here with cloud removal and
+
+569
+00:11:50,629 --> 00:11:50,639
+?  I'm here with cloud removal and
+ 
+
+570
+00:11:50,639 --> 00:11:54,829
+?  I'm here with cloud removal and
+demo, and it has the output here.  So he
+
+571
+00:11:54,829 --> 00:11:54,839
+demo, and it has the output here.  So he
+ 
+
+572
+00:11:54,839 --> 00:11:57,470
+demo, and it has the output here.  So he
+saved it here, look, my computer.  I'll
+
+573
+00:11:57,470 --> 00:11:57,480
+saved it here, look, my computer.  I'll
+ 
+
+574
+00:11:57,480 --> 00:12:00,710
+saved it here, look, my computer.  I'll
+show you, look.  I've simply pulled up the animated video here
+
+575
+00:12:00,710 --> 00:12:00,720
+show you, look.  I've simply pulled up the animated video here
+ 
+
+576
+00:12:00,720 --> 00:12:02,269
+show you, look.  I've simply pulled up the animated video here
+
+577
+00:12:02,269 --> 00:12:02,279
+
+ 
+
+578
+00:12:02,279 --> 00:12:06,710
+ 
+, just like we did.  And then I
+
+579
+00:12:06,710 --> 00:12:06,720
+, just like we did.  And then I
+ 
+
+580
+00:12:06,720 --> 00:12:09,190
+, just like we did.  And then I
+could, for example, tell him to
+
+581
+00:12:09,190 --> 00:12:09,200
+could, for example, tell him to
+ 
+
+582
+00:12:09,200 --> 00:12:11,430
+could, for example, tell him to
+create a background.  And so I had to
+
+583
+00:12:11,430 --> 00:12:11,440
+create a background.  And so I had to
+ 
+
+584
+00:12:11,440 --> 00:12:14,069
+create a background.  And so I had to
+put that in writing there.  I want the
+
+585
+00:12:14,069 --> 00:12:14,079
+put that in writing there.  I want the
+ 
+
+586
+00:12:14,079 --> 00:12:17,069
+put that in writing there.  I want the
+background to be green.  Why?  I can
+
+587
+00:12:17,069 --> 00:12:17,079
+background to be green.  Why?  I can
+ 
+
+588
+00:12:17,079 --> 00:12:19,310
+background to be green.  Why?  I can
+simply remove the background and use it
+
+589
+00:12:19,310 --> 00:12:19,320
+simply remove the background and use it
+ 
+
+590
+00:12:19,320 --> 00:12:21,389
+simply remove the background and use it
+as an animation within any of
+
+591
+00:12:21,389 --> 00:12:21,399
+as an animation within any of
+ 
+
+592
+00:12:21,399 --> 00:12:24,230
+as an animation within any of
+my videos.  Or I could make a
+
+593
+00:12:24,230 --> 00:12:24,240
+my videos.  Or I could make a
+ 
+
+594
+00:12:24,240 --> 00:12:27,030
+my videos.  Or I could make a
+mask, it's not the best thing in the world.   Look
+
+595
+00:12:27,030 --> 00:12:27,040
+mask, it's not the best thing in the world.   Look
+ 
+
+596
+00:12:27,040 --> 00:12:29,069
+mask, it's not the best thing in the world.   Look
+here, it won't be the best version
+
+597
+00:12:29,069 --> 00:12:29,079
+here, it won't be the best version
+ 
+
+598
+00:12:29,079 --> 00:12:31,310
+here, it won't be the best version
+because it won't be the exact shape you see there
+
+599
+00:12:31,310 --> 00:12:31,320
+because it won't be the exact shape you see there
+ 
+
+600
+00:12:31,320 --> 00:12:34,949
+because it won't be the exact shape you see there
+.  I can make it more rounded off,
+
+601
+00:12:34,949 --> 00:12:34,959
+.  I can make it more rounded off,
+ 
+
+602
+00:12:34,959 --> 00:12:37,230
+.  I can make it more rounded off,
+but, look, you understand that whatever you
+
+603
+00:12:37,230 --> 00:12:37,240
+but, look, you understand that whatever you
+ 
+
+604
+00:12:37,240 --> 00:12:39,069
+but, look, you understand that whatever you
+ask him to do, he'll do it
+
+605
+00:12:39,069 --> 00:12:39,079
+ask him to do, he'll do it
+ 
+
+606
+00:12:39,079 --> 00:12:41,829
+ask him to do, he'll do it
+perfectly, and you could simply
+
+607
+00:12:41,829 --> 00:12:41,839
+perfectly, and you could simply
+ 
+
+608
+00:12:41,839 --> 00:12:43,550
+perfectly, and you could simply
+follow the instructions I gave you.  So
+
+609
+00:12:43,550 --> 00:12:43,560
+follow the instructions I gave you.  So
+ 
+
+610
+00:12:43,560 --> 00:12:45,470
+follow the instructions I gave you.  So
+here, I already have an
+
+611
+00:12:45,470 --> 00:12:45,480
+here, I already have an
+ 
+
+612
+00:12:45,480 --> 00:12:48,110
+here, I already have an
+interesting option.  If I want to continue like this,
+
+613
+00:12:48,110 --> 00:12:48,120
+interesting option.  If I want to continue like this,
+ 
+
+614
+00:12:48,120 --> 00:12:50,750
+interesting option.  If I want to continue like this,
+I can now use it in any
+
+615
+00:12:50,750 --> 00:12:50,760
+I can now use it in any
+ 
+
+616
+00:12:50,760 --> 00:12:53,590
+I can now use it in any
+video I want.  Oh man, an
+
+617
+00:12:53,590 --> 00:12:53,600
+video I want.  Oh man, an
+ 
+
+618
+00:12:53,600 --> 00:12:56,430
+video I want.  Oh man, an
+animation that, again, is original.
+
+619
+00:12:56,430 --> 00:12:56,440
+animation that, again, is original.
+ 
+
+620
+00:12:56,440 --> 00:12:58,790
+animation that, again, is original.
+Original, because I used this image.  I
+
+621
+00:12:58,790 --> 00:12:58,800
+Original, because I used this image.  I
+ 
+
+622
+00:12:58,800 --> 00:13:01,030
+Original, because I used this image.  I
+could use any other image, but it
+
+623
+00:13:01,030 --> 00:13:01,040
+could use any other image, but it
+ 
+
+624
+00:13:01,040 --> 00:13:02,910
+could use any other image, but it
+'s something I specifically asked you to do, and
+
+625
+00:13:02,910 --> 00:13:02,920
+'s something I specifically asked you to do, and
+ 
+
+626
+00:13:02,920 --> 00:13:05,230
+'s something I specifically asked you to do, and
+you can use it in any work
+
+627
+00:13:05,230 --> 00:13:05,240
+you can use it in any work
+ 
+
+628
+00:13:05,240 --> 00:13:07,430
+you can use it in any work
+you're going to do.  Man, the time I
+
+629
+00:13:07,430 --> 00:13:07,440
+you're going to do.  Man, the time I
+ 
+
+630
+00:13:07,440 --> 00:13:09,230
+you're going to do.  Man, the time I
+spent doing this still scares me,
+
+631
+00:13:09,230 --> 00:13:09,240
+spent doing this still scares me,
+ 
+
+632
+00:13:09,240 --> 00:13:11,829
+spent doing this still scares me,
+because I always did it in After Effects
+
+633
+00:13:11,829 --> 00:13:11,839
+because I always did it in After Effects
+ 
+
+634
+00:13:11,839 --> 00:13:14,230
+because I always did it in After Effects
+and it took at least, let's say, an
+
+635
+00:13:14,230 --> 00:13:14,240
+and it took at least, let's say, an
+ 
+
+636
+00:13:14,240 --> 00:13:17,110
+and it took at least, let's say, an
+hour or two
+
+637
+00:13:17,110 --> 00:13:17,120
+hour or two
+ 
+
+638
+00:13:17,120 --> 00:13:19,310
+hour or two
+.  So we're saving time, and
+
+639
+00:13:19,310 --> 00:13:19,320
+.  So we're saving time, and
+ 
+
+640
+00:13:19,320 --> 00:13:21,350
+.  So we're saving time, and
+that's very, very good.  Next,
+
+641
+00:13:21,350 --> 00:13:21,360
+that's very, very good.  Next,
+ 
+
+642
+00:13:21,360 --> 00:13:23,470
+that's very, very good.  Next,
+I'm going to show you something, and then we'll
+
+643
+00:13:23,470 --> 00:13:23,480
+I'm going to show you something, and then we'll
+ 
+
+644
+00:13:23,480 --> 00:13:27,629
+I'm going to show you something, and then we'll
+start to see the level of craziness that this
+
+645
+00:13:27,629 --> 00:13:27,639
+start to see the level of craziness that this
+ 
+
+646
+00:13:27,639 --> 00:13:29,470
+start to see the level of craziness that this
+tool reveals to us.  I'll go to
+
+647
+00:13:29,470 --> 00:13:29,480
+tool reveals to us.  I'll go to
+ 
+
+648
+00:13:29,480 --> 00:13:33,150
+tool reveals to us.  I'll go to
+the cloud folder itself, the
+
+649
+00:13:33,150 --> 00:13:33,160
+the cloud folder itself, the
+ 
+
+650
+00:13:33,160 --> 00:13:37,829
+the cloud folder itself, the
+removal demo and public folders.  I have this
+
+651
+00:13:37,829 --> 00:13:37,839
+removal demo and public folders.  I have this
+ 
+
+652
+00:13:37,839 --> 00:13:39,829
+removal demo and public folders.  I have this
+folder here.  It's even located next to the
+
+653
+00:13:39,829 --> 00:13:39,839
+folder here.  It's even located next to the
+ 
+
+654
+00:13:39,839 --> 00:13:41,910
+folder here.  It's even located next to the
+output, which is where it will send and
+
+655
+00:13:41,910 --> 00:13:41,920
+output, which is where it will send and
+ 
+
+656
+00:13:41,920 --> 00:13:44,750
+output, which is where it will send and
+export your file, okay?  Then
+
+657
+00:13:44,750 --> 00:13:44,760
+export your file, okay?  Then
+ 
+
+658
+00:13:44,760 --> 00:13:47,030
+export your file, okay?  Then
+you're going to copy your video into
+
+659
+00:13:47,030 --> 00:13:47,040
+you're going to copy your video into
+ 
+
+660
+00:13:47,040 --> 00:13:49,949
+you're going to copy your video into
+this public section.  And I have it here, look, it's
+
+661
+00:13:49,949 --> 00:13:49,959
+this public section.  And I have it here, look, it's
+ 
+
+662
+00:13:49,959 --> 00:13:53,590
+this public section.  And I have it here, look, it's
+called "Test Subtitles Cloud".  OK.   I'm
+
+663
+00:13:53,590 --> 00:13:53,600
+called "Test Subtitles Cloud".  OK.   I'm
+ 
+
+664
+00:13:53,600 --> 00:13:56,150
+called "Test Subtitles Cloud".  OK.   I'm
+going to import this video into Premiere,
+
+665
+00:13:56,150 --> 00:13:56,160
+going to import this video into Premiere,
+ 
+
+666
+00:13:56,160 --> 00:13:57,829
+going to import this video into Premiere,
+but you could import it from within
+
+667
+00:13:57,829 --> 00:13:57,839
+but you could import it from within
+ 
+
+668
+00:13:57,839 --> 00:14:01,189
+but you could import it from within
+Capcut.  I just like to vary the
+
+669
+00:14:01,189 --> 00:14:01,199
+Capcut.  I just like to vary the
+ 
+
+670
+00:14:01,199 --> 00:14:03,829
+Capcut.  I just like to vary the
+software I use, okay?  I downloaded it from Premiere,
+
+671
+00:14:03,829 --> 00:14:03,839
+software I use, okay?  I downloaded it from Premiere,
+ 
+
+672
+00:14:03,839 --> 00:14:07,470
+software I use, okay?  I downloaded it from Premiere,
+I'll go to the transcript here and
+
+673
+00:14:07,470 --> 00:14:07,480
+I'll go to the transcript here and
+ 
+
+674
+00:14:07,480 --> 00:14:10,829
+I'll go to the transcript here and
+tell him to add the subtitles.  Oh,
+
+675
+00:14:10,829 --> 00:14:10,839
+tell him to add the subtitles.  Oh,
+ 
+
+676
+00:14:10,839 --> 00:14:12,910
+tell him to add the subtitles.  Oh,
+testing subtitles with the cloud.  He even
+
+677
+00:14:12,910 --> 00:14:12,920
+testing subtitles with the cloud.  He even
+ 
+
+678
+00:14:12,920 --> 00:14:14,350
+testing subtitles with the cloud.  He even
+put "cloud" here, which I think I
+
+679
+00:14:14,350 --> 00:14:14,360
+put "cloud" here, which I think I
+ 
+
+680
+00:14:14,360 --> 00:14:18,069
+put "cloud" here, which I think I
+must have mentioned.  It's cloud cloud.  To this day
+
+681
+00:14:18,069 --> 00:14:18,079
+must have mentioned.  It's cloud cloud.  To this day
+ 
+
+682
+00:14:18,079 --> 00:14:20,230
+must have mentioned.  It's cloud cloud.  To this day
+I don't know exactly how to pronounce it, but
+
+683
+00:14:20,230 --> 00:14:20,240
+I don't know exactly how to pronounce it, but
+ 
+
+684
+00:14:20,240 --> 00:14:21,870
+I don't know exactly how to pronounce it, but
+cloud
+
+685
+00:14:21,870 --> 00:14:21,880
+cloud
+ 
+
+686
+00:14:21,880 --> 00:14:25,590
+cloud
+AI, I said it like this, AI.  I'm going to go here,
+
+687
+00:14:25,590 --> 00:14:25,600
+AI, I said it like this, AI.  I'm going to go here,
+ 
+
+688
+00:14:25,600 --> 00:14:28,870
+AI, I said it like this, AI.  I'm going to go here,
+to create captions, and tell it to
+
+689
+00:14:28,870 --> 00:14:28,880
+to create captions, and tell it to
+ 
+
+690
+00:14:28,880 --> 00:14:31,829
+to create captions, and tell it to
+create a caption.  Same thing you'd
+
+691
+00:14:31,829 --> 00:14:31,839
+create a caption.  Same thing you'd
+ 
+
+692
+00:14:31,839 --> 00:14:33,710
+create a caption.  Same thing you'd
+do at a Capcut, or any other place on
+
+693
+00:14:33,710 --> 00:14:33,720
+do at a Capcut, or any other place on
+ 
+
+694
+00:14:33,720 --> 00:14:35,829
+do at a Capcut, or any other place on
+20th Street, anyway.  So here it is,
+
+695
+00:14:35,829 --> 00:14:35,839
+20th Street, anyway.  So here it is,
+ 
+
+696
+00:14:35,839 --> 00:14:40,110
+20th Street, anyway.  So here it is,
+testing subtitles with Cloud AI.  Will it
+
+697
+00:14:40,110 --> 00:14:40,120
+testing subtitles with Cloud AI.  Will it
+ 
+
+698
+00:14:40,120 --> 00:14:42,949
+testing subtitles with Cloud AI.  Will it
+work?  Remember, ideally
+
+699
+00:14:42,949 --> 00:14:42,959
+work?  Remember, ideally
+ 
+
+700
+00:14:42,959 --> 00:14:46,749
+work?  Remember, ideally
+you should adjust all these captions before
+
+701
+00:14:46,749 --> 00:14:46,759
+you should adjust all these captions before
+ 
+
+702
+00:14:46,759 --> 00:14:49,790
+you should adjust all these captions before
+doing anything.  Analyze if they
+
+703
+00:14:49,790 --> 00:14:49,800
+doing anything.  Analyze if they
+ 
+
+704
+00:14:49,800 --> 00:14:51,990
+doing anything.  Analyze if they
+are correct, if there were no
+
+705
+00:14:51,990 --> 00:14:52,000
+are correct, if there were no
+ 
+
+706
+00:14:52,000 --> 00:14:54,670
+are correct, if there were no
+errors, oh, will it work very well?
+
+707
+00:14:54,670 --> 00:14:54,680
+errors, oh, will it work very well?
+ 
+
+708
+00:14:54,680 --> 00:14:57,710
+errors, oh, will it work very well?
+Let's test it, let's see.  Analysis.
+
+709
+00:14:57,710 --> 00:14:57,720
+Let's test it, let's see.  Analysis.
+ 
+
+710
+00:14:57,720 --> 00:15:00,470
+Let's test it, let's see.  Analysis.
+In fact, this is a suggestion for you
+
+711
+00:15:00,470 --> 00:15:00,480
+In fact, this is a suggestion for you
+ 
+
+712
+00:15:00,480 --> 00:15:02,470
+In fact, this is a suggestion for you
+in any caption.  There are some people who
+
+713
+00:15:02,470 --> 00:15:02,480
+in any caption.  There are some people who
+ 
+
+714
+00:15:02,480 --> 00:15:04,389
+in any caption.  There are some people who
+sometimes do it without even looking at what's
+
+715
+00:15:04,389 --> 00:15:04,399
+sometimes do it without even looking at what's
+ 
+
+716
+00:15:04,399 --> 00:15:06,949
+sometimes do it without even looking at what's
+written, and everything goes wrong.  Take a
+
+717
+00:15:06,949 --> 00:15:06,959
+written, and everything goes wrong.  Take a
+ 
+
+718
+00:15:06,959 --> 00:15:09,790
+written, and everything goes wrong.  Take a
+closer look, examine it carefully.  Okay, you've created the
+
+719
+00:15:09,790 --> 00:15:09,800
+closer look, examine it carefully.  Okay, you've created the
+ 
+
+720
+00:15:09,800 --> 00:15:12,230
+closer look, examine it carefully.  Okay, you've created the
+subtitles, you don't need to change
+
+721
+00:15:12,230 --> 00:15:12,240
+subtitles, you don't need to change
+ 
+
+722
+00:15:12,240 --> 00:15:15,550
+subtitles, you don't need to change
+any subtitle templates, okay?  All of this
+
+723
+00:15:15,550 --> 00:15:15,560
+any subtitle templates, okay?  All of this
+ 
+
+724
+00:15:15,560 --> 00:15:17,629
+any subtitle templates, okay?  All of this
+will be done within the cloud.  I'll come here to the
+
+725
+00:15:17,629 --> 00:15:17,639
+will be done within the cloud.  I'll come here to the
+ 
+
+726
+00:15:17,639 --> 00:15:20,430
+will be done within the cloud.  I'll come here to the
+captions, in the case of Premiere.   I'm
+
+727
+00:15:20,430 --> 00:15:20,440
+captions, in the case of Premiere.   I'm
+ 
+
+728
+00:15:20,440 --> 00:15:21,629
+captions, in the case of Premiere.   I'm
+going to click here, on these three
+
+729
+00:15:21,629 --> 00:15:21,639
+going to click here, on these three
+ 
+
+730
+00:15:21,639 --> 00:15:24,350
+going to click here, on these three
+dots, export
+
+731
+00:15:24,350 --> 00:15:24,360
+dots, export
+ 
+
+732
+00:15:24,360 --> 00:15:29,470
+dots, export
+to srt file.  An SRT file, in case you
+
+733
+00:15:29,470 --> 00:15:29,480
+to srt file.  An SRT file, in case you
+ 
+
+734
+00:15:29,480 --> 00:15:31,870
+to srt file.  An SRT file, in case you
+don't know, is a format that exports
+
+735
+00:15:31,870 --> 00:15:31,880
+don't know, is a format that exports
+ 
+
+736
+00:15:31,880 --> 00:15:34,069
+don't know, is a format that exports
+subtitles.  Once you've done that, you'll export
+
+737
+00:15:34,069 --> 00:15:34,079
+subtitles.  Once you've done that, you'll export
+ 
+
+738
+00:15:34,079 --> 00:15:41,309
+subtitles.  Once you've done that, you'll export
+that caption into that public folder.
+
+739
+00:15:41,309 --> 00:15:41,319
+
+ 
+
+740
+00:15:41,319 --> 00:15:43,590
+ 
+So, test, the video name was
+
+741
+00:15:43,590 --> 00:15:43,600
+So, test, the video name was
+ 
+
+742
+00:15:43,600 --> 00:15:45,069
+So, test, the video name was
+testlegendascloud, it will become
+
+743
+00:15:45,069 --> 00:15:45,079
+testlegendascloud, it will become
+ 
+
+744
+00:15:45,079 --> 00:15:47,629
+testlegendascloud, it will become
+testlegendascloud.srt.
+
+745
+00:15:47,629 --> 00:15:47,639
+testlegendascloud.srt.
+ 
+
+746
+00:15:47,639 --> 00:15:52,670
+testlegendascloud.srt.
+I saved it.  And then you'll see it here, look.
+
+747
+00:15:52,670 --> 00:15:52,680
+I saved it.  And then you'll see it here, look.
+ 
+
+748
+00:15:52,680 --> 00:15:55,389
+I saved it.  And then you'll see it here, look.
+Okay, here's my video
+
+749
+00:15:55,389 --> 00:15:55,399
+Okay, here's my video
+ 
+
+750
+00:15:55,399 --> 00:15:58,309
+Okay, here's my video
+.  We have subtitles for
+
+751
+00:15:58,309 --> 00:15:58,319
+.  We have subtitles for
+ 
+
+752
+00:15:58,319 --> 00:16:02,189
+.  We have subtitles for
+the simple video, and we also have the subtitle in
+
+753
+00:16:02,189 --> 00:16:02,199
+the simple video, and we also have the subtitle in
+ 
+
+754
+00:16:02,199 --> 00:16:03,990
+the simple video, and we also have the subtitle in
+SRT format,
+
+755
+00:16:03,990 --> 00:16:04,000
+SRT format,
+ 
+
+756
+00:16:04,000 --> 00:16:06,910
+SRT format,
+which is a standard file.  Now you
+
+757
+00:16:06,910 --> 00:16:06,920
+which is a standard file.  Now you
+ 
+
+758
+00:16:06,920 --> 00:16:10,470
+which is a standard file.  Now you
+go back there and simply talk to the chat.
+
+759
+00:16:10,470 --> 00:16:10,480
+go back there and simply talk to the chat.
+ 
+
+760
+00:16:10,480 --> 00:16:12,430
+go back there and simply talk to the chat.
+I'm talking about the chat, but it's happening here in the code
+
+761
+00:16:12,430 --> 00:16:12,440
+I'm talking about the chat, but it's happening here in the code
+ 
+
+762
+00:16:12,440 --> 00:16:14,389
+I'm talking about the chat, but it's happening here in the code
+every time.  I want you to add subtitles to my
+
+763
+00:16:14,389 --> 00:16:14,399
+every time.  I want you to add subtitles to my
+ 
+
+764
+00:16:14,399 --> 00:16:17,269
+every time.  I want you to add subtitles to my
+video.  So you say the name and it
+
+765
+00:16:17,269 --> 00:16:17,279
+video.  So you say the name and it
+ 
+
+766
+00:16:17,279 --> 00:16:19,069
+video.  So you say the name and it
+already has the subtitles.  I want you to
+
+767
+00:16:19,069 --> 00:16:19,079
+already has the subtitles.  I want you to
+ 
+
+768
+00:16:19,079 --> 00:16:22,269
+already has the subtitles.  I want you to
+put it in this color, in this style.
+
+769
+00:16:22,269 --> 00:16:22,279
+put it in this color, in this style.
+ 
+
+770
+00:16:22,279 --> 00:16:24,710
+put it in this color, in this style.
+If you want a
+
+771
+00:16:24,710 --> 00:16:24,720
+If you want a
+ 
+
+772
+00:16:24,720 --> 00:16:27,230
+If you want a
+subtitle reference, go to YouTube or
+
+773
+00:16:27,230 --> 00:16:27,240
+subtitle reference, go to YouTube or
+ 
+
+774
+00:16:27,240 --> 00:16:30,629
+subtitle reference, go to YouTube or
+Google, take a screenshot of the
+
+775
+00:16:30,629 --> 00:16:30,639
+Google, take a screenshot of the
+ 
+
+776
+00:16:30,639 --> 00:16:32,790
+Google, take a screenshot of the
+subtitle style you want, and send it
+
+777
+00:16:32,790 --> 00:16:32,800
+subtitle style you want, and send it
+ 
+
+778
+00:16:32,800 --> 00:16:35,230
+subtitle style you want, and send it
+along.  Send it here in the folder, go to the
+
+779
+00:16:35,230 --> 00:16:35,240
+along.  Send it here in the folder, go to the
+ 
+
+780
+00:16:35,240 --> 00:16:37,790
+along.  Send it here in the folder, go to the
+options here and tell me, "I want it in this
+
+781
+00:16:37,790 --> 00:16:37,800
+options here and tell me, "I want it in this
+ 
+
+782
+00:16:37,800 --> 00:16:40,710
+options here and tell me, "I want it in this
+style for this video."
+
+783
+00:16:40,710 --> 00:16:40,720
+style for this video."
+ 
+
+784
+00:16:40,720 --> 00:16:42,550
+style for this video."
+It will do it automatically.  I'll
+
+785
+00:16:42,550 --> 00:16:42,560
+It will do it automatically.  I'll
+ 
+
+786
+00:16:42,560 --> 00:16:44,590
+It will do it automatically.  I'll
+ask him to do it here.  He's not going to
+
+787
+00:16:44,590 --> 00:16:44,600
+ask him to do it here.  He's not going to
+ 
+
+788
+00:16:44,600 --> 00:16:46,470
+ask him to do it here.  He's not going to
+create it, he's not going to listen to my video,
+
+789
+00:16:46,470 --> 00:16:46,480
+create it, he's not going to listen to my video,
+ 
+
+790
+00:16:46,480 --> 00:16:50,629
+create it, he's not going to listen to my video,
+he's simply reading a part of
+
+791
+00:16:50,629 --> 00:16:50,639
+he's simply reading a part of
+ 
+
+792
+00:16:50,639 --> 00:16:52,990
+he's simply reading a part of
+another file that I included.
+
+793
+00:16:52,990 --> 00:16:53,000
+another file that I included.
+ 
+
+794
+00:16:53,000 --> 00:16:55,430
+another file that I included.
+So, since both names are the same,
+
+795
+00:16:55,430 --> 00:16:55,440
+So, since both names are the same,
+ 
+
+796
+00:16:55,440 --> 00:16:58,629
+So, since both names are the same,
+he's simply reading and it's already here,
+
+797
+00:16:58,629 --> 00:16:58,639
+he's simply reading and it's already here,
+ 
+
+798
+00:16:58,639 --> 00:17:02,710
+he's simply reading and it's already here,
+ready for us.  Look how crazy this is.  It's a
+
+799
+00:17:02,710 --> 00:17:02,720
+ready for us.  Look how crazy this is.  It's a
+ 
+
+800
+00:17:02,720 --> 00:17:04,270
+ready for us.  Look how crazy this is.  It's a
+bizarre level, but we're
+
+801
+00:17:04,270 --> 00:17:04,280
+bizarre level, but we're
+ 
+
+802
+00:17:04,280 --> 00:17:07,069
+bizarre level, but we're
+getting to that point and I think it's
+
+803
+00:17:07,069 --> 00:17:07,079
+getting to that point and I think it's
+ 
+
+804
+00:17:07,079 --> 00:17:09,750
+getting to that point and I think it's
+cool.  It's a tool, it's interesting
+
+805
+00:17:09,750 --> 00:17:09,760
+cool.  It's a tool, it's interesting
+ 
+
+806
+00:17:09,760 --> 00:17:12,949
+cool.  It's a tool, it's interesting
+because we're spending much less
+
+807
+00:17:12,949 --> 00:17:12,959
+because we're spending much less
+ 
+
+808
+00:17:12,959 --> 00:17:15,390
+because we're spending much less
+time on our work.  I believe it
+
+809
+00:17:15,390 --> 00:17:15,400
+time on our work.  I believe it
+ 
+
+810
+00:17:15,400 --> 00:17:17,990
+time on our work.  I believe it
+'s a very interesting option for
+
+811
+00:17:17,990 --> 00:17:18,000
+'s a very interesting option for
+ 
+
+812
+00:17:18,000 --> 00:17:19,870
+'s a very interesting option for
+saving time when it comes to
+
+813
+00:17:19,870 --> 00:17:19,880
+saving time when it comes to
+ 
+
+814
+00:17:19,880 --> 00:17:22,510
+saving time when it comes to
+animation and motion graphics.  I
+
+815
+00:17:22,510 --> 00:17:22,520
+animation and motion graphics.  I
+ 
+
+816
+00:17:22,520 --> 00:17:24,590
+animation and motion graphics.  I
+personally wouldn't use it just to
+
+817
+00:17:24,590 --> 00:17:24,600
+personally wouldn't use it just to
+ 
+
+818
+00:17:24,600 --> 00:17:26,789
+personally wouldn't use it just to
+add subtitles, would I?  For that, I
+
+819
+00:17:26,789 --> 00:17:26,799
+add subtitles, would I?  For that, I
+ 
+
+820
+00:17:26,799 --> 00:17:29,470
+add subtitles, would I?  For that, I
+can simply pay for Capcut,
+
+821
+00:17:29,470 --> 00:17:29,480
+can simply pay for Capcut,
+ 
+
+822
+00:17:29,480 --> 00:17:31,630
+can simply pay for Capcut,
+pay for any other software, and I can
+
+823
+00:17:31,630 --> 00:17:31,640
+pay for any other software, and I can
+ 
+
+824
+00:17:31,640 --> 00:17:33,830
+pay for any other software, and I can
+just adjust it right there and then,
+
+825
+00:17:33,830 --> 00:17:33,840
+just adjust it right there and then,
+ 
+
+826
+00:17:33,840 --> 00:17:37,310
+just adjust it right there and then,
+quickly.  But on a motion
+
+827
+00:17:37,310 --> 00:17:37,320
+quickly.  But on a motion
+ 
+
+828
+00:17:37,320 --> 00:17:40,310
+quickly.  But on a motion
+graphics level, on the level of animating
+
+829
+00:17:40,310 --> 00:17:40,320
+graphics level, on the level of animating
+ 
+
+830
+00:17:40,320 --> 00:17:42,789
+graphics level, on the level of animating
+larger things, I think it's worth my time,
+
+831
+00:17:42,789 --> 00:17:42,799
+larger things, I think it's worth my time,
+ 
+
+832
+00:17:42,799 --> 00:17:44,710
+larger things, I think it's worth my time,
+because he's simply offering
+
+833
+00:17:44,710 --> 00:17:44,720
+because he's simply offering
+ 
+
+834
+00:17:44,720 --> 00:17:47,110
+because he's simply offering
+something of quality; he's not offering just
+
+835
+00:17:47,110 --> 00:17:47,120
+something of quality; he's not offering just
+ 
+
+836
+00:17:47,120 --> 00:17:49,029
+something of quality; he's not offering just
+anything here.  Well, I
+
+837
+00:17:49,029 --> 00:17:49,039
+anything here.  Well, I
+ 
+
+838
+00:17:49,039 --> 00:17:50,710
+anything here.  Well, I
+truly hope you found this video helpful
+
+839
+00:17:50,710 --> 00:17:50,720
+truly hope you found this video helpful
+ 
+
+840
+00:17:50,720 --> 00:17:52,190
+truly hope you found this video helpful
+.  [music] When I first saw this
+
+841
+00:17:52,190 --> 00:17:52,200
+.  [music] When I first saw this
+ 
+
+842
+00:17:52,200 --> 00:17:54,350
+.  [music] When I first saw this
+, I said, I need to
+
+843
+00:17:54,350 --> 00:17:54,360
+, I said, I need to
+ 
+
+844
+00:17:54,360 --> 00:17:56,630
+, I said, I need to
+show this to everyone.  So,
+
+845
+00:17:56,630 --> 00:17:56,640
+show this to everyone.  So,
+ 
+
+846
+00:17:56,640 --> 00:17:58,270
+show this to everyone.  So,
+honestly, if you could leave a
+
+847
+00:17:58,270 --> 00:17:58,280
+honestly, if you could leave a
+ 
+
+848
+00:17:58,280 --> 00:18:00,590
+honestly, if you could leave a
+like, a comment, whatever, it would
+
+849
+00:18:00,590 --> 00:18:00,600
+like, a comment, whatever, it would
+ 
+
+850
+00:18:00,600 --> 00:18:02,750
+like, a comment, whatever, it would
+help a lot.  And besides that, I'm going to
+
+851
+00:18:02,750 --> 00:18:02,760
+help a lot.  And besides that, I'm going to
+ 
+
+852
+00:18:02,760 --> 00:18:05,029
+help a lot.  And besides that, I'm going to
+recommend this video here, which I believe
+
+853
+00:18:05,029 --> 00:18:05,039
+recommend this video here, which I believe
+ 
+
+854
+00:18:05,039 --> 00:18:06,710
+recommend this video here, which I believe
+will be great for you to
+
+855
+00:18:06,710 --> 00:18:06,720
+will be great for you to
+ 
+
+856
+00:18:06,720 --> 00:18:09,070
+will be great for you to
+continue following this channel.  That's it, and
+
+857
+00:18:09,070 --> 00:18:09,080
+continue following this channel.  That's it, and
+ 
+
+858
+00:18:09,080 --> 00:18:11,590
+continue following this channel.  That's it, and
+we'll see each other very, very soon.
+
+859
+00:18:11,590 --> 00:18:11,600
+we'll see each other very, very soon.
+ 
+
+860
+00:18:11,600 --> 00:18:13,720
+we'll see each other very, very soon.
+Yeah.
+

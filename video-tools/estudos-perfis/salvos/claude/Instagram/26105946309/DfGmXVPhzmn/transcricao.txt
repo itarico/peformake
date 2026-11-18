@@ -1,0 +1,12 @@
+idioma: pt (0.99)
+[   0.0-   3.9] O Cláudio agora consegue cuidar da produção do seu canal do YouTube inteiro!
+[   3.9-   9.1] Chama a Pipeline Canal Dark, e ele conecta o trabalho que você faria em várias etapas.
+[   9.1-  11.8] Uma prepara a pauta, outra escreve o roteiro.
+[  11.8-  14.7] Depois vem a narração, as cenas e a montagem.
+[  14.7-  17.5] Do mesmo conteúdo saem os shorts e a thumbnail.
+[  17.5-  19.3] Mas a parte mais interessante?
+[  19.3-  21.2] Tudo chega no mesmo painel!
+[  21.2-  23.5] Você acompanha, revisa e aprova.
+[  23.5-  25.9] O vídeo aprovado entra na agenda do YouTube.
+[  25.9-  29.5] É da ideia a publicação, com o motor rodando no seu computador.
+[  29.5-  31.7] Comenta a fábrica que eu te mando o link na DM.

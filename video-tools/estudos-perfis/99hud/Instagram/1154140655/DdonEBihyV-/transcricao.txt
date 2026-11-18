@@ -1,0 +1,11 @@
+idioma: pt
+[00:00] Qual a sua profissão?
+[00:01] Engenheiro de software.
+[00:03] Quanto tempo você faz isso?
+[00:04] 15 anos.
+[00:06] Quais habilidades fizeram você se tornar a pessoa que você é dentro do seu mercado?
+[00:10] Assim, são vários, mas eu acho que a principal é comunicação.
+[00:14] Ela mudou a minha vida, eu sempre fui uma pessoa muito comunicativa,
+[00:17] acho que sempre foi um diferencial muito grande dentro da área de tecnologia.
+[00:20] Qual o conselho você gostaria de ter recebido no início da sua jornada?
+[00:24] Coloca a cara na internet e começa a fazer conteúdo, se mudou a minha vida.

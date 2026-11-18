@@ -1,0 +1,25 @@
+{
+ "_type": "playlist",
+ "id": "DfkgEGwlPu_",
+ "title": "Post by 99hud",
+ "description": "Comenta “FABLE” que eu te mando o checklist dos 5 ajustes no direct 👇\n\nO Fable 5.2 saiu ontem e eu fui direto na documentação. Custa 8 dólares na entrada e 40 na saída por milhão de tokens, contra 10 e 50 do Fable 5.1.\n\nMexi em 5 coisas:\n\n1 · effort — o padrão é high, e acima dele o gasto sobe muito mais que a nota\n2 · cache — a leitura custa 20 centavos por milhão, contra 8 dólares da entrada\n3 · histórico — editar mensagem antiga agora dá erro 400 em qualquer conta\n4 · subagentes — podem virar grande parte do custo da sessão\n5 · terminar a tarefa — um texto oficial corta pela metade as paradas no meio\n\nSem effort no talo. Sem pagar o mesmo contexto duas vezes. Sem agente parando no meio da tarefa.\n\n📌 Salva pra configurar na próxima sessão e manda pro dev que trocou o modelo e não leu a migração.\n\n#claude #inteligenciaartificial #claudecode #programacao #produtividade",
+ "channel": "99hud",
+ "uploader_id": "504576059",
+ "uploader": "Hudson Brendon | Claude, IA & Automação",
+ "timestamp": 1794333654,
+ "like_count": 295,
+ "comment_count": 147,
+ "webpage_url": "https://www.instagram.com/reel/DfkgEGwlPu_/",
+ "webpage_url_basename": "DfkgEGwlPu_",
+ "webpage_url_domain": "instagram.com",
+ "extractor": "Instagram",
+ "extractor_key": "Instagram",
+ "upload_date": "20261110",
+ "playlist_count": 8,
+ "epoch": 1794365509,
+ "_version": {
+  "version": "2026.10.26",
+  "release_git_head": "c91f8de0bfb3577894abad716eaaa01659e6bd14",
+  "repository": "yt-dlp/yt-dlp"
+ }
+}

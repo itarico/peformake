@@ -1,0 +1,13 @@
+idioma: pt
+[00:00] Uns dias atrás eu encontrei essa skill chamada Anatomy e muita gente está dizendo que ela
+[00:03] pode ser a melhor skill já criada.
+[00:05] Ela cria animações isométricas de literalmente tudo que você quiser.
+[00:08] Dá pra criar explicações visuais, wireframes isométricos, bento grids ou até fazer engenharia
+[00:13] reversa visual de qualquer coisa.
+[00:15] O pessoal já está construindo coisas incríveis com ela e fica muito mais fácil construir
+[00:19] coisas parecidas usando essa skill.
+[00:22] Primeiro é só instalar essa skill gratuita no Cloud Code, Codex, OpenCode e Anti Gravity.
+[00:27] Hoje instalar você dá pra ela uma referência dos exemplos que já vêm prontos e pede pra ela
+[00:30] construir o que você quiser.
+[00:32] É simples assim.
+[00:33] Se você quiser testar, é só comentar a Anatomy que eu te mando.

@@ -1,0 +1,344 @@
+idioma: en
+[00:00] Look at these two videos.
+[00:01] This one has 29 million views and it's not a one off.
+[00:05] That channel is brand new and its last 80 shorts
+[00:08] got over 200 million views.
+[00:10] The other one, that's mine.
+[00:12] And no, it didn't come out of an AI video generator.
+[00:15] Claude built it in 3D with code every single frame.
+[00:19] In this video, I'll show you exactly
+[00:21] how I made this animated short,
+[00:22] how I trained Claude on this style frame by frame,
+[00:25] what went wrong and how I fixed it
+[00:27] and how you can get it too.
+[00:29] You're going to get all of that for completely free.
+[00:33] All right, let's get into it.
+[00:34] If you've never seen this type of short, it's this.
+[00:36] The characters are 2D, but the world around them is 3D.
+[00:40] So how do you train Claude to make this?
+[00:42] First, you need references, a lot of them.
+[00:45] I went to the channel and had Claude download
+[00:47] the last 20 shorts in this style.
+[00:49] The ones that look this good.
+[00:50] Now, here's the thing.
+[00:51] If you just tell Claude to analyze a video,
+[00:53] it won't look at every frame.
+[00:55] It grabs a few here and there,
+[00:57] but a normal video runs at 30 frames per second
+[00:59] and you've probably seen this style all over your feed.
+[01:02] Most of those look trash.
+[01:04] The reason is the tiny stuff, micro animations,
+[01:07] a little camera move, a little shading, a little light,
+[01:09] that's what makes it feel real
+[01:11] and you only catch that at 30 frames per second.
+[01:14] Every single frame, every camera move,
+[01:16] every little change in the light.
+[01:17] So that's the main thing I told Claude.
+[01:19] Watch all of them at 30 frames per second
+[01:22] and check everything, the lighting, the contrast,
+[01:25] the shadows, the movement, the effects, the cuts, everything.
+[01:28] 20 shorts, about 18 minutes of video, over 32,000 frames
+[01:33] and it came back with a rule book.
+[01:35] So what's the actual workflow behind these shorts?
+[01:38] It comes down to three layers,
+[01:39] how the script is engineered,
+[01:41] how the visuals are constructed
+[01:43] and how Claude measured all of it.
+[01:44] First, the script.
+[01:46] To decode it, Claude needed the audio
+[01:48] and the first time, YouTube handed it the German dub.
+[01:51] Classic.
+[01:52] So it pulled the original English track
+[01:54] and transcribed all 20 itself
+[01:56] and every single one opens like this.
+[01:58] They buried a man alive with a bell tied to his finger.
+[02:01] He bet his life savings on the slowest horse in the race.
+[02:04] A knight paid a priest to forgive a crime
+[02:06] he hadn't committed yet.
+[02:08] There's a button in the middle of town
+[02:09] and nobody's allowed to press it.
+[02:11] A paradox in the very first sentence.
+[02:14] No intro, no setup.
+[02:15] Then it escalates.
+[02:17] Then comes the pivot where the real reason comes out.
+[02:19] Then the payoff.
+[02:20] One last line and the twist lands
+[02:23] and there's a signature move.
+[02:24] 14 of the 20 flip into the explanation
+[02:27] with the exact same two words.
+[02:29] You see, you see, you see, you see, you see.
+[02:32] And the delivery is relentless.
+[02:34] Almost four words a second
+[02:35] with basically zero dead air.
+[02:37] Second, the visuals.
+[02:38] The characters are flat, two dimensional,
+[02:40] but they're lit like they physically exist in that world.
+[02:43] They catch the key light and they cast real shadows.
+[02:46] The world is real 3D geometry,
+[02:48] traced with black ink outlines like a comic book.
+[02:51] The colors are heavily saturated.
+[02:53] Warm highlights, cool blue shadows.
+[02:55] And the lighting follows the story.
+[02:57] Warm and bright while it sets things up,
+[02:58] then a deep night blue right as the explanation begins.
+[03:02] And the camera almost never cuts.
+[03:04] 12 of the 20 have one hard cut or none at all.
+[03:06] Instead, the camera physically travels into the next moment.
+[03:10] Third, and this is the real secret,
+[03:12] how Claude analyzed all of it.
+[03:14] It didn't just eyeball it,
+[03:15] it wrote its own measuring tool.
+[03:17] Every two seconds of video became one contact sheet.
+[03:20] 60 frames on a single image, 549 of them.
+[03:23] Then it tracked the camera with phase correlation,
+[03:26] measuring how far the image shifts frame by frame.
+[03:29] It flagged every hard cut.
+[03:30] And it measured the brightness, the contrast,
+[03:32] and the saturation of every short.
+[03:34] That's how it found that in about 80% of the frames,
+[03:37] the camera is almost perfectly still, just tiny drifts.
+[03:41] So here's the tip.
+[03:42] Don't ask Claude what it thinks of a video.
+[03:44] Make it measure.
+[03:45] You can't recreate an opinion,
+[03:46] you can recreate a number.
+[03:48] So now I had the whole blueprint.
+[03:50] Now, the story.
+[03:51] We made the same type of short, but with our own story.
+[03:54] Same lighting, same camera, same cuts,
+[03:57] same script formula, just our own characters.
+[04:00] My first topic was why time seems to slow down
+[04:03] when you're in danger?
+[04:04] But while Claude studied the 20,
+[04:06] it noticed one of them already covered
+[04:07] the exact same experiment with 5.7 million views.
+[04:11] So we threw it out and picked a new story.
+[04:14] One the channel had never told.
+[04:16] 1831, 74 soldiers march across an iron bridge,
+[04:19] all in step, and one end of the bridge
+[04:21] drops into the river.
+[04:23] Before writing a single word, Claude checked every fact.
+[04:26] The date, the number of soldiers,
+[04:28] even how deep the river was, two feet.
+[04:30] And that turned into the best joke in the whole short.
+[04:33] Luckily, the river was only two feet deep.
+[04:36] Unluckily, the river was only two feet deep.
+[04:39] Then it wrote the script with the exact formula
+[04:42] from the 20, a paradox in the very first line.
+[04:45] 74 soldiers knocked down an iron bridge
+[04:48] just by walking across it.
+[04:50] Then it builds up, then you see, then the twist.
+[04:53] After that, Claude started building.
+[04:55] At first, it used blender, same as my very first test.
+[04:59] Before any of this, I asked Claude
+[05:01] for a quick five second test, just to see the look.
+[05:03] Claude designed its own character, a little courier.
+[05:06] It grabbed free 3D buildings, made flat cartoon clouds,
+[05:10] and matched the camera timing from the channel's frames.
+[05:12] There was just one problem.
+[05:14] On the third camera push,
+[05:15] the camera flew right past the character.
+[05:17] So for the bridge, Claude started in blender again.
+[05:20] It tested the ink lines there,
+[05:21] and drew the whole cast in code.
+[05:23] Soldiers, an officer, people from the town,
+[05:26] a kid, and a parent.
+[05:27] Then I had a hunch.
+[05:29] Maybe these shorts are made with 3JS.
+[05:31] That's 3D built with code right in the browser.
+[05:34] Claude checked the frames, flat characters,
+[05:36] standing in a real 3D world.
+[05:38] 3JS can do exactly that.
+[05:40] So it moved everything over,
+[05:42] and Remotion turns it into a video, frame by frame.
+[05:45] Then it built the world.
+[05:47] 37 free 3D models.
+[05:49] Trees, rocks, flowers, market stalls, a cart, even a windmill.
+[05:53] And every texture, the grass, the cobblestones,
+[05:56] the roofs, the water, was painted by code.
+[05:59] The characters got 14 different faces.
+[06:01] Laughing, whistling, nervous, shocked.
+[06:04] Then the bridge.
+[06:05] Two towers, iron chains, and a deck five meters wide.
+[06:09] 74 soldiers march across it, four side by side.
+[06:12] Every step makes it bounce.
+[06:14] And the bounce keeps growing until it snaps.
+[06:17] For the ink lines, Claude wrote its own effect.
+[06:19] It finds the edges in the 3D world
+[06:21] and draws a black line on them.
+[06:22] About an hour after the switch,
+[06:24] all 15 shots were working, 2,025 frames.
+[06:28] But before rendering any video,
+[06:29] Claude checked still frames.
+[06:31] Good thing it did.
+[06:32] In three shots, the camera was stuck inside a house.
+[06:35] The trees were teal,
+[06:36] and a chain was right in front of everyone's faces.
+[06:39] While Claude was fixing that,
+[06:40] I put one of our frames next to the original,
+[06:42] and it looked cheap.
+[06:44] Here's what I told Claude.
+[06:45] The original is colorful, high contrast.
+[06:48] It looks premium.
+[06:49] Ours looks dull.
+[06:51] So go analyze it, frame by frame.
+[06:53] Take your time, use 10 agents if you have to.
+[06:56] Just make it as close as you possibly can.
+[06:58] And Claude agreed.
+[06:59] Ours looked cheap.
+[07:01] Then it broke down exactly why.
+[07:02] The original has black ink lines on the whole 3D world.
+[07:06] Ours had almost none.
+[07:07] Their colors are bold,
+[07:09] with long blue shadows and deep darks.
+[07:11] Ours were pastel and flat.
+[07:13] Their wood and stone look hand-painted.
+[07:15] You can see the grain
+[07:16] and the dark gaps between the planks.
+[07:18] Ours were plain.
+[07:19] Their backgrounds are blurry,
+[07:21] so your eye goes straight to the character.
+[07:23] Ours were mostly sharp.
+[07:24] And the characters,
+[07:25] theirs have egg-shaped heads and thin little limbs.
+[07:28] Ours had perfect circle heads and chunky bodies.
+[07:31] They looked like clip art pasted on top.
+[07:33] And this is where it gets interesting.
+[07:35] I asked for 10 agents.
+[07:37] Claude used 12.
+[07:38] And it didn't just throw them at the problem.
+[07:40] It built a team.
+[07:41] Seven agents to study the gap.
+[07:43] One for color, one for the ink lines,
+[07:45] one for light and shadows,
+[07:47] one for textures,
+[07:48] one for the characters,
+[07:49] one for depth and framing,
+[07:51] and one for motion,
+[07:52] the camera and the characters.
+[07:54] Each one put the original frames next to ours
+[07:56] and measured the difference.
+[07:58] No guessing, real numbers.
+[07:59] An eighth agent worked on the sound.
+[08:01] Then four more agents to rebuild everything.
+[08:04] One for the camera, one for the world,
+[08:06] one for the characters and one for the final look.
+[08:09] But here's the problem.
+[08:10] Four agents working on the same project
+[08:12] can break each other's work.
+[08:13] So Claude gave each one its own copy of the project
+[08:17] and each agent owned its own files.
+[08:19] Nobody else could touch them.
+[08:21] When they were done,
+[08:22] Claude merged everything back,
+[08:23] file by file.
+[08:24] So here's the tip.
+[08:25] When you use a lot of agents,
+[08:27] don't just split the jobs, split the files.
+[08:30] Then I gave Claude 10 hours.
+[08:32] 10 hours to learn this style
+[08:34] and make the finished video.
+[08:35] Here's what the seven agents found.
+[08:37] First, the ink lines.
+[08:39] The original has black lines
+[08:40] on almost three out of four edges.
+[08:42] On ours, the agent found zero.
+[08:44] The ink effect was there,
+[08:46] but the blur effect ran in the same step
+[08:48] and wiped it out.
+[08:49] And the blur itself,
+[08:50] it was so weak, you couldn't see it anywhere.
+[08:52] Next, the camera.
+[08:53] Ours snapped from one spot to the next in three frames.
+[08:57] The original glides over about 23 frames.
+[09:00] Slow in, slow out.
+[09:01] Then the color.
+[09:02] The original has no pure black anywhere.
+[09:05] Ours went almost black.
+[09:06] And at sunset, their shadows are purple.
+[09:09] Ours were brown.
+[09:10] And the characters.
+[09:11] Their bodies are three and a half heads tall.
+[09:13] Ours were under three.
+[09:14] And our arms and legs were five times too thick.
+[09:17] But the agents also found something I didn't expect.
+[09:20] Some of our own notes were wrong.
+[09:22] Remember the egg-shaped heads?
+[09:23] The agent measured 38 of them.
+[09:25] Their heads are actually rounder than ours.
+[09:27] Ours were the egg-shaped ones.
+[09:29] And remember the measuring tool from the start?
+[09:31] It said the camera is almost still 80% of the time.
+[09:34] It's not.
+[09:35] The camera is moving in 65% of the frames,
+[09:37] slowly pushing in.
+[09:39] The tool just couldn't see moves that slow.
+[09:41] And this is exactly the part other tutorials skip.
+[09:44] I found only two other tutorials on this style.
+[09:47] One sells it inside an app.
+[09:49] $67 a month.
+[09:50] Or $97 for everything.
+[09:53] The other one gives you a few prompts.
+[09:55] And it says,
+[09:56] your first results might not look as clean.
+[09:58] So here's how you can get mine.
+[10:00] Everything from this video,
+[10:01] every rule and every fix,
+[10:03] I save as one skill for Claude.
+[10:05] And I'm giving it away,
+[10:06] fully free on my GitHub.
+[10:08] You get the whole repository
+[10:09] with 5,000 reference images.
+[10:12] The link is in the description.
+[10:13] So you don't have to do anything.
+[10:15] Just install it and start making videos.
+[10:17] Everything is already set up.
+[10:18] So the output should be as polished as it gets.
+[10:21] And I'm going to keep uploading new things there.
+[10:23] I'll keep updating it and making it better.
+[10:26] And you get all of that for free.
+[10:27] And here's one more thing.
+[10:29] I'm making a video on it tomorrow.
+[10:30] This realistic 3D video.
+[10:32] As you can see, I made it.
+[10:34] That's my name on it.
+[10:35] Here's something wild.
+[10:36] Pull every blood vessel out of your body
+[10:39] and lay them in one straight line.
+[10:41] Most people guess it would reach across a football field.
+[10:43] Not even close.
+[10:45] Your body hides billions of microscopic tubes
+[10:48] branching through every muscle,
+[10:49] every organ, even your bones.
+[10:51] Lay them all out
+[10:52] and the line would leave your city
+[10:54] across entire countries,
+[10:55] stretch over oceans and keep on going.
+[10:58] Scientists estimate about 100,000 kilometers.
+[11:01] That's enough to wrap around the whole earth
+[11:03] roughly two and a half times.
+[11:05] Just so you know,
+[11:06] I've never seen anything like this made with AI.
+[11:08] Other people have made this style with Claude,
+[11:10] but not like this.
+[11:12] I looked and I couldn't find a single tutorial
+[11:14] that gets this close.
+[11:16] If this showed up on your feed,
+[11:17] you'd never guess AI touched it.
+[11:19] In that video, I'll show you exactly how I made it.
+[11:22] How to animate a realistic face
+[11:23] with an open source AI model.
+[11:25] How to rig the character for free on your own computer.
+[11:28] How to make the world look real.
+[11:30] How to cut the render from seven and a half hours
+[11:32] to one hour.
+[11:33] And how to render it smaller than upscale it
+[11:36] so it renders as fast as it gets.
+[11:38] You can find the skill and everything in the description.
+[11:40] The link to the GitHub repository is right there.
+[11:43] Completely free.
+[11:44] That's all for today.
+[11:45] Make sure to subscribe and like.
+[11:47] And with this type of workflow,
+[11:48] you can pretty much clone any style.
+[11:50] Bye.

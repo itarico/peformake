@@ -1,0 +1,25 @@
+idioma: pt
+[00:00] diga a Deus a velha forma de criar legendas como essas aqui manualmente.
+[00:04] A mais ou menos dois anos atrás eu modelei esse formato de legenda que você está vendo aqui
+[00:08] lá da gringa. Eu fiz diversos tutoriais, tanto aqui no meu Instagram quanto lá no meu canal no YouTube.
+[00:13] Mas é importante ressaltar o quanto que esse método hoje está ultrapassado.
+[00:16] Isso porque hoje eu uso uma ferramenta que cria esse formato de legenda
+[00:20] com apenas um clique dentro do After Effects.
+[00:22] Pois é, todas as legendas que você viu até agora e que você vai ver até o final desse vídeo
+[00:26] foram geradas com apenas um clique dentro do After Effects.
+[00:30] E não só isso, esses ZunWin e ZunOut também foram gerados com apenas um clique dentro do After Effects.
+[00:35] E foi por isso que eu desenvolvi o Essential Captions, que é basicamente um plugin dentro do After Effects
+[00:39] onde você arrasta um arquivo SRT para dentro desse plugin, configura as legendas ao seu gosto,
+[00:45] salva esse padrão de legenda para você não precisar repetir esse processo todas as vezes que você for fazer
+[00:49] e clique em Gerar Legendas.
+[00:51] E como mágica, as legendas vão sendo geradas na sua timeline.
+[00:53] E pra gerar esses ZunWins e ZunOut automaticos é a mesma coisa.
+[00:57] Você vai configurar o padrão por frase, vai usar algumas configurações ali ao seu gosto,
+[01:01] como eu estou usando aqui, clique em Aplicar e basicamente já está pronto.
+[01:04] Então você tem noção esse é um processo que em algumas vezes eu já demorei mais de uma hora
+[01:07] pra conseguir concluir dependendo do tamanho do vídeo.
+[01:09] Sem contar todas as outras coisas que você tem que fazer num vídeo,
+[01:12] esse é um processo manual muito chato que honestamente é muito bom ser automatizado dessa forma.
+[01:17] Aí é claro, a gente também está trabalhando a versão desse plugin para Premiere
+[01:19] caso você prefira concentrar o seu fluxo de trabalho dentro dele.
+[01:22] É só você comentar o que era aqui embaixo que eu te mando o link dele no direct pra você testar.

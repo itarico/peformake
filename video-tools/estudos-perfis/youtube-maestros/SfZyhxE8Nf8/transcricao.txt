@@ -1,0 +1,424 @@
+idioma: pt
+[00:00] Nós criamos uma máquina de produção de conteúdo, uma fábrica que vai desde a escolha do vídeo até a postagem nas suas redes sociais.
+[00:07] E todo esse processo envolve 0% de interferência humana.
+[00:12] Ou seja, hoje mesmo você pode plugar esse sistema dentro das suas contas, das suas redes sociais
+[00:17] e elas vão começar a crescer no piloto automático e gerar vendas no piloto automático, que é o que aconteceu conosco.
+[00:23] Pela primeira vez na história a gente vai disponibilizar esse agente pra vocês.
+[00:27] Foram muitos e muitos e muitos pedidos e muita insistência do pessoal da comunidade.
+[00:32] Então a gente vai disponibilizar esse agente.
+[00:35] Só pra você entender por que a nossa resistência em fazer isso, hoje a maior parte do faturamento da empresa vende implementações.
+[00:42] E muitas dessas implementações hoje giram em torno das redes sociais, implementações de fluxos automatizados de trabalho.
+[00:50] Então durante muito tempo nós estávamos relutantes em compartilhar isso com vocês.
+[00:55] Porque se de repente um agente que nós cobramos de 50 ou 80 mil reais pra implementar está disponível,
+[01:01] primeiro a gente queria muitos concorrentes e segundo a empresa pode ir lá e adaptar pra o seu próprio contexto sem precisar fazer esse investimento.
+[01:11] No final do vídeo eu vou explicar por que nós decidimos compartilhar esse agente,
+[01:15] mas antes eu vou te mostrar exatamente os resultados que ele gerou pra gente.
+[01:19] Alguns meses atrás nós decidimos iniciar esse experimento aqui, o Maestros da IA Hub.
+[01:24] E a ideia era simplesmente ver se uma conta no piloto automático, se uma conta de Instagram totalmente automatizada
+[01:31] poderia ganhar alguma atração, poderia gerar novos seguidores e eventualmente novos clientes.
+[01:35] A premissa era muito simples, se nós conseguíssemos criar uma conta de Instagram
+[01:39] que de fato ganhasse seguidores ao longo do tempo, de maneira 100% automatizada,
+[01:43] a escala não tem mais limites.
+[01:46] Isso porque um pipeline 100% automatizado do começo ao fim pode gerar 100 vídeos por dia.
+[01:53] Pode gerar conteúdo não apenas pra uma conta, mas pra 10 contas, 50 contas,
+[01:57] porque não 100 contas de Instagram, já que o trabalho humano é basicamente o mesmo.
+[02:01] Eu vou te mostrar alguns vídeos que ainda estão na nossa conta de Instagram pra você ver como essa evolução foi acontecendo.
+[02:06] Esse foi um dos primeiros vídeos postados.
+[02:08] Você nota que até o enquadramento, até o crop ali está totalmente zoado.
+[02:14] Tem uma faixa preta em cima, uma preta embaixo, fora de formatação,
+[02:18] as coisas nem fazem sentido isso porque você nem está ouvindo áudio,
+[02:21] mas não tem nem legenda esse vídeo feito com uma animaçãozinha do remote sem vergonha
+[02:27] e já ganhou cinco likes.
+[02:29] O vídeo completamente...
+[02:32] Assim...
+[02:33] Mal feito, sendo sincero.
+[02:35] Aqui a gente já viu uma melhora significativa.
+[02:38] Uma headline, um screenshot com um scroll down,
+[02:42] você vai descendo numa página, a legenda já está num lugar bacana.
+[02:46] Aí outro screenshot.
+[02:47] Mas você vê que tem coisas que estão fora do enquadramento.
+[02:51] As animações ainda estão com aquela cara de AI Slop.
+[02:54] O Motion está com aquela cara de AI Slop.
+[02:57] E pra quem não sabe, AI Slop é uma coisa que está na cara que foi feito por IA.
+[03:01] Na era dos sites com IA, era aquele site com aqueles cardezinhos bem toscos.
+[03:08] Aqui no começo era uma grande evolução.
+[03:10] Depois de alguns meses, todo mundo já tinha visto tanto aquilo
+[03:12] que mais um site girado por IA de uma maneira preguiçosa não era nenhuma novidade.
+[03:17] Isso é uma tendência super natural.
+[03:19] Até pro texto, você tem um texto que é meio AI Slop,
+[03:21] aquele texto com muita travesção, tem alguns símbolos,
+[03:24] algumas frases específicas que se repetem muito quando você escreve coisas com IA.
+[03:29] E quando a AI começou a ser capaz de fazer Motion,
+[03:31] ou seja, esses elementos na tela, essas animaçõeszinhas,
+[03:35] todo mundo começou a fazer do mesmo jeito.
+[03:37] E aí ficou com aquela cara de feito por IA.
+[03:39] Os ícones são os mesmos, as animações são as mesmas,
+[03:42] é uma coisa muito repetitiva.
+[03:43] E tudo bem, a primeira vez que você vê, você acha ótimo,
+[03:46] a primeira vez que você faz, você acha incrível,
+[03:47] mas depois começa a ficar repetitivo.
+[03:49] Só que veja uma coisa interessante.
+[03:51] Esse vídeo foi um dos primeiros vídeos postados nessa conta
+[03:54] com essa nova ideia de conteúdo 100% automatizado.
+[03:58] E ele já bateu 162 comentários, se você olha aqui do lado.
+[04:02] 4 pessoas repostaram e 66 pessoas compartilharam aqui, né?
+[04:08] 145 curtidas e usa essas animações totalmente previsíveis,
+[04:14] que talvez na época que a gente postou não fosse tão previsível.
+[04:17] A gente, 4 dias, não, já era bem fracinha, pra época.
+[04:22] Tinha coisas muito mais legais já acontecendo,
+[04:24] isso aqui era mais um teste, mesmo assim ele foi bem.
+[04:26] As animaçõeszinhas podem ser legais, pra quem nunca viu, podem.
+[04:29] Mas depois que você vê o quinto vídeo com esse tipo de animações,
+[04:31] eu começo a falar de novo essa animação preguiçosa.
+[04:34] E aí eu vou rolando pra cima aos poucos pra você ver
+[04:37] o tipo de engajamento e visibilidade que esses vídeos pegaram logo no começo.
+[04:40] Isso aqui pouquíssimo, né? Dois comentários.
+[04:42] Mas olha esse aqui, 459 comentários.
+[04:46] 150 comentários, 47 comentários.
+[04:50] 42 comentários, 100 comentários.
+[04:52] Aqui, 1.243 comentários.
+[04:56] Mais de 800 likes, mais de 500 pessoas compartilhando.
+[05:00] E aqui, nesse que foi muito bem, a gente já começou a aplicar
+[05:03] um motion mais interessante.
+[05:05] Note que logo no começo, o jeito que a redline aparece
+[05:08] já é um pouco diferente entre as duas telas.
+[05:10] Note que já tem um zoom.
+[05:12] Note que já tem essa sincronia entre o que tá sendo dito e a legenda.
+[05:15] Note que tem agora figuras muito diferentes.
+[05:19] Esse é um tipo de motion em que cada imagem é gerada,
+[05:23] especificamente pra o que está sendo dito.
+[05:25] Tem zoom-ins, zoom-out, cortes, o cadeado.
+[05:29] Esse cadeado foi gerado especificamente pra esse motion.
+[05:33] E aí, esse dinamismo entre uma imagem, um motion, uma legenda,
+[05:38] split de tela agora em cima, a gente tá vendo motion,
+[05:41] embaixo tá vendo avatar.
+[05:42] Agora, tela inteira com o mesmo elemento já utilizado anteriormente.
+[05:45] Agora, de novo, fundo de uma cor só com legenda em sincronia.
+[05:49] E aí, agora, volta o avatar, tela cheia,
+[05:50] depois o avatar split com um screenshot em cima.
+[05:53] E agora, o motion, esse aqui não é bem o motion,
+[05:55] mas uma imagem estática.
+[05:57] Depois, o motion em cima, split no motion.
+[05:59] Aí, depois, avatar com legenda dentro do background,
+[06:02] dentro do cenário, sem precisar fazer split,
+[06:04] e nem legenda embaixo, e outro motion,
+[06:06] vale que bacana.
+[06:07] E aí, sincronia, e aí, de novo, esse efeito do avatar
+[06:11] com a legenda em cima e aí no final, salvo o vídeo.
+[06:14] E muitas vezes a gente pede pra comentar uma palavra-chave
+[06:17] também pra receber o link.
+[06:18] E aí, quem comenta a palavra-chave pra receber esse link
+[06:21] vai ter também uma automação no Instagram
+[06:24] que vai não só enviar o link do repositório,
+[06:27] o recurso prometido no vídeo,
+[06:29] mas também vai convidar pra comunidade,
+[06:31] vai iniciar um diálogo,
+[06:33] e isso faz com que a rede social cresça muito mais rápido.
+[06:37] E aí, só pra te mostrar como funciona, né?
+[06:39] A gente tem aqui o vídeo inteiro,
+[06:40] e aí no final tem um CTA pra uma palavra-chave, né?
+[06:46] Então, comenta cirurgia.
+[06:51] Então, cirurgia.
+[06:55] Aqui acontece.
+[06:56] Eu vou receber essa mensagem.
+[06:59] Pronto, eu recebi a mensagem aqui, vou clicar.
+[07:02] E eu falo que eu quero receber.
+[07:05] Se eu já estou seguindo,
+[07:07] ele vai me enviar o recurso e já vai chamar pra comunidade.
+[07:10] Se eu não estiver seguindo, então vou deixar de seguir,
+[07:14] eu vou clicar que eu quero receber.
+[07:16] E olha que bacana.
+[07:18] Aí ele vai entender que eu não estou seguindo ainda
+[07:22] e vai pedir pra visitar o perfil
+[07:24] ou pra eu falar que eu estou seguindo.
+[07:25] Eu vou tentar enganar ele, vou falar que eu estou seguindo
+[07:27] e ver se ele consegue identificar.
+[07:28] E ele identifica que a gente ainda não está seguindo.
+[07:31] Então a gente precisa ir lá, seguir.
+[07:33] Aí eu clico e estou seguindo,
+[07:34] e agora ele envia o recurso prometido.
+[07:37] Então você vai aumentando o número de seguidores
+[07:40] e abrindo seus posts, viralizam.
+[07:42] E dá uma olhada nesse resultado.
+[07:43] Aqui, ó, painel profissional e aqui embaixo,
+[07:46] 925 mil visualizações nos últimos 30 dias.
+[07:51] No piloto automático.
+[07:53] Você está entendendo a loucura que é isso aqui?
+[07:55] A gente literalmente não precisou fazer nenhum esforço
+[07:58] pra ter quase um milhão de visualizações.
+[08:00] E se a gente vem aqui nos vídeos mais vistos
+[08:02] dos últimos 30 dias, ó, vou clicar aqui,
+[08:05] esse vídeo teve mais de 100 mil visualizações.
+[08:10] 2.5 mil compartilhamentos, 4 mil saves,
+[08:14] galera, salvando o vídeo,
+[08:16] centrando a pessoas que repostaram o vídeo,
+[08:19] que realmente gostaram tanto que compartilharam o próprio perfil
+[08:22] e 3.3 mil comentários.
+[08:25] Vou descendo aqui devagar pra quem gosta de canalizando as métricas.
+[08:31] Não sei realmente se são métricas excelentes ou não, tá?
+[08:35] Mas é um vídeo que obteve 100 mil visualizações
+[08:37] com zero esforço, zero calorias nesse post.
+[08:42] É claro que existe um custo, tá, que é de ir às plataformas,
+[08:45] a gente vai chegar lá,
+[08:46] mas eu queria só te mostrar que o trabalho humano aqui é zero.
+[08:50] E uma coisa muito maluca é que esse Instagram
+[08:52] tá superando em visualizações
+[08:54] o nosso Instagram principal que tem 110 mil seguidores.
+[08:58] E nós temos um traqueamento muito bacana, muito bom,
+[09:01] a gente sabe exatamente de onde as pessoas que compram
+[09:03] nossos produtos vêm.
+[09:04] A gente herdou isso do Trafego Pago,
+[09:06] né, nossa primeira empresa foi completamente escalada
+[09:08] através de Trafego Pago,
+[09:10] a gente gastava centenas de milhares de reais por mês,
+[09:13] já chegou a gastar mais de 600 mil em um mês só.
+[09:16] Então a gente tem uma veia forte de traqueamento.
+[09:19] E nesse Instagram que roda no piloto automático,
+[09:21] a gente gera vendas todos os dias,
+[09:24] às vezes muito mais de uma venda por dia,
+[09:25] mas pelo menos uma por dia em média na semana,
+[09:29] já fechamos clientes de mentoria, de clube de negócios
+[09:32] e até de implementação que vieram através dessa conta de Instagram.
+[09:36] E o absurdo disso é que o nosso trabalho
+[09:38] para adquirir esses clientes,
+[09:40] para trazer essas pessoas para o nosso aconselstemo,
+[09:42] foi literalmente zero.
+[09:44] Você tá entendendo o que isso significa?
+[09:46] É muito louco.
+[09:47] Assim, no começo a gente não achava que ia dar tão certo.
+[09:50] E não é que esteja dando nossa, milhões de seguidores,
+[09:52] a gente vai bater 20 poucos mil seguidores daqui a pouco 30,
+[09:56] não é uma coisa extraordinária,
+[09:58] mas só o fato de não exigir trabalho nenhum
+[10:00] e ter um resultado melhor do que muita gente que,
+[10:02] literalmente, acorda todo dia pensando em qual vídeo vai postar,
+[10:05] é uma coisa extraordinária.
+[10:07] Agora vamos falar um pouco de custo, tá?
+[10:09] Eu não vou falar um número específico,
+[10:10] mas eu vou te mostrar as plataformas que a gente tá usando.
+[10:13] Para fazer a pesquisa de conteúdo,
+[10:15] para ver o que tá viralizando no Instagram,
+[10:17] TikTok, Twitter, LinkedIn, etc.,
+[10:19] a gente usa o EpiFi,
+[10:21] que é basicamente um detetive online
+[10:23] que vai poder buscar nas redes sociais muito bem
+[10:25] quais são os melhores vídeos do seu nicho.
+[10:27] Para gerar nossos avatares, os nossos clones de A,
+[10:30] a gente usa o Ray-GEN
+[10:32] e para gerar os áudios, a gente usa o 11 Labs.
+[10:35] Então se você gera direto no Ray-GEN, a voz fica ruim.
+[10:38] Então o 11 Labs ele conserta isso,
+[10:40] faz com que a voz fique melhor.
+[10:41] E aí você vai ter que decidir entre usar o Ray-GEN via API
+[10:45] ou via browser.
+[10:46] Você tem alguns planos do Ray-GEN que via browser
+[10:48] não vão cobrar, mesmo que você gere muitos vídeos por dia.
+[10:51] Então você tem uma escala maior com uma margem maior também,
+[10:55] sem tanto custo.
+[10:56] E via API é mais rápida, mas eficiente,
+[10:58] mas tem um custo adicional.
+[11:00] Eu acho que em breve eles vão mudar isso, tá?
+[11:02] Porque muita gente tem usado browser
+[11:05] como se fosse API hoje em dia,
+[11:07] porque tá muito fácil tomar dos abrowser.
+[11:09] Então não faz tanta diferença se você souber como faz.
+[11:13] E se em uma opção você tem custo zero,
+[11:15] em outra você tem que pagar por geração de vídeo,
+[11:17] custo zero é melhor.
+[11:18] Só que obviamente tem o custo da mensalidade do Ray-GEN e do 11 Labs.
+[11:22] Pra essa automação que a pessoa comenta a palavra-chave
+[11:25] e você envia no Direct um recurso, um link,
+[11:28] pede pra seguir, etc.,
+[11:30] a gente usa o Manichat, não precisaria, tá?
+[11:32] Existem soluções, já tem algumas soluções locais
+[11:35] pra serem uma opção ao Manichat,
+[11:38] mas a gente gosta de usar o Manichat
+[11:40] porque a gente usa pra WhatsApp,
+[11:41] usa pra Instagram, tem tudo no mesmo ambiente.
+[11:44] Pra aprovar tem plate de WhatsApp, é muito rápido.
+[11:46] Então a gente já assina o Manichat de qualquer maneira
+[11:49] pra gente colocar as automações no Manichat,
+[11:51] não é nenhum problema.
+[11:52] A única desvantagem do Manichat
+[11:53] é que você não consegue criar automações
+[11:57] com uma facilidade tão grande.
+[11:58] A gente até tem agentes que criam automações pro Manichat,
+[12:00] mas o resultado não é espetacular,
+[12:03] a gente em alguns momentos obteve resultados excepcionais,
+[12:06] mas com coisas muito complexas ele acaba falhando,
+[12:09] não é como o N8N, por exemplo,
+[12:11] que você consegue criar uma automação inteira
+[12:14] e depois importar pro N8N,
+[12:16] que é o mundo ideal quando você vai usar esse modo agêntico
+[12:20] no seu terminal ou no seu aplicativo do Code do Codex,
+[12:23] você cria e depois faz o upload
+[12:25] porque ele consegue controlar tudo que está acontecendo
+[12:28] de uma maneira menos vagarosa, vamos dizer assim,
+[12:31] mas acho que na verdade mais confiável.
+[12:33] Quando você faz as coisas via browser,
+[12:35] existe sempre uma margem de erro maior.
+[12:37] E aí pra postar nas redes sociais,
+[12:39] você pode fazer via browser também,
+[12:41] você pode ter ali um perfil persistente do Chrome,
+[12:45] você pode ter ali um Q, salvo,
+[12:47] dá pra postar manualmente, dá.
+[12:49] A gente gosta de usar uma ferramenta chamada Metricul,
+[12:52] tem outras também, tem uma chamada Blotator,
+[12:54] tem várias opções que postam nas redes sociais via API
+[12:57] pra você de uma maneira muito fácil,
+[12:59] simples e a gente não nota uma queda de performance.
+[13:02] E aí obviamente tem o preço da IA que você vai pagar,
+[13:04] mas pode usar o Codex, pode usar o Cloud,
+[13:07] enfim, o plano Pro,
+[13:09] o plano de 100 reais,
+[13:11] talvez não seja suficiente pra rodar todo dia,
+[13:13] milhão de vezes por dia, talvez não.
+[13:15] O plano Max ele vai,
+[13:17] pelo menos no Codex, 20 vezes Max,
+[13:19] ele é mais o que o suficiente pra rodar esse pipeline,
+[13:21] pelo menos umas 10 vezes por dia,
+[13:23] dependendo de o que você vai fazer até mais.
+[13:25] Mas enfim, essas são as plataformas,
+[13:27] não é um custo tão baixo,
+[13:29] você tem ali umas 4, 5, 6 plataformas,
+[13:31] algumas são opcionais, outras menos opcionais,
+[13:35] mas é um pipeline infinito de produção de conteúdo.
+[13:39] E aí você pode perguntar bom,
+[13:40] mas e gerar esses b-rolls, essas imagens?
+[13:43] Hoje em dia, girar imagens com IA é muito barato,
+[13:46] tem também alguns planos e algumas plataformas
+[13:48] que se você vai lá e compra o plano anual,
+[13:50] eles já liberam geração de imagens limitadas,
+[13:53] então a geração de imagens hoje é uma coisa
+[13:55] que não vai ser extremamente custosa.
+[13:59] Então gerar 10 b-rolls por vídeo, 10 vídeos por dia,
+[14:03] dependendo do modelo que você tá usando,
+[14:05] não vai ser um custo significativo.
+[14:07] E justamente por isso que a gente optou pelo motion,
+[14:10] porque o motion é muito mais escalável,
+[14:12] eu gero várias imagens, 5, 6 imagens,
+[14:14] coloco elas em movimento,
+[14:16] as imagens elas condizem com aquilo que eu tô dizendo no texto,
+[14:20] e elas aparecem na tela de uma maneira que faz muito sentido
+[14:24] pra representar visualmente o que foi dito.
+[14:26] O custo disso em comparação a um vídeo gerado por IA hoje
+[14:30] com os melhores modelos,
+[14:32] mesmo com os modelos inferiores, é incomparável,
+[14:35] mesmo um modelo mais barato que você vai encontrar
+[14:37] pra geração de vídeo vai ter um valor muito elevado
+[14:40] em comparação a essa estratégia de imagens mais movimento
+[14:44] pra fazer um b-roll, mas as imagens são personalizadas,
+[14:47] você pode colocar texto nas imagens,
+[14:49] você pode colocar exatamente o objeto sendo descrito
+[14:52] ali no texto do vídeo, é um negócio incrível.
+[14:55] Não é a coisa mais evolucionária do mundo
+[14:57] em termos de estou vendo uma coisa sensacional,
+[15:00] uma produção incrível, mas é muito mais escalável,
+[15:02] por isso a gente optou por fazer isso nesse pipeline.
+[15:05] Eu aspecto que eu acho mais interessante,
+[15:07] que foi o mais trabalhoso de todos, foi acertar a mão na edição.
+[15:11] Primeiro a gente criou um pipeline por camadas,
+[15:14] então você vai abrir sempre desse jeito.
+[15:17] E aí a segunda camada vai ser sempre desse outro jeito.
+[15:19] Então, por exemplo, eu quero que comece sempre com um split de tela
+[15:22] e uma redline no começo, isso foi mantido, até agora funciona.
+[15:25] Só que eu quero que na parte de cima do split tenha um screenshot,
+[15:29] uma captura de tela com um scroll pra gerar um movimento
+[15:32] e também mostrar um recurso, caso a gente esteja falando de um recurso.
+[15:35] Beleza, aí cortou pra segunda cena,
+[15:37] e aí a gente tá falando de 2, 3 segundos no máximo, tá?
+[15:40] Chegou na segunda cena,
+[15:41] o que que pode ser?
+[15:41] Avatar inteiro falando direto com a câmera,
+[15:44] no frame todo, ocupando o frame todo com a legenda embaixo.
+[15:47] Depois do terceiro, aí pode ser fundo de uma cor só
+[15:51] com as letras aparecendo em sincronia
+[15:53] exata com aquilo que eu estou dizendo.
+[15:55] E aí a primeira versão desse pipeline era extremamente rígida.
+[15:58] Todos os vídeos seguiam esse mesmo formatinho
+[16:02] e esse formato se repetia.
+[16:03] A gente criou umas oito variações,
+[16:05] split com red, motion em cima, motion total.
+[16:09] E aí era sempre aquela ordem específica
+[16:12] com 2, 3, 4 segundos de flexibilidade,
+[16:15] mas sempre aquela ordem que ia se repetindo.
+[16:17] Depois a gente decidiu fazer uma coisa mais inteligente
+[16:21] que é deixar a IA decidir
+[16:24] qual dos formatos ela vai aplicar
+[16:26] em cada contexto do roteiro, em cada momento do roteiro.
+[16:30] Então, se eu estou falando uma frase de efeito,
+[16:32] aí ele vai usar aquele recurso de cor única no fundo
+[16:36] e letras grandes aparecendo sem avatar, sem motion, sem nada,
+[16:40] porque é uma frase de efeito.
+[16:42] Se eu estou falando de um site, de um recurso, de um repositório,
+[16:45] aí ele corta para o screenshot do repositório
+[16:48] fazendo o rolamento para baixo.
+[16:50] Se é um conceito um pouco mais complexo,
+[16:52] um fluxo que eu estou explicando,
+[16:53] aí ele vai para o motion.
+[16:55] Então, uma das viradas de chave interessantes
+[16:57] foi quando a gente deixou a IA escolher
+[17:00] onde ela colocaria cada um dos elementos do template.
+[17:03] Então, em vez de uma estrutura rígida, extremamente previsível
+[17:07] e que entregava um resultado mais ou menos
+[17:10] porque algumas coisas ficavam muito fora,
+[17:12] o que estava sendo dito e o que estava sendo mostrado,
+[17:14] ficavam muito esquisitos,
+[17:15] a gente decidiu optar por uma estrutura mais maleável,
+[17:19] mais flexível e, portanto, mais interessante de assistir.
+[17:23] Ah, também tem a questão das legendas,
+[17:25] que não é uma coisa difícil,
+[17:26] o capquete já vai ser só um século,
+[17:28] mas é legal você ter legendas e colocar essas legendas
+[17:31] no vídeo, no formato, na fonte da maneira que você quer
+[17:34] e poder personalizar isso infinitamente.
+[17:36] Tem a trilha sonora também,
+[17:38] que basicamente, o agente vai lá e escolhe uma das músicas,
+[17:40] a gente poderia ter investido muito mais tempo
+[17:42] na trilha sonora,
+[17:43] poderia ter colocado 20, 30, 50 músicas,
+[17:45] acho que tem quatro lá
+[17:46] e ele escolhe, randomicamente, cada uma das quatro.
+[17:49] A gente poderia ter criado uma descriçãozinha
+[17:51] de como é a música, etc.,
+[17:53] mas a gente estava mais envolvido na parte da edição
+[17:56] e as músicas funcionam meio para qualquer cenário.
+[17:59] E tem um efeito de um sonoro de transição,
+[18:01] toda vez que muda de um take pro outro,
+[18:02] faz um click com sua cima foto sendo tirada.
+[18:05] Eu ainda acho o volume um pouco alto,
+[18:07] uma coisa que a gente pode ir melhorando aos poucos,
+[18:09] mas é um agente que funciona muito bem
+[18:12] e que nos gera vendas todos os dias,
+[18:14] seguidores todos os dias
+[18:15] e agora está disponível pra vocês
+[18:17] da comunidade Maestros da EA.
+[18:19] Na aba agentes prontos da comunidade,
+[18:21] vocês podem procurar por Maestro Video Generator.
+[18:25] E aí vocês baixam, o repositório começa a usar a vontade,
+[18:28] vai ter um processo de setup
+[18:29] pra colocar as APIs, as ferramentas, etc.,
+[18:32] o seu nicho, o que você vai querer criar, etc.
+[18:35] Depois desse setup você já vai poder ter o seu próprio
+[18:38] pipeline de criação de conteúdo 100% automatizado.
+[18:41] E pra quem ainda não está na comunidade,
+[18:43] eu quero te fazer o convite.
+[18:44] Porque lá nós temos lives toda semana,
+[18:46] suporte técnico todos os dias,
+[18:48] cursos de codecs, codecodes, Hermes,
+[18:50] formação completa e inteligência artificial,
+[18:53] além de mais de 50 aplicativos exclusivos
+[18:56] e centenas de agentes, skills,
+[18:59] recursos, repositórios, recomendações,
+[19:02] além de toda a comunidade maravilhosa
+[19:04] que todos os dias compartilha,
+[19:06] conquistas, desafios, oportunidades de parceria,
+[19:09] vários aplicativos SaaS já foram criados dentro da comunidade,
+[19:13] então vai ser um prazer enorme receber você lá.
+[19:15] Então clique na descrição desse vídeo
+[19:17] pra entrar na comunidade.
+[19:19] E caso você tenha gostado desse vídeo
+[19:21] e queira receber mais recomendações de vídeos como esse,
+[19:23] você pode se inscrever no canal,
+[19:24] além de deixar no seu hype e o seu like.
+[19:27] Um abraço e até a próxima.

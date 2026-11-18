@@ -1,0 +1,20 @@
+idioma: en (1.00)
+[   0.0-   1.2] Look at this animation.
+[   1.2-   3.1] It feels cinematic, right?
+[   3.1-   5.2] Now it takes a simple photo and turns it
+[   5.2-   7.2] into a key part of a visual story.
+[   7.2-  10.1] But what if I told you this animation was generated
+[  10.1-  13.1] in just five minutes using a single prompt in Claude?
+[  13.1-  15.8] That means I don't need to know how to use After Effects
+[  15.8-  18.1] or any editing software for that matter
+[  18.1-  19.9] to create something like this.
+[  19.9-  22.6] So here's how you can recreate the same animation.
+[  22.6-  26.0] First, open Higgsild MCP to Claude using this link.
+[  26.0-  27.6] Second, download the skill
+[  27.6-  30.7] and I'll send it to you directly if you comment box below.
+[  30.7-  34.4] And third, add it to Claude and describe your animation idea.
+[  34.4-  35.3] And that's it.
+[  35.3-  36.7] You've got your first animation.
+[  36.7-  39.0] From there, you can change literally anything
+[  39.0-  40.7] with just another prompt.
+[  40.7-  41.6] And now...

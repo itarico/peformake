@@ -1,0 +1,20 @@
+idioma: pt
+[00:00] Você pode vender essa automação para uma clínica ontológica por até 3 mil reais.
+[00:04] E olha só como ela funciona. São 11 horas e 47 da noite
+[00:07] e uma paciente manda um áudio no WhatsApp da clínica.
+[00:10] Só que o consultório já está fechado.
+[00:11] Normalmente ela ficaria sem resposta
+[00:13] e provavelmente procuraria outro dentista.
+[00:15] Mas essa clínica tem um agente de inteligência artificial atendendo 24 horas.
+[00:20] Primeiro ele transcreve o áudio, entende o que a paciente precisa
+[00:23] e identifica que ela está procurando um atendimento urgente.
+[00:26] Depois consulta a agenda da dentista e oferece dois horários disponíveis.
+[00:30] A paciente escolhe 9 horas e 30 minutos.
+[00:32] O agente confirma a consulta, registra os dados e envia a localização da clínica.
+[00:36] Tudo isso em apenas 41 segundos.
+[00:39] E sabe o que é mais interessante?
+[00:40] Quando a dentista acorda, já tem 3 novas pacientes agendadas durante a madrugada.
+[00:44] E um dia antes de cada consulta,
+[00:46] a IA ainda envia um lembrete para reduzir as faltas.
+[00:49] Quer aprender a criar esse agente?
+[00:50] Comenta a agenda aqui embaixo que eu te mando o fluxo completo.

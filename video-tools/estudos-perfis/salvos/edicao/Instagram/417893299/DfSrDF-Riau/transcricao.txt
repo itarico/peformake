@@ -1,0 +1,4 @@
+idioma: en (0.98)
+[   0.0-   2.7] Wait, how are these words going behind my head?
+[   2.7-   6.8] It's tracking my face 10 times a second and it knows where all of Instagram's buttons are
+[   6.8-   9.2] so my captions never end up underneath them.

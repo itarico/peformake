@@ -1,0 +1,71 @@
+{
+ "id": "sFgPZZXwMMk",
+ "title": "Crie Carrosséis no Piloto Automático com Claude Code!",
+ "fulltitle": "Crie Carrosséis no Piloto Automático com Claude Code!",
+ "channel": "Maestros da IA",
+ "channel_id": "UCEojuEA0eCL267t_G_cc0Fg",
+ "channel_url": "https://www.youtube.com/channel/UCEojuEA0eCL267t_G_cc0Fg",
+ "uploader": "Maestros da IA",
+ "uploader_id": "@maestrosdaia",
+ "webpage_url": "https://www.youtube.com/watch?v=sFgPZZXwMMk",
+ "upload_date": "20261021",
+ "duration": 2434,
+ "duration_string": "40:34",
+ "view_count": 10269,
+ "like_count": 243,
+ "comment_count": 23,
+ "channel_follower_count": 118000,
+ "description": "Ⓜ Torne-se um Maestro da IA 👉 https://comunidade.maestrosdaia.com/?utm_source=youtubedescription&utm_medium=youtubedescription&utm_campaign=youtubedescription&utm_content=skill-carrossel-claude-code_raw167\n🆓 Prompts e Recursos Grátis em Nossa Comunidade Aberta 👉 https://invitecomunidadeaberta.maestrosdaia.com\n📊 IA Para Empresas 👉 https://porta.maestrosdaia.com/\n\nSkill de carrossel no Claude Code: crie do zero, com um único prompt, a skill que transforma um tema em carrossel com capa, roteiro, slides e legenda.\n\nNeste vídeo eu mostro, passo a passo, como criar uma skill de carrossel no Claude Code copiando e colando um prompt. Uma skill é uma pasta com um arquivo SKILL.md: no topo vão o nome e a descrição de quando ela deve ser usada, e o Claude abre esse manual sempre que você pede um carrossel ou digita barra e o nome dela. Assim você para de explicar tudo de novo a cada pedido e passa a ter um resultado previsível. A skill segue seis regras, da capa que para a rolagem ao CTA que pede um comentário com palavra-chave em vez de um \"me siga\", e trabalha em etapas que você aprova uma a uma: checagem de fatos, brief, cinco opções de capa, roteiro slide por slide e visual com checklist de revisão. A capa sai de um modelo de imagem, como OpenArt, Higgsfield ou fal.ai, e os slides de dentro saem em HTML, o que deixa cada carrossel mais barato de produzir. Antes do passo a passo, mostro os carrosséis que publicamos com essa mesma skill. No fim, treino o estilo visual com uma pasta de referências tiradas do Instagram e gero um carrossel completo sobre erros que fazem um anúncio no Instagram não vender, exportado em PNG, com a legenda pronta e um checklist para mandar na DM.\n\n📌 CAPÍTULOS\n0:00 Como criar uma skill de carrossel no Claude Code\n0:26 Por que usar uma skill em vez de explicar tudo no prompt\n2:46 As 6 regras e as etapas da skill\n4:59 Capa com modelo de imagem e slides em HTML para gastar menos\n9:11 Carrosséis que publicamos com essa skill\n18:25 Passo a passo: criando a skill com um prompt no Claude Code\n20:30 Referências do Instagram para treinar o estilo visual\n29:09 Da checagem de fatos ao carrossel pronto para postar\n38:39 Publicação automática nas redes e recapitulação\n\n✨ O QUE VOCÊ VAI APRENDER\n✅ Como criar sua própria skill no Claude Code com um único prompt\n✅ As seis regras da skill, da capa que para a rolagem ao CTA que gera comentário\n✅ Por que a checagem de fatos vem antes de qualquer capa\n✅ Como gastar menos: capa com modelo de imagem e slides de dentro em HTML\n✅ Como treinar o estilo visual da skill com referências do Instagram\n\nEste vídeo mostra carrosséis com imagens geradas por IA.\n\n#claudecode #carrossel #inteligenciaartificial",
+ "tags": [],
+ "categories": [
+  "Science & Technology"
+ ],
+ "chapters": [
+  {
+   "start_time": 0,
+   "title": "Como criar uma skill de carrossel no Claude Code",
+   "end_time": 26
+  },
+  {
+   "start_time": 26,
+   "title": "Por que usar uma skill em vez de explicar tudo no prompt",
+   "end_time": 166
+  },
+  {
+   "start_time": 166,
+   "title": "As 6 regras e as etapas da skill",
+   "end_time": 299
+  },
+  {
+   "start_time": 299,
+   "title": "Capa com modelo de imagem e slides em HTML para gastar menos",
+   "end_time": 551
+  },
+  {
+   "start_time": 551,
+   "title": "Carrosséis que publicamos com essa skill",
+   "end_time": 1105
+  },
+  {
+   "start_time": 1105,
+   "title": "Passo a passo: criando a skill com um prompt no Claude Code",
+   "end_time": 1230
+  },
+  {
+   "start_time": 1230,
+   "title": "Referências do Instagram para treinar o estilo visual",
+   "end_time": 1749
+  },
+  {
+   "start_time": 1749,
+   "title": "Da checagem de fatos ao carrossel pronto para postar",
+   "end_time": 2319
+  },
+  {
+   "start_time": 2319,
+   "title": "Publicação automática nas redes e recapitulação",
+   "end_time": 2434
+  }
+ ],
+ "language": "pt-BR"
+}

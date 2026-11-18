@@ -1,0 +1,10 @@
+idioma: pt
+[00:00] Um cara disponibilizou no GitHub em uma produtora de vídeo inteira dentro do clave, e deixou tudo de graça.
+[00:04] Se chama Open Montage, e é um projeto open source com mais de 60 mil estrelas no GitHub.
+[00:09] Ele funciona igualzinho a um equipo de produção de verdade, com um pesquisador, um roteirista, um ocultor e até um editor.
+[00:15] Tudo comandado por IA.
+[00:16] Você só manda um pronte e uma equipe de agentes de IA pesquisa na internet inteira, escreve o roteiro,
+[00:21] gere as imagens e ainda puxa do IA, música e efeito sonoro.
+[00:25] E depois junta tudo num vídeo pronto sozinho, como vídeos no formato explicativo animado,
+[00:29] anúncios de produto e documentário, até trailer de cinema.
+[00:32] Então se você quer testar, comenta vídeo aqui embaixo e nos segue continuando passo a passo completo no Direct.

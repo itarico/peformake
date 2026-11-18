@@ -1,0 +1,19 @@
+idioma: en
+[00:00] Turn any flat image into an insane Vox style documentary animation using the parallax effect.
+[00:06] It's a simple technique that brings still images to life by combining 2D animation with a 3D camera.
+[00:12] First, we'll gather our assets.
+[00:14] An Iron Man PNG, flames for his feet, city buildings, clouds, and a flare effect for the energy in his hand.
+[00:21] And you can find all these assets on Pinterest.
+[00:23] Now open After Effects.
+[00:25] Start with a black solid and change it to a bright sky blue.
+[00:28] Then create a 3D camera to build depth between our layers.
+[00:32] Import the assets, make them 3D, and arrange them into separate depth layers.
+[00:36] Next, we'll rig Iron Man with the Puppet Pin tool to add subtle movement.
+[00:40] Then create a null.
+[00:42] Link it to the camera and animate its position to create the parallax motion.
+[00:46] Add 3D text to match the camera movement.
+[00:49] Finally, create an adjustment layer and add noise at 10%,
+[00:53] followed by posterize time at 16-17 fps for that stylized documentary look.
+[00:59] Want to see how these animations are actually made?
+[01:01] Comment, edit, and we'll send you the full tutorial library,
+[01:04] plus project files to study and recreate it yourself.

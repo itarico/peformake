@@ -1,0 +1,2945 @@
+1
+00:00:00,219 --> 00:00:02,570
+ 
+This entire video was edited by Claude.
+
+2
+00:00:02,570 --> 00:00:02,580
+This entire video was edited by Claude.
+ 
+
+3
+00:00:02,580 --> 00:00:04,797
+This entire video was edited by Claude.
+The elements you see on screen, the text
+
+4
+00:00:04,797 --> 00:00:04,807
+The elements you see on screen, the text
+ 
+
+5
+00:00:04,807 --> 00:00:07,024
+The elements you see on screen, the text
+emphasizing what I say, this full-screen
+
+6
+00:00:07,024 --> 00:00:07,034
+emphasizing what I say, this full-screen
+ 
+
+7
+00:00:07,034 --> 00:00:09,143
+emphasizing what I say, this full-screen
+animation, the camera zooms, the cuts,
+
+8
+00:00:09,143 --> 00:00:09,153
+animation, the camera zooms, the cuts,
+ 
+
+9
+00:00:09,153 --> 00:00:11,949
+animation, the camera zooms, the cuts,
+and even the sound effects.
+
+10
+00:00:11,949 --> 00:00:11,959
+and even the sound effects.
+ 
+
+11
+00:00:11,959 --> 00:00:13,464
+and even the sound effects.
+And best of all, you can still adapt
+
+12
+00:00:13,464 --> 00:00:13,474
+And best of all, you can still adapt
+ 
+
+13
+00:00:13,474 --> 00:00:15,144
+And best of all, you can still adapt
+this to any style or visual identity you
+
+14
+00:00:15,144 --> 00:00:15,154
+this to any style or visual identity you
+ 
+
+15
+00:00:15,154 --> 00:00:16,249
+this to any style or visual identity you
+want.
+
+16
+00:00:16,249 --> 00:00:16,259
+want.
+ 
+
+17
+00:00:16,259 --> 00:00:17,974
+want.
+But of course, we aren't at the point of
+
+18
+00:00:17,974 --> 00:00:17,984
+But of course, we aren't at the point of
+ 
+
+19
+00:00:17,984 --> 00:00:19,573
+But of course, we aren't at the point of
+writing a single prompt and getting a
+
+20
+00:00:19,573 --> 00:00:19,583
+writing a single prompt and getting a
+ 
+
+21
+00:00:19,583 --> 00:00:21,561
+writing a single prompt and getting a
+result like this. I spent a good amount
+
+22
+00:00:21,561 --> 00:00:21,571
+result like this. I spent a good amount
+ 
+
+23
+00:00:21,571 --> 00:00:23,106
+result like this. I spent a good amount
+of time creating an eight-step process
+
+24
+00:00:23,106 --> 00:00:23,116
+of time creating an eight-step process
+ 
+
+25
+00:00:23,116 --> 00:00:24,690
+of time creating an eight-step process
+that I will show you in this video today
+
+26
+00:00:24,690 --> 00:00:24,700
+that I will show you in this video today
+ 
+
+27
+00:00:24,700 --> 00:00:26,622
+that I will show you in this video today
+. And at the end, I’ll even give you a
+
+28
+00:00:26,622 --> 00:00:26,632
+. And at the end, I’ll even give you a
+ 
+
+29
+00:00:26,632 --> 00:00:28,228
+. And at the end, I’ll even give you a
+free skill that guides you to create
+
+30
+00:00:28,228 --> 00:00:28,238
+free skill that guides you to create
+ 
+
+31
+00:00:28,238 --> 00:00:29,964
+free skill that guides you to create
+your own, without going through all the
+
+32
+00:00:29,964 --> 00:00:29,974
+your own, without going through all the
+ 
+
+33
+00:00:29,974 --> 00:00:31,789
+your own, without going through all the
+tests and problems I did.
+
+34
+00:00:31,789 --> 00:00:31,799
+tests and problems I did.
+ 
+
+35
+00:00:31,799 --> 00:00:33,339
+tests and problems I did.
+So, I’ll warn you now: if you’re looking
+
+36
+00:00:33,339 --> 00:00:33,349
+So, I’ll warn you now: if you’re looking
+ 
+
+37
+00:00:33,349 --> 00:00:34,545
+So, I’ll warn you now: if you’re looking
+for a magic prompt that delivers a
+
+38
+00:00:34,545 --> 00:00:34,555
+for a magic prompt that delivers a
+ 
+
+39
+00:00:34,555 --> 00:00:35,957
+for a magic prompt that delivers a
+mediocre video like many people do, this
+
+40
+00:00:35,957 --> 00:00:35,967
+mediocre video like many people do, this
+ 
+
+41
+00:00:35,967 --> 00:00:37,349
+mediocre video like many people do, this
+isn't the place.
+
+42
+00:00:37,349 --> 00:00:37,359
+isn't the place.
+ 
+
+43
+00:00:37,359 --> 00:00:39,271
+isn't the place.
+I prefer to give you a system where you
+
+44
+00:00:39,271 --> 00:00:39,281
+I prefer to give you a system where you
+ 
+
+45
+00:00:39,281 --> 00:00:40,905
+I prefer to give you a system where you
+put in a little time and a little
+
+46
+00:00:40,905 --> 00:00:40,915
+put in a little time and a little
+ 
+
+47
+00:00:40,915 --> 00:00:42,636
+put in a little time and a little
+attention, but you get a video well
+
+48
+00:00:42,636 --> 00:00:42,646
+attention, but you get a video well
+ 
+
+49
+00:00:42,646 --> 00:00:43,849
+attention, but you get a video well
+above average.
+
+50
+00:00:43,849 --> 00:00:43,859
+above average.
+ 
+
+51
+00:00:43,859 --> 00:00:45,654
+above average.
+For those who don't know me, I'm Lucas
+
+52
+00:00:45,654 --> 00:00:45,664
+For those who don't know me, I'm Lucas
+ 
+
+53
+00:00:45,664 --> 00:00:47,414
+For those who don't know me, I'm Lucas
+Leite, a filmmaker for over 10 years,
+
+54
+00:00:47,414 --> 00:00:47,424
+Leite, a filmmaker for over 10 years,
+ 
+
+55
+00:00:47,424 --> 00:00:49,266
+Leite, a filmmaker for over 10 years,
+and that's why I've always been wary of
+
+56
+00:00:49,266 --> 00:00:49,276
+and that's why I've always been wary of
+ 
+
+57
+00:00:49,276 --> 00:00:51,025
+and that's why I've always been wary of
+using AI in my editing, because until
+
+58
+00:00:51,025 --> 00:00:51,035
+using AI in my editing, because until
+ 
+
+59
+00:00:51,035 --> 00:00:52,877
+using AI in my editing, because until
+now, I’d always seen videos of people
+
+60
+00:00:52,877 --> 00:00:52,887
+now, I’d always seen videos of people
+ 
+
+61
+00:00:52,887 --> 00:00:54,729
+now, I’d always seen videos of people
+editing with AI, but I always found the
+
+62
+00:00:54,729 --> 00:00:54,739
+editing with AI, but I always found the
+ 
+
+63
+00:00:54,739 --> 00:00:57,189
+editing with AI, but I always found the
+results quite weak. However, now, as you
+
+64
+00:00:57,189 --> 00:00:57,199
+results quite weak. However, now, as you
+ 
+
+65
+00:00:57,199 --> 00:00:59,283
+results quite weak. However, now, as you
+can see, things have changed a lot. So,
+
+66
+00:00:59,283 --> 00:00:59,293
+can see, things have changed a lot. So,
+ 
+
+67
+00:00:59,293 --> 00:01:00,833
+can see, things have changed a lot. So,
+let's get to it. To do all this editing
+
+68
+00:01:00,833 --> 00:01:00,843
+let's get to it. To do all this editing
+ 
+
+69
+00:01:00,843 --> 00:01:02,525
+let's get to it. To do all this editing
+that you’re seeing, you only need two
+
+70
+00:01:02,525 --> 00:01:02,535
+that you’re seeing, you only need two
+ 
+
+71
+00:01:02,535 --> 00:01:03,329
+that you’re seeing, you only need two
+things.
+
+72
+00:01:03,329 --> 00:01:03,339
+things.
+ 
+
+73
+00:01:03,339 --> 00:01:05,311
+things.
+The first is a Claude Pro subscription
+
+74
+00:01:05,311 --> 00:01:05,321
+The first is a Claude Pro subscription
+ 
+
+75
+00:01:05,321 --> 00:01:07,344
+The first is a Claude Pro subscription
+and the second is Claude Code installed
+
+76
+00:01:07,344 --> 00:01:07,354
+and the second is Claude Code installed
+ 
+
+77
+00:01:07,354 --> 00:01:09,489
+and the second is Claude Code installed
+on your computer. Claude Code, for those
+
+78
+00:01:09,489 --> 00:01:09,499
+on your computer. Claude Code, for those
+ 
+
+79
+00:01:09,499 --> 00:01:11,023
+on your computer. Claude Code, for those
+who don't know, is what allows Claude to
+
+80
+00:01:11,023 --> 00:01:11,033
+who don't know, is what allows Claude to
+ 
+
+81
+00:01:11,033 --> 00:01:12,332
+who don't know, is what allows Claude to
+work directly on the files on your
+
+82
+00:01:12,332 --> 00:01:12,342
+work directly on the files on your
+ 
+
+83
+00:01:12,342 --> 00:01:14,159
+work directly on the files on your
+computer. This is absolutely important.
+
+84
+00:01:14,159 --> 00:01:14,169
+computer. This is absolutely important.
+ 
+
+85
+00:01:14,169 --> 00:01:15,759
+computer. This is absolutely important.
+And just two more important details
+
+86
+00:01:15,759 --> 00:01:15,769
+And just two more important details
+ 
+
+87
+00:01:15,769 --> 00:01:17,705
+And just two more important details
+before we get to the steps. First, the
+
+88
+00:01:17,705 --> 00:01:17,715
+before we get to the steps. First, the
+ 
+
+89
+00:01:17,715 --> 00:01:19,523
+before we get to the steps. First, the
+workflow I’m going to use here is for a
+
+90
+00:01:19,523 --> 00:01:19,533
+workflow I’m going to use here is for a
+ 
+
+91
+00:01:19,533 --> 00:01:21,385
+workflow I’m going to use here is for a
+YouTube video, just like this one you’re
+
+92
+00:01:21,385 --> 00:01:21,395
+YouTube video, just like this one you’re
+ 
+
+93
+00:01:21,395 --> 00:01:23,073
+YouTube video, just like this one you’re
+watching, a person talking directly to
+
+94
+00:01:23,073 --> 00:01:23,083
+watching, a person talking directly to
+ 
+
+95
+00:01:23,083 --> 00:01:24,933
+watching, a person talking directly to
+the camera. But later, with the skill
+
+96
+00:01:24,933 --> 00:01:24,943
+the camera. But later, with the skill
+ 
+
+97
+00:01:24,943 --> 00:01:26,571
+the camera. But later, with the skill
+I’m going to give you, you can create
+
+98
+00:01:26,571 --> 00:01:26,581
+I’m going to give you, you can create
+ 
+
+99
+00:01:26,581 --> 00:01:28,127
+I’m going to give you, you can create
+your own workflow and adapt it to any
+
+100
+00:01:28,127 --> 00:01:28,137
+your own workflow and adapt it to any
+ 
+
+101
+00:01:28,137 --> 00:01:29,886
+your own workflow and adapt it to any
+type of video you want. It could be a
+
+102
+00:01:29,886 --> 00:01:29,896
+type of video you want. It could be a
+ 
+
+103
+00:01:29,896 --> 00:01:31,289
+type of video you want. It could be a
+workflow just for Instagram Reels, a
+
+104
+00:01:31,289 --> 00:01:31,299
+workflow just for Instagram Reels, a
+ 
+
+105
+00:01:31,299 --> 00:01:32,730
+workflow just for Instagram Reels, a
+workflow just for narrated videos, it
+
+106
+00:01:32,730 --> 00:01:32,740
+workflow just for narrated videos, it
+ 
+
+107
+00:01:32,740 --> 00:01:34,295
+workflow just for narrated videos, it
+could be whatever you want. Second, I
+
+108
+00:01:34,295 --> 00:01:34,305
+could be whatever you want. Second, I
+ 
+
+109
+00:01:34,305 --> 00:01:36,015
+could be whatever you want. Second, I
+decided by choice to review everything
+
+110
+00:01:36,015 --> 00:01:36,025
+decided by choice to review everything
+ 
+
+111
+00:01:36,025 --> 00:01:37,646
+decided by choice to review everything
+in Premiere because it was a program
+
+112
+00:01:37,646 --> 00:01:37,656
+in Premiere because it was a program
+ 
+
+113
+00:01:37,656 --> 00:01:39,233
+in Premiere because it was a program
+I’ve always used, but you can use
+
+114
+00:01:39,233 --> 00:01:39,243
+I’ve always used, but you can use
+ 
+
+115
+00:01:39,243 --> 00:01:40,847
+I’ve always used, but you can use
+whatever you prefer. You can use any
+
+116
+00:01:40,847 --> 00:01:40,857
+whatever you prefer. You can use any
+ 
+
+117
+00:01:40,857 --> 00:01:42,428
+whatever you prefer. You can use any
+other program or not use any program at
+
+118
+00:01:42,428 --> 00:01:42,438
+other program or not use any program at
+ 
+
+119
+00:01:42,438 --> 00:01:43,930
+other program or not use any program at
+all, since Claude can already deliver
+
+120
+00:01:43,930 --> 00:01:43,940
+all, since Claude can already deliver
+ 
+
+121
+00:01:43,940 --> 00:01:45,574
+all, since Claude can already deliver
+the video ready-made. Before doing any
+
+122
+00:01:45,574 --> 00:01:45,584
+the video ready-made. Before doing any
+ 
+
+123
+00:01:45,584 --> 00:01:47,145
+the video ready-made. Before doing any
+editing, there is a very important part
+
+124
+00:01:47,145 --> 00:01:47,155
+editing, there is a very important part
+ 
+
+125
+00:01:47,155 --> 00:01:48,757
+editing, there is a very important part
+, which is providing some references of
+
+126
+00:01:48,757 --> 00:01:48,767
+, which is providing some references of
+ 
+
+127
+00:01:48,767 --> 00:01:51,410
+, which is providing some references of
+what you like for the cloud to analyze.
+
+128
+00:01:51,410 --> 00:01:51,420
+what you like for the cloud to analyze.
+ 
+
+129
+00:01:51,420 --> 00:01:53,204
+what you like for the cloud to analyze.
+To do this, just drop some clips of
+
+130
+00:01:53,204 --> 00:01:53,214
+To do this, just drop some clips of
+ 
+
+131
+00:01:53,214 --> 00:01:54,999
+To do this, just drop some clips of
+animations you like into the folder
+
+132
+00:01:54,999 --> 00:01:55,009
+animations you like into the folder
+ 
+
+133
+00:01:55,009 --> 00:01:56,943
+animations you like into the folder
+Cloud Code is working on and ask it to
+
+134
+00:01:56,943 --> 00:01:56,953
+Cloud Code is working on and ask it to
+ 
+
+135
+00:01:56,953 --> 00:01:58,838
+Cloud Code is working on and ask it to
+analyze the style, animations, speed,
+
+136
+00:01:58,838 --> 00:01:58,848
+analyze the style, animations, speed,
+ 
+
+137
+00:01:58,848 --> 00:02:00,832
+analyze the style, animations, speed,
+and rhythm, and it will be able to do a
+
+138
+00:02:00,832 --> 00:02:00,842
+and rhythm, and it will be able to do a
+ 
+
+139
+00:02:00,842 --> 00:02:02,969
+and rhythm, and it will be able to do a
+complete analysis for you.
+
+140
+00:02:02,969 --> 00:02:02,979
+complete analysis for you.
+ 
+
+141
+00:02:02,979 --> 00:02:04,600
+complete analysis for you.
+Without this, the result tends to be
+
+142
+00:02:04,600 --> 00:02:04,610
+Without this, the result tends to be
+ 
+
+143
+00:02:04,610 --> 00:02:06,364
+Without this, the result tends to be
+more generic, even if it has a nice flow
+
+144
+00:02:06,364 --> 00:02:06,374
+more generic, even if it has a nice flow
+ 
+
+145
+00:02:06,374 --> 00:02:08,212
+more generic, even if it has a nice flow
+. But the good news is that you only do
+
+146
+00:02:08,212 --> 00:02:08,222
+. But the good news is that you only do
+ 
+
+147
+00:02:08,222 --> 00:02:09,922
+. But the good news is that you only do
+this part once, or whenever you want to
+
+148
+00:02:09,922 --> 00:02:09,932
+this part once, or whenever you want to
+ 
+
+149
+00:02:09,932 --> 00:02:11,749
+this part once, or whenever you want to
+update your style or something similar.
+
+150
+00:02:11,749 --> 00:02:11,759
+update your style or something similar.
+ 
+
+151
+00:02:11,759 --> 00:02:12,987
+update your style or something similar.
+With the Cloud trained, comes the
+
+152
+00:02:12,987 --> 00:02:12,997
+With the Cloud trained, comes the
+ 
+
+153
+00:02:12,997 --> 00:02:14,407
+With the Cloud trained, comes the
+workflow, which as I mentioned before,
+
+154
+00:02:14,407 --> 00:02:14,417
+workflow, which as I mentioned before,
+ 
+
+155
+00:02:14,417 --> 00:02:16,394
+workflow, which as I mentioned before,
+has eight steps. Each step is a skill I
+
+156
+00:02:16,394 --> 00:02:16,404
+has eight steps. Each step is a skill I
+ 
+
+157
+00:02:16,404 --> 00:02:18,362
+has eight steps. Each step is a skill I
+created, that is, an instruction file
+
+158
+00:02:18,362 --> 00:02:18,372
+created, that is, an instruction file
+ 
+
+159
+00:02:18,372 --> 00:02:20,484
+created, that is, an instruction file
+teaching the cloud to perform a task the
+
+160
+00:02:20,484 --> 00:02:20,494
+teaching the cloud to perform a task the
+ 
+
+161
+00:02:20,494 --> 00:02:22,157
+teaching the cloud to perform a task the
+same way every time. And pay close
+
+162
+00:02:22,157 --> 00:02:22,167
+same way every time. And pay close
+ 
+
+163
+00:02:22,167 --> 00:02:23,656
+same way every time. And pay close
+attention to step four, because that's
+
+164
+00:02:23,656 --> 00:02:23,666
+attention to step four, because that's
+ 
+
+165
+00:02:23,666 --> 00:02:25,077
+attention to step four, because that's
+where the video will either turn out
+
+166
+00:02:25,077 --> 00:02:25,087
+where the video will either turn out
+ 
+
+167
+00:02:25,087 --> 00:02:26,932
+where the video will either turn out
+good or bad. Let's go to the first two.
+
+168
+00:02:26,932 --> 00:02:26,942
+good or bad. Let's go to the first two.
+ 
+
+169
+00:02:26,942 --> 00:02:28,780
+good or bad. Let's go to the first two.
+The first two steps are the preparation
+
+170
+00:02:28,780 --> 00:02:28,790
+The first two steps are the preparation
+ 
+
+171
+00:02:28,790 --> 00:02:30,104
+The first two steps are the preparation
+. The first one, the Cloud asks me for a
+
+172
+00:02:30,104 --> 00:02:30,114
+. The first one, the Cloud asks me for a
+ 
+
+173
+00:02:30,114 --> 00:02:31,776
+. The first one, the Cloud asks me for a
+briefing. What is the video? What is the
+
+174
+00:02:31,776 --> 00:02:31,786
+briefing. What is the video? What is the
+ 
+
+175
+00:02:31,786 --> 00:02:33,162
+briefing. What is the video? What is the
+general direction? If I have any
+
+176
+00:02:33,162 --> 00:02:33,172
+general direction? If I have any
+ 
+
+177
+00:02:33,172 --> 00:02:34,589
+general direction? If I have any
+comments. And then it goes and
+
+178
+00:02:34,589 --> 00:02:34,599
+comments. And then it goes and
+ 
+
+179
+00:02:34,599 --> 00:02:36,235
+comments. And then it goes and
+identifies the files I put in the folder
+
+180
+00:02:36,235 --> 00:02:36,245
+identifies the files I put in the folder
+ 
+
+181
+00:02:36,245 --> 00:02:38,103
+identifies the files I put in the folder
+. In the second, it will transcribe your
+
+182
+00:02:38,103 --> 00:02:38,113
+. In the second, it will transcribe your
+ 
+
+183
+00:02:38,113 --> 00:02:40,043
+. In the second, it will transcribe your
+video. For this, it will use Whisper X,
+
+184
+00:02:40,043 --> 00:02:40,053
+video. For this, it will use Whisper X,
+ 
+
+185
+00:02:40,053 --> 00:02:41,899
+video. For this, it will use Whisper X,
+which is a free model that runs directly
+
+186
+00:02:41,899 --> 00:02:41,909
+which is a free model that runs directly
+ 
+
+187
+00:02:41,909 --> 00:02:43,639
+which is a free model that runs directly
+on your computer. The Cloud uses it to
+
+188
+00:02:43,639 --> 00:02:43,649
+on your computer. The Cloud uses it to
+ 
+
+189
+00:02:43,649 --> 00:02:45,339
+on your computer. The Cloud uses it to
+transcribe everything, marking the exact
+
+190
+00:02:45,339 --> 00:02:45,349
+transcribe everything, marking the exact
+ 
+
+191
+00:02:45,349 --> 00:02:46,977
+transcribe everything, marking the exact
+timing of each word. And this will be
+
+192
+00:02:46,977 --> 00:02:46,987
+timing of each word. And this will be
+ 
+
+193
+00:02:46,987 --> 00:02:48,553
+timing of each word. And this will be
+the base for our complete edit. But
+
+194
+00:02:48,553 --> 00:02:48,563
+the base for our complete edit. But
+ 
+
+195
+00:02:48,563 --> 00:02:49,603
+the base for our complete edit. But
+don't worry, you don't need to be
+
+196
+00:02:49,603 --> 00:02:49,613
+don't worry, you don't need to be
+ 
+
+197
+00:02:49,613 --> 00:02:51,045
+don't worry, you don't need to be
+concerned about any of this. All these
+
+198
+00:02:51,045 --> 00:02:51,055
+concerned about any of this. All these
+ 
+
+199
+00:02:51,055 --> 00:02:52,431
+concerned about any of this. All these
+programs I'm mentioning here, like
+
+200
+00:02:52,431 --> 00:02:52,441
+programs I'm mentioning here, like
+ 
+
+201
+00:02:52,441 --> 00:02:53,976
+programs I'm mentioning here, like
+Whisper X, the cloud installs them for
+
+202
+00:02:53,976 --> 00:02:53,986
+Whisper X, the cloud installs them for
+ 
+
+203
+00:02:53,986 --> 00:02:55,915
+Whisper X, the cloud installs them for
+you automatically. And so, moving to the
+
+204
+00:02:55,915 --> 00:02:55,925
+you automatically. And so, moving to the
+ 
+
+205
+00:02:55,925 --> 00:02:57,555
+you automatically. And so, moving to the
+next step, with the transcription ready
+
+206
+00:02:57,555 --> 00:02:57,565
+next step, with the transcription ready
+ 
+
+207
+00:02:57,565 --> 00:02:59,585
+next step, with the transcription ready
+, come the cuts. The cloud identifies
+
+208
+00:02:59,585 --> 00:02:59,595
+, come the cuts. The cloud identifies
+ 
+
+209
+00:02:59,595 --> 00:03:01,520
+, come the cuts. The cloud identifies
+the pauses, the speech, and all the text
+
+210
+00:03:01,520 --> 00:03:01,530
+the pauses, the speech, and all the text
+ 
+
+211
+00:03:01,530 --> 00:03:03,565
+the pauses, the speech, and all the text
+. And only then does it cut the errors
+
+212
+00:03:03,565 --> 00:03:03,575
+. And only then does it cut the errors
+ 
+
+213
+00:03:03,575 --> 00:03:05,317
+. And only then does it cut the errors
+and assemble a complete structure for
+
+214
+00:03:05,317 --> 00:03:05,327
+and assemble a complete structure for
+ 
+
+215
+00:03:05,327 --> 00:03:06,916
+and assemble a complete structure for
+our video. It is at this time that if
+
+216
+00:03:06,916 --> 00:03:06,926
+our video. It is at this time that if
+ 
+
+217
+00:03:06,926 --> 00:03:08,453
+our video. It is at this time that if
+you put a script in the folder, it uses
+
+218
+00:03:08,453 --> 00:03:08,463
+you put a script in the folder, it uses
+ 
+
+219
+00:03:08,463 --> 00:03:10,013
+you put a script in the folder, it uses
+it as a base, but it is not necessary.
+
+220
+00:03:10,013 --> 00:03:10,023
+it as a base, but it is not necessary.
+ 
+
+221
+00:03:10,023 --> 00:03:11,560
+it as a base, but it is not necessary.
+This step is the first one I usually
+
+222
+00:03:11,560 --> 00:03:11,570
+This step is the first one I usually
+ 
+
+223
+00:03:11,570 --> 00:03:13,276
+This step is the first one I usually
+review. It delivers a file that I open
+
+224
+00:03:13,276 --> 00:03:13,286
+review. It delivers a file that I open
+ 
+
+225
+00:03:13,286 --> 00:03:14,846
+review. It delivers a file that I open
+in Premiere, and if there is any detail
+
+226
+00:03:14,846 --> 00:03:14,856
+in Premiere, and if there is any detail
+ 
+
+227
+00:03:14,856 --> 00:03:16,497
+in Premiere, and if there is any detail
+, I ask it to correct it or I correct it
+
+228
+00:03:16,497 --> 00:03:16,507
+, I ask it to correct it or I correct it
+ 
+
+229
+00:03:16,507 --> 00:03:18,107
+, I ask it to correct it or I correct it
+myself in Premiere and return it to the
+
+230
+00:03:18,107 --> 00:03:18,117
+myself in Premiere and return it to the
+ 
+
+231
+00:03:18,117 --> 00:03:20,763
+myself in Premiere and return it to the
+cloud. And now step four, the motion map
+
+232
+00:03:20,763 --> 00:03:20,773
+cloud. And now step four, the motion map
+ 
+
+233
+00:03:20,773 --> 00:03:22,391
+cloud. And now step four, the motion map
+. This is the one that requires the most
+
+234
+00:03:22,391 --> 00:03:22,401
+. This is the one that requires the most
+ 
+
+235
+00:03:22,401 --> 00:03:23,877
+. This is the one that requires the most
+of your attention. Motion, for those who
+
+236
+00:03:23,877 --> 00:03:23,887
+of your attention. Motion, for those who
+ 
+
+237
+00:03:23,887 --> 00:03:25,137
+of your attention. Motion, for those who
+don't know, are the animations that
+
+238
+00:03:25,137 --> 00:03:25,147
+don't know, are the animations that
+ 
+
+239
+00:03:25,147 --> 00:03:26,934
+don't know, are the animations that
+appear on your screen. And the map will
+
+240
+00:03:26,934 --> 00:03:26,944
+appear on your screen. And the map will
+ 
+
+241
+00:03:26,944 --> 00:03:28,874
+appear on your screen. And the map will
+be the planning for all of that. What
+
+242
+00:03:28,874 --> 00:03:28,884
+be the planning for all of that. What
+ 
+
+243
+00:03:28,884 --> 00:03:30,719
+be the planning for all of that. What
+will appear, at what moment, what is the
+
+244
+00:03:30,719 --> 00:03:30,729
+will appear, at what moment, what is the
+ 
+
+245
+00:03:30,729 --> 00:03:32,449
+will appear, at what moment, what is the
+rhythm, what is the style. It won't
+
+246
+00:03:32,449 --> 00:03:32,459
+rhythm, what is the style. It won't
+ 
+
+247
+00:03:32,459 --> 00:03:33,969
+rhythm, what is the style. It won't
+animate anything yet; it’s just the
+
+248
+00:03:33,969 --> 00:03:33,979
+animate anything yet; it’s just the
+ 
+
+249
+00:03:33,979 --> 00:03:35,304
+animate anything yet; it’s just the
+planning. And this stage is very
+
+250
+00:03:35,304 --> 00:03:35,314
+planning. And this stage is very
+ 
+
+251
+00:03:35,314 --> 00:03:36,649
+planning. And this stage is very
+important because it's here that you
+
+252
+00:03:36,649 --> 00:03:36,659
+important because it's here that you
+ 
+
+253
+00:03:36,659 --> 00:03:38,138
+important because it's here that you
+save tokens, which is what measures your
+
+254
+00:03:38,138 --> 00:03:38,148
+save tokens, which is what measures your
+ 
+
+255
+00:03:38,148 --> 00:03:40,257
+save tokens, which is what measures your
+usage in the cloud. If you get the plan
+
+256
+00:03:40,257 --> 00:03:40,267
+usage in the cloud. If you get the plan
+ 
+
+257
+00:03:40,267 --> 00:03:42,107
+usage in the cloud. If you get the plan
+right, the chance of getting a cool
+
+258
+00:03:42,107 --> 00:03:42,117
+right, the chance of getting a cool
+ 
+
+259
+00:03:42,117 --> 00:03:44,111
+right, the chance of getting a cool
+result in the next stage is much higher
+
+260
+00:03:44,111 --> 00:03:44,121
+result in the next stage is much higher
+ 
+
+261
+00:03:44,121 --> 00:03:46,115
+result in the next stage is much higher
+, and you need fewer changes and fewer
+
+262
+00:03:46,115 --> 00:03:46,125
+, and you need fewer changes and fewer
+ 
+
+263
+00:03:46,125 --> 00:03:48,239
+, and you need fewer changes and fewer
+revisions. It's also in this stage that
+
+264
+00:03:48,239 --> 00:03:48,249
+revisions. It's also in this stage that
+ 
+
+265
+00:03:48,249 --> 00:03:49,659
+revisions. It's also in this stage that
+you tell Claude if you want fewer
+
+266
+00:03:49,659 --> 00:03:49,669
+you tell Claude if you want fewer
+ 
+
+267
+00:03:49,669 --> 00:03:51,370
+you tell Claude if you want fewer
+animations or more animations throughout
+
+268
+00:03:51,370 --> 00:03:51,380
+animations or more animations throughout
+ 
+
+269
+00:03:51,380 --> 00:03:52,790
+animations or more animations throughout
+your video.
+
+270
+00:03:52,790 --> 00:03:52,800
+your video.
+ 
+
+271
+00:03:52,800 --> 00:03:54,113
+your video.
+In my specific case, the map also
+
+272
+00:03:54,113 --> 00:03:54,123
+In my specific case, the map also
+ 
+
+273
+00:03:54,123 --> 00:03:55,709
+In my specific case, the map also
+defines some camera movements, because I
+
+274
+00:03:55,709 --> 00:03:55,719
+defines some camera movements, because I
+ 
+
+275
+00:03:55,719 --> 00:03:58,009
+defines some camera movements, because I
+like my motion to talk to the camera.
+
+276
+00:03:58,009 --> 00:03:58,019
+like my motion to talk to the camera.
+ 
+
+277
+00:03:58,019 --> 00:03:59,648
+like my motion to talk to the camera.
+If an animation enters with a zoom, the
+
+278
+00:03:59,648 --> 00:03:59,658
+If an animation enters with a zoom, the
+ 
+
+279
+00:03:59,658 --> 00:04:01,287
+If an animation enters with a zoom, the
+camera zooms before the transition, and
+
+280
+00:04:01,287 --> 00:04:01,297
+camera zooms before the transition, and
+ 
+
+281
+00:04:01,297 --> 00:04:02,845
+camera zooms before the transition, and
+it becomes more dynamic, as you could
+
+282
+00:04:02,845 --> 00:04:02,855
+it becomes more dynamic, as you could
+ 
+
+283
+00:04:02,855 --> 00:04:04,932
+it becomes more dynamic, as you could
+see. Then comes the assets stage, which
+
+284
+00:04:04,932 --> 00:04:04,942
+see. Then comes the assets stage, which
+ 
+
+285
+00:04:04,942 --> 00:04:06,989
+see. Then comes the assets stage, which
+are the files that the animations need.
+
+286
+00:04:06,989 --> 00:04:06,999
+are the files that the animations need.
+ 
+
+287
+00:04:06,999 --> 00:04:09,078
+are the files that the animations need.
+Icons, screenshots, screen recordings,
+
+288
+00:04:09,078 --> 00:04:09,088
+Icons, screenshots, screen recordings,
+ 
+
+289
+00:04:09,088 --> 00:04:10,949
+Icons, screenshots, screen recordings,
+images, anything. Claude looks at the
+
+290
+00:04:10,949 --> 00:04:10,959
+images, anything. Claude looks at the
+ 
+
+291
+00:04:10,959 --> 00:04:12,470
+images, anything. Claude looks at the
+map and lists everything that is missing
+
+292
+00:04:12,470 --> 00:04:12,480
+map and lists everything that is missing
+ 
+
+293
+00:04:12,480 --> 00:04:14,404
+map and lists everything that is missing
+. It will try to fetch everything by
+
+294
+00:04:14,404 --> 00:04:14,414
+. It will try to fetch everything by
+ 
+
+295
+00:04:14,414 --> 00:04:16,203
+. It will try to fetch everything by
+itself first, and what it can't get, it
+
+296
+00:04:16,203 --> 00:04:16,213
+itself first, and what it can't get, it
+ 
+
+297
+00:04:16,213 --> 00:04:18,351
+itself first, and what it can't get, it
+asks you for. Now, with the plan and the
+
+298
+00:04:18,351 --> 00:04:18,361
+asks you for. Now, with the plan and the
+ 
+
+299
+00:04:18,361 --> 00:04:20,297
+asks you for. Now, with the plan and the
+files in hand, it finally reaches the
+
+300
+00:04:20,297 --> 00:04:20,307
+files in hand, it finally reaches the
+ 
+
+301
+00:04:20,307 --> 00:04:21,884
+files in hand, it finally reaches the
+stage where it will create the
+
+302
+00:04:21,884 --> 00:04:21,894
+stage where it will create the
+ 
+
+303
+00:04:21,894 --> 00:04:23,449
+stage where it will create the
+animations.
+
+304
+00:04:23,449 --> 00:04:23,459
+animations.
+ 
+
+305
+00:04:23,459 --> 00:04:24,916
+animations.
+And for this, it uses Hyperframes, which
+
+306
+00:04:24,916 --> 00:04:24,926
+And for this, it uses Hyperframes, which
+ 
+
+307
+00:04:24,926 --> 00:04:26,241
+And for this, it uses Hyperframes, which
+is another extra program that Claude
+
+308
+00:04:26,241 --> 00:04:26,251
+is another extra program that Claude
+ 
+
+309
+00:04:26,251 --> 00:04:27,602
+is another extra program that Claude
+will install for you by itself, which
+
+310
+00:04:27,602 --> 00:04:27,612
+will install for you by itself, which
+ 
+
+311
+00:04:27,612 --> 00:04:29,589
+will install for you by itself, which
+turns your code into video.
+
+312
+00:04:29,589 --> 00:04:29,599
+turns your code into video.
+ 
+
+313
+00:04:29,599 --> 00:04:31,251
+turns your code into video.
+And in my case, this is where I like to
+
+314
+00:04:31,251 --> 00:04:31,261
+And in my case, this is where I like to
+ 
+
+315
+00:04:31,261 --> 00:04:33,049
+And in my case, this is where I like to
+give a second review in Premiere Pro. It
+
+316
+00:04:33,049 --> 00:04:33,059
+give a second review in Premiere Pro. It
+ 
+
+317
+00:04:33,059 --> 00:04:34,292
+give a second review in Premiere Pro. It
+delivers the file to me and I can
+
+318
+00:04:34,292 --> 00:04:34,302
+delivers the file to me and I can
+ 
+
+319
+00:04:34,302 --> 00:04:35,644
+delivers the file to me and I can
+already see the motions in the right
+
+320
+00:04:35,644 --> 00:04:35,654
+already see the motions in the right
+ 
+
+321
+00:04:35,654 --> 00:04:36,956
+already see the motions in the right
+timing. And then it's just a matter of
+
+322
+00:04:36,956 --> 00:04:36,966
+timing. And then it's just a matter of
+ 
+
+323
+00:04:36,966 --> 00:04:38,489
+timing. And then it's just a matter of
+me approving or asking for adjustments.
+
+324
+00:04:38,489 --> 00:04:38,499
+me approving or asking for adjustments.
+ 
+
+325
+00:04:38,499 --> 00:04:40,233
+me approving or asking for adjustments.
+In my experience, with a well-trained
+
+326
+00:04:40,233 --> 00:04:40,243
+In my experience, with a well-trained
+ 
+
+327
+00:04:40,243 --> 00:04:42,070
+In my experience, with a well-trained
+flow, one or two revisions at most, you
+
+328
+00:04:42,070 --> 00:04:42,080
+flow, one or two revisions at most, you
+ 
+
+329
+00:04:42,080 --> 00:04:44,209
+flow, one or two revisions at most, you
+can already reach a very good result.
+
+330
+00:04:44,209 --> 00:04:44,219
+can already reach a very good result.
+ 
+
+331
+00:04:44,219 --> 00:04:45,967
+can already reach a very good result.
+And then, after all the motions are
+
+332
+00:04:45,967 --> 00:04:45,977
+And then, after all the motions are
+ 
+
+333
+00:04:45,977 --> 00:04:47,971
+And then, after all the motions are
+approved, come the zooms, which is where
+
+334
+00:04:47,971 --> 00:04:47,981
+approved, come the zooms, which is where
+ 
+
+335
+00:04:47,981 --> 00:04:49,974
+approved, come the zooms, which is where
+Claude works on all this camera movement
+
+336
+00:04:49,974 --> 00:04:49,984
+Claude works on all this camera movement
+ 
+
+337
+00:04:49,984 --> 00:04:52,101
+Claude works on all this camera movement
+you are seeing so far. It uses the zoom
+
+338
+00:04:52,101 --> 00:04:52,111
+you are seeing so far. It uses the zoom
+ 
+
+339
+00:04:52,111 --> 00:04:53,919
+you are seeing so far. It uses the zoom
+difference to disguise the cuts, makes
+
+340
+00:04:53,919 --> 00:04:53,929
+difference to disguise the cuts, makes
+ 
+
+341
+00:04:53,929 --> 00:04:55,737
+difference to disguise the cuts, makes
+dynamic zooms, follows the animations,
+
+342
+00:04:55,737 --> 00:04:55,747
+dynamic zooms, follows the animations,
+ 
+
+343
+00:04:55,747 --> 00:04:57,604
+dynamic zooms, follows the animations,
+and zooms in for emphasis. And a very
+
+344
+00:04:57,604 --> 00:04:57,614
+and zooms in for emphasis. And a very
+ 
+
+345
+00:04:57,614 --> 00:04:59,373
+and zooms in for emphasis. And a very
+cool detail that I like to add is making
+
+346
+00:04:59,373 --> 00:04:59,383
+cool detail that I like to add is making
+ 
+
+347
+00:04:59,383 --> 00:05:01,012
+cool detail that I like to add is making
+the camera follow my face, as you are
+
+348
+00:05:01,012 --> 00:05:01,022
+the camera follow my face, as you are
+ 
+
+349
+00:05:01,022 --> 00:05:02,537
+the camera follow my face, as you are
+seeing here. I think it stays very
+
+350
+00:05:02,537 --> 00:05:02,547
+seeing here. I think it stays very
+ 
+
+351
+00:05:02,547 --> 00:05:04,938
+seeing here. I think it stays very
+dynamic. And for this, it uses the model
+
+352
+00:05:04,938 --> 00:05:04,948
+dynamic. And for this, it uses the model
+ 
+
+353
+00:05:04,948 --> 00:05:07,392
+dynamic. And for this, it uses the model
+that tracks faces in the video. Reaching
+
+354
+00:05:07,392 --> 00:05:07,402
+that tracks faces in the video. Reaching
+ 
+
+355
+00:05:07,402 --> 00:05:09,115
+that tracks faces in the video. Reaching
+the last stage, which is the sound
+
+356
+00:05:09,115 --> 00:05:09,125
+the last stage, which is the sound
+ 
+
+357
+00:05:09,125 --> 00:05:11,376
+the last stage, which is the sound
+effects. Claude identifies the movements
+
+358
+00:05:11,376 --> 00:05:11,386
+effects. Claude identifies the movements
+ 
+
+359
+00:05:11,386 --> 00:05:13,261
+effects. Claude identifies the movements
+both in the motions and in the camera
+
+360
+00:05:13,261 --> 00:05:13,271
+both in the motions and in the camera
+ 
+
+361
+00:05:13,271 --> 00:05:15,176
+both in the motions and in the camera
+and puts a sound for each one. In my
+
+362
+00:05:15,176 --> 00:05:15,186
+and puts a sound for each one. In my
+ 
+
+363
+00:05:15,186 --> 00:05:16,780
+and puts a sound for each one. In my
+case, it searches first in a folder of
+
+364
+00:05:16,780 --> 00:05:16,790
+case, it searches first in a folder of
+ 
+
+365
+00:05:16,790 --> 00:05:18,533
+case, it searches first in a folder of
+sound effects that I have. If any are
+
+366
+00:05:18,533 --> 00:05:18,543
+sound effects that I have. If any are
+ 
+
+367
+00:05:18,543 --> 00:05:20,262
+sound effects that I have. If any are
+missing, it just goes and downloads them
+
+368
+00:05:20,262 --> 00:05:20,272
+missing, it just goes and downloads them
+ 
+
+369
+00:05:20,272 --> 00:05:21,823
+missing, it just goes and downloads them
+for me directly from Epidemic Sound,
+
+370
+00:05:21,823 --> 00:05:21,833
+for me directly from Epidemic Sound,
+ 
+
+371
+00:05:21,833 --> 00:05:23,537
+for me directly from Epidemic Sound,
+which I subscribe to. In your case, I
+
+372
+00:05:23,537 --> 00:05:23,547
+which I subscribe to. In your case, I
+ 
+
+373
+00:05:23,547 --> 00:05:24,990
+which I subscribe to. In your case, I
+recommend you first ask Claude which
+
+374
+00:05:24,990 --> 00:05:25,000
+recommend you first ask Claude which
+ 
+
+375
+00:05:25,000 --> 00:05:26,521
+recommend you first ask Claude which
+sound effects would be good for you to
+
+376
+00:05:26,521 --> 00:05:26,531
+sound effects would be good for you to
+ 
+
+377
+00:05:26,531 --> 00:05:28,359
+sound effects would be good for you to
+have in a folder. Then you go look for
+
+378
+00:05:28,359 --> 00:05:28,369
+have in a folder. Then you go look for
+ 
+
+379
+00:05:28,369 --> 00:05:30,208
+have in a folder. Then you go look for
+some free ones and build that folder to
+
+380
+00:05:30,208 --> 00:05:30,218
+some free ones and build that folder to
+ 
+
+381
+00:05:30,218 --> 00:05:32,061
+some free ones and build that folder to
+have your initial foundation. Now, if
+
+382
+00:05:32,061 --> 00:05:32,071
+have your initial foundation. Now, if
+ 
+
+383
+00:05:32,071 --> 00:05:33,557
+have your initial foundation. Now, if
+you want a much faster path, just
+
+384
+00:05:33,557 --> 00:05:33,567
+you want a much faster path, just
+ 
+
+385
+00:05:33,567 --> 00:05:35,273
+you want a much faster path, just
+subscribe to Epidemic Sound and Claude
+
+386
+00:05:35,273 --> 00:05:35,283
+subscribe to Epidemic Sound and Claude
+ 
+
+387
+00:05:35,283 --> 00:05:37,077
+subscribe to Epidemic Sound and Claude
+can download everything for you directly
+
+388
+00:05:37,077 --> 00:05:37,087
+can download everything for you directly
+ 
+
+389
+00:05:37,087 --> 00:05:39,208
+can download everything for you directly
+via API. So let's go, recapping all the
+
+390
+00:05:39,208 --> 00:05:39,218
+via API. So let's go, recapping all the
+ 
+
+391
+00:05:39,218 --> 00:05:41,081
+via API. So let's go, recapping all the
+steps and all the skills that this
+
+392
+00:05:41,081 --> 00:05:41,091
+steps and all the skills that this
+ 
+
+393
+00:05:41,091 --> 00:05:42,610
+steps and all the skills that this
+workflow uses.
+
+394
+00:05:42,610 --> 00:05:42,620
+workflow uses.
+ 
+
+395
+00:05:42,620 --> 00:05:45,248
+workflow uses.
+Start and prepare, cuts, motion, map,
+
+396
+00:05:45,248 --> 00:05:45,258
+Start and prepare, cuts, motion, map,
+ 
+
+397
+00:05:45,258 --> 00:05:48,094
+Start and prepare, cuts, motion, map,
+assets, motion handler, zooms, and sound
+
+398
+00:05:48,094 --> 00:05:48,104
+assets, motion handler, zooms, and sound
+ 
+
+399
+00:05:48,104 --> 00:05:49,429
+assets, motion handler, zooms, and sound
+effects.
+
+400
+00:05:49,429 --> 00:05:49,439
+effects.
+ 
+
+401
+00:05:49,439 --> 00:05:51,095
+effects.
+These are the eight steps or eight
+
+402
+00:05:51,095 --> 00:05:51,105
+These are the eight steps or eight
+ 
+
+403
+00:05:51,105 --> 00:05:53,177
+These are the eight steps or eight
+skills. And I know it might seem like a
+
+404
+00:05:53,177 --> 00:05:53,187
+skills. And I know it might seem like a
+ 
+
+405
+00:05:53,187 --> 00:05:55,186
+skills. And I know it might seem like a
+lot, many steps, very complex, but don't
+
+406
+00:05:55,186 --> 00:05:55,196
+lot, many steps, very complex, but don't
+ 
+
+407
+00:05:55,196 --> 00:05:57,195
+lot, many steps, very complex, but don't
+worry because surrounding all of this is
+
+408
+00:05:57,195 --> 00:05:57,205
+worry because surrounding all of this is
+ 
+
+409
+00:05:57,205 --> 00:05:58,570
+worry because surrounding all of this is
+a master skill.
+
+410
+00:05:58,570 --> 00:05:58,580
+a master skill.
+ 
+
+411
+00:05:58,580 --> 00:06:00,502
+a master skill.
+You call it once and it calls each step
+
+412
+00:06:00,502 --> 00:06:00,512
+You call it once and it calls each step
+ 
+
+413
+00:06:00,512 --> 00:06:02,338
+You call it once and it calls each step
+for you, guiding you through what you
+
+414
+00:06:02,338 --> 00:06:02,348
+for you, guiding you through what you
+ 
+
+415
+00:06:02,348 --> 00:06:04,070
+for you, guiding you through what you
+need to do in each one.
+
+416
+00:06:04,070 --> 00:06:04,080
+need to do in each one.
+ 
+
+417
+00:06:04,080 --> 00:06:05,907
+need to do in each one.
+And here is an extra tip for you to save
+
+418
+00:06:05,907 --> 00:06:05,917
+And here is an extra tip for you to save
+ 
+
+419
+00:06:05,917 --> 00:06:07,669
+And here is an extra tip for you to save
+even more tokens.
+
+420
+00:06:07,669 --> 00:06:07,679
+even more tokens.
+ 
+
+421
+00:06:07,679 --> 00:06:09,566
+even more tokens.
+For each step you complete, clear your
+
+422
+00:06:09,566 --> 00:06:09,576
+For each step you complete, clear your
+ 
+
+423
+00:06:09,576 --> 00:06:11,969
+For each step you complete, clear your
+chat with/clear or start a new one.
+
+424
+00:06:11,969 --> 00:06:11,979
+chat with/clear or start a new one.
+ 
+
+425
+00:06:11,979 --> 00:06:13,432
+chat with/clear or start a new one.
+This way the history doesn't get huge
+
+426
+00:06:13,432 --> 00:06:13,442
+This way the history doesn't get huge
+ 
+
+427
+00:06:13,442 --> 00:06:14,780
+This way the history doesn't get huge
+and you don't waste your limit for
+
+428
+00:06:14,780 --> 00:06:14,790
+and you don't waste your limit for
+ 
+
+429
+00:06:14,790 --> 00:06:16,225
+and you don't waste your limit for
+nothing. The master skill also helps you
+
+430
+00:06:16,225 --> 00:06:16,235
+nothing. The master skill also helps you
+ 
+
+431
+00:06:16,235 --> 00:06:17,526
+nothing. The master skill also helps you
+with this, because it lets you know when
+
+432
+00:06:17,526 --> 00:06:17,536
+with this, because it lets you know when
+ 
+
+433
+00:06:17,536 --> 00:06:19,452
+with this, because it lets you know when
+it's time to clear. Afterward, just call
+
+434
+00:06:19,452 --> 00:06:19,462
+it's time to clear. Afterward, just call
+ 
+
+435
+00:06:19,462 --> 00:06:21,376
+it's time to clear. Afterward, just call
+it again and it identifies which step
+
+436
+00:06:21,376 --> 00:06:21,386
+it again and it identifies which step
+ 
+
+437
+00:06:21,386 --> 00:06:23,641
+it again and it identifies which step
+you stopped at, even in a new chat. And
+
+438
+00:06:23,641 --> 00:06:23,651
+you stopped at, even in a new chat. And
+ 
+
+439
+00:06:23,651 --> 00:06:25,351
+you stopped at, even in a new chat. And
+again, it's very worth it to do it this
+
+440
+00:06:25,351 --> 00:06:25,361
+again, it's very worth it to do it this
+ 
+
+441
+00:06:25,361 --> 00:06:26,976
+again, it's very worth it to do it this
+way because the result turns out much
+
+442
+00:06:26,976 --> 00:06:26,986
+way because the result turns out much
+ 
+
+443
+00:06:26,986 --> 00:06:28,750
+way because the result turns out much
+better and much more personalized.
+
+444
+00:06:28,750 --> 00:06:28,760
+better and much more personalized.
+ 
+
+445
+00:06:28,760 --> 00:06:30,457
+better and much more personalized.
+Certainly, if we made a single skill to
+
+446
+00:06:30,457 --> 00:06:30,467
+Certainly, if we made a single skill to
+ 
+
+447
+00:06:30,467 --> 00:06:31,952
+Certainly, if we made a single skill to
+do all of this at once, the result
+
+448
+00:06:31,952 --> 00:06:31,962
+do all of this at once, the result
+ 
+
+449
+00:06:31,962 --> 00:06:33,617
+do all of this at once, the result
+wouldn't even come close to everything
+
+450
+00:06:33,617 --> 00:06:33,627
+wouldn't even come close to everything
+ 
+
+451
+00:06:33,627 --> 00:06:35,510
+wouldn't even come close to everything
+you're seeing here. And behind all of
+
+452
+00:06:35,510 --> 00:06:35,520
+you're seeing here. And behind all of
+ 
+
+453
+00:06:35,520 --> 00:06:37,327
+you're seeing here. And behind all of
+this is the part that, for me, is the
+
+454
+00:06:37,327 --> 00:06:37,337
+this is the part that, for me, is the
+ 
+
+455
+00:06:37,337 --> 00:06:39,349
+this is the part that, for me, is the
+most powerful in this workflow.
+
+456
+00:06:39,349 --> 00:06:39,359
+most powerful in this workflow.
+ 
+
+457
+00:06:39,359 --> 00:06:41,328
+most powerful in this workflow.
+As I provide feedback and correct some
+
+458
+00:06:41,328 --> 00:06:41,338
+As I provide feedback and correct some
+ 
+
+459
+00:06:41,338 --> 00:06:43,307
+As I provide feedback and correct some
+things, Claude notes everything in the
+
+460
+00:06:43,307 --> 00:06:43,317
+things, Claude notes everything in the
+ 
+
+461
+00:06:43,317 --> 00:06:45,338
+things, Claude notes everything in the
+learning file inside the folder, and at
+
+462
+00:06:45,338 --> 00:06:45,348
+learning file inside the folder, and at
+ 
+
+463
+00:06:45,348 --> 00:06:47,165
+learning file inside the folder, and at
+any moment I can ask to see what it
+
+464
+00:06:47,165 --> 00:06:47,175
+any moment I can ask to see what it
+ 
+
+465
+00:06:47,175 --> 00:06:48,109
+any moment I can ask to see what it
+noted.
+
+466
+00:06:48,109 --> 00:06:48,119
+noted.
+ 
+
+467
+00:06:48,119 --> 00:06:49,353
+noted.
+Then I can choose what becomes a
+
+468
+00:06:49,353 --> 00:06:49,363
+Then I can choose what becomes a
+ 
+
+469
+00:06:49,363 --> 00:06:51,089
+Then I can choose what becomes a
+permanent rule and what gets removed.
+
+470
+00:06:51,089 --> 00:06:51,099
+permanent rule and what gets removed.
+ 
+
+471
+00:06:51,099 --> 00:06:52,923
+permanent rule and what gets removed.
+This way, with each video you edit, it
+
+472
+00:06:52,923 --> 00:06:52,933
+This way, with each video you edit, it
+ 
+
+473
+00:06:52,933 --> 00:06:54,851
+This way, with each video you edit, it
+understands your taste more and more and
+
+474
+00:06:54,851 --> 00:06:54,861
+understands your taste more and more and
+ 
+
+475
+00:06:54,861 --> 00:06:56,638
+understands your taste more and more and
+improves the level of your animations
+
+476
+00:06:56,638 --> 00:06:56,648
+improves the level of your animations
+ 
+
+477
+00:06:56,648 --> 00:06:58,594
+improves the level of your animations
+even further. So every next video will
+
+478
+00:06:58,594 --> 00:06:58,604
+even further. So every next video will
+ 
+
+479
+00:06:58,604 --> 00:07:00,495
+even further. So every next video will
+come out better, okay? But you must be
+
+480
+00:07:00,495 --> 00:07:00,505
+come out better, okay? But you must be
+ 
+
+481
+00:07:00,505 --> 00:07:02,730
+come out better, okay? But you must be
+thinking, how much does this cost?
+
+482
+00:07:02,730 --> 00:07:02,740
+thinking, how much does this cost?
+ 
+
+483
+00:07:02,740 --> 00:07:04,461
+thinking, how much does this cost?
+Guys, it varies a lot from video to
+
+484
+00:07:04,461 --> 00:07:04,471
+Guys, it varies a lot from video to
+ 
+
+485
+00:07:04,471 --> 00:07:06,385
+Guys, it varies a lot from video to
+video, but to give you an idea, a video
+
+486
+00:07:06,385 --> 00:07:06,395
+video, but to give you an idea, a video
+ 
+
+487
+00:07:06,395 --> 00:07:08,261
+video, but to give you an idea, a video
+like this one uses between 20 to 30%of
+
+488
+00:07:08,261 --> 00:07:08,271
+like this one uses between 20 to 30%of
+ 
+
+489
+00:07:08,271 --> 00:07:09,944
+like this one uses between 20 to 30%of
+the weekly limit of the Claude Pro
+
+490
+00:07:09,944 --> 00:07:09,954
+the weekly limit of the Claude Pro
+ 
+
+491
+00:07:09,954 --> 00:07:11,429
+the weekly limit of the Claude Pro
+subscription.
+
+492
+00:07:11,429 --> 00:07:11,439
+subscription.
+ 
+
+493
+00:07:11,439 --> 00:07:13,232
+subscription.
+In other words, we could make about 15
+
+494
+00:07:13,232 --> 00:07:13,242
+In other words, we could make about 15
+ 
+
+495
+00:07:13,242 --> 00:07:14,989
+In other words, we could make about 15
+to 20 videos like this per month just
+
+496
+00:07:14,989 --> 00:07:14,999
+to 20 videos like this per month just
+ 
+
+497
+00:07:14,999 --> 00:07:17,190
+to 20 videos like this per month just
+with the Cloud Pro subscription. With
+
+498
+00:07:17,190 --> 00:07:17,200
+with the Cloud Pro subscription. With
+ 
+
+499
+00:07:17,200 --> 00:07:20,004
+with the Cloud Pro subscription. With
+that in mind, we spend more or less 10
+
+500
+00:07:20,004 --> 00:07:20,014
+that in mind, we spend more or less 10
+ 
+
+501
+00:07:20,014 --> 00:07:22,458
+that in mind, we spend more or less 10
+to 15 dollars per video, which is
+
+502
+00:07:22,458 --> 00:07:22,468
+to 15 dollars per video, which is
+ 
+
+503
+00:07:22,468 --> 00:07:24,923
+to 15 dollars per video, which is
+ridiculously cheap. A video like this,
+
+504
+00:07:24,923 --> 00:07:24,933
+ridiculously cheap. A video like this,
+ 
+
+505
+00:07:24,933 --> 00:07:26,805
+ridiculously cheap. A video like this,
+delivered by a professional editor with
+
+506
+00:07:26,805 --> 00:07:26,815
+delivered by a professional editor with
+ 
+
+507
+00:07:26,815 --> 00:07:28,782
+delivered by a professional editor with
+the quality we’re seeing, would cost at
+
+508
+00:07:28,782 --> 00:07:28,792
+the quality we’re seeing, would cost at
+ 
+
+509
+00:07:28,792 --> 00:07:31,289
+the quality we’re seeing, would cost at
+least 3,000 Reais.
+
+510
+00:07:31,289 --> 00:07:31,299
+least 3,000 Reais.
+ 
+
+511
+00:07:31,299 --> 00:07:33,415
+least 3,000 Reais.
+Actually, now here, me from the future,
+
+512
+00:07:33,415 --> 00:07:33,425
+Actually, now here, me from the future,
+ 
+
+513
+00:07:33,425 --> 00:07:35,595
+Actually, now here, me from the future,
+finishing editing this video, the math I
+
+514
+00:07:35,595 --> 00:07:35,605
+finishing editing this video, the math I
+ 
+
+515
+00:07:35,605 --> 00:07:37,775
+finishing editing this video, the math I
+had done was based on a previous video I
+
+516
+00:07:37,775 --> 00:07:37,785
+had done was based on a previous video I
+ 
+
+517
+00:07:37,785 --> 00:07:41,189
+had done was based on a previous video I
+edited that had much less animation.
+
+518
+00:07:41,189 --> 00:07:41,199
+edited that had much less animation.
+ 
+
+519
+00:07:41,199 --> 00:07:42,950
+edited that had much less animation.
+Since I made this one packed with
+
+520
+00:07:42,950 --> 00:07:42,960
+Since I made this one packed with
+ 
+
+521
+00:07:42,960 --> 00:07:44,970
+Since I made this one packed with
+animations, a more realistic value for
+
+522
+00:07:44,970 --> 00:07:44,980
+animations, a more realistic value for
+ 
+
+523
+00:07:44,980 --> 00:07:47,043
+animations, a more realistic value for
+this type of video would be around 5 to
+
+524
+00:07:47,043 --> 00:07:47,053
+this type of video would be around 5 to
+ 
+
+525
+00:07:47,053 --> 00:07:49,115
+this type of video would be around 5 to
+10 videos per month on Cloud Pro, which
+
+526
+00:07:49,115 --> 00:07:49,125
+10 videos per month on Cloud Pro, which
+ 
+
+527
+00:07:49,125 --> 00:07:51,135
+10 videos per month on Cloud Pro, which
+still comes out to like 2 to 4 dollars
+
+528
+00:07:51,135 --> 00:07:51,145
+still comes out to like 2 to 4 dollars
+ 
+
+529
+00:07:51,145 --> 00:07:53,929
+still comes out to like 2 to 4 dollars
+per video, which is absurdly cheap.
+
+530
+00:07:53,929 --> 00:07:53,939
+per video, which is absurdly cheap.
+ 
+
+531
+00:07:53,939 --> 00:07:55,582
+per video, which is absurdly cheap.
+And if you want to make more videos than
+
+532
+00:07:55,582 --> 00:07:55,592
+And if you want to make more videos than
+ 
+
+533
+00:07:55,592 --> 00:07:57,155
+And if you want to make more videos than
+that, just get a higher tier cloud plan
+
+534
+00:07:57,155 --> 00:07:57,165
+that, just get a higher tier cloud plan
+ 
+
+535
+00:07:57,165 --> 00:07:58,949
+that, just get a higher tier cloud plan
+, and then you’ll have infinite videos.
+
+536
+00:07:58,949 --> 00:07:58,959
+, and then you’ll have infinite videos.
+ 
+
+537
+00:07:58,959 --> 00:08:00,079
+, and then you’ll have infinite videos.
+I just wanted to clarify so I wouldn't
+
+538
+00:08:00,079 --> 00:08:00,089
+I just wanted to clarify so I wouldn't
+ 
+
+539
+00:08:00,089 --> 00:08:01,267
+I just wanted to clarify so I wouldn't
+pass on false information, but let's get
+
+540
+00:08:01,267 --> 00:08:01,277
+pass on false information, but let's get
+ 
+
+541
+00:08:01,277 --> 00:08:02,819
+pass on false information, but let's get
+on with the video. And now, as promised
+
+542
+00:08:02,819 --> 00:08:02,829
+on with the video. And now, as promised
+ 
+
+543
+00:08:02,829 --> 00:08:04,924
+on with the video. And now, as promised
+, the free skill I created for you. It
+
+544
+00:08:04,924 --> 00:08:04,934
+, the free skill I created for you. It
+ 
+
+545
+00:08:04,934 --> 00:08:06,688
+, the free skill I created for you. It
+will guide you step-by-step to build a
+
+546
+00:08:06,688 --> 00:08:06,698
+will guide you step-by-step to build a
+ 
+
+547
+00:08:06,698 --> 00:08:08,542
+will guide you step-by-step to build a
+custom workflow for whatever video style
+
+548
+00:08:08,542 --> 00:08:08,552
+custom workflow for whatever video style
+ 
+
+549
+00:08:08,552 --> 00:08:09,610
+custom workflow for whatever video style
+you want.
+
+550
+00:08:09,610 --> 00:08:09,620
+you want.
+ 
+
+551
+00:08:09,620 --> 00:08:11,498
+you want.
+And it already comes with best practices
+
+552
+00:08:11,498 --> 00:08:11,508
+And it already comes with best practices
+ 
+
+553
+00:08:11,508 --> 00:08:13,340
+And it already comes with best practices
+and general training on what I think is
+
+554
+00:08:13,340 --> 00:08:13,350
+and general training on what I think is
+ 
+
+555
+00:08:13,350 --> 00:08:15,044
+and general training on what I think is
+needed to make good animations and a
+
+556
+00:08:15,044 --> 00:08:15,054
+needed to make good animations and a
+ 
+
+557
+00:08:15,054 --> 00:08:17,232
+needed to make good animations and a
+good workflow. The GitHub link is in the
+
+558
+00:08:17,232 --> 00:08:17,242
+good workflow. The GitHub link is in the
+ 
+
+559
+00:08:17,242 --> 00:08:19,229
+good workflow. The GitHub link is in the
+description. You copy it, paste it into
+
+560
+00:08:19,229 --> 00:08:19,239
+description. You copy it, paste it into
+ 
+
+561
+00:08:19,239 --> 00:08:21,142
+description. You copy it, paste it into
+your cloud, and ask it to install it for
+
+562
+00:08:21,142 --> 00:08:21,152
+your cloud, and ask it to install it for
+ 
+
+563
+00:08:21,152 --> 00:08:22,641
+your cloud, and ask it to install it for
+you. After that, just type/
+
+564
+00:08:22,641 --> 00:08:22,651
+you. After that, just type/
+ 
+
+565
+00:08:22,651 --> 00:08:24,492
+you. After that, just type/
+editing-workflow in the chat and it
+
+566
+00:08:24,492 --> 00:08:24,502
+editing-workflow in the chat and it
+ 
+
+567
+00:08:24,502 --> 00:08:26,750
+editing-workflow in the chat and it
+starts guiding you. So that’s it, Cloud
+
+568
+00:08:26,750 --> 00:08:26,760
+starts guiding you. So that’s it, Cloud
+ 
+
+569
+00:08:26,760 --> 00:08:28,479
+starts guiding you. So that’s it, Cloud
+does the mechanical work, but the one
+
+570
+00:08:28,479 --> 00:08:28,489
+does the mechanical work, but the one
+ 
+
+571
+00:08:28,489 --> 00:08:30,254
+does the mechanical work, but the one
+who defines the style, approves the map
+
+572
+00:08:30,254 --> 00:08:30,264
+who defines the style, approves the map
+ 
+
+573
+00:08:30,264 --> 00:08:32,289
+who defines the style, approves the map
+, and says what’s good or not is you.
+
+574
+00:08:32,289 --> 00:08:32,299
+, and says what’s good or not is you.
+ 
+
+575
+00:08:32,299 --> 00:08:34,118
+, and says what’s good or not is you.
+And that is why I don't think it will
+
+576
+00:08:34,118 --> 00:08:34,128
+And that is why I don't think it will
+ 
+
+577
+00:08:34,128 --> 00:08:36,318
+And that is why I don't think it will
+replace editors. It will just change the
+
+578
+00:08:36,318 --> 00:08:36,328
+replace editors. It will just change the
+ 
+
+579
+00:08:36,328 --> 00:08:38,252
+replace editors. It will just change the
+way we work a lot, and those who don't
+
+580
+00:08:38,252 --> 00:08:38,262
+way we work a lot, and those who don't
+ 
+
+581
+00:08:38,262 --> 00:08:40,204
+way we work a lot, and those who don't
+learn will end up falling behind. Now
+
+582
+00:08:40,204 --> 00:08:40,214
+learn will end up falling behind. Now
+ 
+
+583
+00:08:40,214 --> 00:08:41,792
+learn will end up falling behind. Now
+tell me in the comments if there was any
+
+584
+00:08:41,792 --> 00:08:41,802
+tell me in the comments if there was any
+ 
+
+585
+00:08:41,802 --> 00:08:43,188
+tell me in the comments if there was any
+part of this video that you thought
+
+586
+00:08:43,188 --> 00:08:43,198
+part of this video that you thought
+ 
+
+587
+00:08:43,198 --> 00:08:44,740
+part of this video that you thought
+looked too much like AI and didn't turn
+
+588
+00:08:44,740 --> 00:08:44,750
+looked too much like AI and didn't turn
+ 
+
+589
+00:08:44,750 --> 00:08:47,758
+looked too much like AI and didn't turn
+out well. Thanks,
+
