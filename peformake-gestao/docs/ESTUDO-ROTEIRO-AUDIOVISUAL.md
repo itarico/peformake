@@ -3,6 +3,50 @@
 18/11/2026. **Isto é estudo, não regra.** Serve para a IA e a equipe pensarem melhor antes de escrever. Espinha: o **MDD** (§2b). A versão
 operacional está em `MOTOR-ROTEIRO.md`, o prompt completo em `PROMPT-ROTEIRO-MASTER.md`, o radar em `RADAR-TENDENCIAS.md` e o teste em `TESTE-ROTEIROS-SN.md`.
 
+### Índice de seções (o prompt mestre manda a cada etapa só as seções que ela usa)
+| § | Seção | Usada por |
+|---|---|---|
+| 1 | Por que a SN falhou | Estrategista, Banca |
+| 2 | O que os dois roteiros da equipe ensinam (Rosanne, Colégio Militar) | Roteirista, Banca (conjunto de ouro em `MOTOR-ROTEIRO.md`) |
+| 2b | O MDD expandido (espinha) | Estrategista, Ideação |
+| 2c | Persona primeiro | Estrategista, Copywriter |
+| 2d | Inteligência de dados do sistema | Dossiê, Portão, Estrategista |
+| 3 | Objetivos e papéis | Estrategista |
+| 3b | Catálogo de formatos (orgânico e anúncio) | Estrategista, Curador |
+| 4 | Estruturas (arcos) | Roteirista |
+| 5 | Banco de ganchos por objetivo | Copywriter |
+| 6 | Neuromarketing em vídeo curto | Copywriter, Editor |
+| 7 | Humor em vídeo de marca | Ideação, Roteirista, Banca (só se houver humor) |
+| 8 | Linguagens visuais | Estrategista, Diretor |
+| 9 | Escrita: fala contínua | Roteirista |
+| 10.1 | Roteiro, estrutura e cena | Roteirista, Diretor |
+| 10.2 | Storytelling de marca | Roteirista |
+| 10.3 | Ganchos, atenção e vídeo curto | Copywriter, Editor |
+| 10.4 | Persuasão e copy | Copywriter |
+| 10.5 | Mente e emoção | Estrategista, Banca |
+| 10.6 | Ofício em 15–90 s, publicidade e documentário | Roteirista, Diretor |
+| 11 | Conteúdo magnético | Ideação |
+| 12 | Radar do momento e dossiê | Dossiê, Estrategista, Curador |
+| 13 | Intenção em tudo | Roteirista, Interrogatório |
+| 14 | Próximos passos (fase 2) | (nenhuma; só equipe) |
+| 15 | Vender sem parecer venda | Copywriter, Banca |
+| 16 | Algoritmo de cada rede | Estrategista, Editor |
+| 17 | Resultado imediato × marca | Estrategista |
+| 18 | Percepção de quem assiste | Banca |
+| 19 | Capa, título, legenda e SEO social | Editor |
+| 20 | Depois do vídeo: conversa e atribuição | Editor |
+| 21 | Direção de não-atores | Roteirista (entrevista), Diretor |
+| 22 | Qualidade técnica mínima | Diretor |
+| 23 | Teste A/B de ganchos e fadiga | Copywriter, Editor |
+| 24 | Colaborações, influenciadores e UGC | Estrategista |
+| 25 | Acessibilidade | Editor |
+| 26 | Limites legais e éticos | Fidelidade (Banca) |
+| 27 | Humor como pilar | Roteirista, Banca (só se houver humor) |
+| 28 | Identidade de cada cliente | Dossiê, Roteirista, Banca |
+| 29 | Autenticidade obrigatória | Roteirista, Banca |
+| 30 | Mapa de frameworks por etapa | Estrategista |
+| 31 | Fontes | (nenhuma; consulta) |
+
 Pedido do Italo: a geração de roteiro "ficou bonita, mas não funcional". O roteiro tem que ser o diferencial da casa:
 ideias novas e únicas por cliente, baseadas no que já deu certo (estrutura, gancho, neuromarketing, humor), com a
 comunicação que o cliente precisa e foco em conversão. "Não é regra, é estudo; é construção narrativa criativa."

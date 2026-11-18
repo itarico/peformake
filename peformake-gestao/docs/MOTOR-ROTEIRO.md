@@ -2,7 +2,7 @@
 
 Versão operacional de `ESTUDO-ROTEIRO-AUDIOVISUAL.md` (o porquê está lá; índice de seções no topo). O texto para a IA
 executar é `PROMPT-ROTEIRO-MASTER.md` (núcleo curto + módulos por etapa; também no banco:
-`select instructions from agent_instructions where slug='roteiro-master';`). Radar e calendário: `RADAR-TENDENCIAS.md`.
+`select public.agent_instructions('roteiro-master');`). Radar e calendário: `RADAR-TENDENCIAS.md`.
 Teste aplicado: `TESTE-ROTEIROS-SN.md`.
 
 **Regra do Italo (18/11/2026): é proibido gerar roteiro simples ou genérico.** Todo roteiro passa por um pipeline de
