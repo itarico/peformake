@@ -70,27 +70,273 @@ muda o que se vê**; nada de adjetivo vazio; o fecho é convite com pergunta.
 
 ---
 
-## 3. Papéis no mês (para que serve cada vídeo)
+## 2b. O MDD expandido: a espinha de tudo
+
+O **Método De Dentro (MDD)** é o maior estudo da casa e a base do Italo (skill `anthropic-skills:mdd`, índice v3.1;
+ideias soltas D1–D78 em `.claude/skills/roteiro-narrativa/IDEIAS_MDD.md`; moldes M25–M38 em `MODELOS.md`). O motor de
+roteiro **segue o MDD**; as autoridades abaixo entram para reforçar, completar ou corrigir cada camada.
+
+**Nas palavras do método:** "marketing feito de dentro pra fora: de dentro da verdade da marca, de dentro da operação,
+de dentro da própria voz. Não de longe, não de fachada, não no automático." Inimigo: **o automático, o raso, a
+fachada**. Lei: "verdade vende mais que perfeição".
+
+**Leis que valem sempre:** (1) **Duas camadas**: regra universal com [variáveis] + contexto do cliente carregado na
+hora; exemplo nunca vira regra; variável essencial vazia = perguntar ou diagnosticar antes. (2) Lê a ficha antes,
+salva depois. (3) Conhecimento vivo: estável (técnica, psicologia, dramaturgia) × rotativo (plataformas, trends, com
+data e etiqueta CONFIRMADO/CONSENSO/HIPÓTESE; hipótese vence em 4 semanas sem teste). (4) Tudo passa pelos 5 filtros.
+
+**Motor Autoral (gate):** sem **Repertório** (haste única, amplitude, peças reais: vivências, casos com resultado,
+números próprios, cicatrizes, metáforas proprietárias, bastidor exclusivo) e sem **Eixo** (convicção central
+falseável, satélites, inimigo-ideia, lista "não somos isso") **o MDD não gera, pergunta**. Gatilho do mundo +
+Repertório → Eixo → **Tese**. "Não são 50 assuntos, são 50 ângulos de 1 ideia central." "Originalidade não é invenção,
+é enquadramento." "Argumento não constrói autoridade; evidência constrói."
+
+**Pipeline universal do MDD (Base Mestra v2):** 1 Assunto com nome/número/caso → 2 **Fase de consciência** (1
+inconsciente, 2 problema, 3 solução, 4 produto, 5 pronto; mix 30/40/25/5; nunca 2 seguidos na mesma fase) → 3
+**Intenção RETINA** (Relacionamento, Engajamento, Transformação, Interação, Nível de consciência, Autoridade) → 4
+Narrativa + motor de entretenimento (tensão, surpresa, emoção ou estética: qual liga no segundo 1?) + assinatura viral →
+5 Formato + hook + checklist neuro (mín. 7/10, item ético eliminatório) → 6 **Diferenciação Brutal** (concorrente
+postaria trocando o logo? mín. 3/6) → 7 Entrega falável, 1 CTA, classificar venda invisível ou explícita (80/20).
+
+**Os 5 filtros (toda peça):** Diferenciação Brutal · Anti-Fórmula (roteiro dirigido, não template preenchido) ·
+Humanização (teste da boca: lido em voz alta soa gente?) · Venda como consequência (a história prova o benefício, não
+interrompe) · De dentro (feito da verdade/operação/voz, não de fora).
+
+### Cada camada do MDD × autoridades × metodologias que somam
+
+| Camada MDD | O que pede | Reforçam | Completam (novo) | Contradizem / cuidado |
+|---|---|---|---|---|
+| **1. Dentro da verdade** (identidade: onlyness, inimigo-ideia, mito fundador, marca-personagem) | achar a verdade antes de gravar | Sinek (**Golden Circle**: por quê → como → o quê); Kindra Hall (história de fundador e de valor); Godin ("pessoas como nós fazem coisas assim") | **Jobs-to-be-Done** (Christensen): que "trabalho" o cliente contrata a marca para fazer? Para a SN: "não deixar a obra parar", não "comprar tubo" | Sinek é inspiracional; em B2B o "porquê" precisa de **prova** (Hopkins, Ogilvy). Porquê sem evidência vira fachada (o inimigo do MDD) |
+| **2. Dentro da causa** (movimento, desejo, universo) | marca vira bandeira | StoryBrand (Miller): o **cliente é o herói**, a marca é o guia; Campbell/Vogler (mentor); Berger (moeda social, "público") | **Hero-Hub-Help** (Google): Hero = peça grande (cinemático), Hub = série recorrente, Help = utilidade de busca | movimento em B2B é mais "padrão de mercado que combatemos" (Avis, Volvo) do que causa social |
+| **3. Dentro da história** (story-mining, narrativa, humor, venda invisível) | conteúdo nasce de dentro e é contado como história | McKee (cena = valor que muda), Dicks (momento de 5 segundos), Hall (4 componentes), Zak (arco gera oxitocina), Heath (concreto) | **ABT** (Olson: E… MAS… PORTANTO = a regra MAS/ENTÃO do MDD), **Story Spine** (Pixar), **Kishōtenketsu** (4 atos sem conflito, a virada é surpresa: ótimo para sensorial/gastronomia) | o "conflito obrigatório" do MDD tem exceção: Kishōtenketsu e ASMR seguram por surpresa/prazer estético |
+| **4. Dentro da cena** (produção, escrita dirigida, desfecho intencional, humanização) | gravar de dentro, abrir in medias res, final decidido | Hitchcock (bomba sob a mesa), Murch (emoção 51 %), Kuleshov (o corte cria o sentido), Stanton ("2+2": dar as peças, não a conta), Sorkin (intenção × obstáculo) | **Hook-Retain-Reward** (Hormozi), re-hook a cada 15–20 s, **beat sheet** proporcional à duração (Snyder) | o in medias res é default, não lei: em entrevista e institucional a apresentação (contexto) vem cedo (Live CMR) |
+| **5. Dentro do negócio** (ponte orgânico↔pago, funil, métricas de caixa) | conteúdo vira venda | Schwartz (nível de consciência decide o texto), Cialdini (prova social, autoridade, unidade), Hopkins (afirmação preventiva), Kennedy (mensagem-mercado-mídia) | **AIDA, PAS, BAB, 4Ps** (Promise-Picture-Proof-Push) por fase; **Minto** (conclusão primeiro) para B2B racional; criativo como público (Matriz ângulo × formato × fase) | métrica de vaidade (hook rate alto + hold baixo = gancho mentiroso) |
+
+**Como ler junto:** o MDD diz **de onde** vem o conteúdo (de dentro) e **o que** ele tem que passar (5 filtros); as
+autoridades dizem **como** prender, emocionar e converter. Sempre que uma técnica brigar com um filtro do MDD, o filtro
+vence (ex.: gancho de curiosidade que mente = reprova em "venda como consequência" e em ética).
+
+---
+
+## 2c. Persona primeiro
+
+Antes de qualquer ideia, o pipeline cria ou atualiza **uma persona por público** do cliente. Persona aqui não é
+"homem, 35 anos": é o que faz a pessoa parar, se reconhecer e agir.
+
+**Campos (cada um com fonte ou marcado HIPÓTESE):** quem é e o que faz no dia (rotina real, horários, onde está quando
+vê o celular) · dores e medos (o que dá errado na semana dela) · desejos (o que seria um dia bom) · objeções (por que
+não compra / não troca de fornecedor) · **linguagem real** (palavras, gírias, apelidos, como ela escreve no WhatsApp) ·
+crenças (o que ela acha que é verdade sobre o mercado) · onde consome conteúdo (Reels, YouTube, grupos de WhatsApp,
+LinkedIn) · o que a faz **parar o scroll** · **gatilhos de "isso sou eu"** (situações que só quem vive reconhece) ·
+quem influencia a decisão · momento de compra (gatilho, sazonalidade) · nível de consciência típico (Schwartz).
+
+**Fontes, por ordem de força:** palavras reais do cliente final (conversas de WhatsApp do próprio cliente no sistema,
+comentários, perguntas do atendimento) > respostas do cliente (perguntas do mês, reunião) > briefing e diagnóstico >
+pesquisa (comentários em vídeos do nicho, Reclame Aqui, fóruns) > dedução (marcada HIPÓTESE). Comentário vale mais que
+o vídeo (MDD, Caçador).
+
+**Cada roteiro declara:** a qual persona fala, qual **ponto de identificação** usa ("isso sou eu") e qual palavra real
+dela entrou no gancho ou na objeção.
+
+---
+
+## 2d. Inteligência de dados do sistema (o que ler e o que tirar)
+
+O sistema já guarda o que acontece em cada área do cliente. O motor cruza tudo antes de criar. Conferido no banco em
+18/11/2026.
+
+| Fonte (tabela.campo) | O que tirar para o roteiro |
+|---|---|
+| `strategy_brief_context(cliente, mês)` | já junta: briefing, briefing do mês, perguntas do mês, anotações abertas de reunião, direcionamento, voz, recusas, o que funcionou (último relatório mensal), já feito, contrato, faltou no briefing. **Ponto de partida.** |
+| `clients`: `segment`, `niche`, `description`, `target_audience`, `value_proposition`, `competitors`, `brand_style` (voz, faça, evite, foto) | modelo de negócio, públicos, proposta de valor, o que a marca faz/evita (não vem no contexto acima) |
+| `client_briefs.data`: `publico`, `voz`, `produtos`, `diferenciais`, `proibidos`, `quem_aparece`, `quem_grava`, `capacidade`, `referencias`, `concorrentes`, `links`, `links_extra` | persona, prova, quem grava, limites |
+| `client_brief_months.data`: `meta`, `ofertas`, `datas_travam` | objetivo e oferta do mês |
+| `client_questions` (`question`, `answer`, `status`='respondida', `pack`, `focus`, `area`) | respostas do cliente em todas as áreas, não só do mês: objeções, histórias, números |
+| `client_meeting_notes.body` (abertas: `done_at` nulo) | decisões e pedidos recentes |
+| `client_directions` (`area`, `month`, `body`) | **direcionamento da equipe: prioridade sobre tudo** |
+| `client_brand_voice` (`essencia`, `proposito`, `arquetipo`, `tom`, `evitar`, `expressao`, `regra_teste`, `pilares`) e `client_brand_guides.guide` | voz, arquétipo, pilares, palavras proibidas |
+| `consult_docs` (`doc`, `research`, `status`) | diagnóstico: SWOT, concorrência, maturidade (usar só se `status` não for erro) |
+| `strategy_cards` de meses anteriores (`title`, `tab`, `status`, `reject_reason`, `redo_pedido`, `data`) e `content_rules.rule` | o que foi aprovado (padrão a manter), recusado e **por quê** (regra), refeito e o pedido do Italo (aprender com a edição) |
+| `content_items` (`kind`, `status`, `title`, `headline`, `caption`, `revision_note`, `approved_at`, `publish_date`) e `content_plans` | peças de social aprovadas/publicadas: tom que o cliente aprova, temas já cobertos, revisões pedidas |
+| `av_projects` (`title`, `script`, `script_status`, `script_note`, `revision_note`, `final_link`) | roteiros já gravados, o que o cliente pediu para mudar |
+| `ad_accounts.client_id` → `traffic_entities` (`level`='ad', `name`, `effective_status`, `thumbnail_url`) + `traffic_entity_daily` (`spend_cents`, `impressions`, `reach`, `clicks`, `results`, `leads`) | **criativos vencedores**: custo por resultado e CTR por anúncio nos últimos 30–90 dias; o ângulo que converteu vira pauta (ponte pago → orgânico) |
+| `traffic_daily_metrics`, `traffic_reports` (`summary`, `metrics`), `traffic_strategies`/`traffic_strategy_items`, `traffic_goals` | tendência, metas e decisões de tráfego |
+| `social_accounts` → `social_metrics_daily` (`reach`, `engagement`, `profile_visits`, `followers`); `social_docs.summary`; `social_suggestions` | o que dá alcance e visita ao perfil |
+| `client_scan` (`month`, `source`, `data`) | coleta do mês (perfil, concorrentes, referências) sem recoletar; **também serve de cache do contexto do roteiro** (`source`='contexto_roteiro') |
+| `whatsapp_accounts.client_id` → `whatsapp_messages` (`from_me`=false, `body`) | **a voz do cliente final**: dúvidas, objeções, apelidos de produto, palavras para gancho. Atenção: `wa_contacts.client_id` liga contatos do número da Peformake ao cliente (equipe dele), não o cliente final; `ai_summary`/`ai_intent`/`ai_sentiment` ajudam a filtrar |
+
+**SN em 18/11/2026 (o que o sistema tem):** sem conta de anúncio, sem conta social conectada, sem WhatsApp próprio no
+sistema, diagnóstico (`consult_docs`) com erro de coleta, sem guia de marca, nenhuma pergunta respondida, nenhuma
+recusa registrada, 4 artes em aprovação ("Aqui você encontra materiais", "Sua obra merece produtos hidráulicos que
+duram"…). Ou seja: **dados escassos**. O motor deve dizer isso, marcar a persona como hipótese e gerar as perguntas
+que faltam (ver teste).
+
+---
+## 3. Objetivos e papéis (para que serve cada vídeo)
+
+O objetivo vem da **necessidade do cliente** (meta do mês, fase de consciência do público, o que falta no funil), não
+da moda. Objetivos cobertos: **alcance/viralizar · criativo de tráfego pago · autoridade · ensinar · vender/converter ·
+prova social · comunidade/humor · recrutamento** (quando o cliente contrata). Cada objetivo tem o sinal que prova que
+funcionou (MDD §11): tese → envios e seguidores · bastidor → retenção · educativo → salvamentos · case → comentário e
+lead · react/trend → alcance de não seguidor · anúncio → custo por resultado.
 
 Um mês bom é um **elenco de papéis**, não uma pilha de dicas. Cada papel responde a uma pergunta que o comprador faz
 antes de comprar.
 
-| Papel | Pergunta do comprador | Linguagens que servem | Sinal de que funcionou |
-|---|---|---|---|
-| **Apresentar / autoridade** | "Quem são vocês e por que eu confiaria?" | cinemático/institucional, documental, depoimento do dono | salvamentos, visitas ao perfil, "vi o vídeo de vocês" no atendimento |
-| **História / origem** | "Por que vocês fazem isso?" | entrevista em perguntas, documental, micro-doc | tempo de visualização alto, comentários pessoais |
-| **Objeção principal** | "Mas e o preço / o prazo / a confiança?" | talking head documental, diálogo leigo × especialista, demonstração | conversas que citam o argumento; menos "achei caro" |
-| **Prova** | "Funciona mesmo? Para quem?" | caso real, depoimento de cliente, antes e depois, bastidor | pedidos de orçamento parecidos com o caso |
-| **Método / como funciona** | "Como é trabalhar com vocês?" | POV câmera viva, passo a passo, bastidor | conversas mais qualificadas (já sabem o processo) |
-| **Oferta** | "O que eu ganho agora e até quando?" | vitrine com condição, talking head direto, esquete com oferta dentro da ficção | conversas/pedidos no período |
-| **Comunidade / humor** | "Eles entendem a minha vida?" | esquete, trend com motivo, personagem fixo | compartilhamentos e marcações (alcance entre pares) |
-| **Educar / utilidade** | "O que eu preciso saber?" | tutorial, mito × verdade, lista | salvamentos |
+| Papel | Pergunta do comprador | Fase de consciência | Formatos que servem (ver §3b) | Sinal de sucesso |
+|---|---|---|---|---|
+| **Apresentar / autoridade** | "Quem são vocês e por que eu confiaria?" | 2–3 | institucional cinemático, mini-doc, dono falando, entrevista | salvamentos, visitas ao perfil, "vi o vídeo de vocês" |
+| **História / origem** | "Por que vocês fazem isso?" | 1–3 | storytime, entrevista em perguntas, mini-doc | tempo de visualização, comentários pessoais |
+| **Objeção principal** | "Mas e o preço / o prazo / a confiança?" | 3–4 | talking head documental, nós × eles, react a comentário, diálogo leigo × especialista | conversas que citam o argumento |
+| **Prova** | "Funciona? Para quem?" | 3–4 | depoimento, montagem de depoimentos, antes e depois, teste na mão, timelapse | pedidos parecidos com o caso |
+| **Método** | "Como é trabalhar com vocês?" | 3 | POV, bastidor, day in the life, processo/ASMR | conversas mais qualificadas |
+| **Oferta** | "O que eu ganho agora e até quando?" | 4–5 | vídeo de oferta, UGC problema-solução, unboxing | conversas/pedidos no período |
+| **Comunidade / humor** | "Eles entendem a minha vida?" | 1–2 | esquete, personagem, sátira do nicho, trend adaptada, meme | compartilhamentos, marcações |
+| **Ensinar / utilidade** | "O que eu preciso saber?" | 2–3 | tutorial, listicle, mito × verdade, faceless | salvamentos |
+| **Alcance** | (não pergunta: rola o feed) | 1 | trend adaptada, entrevista de rua, desafio, react, gancho visual | alcance de não seguidor, envios |
+| **Recrutamento** | "Vale a pena trabalhar aí?" | — | day in the life da equipe, depoimento de funcionário | candidaturas |
 
-Regras de bolso (de `estudo_narrativas` e `peformake-estudo-mes`): um mês de 6–8 vídeos tem pelo menos **apresentar,
-objeção, prova e oferta**; o resto varia. O papel decide o gancho, a linguagem e o fecho, nessa ordem.
+Regras de bolso: mês de 6–8 vídeos tem pelo menos **apresentar, objeção, prova e oferta**; o resto varia; fases de
+consciência em mistura (MDD: 30 % fases 1–2, 40 % fase 3, 25 % fase 4, 5 % fase 5); nunca dois seguidos na mesma fase.
 
 ---
 
+## 3b. Catálogo profundo de formatos (orgânico e anúncio)
+
+Formato de cada ficha: **o que é** · **objetivo/funil** · **por que funciona** (mecanismo) · **batidas** · **gancho
+típico** · **exige** (equipe, local, tempo) · **erros** · **referência** · **adaptar** (B2B · varejo local · serviço ·
+saúde). Referências com caminho são do nosso acervo (`video-tools/estudos-perfis/`, `video-tools/estilos/`).
+
+**UGC e anúncios de criador**
+1. **UGC (conteúdo gerado por usuário/criador)** · prova e oferta (meio e fundo; anúncio) · par falando com par: parece
+   recomendação, não propaganda (prova social, semelhança; Cialdini "simpatia" e "prova social") · gancho → problema
+   vivido → produto em uso → resultado → CTA · "Eu não acreditava que…", "Achei a solução pra [dor]" · 1 criador com
+   celular, 20–40 min, roteiro em tópicos · erro: texto decorado, criador que não é do público · ref.: formatos UGC de
+   Modern Millie (showcase, demo, unboxing, problema-solução, depoimento, voiceover, transformação, educativo) ·
+   adaptar: B2B = **engenheiro/mestre real** filmando no canteiro (o "UGC" de B2B é o cliente profissional); varejo =
+   cliente da loja; serviço = cliente na hora do serviço; saúde = só relato autorizado, sem promessa de resultado.
+2. **UGC "unboxing"** · fundo · antecipação + recompensa (dopamina da expectativa, Sapolsky) · caixa → abre → detalhe →
+   uso → veredito · "Chegou!" · 10 min · erro: produto sem diferença visível · adaptar: B2B = **o pedido chegando na
+   obra conferido** (abrir o pallet com a lista); varejo = embalagem; serviço = "o kit que você recebe".
+3. **UGC "teste/review"** · meio · ceticismo resolvido ao vivo (prova > afirmação) · desconfiança → teste → resultado →
+   veredito honesto (com 1 ressalva) · "Testei pra ver se é verdade" · 15 min · erro: review 100 % elogio · adaptar: SN
+   "cola e puxa: solta?"; ótica "a lente risca?"; saúde só com evidência e sem antes/depois não autorizado.
+4. **UGC "problema-solução"** · fundo/anúncio · identificação com a dor + alívio (PAS) · dor vivida → tentativa que
+   falhou → solução → resultado → CTA · "Se você sofre com [dor]…" · 10 min · erro: dor genérica · adaptar: B2B "a obra
+   parou por uma peça"; varejo "a pizza chega fria"; serviço "orçamento que nunca vem".
+5. **UGC "3 motivos"** · meio/fundo · lista curta com progresso (loop numérico, Zeigarnik) · "3 motivos pra…" → 1, 2, 3
+   (o 3º o mais forte) → CTA · 10 min · erro: motivos genéricos · adaptar: "3 coisas que o engenheiro confere antes de
+   fechar a hidráulica".
+
+**Gente da marca falando**
+6. **Dono falando (founder-led)** · autoridade e confiança (fases 2–4) · rosto + responsabilidade (Hall: história do
+   fundador; Kennedy: quem assina vende) · tese → história curta → prova → convite · confissão ou tese contraintuitiva ·
+   30 min, teleprompter ou tópicos · erro: dono lendo, falando "nós somos referência" · adaptar: SN = Sandra; saúde = o
+   profissional com CRM/CRO (regras do conselho).
+7. **Talking head (cabeça falante)** · ensinar, objeção · fala contínua prende quando tem tensão interna (ABT) · gancho
+   → 2–3 batidas com virada → fecho · todos os ganchos G1–G12 · 15 min · erro: fala picada, sem prova visual; resolver
+   com inserts (E16 rosto↔cartaz) · ref.: Giullya `DcJcoxMRu7z` (objeção na voz do público, 15 mil curtidas).
+8. **Depoimento** e 9. **Montagem de depoimentos (testimonial stack)** · prova (fundo; anúncio de retargeting) · prova
+   social de par + especificidade · problema antes → o que mudou → detalhe concreto → recomendação; no stack: 3–5
+   rostos, uma frase forte cada, ritmo rápido · "Eu achava que…" · 20–30 min por pessoa, autorização · erro: depoimento
+   roteirizado, elogio vago · adaptar: B2B = engenheiro sobre prazo; saúde = sem resultado prometido.
+10. **Entrevista de rua (vox pop / street interview)** · alcance + identificação · curiosidade sobre a resposta do
+    outro + pergunta que o espectador responde mentalmente · pergunta → 3–6 respostas → virada/revelação → marca · a
+    pergunta na tela · 1 h na rua, microfone de mão, autorização · erro: pergunta sem tensão · adaptar: B2B = "pergunta
+    de canteiro" em obra (mestres e encanadores); varejo = na calçada do bairro; saúde = mitos de saúde (sem diagnóstico).
+11. **Podcast / cortes** · autoridade + volume (1 gravação → 10 cortes; Gary Vee "pilar → micro") · conversa longa com
+    picos; corte = 1 pico com contexto · a frase mais forte do episódio · 1 h de gravação, 2 câmeras · erro: corte sem
+    contexto (NARRATIVA §11b) · "fake podcast" no anúncio = cenário de podcast para dar ar de conversa.
+12. **Entrevista sentada com perguntas** (Visage, Live CMR) · história, autoridade · perguntas da história real + pontos
+    pra resposta espontânea · 40–60 min rendem 3–5 cortes.
+
+**Documental e cinematográfico**
+13. **Mini-documentário** · marca, autoridade (Hero) · personagem + o que está em jogo + virada (Zak; McKee) · mundo →
+    pessoa → tensão → processo mostrado → respiro → fecho na pessoa · imagem que intriga · Ellcazo, 2–4 h · erro:
+    "bonito sem história" · ref.: E2/E7, M14; Volvo Live Tests.
+14. **Institucional cinemático** · apresentar (fixado no perfil, site, LinkedIn) · emoção + uma ideia só (Binet & Field)
+    · ver Roteiro 1 do teste · Ellcazo · erro: catálogo de produtos com trilha épica.
+15. **Bastidor / day in the life** · método, recrutamento, identificação · o "invisível" vira prova (venda invisível:
+    "bastidor que gera desejo") · manhã → tarefa difícil → detalhe que ninguém vê → resultado · "6h da manhã na [marca]"
+    · celular, contínuo · erro: rotina sem conflito ("dia perfeito não é história").
+16. **POV** · método, ensinar · imersão: o espectador é o personagem (neurônios-espelho) · "POV: você é…" + cenário
+    real que prova (E17, Giullya "publicitária no mercado" 14,2 mi) · 20–30 min · erro: POV sem conhecimento técnico.
+17. **Storytime** · história, comunidade · narrativa em 1ª pessoa com tensão (Dicks: momento de 5 s) · in medias res →
+    contexto mínimo → virada → lição/ponte · "Teve um dia que…" · 15 min · erro: história sem ponte (umbiguismo, MDD).
+18. **ASMR / sons do processo** · alcance, marca (fase 1) · prazer estético sem fala; o som é personagem (MDD §6) ·
+    só som real + detalhe · 30 min com microfone direcional · adaptar: SN = corte de tubo, encaixe, caminhão; gastronomia
+    = fritura, crocância.
+19. **Timelapse / processo** e 20. **Transformação / antes e depois** · prova · contraste temporal (o cérebro adora
+    mudança visível) · antes → processo acelerado → depois · tripé fixo, tempo de obra · erro: "depois" sem o "antes"
+    no mesmo enquadramento; saúde: antes/depois só com autorização e regras do conselho.
+
+**Ensinar**
+21. **Tutorial / how-to** · ensinar, salvamento · utilidade + resultado primeiro (E9) · resultado → passos (1 por frase)
+    → erro comum → CTA · "Como [resultado] sem [esforço]" · 20 min · erro: passo sem demonstração.
+22. **Listicle** · ensinar, alcance · loop numérico com escalada ("o 3º é o mais importante") · 15 min.
+23. **Mito × verdade** · ensinar, objeção · quebra de crença (Schwartz: o mercado acredita X) · mito dito com convicção
+    → "mentira" → prova → regra prática · "Tubo marrom serve pra água quente? Mito." · 15 min.
+24. **Faceless / B-roll + narração** · ensinar, alcance (quando ninguém quer aparecer) · imagem por frase + voz (E15,
+    E23) · 0 de diária (banco próprio de imagens) · erro: B-roll genérico; "imagem = o que é dito".
+25. **Green screen** · react a print/notícia/comentário · prova visual atrás da fala · celular + app · erro: print
+    ilegível.
+
+**Conversa com o público**
+26. **React / reação** · alcance, posicionamento · opinião sobre algo que já tem atenção (newsjacking; janela 48 h no
+    MDD) · trecho → pausa → opinião com tese → ponte para o público · "Viu isso?" · 15 min · erro: só reagir, sem tese;
+    nunca chutar quem está no chão.
+27. **Dueto / stitch / resposta a comentário** · objeção, comunidade · a dúvida real do público como gancho (Voss:
+    rotular a objeção) · comentário na tela → resposta com prova → convite · 10 min · melhor uso das **palavras reais**.
+28. **Desafio / teste ("testei na mão")** · alcance, prova · aposta + resultado incerto (tensão, recompensa variável) ·
+    desafio → tentativa → resultado → lição · "Desafio: furar concreto com a menor broca" (estudo_narrativas G12).
+
+**Entretenimento e marca**
+29. **Série / franquia recorrente** · comunidade, hábito (Hub) · Eyal: gatilho → ação → recompensa variável → hábito;
+    título fixo, bordão, episódio que funciona sozinho · erro: série que depende do episódio anterior (Mavic: 178–563 ♥
+    contra 28,5 mil do avulso).
+30. **Trend adaptada** · alcance · reconhecimento do formato + surpresa da adaptação · só com motivo ligado à tese e
+    janela de produção menor que a vida da trend · erro: trend crua (Diferenciação Brutal reprova).
+31. **Meme / esquete / personagem / sátira do nicho** · comunidade, alcance, objeção leve · violação benigna (§7) ·
+    premissa → escalada → virada → produto como fim da piada → tag · ref.: `estudo_mavic.md` (H1–H14, V1–V12),
+    `estudos-perfis/mavicproducoes/`.
+32. **Carrossel em vídeo / slideshow** · ensinar, salvamento · leitura no próprio ritmo; loop de 6–8 s (E11).
+33. **Animação / motion / IA** · ensinar o invisível (como funciona um biodigestor por dentro) · E23 explainer 3D;
+    skill `motion-pro`; erro: IA no lugar de prova real (regra da casa: nada de imagem por IA como foto do cliente).
+
+**Venda e institucional**
+34. **Vídeo de oferta / promo** · fundo (fase 4–5) · escassez **verdadeira** + condição concreta (Cialdini; Kennedy:
+    prazo) · condição → para quem → por que agora → como pedir · 10 min · erro: preço não confirmado (proibido).
+35. **Convite para evento** · conversão para presença · quem, o quê, quando, onde, por que ir (FOMO verdadeiro).
+36. **Recrutamento** · vagas · day in the life + depoimento de funcionário + "quem não queremos" (polarização).
+37. **Comparação "nós × eles"** · objeção (fase 3–4) · contraste (Avis; MDD: inimigo = ideia, **nunca concorrente pelo
+    nome**) · o padrão do mercado → o nosso jeito → prova · erro: atacar CNPJ (proibido no briefing da SN).
+38. **Gancho visual** (abertura que é só imagem) · alcance · interrupção de padrão (Von Restorff) · objeto/escala
+    absurda (tanque de 25 mil litros com uma pessoa ao lado) · serve de abertura para qualquer outro formato.
+
+### Formatos de anúncio que mais convertem (Meta/TikTok) e a métrica que movem
+Métricas (definições): **hook rate** = reproduções de 3 s ÷ impressões (TikTok usa 2 s); **hold rate** = ThruPlays ÷
+reproduções de 3 s; **CTR** = cliques ÷ impressões; **CPA** = custo por resultado. Faixas publicadas para Meta (público
+frio): hook ~25 % médio, 30–40 % forte, abaixo de 15–20 % a abertura falhou; hold 40–50 % médio na definição ThruPlay
+÷ 3 s. **Gancho alto + hold baixo = gancho que promete o que o vídeo não entrega** (atrai o público errado e piora o CPA).
+Sempre comparar com a média da própria conta.
+
+| Formato de anúncio | Batidas | Move principalmente |
+|---|---|---|
+| **Gancho + problema + demo + prova + oferta + CTA** (o "padrão de resposta direta") | 0–3 dor ou resultado · 3–8 problema · 8–20 demonstração · 20–25 prova · 25–30 oferta e CTA | CPA (é o mais completo) |
+| **Testimonial stack** | 3–5 clientes, uma frase forte cada, fecho com oferta | hold rate e conversão em retargeting |
+| **Split screen** (lado a lado) | o jeito comum × o nosso, ao mesmo tempo | hook rate (contraste visual) |
+| **Nós × eles** | o padrão do mercado × a nossa forma, com prova | CTR (público em fase 3) |
+| **Unboxing** | expectativa → revelação → detalhe → uso | hold rate |
+| **Fake podcast** | duas pessoas "conversando" sobre a dor; a solução surge na conversa | hold rate (parece conteúdo, não anúncio) |
+| **Street interview** | pergunta na rua → respostas → a marca resolve | hook rate |
+| **Founder story** | o dono conta por que criou + prova + convite | CTR e confiança (ticket alto, B2B) |
+| **UGC problema-solução** | criador com a dor → solução → resultado | CPA em público frio |
+
+Regra da ponte (MDD, tráfego): **orgânico com sinal forte vira criativo; criativo que converteu volta como pauta
+orgânica**. Para cada vídeo de anúncio, entregar **3–5 variações de gancho** sobre o mesmo corpo (o gancho é a
+variável mais barata de testar; Hormozi e o estudo da casa).
+
+---
 ## 4. Estruturas (arcos) que funcionam
 
 Detalhe e exemplos em `estudo_narrativas.md` §3 e `MODELOS.md`. Resumo por papel:
@@ -250,7 +496,200 @@ Como escrever:
 
 ---
 
-## 10. Fontes
+## 10. Biblioteca de princípios (as maiores autoridades, só o que muda a escrita)
+
+Não é resumo de livro. Cada linha diz **o princípio** e **como vira roteiro** (→). O prompt mestre consulta esta
+biblioteca em cada etapa (indicado entre colchetes).
+
+### 10.1 Roteiro, estrutura e cena [Roteirista, Diretor]
+- **Aristóteles (Poética):** unidade de ação (uma história só); peripécia (virada) e reconhecimento. → Um vídeo, uma
+  ação; a virada é o ponto em que o espectador "reconhece" algo.
+- **Robert McKee (Story):** toda cena muda um valor de carga (+ → − ou − → +); se nada muda, não é cena; o caráter se
+  revela na escolha sob pressão; a lacuna entre o que o personagem espera e o que acontece gera interesse. → Cada bloco
+  do roteiro precisa virar uma carga (obra parada → obra andando; dúvida → confiança). Mostre a Sandra **escolhendo**
+  sob pressão (o item que falta, a hora que aperta).
+- **Syd Field (Screenplay):** 3 atos com pontos de virada; o problema tem que estar armado cedo. → Em 60 s: ato 1 até 10
+  s, virada 1, ato 2 até 45 s, virada 2, fecho.
+- **Blake Snyder (Save the Cat):** cena "salvar o gato" (o herói faz algo que nos faz gostar dele cedo); logline antes
+  de escrever; beat sheet (imagem de abertura, tema dito, catalisador, debate, virada, diversão e jogos, ponto médio,
+  tudo perdido, final, imagem final). → Toda ideia começa por **uma logline** de 1 frase; versão de bolso do beat sheet
+  por duração (15 s: abertura · catalisador · final; 60 s: abertura · tema · catalisador · virada · ponto médio ·
+  final · imagem final); imagem final espelha a de abertura.
+- **Campbell / Vogler (jornada):** chamado, recusa, mentor, provação, retorno com o elixir. → A marca é **o mentor**
+  (Miller), o cliente é o herói; a "provação" é a dor real dele.
+- **John Truby (Anatomy of Story):** desejo × necessidade; o oponente quer a mesma coisa; argumento moral. → Personagem
+  quer "preço baixo" (desejo) mas precisa de "obra sem parar" (necessidade): o vídeo mora nessa diferença.
+- **Lajos Egri (Art of Dramatic Writing):** a **premissa** (personagem + conflito → resolução) testável. → Escreva a
+  premissa antes do gancho: "lista conferida (personagem/ação) leva a obra sem parada (resolução)".
+- **Pixar (Emma Coats, 22 regras; Story Spine; Andrew Stanton TED "Clues to a great story"):** "era uma vez… todo dia…
+  até que um dia… por causa disso… até que finalmente"; admiramos o personagem pelo que tenta, não pelo que consegue;
+  "faça-me importar"; **2+2**: dê as peças, não o 4. → O espectador soma; não explique a moral.
+- **Aaron Sorkin:** intenção e obstáculo: alguém quer algo e algo está no caminho; sem isso não há cena. → Primeira
+  pergunta do roteirista: quem quer o quê, e o que impede?
+- **Charlie Kaufman (palestra BAFTA, 2011):** honestidade e especificidade pessoal vencem a fórmula. → É o filtro
+  "de dentro" do MDD.
+- **Hitchcock (a Truffaut):** surpresa = 15 s de susto; suspense = mostrar a bomba sob a mesa e dar minutos de
+  tensão. → Mostre ao público o problema que o personagem ainda não viu (a peça que vai faltar) e deixe a tensão
+  correr até a virada.
+- **Kurosawa:** movimento na cena (vento, chuva, gente) dá emoção ao plano parado. → No institucional, algo se move no
+  quadro (poeira no contraluz, carrinho, caminhão).
+- **Walter Murch (In the Blink of an Eye):** regra de 6 no corte: emoção 51 %, história 23 %, ritmo 10 %, direção do
+  olhar 7 %, plano 2D 5 %, espaço 3D 4 %. → Na dúvida, o corte que preserva a emoção ganha do corte "correto".
+- **Eisenstein / Kuleshov:** o sentido nasce da justaposição: o mesmo rosto parece faminto, triste ou apaixonado
+  conforme o plano seguinte. → O insert depois da fala decide o que o público sente (lista → obra andando = alívio).
+
+### 10.2 Storytelling de marca e conteúdo [Estrategista, Roteirista]
+- **Kindra Hall (Stories That Stick):** 4 componentes: personagem identificável, emoção autêntica, momento
+  significativo, detalhes específicos; 4 histórias: valor, fundador, propósito, cliente. → Checklist de cada vídeo de
+  história; mês com pelo menos 2 das 4 histórias.
+- **Donald Miller (StoryBrand SB7):** personagem quer algo → tem problema (externo, interno, filosófico) → encontra um
+  guia (empatia + autoridade) → que dá um plano → e chama para a ação → evita o fracasso → termina em sucesso. → O
+  problema **interno** (medo, vergonha, cansaço) é o que prende; a marca mostra empatia antes da autoridade.
+- **Matthew Dicks (Storyworthy):** toda história é sobre um **momento de 5 segundos** de mudança; comece o mais perto
+  possível do fim; "homework for life" (anotar momentos todo dia). → Ache o momento de 5 s do cliente (a entrega que
+  salvou a obra) e construa para trás.
+- **Nancy Duarte (Resonate):** alternar "o que é" × "o que poderia ser" (sparkline); um momento inesquecível (STAR). →
+  Para objeção e institucional.
+- **Seth Godin:** "pessoas como nós fazem coisas assim"; o mínimo público viável; seja notável (vaca roxa). → B2B:
+  falar como "nós, de obra"; nichar até doer (MDD).
+- **Jonah Berger (Contagious, STEPPS):** moeda social, gatilhos, emoção, público, valor prático, histórias. → Crítico
+  checa: por que alguém mandaria isso para outro? Qual gatilho do dia a dia lembra o vídeo?
+- **Chip & Dan Heath (Made to Stick, SUCCESs):** simples, inesperado, concreto, crível, emocional, histórias; a
+  maldição do conhecimento. → Crítico checa os 6; roteirista corta jargão que só o especialista entende.
+
+### 10.3 Ganchos, atenção e vídeo curto [Copywriter, Editor]
+- **MrBeast (documento de produção):** o primeiro minuto é o mais importante e tem que cumprir a promessa da capa;
+  escalar sempre; nada chato. → Em Reels, o primeiro quadro cumpre o gancho; cada bloco sobe a aposta.
+- **Paddy Galloway:** a ideia e a embalagem (título/capa) antes da produção; ideia fraca não se salva na edição. →
+  Etapa de ideias curtas e baratas antes do pipeline completo.
+- **Brendan Kane (Hook Point):** o mundo de 3 segundos; testar muitas versões rápido. → 3–5 ganchos por vídeo.
+- **Nir Eyal (Hooked):** gatilho → ação → recompensa variável → investimento. → Série com recompensa que muda a cada
+  episódio e um pedido de participação (mande sua lista, comente).
+- **Alex Hormozi ($100M Leads; ganchos):** **Hook-Retain-Reward**; chamar o público pelo nome ("se você é engenheiro…");
+  equação de valor (resultado desejado × probabilidade ÷ tempo × esforço); muitos ganchos para o mesmo corpo. →
+  Copywriter escreve o gancho que chama a persona e promete o resultado com menos tempo/esforço.
+- **Gary Vaynerchuk:** documente, não crie; um conteúdo pilar vira dezenas de micro conteúdos. → Diária gera entrevista
+  pilar + cortes; bastidor documentado.
+
+### 10.4 Persuasão e copy [Copywriter, Crítico]
+- **Robert Cialdini (Influence; Pre-suasion):** reciprocidade, compromisso, prova social, autoridade, simpatia,
+  escassez, unidade; o que se coloca em foco **antes** da mensagem muda como ela é recebida. → Abra o vídeo pondo em
+  foco o critério que favorece o cliente (prazo, não preço) antes de falar dele.
+- **Eugene Schwartz (Breakthrough Advertising):** 5 níveis de consciência (não sabe do problema → sabe do problema →
+  sabe da solução → conhece o produto → pronto); o desejo não se cria, se canaliza; sofisticação do mercado. →
+  Copywriter **escolhe o nível**: frio = história e problema; quente = oferta direta.
+- **David Ogilvy:** pesquisa antes de escrever; fato específico vende; "o consumidor não é idiota". → Nada de adjetivo
+  sem fato.
+- **Gary Halbert:** a multidão faminta (mercado certo) vale mais que a melhor copy. → Persona certa > texto bonito.
+- **Joseph Sugarman:** escorregador: a função da 1ª frase é fazer ler a 2ª; sementes de curiosidade. → Cada frase do
+  roteiro empurra para a próxima.
+- **Claude Hopkins (Scientific Advertising):** especificidade, teste, **afirmação preventiva** (contar o processo que
+  todos fazem mas ninguém conta, como a Schlitz com o vapor das garrafas). → SN: mostrar a conferência da lista, que
+  todo distribuidor "deveria" fazer e ninguém mostra.
+- **Dan Kennedy:** mensagem-mercado-mídia; oferta com prazo; especificidade. → Oferta do vídeo tem condição e data reais.
+- **Jim Camp / Chris Voss (negociação):** empatia tática, rotular ("parece que você…"), auditoria de acusações (dizer as
+  objeções antes do outro), perguntas que admitem "não". → Roteiro de objeção começa dizendo a objeção em voz alta.
+
+### 10.5 Mente e emoção [Estrategista, Crítico]
+- **Daniel Kahneman:** Sistema 1 (rápido, intuitivo) decide primeiro; facilidade cognitiva; regra pico-fim. → Fala
+  simples, um pico emocional e um final forte.
+- **Paul Zak:** arco dramático gera cortisol (atenção) e oxitocina (empatia), e muda comportamento depois.
+- **Uri Hasson (PNAS, 2010):** o cérebro de quem ouve se acopla ao de quem conta quando há compreensão; quanto maior o
+  acoplamento, melhor a compreensão. → Clareza e ritmo de fala natural; quem fala tem que **entender e sentir** o que
+  diz (não decorar).
+- **Antonio Damasio:** marcadores somáticos: sem emoção, a decisão trava. → Mesmo o B2B racional precisa de uma emoção
+  (alívio, orgulho, medo de perder).
+- **Robert Sapolsky:** a dopamina sobe na **antecipação** e no "talvez". → Recompensa incerta segura (o que falta na
+  lista? será que solta?).
+- **Lisa Feldman Barrett:** emoção é construída pelo cérebro que prevê com base no contexto; quebrar a previsão captura
+  atenção. → Gancho que quebra o esperado; contexto (trilha, luz) define a emoção da mesma imagem.
+- **Paul Ekman:** emoções básicas lidas no rosto. → Close na reação; a emoção do rosto vende mais que a fala.
+- **Gerald Zaltman:** a maior parte da decisão é inconsciente e se expressa por metáforas profundas. → Uma metáfora
+  central por vídeo (a obra como relógio; a lista como mapa).
+- **Martin Lindstrom (Buyology):** rituais, sons e sensações criam marcadores de marca. → Assinatura sonora/ritual fixo
+  (o som do caminhão saindo, "próximo!").
+
+### 10.6 Ofício traduzido para 15–90 s e para publicidade/documentário de marca
+| Ofício | Em 15–30 s | Em 60–90 s | Em documentário de marca |
+|---|---|---|---|
+| Cold open (abrir no meio) | o primeiro quadro já é a ação | 3–5 s de cena antes do contexto | cena com som ambiente antes de qualquer fala |
+| Bomba sob a mesa | o texto na tela mostra o risco que o personagem não vê | o risco volta a cada virada | o público sabe o prazo antes do personagem |
+| Setup e payoff / callback | o gancho é respondido na última frase | 1 objeto plantado no início volta no fim | a imagem final espelha a de abertura |
+| Subtexto | a imagem diz o que a fala não diz | contraste fala × imagem (ironia) | entrevista + imagem que revela mais |
+| Montagem (Kuleshov) | 2 planos criam o sentido | sequência de 3 inserts por ideia | o B-roll é argumento, não enfeite |
+| Som como emoção | silêncio de 1 s antes da frase forte | trilha sobe no respiro | som direto do lugar como personagem |
+| Economia (Murch) | corte tudo que não serve à emoção | uma virada a cada 15–20 s | cenas de 1–2 min que prendem sozinhas |
+
+---
+
+## 11. Conteúdo magnético (Giulia Becker) e o que o acervo novo ensina
+
+Acervo novo: `video-tools/estudos-perfis/` (2.078 arquivos de texto: transcrições, legendas, fichas e análises de
+@giubeckers, Mavic, rabbits, Vianna, dacosta, Aslani, EarnEdits, 99hud, tráfego, tutoriais e canais do YouTube).
+Estudos consolidados continuam em `video-tools/estilos/estudo_*.md`.
+
+**Giulia (Giullya) Becker, comunicadora (895 mil seguidores):** "conteúdo magnético" = **o próprio vídeo é a prova do
+que ela vende**. No post de referência (`giubeckers/.../DecE-WsxmJ9`, 34,6 mil curtidas, 2,47 mil comentários, 80 s):
+"Como fazer uma pessoa travadona gravar?" → apresenta o personagem com a dor ("esse é o Esteve, só de olhar para a
+câmera ele esquece o nome") → desafio com tarefas numeradas → resultado na frente da câmera → frase-mantra repetida
+("tudo na vida é treinável") → CTA de palavra no comentário com material maior que o vídeo. Outros padrões (estudo
+`estudo_giubeckers.md`): título-série fixo no topo; conhecimento técnico aplicado a um lugar real (o mercado prova a
+aula: 14,2 mi de views); nome técnico para cada segredo (autoridade sem arrogância); objeção na voz do público ("Ai,
+Giu, mas…", `DcJcoxMRu7z`, 15,2 mil curtidas, 3,1 mil comentários); fecho que vira o assunto para o seguidor + frase
+assinatura sempre igual ("Ocupe seu lugar"); bastidor/erro depois do CTA como recompensa.
+→ **Para clientes:** cada mês tem pelo menos 1 vídeo em que **a demonstração é a prova** (a lista conferida na frente
+da câmera; a unha vista de lado; o molho rendendo na lata).
+
+**Tráfego (`estudos-perfis/trafego/`):** o criativo de referência (Felipe Tâmbara, 41 s, 33 comentários) usa gancho de
+**substituição/inimigo** ("pare de pedir X antes de…"), prova de custo concreta ("a lista inteira custou 60
+centavos"), comparação com a alternativa cara (com preço), ressalva do jeito normal ("ele inventaria metade") e CTA de
+palavra. → Para anúncio: número concreto + alternativa comparada + CTA de baixo atrito.
+
+**YouTube (fluxos de IA, `estudo_youtube.md`):** o "one-shot" sai barato; dividir em etapas (Duncan Rogoff: 6
+trabalhos; Lucas Leite: 8 skills + skill mestre) e manter um **arquivo de aprendizados** ("qual instrução teria
+evitado esta nota?"). É o desenho do pipeline deste motor.
+
+---
+
+## 12. Radar do momento, dossiê e portões (resumo; desenho técnico em `RADAR-TENDENCIAS.md` e `MOTOR-ROTEIRO.md`)
+
+- **Dossiê do cliente (etapa 0):** diagnóstico (dor → conteúdo → formato), produtos e como funcionam, preços, horário,
+  equipe e quem aparece, estrutura, área de atendimento, reputação (Google, comentários, Reclame Aqui, WhatsApp), como
+  o **dono** pensa × como o **cliente** enxerga a marca (a distância vira pauta), auditoria da comunicação atual.
+  Atualizado por mês e guardado em cache (`client_scan`, `source`='dossie').
+- **Portão de conhecimento:** "sei o suficiente?" com checklist pontuado; abaixo do mínimo não sai roteiro final, sai
+  lista de lacunas e perguntas.
+- **Radar do momento:** o que chama atenção agora no nicho (TikTok Creative Center, Google Trends PE, Biblioteca de
+  Anúncios dos concorrentes, YouTube em alta, comentários, WhatsApp) + calendário (`seasonal_dates`, `client_dates`)
+  com antecedência de produção. Cada ideia diz se é **do momento** (com validade) ou **perene**.
+- **Inteligência de performance:** criativos com mais, menos e nenhum resultado (custo por resultado, CTR, frequência,
+  fadiga) geram **criativo substituto** com diagnóstico (gancho, oferta ou público), sempre como sugestão.
+- **Concorrência em camadas** (Recife, PE, Brasil, mundo) com ofertas e ângulos extraídos e **engenharia reversa**
+  (gancho, batidas, prova, oferta, CTA, linguagem, mecanismo) → adaptar, nunca copiar. **Sair da bolha:** pelo menos 1
+  referência de fora do nicho por mês, explicando por que funciona com o público local.
+- **Checagem de fidelidade:** cada afirmação conferida contra dossiê/briefing; sem fonte = [a confirmar] ou corta.
+  Exemplo real da SN: o portfólio diz "distribuidora **autorizada**" e o briefing diz "**oficial** Tigre"; no
+  portfólio o ícone de WhatsApp está ao lado de (81) 93446-9009, e site e briefing dizem 98818-8000. Roteiro só afirma
+  depois de confirmar.
+
+---
+
+## 13. Intenção em tudo
+
+Mesmo o vídeo "simples" é simples **de propósito**. Cada escolha (formato, estrutura, linguagem visual, palavra,
+pausa, plano, trilha, CTA) declara o porquê, e o card guarda uma **intenção** curta: emoção-alvo + efeito desejado
+(ex.: "alívio → o engenheiro manda a lista da próxima etapa"). Escolha sem porquê sai no interrogatório interno.
+
+## 14. Próximos passos (fase 2, só descritos)
+1. **Memória de resultados:** ligar cada vídeo publicado (`content_items`/`av_projects`) às métricas (`social_metrics_daily`,
+   `traffic_entity_daily`) e devolver ao motor "o que funcionou neste cliente" por formato, gancho e papel.
+2. **Banco próprio de referências** com etiquetas (nicho, formato, gancho, mecanismo, número, data) e atualização
+   semanal pelo radar, para o curador consultar antes de buscar na web.
+3. Função SQL `roteiro_context(cliente, mês)` que junta o que hoje são consultas soltas (dossiê, desempenho, voz do
+   cliente final), para a geração pela API ler o mesmo que o agente.
+
+---
+## 15. Fontes
 
 - Meta for Business: "Adopt a mobile-first creative approach" (facebook.com/business/news/mobile-first-creative) e
   "Video ads: testing what works for mobile feed" (facebook.com/business/news/building-video-for-mobile-feed).
