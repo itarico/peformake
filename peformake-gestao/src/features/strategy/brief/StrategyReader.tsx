@@ -8,6 +8,9 @@ import { patchCard } from './strategyApi'
 import { videoDoc, type ScriptDoc } from './scriptRules'
 import { DetailsDialog, RedoDialog, VideoEditDialog } from './ReaderDialogs'
 import { CardDialog } from './CardDialog'
+import { DialogTabs } from '@/components/ui/DialogTabs'
+import { AV_PARTS, type AvPart } from './avParts'
+import { ClientView, EditView, ShootView } from './AvPartsView'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 const s = (v: unknown) => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v))
@@ -33,7 +36,7 @@ export function StrategyReader({ board, tab, name, onChanged }: { board: Strateg
   const more = (c: StrategyCard, doc?: ScriptDoc) => <button type="button" onClick={() => setDetails({ c, doc })} className="min-h-10 cursor-pointer self-start text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">Ver detalhes</button>
   return (
     <div data-leitura={tab} className="flex flex-col gap-3">
-      {tab === 'audiovisual' && cards.map((c, i) => <VideoArticle key={c.id} c={c} doc={videoDoc(c, i)} actions={actions(c)} more={more} />)}
+      {tab === 'audiovisual' && cards.map((c, i) => <VideoArticle key={c.id} c={c} index={i} doc={videoDoc(c, i)} actions={actions(c)} more={more} />)}
       {tab === 'resumo' && <Resumo cards={cards} actions={actions} more={more} />}
       {tab === 'social' && cards.map((c, i) => <Article key={c.id} c={c} kicker={`${String(i + 1).padStart(2, '0')} / ${s(c.data.formato) || 'Peça'}`} actions={actions(c)} more={more(c)}>
         {s(c.data.ideia) && <P>{s(c.data.ideia)}</P>}
@@ -105,32 +108,19 @@ function Article({ c, kicker, actions, more, children }: { c: StrategyCard; kick
   return <Shell c={c} kicker={kicker} title={c.title} actions={actions}>{children}{more}</Shell>
 }
 
-/** Um vídeo = uma "página": número/tipo, título, quem fala e a fala completa (como o PDF da Rosanne). */
-function VideoArticle({ c, doc, actions, more }: { c: StrategyCard; doc: ScriptDoc; actions: ReactNode; more: (c: StrategyCard, doc?: ScriptDoc) => ReactNode }) {
-  let q = 0
+/**
+ * Um vídeo = uma "página", em três partes para três públicos (Italo, 19/11): Cliente (a fala, padrão) · Gravação
+ * (storyboard, shot list, diária) · Edição (por bloco e derivados). Abas simples, sem rolagem dupla.
+ */
+function VideoArticle({ c, index, doc, actions, more }: { c: StrategyCard; index: number; doc: ScriptDoc; actions: ReactNode; more: (c: StrategyCard, doc?: ScriptDoc) => ReactNode }) {
+  const [part, setPart] = useState<AvPart>('cliente')
   return (
     <div data-roteiro={c.id}>
       <Shell c={c} kicker={`${doc.number} / ${doc.type}`} title={doc.title} actions={actions}>
-        {doc.blocks.map((b, i) => (
-          <section key={i} className="flex flex-col gap-2">
-            {b.speaker && <span className="text-[13px] font-semibold text-accent-ink">{b.speaker}</span>}
-            {b.items.map((it, k) => it.kind === 'dir'
-              ? <p key={k} className="max-w-[68ch] text-[13.5px] italic text-muted">[{it.text}]</p>
-              : it.pergunta
-                ? <p key={k} data-pergunta-entrevista className="max-w-[68ch] text-[16px] font-semibold leading-snug"><span className="mb-0.5 block text-[12px] font-semibold not-italic text-accent-ink">Pergunta {++q}</span>{it.text}</p>
-                : it.livre
-                  ? <p key={k} className="max-w-[68ch] text-[14px] text-muted"><b className="font-semibold">Resposta espontânea</b> · {it.text.replace(/^\(|\)$/g, '')}</p>
-                  : <P key={k}>{it.text}</P>)}
-          </section>
-        ))}
-        {doc.questions.map((x, i) => (
-          <section key={`q${i}`} className="flex flex-col gap-1">
-            <span className="text-[12px] font-semibold text-accent-ink">Pergunta {q + i + 1}</span>
-            <p data-pergunta-entrevista className="max-w-[68ch] text-[16px] font-semibold leading-snug">“{x.pergunta}”</p>
-            {x.pontos && <p className="max-w-[68ch] text-[14px] text-muted"><b className="font-semibold">Pontos pra resposta espontânea</b> · {x.pontos}</p>}
-          </section>
-        ))}
-        {!doc.blocks.length && !doc.questions.length && <p className="text-[14px] text-muted">Sem fala escrita. Toque em Editar para escrever.</p>}
+        <div className="w-full max-w-sm"><DialogTabs value={part} onChange={setPart} label={`Partes de ${doc.title}`} options={AV_PARTS} /></div>
+        {part === 'cliente' && <ClientView c={c} index={index} />}
+        {part === 'gravacao' && <ShootView c={c} />}
+        {part === 'edicao' && <EditView c={c} />}
         {more(c, doc)}
       </Shell>
     </div>

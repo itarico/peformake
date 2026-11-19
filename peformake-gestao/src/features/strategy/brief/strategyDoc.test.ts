@@ -1,4 +1,4 @@
-import { docName, pdfCards, strategyHtml } from './strategyDoc'
+import { avDocName, docName, pdfCards, strategyHtml } from './strategyDoc'
 import type { StrategyCard } from './cardRules'
 
 const card = (p: Partial<StrategyCard>): StrategyCard => ({ id: Math.random().toString(), board_id: 'b', tab: 'resumo', kind: 'tese', position: 0, title: 'T', data: {}, funnel: null, serves: null, goal: null, inspired: null, assumed: null, status: 'aprovado', reject_reason: null, in_pdf: true, regen_count: 0, is_new: false, updated_at: '', ...p })
@@ -18,13 +18,24 @@ describe('PDF da estratégia', () => {
       card({ tab: 'social', kind: 'peca', title: 'Fora', in_pdf: false }),
     ] })
     expect(html).toContain('Fornario &lt;x&gt;')
-    expect((html.match(/class="page ez"/g) ?? []).length).toBe(2)
+    // Três partes (cliente, gravação, edição): um capítulo cada e uma página por vídeo em cada parte.
+    expect((html.match(/class="page ez"/g) ?? []).length).toBe(6)
+    expect((html.match(/class="page ez cap"/g) ?? []).length).toBe(3)
+    expect(html).toContain('Para o cliente'); expect(html).toContain('Storyboard'); expect(html).toContain('<svg')
     // Formato do PDF da Rosanne: número/tipo, título sem o "S1 ·", quem fala, a fala em parágrafos, direção entre colchetes; sem selo de funil.
     expect(html).toContain('01 / Reel (ensinar)'); expect(html).toContain('<h2>V1</h2>')
     expect(html).toContain('<p class="spk">Sandra</p>'); expect(html).toContain('<p class="fala">Primeira fala.</p>'); expect(html).toContain('[Mostra a peça.]')
     expect(html).not.toContain('Fecho'); expect(html).not.toContain('Atrair')
     expect(html).toContain('i.ytimg.com/vi/abcdefghijk'); expect(html).toContain('Assistir a referência')
     expect(html).not.toContain('Fora')
-    expect(html).not.toMatch(/\.ez[^{]*\{[^}]*background:#000/)
+    expect(html).not.toMatch(/\.ez[^{]*\{[^}]*background:#(000|1d1f1a)\b/)
+  })
+  it('cada parte do audiovisual sozinha (download separado)', () => {
+    const cards = [card({ tab: 'audiovisual', kind: 'video', title: 'V1', data: { roteiro: [{ cena: 'CLOSE NA PEÇA', fala: 'SANDRA: Olha.' }] } }), card({ title: 'Tese' })]
+    const cli = strategyHtml({ name: 'X', month: '2026-12-01', cards }, { part: 'cliente' })
+    expect((cli.match(/class="page ez"/g) ?? []).length).toBe(1); expect(cli).not.toContain('Storyboard'); expect(cli).not.toContain('Tese'); expect(cli).not.toMatch(/close na/i)
+    const gr = strategyHtml({ name: 'X', month: '2026-12-01', cards }, { part: 'gravacao' })
+    expect(gr).toContain('data-quadro="detalhe"')
+    expect(avDocName('2026-12-01', 'cliente')).toBe('Audiovisual · Para o cliente · 01-12 a 31-12-2026')
   })
 })
