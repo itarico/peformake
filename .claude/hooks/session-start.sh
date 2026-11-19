@@ -6,6 +6,7 @@
 cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
 BRANCH=claude/performig-app-data-hxl4zh
 DIARIO=peformake-gestao/docs/rotina-diario.md
+BASTAO=peformake-gestao/docs/EM-ANDAMENTO.md
 
 echo "== Sincronização automática (início da sessão) =="
 atual=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
@@ -21,9 +22,16 @@ if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
   echo "Atenção: há mudanças nesta máquina que ainda não foram enviadas ao GitHub."
 fi
 
+if [ -f "$BASTAO" ]; then
+  echo
+  echo "== EM ANDAMENTO (passagem de bastão entre PC e nuvem: $BASTAO) =="
+  cut -c1-900 "$BASTAO" | head -60
+fi
+
 if [ -f "$DIARIO" ]; then
   echo
   echo "== Últimas entradas do diário ($DIARIO) =="
-  awk '/^## /{n++} n>=1 && n<=4' "$DIARIO" | cut -c1-900
+  # linhas soltas do topo (antes do primeiro "## ") (as 6 mais novas) e a última seção
+  awk '/^## /{n++} n==0 && /^- / && c++<6 {print} n==1' "$DIARIO" | cut -c1-500 | head -30
 fi
 exit 0
