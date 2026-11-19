@@ -19,13 +19,13 @@ duplicação; (5) prompt modular; (6) exemplos de fala só para consulta (não s
 |---|---|---|---|---|
 | 0 | **Dossiê** | Verdade | contexto do sistema (consultas do prompt mestre), site, perfil, Google, portfólio, cache do mês | dossiê com fonte em cada item (negócio, produtos, preços, equipe e quem aparece, local, reputação e palavras reais do público, dono × como o cliente enxerga, comunicação atual, mapa dor → conteúdo → formato, ficha de identidade audiovisual) |
 | 0b | **Portão de conhecimento** | Verdade | dossiê | nota 0–10 em 11 itens (é a base da nota de **conhecimento do cliente** da banca); **< 7: só pré-roteiro de validação**; lista lacunas, tenta preencher, gera perguntas e marca suposições |
-| 1 | **Estrategista** | Verdade + Causa + Negócio | dossiê, identidade, personas, metas, radar e calendário, desempenho | Repertório + Eixo, tese do mês, personas, mix do mês por papel (orientação, ver abaixo), objetivo, fase de consciência, linguagem e alvo; cada vaga **do momento** (com validade) ou **perene** |
+| 1 | **Estrategista** | Verdade + Causa + Negócio | dossiê, identidade, personas, metas, radar e calendário, desempenho | Repertório + Eixo, tese do mês, personas, mix do mês por papel (orientação, ver abaixo), objetivo, fase de consciência, linguagem, **estrutura (S1–S117, variando; ver abaixo)** e alvo; cada vaga **do momento** (com validade) ou **perene**; hype do momento passa pela análise de hype |
 | 2 | **Curador de referências** | História | mix, radar, acervo (`video-tools/`), Biblioteca de Anúncios, TikTok Creative Center, web | 2–3 candidatas por vaga com nota (5 critérios); escolhida ≥ 7 e aderência ≥ 3; engenharia reversa; ≥ 1 de fora do nicho no mês; descartadas com motivo |
 | 3 | **Ideação barata** | História | tudo acima | 10–15 loglines (SCAMPER); nota rápida; **o próprio sistema escolhe** a melhor por vaga (maior nota, desempate por diversidade no mês); as demais vão para `outras_ideias`. Ninguém precisa escolher; a equipe só aprova ou refaz o card |
 | 4 | **Copywriter** | Negócio | ideia escolhida, persona, nível de consciência | promessa, **3 ganchos** (chamam a persona, concretos, funcionam sem som; servem também ao corte de anúncio), argumentos (FAB), objeção tratada, oferta (escassez só verdadeira), CTA pela fase |
 | 5 | **Roteirista** | História + Cena | copy, persona, identidade, referência | logline, frase-alma, intenção (emoção + efeito), arco por duração, **fala contínua palavra por palavra** de quem aparece (cada frase com função), perguntas + pontos para resposta espontânea (entrevista), fecho que responde o gancho |
-| 6 | **Diretor (videomaker)** | Cena | roteiro | planos, câmera, luz, som, local e horário, quem precisa estar, **diária Ellcazo × celular**, shot list, plano da diária, cola de tópicos |
-| 7 | **Editor** | Cena | roteiro + direção | ritmo, cortes, B-roll = o que é dito, motion (skill `motion-pro`), texto sem som, trilha, derivados, pacote de publicação |
+| 6 | **Diretor (videomaker)** | Cena | roteiro + plano de derivados | planos, câmera, luz, som, local e horário, quem precisa estar, **diária Ellcazo × celular**, shot list (**com os planos extras que os derivados pedem**), plano da diária, cola de tópicos |
+| 7 | **Editor** | Cena | roteiro + direção | ritmo, cortes, B-roll = o que é dito, motion (skill `motion-pro`), texto sem som, trilha, **multiplicador (1 gravação → 6+ derivados em estruturas diferentes)**, pacote de publicação |
 | 8 | **Interrogatório interno** | os 5 filtros | tudo | por quê / como / onde / quando / com quem / para quem / e se tirar? por decisão; sem resposta sólida → refaz ou corta. Oculto (auditoria) |
 | 9 | **Banca** (uma só) | todos | roteiro final, dossiê | **4 notas** (abaixo), cada uma com 1 linha de justificativa, comparação com a referência escolhida, checagem de humor se houver |
 | 9b | **Avaliador às cegas** (condicional) | — | só o roteiro + a persona | roda **só se alguma nota da banca ficar a 0,5 ou menos do mínimo** (acima ou abaixo). Nota independente; diferença > 1,5 → revisa o critério divergente |
@@ -57,6 +57,73 @@ Os números abaixo são **ponto de partida**. O estrategista pode fugir deles **
   70/20/10 (o que funciona / variação / experimento).
 - Nada repetido do mês, dos meses anteriores ou de outro cliente (exceto a série, que repete o formato de propósito).
 
+## Estruturas: explorar uma nova a cada mês
+Catálogo de 117 estruturas no ESTUDO §3c (S1–S117). O estrategista lê o que o cliente já usou e varia:
+```sql
+select month, title, data->>'estrutura' estrutura from strategy_cards
+where client_id='<id>' and tab='audiovisual' and month >= '<AAAA-MM-01>'::date - interval '3 months' and data ? 'estrutura';
+```
+Regras (orientação, como o mix): ≥ 2 vídeos do mês com estrutura **nunca usada** por aquele cliente; nenhuma estrutura
+repetida no mês (salvo série aprovada); ≥ 1 estrutura de um **grupo** (A–M) que o cliente nunca usou; estrutura que
+performou pode voltar com tema novo (conta como "o que funciona" do 70/20/10). Todo card grava `estrutura`.
+Estrutura fora do catálogo: "S-novo: nome" e a equipe decide se entra.
+
+## Trend como gancho (protocolo; liga ao `RADAR-TENDENCIAS.md` §3 e §7)
+**Nunca a trend crua.** A trend só empresta o **elemento reconhecível** (áudio, formato, frase, meme, visual) para
+parar o dedo nos 2 primeiros segundos; daí em diante o vídeo é do cliente e converte.
+1. **Identificar** a trend (radar: Creative Center, Reels, notícias, comentários) e anotar onde está no ciclo
+   (nascendo → copiando → massa → saturando → morta; Billion Dollar Boy). Entrar no "copiando" ou começo do "massa".
+2. **Gatilho de reconhecimento:** o mínimo que faz o público reconhecer em 1 s (os 3 primeiros segundos do áudio,
+   a frase, a pose, o enquadramento, a cor). Escreva em 1 linha. Se precisa explicar a trend, ela não serve.
+3. **Ponte lógica:** uma frase que liga o sentido da trend à **dor, desejo ou oferta** do cliente ("a trend fala de
+   X; nosso público vive X quando ___"). Sem ponte natural → não faz (Diferenciação Brutal reprova).
+4. **Conteúdo que converte:** depois do gatilho, entra uma estrutura do §3c (prova, objeção, demo, oferta) com o
+   caso, a pessoa e o lugar do cliente. O gatilho dura 1–3 s; o resto é roteiro normal pela banca.
+5. **CTA** pela fase (suave no topo; palavra-isca ou WhatsApp no fundo).
+6. **Prazo de vida × produção:** publicar antes da trend saturar. Vida estimada (validar no radar):
+   | Tipo | Vida típica | Produção máxima |
+   |---|---|---|
+   | áudio/meme/micro-trend | 3–10 dias | celular, 24–48 h |
+   | formato (POV, "tipos de", desafio) | 2–6 semanas | celular ou talking head, ≤ 7 dias |
+   | evento/hype (lançamento, jogo, final) | pico de 1–3 semanas | celular, 1–3 dias; Ellcazo só se for data prevista |
+   | estética (cores, era, visual) | meses | qualquer, inclusive diária |
+   Se `produção > metade da vida restante`, não faz ou troca por formato mais leve. Validade vai em `trend_gancho.validade`.
+7. **Riscos:** áudio comercial só da biblioteca da rede (e nunca em anúncio pago sem licença); nada de marca, logo,
+   personagem ou arte de terceiros; tragédia, política e polêmica de tribo = não faz.
+
+## Multiplicador: 1 gravação → N estruturas (Diretor e Editor)
+Exemplo que o Italo viu numa assessoria de restaurantes: um depoimento vira 6+ vídeos diferentes. **Toda gravação
+planejada já sai do motor com os derivados planejados** e a lista do que gravar a mais para viabilizá-los (o Diretor põe
+na shot list; o Editor monta). Mínimo 6 derivados por material-base forte (depoimento, entrevista, processo,
+bastidor); 3 para material curto. Cada derivado tem estrutura diferente e não conta como repetição no mês.
+
+| Derivado (estrutura) | Como sai do bruto | O que gravar a mais |
+|---|---|---|
+| 1. Puro (S61) | o melhor trecho, 30–60 s, com corte limpo | 2 B-rolls do que a pessoa cita |
+| 2. React / comentário (S97) | alguém da marca ou outro cliente assiste e comenta | reação de 1 pessoa assistindo (tela + rosto), 5 min |
+| 3. História antes → virada → depois (S47) | a fala vira narração sobre cenas | cenas do "antes" (o problema encenado ou real) e do "depois" no local |
+| 4. Só ganchos visuais + legenda, sem som (S105/S38) | as 3 frases mais fortes em texto sobre imagem | 6–8 planos de detalhe sem fala (mãos, produto, rosto ouvindo) |
+| 5. Montagem de vários (S62) | junta com outros depoimentos do acervo | mesma pergunta-chave a 2–4 pessoas no mesmo dia |
+| 6. Anúncio 15 s com oferta (S81) | gancho (dos `ganchos`) + 1 frase de prova + oferta + CTA | cartela/condição confirmada; 1 plano do produto/serviço |
+| 7. Carrossel (S106) | frases viram slides com foto real | 4–6 fotos (retrato da pessoa, local, produto) |
+| 8. Pergunta do público → resposta (S93/S98) | uma dúvida real (comentário, WhatsApp) respondida pelo trecho | print da pergunta real (com permissão) ou a pergunta lida por alguém |
+| 9. Story com enquete (S99) | trecho curto + enquete/caixinha | nada |
+Campo no card: `producao.derivados` [{`estrutura`, `formato`, `duracao_s`, `gancho`, `usa` (trecho/minuto do bruto),
+`gravar_a_mais`}]; o somatório de `gravar_a_mais` entra na `shot_list` e no `plano_da_diaria`. Regra de ouro: os
+derivados não pedem nova diária; o que não couber na mesma gravação sai da lista.
+
+## Análise de hype do momento (protocolo; matriz e exemplo resolvido em `RADAR-TENDENCIAS.md` §7)
+Para cada assunto em alta, responder em ordem e gravar em `client_scan` (`source`='hype'):
+1. **O que é e por que está em alta** (fonte e data). 2. **Quem é o público do hype** (idade, gênero, interesse,
+classe, onde está). 3. **Em qual cliente da carteira** aplicar e **por quê**: cruzar a persona de cada cliente ativo
+com o público do hype; lista de candidatos com **nota 0–10** (aderência de público ×2, ponte com a oferta, risco,
+janela × produção). 4. **Benefício** (alcance, identificação, autoridade, venda). 5. **Comunicação** (a mensagem em 1
+frase). 6. **Formato e gancho** (estrutura do §3c + gatilho de reconhecimento). 7. **Risco de imagem e direito**
+(marcas, propriedade intelectual: usar a **referência**, nunca a marca/arte/personagem/trilha protegida; classificação
+etária; nada que glamourize crime, violência ou direção perigosa). 8. **Janela de tempo** × produção. 9. **Vale a
+pena?** nota final e decisão: **fazer** (≥ 8) · **adaptar** (6,5–7,9: só celular/story, ou outro ângulo) · **não
+fazer** (< 6,5 ou risco ≤ 2). Sai como **sugestão** para a equipe aprovar; nada publica sozinho.
+
 ## Custo
 Ideias curtas primeiro; pipeline completo só nas escolhidas pelo sistema. Modelo leve para coleta, resumo, radar e
 ideação; o melhor modelo para copy, roteiro e banca. Avaliador às cegas só quando a nota fica no limite. Cada etapa
@@ -81,8 +148,8 @@ não escolheu), `referencia` {`link`, `porque`}, `cruzamento`, `filmar`; no card
 `suposicao` (**só lacunas** "[a confirmar: …]", nunca notas).
 
 **Extras (atrás de "Ver detalhes"; o PDF e a equipe leem):** `papel`, `linguagem`, `persona`, `frase_alma`, `duracao_s`,
-`momento` ('perene' ou {`validade`}), `nasceu_de` [{`fonte`, `dado`}], `marcas_autenticidade` [..], `perguntas`
-[{`pergunta`, `pontos`}] (entrevista), `producao` {`plano_diaria`, `shot_list`, `cola`, `derivados`, `publicacao`
+`momento` ('perene' ou {`validade`}), `estrutura` (código do ESTUDO §3c, ex. "S63"), `trend_gancho` {`trend`, `gatilho`, `ponte`, `validade`} (só se usar trend), `hype` {`assunto`, `nota`, `decisao`} (só se nascer de hype), `nasceu_de` [{`fonte`, `dado`}], `marcas_autenticidade` [..], `perguntas`
+[{`pergunta`, `pontos`}] (entrevista), `producao` {`plano_diaria`, `shot_list`, `cola`, `derivados` [{`estrutura`, `formato`, `duracao_s`, `gancho`, `usa`, `gravar_a_mais`}], `publicacao`
 {`capa`, `primeira_linha`, `legenda`, `cta_comentario`}, `pos_video` {`palavra`, `resposta`}}.
 
 **Auditoria (oculta):** `auditoria` {`etapas` (1 linha por etapa), `interrogatorio` [{`pergunta`, `resposta`}], `banca`
