@@ -321,3 +321,190 @@ motivo de inscrição**:
 
 **Serve:** a abertura "prova + contrato + promessa do canal" para vídeos longos de cliente B2B (aula, case). **Não
 serve:** o discurso de automação total para clientes de serviço e saúde.
+
+---
+
+## 3. Por que as pessoas acompanham alguém
+
+Lembrete: são **lentes para pensar** um vídeo ou uma linha editorial, não um checklist. Um vídeo bom costuma usar uma ou
+duas; usar todas ao mesmo tempo deixa o conteúdo forçado.
+
+### 3.1 Identidade social e tribos
+A teoria da identidade social (Henri Tajfel e John Turner, 1979) diz que parte de quem a gente é vem dos grupos a que
+pertence; a gente valoriza o próprio grupo e se diferencia dos outros
+([resumo](https://en.wikipedia.org/wiki/Social_identity_theory)). Seth Godin levou isso ao marketing em *Tribes* (2008):
+um grupo precisa de **uma ideia em comum e um jeito de se comunicar**.
+**No material:** "Rabbit Nation", "Comunicadores Magnéticos", "renascentistas" (Davi Ribas), "comunidade de drone do
+Brasil". O nome do grupo faz a pessoa se ver **dentro**.
+**Para a Peformake:** o cliente pode dar nome ao seu público quando isso for natural ("a turma do treino das 6", "quem
+cozinha de verdade"). Nunca forçar um nome que ninguém usaria.
+
+### 3.2 Inimigo em comum (sempre uma ideia, nunca uma pessoa)
+O que une um grupo é tanto o que ele defende quanto **o que ele recusa**. Giulia resume: quem é seguido "traz um
+culpado, traz uma visão de mundo e aponta um caminho" (`De9lNMuRYmy`). O culpado, para uma marca, deve ser:
+- **uma ideia ou comportamento**: o "marketing no automático" (Peformake), "parecer rico para ter autoridade" (Giulia,
+  Pov 2030), "esconder o que você sabe" (Giulia), "o guru de cursinho de fim de semana" (Davi Ribas, sem citar nome);
+- **um status quo ou uma regra mal feita**: a lei que pôs todos os drones "na mesma sacola" (Rabbits); a fila com um
+  caixa só (Novo Tempo/Mavic, `DdZx1lipTd1`);
+- **uma dor ou situação**: a solidão do editor (EarnEdits), a madrugada editando (Andrhé), o calor (Techfrio/Mavic).
+
+**Nunca:** concorrente com nome, pessoa, cliente, grupo social. Além do risco jurídico e de reputação, atacar pessoas
+faz o público defender o atacado. Rabbits mostra o tom certo: **concede o que é justo** ("é importante ter cadastro") e
+ataca só a forma. Também regra da casa: nunca vilanizar o tráfego pago; o vilão é o automático, não a ferramenta.
+
+### 3.3 Crenças compartilhadas e manifesto
+Pessoas seguem quem diz em voz alta o que elas já pensam e não sabiam dizer. A forma mais concentrada disso é o
+**manifesto**: 5 a 8 frases do tipo "nós acreditamos que… / nós recusamos…". Exemplos: os brandmotion de Dacosta
+(Realure, SINGU), "criatividade não é dom, é técnica" (Mavic), "tudo na vida é treinável" (Giulia), "o Movimento constrói
+o lucro" e "marcas que constroem cultura crescem mais rápido" (Davi Ribas).
+**Para a Peformake:** cada cliente pode ter 3 crenças curtas no cadastro (ver seção 5), e o motor usa uma por vídeo
+quando couber. O manifesto completo vira peça única (institucional, abertura de campanha), não conteúdo de toda semana.
+
+### 3.4 Relação parassocial
+Horton e Wohl (1956) chamaram de "interação parassocial" a sensação de intimidade que o espectador sente com quem vê na
+tela, como se fosse um conhecido ([resumo](https://en.wikipedia.org/wiki/Parasocial_interaction)). Ela cresce com
+**rosto frequente, fala direta para a câmera, bastidor e rotina**. Giulia fala com "meu povo", olha nos olhos, mostra o
+marido, os erros de gravação; Vianna mostra a gata entrando na filmagem (`Dblnw4hvGNE`, 7,7 mil). É o que torna o
+CTA "comenta EU QUERO" uma conversa e não um anúncio.
+**Cuidado:** em saúde, a proximidade não pode virar promessa nem consulta pela rede.
+
+### 3.5 Consistência e expectativa (série e ritual)
+Quem sabe o que vai receber volta. Isso vem de **série** (mesmo formato, título fixo, episódio numerado), **ritual**
+(abertura e fecho iguais, mesmo dia) e **promessa recorrente** (o canal diz o que entrega). Exemplos: "POV: uma
+publicitária no mercado" ×3 com o mesmo fecho palavra por palavra; "Decifrando Roteiros, quinto episódio" (Mavic);
+novela da Mário Pet Shop ("o que será que acontecerá no próximo episódio?"); edição numerada da revista Éter (ED05);
+Hudson toda semana uma ferramenta nova. O próprio Bombril (analisado pela Giulia em `DfQWFoWhxDP`) manteve **o mesmo
+personagem e o mesmo produto por anos, mudando só a situação**.
+**Para a Peformake:** cada cliente pode ter 1 ou 2 séries fixas no mês; a novidade vem da situação, não do formato.
+
+### 3.6 Personagem e vulnerabilidade
+"No teatro social da vida vence quem interpreta melhor seu personagem" (Davi Ribas, o post mais comentado do período).
+Personagem não é mentira: é **escolher quais traços verdadeiros ficam em evidência** e manter a coerência. A
+vulnerabilidade aproxima: o efeito *pratfall* (Aronson, 1966) mostra que um erro pequeno de alguém competente o deixa
+mais simpático ([resumo](https://en.wikipedia.org/wiki/Pratfall_effect)). No material: o erro de bastidor no fim da
+Giulia, "esse aí sou eu, dá pra notar que eu tenho que dar um jeito na minha vida" (Rabbits e Vianna), o Willy azarado
+da Mavic, o Bombril com "um homem em posição de vulnerabilidade".
+**Limite:** vulnerabilidade só de quem já mostrou competência; em saúde e B2B, errar o detalhe pessoal, nunca o técnico.
+
+### 3.7 Conteúdo de valor ("magnético") e curiosidade
+A Giulia chama de magnético o conteúdo que atrai "seguidores que compram": útil, demonstrado no lugar real e fechado com
+uma virada que puxa o espectador para dentro do problema dele. A curiosidade funciona como uma **lacuna de informação**
+(George Loewenstein, "The Psychology of Curiosity", 1994): a pessoa precisa fechar o que foi aberto, e a frustração vem
+quando a resposta não vale a espera ("sabe criar a dúvida, não sabe entregar a resposta"). O valor também precisa ser do
+tipo certo: o gancho de **desejo** (resultado + personagem) atrai quem compra, o de **informação** atrai curioso
+(Kallaway, `Dfc59rPsETD`).
+
+### 3.8 Reciprocidade
+Quem recebe algo útil sente vontade de retribuir (Cialdini, *As armas da persuasão*, 1984;
+[resumo](https://en.wikipedia.org/wiki/Reciprocity_(social_psychology))). No material é o motor do "comenta PALAVRA":
+checklist (Hudson), petição (Rabbits), project file grátis (EarnEdits, 2.769 comentários), edição da revista (Davi),
+link do vídeo que "mudou minha vida" (Mavic, `DdruYCZMsu-`). O comentário ainda ajuda a distribuição do post.
+**Para a Peformake:** o presente tem que ser útil de verdade e combinar com o cliente (tabela de medidas, guia de
+cuidados pós-procedimento, checklist de compra). Respostas automáticas no direct de cliente seguem a regra da casa:
+nascem desligadas e passam por um humano antes de ligar.
+
+### 3.9 Status
+As pessoas seguem também para **parecer** algo: informadas (Hudson: "ainda não saiu no Brasil"), com bom gosto
+(Aslani, Dacosta), parte de um grupo seleto (comunidade paga, "renascentista"). Compartilhar o vídeo certo dá status a
+quem compartilha: é por isso que funciona a legenda "envia pra pessoa que…".
+**Risco:** status por ostentação é exatamente o que a Giulia critica no Pov 2030; para cliente, o status saudável é
+"quem entende" (conhecimento), não "quem tem".
+
+### 3.10 O que o conjunto mostra
+- Alcance vem do **gancho e da utilidade**; lembrança vem do **personagem, da série e da visão de mundo**. Os perfis só
+  de ferramenta (Hudson e parecidos) têm muito comentário e pouca identidade; Giulia, Rabbits e Davi Ribas têm as duas.
+- O comentário cresce quando o vídeo **pede uma posição** (polêmica com tese, causa) ou **dá um presente**.
+- A venda some quando o produto é **a solução da cena** (Mavic, publi da Stone na Giulia) ou **a prova é o próprio
+  trabalho** (Vianna, Aslani).
+
+---
+
+## 4. O lugar na mente: como fazer o cliente ser lembrado
+
+Também estudo, não regra. A pergunta deste capítulo: **quando alguém pensa em X, o nome do cliente vem à cabeça?** E o
+que cada vídeo faz para isso acontecer.
+
+### 4.1 As ideias de base
+- **Posicionamento (Al Ries e Jack Trout, *Positioning*, 1981).** A batalha é pela mente, e a mente guarda pouco: o
+  mais fácil é ser **o primeiro** numa categoria ou **o dono de uma palavra** (Volvo = segurança). Se a categoria já tem
+  dono, crie uma categoria menor onde você é o primeiro ([resumo](https://en.wikipedia.org/wiki/Positioning_(marketing))).
+- **Disponibilidade mental (Byron Sharp, *How Brands Grow*, 2010; Jenni Romaniuk, *Building Distinctive Brand Assets*,
+  2018; Instituto Ehrenberg-Bass, [marketingscience.info](https://marketingscience.info/)).** A marca cresce sendo
+  lembrada por mais gente, em mais situações de compra. Essas situações são os **pontos de entrada na categoria**
+  (*Category Entry Points*): "quando chove", "almoço rápido perto do trabalho", "presente de última hora", "dor nas
+  costas depois do treino". E a marca é reconhecida pelos **ativos distintivos**: cor, bordão, som, personagem,
+  abertura fixa, forma, que precisam ser **únicos e usados sempre do mesmo jeito**.
+- **Ideias que grudam (Chip e Dan Heath, *Made to Stick*, 2007).** O que fica na memória é Simples, Inesperado,
+  Concreto, Crível, Emocional e vem em História (as 6 letras do "SUCCESs";
+  [resumo](https://en.wikipedia.org/wiki/Made_to_Stick)).
+- **Mera exposição (Robert Zajonc, 1968).** Quanto mais uma coisa é vista, mais ela agrada e parece confiável
+  ([resumo](https://en.wikipedia.org/wiki/Mere-exposure_effect)). Por isso o ativo distintivo tem que **repetir**.
+- **Repetição espaçada (Ebbinghaus).** A memória fica mais forte quando a mesma ideia volta em intervalos, não toda de
+  uma vez ([resumo](https://en.wikipedia.org/wiki/Spacing_effect)). Na prática: a frase-assinatura em todo vídeo e o
+  tema central voltando a cada 1–2 semanas com situação nova (o "método Bombril").
+- **Associação a um momento (Giulia sobre "pipoca com Guaraná", `DfQWFoWhxDP`).** É o *Category Entry Point* dito em
+  português: "venda o momento em que a pessoa percebe que precisa".
+
+### 4.2 Ganchos de memória (o que costuma ficar)
+| Ganho de memória | Exemplo no material |
+|---|---|
+| Frase-assinatura fixa no fecho | "Ocupe seu lugar." (Giulia) |
+| Bordão que é o próprio slogan | "rações boas e baratas" repetido até virar piada (Mavic, Mário Pet Shop) |
+| Personagem recorrente | o Willy azarado (Mavic); o "Ô Victor" de quem filma (Giulia) |
+| Número + promessa | "9 projetos que tiram R$ 15.008 da tua fatura" (Hudson) |
+| Imagem forte e concreta | o carro-chefe com 6 fileiras e o concorrente com 3 (Giulia) |
+| Contraste | "Most great inventions come from labs. This one came from a jail cell" (EarnEdits) |
+| Aforismo/rima | "Dominar o Verbo é dominar a Máquina"; "Não jogue um jogo feito para você perder" (Davi Ribas) |
+| Ritual de série | "POV: publicitária no ___"; "Decifrando Roteiros ep. 5"; "ED05" |
+| Ativo visual/sonoro | cartela P&B de cinema no fecho (Giulia); paleta e som de logo (Dacosta) |
+
+### 4.3 Como os perfis estudados ocupam a mente
+| Perfil | Palavra/lugar que ocupa | Ativos de memória |
+|---|---|---|
+| Giulia Becker | "quem sabe muito precisa aparecer" / conteúdo magnético | "Ocupe seu lugar", série POV no lugar real, fecho P&B, CTA "comenta BLACK", ímã 🧲 |
+| Davi Ribas | "marketing ideológico" / movimento | "Torna-te quem tu és", "renascentista", aforismos, revista numerada, "Avante!" |
+| Mavic | "humor que vende" no varejo de Boa Vista | elenco fixo, sotaque, novela em episódios, "Decifrando Roteiros" |
+| Rabbits | audiovisual de carro com atitude | "Rabbit Nation", 🫡 em toda legenda, causa da comunidade |
+| Marcos Vianna | o editor sincero que fala de negócio | opinião contra a própria categoria, "dicas não tão óbvias" |
+| Hudson e parecidos | "ferramenta grátis da semana" | "comenta PALAVRA" (fraco: todos usam o mesmo, ninguém é dono) |
+| EarnEdits | micro-documentário retrô | grão, paleta, gancho de contraste, "comment LINK" |
+
+### 4.4 "Dono de uma palavra" por cliente (exemplos para o motor propor)
+- **Peformake:** contra o **"marketing no automático"**; palavra a disputar: "assessoria que pensa junto" (nunca
+  "agência"). Ativo possível: a expressão "no automático" sempre dita do mesmo jeito, com o mesmo grafismo.
+- **SN:** "prazo certinho" e "oficial Tigre" (já em uso nos testes do motor). Ativo: o bordão no fecho e o selo
+  oficial sempre no mesmo canto.
+- **Varejo local (padrão):** dono de um **momento** ("o lugar do churrasco de domingo"), não de um adjetivo genérico
+  ("qualidade e preço baixo" ninguém lembra: todo mundo diz).
+- **Saúde:** dono de **uma dúvida bem respondida** ("a que explica sem assustar"); ativo = série de perguntas com o
+  mesmo título.
+- **B2B:** dono de **um problema técnico** ("quem resolve a parada de linha"); ativo = o especialista recorrente e
+  o caso numerado.
+
+Regra prática que sai do estudo: **uma palavra por cliente, dita do mesmo jeito, por muito tempo**. Trocar a palavra
+a cada mês apaga o que foi construído.
+
+---
+
+## 5. Para o motor (o coordenador integra depois)
+
+O que o PROMPT MESTRE pode passar a consultar deste arquivo, e em qual etapa. São consultas opcionais: o motor decide.
+
+1. **Ficha do cliente (antes de qualquer roteiro):** propor e guardar, uma vez, o **lugar na mente** (seção 4.4): a
+   palavra/momento, o **inimigo-ideia** (3.2, nunca pessoa ou concorrente), 3 crenças curtas (3.3), o personagem de tela
+   (3.6) e 2 ou 3 **ativos de memória** (4.2: frase-assinatura, bordão, abertura/fecho, cor/som). A equipe aprova; o
+   direcionamento em `client_directions` tem prioridade.
+2. **Escolha da ideia/pauta:** consultar 3.5 (série e ritual) para encaixar o vídeo numa série do cliente quando houver;
+   4.1 (pontos de entrada na categoria) para escolher o **momento** que o vídeo associa à marca.
+3. **Gancho:** consultar a lista vídeo a vídeo da Giulia (2.1), as 3 camadas da atenção (2.1) e o gancho de desejo x
+   informação (2.8). Escolher pelo objetivo do vídeo, não pela moda.
+4. **Estrutura/arco:** estruturas em batidas da tabela 2.1 (lista que se sustenta, virada para o espectador no fim,
+   bastidor como recompensa); humor encenado da Mavic (2.3) só para varejo/serviço local.
+5. **CTA:** 3.8 (reciprocidade, "comenta PALAVRA" com presente útil) e CTA de duas portas (2.8). Respeitar: mensagens
+   automáticas para cliente nascem desligadas.
+6. **Legenda do post:** fórmula de encaminhar ("envia pra quem…", 2.1) e legenda-história para quem não segue (2.8).
+7. **Banca/checagem final (nova pergunta):** "este vídeo **reforça o lugar na mente** do cliente?" — usa a palavra ou
+   o momento? tem pelo menos 1 ativo de memória dito do mesmo jeito? o inimigo é uma ideia (não pessoa/concorrente, não o
+   tráfego pago)? Se não reforça, não reprova sozinho, mas a banca anota.
+8. **O que NÃO usar por segmento:** puxar os "não serve" de cada perfil (seção 2) como alerta: urgência de lançamento e
+   provocação para saúde/B2B; humor com doença; tom político; promessa de "piloto automático".
