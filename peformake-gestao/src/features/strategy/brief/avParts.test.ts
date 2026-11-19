@@ -34,9 +34,11 @@ describe('montagem (storyboard)', () => {
       { cena: 'Texto na tela: “Manda a lista”', fala: 'SANDRA: Manda a lista no WhatsApp.' },
     ] } }
     const m = montage(c)
-    expect(m.map((x) => x.tipo)).toEqual(['apoio', 'detalhe', 'texto'])
+    expect(m.map((x) => x.tipo)).toEqual(['apoio', 'detalhe', 'fala'])
     expect(m.map((x) => x.t)).toEqual(['0–10s', '10–20s', '20–30s'])
     expect(m[2]!.texto).toBe('Manda a lista'); expect(m[2]!.audio).toBe('Sandra: Manda a lista no WhatsApp.')
+    expect(m[2]!.visual).toBe('Sandra falando')
+    expect(montage({ data: { roteiro: [{ cena: 'Texto na tela: “Só texto”', fala: '' }] } })[0]).toMatchObject({ tipo: 'texto', texto: 'Só texto' })
     expect(montage({ data: { roteiro: [{ cena: '', fala: 'SANDRA: Oi.' }] } })[0]).toMatchObject({ tipo: 'fala', t: '' })
   })
   it('duração: duracao_s ou o fim da montagem', () => {

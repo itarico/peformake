@@ -108,11 +108,13 @@ export function montage(c: Pick<StrategyCard, 'data'>): Shot[] {
     const free = isFreeAnswer(text)
     const texto = str(s.texto_tela) || screenTextOf(cena)
     const speech = !!text && !free
+    // O texto na tela vai no próprio campo; a descrição fica só com a imagem.
+    const img = cena.replace(/(?:texto na tela|lettering|letreiro|t[ií]tulo na tela)\s*:?\s*[“"][^”"]*[”"]\.?\s*/i, '').trim()
     return {
       n: i + 1, t: slot ? `${Math.round(i * slot)}–${Math.round((i + 1) * slot)}s` : '',
-      visual: cena ? summary(sentence(cena), 80) : speaker ? `${speaker} falando` : '',
+      visual: img ? summary(sentence(img), 80) : speaker ? `${speaker} falando` : '',
       audio: free ? '(resposta espontânea)' : text ? summary(`${speaker ? `${speaker}: ` : ''}${text}`, 90) : '',
-      texto, tipo: shotTypeOf(s.tipo, cena, speech || (!!speaker && !cena)),
+      texto, tipo: shotTypeOf(s.tipo, img || (texto && !speech ? 'texto' : ''), speech || (!!speaker && !img)),
     }
   })
 }

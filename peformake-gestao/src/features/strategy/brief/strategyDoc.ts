@@ -118,7 +118,7 @@ function avNarration(c: StrategyCard, i: number) {
 function avShoot(c: StrategyCard) {
   const p = shootPart(c)
   const n = p.shots.length
-  const cols = p.orient === 'vertical' ? (n > 12 ? 8 : 6) : (n > 12 ? 5 : 4)
+  const cols = p.orient === 'vertical' ? (n > 16 ? 10 : 8) : (n > 12 ? 5 : 4)
   const sb = n ? `<ol class="sb" style="grid-template-columns:repeat(${cols},1fr)">${p.shots.map((s) => `<li>${shotSvg(s, p.orient)}<b>${esc(SHOT_LABEL[s.tipo])}</b>${s.visual ? `<span>${esc(s.visual)}</span>` : ''}${s.texto ? `<i>“${esc(s.texto)}”</i>` : ''}</li>`).join('')}</ol>` : ''
   const cap = p.captar.length ? `<div><span class="k2">O que captar</span><ul>${p.captar.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''
   const e = p.extras

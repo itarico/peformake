@@ -56,7 +56,7 @@ export function ShootView({ c }: { c: StrategyCard }) {
         ? <ol data-storyboard className={v ? 'grid grid-cols-3 gap-x-2.5 gap-y-3 sm:grid-cols-4 lg:grid-cols-6' : 'grid grid-cols-2 gap-x-2.5 gap-y-3 sm:grid-cols-3 lg:grid-cols-4'}>
           {p.shots.map((s) => (
             <li key={s.n} className="flex min-w-0 flex-col gap-1">
-              <span className={v ? 'mx-auto block w-full max-w-[150px]' : 'block w-full'} dangerouslySetInnerHTML={{ __html: shotSvg(s, p.orient) }} />
+              <span className={v ? 'block w-full max-w-[118px]' : 'block w-full max-w-[210px]'} dangerouslySetInnerHTML={{ __html: shotSvg(s, p.orient) }} />
               <b className="text-[11.5px] leading-tight">{SHOT_LABEL[s.tipo]}</b>
               {s.visual && <span className="line-clamp-3 text-[12.5px] leading-snug">{s.visual}</span>}
               {s.texto && <span className="line-clamp-2 text-[12px] font-semibold leading-snug text-accent-ink">“{s.texto}”</span>}
