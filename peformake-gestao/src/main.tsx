@@ -25,3 +25,6 @@ createRoot(document.getElementById('root')!).render(
     </QueryClientProvider>
   </StrictMode>,
 )
+
+// O sistema não usa service worker: remove qualquer um que tenha sobrado (ex.: o do site antigo, 19/11/2026).
+if ('serviceWorker' in navigator) void navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => void r.unregister())).catch(() => {})
