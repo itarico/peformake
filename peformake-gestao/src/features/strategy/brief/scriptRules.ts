@@ -45,7 +45,7 @@ export function splitSpeaker(fala: string): { speaker: string; text: string } {
 }
 
 /** A cena só vira direção quando diz algo além de "quem fala" ou do rótulo da etapa. */
-function usefulDirection(cena: string, speaker: string): string {
+export function usefulDirection(cena: string, speaker: string): string {
   const t = sentence(cena)
   if (!t || NOISE.test(t)) return ''
   const plain = t.replace(/[.]$/, '').toLowerCase()

@@ -5,7 +5,7 @@
 // Função pura (sem navegador): a tela usa para imprimir/salvar e o agente usa para gerar o PDF com o Chromium.
 import { ellcazoSvg } from '@/components/ui/ellcazoSvg'
 import type { StrategyCard } from './cardRules'
-import { editPart, narrationPart, SHOT_LABEL, shootPart, shotSvg, videoHead, type Ref } from './avParts'
+import { editPart, narrationPart, SHOT_LABEL, shootPart, sentenceCase, shotSvg, twoRowCols, videoHead, type Ref } from './avParts'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 export interface DocInput {
@@ -118,12 +118,16 @@ function avNarration(c: StrategyCard, i: number) {
 function avShoot(c: StrategyCard) {
   const p = shootPart(c)
   const n = p.shots.length
-  const cols = p.orient === 'vertical' ? (n > 16 ? 10 : 8) : (n > 12 ? 5 : 4)
-  const sb = n ? `<ol class="sb" style="grid-template-columns:repeat(${cols},1fr)">${p.shots.map((s) => `<li>${shotSvg(s, p.orient)}<b>${esc(SHOT_LABEL[s.tipo])}</b>${s.visual ? `<span>${esc(s.visual)}</span>` : ''}${s.texto ? `<i>“${esc(s.texto)}”</i>` : ''}</li>`).join('')}</ol>` : ''
+  const cols = twoRowCols(n)
+  const est = p.estrutura.nome || p.estrutura.passos.length
+    ? `<div class="est"><span class="k2">Estrutura</span>${p.estrutura.nome ? `<b>${esc(p.estrutura.nome)}</b>` : ''}${p.estrutura.passos.length ? `<ol class="steps">${p.estrutura.passos.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>` : ''}</div>` : ''
+  const sb = n ? `<span class="k2">Storyboard</span><ol class="sb${cols > 7 ? ' tight' : ''}" style="grid-template-columns:repeat(${cols},1fr)">${p.shots.map((s) => `<li>${shotSvg(s, p.orient)}<b>${esc(SHOT_LABEL[s.tipo])}</b>${s.texto ? `<i>“${esc(s.texto)}”</i>` : ''}</li>`).join('')}</ol>` : ''
+  const rot = p.roteiro.length ? `<span class="k2">Roteiro completo</span><table class="rot">${p.roteiro.map((s) => `<tr><td class="n">${s.n}</td><td class="cena">${esc(sentenceCase(s.cena))}</td><td>${s.speaker ? `<b class="who2">${esc(s.speaker)}</b>` : ''}${nl(s.fala)}</td></tr>`).join('')}</table>` : ''
+  const como = p.como.length ? `<div class="como"><span class="k2">Como vai ser a gravação</span><ol>${p.como.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></div>` : ''
   const cap = p.captar.length ? `<div><span class="k2">O que captar</span><ul>${p.captar.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''
   const e = p.extras
   const ex = e ? `<div><span class="k2">Aproveite a gravação</span>${e.stories.length ? `<p><b>Stories:</b> ${esc(e.stories.join(' · '))}</p>` : ''}${e.reels.length ? `<p><b>Reels no celular:</b> ${esc(e.reels.join(' · '))}</p>` : ''}${e.fotos.length ? `<p><b>Fotos</b></p><ul>${e.fotos.map((f) => `<li>${esc(f.tema)}${f.como ? ` · ${esc(f.como)}` : ''}${f.ref ? ` · <a href="${esc(url(f.ref.link))}">ver referência</a>` : ''}</li>`).join('')}</ul>` : ''}</div>` : ''
-  return `${sb}${cap || ex ? `<div class="cols two">${cap}${ex}</div>` : ''}${refRow(p.ref)}`
+  return `${est}${sb}${rot}${como}${cap || ex ? `<div class="cols two">${cap}${ex}</div>` : ''}${refRow(p.ref)}`
 }
 
 /** Página 3 (edição): o guia curto e os tempos principais da montagem. */
@@ -188,6 +192,10 @@ p{font-size:12.5px;line-height:1.45;margin:4px 0}ol{font-size:12.5px;line-height
 .cola{font-size:14px;line-height:1.5;padding-left:18px}.ez .idea{font-size:14px;line-height:1.45;color:#3b3e36;margin:-6px 0 14px;max-width:150mm}
 .sb{list-style:none;padding:0;margin:4px 0 12px;display:grid;gap:9px 7px}
 .sb li{break-inside:avoid;display:flex;flex-direction:column;gap:2px;min-width:0}.sb svg{width:100%;height:auto;display:block}.sb b{font-size:9.5px;line-height:1.2;margin-top:2px}.sb span{font-size:9.5px;line-height:1.3;color:#3b3e36}.sb i{font-size:9px;line-height:1.25;font-style:normal;font-weight:700;color:#4a6b12}
+.sb.tight{gap:6px 4px}.sb.tight b{font-size:8.5px}.sb.tight i{font-size:8px}
+.est{margin:0 0 12px}.est b{display:block;font-size:13px;margin:2px 0 5px}.steps{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:5px;counter-reset:st}.steps li{counter-increment:st;font-size:10.5px;font-weight:700;border:1.5px solid #1d1f1a;border-radius:99px;padding:2px 9px}.steps li::before{content:counter(st) " · ";color:#4a6b12}
+.rot{width:100%;border-collapse:collapse;margin:4px 0 12px}.rot td{font-size:12px;line-height:1.45;padding:7px 8px 7px 0;border-bottom:1.5px solid #e2e4df;vertical-align:top}.rot td.n{width:20px;font-weight:800;color:#4a6b12}.rot td.cena{width:34%;font-size:11px;color:#3b3e36}.rot tr{break-inside:avoid}.who2{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#4a6b12}
+.como{margin:0 0 10px}.como ol{font-size:11.5px;line-height:1.45;margin:2px 0 0;padding-left:18px}
 .cols{display:grid;gap:14px;margin:6px 0 10px}.cols.two{grid-template-columns:1fr 1fr}.cols ul{font-size:11.5px;line-height:1.45;margin:2px 0 0;padding-left:16px}.cols p{font-size:11.5px;margin:3px 0}
 .tempos{width:100%;border-collapse:collapse;margin-top:4px}.tempos td{font-size:11.5px;line-height:1.35;padding:5px 6px 5px 0;border-bottom:1.5px solid #1d1f1a22;vertical-align:top}.tempos td:first-child{width:52px;white-space:nowrap}.tempos td:nth-child(2){width:92px;color:#3b3e36}
 .ez.lime{background:#B5E61D}.ez.lime .k2{color:#1d1f1a}.ez.lime .ezh,.ez.lime .ezf{border-color:#1d1f1a44}.ez.lime .ezh .bar{background:#fff}

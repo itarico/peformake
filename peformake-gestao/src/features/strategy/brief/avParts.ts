@@ -9,7 +9,7 @@
 // `data.referencia` {link, porque}. Sem montagem: deduz dos blocos do roteiro. O que falta some sem deixar buraco.
 // Funções puras: a tela (AvPartsView) e o PDF (strategyDoc) usam o mesmo modelo.
 import type { StrategyCard } from './cardRules'
-import { isFreeAnswer, splitSpeaker, videoDoc, type Question } from './scriptRules'
+import { isFreeAnswer, splitSpeaker, usefulDirection, videoDoc, type Question } from './scriptRules'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 const str = (v: unknown) => (typeof v === 'string' ? v.trim() : typeof v === 'number' ? String(v) : '')
@@ -216,7 +216,16 @@ export function narrationPart(c: Pick<StrategyCard, 'title' | 'data'>, index = 0
 
 export interface Ref { link: string; porque: string; thumb?: string }
 export interface Extras { stories: string[]; reels: string[]; fotos: { tema: string; como: string; ref: Ref | null }[] }
-export interface ShootPart { orient: 'vertical' | 'horizontal'; shots: Shot[]; captar: string[]; extras: Extras | null; ref: Ref | null }
+export interface ScriptScene { n: number; cena: string; speaker: string; fala: string }
+export interface ShootPart {
+  orient: 'vertical' | 'horizontal'; shots: Shot[]; captar: string[]; extras: Extras | null; ref: Ref | null
+  /** Etapas da estrutura (ex.: Gancho → Vazamento 1 → … → Chamada). */
+  estrutura: { nome: string; passos: string[] }
+  /** Roteiro completo cena a cena: o que se grava + a fala inteira. */
+  roteiro: ScriptScene[]
+  /** Como vai ser a gravação: local, quem, ordem dos planos. */
+  como: string[]
+}
 const refOf = (r: Any): Ref | null => (r && typeof r === 'object' && str(r.link) ? { link: str(r.link), porque: str(r.porque), thumb: str(r.thumb) || undefined } : null)
 
 /** "Aproveite a gravação": stories, reels no celular e fotos. Vazio → null (não mostra). */
@@ -232,7 +241,29 @@ export function extrasOf(d: Any): Extras | null {
 export function shootPart(c: Pick<StrategyCard, 'data' | 'inspired'>): ShootPart {
   const d = (c.data ?? {}) as Any; const p = (d.producao ?? {}) as Any
   const ref = refOf(d.referencia) ?? (c.inspired?.link ? { link: str(c.inspired.link), porque: '' } : null)
-  return { orient: orientationOf(d.formato), shots: montage(c), captar: toLines(d.captar ?? p.shot_list ?? d.shot_list), extras: extrasOf(d), ref }
+  const est = d.estrutura
+  const estrutura = typeof est === 'object' && est && !Array.isArray(est)
+    ? { nome: str(est.nome), passos: toLines(est.passos) }
+    : { nome: str(est), passos: toLines(d.arco) }
+  const roteiro = (Array.isArray(d.roteiro) ? d.roteiro : []).map((s: Any, i: number) => {
+    const raw = typeof s === 'string' ? s : str(s?.fala)
+    const { speaker, text } = splitSpeaker(raw)
+    return { n: i + 1, cena: typeof s === 'string' ? '' : usefulDirection(str(s?.cena), speaker), speaker, fala: text }
+  }).filter((s: ScriptScene) => s.cena || s.fala).map((s: ScriptScene, i: number) => ({ ...s, n: i + 1 }))
+  const como = toLines(d.gravacao_como ?? p.plano_diaria ?? p.plano_da_diaria)
+  return { orient: orientationOf(d.formato), shots: montage(c), captar: toLines(d.captar ?? p.shot_list ?? d.shot_list), extras: extrasOf(d), ref, estrutura, roteiro, como }
+}
+
+/** Storyboard em 2 linhas: número de colunas para n quadros. */
+export const twoRowCols = (n: number) => Math.max(1, Math.ceil(n / 2))
+/** Direção em CAIXA ALTA → frase normal (lê melhor no roteiro). */
+export function sentenceCase(t: string): string {
+  let x = t.trim()
+  if (!x) return x
+  if (x === x.toUpperCase()) x = x.toLowerCase()
+  x = x.charAt(0).toUpperCase() + x.slice(1)
+  return x.replace(/([.!?]\s+)(\p{L})/gu, (_, a: string, b: string) => a + b.toUpperCase())
+    .replace(/\bitalo\b/g, 'Italo').replace(/\bwhatsapp\b/gi, 'WhatsApp').replace(/\binstagram\b/gi, 'Instagram')
 }
 
 // ───────── 3. Edição ─────────

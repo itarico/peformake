@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { ExternalLink } from 'lucide-react'
 import { thumbOf } from './briefRules'
 import type { StrategyCard } from './cardRules'
-import { editPart, narrationPart, SHOT_LABEL, shootPart, shotSvg, type Ref } from './avParts'
+import { editPart, narrationPart, sentenceCase, SHOT_LABEL, shootPart, shotSvg, twoRowCols, type Ref } from './avParts'
 
 const href = (l: string) => (/^https?:\/\//.test(l) ? l : `https://${l}`)
 const Small = ({ children }: { children: ReactNode }) => <span className="text-[12px] font-semibold text-accent-ink">{children}</span>
@@ -50,20 +50,43 @@ function RefLink({ r, label = 'Assistir a referência' }: { r: Ref; label?: stri
 export function ShootView({ c }: { c: StrategyCard }) {
   const p = shootPart(c)
   const v = p.orient === 'vertical'
+  const cols = twoRowCols(p.shots.length)
   return (
-    <div data-parte-av="gravacao" className="flex flex-col gap-4">
+    <div data-parte-av="gravacao" className="flex flex-col gap-5">
+      {(p.estrutura.nome || p.estrutura.passos.length > 0) && (
+        <section data-estrutura className="flex flex-col gap-1.5">
+          <Small>Estrutura</Small>
+          {p.estrutura.nome && <b className="text-[14px] font-semibold">{p.estrutura.nome}</b>}
+          {p.estrutura.passos.length > 0 && <ol className="flex flex-wrap gap-1.5">{p.estrutura.passos.map((x, i) => <li key={i} className="rounded-full border border-ink px-2.5 py-0.5 text-[12.5px] font-semibold"><span className="text-accent-ink">{i + 1} · </span>{x}</li>)}</ol>}
+        </section>
+      )}
       {p.shots.length > 0
-        ? <ol data-storyboard className={v ? 'grid grid-cols-3 gap-x-2.5 gap-y-3 sm:grid-cols-4 lg:grid-cols-6' : 'grid grid-cols-2 gap-x-2.5 gap-y-3 sm:grid-cols-3 lg:grid-cols-4'}>
-          {p.shots.map((s) => (
-            <li key={s.n} className="flex min-w-0 flex-col gap-1">
-              <span className={v ? 'block w-full max-w-[118px]' : 'block w-full max-w-[210px]'} dangerouslySetInnerHTML={{ __html: shotSvg(s, p.orient) }} />
-              <b className="text-[11.5px] leading-tight">{SHOT_LABEL[s.tipo]}</b>
-              {s.visual && <span className="line-clamp-3 text-[12.5px] leading-snug">{s.visual}</span>}
-              {s.texto && <span className="line-clamp-2 text-[12px] font-semibold leading-snug text-accent-ink">“{s.texto}”</span>}
-            </li>
-          ))}
-        </ol>
+        ? <section className="flex flex-col gap-1.5"><Small>Storyboard</Small>
+          <ol data-storyboard style={{ ['--sb' as string]: `repeat(${cols}, minmax(0, 1fr))` }} className={`grid gap-x-2 gap-y-3 ${v ? 'grid-cols-4 sm:grid-cols-6' : 'grid-cols-2 sm:grid-cols-4'} lg:[grid-template-columns:var(--sb)]`}>
+            {p.shots.map((s) => (
+              <li key={s.n} className="flex min-w-0 flex-col gap-1" title={s.visual}>
+                <span className={v ? 'block w-full max-w-[118px]' : 'block w-full max-w-[210px]'} dangerouslySetInnerHTML={{ __html: shotSvg(s, p.orient) }} />
+                <b className="text-[11px] leading-tight">{SHOT_LABEL[s.tipo]}</b>
+                {s.texto && <span className="line-clamp-2 text-[11px] font-semibold leading-snug text-accent-ink">“{s.texto}”</span>}
+              </li>
+            ))}
+          </ol></section>
         : <p className="text-[14px] text-muted">Sem roteiro para montar o storyboard.</p>}
+      {p.roteiro.length > 0 && (
+        <section data-roteiro-completo className="flex flex-col gap-1">
+          <Small>Roteiro completo</Small>
+          <ol className="flex flex-col divide-y divide-line">
+            {p.roteiro.map((s) => (
+              <li key={s.n} className="grid grid-cols-[1.5rem_1fr] gap-x-3 gap-y-1 py-2.5 md:grid-cols-[1.5rem_minmax(0,1fr)_minmax(0,2fr)]">
+                <b className="text-[13px] text-accent-ink">{s.n}</b>
+                <span className="text-[13px] leading-snug text-muted">{sentenceCase(s.cena)}</span>
+                <p className="text-[15px] leading-relaxed max-md:col-start-2">{s.speaker && <span className="block text-[11px] font-semibold uppercase tracking-wide text-accent-ink">{s.speaker}</span>}{s.fala}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {p.como.length > 0 && <section data-como className="flex flex-col gap-1"><Small>Como vai ser a gravação</Small><ol className="flex list-decimal flex-col gap-0.5 pl-5 text-[14px] leading-snug">{p.como.map((x, i) => <li key={i}>{x}</li>)}</ol></section>}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {p.captar.length > 0 && <section data-captar className="flex min-w-0 flex-col gap-1"><Small>O que captar</Small><ul className="flex list-disc flex-col gap-0.5 pl-5 text-[14px] leading-snug">{p.captar.map((x, i) => <li key={i}>{x}</li>)}</ul></section>}
         {p.extras && (

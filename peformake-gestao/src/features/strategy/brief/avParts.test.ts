@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
 import { describe, expect, it } from 'vitest'
-import { durationOf, editPart, extrasOf, montage, narrationPart, orientationOf, productionExtras, screenTextOf, shootPart, shotSvg, shotTypeOf, videoHead } from './avParts'
+import { durationOf, editPart, extrasOf, montage, narrationPart, orientationOf, productionExtras, screenTextOf, sentenceCase, shootPart, shotSvg, shotTypeOf, twoRowCols, videoHead } from './avParts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fx = createRequire(import.meta.url)('../../../../e2e/fixtures/av-montagem.cjs') as { title: string; data: any }
@@ -62,7 +62,8 @@ describe('as três partes', () => {
     expect(s.shots).toHaveLength(12); expect(s.captar).toHaveLength(7); expect(s.ref?.porque).toMatch(/processo/)
     expect(s.extras?.stories).toHaveLength(2); expect(s.extras?.reels).toHaveLength(1)
     expect(s.extras?.fotos[0]!.ref?.link).toMatch(/youtube/); expect(s.extras?.fotos[1]!.ref).toBeNull()
-    expect(shootPart({ inspired: null, data: {} })).toEqual({ orient: 'vertical', shots: [], captar: [], extras: null, ref: null })
+    expect(shootPart({ inspired: null, data: {} })).toEqual({ orient: 'vertical', shots: [], captar: [], extras: null, ref: null, estrutura: { nome: '', passos: [] }, roteiro: [], como: [] })
+    expect(s.roteiro.length).toBeGreaterThan(0); expect(twoRowCols(17)).toBe(9); expect(sentenceCase('ITALO NA PORTA. FALA PRA CÂMERA.')).toBe('Italo na porta. Fala pra câmera.')
     expect(extrasOf({ extras: { stories: [], fotos: [] } })).toBeNull()
   })
   it('edição: guia curto e os tempos; derivados ficam em Ver detalhes', () => {
