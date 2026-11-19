@@ -69,6 +69,9 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-19 · Pendências técnicas: levantamento na nuvem, continua no PC (nuvem)
+- Nada alterado. Prompt completo com o que já foi levantado (constraint do dossiê, funções SQL e arquivos com o link fixo) em docs/PROMPT-PENDENCIAS-TECNICAS.md. DNS ainda na Lovable em 19/11.
+
 ## 2026-11-19 · Motor de roteiro: perfis integrados; pendências do Italo (nuvem)
 - Conjunto de ouro removido como régua (Rosanne/CMR só consulta de roteiro falado). ESTUDO-PERFIS.md (23 pastas + @soudaviribas parcial) integrado ao prompt mestre (arquivo e banco). 117 estruturas, trend como gancho, multiplicador 1→N e análise de hype (GTA 6) no motor/radar.
 - Em andamento: teste do motor na Peformake (6 vídeos de dez/2026) e PDF do audiovisual em 3 partes (cliente/gravação/edição) com storyboard SVG.
