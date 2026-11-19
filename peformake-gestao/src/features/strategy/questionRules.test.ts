@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/siteUrl'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import {
@@ -93,8 +94,8 @@ describe('envio e conversa', () => {
     expect(npsCategory(6)).toBe('detrator')
   })
   it('monta o convite com o link', () => {
-    const link = chatLink('https://peformake-gestao.vercel.app/', 'abc')
-    expect(link).toBe('https://peformake-gestao.vercel.app/conversa/abc')
+    const link = chatLink(`${SITE_URL}/`, 'abc')
+    expect(link).toBe(`${SITE_URL}/conversa/abc`)
     const tarde = new Date('2026-11-12T17:00:00Z') // 14h em Recife
     expect(chatInvite('Will motos ', 3, link, null, 'william souza', tarde)).toContain('Boa tarde, William! Tudo bem?')
     expect(chatInvite('Will motos ', 3, link, null, null, tarde)).toContain('responda estas 3 perguntas rápidas para ajudar a gente nas estratégias de marketing da Will motos.')

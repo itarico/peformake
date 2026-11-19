@@ -1,4 +1,5 @@
 // Regras da área da equipe (o cálculo de valor fica no servidor; aqui só a leitura do progresso).
+import { SITE_URL } from '@/lib/siteUrl'
 
 export const LEAD_STAGES = [
   ['novo', 'Novo'],
@@ -126,7 +127,7 @@ export function loginMessage(name: string, email: string, password: string): str
   return [
     `Oi${first ? `, ${first}` : ''}! Seu acesso ao sistema da Peformake está pronto.`,
     '',
-    'Entre em: https://peformake-gestao.vercel.app/login',
+    `Entre em: ${SITE_URL}/login`,
     `E-mail: ${email}`,
     `Senha temporária: ${password}`,
     '',

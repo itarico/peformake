@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
 import { describe, expect, it } from 'vitest'
-import { durationOf, editPart, extrasOf, montage, narrationPart, orientationOf, productionExtras, screenTextOf, sentenceCase, shootPart, shotSvg, shotTypeOf, twoRowCols, videoHead } from './avParts'
+import { durationOf, editPart, extrasOf, montage, narrationPart, orientationOf, productionExtras, screenTextOf, sentenceCase, shootPart, shotSvg, shotTypeOf, twoRowCols, videoFacts, videoHead } from './avParts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fx = createRequire(import.meta.url)('../../../../e2e/fixtures/av-montagem.cjs') as { title: string; data: any }
@@ -76,5 +76,17 @@ describe('as três partes', () => {
   it('texto na tela e orientação', () => {
     expect(screenTextOf('Texto na tela: “Quando o cliente não sabe o nome da peça…”. Alguém da equipe faz o cliente')).toBe('Quando o cliente não sabe o nome da peça…')
     expect(orientationOf('Reel (humor)')).toBe('vertical'); expect(orientationOf('Vídeo horizontal para o YouTube')).toBe('horizontal')
+  })
+})
+
+describe('resumo do motor acima de "Ver detalhes"', () => {
+  it('mostra estrutura, intenção, notas e derivados quando existem', () => {
+    const f = videoFacts({ data: { estrutura: 'S61', intencao: 'confiança → chamar no WhatsApp', notas: 'Criativa 8,9 · Fidelidade 9,5', producao: { derivados: [{ formato: 'anúncio 15 s' }, { estrutura: 'S81' }] } } })
+    expect(f.map((x) => x.key)).toEqual(['estrutura', 'intencao', 'notas', 'derivados'])
+    expect(f[3]!.value).toBe('2 · anúncio 15 s · S81')
+  })
+  it('estrutura em objeto e nada inventado quando falta', () => {
+    expect(videoFacts({ data: { estrutura: { nome: 'Vazamento', passos: ['a'] } } })).toEqual([{ key: 'estrutura', label: 'Estrutura', value: 'Vazamento' }])
+    expect(videoFacts({ data: {} })).toEqual([])
   })
 })

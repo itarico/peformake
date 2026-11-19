@@ -56,11 +56,19 @@ Conhecimento do cliente ≥ 7 (abaixo: pré-roteiro de validação com perguntas
    "publicacao":{"capa":"…","primeira_linha":"…","legenda":"…","cta_comentario":"…"},"pos_video":{"palavra":"…","resposta":"…"}},
  "auditoria":{"etapas":{},"interrogatorio":[],"banca":{"criativa":{},"fidelidade":[],"autenticidade":"","conhecimento":""},"cego":null,"rodadas":1},
  "referencia_nota":{"aderencia":4,"estrutura":5,"prova":5,"viabilidade":3,"originalidade":4,"nota":8.3,"descartadas":[]},
- "logline":"…","arco":["…"]}
+ "logline":"…","arco":["…"],
+ "montagem":[{"t":"0–3s","visual":"…","tipo":"fala|apoio|detalhe|insert|grafico|texto","audio":"…","texto_tela":"…"}],
+ "captar":["…"],"edicao":"2 a 4 frases: ritmo, legenda, trilha, fecho",
+ "extras":{"stories":["…"],"reels_celular":["…"],"fotos":[{"tema":"…","como":"…","referencia":{"link":"…","porque":"…"}}]},
+ "gravacao_como":"…"}
 ```
 Regras: `roteiro` = 3–7 blocos do arco; `cena` em CAIXA ALTA só onde muda o que se vê; `fala` contínua com o nome de quem
 fala. Ganchos **só** em `ganchos` (o 1º abre o roteiro; o corte de anúncio usa os mesmos). Notas **só** em `notas` (linha) e
-`auditoria.banca` (detalhe). `suposicao` **só** lacunas. `ideia`, `por_que_existe` e `cruzamento` dizem coisas diferentes.
+`auditoria.banca` (detalhe). `suposicao` **só** lacunas. **Obrigatórios para a tela e o PDF (Narração · Gravação ·
+Edição):** `montagem` (M6+M7: 8 a 20 quadros na ordem do vídeo cobrindo toda a `duracao_s`, intercalando fala, apoio,
+detalhe, insert, gráfico e tela de texto), `captar` (M6: lista do que gravar, com o `gravar_a_mais` dos derivados),
+`edicao` (M7: guia curto), `extras` (M6: "Aproveite a gravação": stories, reels de celular e fotos), `estrutura`,
+`intencao`, `notas` e `producao.derivados`. `referencia` só se houver uma conferida (sem ela, omita). `ideia`, `por_que_existe` e `cruzamento` dizem coisas diferentes.
 Gravar por `strategy_agent_submit`, `strategy_agent_add`, `strategy_agent_redo` ou `strategy_chat_submit` (ver
 `agent_instructions('estrategia-interativa')`). Ideias "do momento" vão como sugestão; nada publica sozinho; nada vai ao
 cliente.
@@ -98,8 +106,9 @@ Mais: site, Instagram e Google Meu Negócio, Reclame Aqui, portfólio/PDF anexad
 confirmar]) · horário, local, área · equipe e quem aparece · reputação e **palavras reais** do público · dono × como o
 cliente enxerga (a distância vira pauta) · comunicação atual · **mapa dor → conteúdo → formato** · desempenho (o que
 mais, menos e nada rendeu, com número) · **ficha de identidade audiovisual** (arquétipo, tom em 5 escalas, vocabulário,
-proibidas, bordões, rosto, visual, trilha, fecho). Gravar: `insert into client_scan(client_id, month, source, query,
-data) values ('<id>','<AAAA-MM-01>','dossie','motor-roteiro','<json>'::jsonb);`
+proibidas, bordões, rosto, visual, trilha, fecho). Gravar (regrava o do mês, sem duplicar): `insert into client_scan(client_id, month, source,
+query, data) values ('<id>','<AAAA-MM-01>','dossie','motor-roteiro','<json>'::jsonb) on conflict (client_id, month, source,
+query) do update set data = excluded.data, collected_at = now();`
 
 ## M0b · PORTÃO DE CONHECIMENTO · Estudo: §2d
 Nota 0–10 em: negócio/modelo · produtos · preços/ofertas · público e quem decide · dores · voz da marca e do dono · o
@@ -161,9 +170,11 @@ Não use roteiros anteriores (de nenhum cliente) como modelo: cada roteiro nasce
 Por bloco: plano e por quê, lente, movimento, luz, som, local que prova, horário (nunca no pico do cliente), quem
 precisa estar, autorização de imagem. Define **diária Ellcazo × celular**. Entrega shot list, **plano da diária**
 (ordem por local e luz; referência: até 6 vídeos por diária de 3 h) e **cola de tópicos** (3–5 palavras por bloco). Inclua na shot list e no plano da diária o `gravar_a_mais` de cada
-derivado (M7), sem pedir diária nova.
+derivado (M7), sem pedir diária nova. Grava no card: `captar`, `extras`, `gravacao_como` e os quadros da `montagem`
+(`t`, `visual`, `tipo`, `audio`).
 
 ## M7 · EDITOR · Estudo: §6, §16, §19, §20, §23, §25
+Grava no card: `edicao` (guia curto) e, em cada quadro da `montagem`, o `texto_tela` e o tempo `t` (ajuste fino do M6).
 Ritmo (quebra a cada 3–5 s no curto; respiro na emoção), cortes (J/L, match), B-roll = a palavra dita, motion com motivo
 (skill `motion-pro`), texto sem som, trilha e silêncio antes da frase forte (`video-tools/MANUAL_EDICAO.md`, skill
 `edicao-cliente`). **Multiplicador (1 gravação → N estruturas):** para cada material-base forte (depoimento, entrevista, processo,

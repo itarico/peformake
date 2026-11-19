@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/siteUrl'
 import { describe, expect, it } from 'vitest'
 import { fixedInstallments, goalValue, maskPhone, nextPayday, partnershipProgress, payTag, phoneProblem, accessStatus, loginMessage, type MemberDashboard } from './teamRules'
 
@@ -82,7 +83,7 @@ describe('loginMessage', () => {
   it('tem link, e-mail, senha e o aviso de troca', () => {
     const t = loginMessage('Ana Souza', 'ana@x.com', 'Abc23456789xyz')
     expect(t).toContain('Oi, Ana!')
-    expect(t).toContain('https://peformake-gestao.vercel.app/login')
+    expect(t).toContain(`${SITE_URL}/login`)
     expect(t).toContain('ana@x.com')
     expect(t).toContain('Abc23456789xyz')
     expect(t).toMatch(/trocar a senha/)

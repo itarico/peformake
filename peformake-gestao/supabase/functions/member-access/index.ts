@@ -7,7 +7,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info', 'Access-Control-Allow-Methods': 'POST, OPTIONS' }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...CORS, 'Content-Type': 'application/json' } })
-const SITE = 'https://peformake-gestao.vercel.app'
+// Endereço do sistema: vem do banco (public.app_base_url() = av_settings.site_url); este é só o padrão se falhar.
+const SITE_FALLBACK = 'https://peformake-gestao.vercel.app'
 
 // 14 caracteres sem os que confundem (0/O, 1/l/I), com letra minúscula, maiúscula e número.
 function tempPassword(): string {
@@ -89,6 +90,8 @@ Deno.serve(async (request) => {
   }
 
   // send_invite: e-mail padrão do Supabase (pode cair no spam; tem limite por hora).
+  const { data: base } = await admin.rpc('app_base_url')
+  const SITE = String(base || SITE_FALLBACK).replace(/\/+$/, '')
   const redirectTo = `${SITE}/nova-senha`
   const rate = (m: string) => /rate|limit|too many/i.test(m)
   if (!profileId) {

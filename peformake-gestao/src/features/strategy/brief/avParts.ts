@@ -288,3 +288,23 @@ export function productionExtras(c: Pick<StrategyCard, 'data'>): { label: string
     ...[['Capa', pub.capa], ['Primeira linha', pub.primeira_linha], ['Legenda', pub.legenda], ['Chamada nos comentários', pub.cta_comentario]].filter(([, v]) => str(v)).map(([l, v]) => ({ label: String(l), value: str(v) })),
   ]
 }
+
+/**
+ * Resumo do motor por vídeo, acima de "Ver detalhes" (pendência técnica, 19/11): estrutura, intenção, notas da banca e
+ * derivados em 1 linha cada. Só o que existir; o detalhe completo dos derivados segue em "Ver detalhes".
+ */
+export function videoFacts(c: Pick<StrategyCard, 'data'>): { key: 'estrutura' | 'intencao' | 'notas' | 'derivados'; label: string; value: string }[] {
+  const d = (c.data ?? {}) as Any
+  const est = d.estrutura
+  const estrutura = typeof est === 'object' && est && !Array.isArray(est)
+    ? [str(est.codigo ?? est.code), str(est.nome)].filter(Boolean).join(' · ')
+    : str(est)
+  const der = (Array.isArray(d.producao?.derivados) ? d.producao.derivados : []) as Any[]
+  const derNames = der.map((x) => (typeof x === 'string' ? x : str(x?.formato) || str(x?.estrutura))).filter(Boolean)
+  const out: { key: 'estrutura' | 'intencao' | 'notas' | 'derivados'; label: string; value: string }[] = []
+  if (estrutura) out.push({ key: 'estrutura', label: 'Estrutura', value: estrutura })
+  if (str(d.intencao)) out.push({ key: 'intencao', label: 'Intenção', value: str(d.intencao) })
+  if (str(d.notas)) out.push({ key: 'notas', label: 'Notas', value: str(d.notas) })
+  if (der.length) out.push({ key: 'derivados', label: 'Derivados', value: derNames.length ? `${der.length} · ${summary(derNames.join(' · '), 80)}` : String(der.length) })
+  return out
+}

@@ -9,7 +9,7 @@ import { videoDoc, type ScriptDoc } from './scriptRules'
 import { DetailsDialog, RedoDialog, VideoEditDialog } from './ReaderDialogs'
 import { CardDialog } from './CardDialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
-import { AV_PARTS, videoHead, type AvPart } from './avParts'
+import { AV_PARTS, videoFacts, videoHead, type AvPart } from './avParts'
 import { EditView, NarrationView, ShootView } from './AvPartsView'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -110,8 +110,8 @@ function Article({ c, kicker, actions, more, children }: { c: StrategyCard; kick
 
 /**
  * Um vídeo = uma "página" (Italo, 19/11, v2): no topo título, formato · duração e a ideia em 1 frase; embaixo, 3 abas
- * Narração (a fala, padrão) · Gravação (a montagem em quadros, o que captar) · Edição (guia e tempos). Sem selos nem
- * notas (ficam em "Ver detalhes"); sem rolagem dupla.
+ * Narração (a fala, padrão) · Gravação (a montagem em quadros, o que captar) · Edição (guia e tempos). Sem selos; embaixo,
+ * estrutura, intenção, notas e derivados em linhas curtas (o detalhe fica em "Ver detalhes"); sem rolagem dupla.
  */
 function VideoArticle({ c, index, doc, actions, more }: { c: StrategyCard; index: number; doc: ScriptDoc; actions: ReactNode; more: (c: StrategyCard, doc?: ScriptDoc) => ReactNode }) {
   const [part, setPart] = useState<AvPart>('narracao')
@@ -130,8 +130,25 @@ function VideoArticle({ c, index, doc, actions, more }: { c: StrategyCard; index
       {part === 'narracao' && <NarrationView c={c} index={index} />}
       {part === 'gravacao' && <ShootView c={c} />}
       {part === 'edicao' && <EditView c={c} />}
+      <VideoFacts c={c} />
       {more(c, doc)}
     </article>
+  )
+}
+
+/** Estrutura, intenção, notas e derivados do motor em linhas curtas, acima de "Ver detalhes" (só o que existir). */
+function VideoFacts({ c }: { c: StrategyCard }) {
+  const xs = videoFacts(c)
+  if (!xs.length) return null
+  return (
+    <dl data-fatos className="grid grid-cols-1 gap-x-4 gap-y-1 border-t border-line pt-3 text-[13px] leading-snug sm:grid-cols-2">
+      {xs.map((x) => (
+        <div key={x.key} data-fato={x.key} className="flex min-w-0 gap-1.5">
+          <dt className="shrink-0 font-semibold text-muted">{x.label}:</dt>
+          <dd className="min-w-0 break-words">{x.value}</dd>
+        </div>
+      ))}
+    </dl>
   )
 }
 

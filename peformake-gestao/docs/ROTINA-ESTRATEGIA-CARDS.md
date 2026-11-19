@@ -19,10 +19,11 @@ Ordem: refazer (rápido) → gerar → pdf. No máximo 3 quadros "gerar" por rod
    - Não repetir: títulos de `strategy_cards` de meses anteriores do cliente.
    - O contrato (`client_services`) é só referência: proponha o que faz sentido; a equipe escolhe o que vai para o PDF.
 3. Pesquise rápido (Firecrawl, até 5 buscas): concorrentes agora, posts/vídeos de sucesso do nicho (com link e número), datas do mês.
-4. Escreva os cards. Método e qualidade: skill `.claude/skills/peformake-estudo-mes/` (estratégia → audiovisual → social → tráfego → venda).
+4. Audiovisual: leia `select public.agent_instructions('roteiro-master');` e use **por módulo** (NÚCLEO + só o módulo da etapa: M0 dossiê, M5 roteirista, M6 diretor, M7 editor, M9 banca); o dossiê do mês fica em `client_scan` (`source`='dossie', `query`='motor-roteiro', upsert).
+5. Escreva os cards. Método e qualidade: skill `.claude/skills/peformake-estudo-mes/` (estratégia → audiovisual → social → tráfego → venda).
    Tudo curto: card é decisão ou peça pronta, nunca parágrafo longo. O que veio do que **faltou no briefing** (`faltou_no_briefing`)
    vai em `suposicao` (1 linha); sem suposição, `""`.
-5. Grave tudo de uma vez:
+6. Grave tudo de uma vez:
    `select public.strategy_agent_submit('<board_id>', '<cards json>'::jsonb, '<novos json>'::jsonb);`
    - `novos` = `{"concorrentes":[{nome,link,porque}], "referencias":[{link,porque,numero,tipo}]}` achados na pesquisa (entram no briefing com o selo "novo", sem duplicar; tipo: post, video, anuncio ou outro_nicho).
    - Os aprovados de antes ficam; a aba Referências sai do briefing sozinha.
@@ -38,7 +39,7 @@ Campos comuns: `aba`, `tipo`, `titulo`, `funil` (atrair | provar | objecao | con
 | resumo | oferta | `condicao` (preço real), `quando`, `porque` |
 | resumo | data | `dia`, `uso` |
 | resumo | decisao (3 a 5) | `porque` |
-| audiovisual | video (contrato + 2, entre 4 e 8) | `formato` (POV, bastidor, mito x verdade, antes e depois, tutorial, entrevista, trend...; no máximo 2 iguais), `ganchos` (exatamente 3), `roteiro` [{`cena`, `fala`}] completo, `outras_ideias` (exatamente 3 outros assuntos com o mesmo material), `referencia` {`link`, `porque`}, `cruzamento` (o que já deu certo), `filmar` |
+| audiovisual | video (contrato + 2, entre 4 e 8) | `formato` (POV, bastidor, mito x verdade, antes e depois, tutorial, entrevista, trend...; no máximo 2 iguais), `ganchos` (exatamente 3), `roteiro` [{`cena`, `fala`}] completo, `outras_ideias` (exatamente 3 outros assuntos com o mesmo material), `referencia` {`link`, `porque`}, `cruzamento` (o que já deu certo), `filmar`; e sempre `estrutura`, `intencao`, `notas`, `montagem` [{`t`, `visual`, `tipo`, `audio`, `texto_tela`}], `captar`, `edicao`, `extras` {`stories`, `reels_celular`, `fotos`}, `gravacao_como`, `producao.derivados` (a tela e o PDF leem). Roteiro: siga `agent_instructions('roteiro-master')` por módulo (NÚCLEO + o módulo da etapa) |
 | social | peca (6 a 10) | `formato` (carrossel, reels, stories, post), `ideia`, `slides` [texto], `copy`, `legenda`, `cta`, `ideia_imagem` (só foto real), `referencia_visual` {`link`, `porque`}, `data_sugerida` (DD/MM) |
 | trafego | campanha (1 a 3, se tem tráfego) | `campanha`, `objetivo`, `publico`, `criativo` (título de um card aprovado/planejado), `verba_opcoes` [{`valor_dia`, `o_que_esperar`}] (3), `teste_ab` {`a`, `b`, `como_decidir`} |
 | atendimento | roteiro (1 por oferta) | `oferta`, `roteiro_whatsapp` [mensagens], `objecoes` [{`objecao`, `resposta`}], `follow_up` [{`quando`, `mensagem`}] |

@@ -7,6 +7,7 @@ import { fillDays, fmt, pctChange } from '@/components/charts/chartRules'
 import { Dialog } from '@/components/ui/Dialog'
 import { useAuth } from '@/auth/context'
 import { ACTIVITY_LABEL } from '@/features/clients/intelApi'
+import { NicheChart } from '@/features/clients/NicheChart'
 import { todayBR } from '@/features/finance/money'
 import { LoadState } from '@/features/traffic/LoadState'
 import { dashAv, dashClients, dashClientsAvulsos, dashCommercial, dashContent, dashTraffic, dismissLostSuggestion, type AvulsosDash, type ClientsDash } from './dashApi'
@@ -259,6 +260,7 @@ export function ClientsSummary() {
             { label: 'Detratores (0 a 6)', value: d.nps.detractors, color: 'bg-warn' },
           ]} />
         </Panel>
+        <NicheChart className="md:row-span-2" />
         <Panel title="Serviços mais contratados">
           <RankBars label="Clientes ativos por serviço" format={fmt.int} rows={d.services.slice(0, 5).map((s) => ({ label: s.name, value: s.n }))} />
         </Panel>
