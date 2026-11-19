@@ -230,3 +230,13 @@ rodadas; depois entregue com a lacuna explicada em `suposicao`.
 3 vídeos lado a lado parecem do mesmo molde (linguagem, cenário, fecho)? → refaça o mix (episódios de série não contam).
 Fechos iguais? → reescreva. Estruturas repetidas ou nenhuma inédita para o cliente? → troque. Todos para o mesmo público? → reequilibre. Sem cinemático, prova ou oferta? → complete ou
 explique por que não.
+
+## Consulta ao ESTUDO-PERFIS.md (opcional, o motor decide; nada vira regra)
+Perfis estudados: Giulia Becker, Mavic, Rabbits, Marcos Vianna, Da Costa Motion, Earn Edits, Aslani, 99hud, @soudaviribas e canais do YouTube. Mande só a seção indicada.
+- **M0/M1 · Ficha do cliente (uma vez, a equipe aprova):** lugar na mente (§4.4: palavra/momento), inimigo-ideia (§3.2: sempre ideia ou comportamento, nunca pessoa, concorrente ou o tráfego pago), 3 crenças (§3.3), personagem de tela (§3.6) e 2–3 ativos de memória (§4.2). `client_directions` tem prioridade.
+- **M1/M3 · Pauta:** série e ritual (§3.5); ponto de entrada na categoria = o momento que o vídeo associa à marca (§4.1).
+- **M4 · Gancho:** lista vídeo a vídeo da Giulia e as 3 camadas da atenção (§2.1); gancho de desejo × informação (§2.8). Escolher pelo objetivo do vídeo.
+- **M5 · Arco:** batidas da tabela §2.1 (lista que se sustenta, virada para o espectador no fim, bastidor como recompensa); humor encenado (§2.3) só para varejo/serviço local.
+- **M5/M7 · CTA e legenda:** reciprocidade e "comenta PALAVRA" com presente útil (§3.8), CTA de duas portas (§2.8), legenda de encaminhar e legenda-história (§2.1, §2.8). Mensagem automática para cliente nasce desligada.
+- **M9 · Banca, pergunta extra:** "este vídeo reforça o lugar na mente do cliente?" (usa a palavra/momento? tem ≥ 1 ativo de memória dito do mesmo jeito? o inimigo é uma ideia?). Não reprova sozinho; a banca anota.
+- **Alerta por segmento:** puxar os "não serve" de cada perfil (§2): urgência de lançamento e provocação em saúde/B2B, humor com doença, tom político, promessa de "piloto automático".
