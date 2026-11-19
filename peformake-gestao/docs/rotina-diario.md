@@ -1,5 +1,6 @@
 # Diário da rotina de melhoria contínua
 
+- 19/11 (nuvem): PENDÊNCIAS TÉCNICAS: só levantamento, nada alterado; continua no PC com docs/PROMPT-PENDENCIAS-TECNICAS.md (constraint do dossiê, funções SQL e arquivos com o link fixo). DNS ainda na Lovable.
 - 19/11 (nuvem): DOMÍNIO: peformake.com e www.peformake.com (www redireciona 308 para o principal) adicionados ao projeto peformake-gestao na Vercel. DNS fica na IONOS (hoje A 185.158.133.1 = Lovable; e-mail MX/TXT da IONOS, NÃO mexer). Italo precisa trocar na IONOS: @ A → 216.198.79.1 e 64.29.17.1 (sem o 185.158.133.1) e www CNAME → 1493cab6d834583c.vercel-dns-017.com. Depois que propagar: trocar links fixos peformake-gestao.vercel.app (teamRules.ts, member-access, funções SQL pagar/portal/peça, av_settings.site_url) e Site URL/Redirect URLs no Supabase Auth.
 - 19/11 (nuvem): GRAVAÇÃO = ROTEIRO COMPLETO DE GRAVAÇÃO (Italo): na tela e no PDF (Ellcazo) a parte Gravação agora traz Estrutura (`data.estrutura` {nome, passos} ou texto + `arco`), storyboard SEMPRE em 2 linhas (`twoRowCols`), Roteiro completo cena a cena (direção + fala inteira), Como vai ser a gravação (`data.gravacao_como` ou `producao.plano_diaria`), O que captar e Aproveite a gravação. Card da Peformake 8d9032bc ganhou estrutura e gravacao_como. O "desenho animado" que o Italo viu era o link de teste do PDF de exemplo (fixture e2e/fixtures/av-montagem.cjs, Big Buck Bunny), não uma referência real da SN.
 - 19/11 (nuvem): PEFORMAKE DO ZERO, 1 vídeo para o Italo avaliar: "Cinco minutos dentro do teu negócio" (card 8d9032bc, dez/2026), com fala completa do Italo (~85 s), montagem de 17 quadros, captar, guia de edição, extras (stories, reels no celular, fotos) e SEM referência (nenhuma conferida). Os 6 cards antigos foram recusados. Briefing da Peformake preenchido (produtos, público, voz, proibidos, quem aparece/grava; preços [a confirmar]). Pendente: o Italo dizer qual cliente deixa gravar a loja; referências da SN não conferidas (uma é desenho animado) a revisar.
@@ -68,9 +69,6 @@
 - 12/11 Clientes → Resumo: novo bloco "Clientes avulsos" (cadastrados, compraram em 90 dias, novos no mês, recompra %, e só para admin receita 12 meses e ticket médio; gráfico de novos por mês). Função `dash_clients_avulsos` (migração 20261112000000). Pronto para publicar.
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
-
-## 2026-11-19 · Pendências técnicas: levantamento na nuvem, continua no PC (nuvem)
-- Nada alterado. Prompt completo com o que já foi levantado (constraint do dossiê, funções SQL e arquivos com o link fixo) em docs/PROMPT-PENDENCIAS-TECNICAS.md. DNS ainda na Lovable em 19/11.
 
 ## 2026-11-19 · Motor de roteiro: perfis integrados; pendências do Italo (nuvem)
 - Conjunto de ouro removido como régua (Rosanne/CMR só consulta de roteiro falado). ESTUDO-PERFIS.md (23 pastas + @soudaviribas parcial) integrado ao prompt mestre (arquivo e banco). 117 estruturas, trend como gancho, multiplicador 1→N e análise de hype (GTA 6) no motor/radar.
