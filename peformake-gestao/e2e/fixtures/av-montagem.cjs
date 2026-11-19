@@ -1,0 +1,50 @@
+// 1 vídeo exemplo COMPLETO no formato novo do audiovisual (Italo, 19/11, v2): 60 s, 12 quadros de montagem,
+// o que captar, guia de edição, referência e "Aproveite a gravação". Usado no e2e/estrategia-leitura.cjs e nos testes.
+module.exports = {
+  title: 'S8 · A lista da obra em 60 segundos',
+  data: {
+    formato: 'Reel (ensinar)',
+    duracao_s: 60,
+    ideia: 'A Sandra mostra, com a lista de um cliente real, como a SN separa tudo da obra e entrega no prazo. Do papel ao caminhão.',
+    filmar: 'Quem fala: Sandra. Quem grava: Ellcazo, na diária 17/11.',
+    roteiro: [
+      { cena: 'Sandra no balcão, olhando para a câmera', fala: 'SANDRA: Chegou uma lista de obra com 38 itens. Quanto tempo você acha que a gente leva pra separar?' },
+      { cena: 'Mão pegando a lista impressa', fala: 'SANDRA: Primeiro eu confiro tudo com o cliente pelo WhatsApp, item por item.' },
+      { cena: 'Corredor do estoque', fala: 'SANDRA: Depois a equipe separa: tubo, conexão, registro, caixa d’água.' },
+      { cena: 'Caminhão saindo', fala: 'SANDRA: E sai no prazo que a gente combinou. Manda a sua lista no WhatsApp que eu confiro.' },
+    ],
+    montagem: [
+      { t: '0–3s', tipo: 'fala', visual: 'Sandra no balcão, olhando para a câmera, com a lista na mão', audio: 'SANDRA: Chegou uma lista de obra com 38 itens.', texto_tela: '38 itens. Quanto tempo?' },
+      { t: '3–6s', tipo: 'detalhe', visual: 'Close da lista impressa, dedo descendo pelos itens', audio: 'SANDRA: Quanto tempo você acha que a gente leva?', texto_tela: '' },
+      { t: '6–10s', tipo: 'insert', visual: 'Print da conversa no WhatsApp com a lista (nome do cliente borrado)', audio: 'SANDRA: Primeiro eu confiro tudo com o cliente pelo WhatsApp.', texto_tela: 'Confere item por item' },
+      { t: '10–15s', tipo: 'fala', visual: 'Sandra ao telefone, plano médio, anotando', audio: 'SANDRA: Item por item, pra não faltar nada.', texto_tela: '' },
+      { t: '15–20s', tipo: 'apoio', visual: 'Equipe andando pelo corredor do estoque com o carrinho', audio: 'Trilha sobe', texto_tela: '' },
+      { t: '20–25s', tipo: 'detalhe', visual: 'Mãos separando joelhos e luvas Tigre na caixa', audio: 'SANDRA: Tubo, conexão, registro…', texto_tela: '' },
+      { t: '25–30s', tipo: 'apoio', visual: 'Prateleira de caixas d’água, câmera passando devagar', audio: 'SANDRA: …até a caixa d’água.', texto_tela: '' },
+      { t: '30–36s', tipo: 'grafico', visual: 'Contador animado de 0 a 38 itens separados, relógio ao lado', audio: 'Som de check a cada item', texto_tela: '38 de 38' },
+      { t: '36–42s', tipo: 'fala', visual: 'Sandra conferindo a caixa com a lista, olha para a câmera', audio: 'SANDRA: Tudo conferido duas vezes.', texto_tela: '' },
+      { t: '42–48s', tipo: 'apoio', visual: 'Caminhão sendo carregado na doca', audio: 'Trilha', texto_tela: '' },
+      { t: '48–54s', tipo: 'texto', visual: 'Tela verde-limão com a frase grande', audio: 'SANDRA (off): E sai no prazo que a gente combinou.', texto_tela: 'No prazo combinado' },
+      { t: '54–60s', tipo: 'fala', visual: 'Sandra no balcão, sorri e aponta para baixo', audio: 'SANDRA: Manda a sua lista no WhatsApp que eu confiro.', texto_tela: 'Manda a lista no WhatsApp' },
+    ],
+    captar: [
+      'Sandra no balcão falando para a câmera (3 tomadas do começo e do fim)',
+      'Close da lista impressa e do dedo descendo pelos itens',
+      'Tela do WhatsApp com a lista (gravar a tela do celular)',
+      'Equipe com o carrinho no corredor (de frente e de costas)',
+      'Mãos separando as peças Tigre na caixa',
+      'Prateleira de caixas d’água com a câmera andando',
+      'Caminhão carregando e saindo da doca',
+    ],
+    edicao: 'Ritmo rápido nos primeiros 6 s, corte a cada 3 a 5 s. Legenda em todas as falas, texto na tela em verde-limão. Trilha animada baixa embaixo da voz; som de check no contador. Fecha no rosto da Sandra com a chamada.',
+    referencia: { link: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', porque: 'Mostra o processo do pedido ao envio em ritmo rápido, com contador na tela.' },
+    extras: {
+      stories: ['Bastidor da separação com enquete: “Quanto tempo você acha?”', 'Caminhão saindo com a localização da obra'],
+      reels_celular: ['Sandra respondendo “vocês entregam na obra?” em 15 s'],
+      fotos: [
+        { tema: 'Sandra no balcão com a lista', como: 'Luz da janela, de frente, sorrindo', referencia: { link: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', porque: 'Retrato no ambiente de trabalho' } },
+        { tema: 'Caixa pronta com as peças Tigre', como: 'De cima, tudo organizado' },
+      ],
+    },
+  },
+};

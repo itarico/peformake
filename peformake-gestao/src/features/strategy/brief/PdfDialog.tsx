@@ -7,8 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import type { StrategyBoardData } from './cardRules'
 import { approveBoard, approveCard } from './strategyApi'
-import { avDocName, docName, pdfRefLinks, strategyHtml } from './strategyDoc'
-import { AV_PARTS, type AvPart } from './avParts'
+import { avClientDocName, docName, pdfRefLinks, strategyHtml } from './strategyDoc'
 import { cn } from '@/lib/cn'
 
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
@@ -41,10 +40,10 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
   const toApprove = going.filter((c) => c.status !== 'aprovado')
   const byTab = Object.entries(going.reduce<Record<string, number>>((m, c) => ({ ...m, [c.tab]: (m[c.tab] ?? 0) + 1 }), {}))
   const [step, setStep] = useState<string | null>(null)
-  // Audiovisual em três partes (Italo, 19/11): baixa o documento completo ou só uma parte; as três ficam salvas na pasta.
+  // Audiovisual (Italo, 19/11, v2): cada vídeo em 3 páginas no completo; "Para o cliente" = só as narrações (é o que vai ao cliente).
   const hasVideos = going.some((c) => c.tab === 'audiovisual')
-  const [which, setWhich] = useState<'completo' | AvPart>('completo')
-  const choices = [{ id: 'completo' as const, label: 'Completo' }, ...(hasVideos ? AV_PARTS.map((p) => ({ id: p.id, label: p.label })) : [])]
+  const [which, setWhich] = useState<'completo' | 'cliente'>('completo')
+  const choices = [{ id: 'completo' as const, label: 'Completo' }, ...(hasVideos ? [{ id: 'cliente' as const, label: 'Só a narração (cliente)' }] : [])]
   const run = useMutation({
     mutationFn: async () => {
       const w = window.open('', '_blank')
@@ -65,12 +64,12 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
           const { error } = await rpc('strategy_save_html', { _board: board.id, _path: path, _name: `${title}.html`, _size: blob.size })
           if (error) throw new Error(error.code === 'PF005' ? 'Aprove a estratégia antes.' : 'Não foi possível guardar o documento. Tente de novo.')
         }
-        // As partes primeiro e o completo por último: o PDF definitivo que o agente gera é o do documento completo.
-        const parts = hasVideos ? AV_PARTS.map((p) => ({ id: p.id, html: strategyHtml(input, { part: p.id }) })) : []
-        for (const p of parts) await save(avDocName(board.month, p.id), p.html)
+        // A narração primeiro e o completo por último: o PDF definitivo que o agente gera é o do documento completo.
+        const narr = hasVideos ? strategyHtml(input, { only: 'narracao' }) : ''
+        if (narr) await save(avClientDocName(board.month), narr)
         const full = strategyHtml(input)
         await save(docName(board.month), full)
-        const html = which === 'completo' ? full : parts.find((p) => p.id === which)?.html ?? full
+        const html = which === 'cliente' && narr ? narr : full
         printNow(w, html)
       } catch (e) { w?.close(); throw e } finally { setStep(null) }
     },
@@ -78,8 +77,8 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
   })
   return (
     <Dialog open onClose={onClose} title="Baixar PDF" size="sm"
-      description="Abre o documento para salvar em PDF e guarda na pasta do cliente (o completo e as 3 partes do audiovisual). Nada vai ao cliente."
-      footer={<div className="flex gap-2"><Button disabled={run.isPending || !going.length} onClick={() => run.mutate()}><FileDown size={15} aria-hidden="true" /> {run.isPending ? (step ?? 'Gerando') : which === 'completo' ? 'Baixar PDF' : `Baixar ${AV_PARTS.find((p) => p.id === which)!.label}`}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
+      description="Abre o documento para salvar em PDF e guarda na pasta do cliente (o completo e a narração dos vídeos). Nada vai ao cliente."
+      footer={<div className="flex gap-2"><Button disabled={run.isPending || !going.length} onClick={() => run.mutate()}><FileDown size={15} aria-hidden="true" /> {run.isPending ? (step ?? 'Gerando') : which === 'completo' ? 'Baixar PDF' : 'Baixar a narração'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div data-baixar-pdf className="flex flex-col gap-2 text-[13.5px]">
         <p><b>{going.length}</b> {going.length === 1 ? 'item entra' : 'itens entram'}{out ? ` · ${out} fora (você tirou)` : ''}.</p>
         {choices.length > 1 && <div role="radiogroup" aria-label="O que baixar" className="flex flex-wrap gap-1.5">{choices.map((o) => <button key={o.id} type="button" role="radio" aria-checked={which === o.id} onClick={() => setWhich(o.id)} className={cn('min-h-10 cursor-pointer rounded-full border px-3 text-[13px] font-medium', which === o.id ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o.label}</button>)}</div>}

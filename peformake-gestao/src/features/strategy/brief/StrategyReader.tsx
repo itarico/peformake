@@ -9,8 +9,8 @@ import { videoDoc, type ScriptDoc } from './scriptRules'
 import { DetailsDialog, RedoDialog, VideoEditDialog } from './ReaderDialogs'
 import { CardDialog } from './CardDialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
-import { AV_PARTS, type AvPart } from './avParts'
-import { ClientView, EditView, ShootView } from './AvPartsView'
+import { AV_PARTS, videoHead, type AvPart } from './avParts'
+import { EditView, NarrationView, ShootView } from './AvPartsView'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 const s = (v: unknown) => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v))
@@ -109,21 +109,29 @@ function Article({ c, kicker, actions, more, children }: { c: StrategyCard; kick
 }
 
 /**
- * Um vídeo = uma "página", em três partes para três públicos (Italo, 19/11): Cliente (a fala, padrão) · Gravação
- * (storyboard, shot list, diária) · Edição (por bloco e derivados). Abas simples, sem rolagem dupla.
+ * Um vídeo = uma "página" (Italo, 19/11, v2): no topo título, formato · duração e a ideia em 1 frase; embaixo, 3 abas
+ * Narração (a fala, padrão) · Gravação (a montagem em quadros, o que captar) · Edição (guia e tempos). Sem selos nem
+ * notas (ficam em "Ver detalhes"); sem rolagem dupla.
  */
 function VideoArticle({ c, index, doc, actions, more }: { c: StrategyCard; index: number; doc: ScriptDoc; actions: ReactNode; more: (c: StrategyCard, doc?: ScriptDoc) => ReactNode }) {
-  const [part, setPart] = useState<AvPart>('cliente')
+  const [part, setPart] = useState<AvPart>('narracao')
+  const h = videoHead(c, index)
   return (
-    <div data-roteiro={c.id}>
-      <Shell c={c} kicker={`${doc.number} / ${doc.type}`} title={doc.title} actions={actions}>
-        <div className="w-full max-w-sm"><DialogTabs value={part} onChange={setPart} label={`Partes de ${doc.title}`} options={AV_PARTS} /></div>
-        {part === 'cliente' && <ClientView c={c} index={index} />}
-        {part === 'gravacao' && <ShootView c={c} />}
-        {part === 'edicao' && <EditView c={c} />}
-        {more(c, doc)}
-      </Shell>
-    </div>
+    <article data-roteiro={c.id} data-item={c.id} className={cn('flex flex-col gap-3 rounded-2xl border border-line bg-surface px-4 py-4 md:px-7 md:py-6', !c.in_pdf && 'opacity-60')}>
+      <header className="flex flex-col gap-1">
+        <div className="flex min-h-10 items-center gap-2">
+          <span className="min-w-0 flex-1 truncate text-[12px] font-bold uppercase tracking-[.06em] text-accent-ink">{doc.number} · {h.meta}</span>
+          {actions}
+        </div>
+        <h3 className="text-[21px] font-bold leading-tight tracking-tight md:text-[27px]">{h.title}</h3>
+        {h.idea && <p data-ideia className="max-w-[68ch] text-[15px] leading-snug text-muted">{h.idea}</p>}
+      </header>
+      <div className="w-full max-w-sm"><DialogTabs value={part} onChange={setPart} label={`Partes de ${h.title}`} options={AV_PARTS} /></div>
+      {part === 'narracao' && <NarrationView c={c} index={index} />}
+      {part === 'gravacao' && <ShootView c={c} />}
+      {part === 'edicao' && <EditView c={c} />}
+      {more(c, doc)}
+    </article>
   )
 }
 

@@ -8,6 +8,7 @@ import { cn } from '@/lib/cn'
 import { FUNNEL, KIND_LABEL, REDO_HINTS, type StrategyCard } from './cardRules'
 import { patchCard, redoCard, requestRedo } from './strategyApi'
 import { cleanTitle, roteiroToText, textToRoteiro, type ScriptDoc } from './scriptRules'
+import { productionExtras } from './avParts'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 const s = (v: unknown) => (typeof v === 'string' ? v.trim() : '')
@@ -97,7 +98,10 @@ export function DetailsDialog({ card, doc, onClose }: { card: StrategyCard; doc?
   ] as const
   const [tab, setTab] = useState<(typeof tabs)[number]['id']>('equipe')
   const lines: { label: string; value: string }[] = [
+    // Notas do item (Italo, 19/11): só aqui, nunca em destaque na leitura.
+    ...(card.redo_requested_at ? [{ label: 'Situação', value: `Refazendo${card.redo_pedido ? `: ${card.redo_pedido}` : ''}` }] : !card.in_pdf ? [{ label: 'Situação', value: 'Fora do PDF' }] : []),
     ...(doc?.extras ?? []),
+    ...(doc ? productionExtras(card) : []),
     ...(card.funnel ? [{ label: 'Funil', value: FUNNEL[card.funnel].label }] : []),
     ...(card.serves ? [{ label: 'Serve', value: card.serves }] : []),
     ...(card.goal ? [{ label: 'Meta', value: card.goal }] : []),

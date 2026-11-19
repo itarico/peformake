@@ -1,71 +1,77 @@
+import { createRequire } from 'node:module'
 import { describe, expect, it } from 'vitest'
-import { clientPart, editPart, frameSvg, framingOf, movementOf, orientationOf, screenTextOf, shootPart, soundOf, storyboard } from './avParts'
+import { durationOf, editPart, extrasOf, montage, narrationPart, orientationOf, productionExtras, screenTextOf, shootPart, shotSvg, shotTypeOf, videoHead } from './avParts'
 
-describe('direção → enquadramento', () => {
-  it.each([
-    ['PLANO ABERTO DA LOJA', 'geral'], ['PLANO GERAL DO GALPÃO', 'geral'], ['Corredor das caixas. Voz de fora do quadro', 'geral'],
-    ['PLANO MÉDIO, SANDRA NO BALCÃO', 'medio'], ['CLOSE NO ROSTO DA SANDRA', 'close'], ['PRIMEIRO PLANO', 'close'],
-    ['CLOSE NA PEÇA', 'detalhe'], ['DETALHE DAS MÃOS', 'detalhe'], ['INSERT DO TUBO', 'detalhe'],
-    ['POV DO CLIENTE ENTRANDO NA LOJA', 'pov'], ['DRONE SOBRE A OBRA', 'drone'], ['Vista aérea do bairro', 'drone'],
-    ['Sandra fala olhando para a câmera', 'medio'], ['Para, olha para a câmera', 'medio'], ['Sandra pega o joelho e mostra para a câmera', 'close'], ['Sandra com o registro na mão', 'close'], ['', 'medio'],
-  ])('%s → %s', (dir, f) => { expect(framingOf(dir)).toBe(f) })
-  it('a primeira citada vale; o campo explícito vence', () => {
-    expect(framingOf('PLANO ABERTO, DEPOIS CLOSE NO ROSTO')).toBe('geral')
-    expect(framingOf('CLOSE NO ROSTO, ABRE PARA PLANO GERAL')).toBe('close')
-    expect(framingOf('PLANO ABERTO', 'close')).toBe('close')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fx = createRequire(import.meta.url)('../../../../e2e/fixtures/av-montagem.cjs') as { title: string; data: any }
+const full = { title: fx.title, inspired: null, data: fx.data }
+
+describe('montagem (storyboard)', () => {
+  it('vem de data.montagem, na ordem, com tempo, tipo, visual e texto na tela', () => {
+    const m = montage(full)
+    expect(m).toHaveLength(12)
+    expect(m.map((x) => x.tipo)).toEqual(['fala', 'detalhe', 'insert', 'fala', 'apoio', 'detalhe', 'apoio', 'grafico', 'fala', 'apoio', 'texto', 'fala'])
+    expect(m[0]).toMatchObject({ n: 1, t: '0–3s', texto: '38 itens. Quanto tempo?' })
+    expect(m[11]!.t).toBe('54–60s')
   })
-  it('movimento, som e texto na tela', () => {
-    expect(movementOf('TRAVELLING ACOMPANHANDO A SANDRA')).toBe('travelling')
-    expect(movementOf('Sandra vira para a câmera e começa a andar')).toBe('travelling')
-    expect(movementOf('Passa pelos biodigestores e aponta')).toBe('travelling')
-    expect(movementOf('PAN PARA A PRATELEIRA')).toBe('pan')
-    expect(movementOf('DRONE SOBE MOSTRANDO A OBRA')).toBe('sobe')
-    expect(movementOf('CÂMERA DESCE ATÉ O PISO')).toBe('desce')
-    expect(movementOf('SANDRA ENTRA NO QUADRO')).toBe('entra'); expect(movementOf('Caminhão saindo')).toBe('sai')
-    expect(movementOf('TRILHA SOBE')).toBeNull(); expect(movementOf('Sandra parada')).toBeNull()
-    expect(soundOf('TRILHA SOBE')).toBe('Trilha'); expect(soundOf('Voz de fora do quadro')).toBe('Voz off'); expect(soundOf('Plano médio')).toBe('')
-    expect(screenTextOf('Texto na tela: “Quando o cliente não sabe o nome da peça…”. Alguém da equipe faz o cliente')).toBe('Quando o cliente não sabe o nome da peça…')
+  it('cada tipo tem o seu desenho; vertical ou horizontal', () => {
+    for (const s of montage(full)) {
+      const svg = shotSvg(s, 'vertical')
+      expect(svg).toMatch(/^<svg[^>]+viewBox="0 0 90 160"/); expect(svg).toContain(`data-quadro="${s.tipo}"`); expect(svg).toContain(s.t)
+    }
+    expect(shotSvg({ n: 1, t: '', tipo: 'grafico', texto: '' }, 'horizontal')).toContain('viewBox="0 0 160 90"')
+    expect(shotSvg({ n: 1, t: '0–3s', tipo: 'texto', texto: 'x' }, 'vertical')).toContain('Aa')
   })
-  it('vertical por padrão; horizontal quando o formato pede', () => {
-    expect(orientationOf('Reel (humor)')).toBe('vertical'); expect(orientationOf('Vídeo horizontal para o YouTube')).toBe('horizontal'); expect(orientationOf('Institucional 16:9')).toBe('horizontal')
+  it('tipo: campo do card, sinônimos ou deduzido da descrição', () => {
+    expect(shotTypeOf('B-roll')).toBe('apoio'); expect(shotTypeOf('print')).toBe('insert'); expect(shotTypeOf('lettering')).toBe('texto')
+    expect(shotTypeOf('', 'Close das mãos na peça')).toBe('detalhe'); expect(shotTypeOf('', 'Contador de 0 a 38')).toBe('grafico')
+    expect(shotTypeOf('', 'Fachada da loja')).toBe('apoio'); expect(shotTypeOf('', '', true)).toBe('fala')
+  })
+  it('sem montagem: um quadro por bloco do roteiro, tempos pela duração', () => {
+    const c = { inspired: null, data: { duracao_s: 30, roteiro: [
+      { cena: 'PLANO ABERTO DA LOJA. TRILHA ENTRA', fala: '' },
+      { cena: 'CLOSE NA PEÇA', fala: '' },
+      { cena: 'Texto na tela: “Manda a lista”', fala: 'SANDRA: Manda a lista no WhatsApp.' },
+    ] } }
+    const m = montage(c)
+    expect(m.map((x) => x.tipo)).toEqual(['apoio', 'detalhe', 'texto'])
+    expect(m.map((x) => x.t)).toEqual(['0–10s', '10–20s', '20–30s'])
+    expect(m[2]!.texto).toBe('Manda a lista'); expect(m[2]!.audio).toBe('Sandra: Manda a lista no WhatsApp.')
+    expect(montage({ data: { roteiro: [{ cena: '', fala: 'SANDRA: Oi.' }] } })[0]).toMatchObject({ tipo: 'fala', t: '' })
+  })
+  it('duração: duracao_s ou o fim da montagem', () => {
+    expect(durationOf(fx.data)).toBe(60); expect(durationOf({ montagem: [{ t: '0-3s' }, { t: '40–45s' }] })).toBe(45); expect(durationOf({})).toBeNull()
   })
 })
 
-const card = { title: 'S1 · Teste', inspired: null, data: {
-  formato: 'Reel', filmar: 'Quem fala: Sandra. Quem grava: Ellcazo. Diária 17/11.',
-  roteiro: [
-    { cena: 'PLANO ABERTO DA LOJA. TRILHA ENTRA', fala: 'SANDRA: Tem! De 100 litros até 25 mil.' },
-    { cena: 'CLOSE NA PEÇA', fala: '' },
-    { cena: 'Texto na tela: “Manda a lista”. Corta para o balcão', fala: 'SANDRA: Manda a lista no WhatsApp.' },
-  ],
-} }
-
 describe('as três partes', () => {
-  it('storyboard: um quadro por bloco, com plano, som e legenda', () => {
-    const f = storyboard(card)
-    expect(f.map((x) => x.framing)).toEqual(['geral', 'detalhe', 'detalhe'])
-    expect(f[0]!.sound).toBe('Trilha'); expect(f[0]!.caption).toBe('Tem! De 100 litros até 25 mil.'); expect(f[2]!.text).toBe('Manda a lista')
-    const svg = frameSvg(f[0]!, 'vertical')
-    expect(svg).toMatch(/^<svg[^>]+viewBox="0 0 90 160"/); expect(svg).toContain('PLANO GERAL'); expect(svg).toContain('data-quadro="geral"')
-    expect(frameSvg({ ...f[0]!, framing: 'close' }, 'horizontal')).toContain('viewBox="0 0 160 90"')
+  it('topo: título, formato · duração e a ideia em 1 frase', () => {
+    expect(videoHead(full)).toEqual({ title: 'A lista da obra em 60 segundos', meta: 'Reel (ensinar) · 60 s', idea: 'A Sandra mostra, com a lista de um cliente real, como a SN separa tudo da obra e entrega no prazo.' })
   })
-  it('cliente: sem direção técnica; logística tirada do filmar', () => {
-    const c = clientPart(card)
-    expect(JSON.stringify(c.blocks)).not.toMatch(/plano|close|texto na tela/i)
-    expect(c.blocks[0]!.items.map((i) => i.text)).toContain('Tem! De 100 litros até 25 mil.')
-    expect(c.logistics).toEqual([{ label: 'Quando', value: '17/11' }])
+  it('narração: só a fala, sem direção; quem fala só com mais de uma pessoa', () => {
+    const n = narrationPart(full)
+    expect(n.paras).toHaveLength(4); expect(n.paras.every((p) => !p.speaker)).toBe(true)
+    expect(JSON.stringify(n)).not.toMatch(/balc[aã]o, olhando|Corredor|Caminhão saindo/)
+    const two = narrationPart({ title: '', data: { roteiro: [{ cena: 'x', fala: 'VOZ: Tem caixa?' }, { cena: 'y', fala: 'SANDRA: Tem!' }, { cena: '', fala: 'SANDRA: De 100 litros.' }] } })
+    expect(two.paras.map((p) => p.speaker)).toEqual(['Voz (fora do quadro)', 'Sandra', ''])
   })
-  it('gravação: equipamentos deduzidos quando o card não traz', () => {
-    const s = shootPart(card)
-    expect(s.gearSuggested).toBe(true); expect(s.gear).toContain('Microfone de lapela'); expect(s.gear).toContain('Tripé')
-    expect(shootPart({ inspired: null, data: { producao: { equipamentos: ['Sony FX3'] } } }).gear).toEqual(['Sony FX3'])
+  it('gravação: montagem, o que captar, aproveite a gravação e referência só se existir', () => {
+    const s = shootPart(full)
+    expect(s.shots).toHaveLength(12); expect(s.captar).toHaveLength(7); expect(s.ref?.porque).toMatch(/processo/)
+    expect(s.extras?.stories).toHaveLength(2); expect(s.extras?.reels).toHaveLength(1)
+    expect(s.extras?.fotos[0]!.ref?.link).toMatch(/youtube/); expect(s.extras?.fotos[1]!.ref).toBeNull()
+    expect(shootPart({ inspired: null, data: {} })).toEqual({ orient: 'vertical', shots: [], captar: [], extras: null, ref: null })
+    expect(extrasOf({ extras: { stories: [], fotos: [] } })).toBeNull()
   })
-  it('edição: por bloco e derivados; card vazio não quebra', () => {
-    const e = editPart({ data: { ...card.data, producao: { derivados: [{ formato: 'Anúncio', duracao_s: 15, gancho: 'Tem!' }] } } })
-    expect(e.beats[2]!.items).toEqual(expect.arrayContaining([{ label: 'Texto na tela', value: 'Manda a lista' }, { label: 'Corte', value: 'Corta para o balcão' }]))
-    expect(e.beats[0]!.items.find((x) => x.label === 'Trilha e som')?.value).toBe('Trilha entra')
-    expect(e.derivados).toEqual(['Anúncio · 15 s · abre com “Tem!”'])
-    expect(editPart({ data: {} })).toEqual({ beats: [], general: [], derivados: [], publicacao: [] })
-    expect(clientPart({ title: '', data: {} }).blocks).toEqual([]); expect(shootPart({ inspired: null, data: {} }).gear).toEqual([])
+  it('edição: guia curto e os tempos; derivados ficam em Ver detalhes', () => {
+    const e = editPart(full)
+    expect(e.guide[0]).toMatch(/^Ritmo rápido/); expect(e.times).toHaveLength(12)
+    expect(editPart({ data: {} })).toEqual({ guide: [], times: [] })
+    expect(productionExtras({ data: { producao: { derivados: [{ formato: 'Anúncio', duracao_s: 15, gancho: 'Tem!' }], publicacao: { capa: 'Sandra' } } } }))
+      .toEqual([{ label: 'Derivados', value: 'Anúncio · 15 s · abre com “Tem!”' }, { label: 'Capa', value: 'Sandra' }])
+  })
+  it('texto na tela e orientação', () => {
+    expect(screenTextOf('Texto na tela: “Quando o cliente não sabe o nome da peça…”. Alguém da equipe faz o cliente')).toBe('Quando o cliente não sabe o nome da peça…')
+    expect(orientationOf('Reel (humor)')).toBe('vertical'); expect(orientationOf('Vídeo horizontal para o YouTube')).toBe('horizontal')
   })
 })

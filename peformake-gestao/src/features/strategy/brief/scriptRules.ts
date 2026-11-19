@@ -97,7 +97,7 @@ export function interviewQuestions(d: Any): Question[] {
 const LABELS: Record<string, string> = {
   papel: 'Papel', linguagem: 'Linguagem', alvo: 'Para quem', frase_alma: 'Frase-alma', objetivo: 'Objetivo', duracao_s: 'Duração (s)', cruzamento: 'Por que vai dar certo', ideia: 'Ideia',
 }
-const KNOWN = new Set(['formato', 'ganchos', 'roteiro', 'outras_ideias', 'referencia', 'filmar', 'fala', 'perguntas', 'nasceu_de', 'referencia_nota', 'nota_qualidade', 'arco', ...Object.keys(LABELS)])
+const KNOWN = new Set(['formato', 'montagem', 'captar', 'edicao', 'extras', 'ganchos', 'roteiro', 'outras_ideias', 'referencia', 'filmar', 'fala', 'perguntas', 'nasceu_de', 'referencia_nota', 'nota_qualidade', 'arco', ...Object.keys(LABELS)])
 
 /** Detalhes para a equipe (atrás de "Ver detalhes"): campos conhecidos e qualquer campo novo de texto, sem quebrar se faltar. */
 export function teamExtras(c: Pick<StrategyCard, 'data'>): { label: string; value: string }[] {

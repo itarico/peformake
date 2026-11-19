@@ -5,8 +5,7 @@
 // Função pura (sem navegador): a tela usa para imprimir/salvar e o agente usa para gerar o PDF com o Chromium.
 import { ellcazoSvg } from '@/components/ui/ellcazoSvg'
 import type { StrategyCard } from './cardRules'
-import { isFreeAnswer, videoDoc } from './scriptRules'
-import { AV_PARTS, clientPart, editPart, FRAMING_LABEL, frameSvg, MOVE_LABEL, shootPart, type AvPart } from './avParts'
+import { editPart, narrationPart, SHOT_LABEL, shootPart, shotSvg, videoHead, type Ref } from './avParts'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
 export interface DocInput {
@@ -44,9 +43,9 @@ export function docName(month: string): string {
   return `Estratégia · 01-${mm} a ${last}-${mm}-${y}`
 }
 
-/** Nome do arquivo de uma parte do audiovisual ("Audiovisual · Para o cliente · 01-12 a 31-12-2026"). */
-export function avDocName(month: string, part: AvPart): string {
-  return `Audiovisual · ${AV_PARTS.find((p) => p.id === part)!.title} · ${docName(month).split(' · ')[1]}`
+/** Nome do arquivo só com as narrações (o que vai ao cliente): "Audiovisual · Para o cliente · 01-12 a 31-12-2026". */
+export function avClientDocName(month: string): string {
+  return `Audiovisual · Para o cliente · ${docName(month).split(' · ')[1]}`
 }
 
 /** Sem selos de funil/serve/meta no documento (Italo, 18/11): o PDF é para ler e gravar. */
@@ -97,78 +96,64 @@ function referencias(cs: StrategyCard[]) {
 }
 
 /** Cabeçalho e rodapé Ellcazo das páginas de vídeo. */
-const ezHead = (client: string, month: string, part: string) => `<header class="ezh"><div><span class="bar"></span><span class="k2">${esc(part)} · ${esc(monthTitle(month))}</span><b class="who">${esc(client)}</b></div><span class="ezmark">${ellcazoSvg('#B5E61D', 84)}</span></header>`
-const ezFoot = (n: string, total: number) => `<footer class="ezf"><b>ELLCAZO STUDIO</b><span>${esc(n)} / ${String(total).padStart(2, '0')}</span></footer>`
-const refOf = (c: StrategyCard) => (c.data.referencia?.link ? url(c.data.referencia.link) : c.inspired?.link ? url(c.inspired.link) : '')
-const refRow = (c: StrategyCard) => {
-  const ref = refOf(c); if (!ref) return ''
-  const thumb = coverOf(ref)
-  return `<div class="refrow">${thumb ? `<a href="${esc(ref)}"><img src="${esc(thumb)}" alt=""></a>` : ''}<div><span class="k2">Referência</span><a class="btn" href="${esc(ref)}">▶ Assistir a referência</a>${c.inspired?.numero ? `<p class="small">${esc(c.inspired.numero)}</p>` : ''}</div></div>`
+const ezHead = (client: string, month: string, part: string) => `<header class="ezh"><div><span class="bar"></span><span class="k2">${esc(part)} · ${esc(monthTitle(month))}</span><b class="who">${esc(client)}</b></div><span class="ezmark">${ellcazoSvg('#1d1f1a', 84)}</span></header>`
+const ezFoot = (right: string) => `<footer class="ezf"><b>ELLCAZO STUDIO</b><span>${esc(right)}</span></footer>`
+const refRow = (r: Ref | null, label = '▶ Assistir a referência') => {
+  if (!r) return ''
+  const ref = url(r.link); const thumb = r.thumb || coverOf(ref)
+  return `<div class="refrow">${thumb ? `<a href="${esc(ref)}"><img src="${esc(thumb)}" alt=""></a>` : ''}<div><a class="btn" href="${esc(ref)}">${esc(label)}</a>${r.porque ? `<p class="small">${esc(r.porque)}</p>` : ''}</div></div>`
 }
-const ul = (title: string, xs: string[], note = '') => (xs.length ? `<div><span class="k2">${esc(title)}${note ? ` <i>· ${esc(note)}</i>` : ''}</span><ol>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></div>` : '')
 
-/** Parte 1, para quem fala na câmera (o formato do PDF da Rosanne): a fala, as perguntas, a cola e o que levar. */
-function avClient(c: StrategyCard, i: number) {
-  const doc = videoDoc(c, i); const p = clientPart(c, i)
+/** Página 1 (para o cliente): só a fala completa e as perguntas. */
+function avNarration(c: StrategyCard, i: number) {
+  const p = narrationPart(c, i)
   let q = 0
-  const blocks = p.blocks.map((b) => `${b.speaker ? `<p class="spk">${esc(b.speaker)}</p>` : ''}${b.items.map((it) => it.kind === 'dir' ? `<p class="dir">[${esc(it.text)}]</p>`
-    : it.pergunta ? `<p class="spk">Pergunta ${++q}</p><p class="q">“${esc(it.text)}”</p>`
-    : it.livre || isFreeAnswer(it.text) ? `<p class="pts"><b>Resposta espontânea</b> · ${esc(it.text.replace(/^\(|\)$/g, ''))}</p>`
-    : `<p class="fala">${nl(it.text)}</p>`).join('')}`).join('')
-  const qs = p.questions.map((x, k) => `<p class="spk">Pergunta ${q + k + 1}</p><p class="q">“${esc(x.pergunta)}”</p>${x.pontos ? `<p class="pts"><b>Pontos pra resposta espontânea</b> · ${esc(x.pontos)}</p>` : ''}`).join('')
-  const cola = p.cola.length ? `<div class="cola"><span class="k2">${p.blocks.length ? 'Se preferir falar com suas palavras' : 'Cola de tópicos'}</span><ul>${p.cola.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''
-  const lg = p.logistics.length ? `<p class="lg">${p.logistics.map((l) => `<span><b>${esc(l.label)}:</b> ${esc(l.value)}</span>`).join('')}</p>` : ''
-  return { doc, body: `${lg}${blocks}${qs}${cola}${!blocks && !qs && !cola ? '<p class="fala">(sem fala escrita)</p>' : ''}${refRow(c) ? `<div class="team">${refRow(c)}</div>` : ''}` }
+  const paras = p.paras.map((x) => `${x.speaker ? `<p class="spk">${esc(x.speaker)}</p>` : ''}${x.pergunta ? `<p class="spk">Pergunta ${++q}</p><p class="q">“${esc(x.text)}”</p>` : x.livre ? '<p class="pts">Resposta espontânea</p>' : `<p class="fala">${nl(x.text)}</p>`}`).join('')
+  const qs = p.questions.map((x, k) => `<p class="spk">Pergunta ${q + k + 1}</p><p class="q">“${esc(x.pergunta)}”</p>${x.pontos ? `<p class="pts">${esc(x.pontos)}</p>` : ''}`).join('')
+  const cola = p.cola.length ? `<ul class="cola">${p.cola.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''
+  return `${paras}${qs}${cola}` || '<p class="pts">(sem fala escrita)</p>'
 }
 
-/** Parte 2, para a Ellcazo: storyboard esquemático, shot list, ordem da diária, equipamentos, referência e outras abordagens. */
-function avShoot(c: StrategyCard, i: number) {
-  const doc = videoDoc(c, i); const p = shootPart(c)
-  const sb = p.frames.length ? `<span class="k2">Storyboard</span><ol class="sb ${p.orient === 'horizontal' ? 'h' : ''}">${p.frames.map((f) => `<li>${frameSvg(f, p.orient)}<b>${esc(FRAMING_LABEL[f.framing])}${f.move ? ` · ${esc(MOVE_LABEL[f.move])}` : ''}${f.sound ? ` · ${esc(f.sound)}` : ''}</b>${f.caption ? `<span>${esc(f.speaker ? `${f.speaker}: ` : '')}${esc(f.caption)}</span>` : ''}</li>`).join('')}</ol>` : '<p class="pts">Sem roteiro em blocos para montar o storyboard.</p>'
-  const ideias = (Array.isArray(c.data.outras_ideias) ? c.data.outras_ideias : []).filter(Boolean)
-  const cols = [ul('Shot list', p.shotList), ul('Ordem da diária', p.order), ul('Equipamentos', p.gear, p.gearSuggested ? 'sugeridos' : '')].filter(Boolean)
-  return { doc, body: `${sb}${cols.length ? `<div class="cols">${cols.join('')}</div>` : ''}${p.team ? `<p class="pts"><b>Equipe e local</b> · ${esc(p.team)}</p>` : ''}${refRow(c) || ideias.length ? `<div class="team">${refRow(c)}${ideias.length ? `<span class="k2">Outras abordagens</span><ol>${list(ideias, (g) => `<li>${esc(g)}</li>`)}</ol>` : ''}</div>` : ''}` }
+/** Página 2 (Ellcazo): a montagem em quadros, o que captar, aproveite a gravação e a referência (só se existir). */
+function avShoot(c: StrategyCard) {
+  const p = shootPart(c)
+  const n = p.shots.length
+  const cols = p.orient === 'vertical' ? (n > 12 ? 8 : 6) : (n > 12 ? 5 : 4)
+  const sb = n ? `<ol class="sb" style="grid-template-columns:repeat(${cols},1fr)">${p.shots.map((s) => `<li>${shotSvg(s, p.orient)}<b>${esc(SHOT_LABEL[s.tipo])}</b>${s.visual ? `<span>${esc(s.visual)}</span>` : ''}${s.texto ? `<i>“${esc(s.texto)}”</i>` : ''}</li>`).join('')}</ol>` : ''
+  const cap = p.captar.length ? `<div><span class="k2">O que captar</span><ul>${p.captar.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''
+  const e = p.extras
+  const ex = e ? `<div><span class="k2">Aproveite a gravação</span>${e.stories.length ? `<p><b>Stories:</b> ${esc(e.stories.join(' · '))}</p>` : ''}${e.reels.length ? `<p><b>Reels no celular:</b> ${esc(e.reels.join(' · '))}</p>` : ''}${e.fotos.length ? `<p><b>Fotos</b></p><ul>${e.fotos.map((f) => `<li>${esc(f.tema)}${f.como ? ` · ${esc(f.como)}` : ''}${f.ref ? ` · <a href="${esc(url(f.ref.link))}">ver referência</a>` : ''}</li>`).join('')}</ul>` : ''}</div>` : ''
+  return `${sb}${cap || ex ? `<div class="cols two">${cap}${ex}</div>` : ''}${refRow(p.ref)}`
 }
 
-/** Parte 3, para a edição: o que fazer em cada bloco, os derivados e a publicação. */
-function avEdit(c: StrategyCard, i: number) {
-  const doc = videoDoc(c, i); const p = editPart(c)
-  const beats = p.beats.length ? `<ol class="beats">${p.beats.map((b) => `<li><span class="n">${b.n}</span><div>${b.caption ? `<p class="cap">${esc(b.caption)}</p>` : ''}${b.items.length ? b.items.map((x) => `<p><b>${esc(x.label)}:</b> ${esc(x.value)}</p>`).join('') : '<p class="mut">Segue o roteiro.</p>'}</div></li>`).join('')}</ol>` : '<p class="pts">Sem roteiro em blocos.</p>'
-  const pub = p.publicacao.length ? `<div><span class="k2">Publicação</span>${p.publicacao.map((x) => `<p><b>${esc(x.label)}:</b> ${esc(x.value)}</p>`).join('')}</div>` : ''
-  const cols = [ul('Derivados', p.derivados), pub].filter(Boolean)
-  return { doc, body: `${ul('Para o vídeo todo', p.general)}${beats}${cols.length ? `<div class="cols two">${cols.join('')}</div>` : ''}` }
-}
-
-const AV_RENDER: Record<AvPart, (c: StrategyCard, i: number) => { doc: ReturnType<typeof videoDoc>; body: string }> = { cliente: avClient, gravacao: avShoot, edicao: avEdit }
-
-/** Abertura de cada parte (capítulo): fundo verde-limão, para quem é e a lista dos vídeos. */
-function avChapter(part: AvPart, k: number, cs: StrategyCard[], client: string, month: string) {
-  const meta = AV_PARTS.find((x) => x.id === part)!
-  return `<section class="page ez cap" data-parte="${part}"><div><span class="ezmark">${ellcazoSvg('#1d1f1a', 96)}</span><span class="k2">Audiovisual · ${esc(client)} · ${esc(monthTitle(month))}</span>
-    <p class="pn">Parte ${k}</p><h2>${esc(meta.title)}</h2><p class="lead">${esc(meta.who)}</p></div>
-    <ol class="toc">${cs.map((c, i) => `<li><b>${String(i + 1).padStart(2, '0')}</b> ${esc(videoDoc(c, i).title)}</li>`).join('')}</ol>
-    <footer class="ezf"><b>ELLCAZO STUDIO</b><span>${cs.length} ${cs.length === 1 ? 'vídeo' : 'vídeos'}</span></footer></section>`
+/** Página 3 (edição): o guia curto e os tempos principais da montagem. */
+function avEdit(c: StrategyCard) {
+  const p = editPart(c)
+  const guide = p.guide.map((x) => `<p class="fala">${esc(x)}</p>`).join('')
+  const times = p.times.length ? `<span class="k2">Tempos</span><table class="tempos">${p.times.map((s) => `<tr><td><b>${esc(s.t || `Quadro ${s.n}`)}</b></td><td>${esc(SHOT_LABEL[s.tipo])}</td><td>${esc(s.visual || s.audio)}${s.texto ? ` · <b>“${esc(s.texto)}”</b>` : ''}</td></tr>`).join('')}</table>` : ''
+  return `${guide}${times}` || '<p class="pts">Sem guia de edição.</p>'
 }
 
 /**
- * Audiovisual (Ellcazo) em três partes, cada uma para um público (Italo, 19/11): capítulo de abertura (verde-limão) e
- * uma página por vídeo (fundo branco, verde-limão nos detalhes, preto só nos traços; nunca fundo preto).
+ * Audiovisual (Ellcazo) por VÍDEO, 3 páginas seguidas (Italo, 19/11, v2): Narração (branco) · Gravação (branco) ·
+ * Edição (verde-limão). Preto só nos traços, nunca de fundo. `only: 'narracao'` = só as narrações (vai ao cliente).
  */
-function audiovisual(cs: StrategyCard[], client: string, month: string, parts: AvPart[] = AV_PARTS.map((p) => p.id)) {
+function audiovisual(cs: StrategyCard[], client: string, month: string, only?: 'narracao') {
   if (!cs.length) return ''
-  return parts.map((part) => {
-    const k = AV_PARTS.findIndex((x) => x.id === part) + 1
-    const label = AV_PARTS[k - 1]!.title
-    return avChapter(part, k, cs, client, month) + cs.map((c, i) => {
-      const { doc, body } = AV_RENDER[part](c, i)
-      return `<section class="page ez" data-parte="${part}">
-      ${ezHead(client, month, label)}
-      <span class="k2 num">${esc(doc.number)} / ${esc(doc.type)}</span>
-      <h2>${esc(doc.title)}</h2>
+  const total = String(cs.length).padStart(2, '0')
+  return cs.map((c, i) => {
+    const h = videoHead(c, i); const num = String(i + 1).padStart(2, '0')
+    const page = (part: string, label: string, body: string, k: number, lime = false) => `<section class="page ez${lime ? ' lime' : ''}" data-parte="${part}" data-video="${num}">
+      ${ezHead(client, month, `Vídeo ${num} · ${label}`)}
+      <span class="k2 num">${esc(h.meta)}</span>
+      <h2>${esc(h.title)}</h2>
+      ${h.idea && k === 1 ? `<p class="idea">${esc(h.idea)}</p>` : ''}
       ${body}
-      ${ezFoot(doc.number, cs.length)}
+      ${ezFoot(only ? `${num} / ${total}` : `Vídeo ${num} de ${total} · ${k}/3`)}
     </section>`
-    }).join('')
+    const n1 = page('narracao', 'Narração', avNarration(c, i), 1)
+    if (only) return n1
+    return n1 + page('gravacao', 'Gravação', avShoot(c), 2) + page('edicao', 'Edição', avEdit(c), 3, true)
   }).join('')
 }
 
@@ -200,26 +185,23 @@ p{font-size:12.5px;line-height:1.45;margin:4px 0}ol{font-size:12.5px;line-height
 .ezf{position:absolute;bottom:10mm;left:18mm;right:18mm;display:flex;justify-content:space-between;border-top:1.5px solid #e2e4df;padding-top:8px;font-size:10.5px;color:#55594f}.ezf b{color:#1d1f1a}
 .refimg{width:100%;max-height:220px;object-fit:cover;border-radius:12px;display:block;margin:6px 0}
 .noimg{border:2px dashed #000;border-radius:12px;aspect-ratio:16/9;display:grid;place-items:center;font-weight:700}
-.ez .lg{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.ez .lg span{background:#f1f9dc;border-radius:99px;padding:3px 10px;font-size:11.5px}
-.cola{background:#f1f9dc;border-radius:12px;padding:8px 12px;margin:10px 0}.cola ul{font-size:13px;margin:4px 0 0;padding-left:18px}
-.sb{list-style:none;padding:0;margin:4px 0 10px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.sb.h{grid-template-columns:repeat(3,1fr)}
-.sb li{break-inside:avoid;display:flex;flex-direction:column;gap:2px}.sb svg{width:100%;height:auto;display:block}.sb b{font-size:9.5px;line-height:1.2}.sb span{font-size:9.5px;line-height:1.3;color:#55594f}
-.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0}.cols.two{grid-template-columns:1fr 1fr}.cols ol{font-size:11.5px;margin:2px 0 0;padding-left:16px}.cols p{font-size:11.5px;margin:2px 0}.k2 i{font-weight:400;text-transform:none;color:#55594f}
-.beats{list-style:none;padding:0;margin:0 0 10px}.beats li{display:flex;gap:10px;padding:7px 0;border-bottom:1.5px solid #e2e4df;break-inside:avoid}.beats .n{flex:none;width:22px;height:22px;border-radius:99px;background:#B5E61D;display:grid;place-items:center;font-weight:800;font-size:11px}
-.beats p{font-size:12.5px;margin:1px 0}.beats .cap{color:#55594f;font-size:11.5px}
-.ez.cap{background:#B5E61D;display:flex;flex-direction:column;justify-content:space-between}.ez.cap .k2{color:#1d1f1a;margin-top:18mm}.ez.cap .pn{font-size:16px;font-weight:800;margin:10mm 0 0}.ez.cap h2{font-size:54px;margin:2px 0 10px}
-.ez.cap .lead{font-size:16px;max-width:130mm;line-height:1.4}.toc{list-style:none;padding:0;margin:0 0 16mm;font-size:13px;line-height:1.9}.toc b{display:inline-block;width:28px}.ez.cap .ezf{border-top-color:#1d1f1a}
+.cola{font-size:14px;line-height:1.5;padding-left:18px}.ez .idea{font-size:14px;line-height:1.45;color:#3b3e36;margin:-6px 0 14px;max-width:150mm}
+.sb{list-style:none;padding:0;margin:4px 0 12px;display:grid;gap:9px 7px}
+.sb li{break-inside:avoid;display:flex;flex-direction:column;gap:2px;min-width:0}.sb svg{width:100%;height:auto;display:block}.sb b{font-size:9.5px;line-height:1.2;margin-top:2px}.sb span{font-size:9.5px;line-height:1.3;color:#3b3e36}.sb i{font-size:9px;line-height:1.25;font-style:normal;font-weight:700;color:#4a6b12}
+.cols{display:grid;gap:14px;margin:6px 0 10px}.cols.two{grid-template-columns:1fr 1fr}.cols ul{font-size:11.5px;line-height:1.45;margin:2px 0 0;padding-left:16px}.cols p{font-size:11.5px;margin:3px 0}
+.tempos{width:100%;border-collapse:collapse;margin-top:4px}.tempos td{font-size:11.5px;line-height:1.35;padding:5px 6px 5px 0;border-bottom:1.5px solid #1d1f1a22;vertical-align:top}.tempos td:first-child{width:52px;white-space:nowrap}.tempos td:nth-child(2){width:92px;color:#3b3e36}
+.ez.lime{background:#B5E61D}.ez.lime .k2{color:#1d1f1a}.ez.lime .ezh,.ez.lime .ezf{border-color:#1d1f1a44}.ez.lime .ezh .bar{background:#fff}
 .btn{display:inline-block;margin:6px 0 2px;background:#B5E61D;color:#1d1f1a;border-radius:99px;padding:5px 12px;font-weight:800;text-decoration:none;font-size:12px}
 @media screen{body{background:#e9eef0}.page{margin:12px auto;box-shadow:0 2px 12px #0002}}`
 
 /** HTML completo (abre no navegador, imprime ou vira PDF no Chromium). */
-export function strategyHtml(input: DocInput, opts: { part?: AvPart } = {}): string {
+export function strategyHtml(input: DocInput, opts: { only?: 'narracao' } = {}): string {
   TH = input.thumbs ?? {}
   const cs = pdfCards(input.cards)
   const tab = (t: string) => cs.filter((c) => c.tab === t)
-  // Uma parte do audiovisual sozinha (download separado): o capítulo abre o documento.
-  if (opts.part) return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(avDocName(input.month, opts.part))} · ${esc(input.name)}</title><style>${CSS}</style></head><body>
-${audiovisual(tab('audiovisual'), input.name, input.month, [opts.part])}
+  // Só as narrações de todos os vídeos (download "Para o cliente", é o que vai no Enviar ao cliente).
+  if (opts.only) return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(avClientDocName(input.month))} · ${esc(input.name)}</title><style>${CSS}</style></head><body>
+${audiovisual(tab('audiovisual'), input.name, input.month, 'narracao')}
 </body></html>`
   const cover = `<section class="page cover"><div><span class="k">Estratégia do mês</span><h1>${esc(input.name)}<br>${esc(monthTitle(input.month))}</h1></div>
     <div><p>${cs.length} itens aprovados: ${['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias'].map((t) => [t, tab(t).length] as const).filter(([, n]) => n).map(([t, n]) => `${n} ${({ resumo: 'do resumo', audiovisual: 'vídeos', social: 'peças de social', trafego: 'campanhas', atendimento: 'roteiros de atendimento', referencias: 'referências' } as Record<string, string>)[t]}`).join(' · ')}</p>
