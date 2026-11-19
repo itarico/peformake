@@ -446,7 +446,7 @@ que cada vídeo faz para isso acontecer.
   português: "venda o momento em que a pessoa percebe que precisa".
 
 ### 4.2 Ganchos de memória (o que costuma ficar)
-| Ganho de memória | Exemplo no material |
+| Gancho de memória | Exemplo no material |
 |---|---|
 | Frase-assinatura fixa no fecho | "Ocupe seu lugar." (Giulia) |
 | Bordão que é o próprio slogan | "rações boas e baratas" repetido até virar piada (Mavic, Mário Pet Shop) |
