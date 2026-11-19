@@ -50,9 +50,9 @@ Conhecimento do cliente ≥ 7 (abaixo: pré-roteiro de validação com perguntas
  "por_que_existe":"1 frase","intencao":"emoção → efeito",
  "notas":"Criativa 8,9 · Fidelidade 9,5 · Autenticidade 9 · Conhecimento 7,5",
  "outras_ideias":["logline não escolhida","…","…"],"referencia":{"link":"…","porque":"…"},"cruzamento":"o dado que sustenta","filmar":"…",
- "papel":"…","linguagem":"…","persona":"…","frase_alma":"…","duracao_s":70,"momento":"perene",
+ "papel":"…","linguagem":"…","persona":"…","frase_alma":"…","duracao_s":70,"momento":"perene","estrutura":"S61",
  "nasceu_de":[{"fonte":"briefing.diferenciais","dado":"…"}],"marcas_autenticidade":["…","…"],"perguntas":[],
- "producao":{"plano_diaria":"…","shot_list":["…"],"cola":["…"],"derivados":["…"],
+ "producao":{"plano_diaria":"…","shot_list":["…"],"cola":["…"],"derivados":[{"estrutura":"S81","formato":"anúncio 15 s","duracao_s":15,"gancho":"…","usa":"…","gravar_a_mais":"…"}],
    "publicacao":{"capa":"…","primeira_linha":"…","legenda":"…","cta_comentario":"…"},"pos_video":{"palavra":"…","resposta":"…"}},
  "auditoria":{"etapas":{},"interrogatorio":[],"banca":{"criativa":{},"fidelidade":[],"autenticidade":"","conhecimento":""},"cego":null,"rodadas":1},
  "referencia_nota":{"aderencia":4,"estrutura":5,"prova":5,"viabilidade":3,"originalidade":4,"nota":8.3,"descartadas":[]},
@@ -118,8 +118,13 @@ conhecimento da banca.
    ~2 linguagens iguais, ≥ 1 cinemático/documental Ellcazo, humor considerado, ~60/40 construção/conversão, 70/20/10.
    **Pode fugir escrevendo o porquê na vaga. Série recorrente não conta como repetição de linguagem.**
 5. **Performance:** criativo cansado ou ruim → sugira substituto com diagnóstico (Meta só leitura).
+6. **Estrutura (ESTUDO §3c, S1–S117):** leia as já usadas
+   (`select month, title, data->>'estrutura' from strategy_cards where client_id='<id>' and tab='audiovisual' and month >= '<AAAA-MM-01>'::date - interval '3 months' and data ? 'estrutura';`).
+   ≥ 2 vídeos com estrutura nunca usada pelo cliente; nenhuma repetida no mês (salvo série); ≥ 1 de um grupo (A–M)
+   inédito para ele. Grave `estrutura` em todo card.
+7. **Do momento:** trend aprovada no radar → módulo MT; assunto grande (lançamento, final, evento) → módulo MH.
 **Saída:** Repertório + Eixo, personas, tese, tabela do mix (vaga · papel · objetivo · fase · persona · CEP · formato ·
-linguagem · momento · por que existe · desvio da orientação e porquê, se houver).
+linguagem · estrutura · momento · por que existe · desvio da orientação e porquê, se houver).
 
 ## M2 · CURADOR DE REFERÊNCIAS · Estudo: §3b (anúncio), §12, §10.5
 Por vaga, 2–3 candidatas (Recife/PE, Brasil, mundo; outras redes; Biblioteca de Anúncios, TikTok Creative Center, acervo
@@ -155,14 +160,46 @@ Não use roteiros anteriores (de nenhum cliente) como modelo: cada roteiro nasce
 ## M6 · DIRETOR · Estudo: §8, §10.1, §21, §22
 Por bloco: plano e por quê, lente, movimento, luz, som, local que prova, horário (nunca no pico do cliente), quem
 precisa estar, autorização de imagem. Define **diária Ellcazo × celular**. Entrega shot list, **plano da diária**
-(ordem por local e luz; referência: até 6 vídeos por diária de 3 h) e **cola de tópicos** (3–5 palavras por bloco).
+(ordem por local e luz; referência: até 6 vídeos por diária de 3 h) e **cola de tópicos** (3–5 palavras por bloco). Inclua na shot list e no plano da diária o `gravar_a_mais` de cada
+derivado (M7), sem pedir diária nova.
 
 ## M7 · EDITOR · Estudo: §6, §16, §19, §20, §23, §25
 Ritmo (quebra a cada 3–5 s no curto; respiro na emoção), cortes (J/L, match), B-roll = a palavra dita, motion com motivo
 (skill `motion-pro`), texto sem som, trilha e silêncio antes da frase forte (`video-tools/MANUAL_EDICAO.md`, skill
-`edicao-cliente`). **Derivados** (anúncio de 15 s com os mesmos ganchos, story, Shorts, carrossel). **Publicação:** capa,
+`edicao-cliente`). **Multiplicador (1 gravação → N estruturas):** para cada material-base forte (depoimento, entrevista, processo,
+bastidor) planeje **≥ 6 derivados em estruturas diferentes** (3 se o material for curto), escolhendo entre: puro (S61) ·
+react/comentário de alguém assistindo (S97) · história antes → virada → depois com cenas (S47) · só ganchos visuais +
+legenda, sem som (S105/S38) · montagem com outros depoimentos (S62) · anúncio de 15 s com oferta e os mesmos `ganchos`
+(S81) · carrossel (S106) · pergunta real do público → resposta com o trecho (S93/S98) · story com enquete (S99). Cada
+um em `producao.derivados` {estrutura, formato, duracao_s, gancho, usa (trecho do bruto), gravar_a_mais}; o que
+precisa ser gravado a mais volta para o Diretor (M6). **Publicação:** capa,
 1ª linha (gancho + palavra de busca), legenda, CTA nos comentários, palavra para DM/WhatsApp + resposta pronta e
 atribuição (etiqueta, UTM).
+
+## MT · TREND COMO GANCHO (só se a vaga usar trend) · Estudo: §3c (S78), §12 · Radar: `RADAR-TENDENCIAS.md` §3
+Nunca a trend crua: ela só empresta o elemento reconhecível para abrir; o resto é do cliente e converte.
+1. **Trend** e fase do ciclo (nascendo, copiando, massa, saturando; entrar no copiando ou começo da massa).
+2. **Gatilho de reconhecimento** em 1 linha (3 s de áudio, frase, pose, enquadramento, cor). Precisa explicar? Não serve.
+3. **Ponte lógica** em 1 frase: o sentido da trend → a dor, o desejo ou a oferta do cliente. Sem ponte natural → não faz.
+4. **Conteúdo que converte:** gatilho por 1–3 s, depois uma estrutura do §3c (prova, objeção, demo, oferta) com caso,
+   pessoa e lugar do cliente; passa pela banca como qualquer roteiro.
+5. **CTA** pela fase.
+6. **Vida × produção:** micro-trend/áudio 3–10 dias (celular, 24–48 h) · formato 2–6 semanas (≤ 7 dias) · hype de
+   evento 1–3 semanas (celular, 1–3 dias) · estética meses. Produção > metade da vida restante → não faz ou formato
+   mais leve. Áudio comercial só da biblioteca da rede, nunca em anúncio pago; nada de marca/arte de terceiros.
+Saída: `trend_gancho` {trend, gatilho, ponte, validade} e `momento` {validade}.
+
+## MH · ANÁLISE DE HYPE (assunto grande em alta; roda 1 vez para a carteira) · Radar: `RADAR-TENDENCIAS.md` §7
+Liste os clientes ativos (`select id, name, niche, segment, target_audience from clients where is_active;`) e responda:
+1. O que é e por que está em alta (fonte, data). 2. Público do hype. 3. **Em qual cliente e por quê:** cruze a persona
+de cada cliente com o público do hype; candidatos com nota 0–10 = (2×público + 2×ponte + benefício + janela + risco)
+÷ 3,5 (cada 0–5; risco 5 = sem risco). 4. Benefício (alcance, identificação, autoridade, venda). 5. Comunicação em 1
+frase. 6. Formato (estrutura do §3c) e gancho (gatilho de reconhecimento, via MT). 7. Risco de imagem e direito: usar a
+referência, **nunca** marca, logo, fonte, arte, personagem, trailer ou trilha protegidos; no anúncio pago, sem o nome
+do produto de terceiro; classificação etária; nada que glamourize crime, violência ou direção perigosa. 8. Janela ×
+produção. 9. **Vale a pena?** Fazer ≥ 8 · Adaptar 6,5–7,9 · Não fazer < 6,5 (risco ≤ 2 ou ponte 0 elimina).
+Grave por cliente candidato em `client_scan` (`source`='hype'); vira sugestão, nunca publica sozinho. Exemplo resolvido:
+GTA 6 no RADAR §7.
 
 ## M8 · INTERROGATÓRIO (oculto) · Estudo: §13
 Para cada decisão (vídeo, persona, objetivo, estrutura, gancho, cada frase, plano, local, horário, quem aparece, trilha,
@@ -191,5 +228,5 @@ rodadas; depois entregue com a lacuna explicada em `suposicao`.
 
 ## Mês completo: checagem final
 3 vídeos lado a lado parecem do mesmo molde (linguagem, cenário, fecho)? → refaça o mix (episódios de série não contam).
-Fechos iguais? → reescreva. Todos para o mesmo público? → reequilibre. Sem cinemático, prova ou oferta? → complete ou
+Fechos iguais? → reescreva. Estruturas repetidas ou nenhuma inédita para o cliente? → troque. Todos para o mesmo público? → reequilibre. Sem cinemático, prova ou oferta? → complete ou
 explique por que não.
