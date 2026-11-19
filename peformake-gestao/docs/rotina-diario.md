@@ -63,6 +63,11 @@
 
 Mais recente primeiro. A rotina lê isto antes de começar e escreve aqui ao terminar.
 
+## 2026-11-19 · Motor de roteiro: perfis integrados; pendências do Italo (nuvem)
+- Conjunto de ouro removido como régua (Rosanne/CMR só consulta de roteiro falado). ESTUDO-PERFIS.md (23 pastas + @soudaviribas parcial) integrado ao prompt mestre (arquivo e banco). 117 estruturas, trend como gancho, multiplicador 1→N e análise de hype (GTA 6) no motor/radar.
+- Em andamento: teste do motor na Peformake (6 vídeos de dez/2026) e PDF do audiovisual em 3 partes (cliente/gravação/edição) com storyboard SVG.
+- PENDÊNCIAS DO ITALO (lembrar no fim): 1) conectores Supabase e Firecrawl na tarefa "Fila da estratégia (cards)"; 2) OK para o radar semanal (gasta crédito); 3) puxar no PC @giogarcia e o perfil do reel https://www.instagram.com/reel/Df0Psq5AUDb/ para video-tools/estudos-perfis/ (Firecrawl sem créditos até ~20/11) e terminar @soudaviribas (falas dos reels); 4) avaliar os 6 roteiros da Peformake; 5) respostas da Sandra (SN) para os roteiros virarem finais.
+
 ## 2026-11-18 · Motor de roteiro (estudo + pipeline) e Estratégia em modo leitura (nuvem)
 - NO AR: Estratégia em modo leitura (padrão PDF da Rosanne), sem ícones vermelhos na lista, Baixar PDF aprova o que está no PDF, Editar/Refazer/Tirar do PDF por item (commit a63ab5d, publicado).
 - Pedido do Italo: proibido roteiro simples. Estudo e motor em docs/: ESTUDO-ROTEIRO-AUDIOVISUAL.md (MDD como espinha, persona, dossiê, autoridades, formatos/UGC, humor, identidade, algoritmos, neuromarketing), MOTOR-ROTEIRO.md (pipeline de especialistas, portão de conhecimento, interrogatório, notas), PROMPT-ROTEIRO-MASTER.md, RADAR-TENDENCIAS.md, TESTE-ROTEIROS-SN.md. Material do PC em video-tools/estudos-perfis/ (2.078 arquivos).
