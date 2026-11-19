@@ -34,8 +34,8 @@ const FRAMING_RX: [Framing, RegExp][] = [
   ['drone', /\bdrone\b|\baere[ao]\b|vista de cima|de cima para baixo|top ?view|zenital/],
   ['pov', /\bpov\b|ponto de vista|primeira pessoa|\bsubjetiva\b/],
   ['detalhe', new RegExp(`\\bdetalhe\\b|\\bmacro\\b|\\binsert\\b|close (n|d)[ao]s? ${OBJ}\\b`)],
-  ['close', /\bclose\b|close-up|primeiro plano|primeirissimo|plano fechado|\brosto\b/],
-  ['medio', /plano medio|\bmedio\b|meio corpo|plano americano|da cintura/],
+  ['close', /\bclose\b|mostra [^.]{0,30}(para|pra) a camera|\bna mao\b|close-up|primeiro plano|primeirissimo|plano fechado|\brosto\b/],
+  ['medio', /plano medio|(olha|fala|vira) (para|pra) a camera|\bmedio\b|meio corpo|plano americano|da cintura/],
   ['geral', /plano (aberto|geral)|\baberto\b|\bgeral\b|panoramica|fachada|\bambiente\b|corredor|loja (inteira|toda)|estabelecimento|de longe|corpo inteiro/],
 ]
 const MOVE_RX: [Move, RegExp][] = [

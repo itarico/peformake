@@ -7,7 +7,9 @@ import { supabase } from '@/lib/supabase'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import type { StrategyBoardData } from './cardRules'
 import { approveBoard, approveCard } from './strategyApi'
-import { docName, pdfRefLinks, strategyHtml } from './strategyDoc'
+import { avDocName, docName, pdfRefLinks, strategyHtml } from './strategyDoc'
+import { AV_PARTS, type AvPart } from './avParts'
+import { cn } from '@/lib/cn'
 
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
@@ -39,6 +41,10 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
   const toApprove = going.filter((c) => c.status !== 'aprovado')
   const byTab = Object.entries(going.reduce<Record<string, number>>((m, c) => ({ ...m, [c.tab]: (m[c.tab] ?? 0) + 1 }), {}))
   const [step, setStep] = useState<string | null>(null)
+  // Audiovisual em três partes (Italo, 19/11): baixa o documento completo ou só uma parte; as três ficam salvas na pasta.
+  const hasVideos = going.some((c) => c.tab === 'audiovisual')
+  const [which, setWhich] = useState<'completo' | AvPart>('completo')
+  const choices = [{ id: 'completo' as const, label: 'Completo' }, ...(hasVideos ? AV_PARTS.map((p) => ({ id: p.id, label: p.label })) : [])]
   const run = useMutation({
     mutationFn: async () => {
       const w = window.open('', '_blank')
@@ -49,15 +55,22 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
         const cards = board.cards.map((c) => (c.in_pdf && c.status === 'proposta' ? { ...c, status: 'aprovado' as const } : c))
         const { data: cli } = await supabase.from('clients').select('logo_path').eq('id', clientId).maybeSingle()
         const thumbs = await refCovers(pdfRefLinks(cards))
-        const html = strategyHtml({ name, month: board.month, cards, thumbs, logoUrl: logoPublicUrl((cli?.logo_path as string | null) ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` })
-        const title = docName(board.month)
-        const safe = title.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9._-]+/g, '-').slice(0, 120)
-        const path = `${clientId}/estrategia/${safe}.html`
-        const blob = new Blob([html], { type: 'text/html' })
-        const up = await supabase.storage.from('client-assets').upload(path, blob, { contentType: 'text/html', upsert: true })
-        if (up.error) throw new Error('Não foi possível guardar o documento. Tente de novo.')
-        const { error } = await rpc('strategy_save_html', { _board: board.id, _path: path, _name: `${title}.html`, _size: blob.size })
-        if (error) throw new Error(error.code === 'PF005' ? 'Aprove a estratégia antes.' : 'Não foi possível guardar o documento. Tente de novo.')
+        const input = { name, month: board.month, cards, thumbs, logoUrl: logoPublicUrl((cli?.logo_path as string | null) ?? null), peformakeLogoUrl: `${window.location.origin}/logo-pfmk.png` }
+        const save = async (title: string, html: string) => {
+          const safe = title.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9._-]+/g, '-').slice(0, 120)
+          const path = `${clientId}/estrategia/${safe}.html`
+          const blob = new Blob([html], { type: 'text/html' })
+          const up = await supabase.storage.from('client-assets').upload(path, blob, { contentType: 'text/html', upsert: true })
+          if (up.error) throw new Error('Não foi possível guardar o documento. Tente de novo.')
+          const { error } = await rpc('strategy_save_html', { _board: board.id, _path: path, _name: `${title}.html`, _size: blob.size })
+          if (error) throw new Error(error.code === 'PF005' ? 'Aprove a estratégia antes.' : 'Não foi possível guardar o documento. Tente de novo.')
+        }
+        // As partes primeiro e o completo por último: o PDF definitivo que o agente gera é o do documento completo.
+        const parts = hasVideos ? AV_PARTS.map((p) => ({ id: p.id, html: strategyHtml(input, { part: p.id }) })) : []
+        for (const p of parts) await save(avDocName(board.month, p.id), p.html)
+        const full = strategyHtml(input)
+        await save(docName(board.month), full)
+        const html = which === 'completo' ? full : parts.find((p) => p.id === which)?.html ?? full
         printNow(w, html)
       } catch (e) { w?.close(); throw e } finally { setStep(null) }
     },
@@ -65,10 +78,11 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
   })
   return (
     <Dialog open onClose={onClose} title="Baixar PDF" size="sm"
-      description="Abre o documento para salvar em PDF e guarda na pasta do cliente. Nada vai ao cliente."
-      footer={<div className="flex gap-2"><Button disabled={run.isPending || !going.length} onClick={() => run.mutate()}><FileDown size={15} aria-hidden="true" /> {run.isPending ? (step ?? 'Gerando') : 'Baixar PDF'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
+      description="Abre o documento para salvar em PDF e guarda na pasta do cliente (o completo e as 3 partes do audiovisual). Nada vai ao cliente."
+      footer={<div className="flex gap-2"><Button disabled={run.isPending || !going.length} onClick={() => run.mutate()}><FileDown size={15} aria-hidden="true" /> {run.isPending ? (step ?? 'Gerando') : which === 'completo' ? 'Baixar PDF' : `Baixar ${AV_PARTS.find((p) => p.id === which)!.label}`}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div data-baixar-pdf className="flex flex-col gap-2 text-[13.5px]">
         <p><b>{going.length}</b> {going.length === 1 ? 'item entra' : 'itens entram'}{out ? ` · ${out} fora (você tirou)` : ''}.</p>
+        {choices.length > 1 && <div role="radiogroup" aria-label="O que baixar" className="flex flex-wrap gap-1.5">{choices.map((o) => <button key={o.id} type="button" role="radio" aria-checked={which === o.id} onClick={() => setWhich(o.id)} className={cn('min-h-10 cursor-pointer rounded-full border px-3 text-[13px] font-medium', which === o.id ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o.label}</button>)}</div>}
         <ul className="flex flex-wrap gap-1.5">{byTab.map(([t, n]) => <li key={t} className="rounded-full bg-raised px-2.5 py-1 text-[12.5px] font-medium">{TAB_LABEL[t] ?? t}: {n}</li>)}</ul>
         {toApprove.length > 0 && <p className="text-[12.5px] text-muted">Ao baixar, o que está no PDF fica aprovado e vai para a produção da área.</p>}
         {run.isError && <p role="alert" className="text-[12.5px] text-warn-ink">{(run.error as Error).message}</p>}

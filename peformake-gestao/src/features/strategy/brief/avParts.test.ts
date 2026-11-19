@@ -7,7 +7,7 @@ describe('direção → enquadramento', () => {
     ['PLANO MÉDIO, SANDRA NO BALCÃO', 'medio'], ['CLOSE NO ROSTO DA SANDRA', 'close'], ['PRIMEIRO PLANO', 'close'],
     ['CLOSE NA PEÇA', 'detalhe'], ['DETALHE DAS MÃOS', 'detalhe'], ['INSERT DO TUBO', 'detalhe'],
     ['POV DO CLIENTE ENTRANDO NA LOJA', 'pov'], ['DRONE SOBRE A OBRA', 'drone'], ['Vista aérea do bairro', 'drone'],
-    ['Sandra fala olhando para a câmera', 'medio'], ['', 'medio'],
+    ['Sandra fala olhando para a câmera', 'medio'], ['Para, olha para a câmera', 'medio'], ['Sandra pega o joelho e mostra para a câmera', 'close'], ['Sandra com o registro na mão', 'close'], ['', 'medio'],
   ])('%s → %s', (dir, f) => { expect(framingOf(dir)).toBe(f) })
   it('a primeira citada vale; o campo explícito vence', () => {
     expect(framingOf('PLANO ABERTO, DEPOIS CLOSE NO ROSTO')).toBe('geral')

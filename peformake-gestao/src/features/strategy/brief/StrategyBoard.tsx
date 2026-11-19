@@ -102,7 +102,13 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const refresh = () => { void qc.invalidateQueries({ queryKey: boardKey(clientId, month) }); void qc.invalidateQueries({ queryKey: ['agent-docs', clientId] }) }
   // "Enviar ao cliente": o arquivo mais novo da pasta Estratégia/Audiovisual (PDF do agente ou o documento salvo ao baixar).
   const docs = useAgentDocs(clientId)
-  const doc = (() => { const all = (docs.data ?? []).filter((d) => d.folder === 'estrategia' || d.folder === 'audiovisual'); return all.find((d) => !isHtml(d)) ?? all[0] ?? null })()
+  // No Audiovisual vai só a parte "Para o cliente" (a fala, as perguntas e o que levar; nada técnico).
+  const doc = (() => {
+    const all = (docs.data ?? []).filter((d) => d.folder === 'estrategia' || d.folder === 'audiovisual')
+    const cli = all.filter((d) => /^Audiovisual · Para o cliente/.test(d.name))
+    const pool = tab === 'audiovisual' && cli.length ? cli : all.filter((d) => !/^Audiovisual · /.test(d.name))
+    return pool.find((d) => !isHtml(d)) ?? pool[0] ?? null
+  })()
   const phone = useQuery({ queryKey: ['client-phone', clientId], queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null } })
   const send = () => { if (!doc) { say('Baixe o PDF antes: ele fica salvo na pasta do cliente e é esse arquivo que vai.'); return } void sendDoc(doc, name, phone.data ?? null) }
   const area = tab !== 'briefing' && tab !== 'referencias' && tab !== 'resumo'

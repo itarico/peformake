@@ -38,6 +38,21 @@ global.BOARD = { ...global.BOARD, cards: [...videos, ...others] };
       if (!/Tem! De 100 litros/.test(txt)) fails.push(`${tag}: roteiro sem a fala completa`);
       if (/Abertura|Meio|Fecho|Atrair|Provar|suposição/.test(txt)) fails.push(`${tag}: leitura com rótulos/selos (${txt.match(/Abertura|Meio|Fecho|Atrair|Provar|suposição/)[0]})`);
       if (!(await p.locator('[data-roteiro]').nth(4).locator('[data-pergunta-entrevista]').count())) fails.push(`${tag}: depoimento sem a pergunta em destaque`);
+      // Três partes por vídeo (Italo, 19/11): Cliente (padrão) · Gravação (storyboard) · Edição.
+      const v1 = p.locator('[data-roteiro]').first();
+      if (!(await v1.locator('[data-parte-av="cliente"]').count())) fails.push(`${tag}: vídeo não abre na parte Cliente`);
+      if (/plano|close|travelling/i.test(await v1.locator('[data-parte-av="cliente"]').innerText())) fails.push(`${tag}: parte Cliente com direção técnica`);
+      await v1.getByRole('tab', { name: 'Gravação' }).click(); await p.waitForTimeout(200);
+      const q = await v1.locator('[data-storyboard] svg[data-quadro]').count();
+      if (q !== sn[0].roteiro.length) fails.push(`${tag}: storyboard com ${q} quadros (esperado ${sn[0].roteiro.length})`);
+      if (await sideScroll(p)) fails.push(`${tag}: gravação com rolagem de lado`);
+      await v1.screenshot({ path: `${SHOTS}/${PREFIX}-gravacao-${tag}.png` });
+      await v1.getByRole('tab', { name: 'Edição' }).click(); await p.waitForTimeout(200);
+      if (!(await v1.locator('[data-parte-av="edicao"] li').count())) fails.push(`${tag}: edição sem os blocos`);
+      if (await sideScroll(p)) fails.push(`${tag}: edição com rolagem de lado`);
+      await v1.screenshot({ path: `${SHOTS}/${PREFIX}-edicao-${tag}.png` });
+      await v1.getByRole('tab', { name: 'Cliente' }).click(); await p.waitForTimeout(150);
+      await v1.screenshot({ path: `${SHOTS}/${PREFIX}-cliente-${tag}.png` });
       for (const nm of ['Gerar de novo', 'Baixar PDF', 'Enviar ao cliente']) if (!(await p.getByRole('button', { name: nm }).count())) fails.push(`${tag}: topo sem "${nm}"`);
       // Editar: pop-up com o texto inteiro, sem rolagem.
       await p.locator('[data-roteiro]').first().getByRole('button', { name: /^Editar/ }).click(); await p.waitForTimeout(300);
@@ -52,7 +67,10 @@ global.BOARD = { ...global.BOARD, cards: [...videos, ...others] };
       await check(p, tag, 'leitura-detalhes'); await p.screenshot({ path: `${SHOTS}/${PREFIX}-detalhes-${tag}.png` });
       const dt = p.locator('dialog[open] [role=tablist] [role=tab]'); for (let k = 0; k < await dt.count(); k++) { await dt.nth(k).click(); await p.waitForTimeout(120); await check(p, tag, `leitura-detalhes-${k}`) }
       await close(p);
-      await p.getByRole('button', { name: 'Baixar PDF' }).click(); await p.waitForTimeout(250); await check(p, tag, 'leitura-pdf'); await close(p);
+      await p.getByRole('button', { name: 'Baixar PDF' }).click(); await p.waitForTimeout(250); await check(p, tag, 'leitura-pdf');
+      if ((await p.locator('dialog[open] [role=radio]').count()) !== 4) fails.push(`${tag}: Baixar PDF sem Completo · Cliente · Gravação · Edição`);
+      await p.locator('dialog[open] [role=radio]', { hasText: 'Gravação' }).click(); await p.waitForTimeout(120); await check(p, tag, 'leitura-pdf-parte');
+      await p.screenshot({ path: `${SHOTS}/${PREFIX}-baixar-${tag}.png` }); await close(p);
       for (const t of ['resumo', 'social', 'trafego', 'atendimento', 'referencias']) {
         await p.goto(`${BASE}/estrategia/consultoria?cliente=${C}&ver=estrategia&mes=${month}&parte=${t}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(500);
         if (!(await p.locator(`[data-leitura="${t}"]`).count())) fails.push(`${tag}: parte ${t} sem a leitura`);

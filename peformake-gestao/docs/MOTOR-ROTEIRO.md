@@ -157,6 +157,8 @@ não escolheu), `referencia` {`link`, `porque`}, `cruzamento`, `filmar`; no card
 `cego` (só se rodou), `rodadas`}, `referencia_nota` {aderencia, estrutura, prova, viabilidade, originalidade, nota,
 descartadas}, `logline`, `arco`.
 
+**Três partes do audiovisual (Italo, 19/11/2026):** a tela e o PDF separam cada vídeo em Cliente (fala, perguntas, `producao.cola`, `vestir`/`local`/`horario`), Gravação (storyboard deduzido da `cena` de cada bloco, `producao.shot_list`, `producao.plano_diaria`, `producao.equipamentos`) e Edição (por bloco, `producao.derivados`, `producao.publicacao`). Opcional por bloco do `roteiro`, quando o motor souber: `plano` (geral/médio/close/detalhe/POV/drone), `movimento`, `corte`, `broll`, `texto_tela`, `trilha`, `motion`; sem eles, o sistema deduz das palavras da `cena`. Na `cena`, citar o plano em palavras claras (PLANO ABERTO, CLOSE NO ROSTO, DETALHE DA PEÇA, TRAVELLING…). Futuro: prévia animada 2D/3D só para vídeos especiais.
+
 Proibido repetir: gancho fora de `ganchos`; nota fora de `notas`/`auditoria.banca`; a mesma frase em `ideia`,
 `por_que_existe` e `cruzamento` (cada um diz uma coisa: a ideia, o motivo, o dado que sustenta).
 
