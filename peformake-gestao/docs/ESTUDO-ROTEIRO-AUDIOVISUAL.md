@@ -13,6 +13,7 @@ operacional está em `MOTOR-ROTEIRO.md`, o prompt completo em `PROMPT-ROTEIRO-MA
 | 2d | Inteligência de dados do sistema | Dossiê, Portão, Estrategista |
 | 3 | Objetivos e papéis | Estrategista |
 | 3b | Catálogo de formatos (orgânico e anúncio) | Estrategista, Curador |
+| 3c | Catálogo de 117 estruturas (S1–S117) e regra de variação por cliente | Estrategista, Curador, Ideação |
 | 4 | Estruturas (arcos) | Roteirista |
 | 5 | Banco de ganchos por objetivo | Copywriter |
 | 6 | Neuromarketing em vídeo curto | Copywriter, Editor |
@@ -26,7 +27,7 @@ operacional está em `MOTOR-ROTEIRO.md`, o prompt completo em `PROMPT-ROTEIRO-MA
 | 10.5 | Mente e emoção | Estrategista, Banca |
 | 10.6 | Ofício em 15–90 s, publicidade e documentário | Roteirista, Diretor |
 | 11 | Conteúdo magnético | Ideação |
-| 12 | Radar do momento e dossiê | Dossiê, Estrategista, Curador |
+| 12 | Radar do momento, dossiê, trend como gancho, hype e multiplicador | Dossiê, Estrategista, Curador, Editor |
 | 13 | Intenção em tudo | Roteirista, Interrogatório |
 | 14 | Próximos passos (fase 2) | (nenhuma; só equipe) |
 | 15 | Vender sem parecer venda | Copywriter, Banca |
@@ -381,6 +382,201 @@ orgânica**. Para cada vídeo de anúncio, entregar **3–5 variações de ganch
 variável mais barata de testar; Hormozi e o estudo da casa).
 
 ---
+## 3c. Catálogo de 117 estruturas de vídeo (para variar todo mês)
+
+19/11/2026, pedido do Italo. **Estrutura** é o esqueleto do vídeo (quem fala, como abre, como anda, como prova); o
+**papel** (§3) diz para que serve e a **linguagem** (§8, E1–E40) diz como fica na tela. A mesma estrutura serve a vários
+papéis. Onde já há ficha profunda, a coluna "Nome" aponta (§3b-n, M = `estudo_narrativas.md`, H/V = `estudo_mavic.md`,
+E = `catalogo_estilos.md`). Fontes no §31.
+
+Legenda. **Funil:** T topo (alcance), M meio (confiança, objeção), F fundo (venda). **Exige:** 📱 celular e 1 pessoa ·
+👥 2+ pessoas · 🎬 diária Ellcazo · ✂️ edição/motion forte · 📍 precisa do local do cliente · ✍️ autorização de imagem
+de terceiro. **Serve:** B = B2B/indústria/construção · V = varejo local e gastronomia · S = serviço · H = saúde e
+estética (sempre com as regras do conselho, §26).
+
+**Regra de uso (motor):** cada vídeo grava o código da estrutura em `data.estrutura` (ex.: "S63"). Antes do mix, o
+estrategista lê as estruturas usadas pelo cliente nos últimos 3 meses (consulta no M1 do prompt) e: (1) **≥ 2 vídeos
+do mês com estrutura nunca usada por aquele cliente**; (2) nenhuma estrutura repetida no mês, salvo episódios de série
+aprovada; (3) estrutura que performou (sinal forte em `social_metrics_daily`/tráfego) pode voltar, com tema novo, e
+conta como "o que funciona" do 70/20/10; (4) a cada mês, ≥ 1 estrutura de um grupo que o cliente nunca usou.
+
+### A. Falado (rosto e voz)
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S1 | Talking head com tese (§3b-7) | uma pessoa, uma ideia contraintuitiva, inserts de prova | T/M | "Todo mundo faz X. Está errado." | 📱 | BVSH |
+| S2 | Confissão do dono | erro/cicatriz do dono que virou o método de hoje | M | "O maior erro que eu cometi aqui foi…" | 📱 dono | BVSH |
+| S3 | Opinião impopular | discorda do senso comum do nicho, com prova | T | "Opinião impopular sobre [nicho]:" | 📱 | BVS |
+| S4 | Selfie de opinião (E22) | plano único, título fixo, fala curta | T | título fixo em 2 linhas | 📱 | VSH |
+| S5 | Leigo × especialista (M18) | dúvida na voz do leigo, especialista traduz | M | "Minha cliente me perguntou…" | 👥 | BSH |
+| S6 | Explicando pra minha mãe | tradução extrema do técnico para um leigo real | T/M | "Explicando [termo] pra minha mãe" | 👥 | BSH |
+| S7 | Carta aberta | fala dirigida a um tipo de cliente | M/F | "Pra você que [situação]…" | 📱 | BSH |
+| S8 | Previsão do setor | o que vai mudar e o que fazer antes | M | "Em [ano] isso vai mudar no [nicho]" | 📱 | BS |
+| S9 | Manifesto falado (M3) | crença da marca em frases curtas sobre B-roll | T | a frase-tese | 📱 + ✂️ | BVSH |
+| S10 | A pergunta que ninguém faz | a pergunta certa antes de comprar | M/F | "Antes de fechar, pergunte isso" | 📱 | BSH |
+| S11 | Por que a gente escolheu | bastidor de uma decisão (fornecedor, ingrediente, material) | M | "Por que a gente paga mais caro em…" | 📱 📍 | BVS |
+
+### B. Entrevista e bate-papo
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S12 | Entrevista sentada em perguntas (§3b-12) | perguntas da história real com pontos de resposta | M | a resposta mais forte primeiro | 🎬 | BVSH |
+| S13 | Vox pop / rua (§3b-10) | uma pergunta, várias respostas, virada | T | a pergunta na tela | 📱 ✍️ | VSH |
+| S14 | Pergunta de balcão/canteiro | vox pop dentro do local do cliente (clientes e equipe) | T/M | "Pergunta rápida pra quem está na fila" | 📱 📍 ✍️ | BV |
+| S15 | Podcast e cortes (§3b-11) | conversa longa, corte = 1 pico com contexto | M | a frase mais forte do episódio | 🎬 👥 | BS |
+| S16 | Fake podcast | cenário de podcast, conversa roteirizada da dor | F | pergunta do "host" | 👥 | BVSH |
+| S17 | Debate de bancada | dois da equipe discordam e chegam numa regra | M | "Ele acha X. Eu acho Y." | 👥 | BVS |
+| S18 | Cliente entrevista o dono | o cliente real faz as perguntas difíceis | M/F | a pergunta mais incômoda | 👥 ✍️ | BVSH |
+| S19 | Adivinha o preço | o público chuta, revela o real (só preço confirmado) | T | "Quanto você acha que custa…" | 📱 ✍️ | VS |
+| S20 | Orgulho de ofício | o funcionário conta o detalhe que só ele vê | T/M | "Há 12 anos eu…" | 📱 📍 | BVS |
+
+### C. UGC e criador
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S21 | UGC problema-solução (§3b-4) | dor vivida → tentativa → solução → resultado | F | "Se você sofre com [dor]…" | 📱 criador | BVS |
+| S22 | UGC teste/review (§3b-3) | ceticismo resolvido ao vivo, com 1 ressalva | M | "Testei pra ver se é verdade" | 📱 | BVS |
+| S23 | UGC unboxing (§3b-2) | expectativa → revelação → uso | F | "Chegou!" | 📱 | BV |
+| S24 | UGC 3 motivos (§3b-5) | lista curta, o 3º mais forte | M/F | "3 motivos pra…" | 📱 | BVS |
+| S25 | Gravado pelo cliente real | o cliente grava com o próprio celular | F | "Me pediram pra contar" | ✍️ | VSH |
+| S26 | Rotina com o produto | o produto entra no meio de uma rotina comum | M | "Arruma comigo pra…" | 📱 | VH |
+| S27 | Conselho de amigo | recomendação pessoa a pessoa, sem cara de anúncio | F | "Se eu fosse você, eu…" | 📱 | VS |
+| S28 | Creator do bairro (collab) | influenciador local visita e vive a experiência | T | "Vim conhecer o lugar que todo mundo fala" | collab, contrato | VS |
+
+### D. Gancho visual (interrupção nos 2 primeiros segundos; serve de abertura para outras estruturas)
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S29 | Escala absurda (§3b-38) | objeto gigante/minúsculo ao lado de uma pessoa | T | só a imagem | 📍 | BV |
+| S30 | Objeto fora do lugar | algo do cliente num lugar impossível | T | só a imagem | 📱 | VB |
+| S31 | Macro que não se reconhece | close extremo; revela o que é depois | T | "O que é isso?" | lente macro | VH |
+| S32 | In medias res | começa no ápice da ação | T/M | o momento de maior tensão | qualquer | BVSH |
+| S33 | Cronômetro na tela | o relógio dita a tensão | T/M | "Tenho 60 s pra…" | 📱 | BVS |
+| S34 | Quebra de realidade (E24) | VFX ancorado no real | T | o absurdo | ✂️ | VB |
+| S35 | Palavra-mundo (E1/E40) | a palavra-pico vira cenário atrás da pessoa | T | a palavra | ✂️ | BVSH |
+| S36 | Match cut de transformação (E8) | mesma pose, tudo muda | T/M | o corte | ✂️ | VSH |
+| S37 | Erro proposital | algo "dá errado" no 1º segundo e vira o assunto | T | o tombo/derrubada | 📱 | VS |
+| S38 | Só as mãos | mãos fazem a ação, sem rosto (E32) | T/M | o gesto | 📱 | VB |
+
+### E. Narrativa e documental
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S39 | Mini-documentário (§3b-13) | personagem + o que está em jogo + virada | T/M | imagem que intriga | 🎬 | BVSH |
+| S40 | Institucional cinemático (§3b-14) | uma ideia, emoção, fixado no perfil | T | frase-alma | 🎬 | BVSH |
+| S41 | Storytime (§3b-17) | 1ª pessoa, in medias res, ponte para o público | M | "Teve um dia que…" | 📱 | BVSH |
+| S42 | Cena com relógio (M11) | hora, lugar, o que daria errado, o serviço agindo | M/F | "17h40, sexta, a obra parou" | 👥 | BS |
+| S43 | História de lugar em 3 atos (M14) | o lugar como personagem | T | o lugar no passado | 🎬 | VB |
+| S44 | Caso famoso → princípio → aplicação (M12) | história conhecida ensina a regra do cliente | M | "Sabe por que [caso] deu certo?" | 📱 ✂️ | BS |
+| S45 | Dia na vida (§3b-15) | rotina com conflito, detalhe invisível | M | "6h da manhã na [marca]" | 📱 📍 | BVSH |
+| S46 | Memória da empresa (E5) | retrô-documentário de aniversário ou marco | T | o ano gigante | ✂️ | BVS |
+| S47 | Jornada do cliente herói | o cliente com o problema, a marca como guia | M/F | a dor no rosto do cliente | 👥 ✍️ | BSH |
+| S48 | Carta do futuro | "daqui a 10 anos" ou "eu de 2015" | T | "Se o [dono] de 2015 visse isso…" | 📱 | VS |
+| S49 | Biografia de um objeto | o produto do fornecedor até o cliente final | M | "Esse [produto] viajou 800 km" | 📍 ✂️ | BV |
+
+### F. Ensino
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S50 | Tutorial (§3b-21) | resultado primeiro, passos, erro comum | M | "Como [resultado] sem [esforço]" | 📱 | BVSH |
+| S51 | Listicle (§3b-22) | lista com escalada | T/M | "5 coisas que…, a 5ª…" | 📱 | BVSH |
+| S52 | Mito × verdade (§3b-23) | crença dita com convicção → prova | M | "[Crença]? Mito." | 📱 | BVSH |
+| S53 | Você está fazendo errado | o erro comum e o jeito certo | M | "Pare de [erro]" | 📱 | BVSH |
+| S54 | Checklist antes de comprar | o que conferir, com o cliente passando em todos | F | "Confere essas 4 coisas" | 📱 | BSH |
+| S55 | Perguntas encadeadas (M13) | cada resposta abre a próxima pergunta | M | uma pergunta curiosa | ✂️ | BSH |
+| S56 | Ranking com revelação adiada (M10) | do 5º ao 1º, o 1º no fim | T/M | "O 1º vai te surpreender" | 📱 | BV |
+| S57 | Lado a lado (split screen) | jeito comum × jeito certo ao mesmo tempo | M | as duas telas | ✂️ | BV |
+| S58 | Glossário ("o que é…") | 1 termo por vídeo, série | T/M | "[Termo] em 20 s" | 📱 | BH |
+| S59 | Novidade → mecanismo → ressalva (M9) | o que mudou, como funciona, o cuidado | M | "Agora dá pra…" | 📱 | BS |
+| S60 | Anatomia (desmontado) | abre o produto e mostra por dentro | M | o produto cortado ao meio | 📍 | BV |
+
+### G. Prova e depoimento
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S61 | Depoimento (§3b-8) | antes → o que mudou → detalhe concreto | F | "Eu achava que…" | ✍️ | BVSH |
+| S62 | Montagem de depoimentos (§3b-9) | 3–5 rostos, uma frase forte cada | F | a frase mais forte | ✍️ ✂️ | BVSH |
+| S63 | Antes e depois (§3b-20) | mesmo enquadramento, processo no meio | M/F | o "antes" feio | 📍 | VSH* |
+| S64 | Teste ao vivo / desafio (§3b-28) | aposta com resultado incerto | T/M | "Será que aguenta?" | 📱 | BV |
+| S65 | Números na tela | um dado real por frase (obras, pedidos, anos) | F | o número | ✂️ | BS |
+| S66 | Feedback lido em voz alta | dono lê uma avaliação real (boa ou ruim) e responde | M | "Recebi essa avaliação…" | 📱 | VS |
+| S67 | Reação na entrega | câmera no rosto do cliente na hora de receber | M/F | o rosto antes do reveal | ✍️ | VSH |
+| S68 | Garantia demonstrada | a garantia acontecendo de verdade | F | "Deu problema. Olha o que fizemos." | 📍 | BV |
+| S69 | Bastidor da qualidade | inspeção, laudo, conferência, certificado | M | "Isso aqui ninguém vê" | 📍 | BH |
+
+\* saúde e estética: antes/depois só com autorização e dentro das regras do conselho.
+
+### H. Humor, trend e meme
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S70 | Esquete de 2 pessoas (M19–M24) | premissa → escalada → produto como fim da piada | T/M | a situação de dor | 👥 | BVS |
+| S71 | Personagem recorrente (H5/V12) | figura com bordão que o público segue | T | o bordão | 👥 | VS |
+| S72 | Paródia de gênero (H6) | novela, terror, detetive com a dor do cliente | T | a trilha do gênero | 👥 ✂️ | BVS |
+| S73 | Literalização (H3) | a expressão da dor acontece de verdade | T | a imagem literal | 👥 | VS |
+| S74 | Exagero da dor (H2) | consequência impossível da dor real | T | "A fila tava tão grande que…" | 👥 | VS |
+| S75 | "Isso é um anúncio" (H9/V6) | admite que é propaganda e faz disso a piada | T/F | "Me pagaram pra dizer isso" | 👥 | VS |
+| S76 | Tipos de cliente | "todo [nicho] tem esse cliente" | T | "O cliente que…" | 👥 | VS |
+| S77 | Expectativa × realidade | o que o cliente imagina × o que acontece | T | tela dividida | ✂️ | VS |
+| S78 | Trend como gancho (protocolo no `MOTOR-ROTEIRO.md`) | o elemento reconhecível da trend abre; o conteúdo do cliente converte | T/M | o áudio/frase/visual da trend | 📱 | BVSH |
+| S79 | Meme de texto estático (E22) | texto sobre fundo, áudio do momento | T | a frase | 📱 | VS |
+| S80 | Dublagem de áudio em alta | lip sync com o áudio, situação do nicho | T | o áudio | 📱 | VS (áudio comercial só da biblioteca da rede) |
+
+### I. Oferta e anúncio
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S81 | Resposta direta padrão | gancho → problema → demo → prova → oferta → CTA | F | dor ou resultado | 📱 | BVSH |
+| S82 | Nós × eles (§3b-37) | o padrão do mercado × o nosso, sem citar concorrente | M/F | "O comum é…" | 📱 | BVS |
+| S83 | Comum × o nosso (M15) | mesmo objeto, duas versões | F | as duas lado a lado | ✂️ | BV |
+| S84 | Oferta / promo (§3b-34) | condição → para quem → por que agora | F | a condição | 📱 | VS |
+| S85 | Escassez real | vagas, estoque ou prazo verdadeiros, mostrados | F | "Sobraram 4" (com prova) | 📱 | VS |
+| S86 | Founder ad (§3b-6) | o dono conta por que criou + convite | F | "Eu criei isso porque…" | 📱 dono | BS |
+| S87 | Bumper de 6 s | uma ideia, uma imagem, a marca | T/F | a imagem | ✂️ | V |
+| S88 | Cardápio pelo desejo | serviços organizados pelo desejo do cliente (Visage 04) | F | "Qual combina com você?" | 📱 | VSH |
+| S89 | Convite para evento (§3b-35) | quem, o quê, quando, onde, por que ir | F | o momento do evento | 📱 | BVS |
+| S90 | "Ainda pensando?" (retargeting) | fala com quem já visitou e trata a última objeção | F | "Você olhou e não fechou. Normal." | 📱 | BVSH |
+
+### J. Série
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S91 | Série recorrente (§3b-29) | título fixo, episódio que funciona sozinho | T/M | o título da série | 📱 | BVSH |
+| S92 | Dia 1 de 30 | desafio longo contado por dia | T | "Dia 7:" | 📱 | VS |
+| S93 | Pergunta da semana | a dúvida real mais frequente (WhatsApp, comentários) | M | a pergunta | 📱 | BVSH |
+| S94 | Quadro fixo com bordão | mesmo cenário e bordão, tema novo | T | o bordão | 📱 📍 | V |
+| S95 | Segredos do lugar (E17) | POV andando pelo lugar mostrando o que ninguém vê | T/M | "POV: você descobre…" | 📱 📍 | VB |
+| S96 | Construindo em público | obra, reforma ou abertura por etapas | M | "Semana 3 da obra" | 📍 | BS |
+
+### K. Interação, react e stitch
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S97 | React (§3b-26) | trecho → pausa → opinião com tese → ponte | T | "Viu isso?" | 📱 | BVSH |
+| S98 | Dueto / stitch (§3b-27) | responde a vídeo de outro com prova | M | o trecho do outro | 📱 | BVSH |
+| S99 | Enquete encenada | duas opções, o público escolhe nos comentários | T | "Qual você leva?" | 📱 | V |
+| S100 | Palavra-isca | "comenta X que eu te mando" (§20) | F | a promessa da isca | 📱 | BVSH |
+| S101 | Reagindo ao próprio passado | dono comenta o vídeo/foto antigo da marca | T/M | "Olha a gente em 2019" | 📱 | VS |
+| S102 | Especialista reage a mito viral | corrige um vídeo viral do nicho, sem atacar a pessoa | M | o mito viral | 📱 | HB |
+| S103 | Live recortada | a pergunta ao vivo e a resposta | M | a pergunta | 📱 | BVSH |
+
+### L. Faceless, B-roll e texto
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S104 | B-roll + narração (§3b-24) | imagem = o que é dito | T/M | a frase de abertura | ✂️ | BVSH |
+| S105 | Tese em palavras (M17) | texto-motion sem fala, 7–12 s | T | a frase | ✂️ | BVSH |
+| S106 | Carrossel em vídeo (§3b-32) | slides em loop, leitura no próprio ritmo | M | a capa | ✂️ | BSH |
+| S107 | Explainer 3D/animação (§3b-33) | o invisível por dentro | M | o objeto por dentro | ✂️ | BH |
+| S108 | Slideshow de fotos reais | fotos do cliente no ritmo de um áudio do momento | T | a 1ª foto | 📱 | V |
+| S109 | Tela filmada / demo (E21/E15) | sistema, app ou planilha filmada | M | "Olha como chega o pedido" | 📱 | BS |
+
+### M. Processo, ASMR e transformação
+| # | Nome | O que é | Funil | Gancho típico | Exige | Serve |
+|---|---|---|---|---|---|---|
+| S110 | ASMR / sons do processo (§3b-18) | só som real + detalhe | T | o som | microfone | BV |
+| S111 | Timelapse (§3b-19) | processo longo acelerado | T/M | o vazio do início | tripé 📍 | BS |
+| S112 | Do zero ao pronto | receita, peça ou obra completa em 30 s | T/M | o ingrediente cru | 📍 | VB |
+| S113 | Bastidor → 3·2·1 → resultado (E28) | bastidor real e contagem para o resultado | T | "Resultado em 3, 2, 1" | ✂️ | VSH |
+| S114 | Satisfação de ordem | organizar, alinhar, empilhar | T | a bagunça | 📍 | VB |
+| S115 | Restauração | velho → novo (peça, carro, fachada) | T/M | o estado ruim | 📍 | SV |
+| S116 | Making of da gravação | o bastidor do próprio vídeo | M | "Isso foi o que deu errado" | 📱 | BVSH |
+| S117 | Multiplicador (1 bruto → N estruturas) | um material gravado vira 6+ vídeos (protocolo no `MOTOR-ROTEIRO.md`) | T→F | depende do derivado | ✂️ | BVSH |
+
+**Exploração:** quando o catálogo não tiver a estrutura certa, o curador pode criar uma nova (combinação de duas
+linhas, ex.: S33 cronômetro + S42 cena com relógio) e registrá-la com código provisório "S-novo: nome" no card; a equipe
+decide se entra no catálogo.
+
+---
+
 ## 4. Estruturas (arcos) que funcionam
 
 Detalhe e exemplos em `estudo_narrativas.md` §3 e `MODELOS.md`. Resumo por papel:
@@ -990,4 +1186,6 @@ Cada cliente soa único; nunca cópia de referência nem de outro cliente.
 - Olson, ABT (crtc.wustl.edu/and-but-therefore-the-powerful-narrative-framework-transforming-scientific-communication).
 - Hero-Hub-Help (practicalecommerce.com/the-hero-hub-help-content-marketing-strategy).
 - CFM, Resolução 2.336/2023 sobre publicidade médica (sistemas.cfm.org.br/normas/arquivos/resolucoes/BR/2023/2336_2023.pdf).
+- Catálogo de estruturas (§3c): Motion, "The 30 ad formats every top brand is stealing" (motionapp.com/library/talk/the-30-ad-formats-every-top-brand-is-stealing-in-2025); Influencer Marketing Hub, "The Complete Guide to UGC Video Ads" (influencermarketinghub.com/video-advertising/ugc-video-ads); thebrief.ai/blog/ugc-video-ads-guide-formats; TikTok for Business, guia de criativo (ads.tiktok.com/business/en/guides/what-is-ad-creative-guide); acervo interno `video-tools/estilos/` (E1–E40, M1–M24, H1–H14, V1–V12) e `video-tools/estudos-perfis/`.
+- Trend e hype (MOTOR, RADAR): Billion Dollar Boy, ciclo de vida das trends no TikTok (netinfluencer.com/billion-dollar-boy-report-lifecycle-tiktok-trends); Bazaarvoice, trendjacking (bazaarvoice.com/blog/how-brands-can-leverage-trendjacking); Metricool, "Trendjacking: what works and what backfires" (metricool.com/trendjacking-what-works-and-what-backfires); Influencer Marketing Hub, "Is trend-jacking actually driving results" (influencermarketinghub.com/is-trend-jacking-actually-driving-results); Lei 9.279/1996 (marcas) e Lei 9.610/1998 (direitos autorais). GTA 6: data de 19/11/2026 anunciada pela Rockstar em 06/11/2025 (techradar.com/gaming/grand-theft-auto-6-release-date-confirmed-but-its-been-delayed-heres-why; gamesradar.com/gta-6-release-date-news-trailers-map-gameplay-rumours).
 - Livros citados como referência bibliográfica (sem link): Aristóteles, *Poética*; McKee, *Story* (1997); Field, *Screenplay* (1979); Snyder, *Save the Cat* (2005); Campbell, *O herói de mil faces* (1949); Vogler, *A jornada do escritor* (1992); Truby, *The Anatomy of Story* (2007); Egri, *The Art of Dramatic Writing* (1946); Murch, *In the Blink of an Eye* (1995); Hall, *Stories That Stick* (2019); Miller, *Building a StoryBrand* (2017); Dicks, *Storyworthy* (2018); Duarte, *Resonate* (2010); Godin, *This Is Marketing* (2018); Heath & Heath, *Made to Stick* (2007); Kane, *Hook Point* (2020); Eyal, *Hooked* (2014); Hormozi, *$100M Offers* (2021) e *$100M Leads* (2023); Vaynerchuk, *Crushing It!* (2018); Cialdini, *Influence* (1984) e *Pre-Suasion* (2016); Schwartz, *Breakthrough Advertising* (1966); Ogilvy, *Ogilvy on Advertising* (1983); Halbert, *The Boron Letters*; Sugarman, *The Adweek Copywriting Handbook* (2006); Hopkins, *Scientific Advertising* (1923); Kennedy, *The Ultimate Sales Letter*; Voss, *Never Split the Difference* (2016); Camp, *Start with No* (2002); Kahneman, *Rápido e devagar* (2011); Damasio, *O erro de Descartes* (1994); Sapolsky, *Behave* (2017); Barrett, *How Emotions Are Made* (2017); Ekman, *Emotions Revealed* (2003); Zaltman, *How Customers Think* (2003); Lindstrom, *Buyology* (2008); Sharp, *How Brands Grow* (2010); Ries & Trout, *Positioning* (1981); Osterwalder et al., *Value Proposition Design* (2014); Sutherland, *Alchemy* (2019); Fogg, *Tiny Habits* (2019); Fitzpatrick, *The Mom Test* (2013); Booker, *The Seven Basic Plots* (2004); Rabiger, *Directing the Documentary*; Kleon, *Steal Like an Artist* (2012); Mark & Pearson, *The Hero and the Outlaw* (2001); De Bono, *Six Thinking Hats* (1985); Caples, *Tested Advertising Methods* (1932); Christensen, *Competing Against Luck* (2016); Sinek, *Start With Why* (2009); Minto, *The Pyramid Principle* (1987); Kaushik, See-Think-Do-Care (kaushik.net); LinkedIn B2B Institute, regra 95-5 (Dawes, 2021).
