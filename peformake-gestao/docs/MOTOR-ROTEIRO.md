@@ -11,7 +11,7 @@ Nada vai ao cliente; a equipe aprova.
 
 **Decisões do coordenador (18/11/2026), já aplicadas abaixo:** (1) números do mix são orientação, não trava;
 (2) o sistema escolhe sozinho as melhores ideias; (3) avaliação numa banca única com 4 notas; (4) card enxuto, sem
-duplicação; (5) prompt modular; (6) conjunto de ouro calibra a banca.
+duplicação; (5) prompt modular; (6) exemplos de fala só para consulta (não são régua).
 
 ## O pipeline (em ordem; cada etapa entrega uma saída curta que a próxima lê)
 
@@ -23,11 +23,11 @@ duplicação; (5) prompt modular; (6) conjunto de ouro calibra a banca.
 | 2 | **Curador de referências** | História | mix, radar, acervo (`video-tools/`), Biblioteca de Anúncios, TikTok Creative Center, web | 2–3 candidatas por vaga com nota (5 critérios); escolhida ≥ 7 e aderência ≥ 3; engenharia reversa; ≥ 1 de fora do nicho no mês; descartadas com motivo |
 | 3 | **Ideação barata** | História | tudo acima | 10–15 loglines (SCAMPER); nota rápida; **o próprio sistema escolhe** a melhor por vaga (maior nota, desempate por diversidade no mês); as demais vão para `outras_ideias`. Ninguém precisa escolher; a equipe só aprova ou refaz o card |
 | 4 | **Copywriter** | Negócio | ideia escolhida, persona, nível de consciência | promessa, **3 ganchos** (chamam a persona, concretos, funcionam sem som; servem também ao corte de anúncio), argumentos (FAB), objeção tratada, oferta (escassez só verdadeira), CTA pela fase |
-| 5 | **Roteirista** | História + Cena | copy, persona, identidade, referência, conjunto de ouro | logline, frase-alma, intenção (emoção + efeito), arco por duração, **fala contínua palavra por palavra** de quem aparece (cada frase com função), perguntas + pontos para resposta espontânea (entrevista), fecho que responde o gancho |
+| 5 | **Roteirista** | História + Cena | copy, persona, identidade, referência | logline, frase-alma, intenção (emoção + efeito), arco por duração, **fala contínua palavra por palavra** de quem aparece (cada frase com função), perguntas + pontos para resposta espontânea (entrevista), fecho que responde o gancho |
 | 6 | **Diretor (videomaker)** | Cena | roteiro | planos, câmera, luz, som, local e horário, quem precisa estar, **diária Ellcazo × celular**, shot list, plano da diária, cola de tópicos |
 | 7 | **Editor** | Cena | roteiro + direção | ritmo, cortes, B-roll = o que é dito, motion (skill `motion-pro`), texto sem som, trilha, derivados, pacote de publicação |
 | 8 | **Interrogatório interno** | os 5 filtros | tudo | por quê / como / onde / quando / com quem / para quem / e se tirar? por decisão; sem resposta sólida → refaz ou corta. Oculto (auditoria) |
-| 9 | **Banca** (uma só) | todos | roteiro final, dossiê, conjunto de ouro | **4 notas** (abaixo), cada uma com 1 linha de justificativa, comparação com a referência e com o conjunto de ouro, checagem de humor se houver |
+| 9 | **Banca** (uma só) | todos | roteiro final, dossiê | **4 notas** (abaixo), cada uma com 1 linha de justificativa, comparação com a referência escolhida, checagem de humor se houver |
 | 9b | **Avaliador às cegas** (condicional) | — | só o roteiro + a persona | roda **só se alguma nota da banca ficar a 0,5 ou menos do mínimo** (acima ou abaixo). Nota independente; diferença > 1,5 → revisa o critério divergente |
 | 10 | **Loop** | — | notas | abaixo do mínimo: volta só à etapa que derrubou (máx. 2 rodadas); depois disso grava com a lacuna explicada em `suposicao` |
 
@@ -42,8 +42,8 @@ duplicação; (5) prompt modular; (6) conjunto de ouro calibra a banca.
 Referência (curador, à parte da banca): (2×aderência + estrutura + prova + viabilidade + originalidade) ÷ 3; mínimo 7 e
 aderência ≥ 3; referência global explica por que funciona com o público local.
 
-A banca **calibra pelo conjunto de ouro**: antes de dar a nota, compara o roteiro com o exemplo de ouro do mesmo papel
-("está no nível do institucional da Rosanne? a transição está tão clara quanto na live do Colégio Militar?").
+A banca **não usa nenhum roteiro anterior como régua** (decisão do Italo, 19/11/2026: régua fixa prende a criação).
+Ela avalia pelos critérios do ESTUDO e pela referência escolhida para aquele vídeo; cada cliente e cada vídeo é único.
 
 ## Mix do mês: orientação, não trava
 Os números abaixo são **ponto de partida**. O estrategista pode fugir deles **desde que escreva o porquê** na vaga
@@ -93,10 +93,11 @@ descartadas}, `logline`, `arco`.
 Proibido repetir: gancho fora de `ganchos`; nota fora de `notas`/`auditoria.banca`; a mesma frase em `ideia`,
 `por_que_existe` e `cruzamento` (cada um diz uma coisa: a ideia, o motivo, o dado que sustenta).
 
-## Conjunto de ouro (régua da banca)
-Roteiros aprovados que mostram o nível esperado. A banca compara com o exemplo do mesmo papel antes de dar a nota; o
-roteirista lê o do papel que vai escrever. **É régua de escrita, não modelo de conteúdo** (outro cliente nunca vira
-regra de conteúdo).
+## Exemplos de roteiro falado (só consulta, NÃO é régua)
+Decisão do Italo (19/11/2026): estes exemplos foram mandados só para mostrar como fica um roteiro **falado** (fala
+contínua, direção separada, perguntas com pontos de resposta). **Não servem de régua nem de modelo**: a banca não
+compara com eles e o roteirista não copia formato, estrutura ou tom. Consultar só se houver dúvida sobre como
+apresentar uma fala contínua.
 
 ### 1. Método Visage · Rosanne Ventura (nail designer), Ellcazo, 4 vídeos
 Fonte: PDF "Roteiros Método Visage Rosanne Ventura Ellcazo" (equipe, nov/2026).
@@ -129,5 +130,5 @@ Quando o Italo aprovar um roteiro gravado que performou (ou que ele marcar como 
 
 ## Aprender com o Italo
 Cada recusa (`reject_reason`), refação (`redo_pedido`) e edição vira uma linha em `content_rules` ou no arquivo de
-aprendizados: "qual instrução teria evitado esta nota?". Roteiro aprovado sem edição é candidato ao conjunto de ouro.
+aprendizados: "qual instrução teria evitado esta nota?". Roteiro aprovado sem edição vira aprendizado (o que funcionou e por quê), nunca régua.
 A banca calibra a nota prevista com o resultado real quando houver (fase 2).

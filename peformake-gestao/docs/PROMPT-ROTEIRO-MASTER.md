@@ -4,7 +4,7 @@
 > `peformake-estudo-mes` 3.2, pedidos avulsos). Cópia no banco: `select public.agent_instructions('roteiro-master');`.
 > **Modular:** cada geração manda o **NÚCLEO** + o **módulo da etapa** que está rodando + só as seções do
 > `ESTUDO-ROTEIRO-AUDIOVISUAL.md` que aquele módulo lista em "Estudo:" (índice de seções no topo do ESTUDO; recorte
-> pelo título "## n." ou "### n.n"). Nunca mande o ESTUDO inteiro (90 KB). Motor resumido e conjunto de ouro:
+> pelo título "## n." ou "### n.n"). Nunca mande o ESTUDO inteiro (90 KB). Motor resumido:
 > `MOTOR-ROTEIRO.md`. Radar: `RADAR-TENDENCIAS.md`.
 
 ---
@@ -141,7 +141,7 @@ verdadeiros, funcionam sem som, com palavras reais do público; servem também a
 dita antes (Voss) → oferta (Hormozi; escassez só verdadeira) → um CTA (suave nas fases 1–3, direto nas 4–5).
 
 ## M5 · ROTEIRISTA · Estudo: §2, §4, §9, §10.1, §10.2, §10.6, §13, §21 (entrevista), §27 (humor), §28, §29
-Leia antes o exemplo do **conjunto de ouro** do mesmo papel (`MOTOR-ROTEIRO.md`).
+Não use roteiros anteriores (de nenhum cliente) como modelo: cada roteiro nasce do dossiê, da persona e da referência deste vídeo.
 1. Logline e premissa; **frase-alma** (depois de ver, [persona] deve SENTIR ___ e ACREDITAR que ___); intenção.
 2. Estrutura pela duração (beat sheet, Story Circle, ABT, Kishōtenketsu). Cliente herói, marca guia.
 3. **Fala contínua palavra por palavra**, 1ª pessoa, **um bloco por momento do arco** (nunca uma frase por plano).
@@ -169,8 +169,8 @@ Para cada decisão (vídeo, persona, objetivo, estrutura, gancho, cada frase, pl
 CTA, publicação): por quê? como? onde? quando? com quem? para quem? e se eu tirar? Sem resposta sólida → refaça ou
 corte. Guarde em `auditoria.interrogatorio`.
 
-## M9 · BANCA (única, 4 notas) · Estudo: §7/§27 (se humor), §15, §18, §26, §29 + conjunto de ouro
-Compare primeiro com o exemplo de ouro do mesmo papel e com a referência escolhida (está no nível? onde parece amador?).
+## M9 · BANCA (única, 4 notas) · Estudo: §7/§27 (se humor), §15, §18, §26, §29
+Compare com a referência escolhida e com os critérios do estudo (está no nível? onde parece amador ou genérico?). Nenhum roteiro anterior é régua.
 1. **Criativa** (média): gancho · originalidade · construção narrativa · clareza da fala · viabilidade · conversão/objetivo
    (sinal certo: salvar, enviar, comentar) · diversidade no mês. Humor: engraçado para esta persona? alvo = situação?
    termina no produto? nota de humor ≥ 8. **≥ 8,5, nenhum item < 7.**
