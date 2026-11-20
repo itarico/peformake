@@ -16,7 +16,7 @@ export const htmlPathOf = (path: string) => path.replace(/\.pdf$/i, '.html')
 export const htmlOf = (d: Doc, all: Doc[]) => all.find((x) => x.id !== d.id && isHtml(x) && x.path === htmlPathOf(d.path))
 export const docLabel = (name: string) => name.replace(/\.(pdf|html?)$/i, '')
 /** "Estratégia · 12-11 a 31-12-2026.pdf" -> "12/11 a 31/12" */
-export const docPeriod = (name: string) => (docLabel(name).split('·')[1] ?? '').trim().replace(/-(\d{4})$/, '').replace(/(\d{2})-(\d{2})/g, '$1/$2')
+export const docPeriod = (name: string) => (docLabel(name).split('·').pop() ?? '').trim().replace(/-(\d{4})$/, '').replace(/(\d{2})-(\d{2})/g, '$1/$2')
 
 const LABEL: Record<Folder, string> = { estrategia: 'Estratégia', trafego: 'Tráfego', social: 'Social media', audiovisual: 'Audiovisual', relatorios: 'Relatório' }
 const ORDER: Folder[] = ['estrategia', 'trafego', 'social', 'audiovisual', 'relatorios']

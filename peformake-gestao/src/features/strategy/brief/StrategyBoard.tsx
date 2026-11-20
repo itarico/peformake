@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, ExternalLink, Link2, ClipboardCopy, ClipboardPaste, ClipboardList, FileDown, MessageSquare, Play, Plus, RefreshCw, Send, Sparkles } from 'lucide-react'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { useSearchParams } from 'react-router-dom'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -113,6 +114,7 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const [gen, setGen] = useState(false)
   const [pdfOpen, setPdfOpen] = useState(false)
   const [paste, setPaste] = useState(false)
+  const [chat, setChat] = useState(false)
   const [more, setMore] = useState(false)
   const [note, setNote] = useState<string | null>(null)
   const say = (t: string) => { setNote(t); setTimeout(() => setNote(null), 5000) }
@@ -134,7 +136,7 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
     if (!doc || !(await confirmApprove(doc, name))) return
     autoSend.mutate(doc, { onSuccess: (n) => say(n ? `Enviado pelo WhatsApp da Peformake (${n} ${n === 1 ? 'contato' : 'contatos'}).` : 'O cliente não tem WhatsApp de aprovação no cadastro. Use "Abrir no meu WhatsApp".'), onError: (e) => say((e as Error).message) })
   }
-  const send = () => { if (!doc) { say('Ainda não tem o documento deste mês. Toque em Baixar PDF: ele fica salvo na pasta do cliente e é esse arquivo que vai.'); return } void sendDoc(doc, name, phone.data ?? null) }
+  const send = () => { if (!doc) { say('Esta aba ainda não tem documento. Toque em Baixar PDF aqui: ele fica salvo na pasta do cliente e é esse arquivo que vai.'); return } void sendDoc(doc, name, phone.data ?? null) }
   const area = tab !== 'briefing' && tab !== 'referencias' && tab !== 'resumo'
   return (
     <div data-estrategia className="flex flex-col gap-3">
@@ -146,7 +148,7 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
           <Button className="min-h-10 min-w-0 flex-1 px-3 text-[13px] sm:flex-none" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> <span><span className="max-sm:hidden">Baixar </span>PDF</span></Button>
             {/* Enviar = o que está aberto (Italo, 19/11): na parte Vídeos, os roteiros "Para o cliente"; nas outras, a estratégia. */}
             <ActionMenu label="Enviar ao cliente" className="min-w-0 flex-1 sm:flex-none" trigger={<><Send size={14} aria-hidden="true" /> <span>Enviar<span className="max-sm:hidden"> ao cliente</span></span></>}
-              title={doc ? `Vai: ${docLabel(doc.name)}` : 'Ainda não tem o documento deste mês: toque em Baixar PDF antes.'} actions={[
+              title={doc ? `Vai: ${docLabel(doc.name)}` : 'Esta aba ainda não tem documento: toque em Baixar PDF antes.'} actions={[
                 { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, disabled: !doc, onClick: () => doc && void openDoc(doc) },
                 { label: 'Copiar link', icon: <Link2 size={15} aria-hidden="true" />, disabled: !doc, onClick: () => void copyLink() },
                 { label: 'Abrir no meu WhatsApp', icon: <MessageSquare size={15} aria-hidden="true" />, disabled: !doc, onClick: send },
@@ -159,9 +161,8 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
             { label: 'Abrir o briefing', icon: <ClipboardList size={15} aria-hidden="true" />, onClick: () => go({ parte: 'briefing' }), hidden: tab === 'briefing' },
             { label: 'Pedir mais ideias nesta parte ao agente', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setMore(true), hidden: !ready || !area || !b || (b.more_requests ?? []).some((r) => r.aba === tab) },
             { label: 'Revisar um por um (aprovar ou recusar)', icon: <Play size={15} aria-hidden="true" />, onClick: () => go({ revisar: tab === 'briefing' ? 'todos' : tab }), hidden: !ready },
-            { label: 'Plano B: copiar pedido para o chat do Claude', icon: <MessageSquare size={15} aria-hidden="true" />, onClick: () => void copyShort(), hidden: busy },
-            { label: 'Plano B: copiar pedido completo (sem conector)', icon: <ClipboardCopy size={15} aria-hidden="true" />, onClick: () => void copyFull(), hidden: busy },
-            { label: 'Plano B: colar a resposta do chat', icon: <ClipboardPaste size={15} aria-hidden="true" />, onClick: () => setPaste(true), hidden: busy },
+            // Italo, 20/11: "isso me deixa perdido". Os 3 do plano B viraram 1 item; o passo a passo fica no pop-up.
+            { label: 'Fazer pelo chat do Claude', icon: <MessageSquare size={15} aria-hidden="true" />, onClick: () => setChat(true), hidden: busy },
           ]} />
         </span>
       </div>
@@ -176,8 +177,18 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
       {gen && <GenerateDialog clientId={clientId} month={month} missing={brief.missing} percent={brief.percent} regenerate={ready} onClose={() => setGen(false)} onBriefing={() => { setGen(false); go({ parte: 'briefing' }) }} />}
       {more && b && <MoreDialog boardId={b.id} tab={tab as CardTab} count={liveCards(b, tab as CardTab).length} onClose={() => setMore(false)} onDone={() => { setMore(false); refresh() }} />}
       {params.get('revisar') && b && ready && <ReviewMode board={b} name={name} tab={params.get('revisar') === 'todos' ? null : params.get('revisar')} onClose={() => go({ revisar: null })} onChanged={refresh} />}
+      {chat && (
+        <Dialog open onClose={() => setChat(false)} size="sm" title="Fazer pelo chat do Claude" description="Só se o agente não estiver gerando sozinho.">
+          <ol className="flex flex-col gap-2 text-[13.5px]">
+            <li className="flex items-center justify-between gap-2"><span><b>1.</b> Copie o pedido e cole num chat do Claude</span><Button variant="secondary" className="shrink-0" onClick={() => void copyShort()}><MessageSquare size={14} aria-hidden="true" /> Copiar</Button></li>
+            <li className="flex items-center justify-between gap-2"><span><b>2.</b> O Claude grava sozinho. Se ele não tiver o Supabase, cole a resposta aqui</span><Button variant="secondary" className="shrink-0" onClick={() => { setChat(false); setPaste(true) }}><ClipboardPaste size={14} aria-hidden="true" /> Colar</Button></li>
+          </ol>
+          <button type="button" onClick={() => void copyFull()} className="mt-3 cursor-pointer text-[12.5px] text-muted underline hover:text-ink"><ClipboardCopy size={12} aria-hidden="true" className="mr-1 inline" />Copiar o pedido completo (para chat sem o Supabase)</button>
+          {note && <p role="status" className="mt-2 text-[12.5px] font-medium text-accent-ink">{note}</p>}
+        </Dialog>
+      )}
       {paste && <PasteDialog clientId={clientId} month={month} onClose={() => setPaste(false)} onDone={() => { refresh(); say('Importado. Confira nas partes.'); go({ parte: null }) }} />}
-      {pdfOpen && b && <PdfDialog board={b} clientId={clientId} name={name} onClose={() => setPdfOpen(false)} onDone={refresh} />}
+      {pdfOpen && b && <PdfDialog board={b} clientId={clientId} name={name} tab={tab} onClose={() => setPdfOpen(false)} onDone={refresh} />}
     </div>
   )
 }

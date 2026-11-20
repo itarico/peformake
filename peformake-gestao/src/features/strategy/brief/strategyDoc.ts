@@ -43,6 +43,13 @@ export function docName(month: string): string {
   return `Estratégia · 01-${mm} a ${last}-${mm}-${y}`
 }
 
+/** Nome de cada parte no documento e no arquivo (Italo, 20/11: o PDF e o Enviar seguem a aba aberta). */
+export const PART_DOC: Record<string, string> = { resumo: 'Plano do mês', audiovisual: 'Vídeos', social: 'Social media', atendimento: 'Plano de vendas', trafego: 'Tráfego', referencias: 'Referências' }
+/** Arquivo só de uma parte: "Estratégia · Social media · 01-12 a 31-12-2026". */
+export function partDocName(month: string, tab: string): string {
+  return `Estratégia · ${PART_DOC[tab] ?? tab} · ${docName(month).split(' · ')[1]}`
+}
+
 /** Nome do arquivo só com as narrações (o que vai ao cliente): "Audiovisual · Para o cliente · 01-12 a 31-12-2026". */
 export function avClientDocName(month: string): string {
   return `Audiovisual · Para o cliente · ${docName(month).split(' · ')[1]}`
@@ -209,18 +216,18 @@ p{font-size:12.5px;line-height:1.45;margin:4px 0}ol{font-size:12.5px;line-height
 @media screen{body{background:#e9eef0}.page{margin:12px auto;box-shadow:0 2px 12px #0002}}`
 
 /** HTML completo (abre no navegador, imprime ou vira PDF no Chromium). */
-export function strategyHtml(input: DocInput, opts: { only?: 'narracao' } = {}): string {
+export function strategyHtml(input: DocInput, opts: { only?: 'narracao'; part?: string } = {}): string {
   TH = input.thumbs ?? {}
-  const cs = pdfCards(input.cards)
+  const cs = pdfCards(input.cards).filter((c) => !opts.part || c.tab === opts.part)
   const tab = (t: string) => cs.filter((c) => c.tab === t)
   // Só as narrações de todos os vídeos (download "Para o cliente", é o que vai no Enviar ao cliente).
   if (opts.only) return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(avClientDocName(input.month))} · ${esc(input.name)}</title><style>${CSS}</style></head><body>
 ${audiovisual(tab('audiovisual'), input.name, input.month, 'narracao')}
 </body></html>`
-  const cover = `<section class="page cover"><div><span class="k">Estratégia do mês</span><h1>${esc(input.name)}<br>${esc(monthTitle(input.month))}</h1></div>
+  const cover = `<section class="page cover"><div><span class="k">${opts.part ? `Estratégia do mês · ${esc(PART_DOC[opts.part] ?? opts.part)}` : 'Estratégia do mês'}</span><h1>${esc(input.name)}<br>${esc(monthTitle(input.month))}</h1></div>
     <div><p>${cs.length} itens aprovados: ${['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias'].map((t) => [t, tab(t).length] as const).filter(([, n]) => n).map(([t, n]) => `${n} ${({ resumo: 'do resumo', audiovisual: 'vídeos', social: 'peças de social', trafego: 'campanhas', atendimento: 'itens do plano de vendas', referencias: 'referências' } as Record<string, string>)[t]}`).join(' · ')}</p>
     <div class="logos">${input.peformakeLogoUrl ? `<img src="${esc(input.peformakeLogoUrl)}" alt="Peformake">` : '<b>Peformake</b>'}${input.logoUrl ? `<img src="${esc(input.logoUrl)}" alt="">` : ''}</div></div></section>`
-  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(docName(input.month))} · ${esc(input.name)}</title><style>${CSS}</style></head><body>
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(opts.part ? partDocName(input.month, opts.part) : docName(input.month))} · ${esc(input.name)}</title><style>${CSS}</style></head><body>
 ${cover}${tab('resumo').length ? resumo(tab('resumo')) : ''}${audiovisual(tab('audiovisual'), input.name, input.month)}${social(tab('social'))}${trafego(tab('trafego'))}${atendimento(tab('atendimento'))}${referencias(tab('referencias'))}
 </body></html>`
 }

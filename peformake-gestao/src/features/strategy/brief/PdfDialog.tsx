@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { logoPublicUrl } from '@/features/clients/clientsApi'
 import type { StrategyBoardData } from './cardRules'
 import { approveBoard, approveCard } from './strategyApi'
-import { avClientDocName, docName, pdfRefLinks, strategyHtml } from './strategyDoc'
+import { avClientDocName, docName, PART_DOC, partDocName, pdfRefLinks, strategyHtml } from './strategyDoc'
 import { cn } from '@/lib/cn'
 
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
@@ -33,8 +33,10 @@ function printNow(w: Window | null, html: string) {
  * peça vira pauta etc.); o que a equipe tirou do PDF fica de fora. Guarda o documento na pasta Estratégia do cliente, pede ao
  * agente o PDF definitivo e abre a impressão para salvar já. Nada vai ao cliente.
  */
-export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: StrategyBoardData; clientId: string; name: string; onClose: () => void; onDone: () => void }) {
-  const live = board.cards.filter((c) => c.status !== 'recusado')
+export function PdfDialog({ board, clientId, name, tab, onClose, onDone }: { board: StrategyBoardData; clientId: string; name: string; tab: string; onClose: () => void; onDone: () => void }) {
+  // Só a parte da aba aberta (Italo, 20/11). Ao baixar, a estratégia completa também fica salva na pasta (é dela que o agente faz o PDF).
+  const part = PART_DOC[tab] ? tab : null
+  const live = board.cards.filter((c) => c.status !== 'recusado' && (!part || c.tab === part))
   // Vídeos, social, tráfego e atendimento só vão se a equipe aprovou (Italo, 19/11); Resumo e Referências: o que está no PDF é aprovado ao baixar.
   const NEEDS_OK = ['audiovisual', 'social', 'trafego', 'atendimento']
   const going = live.filter((c) => c.in_pdf && (!NEEDS_OK.includes(c.tab) || c.status === 'aprovado'))
@@ -66,20 +68,22 @@ export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: S
           const { error } = await rpc('strategy_save_html', { _board: board.id, _path: path, _name: `${title}.html`, _size: blob.size })
           if (error) throw new Error(error.code === 'PF005' ? 'Aprove a estratégia antes.' : 'Não foi possível guardar o documento. Tente de novo.')
         }
-        // A narração primeiro e o completo por último: o PDF definitivo que o agente gera é o do documento completo.
+        // A parte e a narração primeiro e o completo por último: o PDF definitivo que o agente gera é o do documento completo.
         const narr = hasVideos ? strategyHtml(input, { only: 'narracao' }) : ''
         if (narr) await save(avClientDocName(board.month), narr)
+        const mine = part ? strategyHtml(input, { part }) : ''
+        if (part) await save(partDocName(board.month, part), mine)
         const full = strategyHtml(input)
         await save(docName(board.month), full)
-        const html = which === 'cliente' && narr ? narr : full
+        const html = which === 'cliente' && narr ? narr : part ? mine : full
         printNow(w, html)
       } catch (e) { w?.close(); throw e } finally { setStep(null) }
     },
     onSuccess: () => { onDone(); onClose() },
   })
   return (
-    <Dialog open onClose={onClose} title="Baixar PDF" size="sm"
-      description="Abre o documento para salvar em PDF e guarda na pasta do cliente (o completo e a narração dos vídeos). Nada vai ao cliente."
+    <Dialog open onClose={onClose} title={part ? `Baixar PDF · ${PART_DOC[part]}` : 'Baixar PDF'} size="sm"
+      description={part ? `Só a parte ${PART_DOC[part]}. Fica salvo na pasta do cliente. Nada vai ao cliente.` : 'Abre o documento para salvar em PDF e guarda na pasta do cliente. Nada vai ao cliente.'}
       footer={<div className="flex gap-2"><Button disabled={run.isPending || !going.length} onClick={() => run.mutate()}><FileDown size={15} aria-hidden="true" /> {run.isPending ? (step ?? 'Gerando') : which === 'completo' ? 'Baixar PDF' : 'Baixar a narração'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div data-baixar-pdf className="flex flex-col gap-2 text-[13.5px]">
         <p><b>{going.length}</b> {going.length === 1 ? 'item entra' : 'itens entram'}{out ? ` · ${out} fora (você tirou)` : ''}.</p>
