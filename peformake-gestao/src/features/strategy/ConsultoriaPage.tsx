@@ -295,7 +295,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
           {next && next.label !== 'Abrir' && <span data-proximo className="block truncate text-[12px] text-muted">Agora: {next.label.charAt(0).toLowerCase() + next.label.slice(1)}</span>}
         </span>
       </span>
-      {!ver && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setPicker(true)}><Send size={14} aria-hidden="true" /> Enviar</Button>}
+      {/* "Enviar" do topo saiu (Italo, 20/11): cada passo envia o seu (Perguntas aqui; diagnóstico no ⋯; estratégia dentro dela). */}
       <ActionMenu label="Mais opções do cliente" actions={[
       ]} />
     </header>
@@ -356,7 +356,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         <Step n={2} current={stepCur === 2} done={askDone} locked={!briefDone} wait="o briefing chegar a 80%">
           <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />
         </Step>
-        <Step n={3} current={stepCur === 3} done={approved}>
+        <Step n={3} current={stepCur === 3} done={approved} locked={!briefDone || !askDone} wait={!briefDone ? 'o briefing chegar a 80%' : 'o cliente responder as perguntas'}>
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
             onInfo={onInfo} onGenerate={() => act.mutate(() => requestDiag(clientId))} hasDoc={!!d} finishedAt={d?.finished_at ?? null}
@@ -367,7 +367,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
         </Step>
         {/* Da estratégia em diante, cada parte é um passo e abre sozinha (sem a barra de abas). */}
         {PARTS.map((p, i) => (
-          <Step key={p.tab} n={4 + i} last={i === PARTS.length - 1} current={stepCur === 4 && i === 0} done={false}>
+          <Step key={p.tab} n={4 + i} last={i === PARTS.length - 1} current={stepCur === 4 && i === 0} done={false} locked={!briefDone || !askDone} wait={!briefDone ? 'o briefing chegar a 80%' : 'o cliente responder as perguntas'}>
             <StrategyPart clientId={clientId} month={opts[1]!} tab={p.tab} label={p.label} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, so: '1', mes: opts[1]!.slice(0, 7) })} />
           </Step>
         ))}
@@ -406,7 +406,7 @@ function Step({ n, done, locked, wait, current, last, children }: { n: number; d
 /** Perguntas numa faixa só: quantas estão abertas, respostas novas e "Mandar ao cliente" (o envio de sempre). */
 function QuestionsStrip({ toAsk, waiting, answers, onSend, onOpen }: { toAsk: number; waiting: number; answers: number; onSend: () => void; onOpen: () => void }) {
   const text = [answers > 0 ? `${answers} ${answers === 1 ? 'resposta nova' : 'respostas novas'}` : null, toAsk ? `${toAsk} ${toAsk === 1 ? 'pergunta aberta' : 'perguntas abertas'}` : null, waiting ? `${waiting} esperando o cliente` : null].filter(Boolean).join(' · ') || 'Perguntas em dia'
-  return <div data-perguntas><StepCard title="Perguntas" line={text} action="Mandar" onOpen={onSend} onTitle={onOpen} /></div>
+  return <div data-perguntas><StepCard title="Perguntas" line={text} action="Enviar" onOpen={onSend} onTitle={onOpen} /></div>
 }
 
 /** "Enviar" do cabeçalho: escolhe o que mandar (só o que está pronto). Cada opção abre o envio de sempre. */
