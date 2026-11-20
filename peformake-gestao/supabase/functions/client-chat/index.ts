@@ -5,7 +5,7 @@
 // Cada resposta é salva na hora (answered_via = 'cliente') e avisa a equipe. No fim: NPS (0 a 10) e avaliação curta.
 import Anthropic from 'npm:@anthropic-ai/sdk@1.8.0'
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2.45.4'
-import { canFollowUp, firstName, nextQuestion, parseNps, SKIP_LABEL } from './questionRules.ts'
+import { canFollowUp, condMet, firstName, nextQuestion, parseNps, SKIP_LABEL } from './questionRules.ts'
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info', 'Access-Control-Allow-Methods': 'POST, OPTIONS' }
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...CORS, 'Content-Type': 'application/json' } })
@@ -28,7 +28,7 @@ interface Session {
   id: string; client_id: string; token: string; question_ids: string[]; status: string; stage: 'perguntas' | 'nps' | 'avaliacao' | 'fim'
   current_question: string | null; followups: Record<string, unknown>; messages: Msg[]; nps_score: number | null; uploads: number; cost_usd: number; expires_at: string
 }
-interface Question { id: string; question: string; options: string[]; status: string; why?: string | null }
+interface Question { id: string; question: string; options: string[]; status: string; why?: string | null; answer?: string | null; cond?: { q?: string; has?: string[] } | null }
 
 const now = () => new Date().toISOString()
 const transcribeOn = () => !!Deno.env.get('TRANSCRIBE_API_KEY') && !!TRANSCRIBERS[Deno.env.get('TRANSCRIBE_PROVIDER') ?? 'groq']
@@ -69,9 +69,11 @@ async function sessionOf(db: SupabaseClient, token?: string): Promise<Session | 
 }
 
 async function questionsOf(db: SupabaseClient, s: Session): Promise<Question[]> {
-  const { data } = await db.from('client_questions').select('id, question, options, status, why').eq('client_id', s.client_id).in('id', s.question_ids)
+  const { data } = await db.from('client_questions').select('id, question, options, status, why, answer, cond').eq('client_id', s.client_id).in('id', s.question_ids)
   const rows = (data ?? []) as Question[]
-  return s.question_ids.map((id) => rows.find((r) => r.id === id)).filter((q): q is Question => !!q && q.status !== 'descartada')
+  const list = s.question_ids.map((id) => rows.find((r) => r.id === id)).filter((q): q is Question => !!q && q.status !== 'descartada')
+  // Subperguntas (20/11): só ficam as que a resposta da pergunta-mãe liberou.
+  return list.filter((q) => condMet(q.cond, list.map((x) => ({ question: x.question, answer: x.answer ?? null, status: x.status }))))
 }
 
 const skippedOf = (s: Session) => new Set(Array.isArray(s.followups._skip) ? (s.followups._skip as string[]) : [])

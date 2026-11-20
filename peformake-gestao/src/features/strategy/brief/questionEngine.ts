@@ -6,7 +6,9 @@
 
 export type Family = 'bar' | 'comida' | 'saude' | 'beleza' | 'varejo' | 'automotivo' | 'b2b' | 'servicos' | 'educacao' | 'terceiro_setor'
 export type Area = 'consultoria' | 'vendas' | 'social' | 'audiovisual'
-export interface EngineQuestion { area: Area; question: string; why: string; options: string[] }
+/** cond: só pergunta se a resposta da pergunta `q` tiver uma das palavras de `has` (vazio = basta ter respondido). */
+export interface Cond { q: string; has: string[] }
+export interface EngineQuestion { area: Area; question: string; why: string; options: string[]; cond?: Cond }
 export interface EngineInput {
   clientId: string; name: string; segment?: string | null; description?: string | null
   /** Tipo de negócio escolhido pela equipe no briefing: manda sobre o que o sistema deduz. */
@@ -176,6 +178,74 @@ const BY_FAMILY: Partial<Record<Family, Partial<Bank>>> = {
 // Nichos em que a base genérica (comprar, combo, dia fraco) cabe quando o banco próprio acaba.
 const GENERIC_OK = new Set<Family>(['comida', 'bar', 'varejo', 'automotivo', 'beleza', 'servicos'])
 
+/**
+ * TRILHAS em profundidade (Italo, 20/11: "ir até o fundo para saber exatamente tudo"). Cada tipo tem uma pergunta-mãe
+ * com opções e subperguntas que só aparecem conforme a resposta (ex.: automotivo → motos → novas ou usadas → marcas → a
+ * que mais vende). `if` = palavras que, na resposta da mãe, liberam a subpergunta; sem `if` = sempre depois da mãe.
+ */
+type Node = { area: Area; q: string; why: string; options?: string[]; if?: string[]; kids?: Node[] }
+const TRAIL: Partial<Record<Family, Node[]>> = {
+  automotivo: [{ area: 'vendas', q: 'O que vocês vendem ou fazem?', why: 'Pode marcar mais de um.', options: ['Motos', 'Carros', 'Peças e acessórios', 'Oficina ou serviço', 'Consórcio ou financiamento'], kids: [
+    { area: 'vendas', q: 'As motos são novas, seminovas ou as duas?', why: 'Muda o público e o anúncio.', options: ['Novas (0 km)', 'Seminovas', 'As duas'], if: ['moto'], kids: [
+      { area: 'vendas', q: 'Quais marcas de moto vocês trabalham?', why: 'Ex.: Honda, Yamaha, Shineray.', options: ['Honda', 'Yamaha', 'Shineray', 'Suzuki', 'Outras'] },
+      { area: 'vendas', q: 'Qual moto mais vende hoje e quanto custa (à vista e na parcela)?', why: 'Ex.: "CG 160, R$ 18.900 ou 48x de R$ 590".' },
+      { area: 'vendas', q: 'Tem moto parada no estoque que precisa girar? Quais e quantas?', why: 'Vira oferta do mês.' },
+    ] },
+    { area: 'vendas', q: 'Os carros são novos, seminovos ou as duas?', why: 'Muda o público e o anúncio.', options: ['Novos', 'Seminovos', 'As duas'], if: ['carro'], kids: [
+      { area: 'vendas', q: 'Qual a faixa de preço dos carros que mais saem?', why: 'Ex.: "de R$ 40 a 70 mil".', options: ['Até R$ 40 mil', 'R$ 40 a 80 mil', 'R$ 80 a 150 mil', 'Acima de R$ 150 mil'] },
+      { area: 'vendas', q: 'Aceitam troca? Financiam pela loja ou por banco?', why: 'Entra na copy do anúncio.', options: ['Aceita troca', 'Financiamento próprio', 'Financia por banco', 'Só à vista'] },
+    ] },
+    { area: 'vendas', q: 'Quais serviços da oficina mais saem e quanto custam?', why: 'Ex.: "revisão R$ 180; troca de óleo R$ 90".', if: ['oficina', 'servico'] },
+    { area: 'vendas', q: 'Quais peças ou acessórios vendem mais? Tem instalação?', why: 'Ex.: "capacete, baú, kit LED com instalação".', if: ['peca', 'acessorio'] },
+    { area: 'vendas', q: 'Quem mais compra: quem usa para trabalhar, para passear ou primeiro veículo?', why: 'Define o tom do conteúdo.', options: ['Trabalho (entrega, app)', 'Lazer', 'Primeiro veículo', 'Empresas e frotas'] },
+  ] }],
+  comida: [{ area: 'vendas', q: 'Como o cliente mais compra de vocês?', why: 'Pode marcar mais de um.', options: ['Salão', 'Delivery próprio', 'iFood ou app', 'Retirada', 'Encomenda'], kids: [
+    { area: 'vendas', q: 'Quantos pedidos de delivery saem num dia bom e num dia fraco?', why: 'Ex.: "80 no sábado, 20 na terça".', if: ['delivery', 'ifood', 'app'] },
+    { area: 'vendas', q: 'Qual o ticket médio do pedido e o prato mais pedido?', why: 'Ex.: "R$ 62; pizza calabresa".' },
+    { area: 'vendas', q: 'Quantas mesas, e quais dias e horários enchem ou ficam vazios?', why: 'Ex.: "20 mesas; lota sexta à noite, vazio na terça".', if: ['salao'] },
+    { area: 'vendas', q: 'Encomendas: com quanta antecedência e qual o pedido mínimo?', why: 'Ex.: "48h; mínimo 50 salgados".', if: ['encomenda'] },
+  ] }],
+  saude: [{ area: 'vendas', q: 'Quais especialidades ou procedimentos vocês fazem?', why: 'Pode marcar mais de um.', options: ['Consulta', 'Exame', 'Procedimento estético', 'Tratamento contínuo', 'Cirurgia'], kids: [
+    { area: 'vendas', q: 'Atendem plano de saúde, particular ou os dois? Quais planos?', why: 'Muda totalmente a comunicação.', options: ['Só particular', 'Só plano', 'Os dois'] },
+    { area: 'vendas', q: 'Qual procedimento dá mais retorno e quanto custa?', why: 'Ex.: "clareamento, R$ 1.200 em 3x".' },
+    { area: 'vendas', q: 'Quantos horários vagos na agenda por semana, e em quais dias?', why: 'Para o anúncio encher o que está vazio.' },
+  ] }],
+  beleza: [{ area: 'vendas', q: 'Quais serviços vocês fazem?', why: 'Pode marcar mais de um.', options: ['Cabelo', 'Unhas', 'Estética facial', 'Estética corporal', 'Barba', 'Sobrancelha e cílios'], kids: [
+    { area: 'vendas', q: 'Qual serviço tem mais procura e qual você quer lotar? Valores?', why: 'Ex.: "progressiva R$ 250 lota; quero lotar limpeza de pele R$ 150".' },
+    { area: 'vendas', q: 'Tem pacote, plano mensal ou clube de assinatura?', why: 'Recorrência segura o caixa.', options: ['Pacote', 'Plano mensal', 'Clube', 'Não tem'] },
+    { area: 'vendas', q: 'Quantos profissionais atendem e quantos horários livres por semana?', why: 'Define quanto dá para vender.' },
+  ] }],
+  varejo: [{ area: 'vendas', q: 'Onde vocês vendem?', why: 'Pode marcar mais de um.', options: ['Loja física', 'WhatsApp', 'Instagram', 'Site', 'Marketplace'], kids: [
+    { area: 'vendas', q: 'Quais as 3 categorias que mais vendem e o preço médio de cada?', why: 'Ex.: "óculos de sol R$ 180; armação R$ 350".' },
+    { area: 'vendas', q: 'Entregam? Em quais bairros e com qual prazo e taxa?', why: 'Entra no anúncio.', if: ['whatsapp', 'instagram', 'site'] },
+    { area: 'vendas', q: 'Qual marketplace e quanto ele representa nas vendas?', why: 'Ex.: "Mercado Livre, 30%".', if: ['marketplace'] },
+  ] }],
+  b2b: [{ area: 'vendas', q: 'Para que tipo de empresa vocês vendem?', why: 'Pode marcar mais de um.', options: ['Indústria', 'Comércio', 'Construtoras', 'Órgão público', 'Hotéis e restaurantes'], kids: [
+    { area: 'vendas', q: 'Qual o ticket médio de um contrato e quanto tempo leva para fechar?', why: 'Ex.: "R$ 25 mil; 45 dias".' },
+    { area: 'vendas', q: 'Quem decide a compra do lado do cliente?', why: 'O anúncio fala com essa pessoa.', options: ['Dono', 'Comprador', 'Engenheiro ou técnico', 'Diretoria'] },
+    { area: 'vendas', q: 'Vendem para o governo por licitação? Quais órgãos?', why: 'É outro jeito de vender.', if: ['publico'] },
+  ] }],
+  educacao: [{ area: 'vendas', q: 'O que vocês oferecem?', why: 'Pode marcar mais de um.', options: ['Educação infantil', 'Fundamental', 'Médio', 'Cursos livres', 'Graduação', 'Pré-vestibular'], kids: [
+    { area: 'vendas', q: 'Quantas vagas abertas para 2027 e até quando vai a matrícula?', why: 'Ex.: "40 vagas no 6º ano até 15/12".' },
+    { area: 'vendas', q: 'Qual a mensalidade e tem desconto (irmão, à vista, pontualidade)?', why: 'Só valor real entra.' },
+    { area: 'vendas', q: 'Qual resultado de aluno dá para mostrar (aprovados, medalhas)?', why: 'Prova vende mais que promessa.' },
+  ] }],
+  terceiro_setor: [{ area: 'consultoria', q: 'Quem a instituição atende ou representa?', why: 'Ex.: famílias da escola, comunidade, fiéis.', options: ['Famílias', 'Alunos', 'Comunidade do bairro', 'Fiéis', 'Associados'], kids: [
+    { area: 'consultoria', q: 'Quantas pessoas contribuem hoje e quantas poderiam contribuir?', why: 'Ex.: "300 de 1.200 famílias".' },
+    { area: 'consultoria', q: 'Para onde vai o dinheiro? Dá para mostrar com números?', why: 'Transparência aumenta contribuição.' },
+    { area: 'consultoria', q: 'Quais eventos ou ações a instituição faz no ano?', why: 'Ex.: festa junina, bazar, formatura.' },
+  ] }],
+  servicos: [{ area: 'vendas', q: 'Como o cliente contrata vocês?', why: 'Pode marcar mais de um.', options: ['Orçamento', 'Pacote fechado', 'Por hora', 'Contrato mensal'], kids: [
+    { area: 'vendas', q: 'Qual serviço mais vende e quanto custa (ou a partir de quanto)?', why: 'Só valor real entra.' },
+    { area: 'vendas', q: 'Quanto tempo do primeiro contato até fechar? Onde o cliente some?', why: 'Mostra onde o atendimento perde venda.' },
+    { area: 'vendas', q: 'Quantos clientes novos por mês vocês conseguem atender?', why: 'Para não vender mais do que entrega.' },
+  ] }],
+  bar: [{ area: 'vendas', q: 'O que mais movimenta a casa?', why: 'Pode marcar mais de um.', options: ['Música ao vivo', 'Futebol', 'Happy hour', 'Petiscos', 'Drinks'], kids: [
+    { area: 'vendas', q: 'Quais dias enchem e quais ficam vazios?', why: 'O conteúdo trabalha os dias fracos.' },
+    { area: 'vendas', q: 'Qual o consumo médio por pessoa e o carro-chefe?', why: 'Ex.: "R$ 70; balde de cerveja".' },
+  ] }],
+}
+
 /** Número estável a partir de um texto (mesmo cliente + mês = mesma escolha). */
 function hash(s: string): number { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) } return h >>> 0 }
 
@@ -234,5 +304,17 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
     const own = BY_FAMILY[fam]?.[cat] ?? []
     for (const t of [...own, ...(GENERIC_OK.has(fam) || !own.length ? BASE[cat] : [])]) { if (out.length >= 8) break; push(t) }
   }
-  return out.slice(0, 8)
+  // 5) Trilha em profundidade do tipo de negócio (subperguntas que aparecem conforme a resposta).
+  const deep: EngineQuestion[] = []
+  const walk = (nodes: Node[], parent: string | null) => {
+    for (const n of nodes) {
+      const q = fill(n.q)
+      if (asked.has(norm(q)) || used.has(norm(q))) continue
+      used.add(norm(q))
+      deep.push({ area: n.area, question: q, why: fill(n.why), options: n.options ?? [], ...(parent ? { cond: { q: parent, has: n.if ?? [] } } : {}) })
+      if (n.kids) walk(n.kids, q)
+    }
+  }
+  walk(TRAIL[fam] ?? [], null)
+  return [...out.slice(0, 8), ...deep.slice(0, 14)]
 }

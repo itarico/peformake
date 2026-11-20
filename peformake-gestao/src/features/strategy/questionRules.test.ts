@@ -114,3 +114,14 @@ describe('cópias nas funções do Supabase', () => {
     }
   })
 })
+
+describe('subperguntas (cond)', () => {
+  it('só libera quando a mãe foi respondida com a palavra', async () => {
+    const { condMet } = await import('./questionRules')
+    const mom = { question: 'O que vocês vendem ou fazem?', answer: 'Motos e peças', status: 'respondida' }
+    expect(condMet(null, [mom])).toBe(true)
+    expect(condMet({ q: mom.question, has: ['moto'] }, [mom])).toBe(true)
+    expect(condMet({ q: mom.question, has: ['carro'] }, [mom])).toBe(false)
+    expect(condMet({ q: mom.question, has: [] }, [{ ...mom, status: 'pendente', answer: null }])).toBe(false)
+  })
+})

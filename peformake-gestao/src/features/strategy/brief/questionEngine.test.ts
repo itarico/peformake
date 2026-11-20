@@ -14,7 +14,7 @@ describe('motor de perguntas (sem IA)', () => {
   it('bar e ONG recebem perguntas diferentes', () => {
     const bar = monthQuestions({ ...base, segment: 'Gastronomia', description: 'bar com samba', products: [{ nome: 'Rodízio', preco: 'R$ 49,90' }], competitors: [{ nome: 'Boteco X' }] })
     const ong = monthQuestions({ ...base, clientId: 'c2', segment: 'Educação', description: 'associação sem fins lucrativos', products: [{ nome: 'Contribuição', preco: 'R$ 30' }], competitors: [{ nome: 'APM Fortaleza' }] })
-    expect(bar).toHaveLength(8); expect(ong).toHaveLength(8)
+    expect(bar.filter((q) => !q.cond).length).toBeGreaterThanOrEqual(8); expect(ong.filter((q) => !q.cond).length).toBeGreaterThanOrEqual(8)
     const common = bar.filter((q) => ong.some((o) => o.question === q.question))
     expect(common.length).toBeLessThan(4)
     expect(bar.some((q) => /drink|petisco|noite|atra/i.test(q.question))).toBe(true)
@@ -54,5 +54,14 @@ describe('tipo pela Receita', () => {
     expect(familyFromReceita('213-5 - Empresário (Individual)', '5611201')).toBe('comida')
     expect(familyFromReceita('206-2 - Sociedade Empresária Limitada', '4541203')).toBe('automotivo')
     expect(familyFromReceita('213-5', '7420004')).toBe('servicos')
+  })
+})
+
+describe('trilha em profundidade', () => {
+  it('automotivo pergunta motos e depois marcas, só se a resposta tiver moto', () => {
+    const qs = monthQuestions({ clientId: 'a', name: 'Auto', month: '2026-12-01', asked: [], family: 'automotivo', products: [{ nome: 'CG', preco: 'R$ 1' }], competitors: [{ nome: 'x' }] })
+    const marcas = qs.find((q) => /marcas de moto/i.test(q.question))
+    expect(marcas?.cond?.q).toMatch(/novas, seminovas/i)
+    expect(qs.find((q) => /novas, seminovas/i.test(q.question))?.cond?.has).toContain('moto')
   })
 })

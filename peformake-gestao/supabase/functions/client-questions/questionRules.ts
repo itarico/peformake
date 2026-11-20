@@ -122,6 +122,20 @@ export function nextQuestion(ids: string[], done: Set<string>, skipped: Set<stri
   return ids.find((id) => !done.has(id) && !skipped.has(id)) ?? null
 }
 
+/**
+ * Subpergunta (cond) só entra quando a pergunta-mãe foi respondida e a resposta tem uma das palavras (sem acento,
+ * sem maiúscula). Mãe pulada ou sem resposta: a filha some. `has` vazio: basta a mãe ter resposta.
+ */
+export function condMet(cond: { q?: string; has?: string[] } | null | undefined, answers: { question: string; answer: string | null; status: string }[]): boolean {
+  if (!cond?.q) return true
+  const mom = answers.find((a) => norm(a.question) === norm(cond.q!))
+  if (!mom || mom.status !== 'respondida' || !(mom.answer ?? '').trim()) return false
+  const has = (cond.has ?? []).map(norm).filter(Boolean)
+  if (!has.length) return true
+  const a = norm(mom.answer ?? '')
+  return has.some((h) => a.includes(h))
+}
+
 export const canFollowUp = (followups: Record<string, number>, qid: string) => (followups[qid] ?? 0) < MAX_FOLLOWUPS
 
 /** Nota do NPS digitada ou tocada: só um número de 0 a 10 ("8", "nota 8", "8!"). */
