@@ -55,7 +55,12 @@ const TEXT = ['Histórias e assuntos', 'Posicionamento', 'Propósito e história
     const p = await ctx.newPage(); const errs = []
     p.on('pageerror', (e) => errs.push(e.message))
     await p.goto(BASE + board); await p.waitForLoadState('networkidle'); await p.waitForTimeout(1200)
-    await p.locator('[data-ver-tudo]').click(); await p.waitForTimeout(300)
+    // Grupos recolhíveis: fechados mostram só o título e o ✓ ou "falta N"; abre todos para testar os cartões.
+    const groups = await p.locator('[data-grupo-briefing]').evaluateAll((xs) => xs.map((x) => `${x.getAttribute('data-grupo-briefing')}:${x.getAttribute('data-aberto')}`))
+    if (groups.length !== 3) fails.push(`${tag}: ${groups.length} grupos recolhíveis (${groups.join(' ')})`)
+    if (groups.filter((g) => g.endsWith(':sim')).length > 1) fails.push(`${tag}: mais de um grupo aberto de início (${groups.join(' ')})`)
+    for (let k = 0; k < 6 && (await p.locator('[data-briefing] button[aria-expanded="false"]').count()); k++) { await p.locator('[data-briefing] button[aria-expanded="false"]').first().click(); await p.waitForTimeout(120) }
+    await p.waitForTimeout(300)
     const tiles = (await p.locator('[data-briefing] [data-item] span.line-clamp-2').allInnerTexts()).map((x) => x.trim())
     for (const n of NEW) if (!tiles.includes(n)) fails.push(`${tag}: falta o cartão ${n}`)
     for (const n of OLD) if (tiles.includes(n)) fails.push(`${tag}: cartão antigo ainda aparece: ${n}`)
@@ -70,18 +75,28 @@ const TEXT = ['Histórias e assuntos', 'Posicionamento', 'Propósito e história
       // Já preenchido abre no texto; o resto abre nos 3 jeitos (Falar, Escolher, Digitar).
       if (await d.locator('[data-modo-resposta]').count()) {
         const modes = (await d.locator('[data-modo-resposta] b').allInnerTexts()).join(',')
-        if (modes !== 'Falar,Escolher,Digitar') fails.push(`${tag}: ${n} modos ${modes}`)
-        await d.getByRole('button', { name: /Escolher/ }).click()
-      } else await d.getByRole('button', { name: /Escolher opções/ }).click()
+        if (modes !== 'Falar,Perguntas,Digitar') fails.push(`${tag}: ${n} modos ${modes}`)
+        await d.getByRole('button', { name: /^Perguntas/ }).click()
+      } else await d.getByRole('button', { name: /Responder por perguntas/ }).click()
       await p.waitForTimeout(250)
       let fio = 0, money = 0
+      const tipos = new Set()
       for (let k = 0; k < 40; k++) {
         const m = await check(p, tag, `${n} guia ${k + 1}`); if (!m) break
         const q = p.locator('dialog[open]').last()
         if (!(await q.locator('[data-quiz]').count())) break
         if (await q.locator('[data-puxa-fio]').count()) fio++
-        if (/administrador/.test(await q.locator('p, [id]').first().innerText().catch(() => '')) || /só administrador vê/.test((await q.innerText()))) money++
-        if (await q.locator('[data-quiz] textarea').count()) await q.locator('[data-quiz] textarea').fill('Exemplo real: a cliente Ana voltou três vezes no mês')
+        if (/administrador/.test(await q.locator('p, [id]').first().innerText().catch(() => '')) || /administrador vê/i.test((await q.innerText()))) money++
+        const tipo = await q.locator('[data-quiz]').getAttribute('data-tipo')
+        tipos.add(tipo)
+        // Só a aberta tem microfone; curta, número e opções não.
+        const mic = await q.locator('[data-quiz] [data-microfone]').count()
+        if (tipo !== 'aberta' && mic) fails.push(`${tag}: ${n} pergunta ${tipo} com microfone`)
+        if (tipo === 'aberta' && !mic) fails.push(`${tag}: ${n} pergunta aberta sem microfone`)
+        if (/Pergunta \d+ de \d+/.test(await q.innerText())) fails.push(`${tag}: ${n} ainda mostra "Pergunta X de Y"`)
+        if (tipo === 'aberta') await q.locator('[data-quiz] textarea').fill('Exemplo real: a cliente Ana voltou três vezes no mês')
+        else if (tipo === 'num') await q.locator('[data-quiz] input').first().fill('12')
+        else if (tipo === 'curta') await q.locator('[data-quiz] input').first().fill('Boa Viagem e Pina')
         else await q.locator('[data-quiz] [role=group] button[aria-pressed]').first().click()
         const nx = q.getByRole('button', { name: /^(Próxima|Usar respostas)$/ })
         const lastStep = (await nx.innerText()) === 'Usar respostas'

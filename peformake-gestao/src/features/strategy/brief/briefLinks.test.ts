@@ -24,7 +24,7 @@ describe('links do briefing', () => {
 
 describe('quiz', () => {
   it('junta as respostas num texto curto', () => {
-    expect(quizText(QUIZ.publico!.filter((s) => !s.when && !s.open).slice(0, 2), [['Mulheres', 'Casais'], ['31 a 40']])).toBe('Quem mais compra: Mulheres, Casais. Qual a idade: 31 a 40.')
+    expect(quizText(QUIZ.publico!.filter((s) => !s.when && !s.open).slice(0, 2), [['Mulheres', 'Casais'], ['31 a 40']])).toBe('Quem mais compra: Mulheres, Casais. Qual a faixa de idade que mais compra: 31 a 40.')
   })
 })
 

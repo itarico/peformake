@@ -6,7 +6,7 @@ import { VoiceNote } from '@/components/ui/VoiceNote'
 import { cn } from '@/lib/cn'
 import { fileUrl, type ClientQuestion } from '../questionsApi'
 import { useTranscriber } from '@/lib/transcriber'
-import { detectLink, fromLinkList, isFio, linkList, MONEY_FIELDS, MONTHS_FULL, MONTHS_SHORT, QUIZ, quizMoney, quizText, visibleSteps, type BriefFixed, type LinkItem, type MoneyKey, type QuizStep, type TextKey } from './briefRules'
+import { detectLink, fromLinkList, isFio, linkList, MONEY_FIELDS, MONTHS_FULL, MONTHS_SHORT, QUIZ, quizMoney, quizText, stepKind, stepSeconds, visibleSteps, type BriefFixed, type LinkItem, type MoneyKey, type QuizStep, type TextKey } from './briefRules'
 import { IMPORT_ACCEPT, importProducts, productsFromText } from './productImport'
 import { productsFromUrl } from './briefApi'
 
@@ -47,7 +47,7 @@ export function TextDialog({ title, hint, initial, onSave, onClose, busy, error,
     <Dialog open onClose={onClose} title={title} description={hint} size="sm" footer={<Button variant="secondary" onClick={onClose}>Cancelar</Button>}>
       <div data-modo-resposta className="grid grid-cols-1 gap-2">
         <button type="button" onClick={() => setMode('talk')} className="flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl border border-transparent bg-fill px-3 text-left text-on-fill hover:opacity-90"><Mic size={18} aria-hidden="true" /><span><b className="block text-[14px]">Falar</b><span className="text-[12.5px] opacity-80">O jeito mais rápido: o texto aparece enquanto você fala</span></span></button>
-        {steps && <button type="button" onClick={() => setQuiz(true)} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><ListChecks size={18} aria-hidden="true" /><span><b className="block text-[14px]">Escolher</b><span className="text-[12.5px] text-muted">Perguntas com opções para tocar</span></span></button>}
+        {steps && <button type="button" onClick={() => setQuiz(true)} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><ListChecks size={18} aria-hidden="true" /><span><b className="block text-[14px]">Perguntas</b><span className="text-[12.5px] text-muted">Uma por vez: falar, tocar ou escrever</span></span></button>}
         <button type="button" onClick={() => setMode('type')} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><Pencil size={18} aria-hidden="true" /><span><b className="block text-[14px]">Digitar</b><span className="text-[12.5px] text-muted">Escrever do seu jeito</span></span></button>
       </div>
     </Dialog>
@@ -59,7 +59,7 @@ export function TextDialog({ title, hint, initial, onSave, onClose, busy, error,
         <textarea autoFocus={mode === 'type'} rows={money?.length ? 4 : 5} value={shown} readOnly={!!live} onChange={(e) => setV(e.target.value)} className={cn(area, live && 'text-muted')} aria-label={title} />
         <div className="flex flex-wrap items-start gap-2">
           <VoiceNote autoStart={mode === 'talk'} onLive={setLive} onText={(t) => setV((c) => (c.trim() ? `${c.trim()} ${t}` : t))} />
-          {steps && <button type="button" onClick={() => setQuiz(true)} className="inline-flex min-h-9 w-fit cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold hover:border-ink"><ListChecks size={14} aria-hidden="true" /> Escolher opções</button>}
+          {steps && <button type="button" onClick={() => setQuiz(true)} className="inline-flex min-h-9 w-fit cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold hover:border-ink"><ListChecks size={14} aria-hidden="true" /> Responder por perguntas</button>}
         </div>
         {!!money?.length && <div data-dinheiro className="grid grid-cols-2 gap-2">
           {money.map((m) => <label key={m.key} className="min-w-0 text-[12px] font-semibold text-muted">{MONEY_FIELDS[m.key].label}
@@ -73,45 +73,60 @@ export function TextDialog({ title, hint, initial, onSave, onClose, busy, error,
   )
 }
 
-/** Quiz: uma pergunta por tela, opções para tocar e "Outro" para escrever. No fim, vira texto no campo. */
-/** `money`: mostra as perguntas de dinheiro (só administrador); a resposta delas volta à parte, não no texto. */
+/**
+ * Guia: uma pergunta por tela, uma coisa por vez (Italo, 20/11). Cada pergunta tem um tipo:
+ * aberta = microfone grande com o texto ao vivo na caixa (teclado de reserva); opções = tocar; curta = campo; número = campo numérico.
+ * Em vez de "Pergunta 1 de 17": a barra e "uns N minutos". No fim, vira texto no campo.
+ * `money`: mostra as perguntas de dinheiro (só administrador); a resposta delas volta à parte, não no texto.
+ */
 export function QuizDialog({ title, steps, onDone, onClose, money = false }: { title: string; steps: QuizStep[]; onDone: (text: string, money: Partial<Record<MoneyKey, string>>) => void; onClose: () => void; money?: boolean }) {
-  // Respostas por pergunta (índice em `steps`); as que dependem de outra só aparecem quando a resposta pede (Italo, 20/11).
+  // Respostas por pergunta (índice em `steps`); as que dependem de outra só aparecem quando a resposta pede.
   const [ans, setAns] = useState<string[][]>(steps.map(() => []))
   const [other, setOther] = useState<string[]>(steps.map(() => ''))
   const [otherOpen, setOtherOpen] = useState(false)
+  const [live, setLive] = useState('')
   const [pos, setPos] = useState(0)
   const all = () => ans.map((a, k) => [...a, ...(other[k]!.trim() ? [other[k]!.trim()] : [])])
   const visible = visibleSteps(steps, all(), money).map((k) => [steps[k]!, k] as const)
   const at = Math.min(pos, visible.length - 1)
   const [st, i] = visible[at]!
+  const kind = stepKind(st)
   const cur = ans[i]!
+  const setText = (v: string) => setOther((o) => o.map((x, k) => (k === i ? v : x)))
   const pick = (o: string) => setAns((a) => a.map((x, k) => (k !== i ? x : st.multi ? (x.includes(o) ? x.filter((y) => y !== o) : [...x, o]) : x.includes(o) ? [] : [o])))
   const last = at === visible.length - 1
   const shown = () => { const keep = new Set(visible.map(([, k]) => k)); return all().map((a, k) => (keep.has(k) ? a : [])) }
-  const next = () => { setOtherOpen(false); if (last) onDone(quizText(steps, shown()), quizMoney(steps, shown())); else setPos(at + 1) }
+  const go = (n: number) => { setOtherOpen(false); setLive(''); setPos(n) }
+  const next = () => { setOtherOpen(false); setLive(''); if (last) onDone(quizText(steps, shown()), quizMoney(steps, shown())); else setPos(at + 1) }
   const answered = !!(cur.length || other[i]!.trim())
   const many = st.opts.length > 8
+  const mins = Math.max(1, Math.round(visible.slice(at).reduce((t, [s]) => t + stepSeconds(s), 0) / 60))
+  const text = live ? (other[i]!.trim() ? `${other[i]!.trim()} ${live}` : live) : other[i]!
   return (
-    <Dialog open onClose={onClose} title={title} description={`Pergunta ${at + 1} de ${visible.length}${st.open ? ' · escreva ou fale' : st.multi ? ' · pode marcar mais de uma' : ''}${st.money ? ' · só administrador vê' : ''}`} size="sm"
-      footer={<div className="flex gap-2"><Button onClick={next}>{last ? 'Usar respostas' : answered ? 'Próxima' : 'Pular'}</Button><Button variant="secondary" onClick={() => (at ? (setOtherOpen(false), setPos(at - 1)) : onClose())}>{at ? 'Voltar' : 'Cancelar'}</Button></div>}>
-      <div data-quiz className="flex flex-col gap-3">
-        <div className="h-1.5 overflow-hidden rounded-full bg-raised" aria-hidden="true"><div className="h-full rounded-full bg-accent transition-all" style={{ width: `${((at + 1) / visible.length) * 100}%` }} /></div>
+    <Dialog open onClose={onClose} title={title} description={st.money ? 'Só administrador vê esta resposta' : undefined} size="sm"
+      footer={<div className="flex gap-2"><Button onClick={next}>{last ? 'Usar respostas' : answered ? 'Próxima' : 'Pular'}</Button><Button variant="secondary" onClick={() => (at ? go(at - 1) : onClose())}>{at ? 'Voltar' : 'Cancelar'}</Button></div>}>
+      <div data-quiz data-tipo={kind} className="flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised" aria-hidden="true"><div className="h-full rounded-full bg-accent transition-all" style={{ width: `${((at + 1) / visible.length) * 100}%` }} /></div>
+          <span data-tempo className="shrink-0 text-[11.5px] font-semibold text-muted">uns {mins} min</span>
+        </div>
         {isFio(st) && <span data-puxa-fio className="-mb-2 text-[11.5px] font-semibold uppercase tracking-wide text-accent-ink">Puxando o fio</span>}
         <b className="text-[16px] leading-snug">{st.q}</b>
-        {st.open
-          ? <>
-              <textarea autoFocus rows={3} value={other[i]} onChange={(e) => setOther((o) => o.map((x, k) => (k === i ? e.target.value : x)))} className={area} placeholder="Escreva aqui, ou toque em Falar" aria-label={st.q} />
-              <VoiceNote onText={(x) => setOther((o) => o.map((y, k) => (k === i ? (y.trim() ? `${y.trim()} ${x}` : x) : y)))} />
-            </>
-          : <>
-              {/* Muitas opções (ex.: os 12 arquétipos): chips menores para caber sem rolar no celular. */}
-              <div className={cn('flex flex-wrap', many ? 'gap-1' : 'gap-1.5')} role="group" aria-label={st.q}>
-                {st.opts.map((o) => <button key={o} type="button" aria-pressed={cur.includes(o)} onClick={() => pick(o)} className={cn('cursor-pointer rounded-full border font-medium', many ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', cur.includes(o) ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o}</button>)}
-                <button type="button" aria-pressed={otherOpen || !!other[i]!.trim()} onClick={() => setOtherOpen(true)} className={cn('cursor-pointer rounded-full border border-dashed font-medium', many ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', other[i]!.trim() ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{other[i]!.trim() ? `Outro: ${other[i]}` : 'Outro'}</button>
-              </div>
-              {otherOpen && <input autoFocus value={other[i]} onChange={(e) => setOther((o) => o.map((x, k) => (k === i ? e.target.value : x)))} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); setOtherOpen(false) } }} className={field} placeholder="Escreva a sua resposta" aria-label="Outra resposta" />}
-            </>}
+        {kind === 'aberta' && <>
+          {/* Falar é o principal: o texto aparece ao vivo dentro da caixa; o teclado fica de reserva. */}
+          <textarea rows={3} value={text} readOnly={!!live} onChange={(e) => setText(e.target.value)} className={cn(area, 'mt-0', live && 'text-muted')} placeholder="Toque no microfone e fale. Ou escreva aqui." aria-label={st.q} />
+          <VoiceNote key={i} big onLive={setLive} onText={(x) => { setLive(''); setText(other[i]!.trim() ? `${other[i]!.trim()} ${x}` : x) }} />
+        </>}
+        {kind === 'curta' && <input autoFocus value={other[i]} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); next() } }} className={cn(field, 'mt-0')} placeholder="Escreva aqui" aria-label={st.q} />}
+        {kind === 'num' && <input autoFocus inputMode="decimal" value={other[i]} onChange={(e) => setText(e.target.value.replace(/[^\d.,%\s-]/g, ''))} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); next() } }} className={cn(field, 'mt-0 max-w-40 text-[16px] font-semibold')} placeholder="0" aria-label={st.q} />}
+        {kind === 'opcoes' && <>
+          {/* Muitas opções (ex.: os 12 arquétipos): chips menores para caber sem rolar no celular. */}
+          <div className={cn('flex flex-wrap', many ? 'gap-1' : 'gap-1.5')} role="group" aria-label={st.q}>
+            {st.opts.map((o) => <button key={o} type="button" aria-pressed={cur.includes(o)} onClick={() => pick(o)} className={cn('cursor-pointer rounded-full border font-medium', many ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', cur.includes(o) ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o}</button>)}
+            <button type="button" aria-pressed={otherOpen || !!other[i]!.trim()} onClick={() => setOtherOpen(true)} className={cn('cursor-pointer rounded-full border border-dashed font-medium', many ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', other[i]!.trim() ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{other[i]!.trim() ? `Outro: ${other[i]}` : 'Outro'}</button>
+          </div>
+          {otherOpen && <input autoFocus value={other[i]} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); setOtherOpen(false) } }} className={field} placeholder="Escreva a sua resposta" aria-label="Outra resposta" />}
+        </>}
       </div>
     </Dialog>
   )

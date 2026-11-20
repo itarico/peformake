@@ -374,7 +374,7 @@ const TRAIL: Partial<Record<Family, Node[]>> = {
 }
 
 /** Passo do guia (mesmo formato do QuizStep do briefing). */
-export interface GuideStep { q: string; opts: string[]; multi?: boolean; when?: { q: string; has: string[] }; open?: boolean }
+export interface GuideStep { q: string; opts: string[]; multi?: boolean; when?: { q: string; has: string[] }; open?: boolean; kind?: 'aberta' | 'opcoes' | 'curta' | 'num' }
 
 const OFFER_KIND: Record<Family, string[]> = {
   comida: ['Combo', 'Prato do dia', 'Promoção no dia fraco', 'Frete grátis', 'Produto da data', 'Cupom de volta'],
@@ -419,21 +419,21 @@ export function monthGuide(key: 'ofertas' | 'meta' | 'datas_travam', fam: Family
   if (key === 'ofertas') return [
     { q: `O que precisa vender mais em ${mes}?`, opts: prods.length ? prods : ['O carro-chefe', 'Um lançamento', 'O de maior margem', 'Estoque parado'], multi: true },
     { q: 'Que tipo de oferta faz sentido?', opts: OFFER_KIND[fam], multi: true },
-    { q: 'Qual o preço ou a condição real da oferta?', opts: [], open: true },
+    { q: 'Qual o preço ou a condição real da oferta?', opts: [], open: true, kind: 'curta' },
     { q: 'Até quando vale e tem limite (estoque, vagas)?', opts: ['Até o fim do mês', 'Só um fim de semana', 'Até acabar o estoque', 'Vagas limitadas'], multi: true },
     ...perDate,
     { q: 'Alguma ação junto da oferta?', opts: ['Influenciador', 'Parceria com outro negócio', 'Sorteio', 'Evento', 'Indique e ganhe', 'Nenhuma'], multi: true },
   ]
   if (key === 'meta') return [
     { q: `O que conta como resultado em ${mes}?`, opts: GOAL_UNIT[fam] },
-    { q: 'Quanto foi no mês passado?', opts: [], open: true },
-    { q: 'Qual o número da meta deste mês?', opts: [], open: true },
+    { q: 'Quanto foi no mês passado?', opts: [], open: true, kind: 'num' },
+    { q: 'Qual o número da meta deste mês?', opts: [], open: true, kind: 'num' },
     { q: 'Por que esse número?', opts: ['Pagar as contas', 'Crescer em relação ao mês passado', 'Data forte no mês', 'Encher a capacidade', 'Lançamento'], multi: true },
   ]
   return [
     ...(cal.length ? [{ q: `Alguma destas datas de ${mes} muda o funcionamento?`, opts: [...cal.map((d) => d.label), 'Nenhuma'], multi: true }] : []),
     { q: `Tem dia em ${mes} que não dá para gravar ou atender?`, opts: ['Feriado fechado', 'Férias da equipe', 'Reforma', 'Viagem do dono', 'Evento que lota', 'Nada trava'], multi: true },
-    { q: 'Quais dias exatamente?', opts: [], open: true, when: { q: `Tem dia em ${mes} que não dá para gravar ou atender?`, has: ['feriado', 'ferias', 'reforma', 'viagem', 'evento'] } },
+    { q: 'Quais dias exatamente?', opts: [], open: true, kind: 'curta', when: { q: `Tem dia em ${mes} que não dá para gravar ou atender?`, has: ['feriado', 'ferias', 'reforma', 'viagem', 'evento'] } },
     { q: 'Mudança de horário no mês?', opts: ['Abre mais tarde', 'Fecha mais cedo', 'Abre domingo', 'Horário normal'], multi: true },
   ]
 }

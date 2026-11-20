@@ -111,12 +111,9 @@ export function ConsultoriaPage() {
                       <b className="truncate text-[14.5px] font-semibold">{r.name.trim()}</b>
                       {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
                     </span>
-                    {/* Onde o cliente está no passo a passo da ficha: 4 bolinhas pequenas (verde = feito, amarelo = agora) e o que falta. */}
-                    <span data-situacao className="flex min-w-0 items-center gap-2 text-[12.5px] text-muted">
-                      {s ? <>
-                        <StepDots n={s.n} />
-                        <span className="truncate">{s.line}</span>
-                      </> : <span>Carregando</span>}
+                    {/* Só as bolinhas do passo a passo (Italo, 20/11: "lista poluída"): verde ✓ = pronto, amarela = a vez, cinza = depois. O detalhe fica no toque longo (title). */}
+                    <span data-situacao title={s?.line} className="flex min-w-0 items-center text-[12.5px] text-muted">
+                      {s ? <StepDots n={s.n} /> : <span>Carregando</span>}
                     </span>
                   </span>
                 </button>
@@ -163,7 +160,7 @@ const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'envia
 function StepDots({ n }: { n: number }) {
   return (
     <span role="img" aria-label={`Passo ${n} de 4: ${LIST_STEPS[n - 1]}`} data-bolinhas className="inline-flex shrink-0 items-center gap-1">
-      {LIST_STEPS.map((k, i) => <span key={k} aria-hidden="true" className={cn('size-1.5 rounded-full', i + 1 < n ? 'bg-ok' : i + 1 === n ? 'size-2 bg-amber-400' : 'bg-line-strong')} />)}
+      {LIST_STEPS.map((k, i) => <span key={k} aria-hidden="true" data-bolinha={i + 1 < n ? 'pronto' : i + 1 === n ? 'vez' : 'depois'} className={cn('grid place-items-center rounded-full', i + 1 < n ? 'size-4 bg-ok text-white' : i + 1 === n ? 'size-4 bg-amber-400' : 'size-2.5 bg-line-strong')}>{i + 1 < n && <Check size={10} strokeWidth={3.5} />}</span>)}
     </span>
   )
 }

@@ -1,7 +1,7 @@
-import { Children, useState, type ReactNode } from 'react'
+import { Children, isValidElement, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { BookOpen, Bookmark, Building2, CalendarRange, CalendarX, Check, Compass, IdCard, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, NotebookPen, Package, Route, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
+import { BookOpen, Bookmark, ChevronDown, Building2, CalendarRange, CalendarX, Check, Compass, IdCard, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, NotebookPen, Package, Route, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { SearchSelect } from '@/components/ui/SearchSelect'
@@ -67,8 +67,25 @@ export function BriefMeter({ percent, missing, compact }: { percent: number; mis
 type Icon = typeof Check
 
 /** Grupo de ícones (sem caixa de texto): o título é só uma palavra. */
-export function Group({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
-  if (!Children.toArray(children).length) return null
+export function Group({ title, right, children, fold, defaultOpen = false }: { title: string; right?: ReactNode; children: ReactNode
+  /** Recolhível (Italo, 20/11: "área poluída"): fechado mostra só o título e o ✓ ou quantos faltam. */
+  fold?: boolean; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
+  const items = Children.toArray(children)
+  if (!items.length) return null
+  if (fold) {
+    const missing = items.filter((c) => isValidElement<{ done?: boolean }>(c) && c.props.done === false).length
+    return (
+      <section data-grupo-briefing={title} data-aberto={open ? 'sim' : 'nao'} className="overflow-hidden rounded-2xl border border-line bg-surface">
+        <button type="button" aria-expanded={open} onClick={() => setOpen((v) => !v)} className="flex min-h-12 w-full cursor-pointer items-center gap-2 px-3.5 text-left hover:bg-raised/50">
+          <span className="flex-1 text-[14px] font-semibold">{title}</span>
+          {missing ? <span className="rounded-full bg-warn-soft px-2 py-0.5 text-[12px] font-semibold text-warn-ink">falta {missing}</span> : <span aria-label="Completo" className="grid size-6 place-items-center rounded-full bg-ok-soft text-ok-ink"><Check size={13} strokeWidth={3} /></span>}
+          <ChevronDown size={16} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', open && 'rotate-180')} />
+        </button>
+        {open && <div className="grid grid-cols-4 gap-2 border-t border-line p-2 sm:grid-cols-6 lg:grid-cols-8">{children}</div>}
+      </section>
+    )
+  }
   return (
     <section className="flex flex-col gap-2">
       <div className="flex min-h-9 items-center gap-2 px-1"><h3 className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">{title}</h3>{right && <span className="ml-auto">{right}</span>}</div>
@@ -121,6 +138,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
   const last = useLastMonthly(clientId)
   const st = useBriefStatus(clientId, month)
   const [open, setOpen] = useState<Open>(null)
+  const [docsOpen, setDocsOpen] = useState(false)
   const [semComp, setSemComp] = useState(false)
   // Briefing em conversa com a Bete (Italo, 20/11): o jeito principal de preencher; os blocos abaixo continuam para ajustar.
   const [chat, setChat] = useState(false)
@@ -131,8 +149,8 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
   // Tipo de negócio (Italo, 20/11: "uma APM não é uma loja"): define as perguntas e o tom da estratégia.
   const [tipoOpen, setTipoOpen] = useState(false)
   // Compacto (Italo, 18/11): mostra só o que falta; o que já está feito fica atrás de "Ver tudo".
-  const [all, setAll] = useState(false)
-  const show = (done: boolean) => all || !done
+  // No fixo, os grupos recolhíveis mostram tudo (o que falta aparece no cabeçalho); no mês, só o que falta.
+  const show = (done: boolean) => part === 'fixo' || !done
   // Direcionamento da equipe (o que a IA não acha sozinha): fica aqui no briefing, junto das respostas (Italo, 17/11).
   const consult = useConsultList()
   const direction = consult.data?.find((r) => r.client_id === clientId)?.direction ?? ''
@@ -193,6 +211,9 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
   // Um cartão de texto (juntos contam feito com qualquer chave dele).
   const C = (key: TextKey, icon: Icon) => show(cardDone(f, key)) && <Tile key={key} icon={icon} label={TEXT_FIELDS[key].label} title={TEXT_FIELDS[key].hint} done={cardDone(f, key)} onOpen={() => setOpen({ kind: 'text', key })} />
   const seasonDone = !!(f.meses_fortes?.length || f.meses_fracos?.length)
+  const firstOpen = (['posicionamento', 'proposito', 'percepcao', 'voz', 'momento'] as TextKey[]).some((k) => !cardDone(f, k)) ? 'essencia'
+    : !isFamily(f.tipo) || !doc || !prods.some((p) => p.preco) || links.length < 2 || !cardDone(f, 'publico') || !cardDone(f, 'jornada') || !(comps.length || f.sem_concorrentes) || !refs.length ? 'cliente'
+    : !seasonDone || !cardDone(f, 'marketing') || !cardDone(f, 'marca') || !cardDone(f, 'historias') ? 'marketing' : null
   const startGuide = () => { if (!todo.length) return; setGuide({ steps: todo, i: 0 }); openStep(todo[0]!) }
 
   return (
@@ -200,7 +221,6 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       {part === 'fixo' && <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Ring percent={st.fixedPercent} />
         <div className="min-w-0 flex-1 text-[13px] text-muted">{todo.length ? <><b className="text-ink">{todo.length}</b> para completar</> : <b className="text-ok-ink">Tudo pronto</b>}</div>
-        <button type="button" data-ver-tudo onClick={() => setAll((v) => !v)} className="min-h-10 shrink-0 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{all ? 'Só o que falta' : 'Ver tudo'}</button>
         {todo.length > 0 && <Button data-completar variant="secondary" aria-label="Eu preencho o que falta, um por vez" title="Abre só o que falta, um por vez, com perguntas guiadas" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /> Eu preencho</Button>}
         <Button data-conversar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setChat(true)}><MessageCircle size={15} aria-hidden="true" /> Cliente preenche</Button>
       </div>}
@@ -209,7 +229,8 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} onClient={() => setOpen({ kind: 'enviar' })} />}
 
       {/* Essência da marca (Italo, 20/11): frameworks de marca. Os cartões que se repetiam viraram um só (Posicionamento, Propósito e história, Jeito da marca, Momento e futuro). */}
-      {part === 'fixo' && <Group title="Essência da marca">
+      {/* Grupos recolhíveis: abre sozinho só o primeiro que tem o que preencher. */}
+      {part === 'fixo' && <Group fold defaultOpen={firstOpen === 'essencia'} title="Essência da marca">
         {C('posicionamento', Target)}
         {C('proposito', Compass)}
         {C('percepcao', Star)}
@@ -217,7 +238,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
         {C('momento', TrendingUp)}
       </Group>}
 
-      {part === 'fixo' && <Group title="O cliente">
+      {part === 'fixo' && <Group fold defaultOpen={firstOpen === 'cliente'} title="O cliente">
         <Tile icon={Building2} label="Tipo" title={f.tipo_label || (isFamily(f.tipo) ? FAMILY_LABEL[f.tipo] : `Confirmar: ${FAMILY_LABEL[familyOf(b.data?.segment, b.data?.description, name)]}`)} done={isFamily(f.tipo)} onOpen={() => setTipoOpen(true)} />
         {show(!!doc) && <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />}
         {show(prods.some((p) => p.preco)) && <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />}
@@ -231,7 +252,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       </Group>}
 
       {/* Novos (Italo, 20/11): o que já foi feito de marketing, os meses fortes e fracos, a marca e os acessos. */}
-      {part === 'fixo' && <Group title="Marketing e conteúdo">
+      {part === 'fixo' && <Group fold defaultOpen={firstOpen === 'marketing'} title="Marketing e conteúdo">
         {C('marketing', Megaphone)}
         {show(seasonDone) && <Tile icon={CalendarRange} label="Sazonalidade" title={seasonText(f) || TEXT_FIELDS.sazonalidade.hint} done={seasonDone} onOpen={() => setOpen({ kind: 'sazonal' })} />}
         {C('marca', KeyRound)}
@@ -249,14 +270,17 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
 
       {/* As perguntas saíram daqui (Italo, 20/11): têm o passo próprio "Perguntas" na ficha do cliente. */}
       {/* Documentos do cliente (Italo, 20/11): tudo o que ele mandar fica aqui; o agente lê antes de gerar. */}
-      {part === 'fixo' && <section data-documentos className="flex flex-col gap-2">
-        <h3 className="px-1 text-[12.5px] font-semibold uppercase tracking-wide text-muted">Documentos</h3>
-        <ClientAssets clientId={clientId} only="briefing" done={[...(f.cnpj ? ['cnpj'] : []), ...(prods.some((p) => p.preco) ? ['produtos'] : [])]}
+      {part === 'fixo' && <section data-documentos className="overflow-hidden rounded-2xl border border-line bg-surface">
+        <button type="button" aria-expanded={docsOpen} onClick={() => setDocsOpen((v) => !v)} className="flex min-h-12 w-full cursor-pointer items-center gap-2 px-3.5 text-left hover:bg-raised/50">
+          <span className="flex-1 text-[14px] font-semibold">Documentos</span>
+          <ChevronDown size={16} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', docsOpen && 'rotate-180')} />
+        </button>
+        {docsOpen && <div className="border-t border-line p-2"><ClientAssets clientId={clientId} only="briefing" done={[...(f.cnpj ? ['cnpj'] : []), ...(prods.some((p) => p.preco) ? ['produtos'] : [])]}
           onProducts={async (file) => {
             const { list, added } = mergeProducts(prods, await importProducts(file))
             if (added) { await saveBrief(clientId, { ...f, produtos: list }); void qc.invalidateQueries({ queryKey: briefKey(clientId) }) }
             return added ? `${added} ${added === 1 ? 'produto entrou' : 'produtos entraram'} em Produtos. Confira os preços lá.` : 'Guardei o arquivo; não achei produtos novos nele.'
-          }} />
+          }} /></div>}
       </section>}
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>

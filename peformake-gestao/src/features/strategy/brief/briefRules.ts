@@ -327,16 +327,26 @@ export function fromLinkList(items: LinkItem[], before: BriefFixed): Pick<BriefF
  */
 export interface QuizStep {
   q: string; opts: string[]; multi?: boolean; open?: boolean
+  /**
+   * Como se responde (Italo, 20/11): `aberta` = ouvir o dono (microfone grande, texto ao vivo, teclado de reserva);
+   * `opcoes` = tocar; `curta` = campo de texto curto; `num` = campo numérico. Curta, número e opções: sem áudio.
+   */
+  kind?: StepKind
   /** Só aparece se a resposta da pergunta `q` tiver uma das palavras. `has: []`: aparece quando ela foi respondida (puxa-fio). */
   when?: { q: string; has: string[]; short?: number }
   /** Pergunta de dinheiro: a resposta vai para o campo de valor (só administrador vê), não para o texto. */
   money?: MoneyKey
 }
+export type StepKind = 'aberta' | 'opcoes' | 'curta' | 'num'
+/** Tipo da pergunta (sem `kind`: aberta se `open`, senão opções). */
+export const stepKind = (s: Pick<QuizStep, 'kind' | 'open'>): StepKind => s.kind ?? (s.open ? 'aberta' : 'opcoes')
+/** Segundos estimados para responder (falar uma aberta leva mais). */
+export const stepSeconds = (s: Pick<QuizStep, 'kind' | 'open'>) => (stepKind(s) === 'aberta' ? 50 : 10)
 const W = (q: string, ...has: string[]) => ({ q, has })
 /** Puxa-fio (Italo, 20/11): pergunta curta que só aparece depois que a anterior foi respondida, para a resposta ir fundo. */
-const fio = (q: string, p = 'Me dá um exemplo real disso'): QuizStep => ({ q: p, opts: [], open: true, when: { q, has: [] } })
+const fio = (q: string, p = 'Me dá um exemplo real disso'): QuizStep => ({ q: p, opts: [], open: true, kind: 'aberta', when: { q, has: [] } })
 /** Pergunta aberta + o puxa-fio dela. */
-const aberta = (q: string, p?: string, when?: { q: string; has: string[] }): QuizStep[] => [{ q, opts: [], open: true, ...(when ? { when } : {}) }, fio(q, p)]
+const aberta = (q: string, p?: string, when?: { q: string; has: string[] }): QuizStep[] => [{ q, opts: [], open: true, kind: 'aberta', ...(when ? { when } : {}) }, fio(q, p)]
 /** É um puxa-fio (pergunta extra de aprofundar). */
 export const isFio = (s: QuizStep) => !!s.open && !!s.when && s.when.has.length === 0
 
@@ -346,186 +356,202 @@ export const isFio = (s: QuizStep) => !!s.open && !!s.when && s.when.has.length 
  */
 export { HISTORIAS, HISTORIA_FIO, HISTORIA_FIOS, HISTORIA_CURTA }
 
-/** O que nunca falar (entra no guia do Jeito da marca; o portal ainda abre o campo antigo). */
+/** Pergunta de escolher (tocar nas opções). */
+const op = (q: string, opts: string[], extra: Partial<QuizStep> = {}): QuizStep => ({ q, opts, kind: 'opcoes', ...extra })
+/** Resposta curta escrita (nome, bairro, horário): sem áudio. */
+const curta = (q: string, extra: Partial<QuizStep> = {}): QuizStep => ({ q, opts: [], open: true, kind: 'curta', ...extra })
+/** Número (campo numérico): sem áudio. */
+const num = (q: string, extra: Partial<QuizStep> = {}): QuizStep => ({ q, opts: [], open: true, kind: 'num', ...extra })
+
+/**
+ * O que nunca falar (entra no guia do Jeito da marca; o portal ainda abre o campo antigo).
+ * Guias reescritos (Italo, 20/11, testando no celular): perguntas que fazem o dono PENSAR e contar, uma coisa por vez.
+ * Os dados objetivos (faixa, bairro, número) vêm depois, como pergunta curta de completar.
+ */
 const PROIBIDOS: QuizStep[] = [
-  { q: 'O que nunca falar ou mostrar?', opts: ['Política', 'Religião', 'Palavrão', 'Concorrente pelo nome', 'Preço baixo como foco', 'Bebida alcoólica', 'Crianças'], multi: true },
-  { q: 'Tem regra de conselho ou lei da profissão?', opts: ['Não mostrar preço', 'Não prometer resultado', 'Não mostrar paciente', 'Não usar antes e depois', 'Não tem'], multi: true },
+  op('O que nunca falar ou mostrar?', ['Política', 'Religião', 'Palavrão', 'Concorrente pelo nome', 'Preço baixo como foco', 'Bebida alcoólica', 'Crianças'], { multi: true }),
+  op('Tem regra de conselho ou lei da profissão?', ['Não mostrar preço', 'Não prometer resultado', 'Não mostrar paciente', 'Não usar antes e depois', 'Não tem'], { multi: true }),
   ...aberta('Algo que já deu problema e não pode repetir?', 'O que aconteceu e como resolveram?'),
 ]
 
 export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
   proibidos: PROIBIDOS,
-  historias: HISTORIAS.flatMap((q, i) => [{ q, opts: [], open: true }, { q: HISTORIA_FIOS[i] ?? HISTORIA_FIO, opts: [], open: true, when: { q, has: [], short: HISTORIA_CURTA } }]),
+  historias: HISTORIAS.flatMap((q, i) => [{ q, opts: [], open: true, kind: 'aberta' as const }, { q: HISTORIA_FIOS[i] ?? HISTORIA_FIO, opts: [], open: true, kind: 'aberta' as const, when: { q, has: [], short: HISTORIA_CURTA } }]),
   publico: [
-    { q: 'Quem mais compra?', opts: ['Mulheres', 'Homens', 'Casais', 'Famílias com filhos', 'Jovens', 'Empresas'], multi: true },
-    { q: 'Idade dos filhos dessas famílias?', opts: ['Bebês', 'Crianças', 'Adolescentes'], multi: true, when: W('Quem mais compra?', 'familias') },
-    { q: 'Que tipo de empresa compra e quem decide lá dentro?', opts: ['Pequenos comércios', 'Indústrias', 'Escritórios', 'Órgão público', 'Dono decide', 'Comprador decide'], multi: true, when: W('Quem mais compra?', 'empresas') },
-    { q: 'Qual a idade?', opts: ['18 a 24', '25 a 34', '35 a 44', '45 a 59', '60 ou mais'], multi: true },
-    { q: 'Onde mora ou trabalha?', opts: ['No bairro', 'Bairros vizinhos', 'Na cidade toda', 'Região metropolitana', 'Turistas', 'Outras cidades (online)'], multi: true },
-    { q: 'Até qual bairro ou raio atendem ou entregam?', opts: [], open: true },
-    { q: 'Qual a renda?', opts: ['Popular', 'Classe média', 'Média alta', 'Alta'], multi: true },
-    ...aberta('Descreva o seu melhor cliente: quem é, o que compra e por que volta', 'Por que ele é o melhor? O que tem de diferente dos outros?'),
-    { q: 'Quantas vezes por ano um cliente fiel compra?', opts: ['1 vez', '2 a 4 vezes', '5 a 12 vezes', 'Toda semana'] },
-    { q: 'Quanto um cliente fiel gasta no ano?', opts: ['Até R$ 500', 'R$ 500 a 2 mil', 'R$ 2 a 10 mil', 'Mais de R$ 10 mil'], money: 'gasto_ano_cliente' },
-    { q: 'O que faz a pessoa procurar vocês? (a dor ou o desejo)', opts: ['Resolver um problema urgente', 'Economizar', 'Se sentir bem', 'Status', 'Praticidade', 'Presentear'], multi: true },
-    ...aberta('Conte com as palavras do cliente: o que ele diz quando chega ou elogia?', 'O que um cliente diria sobre vocês para um amigo?'),
-    { q: 'O que mais pesa na compra?', opts: ['Preço', 'Qualidade', 'Rapidez', 'Atendimento', 'Experiência', 'Confiança na marca'], multi: true },
-    { q: 'O que faz ele desistir de comprar?', opts: ['Preço', 'Demora', 'Desconfiança', 'Não achou o que queria', 'Atendimento'], multi: true },
-    { q: 'Quando costuma comprar?', opts: ['Dia a dia', 'Fim de semana', 'À noite', 'No almoço', 'Datas especiais', 'Quando tem promoção'], multi: true },
-    { q: 'Onde ele passa o tempo online?', opts: ['Instagram', 'TikTok', 'Facebook', 'YouTube', 'WhatsApp', 'Google'], multi: true },
+    ...aberta('Pensa no cliente que, quando entra, você pensa "esse é o meu cliente". Como ele é, o que ele busca e por que escolhe vocês?', 'Me conta de um cliente real assim.'),
+    ...aberta('E qual cliente você queria ter mais e ainda não tem?', 'O que falta para ele chegar até vocês?'),
+    ...aberta('O que faz alguém procurar vocês? Qual problema ou vontade ele tem naquela hora?', 'O que um cliente diria sobre isso?'),
+    { q: 'Quando um cliente elogia, o que ele costuma dizer?', opts: [], open: true, kind: 'aberta' },
     ...aberta('E o cliente que dá trabalho e você não quer mais: como ele é?', 'Por que esse cliente não compensa?'),
     ...aberta('Por que um cliente deixou de comprar com vocês? Conte um caso', 'O que daria para ter feito diferente?'),
+    op('Quem mais compra?', ['Mulheres', 'Homens', 'Casais', 'Famílias com filhos', 'Jovens', 'Empresas'], { multi: true }),
+    op('Idade dos filhos dessas famílias?', ['Bebês', 'Crianças', 'Adolescentes'], { multi: true, when: W('Quem mais compra?', 'familias') }),
+    op('Que tipo de empresa compra?', ['Pequenos comércios', 'Indústrias', 'Escritórios', 'Órgão público', 'Construtoras'], { multi: true, when: W('Quem mais compra?', 'empresas') }),
+    op('Qual a faixa de idade que mais compra?', ['18 a 24', '25 a 34', '35 a 44', '45 a 59', '60 ou mais'], { multi: true }),
+    op('Qual a renda da maioria?', ['Popular', 'Classe média', 'Média alta', 'Alta']),
+    curta('De quais bairros ou cidades eles vêm?'),
+    curta('Até qual bairro ou distância vocês atendem ou entregam?'),
+    op('Quantas vezes por ano um cliente fiel compra?', ['1 vez', '2 a 4 vezes', '5 a 12 vezes', 'Toda semana']),
+    op('Quanto um cliente fiel gasta no ano?', ['Até R$ 500', 'R$ 500 a 2 mil', 'R$ 2 a 10 mil', 'Mais de R$ 10 mil'], { money: 'gasto_ano_cliente' }),
+    op('Onde ele passa o tempo online?', ['Instagram', 'TikTok', 'Facebook', 'YouTube', 'WhatsApp', 'Google'], { multi: true }),
   ],
   // Posicionamento + Diferenciais.
   posicionamento: [
-    { q: 'Por que escolhem vocês?', opts: ['Qualidade', 'Preço justo', 'Atendimento', 'Rapidez', 'Localização', 'Tradição', 'Produto exclusivo'], multi: true },
-    { q: 'Qualidade como? O que fazem diferente?', opts: ['Matéria-prima melhor', 'Feito à mão', 'Equipe especializada', 'Garantia', 'Tecnologia'], multi: true, when: W('Por que escolhem vocês?', 'qualidade') },
-    { q: 'Por que conseguem um preço melhor?', opts: ['Compra direto da fábrica', 'Produção própria', 'Custo baixo', 'Volume'], multi: true, when: W('Por que escolhem vocês?', 'preco') },
-    { q: 'O que tem de especial no atendimento?', opts: ['Responde rápido no WhatsApp', 'Pós-venda', 'Atendimento personalizado', 'Horário estendido', 'Conhece o cliente pelo nome'], multi: true, when: W('Por que escolhem vocês?', 'atendimento') },
+    ...aberta('Se um cliente fosse explicar para um amigo por que compra de vocês e não do concorrente, o que ele diria?', 'Me dá um exemplo real disso'),
+    op('Por que escolhem vocês?', ['Qualidade', 'Preço justo', 'Atendimento', 'Rapidez', 'Localização', 'Tradição', 'Produto exclusivo'], { multi: true }),
+    op('Qualidade como? O que fazem diferente?', ['Matéria-prima melhor', 'Feito à mão', 'Equipe especializada', 'Garantia', 'Tecnologia'], { multi: true, when: W('Por que escolhem vocês?', 'qualidade') }),
+    op('Por que conseguem um preço melhor?', ['Compra direto da fábrica', 'Produção própria', 'Custo baixo', 'Volume'], { multi: true, when: W('Por que escolhem vocês?', 'preco') }),
+    op('O que tem de especial no atendimento?', ['Responde rápido no WhatsApp', 'Pós-venda', 'Atendimento personalizado', 'Horário estendido', 'Conhece o cliente pelo nome'], { multi: true, when: W('Por que escolhem vocês?', 'atendimento') }),
     ...aberta('O que é exclusivo de vocês? Conte.', 'Desde quando é assim e por que ninguém copiou?', W('Por que escolhem vocês?', 'exclusivo')),
-    { q: 'O que o cliente mais elogia?', opts: ['Sabor/resultado', 'Ambiente', 'Equipe', 'Entrega', 'Variedade', 'Custo-benefício'], multi: true },
-    ...aberta('Para quem é, principalmente? (o cliente que vocês mais querem)', 'Por que esse cliente e não outro?'),
     ...aberta('Que problema vocês resolvem melhor que todo mundo?', 'Me dá um exemplo real de um cliente que teve isso resolvido'),
-    ...aberta('O que o cliente diria que vocês são? (a categoria)', 'E o que vocês gostariam que ele dissesse?'),
-    { q: 'Por que acreditar? Qual a prova?', opts: ['Anos de mercado', 'Clientes atendidos', 'Depoimentos', 'Avaliações no Google', 'Prêmios ou certificação', 'Garantia', 'Antes e depois', 'Ainda não tem'], multi: true },
-    { q: 'Contra quem competem de verdade?', opts: ['Concorrente direto', 'O cliente fazer sozinho', 'Não fazer nada', 'Loja online', 'Informal ou mais barato'], multi: true },
+    ...aberta('Para quem vocês são, principalmente? O cliente que vocês mais querem.', 'Por que esse cliente e não outro?'),
     ...aberta('O que o concorrente faz melhor que vocês? Seja sincero', 'Por que vocês ainda não fazem igual?'),
     ...aberta('Por que um cliente troca vocês pelo concorrente?', 'Me dá um exemplo real de quando isso aconteceu'),
-    ...aberta('Qual concorrente você admira e qual quer superar?', 'O que precisa acontecer para passar dele?'),
+    curta('Qual concorrente você admira?'),
+    curta('E qual você quer superar?'),
+    op('Que prova vocês têm?', ['Anos de mercado', 'Clientes atendidos', 'Depoimentos', 'Avaliações no Google', 'Prêmios ou certificação', 'Garantia', 'Antes e depois', 'Ainda não tem'], { multi: true }),
+    op('Contra quem competem de verdade?', ['Concorrente direto', 'O cliente fazer sozinho', 'Não fazer nada', 'Loja online', 'Informal ou mais barato'], { multi: true }),
     ...aberta('Em uma frase: o que só vocês fazem e ninguém mais na região?', 'Por que você acha que só vocês fazem isso?'),
   ],
-  // Jeito da marca = personalidade (arquétipo) + voz + proibidos.
+  // Jeito da marca = como fala + personalidade (arquétipo) + proibidos.
   voz: [
-    { q: 'Como a marca fala?', opts: ['Descontraída', 'Próxima, de amigo', 'Profissional', 'Sofisticada', 'Divertida', 'Acolhedora', 'Técnica'], multi: true },
-    { q: 'Até onde vai a brincadeira?', opts: ['Pode zoar e usar meme', 'Leve, sem exagero', 'Só no conteúdo, nunca no anúncio'], when: W('Como a marca fala?', 'descontraida', 'divertida', 'amigo') },
-    { q: 'O que passa autoridade para essa marca?', opts: ['Dados e números', 'Anos de experiência', 'Certificações', 'Clientes conhecidos', 'Resultados mostrados'], multi: true, when: W('Como a marca fala?', 'profissional', 'tecnica', 'sofisticada') },
-    { q: 'Como ela mostra cuidado com o cliente?', opts: ['Explica com calma', 'Pergunta como ele está', 'Acompanha depois da compra', 'Fala de família'], multi: true, when: W('Como a marca fala?', 'acolhedora') },
-    { q: 'Qual personalidade combina mais com a marca? (até 2)', opts: ['Cuidador (protege)', 'Herói (supera)', 'Sábio (ensina)', 'Explorador (aventura)', 'Criador (inova)', 'Governante (lidera)', 'Mago (transforma)', 'Inocente (simples e otimista)', 'Cara comum (igual a você)', 'Amante (prazer e beleza)', 'Bobo da corte (diversão)', 'Rebelde (quebra regras)'], multi: true },
-    { q: 'Usa gírias e emojis?', opts: ['Sim, bastante', 'Pouco', 'Não'] },
-    { q: 'Trata o cliente por', opts: ['Você', 'Vocês/galera', 'Senhor(a)', 'Pelo nome'] },
-    ...aberta('Uma marca famosa com o jeito que vocês querem ter (e por quê)', 'O que exatamente vocês admiram nela?'),
-    ...aberta('Uma marca que vocês NÃO querem parecer', 'Por que não? O que incomoda nela?'),
-    ...aberta('Palavras ou expressões que a marca SEMPRE usa', 'Onde essas palavras aparecem hoje? (atendimento, post, placa)'),
-    { q: 'Palavras que a marca NUNCA usa', opts: [], open: true },
+    op('Como a marca fala?', ['Descontraída', 'Próxima, de amigo', 'Profissional', 'Sofisticada', 'Divertida', 'Acolhedora', 'Técnica'], { multi: true }),
+    op('Até onde vai a brincadeira?', ['Pode zoar e usar meme', 'Leve, sem exagero', 'Só no conteúdo, nunca no anúncio'], { when: W('Como a marca fala?', 'descontraida', 'divertida', 'amigo') }),
+    op('O que passa autoridade para essa marca?', ['Dados e números', 'Anos de experiência', 'Certificações', 'Clientes conhecidos', 'Resultados mostrados'], { multi: true, when: W('Como a marca fala?', 'profissional', 'tecnica', 'sofisticada') }),
+    op('Como ela mostra cuidado com o cliente?', ['Explica com calma', 'Pergunta como ele está', 'Acompanha depois da compra', 'Fala de família'], { multi: true, when: W('Como a marca fala?', 'acolhedora') }),
+    ...aberta('Se a marca fosse uma pessoa entrando aqui agora, quem seria? Como ela fala, como se veste, como trata as pessoas?', 'Por que essa pessoa?'),
+    op('Qual personalidade combina mais? (até 2)', ['Cuidador (protege)', 'Herói (supera)', 'Sábio (ensina)', 'Explorador (aventura)', 'Criador (inova)', 'Governante (lidera)', 'Mago (transforma)', 'Inocente (simples e otimista)', 'Cara comum (igual a você)', 'Amante (prazer e beleza)', 'Bobo da corte (diversão)', 'Rebelde (quebra regras)'], { multi: true }),
+    ...aberta('Uma marca famosa com o jeito que vocês querem ter. Por quê?', 'O que exatamente vocês admiram nela?'),
+    ...aberta('Uma marca que vocês NÃO querem parecer. Por quê?', 'O que incomoda nela?'),
+    { q: 'Fala uma frase do jeito que a marca falaria no Instagram', opts: [], open: true, kind: 'aberta' },
+    curta('Palavras ou expressões que a marca sempre usa'),
+    curta('Palavras que a marca nunca usa'),
+    op('Usa gírias e emojis?', ['Sim, bastante', 'Pouco', 'Não']),
+    op('Trata o cliente por', ['Você', 'Vocês/galera', 'Senhor(a)', 'Pelo nome']),
     ...aberta('O que você nunca faria, mesmo que vendesse muito?', 'Por que isso é inegociável?'),
-    { q: 'Escreva (ou fale) uma frase do jeito que a marca diria no Instagram', opts: [], open: true },
     ...PROIBIDOS,
   ],
   quem_aparece: [
-    { q: 'Quem pode aparecer nos vídeos?', opts: ['O dono', 'A equipe', 'Clientes', 'Só as mãos/produto', 'Ninguém (só produto)'], multi: true },
-    { q: 'O dono fica à vontade na câmera?', opts: ['Muito, fala solto', 'Mais ou menos', 'Precisa de roteiro', 'Prefere não falar'], when: W('Quem pode aparecer nos vídeos?', 'dono') },
-    ...aberta('Quantas pessoas da equipe topam aparecer? Quem se destaca?', 'Por que essa pessoa se destaca? O que ela tem?', W('Quem pode aparecer nos vídeos?', 'equipe')),
-    { q: 'Tem clientes que topam gravar depoimento?', opts: ['Sim, vários', 'Uns 2 ou 3', 'Preciso perguntar'], when: W('Quem pode aparecer nos vídeos?', 'clientes') },
+    op('Quem pode aparecer nos vídeos?', ['O dono', 'A equipe', 'Clientes', 'Só as mãos/produto', 'Ninguém (só produto)'], { multi: true }),
+    op('O dono fica à vontade na câmera?', ['Muito, fala solto', 'Mais ou menos', 'Precisa de roteiro', 'Prefere não falar'], { when: W('Quem pode aparecer nos vídeos?', 'dono') }),
+    num('Quantas pessoas da equipe topam aparecer?', { when: W('Quem pode aparecer nos vídeos?', 'equipe') }),
+    ...aberta('Quem da equipe se destaca na câmera? Por quê?', 'Me conta um momento em que essa pessoa brilhou', W('Quem pode aparecer nos vídeos?', 'equipe')),
+    op('Tem clientes que topam gravar depoimento?', ['Sim, vários', 'Uns 2 ou 3', 'Preciso perguntar'], { when: W('Quem pode aparecer nos vídeos?', 'clientes') }),
   ],
   quem_grava: [
-    { q: 'Quem grava?', opts: ['Ellcazo', 'O próprio cliente', 'A equipe do cliente', 'Misto'], multi: true },
-    { q: 'Com que aparelho?', opts: ['Celular bom', 'Celular simples', 'Câmera'], when: W('Quem grava?', 'proprio', 'equipe', 'misto') },
-    { q: 'Com que frequência dá para gravar?', opts: ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar'] },
-    { q: 'Melhor dia e horário para gravar sem atrapalhar o movimento?', opts: [], open: true },
-    { q: 'Onde dá para gravar? Como é a luz e o barulho do lugar?', opts: ['Tem bom espaço', 'Luz natural boa', 'Lugar barulhento', 'Espaço pequeno', 'Gravar fora'], multi: true },
+    op('Quem grava?', ['Ellcazo', 'O próprio cliente', 'A equipe do cliente', 'Misto'], { multi: true }),
+    op('Com que aparelho?', ['Celular bom', 'Celular simples', 'Câmera'], { when: W('Quem grava?', 'proprio', 'equipe', 'misto') }),
+    op('Com que frequência dá para gravar?', ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar']),
+    curta('Melhor dia e horário para gravar sem atrapalhar o movimento?'),
+    op('Onde dá para gravar? Como é o lugar?', ['Tem bom espaço', 'Luz natural boa', 'Lugar barulhento', 'Espaço pequeno', 'Gravar fora'], { multi: true }),
   ],
   // Momento e futuro = SWOT + visão + capacidade de atendimento.
   momento: [
-    ...aberta('O que a empresa faz muito bem hoje? (os pontos fortes)'),
-    { q: 'O que não está bom hoje?', opts: ['Poucos clientes novos', 'Cliente não volta', 'Preço pressionado', 'Equipe', 'Atendimento lento', 'Marca pouco conhecida', 'Redes sociais paradas'], multi: true },
-    ...aberta('Conte mais sobre o que não está bom: desde quando e por quê?', 'O que já tentaram para resolver?'),
-    { q: 'Como está o movimento hoje?', opts: ['Crescendo', 'Estável', 'Caindo', 'Sazonal (oscila)'] },
-    ...aberta('Por que está caindo, na sua visão?', 'Por que você acha isso? O que mudou?', W('Como está o movimento hoje?', 'caindo')),
-    { q: 'Quanto fatura por mês, mais ou menos?', opts: ['Até R$ 20 mil', 'R$ 20 a 50 mil', 'R$ 50 a 150 mil', 'R$ 150 a 500 mil', 'Mais de R$ 500 mil'], money: 'faturamento_mes' },
-    { q: 'Quanto o cliente gasta em média por compra? (ticket médio)', opts: ['Até R$ 50', 'R$ 50 a 150', 'R$ 150 a 500', 'R$ 500 a 2 mil', 'Mais de R$ 2 mil'], money: 'ticket_medio' },
-    { q: 'Quanto dá para atender por dia?', opts: ['Até 20', '20 a 50', '50 a 100', 'Mais de 100'] },
-    { q: 'Qual o gargalo?', opts: ['Cozinha/produção', 'Atendimento', 'Entrega', 'Espaço', 'Agenda', 'Nenhum'], multi: true },
-    { q: 'Quantos horários livres por semana, e em quais dias?', opts: [], open: true, when: W('Qual o gargalo?', 'agenda') },
-    { q: 'Quantas pessoas atendem o WhatsApp e em que horário?', opts: [], open: true, when: W('Qual o gargalo?', 'atendimento') },
-    { q: 'Onde a empresa quer estar em 3 anos?', opts: ['Mais unidades', 'Referência na região', 'Vender para o Brasil todo', 'Lançar produto novo', 'Franquia', 'Crescer a equipe'], multi: true },
-    ...aberta('E nos próximos 12 meses: o que precisa acontecer para ser um ano bom?', 'Como você vai saber que deu certo? Que número?'),
-    { q: 'O que impede de chegar lá hoje?', opts: ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Processo bagunçado', 'Marca pouco conhecida'], multi: true },
-    ...aberta('Que oportunidade vocês veem no mercado agora?', 'Por que você acha que ninguém aproveitou ainda?'),
+    ...aberta('O que a empresa faz muito bem hoje?'),
+    ...aberta('E o que não está bom hoje? Desde quando?', 'O que já tentaram para resolver?'),
+    op('Como está o movimento hoje?', ['Crescendo', 'Estável', 'Caindo', 'Sazonal (oscila)']),
+    ...aberta('Por que está caindo, na sua visão?', 'O que mudou de lá para cá?', W('Como está o movimento hoje?', 'caindo')),
+    ...aberta('Daqui a 12 meses, o que precisa ter acontecido para você dizer que foi um ano bom?', 'Como você vai saber que deu certo? Que número?'),
+    op('Onde a empresa quer estar em 3 anos?', ['Mais unidades', 'Referência na região', 'Vender para o Brasil todo', 'Lançar produto novo', 'Franquia', 'Crescer a equipe'], { multi: true }),
+    op('O que impede de chegar lá hoje?', ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Processo bagunçado', 'Marca pouco conhecida'], { multi: true }),
     ...aberta('Se a verba fosse ilimitada, o que faria amanhã?', 'E qual pedaço disso dá para começar pequeno, já?'),
     ...aberta('Tem projeto parado esperando dinheiro ou tempo?', 'O que falta exatamente para destravar?'),
-    ...aberta('O que preocupa (ameaças: concorrente novo, preço, crise)?', 'Já aconteceu algo assim? O que fizeram?'),
-    { q: 'O que seria um sucesso absoluto com a Peformake em 12 meses?', opts: [], open: true },
+    ...aberta('Que oportunidade vocês veem no mercado agora?', 'Por que você acha que ninguém aproveitou ainda?'),
+    ...aberta('O que mais te preocupa: concorrente novo, preço, crise?', 'Já aconteceu algo assim? O que fizeram?'),
+    op('Quanto fatura por mês, mais ou menos?', ['Até R$ 20 mil', 'R$ 20 a 50 mil', 'R$ 50 a 150 mil', 'R$ 150 a 500 mil', 'Mais de R$ 500 mil'], { money: 'faturamento_mes' }),
+    op('Quanto o cliente gasta em média por compra?', ['Até R$ 50', 'R$ 50 a 150', 'R$ 150 a 500', 'R$ 500 a 2 mil', 'Mais de R$ 2 mil'], { money: 'ticket_medio' }),
+    num('Quantos clientes, pedidos ou horários dá para atender por dia?'),
+    op('Qual o gargalo?', ['Cozinha/produção', 'Atendimento', 'Entrega', 'Espaço', 'Agenda', 'Nenhum'], { multi: true }),
+    num('Quantos horários livres por semana?', { when: W('Qual o gargalo?', 'agenda') }),
+    num('Quantas pessoas atendem o WhatsApp?', { when: W('Qual o gargalo?', 'atendimento') }),
+    { q: 'O que seria um sucesso absoluto com a Peformake em 12 meses?', opts: [], open: true, kind: 'aberta' },
   ],
   // Propósito e história.
   proposito: [
-    { q: 'Por que a empresa existe, além de ganhar dinheiro?', opts: ['Facilitar a vida das pessoas', 'Cuidar da saúde e do bem-estar', 'Trazer alegria', 'Dar acesso a quem não tinha', 'Valorizar a região', 'Transformar vidas'], multi: true },
-    { q: 'Como a empresa nasceu?', opts: ['Paixão do dono', 'Viu uma necessidade', 'Negócio de família', 'Oportunidade de mercado', 'Virada de vida'] },
+    ...aberta('Por que a empresa existe, além de ganhar dinheiro?', 'Me dá um exemplo real de quando isso apareceu'),
+    op('Como a empresa nasceu?', ['Paixão do dono', 'Viu uma necessidade', 'Negócio de família', 'Oportunidade de mercado', 'Virada de vida']),
     ...aberta('Quantas gerações e o que se mantém desde o começo?', 'Por que isso nunca mudou?', W('Como a empresa nasceu?', 'familia')),
-    { q: 'Há quanto tempo existem?', opts: ['Menos de 1 ano', '1 a 3 anos', '3 a 10 anos', 'Mais de 10 anos'] },
     ...aberta('Conte o começo: quem, onde e o momento da virada', 'Lembra de um detalhe desse dia? (lugar, frase, sensação)'),
     ...aberta('Um cliente ou caso que marcou a história', 'O que esse cliente diria sobre vocês?'),
-    { q: 'Conquistas que dão orgulho', opts: ['Prêmio', 'Nova unidade', 'Cliente grande', 'Marca de vendas', 'Reconhecimento na mídia'], multi: true },
     ...aberta('O que mudaria na vida das pessoas se a empresa fechasse amanhã?', 'Por que você acha isso?'),
-    ...aberta('Como vocês fazem isso de um jeito diferente (o "como")?', 'Me dá um exemplo real do dia a dia'),
+    ...aberta('Como vocês fazem isso de um jeito diferente?', 'Me dá um exemplo real do dia a dia'),
     ...aberta('Quais valores vocês não negociam?', 'Me dá um exemplo real de quando isso custou caro e vocês mantiveram'),
     ...aberta('Do que a equipe mais se orgulha?', 'O que um cliente diria sobre isso?'),
     ...aberta('Quem na equipe tem uma história boa para contar?', 'Qual é a história? Conte um pedaço'),
-    { q: 'Em uma frase: qual é a missão?', opts: [], open: true },
+    op('Há quanto tempo existem?', ['Menos de 1 ano', '1 a 3 anos', '3 a 10 anos', 'Mais de 10 anos']),
+    op('Conquistas que dão orgulho', ['Prêmio', 'Nova unidade', 'Cliente grande', 'Marca de vendas', 'Reconhecimento na mídia'], { multi: true }),
+    { q: 'Em uma frase: qual é a missão?', opts: [], open: true, kind: 'aberta' },
   ],
   percepcao: [
-    { q: 'Como a marca QUER ser vista?', opts: ['A mais confiável', 'A mais moderna', 'A de melhor preço', 'A mais premium', 'A mais próxima', 'A especialista', 'A mais divertida'], multi: true },
-    { q: 'E como você acha que ela É vista hoje?', opts: ['A mais confiável', 'A mais moderna', 'A de melhor preço', 'A mais premium', 'A mais próxima', 'A especialista', 'Pouco conhecida'], multi: true },
+    ...aberta('Quando alguém fala de vocês para um amigo, o que você queria que ele dissesse?', 'Por que isso importa para vocês?'),
+    ...aberta('E o que você acha que falam hoje?', 'O que um cliente diria sobre isso?'),
     ...aberta('O que falta para sair de como é vista para como quer ser vista?', 'Por que você acha que ainda não chegou lá?'),
-    { q: 'Quem compra quer se sentir como?', opts: ['Esperto', 'Cuidado', 'Especial', 'Moderno', 'Seguro', 'Parte de um grupo'], multi: true },
-    { q: 'Que relação a marca tem com o cliente?', opts: ['Amiga', 'Professora', 'Parceira', 'Cuidadora', 'Inspiradora'] },
-    { q: 'Visual: que estilo representa a marca?', opts: ['Cores vivas', 'Tons neutros', 'Escuro e elegante', 'Natural', 'Minimalista', 'Cheio de energia'], multi: true },
-    ...aberta('3 palavras que as pessoas devem lembrar ao ver a marca', 'O que um cliente diria sobre isso?'),
+    op('Como a marca QUER ser vista?', ['A mais confiável', 'A mais moderna', 'A de melhor preço', 'A mais premium', 'A mais próxima', 'A especialista', 'A mais divertida'], { multi: true }),
+    op('Quem compra quer se sentir como?', ['Esperto', 'Cuidado', 'Especial', 'Moderno', 'Seguro', 'Parte de um grupo'], { multi: true }),
+    op('Que relação a marca tem com o cliente?', ['Amiga', 'Professora', 'Parceira', 'Cuidadora', 'Inspiradora']),
+    op('Visual: que estilo representa a marca?', ['Cores vivas', 'Tons neutros', 'Escuro e elegante', 'Natural', 'Minimalista', 'Cheio de energia'], { multi: true }),
+    curta('3 palavras que as pessoas devem lembrar ao ver a marca'),
   ],
-  // Como o cliente compra = jornada + objeções.
+  // Como o cliente compra = jornada + objeções + atendimento.
   jornada: [
-    { q: 'Como o cliente descobre vocês?', opts: ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace'], multi: true },
+    ...aberta('Conta como é a compra, do primeiro contato até o cliente sair satisfeito', 'Onde ele mais trava nesse caminho?'),
+    op('Como o cliente descobre vocês?', ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace'], { multi: true }),
     ...aberta('Mais ou menos quanto vem de cada canal?', 'Como vocês sabem disso? (perguntam, cupom, palpite)'),
-    { q: 'Qual canal traz o cliente que mais compra ou volta?', opts: ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace'] },
-    { q: 'Quem mais indica vocês?', opts: ['Clientes', 'Parceiros', 'Profissionais da área', 'Ninguém em especial'], multi: true },
-    { q: 'O que ele faz antes de comprar?', opts: ['Compara preço', 'Pede indicação', 'Olha avaliações', 'Visita o perfil', 'Pergunta no WhatsApp', 'Visita a loja'], multi: true },
-    { q: 'Quanto tempo do primeiro contato até comprar?', opts: ['Na hora', 'No mesmo dia', 'Alguns dias', 'Semanas', 'Meses'] },
-    ...aberta('Quem responde o WhatsApp e em quanto tempo, em média?', 'E fora do horário, o que acontece?'),
+    op('Qual canal traz o cliente que mais compra ou volta?', ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace']),
+    op('Quem mais indica vocês?', ['Clientes', 'Parceiros', 'Profissionais da área', 'Ninguém em especial'], { multi: true }),
+    op('O que ele faz antes de comprar?', ['Compara preço', 'Pede indicação', 'Olha avaliações', 'Visita o perfil', 'Pergunta no WhatsApp', 'Visita a loja'], { multi: true }),
+    op('Quanto tempo do primeiro contato até comprar?', ['Na hora', 'No mesmo dia', 'Alguns dias', 'Semanas', 'Meses']),
     ...aberta('Qual a frase ou pergunta que mais fecha venda?', 'Por que você acha que ela funciona?'),
-    { q: 'Têm meta por vendedor? Usam sistema ou CRM?', opts: ['Meta por vendedor', 'Usam CRM ou sistema', 'Só planilha', 'Nada disso'], multi: true },
-    { q: 'Quais formas de pagamento aceitam?', opts: ['Pix', 'Cartão de crédito', 'Parcelado', 'Dinheiro', 'Boleto', 'Link de pagamento'], multi: true },
-    { q: 'Qual o horário de funcionamento (e de atendimento no WhatsApp)?', opts: [], open: true },
-    { q: 'Tem garantia, troca ou devolução? Como funciona?', opts: ['Garantia', 'Troca', 'Devolução', 'Não tem'], multi: true },
-    { q: 'Qual a margem do produto principal?', opts: ['Até 20%', '20% a 40%', '40% a 60%', 'Mais de 60%', 'Não sei'], money: 'margem_principal' },
-    { q: 'O que o cliente mais pergunta antes de comprar?', opts: ['Preço', 'Prazo', 'Garantia', 'Forma de pagamento', 'Se funciona', 'Onde fica'], multi: true },
-    { q: 'O que ele fala quando não fecha?', opts: ['Tá caro', 'Vou pensar', 'Vou ver com alguém', 'Depois eu volto', 'Achei mais barato'], multi: true },
+    op('O que o cliente mais pergunta antes de comprar?', ['Preço', 'Prazo', 'Garantia', 'Forma de pagamento', 'Se funciona', 'Onde fica'], { multi: true }),
+    op('O que ele fala quando não fecha?', ['Tá caro', 'Vou pensar', 'Vou ver com alguém', 'Depois eu volto', 'Achei mais barato'], { multi: true }),
     ...aberta('Como vocês respondem hoje ao "tá caro"?', 'E funciona? O que o cliente responde?', W('O que ele fala quando não fecha?', 'caro', 'barato')),
     ...aberta('Qual o medo do cliente na hora de comprar?', 'O que um cliente diria sobre isso?'),
-    ...aberta('Que "trabalho" o cliente contrata quando compra de vocês? (o que ele quer resolver de verdade)', 'Me dá um exemplo real de um cliente'),
-    { q: 'Quanto tempo leva do pedido à entrega (ou ao resultado)?', opts: [], open: true },
-    { q: 'Depois de comprar ele volta ou indica?', opts: ['Volta todo mês', 'Volta às vezes', 'Compra uma vez', 'Indica muito'], multi: true },
-    { q: 'Fazem pós-venda ou pedem indicação? Como?', opts: ['Mensagem de agradecimento', 'Pede avaliação', 'Pede indicação', 'Cupom para voltar', 'Acompanha o resultado', 'Nada ainda'], multi: true },
+    ...aberta('No fundo, o que o cliente quer resolver quando compra de vocês?', 'Me dá um exemplo real de um cliente'),
+    curta('Quem responde o WhatsApp?'),
+    op('Em quanto tempo, em média, respondem?', ['Na hora', 'Até 30 minutos', 'Algumas horas', 'No outro dia']),
+    curta('Qual o horário de funcionamento (e de atendimento no WhatsApp)?'),
+    op('Quais formas de pagamento aceitam?', ['Pix', 'Cartão de crédito', 'Parcelado', 'Dinheiro', 'Boleto', 'Link de pagamento'], { multi: true }),
+    op('Tem garantia, troca ou devolução?', ['Garantia', 'Troca', 'Devolução', 'Não tem'], { multi: true }),
+    curta('Quanto tempo do pedido à entrega (ou ao resultado)?'),
+    op('Têm meta por vendedor?', ['Sim', 'Não', 'Só eu vendo']),
+    op('Usam sistema ou CRM para as vendas?', ['CRM ou sistema', 'Planilha', 'Caderno', 'Nada']),
+    op('Qual a margem do produto principal?', ['Até 20%', '20% a 40%', '40% a 60%', 'Mais de 60%', 'Não sei'], { money: 'margem_principal' }),
+    op('Depois de comprar ele volta ou indica?', ['Volta todo mês', 'Volta às vezes', 'Compra uma vez', 'Indica muito'], { multi: true }),
+    op('Fazem pós-venda ou pedem indicação?', ['Mensagem de agradecimento', 'Pede avaliação', 'Pede indicação', 'Cupom para voltar', 'Acompanha o resultado', 'Nada ainda'], { multi: true }),
   ],
   // Novo (Italo, 20/11): o que já foi feito, o que deu certo e a verba (dinheiro só para admin).
   marketing: [
-    { q: 'O que já fizeram de marketing?', opts: ['Anúncio no Instagram/Facebook', 'Google Ads', 'Influenciador', 'Outra agência ou assessoria', 'Panfleto, rádio ou outdoor', 'Só postar no Instagram', 'Nada ainda'], multi: true },
-    { q: 'Quem fazia os anúncios?', opts: ['O dono', 'Alguém da equipe', 'Agência ou assessoria', 'Freelancer'], multi: true, when: W('O que já fizeram de marketing?', 'anuncio', 'google') },
-    ...aberta('Como foi com a outra agência: quanto tempo e por que saiu?', 'O que ela fazia que você gostaria que continuasse?', W('O que já fizeram de marketing?', 'agencia')),
-    ...aberta('Que influenciador e qual foi o resultado?', 'Quanto vendeu ou quantos clientes vieram?', W('O que já fizeram de marketing?', 'influenciador')),
+    ...aberta('Conta o que vocês já fizeram de marketing até hoje e o que você achou de cada coisa', 'Qual foi a maior decepção? Por quê?'),
+    op('O que já fizeram?', ['Anúncio no Instagram/Facebook', 'Google Ads', 'Influenciador', 'Outra agência ou assessoria', 'Panfleto, rádio ou outdoor', 'Só postar no Instagram', 'Nada ainda'], { multi: true }),
+    op('Quem fazia os anúncios?', ['O dono', 'Alguém da equipe', 'Agência ou assessoria', 'Freelancer'], { multi: true, when: W('O que já fizeram?', 'anuncio', 'google') }),
+    ...aberta('Como foi com a outra agência e por que saiu?', 'O que ela fazia que você gostaria que continuasse?', W('O que já fizeram?', 'agencia')),
+    ...aberta('Que influenciador e qual foi o resultado?', 'Quanto vendeu ou quantos clientes vieram?', W('O que já fizeram?', 'influenciador')),
     ...aberta('O que funcionou melhor até hoje?', 'Por que você acha que funcionou?'),
     ...aberta('O que não funcionou?', 'Por que você acha que não deu certo?'),
     ...aberta('Qual post ou vídeo mais deu resultado até hoje?', 'Por que você acha que ele funcionou?'),
-    ...aberta('Qual a nota no Google e o que mais aparece nas avaliações?', 'O que um cliente diria sobre isso?'),
+    num('Qual a nota no Google?'),
+    ...aberta('O que mais aparece nas avaliações?', 'O que um cliente diria sobre isso?'),
     ...aberta('Já tiveram crise ou reclamação pública? Como resolveram?', 'O que aprenderam com isso?'),
-    { q: 'Existe comunidade, grupo ou evento de clientes?', opts: ['Grupo no WhatsApp', 'Clube ou fidelidade', 'Evento para clientes', 'Ainda não'], multi: true },
+    op('Existe comunidade, grupo ou evento de clientes?', ['Grupo no WhatsApp', 'Clube ou fidelidade', 'Evento para clientes', 'Ainda não'], { multi: true }),
     ...aberta('Com quais negócios vizinhos ou parceiros dá para fazer ação juntos?', 'Já fizeram algo juntos? Como foi?'),
     ...aberta('Tem influenciador, cliente famoso ou líder local que já é fã?', 'Como ele conheceu vocês?'),
-    { q: 'Como vocês sabem se uma ação deu resultado?', opts: ['Pergunta como conheceu', 'Cupom ou código', 'Relatório da agência', 'Movimento na loja', 'Não medimos'], multi: true },
-    { q: 'Quanto dá para investir em anúncio por mês?', opts: ['Até R$ 500', 'R$ 500 a 1.500', 'R$ 1.500 a 3 mil', 'R$ 3 a 10 mil', 'Mais de R$ 10 mil', 'Ainda não sei'], money: 'verba_anuncio' },
-    { q: 'Tem conteúdo pronto que dá para reaproveitar?', opts: ['Fotos', 'Vídeos', 'Depoimentos', 'Posts antigos que foram bem', 'Não tem'], multi: true },
+    op('Como vocês sabem se uma ação deu resultado?', ['Pergunta como conheceu', 'Cupom ou código', 'Relatório da agência', 'Movimento na loja', 'Não medimos'], { multi: true }),
+    op('Quanto dá para investir em anúncio por mês?', ['Até R$ 500', 'R$ 500 a 1.500', 'R$ 1.500 a 3 mil', 'R$ 3 a 10 mil', 'Mais de R$ 10 mil', 'Ainda não sei'], { money: 'verba_anuncio' }),
+    op('Tem conteúdo pronto que dá para reaproveitar?', ['Fotos', 'Vídeos', 'Depoimentos', 'Posts antigos que foram bem', 'Não tem'], { multi: true }),
   ],
   // Novo: identidade visual e acessos (nunca pedir senha aqui).
   marca: [
-    { q: 'Tem logo em arquivo?', opts: ['Sim, em boa qualidade (PDF, PNG, vetor)', 'Só uma imagem simples', 'Não tem logo'] },
-    { q: 'A marca tem cores definidas?', opts: ['Sim, com o código (ex.: #1FC8DB)', 'Sim, mas sem o código', 'Ainda não'] },
-    { q: 'Quais são as cores? (nomes ou códigos)', opts: [], open: true, when: W('A marca tem cores definidas?', 'sim') },
-    ...aberta('Como as pessoas reconhecem a marca hoje? (uma cor, um desenho, uma frase, a fachada)', 'O que um cliente diria sobre isso?'),
-    { q: 'Tem fonte (tipo de letra) definida?', opts: ['Sim, sei o nome', 'Sim, mas não sei o nome', 'Não'] },
-    { q: 'Tem manual da marca?', opts: ['Sim', 'Não', 'Não sei'] },
-    { q: 'Tem fotos boas?', opts: ['Dos produtos', 'Do espaço', 'Da equipe', 'Do dono', 'Não tem fotos boas'], multi: true },
-    { q: 'Que acessos a Peformake já tem?', opts: ['Instagram', 'Facebook', 'Gerenciador de anúncios (Meta)', 'Google Meu Negócio', 'Google Ads', 'Site', 'Nenhum ainda'], multi: true },
-    { q: 'Para onde o anúncio deve levar o cliente?', opts: ['WhatsApp', 'Site ou loja online', 'Instagram', 'Ligação', 'Ir até a loja'], multi: true },
-    { q: 'O site tem pixel da Meta ou tag do Google instalados?', opts: ['Sim', 'Não', 'Não sei', 'Não tem site'] },
-    { q: 'Quem é o dono das contas?', opts: ['O dono da empresa', 'Alguém da equipe', 'A agência antiga', 'Não sei'], multi: true },
+    ...aberta('Como as pessoas reconhecem a marca hoje? Uma cor, um desenho, uma frase, a fachada?', 'O que um cliente diria sobre isso?'),
+    op('Tem logo em arquivo?', ['Sim, em boa qualidade (PDF, PNG, vetor)', 'Só uma imagem simples', 'Não tem logo']),
+    op('A marca tem cores definidas?', ['Sim, com o código (ex.: #1FC8DB)', 'Sim, mas sem o código', 'Ainda não']),
+    curta('Quais são as cores? (nomes ou códigos)', { when: W('A marca tem cores definidas?', 'sim') }),
+    op('Tem fonte (tipo de letra) definida?', ['Sim, sei o nome', 'Sim, mas não sei o nome', 'Não']),
+    op('Tem manual da marca?', ['Sim', 'Não', 'Não sei']),
+    op('Tem fotos boas?', ['Dos produtos', 'Do espaço', 'Da equipe', 'Do dono', 'Não tem fotos boas'], { multi: true }),
+    op('Que acessos a Peformake já tem?', ['Instagram', 'Facebook', 'Gerenciador de anúncios (Meta)', 'Google Meu Negócio', 'Google Ads', 'Site', 'Nenhum ainda'], { multi: true }),
+    op('Para onde o anúncio deve levar o cliente?', ['WhatsApp', 'Site ou loja online', 'Instagram', 'Ligação', 'Ir até a loja'], { multi: true }),
+    op('O site tem pixel da Meta ou tag do Google instalados?', ['Sim', 'Não', 'Não sei', 'Não tem site']),
+    op('Quem é o dono das contas?', ['O dono da empresa', 'Alguém da equipe', 'A agência antiga', 'Não sei'], { multi: true }),
     ...aberta('Falta algum acesso? Qual e com quem está?', 'O que precisa para liberar? (quem, até quando)', W('Quem é o dono das contas?', 'agencia', 'nao sei', 'equipe')),
   ],
 }

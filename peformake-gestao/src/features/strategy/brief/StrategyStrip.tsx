@@ -93,7 +93,8 @@ export function StepCard({ title, line, action, onOpen, onTitle, primary, disabl
     <div className="flex items-center gap-3 rounded-2xl border border-line bg-surface px-3 py-2.5">
       <button type="button" disabled={disabled} onClick={onTitle ?? onOpen} className="flex min-h-11 min-w-0 flex-1 cursor-pointer flex-col justify-center overflow-hidden text-left disabled:cursor-default">
         <b className="block w-full truncate text-[14px] font-semibold">{title}</b>
-        <span className="block w-full truncate text-[12.5px] text-muted">{line}</span>
+        {/* No celular só o título e o botão (Italo, 20/11: "poluído"); a situação fica no computador. */}
+        <span data-linha className="block w-full truncate text-[12.5px] text-muted max-sm:hidden">{line}</span>
       </button>
       <Button data-acao variant={primary ? 'primary' : 'secondary'} disabled={disabled} className="min-h-10 shrink-0 px-4 text-[13px]" onClick={onOpen}>{action}</Button>
       {extra}
