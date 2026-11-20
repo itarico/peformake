@@ -19,7 +19,7 @@ const when = (iso: string) => new Date(iso).toLocaleDateString('pt-BR', { day: '
  * Portal → Briefing: o cliente revisa o que a Peformake já sabe e completa o que falta, com os mesmos guias da equipe
  * (opções, "Outro", perguntas abertas por texto ou fala, e perguntas que aprofundam conforme a resposta).
  */
-export function PortalBriefing({ token, month, brief, onDone }: { token: string; month: string; brief: PortalBrief; onDone: () => void }) {
+export function PortalBriefing({ token, month, brief, onDone, onChat }: { token: string; month: string; brief: PortalBrief; onDone: () => void; onChat: () => void }) {
   const qc = useQueryClient()
   const f = brief.data
   const [open, setOpen] = useState<Open | null>(null)
@@ -47,7 +47,6 @@ export function PortalBriefing({ token, month, brief, onDone }: { token: string;
     momento: { kind: 'text', key: 'momento' }, proposito: { kind: 'text', key: 'proposito' }, percepcao: { kind: 'text', key: 'percepcao' }, posicionamento: { kind: 'text', key: 'posicionamento' },
   }
   const todo = fixedStatus(f).checks.filter((c) => !c.done).sort((a, b) => b.weight - a.weight).map((c) => STEP[c.key]).filter((x): x is Open => !!x)
-  const startGuide = () => { if (!todo.length) return; setGuide({ steps: todo, i: 0 }); setOpen(todo[0]!) }
 
   const prods = f.produtos ?? []
   const links = linkList(f)
@@ -67,7 +66,7 @@ export function PortalBriefing({ token, month, brief, onDone }: { token: string;
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {todo.length > 0 && <Button data-completar onClick={startGuide}><ListChecks size={16} aria-hidden="true" /> Completar o que falta</Button>}
+          {todo.length > 0 && <Button data-completar onClick={onChat}><ListChecks size={16} aria-hidden="true" /> Completar o que falta</Button>}
           {brief.percent >= BRIEF_REQUIRED && <Button variant="secondary" onClick={onDone}>Ir para as perguntas</Button>}
           <button type="button" onClick={() => setAll((v) => !v)} className="min-h-10 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{all ? 'Só o que falta' : 'Ver e revisar tudo'}</button>
         </div>

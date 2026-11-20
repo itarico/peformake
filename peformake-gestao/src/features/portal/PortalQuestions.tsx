@@ -18,7 +18,7 @@ const asClientQuestion = (q: PortalQuestion): ClientQuestion => ({
  * Portal → Perguntas do mês: uma por vez, por toque, texto, áudio ou arquivo. A subpergunta só aparece quando a resposta
  * da pergunta anterior pede (ex.: "Motos" abre "novas ou seminovas?").
  */
-export function PortalQuestions({ token, month, brief }: { token: string; month: string; brief: PortalBrief }) {
+export function PortalQuestions({ token, month, brief, onChat }: { token: string; month: string; brief: PortalBrief; onChat: () => void }) {
   const qc = useQueryClient()
   const shown = visibleQuestions(brief.questions)
   const open = shown.filter((q) => q.status !== 'respondida')
@@ -46,7 +46,6 @@ export function PortalQuestions({ token, month, brief }: { token: string; month:
       goNext(fresh?.questions ?? [], skipped)
     },
   })
-  const start = () => { setRun(true); setSkipped([]); const first = open[0]; if (first) setCur(first.id) }
   const skip = () => { const s = [...skipped, cur!]; setSkipped(s); goNext(brief.questions, s) }
   const mes = monthName(month.slice(0, 7))
 
@@ -65,7 +64,7 @@ export function PortalQuestions({ token, month, brief }: { token: string; month:
           <span className="block text-[13px] text-muted">{open.length ? `${done} de ${shown.length} respondidas. Uma por vez, com um toque, texto ou áudio.` : 'Se quiser ajustar alguma, toque nela.'}</span>
           <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-raised" aria-hidden="true"><span className="block h-full rounded-full bg-accent" style={{ width: `${(done / shown.length) * 100}%` }} /></span>
         </div>
-        {open.length > 0 && <Button data-responder onClick={start}><MessageCircle size={16} aria-hidden="true" /> {done ? 'Continuar' : 'Responder'}</Button>}
+        {open.length > 0 && <Button data-responder onClick={onChat}><MessageCircle size={16} aria-hidden="true" /> {done ? 'Continuar' : 'Responder'}</Button>}
       </div>
       <ul className="flex flex-col gap-1.5">
         {shown.map((x) => (

@@ -14,7 +14,7 @@ const SpeechCtor = (): (new () => SpeechRec) | null => {
  * Botão de gravar: o texto aparece AO VIVO enquanto fala (Italo, 20/11) e, ao parar, a transcrição do servidor confere e
  * corrige. Se o servidor falhar, fica o texto ao vivo. O áudio não fica guardado.
  */
-export function VoiceNote({ onText, onLive, autoStart, className }: { onText: (text: string) => void; onLive?: (text: string) => void; autoStart?: boolean; className?: string }) {
+export function VoiceNote({ onText, onLive, autoStart, className, big }: { onText: (text: string) => void; onLive?: (text: string) => void; autoStart?: boolean; className?: string; big?: boolean }) {
   // Equipe: voice-transcribe. Portal do cliente: transcrição pelo código do link (TranscriberCtx).
   const transcribe = useTranscriber()
   const rec = useRef<MediaRecorder | null>(null)
@@ -87,6 +87,18 @@ export function VoiceNote({ onText, onLive, autoStart, className }: { onText: (t
   // Escolheu "Falar" na tela anterior: já começa gravando.
   const auto = useRef(false)
   useEffect(() => { if (autoStart && !auto.current) { auto.current = true; void start() } })
+
+  // Microfone grande (conversa do portal, Italo 20/11): o jeito principal de responder.
+  if (big) return (
+    <span className={cn('flex flex-col items-center gap-1.5', className)}>
+      <button type="button" data-microfone onClick={state === 'rec' ? stop : () => void start()} disabled={state === 'busy'} aria-label={state === 'rec' ? 'Parar de gravar' : 'Falar a resposta'}
+        className={cn('grid size-20 cursor-pointer place-items-center rounded-full shadow-md transition-transform active:scale-95 disabled:opacity-60', state === 'rec' ? 'bg-[#e5484d] text-white' : 'bg-brand text-on-brand')}>
+        {state === 'rec' ? <Square size={26} aria-hidden="true" /> : <Mic size={30} aria-hidden="true" />}
+      </button>
+      <span className="text-[12.5px] font-semibold text-muted">{state === 'rec' ? `Gravando ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')} · toque para parar` : state === 'busy' ? 'Conferindo o texto' : 'Toque para falar'}</span>
+      {error && <span role="alert" className="text-center text-[12px] font-medium text-warn-ink">{error}</span>}
+    </span>
+  )
 
   return (
     <span className={cn('flex flex-col gap-1', className)}>

@@ -60,9 +60,35 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     const ctx = await b.newContext(opts); await ctx.route('**/*', mock); const p = await ctx.newPage();
     const errs = []; p.on('pageerror', (e) => errs.push(e.message));
     await p.goto(`${BASE}/portal#${TOKEN}`); await p.waitForTimeout(1500);
+    // Conversa obrigatória: abre direto no chat, uma pergunta por vez.
+    if (!(await p.locator('[data-portal-chat]').count())) fails.push(`${dev}: com briefing baixo devia abrir direto na conversa`);
+    if (await sideScroll(p)) fails.push(`${dev}: rolagem lateral na conversa`);
+    const area = await p.evaluate(() => document.querySelector('[data-portal-chat] [aria-live]')?.clientHeight ?? 0);
+    console.log(`${dev} | conversa | área das mensagens ${area}px`);
+    if (area < 160) fails.push(`${dev}: sobra pouco espaço para as mensagens (${area}px)`);
+    if (!(await p.locator('[data-microfone]').count())) fails.push(`${dev}: sem o microfone grande`);
+    await p.screenshot({ path: `${OUT}/portal-chat-${dev}.png` });
+    await p.locator('[data-caixa]').fill('Atendimento rápido e preço justo');
+    await p.locator('[data-enviar]').click(); await p.waitForTimeout(700);
+    if (!calls.some((c) => c[0] === 'save' && c[1] === TOKEN && c[2].length > 0)) fails.push(`${dev}: a 1ª resposta não salvou (${JSON.stringify(calls)})`);
+    let sawSub = false; let answeredMom = false;
+    for (let k = 0; k < 150; k++) {
+      if (await p.locator('[data-ir-painel]').count()) break;
+      const last = await p.locator('[data-portal-chat] ul > li').last().innerText();
+      if (/O que vocês vendem ou fazem/.test(last) && !answeredMom) {
+        await p.locator('[data-portal-chat] [role=group] button', { hasText: 'Motos' }).click();
+        await p.locator('[data-enviar]').click(); await p.waitForTimeout(800); answeredMom = true; continue;
+      }
+      if (/motos são novas/.test(last)) sawSub = true;
+      await p.locator('[data-depois]').click(); await p.waitForTimeout(120);
+    }
+    if (!answeredMom) fails.push(`${dev}: a pergunta do mês não apareceu na conversa`);
+    if (!sawSub) fails.push(`${dev}: depois de "Motos" devia vir a subpergunta das motos`);
+    if (!calls.some((c) => c[0] === 'answer' && c[2] === 'q1')) fails.push(`${dev}: responder na conversa não chamou portal_brief_answer`);
+    await p.screenshot({ path: `${OUT}/portal-chat-fim-${dev}.png` });
+    await p.locator('[data-ir-painel]').click(); await p.waitForTimeout(800);
     const tab = await p.locator('[role=tab][aria-selected=true]').innerText().catch(() => '');
-    if (!/Briefing/.test(tab)) fails.push(`${dev}: com briefing baixo devia abrir no Briefing (abriu "${tab}")`);
-    if (await sideScroll(p)) fails.push(`${dev}: rolagem lateral no Briefing`);
+    if (!/Briefing/.test(tab)) fails.push(`${dev}: ao sair da conversa devia ir ao Briefing (foi "${tab}")`);
     await p.screenshot({ path: `${OUT}/portal-briefing-${dev}.png`, fullPage: true });
     // Cada item do briefing (ver e revisar tudo).
     await p.getByRole('button', { name: 'Ver e revisar tudo' }).click(); await p.waitForTimeout(300);
@@ -86,36 +112,23 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
       if (/Produtos/.test(tiles[i] || '') && (await add.count())) { await add.click(); await p.waitForTimeout(250); await check(p, dev, 'produtos › adicionar') }
       await esc(p);
     }
-    // Salvar um campo pelo guia de passos.
-    await p.getByRole('button', { name: 'Só o que falta' }).click().catch(() => {});
-    await p.locator('[data-completar]').click(); await p.waitForTimeout(350);
-    await check(p, dev, 'completar passo 1');
-    const dig = p.locator('dialog[open]').getByRole('button', { name: /^Digitar/ });
-    if (await dig.count()) { await dig.click(); await p.waitForTimeout(250); await check(p, dev, 'completar › digitar') }
-    const ta = p.locator('dialog[open] textarea').first();
-    if (await ta.count()) { await ta.fill('Teste do autoteste'); await p.locator('dialog[open]').getByRole('button', { name: /Salvar e seguir|Salvar e terminar|Salvar/ }).first().click(); await p.waitForTimeout(700) }
-    else await p.locator('dialog[open]').getByRole('button', { name: 'Pular' }).click().catch(() => {});
-    if (!calls.some((c) => c[0] === 'save' && c[1] === TOKEN)) { fails.push(`${dev}: salvar não chamou portal_brief_save com o código (${JSON.stringify(calls)})`); await p.screenshot({ path: `${OUT}/portal-briefing-salvar-${dev}.png` }) }
-    await esc(p);
-    // Perguntas.
+    // Perguntas: lista para revisar; "Responder" volta para a conversa.
     await p.locator('[data-aba=perguntas]').click(); await p.waitForTimeout(400);
-    const n0 = await p.locator('[data-portal-perguntas] li').count();
-    if (n0 !== 2) fails.push(`${dev}: devia mostrar 2 perguntas antes da resposta (mostrou ${n0})`);
-    await p.locator('[data-responder]').click(); await p.waitForTimeout(350);
-    await check(p, dev, 'pergunta 1');
-    await p.locator('dialog[open]').getByRole('button', { name: 'Motos' }).click();
-    await p.locator('dialog[open]').getByRole('button', { name: /Salvar/ }).first().click(); await p.waitForTimeout(900);
-    const m2 = await check(p, dev, 'pergunta 2 (subpergunta)');
-    if (m2 && !/motos são novas/.test(m2.title)) fails.push(`${dev}: depois de "Motos" devia vir a subpergunta das motos (veio "${m2.title}")`);
-    await esc(p);
     const n1 = await p.locator('[data-portal-perguntas] li').count();
     if (n1 !== 3) fails.push(`${dev}: com "Motos" devia mostrar 3 perguntas (mostrou ${n1})`);
-    if (!calls.some((c) => c[0] === 'answer' && c[2] === 'q1')) fails.push(`${dev}: responder não chamou portal_brief_answer`);
-    if (await sideScroll(p)) fails.push(`${dev}: rolagem lateral nas Perguntas`);
     await p.screenshot({ path: `${OUT}/portal-perguntas-${dev}.png`, fullPage: true });
+    await p.locator('[data-responder]').click(); await p.waitForTimeout(500);
+    if (!(await p.locator('[data-portal-chat]').count())) fails.push(`${dev}: "Responder" devia abrir a conversa`);
+    const prog = await p.locator('[data-progresso]').innerText().catch(() => '');
+    // Briefing ainda abaixo de 80%: a conversa refaz o que falta antes das perguntas (obrigatório).
+    if (!/^1 de \d+$/.test(prog)) fails.push(`${dev}: conversa sem progresso (${prog})`);
+    while (!(await p.locator('[data-ir-painel]').count())) { await p.locator('[data-depois]').click(); await p.waitForTimeout(120) }
+    await p.locator('[data-ir-painel]').click(); await p.waitForTimeout(400);
     // Briefing completo (>= 80%): abre no Painel.
     brief = { ...brief, produtos: [{ nome: 'X', preco: 'R$ 1' }], publico: 'aaaa', diferenciais: 'aaaa', voz: 'aaaa', proibidos: 'aaa', quem_aparece: 'aaa', capacidade: 'aaa', proposito: 'aaa', percepcao: 'aaa', posicionamento: 'aaa', sem_concorrentes: true, referencias: [{ link: 'https://x.com' }], links: { site: 'https://a.com', instagram: 'https://instagram.com/a' } };
+    questions = questions.map((x) => ({ ...x, status: 'respondida', answer: 'ok' }));
     await p.goto(`${BASE}/portal#${TOKEN}/perguntas`); await p.reload(); await p.waitForTimeout(1500);
+    if (await p.locator('[data-portal-chat]').count()) fails.push(`${dev}: com briefing completo e tudo respondido não devia abrir a conversa`);
     const tab2 = await p.locator('[role=tab][aria-selected=true]').innerText().catch(() => '');
     if (!/Perguntas/.test(tab2)) fails.push(`${dev}: com briefing completo e link /perguntas devia abrir em Perguntas (abriu "${tab2}")`);
     // Ficha do cliente → passo Briefing → Enviar: mensagem com o link do PORTAL (aba Briefing), pelo WhatsApp da pessoa.

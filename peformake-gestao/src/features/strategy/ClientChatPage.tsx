@@ -9,7 +9,7 @@ import { supabase } from '@/lib/supabase'
 // Conversa de perguntas com o cliente: link público /conversa/<código>, sem login, feito para o celular.
 // Tudo passa pela função client-chat: ela guarda cada resposta na hora e conduz a conversa.
 
-interface ChatMsg { from: 'ia' | 'cliente'; text: string; at: string; files: { name: string; type: string }[] }
+export interface ChatMsg { from: 'ia' | 'cliente'; text: string; at: string; files: { name: string; type: string }[] }
 interface ChatState {
   client: string; greeting: string; status: 'aberta' | 'concluida'; stage: string
   progress: { done: number; total: number }; messages: ChatMsg[]; options: string[]; nps: boolean; transcribe: boolean
@@ -121,7 +121,7 @@ export function ClientChatPage() {
 }
 
 /** Logo de quem atende o cliente: Peformake ou Ellcazo (cliente só do audiovisual). */
-function BrandLogo({ brand, className }: { brand: 'peformake' | 'ellcazo'; className?: string }) {
+export function BrandLogo({ brand, className }: { brand: 'peformake' | 'ellcazo'; className?: string }) {
   if (brand === 'ellcazo') return <span className={cn('theme-ellcazo grid shrink-0 place-items-center rounded-xl bg-[#0f1a12]', className)}><EllcazoMark className="h-[70%] w-auto text-accent" /></span>
   return <img src="/icon-192.png" alt="Peformake" className={cn('shrink-0 rounded-xl', className)} />
 }
@@ -161,7 +161,7 @@ function Shell({ children }: { children: React.ReactNode }) {
   return <main className="flex h-dvh flex-col overflow-hidden bg-canvas text-ink">{children}</main>
 }
 
-function Bubble({ m, faded }: { m: ChatMsg; faded?: boolean }) {
+export function Bubble({ m, faded }: { m: ChatMsg; faded?: boolean }) {
   const me = m.from === 'cliente'
   return (
     <li className={cn('max-w-[85%] whitespace-pre-line rounded-2xl px-3.5 py-2 text-[15px] leading-snug shadow-sm', me ? 'self-end rounded-br-md bg-brand text-on-brand' : 'self-start rounded-bl-md bg-surface', faded && 'opacity-60')}>
