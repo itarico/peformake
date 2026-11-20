@@ -43,7 +43,7 @@ const LINES: { key: string; label: string; pts: string; bad?: boolean }[] = [
   { key: 'checkins_on_time', label: 'Check-in no horário', pts: '+5' },
   { key: 'raw_fast', label: 'Bruto em até 3 h', pts: '+10' },
   { key: 'scripts', label: 'Roteiros aprovados', pts: '+5' },
-  { key: 'tasks_done', label: 'Tarefas de tráfego feitas', pts: '+3' },
+  { key: 'tasks_done', label: 'Tarefas feitas', pts: '+3' },
   { key: 'tasks_late', label: 'Tarefas vencidas', pts: '−2', bad: true },
   { key: 'social_done', label: 'Peças aprovadas dos seus clientes', pts: '+3' },
   { key: 'social_late', label: 'Peças sem briefing vencidas', pts: '−3', bad: true },
@@ -203,7 +203,7 @@ export function TeamBoard({ isAdmin }: { isAdmin: boolean }) {
         <ul className="mt-3 grid gap-1 sm:grid-cols-2">
           {LINES.map((l) => <li key={l.key} className="flex justify-between gap-3 border-b border-line pb-1"><span>{l.label}</span><b className={cn('tabular-nums', l.bad && 'text-warn-ink')}>{l.pts}</b></li>)}
         </ul>
-        <p className="mt-3 text-muted">Níveis do mês: Bronze até 49, Prata a partir de 50, Ouro a partir de 150, Diamante a partir de 300. O placar zera todo mês; o histórico fica em cada mês.</p>
+        <p className="mt-3 text-muted">Níveis do mês: Bronze até 49, Prata a partir de 50, Ouro a partir de 150, Diamante a partir de 300. Os pontos não ficam abaixo de zero; o que está atrasado aparece ao lado do nome. O placar zera todo mês; o histórico fica em cada mês.</p>
       </details>
     </div>
   )

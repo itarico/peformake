@@ -7,6 +7,8 @@ const BASE = process.env.BASE || 'http://localhost:5198'
 const ROLES = (process.env.ROLES || 'admin,head_marketing,traffic_manager,social_media,designer,videomaker,editor,sdr,closer,ellcazo,parceiro').split(',')
 const EXTRA = ['/inicio', '/equipe', '/equipe/metas', '/comercial', '/whatsapp', '/estrategia/consultoria', '/estrategia/relatorios', '/trafego/painel', '/trafego/relatorios', '/audiovisual/plano-do-mes']
 const MONEY_OK = new Set(['admin', 'ellcazo'])
+// Investimento em anúncios (verba do cliente) é dado de trabalho do tráfego, não valor da empresa.
+const AD_SPEND_OK = (role, path) => ['head_marketing', 'traffic_manager'].includes(role) && path.startsWith('/trafego')
 ;(async () => {
   const b = await chromium.launch(); const out = []
   for (const role of ROLES) {
@@ -22,7 +24,7 @@ const MONEY_OK = new Set(['admin', 'ellcazo'])
       const r = await p.evaluate(() => { const m = document.querySelector('main') || document.body; const t = m.innerText; return { url: location.pathname, t: t.slice(0, 4000), deny: /sem acesso|não tem acesso|acesso restrito|sem permissão/i.test(t), money: (t.match(/R\$\s?\d/g) || []).length } })
       const moved = r.url !== path.split('?')[0]
       if (r.deny || (moved && /\/(inicio|equipe|sem-modulo|login)$/.test(r.url) && !path.startsWith(r.url))) blocked.push(path); else opened.push(moved ? `${path}→${r.url}` : path)
-      if (!r.deny && r.money && !MONEY_OK.has(role)) money.push(`${path} (${r.money}x R$)`)
+      if (!r.deny && r.money && !MONEY_OK.has(role) && !AD_SPEND_OK(role, path)) money.push(`${path} (${r.money}x R$)`)
       if (errs.length) broke.push(`${path}: ${errs[0]}`)
     }
     out.push({ role, menu, opened, blocked, money, broke })
