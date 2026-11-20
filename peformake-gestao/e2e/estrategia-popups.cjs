@@ -24,7 +24,7 @@ const CASES = [
   [board('resumo'), 'Gerar de novo', async (p) => p.getByRole('button', { name: 'Gerar de novo' }).click()],
   [board('social'), 'Mais ideias (menu)', async (p) => { await p.getByRole('button', { name: 'Mais opções da estratégia' }).click(); await p.getByRole('menuitem', { name: /Pedir mais ideias/ }).click() }],
   [board('social'), 'Colar resultado (menu)', async (p) => { await p.getByRole('button', { name: 'Mais opções da estratégia' }).click(); await p.getByRole('menuitem', { name: /colar a resposta/i }).click() }],
-  ...['Direção', 'CNPJ', 'Voz', 'Proibidos', 'Quem aparece', 'Quem grava', 'Capacidade', 'Ofertas', 'Datas', 'Reunião', 'Completar', 'Ver tudo'].map((n) => [board('briefing'), `Briefing: ${n}`, async (p) => p.getByRole('button', { name: n, exact: true }).first().click()]),
+  ...['Direção', 'CNPJ', 'Jeito da marca', 'Momento e futuro', 'Marketing até hoje', 'Sazonalidade', 'Marca e acessos', 'Ofertas', 'Datas', 'Reunião', 'Completar', 'Ver tudo'].map((n) => [board('briefing'), `Briefing: ${n}`, async (p) => p.getByRole('button', { name: n, exact: true }).first().click()]),
   [`/estrategia/consultoria?cliente=${C}&ver=perguntas`, 'Perguntas: Responder pela equipe', async (p) => p.getByRole('button', { name: 'Responder pela equipe' }).first().click()],
   [`/estrategia/consultoria?cliente=${C}&ver=perguntas`, 'Perguntas: Editar', async (p) => p.getByRole('button', { name: 'Editar', exact: true }).first().click()],
   [`/estrategia/consultoria?cliente=${C}&ver=perguntas`, 'Perguntas: Enviar ao cliente', async (p) => p.getByRole('button', { name: /Enviar ao cliente/ }).first().click()],

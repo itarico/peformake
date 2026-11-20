@@ -180,7 +180,7 @@ export function useBriefProgress(month: string) {
     queryKey: ['brief-progress', month],
     queryFn: async () => {
       // Mesmas fontes do useBrief (cadastro, links, voz da marca, concorrentes do diagnóstico) para o % bater com o da ficha.
-      const [b, m, q, c, dg, ln, v, aq] = await Promise.all([
+      const [b, m, q, c, dg, ln, v, aq, av] = await Promise.all([
         db.from('client_briefs').select('client_id, data'),
         db.from('client_brief_months').select('client_id, data').eq('month', month),
         db.from('client_questions').select('client_id, status').eq('pack', 'briefing_mes').eq('focus', focusOf(month)).neq('status', 'descartada'),
@@ -190,7 +190,10 @@ export function useBriefProgress(month: string) {
         db.from('client_brand_voice').select('client_id, essencia, tom, evitar').limit(500),
         // Passo 2 da ficha (Perguntas): pronto quando não há pendente nem esperando o cliente.
         db.from('client_questions').select('client_id, status').in('status', ['pendente', 'enviada']).limit(5000),
+        // Clientes com vídeo: só eles têm o cartão Gravação (o % bate com o da ficha).
+        db.from('client_services').select('client_id, services!inner(is_audiovisual)').eq('is_active', true).eq('services.is_audiovisual', true).limit(5000),
       ])
+      const video = new Set((av.data ?? []).map((x: { client_id: string }) => x.client_id))
       if (b.error || m.error) throw new Error('Não foi possível ler os briefings.')
       const out: Record<string, BriefRowProgress> = {}
       const ids = new Set<string>([...(c.data ?? []).map((x: { id: string }) => x.id), ...(b.data ?? []).map((x: { client_id: string }) => x.client_id)])
@@ -205,7 +208,7 @@ export function useBriefProgress(month: string) {
         const qs = (q.data ?? []).filter((x: { client_id: string }) => x.client_id === id)
         const answered = qs.filter((x: { status: string }) => x.status === 'respondida').length
         const total = qs.length || 8
-        const checks = briefChecks(f, mo, answered, total)
+        const checks = briefChecks(f, mo, answered, total, video.has(id))
         const fixed = checks.filter((x) => !MONTH_CHECKS.has(x.key))
         const open = (aq.data ?? []).filter((x: { client_id: string }) => x.client_id === id)
         out[id] = {

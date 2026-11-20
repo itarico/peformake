@@ -28,6 +28,12 @@ export interface BriefFixed {
   /** Momento do negócio (SWOT): forças, fraquezas, onde está, onde quer chegar. */
   momento?: string
   proposito?: string; percepcao?: string; arquetipo?: string; posicionamento?: string; historia?: string; jornada?: string; objecoes?: string; visao?: string
+  /** Marketing até hoje, marca e acessos, e o porquê da sazonalidade (Italo, 20/11). */
+  marketing?: string; marca?: string; sazonalidade?: string
+  /** Meses fortes e fracos (1 a 12). Datas comemorativas o sistema já sabe: não se pergunta. */
+  meses_fortes?: number[]; meses_fracos?: number[]
+  /** Valores em dinheiro: só administrador vê na tela; o agente lê. */
+  verba_anuncio?: string; ticket_medio?: string; faturamento_mes?: string
   /** Tipo de negócio (família do motor de perguntas). Sem ele, o sistema deduz pela descrição. */
   tipo?: string
   /** Como a equipe chama o tipo (ex.: Pizzaria, Igreja, ou um tipo novo escrito à mão). */
@@ -40,20 +46,24 @@ export interface BriefMonth { ofertas?: string; meta?: string; datas_travam?: st
 /** Campos de texto do briefing (os de lista têm pop-up próprio). */
 export type TextKey = 'publico' | 'diferenciais' | 'voz' | 'proibidos' | 'quem_aparece' | 'quem_grava' | 'capacidade'
   | 'momento' | 'proposito' | 'percepcao' | 'arquetipo' | 'posicionamento' | 'historia' | 'jornada' | 'objecoes' | 'visao'
+  | 'marketing' | 'marca' | 'sazonalidade'
 export const TEXT_FIELDS: Record<TextKey, { label: string; hint: string }> = {
-  publico: { label: 'Público', hint: 'Quem compra: idade, bairro, renda, o que busca.' },
-  momento: { label: 'Momento do negócio', hint: 'Pontos fortes e fracos, onde está hoje, onde quer chegar e o que impede (análise SWOT).' },
-  proposito: { label: 'Propósito', hint: 'Por que a empresa existe além de ganhar dinheiro (Círculo Dourado: por quê, como, o quê).' },
+  publico: { label: 'Público', hint: 'Quem compra: idade, bairro, renda, o que busca e o melhor cliente.' },
+  momento: { label: 'Momento e futuro', hint: 'Pontos fortes e fracos, quanto dá para atender, onde quer chegar e o que impede (SWOT e visão).' },
+  proposito: { label: 'Propósito e história', hint: 'Por que existe além do dinheiro, como começou, a virada e as conquistas (Círculo Dourado).' },
   percepcao: { label: 'Como quer ser vista', hint: 'Como quer ser percebida, como é vista hoje e o que falta (Prisma de Identidade de Kapferer).' },
   arquetipo: { label: 'Personalidade', hint: 'O arquétipo da marca (os 12 arquétipos) e marcas que inspiram ou não.' },
-  posicionamento: { label: 'Posicionamento', hint: 'Para quem, que problema resolve melhor, em que categoria e por que acreditar.' },
+  posicionamento: { label: 'Posicionamento', hint: 'Para quem, por que escolhem vocês e não o concorrente, o que resolve melhor e a prova.' },
   historia: { label: 'História', hint: 'Como começou, a virada, as dificuldades e as conquistas: vira conteúdo.' },
-  jornada: { label: 'Jornada de compra', hint: 'Como descobre, o que faz antes de comprar, o "trabalho" que contrata (JTBD) e o pós-venda.' },
+  jornada: { label: 'Como o cliente compra', hint: 'Como descobre, o que pergunta, o que trava a compra, o "trabalho" que contrata (JTBD) e o pós-venda.' },
   objecoes: { label: 'Objeções', hint: 'O que perguntam antes de comprar e o que falam quando não fecham.' },
   visao: { label: 'Visão', hint: 'Onde quer estar em 3 anos e o maior obstáculo de hoje.' },
   diferenciais: { label: 'Diferenciais', hint: 'Por que comprar aqui e não no concorrente.' },
-  voz: { label: 'Voz da marca', hint: 'Como a marca fala: palavras, tom, jeito.' },
+  voz: { label: 'Jeito da marca', hint: 'A personalidade (arquétipo), como fala e o que nunca falar ou mostrar.' },
   proibidos: { label: 'Proibidos', hint: 'O que nunca falar ou mostrar.' },
+  marketing: { label: 'Marketing até hoje', hint: 'O que já fizeram (anúncio, influenciador, outra agência), o que funcionou, o que não funcionou e a verba.' },
+  marca: { label: 'Marca e acessos', hint: 'Logo, cores, fontes e fotos, e quais acessos a Peformake já tem (Instagram, anúncios, Google).' },
+  sazonalidade: { label: 'Sazonalidade', hint: 'Os meses fortes e fracos do ano e por quê. As datas comemorativas o sistema já sabe.' },
   quem_aparece: { label: 'Quem aparece', hint: 'Quem pode aparecer nos vídeos.' },
   quem_grava: { label: 'Quem grava', hint: 'Ellcazo, o próprio cliente, a equipe dele.' },
   capacidade: { label: 'Capacidade de atendimento', hint: 'Quantos pedidos, mesas ou horários dá para atender.' },
@@ -70,24 +80,66 @@ const linksCount = (f: BriefFixed) => Object.values(f.links ?? {}).filter((v) =>
 
 export interface Check { key: string; label: string; done: boolean; weight: number }
 
+// ───────── Cartões juntos (Italo, 20/11: "16 cartões que se repetem viram ~10") ─────────
+/**
+ * Cartão novo = chave principal + chaves antigas. O cartão mostra o texto que já existia em todas,
+ * grava na principal e não apaga as outras (o agente continua lendo tudo).
+ */
+export const MERGED: Partial<Record<TextKey, TextKey[]>> = {
+  posicionamento: ['diferenciais'],
+  proposito: ['historia'],
+  momento: ['visao', 'capacidade'],
+  jornada: ['objecoes'],
+  voz: ['arquetipo', 'proibidos'],
+}
+export const cardKeys = (k: TextKey): TextKey[] => [k, ...(MERGED[k] ?? [])]
+/** Feito quando qualquer uma das chaves do cartão tem texto. */
+export const cardDone = (f: BriefFixed, k: TextKey) => cardKeys(k).some((x) => filled(f[x]))
+/** Texto que o cartão abre: o da chave principal e, sem repetir, o das antigas com o nome na frente. */
+export function cardText(f: BriefFixed, k: TextKey): string {
+  const main = (f[k] ?? '').trim()
+  const rest = (MERGED[k] ?? []).map((x) => [x, (f[x] ?? '').trim()] as const).filter(([, v]) => v.length > 1 && !main.includes(v))
+  return [main, ...rest.map(([x, v]) => `${TEXT_FIELDS[x].label}: ${v}`)].filter(Boolean).join('\n')
+}
+
+/** Dinheiro do briefing: só administrador vê e preenche na tela (CLAUDE.md); o agente lê. */
+export type MoneyKey = 'verba_anuncio' | 'ticket_medio' | 'faturamento_mes'
+export const MONEY_FIELDS: Record<MoneyKey, { label: string; placeholder: string }> = {
+  verba_anuncio: { label: 'Verba de anúncio por mês', placeholder: 'Ex.: R$ 1.500' },
+  faturamento_mes: { label: 'Faturamento por mês', placeholder: 'Ex.: R$ 60 mil' },
+  ticket_medio: { label: 'Ticket médio', placeholder: 'Ex.: R$ 120' },
+}
+/** Que dinheiro cada cartão pergunta. */
+export const CARD_MONEY: Partial<Record<TextKey, MoneyKey[]>> = { marketing: ['verba_anuncio'], momento: ['faturamento_mes', 'ticket_medio'] }
+
+export const MONTHS_SHORT = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+export const MONTHS_FULL = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
+/** Resumo da sazonalidade em palavras (para a linha do cartão e para quem lê o briefing). */
+export function seasonText(f: Pick<BriefFixed, 'meses_fortes' | 'meses_fracos'>): string {
+  const ls = (xs?: number[]) => [...new Set(xs ?? [])].filter((m) => m >= 1 && m <= 12).sort((a, b) => a - b).map((m) => MONTHS_FULL[m - 1]).join(', ')
+  return [ls(f.meses_fortes) && `Fortes: ${ls(f.meses_fortes)}`, ls(f.meses_fracos) && `Fracos: ${ls(f.meses_fracos)}`].filter(Boolean).join(' · ')
+}
+
 /** O que conta para o medidor "briefing X% completo". Perguntas do mês valem 2 pontos (proporcional às respondidas). */
-export function briefChecks(f: BriefFixed, m: BriefMonth, answered: number, total: number): Check[] {
+/** `video`: o cliente tem serviço de vídeo (só ele tem o cartão Gravação). */
+export function briefChecks(f: BriefFixed, m: BriefMonth, answered: number, total: number, video = true): Check[] {
   const precos = (f.produtos ?? []).some((p) => filled(p.preco))
   return [
     { key: 'produtos', label: precos ? 'Produtos' : 'Produtos com preço', done: precos, weight: 1.5 },
     { key: 'links', label: 'Links (2 ou mais)', done: linksCount(f) >= 2, weight: 1 },
     { key: 'publico', label: 'Público', done: filled(f.publico), weight: 1 },
-    { key: 'diferenciais', label: 'Diferenciais', done: filled(f.diferenciais), weight: 1 },
+    { key: 'posicionamento', label: 'Posicionamento', done: cardDone(f, 'posicionamento'), weight: 1 },
     { key: 'concorrentes', label: 'Concorrentes', done: filled(f.concorrentes) || !!f.sem_concorrentes, weight: 0.5 },
     { key: 'referencias', label: 'Referências', done: filled(f.referencias), weight: 0.5 },
-    { key: 'voz', label: 'Voz da marca', done: filled(f.voz), weight: 0.5 },
-    { key: 'proibidos', label: 'Proibidos', done: filled(f.proibidos), weight: 0.5 },
-    { key: 'quem_aparece', label: 'Quem aparece', done: filled(f.quem_aparece), weight: 0.5 },
-    { key: 'capacidade', label: 'Capacidade', done: filled(f.capacidade), weight: 0.5 },
-    { key: 'momento', label: 'Momento do negócio', done: filled(f.momento), weight: 0.5 },
-    { key: 'proposito', label: 'Propósito', done: filled(f.proposito), weight: 0.5 },
+    { key: 'voz', label: 'Jeito da marca', done: cardDone(f, 'voz'), weight: 0.75 },
+    ...(video ? [{ key: 'quem_aparece', label: 'Gravação', done: filled(f.quem_aparece), weight: 0.5 }] : []),
+    { key: 'momento', label: 'Momento e futuro', done: cardDone(f, 'momento'), weight: 0.75 },
+    { key: 'proposito', label: 'Propósito e história', done: cardDone(f, 'proposito'), weight: 0.5 },
     { key: 'percepcao', label: 'Como quer ser vista', done: filled(f.percepcao), weight: 0.5 },
-    { key: 'posicionamento', label: 'Posicionamento', done: filled(f.posicionamento), weight: 0.5 },
+    { key: 'jornada', label: 'Como o cliente compra', done: cardDone(f, 'jornada'), weight: 0.5 },
+    { key: 'marketing', label: 'Marketing até hoje', done: filled(f.marketing), weight: 0.75 },
+    { key: 'sazonalidade', label: 'Sazonalidade', done: filled(f.meses_fortes) || filled(f.meses_fracos), weight: 0.5 },
+    { key: 'marca', label: 'Marca e acessos', done: filled(f.marca), weight: 0.5 },
     { key: 'ofertas', label: 'Ofertas do mês', done: filled(m.ofertas), weight: 1 },
     { key: 'meta', label: 'Meta do mês', done: filled(m.meta), weight: 1 },
     { key: 'datas_travam', label: 'Datas que travam', done: filled(m.datas_travam), weight: 0.5 },
@@ -110,8 +162,8 @@ export function briefMissing(checks: Check[]): string[] {
 }
 
 /** Medidor só do briefing FIXO (passo 1 da ficha e o portal do cliente usam o mesmo número). */
-export function fixedStatus(f: BriefFixed): { percent: number; missing: string[]; checks: Check[] } {
-  const checks = briefChecks(f, {}, 0, 8).filter((c) => !MONTH_CHECKS.has(c.key))
+export function fixedStatus(f: BriefFixed, video = true): { percent: number; missing: string[]; checks: Check[] } {
+  const checks = briefChecks(f, {}, 0, 8, video).filter((c) => !MONTH_CHECKS.has(c.key))
   return { percent: briefPercent(checks), missing: briefMissing(checks), checks }
 }
 
@@ -257,9 +309,30 @@ export function fromLinkList(items: LinkItem[], before: BriefFixed): Pick<BriefF
  * Guia de perguntas de um campo (Italo, 20/11: "a partir de uma pergunta ir aprofundando até a essência").
  * `when`: só aparece se a resposta da pergunta `q` tiver uma das palavras. `open`: pergunta aberta (texto ou fala).
  */
-export interface QuizStep { q: string; opts: string[]; multi?: boolean; when?: { q: string; has: string[] }; open?: boolean }
+export interface QuizStep {
+  q: string; opts: string[]; multi?: boolean; open?: boolean
+  /** Só aparece se a resposta da pergunta `q` tiver uma das palavras. `has: []`: aparece quando ela foi respondida (puxa-fio). */
+  when?: { q: string; has: string[] }
+  /** Pergunta de dinheiro: a resposta vai para o campo de valor (só administrador vê), não para o texto. */
+  money?: MoneyKey
+}
 const W = (q: string, ...has: string[]) => ({ q, has })
+/** Puxa-fio (Italo, 20/11): pergunta curta que só aparece depois que a anterior foi respondida, para a resposta ir fundo. */
+const fio = (q: string, p = 'Me dá um exemplo real disso'): QuizStep => ({ q: p, opts: [], open: true, when: { q, has: [] } })
+/** Pergunta aberta + o puxa-fio dela. */
+const aberta = (q: string, p?: string, when?: { q: string; has: string[] }): QuizStep[] => [{ q, opts: [], open: true, ...(when ? { when } : {}) }, fio(q, p)]
+/** É um puxa-fio (pergunta extra de aprofundar). */
+export const isFio = (s: QuizStep) => !!s.open && !!s.when && s.when.has.length === 0
+
+/** O que nunca falar (entra no guia do Jeito da marca; o portal ainda abre o campo antigo). */
+const PROIBIDOS: QuizStep[] = [
+  { q: 'O que nunca falar ou mostrar?', opts: ['Política', 'Religião', 'Palavrão', 'Concorrente pelo nome', 'Preço baixo como foco', 'Bebida alcoólica', 'Crianças'], multi: true },
+  { q: 'Tem regra de conselho ou lei da profissão?', opts: ['Não mostrar preço', 'Não prometer resultado', 'Não mostrar paciente', 'Não usar antes e depois', 'Não tem'], multi: true },
+  ...aberta('Algo que já deu problema e não pode repetir?', 'O que aconteceu e como resolveram?'),
+]
+
 export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
+  proibidos: PROIBIDOS,
   publico: [
     { q: 'Quem mais compra?', opts: ['Mulheres', 'Homens', 'Casais', 'Famílias com filhos', 'Jovens', 'Empresas'], multi: true },
     { q: 'Idade dos filhos dessas famílias?', opts: ['Bebês', 'Crianças', 'Adolescentes'], multi: true, when: W('Quem mais compra?', 'familias') },
@@ -267,45 +340,50 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     { q: 'Qual a idade?', opts: ['18 a 24', '25 a 34', '35 a 44', '45 a 59', '60 ou mais'], multi: true },
     { q: 'Onde mora ou trabalha?', opts: ['No bairro', 'Bairros vizinhos', 'Na cidade toda', 'Região metropolitana', 'Turistas', 'Outras cidades (online)'], multi: true },
     { q: 'Qual a renda?', opts: ['Popular', 'Classe média', 'Média alta', 'Alta'], multi: true },
+    ...aberta('Pense no seu melhor cliente: quem é ele, o que faz da vida e por que compra de vocês?', 'Por que ele é o melhor? O que tem de diferente dos outros?'),
     { q: 'O que faz a pessoa procurar vocês? (a dor ou o desejo)', opts: ['Resolver um problema urgente', 'Economizar', 'Se sentir bem', 'Status', 'Praticidade', 'Presentear'], multi: true },
-    { q: 'Conte com as palavras do cliente: o que ele diz quando chega ou elogia?', opts: [], open: true },
+    ...aberta('Conte com as palavras do cliente: o que ele diz quando chega ou elogia?', 'O que um cliente diria sobre vocês para um amigo?'),
     { q: 'O que mais pesa na compra?', opts: ['Preço', 'Qualidade', 'Rapidez', 'Atendimento', 'Experiência', 'Confiança na marca'], multi: true },
     { q: 'O que faz ele desistir de comprar?', opts: ['Preço', 'Demora', 'Desconfiança', 'Não achou o que queria', 'Atendimento'], multi: true },
     { q: 'Quando costuma comprar?', opts: ['Dia a dia', 'Fim de semana', 'À noite', 'No almoço', 'Datas especiais', 'Quando tem promoção'], multi: true },
     { q: 'Onde ele passa o tempo online?', opts: ['Instagram', 'TikTok', 'Facebook', 'YouTube', 'WhatsApp', 'Google'], multi: true },
+    ...aberta('Quem vocês NÃO querem atender? (o cliente que dá trabalho e não compensa)', 'Por que esse cliente não compensa?'),
   ],
-  diferenciais: [
+  // Posicionamento + Diferenciais.
+  posicionamento: [
     { q: 'Por que escolhem vocês?', opts: ['Qualidade', 'Preço justo', 'Atendimento', 'Rapidez', 'Localização', 'Tradição', 'Produto exclusivo'], multi: true },
     { q: 'Qualidade como? O que fazem diferente?', opts: ['Matéria-prima melhor', 'Feito à mão', 'Equipe especializada', 'Garantia', 'Tecnologia'], multi: true, when: W('Por que escolhem vocês?', 'qualidade') },
     { q: 'Por que conseguem um preço melhor?', opts: ['Compra direto da fábrica', 'Produção própria', 'Custo baixo', 'Volume'], multi: true, when: W('Por que escolhem vocês?', 'preco') },
     { q: 'O que tem de especial no atendimento?', opts: ['Responde rápido no WhatsApp', 'Pós-venda', 'Atendimento personalizado', 'Horário estendido', 'Conhece o cliente pelo nome'], multi: true, when: W('Por que escolhem vocês?', 'atendimento') },
-    { q: 'O que é exclusivo de vocês? Conte.', opts: [], open: true, when: W('Por que escolhem vocês?', 'exclusivo') },
+    ...aberta('O que é exclusivo de vocês? Conte.', 'Desde quando é assim e por que ninguém copiou?', W('Por que escolhem vocês?', 'exclusivo')),
     { q: 'O que o cliente mais elogia?', opts: ['Sabor/resultado', 'Ambiente', 'Equipe', 'Entrega', 'Variedade', 'Custo-benefício'], multi: true },
-    { q: 'Tem prova disso?', opts: ['Depoimentos', 'Avaliações no Google', 'Prêmios', 'Números de vendas', 'Antes e depois', 'Ainda não'], multi: true },
-    { q: 'Há quanto tempo existem?', opts: ['Menos de 1 ano', '1 a 3 anos', '3 a 10 anos', 'Mais de 10 anos'] },
-    { q: 'Em uma frase: o que só vocês fazem e ninguém mais na região?', opts: [], open: true },
+    ...aberta('Para quem é, principalmente? (o cliente que vocês mais querem)', 'Por que esse cliente e não outro?'),
+    ...aberta('Que problema vocês resolvem melhor que todo mundo?', 'Me dá um exemplo real de um cliente que teve isso resolvido'),
+    ...aberta('O que o cliente diria que vocês são? (a categoria)', 'E o que vocês gostariam que ele dissesse?'),
+    { q: 'Por que acreditar? Qual a prova?', opts: ['Anos de mercado', 'Clientes atendidos', 'Depoimentos', 'Avaliações no Google', 'Prêmios ou certificação', 'Garantia', 'Antes e depois', 'Ainda não tem'], multi: true },
+    { q: 'Contra quem competem de verdade?', opts: ['Concorrente direto', 'O cliente fazer sozinho', 'Não fazer nada', 'Loja online', 'Informal ou mais barato'], multi: true },
+    ...aberta('Em uma frase: o que só vocês fazem e ninguém mais na região?', 'Por que você acha que só vocês fazem isso?'),
   ],
+  // Jeito da marca = personalidade (arquétipo) + voz + proibidos.
   voz: [
     { q: 'Como a marca fala?', opts: ['Descontraída', 'Próxima, de amigo', 'Profissional', 'Sofisticada', 'Divertida', 'Acolhedora', 'Técnica'], multi: true },
     { q: 'Até onde vai a brincadeira?', opts: ['Pode zoar e usar meme', 'Leve, sem exagero', 'Só no conteúdo, nunca no anúncio'], when: W('Como a marca fala?', 'descontraida', 'divertida', 'amigo') },
     { q: 'O que passa autoridade para essa marca?', opts: ['Dados e números', 'Anos de experiência', 'Certificações', 'Clientes conhecidos', 'Resultados mostrados'], multi: true, when: W('Como a marca fala?', 'profissional', 'tecnica', 'sofisticada') },
     { q: 'Como ela mostra cuidado com o cliente?', opts: ['Explica com calma', 'Pergunta como ele está', 'Acompanha depois da compra', 'Fala de família'], multi: true, when: W('Como a marca fala?', 'acolhedora') },
-    { q: 'Se a marca fosse uma pessoa, quem seria?', opts: ['Amigo do bairro', 'Especialista', 'Mãe ou pai cuidadoso', 'Jovem antenado', 'Empresário de sucesso'] },
+    { q: 'Qual personalidade combina mais com a marca? (até 2)', opts: ['Cuidador (protege)', 'Herói (supera)', 'Sábio (ensina)', 'Explorador (aventura)', 'Criador (inova)', 'Governante (lidera)', 'Mago (transforma)', 'Inocente (simples e otimista)', 'Cara comum (igual a você)', 'Amante (prazer e beleza)', 'Bobo da corte (diversão)', 'Rebelde (quebra regras)'], multi: true },
     { q: 'Usa gírias e emojis?', opts: ['Sim, bastante', 'Pouco', 'Não'] },
     { q: 'Trata o cliente por', opts: ['Você', 'Vocês/galera', 'Senhor(a)', 'Pelo nome'] },
-    { q: 'Palavras ou expressões que a marca SEMPRE usa', opts: [], open: true },
+    ...aberta('Uma marca famosa com o jeito que vocês querem ter (e por quê)', 'O que exatamente vocês admiram nela?'),
+    ...aberta('Uma marca que vocês NÃO querem parecer', 'Por que não? O que incomoda nela?'),
+    ...aberta('Palavras ou expressões que a marca SEMPRE usa', 'Onde essas palavras aparecem hoje? (atendimento, post, placa)'),
     { q: 'Palavras que a marca NUNCA usa', opts: [], open: true },
     { q: 'Escreva (ou fale) uma frase do jeito que a marca diria no Instagram', opts: [], open: true },
-  ],
-  proibidos: [
-    { q: 'O que nunca falar ou mostrar?', opts: ['Política', 'Religião', 'Palavrão', 'Concorrente pelo nome', 'Preço baixo como foco', 'Bebida alcoólica', 'Crianças'], multi: true },
-    { q: 'Tem regra de conselho ou lei da profissão?', opts: ['Não mostrar preço', 'Não prometer resultado', 'Não mostrar paciente', 'Não usar antes e depois', 'Não tem'], multi: true },
-    { q: 'Algo que já deu problema e não pode repetir?', opts: [], open: true },
+    ...PROIBIDOS,
   ],
   quem_aparece: [
     { q: 'Quem pode aparecer nos vídeos?', opts: ['O dono', 'A equipe', 'Clientes', 'Só as mãos/produto', 'Ninguém (só produto)'], multi: true },
     { q: 'O dono fica à vontade na câmera?', opts: ['Muito, fala solto', 'Mais ou menos', 'Precisa de roteiro', 'Prefere não falar'], when: W('Quem pode aparecer nos vídeos?', 'dono') },
-    { q: 'Quantas pessoas da equipe topam aparecer? Quem se destaca?', opts: [], open: true, when: W('Quem pode aparecer nos vídeos?', 'equipe') },
+    ...aberta('Quantas pessoas da equipe topam aparecer? Quem se destaca?', 'Por que essa pessoa se destaca? O que ela tem?', W('Quem pode aparecer nos vídeos?', 'equipe')),
     { q: 'Tem clientes que topam gravar depoimento?', opts: ['Sim, vários', 'Uns 2 ou 3', 'Preciso perguntar'], when: W('Quem pode aparecer nos vídeos?', 'clientes') },
   ],
   quem_grava: [
@@ -314,78 +392,87 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     { q: 'Com que frequência dá para gravar?', opts: ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar'] },
     { q: 'Melhor dia e horário para gravar sem atrapalhar o movimento?', opts: [], open: true },
   ],
+  // Momento e futuro = SWOT + visão + capacidade de atendimento.
   momento: [
-    { q: 'O que a empresa faz muito bem hoje? (os pontos fortes)', opts: [], open: true },
+    ...aberta('O que a empresa faz muito bem hoje? (os pontos fortes)'),
     { q: 'O que não está bom hoje?', opts: ['Poucos clientes novos', 'Cliente não volta', 'Preço pressionado', 'Equipe', 'Atendimento lento', 'Marca pouco conhecida', 'Redes sociais paradas'], multi: true },
-    { q: 'Conte mais sobre o que não está bom: desde quando e por quê?', opts: [], open: true },
+    ...aberta('Conte mais sobre o que não está bom: desde quando e por quê?', 'O que já tentaram para resolver?'),
     { q: 'Como está o movimento hoje?', opts: ['Crescendo', 'Estável', 'Caindo', 'Sazonal (oscila)'] },
-    { q: 'Por que está caindo, na sua visão?', opts: [], open: true, when: W('Como está o movimento hoje?', 'caindo') },
-    { q: 'Onde a empresa quer chegar em 12 meses?', opts: [], open: true },
-    { q: 'O que impede de chegar lá hoje?', opts: ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Processo bagunçado'], multi: true },
-    { q: 'Que oportunidade vocês veem no mercado agora?', opts: [], open: true },
-    { q: 'O que preocupa (ameaças: concorrente novo, preço, crise)?', opts: [], open: true },
+    ...aberta('Por que está caindo, na sua visão?', 'Por que você acha isso? O que mudou?', W('Como está o movimento hoje?', 'caindo')),
+    { q: 'Quanto fatura por mês, mais ou menos?', opts: ['Até R$ 20 mil', 'R$ 20 a 50 mil', 'R$ 50 a 150 mil', 'R$ 150 a 500 mil', 'Mais de R$ 500 mil'], money: 'faturamento_mes' },
+    { q: 'Quanto o cliente gasta em média por compra? (ticket médio)', opts: ['Até R$ 50', 'R$ 50 a 150', 'R$ 150 a 500', 'R$ 500 a 2 mil', 'Mais de R$ 2 mil'], money: 'ticket_medio' },
+    { q: 'Quanto dá para atender por dia?', opts: ['Até 20', '20 a 50', '50 a 100', 'Mais de 100'] },
+    { q: 'Qual o gargalo?', opts: ['Cozinha/produção', 'Atendimento', 'Entrega', 'Espaço', 'Agenda', 'Nenhum'], multi: true },
+    { q: 'Quantos horários livres por semana, e em quais dias?', opts: [], open: true, when: W('Qual o gargalo?', 'agenda') },
+    { q: 'Quantas pessoas atendem o WhatsApp e em que horário?', opts: [], open: true, when: W('Qual o gargalo?', 'atendimento') },
+    { q: 'Onde a empresa quer estar em 3 anos?', opts: ['Mais unidades', 'Referência na região', 'Vender para o Brasil todo', 'Lançar produto novo', 'Franquia', 'Crescer a equipe'], multi: true },
+    ...aberta('E nos próximos 12 meses: o que precisa acontecer para ser um ano bom?', 'Como você vai saber que deu certo? Que número?'),
+    { q: 'O que impede de chegar lá hoje?', opts: ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Processo bagunçado', 'Marca pouco conhecida'], multi: true },
+    ...aberta('Que oportunidade vocês veem no mercado agora?', 'Por que você acha que ninguém aproveitou ainda?'),
+    ...aberta('O que preocupa (ameaças: concorrente novo, preço, crise)?', 'Já aconteceu algo assim? O que fizeram?'),
+    { q: 'O que seria um sucesso absoluto com a Peformake em 12 meses?', opts: [], open: true },
   ],
+  // Propósito e história.
   proposito: [
     { q: 'Por que a empresa existe, além de ganhar dinheiro?', opts: ['Facilitar a vida das pessoas', 'Cuidar da saúde e do bem-estar', 'Trazer alegria', 'Dar acesso a quem não tinha', 'Valorizar a região', 'Transformar vidas'], multi: true },
     { q: 'Como a empresa nasceu?', opts: ['Paixão do dono', 'Viu uma necessidade', 'Negócio de família', 'Oportunidade de mercado', 'Virada de vida'] },
-    { q: 'Quantas gerações e o que se mantém desde o começo?', opts: [], open: true, when: W('Como a empresa nasceu?', 'familia') },
-    { q: 'Que necessidade era essa? Conte.', opts: [], open: true, when: W('Como a empresa nasceu?', 'necessidade') },
-    { q: 'O que mudaria na vida das pessoas se a empresa fechasse amanhã?', opts: [], open: true },
-    { q: 'Como vocês fazem isso de um jeito diferente (o "como")?', opts: [], open: true },
+    ...aberta('Quantas gerações e o que se mantém desde o começo?', 'Por que isso nunca mudou?', W('Como a empresa nasceu?', 'familia')),
+    { q: 'Há quanto tempo existem?', opts: ['Menos de 1 ano', '1 a 3 anos', '3 a 10 anos', 'Mais de 10 anos'] },
+    ...aberta('Conte o começo: quem, onde e o momento da virada', 'Lembra de um detalhe desse dia? (lugar, frase, sensação)'),
+    ...aberta('Qual foi a maior dificuldade e como superaram?', 'O que aprenderam com isso que usam até hoje?'),
+    ...aberta('Um cliente ou caso que marcou a história', 'O que esse cliente diria sobre vocês?'),
+    { q: 'Conquistas que dão orgulho', opts: ['Prêmio', 'Nova unidade', 'Cliente grande', 'Marca de vendas', 'Reconhecimento na mídia'], multi: true },
+    ...aberta('O que mudaria na vida das pessoas se a empresa fechasse amanhã?', 'Por que você acha isso?'),
+    ...aberta('Como vocês fazem isso de um jeito diferente (o "como")?', 'Me dá um exemplo real do dia a dia'),
     { q: 'Em uma frase: qual é a missão?', opts: [], open: true },
   ],
   percepcao: [
     { q: 'Como a marca QUER ser vista?', opts: ['A mais confiável', 'A mais moderna', 'A de melhor preço', 'A mais premium', 'A mais próxima', 'A especialista', 'A mais divertida'], multi: true },
     { q: 'E como você acha que ela É vista hoje?', opts: ['A mais confiável', 'A mais moderna', 'A de melhor preço', 'A mais premium', 'A mais próxima', 'A especialista', 'Pouco conhecida'], multi: true },
-    { q: 'O que falta para sair de como é vista para como quer ser vista?', opts: [], open: true },
+    ...aberta('O que falta para sair de como é vista para como quer ser vista?', 'Por que você acha que ainda não chegou lá?'),
     { q: 'Quem compra quer se sentir como?', opts: ['Esperto', 'Cuidado', 'Especial', 'Moderno', 'Seguro', 'Parte de um grupo'], multi: true },
     { q: 'Que relação a marca tem com o cliente?', opts: ['Amiga', 'Professora', 'Parceira', 'Cuidadora', 'Inspiradora'] },
     { q: 'Visual: que estilo representa a marca?', opts: ['Cores vivas', 'Tons neutros', 'Escuro e elegante', 'Natural', 'Minimalista', 'Cheio de energia'], multi: true },
-    { q: '3 palavras que as pessoas devem lembrar ao ver a marca', opts: [], open: true },
+    ...aberta('3 palavras que as pessoas devem lembrar ao ver a marca', 'O que um cliente diria sobre isso?'),
   ],
-  arquetipo: [
-    { q: 'Qual personalidade combina mais com a marca? (até 2)', opts: ['Cuidador (protege)', 'Herói (supera)', 'Sábio (ensina)', 'Explorador (aventura)', 'Criador (inova)', 'Governante (lidera)', 'Mago (transforma)', 'Inocente (simples e otimista)', 'Cara comum (igual a você)', 'Amante (prazer e beleza)', 'Bobo da corte (diversão)', 'Rebelde (quebra regras)'], multi: true },
-    { q: 'Uma marca famosa com o jeito que vocês querem ter (e por quê)', opts: [], open: true },
-    { q: 'Uma marca que vocês NÃO querem parecer', opts: [], open: true },
-  ],
-  posicionamento: [
-    { q: 'Para quem é, principalmente? (o cliente que vocês mais querem)', opts: [], open: true },
-    { q: 'Que problema vocês resolvem melhor que todo mundo?', opts: [], open: true },
-    { q: 'O que o cliente diria que vocês são? (a categoria)', opts: [], open: true },
-    { q: 'Por que acreditar? Qual a prova?', opts: ['Anos de mercado', 'Clientes atendidos', 'Certificação', 'Garantia', 'Resultados mostrados', 'Avaliações'], multi: true },
-    { q: 'Contra quem competem de verdade?', opts: ['Concorrente direto', 'O cliente fazer sozinho', 'Não fazer nada', 'Loja online', 'Informal ou mais barato'], multi: true },
-  ],
-  historia: [
-    { q: 'Como começou? Conte o momento da virada', opts: [], open: true },
-    { q: 'Qual foi a maior dificuldade e como superaram?', opts: [], open: true },
-    { q: 'Um cliente ou caso que marcou a história', opts: [], open: true },
-    { q: 'Conquistas que dão orgulho', opts: ['Prêmio', 'Nova unidade', 'Cliente grande', 'Marca de vendas', 'Reconhecimento na mídia'], multi: true },
-  ],
+  // Como o cliente compra = jornada + objeções.
   jornada: [
     { q: 'Como o cliente descobre vocês?', opts: ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace'], multi: true },
     { q: 'O que ele faz antes de comprar?', opts: ['Compara preço', 'Pede indicação', 'Olha avaliações', 'Visita o perfil', 'Pergunta no WhatsApp', 'Visita a loja'], multi: true },
     { q: 'Quanto tempo do primeiro contato até comprar?', opts: ['Na hora', 'No mesmo dia', 'Alguns dias', 'Semanas', 'Meses'] },
-    { q: 'Que "trabalho" o cliente contrata quando compra de vocês?', opts: [], open: true },
+    { q: 'O que o cliente mais pergunta antes de comprar?', opts: ['Preço', 'Prazo', 'Garantia', 'Forma de pagamento', 'Se funciona', 'Onde fica'], multi: true },
+    { q: 'O que ele fala quando não fecha?', opts: ['Tá caro', 'Vou pensar', 'Vou ver com alguém', 'Depois eu volto', 'Achei mais barato'], multi: true },
+    ...aberta('Como vocês respondem hoje ao "tá caro"?', 'E funciona? O que o cliente responde?', W('O que ele fala quando não fecha?', 'caro', 'barato')),
+    ...aberta('Qual o medo do cliente na hora de comprar?', 'O que um cliente diria sobre isso?'),
+    ...aberta('Que "trabalho" o cliente contrata quando compra de vocês? (o que ele quer resolver de verdade)', 'Me dá um exemplo real de um cliente'),
+    { q: 'Quanto tempo leva do pedido à entrega (ou ao resultado)?', opts: [], open: true },
     { q: 'Depois de comprar ele volta ou indica?', opts: ['Volta todo mês', 'Volta às vezes', 'Compra uma vez', 'Indica muito'], multi: true },
     { q: 'O que fazem no pós-venda?', opts: ['Mensagem de agradecimento', 'Pede avaliação', 'Cupom para voltar', 'Acompanha o resultado', 'Nada ainda'], multi: true },
   ],
-  objecoes: [
-    { q: 'O que o cliente mais pergunta antes de comprar?', opts: ['Preço', 'Prazo', 'Garantia', 'Forma de pagamento', 'Se funciona', 'Onde fica'], multi: true },
-    { q: 'O que ele fala quando não fecha?', opts: ['Tá caro', 'Vou pensar', 'Vou ver com alguém', 'Depois eu volto', 'Achei mais barato'], multi: true },
-    { q: 'Como vocês respondem hoje ao "tá caro"?', opts: [], open: true, when: W('O que ele fala quando não fecha?', 'caro', 'barato') },
-    { q: 'Qual o medo do cliente na hora de comprar?', opts: [], open: true },
+  // Novo (Italo, 20/11): o que já foi feito, o que deu certo e a verba (dinheiro só para admin).
+  marketing: [
+    { q: 'O que já fizeram de marketing?', opts: ['Anúncio no Instagram/Facebook', 'Google Ads', 'Influenciador', 'Outra agência ou assessoria', 'Panfleto, rádio ou outdoor', 'Só postar no Instagram', 'Nada ainda'], multi: true },
+    { q: 'Quem fazia os anúncios?', opts: ['O dono', 'Alguém da equipe', 'Agência ou assessoria', 'Freelancer'], multi: true, when: W('O que já fizeram de marketing?', 'anuncio', 'google') },
+    ...aberta('Como foi com a outra agência: quanto tempo e por que saiu?', 'O que ela fazia que você gostaria que continuasse?', W('O que já fizeram de marketing?', 'agencia')),
+    ...aberta('Que influenciador e qual foi o resultado?', 'Quanto vendeu ou quantos clientes vieram?', W('O que já fizeram de marketing?', 'influenciador')),
+    ...aberta('O que funcionou melhor até hoje?', 'Por que você acha que funcionou?'),
+    ...aberta('O que não funcionou?', 'Por que você acha que não deu certo?'),
+    { q: 'Como vocês sabem se uma ação deu resultado?', opts: ['Pergunta como conheceu', 'Cupom ou código', 'Relatório da agência', 'Movimento na loja', 'Não medimos'], multi: true },
+    { q: 'Quanto dá para investir em anúncio por mês?', opts: ['Até R$ 500', 'R$ 500 a 1.500', 'R$ 1.500 a 3 mil', 'R$ 3 a 10 mil', 'Mais de R$ 10 mil', 'Ainda não sei'], money: 'verba_anuncio' },
+    { q: 'Tem conteúdo pronto que dá para reaproveitar?', opts: ['Fotos', 'Vídeos', 'Depoimentos', 'Posts antigos que foram bem', 'Não tem'], multi: true },
   ],
-  visao: [
-    { q: 'Onde a empresa quer estar em 3 anos?', opts: ['Mais unidades', 'Referência na região', 'Vender para o Brasil todo', 'Lançar produto novo', 'Franquia', 'Crescer a equipe'], multi: true },
-    { q: 'Qual o maior obstáculo hoje?', opts: ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Marca pouco conhecida'], multi: true },
-    { q: 'O que seria um sucesso absoluto com a Peformake em 12 meses?', opts: [], open: true },
-  ],
-  capacidade: [
-    { q: 'Quanto dá para atender por dia?', opts: ['Até 20', '20 a 50', '50 a 100', 'Mais de 100'] },
-    { q: 'Qual o gargalo?', opts: ['Cozinha/produção', 'Atendimento', 'Entrega', 'Espaço', 'Agenda', 'Nenhum'], multi: true },
-    { q: 'Quantos horários livres por semana, e em quais dias?', opts: [], open: true, when: W('Qual o gargalo?', 'agenda') },
-    { q: 'Quantas pessoas atendem o WhatsApp e em que horário?', opts: [], open: true, when: W('Qual o gargalo?', 'atendimento') },
-    { q: 'Quanto tempo leva do pedido à entrega?', opts: [], open: true },
+  // Novo: identidade visual e acessos (nunca pedir senha aqui).
+  marca: [
+    { q: 'Tem logo em arquivo?', opts: ['Sim, em boa qualidade (PDF, PNG, vetor)', 'Só uma imagem simples', 'Não tem logo'] },
+    { q: 'A marca tem cores definidas?', opts: ['Sim, com o código (ex.: #1FC8DB)', 'Sim, mas sem o código', 'Ainda não'] },
+    { q: 'Quais são as cores? (nomes ou códigos)', opts: [], open: true, when: W('A marca tem cores definidas?', 'sim') },
+    ...aberta('Como as pessoas reconhecem a marca hoje? (uma cor, um desenho, uma frase, a fachada)', 'O que um cliente diria sobre isso?'),
+    { q: 'Tem fonte (tipo de letra) definida?', opts: ['Sim, sei o nome', 'Sim, mas não sei o nome', 'Não'] },
+    { q: 'Tem manual da marca?', opts: ['Sim', 'Não', 'Não sei'] },
+    { q: 'Tem fotos boas?', opts: ['Dos produtos', 'Do espaço', 'Da equipe', 'Do dono', 'Não tem fotos boas'], multi: true },
+    { q: 'Que acessos a Peformake já tem?', opts: ['Instagram', 'Facebook', 'Gerenciador de anúncios (Meta)', 'Google Meu Negócio', 'Google Ads', 'Site', 'Nenhum ainda'], multi: true },
+    { q: 'Quem é o dono das contas?', opts: ['O dono da empresa', 'Alguém da equipe', 'A agência antiga', 'Não sei'], multi: true },
+    ...aberta('Falta algum acesso? Qual e com quem está?', 'O que precisa para liberar? (quem, até quando)', W('Quem é o dono das contas?', 'agencia', 'nao sei', 'equipe')),
   ],
 }
 
@@ -401,9 +488,39 @@ export const DIRECTION_QUIZ: QuizStep[] = [
 
 export function quizText(steps: QuizStep[], answers: string[][]): string {
   return steps.map((s, i) => {
+    if (s.money) return ''
     const a = (answers[i] ?? []).map((x) => x.trim()).filter(Boolean)
     return a.length ? `${s.q.replace(/\?$/, '')}: ${a.join(', ')}.` : ''
   }).filter(Boolean).join(' ')
+}
+
+const nrm = (x: string) => x.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+/**
+ * Quais perguntas do guia aparecem (índices em `steps`): a que depende de outra só aparece quando a resposta pede
+ * e a outra está à mostra; o puxa-fio (`has: []`) aparece quando a anterior foi respondida. `money`: false esconde as de dinheiro.
+ */
+export function visibleSteps(steps: QuizStep[], answers: string[][], money = true): number[] {
+  const out: number[] = []
+  const shown = new Set<number>()
+  steps.forEach((s, k) => {
+    if (s.money && !money) return
+    if (s.when) {
+      const m = steps.findIndex((x) => x.q === s.when!.q)
+      if (m < 0 || m >= k || !shown.has(m)) return
+      const got = nrm((answers[m] ?? []).join(' ')).trim()
+      if (!got) return
+      if (s.when.has.length && !s.when.has.some((h) => got.includes(nrm(h)))) return
+    }
+    shown.add(k); out.push(k)
+  })
+  return out
+}
+
+/** Respostas das perguntas de dinheiro, para os campos de valor. */
+export function quizMoney(steps: QuizStep[], answers: string[][]): Partial<Record<MoneyKey, string>> {
+  const out: Partial<Record<MoneyKey, string>> = {}
+  steps.forEach((s, i) => { const a = (answers[i] ?? []).map((x) => x.trim()).filter(Boolean); if (s.money && a.length) out[s.money] = a.join(', ') })
+  return out
 }
 
 /** Concorrente a partir de um link colado (Instagram, Maps, site): o nome sai do próprio link. */

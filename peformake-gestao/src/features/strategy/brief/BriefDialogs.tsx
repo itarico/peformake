@@ -6,7 +6,7 @@ import { VoiceNote } from '@/components/ui/VoiceNote'
 import { cn } from '@/lib/cn'
 import { fileUrl, type ClientQuestion } from '../questionsApi'
 import { useTranscriber } from '@/lib/transcriber'
-import { detectLink, fromLinkList, linkList, QUIZ, quizText, type BriefFixed, type LinkItem, type QuizStep, type TextKey } from './briefRules'
+import { detectLink, fromLinkList, isFio, linkList, MONEY_FIELDS, MONTHS_FULL, MONTHS_SHORT, QUIZ, quizMoney, quizText, visibleSteps, type BriefFixed, type LinkItem, type MoneyKey, type QuizStep, type TextKey } from './briefRules'
 import { IMPORT_ACCEPT, importProducts, productsFromText } from './productImport'
 import { productsFromUrl } from './briefApi'
 
@@ -32,15 +32,17 @@ function Footer({ busy, onSave, onClose, label = 'Salvar', disabled }: { busy?: 
 }
 
 /** Um campo de texto: escrever, falar (transcreve sozinho) ou responder tocando em opções (quiz). */
-export function TextDialog({ title, hint, initial, onSave, onClose, busy, error, quizKey, quizSteps }: { title: string; hint: string; initial: string; onSave: (v: string) => void; onClose: () => void; busy?: boolean; error?: string | null; quizKey?: TextKey; quizSteps?: QuizStep[] }) {
+/** `money`: campos de valor do cartão (só para administrador; sem ele, as perguntas de dinheiro nem aparecem). */
+export function TextDialog({ title, hint, initial, onSave, onClose, busy, error, quizKey, quizSteps, money }: { title: string; hint: string; initial: string; onSave: (v: string, money?: Partial<Record<MoneyKey, string>>) => void; onClose: () => void; busy?: boolean; error?: string | null; quizKey?: TextKey; quizSteps?: QuizStep[]; money?: { key: MoneyKey; value: string }[] }) {
   const [v, setV] = useState(initial)
+  const [cash, setCash] = useState<Partial<Record<MoneyKey, string>>>(() => Object.fromEntries((money ?? []).map((m) => [m.key, m.value])))
   const steps = quizSteps ?? (quizKey ? QUIZ[quizKey] : undefined)
   const [quiz, setQuiz] = useState(false)
   // Italo, 20/11: antes de escrever, 3 jeitos de responder (Escolher, Digitar, Falar). Campo já preenchido abre direto no texto.
   const [mode, setMode] = useState<'pick' | 'type' | 'talk'>(initial.trim() ? 'type' : 'pick')
   const [live, setLive] = useState('')
-  if (quiz && steps) return <QuizDialog title={title} steps={steps} onClose={() => { setQuiz(false); setMode('type') }} onDone={(t) => { setV((c) => (c.trim() ? `${c.trim()}
-${t}` : t)); setQuiz(false); setMode('type') }} />
+  const save = () => onSave(v.trim(), money?.length ? Object.fromEntries(money.map((m) => [m.key, (cash[m.key] ?? '').trim()])) : undefined)
+  if (quiz && steps) return <QuizDialog title={title} steps={steps} money={!!money?.length} onClose={() => { setQuiz(false); setMode('type') }} onDone={(t, got) => { setV((c) => (c.trim() ? `${c.trim()}\n${t}` : t)); setCash((c) => ({ ...c, ...got })); setQuiz(false); setMode('type') }} />
   if (mode === 'pick') return (
     <Dialog open onClose={onClose} title={title} description={hint} size="sm" footer={<Button variant="secondary" onClick={onClose}>Cancelar</Button>}>
       <div data-modo-resposta className="grid grid-cols-1 gap-2">
@@ -52,13 +54,19 @@ ${t}` : t)); setQuiz(false); setMode('type') }} />
   )
   const shown = live ? (v.trim() ? `${v.trim()} ${live}` : live) : v
   return (
-    <Dialog open onClose={onClose} title={title} description={hint} size="sm" footer={<Footer busy={busy} onSave={() => onSave(v.trim())} onClose={onClose} />}>
+    <Dialog open onClose={onClose} title={title} description={hint} size="sm" footer={<Footer busy={busy} onSave={save} onClose={onClose} />}>
       <div className="flex flex-col gap-2">
-        <textarea autoFocus={mode === 'type'} rows={5} value={shown} readOnly={!!live} onChange={(e) => setV(e.target.value)} className={cn(area, live && 'text-muted')} aria-label={title} />
+        <textarea autoFocus={mode === 'type'} rows={money?.length ? 4 : 5} value={shown} readOnly={!!live} onChange={(e) => setV(e.target.value)} className={cn(area, live && 'text-muted')} aria-label={title} />
         <div className="flex flex-wrap items-start gap-2">
           <VoiceNote autoStart={mode === 'talk'} onLive={setLive} onText={(t) => setV((c) => (c.trim() ? `${c.trim()} ${t}` : t))} />
           {steps && <button type="button" onClick={() => setQuiz(true)} className="inline-flex min-h-9 w-fit cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold hover:border-ink"><ListChecks size={14} aria-hidden="true" /> Escolher opções</button>}
         </div>
+        {!!money?.length && <div data-dinheiro className="grid grid-cols-2 gap-2">
+          {money.map((m) => <label key={m.key} className="min-w-0 text-[12px] font-semibold text-muted">{MONEY_FIELDS[m.key].label}
+            <input value={cash[m.key] ?? ''} onChange={(e) => setCash((c) => ({ ...c, [m.key]: e.target.value }))} inputMode="decimal" className={cn(field, 'min-h-10 font-normal text-ink')} placeholder={MONEY_FIELDS[m.key].placeholder} />
+          </label>)}
+          <p className="col-span-2 -mt-1 text-[11.5px] text-muted">Valores: só administrador vê.</p>
+        </div>}
         {error && <p role="alert" className="text-[12.5px] text-warn-ink">{error}</p>}
       </div>
     </Dialog>
@@ -66,33 +74,30 @@ ${t}` : t)); setQuiz(false); setMode('type') }} />
 }
 
 /** Quiz: uma pergunta por tela, opções para tocar e "Outro" para escrever. No fim, vira texto no campo. */
-export function QuizDialog({ title, steps, onDone, onClose }: { title: string; steps: QuizStep[]; onDone: (text: string) => void; onClose: () => void }) {
+/** `money`: mostra as perguntas de dinheiro (só administrador); a resposta delas volta à parte, não no texto. */
+export function QuizDialog({ title, steps, onDone, onClose, money = false }: { title: string; steps: QuizStep[]; onDone: (text: string, money: Partial<Record<MoneyKey, string>>) => void; onClose: () => void; money?: boolean }) {
   // Respostas por pergunta (índice em `steps`); as que dependem de outra só aparecem quando a resposta pede (Italo, 20/11).
   const [ans, setAns] = useState<string[][]>(steps.map(() => []))
   const [other, setOther] = useState<string[]>(steps.map(() => ''))
   const [otherOpen, setOtherOpen] = useState(false)
   const [pos, setPos] = useState(0)
   const all = () => ans.map((a, k) => [...a, ...(other[k]!.trim() ? [other[k]!.trim()] : [])])
-  const n = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
-  const visible = steps.map((s, k) => [s, k] as const).filter(([s]) => {
-    if (!s.when) return true
-    const m = steps.findIndex((x) => x.q === s.when!.q)
-    const got = m < 0 ? '' : n(all()[m]!.join(' '))
-    return !!got && s.when.has.some((h) => got.includes(n(h)))
-  })
+  const visible = visibleSteps(steps, all(), money).map((k) => [steps[k]!, k] as const)
   const at = Math.min(pos, visible.length - 1)
   const [st, i] = visible[at]!
   const cur = ans[i]!
   const pick = (o: string) => setAns((a) => a.map((x, k) => (k !== i ? x : st.multi ? (x.includes(o) ? x.filter((y) => y !== o) : [...x, o]) : x.includes(o) ? [] : [o])))
   const last = at === visible.length - 1
   const shown = () => { const keep = new Set(visible.map(([, k]) => k)); return all().map((a, k) => (keep.has(k) ? a : [])) }
-  const next = () => { setOtherOpen(false); if (last) onDone(quizText(steps, shown())); else setPos(at + 1) }
+  const next = () => { setOtherOpen(false); if (last) onDone(quizText(steps, shown()), quizMoney(steps, shown())); else setPos(at + 1) }
   const answered = !!(cur.length || other[i]!.trim())
+  const many = st.opts.length > 8
   return (
-    <Dialog open onClose={onClose} title={title} description={`Pergunta ${at + 1} de ${visible.length}${st.open ? ' · escreva ou fale' : st.multi ? ' · pode marcar mais de uma' : ''}`} size="sm"
+    <Dialog open onClose={onClose} title={title} description={`Pergunta ${at + 1} de ${visible.length}${st.open ? ' · escreva ou fale' : st.multi ? ' · pode marcar mais de uma' : ''}${st.money ? ' · só administrador vê' : ''}`} size="sm"
       footer={<div className="flex gap-2"><Button onClick={next}>{last ? 'Usar respostas' : answered ? 'Próxima' : 'Pular'}</Button><Button variant="secondary" onClick={() => (at ? (setOtherOpen(false), setPos(at - 1)) : onClose())}>{at ? 'Voltar' : 'Cancelar'}</Button></div>}>
       <div data-quiz className="flex flex-col gap-3">
         <div className="h-1.5 overflow-hidden rounded-full bg-raised" aria-hidden="true"><div className="h-full rounded-full bg-accent transition-all" style={{ width: `${((at + 1) / visible.length) * 100}%` }} /></div>
+        {isFio(st) && <span data-puxa-fio className="-mb-2 text-[11.5px] font-semibold uppercase tracking-wide text-accent-ink">Puxando o fio</span>}
         <b className="text-[16px] leading-snug">{st.q}</b>
         {st.open
           ? <>
@@ -101,9 +106,9 @@ export function QuizDialog({ title, steps, onDone, onClose }: { title: string; s
             </>
           : <>
               {/* Muitas opções (ex.: os 12 arquétipos): chips menores para caber sem rolar no celular. */}
-              <div className={cn('flex flex-wrap', st.opts.length > 8 ? 'gap-1' : 'gap-1.5')} role="group" aria-label={st.q}>
-                {st.opts.map((o) => <button key={o} type="button" aria-pressed={cur.includes(o)} onClick={() => pick(o)} className={cn('cursor-pointer rounded-full border font-medium', st.opts.length > 8 ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', cur.includes(o) ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o}</button>)}
-                <button type="button" aria-pressed={otherOpen || !!other[i]!.trim()} onClick={() => setOtherOpen(true)} className={cn('cursor-pointer rounded-full border border-dashed font-medium', st.opts.length > 8 ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', other[i]!.trim() ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{other[i]!.trim() ? `Outro: ${other[i]}` : 'Outro'}</button>
+              <div className={cn('flex flex-wrap', many ? 'gap-1' : 'gap-1.5')} role="group" aria-label={st.q}>
+                {st.opts.map((o) => <button key={o} type="button" aria-pressed={cur.includes(o)} onClick={() => pick(o)} className={cn('cursor-pointer rounded-full border font-medium', many ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', cur.includes(o) ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o}</button>)}
+                <button type="button" aria-pressed={otherOpen || !!other[i]!.trim()} onClick={() => setOtherOpen(true)} className={cn('cursor-pointer rounded-full border border-dashed font-medium', many ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', other[i]!.trim() ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{other[i]!.trim() ? `Outro: ${other[i]}` : 'Outro'}</button>
               </div>
               {otherOpen && <input autoFocus value={other[i]} onChange={(e) => setOther((o) => o.map((x, k) => (k === i ? e.target.value : x)))} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); setOtherOpen(false) } }} className={field} placeholder="Escreva a sua resposta" aria-label="Outra resposta" />}
             </>}
@@ -406,6 +411,39 @@ export function AnswerDialog({ q, onSave, onClose, busy, error }: { q: ClientQue
           </div>
         )}
         <textarea rows={3} value={text} onChange={(e) => setText(e.target.value)} placeholder="Ou escreva aqui" aria-label="Resposta" className={cn(area, 'max-sm:h-[58px]')} />
+        {error && <p role="alert" className="text-[12.5px] text-warn-ink">{error}</p>}
+      </div>
+    </Dialog>
+  )
+}
+
+/**
+ * Sazonalidade (Italo, 20/11): só os meses fortes e fracos (um toque marca forte, dois fraco, três limpa) e o porquê.
+ * Datas comemorativas não se perguntam: o sistema já sabe. Falar é o principal para o porquê.
+ */
+export function SeasonDialog({ fortes, fracos, porque, onSave, onClose, busy, error }: { fortes: number[]; fracos: number[]; porque: string; onSave: (v: Pick<BriefFixed, 'meses_fortes' | 'meses_fracos' | 'sazonalidade'>) => void; onClose: () => void; busy?: boolean; error?: string | null }) {
+  const [mark, setMark] = useState<Record<number, 'forte' | 'fraco'>>(() => ({ ...Object.fromEntries(fracos.map((m) => [m, 'fraco'])), ...Object.fromEntries(fortes.map((m) => [m, 'forte'])) }))
+  const [v, setV] = useState(porque)
+  const [live, setLive] = useState('')
+  const tap = (m: number) => setMark((c) => { const n = { ...c }; if (!c[m]) n[m] = 'forte'; else if (c[m] === 'forte') n[m] = 'fraco'; else delete n[m]; return n })
+  const pick = (k: 'forte' | 'fraco') => Object.entries(mark).filter(([, x]) => x === k).map(([m]) => Number(m)).sort((a, b) => a - b)
+  const shown = live ? (v.trim() ? `${v.trim()} ${live}` : live) : v
+  return (
+    <Dialog open onClose={onClose} title="Sazonalidade" description="Toque no mês: 1 vez é forte, 2 vezes é fraco. As datas comemorativas o sistema já sabe." size="sm"
+      footer={<Footer busy={busy} disabled={!Object.keys(mark).length && !v.trim()} onSave={() => onSave({ meses_fortes: pick('forte'), meses_fracos: pick('fraco'), sazonalidade: v.trim() })} onClose={onClose} />}>
+      <div data-sazonalidade className="flex flex-col gap-2.5">
+        <div className="grid grid-cols-4 gap-1.5" role="group" aria-label="Meses do ano">
+          {MONTHS_SHORT.map((l, k) => {
+            const m = k + 1, s = mark[m]
+            return <button key={l} type="button" data-mes={s ?? 'normal'} aria-label={`${MONTHS_FULL[k]}: ${s ?? 'normal'}`} onClick={() => tap(m)}
+              className={cn('flex min-h-11 cursor-pointer flex-col items-center justify-center rounded-xl border text-[13px] font-semibold leading-tight', s === 'forte' ? 'border-transparent bg-ok-soft text-ok-ink' : s === 'fraco' ? 'border-transparent bg-warn-soft text-warn-ink' : 'border-line-strong hover:border-ink')}>
+              {l}{s && <span className="text-[10.5px] font-medium">{s}</span>}
+            </button>
+          })}
+        </div>
+        <b className="text-[13.5px]">Por que esses meses são fortes ou fracos?</b>
+        <textarea rows={3} value={shown} readOnly={!!live} onChange={(e) => setV(e.target.value)} className={cn(area, 'mt-0', live && 'text-muted')} placeholder="Ex.: dezembro enche com as festas da empresa; fevereiro cai porque o público viaja" aria-label="Por que esses meses" />
+        <VoiceNote onLive={setLive} onText={(t) => setV((c) => (c.trim() ? `${c.trim()} ${t}` : t))} />
         {error && <p role="alert" className="text-[12.5px] text-warn-ink">{error}</p>}
       </div>
     </Dialog>

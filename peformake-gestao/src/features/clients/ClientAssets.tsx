@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Download, FileImage, FileText, FileUp, Film, Folder, Trash2 } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Download, FileImage, FileText, FileUp, Film, Folder, FolderInput, Trash2 } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
+import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
@@ -20,6 +22,24 @@ const FOLDERS: { id: FolderId; label: string }[] = [
 ]
 const SOURCE: Record<string, string> = { manual: 'Enviado pela equipe', creative: 'Criativo automático', report: 'Relatório gerado', strategy: 'Estratégia', agente: 'Feito pela Peformake', portal: 'Enviado pelo cliente' }
 const MAX = 100 * 1024 * 1024
+
+/**
+ * Pedidos de arquivo do Briefing (Italo, 20/11): o que a estratégia precisa ver. O anexado entra na pasta Briefing
+ * com o nome do pedido na frente ("Tabela de preços · arquivo.pdf"), e o pedido fica marcado. O agente lê tudo.
+ */
+export const BRIEF_REQUESTS: { id: string; label: string; hint: string; match: RegExp; accept?: string }[] = [
+  { id: 'precos', label: 'Tabela de preços', hint: 'PDF, planilha ou foto', match: /tabela|preco/ },
+  { id: 'cardapio', label: 'Cardápio ou catálogo', hint: 'O que o cliente vê para escolher', match: /cardapio|catalogo|menu/ },
+  { id: 'fotos', label: 'Fotos dos produtos e do espaço', hint: 'Pode mandar várias', match: /foto/, accept: 'image/*,video/*' },
+  { id: 'marca', label: 'Logo e manual da marca', hint: 'PNG, PDF ou vetor; cores e fontes', match: /logo|manual/ },
+  { id: 'depoimentos', label: 'Depoimentos e prints de avaliações', hint: 'Prints do Google, WhatsApp, Instagram', match: /depoimento|avaliac|print/ },
+  { id: 'antigos', label: 'Relatórios ou campanhas antigas', hint: 'O que já foi feito e o resultado', match: /relatorio|campanha/ },
+]
+const plain = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+/** Pedido já atendido: tem arquivo com o nome do pedido na frente ou com a palavra dele no nome. */
+export function requestDone(req: { label: string; match: RegExp }, names: string[]): boolean {
+  return names.some((n) => plain(n).startsWith(plain(req.label)) || req.match.test(plain(n)))
+}
 
 interface Asset { id: string; folder: FolderId; name: string; bucket: string; path: string; mime: string; size: number; source: string; createdAt: string }
 
@@ -62,20 +82,36 @@ export function ClientAssets({ clientId, only }: { clientId: string; only?: Fold
   const input = useRef<HTMLInputElement>(null)
   const refresh = () => void queryClient.invalidateQueries({ queryKey: key })
 
+  // Pedido de arquivo que está sendo atendido (o nome dele vai na frente do arquivo).
+  const [req, setReq] = useState<string | null>(null)
+  const [importFor, setImportFor] = useState<string | null>(null)
+  const reqInput = useRef<HTMLInputElement>(null)
   const upload = useMutation({
-    mutationFn: async (files: File[]) => {
+    mutationFn: async (arg: File[] | { files: File[]; prefix?: string }) => {
+      const { files, prefix } = Array.isArray(arg) ? { files: arg, prefix: undefined } : arg
       for (const file of files) {
         if (file.size > MAX) throw new Error(`${file.name} passa de 100 MB.`)
-        const path = `${clientId}/${folder}/${crypto.randomUUID()}-${safeName(file.name)}`
+        const name = prefix ? `${prefix} · ${file.name}` : file.name
+        const path = `${clientId}/${folder}/${crypto.randomUUID()}-${safeName(name)}`
         const up = await supabase.storage.from('client-assets').upload(path, file, { contentType: file.type || 'application/octet-stream' })
         if (up.error) throw up.error
-        const { error } = await supabase.rpc('client_asset_register', { _client_id: clientId, _folder: folder, _name: file.name, _path: path, _mime: file.type || 'application/octet-stream', _size: file.size })
+        const { error } = await supabase.rpc('client_asset_register', { _client_id: clientId, _folder: folder, _name: name, _path: path, _mime: file.type || 'application/octet-stream', _size: file.size })
         if (error) throw error
       }
     },
     onSuccess: refresh,
     onError: (e) => setProblem((e as Error).message || 'Não foi possível enviar.'),
-    onSettled: () => { if (input.current) input.current.value = '' },
+    onSettled: () => { if (input.current) input.current.value = ''; if (reqInput.current) reqInput.current.value = '' },
+  })
+  // Importar: traz um arquivo que já está noutra pasta do cliente (ex.: o logo em Design). Copia, não move.
+  const importAsset = useMutation({
+    mutationFn: async ({ a, prefix }: { a: Asset; prefix: string }) => {
+      const { data: blob, error } = await supabase.storage.from(a.bucket).download(a.path)
+      if (error || !blob) throw error ?? new Error('Não foi possível ler o arquivo.')
+      await upload.mutateAsync({ files: [new File([blob], a.name, { type: a.mime || blob.type })], prefix })
+    },
+    onSuccess: () => setImportFor(null),
+    onError: (e) => setProblem((e as Error).message || 'Não foi possível importar.'),
   })
   const remove = useMutation({
     mutationFn: async (a: Asset) => {
@@ -91,6 +127,13 @@ export function ClientAssets({ clientId, only }: { clientId: string; only?: Fold
   const list = data.data.filter((a) => a.folder === folder)
   const count = (f: FolderId) => data.data.filter((a) => a.folder === f).length
 
+  const names = list.map((a) => a.name)
+  const others = data.data.filter((a) => a.folder !== folder)
+  const pickReq = (r: (typeof BRIEF_REQUESTS)[number]) => {
+    setProblem(null); setReq(r.label)
+    if (reqInput.current) { reqInput.current.accept = r.accept ?? ''; reqInput.current.click() }
+  }
+
   return (
     <section aria-label="Arquivos do cliente" className={cn('grid grid-cols-1 gap-3', !only && 'md:grid-cols-[220px_minmax(0,1fr)]')}>
       {!only && <nav aria-label="Pastas" className="flex gap-1 overflow-x-auto md:flex-col">
@@ -105,6 +148,21 @@ export function ClientAssets({ clientId, only }: { clientId: string; only?: Fold
       </nav>}
 
       <div className="flex min-w-0 flex-col gap-2">
+        {only === 'briefing' && <ul data-pedidos aria-label="Arquivos que a estratégia precisa" className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+          {BRIEF_REQUESTS.map((r) => {
+            const done = requestDone(r, names)
+            return (
+              <li key={r.id} data-pedido={r.id} data-feito={done ? 'sim' : 'nao'} className="flex min-h-14 items-center gap-2.5 rounded-2xl border border-line bg-surface px-3 py-1.5">
+                <span aria-hidden="true" className={cn('grid size-8 shrink-0 place-items-center rounded-full', done ? 'bg-ok-soft text-ok-ink' : 'border border-dashed border-line-strong text-muted')}>{done ? <Check size={15} strokeWidth={3} /> : <FileUp size={15} />}</span>
+                <span className="min-w-0 flex-1"><b className="block truncate text-[13.5px]">{r.label}</b><span className="block truncate text-[12px] text-muted">{done ? 'Já anexado' : r.hint}</span></span>
+                <button type="button" disabled={upload.isPending} onClick={() => pickReq(r)} className="min-h-9 shrink-0 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-semibold hover:border-ink disabled:opacity-50">{upload.isPending && req === r.label ? 'Enviando' : 'Anexar'}</button>
+                {others.length > 0 && <button type="button" onClick={() => { setProblem(null); setImportFor(r.label) }} aria-label={`Importar ${r.label} de outra pasta`} title="Usar um arquivo que já está noutra pasta do cliente" className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full border border-line-strong hover:border-ink"><FolderInput size={15} aria-hidden="true" /></button>}
+              </li>
+            )
+          })}
+        </ul>}
+        {only === 'briefing' && <input ref={reqInput} type="file" multiple className="sr-only" aria-hidden="true" tabIndex={-1} onChange={(e) => { const files = [...(e.target.files ?? [])]; if (files.length) upload.mutate({ files, prefix: req ?? undefined }) }} />}
+        {importFor && <ImportDialog title={importFor} files={others} busy={importAsset.isPending} error={importAsset.isError ? problem : null} onClose={() => setImportFor(null)} onPick={(a) => importAsset.mutate({ a, prefix: importFor })} />}
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => { e.preventDefault(); setProblem(null); const files = [...e.dataTransfer.files]; if (files.length) upload.mutate(files) }}
@@ -135,5 +193,35 @@ export function ClientAssets({ clientId, only }: { clientId: string; only?: Fold
         </ul>
       </div>
     </section>
+  )
+}
+
+/** Importar: escolhe um arquivo que já está noutra pasta do cliente. Sem rolagem: 4 por página. */
+function ImportDialog({ title, files, busy, error, onPick, onClose }: { title: string; files: Asset[]; busy: boolean; error: string | null; onPick: (a: Asset) => void; onClose: () => void }) {
+  const per = 4
+  const [page, setPage] = useState(0)
+  const pages = Math.max(1, Math.ceil(files.length / per))
+  const label = (f: FolderId) => FOLDERS.find((x) => x.id === f)?.label ?? f
+  return (
+    <Dialog open onClose={onClose} title={`Importar: ${title}`} description="Escolha um arquivo que já está noutra pasta do cliente. Ele é copiado para o Briefing." size="sm"
+      footer={<div className="flex w-full items-center gap-2"><Button variant="secondary" onClick={onClose}>Cancelar</Button>
+        {pages > 1 && <span className="ml-auto flex items-center gap-1 text-[12.5px] text-muted">
+          <button type="button" aria-label="Página anterior" disabled={page === 0} onClick={() => setPage(page - 1)} className="grid size-9 cursor-pointer place-items-center rounded-full hover:bg-raised disabled:opacity-40"><ChevronLeft size={15} aria-hidden="true" /></button>
+          {page + 1}/{pages}
+          <button type="button" aria-label="Próxima página" disabled={page >= pages - 1} onClick={() => setPage(page + 1)} className="grid size-9 cursor-pointer place-items-center rounded-full hover:bg-raised disabled:opacity-40"><ChevronRight size={15} aria-hidden="true" /></button>
+        </span>}</div>}>
+      <ul data-importar className="flex flex-col gap-1.5">
+        {files.slice(page * per, page * per + per).map((a) => (
+          <li key={a.id}>
+            <button type="button" disabled={busy} onClick={() => onPick(a)} className="flex min-h-12 w-full cursor-pointer items-center gap-2.5 rounded-xl border border-line px-3 text-left hover:border-ink disabled:opacity-50">
+              <Icon mime={a.mime} />
+              <span className="min-w-0 flex-1"><span className="block truncate text-[13.5px] font-medium">{a.name}</span><span className="text-[12px] text-muted">{label(a.folder)} · {when(a.createdAt)}</span></span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {busy && <p role="status" className="mt-2 text-[12.5px] text-muted">Copiando</p>}
+      {error && <p role="alert" className="mt-2 text-[12.5px] text-warn-ink">{error}</p>}
+    </Dialog>
   )
 }

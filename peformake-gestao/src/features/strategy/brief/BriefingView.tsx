@@ -1,11 +1,12 @@
 import { Children, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { Ban, Bookmark, UserRound, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
+import { Bookmark, Building2, CalendarRange, CalendarX, Check, Compass, IdCard, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, NotebookPen, Package, Route, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { SearchSelect } from '@/components/ui/SearchSelect'
 import { ClientAssets } from '@/features/clients/ClientAssets'
+import { useClientPermissions } from '@/features/clients/useClients'
 import { cn } from '@/lib/cn'
 import { MeetingNotes } from '../MeetingNotes'
 import { consultKey, saveConsultInfo, saveDirection, useConsultList } from '../consultApi'
@@ -15,24 +16,33 @@ import { SendQuestionsLoader } from '../QuestionsPanel'
 import { questionsKey, type ClientQuestion } from '../questionsApi'
 import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, resetMonthQuestions, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
-import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
+import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, SeasonDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
 import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, monthGuide, type Family } from './questionEngine'
-import { DIRECTION_QUIZ, fixedStatus, MONTH_CHECKS, QUIZ } from './briefRules'
+import { CARD_MONEY, cardDone, cardText, DIRECTION_QUIZ, fixedStatus, MONTH_CHECKS, QUIZ, seasonText } from './briefRules'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
 } from './briefRules'
 
-type Open = { kind: 'direcao' } | { kind: 'documento' } | { kind: 'text'; key: TextKey } | { kind: 'month'; key: MonthKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'funcionou' | 'enviar' } | { kind: 'q'; q: ClientQuestion } | null
+type Open = { kind: 'direcao' } | { kind: 'documento' } | { kind: 'text'; key: TextKey } | { kind: 'month'; key: MonthKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'funcionou' | 'enviar' | 'gravacao' | 'sazonal' } | { kind: 'q'; q: ClientQuestion } | null
+
+/** Cliente com vídeo (algum serviço ativo de audiovisual): só ele tem o cartão Gravação (e ele só conta no medidor dele). */
+export function useHasVideo(clientId: string) {
+  return useQuery({ queryKey: ['client-has-video', clientId], queryFn: async () => {
+    const { data } = await supabase.from('client_services').select('services!inner(is_audiovisual)').eq('client_id', clientId).eq('is_active', true).eq('services.is_audiovisual', true).limit(1)
+    return (data ?? []).length > 0
+  } })
+}
 
 /** Resultado do briefing para quem chama (o botão Gerar mostra o que falta). */
 export function useBriefStatus(clientId: string, month: string) {
   const b = useBrief(clientId); const m = useBriefMonth(clientId, month); const q = useBriefQuestions(clientId, month)
+  const video = useHasVideo(clientId).data ?? false
   const qs = q.data ?? []
   const answered = qs.filter((x) => x.status === 'respondida').length
-  const checks = briefChecks(b.data?.data ?? {}, m.data ?? {}, answered, qs.length || 8)
-  const fixed = fixedStatus(b.data?.data ?? {})
+  const checks = briefChecks(b.data?.data ?? {}, m.data ?? {}, answered, qs.length || 8, video)
+  const fixed = fixedStatus(b.data?.data ?? {}, video)
   return { ready: b.isSuccess && m.isSuccess && q.isSuccess, percent: briefPercent(checks, answered, qs.length || 8), missing: briefMissing(checks), answered, total: qs.length || 8,
     // Só o fixo (passo 1 da ficha): o do mês conta no passo Perguntas. O portal do cliente usa o mesmo cálculo.
     fixedPercent: fixed.percent, fixedMissing: fixed.missing }
@@ -113,12 +123,10 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
   const [semComp, setSemComp] = useState(false)
   // Briefing em conversa com a Bete (Italo, 20/11): o jeito principal de preencher; os blocos abaixo continuam para ajustar.
   const [chat, setChat] = useState(false)
-  const [gravOpen, setGravOpen] = useState(false)
-  // Cliente com vídeo (algum serviço ativo de audiovisual): só ele vê o cartão Gravação.
-  const hasVideo = useQuery({ queryKey: ['client-has-video', clientId], queryFn: async () => {
-    const { data } = await supabase.from('client_services').select('services!inner(is_audiovisual)').eq('client_id', clientId).eq('is_active', true).eq('services.is_audiovisual', true).limit(1)
-    return (data ?? []).length > 0
-  } })
+  // Cliente com vídeo: só ele vê o cartão Gravação.
+  const hasVideo = useHasVideo(clientId)
+  // Valores em dinheiro (verba, ticket, faturamento): só administrador vê e preenche (CLAUDE.md).
+  const { isAdmin } = useClientPermissions()
   // Tipo de negócio (Italo, 20/11: "uma APM não é uma loja"): define as perguntas e o tom da estratégia.
   const [tipoOpen, setTipoOpen] = useState(false)
   // Compacto (Italo, 18/11): mostra só o que falta; o que já está feito fica atrás de "Ver tudo".
@@ -168,22 +176,27 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
   const comps = f.concorrentes ?? []
   const refs = f.referencias ?? []
   const mes = monthName(month).toLowerCase()
+  // "Eu preencho": cada item do medidor abre o cartão dele (os que se juntaram abrem o cartão novo).
   const STEP: Record<string, NonNullable<Open> | undefined> = {
     produtos: { kind: 'produtos' }, links: { kind: 'links' }, concorrentes: { kind: 'concorrentes' }, referencias: { kind: 'referencias' },
-    publico: { kind: 'text', key: 'publico' }, diferenciais: { kind: 'text', key: 'diferenciais' }, voz: { kind: 'text', key: 'voz' }, proibidos: { kind: 'text', key: 'proibidos' },
-    quem_aparece: { kind: 'text', key: 'quem_aparece' }, capacidade: { kind: 'text', key: 'capacidade' },
-    momento: { kind: 'text', key: 'momento' }, proposito: { kind: 'text', key: 'proposito' }, percepcao: { kind: 'text', key: 'percepcao' }, posicionamento: { kind: 'text', key: 'posicionamento' },
+    publico: { kind: 'text', key: 'publico' }, posicionamento: { kind: 'text', key: 'posicionamento' }, voz: { kind: 'text', key: 'voz' },
+    quem_aparece: { kind: 'gravacao' }, momento: { kind: 'text', key: 'momento' }, proposito: { kind: 'text', key: 'proposito' },
+    percepcao: { kind: 'text', key: 'percepcao' }, jornada: { kind: 'text', key: 'jornada' },
+    marketing: { kind: 'text', key: 'marketing' }, sazonalidade: { kind: 'sazonal' }, marca: { kind: 'text', key: 'marca' },
     ofertas: { kind: 'month', key: 'ofertas' }, meta: { kind: 'month', key: 'meta' }, datas_travam: { kind: 'month', key: 'datas_travam' },
   }
   const todo: NonNullable<Open>[] = [
-    ...briefChecks(f, mo, st.answered, qs.length || 8).filter((c) => !c.done && (part === 'mes') === MONTH_CHECKS.has(c.key)).sort((a, b) => b.weight - a.weight).map((c) => STEP[c.key]).filter((x): x is NonNullable<Open> => !!x),
+    ...briefChecks(f, mo, st.answered, qs.length || 8, !!hasVideo.data).filter((c) => !c.done && (part === 'mes') === MONTH_CHECKS.has(c.key)).sort((a, b) => b.weight - a.weight).map((c) => STEP[c.key]).filter((x): x is NonNullable<Open> => !!x),
     ...(part === 'mes' ? qs.filter((x) => x.status !== 'respondida').map((x) => ({ kind: 'q' as const, q: x })) : []),
   ]
+  // Um cartão de texto (juntos contam feito com qualquer chave dele).
+  const C = (key: TextKey, icon: Icon) => show(cardDone(f, key)) && <Tile key={key} icon={icon} label={TEXT_FIELDS[key].label} title={TEXT_FIELDS[key].hint} done={cardDone(f, key)} onOpen={() => setOpen({ kind: 'text', key })} />
+  const seasonDone = !!(f.meses_fortes?.length || f.meses_fracos?.length)
   const startGuide = () => { if (!todo.length) return; setGuide({ steps: todo, i: 0 }); openStep(todo[0]!) }
 
   return (
     <div data-briefing className="flex flex-col gap-4">
-      {part === 'fixo' && <div className="flex items-center gap-3">
+      {part === 'fixo' && <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Ring percent={st.fixedPercent} />
         <div className="min-w-0 flex-1 text-[13px] text-muted">{todo.length ? <><b className="text-ink">{todo.length}</b> para completar</> : <b className="text-ok-ink">Tudo pronto</b>}</div>
         <button type="button" data-ver-tudo onClick={() => setAll((v) => !v)} className="min-h-10 shrink-0 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{all ? 'Só o que falta' : 'Ver tudo'}</button>
@@ -194,17 +207,13 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
         onPick={(v, l) => saveF.mutate({ tipo: v, tipo_label: l }, { onSuccess: async () => { setTipoOpen(false); await resetMonthQuestions(clientId, month).catch(() => null); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }); void qc.invalidateQueries({ queryKey: ['client-questions', clientId] }) } })} onClose={() => setTipoOpen(false)} />}
       {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} onClient={() => setOpen({ kind: 'enviar' })} />}
 
-      {/* Essência da marca (Italo, 20/11): frameworks de marca (Círculo Dourado, Kapferer, arquétipos, posicionamento, JTBD). */}
+      {/* Essência da marca (Italo, 20/11): frameworks de marca. Os cartões que se repetiam viraram um só (Posicionamento, Propósito e história, Jeito da marca, Momento e futuro). */}
       {part === 'fixo' && <Group title="Essência da marca">
-        {show(!!f.momento) && <Tile icon={TrendingUp} label={TEXT_FIELDS.momento.label} title={TEXT_FIELDS.momento.hint} done={!!f.momento} onOpen={() => setOpen({ kind: 'text', key: 'momento' })} />}
-        {show(!!f.proposito) && <Tile icon={Compass} label={TEXT_FIELDS.proposito.label} title={TEXT_FIELDS.proposito.hint} done={!!f.proposito} onOpen={() => setOpen({ kind: 'text', key: 'proposito' })} />}
-        {show(!!f.percepcao) && <Tile icon={Star} label={TEXT_FIELDS.percepcao.label} title={TEXT_FIELDS.percepcao.hint} done={!!f.percepcao} onOpen={() => setOpen({ kind: 'text', key: 'percepcao' })} />}
-        {show(!!f.arquetipo) && <Tile icon={UserRound} label={TEXT_FIELDS.arquetipo.label} title={TEXT_FIELDS.arquetipo.hint} done={!!f.arquetipo} onOpen={() => setOpen({ kind: 'text', key: 'arquetipo' })} />}
-        {show(!!f.posicionamento) && <Tile icon={Target} label={TEXT_FIELDS.posicionamento.label} title={TEXT_FIELDS.posicionamento.hint} done={!!f.posicionamento} onOpen={() => setOpen({ kind: 'text', key: 'posicionamento' })} />}
-        {show(!!f.historia) && <Tile icon={NotebookPen} label={TEXT_FIELDS.historia.label} title={TEXT_FIELDS.historia.hint} done={!!f.historia} onOpen={() => setOpen({ kind: 'text', key: 'historia' })} />}
-        {show(!!f.jornada) && <Tile icon={TrendingUp} label={TEXT_FIELDS.jornada.label} title={TEXT_FIELDS.jornada.hint} done={!!f.jornada} onOpen={() => setOpen({ kind: 'text', key: 'jornada' })} />}
-        {show(!!f.objecoes) && <Tile icon={Ban} label={TEXT_FIELDS.objecoes.label} title={TEXT_FIELDS.objecoes.hint} done={!!f.objecoes} onOpen={() => setOpen({ kind: 'text', key: 'objecoes' })} />}
-        {show(!!f.visao) && <Tile icon={Gauge} label={TEXT_FIELDS.visao.label} title={TEXT_FIELDS.visao.hint} done={!!f.visao} onOpen={() => setOpen({ kind: 'text', key: 'visao' })} />}
+        {C('posicionamento', Target)}
+        {C('proposito', Compass)}
+        {C('percepcao', Star)}
+        {C('voz', MessageCircle)}
+        {C('momento', TrendingUp)}
       </Group>}
 
       {part === 'fixo' && <Group title="O cliente">
@@ -212,15 +221,19 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
         {show(!!doc) && <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />}
         {show(prods.some((p) => p.preco)) && <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />}
         {show(links.length >= 2) && <Tile icon={Link2} label="Links" title="Links importantes" done={links.length >= 2} count={links.length} onOpen={() => setOpen({ kind: 'links' })} />}
-        {show(!!f.publico) && <Tile icon={Users} label="Público" title={TEXT_FIELDS.publico.label} done={!!f.publico} onOpen={() => setOpen({ kind: 'text', key: 'publico' })} />}
-        {show(!!f.diferenciais) && <Tile icon={Star} label="Diferenciais" title={TEXT_FIELDS.diferenciais.label} done={!!f.diferenciais} onOpen={() => setOpen({ kind: 'text', key: 'diferenciais' })} />}
+        {C('publico', Users)}
+        {C('jornada', Route)}
         {show(comps.length > 0 || !!f.sem_concorrentes) && <Tile icon={Swords} label="Concorrentes" title={f.sem_concorrentes && !comps.length ? 'Não tem concorrente direto' : 'Concorrentes'} done={comps.length > 0 || !!f.sem_concorrentes} count={comps.length} isNew={comps.some((c) => c.novo)} onOpen={() => { setSemComp(!!f.sem_concorrentes); setOpen({ kind: 'concorrentes' }) }} />}
         {show(refs.length > 0) && <Tile icon={Bookmark} label="Referências" title="Referências" done={refs.length > 0} count={refs.length} isNew={refs.some((r) => r.novo)} onOpen={() => setOpen({ kind: 'referencias' })} />}
-        {show(!!f.voz) && <Tile icon={MessageCircle} label="Voz" title={TEXT_FIELDS.voz.label} done={!!f.voz} onOpen={() => setOpen({ kind: 'text', key: 'voz' })} />}
-        {show(!!f.proibidos) && <Tile icon={Ban} label="Proibidos" title={TEXT_FIELDS.proibidos.label} done={!!f.proibidos} onOpen={() => setOpen({ kind: 'text', key: 'proibidos' })} />}
         {/* Gravação (Italo, 20/11): quem aparece + quem grava num cartão só, e só para cliente com vídeo. */}
-        {hasVideo.data && show(!!f.quem_aparece) && <Tile icon={Video} label="Gravação" title="Quem aparece, quem grava e quando" done={!!f.quem_aparece} onOpen={() => setGravOpen(true)} />}
-        {show(!!f.capacidade) && <Tile icon={Gauge} label="Capacidade" title={TEXT_FIELDS.capacidade.label} done={!!f.capacidade} onOpen={() => setOpen({ kind: 'text', key: 'capacidade' })} />}
+        {hasVideo.data && show(!!f.quem_aparece) && <Tile icon={Video} label="Gravação" title="Quem aparece, quem grava e quando" done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'gravacao' })} />}
+      </Group>}
+
+      {/* Novos (Italo, 20/11): o que já foi feito de marketing, os meses fortes e fracos, a marca e os acessos. */}
+      {part === 'fixo' && <Group title="Marketing">
+        {C('marketing', Megaphone)}
+        {show(seasonDone) && <Tile icon={CalendarRange} label="Sazonalidade" title={seasonText(f) || TEXT_FIELDS.sazonalidade.hint} done={seasonDone} onOpen={() => setOpen({ kind: 'sazonal' })} />}
+        {C('marca', KeyRound)}
       </Group>}
 
       {part === 'mes' && <Group title={`Do mês: ${mes}`}>
@@ -242,8 +255,12 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
       {open?.kind === 'documento' && <DocumentDialog clientId={clientId} initial={doc} fixed={b.data?.saved ? (b.data?.data ?? {}) : {}} onClose={stop} onDone={() => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: consultKey }); next() }} />}
       {open?.kind === 'direcao' && <TextDialog key="direcao" title="Direcionamento do mês" hint="O que a IA não acha sozinha: objetivo do dono, o que ele pediu, o que não fazer. Toque em Responder com opções para um guia." quizSteps={DIRECTION_QUIZ} initial={direction} busy={saveDir.isPending} error={err(saveDir)} onClose={stop} onSave={(v) => saveDir.mutate(v)} />}
-      {gravOpen && <TextDialog key="gravacao" quizSteps={[...(QUIZ.quem_aparece ?? []), ...(QUIZ.quem_grava ?? [])]} title="Gravação" hint="Quem aparece, quem grava, com que aparelho e quando dá para gravar. Toque em Responder com opções." initial={[f.quem_aparece, f.quem_grava && f.quem_grava !== f.quem_aparece ? f.quem_grava : ''].filter(Boolean).join(' ')} busy={saveF.isPending} error={err(saveF)} onClose={() => setGravOpen(false)} onSave={(v) => saveF.mutate({ quem_aparece: v, quem_grava: v }, { onSuccess: () => setGravOpen(false) })} />}
-      {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
+      {open?.kind === 'gravacao' && <TextDialog key="gravacao" quizSteps={[...(QUIZ.quem_aparece ?? []), ...(QUIZ.quem_grava ?? [])]} title="Gravação" hint="Quem aparece, quem grava, com que aparelho e quando dá para gravar. Toque em Responder com opções." initial={[f.quem_aparece, f.quem_grava && f.quem_grava !== f.quem_aparece ? f.quem_grava : ''].filter(Boolean).join(' ')} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ quem_aparece: v, quem_grava: v })} />}
+      {open?.kind === 'sazonal' && <SeasonDialog fortes={f.meses_fortes ?? []} fracos={f.meses_fracos ?? []} porque={f.sazonalidade ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate(v)} />}
+      {/* Cartão junto: abre o texto de todas as chaves dele e grava na principal (as antigas ficam para o agente ler). */}
+      {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={cardText(f, open.key)} busy={saveF.isPending} error={err(saveF)} onClose={stop}
+        money={isAdmin ? CARD_MONEY[open.key]?.map((k) => ({ key: k, value: f[k] ?? '' })) : undefined}
+        onSave={(v, cash) => saveF.mutate({ [open.key]: v, ...(cash ?? {}) })} />}
       {open?.kind === 'month' && <TextDialog key={open.key} quizSteps={monthGuide(open.key, isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name), prods, month)} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
       {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate(v)} />}
       {open?.kind === 'produtos' && <ListDialog<Produto & Record<string, unknown>> importer title="Produtos e serviços" hint="Toque em Adicionar: produto ou serviço, e depois um por um, áudio, arquivo, colar ou link. Só valores reais entram na estratégia." items={prods as (Produto & Record<string, unknown>)[]} empty={{ nome: '', preco: '', condicoes: '' }}
