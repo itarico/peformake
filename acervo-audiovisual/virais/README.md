@@ -4,7 +4,7 @@ Cada linha é um vídeo que funcionou, estudado com a skill `engenharia-reversa-
 reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo de estruturas
 (`peformake-gestao/docs/ESTUDO-ROTEIRO-AUDIOVISUAL.md` §3c).
 
-## O que se repete nos 40 de topo (19/11/2026)
+## O que se repete nos vídeos de topo (19/11/2026)
 - **Palavra-isca (S100)** aparece em boa parte dos que têm comentário alto: o vídeo mostra o resultado e guarda o material
   (som, arquivo, prompt, guia) para quem comentar. Funciona quando o que se promete é exatamente o que o vídeo mostrou.
 - **Brandmotion em monitor filmado (E38)** é o estilo mais frequente (dacostamotion e aslaniedits). Vira estrutura nova
@@ -42,10 +42,15 @@ reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo 
 | Tutorial com assinatura visual (fisheye + azul + laranja) · @_victorzk · 27/08/2026 | S50 | E9 | 13,0x | [ficha](2026-08-27__victorzk_DcjsyZRSkuA.md) |
 | Brandmotion editorial em preto e branco (Workflow Studio) · @dacostamotion · 02/09/2026 | S-novo: "Brand book em movimento" | E38 | 24,6x | [ficha](2026-09-02_dacostamotion_DcygNrjOYUa.md) |
 | Vitrine sonora do brinde (comenta SFX) · @helalwork (Helal) · 03/09/2026 | S100 + S-novo: "Amostra do brinde" | E10 | 114,8x | [ficha](2026-09-03_helalwork_Dc1AHDotwvU.md) |
+| Edição de $5 x edição de $30, lado a lado no mesmo take · @vaishmediafilms (Vaisakh) · 04/09/2026 | S57 | E8 | 7,4x | [ficha](2026-09-04_vaishmediafilms_Dc4Bnn0vCQj.md) |
 | Logo nascendo na tela filmada · @dacostamotion · 10/09/2026 | S109 + S112 | E21 + E38 | 21,6x | [ficha](2026-09-10_dacostamotion_DdGvHpxOcpv.md) |
 | Slogan teimoso (o comercial que "não ficou claro") · @mario.petshop · 16/09/2026 | S75 | E18 | 137,3x | [ficha](2026-09-16_mario.petshop_DdXQWAMBxt3.md) |
+| "A Mavic vai acabar": falso luto da marca que vira escassez · @mavicproducoes · 17/09/2026 | S-novo: "Falso anúncio de fim" | E18 | 7,2x | [ficha](2026-09-17_mavicproducoes_DdZPZhdxpgQ.md) |
 | Filme de carro com cartela-título (car film) · @rabbits · 17/09/2026 | S40 | E19 | 10,6x | [ficha](2026-09-17_rabbits_DdZYfpgviBP.md) |
 | Esquete de perseguição com disfarce no balcão · @mario.petshop · 21/09/2026 | S70 + S72 | E18 | 11,4x | [ficha](2026-09-21_mario.petshop_Ddjl9Nehis3.md) |
+| "Ainda fazem isso na mão": original + arquivo = resultado, depois a tela filmada · @nomadatoast (Jo Mendes) · 24/09/2026 | S53 + S50 | E8 + E21 | 7,4x | [ficha](2026-09-24_nomadatoast_DdrD7WQpYK7.md) |
+| Resposta a comentário → frase em cartaz com cartões (8 s em loop) · @aslaniedits · 25/09/2026 | S105 | E1 | 7,0x | [ficha](2026-09-25_aslaniedits_Ddtgn8cs3sZ.md) |
+| Biografia de uma obra com "fato estranho" no meio · @earn.edits · 28/09/2026 | S104 | E35 + E9 + E12 + E4 + E14 + E2 | 6,3x | [ficha](2026-09-28_earn.edits_Dd08TpPONpx.md) |
 | Bruto × editado em alternância (portfólio de editor) · @aslaniedits · 03/10/2026 | S63 | E8 + E1 | 10,9x | [ficha](2026-10-03_aslaniedits_DeC-xCeMrS6.md) |
 | Resultado primeiro, depois "como fazer em 3 passos" (+ palavra-isca) · @sanji.chien · 06/10/2026 | S50 + S100 | E4 + E3 | 13,1x | [ficha](2026-10-06_sanji.chien_DeJ_gTHs-FB.md) |
 | Novidade de IA com vitrine visual + palavra-isca · @ashokreddyai · 08/10/2026 | S59 + S50 | E3 + E4 | 10,1x | [ficha](2026-10-08_ashokreddyai_DePNgrmToh9.md) |
@@ -53,11 +58,22 @@ reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo 
 | Segredos do lugar em perguntas (POV: uma publicitária no mercado) · @giubeckers · 10/10/2026 | S95 + S55 | E17 | 93,4x | [ficha](2026-10-10_giubeckers_DeUW7htRxyx.md) |
 | Manifesto de marca em imagens no monitor (Idea.ai) · @dacostamotion · 12/10/2026 | S-novo: "Brand book em movimento" | E38 | 32,4x | [ficha](2026-10-12_dacostamotion_DeZZ7UIOWcl.md) |
 | Tutorial com o resultado em cima e a isca do arquivo · @ignaciovasconez · 13/10/2026 | S50 + S100 | E9 + E3 | 35,4x | [ficha](2026-10-13_ignaciovasconez_DecOTJJuFyQ.md) |
+| Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers · 18/10/2026 | S50 + S51 | E17 | 6,0x | [ficha](2026-10-18_giubeckers_Deo9FIKRJSG.md) |
+| Mentira absurda → revelação com IA (carro que não existe) · @leoboehme_ · 20/10/2026 | S34 | E24 + E17 | 7,1x | [ficha](2026-10-20_leoboehme__DeuXePGPcQ5.md) |
 | Print de comentário + montagem "a vida que a profissão dá" · @omarcosvianna · 20/10/2026 | S79 + S108 | E22 | 10,3x | [ficha](2026-10-20_omarcosvianna_Deu8GenPJCG.md) |
+| Mosaico 2x2: quatro edições rodando juntas (5 s) · @aslaniedits · 21/10/2026 | S-novo: "Mosaico de portfólio" | E-novo: "Mosaico 2x2 de vitrine" | 6,5x | [ficha](2026-10-21_aslaniedits_Dew85IgsLQg.md) |
+| Mistério de notícia com virada e pergunta aberta · @earn.edits · 25/10/2026 | S104 + S39 | E35 + E5 + E26 + E22 + E27 + E23 + E10 + E9 + E12 + E7 + E19 + E14 | 6,4x | [ficha](2026-10-25_earn.edits_De6bR-1OtGX.md) |
 | Ferramenta grátis contra a paga, demo em UI escura (+ palavra-isca) · @gab.gouvea · 26/10/2026 | S59 + S50 | E15 | 11,5x | [ficha](2026-10-26_gab.gouvea_De9lLWSsJAj.md) |
+| Um filme famoso explica as 3 camadas da atenção (ensaio no carro, 2 min) · @giubeckers (Giullya Becker) · 26/10/2026 | S44 | E2 | 7,2x | [ficha](2026-10-26_giubeckers_De9lNMuRYmy.md) |
+| 4 prompts com escalada, contados por um personagem 3D · @_aighostlab · 28/10/2026 | S51 | E23 + E12 | 6,4x | [ficha](2026-10-28__aighostlab_DfDIDp4pnRT.md) |
 | Review de produto que não existe (troca por IA) · @marcolamaia · 29/10/2026 | S34 + S22 | E24 + E22 + E-novo | 36,8x | [ficha](2026-10-29_marcolamaia_DfFaVmAitkU.md) |
 | Catálogo de sons com playhead (a imagem é o áudio) + palavra-isca · @adrianrazen · 30/10/2026 | S51 + S100 | E10 | 10,0x | [ficha](2026-10-30_adrianrazen_DfG3B45x5nR.md) |
+| Mesma pose, quatro tratamentos, e o "como eu fiz" (16:9, palavra-isca) · @melikazaghari · 01/11/2026 | S50 + S100 | E8 | 8,2x | [ficha](2026-11-01_melikazaghari_DfM8Y32IQUY.md) |
+| Brand book em movimento em tela cheia 16:9 (Workflow Studio, "Work From Within") · @dacostamotion · 02/11/2026 | S-novo: "Brand book em movimento" | E38 | 6,1x | [ficha](2026-11-02_dacostamotion_DfPdO0_m6GZ.md) |
 | Bruto × editado em card de revista (+ palavra-isca) · @viashaan · 03/11/2026 | S63 + S100 | E8 | 14,9x | [ficha](2026-11-03_viashaan_DfSrDF-Riau.md) |
 | Conta da economia em lista com avatar · @joao.escala1p1 · 04/11/2026 | S51 + S65 | E12 + E25 | 28,7x | [ficha](2026-11-04_joao.escala1p1_DfTIAPVRKX-.md) |
 | Pergunta em palavras que se decodificam (7 s, sem fala) · @aslaniedits · 05/11/2026 | S105 | E14 | 11,9x | [ficha](2026-11-05_aslaniedits_DfWvqYMM7uA.md) |
 | Boato do dia checado em cards de manchete · @oandrenuneu · 05/11/2026 | S52 + S55 + S100 | E26 |  | [ficha](2026-11-05_oandrenuneu_DfWQjPpTDt-.md) |
+| "Editado 100% com IA" que termina defendendo o humano · @omarcosvianna · 06/11/2026 | S1 + S8 | E1 + E16 + E40 | 7,2x | [ficha](2026-11-06_omarcosvianna_DfagzsGv2GT.md) |
+| Ferramenta grátis revelada em tela dividida com palavra-isca · @99hud · 08/11/2026 | S59 | E3 + E10 | 5,7x | [ficha](2026-11-08_99hud_DffrHm4DmJ4.md) |
+| Série "Cena Criativa": ensina a montar a cena e grava a cena na hora · @salleszk (Wesley Salles) · 13/11/2026 | S91 + S50 + S113 | E1 + E19 |  | [ficha](2026-11-13_salleszk_DfsfXTHA4nW.md) |
