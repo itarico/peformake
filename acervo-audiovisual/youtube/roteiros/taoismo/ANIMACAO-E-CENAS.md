@@ -29,6 +29,26 @@ com E5 (retrô-documentário) nas cenas de lenda e diagramas Manim nos três mom
 - **Regras:** imagem histórica = acervo real (nunca IA fingindo arquivo); IA só em reconstituição marcada
   "ilustração" no canto. Nenhum trecho de documentário de outro canal (Content ID). Créditos CC BY na descrição.
 
+
+## 1b. Variedade: 10 tipos de animação (pedido do Italo, 20/11/2026)
+A mesa de papel e tinta é a base, mas o vídeo alterna linguagens para ficar dinâmico, como o Tinocando e o Nostalgia
+(estudo em `acervo-audiovisual/perfis/tinocando-e-nostalgia.md`). Regra: nenhum tipo fica mais de 40 s seguidos.
+| # | Tipo | De onde vem | Onde entra |
+|---|---|---|---|
+| A | Mesa de papel 2,5D (base, aprovada) | EarnEdits | Fatos, manuscritos, provas |
+| B | Pintura em tela cheia com câmera 2,5D e título atrás da figura | Tinocando | Lenda de Laozi, corte Tang, Dunhuang |
+| C | Ilustração autoral em camadas (personagens que respiram), marcada "ilustração" | Nostalgia | Guarda de Hangu, Zhang Daoling, Royal Society 1788 |
+| D | **Mapa 3D**: globo que desce do espaço até a China, rotas em arco | Nostalgia (mapa) em 3D | Changsha 1973, China → Londres → São Paulo |
+| E | Mapa em pergaminho em que o território cresce em vermelho | Nostalgia | Expansão Tang, rota da seda até Dunhuang |
+| F | Tinta que vira paisagem de montanha e rio (troca de época) | Nostalgia | Passagem entre blocos |
+| G | Diagrama de traço (wu wei, yin-yang, Te/Tao, pirâmide) | nosso | Explicações |
+| H | Vídeo real dentro do rolo de seda | pedido do Italo | Tai chi, rio, incenso, caligrafia |
+| I | Barra de linha do tempo fixa na base, que acende a cada época | Nostalgia (Egito) | Todo o vídeo, em cada salto de data |
+| J | Tipografia cinética em tela de tinta preta (frase-pico sozinha) | Tinocando | "Elas não são.", "Virou lei.", "É estratégia." |
+
+Distribuição por bloco: 0 = D + A + J · 1 = H + G + A · 2 = B + C + I · 3 = A + linha de vinhetas + I · 4 = B + E + C + J ·
+5 = D + H + G · 6 = H + J + A.
+
 ## 2. Ferramentas
 | O quê | Ferramenta |
 |---|---|

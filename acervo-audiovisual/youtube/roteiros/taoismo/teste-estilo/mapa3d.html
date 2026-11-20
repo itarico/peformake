@@ -1,0 +1,90 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Courier+Prime:wght@700&family=Inter:wght@600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1920px;height:1080px;overflow:hidden;background:#EFE4CC;position:relative;font-family:'Cormorant Garamond',serif;color:#1A1714}
+#fundo{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(255,250,235,.95) 0%,rgba(239,228,204,0) 60%),#E9DCC0}
+#c{position:absolute;inset:0}
+.grao{position:absolute;inset:-200px;opacity:.3;mix-blend-mode:multiply;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .25  0 0 0 0 .12  0 0 0 .6 0'/></filter><rect width='400' height='400' filter='url(%23n)'/></svg>")}
+.vinheta{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 50%,rgba(60,38,10,.5) 100%);pointer-events:none}
+.rot{position:absolute;transform:translate(-50%,-120%);text-align:center;white-space:nowrap;opacity:0}
+.rot b{display:block;font-size:44px}
+.rot span{font-family:'Courier Prime';font-size:26px;color:#B3261E;letter-spacing:2px}
+.leg{position:absolute;left:0;right:0;bottom:62px;text-align:center;font-family:'Inter';font-weight:600;font-size:34px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.85)}
+.barra{position:absolute;left:360px;right:360px;bottom:150px;height:4px;background:rgba(26,23,20,.35)}
+.barra i{position:absolute;top:-9px;width:22px;height:22px;border-radius:50%;background:#EFE4CC;border:4px solid #1A1714;transform:translateX(-50%)}
+.barra i.on{background:#B3261E;border-color:#B3261E}
+.barra em{position:absolute;top:22px;transform:translateX(-50%);font-family:'Courier Prime';font-style:normal;font-size:20px;white-space:nowrap}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head><body>
+<div id="fundo"></div><canvas id="c" width="1920" height="1080"></canvas>
+<div class="rot" id="r_cs"><b>Changsha</b><span>1973</span></div>
+<div class="rot" id="r_ld"><b>Londres</b><span>1788</span></div>
+<div class="rot" id="r_sp"><b>São Paulo</b><span>anos 1970</span></div>
+<div class="barra" id="barra"></div>
+<div class="grao"></div><div class="vinheta"></div>
+<div class="leg" id="leg"></div>
+<script type="module">
+import * as THREE from 'three';
+const GEO = window.__GEO__;
+const R=1, TINTA=0x1A1714, VERM=0xB3261E, JADE=0x3F6B5A;
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(1); renderer.setSize(1920,1080,false);
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(35,1920/1080,0.01,100);
+const v3=(lat,lon,r=R)=>{const p=(90-lat)*Math.PI/180,t=(lon+180)*Math.PI/180;return new THREE.Vector3(-r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t));};
+// mapa como textura (equiretangular): oceano papel escuro, terra papel claro, contorno a tinta; China em camada à parte
+function textura(soChina){
+  const W=4096,H=2048,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
+  if(!soChina){g.fillStyle='#CDBB97';g.fillRect(0,0,W,H);}
+  const xy=([lon,lat])=>[(lon+180)/360*W,(90-lat)/180*H];
+  for(const f of GEO.features){
+    const china=f.properties.ADM0_A3==='CHN'; if(soChina&&!china) continue;
+    const polys=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates;
+    for(const poly of polys){g.beginPath();for(const ring of poly){ring.forEach((c,k)=>{const [x,y]=xy(c);k?g.lineTo(x,y):g.moveTo(x,y);});g.closePath();}
+      g.fillStyle=soChina?'rgba(179,38,30,.85)':'#F3EAD6';g.fill('evenodd');g.lineWidth=soChina?4:2;g.strokeStyle=soChina?'#7E1A14':'rgba(26,23,20,.55)';g.stroke();}
+  }
+  const tx=new THREE.CanvasTexture(cv);tx.colorSpace=THREE.SRGBColorSpace;tx.anisotropy=8;return tx;
+}
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,192,192),new THREE.MeshLambertMaterial({map:textura(false)})));
+const chinaMat=new THREE.MeshBasicMaterial({map:textura(true),transparent:true,opacity:0,depthWrite:false});
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(R*1.0015,192,192),chinaMat));
+scene.add(new THREE.AmbientLight(0xffffff,1.7)); const sol=new THREE.DirectionalLight(0xfff2dd,1.2); sol.position.set(-3,2,4); scene.add(sol);
+// alfinete e pulso em Changsha
+const CS=[28.2,112.94], LD=[51.5,-0.12], SP=[-23.55,-46.63];
+const pin=new THREE.Mesh(new THREE.SphereGeometry(0.012,24,24),new THREE.MeshBasicMaterial({color:TINTA})); pin.position.copy(v3(...CS,R*1.004)); scene.add(pin);
+const pulso=new THREE.Mesh(new THREE.RingGeometry(0.02,0.026,64),new THREE.MeshBasicMaterial({color:VERM,transparent:true,side:THREE.DoubleSide}));
+pulso.position.copy(v3(...CS,R*1.005)); pulso.lookAt(new THREE.Vector3(0,0,0)); scene.add(pulso);
+// rotas em arco (desenhadas progressivamente)
+function arco(pontos,cor){const vs=pontos.map(q=>v3(...q).normalize());const pts=[];const N=240;
+  const segs=vs.length-1;for(let i=0;i<=N;i++){const u=i/N*segs;const k=Math.min(segs-1,Math.floor(u));const f=u-k;
+    const qa=new THREE.Quaternion(),qb=new THREE.Quaternion().setFromUnitVectors(vs[k],vs[k+1]);const q=qa.slerp(qb,f);
+    const p=vs[k].clone().applyQuaternion(q);const tt=i/N;pts.push(p.multiplyScalar(R*(1.006+Math.sin(Math.PI*tt)*0.16)));}
+  const geo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),480,0.0042,8,false);const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:cor}));scene.add(m);return m;}
+const rotaLD=arco([CS,[45,60],LD],VERM), rotaSP=arco([CS,[5,75],[-15,30],SP],JADE);
+function mostra(tubo,p){tubo.geometry.setDrawRange(0,Math.floor(tubo.geometry.index.count*p/3)*3);}
+// barra de linha do tempo fixa
+const EP=[['c. 500 a.C.',0],['168 a.C.',.22],['733',.48],['1788',.72],['anos 1970',.86],['hoje',1]];
+const barra=document.getElementById('barra');
+EP.forEach(([n,x],i)=>{const d=document.createElement('i');d.style.left=(x*100)+'%';d.id='ep'+i;barra.appendChild(d);const e=document.createElement('em');e.textContent=n;e.style.left=(x*100)+'%';barra.appendChild(e);});
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)), seg=(t,a,b)=>clamp((t-a)/(b-a)), ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function proj(lat,lon,id,vis){const w=v3(lat,lon,R*1.01);if(w.clone().normalize().dot(cam.position.clone().normalize())<0.15)vis=0;const p=w.project(cam);const el=document.getElementById(id);el.style.left=((p.x+1)/2*1920)+'px';el.style.top=((1-p.y)/2*1080)+'px';el.style.opacity=vis;}
+window.render=function(t){
+  // 0-4 s: desce do espaço até a China; 4-6 s: Changsha; 6-10 s: rotas e afastamento
+  const desce=ease(seg(t,0,4)), sobe=ease(seg(t,6.2,10.4));
+  const lonV=THREE.MathUtils.lerp(-20,112.9,desce) + THREE.MathUtils.lerp(0,-125,sobe);
+  const latV=THREE.MathUtils.lerp(10,28,desce) + THREE.MathUtils.lerp(0,-30,sobe);
+  const dist=THREE.MathUtils.lerp(4.6,1.75,desce) + THREE.MathUtils.lerp(0,2.6,sobe);
+  cam.position.copy(v3(latV,lonV,dist)); cam.up.set(0,1,0); cam.lookAt(0,0,0);
+  chinaMat.opacity=seg(t,3,4.2);
+  const pp=(t*0.9)%1; pulso.scale.setScalar(1+pp*3); pulso.material.opacity=(1-pp)*seg(t,3.8,4.2);
+  mostra(rotaLD,ease(seg(t,6.4,8.4))); mostra(rotaSP,ease(seg(t,8.0,10.4)));
+  renderer.render(scene,cam);
+  proj(...CS,'r_cs',seg(t,4,4.6)); proj(...LD,'r_ld',seg(t,8.2,8.7)); proj(...SP,'r_sp',seg(t,10.2,10.7));
+  EP.forEach((e,i)=>document.getElementById('ep'+i).className = (i===1&&t>4)||(i===3&&t>8.2)||(i===4&&t>10.2)?'on':'');
+  document.getElementById('leg').textContent = t<6 ? 'Em 1973, no sul da China, arqueólogos abriram uma tumba...' : 'O livro chegou à Europa em 1788...';
+  document.querySelector('.grao').style.transform=`translate(${-Math.floor((Math.sin(t*999)*.5+.5)*200)}px,${-Math.floor((Math.cos(t*777)*.5+.5)*200)}px)`;
+};
+window.__pronto=true; window.render(0);
+</script></body></html>
