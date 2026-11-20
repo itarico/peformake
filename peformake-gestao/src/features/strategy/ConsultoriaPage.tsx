@@ -26,7 +26,7 @@ import { StrategyBoard } from './brief/StrategyBoard'
 import { BriefingCard, StepCard, StrategyPart } from './brief/StrategyStrip'
 import { BriefingView, useBriefStatus } from './brief/BriefingView'
 import { useBriefProgress } from './brief/briefApi'
-import { CONSULT_PATH, targetMonth, clientMessage, diagReviewPath, nicheLinks, sortByStrategy, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { CONSULT_PATH, LIST_STEPS, clientMessage, diagReviewPath, listStep, nicheLinks, sortByListStep, statusChip, waLink, type ConsultRow, type ListStep, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
@@ -65,15 +65,28 @@ export function ConsultoriaPage() {
   })
 
   const row = list.data?.find((r) => r.client_id === clientId) ?? null
-  const briefs = useBriefProgress(monthOptions(new Date())[1]!)
+  const nextMonth = monthOptions(new Date())[1]!
+  const briefs = useBriefProgress(nextMonth)
   if (clientId) return <ConsultDocView clientId={clientId} row={row} onBack={() => open(null)} onInfo={() => row && setInfo(row)} info={info} closeInfo={() => setInfo(null)} />
 
-  const rows = sortByStrategy(list.data ?? [])
-  const go = (r: ConsultRow, step: ReturnType<typeof strategyStep> | null) => setParams((c) => {
-    const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao', 'parte', 'revisar']) n.delete(k)
-    // Revisar = ler a estratégia como documento (o "um por um" ficou no ⋯). Briefing abre o briefing.
-    n.set('cliente', r.client_id); n.set('ver', 'estrategia'); if (!step || step.go === 'briefing') n.set('parte', 'briefing'); return n
+  // Mesmo passo a passo da ficha (Italo, 20/11: a lista só servia para abrir; o "Revisar" não levava a lugar nenhum).
+  const stepOf = (r: ConsultRow) => listStep(r, briefs.data?.[r.client_id])
+  const rows = briefs.data ? sortByListStep(list.data ?? [], stepOf) : (list.data ?? [])
+  /** Abre a ficha do cliente direto no ponto exato (os mesmos parâmetros dos botões da ficha). */
+  const goTo = (r: ConsultRow, patch: Record<string, string> = {}) => setParams((c) => {
+    const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao', 'parte', 'so', 'mes', 'revisar', 'enviar']) n.delete(k)
+    n.set('cliente', r.client_id); for (const [k, v] of Object.entries(patch)) n.set(k, v); return n
   })
+  const part = (r: ConsultRow, parte: string) => goTo(r, { ver: 'estrategia', parte, so: '1', mes: nextMonth.slice(0, 7) })
+  const run = (r: ConsultRow, s: ListStep) => {
+    if (s.go === 'briefing') part(r, 'briefing')
+    else if (s.go === 'estrategia') part(r, 'resumo')
+    else if (s.go === 'enviar-perguntas') setAsking(r)
+    else if (s.go === 'ver-perguntas') goTo(r, { ver: 'perguntas' })
+    else if (s.go === 'cnpj') setInfo(r)
+    else if (s.go === 'criar-diag') gen.mutate(r)
+    else goTo(r)
+  }
   return (
     <section aria-label="Consultoria" className="flex flex-col gap-2.5">
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
@@ -83,13 +96,13 @@ export function ConsultoriaPage() {
       {rows.length > 0 && (
         <ul data-conteudo className="flex flex-col divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
           {rows.map((r) => {
-            const step = strategyStep(r)
+            const b = briefs.data?.[r.client_id]
+            const s = briefs.data ? stepOf(r) : null
             // Diagnóstico para todo cliente ativo (17/11), feito pelo agente; 1 a cada 3 meses.
             const diagBusy = r.status === 'gerando' || (r.status === 'na_fila' && r.stage === 'agente')
             const answers = r.answers_new ?? 0
-            const prog = strategyProgress(r, briefs.data?.[r.client_id])
             return (
-              <li key={r.client_id} data-cliente={r.client_id} data-passo={step.go} className="flex items-center gap-2 px-3 py-2.5">
+              <li key={r.client_id} data-cliente={r.client_id} data-passo={s?.n} data-acao-lista={s?.go} className="flex items-center gap-2 px-3 py-2.5">
                 <button type="button" onClick={() => open(r.client_id)} className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 text-left">
                   <ClientAvatar name={r.name} url={logoPublicUrl(r.logo_path)} size="sm" />
                   <span className="flex min-w-0 flex-1 flex-col gap-1">
@@ -97,19 +110,26 @@ export function ConsultoriaPage() {
                       <b className="truncate text-[14.5px] font-semibold">{r.name.trim()}</b>
                       {answers > 0 && <span className="shrink-0 rounded-full bg-accent-soft px-1.5 text-[11px] font-semibold text-accent-ink">{answers} {answers === 1 ? 'resposta' : 'respostas'}</span>}
                     </span>
-                    {/* Sem ícones coloridos por etapa (Italo, 18/11: poluíam). Só a situação em palavras, neutra. */}
-                    <span data-situacao className="truncate text-[12.5px] text-muted">{((r.monthly?.month ?? '').slice(0, 7) >= targetMonth() || !r.monthly ? prog.text : 'Próximo mês: fazer o briefing').replace(/^\w/, (x) => x.toUpperCase())}</span>
+                    {/* Onde o cliente está no passo a passo da ficha: 4 bolinhas pequenas (verde = feito, amarelo = agora) e o que falta. */}
+                    <span data-situacao className="flex min-w-0 items-center gap-2 text-[12.5px] text-muted">
+                      {s ? <>
+                        <StepDots n={s.n} />
+                        <span className="truncate">{s.line}</span>
+                      </> : <span>Carregando</span>}
+                    </span>
                   </span>
                 </button>
-                <Button variant={step.go === 'revisar' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => go(r, step)}>{step.label}</Button>
-                {/* Italo, 20/11: "precisa disso tudo?". Abrir e enviar a estratégia ficam DENTRO dela (cada aba baixa/envia a sua);
-                    o Briefing é uma aba lá dentro. Aqui só o que não tem outro lugar: diagnóstico e perguntas. */}
+                {s && (s.go === 'revisar-diag'
+                  ? <a data-acao href={diagReviewPath(r.client_id)} className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-line-strong px-3 text-[13px] font-semibold text-ink no-underline hover:border-ink"><span className="max-sm:hidden">{s.label}</span><span className="sm:hidden">{SHORT[s.go]}</span></a>
+                  : <Button data-acao variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={s.go === 'criar-diag' && gen.isPending} onClick={() => run(r, s)}>{s.go === 'criar-diag' && gen.isPending && gen.variables?.client_id === r.client_id ? 'Pedindo' : <><span className="max-sm:hidden">{s.label}</span><span className="sm:hidden">{SHORT[s.go]}</span></>}</Button>)}
+                {/* O resto do que dá para fazer do cliente sem abrir a ficha. Some o que é o próprio botão da linha. */}
                 <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
-                  { label: 'Revisar o diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: r.status !== 'pronto', href: diagReviewPath(r.client_id) },
-                  { label: diagBusy ? 'Diagnóstico sendo feito' : 'Criar diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, hidden: isApproved(r.status) || r.status === 'pronto', disabled: diagBusy || gen.isPending, onClick: () => gen.mutate(r) },
+                  { label: 'Preencher briefing', icon: <Sparkles size={15} aria-hidden="true" />, hidden: !s || s.go === 'briefing', onClick: () => part(r, 'briefing') },
+                  { label: 'Enviar perguntas ao cliente', icon: <Send size={15} aria-hidden="true" />, hidden: s?.go === 'enviar-perguntas', onClick: () => setAsking(r) },
+                  { label: answers > 0 ? 'Ver respostas novas' : 'Ver perguntas', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: s?.go === 'ver-perguntas' || (!answers && !b?.waiting), onClick: () => goTo(r, { ver: 'perguntas' }) },
+                  { label: 'Revisar o diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: r.status !== 'pronto' || s?.go === 'revisar-diag', href: diagReviewPath(r.client_id) },
+                  { label: diagBusy ? 'Diagnóstico sendo feito' : 'Criar diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, hidden: isApproved(r.status) || r.status === 'pronto' || r.status === 'falta_dados' || s?.go === 'criar-diag', disabled: diagBusy || gen.isPending, onClick: () => gen.mutate(r) },
                   { label: 'Enviar diagnóstico ao cliente', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => setSending(r) },
-                  { label: 'Ver respostas novas', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: answers === 0, onClick: () => open(r.client_id, 'perguntas') },
-                  { label: 'Enviar perguntas ao cliente', icon: <Send size={15} aria-hidden="true" />, onClick: () => setAsking(r) },
                 ]} />
               </li>
             )
@@ -133,7 +153,19 @@ async function openPublicDeck(clientId: string): Promise<void> {
 }
 
 
+/** No celular o botão da linha diz só o verbo: o que é (briefing, perguntas, diagnóstico) já está na linha ao lado. */
+const SHORT: Record<ListStep['go'], string> = { briefing: 'Preencher', 'enviar-perguntas': 'Enviar', 'ver-perguntas': 'Ver', cnpj: 'Informar', 'criar-diag': 'Criar', 'revisar-diag': 'Revisar', 'ver-cliente': 'Ver', estrategia: 'Abrir' }
+
 const isApproved = (s: ConsultRow['status']) => s === 'aprovado' || s === 'enviado'
+
+/** Passo n de 4 em bolinhas pequenas: as de antes ✓ (verde), a da vez amarela, as seguintes apagadas. Sem piscar na lista. */
+function StepDots({ n }: { n: number }) {
+  return (
+    <span role="img" aria-label={`Passo ${n} de 4: ${LIST_STEPS[n - 1]}`} data-bolinhas className="inline-flex shrink-0 items-center gap-1">
+      {LIST_STEPS.map((k, i) => <span key={k} aria-hidden="true" className={cn('size-1.5 rounded-full', i + 1 < n ? 'bg-ok' : i + 1 === n ? 'size-2 bg-amber-400' : 'bg-line-strong')} />)}
+    </span>
+  )
+}
 
 const DOT: Record<PartState, string> = { pronto: 'bg-ok', revisar: 'bg-accent', falta: 'bg-warn', andando: 'bg-muted pf-pulse', fora: 'bg-line' }
 

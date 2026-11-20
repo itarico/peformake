@@ -248,6 +248,44 @@ export function strategyProgress(r: Pick<ConsultRow, 'monthly' | 'answers_new'>,
   return { at: 4, text: sub }
 }
 
+// ───────── Lista da Consultoria (20/11): o mesmo passo a passo da ficha, numa linha ─────────
+/** Os 4 passos da ficha do cliente (o 4 abre a estratégia e as partes). */
+export const LIST_STEPS = ['Briefing', 'Perguntas', 'Diagnóstico', 'Estratégia'] as const
+export type ListGo = 'briefing' | 'enviar-perguntas' | 'ver-perguntas' | 'cnpj' | 'criar-diag' | 'revisar-diag' | 'ver-cliente' | 'estrategia'
+export interface ListStep { n: 1 | 2 | 3 | 4; go: ListGo; label: string; line: string; disabled?: boolean }
+
+/**
+ * Onde o cliente está e a ação certa, com a MESMA regra da ficha (stepCur em ConsultoriaPage):
+ * briefing pronto quando o fixo chega a 80%; perguntas prontas sem pendente nem esperando; diagnóstico pronto quando aprovado.
+ */
+export function listStep(r: Pick<ConsultRow, 'status' | 'stage' | 'document' | 'answers_new'>, b: { fixedPercent: number; fixedMissing: string[]; toAsk: number; waiting: number } | null | undefined): ListStep {
+  const fixed = b?.fixedPercent ?? 0
+  if (fixed < 80) {
+    const falta = b?.fixedMissing.length ? ` · falta ${b.fixedMissing.slice(0, 2).join(', ').toLowerCase()}` : ''
+    return { n: 1, go: 'briefing', label: 'Preencher briefing', line: `Briefing ${fixed}%${falta}` }
+  }
+  const toAsk = b?.toAsk ?? 0, waiting = b?.waiting ?? 0, answers = r.answers_new ?? 0
+  if (toAsk > 0 || waiting > 0) {
+    const line = 'Perguntas: ' + [toAsk ? `${toAsk} ${toAsk === 1 ? 'pergunta para enviar' : 'perguntas para enviar'}` : null, waiting ? `${waiting} esperando o cliente` : null].filter(Boolean).join(' · ')
+    if (toAsk > 0) return { n: 2, go: 'enviar-perguntas', label: 'Enviar perguntas', line }
+    return { n: 2, go: 'ver-perguntas', label: answers > 0 ? 'Ver respostas' : 'Ver perguntas', line }
+  }
+  if (r.status !== 'aprovado' && r.status !== 'enviado') {
+    const agent = r.stage === 'agente'
+    if (r.status === 'falta_dados') return { n: 3, go: 'cnpj', label: (r.document ?? '').replace(/\D/g, '').length === 11 ? 'Informar CPF' : 'Informar CNPJ', line: 'Diagnóstico: falta o documento' }
+    if (r.status === 'pronto') return { n: 3, go: 'revisar-diag', label: 'Revisar diagnóstico', line: 'Diagnóstico pronto para revisar' }
+    if (r.status === 'gerando' || (r.status === 'na_fila' && agent)) return { n: 3, go: 'ver-cliente', label: 'Ver', line: r.status === 'gerando' ? 'Diagnóstico sendo feito' : 'Diagnóstico na fila do agente' }
+    if (r.status === 'limite') return { n: 3, go: 'ver-cliente', label: 'Ver', line: 'Diagnóstico: limite do mês atingido' }
+    return { n: 3, go: 'criar-diag', label: 'Criar diagnóstico', line: r.status === 'erro' ? 'Diagnóstico parou no meio' : 'Diagnóstico ainda não feito' }
+  }
+  return { n: 4, go: 'estrategia', label: 'Abrir estratégia', line: answers > 0 ? `Diagnóstico aprovado · ${answers} ${answers === 1 ? 'resposta nova' : 'respostas novas'}` : 'Diagnóstico aprovado · estratégia e partes' }
+}
+
+/** Ordem da lista: quem tem resposta nova primeiro, depois pelo passo (o mais atrasado em cima), depois por nome. */
+export function sortByListStep<T extends ConsultRow>(rows: T[], stepOf: (r: T) => ListStep): T[] {
+  return [...rows].sort((a, b) => Number((b.answers_new ?? 0) > 0) - Number((a.answers_new ?? 0) > 0) || stepOf(a).n - stepOf(b).n || a.name.localeCompare(b.name, 'pt-BR'))
+}
+
 /** Cliente só de audiovisual: a estratégia dele é o roteiro dos vídeos (mesmo prazo, dia 15). Italo, 17/11. */
 export const onlyVideo = (r: Pick<ConsultRow, 'areas' | 'consultoria'>) => !!r.areas?.audiovisual && !r.areas.trafego && !r.areas.social && !r.consultoria
 /** O mês que está sendo preparado: o seguinte ao de hoje (a estratégia de dezembro fica pronta até 15/11). */

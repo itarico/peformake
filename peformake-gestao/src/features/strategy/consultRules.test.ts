@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { answeredNotices, clientMessage, clientParts, consultLink, nextStep, nicheLinks, planReviewPath, readyNotices, rowAction, sortByNext, sortByStrategy, sortRows, statusChip, strategyStep, waLink, type ConsultRow } from './consultRules'
+import { answeredNotices, listStep, sortByListStep, clientMessage, clientParts, consultLink, nextStep, nicheLinks, planReviewPath, readyNotices, rowAction, sortByNext, sortByStrategy, sortRows, statusChip, strategyStep, waLink, type ConsultRow } from './consultRules'
 import { deckHtml, deckSlideCount } from './consultDeck'
 import { effortData, funnelData, positioningData, presenceData, ratingsData } from './consultCharts'
 
@@ -177,5 +177,32 @@ describe('diagnóstico na fila do agente', () => {
     expect(nextStep(row({ status: 'na_fila', stage: 'agente' })).kind).toBe('aguardar')
     expect(nextStep(row({ status: 'na_fila', stage: 'research' })).label).toBe('Gerar diagnóstico')
     expect(nextStep(row({ status: 'na_fila', stage: 'agente', questions_open: 3 })).label).toBe('Mandar perguntas')
+  })
+})
+
+describe('lista da Consultoria: mesmo passo a passo da ficha', () => {
+  const b = (fixedPercent: number, toAsk = 0, waiting = 0) => ({ fixedPercent, fixedMissing: ['Público'], toAsk, waiting })
+  const r = (status: ConsultRow['status'], extra: Partial<ConsultRow> = {}) => ({ status, stage: null, document: null, answers_new: 0, ...extra })
+  it('briefing abaixo de 80% fica no passo 1', () => {
+    expect(listStep(r('aprovado'), b(79))).toMatchObject({ n: 1, go: 'briefing', label: 'Preencher briefing' })
+    expect(listStep(r('aprovado'), null).n).toBe(1)
+  })
+  it('perguntas pendentes ou esperando seguram o passo 2', () => {
+    expect(listStep(r('aprovado'), b(80, 2))).toMatchObject({ n: 2, go: 'enviar-perguntas' })
+    expect(listStep(r('aprovado'), b(80, 0, 1))).toMatchObject({ n: 2, go: 'ver-perguntas', label: 'Ver perguntas' })
+  })
+  it('diagnóstico: cada situação com a sua ação', () => {
+    expect(listStep(r('na_fila', { stage: 'research' }), b(90))).toMatchObject({ n: 3, go: 'criar-diag' })
+    expect(listStep(r('erro'), b(90)).go).toBe('criar-diag')
+    expect(listStep(r('pronto'), b(90))).toMatchObject({ n: 3, go: 'revisar-diag' })
+    expect(listStep(r('na_fila', { stage: 'agente' }), b(90)).go).toBe('ver-cliente')
+    expect(listStep(r('falta_dados', { document: '123.456.789-01' }), b(90))).toMatchObject({ go: 'cnpj', label: 'Informar CPF' })
+  })
+  it('aprovado abre a estratégia (passo 4)', () => {
+    expect(listStep(r('enviado'), b(100))).toMatchObject({ n: 4, go: 'estrategia', label: 'Abrir estratégia' })
+  })
+  it('ordem: resposta nova primeiro, depois o passo mais atrasado', () => {
+    const rows = [{ name: 'A', n: 4 }, { name: 'B', n: 1 }, { name: 'C', n: 4, answers_new: 1 }].map((x) => ({ ...x, client_id: x.name })) as unknown as (ConsultRow & { n: 1 | 2 | 3 | 4 })[]
+    expect(sortByListStep(rows, (x) => ({ n: x.n, go: 'briefing', label: '', line: '' })).map((x) => x.name)).toEqual(['C', 'B', 'A'])
   })
 })

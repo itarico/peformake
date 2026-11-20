@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { ClientQuestion } from '../questionsApi'
-import { briefChecks, briefMissing, briefPercent, focusOf, prefill, type BriefFixed, type BriefMonth } from './briefRules'
+import { briefChecks, briefMissing, briefPercent, focusOf, MONTH_CHECKS, prefill, type BriefFixed, type BriefMonth } from './briefRules'
 import { isFamily, monthQuestions } from './questionEngine'
 
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
@@ -171,31 +171,48 @@ export function useLastMonthly(clientId: string) {
   })
 }
 
+/** Uma linha da lista: briefing (% geral e só o fixo, que é o passo 1 da ficha) e perguntas abertas (passo 2). */
+export interface BriefRowProgress { percent: number; missing: string[]; fixedPercent: number; fixedMissing: string[]; toAsk: number; waiting: number }
+
 /** Briefing de todos os clientes num mês (para a lista da Consultoria): % e o que falta, sem abrir cliente a cliente. */
 export function useBriefProgress(month: string) {
   return useQuery({
     queryKey: ['brief-progress', month],
     queryFn: async () => {
-      const [b, m, q, c, dg] = await Promise.all([
+      // Mesmas fontes do useBrief (cadastro, links, voz da marca, concorrentes do diagnóstico) para o % bater com o da ficha.
+      const [b, m, q, c, dg, ln, v, aq] = await Promise.all([
         db.from('client_briefs').select('client_id, data'),
         db.from('client_brief_months').select('client_id, data').eq('month', month),
         db.from('client_questions').select('client_id, status').eq('pack', 'briefing_mes').eq('focus', focusOf(month)).neq('status', 'descartada'),
-        db.from('clients').select('id, target_audience, value_proposition, competitors, instagram, website, phone').limit(500),
+        db.from('clients').select('id, segment, description, target_audience, value_proposition, competitors, instagram, website, phone, document').limit(500),
         db.from('consult_docs').select('client_id, rivals:doc->diagnostico->mercado->concorrentes'),
+        db.from('client_links').select('client_id, name, url').limit(5000),
+        db.from('client_brand_voice').select('client_id, essencia, tom, evitar').limit(500),
+        // Passo 2 da ficha (Perguntas): pronto quando não há pendente nem esperando o cliente.
+        db.from('client_questions').select('client_id, status').in('status', ['pendente', 'enviada']).limit(5000),
       ])
       if (b.error || m.error) throw new Error('Não foi possível ler os briefings.')
-      const out: Record<string, { percent: number; missing: string[] }> = {}
+      const out: Record<string, BriefRowProgress> = {}
       const ids = new Set<string>([...(c.data ?? []).map((x: { id: string }) => x.id), ...(b.data ?? []).map((x: { client_id: string }) => x.client_id)])
       for (const id of ids) {
-        const known = (c.data ?? []).find((x: { id: string }) => x.id === id) ?? {}
+        const { id: _id, ...known } = ((c.data ?? []).find((x: { id: string }) => x.id === id) ?? {}) as Record<string, unknown>
+        void _id
         const rivals = (dg.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.rivals
-        const f = prefill(((b.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.data ?? {}) as BriefFixed, { ...known, diagRivals: Array.isArray(rivals) ? rivals : null })
+        const links = (ln.data ?? []).filter((x: { client_id: string }) => x.client_id === id).map(({ name, url }: { name: string; url: string }) => ({ name, url }))
+        const voice = (v.data ?? []).find((x: { client_id: string }) => x.client_id === id) ?? null
+        const f = prefill(((b.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.data ?? {}) as BriefFixed, { ...known, links, voz: voice, diagRivals: Array.isArray(rivals) ? rivals : null })
         const mo = ((m.data ?? []).find((x: { client_id: string }) => x.client_id === id)?.data ?? {}) as BriefMonth
         const qs = (q.data ?? []).filter((x: { client_id: string }) => x.client_id === id)
         const answered = qs.filter((x: { status: string }) => x.status === 'respondida').length
         const total = qs.length || 8
         const checks = briefChecks(f, mo, answered, total)
-        out[id] = { percent: briefPercent(checks, answered, total), missing: briefMissing(checks) }
+        const fixed = checks.filter((x) => !MONTH_CHECKS.has(x.key))
+        const open = (aq.data ?? []).filter((x: { client_id: string }) => x.client_id === id)
+        out[id] = {
+          percent: briefPercent(checks, answered, total), missing: briefMissing(checks),
+          fixedPercent: briefPercent(fixed), fixedMissing: briefMissing(fixed),
+          toAsk: open.filter((x: { status: string }) => x.status === 'pendente').length, waiting: open.filter((x: { status: string }) => x.status === 'enviada').length,
+        }
       }
       return out
     },
