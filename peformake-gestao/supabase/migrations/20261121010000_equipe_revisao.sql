@@ -1,5 +1,4 @@
--- ATENÇÃO: AINDA NÃO APLICADA NO BANCO (20/11). A ferramenta do Supabase da sessão recusou; rodar no SQL Editor do Supabase
--- (projeto peformake-app) ou numa sessão com permissão. É segura: se algum trecho não bater, para com erro e não muda nada.
+-- APLICADA em 20/11 pelo Italo no SQL Editor (versão com regexp_replace, que ignora espaços; mesmo efeito). Conferida no banco.
 -- Revisão da aba Equipe antes de liberar a equipe (21/11/2026).
 -- 1) Dados pessoais da equipe (Pix, CPF/CNPJ, endereço) só por função de admin; head, tráfego, SDR e closer liam direto na tabela.
 -- 2) Visitante (anon) sem nenhum privilégio nas tabelas de remuneração (o RLS já barrava; agora nem o privilégio existe).

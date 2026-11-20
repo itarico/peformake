@@ -9,7 +9,6 @@ o próximo passo exato, faz commit e push. Quem terminar a tarefa apaga o item.
 - Domínio: em 19/11 o peformake.com ainda apontava para a Lovable. Não trocar links antes de conferir.
 
 ## Equipe: migração esperando (20/11)
-- `supabase/migrations/20261121010000_equipe_revisao.sql` NÃO aplicada (ferramenta do Supabase recusou). Próximo passo: aplicar; depois testar os 11 papéis em transação desfeita e apagar este item.
 - `supabase/migrations/20261121030000_equipe_fontes_metas.sql` NÃO aplicada (independe da anterior): fontes de so_parada e re_reunioes, meta nova tr_resultados, tarefas de social no placar. Próximo passo: aplicar e conferir member_ote e team_board como admin em transação desfeita.
 
 ## Pendente pequeno (20/11)
