@@ -70,7 +70,7 @@ export function flowSteps(fields: FlowField[], answers: Record<string, string>, 
     steps.forEach((s, j) => {
       if (!vis.has(j)) return
       if (s.when) { if (!kept.has(steps.findIndex((x) => x.q === s.when!.q))) return }
-      else if (!s.money && ++base > MAX_PER_FIELD) return // a verba sempre entra
+      else if (s.money !== 'verba_anuncio' && ++base > MAX_PER_FIELD) return // a verba de anúncio sempre entra
       kept.add(j)
       out.push({ key: `${field}:${j}`, group: fieldLabel(field), q: s.q, opts: s.opts, multi: s.multi, kind: 'quiz', field, ...(s.money ? { money: s.money } : {}) })
     })

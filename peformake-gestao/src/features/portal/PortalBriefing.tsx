@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Bookmark, CalendarRange, Compass, FileText, FileUp, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, Package, Route, Star, Swords, Target, TrendingUp, Users, Video } from 'lucide-react'
+import { BookOpen, Bookmark, CalendarRange, Compass, FileText, FileUp, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, Package, Route, Star, Swords, Target, TrendingUp, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { GuideCtx, LinksDialog, ListDialog, SeasonDialog, TextDialog } from '@/features/strategy/brief/BriefDialogs'
 import { Group, Ring, Tile } from '@/features/strategy/brief/BriefingView'
@@ -92,10 +92,11 @@ export function PortalBriefing({ token, month, brief, onDone, onChat }: { token:
         {T('momento', TrendingUp)}
       </Group>
 
-      <Group title="Marketing">
+      <Group title="Marketing e conteúdo">
         {T('marketing', Megaphone)}
         {show(seasonDone) && <Tile icon={CalendarRange} label="Sazonalidade" title={seasonText(f) || TEXT_FIELDS.sazonalidade.hint} done={seasonDone} onOpen={() => setOpen({ kind: 'sazonal' })} />}
         {T('marca', KeyRound)}
+        {T('historias', BookOpen)}
       </Group>
 
       <BriefDocs token={token} docs={brief.docs} onSent={() => void refresh()} />
