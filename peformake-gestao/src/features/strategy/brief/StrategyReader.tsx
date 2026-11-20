@@ -43,7 +43,7 @@ export function StrategyReader({ board, tab, name, onChanged, onReview }: { boar
     <div data-leitura={tab} className="flex flex-col gap-3">
       {tab === 'audiovisual' && <VideoList cards={cards} actions={actions} more={more} onChanged={onChanged} onReview={onReview} />}
       {tab === 'resumo' && <Resumo cards={cards} actions={actions} more={more} />}
-      {approvable && <ApproveHeader cards={cards} label={tab === 'trafego' ? ['campanha', 'campanhas'] : ['roteiro', 'roteiros']} onReview={onReview} />}
+      {approvable && <ApproveHeader cards={cards} label={tab === 'trafego' ? ['campanha', 'campanhas'] : ['item', 'itens']} onReview={onReview} />}
       {tab === 'social' && <PieceList cards={cards} label={['peça', 'peças']} onChanged={onChanged} onReview={onReview}
         tags={(c) => [s(c.data.formato) || 'Peça']}
         render={(c, i) => <Article c={c} kicker={`${String(i + 1).padStart(2, '0')} / ${s(c.data.formato) || 'Peça'}`} actions={actions(c)} more={more(c)}>
@@ -57,7 +57,8 @@ export function StrategyReader({ board, tab, name, onChanged, onReview }: { boar
         {s(c.data.criativo) && <Labeled label="Criativo"><P>{s(c.data.criativo)}</P></Labeled>}
         {arr(c.data.verba_opcoes).length > 0 && <Labeled label="Verba por dia"><ul className="flex flex-col gap-1 text-[15px]">{arr(c.data.verba_opcoes).map((o, k) => <li key={k}><b>{s(o.valor_dia)}</b>{s(o.o_que_esperar) && <span className="text-muted"> · {s(o.o_que_esperar)}</span>}</li>)}</ul></Labeled>}
       </Article>)}
-      {tab === 'atendimento' && cards.map((c) => <Article key={c.id} c={c} kicker="WhatsApp" actions={actions(c)} more={foot(c)}>
+      {tab === 'atendimento' && cards.filter((c) => c.kind === 'plano').map((c) => <Article key={c.id} c={c} kicker="Plano de vendas" actions={actions(c)} more={foot(c)}><SalesPlan c={c} /></Article>)}
+      {tab === 'atendimento' && cards.filter((c) => c.kind !== 'plano').map((c) => <Article key={c.id} c={c} kicker={`WhatsApp${s(c.data.oferta) ? ` · ${s(c.data.oferta)}` : ''}`} actions={actions(c)} more={foot(c)}>
         {arr(c.data.roteiro_whatsapp).map((m, k) => <P key={k}>{s(m)}</P>)}
         {arr(c.data.objecoes).length > 0 && <Labeled label="Se o cliente disser">{arr(c.data.objecoes).map((o, k) => <div key={k} className="flex flex-col gap-0.5"><b className="text-[15px]">“{s(o.objecao)}”</b><P>{s(o.resposta)}</P></div>)}</Labeled>}
       </Article>)}
@@ -248,9 +249,57 @@ function ApproveButton({ c, onChanged }: { c: StrategyCard; onChanged: () => voi
   </>
 }
 
-const RESUMO_GROUPS: { kind: string; label: string }[] = [{ kind: 'objetivo', label: 'Objetivos' }, { kind: 'oferta', label: 'Ofertas' }, { kind: 'data', label: 'Datas' }, { kind: 'decisao', label: 'Decisões' }]
+const RESUMO_GROUPS: { kind: string; label: string }[] = [{ kind: 'objetivo', label: 'Objetivos' }, { kind: 'acao', label: 'Ações do mês' }, { kind: 'oferta', label: 'Ofertas' }, { kind: 'data', label: 'Datas' }, { kind: 'decisao', label: 'Decisões' }]
 
-/** Resumo do mês como uma página: a tese em destaque e, embaixo, objetivos, ofertas, datas e decisões. */
+/**
+ * Uma ação do mês (Italo, 20/11: "vai chamar um influenciador; tem essas 5 opções; vai anunciar a oferta X"):
+ * o que fazer, a oferta, quando e as opções (nome, link e porquê), cada uma numa linha.
+ */
+function ActionBody({ c }: { c: StrategyCard }) {
+  const d = c.data as Any
+  const opts = arr(d.opcoes)
+  return (
+    <div className="flex flex-col gap-1.5">
+      {s(d.o_que) && <P>{s(d.o_que)}</P>}
+      <p className="flex flex-wrap gap-x-3 gap-y-0.5 text-[13px] text-muted">
+        {s(d.oferta) && <span><b className="text-ink">Oferta:</b> {s(d.oferta)}</span>}
+        {s(d.quando) && <span><b className="text-ink">Quando:</b> {s(d.quando)}</span>}
+        {s(d.como_medir) && <span><b className="text-ink">Mede:</b> {s(d.como_medir)}</span>}
+      </p>
+      {opts.length > 0 && (
+        <ol data-opcoes className="flex flex-col gap-1 rounded-xl bg-raised/60 px-3 py-2 text-[14px]">
+          {opts.map((o, k) => (
+            <li key={k} className="flex min-w-0 flex-wrap items-baseline gap-x-1.5">
+              <span className="w-4 shrink-0 tabular-nums text-muted">{k + 1}.</span>
+              {s(o.link) ? <a href={/^https?:/.test(s(o.link)) ? s(o.link) : `https://${s(o.link)}`} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-2">{s(o.nome) || s(o.link)}</a> : <b>{s(o.nome)}</b>}
+              {s(o.porque) && <span className="min-w-0 text-muted">· {s(o.porque)}</span>}
+            </li>
+          ))}
+        </ol>
+      )}
+      {s(d.como) && <P className="text-muted">{s(d.como)}</P>}
+    </div>
+  )
+}
+
+/** O plano de vendas do mês: meta, ticket e canais numa linha; etapas da venda e meta por semana em listas curtas. */
+function SalesPlan({ c }: { c: StrategyCard }) {
+  const d = c.data as Any
+  return (
+    <div className="flex flex-col gap-3">
+      <dl className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        {([['Meta do mês', d.meta], ['Ticket', d.ticket], ['Quem vende', d.quem_vende]] as [string, unknown][]).filter(([, v]) => s(v)).map(([k, v]) => (
+          <div key={k} className="rounded-xl bg-raised/60 px-3 py-2"><dt className="text-[11.5px] font-semibold uppercase tracking-wide text-muted">{k}</dt><dd className="text-[15px] font-semibold">{s(v)}</dd></div>
+        ))}
+      </dl>
+      {arr(d.canais).length > 0 && <Labeled label="Canais"><P>{arr(d.canais).map((x) => s(x)).join(' · ')}</P></Labeled>}
+      {arr(d.etapas).length > 0 && <Labeled label="Etapas da venda"><ol className="flex list-decimal flex-col gap-1 pl-5 text-[15px] leading-relaxed">{arr(d.etapas).map((e, k) => <li key={k}><b>{s(e.etapa)}</b>{s(e.o_que_fazer) && ` · ${s(e.o_que_fazer)}`}{s(e.quem) && <span className="text-muted"> ({s(e.quem)})</span>}</li>)}</ol></Labeled>}
+      {arr(d.semanas).length > 0 && <Labeled label="Meta por semana"><ul className="flex flex-col gap-1 text-[15px]">{arr(d.semanas).map((w, k) => <li key={k}><b>{s(w.semana)}</b>{s(w.meta) && ` · ${s(w.meta)}`}{s(w.foco) && <span className="text-muted"> · {s(w.foco)}</span>}</li>)}</ul></Labeled>}
+    </div>
+  )
+}
+
+/** Estratégia do mês como uma página: a tese em destaque e, embaixo, objetivos, ações, ofertas, datas e decisões. */
 function Resumo({ cards, actions, more }: { cards: StrategyCard[]; actions: (c: StrategyCard) => ReactNode; more: (c: StrategyCard) => ReactNode }) {
   const tese = cards.filter((c) => c.kind === 'tese')
   const body = (c: StrategyCard) => {
@@ -260,6 +309,7 @@ function Resumo({ cards, actions, more }: { cards: StrategyCard[]; actions: (c: 
       case 'objetivo': return <><P className="font-semibold">{s(d.numero)}</P>{s(d.como_medir) && <P className="text-muted">{s(d.como_medir)}</P>}</>
       case 'oferta': return <><P>{s(d.condicao)}</P>{s(d.quando) && <P className="text-muted">{s(d.quando)}</P>}</>
       case 'data': return <P><b>{s(d.dia)}</b>{s(d.uso) && ` · ${s(d.uso)}`}</P>
+      case 'acao': return <ActionBody c={c} />
       default: return <P>{s(d.porque ?? d.texto)}</P>
     }
   }

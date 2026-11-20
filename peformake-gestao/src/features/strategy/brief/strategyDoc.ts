@@ -60,9 +60,10 @@ function resumo(cs: StrategyCard[]) {
   const by = (k: string) => cs.filter((c) => c.kind === k)
   const tese = by('tese')[0]
   const block = (label: string, xs: StrategyCard[], f: (c: StrategyCard) => string) => xs.length ? `<h3>${label}</h3><div class="grid">${xs.map((c) => `<div class="card"><b>${esc(c.title)}</b>${f(c)}<p class="meta">${meta(c)}</p></div>`).join('')}</div>` : ''
-  return pfPage('Resumo do mês', 'Estratégia', `
+  return pfPage('Estratégia do mês', 'Estratégia', `
     ${tese ? `<div class="tese"><span class="k">Tese do mês</span><p class="big">${esc(tese.title)}</p><p>${nl(tese.data.texto)}</p></div>` : ''}
     ${block('Objetivos', by('objetivo'), (c) => `<p class="num">${esc(c.data.numero)}</p><p>${esc(c.data.como_medir)}</p>`)}
+    ${block('Ações do mês', by('acao'), (c) => `<p>${nl(c.data.o_que)}</p>${c.data.oferta ? `<p class="mut">Oferta: ${esc(c.data.oferta)}${c.data.quando ? ` · ${esc(c.data.quando)}` : ''}</p>` : ''}${(c.data.opcoes ?? []).length ? `<ol>${list(c.data.opcoes, (o) => `<li>${o.link ? `<a href="${esc(url(o.link))}">${esc(o.nome || o.link)}</a>` : `<b>${esc(o.nome)}</b>`}${o.porque ? ` · ${esc(o.porque)}` : ''}</li>`)}</ol>` : ''}`)}
     ${block('Ofertas', by('oferta'), (c) => `<p>${esc(c.data.condicao)}</p><p class="mut">${esc(c.data.quando)}</p>`)}
     ${block('Datas', by('data'), (c) => `<p class="num">${esc(c.data.dia)}</p><p>${esc(c.data.uso)}</p>`)}
     ${block('Decisões', by('decisao'), (c) => `<p>${esc(c.data.porque)}</p>`)}`)
@@ -84,7 +85,12 @@ function trafego(cs: StrategyCard[]) {
 }
 
 function atendimento(cs: StrategyCard[]) {
-  return cs.map((c) => pfPage(c.title, 'Atendimento no WhatsApp', `
+  const plano = cs.filter((c) => c.kind === 'plano').map((c) => pfPage(c.title, 'Plano de vendas', `
+    <div class="grid">${[['Meta do mês', c.data.meta], ['Ticket', c.data.ticket], ['Quem vende', c.data.quem_vende]].filter(([, v]) => v).map(([k, v]) => `<div class="card"><span class="k">${k}</span><p class="num">${esc(v)}</p></div>`).join('')}</div>
+    ${(c.data.canais ?? []).length ? `<h3>Canais</h3><p>${(c.data.canais as string[]).map(esc).join(' · ')}</p>` : ''}
+    <div class="two"><div>${(c.data.etapas ?? []).length ? `<h3>Etapas da venda</h3><ol>${list(c.data.etapas, (e) => `<li><b>${esc(e.etapa)}</b>${e.o_que_fazer ? ` · ${esc(e.o_que_fazer)}` : ''}${e.quem ? ` <span class="mut">(${esc(e.quem)})</span>` : ''}</li>`)}</ol>` : ''}</div>
+    <div>${(c.data.semanas ?? []).length ? `<h3>Meta por semana</h3>${list(c.data.semanas, (w) => `<p><b>${esc(w.semana)}</b> · ${esc(w.meta)}${w.foco ? ` <span class="mut">· ${esc(w.foco)}</span>` : ''}</p>`)}` : ''}</div></div>`)).join('')
+  return plano + cs.filter((c) => c.kind !== 'plano').map((c) => pfPage(c.title, 'Plano de vendas · WhatsApp', `
     <div class="two"><div><h3>Roteiro</h3>${list(c.data.roteiro_whatsapp, (m) => `<p class="bubble">${nl(m)}</p>`)}</div>
     <div><h3>Objeções</h3>${list(c.data.objecoes, (o) => `<div class="card"><b>${esc(o.objecao)}</b><p>${nl(o.resposta)}</p></div>`)}
     <h3>Follow-up</h3>${list(c.data.follow_up, (o) => `<p><b>${esc(o.quando)}:</b> ${nl(o.mensagem)}</p>`)}</div></div>`)).join('')
@@ -212,7 +218,7 @@ export function strategyHtml(input: DocInput, opts: { only?: 'narracao' } = {}):
 ${audiovisual(tab('audiovisual'), input.name, input.month, 'narracao')}
 </body></html>`
   const cover = `<section class="page cover"><div><span class="k">Estratégia do mês</span><h1>${esc(input.name)}<br>${esc(monthTitle(input.month))}</h1></div>
-    <div><p>${cs.length} itens aprovados: ${['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias'].map((t) => [t, tab(t).length] as const).filter(([, n]) => n).map(([t, n]) => `${n} ${({ resumo: 'do resumo', audiovisual: 'vídeos', social: 'peças de social', trafego: 'campanhas', atendimento: 'roteiros de atendimento', referencias: 'referências' } as Record<string, string>)[t]}`).join(' · ')}</p>
+    <div><p>${cs.length} itens aprovados: ${['resumo', 'audiovisual', 'social', 'trafego', 'atendimento', 'referencias'].map((t) => [t, tab(t).length] as const).filter(([, n]) => n).map(([t, n]) => `${n} ${({ resumo: 'do resumo', audiovisual: 'vídeos', social: 'peças de social', trafego: 'campanhas', atendimento: 'itens do plano de vendas', referencias: 'referências' } as Record<string, string>)[t]}`).join(' · ')}</p>
     <div class="logos">${input.peformakeLogoUrl ? `<img src="${esc(input.peformakeLogoUrl)}" alt="Peformake">` : '<b>Peformake</b>'}${input.logoUrl ? `<img src="${esc(input.logoUrl)}" alt="">` : ''}</div></div></section>`
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(docName(input.month))} · ${esc(input.name)}</title><style>${CSS}</style></head><body>
 ${cover}${tab('resumo').length ? resumo(tab('resumo')) : ''}${audiovisual(tab('audiovisual'), input.name, input.month)}${social(tab('social'))}${trafego(tab('trafego'))}${atendimento(tab('atendimento'))}${referencias(tab('referencias'))}

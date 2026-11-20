@@ -25,7 +25,7 @@ export const FUNNEL: Record<Funnel, { label: string; cls: string }> = {
   converter: { label: 'Converter', cls: 'bg-[#2b8a3e]/12 text-[#21702f] dark:text-[#8fe3a0]' },
 }
 export const KIND_LABEL: Record<string, string> = {
-  tese: 'Tese do mês', objetivo: 'Objetivo', oferta: 'Oferta', data: 'Data', decisao: 'Decisão',
+  tese: 'Tese do mês', objetivo: 'Objetivo', acao: 'Ação do mês', oferta: 'Oferta', data: 'Data', decisao: 'Decisão', plano: 'Plano de vendas',
   video: 'Vídeo', peca: 'Peça', campanha: 'Campanha', roteiro: 'Atendimento',
   concorrente: 'Concorrente', referencia: 'Referência', anuncio: 'Anúncio', outro_nicho: 'Outro nicho',
 }
@@ -81,6 +81,8 @@ export function cardSections(c: Pick<StrategyCard, 'kind' | 'tab'>): { id: strin
 export const RESUMO_FIELDS: Record<string, [string, string][]> = {
   tese: [['texto', 'Por quê']],
   objetivo: [['numero', 'Número'], ['como_medir', 'Como medir']],
+  acao: [['o_que', 'O que fazer'], ['como', 'Como'], ['quando', 'Quando'], ['oferta', 'Oferta que anuncia'], ['como_medir', 'Como medir']],
+  plano: [['meta', 'Meta do mês'], ['ticket', 'Ticket'], ['quem_vende', 'Quem vende']],
   oferta: [['condicao', 'Condição'], ['quando', 'Quando'], ['porque', 'Por quê']],
   data: [['dia', 'Dia'], ['uso', 'Como usamos']],
   decisao: [['porque', 'Por quê']],

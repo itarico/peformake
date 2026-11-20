@@ -8,8 +8,8 @@ import { boardState, type CardTab } from './cardRules'
 import { useBoard } from './strategyApi'
 
 const WHAT: { id: CardTab; one: string; many: string }[] = [
-  { id: 'audiovisual', one: 'vídeo', many: 'vídeos' }, { id: 'social', one: 'peça', many: 'peças' },
-  { id: 'trafego', one: 'campanha', many: 'campanhas' }, { id: 'atendimento', one: 'roteiro de atendimento', many: 'roteiros de atendimento' },
+  { id: 'resumo', one: 'item da estratégia', many: 'itens da estratégia' }, { id: 'audiovisual', one: 'vídeo', many: 'vídeos' }, { id: 'social', one: 'peça', many: 'peças' },
+  { id: 'atendimento', one: 'item do plano de vendas', many: 'itens do plano de vendas' }, { id: 'trafego', one: 'campanha', many: 'campanhas' },
 ]
 
 /**

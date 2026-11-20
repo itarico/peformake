@@ -9,7 +9,7 @@ export function mockupOf(c: Pick<StrategyCard, 'tab' | 'kind' | 'data' | 'title'
   if (c.tab === 'audiovisual') return /youtube|tv|televis|horizontal|16:9|institucional/.test(`${f} ${c.title.toLowerCase()}`) ? 'wide' : 'reels'
   if (c.tab === 'social') return f === 'carrossel' ? 'carousel' : f === 'stories' || f === 'story' ? 'story' : f === 'reels' ? 'reels' : 'feed'
   if (c.tab === 'trafego') return 'ad'
-  if (c.tab === 'atendimento') return 'chat'
+  if (c.tab === 'atendimento') return c.kind === 'plano' ? 'poster' : 'chat'
   return 'poster'
 }
 

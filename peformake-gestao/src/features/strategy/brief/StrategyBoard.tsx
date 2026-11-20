@@ -21,11 +21,12 @@ import { fullPrompt, shortPrompt } from './chatPrompt'
 import { liveCards, StrategyReader } from './StrategyReader'
 
 export const BOARD_TABS = [
-  { id: 'resumo', label: 'Resumo' },
+  // Italo, 20/11: Estratégia (o plano do mês: ações, ofertas, decisões), Vídeos, Social e Plano de vendas na frente.
+  { id: 'resumo', label: 'Estratégia' },
   { id: 'audiovisual', label: 'Vídeos' },
   { id: 'social', label: 'Social media', short: 'Social' },
+  { id: 'atendimento', label: 'Plano de vendas', short: 'Vendas' },
   { id: 'trafego', label: 'Tráfego' },
-  { id: 'atendimento', label: 'Atendimento', short: 'Atend.' },
   { id: 'referencias', label: 'Referências' },
   { id: 'briefing', label: 'Briefing' },
 ] as const
@@ -33,11 +34,11 @@ export type BoardTab = (typeof BOARD_TABS)[number]['id']
 
 /** O que cada parte traz e quem faz (Italo, 19/11: "um texto resumo dizendo como e o que cada um traz"). Uma linha, embaixo das abas. */
 export const PART_INFO: Record<BoardTab, string> = {
-  resumo: 'A tese do mês, os objetivos com número, as ofertas, as datas e as decisões. O agente escreve a partir do briefing; tudo o resto serve a isso.',
+  resumo: 'O plano estratégico do mês: a tese, os objetivos com número, as ações (ex.: chamar um influenciador, com 5 opções e a oferta que ele anuncia), as ofertas, as datas e as decisões.',
   audiovisual: 'Os vídeos prontos para gravar: narração para o cliente, gravação (quadros e o que captar) e edição. Feitos pelo motor de roteiro, com nota mínima da banca.',
-  social: 'As peças do mês (carrossel, reels, stories, post) com texto, legenda e ideia de imagem real. Foco em ganhar seguidores e servir as ofertas.',
+  social: 'As peças do mês (post e carrossel; vídeo e Reels ficam em Vídeos) com texto, legenda e ideia de imagem real. Foco em ganhar seguidores e servir as ofertas.',
   trafego: 'As campanhas do mês: objetivo, público, qual criativo usar, 3 opções de verba por dia e um teste A/B. Só se o cliente tem tráfego.',
-  atendimento: 'O roteiro de WhatsApp de cada oferta: mensagens da primeira resposta ao fechamento, objeções com resposta e follow-up.',
+  atendimento: 'O plano de vendas do mês: meta, ticket, canais, as etapas da venda e a meta de cada semana. Embaixo, o roteiro de WhatsApp de cada oferta (mensagens, objeções e follow-up).',
   referencias: 'Concorrentes e posts de referência, com link e porquê. Vêm do briefing e da pesquisa do agente (os novos ganham o selo).',
   briefing: 'O que o agente precisa saber do cliente neste mês. Quanto mais completo, melhor a estratégia.',
 }
