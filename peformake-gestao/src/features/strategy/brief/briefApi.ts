@@ -93,6 +93,8 @@ export async function refreshMonthQuestions(clientId: string, month: string): Pr
         products: f.produtos, competitors: f.concorrentes, noCompetitors: f.sem_concorrentes, publico: f.publico, meta: (bm.data?.data as BriefMonth | undefined)?.meta,
         asked: ((hist.data ?? []) as { question: string; focus: string | null; pack: string | null }[]).filter((x) => !(x.pack === 'briefing_mes' && x.focus === focusOf(month))).map((x) => x.question),
         diagQuestions: Array.isArray(dg.data?.do_cliente) ? dg.data.do_cliente : [],
+        // Experiência e NPS misturado: preparado e desligado (automation_catalog 'nps_misturado').
+        nps: false,
       })
       const { error: e1 } = await rpc('brief_questions_put', { _client: clientId, _month: month, _qs: qs })
       if (e1) throw new Error(e1.code === '42501' ? 'Só administrador ou head de marketing.' : 'Não foi possível abrir as perguntas.')

@@ -5,7 +5,7 @@
 // Determinístico: o mesmo cliente no mesmo mês recebe as mesmas perguntas; o que já foi perguntado em outro mês não volta.
 
 export type Family = 'bar' | 'comida' | 'saude' | 'beleza' | 'varejo' | 'automotivo' | 'b2b' | 'servicos' | 'educacao' | 'terceiro_setor'
-export type Area = 'consultoria' | 'vendas' | 'social' | 'audiovisual'
+export type Area = 'consultoria' | 'vendas' | 'social' | 'audiovisual' | 'trafego'
 /** cond: só pergunta se a resposta da pergunta `q` tiver uma das palavras de `has` (vazio = basta ter respondido).
  * `short`: só se a resposta veio curta (menos caracteres que isso): o puxa-fio das histórias. */
 export interface Cond { q: string; has: string[]; short?: number }
@@ -19,6 +19,10 @@ export interface EngineInput {
   publico?: string; meta?: string
   asked: string[] // perguntas já feitas ao cliente em outros meses (enviadas ou respondidas)
   diagQuestions?: { pergunta: string; por_que?: string }[]
+  /** Serviços que o cliente tem (áreas): só para as perguntas de experiência. */
+  services?: ('social' | 'trafego' | 'audiovisual')[]
+  /** NPS misturado (proposta do Italo, 20/11): perguntas de experiência no meio e a nota de 0 a 10 a cada 3 meses. Desligado por padrão. */
+  nps?: boolean
 }
 
 const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim()
@@ -437,19 +441,54 @@ export function monthGuide(key: 'ofertas' | 'meta' | 'datas_travam', fam: Family
 /** Número estável a partir de um texto (mesmo cliente + mês = mesma escolha). */
 function hash(s: string): number { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) } return h >>> 0 }
 
-// O que mais importa sempre entra; o resto gira mês a mês (nada fica esquecido).
-const CORE: (keyof Bank)[] = ['oferta', 'meta', 'prioridade', 'passado', 'proximo']
+// Prioridade (Italo, 20/11): lacunas do briefing, datas, mês passado e próximo, uma história, experiência; o resto gira
+// mês a mês e o que não couber volta no mês seguinte (nunca se perde: o que já foi perguntado não repete).
+const CORE: (keyof Bank)[] = ['passado', 'proximo', 'oferta', 'meta', 'prioridade']
 const REST: (keyof Bank)[] = ['objecao', 'operacao', 'prova', 'publico', 'ideias', 'concorrencia', 'novidade', 'limite']
-/** Perguntas principais do mês (sem contar as subperguntas). */
-export const MONTH_MAIN = 10
+/**
+ * A conversa do mês dura uns 10 minutos: ~12 perguntas que o cliente VÊ, contando as subperguntas liberadas
+ * (40 a 60 s por resposta falada). Reserva para as subperguntas: ~2 datas, ~1 da trilha do nicho, ~1 puxa-fio.
+ * O briefing fixo não entra nesse teto (é respondido uma vez só).
+ */
+export const MONTH_VISIBLE = 12
+export const SECONDS_PER_ANSWER = 50
+/** Perguntas principais (sem condição) que cabem no mês, contando a mãe da trilha. */
+export const MONTH_MAIN = 8
+/** Minutos estimados da conversa ("uns 10 minutos") e o que falta ("faltam N"): portal e equipe usam o mesmo cálculo. */
+export const monthMinutes = (questions: number) => Math.max(1, Math.round((questions * SECONDS_PER_ANSWER) / 60))
+/** NPS a cada 3 meses (março, junho, setembro, dezembro). */
+export const NPS_MONTHS = [3, 6, 9, 12]
 
-/** As perguntas do mês para este cliente (10 principais + subperguntas). */
+/** As perguntas do mês para este cliente (~8 principais + subperguntas que dependem da resposta: ~12 visíveis). */
 export function monthQuestions(inp: EngineInput): EngineQuestion[] {
   const fam = inp.family ?? familyOf(inp.segment, inp.description, inp.name)
   const mi = Number(inp.month.slice(5, 7))
   const mes = MESES[mi - 1] ?? ''
   const prod = (inp.products ?? []).find((p) => p.nome?.trim())?.nome?.trim() ?? 'seu carro-chefe'
-  const N = MONTH_MAIN
+  // Trilha do nicho: a mãe conta como principal.
+  const hasTrail = !!(TRAIL[fam] ?? []).length
+  // Experiência (NPS misturado, desligado por padrão): uma por serviço, até 2, mais a nota a cada 3 meses.
+  const y = inp.month.slice(0, 4)
+  const pm = mi === 1 ? 12 : mi - 1
+  const prev = `${MESES[pm - 1]} de ${mi === 1 ? Number(y) - 1 : y}`
+  const exp: EngineQuestion[] = []
+  const expKids: EngineQuestion[] = []
+  if (inp.nps) {
+    const sv = inp.services ?? []
+    const EXP: Record<string, EngineQuestion> = {
+      social: { area: 'social', question: `Como você sentiu os posts de ${prev}?`, why: 'Sincero: o que gostou e o que mudaria.', options: ['Gostei muito', 'Bons', 'Podem melhorar', 'Não vi'] },
+      trafego: { area: 'trafego', question: `Os anúncios de ${prev} trouxeram gente no WhatsApp?`, why: 'Ex.: "vieram umas 20 conversas, 5 fecharam".', options: ['Sim, bastante', 'Alguns', 'Poucos', 'Não percebi'] },
+      audiovisual: { area: 'audiovisual', question: `A gravação de ${prev} foi tranquila?`, why: 'Horário, equipe, o que atrapalhou.', options: ['Sim', 'Teve contratempo', 'Não teve gravação'] },
+      atendimento: { area: 'consultoria', question: `Em ${prev}, quando precisou da Peformake, a resposta veio rápido?`, why: 'Ajuda a gente a melhorar o atendimento.', options: ['Sim', 'Às vezes', 'Demorou'] },
+    }
+    for (const k of [...sv.filter((x) => x in EXP), 'atendimento'].slice(0, 2)) exp.push(EXP[k]!)
+    if (NPS_MONTHS.includes(mi)) {
+      const nota = `De 0 a 10, quanto você indicaria a Peformake para um amigo? (${mes} de ${y})`
+      exp.push({ area: 'consultoria', question: nota, why: '0 = nunca, 10 = com certeza.', options: Array.from({ length: 11 }, (_, i) => String(i)) })
+      expKids.push({ area: 'consultoria', question: `O que faria a nota de ${mes} de ${y} subir?`, why: 'Uma coisa só já ajuda.', options: [], cond: { q: nota, has: [] } })
+    }
+  }
+  const N = MONTH_MAIN - (hasTrail ? 1 : 0) - exp.length
   const ORDER = [...CORE, ...REST.map((_, i) => REST[(i + mi) % REST.length]!)]
   const asked = new Set(inp.asked.map(norm))
   const fill = (s: string, extra: Record<string, string> = {}) => Object.entries({ mes, produto: prod, nome: inp.name.trim(), ...extra }).reduce((t, [k, v]) => t.split(`{${k}}`).join(v), s)
@@ -469,9 +508,8 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
   else if ((inp.competitors ?? [])[0]) push({ area: 'social', q: `O que ${inp.competitors![0]!.nome} faz que você acha que funciona (ou que não funciona)?`, why: 'Ex.: "promoção de terça lota"; "atendimento demora".' })
   // Calendário: o cliente marca as datas do mês e, para cada uma, diz o que fazer (Italo, 20/11).
   const kids: EngineQuestion[] = []
-  const cal = monthDates(inp.month, fam).slice(0, 8)
+  const cal = monthDates(inp.month, fam).slice(0, 7)
   if (cal.length) {
-    const y = inp.month.slice(0, 4)
     // Com o ano: a mesma pergunta não pode voltar para o mesmo cliente (banco), e no ano seguinte ela tem que voltar.
     const mother = `Quais datas de ${mes} de ${y} você quer aproveitar?`
     used.add(norm(mother))
@@ -485,10 +523,10 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
   out.push({ area: 'audiovisual', question: story, why: 'Fale à vontade, de 1 a 3 minutos: vira vídeo, arte e texto.', options: [] })
   kids.push({ area: 'audiovisual', question: HISTORIA_FIOS[HISTORIAS.indexOf(story)] ?? HISTORIA_FIO, why: 'Um caso real deixa o conteúdo verdadeiro.', options: [], cond: { q: story, has: [], short: HISTORIA_CURTA } })
 
-  // 2) Perguntas do diagnóstico que ficaram em aberto (até 2): são as mais deste cliente.
+  // 2) Pergunta do diagnóstico que ficou em aberto (1 por mês; as outras voltam nos meses seguintes).
   for (const d of (inp.diagQuestions ?? []).slice(0, 6)) {
-    if (out.length >= 7) break
-    if (out.filter((x) => x.why.startsWith('Do diagnóstico')).length >= 2) break
+    if (out.length >= N - 2) break
+    if (out.filter((x) => x.why.startsWith('Do diagnóstico')).length >= 1) break
     if (d.pergunta?.trim()) push({ area: 'consultoria', q: d.pergunta.trim(), why: `Do diagnóstico: ${d.por_que?.trim() || 'ficou em aberto'}`.slice(0, 200) })
   }
 
@@ -525,5 +563,9 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
     }
   }
   walk(TRAIL[fam] ?? [], null)
-  return [...out.slice(0, N), ...kids, ...deep.slice(0, 14)]
+  // Experiência espalhada no meio da conversa (a nota logo depois delas).
+  const main = out.slice(0, Math.max(0, N))
+  const at = Math.min(main.length, Math.ceil(main.length / 2))
+  // Trilha: a mãe e até 3 subperguntas (o resto entra nos meses seguintes, pelo que já foi perguntado).
+  return [...main.slice(0, at), ...exp, ...main.slice(at), ...kids, ...expKids, ...deep.slice(0, 4)]
 }

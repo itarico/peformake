@@ -34,9 +34,9 @@ describe('motor de perguntas (sem IA)', () => {
     const next = monthQuestions({ ...base, month: '2027-01-01', segment: 'Moda', products: [{ nome: 'Vestido', preco: 'R$ 99' }], competitors: [{ nome: 'Loja Y' }], asked: first.map((x) => x.question) })
     expect(next.filter((q) => first.some((f) => f.question === q.question))).toHaveLength(0)
   })
-  it('perguntas do diagnóstico entram (até 2)', () => {
+  it('pergunta do diagnóstico entra (1 por mês; as outras ficam para os meses seguintes)', () => {
     const q = monthQuestions({ ...base, segment: 'Gastronomia', description: 'cafeteria', products: [{ nome: 'Café', preco: 'R$ 8' }], competitors: [{ nome: 'Z' }], diagQuestions: [{ pergunta: 'Quantas cestas por semana?', por_que: 'capacidade' }, { pergunta: 'Já vendeu para empresas?' }, { pergunta: 'Terceira?' }] })
-    expect(q.filter((x) => x.why.startsWith('Do diagnóstico'))).toHaveLength(2)
+    expect(q.filter((x) => x.why.startsWith('Do diagnóstico'))).toHaveLength(1)
   })
 })
 
@@ -103,6 +103,42 @@ describe('calendário do mês e histórias', () => {
     expect(a.find((q) => q.question === HISTORIA_FIOS[HISTORIAS.indexOf(h[0]!.question)])?.cond).toEqual({ q: h[0]!.question, has: [], short: 240 })
     const b = monthQuestions({ ...base, month: '2027-01-01', products: [{ nome: 'P', preco: 'R$ 1' }], competitors: [{ nome: 'x' }], asked: a.map((q) => q.question) })
     expect(b.find((q) => HISTORIAS.includes(q.question))!.question).not.toBe(h[0]!.question)
-    expect(a.filter((q) => !q.cond).length).toBeLessThanOrEqual(11) // 10 + a pergunta-mãe da trilha do nicho
+    expect(a.filter((q) => !q.cond).length).toBeLessThanOrEqual(8) // MONTH_MAIN, contando a mãe da trilha do nicho
+  })
+})
+
+describe('conversa do mês de uns 10 minutos', () => {
+  const ans = { ...base, products: [{ nome: 'Pizza', preco: 'R$ 50' }], competitors: [{ nome: 'x' }] }
+  it('~12 perguntas visíveis: 8 principais + datas marcadas + puxa-fio + trilha', async () => {
+    const { MONTH_VISIBLE, monthMinutes } = await import('./questionEngine')
+    for (const family of ['comida', 'automotivo', 'terceiro_setor', 'servicos'] as const) {
+      const qs = monthQuestions({ ...ans, family })
+      const main = qs.filter((q) => !q.cond).length
+      expect(main).toBeLessThanOrEqual(8)
+      // Cliente marca 2 datas, a trilha libera 2 subperguntas e a história curta puxa o fio: fica no teto.
+      expect(main + 2 + 2 + 1).toBeLessThanOrEqual(MONTH_VISIBLE + 1)
+    }
+    expect(monthMinutes(MONTH_VISIBLE)).toBe(10)
+  })
+  it('prioridade: lacunas, datas, história e mês passado/próximo entram', () => {
+    const qs = monthQuestions({ ...base, family: 'comida', products: [{ nome: 'Pizza' }] }).filter((q) => !q.cond).map((q) => q.question)
+    expect(qs[0]).toBe('Quanto custa hoje Pizza?')
+    expect(qs.some((q) => /^Quais datas de dezembro de 2026/.test(q))).toBe(true)
+    expect(qs.some((q) => HISTORIAS.includes(q))).toBe(true)
+    expect(qs.some((q) => /mês passado|vendeu no mês passado|Bateram a meta/.test(q))).toBe(true)
+  })
+  it('NPS misturado: desligado por padrão; ligado, experiência por serviço no meio e a nota a cada 3 meses', () => {
+    const off = monthQuestions({ ...ans, services: ['social', 'trafego'] })
+    expect(off.some((q) => /De 0 a 10|posts de/.test(q.question))).toBe(false)
+    const on = monthQuestions({ ...ans, services: ['social', 'trafego'], nps: true })
+    const main = on.filter((q) => !q.cond)
+    const i = main.findIndex((q) => q.question === 'Como você sentiu os posts de novembro de 2026?')
+    expect(i).toBeGreaterThan(0); expect(i).toBeLessThan(main.length - 1)
+    expect(main.some((q) => q.question === 'Os anúncios de novembro de 2026 trouxeram gente no WhatsApp?')).toBe(true)
+    const nota = main.find((q) => q.question.startsWith('De 0 a 10'))!
+    expect(nota.options).toHaveLength(11)
+    expect(main.indexOf(nota)).toBe(i + 2)
+    expect(main.length).toBeLessThanOrEqual(8)
+    expect(monthQuestions({ ...ans, month: '2027-01-01', nps: true }).some((q) => q.question.startsWith('De 0 a 10'))).toBe(false)
   })
 })
