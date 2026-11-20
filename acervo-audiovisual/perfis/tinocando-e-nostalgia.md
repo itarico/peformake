@@ -50,3 +50,14 @@ perdido..."; "Jerusalém, ano 33, um homem caminha na escuridão com 30 moedas d
 6. **Etiqueta vermelha de data** junto do título (Nostalgia) e **cartão de citação** (Tinocando): já entram nas
    estruturas 2 e 4.
 7. **Cor de destaque única**: no nosso vídeo é o vermelho de carimbo (o verde-jade fica para natureza e ciência).
+
+## Canal Nostalgia (Egito, 2018, 19 mi views, 85 cortes em 10 min)
+Fase antiga do canal: apresentador em cerca de 65 % do tempo, com inserções em volta dele.
+- **Imagem que entra em cartão ao lado do apresentador** (máscara de ouro, pirâmide) e some.
+- **Barra de linha do tempo fixa na base**, verde e laranja, mostrando em que época a história está. Volta sempre que muda de era.
+- **Rótulo em faixa de papiro** (lower third) com o nome do lugar ou do termo ("Nomos", "Mâneton", "Servidão coletiva").
+- **Mapa em papiro com o rio se desenhando** e os nomes girados no sentido do território ("Alto Egito", "Baixo Egito"); alfinete vermelho.
+- **Animação de papel recortado em camadas** (ondas, pessoas, barcos) para cenas sem imagem real; imagem aérea de deserto e rio.
+
+**Também entra no Taoísmo:** a barra de linha do tempo fixa na base (de 500 a.C. até hoje) acende a cada salto de
+época, e assim o espectador nunca se perde entre Laozi, Guodian, Tang, 1788 e 2026.
