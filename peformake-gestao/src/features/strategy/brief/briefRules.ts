@@ -229,43 +229,76 @@ export function fromLinkList(items: LinkItem[], before: BriefFixed): Pick<BriefF
 }
 
 // ───────── Quiz: responder tocando em opções (com "Outro") ─────────
-export interface QuizStep { q: string; opts: string[]; multi?: boolean }
+/**
+ * Guia de perguntas de um campo (Italo, 20/11: "a partir de uma pergunta ir aprofundando até a essência").
+ * `when`: só aparece se a resposta da pergunta `q` tiver uma das palavras. `open`: pergunta aberta (texto ou fala).
+ */
+export interface QuizStep { q: string; opts: string[]; multi?: boolean; when?: { q: string; has: string[] }; open?: boolean }
+const W = (q: string, ...has: string[]) => ({ q, has })
 export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
   publico: [
     { q: 'Quem mais compra?', opts: ['Mulheres', 'Homens', 'Casais', 'Famílias com filhos', 'Jovens', 'Empresas'], multi: true },
+    { q: 'Idade dos filhos dessas famílias?', opts: ['Bebês', 'Crianças', 'Adolescentes'], multi: true, when: W('Quem mais compra?', 'familias') },
+    { q: 'Que tipo de empresa compra e quem decide lá dentro?', opts: ['Pequenos comércios', 'Indústrias', 'Escritórios', 'Órgão público', 'Dono decide', 'Comprador decide'], multi: true, when: W('Quem mais compra?', 'empresas') },
     { q: 'Qual a idade?', opts: ['18 a 24', '25 a 34', '35 a 44', '45 a 59', '60 ou mais'], multi: true },
     { q: 'Onde mora ou trabalha?', opts: ['No bairro', 'Bairros vizinhos', 'Na cidade toda', 'Região metropolitana', 'Turistas', 'Outras cidades (online)'], multi: true },
     { q: 'Qual a renda?', opts: ['Popular', 'Classe média', 'Média alta', 'Alta'], multi: true },
+    { q: 'O que faz a pessoa procurar vocês? (a dor ou o desejo)', opts: ['Resolver um problema urgente', 'Economizar', 'Se sentir bem', 'Status', 'Praticidade', 'Presentear'], multi: true },
+    { q: 'Conte com as palavras do cliente: o que ele diz quando chega ou elogia?', opts: [], open: true },
     { q: 'O que mais pesa na compra?', opts: ['Preço', 'Qualidade', 'Rapidez', 'Atendimento', 'Experiência', 'Confiança na marca'], multi: true },
+    { q: 'O que faz ele desistir de comprar?', opts: ['Preço', 'Demora', 'Desconfiança', 'Não achou o que queria', 'Atendimento'], multi: true },
     { q: 'Quando costuma comprar?', opts: ['Dia a dia', 'Fim de semana', 'À noite', 'No almoço', 'Datas especiais', 'Quando tem promoção'], multi: true },
+    { q: 'Onde ele passa o tempo online?', opts: ['Instagram', 'TikTok', 'Facebook', 'YouTube', 'WhatsApp', 'Google'], multi: true },
   ],
   diferenciais: [
     { q: 'Por que escolhem vocês?', opts: ['Qualidade', 'Preço justo', 'Atendimento', 'Rapidez', 'Localização', 'Tradição', 'Produto exclusivo'], multi: true },
+    { q: 'Qualidade como? O que fazem diferente?', opts: ['Matéria-prima melhor', 'Feito à mão', 'Equipe especializada', 'Garantia', 'Tecnologia'], multi: true, when: W('Por que escolhem vocês?', 'qualidade') },
+    { q: 'Por que conseguem um preço melhor?', opts: ['Compra direto da fábrica', 'Produção própria', 'Custo baixo', 'Volume'], multi: true, when: W('Por que escolhem vocês?', 'preco') },
+    { q: 'O que tem de especial no atendimento?', opts: ['Responde rápido no WhatsApp', 'Pós-venda', 'Atendimento personalizado', 'Horário estendido', 'Conhece o cliente pelo nome'], multi: true, when: W('Por que escolhem vocês?', 'atendimento') },
+    { q: 'O que é exclusivo de vocês? Conte.', opts: [], open: true, when: W('Por que escolhem vocês?', 'exclusivo') },
     { q: 'O que o cliente mais elogia?', opts: ['Sabor/resultado', 'Ambiente', 'Equipe', 'Entrega', 'Variedade', 'Custo-benefício'], multi: true },
+    { q: 'Tem prova disso?', opts: ['Depoimentos', 'Avaliações no Google', 'Prêmios', 'Números de vendas', 'Antes e depois', 'Ainda não'], multi: true },
     { q: 'Há quanto tempo existem?', opts: ['Menos de 1 ano', '1 a 3 anos', '3 a 10 anos', 'Mais de 10 anos'] },
+    { q: 'Em uma frase: o que só vocês fazem e ninguém mais na região?', opts: [], open: true },
   ],
   voz: [
-    { q: 'Como a marca fala?', opts: ['Descontraída', 'Próxima, de amigo', 'Profissional', 'Sofisticada', 'Divertida', 'Acolhedora'], multi: true },
+    { q: 'Como a marca fala?', opts: ['Descontraída', 'Próxima, de amigo', 'Profissional', 'Sofisticada', 'Divertida', 'Acolhedora', 'Técnica'], multi: true },
+    { q: 'Até onde vai a brincadeira?', opts: ['Pode zoar e usar meme', 'Leve, sem exagero', 'Só no conteúdo, nunca no anúncio'], when: W('Como a marca fala?', 'descontraida', 'divertida', 'amigo') },
+    { q: 'O que passa autoridade para essa marca?', opts: ['Dados e números', 'Anos de experiência', 'Certificações', 'Clientes conhecidos', 'Resultados mostrados'], multi: true, when: W('Como a marca fala?', 'profissional', 'tecnica', 'sofisticada') },
+    { q: 'Como ela mostra cuidado com o cliente?', opts: ['Explica com calma', 'Pergunta como ele está', 'Acompanha depois da compra', 'Fala de família'], multi: true, when: W('Como a marca fala?', 'acolhedora') },
+    { q: 'Se a marca fosse uma pessoa, quem seria?', opts: ['Amigo do bairro', 'Especialista', 'Mãe ou pai cuidadoso', 'Jovem antenado', 'Empresário de sucesso'] },
     { q: 'Usa gírias e emojis?', opts: ['Sim, bastante', 'Pouco', 'Não'] },
-    { q: 'Trata o cliente por', opts: ['Você', 'Vocês/galera', 'Senhor(a)'] },
+    { q: 'Trata o cliente por', opts: ['Você', 'Vocês/galera', 'Senhor(a)', 'Pelo nome'] },
+    { q: 'Palavras ou expressões que a marca SEMPRE usa', opts: [], open: true },
+    { q: 'Palavras que a marca NUNCA usa', opts: [], open: true },
+    { q: 'Escreva (ou fale) uma frase do jeito que a marca diria no Instagram', opts: [], open: true },
   ],
   proibidos: [
     { q: 'O que nunca falar ou mostrar?', opts: ['Política', 'Religião', 'Palavrão', 'Concorrente pelo nome', 'Preço baixo como foco', 'Bebida alcoólica', 'Crianças'], multi: true },
+    { q: 'Tem regra de conselho ou lei da profissão?', opts: ['Não mostrar preço', 'Não prometer resultado', 'Não mostrar paciente', 'Não usar antes e depois', 'Não tem'], multi: true },
+    { q: 'Algo que já deu problema e não pode repetir?', opts: [], open: true },
   ],
   quem_aparece: [
     { q: 'Quem pode aparecer nos vídeos?', opts: ['O dono', 'A equipe', 'Clientes', 'Só as mãos/produto', 'Ninguém (só produto)'], multi: true },
+    { q: 'O dono fica à vontade na câmera?', opts: ['Muito, fala solto', 'Mais ou menos', 'Precisa de roteiro', 'Prefere não falar'], when: W('Quem pode aparecer nos vídeos?', 'dono') },
+    { q: 'Quantas pessoas da equipe topam aparecer? Quem se destaca?', opts: [], open: true, when: W('Quem pode aparecer nos vídeos?', 'equipe') },
+    { q: 'Tem clientes que topam gravar depoimento?', opts: ['Sim, vários', 'Uns 2 ou 3', 'Preciso perguntar'], when: W('Quem pode aparecer nos vídeos?', 'clientes') },
   ],
   quem_grava: [
     { q: 'Quem grava?', opts: ['Ellcazo', 'O próprio cliente', 'A equipe do cliente', 'Misto'], multi: true },
+    { q: 'Com que aparelho?', opts: ['Celular bom', 'Celular simples', 'Câmera'], when: W('Quem grava?', 'proprio', 'equipe', 'misto') },
     { q: 'Com que frequência dá para gravar?', opts: ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar'] },
+    { q: 'Melhor dia e horário para gravar sem atrapalhar o movimento?', opts: [], open: true },
   ],
   capacidade: [
     { q: 'Quanto dá para atender por dia?', opts: ['Até 20', '20 a 50', '50 a 100', 'Mais de 100'] },
     { q: 'Qual o gargalo?', opts: ['Cozinha/produção', 'Atendimento', 'Entrega', 'Espaço', 'Agenda', 'Nenhum'], multi: true },
+    { q: 'Quantos horários livres por semana, e em quais dias?', opts: [], open: true, when: W('Qual o gargalo?', 'agenda') },
+    { q: 'Quantas pessoas atendem o WhatsApp e em que horário?', opts: [], open: true, when: W('Qual o gargalo?', 'atendimento') },
+    { q: 'Quanto tempo leva do pedido à entrega?', opts: [], open: true },
   ],
 }
 
-/** Junta as respostas do quiz num texto curto ("Quem mais compra: Mulheres, Casais. Idade: 25 a 34."). */
 /** Guia do Direcionamento da equipe (Italo, 20/11: "algo para nos guiar para sair uma resposta completa"). */
 export const DIRECTION_QUIZ: QuizStep[] = [
   { q: 'O que o dono quer conquistar neste mês', opts: ['Vender mais', 'Lançar produto ou serviço', 'Clientes novos', 'Ganhar seguidores', 'Fortalecer a marca', 'Encher a agenda', 'Abrir unidade'], multi: true },
