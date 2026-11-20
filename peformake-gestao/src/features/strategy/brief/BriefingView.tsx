@@ -1,7 +1,7 @@
 import { Children, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
+import { Ban, Bookmark, UserRound, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { SearchSelect } from '@/components/ui/SearchSelect'
@@ -17,7 +17,7 @@ import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
-import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, type Family } from './questionEngine'
+import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, monthGuide, type Family } from './questionEngine'
 import { DIRECTION_QUIZ, MONTH_CHECKS, QUIZ } from './briefRules'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
@@ -172,6 +172,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
     produtos: { kind: 'produtos' }, links: { kind: 'links' }, concorrentes: { kind: 'concorrentes' }, referencias: { kind: 'referencias' },
     publico: { kind: 'text', key: 'publico' }, diferenciais: { kind: 'text', key: 'diferenciais' }, voz: { kind: 'text', key: 'voz' }, proibidos: { kind: 'text', key: 'proibidos' },
     quem_aparece: { kind: 'text', key: 'quem_aparece' }, capacidade: { kind: 'text', key: 'capacidade' },
+    proposito: { kind: 'text', key: 'proposito' }, percepcao: { kind: 'text', key: 'percepcao' }, posicionamento: { kind: 'text', key: 'posicionamento' },
     ofertas: { kind: 'month', key: 'ofertas' }, meta: { kind: 'month', key: 'meta' }, datas_travam: { kind: 'month', key: 'datas_travam' },
   }
   const todo: NonNullable<Open>[] = [
@@ -186,12 +187,24 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
         <Ring percent={st.fixedPercent} />
         <div className="min-w-0 flex-1 text-[13px] text-muted">{todo.length ? <><b className="text-ink">{todo.length}</b> para completar</> : <b className="text-ok-ink">Tudo pronto</b>}</div>
         <button type="button" data-ver-tudo onClick={() => setAll((v) => !v)} className="min-h-10 shrink-0 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{all ? 'Só o que falta' : 'Ver tudo'}</button>
-        {todo.length > 0 && <Button data-completar variant="secondary" aria-label="Completar em passos" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /><span className="max-sm:hidden"> Completar</span></Button>}
-        <Button data-conversar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setChat(true)}><MessageCircle size={15} aria-hidden="true" /> Conversar</Button>
+        {todo.length > 0 && <Button data-completar variant="secondary" aria-label="Eu preencho o que falta, um por vez" title="Abre só o que falta, um por vez, com perguntas guiadas" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /> Eu preencho</Button>}
+        <Button data-conversar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setChat(true)}><MessageCircle size={15} aria-hidden="true" /> Cliente preenche</Button>
       </div>}
       {tipoOpen && <TipoDialog current={isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name)} label={f.tipo_label} busy={saveF.isPending}
         onPick={(v, l) => saveF.mutate({ tipo: v, tipo_label: l }, { onSuccess: () => { setTipoOpen(false); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) } })} onClose={() => setTipoOpen(false)} />}
       {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} onClient={() => setOpen({ kind: 'enviar' })} />}
+
+      {/* Essência da marca (Italo, 20/11): frameworks de marca (Círculo Dourado, Kapferer, arquétipos, posicionamento, JTBD). */}
+      {part === 'fixo' && <Group title="Essência da marca">
+        {show(!!f.proposito) && <Tile icon={Compass} label={TEXT_FIELDS.proposito.label} title={TEXT_FIELDS.proposito.hint} done={!!f.proposito} onOpen={() => setOpen({ kind: 'text', key: 'proposito' })} />}
+        {show(!!f.percepcao) && <Tile icon={Star} label={TEXT_FIELDS.percepcao.label} title={TEXT_FIELDS.percepcao.hint} done={!!f.percepcao} onOpen={() => setOpen({ kind: 'text', key: 'percepcao' })} />}
+        {show(!!f.arquetipo) && <Tile icon={UserRound} label={TEXT_FIELDS.arquetipo.label} title={TEXT_FIELDS.arquetipo.hint} done={!!f.arquetipo} onOpen={() => setOpen({ kind: 'text', key: 'arquetipo' })} />}
+        {show(!!f.posicionamento) && <Tile icon={Target} label={TEXT_FIELDS.posicionamento.label} title={TEXT_FIELDS.posicionamento.hint} done={!!f.posicionamento} onOpen={() => setOpen({ kind: 'text', key: 'posicionamento' })} />}
+        {show(!!f.historia) && <Tile icon={NotebookPen} label={TEXT_FIELDS.historia.label} title={TEXT_FIELDS.historia.hint} done={!!f.historia} onOpen={() => setOpen({ kind: 'text', key: 'historia' })} />}
+        {show(!!f.jornada) && <Tile icon={TrendingUp} label={TEXT_FIELDS.jornada.label} title={TEXT_FIELDS.jornada.hint} done={!!f.jornada} onOpen={() => setOpen({ kind: 'text', key: 'jornada' })} />}
+        {show(!!f.objecoes) && <Tile icon={Ban} label={TEXT_FIELDS.objecoes.label} title={TEXT_FIELDS.objecoes.hint} done={!!f.objecoes} onOpen={() => setOpen({ kind: 'text', key: 'objecoes' })} />}
+        {show(!!f.visao) && <Tile icon={Gauge} label={TEXT_FIELDS.visao.label} title={TEXT_FIELDS.visao.hint} done={!!f.visao} onOpen={() => setOpen({ kind: 'text', key: 'visao' })} />}
+      </Group>}
 
       {part === 'fixo' && <Group title="O cliente">
         <Tile icon={Building2} label="Tipo" title={f.tipo_label || (isFamily(f.tipo) ? FAMILY_LABEL[f.tipo] : `Confirmar: ${FAMILY_LABEL[familyOf(b.data?.segment, b.data?.description, name)]}`)} done={isFamily(f.tipo)} onOpen={() => setTipoOpen(true)} />
@@ -230,7 +243,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       {open?.kind === 'direcao' && <TextDialog key="direcao" title="Direcionamento do mês" hint="O que a IA não acha sozinha: objetivo do dono, o que ele pediu, o que não fazer. Toque em Responder com opções para um guia." quizSteps={DIRECTION_QUIZ} initial={direction} busy={saveDir.isPending} error={err(saveDir)} onClose={stop} onSave={(v) => saveDir.mutate(v)} />}
       {gravOpen && <TextDialog key="gravacao" quizSteps={[...(QUIZ.quem_aparece ?? []), ...(QUIZ.quem_grava ?? [])]} title="Gravação" hint="Quem aparece, quem grava, com que aparelho e quando dá para gravar. Toque em Responder com opções." initial={[f.quem_aparece, f.quem_grava && f.quem_grava !== f.quem_aparece ? f.quem_grava : ''].filter(Boolean).join(' ')} busy={saveF.isPending} error={err(saveF)} onClose={() => setGravOpen(false)} onSave={(v) => saveF.mutate({ quem_aparece: v, quem_grava: v }, { onSuccess: () => setGravOpen(false) })} />}
       {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
-      {open?.kind === 'month' && <TextDialog key={open.key} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
+      {open?.kind === 'month' && <TextDialog key={open.key} quizSteps={monthGuide(open.key, isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name), prods, month)} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
       {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate(v)} />}
       {open?.kind === 'produtos' && <ListDialog<Produto & Record<string, unknown>> importer title="Produtos e serviços" hint="Toque em Adicionar: produto ou serviço, e depois um por um, áudio, arquivo, colar ou link. Só valores reais entram na estratégia." items={prods as (Produto & Record<string, unknown>)[]} empty={{ nome: '', preco: '', condicoes: '' }}
         fields={[{ key: 'nome', label: 'Nome', placeholder: 'Ex.: Pizza grande' }, { key: 'preco', label: 'Preço', placeholder: 'Ex.: R$ 59,90' }, { key: 'condicoes', label: 'Condições', placeholder: 'Ex.: só no delivery, até 2x' }]}

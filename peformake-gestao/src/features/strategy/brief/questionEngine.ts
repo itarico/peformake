@@ -246,6 +246,64 @@ const TRAIL: Partial<Record<Family, Node[]>> = {
   ] }],
 }
 
+/** Passo do guia (mesmo formato do QuizStep do briefing). */
+export interface GuideStep { q: string; opts: string[]; multi?: boolean; when?: { q: string; has: string[] }; open?: boolean }
+
+const OFFER_KIND: Record<Family, string[]> = {
+  comida: ['Combo', 'Prato do dia', 'Promoção no dia fraco', 'Frete grátis', 'Produto da data', 'Cupom de volta'],
+  bar: ['Happy hour', 'Balde ou rodada', 'Evento com música', 'Aniversariante', 'Jogo no telão'],
+  saude: ['Avaliação com desconto', 'Pacote de sessões', 'Check-up', 'Condição no cartão', 'Retorno incluso'],
+  beleza: ['Pacote de sessões', 'Primeira vez com desconto', 'Combo de serviços', 'Plano mensal', 'Indique e ganhe'],
+  varejo: ['Queima de estoque', 'Compre 2 leve 3', 'Frete grátis', 'Brinde', 'Parcelamento sem juros', 'Lançamento'],
+  automotivo: ['Taxa zero', 'Entrada facilitada', 'Brinde (capacete, acessório)', 'Revisão grátis', 'Bônus na troca', 'Seminovo com garantia'],
+  b2b: ['Visita técnica grátis', 'Teste ou amostra', 'Condição para contrato anual', 'Prazo de pagamento', 'Diagnóstico grátis'],
+  educacao: ['Matrícula com desconto', 'Desconto para irmãos', 'Aula experimental', 'Material grátis', 'Pagamento à vista'],
+  terceiro_setor: ['Campanha de contribuição', 'Evento beneficente', 'Rifa ou bazar', 'Associação com benefício', 'Mutirão'],
+  servicos: ['Orçamento grátis', 'Pacote fechado', 'Primeira consulta grátis', 'Desconto à vista', 'Garantia estendida'],
+}
+const GOAL_UNIT: Record<Family, string[]> = {
+  comida: ['Pedidos por dia', 'Faturamento do mês', 'Ticket médio', 'Mesas cheias'],
+  bar: ['Público por noite', 'Faturamento do mês', 'Reservas'],
+  saude: ['Consultas no mês', 'Agenda cheia (%)', 'Pacientes novos', 'Procedimentos'],
+  beleza: ['Atendimentos no mês', 'Clientes novos', 'Pacotes vendidos', 'Agenda cheia (%)'],
+  varejo: ['Vendas no mês', 'Faturamento', 'Ticket médio', 'Pedidos online'],
+  automotivo: ['Veículos vendidos', 'Serviços na oficina', 'Leads no WhatsApp', 'Faturamento'],
+  b2b: ['Contratos fechados', 'Orçamentos enviados', 'Reuniões marcadas', 'Faturamento'],
+  educacao: ['Matrículas', 'Rematrículas', 'Visitas na escola', 'Inscrições'],
+  terceiro_setor: ['Associados novos', 'Contribuição arrecadada', 'Participantes no evento', 'Voluntários'],
+  servicos: ['Clientes novos', 'Orçamentos', 'Contratos fechados', 'Faturamento'],
+}
+
+/**
+ * Guias do mês (Ofertas, Meta, Datas) já do jeito do cliente (Italo, 20/11: "bem precisas, entendendo o negócio"):
+ * as opções vêm dos produtos dele, do tipo de negócio e das datas daquele mês.
+ */
+export function monthGuide(key: 'ofertas' | 'meta' | 'datas_travam', fam: Family, products: { nome: string; preco?: string }[], month: string): GuideStep[] {
+  const mi = Number(month.slice(5, 7))
+  const mes = MESES[mi - 1] ?? 'o mês'
+  const prods = products.map((p) => p.nome?.trim()).filter((x): x is string => !!x).slice(0, 8)
+  const dates = DATES[mi] ?? []
+  if (key === 'ofertas') return [
+    { q: `O que precisa vender mais em ${mes}?`, opts: prods.length ? prods : ['O carro-chefe', 'Um lançamento', 'O de maior margem', 'Estoque parado'], multi: true },
+    { q: 'Que tipo de oferta faz sentido?', opts: OFFER_KIND[fam], multi: true },
+    { q: 'Qual o preço ou a condição real da oferta?', opts: [], open: true },
+    { q: 'Até quando vale e tem limite (estoque, vagas)?', opts: ['Até o fim do mês', 'Só um fim de semana', 'Até acabar o estoque', 'Vagas limitadas'], multi: true },
+    ...(dates.length ? [{ q: `Vai ter algo especial para ${dates.join(' ou ')}?`, opts: ['Sim, oferta da data', 'Produto especial da data', 'Evento', 'Não vamos usar'] }] : []),
+    { q: 'Alguma ação junto da oferta?', opts: ['Influenciador', 'Parceria com outro negócio', 'Sorteio', 'Evento', 'Indique e ganhe', 'Nenhuma'], multi: true },
+  ]
+  if (key === 'meta') return [
+    { q: `O que conta como resultado em ${mes}?`, opts: GOAL_UNIT[fam] },
+    { q: 'Quanto foi no mês passado?', opts: [], open: true },
+    { q: 'Qual o número da meta deste mês?', opts: [], open: true },
+    { q: 'Por que esse número?', opts: ['Pagar as contas', 'Crescer em relação ao mês passado', 'Data forte no mês', 'Encher a capacidade', 'Lançamento'], multi: true },
+  ]
+  return [
+    { q: `Tem dia em ${mes} que não dá para gravar ou atender?`, opts: ['Feriado fechado', 'Férias da equipe', 'Reforma', 'Viagem do dono', 'Evento que lota', 'Nada trava'], multi: true },
+    { q: 'Quais dias exatamente?', opts: [], open: true, when: { q: `Tem dia em ${mes} que não dá para gravar ou atender?`, has: ['feriado', 'ferias', 'reforma', 'viagem', 'evento'] } },
+    { q: 'Mudança de horário no mês?', opts: ['Abre mais tarde', 'Fecha mais cedo', 'Abre domingo', 'Horário normal'], multi: true },
+  ]
+}
+
 /** Número estável a partir de um texto (mesmo cliente + mês = mesma escolha). */
 function hash(s: string): number { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) } return h >>> 0 }
 

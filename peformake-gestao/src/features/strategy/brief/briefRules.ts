@@ -24,6 +24,8 @@ export interface BriefFixed {
   concorrentes_off?: string[]
   voz?: string; proibidos?: string
   quem_aparece?: string; quem_grava?: string; capacidade?: string
+  /** Essência da marca (Italo, 20/11): o agente lê tudo para entender como a empresa quer ser vista. */
+  proposito?: string; percepcao?: string; arquetipo?: string; posicionamento?: string; historia?: string; jornada?: string; objecoes?: string; visao?: string
   /** Tipo de negócio (família do motor de perguntas). Sem ele, o sistema deduz pela descrição. */
   tipo?: string
   /** Como a equipe chama o tipo (ex.: Pizzaria, Igreja, ou um tipo novo escrito à mão). */
@@ -35,8 +37,17 @@ export interface BriefMonth { ofertas?: string; meta?: string; datas_travam?: st
 
 /** Campos de texto do briefing (os de lista têm pop-up próprio). */
 export type TextKey = 'publico' | 'diferenciais' | 'voz' | 'proibidos' | 'quem_aparece' | 'quem_grava' | 'capacidade'
+  | 'proposito' | 'percepcao' | 'arquetipo' | 'posicionamento' | 'historia' | 'jornada' | 'objecoes' | 'visao'
 export const TEXT_FIELDS: Record<TextKey, { label: string; hint: string }> = {
   publico: { label: 'Público', hint: 'Quem compra: idade, bairro, renda, o que busca.' },
+  proposito: { label: 'Propósito', hint: 'Por que a empresa existe além de ganhar dinheiro (Círculo Dourado: por quê, como, o quê).' },
+  percepcao: { label: 'Como quer ser vista', hint: 'Como quer ser percebida, como é vista hoje e o que falta (Prisma de Identidade de Kapferer).' },
+  arquetipo: { label: 'Personalidade', hint: 'O arquétipo da marca (os 12 arquétipos) e marcas que inspiram ou não.' },
+  posicionamento: { label: 'Posicionamento', hint: 'Para quem, que problema resolve melhor, em que categoria e por que acreditar.' },
+  historia: { label: 'História', hint: 'Como começou, a virada, as dificuldades e as conquistas: vira conteúdo.' },
+  jornada: { label: 'Jornada de compra', hint: 'Como descobre, o que faz antes de comprar, o "trabalho" que contrata (JTBD) e o pós-venda.' },
+  objecoes: { label: 'Objeções', hint: 'O que perguntam antes de comprar e o que falam quando não fecham.' },
+  visao: { label: 'Visão', hint: 'Onde quer estar em 3 anos e o maior obstáculo de hoje.' },
   diferenciais: { label: 'Diferenciais', hint: 'Por que comprar aqui e não no concorrente.' },
   voz: { label: 'Voz da marca', hint: 'Como a marca fala: palavras, tom, jeito.' },
   proibidos: { label: 'Proibidos', hint: 'O que nunca falar ou mostrar.' },
@@ -70,6 +81,9 @@ export function briefChecks(f: BriefFixed, m: BriefMonth, answered: number, tota
     { key: 'proibidos', label: 'Proibidos', done: filled(f.proibidos), weight: 0.5 },
     { key: 'quem_aparece', label: 'Quem aparece', done: filled(f.quem_aparece), weight: 0.5 },
     { key: 'capacidade', label: 'Capacidade', done: filled(f.capacidade), weight: 0.5 },
+    { key: 'proposito', label: 'Propósito', done: filled(f.proposito), weight: 0.5 },
+    { key: 'percepcao', label: 'Como quer ser vista', done: filled(f.percepcao), weight: 0.5 },
+    { key: 'posicionamento', label: 'Posicionamento', done: filled(f.posicionamento), weight: 0.5 },
     { key: 'ofertas', label: 'Ofertas do mês', done: filled(m.ofertas), weight: 1 },
     { key: 'meta', label: 'Meta do mês', done: filled(m.meta), weight: 1 },
     { key: 'datas_travam', label: 'Datas que travam', done: filled(m.datas_travam), weight: 0.5 },
@@ -289,6 +303,61 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     { q: 'Com que aparelho?', opts: ['Celular bom', 'Celular simples', 'Câmera'], when: W('Quem grava?', 'proprio', 'equipe', 'misto') },
     { q: 'Com que frequência dá para gravar?', opts: ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar'] },
     { q: 'Melhor dia e horário para gravar sem atrapalhar o movimento?', opts: [], open: true },
+  ],
+  proposito: [
+    { q: 'Por que a empresa existe, além de ganhar dinheiro?', opts: ['Facilitar a vida das pessoas', 'Cuidar da saúde e do bem-estar', 'Trazer alegria', 'Dar acesso a quem não tinha', 'Valorizar a região', 'Transformar vidas'], multi: true },
+    { q: 'Como a empresa nasceu?', opts: ['Paixão do dono', 'Viu uma necessidade', 'Negócio de família', 'Oportunidade de mercado', 'Virada de vida'] },
+    { q: 'Quantas gerações e o que se mantém desde o começo?', opts: [], open: true, when: W('Como a empresa nasceu?', 'familia') },
+    { q: 'Que necessidade era essa? Conte.', opts: [], open: true, when: W('Como a empresa nasceu?', 'necessidade') },
+    { q: 'O que mudaria na vida das pessoas se a empresa fechasse amanhã?', opts: [], open: true },
+    { q: 'Como vocês fazem isso de um jeito diferente (o "como")?', opts: [], open: true },
+    { q: 'Em uma frase: qual é a missão?', opts: [], open: true },
+  ],
+  percepcao: [
+    { q: 'Como a marca QUER ser vista?', opts: ['A mais confiável', 'A mais moderna', 'A de melhor preço', 'A mais premium', 'A mais próxima', 'A especialista', 'A mais divertida'], multi: true },
+    { q: 'E como você acha que ela É vista hoje?', opts: ['A mais confiável', 'A mais moderna', 'A de melhor preço', 'A mais premium', 'A mais próxima', 'A especialista', 'Pouco conhecida'], multi: true },
+    { q: 'O que falta para sair de como é vista para como quer ser vista?', opts: [], open: true },
+    { q: 'Quem compra quer se sentir como?', opts: ['Esperto', 'Cuidado', 'Especial', 'Moderno', 'Seguro', 'Parte de um grupo'], multi: true },
+    { q: 'Que relação a marca tem com o cliente?', opts: ['Amiga', 'Professora', 'Parceira', 'Cuidadora', 'Inspiradora'] },
+    { q: 'Visual: que estilo representa a marca?', opts: ['Cores vivas', 'Tons neutros', 'Escuro e elegante', 'Natural', 'Minimalista', 'Cheio de energia'], multi: true },
+    { q: '3 palavras que as pessoas devem lembrar ao ver a marca', opts: [], open: true },
+  ],
+  arquetipo: [
+    { q: 'Qual personalidade combina mais com a marca? (até 2)', opts: ['Cuidador (protege)', 'Herói (supera)', 'Sábio (ensina)', 'Explorador (aventura)', 'Criador (inova)', 'Governante (lidera)', 'Mago (transforma)', 'Inocente (simples e otimista)', 'Cara comum (igual a você)', 'Amante (prazer e beleza)', 'Bobo da corte (diversão)', 'Rebelde (quebra regras)'], multi: true },
+    { q: 'Uma marca famosa com o jeito que vocês querem ter (e por quê)', opts: [], open: true },
+    { q: 'Uma marca que vocês NÃO querem parecer', opts: [], open: true },
+  ],
+  posicionamento: [
+    { q: 'Para quem é, principalmente? (o cliente que vocês mais querem)', opts: [], open: true },
+    { q: 'Que problema vocês resolvem melhor que todo mundo?', opts: [], open: true },
+    { q: 'O que o cliente diria que vocês são? (a categoria)', opts: [], open: true },
+    { q: 'Por que acreditar? Qual a prova?', opts: ['Anos de mercado', 'Clientes atendidos', 'Certificação', 'Garantia', 'Resultados mostrados', 'Avaliações'], multi: true },
+    { q: 'Contra quem competem de verdade?', opts: ['Concorrente direto', 'O cliente fazer sozinho', 'Não fazer nada', 'Loja online', 'Informal ou mais barato'], multi: true },
+  ],
+  historia: [
+    { q: 'Como começou? Conte o momento da virada', opts: [], open: true },
+    { q: 'Qual foi a maior dificuldade e como superaram?', opts: [], open: true },
+    { q: 'Um cliente ou caso que marcou a história', opts: [], open: true },
+    { q: 'Conquistas que dão orgulho', opts: ['Prêmio', 'Nova unidade', 'Cliente grande', 'Marca de vendas', 'Reconhecimento na mídia'], multi: true },
+  ],
+  jornada: [
+    { q: 'Como o cliente descobre vocês?', opts: ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace'], multi: true },
+    { q: 'O que ele faz antes de comprar?', opts: ['Compara preço', 'Pede indicação', 'Olha avaliações', 'Visita o perfil', 'Pergunta no WhatsApp', 'Visita a loja'], multi: true },
+    { q: 'Quanto tempo do primeiro contato até comprar?', opts: ['Na hora', 'No mesmo dia', 'Alguns dias', 'Semanas', 'Meses'] },
+    { q: 'Que "trabalho" o cliente contrata quando compra de vocês?', opts: [], open: true },
+    { q: 'Depois de comprar ele volta ou indica?', opts: ['Volta todo mês', 'Volta às vezes', 'Compra uma vez', 'Indica muito'], multi: true },
+    { q: 'O que fazem no pós-venda?', opts: ['Mensagem de agradecimento', 'Pede avaliação', 'Cupom para voltar', 'Acompanha o resultado', 'Nada ainda'], multi: true },
+  ],
+  objecoes: [
+    { q: 'O que o cliente mais pergunta antes de comprar?', opts: ['Preço', 'Prazo', 'Garantia', 'Forma de pagamento', 'Se funciona', 'Onde fica'], multi: true },
+    { q: 'O que ele fala quando não fecha?', opts: ['Tá caro', 'Vou pensar', 'Vou ver com alguém', 'Depois eu volto', 'Achei mais barato'], multi: true },
+    { q: 'Como vocês respondem hoje ao "tá caro"?', opts: [], open: true, when: W('O que ele fala quando não fecha?', 'caro', 'barato') },
+    { q: 'Qual o medo do cliente na hora de comprar?', opts: [], open: true },
+  ],
+  visao: [
+    { q: 'Onde a empresa quer estar em 3 anos?', opts: ['Mais unidades', 'Referência na região', 'Vender para o Brasil todo', 'Lançar produto novo', 'Franquia', 'Crescer a equipe'], multi: true },
+    { q: 'Qual o maior obstáculo hoje?', opts: ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Marca pouco conhecida'], multi: true },
+    { q: 'O que seria um sucesso absoluto com a Peformake em 12 meses?', opts: [], open: true },
   ],
   capacidade: [
     { q: 'Quanto dá para atender por dia?', opts: ['Até 20', '20 a 50', '50 a 100', 'Mais de 100'] },

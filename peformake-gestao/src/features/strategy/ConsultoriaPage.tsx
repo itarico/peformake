@@ -353,7 +353,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {/* Passo a passo (Italo, 20/11): primeiro conhecer o cliente (briefing, perguntas, diagnóstico), depois a estratégia e as partes. */}
       <ol data-passos aria-label="Passo a passo do cliente" className="flex flex-col gap-2">
         <Step n={1} current={stepCur === 1} done={briefDone}>
-          <BriefingCard clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, parte: 'briefing', so: '1', mes: opts[1]!.slice(0, 7) })} />
+          <BriefingCard clientId={clientId} month={opts[1]!} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'estrategia', secao: null, parte: 'briefing', so: '1', mes: opts[1]!.slice(0, 7) })} />
         </Step>
         <Step n={2} current={stepCur === 2} done={askDone} locked={!briefDone} wait="o briefing chegar a 80%">
           <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />
