@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      /* Treino E14 (Milad Aslani DfWvqYMM7uA) — recriação à mão a partir do breakdown medido. */
+      :root {
+        --vinho-escuro: #120407;
+        --vinho: #5a0f1e;
+        --vinho-chao: #b8324a;
+        --branco: #ffffff;
+        --acento: #d9734e;
+        --font: "Inter";
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--vinho-escuro); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: var(--font); }
+
+      /* ---------- cena da pessoa (plano A e H) ---------- */
+      .cena { position: absolute; inset: 0; }
+      .sala { position: absolute; inset: 0;
+        background:
+          radial-gradient(ellipse 70% 45% at 50% 38%, rgba(140,24,48,.55), transparent 70%),
+          linear-gradient(180deg, #2a0710 0%, #4a0d1b 48%, #7a1a2e 62%, #b8324a 78%, #8e2238 100%); }
+      .painel { position: absolute; left: 128px; top: 232px; width: 820px; height: 930px;
+        background: linear-gradient(180deg, rgba(10,2,4,.85), rgba(40,6,14,.6)); }
+      .pessoa { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover; }
+      .vinheta { position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 45%, rgba(6,0,2,.78) 100%); }
+      .camera { position: absolute; inset: 0; transform-origin: 50% 45%; }
+
+      /* ---------- texto ---------- */
+      .palavra { position: absolute; left: 0; width: 1080px; text-align: center; color: var(--branco);
+        font-weight: 300; letter-spacing: -0.02em; line-height: 1; }
+      .grande { top: 520px; font-size: 190px; }
+      .media { font-size: 110px; }
+      .pequena { font-size: 62px; font-weight: 400; }
+      .traco { position: absolute; left: 508px; top: 296px; width: 64px; width: 56px; height: 8px; background: var(--branco); }
+      .ponto { position: absolute; width: 12px; height: 12px; background: var(--branco); }
+
+      /* ---------- preto / constelação ---------- */
+      .preto { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 70% at 50% 40%, #3a0a14 0%, #160407 55%, #050102 100%); }
+      .quadrado { position: absolute; background: var(--branco); }
+      .raio { position: absolute; left: 540px; top: 960px; height: 2px; background: rgba(255,255,255,.85);
+        transform-origin: 0 50%; }
+
+      /* ---------- revelação branca ---------- */
+      .branco { position: absolute; inset: 0; background: var(--branco); }
+      .marca { position: absolute; left: 290px; top: 710px; width: 500px; height: 500px; }
+      .cantoneira { position: absolute; width: 46px; height: 46px; border-color: var(--branco); border-style: solid; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6.766666" data-width="1080" data-height="1920" data-fps="30">
+
+      <!-- PLANO A: 0 – 2.233 (frames 0–66) -->
+      <div id="planoA" class="clip cena" data-start="0" data-duration="2.233333" data-track-index="0" data-track-kind="graphics">
+        <div id="camA" class="camera">
+          <div class="sala"></div><div class="painel"></div>
+          <img id="pessoaA" style="transform:translateY(-110px)" class="pessoa" src="assets/pessoa.png" alt="" />
+        </div>
+        <div class="vinheta"></div>
+        <div id="hud" style="position:absolute;inset:0">
+          <div id="tracoA" class="traco"></div>
+          <div id="p1" class="ponto" style="left:196px;top:466px"></div>
+          <div id="p2" class="ponto" style="left:872px;top:466px"></div>
+          <div id="p3" class="ponto" style="left:196px;top:786px"></div>
+          <div id="p4" class="ponto" style="left:872px;top:786px"></div>
+        </div>
+        <div id="wWhy" data-layout-allow-overlap class="palavra grande">Why</div>
+        <div id="wWaste" data-layout-allow-overlap class="palavra grande">waste</div>
+        <div id="wHours" data-layout-allow-overlap class="palavra grande">hours</div>
+        <div id="wOn" data-layout-allow-overlap class="palavra grande">on</div>
+        <div id="wWork" data-layout-allow-overlap class="palavra grande">work</div>
+        <div id="qA" class="quadrado" style="left:400px;top:640px;width:260px;height:260px"></div>
+      </div>
+
+      <!-- PLANOS B–D: 2.233 – 4.767 (preto, pergunta, constelação) -->
+      <div id="planoD" class="clip cena" data-start="2.233333" data-duration="2.533333" data-track-index="0" data-track-kind="graphics">
+        <div class="preto"></div>
+        <div id="qPixel" class="quadrado" style="left:110px;top:1000px;width:40px;height:40px"></div>
+        <div id="pergunta" data-layout-allow-overlap class="palavra pequena" style="top:900px">
+          <span id="t1">that</span> <span id="t2">should</span> <span id="t3">take</span> <span id="t4">minutes?</span>
+        </div>
+        <div id="d1" class="quadrado" style="left:494px;top:1000px;width:18px;height:18px"></div>
+        <div id="d2" class="quadrado" style="left:531px;top:1000px;width:18px;height:18px"></div>
+        <div id="d3" class="quadrado" style="left:568px;top:1000px;width:18px;height:18px"></div>
+        <div id="wFocus" data-layout-allow-overlap class="palavra media" style="top:380px">Focus</div>
+        <div id="wOn2" data-layout-allow-overlap class="palavra media" style="top:380px">on</div>
+        <div id="wWhat" data-layout-allow-overlap class="palavra media" style="top:380px">what</div>
+        <div id="wMatters" data-layout-allow-overlap class="palavra media" style="top:380px">matters</div>
+        <div id="raios"></div>
+        <div id="nucleo" class="quadrado" style="left:518px;top:938px;width:44px;height:44px"></div>
+      </div>
+
+      <!-- PLANOS E–G: 4.767 – 5.567 (revelação branca da marca) -->
+      <div id="planoG" class="clip cena" data-start="4.766666" data-duration="0.8" data-track-index="0" data-track-kind="graphics">
+        <div class="preto"></div>
+        <div id="caixa" class="branco"></div>
+        <div id="wLet" data-layout-allow-overlap class="palavra pequena" style="top:575px;color:#111;font-size:80px">Let Claude</div>
+        <svg id="marcaSvg" class="marca" viewBox="-50 -50 100 100">
+          <g id="raiosMarca" fill="var(--acento)"></g>
+        </svg>
+      </div>
+
+      <!-- PLANO H: 5.567 – 6.767 (volta à pessoa) -->
+      <div id="planoH" class="clip cena" data-start="5.566666" data-duration="1.2" data-track-index="0" data-track-kind="graphics">
+        <div id="camH" class="camera">
+          <div class="sala"></div><div class="painel"></div>
+          <img id="pessoaH" style="transform:translateY(-110px)" class="pessoa" src="assets/pessoa.png" alt="" />
+        </div>
+        <div class="vinheta"></div>
+        <div id="wHandle" data-layout-allow-overlap class="palavra" style="top:500px;left:-70px;font-size:200px">Handle</div>
+        <div id="wThe" data-layout-allow-overlap class="palavra pequena" style="top:690px;left:250px;font-size:72px;font-weight:300">the</div>
+        <div id="wRest" data-layout-allow-overlap class="palavra pequena" style="top:770px;left:250px;font-size:72px;font-weight:300">rest</div>
+        <div id="cSup" class="cantoneira" style="left:860px;top:470px;border-width:6px 6px 0 0"></div>
+        <div id="cInf" class="cantoneira" style="left:172px;top:720px;border-width:0 0 6px 6px"></div>
+      </div>
+
+      <audio id="somOriginal" src="assets/som.m4a" data-start="0" data-volume="1"></audio>
+    </div>
+
+    <script>
+      const F = 1 / 30;                       // 1 quadro
+      const tl = gsap.timeline({ paused: true });
+
+      // ---------- raios da constelação e do símbolo (estáticos no HTML seria melhor; gerados uma vez, sem aleatório) ----------
+      const raiosEl = document.getElementById("raios");
+      const N = 14;
+      for (let i = 0; i < N; i++) {
+        const a = (360 / N) * i;
+        const r = document.createElement("div"); r.className = "raio"; r.id = "raio" + i;
+        r.style.width = "360px"; gsap.set(r, { rotation: a, scaleX: 0, transformOrigin: "0% 50%" });
+        const p = document.createElement("div"); p.className = "quadrado"; p.id = "dot" + i;
+        const rad = a * Math.PI / 180;
+        p.style.cssText = `left:${540 + Math.cos(rad) * 360 - 10}px;top:${960 + Math.sin(rad) * 360 - 10}px;width:20px;height:20px;opacity:0`;
+        raiosEl.appendChild(r); raiosEl.appendChild(p);
+      }
+      const g = document.getElementById("raiosMarca");
+      for (let i = 0; i < 8; i++) {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        el.setAttribute("x", "-5"); el.setAttribute("y", "-46"); el.setAttribute("width", "10"); el.setAttribute("height", "46");
+        el.setAttribute("rx", "5"); el.setAttribute("transform", `rotate(${i * 45 + (i % 2 ? 8 : -6)})`);
+        g.appendChild(el);
+      }
+
+      // ---------- PLANO A ----------
+      // câmera: estalo 250% -> 100% em 9 quadros (expo.out) com rastro; depois respiração até 112%
+      tl.fromTo("#camA", { scale: 2.5, yPercent: -18, filter: "blur(18px)" },
+                         { scale: 1, yPercent: 0, filter: "blur(0px)", duration: 9 * F, ease: "expo.out" }, 0);
+      tl.to("#camA", { scale: 1.25, duration: 2.233 - 9 * F, ease: "none" }, 9 * F);
+      // "Why" desce borrado e assenta
+      tl.fromTo("#wWhy", { yPercent: -260, scale: 1.6, filter: "blur(14px)", opacity: 0.9 },
+                         { yPercent: 0, scale: 1, filter: "blur(0px)", opacity: 1, duration: 9 * F, ease: "expo.out" }, 0);
+      // HUD aparece 0,3–0,45 s
+      tl.from(["#tracoA", "#p1", "#p2", "#p3", "#p4"], { opacity: 0, scale: 0, duration: 3 * F, stagger: F }, 0.3);
+      // trocas de palavra no lugar (cliques medidos: 1.08 / 1.22 / 1.35 / 1.49)
+      const trocas = [["#wWhy", "#wWaste", 1.067], ["#wWaste", "#wHours", 1.2], ["#wHours", "#wOn", 1.333], ["#wOn", "#wWork", 1.467]];
+      gsap.set(["#wWaste", "#wHours", "#wOn", "#wWork"], { opacity: 0 });
+      for (const [sai, entra, t] of trocas) {
+        tl.set(sai, { opacity: 0 }, t);
+        tl.fromTo(entra, { opacity: 1, x: 36, filter: "blur(10px)" }, { x: 0, filter: "blur(0px)", duration: 3 * F, ease: "power3.out", immediateRender: false }, t);
+      }
+      // quadrado nasce no canto (2.05) e cresce sobre o peito (2.2)
+      gsap.set("#qA", { x: -295, y: -155, scale: 0 });
+      tl.to("#qA", { scale: 0.27, duration: 2 * F }, 2.05);
+      tl.to("#qA", { x: 0, y: 0, scale: 1, duration: 4 * F, ease: "power4.in" }, 2.1);
+
+      // ---------- PLANOS B–D (tempo local começa em 2.233) ----------
+      const D = 2.233333;
+      tl.fromTo("#qPixel", { x: 0 }, { x: 120, duration: 4 * F, ease: "power2.out" }, D);
+      tl.set("#qPixel", { opacity: 0 }, D + 0.3);
+      ["#t1", "#t2", "#t3", "#t4"].forEach((s, i) => tl.from(s, { opacity: 0, duration: 2 * F }, D + 0.33 + i * 0.13));
+      ["#d1", "#d2", "#d3"].forEach((s, i) => tl.from(s, { opacity: 0, duration: F }, D + 0.87 + i * 0.1));
+      // pergunta pixeliza e some
+      tl.to(["#pergunta", "#d1", "#d2", "#d3"], { filter: "blur(6px)", opacity: 0, duration: 3 * F }, D + 1.17);
+      // pontos se espalham em círculo; palavras no topo
+      for (let i = 0; i < N; i++) tl.fromTo("#dot" + i, { opacity: 0, x: -Math.cos(i * 2 * Math.PI / N) * 200, y: -Math.sin(i * 2 * Math.PI / N) * 200 },
+                                                       { opacity: 1, x: 0, y: 0, duration: 5 * F, ease: "power3.out", immediateRender: false }, D + 1.37 + i * F * 0.5);
+      gsap.set(["#wOn2", "#wWhat", "#wMatters"], { opacity: 0 });
+      tl.from("#wFocus", { opacity: 0, filter: "blur(8px)", duration: 3 * F }, D + 1.57);
+      tl.set("#wFocus", { opacity: 0 }, D + 1.77); tl.set("#wOn2", { opacity: 1 }, D + 1.77);
+      tl.set("#wOn2", { opacity: 0 }, D + 1.97); tl.set("#wWhat", { opacity: 1 }, D + 1.97);
+      tl.set("#wWhat", { opacity: 0 }, D + 2.17); tl.set("#wMatters", { opacity: 1 }, D + 2.17);
+      // raios ligam ao centro, núcleo fica laranja
+      for (let i = 0; i < N; i++) tl.to("#raio" + i, { scaleX: 1, duration: 4 * F, ease: "power2.out" }, D + 1.87 + i * F * 0.3);
+      tl.to("#nucleo", { backgroundColor: "#d9734e", duration: F }, D + 2.37);
+
+      // ---------- PLANOS E–G (revelação) ----------
+      const G = 4.766666;
+      gsap.set("#caixa", { transformOrigin: "50% 50%" });
+      tl.fromTo("#caixa", { scaleX: 0.3, scaleY: 0.17 }, { scaleX: 0.67, scaleY: 0.37, duration: 4 * F, ease: "expo.out" }, G);
+      tl.to("#caixa", { scaleX: 1, scaleY: 1, duration: 4 * F, ease: "power3.inOut" }, G + 4 * F);
+      tl.from("#raiosMarca rect", { scaleY: 0, transformOrigin: "50% 100%", duration: 3 * F, stagger: F * 0.4 }, G);
+      tl.from("#wLet", { opacity: 0, duration: 2 * F }, G + 8 * F);
+      tl.to("#marcaSvg", { scale: 0.7, duration: 0.8 - 8 * F, ease: "none" }, G + 8 * F);
+
+      // ---------- PLANO H (volta à pessoa) ----------
+      const H = 5.566666;
+      tl.fromTo("#camH", { scale: 1.15, filter: "blur(16px)" }, { scale: 1, filter: "blur(0px)", duration: 4 * F, ease: "expo.out" }, H);
+      tl.from("#wHandle", { opacity: 0, x: 60, filter: "blur(12px)", duration: 4 * F, ease: "power3.out" }, H + 4 * F);
+      tl.from("#wThe", { opacity: 0, duration: 2 * F }, H + 7 * F);
+      tl.from("#wRest", { opacity: 0, duration: 2 * F }, H + 9 * F);
+      tl.from("#cSup", { x: 120, y: -80, opacity: 0, duration: 5 * F, ease: "power3.out" }, H + 7 * F);
+      tl.from("#cInf", { x: -120, y: 80, opacity: 0, duration: 5 * F, ease: "power3.out" }, H + 7 * F);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

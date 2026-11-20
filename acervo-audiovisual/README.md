@@ -86,3 +86,22 @@ continua sendo a do PC. Se editar lá, copie de novo para cá.
 
 Ficaram de fora as skills de terceiros instaladas (seedance, kling, hyperframes, remotion, ugc-ad-scripts,
 ad-hook-analyzer, humanizar, nem-parece-ia e outras): não são estudo da casa e podem ser reinstaladas.
+
+## 7. Kit de edição do PC de edição (subido em 20/11/2026)
+Vindo do checkout `C:\Users\intal\peformake` (estava só lá, sem commit):
+- Skills de edição em `.claude/skills/`: `estilos-edicao` (porta de entrada da biblioteca de estilos),
+  `referencias-instagram` (baixar e medir reels), `decupagem-video`, `tratamento-video`, `cor-sony`, `limpeza-audio`,
+  `narracao`, `motion-remotion`, `capa-thumbnail`
+- `video-tools/README.md`, `ORGANIZACAO.md`, `FERRAMENTAS.md`, `install.sh`, `requirements.txt`
+- `video-tools/scripts/`: decupar, montar, recortar, transcrever, estabilizar, corrigir_cor, limpar_audio, narrar, capa,
+  rastrear, referencia_reel, perfil_instagram, analisar_referencia, `openverse_audio.py` (áudio com licença) e
+  `estudo/` (processar_links.sh, transcrever_lote.py, onsets.py: lote de reels → transcrição → ataques do áudio)
+- `video-tools/remotion/`: kit `src/pro/` (LegendaPro, TituloCinetico, Transicoes, LowerThirdPro, CTA3D, Vitrine,
+  GrainOverlay, fx/ de câmera, texto, traço, shader) e as composições genéricas (Reel, LowerThird, TituloAnimado)
+- `video-tools/referencias/`: análise de referência do earn.edits
+- `acervo-audiovisual/treino/milad_build/`: o treino de recriar o reel do Milad em HyperFrames (só o código; a imagem,
+  o som e os quadros de referência ficaram no PC em `D:\PEFORMAKE\TREINO\milad_build\`)
+
+Ficaram de fora por serem de cliente: `video-tools/clientes/`, as composições e logos de Disalp, MF, 3LM e Menudo
+(`src/compositions/{Disalp,mf,tlm,menudo}`, `public/<cliente>/`). Por isso `remotion/src/Root.tsx` importa arquivos que
+não estão aqui: para rodar o kit em outra máquina, apague essas 4 linhas de import ou traga as pastas do PC.
