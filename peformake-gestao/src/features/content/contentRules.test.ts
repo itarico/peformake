@@ -23,8 +23,10 @@ describe('actionsFor', () => {
     expect(review.map((a) => a.to)).toEqual(['client_review', 'approved', 'changes_requested'])
     expect(review.find((a) => a.to === 'changes_requested')?.needsNote).toBe(true)
   })
-  it('sem arte final a entrega fica sem destaque', () => {
-    expect(actionsFor(item({ status: 'in_production' }), { planner: false, designer: true }, false)[0]?.primary).toBe(false)
+  it('em produção o botão principal é Entregar arte (o pop-up pede o arquivo), com ou sem arte', () => {
+    const a = actionsFor(item({ status: 'in_production' }), { planner: false, designer: true }, false)[0]
+    expect(a?.label).toBe('Entregar arte')
+    expect(a?.primary).toBe(true)
   })
 })
 
@@ -108,7 +110,7 @@ describe('quadro em 4 colunas', () => {
   const now = new Date('2026-11-12T12:00:00Z').getTime()
   it('separa por etapa e esconde o que não precisa de atenção', () => {
     expect(boardColumn(item({ status: 'briefing', briefing: 'x' }), now)).toBe('briefings')
-    expect(boardColumn(item({ status: 'briefing', briefing: null }), now)).toBeNull()
+    expect(boardColumn(item({ status: 'briefing', briefing: null }), now)).toBe('briefings')
     expect(boardColumn(item({ status: 'changes_requested' }), now)).toBe('producao')
     expect(boardColumn(item({ status: 'client_review' }), now)).toBe('aprovado')
     expect(boardColumn(item({ status: 'published', updatedAt: '2026-11-11T12:00:00Z' }), now)).toBe('aprovado')

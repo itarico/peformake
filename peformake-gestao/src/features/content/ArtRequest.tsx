@@ -236,6 +236,8 @@ function RequestCard({ r, client, thumbs }: { r: Req; client: string; thumbs: Ma
   const failed = r.status === 'failed'
   const done = r.status === 'done'
   const last = r.agent_notes?.log?.[r.agent_notes.log.length - 1]
+  // Parado na fila há mais de 30 min: o agente não pegou (rotina da nuvem desligada ou sem o segredo ROUTINE_ID_DESIGN).
+  const stuck = r.status === 'queued' && (r.step ?? 'fila') === 'fila' && Date.now() - new Date(r.created_at).getTime() > 30 * 60_000
   return (
     <li className="pf-rise flex flex-col gap-3 border-b border-line px-5 py-4 last:border-b-0">
       <div className="flex flex-wrap items-start justify-between gap-2">
@@ -246,7 +248,12 @@ function RequestCard({ r, client, thumbs }: { r: Req; client: string; thumbs: Ma
         {done && <span className="inline-flex items-center gap-1 rounded-full bg-ok-soft px-2.5 py-1 text-[12px] font-semibold text-ok-ink"><Check size={13} aria-hidden="true" /> Pronta</span>}
         {failed && <span className="inline-flex items-center gap-1 rounded-full bg-warn-soft px-2.5 py-1 text-[12px] font-semibold text-warn-ink"><AlertTriangle size={13} aria-hidden="true" /> Não saiu</span>}
       </div>
-      {!done && !failed && (
+      {stuck && (
+        <p className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">
+          <b>Parado na fila.</b> O agente de design não pegou este pedido. Use o <Link to="/conteudo/automatico" className="font-semibold underline">Modelo rápido</Link> ou crie a peça no <Link to={`/conteudo/planejamento?cliente=${r.client_id}`} className="font-semibold underline">Planejamento</Link> para o designer.
+        </p>
+      )}
+      {!done && !failed && !stuck && (
         <div className="flex flex-col gap-1">
           <Stepper step={r.step} failed={failed} />
           {last && <p className="text-[12px] text-muted">{last}</p>}

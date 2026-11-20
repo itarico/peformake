@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { DialogTabs } from '@/components/ui/DialogTabs'
 import { cn } from '@/lib/cn'
 import { hasAnyRole, NOTIFICATION_ADMIN_ROLES } from '@/lib/roles'
 import { supabase } from '@/lib/supabase'
@@ -31,7 +32,7 @@ const SOURCE = { whatsapp: 'Pedido no WhatsApp', manual: 'Pedido da equipe', age
 
 async function loadAll() {
   const [reqs, clients, settings] = await Promise.all([
-    supabase.from('creative_requests').select('id, client_id, source, brief, copy, status, error, item_ids, created_at').order('created_at', { ascending: false }).limit(40),
+    supabase.from('creative_requests').select('id, client_id, source, brief, copy, status, error, item_ids, created_at').neq('mode', 'agente').order('created_at', { ascending: false }).limit(40),
     supabase.rpc('production_clients'),
     supabase.from('design_settings').select('auto_enabled, auto_to_portal, drive_root_id, ai_takeover, ai_takeover_minutes, hub_auto_reply, hub_reply_groups').single(),
   ])
@@ -65,8 +66,13 @@ function NewRequest({ clients, onClose }: { clients: { id: string; name: string 
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['creative-auto'] }); onClose() },
   })
   const ok = d.clientId && d.brief.trim().length >= 3 && d.headline.trim().length >= 3 && d.headline.length <= 90 && (d.feed || d.story)
+  const first = d.clientId && d.brief.trim().length >= 3 && d.headline.trim().length >= 3
+  // Duas etapas para caber sem rolagem no celular: 1 Pedido (cliente, pedido, chamada) · 2 Texto e formato.
+  const [step, setStep] = useState<'pedido' | 'texto'>('pedido')
   return (
-    <form onSubmit={(e) => { e.preventDefault(); if (ok) send.mutate() }} className="flex flex-col gap-3">
+    <form onSubmit={(e) => { e.preventDefault(); if (step === 'pedido') { if (first) setStep('texto'); return } if (ok) send.mutate() }} className="flex flex-col gap-3">
+      <DialogTabs steps label="Etapas do pedido" value={step} onChange={setStep} options={[{ id: 'pedido', label: 'Pedido' }, { id: 'texto', label: 'Texto e formato' }]} />
+      <div hidden={step !== 'pedido'} className="flex flex-col gap-3">
       <label className="flex flex-col text-[13px] font-semibold">Cliente
         <select value={d.clientId} onChange={(e) => set('clientId', e.target.value)} className={cn(field, 'mt-1 font-normal')}>
           <option value="">Escolha</option>
@@ -79,6 +85,12 @@ function NewRequest({ clients, onClose }: { clients: { id: string; name: string 
       <label className="flex flex-col text-[13px] font-semibold">Chamada <span className="font-normal text-muted">{d.headline.length}/90</span>
         <input maxLength={90} value={d.headline} onChange={(e) => set('headline', e.target.value)} className={cn(field, 'mt-1 font-normal')} placeholder="Óculos de sol com 30% off" />
       </label>
+      <div className="flex justify-end gap-2 border-t border-line pt-3">
+        <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+        <Button type="submit" disabled={!first}>Continuar</Button>
+      </div>
+      </div>
+      <div hidden={step !== 'texto'} className="flex flex-col gap-3">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="flex flex-col text-[13px] font-semibold">Apoio <span className="font-normal text-muted">opcional</span>
           <input maxLength={140} value={d.subtitle} onChange={(e) => set('subtitle', e.target.value)} className={cn(field, 'mt-1 font-normal')} placeholder="Só sábado e domingo" />
@@ -96,8 +108,9 @@ function NewRequest({ clients, onClose }: { clients: { id: string; name: string 
       </div>
       {send.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível pedir. Confira os campos.</p>}
       <div className="flex justify-end gap-2 border-t border-line pt-3">
-        <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+        <Button variant="secondary" onClick={() => setStep('pedido')}>Voltar</Button>
         <Button type="submit" disabled={!ok || send.isPending}><Sparkles size={16} aria-hidden="true" /> {send.isPending ? 'Pedindo' : 'Criar arte'}</Button>
+      </div>
       </div>
     </form>
   )
@@ -190,6 +203,7 @@ export function AutoCreativePage() {
   if (!data.data) return <LoadState isPending={data.isPending} isError={data.isError} refetch={() => void data.refetch()} />
   const { requests, clients, settings } = data.data
   const name = new Map(clients.map((c) => [c.id, c.name]))
+  const shown = requests.filter((r) => name.has(r.clientId))
   const missingDrive = requests.find((r) => r.error?.includes('Integrações') || r.error?.includes('GOOGLE_SA_JSON'))
 
   return (
@@ -216,7 +230,7 @@ export function AutoCreativePage() {
         <section aria-label="Pedidos" className="overflow-hidden rounded-3xl border border-line bg-surface">
           <h2 className="border-b border-line bg-raised/50 px-5 py-2.5 text-[13px] font-semibold">Modelo rápido: últimos pedidos</h2>
           <ul>
-            {requests.filter((r) => name.has(r.clientId)).map((r) => (
+            {shown.map((r) => (
               <li key={r.id} className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-3 last:border-b-0">
                 <div className="min-w-0 flex-1">
                   <p className="font-medium">{name.get(r.clientId) ?? 'Cliente'} <span className="font-normal text-muted">· {r.headline}</span></p>
@@ -235,7 +249,7 @@ export function AutoCreativePage() {
                 )}
               </li>
             ))}
-            {requests.length === 0 && <li className="p-6 text-center text-muted">Nenhum pedido ainda.</li>}
+            {shown.length === 0 && <li className="p-6 text-center text-muted">Nenhum pedido no modelo rápido ainda. Toque em <b>Usar modelo rápido</b>.</li>}
           </ul>
         </section>
         {isAdmin && settings && <Settings key={JSON.stringify(settings)} initial={settings} />}

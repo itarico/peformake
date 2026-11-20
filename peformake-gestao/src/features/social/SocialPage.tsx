@@ -213,7 +213,7 @@ export function TaskDialog({ task, clients, onClose }: { task: Task | null; clie
       <div className="flex flex-col gap-3">
         {task && <p className={cn('self-start rounded-full px-2.5 py-0.5 text-[12px] font-semibold', SOURCE_TONE[task.source])}>{SOURCE_LABEL[task.source]}</p>}
         <label className="flex flex-col text-[13px] font-semibold">O que fazer<input value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} maxLength={200} className={field} /></label>
-        <label className="flex flex-col text-[13px] font-semibold">Detalhes<textarea rows={5} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={4000} className={cn(field, 'py-2')} /></label>
+        <label className="flex flex-col text-[13px] font-semibold">Detalhes<textarea rows={3} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={4000} className={cn(field, 'py-2')} /></label>
         {!task && (
           <label className="flex flex-col text-[13px] font-semibold">Cliente
             <select value={d.client_id} onChange={(e) => setD({ ...d, client_id: e.target.value })} className={field}><option value="">Geral</option>{clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
@@ -228,7 +228,7 @@ export function TaskDialog({ task, clients, onClose }: { task: Task | null; clie
           <label className="flex flex-col text-[13px] font-semibold">Prazo<input type="date" value={d.due_date} onChange={(e) => setD({ ...d, due_date: e.target.value })} className={field} /></label>
         </div>
         <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={d.priority} onChange={(e) => setD({ ...d, priority: e.target.checked })} className="size-4" /> Prioridade</label>
-        {task?.ref_table === 'content_items' && task.ref_id && <Link to={`/conteudo/peca/${task.ref_id}`} className="text-[13px] font-medium underline">Abrir a pauta no Design</Link>}
+        {task?.ref_table === 'content_items' && task.ref_id && <Link to={`/conteudo/peca/${task.ref_id}`} className="text-[13px] font-medium underline">Abrir a peça</Link>}
         {save.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível salvar.</p>}
       </div>
     </Dialog>

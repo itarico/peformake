@@ -17,6 +17,7 @@ import {
   BOARD_BADGE,
   BOARD_COLUMNS,
   boardColumn,
+  briefingMissing,
   EMPTY_FILTERS,
   filterItems,
   isLate,
@@ -31,7 +32,10 @@ const pill = 'min-h-11 rounded-full border border-line-strong bg-surface px-3.5'
 
 export function ItemCard({ item, clientName, staffName, today }: { item: ContentItem; clientName: string; staffName: string; today: string }) {
   const late = isLate(item, today)
-  const badge = BOARD_BADGE[item.status]
+  // Briefing: selo diz o próximo passo (escrever ou mandar para o design).
+  const badge = item.status === 'briefing'
+    ? (briefingMissing(item) ? { label: 'Falta briefing', tone: 'bg-warn-soft text-warn-ink' } : { label: 'Mandar ao design', tone: 'bg-accent-soft text-accent-ink' })
+    : BOARD_BADGE[item.status]
   return (
     <Link to={`/conteudo/peca/${item.id}`} className={cn('block rounded-2xl border border-line bg-surface p-3 text-ink no-underline hover:border-ink', item.status === 'published' && 'opacity-60')}>
       <p className="flex items-center justify-between gap-2 text-[12px] text-muted">
@@ -66,7 +70,7 @@ export function ContentBoard() {
   const [picked, setFilters] = useState<ContentFilters & { designerChosen?: boolean }>(() => (params.get('cliente') ? { ...EMPTY_FILTERS, clientId: params.get('cliente')!, designerChosen: true } : EMPTY_FILTERS))
   const autoDesigner = !picked.designerChosen && isDesigner && !canPlan && myStaffId ? myStaffId : null
   const filters: ContentFilters = useMemo(() => (autoDesigner ? { ...picked, designerId: autoDesigner } : picked), [picked, autoDesigner])
-  const [tab, setTab] = useState<BoardColumn>('briefings')
+  const [chosenTab, setTab] = useState<BoardColumn | null>(null)
   const [editing, setEditing] = useState<Task | 'new' | null>(null)
 
   const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId, 'conteudo')), filters, clientName), [items.data, filters, clientName, isLive])
@@ -81,6 +85,8 @@ export function ContentBoard() {
     .sort((a, b) => Number(b.priority) - Number(a.priority))
   const byCol = (col: BoardColumn) => visible.filter((i) => boardColumn(i, now) === col)
   const count = (col: BoardColumn) => (col === 'tarefas' ? taskList.length : byCol(col).length)
+  // Celular: abre na primeira coluna com algo para fazer (antes abria em Briefings mesmo vazia).
+  const tab: BoardColumn = chosenTab ?? (BOARD_COLUMNS.find((c) => count(c.id) > 0)?.id ?? 'briefings')
 
   const column = (col: BoardColumn) => {
     if (col === 'tarefas') {
@@ -91,7 +97,7 @@ export function ContentBoard() {
               <Plus size={15} aria-hidden="true" /> Tarefa
             </button>
           )}
-          {taskList.length === 0 && <p className="px-1.5 text-[12px] text-muted">Pedidos dos clientes e itens da estratégia aparecem aqui.</p>}
+          {taskList.length === 0 && <p className="px-1.5 text-[12px] text-muted">Nenhuma tarefa. Pedidos dos clientes e itens aprovados da estratégia aparecem aqui.</p>}
           {taskList.slice(0, 60).map((t) => (
             <button key={t.id} type="button" onClick={() => setEditing(t)} className={cn('flex cursor-pointer flex-col gap-1 rounded-2xl border bg-surface p-3 text-left hover:border-ink', t.priority ? 'border-warn/50' : 'border-line')}>
               <span className="flex items-center justify-between gap-2 text-[12px] text-muted">
@@ -107,7 +113,7 @@ export function ContentBoard() {
     const list = byCol(col)
     return (
       <>
-        {list.length === 0 && <p className="px-1.5 text-[12px] text-muted">{col === 'briefings' ? 'Peças com briefing esperando ir para o design.' : col === 'producao' ? 'Nada com o design agora.' : 'Nada com o cliente agora.'}</p>}
+        {list.length === 0 && <p className="px-1.5 text-[12px] text-muted">{col === 'briefings' ? <>Nenhum briefing pendente. <Link to={`/conteudo/planejamento?mes=${month}`} className="font-semibold text-accent-ink">Criar peça no planejamento</Link></> : col === 'producao' ? 'Nada com o design agora.' : 'Nada com o cliente agora.'}</p>}
         {list.slice(0, 60).map((i) => <ItemCard key={i.id} item={i} clientName={clientName(i.clientId)} staffName={staffName(i.designerId)} today={today} />)}
         {list.length > 60 && <p className="px-1.5 text-[12px] text-muted">E mais {list.length - 60}. Use os filtros.</p>}
       </>

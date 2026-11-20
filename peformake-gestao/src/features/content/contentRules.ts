@@ -151,7 +151,7 @@ export interface StatusAction {
 }
 
 // O próximo passo de cada etapa, para quem pode dar o passo. Erros de regra o banco repete.
-export function actionsFor(item: Pick<ContentItem, 'status'>, actor: Actor, hasFinal: boolean): StatusAction[] {
+export function actionsFor(item: Pick<ContentItem, 'status'>, actor: Actor, _hasFinal: boolean): StatusAction[] {
   const a: StatusAction[] = []
   const { planner, designer } = actor
   switch (item.status) {
@@ -165,7 +165,8 @@ export function actionsFor(item: Pick<ContentItem, 'status'>, actor: Actor, hasF
       break
     case 'in_production':
       // Decisão do Italo (12/11): o design entrega direto ao cliente; a revisão interna fica opcional para a social.
-      if (planner || designer) a.push({ to: 'client_review', label: hasFinal ? 'Entregar ao cliente' : 'Envie a arte para entregar', primary: hasFinal })
+      // Abre o pop-up de entrega (escolhe a arte e entrega no mesmo passo), com ou sem arte já enviada.
+      if (planner || designer) a.push({ to: 'client_review', label: 'Entregar arte', primary: true })
       if (planner) a.push({ to: 'review', label: 'Revisar antes do cliente' })
       break
     case 'review':
@@ -332,10 +333,10 @@ export const BOARD_BADGE: Partial<Record<ContentStatus, { label: string; tone: s
   published: { label: 'Publicada', tone: 'bg-raised text-muted' },
 }
 
-/** Em que coluna a peça fica. Publicada some 3 dias depois; peça sem briefing fica só no planejamento. */
+/** Em que coluna a peça fica. Publicada some 3 dias depois. Peça sem briefing escrito também fica em Briefings (selo "Falta briefing"), para ninguém esquecer dela. */
 export function boardColumn(item: Pick<ContentItem, 'status' | 'briefing' | 'updatedAt'>, now: number): Exclude<BoardColumn, 'tarefas'> | null {
   switch (item.status) {
-    case 'briefing': return item.briefing?.trim() ? 'briefings' : null
+    case 'briefing': return 'briefings'
     case 'ready': case 'in_production': case 'changes_requested': case 'review': return 'producao'
     case 'client_review': case 'approved': return 'aprovado'
     case 'published': return now - new Date(item.updatedAt).getTime() <= 3 * 86_400_000 ? 'aprovado' : null

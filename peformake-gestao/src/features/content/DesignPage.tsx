@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { GuideButton } from '@/features/clients/BrandGuideCard'
 import { cn } from '@/lib/cn'
+import { supabase } from '@/lib/supabase'
 import { countdown } from '@/features/av/avRules'
 import { TONE_CLASS } from '@/features/av/AvShell'
 import { LoadState } from '@/features/traffic/LoadState'
@@ -39,7 +40,7 @@ function hostOf(url: string): string {
 }
 
 /** Entregar arte: escolhe o arquivo e manda. Vai direto ao portal do cliente, que recebe aviso no WhatsApp. */
-function DeliverDialog({ item, finals, clientName, onClose }: { item: ContentItem; finals: number; clientName: string; onClose: () => void }) {
+export function DeliverDialog({ item, finals, clientName, onClose }: { item: ContentItem; finals: number; clientName: string; onClose: () => void }) {
   const queryClient = useQueryClient()
   const input = useRef<HTMLInputElement>(null)
   const [picked, setPicked] = useState<File[]>([])
@@ -65,6 +66,11 @@ function DeliverDialog({ item, finals, clientName, onClose }: { item: ContentIte
     },
   })
   const ready = picked.length > 0 || finals > 0
+  // Aviso automático ao cliente (Configurações → Automações → "Arte entregue avisa o cliente").
+  const autoWa = useQuery({
+    queryKey: ['design-delivery-whatsapp'], staleTime: 5 * 60_000,
+    queryFn: async () => { const { data } = await supabase.from('design_settings').select('*').maybeSingle(); const v = (data as { delivery_whatsapp?: boolean } | null)?.delivery_whatsapp; return v === undefined ? null : v !== false },
+  })
   return (
     <Dialog open onClose={onClose} size="sm" title="Entregar arte" description={`${clientName} · ${itemTitle(item)}`}
       footer={<>
@@ -81,7 +87,7 @@ function DeliverDialog({ item, finals, clientName, onClose }: { item: ContentIte
           <span className="font-semibold">{picked.length ? `${picked.length} arquivo${picked.length > 1 ? 's' : ''} escolhido${picked.length > 1 ? 's' : ''}` : 'Escolher a arte final'}</span>
           <span className="max-w-full truncate text-[12px] text-muted">{picked.length ? picked.map((f) => f.name).join(', ') : finals ? `Já tem ${finals} arte${finals > 1 ? 's' : ''} na peça. Pode entregar assim.` : 'Imagem, vídeo ou PDF'}</span>
         </label>
-        <p className="text-[13px] text-muted">Vai direto para o portal do cliente aprovar. A social media é avisada e o cliente recebe o link no WhatsApp.</p>
+        <p className="text-[13px] text-muted">Vai direto para o portal do cliente aprovar. A social media é avisada{autoWa.data === false ? '. O aviso automático ao cliente está desligado (Configurações → Automações): avise o cliente.' : ' e o cliente recebe o link no WhatsApp.'}</p>
         {problem && <p role="alert" className="font-medium text-warn-ink">{problem}</p>}
       </div>
     </Dialog>
@@ -155,7 +161,8 @@ export function DesignPage() {
   const files = useQuery({ queryKey: ['design-queue-files', ids], queryFn: () => listFiles(ids), enabled: ids.length > 0 })
   const [delivering, setDelivering] = useState<ContentItem | null>(null)
   const [onlyMine, setOnlyMine] = useState(false)
-  const [open, setOpen] = useState<Set<string>>(() => new Set())
+  // null = ninguém mexeu ainda: abre o primeiro cliente (o mais urgente), para o designer já ver o que fazer.
+  const [open, setOpen] = useState<Set<string> | null>(null)
   const month = monthStart(todayInBrazil().slice(0, 7) + '-01', 0)
   const score = useQuery({ queryKey: ['design-on-time', month], queryFn: () => designOnTime(month), staleTime: 5 * 60_000 })
 
@@ -173,7 +180,8 @@ export function DesignPage() {
   const byClient = new Map<string, ContentItem[]>()
   for (const i of list) byClient.set(i.clientId, [...(byClient.get(i.clientId) ?? []), i])
   const groups = [...byClient.entries()]
-  const toggle = (id: string) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n })
+  const opened = open ?? new Set(groups[0] ? [groups[0][0]] : [])
+  const toggle = (id: string) => setOpen(() => { const n = new Set(opened); if (n.has(id)) n.delete(id); else n.add(id); return n })
 
   return (
     <>
@@ -194,7 +202,7 @@ export function DesignPage() {
       ) : (
         <ul data-conteudo aria-label="Fila do design por cliente" className="flex flex-col gap-2">
           {groups.map(([cid, items]) => {
-            const isOpen = groups.length === 1 || open.has(cid)
+            const isOpen = groups.length === 1 || opened.has(cid)
             const c = countdown(deliveryTarget(items[0]!), now)
             const late = items.some((x) => countdown(deliveryTarget(x), now)?.tone === 'red')
             const adjust = items.filter((x) => x.status === 'changes_requested').length

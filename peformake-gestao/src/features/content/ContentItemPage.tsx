@@ -3,6 +3,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, FileUp, Pencil, Trash2 } from 'lucide-react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { PieceEditor } from './PieceEditor'
+import { DeliverDialog } from './DesignPage'
+import { ActionMenu } from '@/components/ui/ActionMenu'
+import { Dialog } from '@/components/ui/Dialog'
+import { ask } from '@/components/ui/confirm'
 import { BrandGuideCard } from '@/features/clients/BrandGuideCard'
 import { Button } from '@/components/ui/Button'
 import { AiTakeoverBanner } from './AiTakeoverBanner'
@@ -29,10 +33,11 @@ import { actionsFor, briefingMissing, fileCheck, itemTitle, KIND_LABEL, specSumm
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink disabled:opacity-70'
 const WAITING = { social: 'Social media', design: 'Design', client: 'Cliente' } as const
 
-function Actions({ item, hasFinal }: { item: ContentItem; hasFinal: boolean }) {
+function Actions({ item, hasFinal, finals, className }: { item: ContentItem; hasFinal: boolean; finals: number; className?: string }) {
   const queryClient = useQueryClient()
-  const { canPlan, isDesigner } = useProduction()
+  const { canPlan, isDesigner, clientName } = useProduction()
   const [pending, setPending] = useState<StatusAction | null>(null)
+  const [delivering, setDelivering] = useState(false)
   const [note, setNote] = useState('')
   const [problem, setProblem] = useState<string | null>(null)
   const move = useMutation({
@@ -48,9 +53,19 @@ function Actions({ item, hasFinal }: { item: ContentItem; hasFinal: boolean }) {
   })
   const actions = actionsFor(item, { planner: canPlan, designer: isDesigner }, hasFinal)
   const waiting = waitingOn(item.status)
+  const run = (a: StatusAction) => {
+    setProblem(null)
+    if (item.status === 'in_production' && a.to === 'client_review') setDelivering(true)
+    else if (a.to === 'client_review' && !hasFinal) setProblem('Envie a arte final antes (em Arquivos).')
+    else if (a.needsNote) setPending(a)
+    else move.mutate(a)
+  }
+  // Um botão principal; o resto no ⋯ (com 2 ações, as duas aparecem).
+  const main = actions.find((a) => a.primary) ?? actions[0]
+  const rest = actions.filter((a) => a !== main)
 
   return (
-    <section aria-labelledby="etapa" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
+    <section aria-labelledby="etapa" className={cn('flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5', className)}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="etapa" className="font-semibold">Etapa</h2>
         <span className={cn('rounded-full px-2.5 py-1 text-[12px] font-medium', STATUS_TONE[item.status])}>{STATUS_LABEL[item.status]}</span>
@@ -59,31 +74,25 @@ function Actions({ item, hasFinal }: { item: ContentItem; hasFinal: boolean }) {
       {item.revisionNote && (item.status === 'changes_requested' || item.status === 'in_production') && (
         <p className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[14px] text-warn-ink"><b>Ajuste pedido:</b> {item.revisionNote}</p>
       )}
-      {problem && <p role="alert" className="font-medium text-warn-ink">{problem}</p>}
-      {pending ? (
-        <div className="flex flex-col gap-2">
-          <label htmlFor="ajuste" className="text-[13px] font-semibold">O que precisa ajustar?</label>
-          <textarea id="ajuste" rows={3} value={note} onChange={(e) => setNote(e.target.value)} className={field} />
-          <div className="flex gap-2">
-            <Button disabled={note.trim().length < 3 || move.isPending} onClick={() => move.mutate(pending)}>{pending.label}</Button>
+      {problem && !pending && <p role="alert" className="font-medium text-warn-ink">{problem}</p>}
+      <div className="flex flex-wrap items-center gap-2">
+        {main && <Button disabled={move.isPending} onClick={() => run(main)}>{main.label}</Button>}
+        {rest.length === 1 && <Button variant="secondary" disabled={move.isPending} onClick={() => run(rest[0]!)}>{rest[0]!.label}</Button>}
+        {rest.length > 1 && <ActionMenu label="Outras ações da peça" actions={rest.map((a) => ({ label: a.label, onClick: () => run(a) }))} />}
+        {actions.length === 0 && <p className="text-[13px] text-muted">Nada para você fazer nesta etapa.</p>}
+      </div>
+      {pending && (
+        <Dialog open onClose={() => setPending(null)} size="sm" title={pending.label} description={itemTitle(item)}
+          footer={<>
             <Button variant="secondary" onClick={() => setPending(null)}>Cancelar</Button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {actions.map((a) => (
-            <Button
-              key={a.to + a.label}
-              variant={a.primary ? 'primary' : 'secondary'}
-              disabled={move.isPending || ((a.to === 'review' || a.to === 'client_review') && !hasFinal)}
-              onClick={() => { setProblem(null); if (a.needsNote) setPending(a); else move.mutate(a) }}
-            >
-              {a.label}
-            </Button>
-          ))}
-          {actions.length === 0 && <p className="text-[13px] text-muted">Nada para você fazer nesta etapa.</p>}
-        </div>
+            <Button disabled={note.trim().length < 3 || move.isPending} onClick={() => move.mutate(pending)}>{move.isPending ? 'Salvando' : 'Mandar para o design'}</Button>
+          </>}>
+          <label htmlFor="ajuste" className="text-[13px] font-semibold">O que precisa ajustar?</label>
+          <textarea id="ajuste" rows={4} autoFocus value={note} onChange={(e) => setNote(e.target.value)} placeholder="Ex.: trocar o fundo para dourado e aumentar o preço" className={cn(field, 'mt-1')} />
+          {problem && <p role="alert" className="mt-2 font-medium text-warn-ink">{problem}</p>}
+        </Dialog>
       )}
+      {delivering && <DeliverDialog item={item} finals={finals} clientName={clientName(item.clientId)} onClose={() => setDelivering(false)} />}
     </section>
   )
 }
@@ -261,7 +270,6 @@ export function ContentItemPage() {
       void queryClient.invalidateQueries({ queryKey: ['design-queue'] })
     }).catch(() => { /* sem permissão ou já mudou: segue como está */ })
   }, [id, status, isDesigner, canPlan, queryClient])
-  const [confirm, setConfirm] = useState(false)
   const addComment = useMutation({
     mutationFn: (message: string) => comment(id, message),
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['content-events', id] }),
@@ -280,13 +288,23 @@ export function ContentItemPage() {
       <Link to={`/conteudo/planejamento?mes=${plan.month}&cliente=${item.clientId}`} className="inline-flex min-h-10 items-center gap-1.5 self-start text-[14px] font-medium">
         <ArrowLeft size={16} aria-hidden="true" /> {clientName(item.clientId)} | {monthLabel(plan.month)}
       </Link>
-      <div>
-        <p className="text-[13px] text-muted">{KIND_LABEL[item.kind]} {item.number}{item.isExtra ? ' | Extra' : ''}</p>
-        <h1 className="text-2xl font-semibold tracking-tight">{itemTitle(item)}</h1>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[13px] text-muted">{KIND_LABEL[item.kind]} {item.number}{item.isExtra ? ' | Extra' : ''}</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{itemTitle(item)}</h1>
+        </div>
+        {canPlan && (item.status === 'briefing' || item.status === 'ready') && (
+          <ActionMenu label="Mais ações da peça" className="shrink-0" actions={[{
+            label: remove.isPending ? 'Excluindo' : 'Excluir peça', danger: true, icon: <Trash2 size={15} aria-hidden="true" />, disabled: remove.isPending,
+            onClick: () => void ask('Excluir esta peça? Não tem volta.').then((ok) => ok && remove.mutate()),
+          }]} />
+        )}
       </div>
+      {remove.isError && <p role="alert" className="font-medium text-warn-ink">{contentErrorMessage(remove.error)}</p>}
       <AiTakeoverBanner itemId={item.id} />
+      {/* No celular a Etapa (o que fazer agora) vem primeiro; no computador fica na coluna da direita. */}
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 max-lg:contents">
           <BriefingSummary key={item.id} item={item} canPlan={canPlan} startOpen={params.get('editar') === '1'} />
           <BrandGuideCard clientId={item.clientId} focus={isDesigner && !canPlan ? 'design' : 'social'} />
           {plan.notes && (
@@ -296,8 +314,8 @@ export function ContentItemPage() {
             </section>
           )}
         </div>
-        <div className="flex flex-col gap-3">
-          <Actions item={item} hasFinal={hasFinal} />
+        <div className="flex flex-col gap-3 max-lg:contents">
+          <Actions item={item} hasFinal={hasFinal} finals={files.data.filter((f) => f.role === 'final').length + item.legacyFinalUrls.length} className="max-lg:order-first" />
           <Files item={item} files={files.data} canUploadFinal={canPlan || isDesigner} canUploadRef={canPlan} />
           <EventLog
             events={events.data ?? []}
@@ -305,20 +323,6 @@ export function ContentItemPage() {
             onComment={(m) => addComment.mutateAsync(m)}
             commenting={addComment.isPending}
           />
-          {canPlan && (item.status === 'briefing' || item.status === 'ready') && (
-            <div className="rounded-3xl border border-line bg-surface p-5">
-              {confirm ? (
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[14px]">Excluir esta peça? Não tem volta.</span>
-                  <Button disabled={remove.isPending} onClick={() => remove.mutate()}>Excluir</Button>
-                  <Button variant="secondary" onClick={() => setConfirm(false)}>Cancelar</Button>
-                </div>
-              ) : (
-                <Button variant="secondary" onClick={() => setConfirm(true)}><Trash2 size={15} aria-hidden="true" /> Excluir peça</Button>
-              )}
-              {remove.isError && <p role="alert" className="mt-2 font-medium text-warn-ink">{contentErrorMessage(remove.error)}</p>}
-            </div>
-          )}
         </div>
       </div>
     </>
