@@ -49,7 +49,8 @@ for p in sorted(VIRAIS.glob('*.md')):
     t = p.read_text(encoding='utf-8')
     titulo = t.splitlines()[0].lstrip('# ').strip()
     curto = titulo.split(' · ')[0]
-    perfil = '@' + p.stem.split('_')[1]
+    m = re.search(r'· (@[\w.]+)', titulo)
+    perfil = m.group(1) if m else '@' + p.stem[11:].rsplit('_', 1)[0]
     m = re.search(r'(\d+(?:[.,]\d+)?)\s*x a mediana', t)
     forca = num(m.group(1)) if m else None
     m = re.search(r'^\*\*Estruturas? do catálogo:\*\*(.*?)(?:\n\n|\n(?=Estilo))', t, re.S | re.M)
@@ -90,7 +91,7 @@ def itens(esq):
         if not parte:
             continue
         m = re.match(r'\*\*([^*]+)\*\*:?\s*(.*)', parte)
-        tempo, resto = (m.group(1).strip(' :'), m.group(2)) if m else ('', parte)
+        tempo, resto = (m.group(1).strip(' :.'), m.group(2)) if m else ('', parte)
         resto = re.sub(r'\*\*|`', '', resto).strip(' :')
         frase = re.split(r'(?<=[a-zà-ú0-9)"])\.\s', resto)[0].strip()
         if len(frase) > 110:

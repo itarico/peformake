@@ -31,7 +31,7 @@ Como usar (motor de roteiro, M2 curador e M5 roteirista):
 
 ## Os mais fortes (força no perfil)
 
-- **391,2x** · S100 + S116 + S45 · Breakdown de SFX com palavra-isca · @jaybendonlifts · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
+- **391,2x** · S100 + S116 + S45 · Breakdown de SFX com palavra-isca · @jaybendonlifts_ · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
 - **137,3x** · S75 + S116 · Slogan teimoso (o comercial que "não ficou claro") · @mario.petshop · [ficha](virais/2026-09-16_mario.petshop_DdXQWAMBxt3.md)
 - **114,8x** · S100 · Vitrine sonora do brinde (comenta SFX) · @helalwork · [ficha](virais/2026-09-03_helalwork_Dc1AHDotwvU.md)
 - **98,6x** · S40 · Brandmotion no monitor (CleverMove) · @dacostamotion · [ficha](virais/2026-08-26_dacostamotion_DchQ4uzPqre.md)
@@ -67,12 +67,12 @@ Esqueleto (da ficha mais forte, @omarcosvianna):
 - 54,3x · Fofoca respondida com curta distópico · @giubeckers · [ficha](virais/2026-08-10_giubeckers_Db3TIw4xcRS.md)
 
 Esqueleto (da ficha mais forte, @giubeckers):
-  1. 0-5 s · A objeção real.: Print ou fala de uma crítica/fofoca/mito sobre o nicho
-  2. 5-12 s · Troca de mundo.: Corte seco para o filme, título fixo "POV: [nicho] em [ano]" e um indicador na tela.
-  3. 12-50 s · Escalada.: 3 ou 4 cenas curtas da rotina pressionada pelo "sistema" (voz robótica ou notificações)
-  4. 50-75 s · A saída.: Um personagem que parou de seguir a regra; diálogo de 2 falas.
-  5. 75-90 s · O sistema reage.: Um alerta contra a saída (mostra o custo de sair).
-  6. 90-100 s · Tese.: Uma frase que vira a lógica do começo
+  1. 0-5 s · A objeção real: Print ou fala de uma crítica/fofoca/mito sobre o nicho
+  2. 5-12 s · Troca de mundo: Corte seco para o filme, título fixo "POV: [nicho] em [ano]" e um indicador na tela.
+  3. 12-50 s · Escalada: 3 ou 4 cenas curtas da rotina pressionada pelo "sistema" (voz robótica ou notificações)
+  4. 50-75 s · A saída: Um personagem que parou de seguir a regra; diálogo de 2 falas.
+  5. 75-90 s · O sistema reage: Um alerta contra a saída (mostra o custo de sair).
+  6. 90-100 s · Tese: Uma frase que vira a lógica do começo
 
 ### S8 · Previsão do setor  (Opinião e tese; autoridade, posicionamento)
 - 7,2x · "Editado 100% com IA" que termina defendendo o humano · @omarcosvianna (secundária) · [ficha](virais/2026-11-06_omarcosvianna_DfagzsGv2GT.md)
@@ -106,12 +106,12 @@ Esqueleto (da ficha mais forte, @dacostamotion):
 - 14,3x · POV de casal: unboxing do equipamento · @omarcosvianna (secundária) · [ficha](virais/2026-08-03_omarcosvianna_Dblnw4hvGNE.md)
 
 Esqueleto (da ficha mais forte, @marcolamaia):
-  1. 0-5 s · O impossível como normal.: "Olha o [produto que eu não tenho/não existe ainda]." Título de 2 palavras.
-  2. 5-10 s · O antes real.: Mostrar o objeto comum e o gesto que "transforma".
-  3. 10-25 s · Closes.: 3 detalhes, cada um mais perto.
-  4. 25-30 s · Desafio.: "Dá pra ver [reflexo/sombra/textura]?"
-  5. 30-40 s · Revelação.: "Isso tudo é feito com [técnica]."
-  6. 40-46 s · Tese + isca.: "Saber fazer não basta, [o que gera resultado]. Comenta [PALAVRA]."
+  1. 0-5 s · O impossível como normal: "Olha o [produto que eu não tenho/não existe ainda]." Título de 2 palavras.
+  2. 5-10 s · O antes real: Mostrar o objeto comum e o gesto que "transforma".
+  3. 10-25 s · Closes: 3 detalhes, cada um mais perto.
+  4. 25-30 s · Desafio: "Dá pra ver [reflexo/sombra/textura]?"
+  5. 30-40 s · Revelação: "Isso tudo é feito com [técnica]."
+  6. 40-46 s · Tese + isca: "Saber fazer não basta, [o que gera resultado]. Comenta [PALAVRA]."
 
 ### S23 · UGC unboxing  (UGC e cliente; prova, conversão)
 - 14,3x · POV de casal: unboxing do equipamento · @omarcosvianna · [ficha](virais/2026-08-03_omarcosvianna_Dblnw4hvGNE.md)
@@ -134,28 +134,28 @@ Esqueleto (da ficha mais forte, @omarcosvianna):
   5. 38–41 s: "e você: time A ou time B?".
 
 ### S32 · In medias res  (Gancho visual e quebra; alcance)
-- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 
-Esqueleto (da ficha mais forte, @eu.adrian):
-  1. 0–15 s · O vídeo que já provou.: Trecho mais forte de um conteúdo que já performou (do cliente ou do perfil), com título fixo em cima
-  2. 15–25 s · Virada para o mistério.: "Há [tempo] eu [fiz isso] e [resultado absurdo]. E eu não sabia por quê."
-  3. 25–35 s · Prova 1 + pergunta.: Um número na tela
-  4. 35–55 s · O mecanismo sem entregar.: O que foi feito para entender (estudo, teste, método), em 2 frases.
-  5. 55–90 s · Provas em escada.: 2 a 4 provas novas, cada uma maior que a anterior; a frase "isso não pode ser coincidência".
-  6. 90–100 s · Meta pública.: "Com isso eu vou chegar em [meta] até [data]."
-  7. 100–115 s · Isca.: "Comenta [PALAVRA] que eu te mando [o método/material]." A palavra em letras gigantes.
+Esqueleto (da ficha mais forte, @eu.adrian_g.s):
+  1. 0–15 s · O vídeo que já provou: Trecho mais forte de um conteúdo que já performou (do cliente ou do perfil), com título fixo em cima
+  2. 15–25 s · Virada para o mistério: "Há [tempo] eu [fiz isso] e [resultado absurdo]. E eu não sabia por quê."
+  3. 25–35 s · Prova 1 + pergunta: Um número na tela
+  4. 35–55 s · O mecanismo sem entregar: O que foi feito para entender (estudo, teste, método), em 2 frases.
+  5. 55–90 s · Provas em escada: 2 a 4 provas novas, cada uma maior que a anterior; a frase "isso não pode ser coincidência".
+  6. 90–100 s · Meta pública: "Com isso eu vou chegar em [meta] até [data]."
+  7. 100–115 s · Isca: "Comenta [PALAVRA] que eu te mando [o método/material]." A palavra em letras gigantes.
 
 ### S34 · Quebra de realidade  (Gancho visual e quebra; alcance)
 - 36,8x · Review de produto que não existe (troca por IA) · @marcolamaia · [ficha](virais/2026-10-29_marcolamaia_DfFaVmAitkU.md)
-- 7,1x · Mentira absurda → revelação com IA (carro que não existe) · @leoboehme · [ficha](virais/2026-10-20_leoboehme__DeuXePGPcQ5.md)
+- 7,1x · Mentira absurda → revelação com IA (carro que não existe) · @leoboehme_ · [ficha](virais/2026-10-20_leoboehme__DeuXePGPcQ5.md)
 
 Esqueleto (da ficha mais forte, @marcolamaia):
-  1. 0-5 s · O impossível como normal.: "Olha o [produto que eu não tenho/não existe ainda]." Título de 2 palavras.
-  2. 5-10 s · O antes real.: Mostrar o objeto comum e o gesto que "transforma".
-  3. 10-25 s · Closes.: 3 detalhes, cada um mais perto.
-  4. 25-30 s · Desafio.: "Dá pra ver [reflexo/sombra/textura]?"
-  5. 30-40 s · Revelação.: "Isso tudo é feito com [técnica]."
-  6. 40-46 s · Tese + isca.: "Saber fazer não basta, [o que gera resultado]. Comenta [PALAVRA]."
+  1. 0-5 s · O impossível como normal: "Olha o [produto que eu não tenho/não existe ainda]." Título de 2 palavras.
+  2. 5-10 s · O antes real: Mostrar o objeto comum e o gesto que "transforma".
+  3. 10-25 s · Closes: 3 detalhes, cada um mais perto.
+  4. 25-30 s · Desafio: "Dá pra ver [reflexo/sombra/textura]?"
+  5. 30-40 s · Revelação: "Isso tudo é feito com [técnica]."
+  6. 40-46 s · Tese + isca: "Saber fazer não basta, [o que gera resultado]. Comenta [PALAVRA]."
 
 ### S37 · Erro proposital  (Gancho visual e quebra; alcance)
 - 20,2x · Bastidor que deu errado → 3·2·1 → vídeo de imóvel · @omarcosvianna (secundária) · [ficha](virais/2026-08-06_omarcosvianna_Dbtq3SgPlvF.md)
@@ -220,9 +220,9 @@ Esqueleto (da ficha mais forte, @salleszk):
   8. 60–71 s: reação, despedida, desliga
 
 ### S45 · Dia na vida  (História; alcance, conexão)
-- 391,2x · Breakdown de SFX com palavra-isca · @jaybendonlifts (secundária) · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
+- 391,2x · Breakdown de SFX com palavra-isca · @jaybendonlifts_ (secundária) · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
 
-Esqueleto (da ficha mais forte, @jaybendonlifts):
+Esqueleto (da ficha mais forte, @jaybendonlifts_):
   1. 0–1 s: título fixo com a palavra "BREAKDOWN/BASTIDOR" e o layout já montado.
   2. 1–15 s: o resultado em cima; a cada corte, o nome do recurso que entrou (som, filtro, luz, ingrediente).
   3. 15–17 s: volta ao início para loop
@@ -246,7 +246,7 @@ Esqueleto (da ficha mais forte, @earn.edits):
 ### S50 · Tutorial  (Educativo; salvar, autoridade)
 - 35,4x · Tutorial com o resultado em cima e a isca do arquivo · @ignaciovasconez · [ficha](virais/2026-10-13_ignaciovasconez_DecOTJJuFyQ.md)
 - 13,1x · Resultado primeiro, depois "como fazer em 3 passos" (+ palavra-isca) · @sanji.chien · [ficha](virais/2026-10-06_sanji.chien_DeJ_gTHs-FB.md)
-- 13,0x · Tutorial com assinatura visual (fisheye + azul + laranja) · @ · [ficha](virais/2026-08-27__victorzk_DcjsyZRSkuA.md)
+- 13,0x · Tutorial com assinatura visual (fisheye + azul + laranja) · @_victorzk · [ficha](virais/2026-08-27__victorzk_DcjsyZRSkuA.md)
 - 8,2x · Mesma pose, quatro tratamentos, e o "como eu fiz" (16:9, palavra-isca) · @melikazaghari · [ficha](virais/2026-11-01_melikazaghari_DfM8Y32IQUY.md)
 - 6,0x · Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers · [ficha](virais/2026-10-18_giubeckers_Deo9FIKRJSG.md)
 - 11,5x · Ferramenta grátis contra a paga, demo em UI escura (+ palavra-isca) · @gab.gouvea (secundária) · [ficha](virais/2026-10-26_gab.gouvea_De9lLWSsJAj.md)
@@ -257,8 +257,8 @@ Esqueleto (da ficha mais forte, @earn.edits):
 - s/ mediana · Série "Cena Criativa": ensina a montar a cena e grava a cena na hora · @salleszk (secundária) · [ficha](virais/2026-11-13_salleszk_DfsfXTHA4nW.md)
 
 Esqueleto (da ficha mais forte, @ignaciovasconez):
-  1. 0-7 s · Resultado em cima, rosto embaixo.: "Hoje te ensino a [resultado]."
-  2. 7-15 s · A objeção.: "Nunca foi tão fácil, sem [o que dá medo]."
+  1. 0-7 s · Resultado em cima, rosto embaixo: "Hoje te ensino a [resultado]."
+  2. 7-15 s · A objeção: "Nunca foi tão fácil, sem [o que dá medo]."
   3. 15-30 s · 3 passos: com a tela/mãos em cima.
   4. 30-40 s · O resultado de novo: e uma prova de controle.
   5. 40-46 s · Isca: ícone do material + "comenta [PALAVRA]".
@@ -266,15 +266,15 @@ Esqueleto (da ficha mais forte, @ignaciovasconez):
 ### S51 · Listicle  (Educativo; salvar, autoridade)
 - 28,7x · Conta da economia em lista com avatar · @joao.escala1p1 · [ficha](virais/2026-11-04_joao.escala1p1_DfTIAPVRKX-.md)
 - 10,0x · Catálogo de sons com playhead (a imagem é o áudio) + palavra-isca · @adrianrazen · [ficha](virais/2026-10-30_adrianrazen_DfG3B45x5nR.md)
-- 6,4x · 4 prompts com escalada, contados por um personagem 3D · @ · [ficha](virais/2026-10-28__aighostlab_DfDIDp4pnRT.md)
+- 6,4x · 4 prompts com escalada, contados por um personagem 3D · @_aighostlab · [ficha](virais/2026-10-28__aighostlab_DfDIDp4pnRT.md)
 - 93,4x · Segredos do lugar em perguntas (POV: uma publicitária no mercado) · @giubeckers (secundária) · [ficha](virais/2026-10-10_giubeckers_DeUW7htRxyx.md)
 - 6,0x · Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers (secundária) · [ficha](virais/2026-10-18_giubeckers_Deo9FIKRJSG.md)
 - 4,7x · Série "Cena Criativa" ep. 5: 5 tipos de corte, cada um feito no próprio vídeo · @salleszk (secundária) · [ficha](virais/2026-11-16_salleszk_Df0Psq5AUDb.md)
 - 4,2x · Série "Cena Criativa" ep. 2: 5 ângulos com o que tem em casa, cada um com o resultado na hora · @salleszk (secundária) · [ficha](virais/2026-11-05_salleszk_DfX3ecBAsyK.md)
 
 Esqueleto (da ficha mais forte, @joao.escala1p1):
-  1. 0-5 s · O total.: "Isso vai te fazer [economizar/ganhar] [número]." Recibo/contador subindo.
-  2. 5-9 s · Item 1 no trilho completo.: Caro com preço → risco → alternativa.
+  1. 0-5 s · O total: "Isso vai te fazer [economizar/ganhar] [número]." Recibo/contador subindo.
+  2. 5-9 s · Item 1 no trilho completo: Caro com preço → risco → alternativa.
   3. 9-13 s · Item 2 com surpresa: que prova o item no próprio vídeo.
   4. 13-25 s · Itens restantes: , cerca de 1,5 s cada.
   5. 25-29 s · Soma: (prova social) e regra geral.
@@ -368,8 +368,8 @@ Esqueleto (da ficha mais forte, @salleszk):
 - 20,2x · Bastidor que deu errado → 3·2·1 → vídeo de imóvel · @omarcosvianna (secundária) · [ficha](virais/2026-08-06_omarcosvianna_Dbtq3SgPlvF.md)
 
 Esqueleto (da ficha mais forte, @joao.escala1p1):
-  1. 0-5 s · O total.: "Isso vai te fazer [economizar/ganhar] [número]." Recibo/contador subindo.
-  2. 5-9 s · Item 1 no trilho completo.: Caro com preço → risco → alternativa.
+  1. 0-5 s · O total: "Isso vai te fazer [economizar/ganhar] [número]." Recibo/contador subindo.
+  2. 5-9 s · Item 1 no trilho completo: Caro com preço → risco → alternativa.
   3. 9-13 s · Item 2 com surpresa: que prova o item no próprio vídeo.
   4. 13-25 s · Itens restantes: , cerca de 1,5 s cada.
   5. 25-29 s · Soma: (prova social) e regra geral.
@@ -379,7 +379,7 @@ Esqueleto (da ficha mais forte, @joao.escala1p1):
 - 11,4x · Esquete de perseguição com disfarce no balcão · @mario.petshop · [ficha](virais/2026-09-21_mario.petshop_Ddjl9Nehis3.md)
 - 10,0x · POV do funcionário bem-humorado (esquete de trocadilho no balcão) · @mavicproducoes · [ficha](virais/2026-07-09_mavicproducoes_Dak-l_8hd9G.md)
 - 1,8x · Série "Cena Criativa" ep. 1: esquete de hospital com coisas de casa, abrindo pelo fim · @salleszk (secundária) · [ficha](virais/2026-10-20_salleszk_DeuprQaREwL.md)
-- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 
 Esqueleto (da ficha mais forte, @mario.petshop):
   1. 0-7 s: diálogo em conflito na rua, com bordão.
@@ -393,12 +393,12 @@ Esqueleto (da ficha mais forte, @mario.petshop):
 - 11,4x · Esquete de perseguição com disfarce no balcão · @mario.petshop (secundária) · [ficha](virais/2026-09-21_mario.petshop_Ddjl9Nehis3.md)
 
 Esqueleto (da ficha mais forte, @giubeckers):
-  1. 0-5 s · A objeção real.: Print ou fala de uma crítica/fofoca/mito sobre o nicho
-  2. 5-12 s · Troca de mundo.: Corte seco para o filme, título fixo "POV: [nicho] em [ano]" e um indicador na tela.
-  3. 12-50 s · Escalada.: 3 ou 4 cenas curtas da rotina pressionada pelo "sistema" (voz robótica ou notificações)
-  4. 50-75 s · A saída.: Um personagem que parou de seguir a regra; diálogo de 2 falas.
-  5. 75-90 s · O sistema reage.: Um alerta contra a saída (mostra o custo de sair).
-  6. 90-100 s · Tese.: Uma frase que vira a lógica do começo
+  1. 0-5 s · A objeção real: Print ou fala de uma crítica/fofoca/mito sobre o nicho
+  2. 5-12 s · Troca de mundo: Corte seco para o filme, título fixo "POV: [nicho] em [ano]" e um indicador na tela.
+  3. 12-50 s · Escalada: 3 ou 4 cenas curtas da rotina pressionada pelo "sistema" (voz robótica ou notificações)
+  4. 50-75 s · A saída: Um personagem que parou de seguir a regra; diálogo de 2 falas.
+  5. 75-90 s · O sistema reage: Um alerta contra a saída (mostra o custo de sair).
+  6. 90-100 s · Tese: Uma frase que vira a lógica do começo
 
 ### S74 · Exagero da dor  (Humor e trend; alcance, seguidores)
 - 7,2x · "A Mavic vai acabar": falso luto da marca que vira escassez · @mavicproducoes · difícil de repetir · [ficha](virais/2026-09-17_mavicproducoes_DdZPZhdxpgQ.md)
@@ -414,11 +414,11 @@ Esqueleto (da ficha mais forte, @mavicproducoes):
 - 137,3x · Slogan teimoso (o comercial que "não ficou claro") · @mario.petshop · [ficha](virais/2026-09-16_mario.petshop_DdXQWAMBxt3.md)
 
 Esqueleto (da ficha mais forte, @mario.petshop):
-  1. 0–4 s · Slogan no absurdo.: O slogan inteiro (até 9 palavras, um benefício concreto) num lugar que não combina.
-  2. 4–8 s · A reprovação.: Alguém da marca assiste no celular: "gostei, mas não ficou claro".
-  3. 8–22 s · Repetição em escada.: 3 a 5 versões, cada uma num lugar mais improvável ou com outra intenção (cansado, sussurrando, gritando).
-  4. 22–26 s · A metapiada.: Alguém comenta o absurdo ("tá quebrando a quarta parede só pra isso").
-  5. 26–32 s · Produto + logo.: Última versão quebrada, produto em close, logo em fundo da cor da marca.
+  1. 0–4 s · Slogan no absurdo: O slogan inteiro (até 9 palavras, um benefício concreto) num lugar que não combina.
+  2. 4–8 s · A reprovação: Alguém da marca assiste no celular: "gostei, mas não ficou claro".
+  3. 8–22 s · Repetição em escada: 3 a 5 versões, cada uma num lugar mais improvável ou com outra intenção (cansado, sussurrando, gritando).
+  4. 22–26 s · A metapiada: Alguém comenta o absurdo ("tá quebrando a quarta parede só pra isso").
+  5. 26–32 s · Produto + logo: Última versão quebrada, produto em close, logo em fundo da cor da marca.
 
 ### S79 · Meme de texto estático  (Humor e trend; alcance, seguidores)
 - 10,3x · Print de comentário + montagem "a vida que a profissão dá" · @omarcosvianna · [ficha](virais/2026-10-20_omarcosvianna_Deu8GenPJCG.md)
@@ -496,23 +496,23 @@ Esqueleto (da ficha mais forte, @salleszk):
 - 93,4x · Segredos do lugar em perguntas (POV: uma publicitária no mercado) · @giubeckers · [ficha](virais/2026-10-10_giubeckers_DeUW7htRxyx.md)
 
 Esqueleto (da ficha mais forte, @giubeckers):
-  1. 0–5 s · Pergunta + prova física.: "Você sabe por que [coisa que todo mundo vê]?" mostrando com a mão.
-  2. 5–50 s · 6 a 8 segredos.: Um por canto do lugar, cada um em 5–8 s: pergunta, resposta em 1 frase, nome técnico quando houver.
-  3. 1 interação no meio.: Pergunta para quem filma, comparação ao vivo.
-  4. 50–60 s · Virada.: A pergunta que traz o assunto para o seguidor.
-  5. 60–68 s · Fecho de assinatura.: Visual fixo da marca + frase-assinatura.
+  1. 0–5 s · Pergunta + prova física: "Você sabe por que [coisa que todo mundo vê]?" mostrando com a mão.
+  2. 5–50 s · 6 a 8 segredos: Um por canto do lugar, cada um em 5–8 s: pergunta, resposta em 1 frase, nome técnico quando houver.
+  3. 1 interação no meio: Pergunta para quem filma, comparação ao vivo.
+  4. 50–60 s · Virada: A pergunta que traz o assunto para o seguidor.
+  5. 60–68 s · Fecho de assinatura: Visual fixo da marca + frase-assinatura.
 
 ### S97 · React  (Reação e interação; alcance, comentário)
-- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 
-Esqueleto (da ficha mais forte, @eu.adrian):
-  1. 0–15 s · O vídeo que já provou.: Trecho mais forte de um conteúdo que já performou (do cliente ou do perfil), com título fixo em cima
-  2. 15–25 s · Virada para o mistério.: "Há [tempo] eu [fiz isso] e [resultado absurdo]. E eu não sabia por quê."
-  3. 25–35 s · Prova 1 + pergunta.: Um número na tela
-  4. 35–55 s · O mecanismo sem entregar.: O que foi feito para entender (estudo, teste, método), em 2 frases.
-  5. 55–90 s · Provas em escada.: 2 a 4 provas novas, cada uma maior que a anterior; a frase "isso não pode ser coincidência".
-  6. 90–100 s · Meta pública.: "Com isso eu vou chegar em [meta] até [data]."
-  7. 100–115 s · Isca.: "Comenta [PALAVRA] que eu te mando [o método/material]." A palavra em letras gigantes.
+Esqueleto (da ficha mais forte, @eu.adrian_g.s):
+  1. 0–15 s · O vídeo que já provou: Trecho mais forte de um conteúdo que já performou (do cliente ou do perfil), com título fixo em cima
+  2. 15–25 s · Virada para o mistério: "Há [tempo] eu [fiz isso] e [resultado absurdo]. E eu não sabia por quê."
+  3. 25–35 s · Prova 1 + pergunta: Um número na tela
+  4. 35–55 s · O mecanismo sem entregar: O que foi feito para entender (estudo, teste, método), em 2 frases.
+  5. 55–90 s · Provas em escada: 2 a 4 provas novas, cada uma maior que a anterior; a frase "isso não pode ser coincidência".
+  6. 90–100 s · Meta pública: "Com isso eu vou chegar em [meta] até [data]."
+  7. 100–115 s · Isca: "Comenta [PALAVRA] que eu te mando [o método/material]." A palavra em letras gigantes.
 
 ### S99 · Enquete encenada  (Reação e interação; alcance, comentário)
 - 9,4x · "O cliente rejeitou. Por quê?" (tela filmada em loop de 6 s) · @aslaniedits · [ficha](virais/2026-10-08_aslaniedits_DeOuD_xMFYZ.md)
@@ -522,7 +522,7 @@ Esqueleto (da ficha mais forte, @aslaniedits):
   2. Responder os melhores comentários em vídeo depois (S98).
 
 ### S100 · Palavra-isca  (Reação e interação; alcance, comentário)
-- 391,2x · Breakdown de SFX com palavra-isca · @jaybendonlifts · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
+- 391,2x · Breakdown de SFX com palavra-isca · @jaybendonlifts_ · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
 - 114,8x · Vitrine sonora do brinde (comenta SFX) · @helalwork · [ficha](virais/2026-09-03_helalwork_Dc1AHDotwvU.md)
 - 36,8x · Review de produto que não existe (troca por IA) · @marcolamaia (secundária) · [ficha](virais/2026-10-29_marcolamaia_DfFaVmAitkU.md)
 - 35,4x · Tutorial com o resultado em cima e a isca do arquivo · @ignaciovasconez (secundária) · [ficha](virais/2026-10-13_ignaciovasconez_DecOTJJuFyQ.md)
@@ -536,29 +536,29 @@ Esqueleto (da ficha mais forte, @aslaniedits):
 - 7,4x · "Ainda fazem isso na mão": original + arquivo = resultado, depois a tela filmada · @nomadatoast (secundária) · [ficha](virais/2026-09-24_nomadatoast_DdrD7WQpYK7.md)
 - 7,2x · Um filme famoso explica as 3 camadas da atenção (ensaio no carro, 2 min) · @giubeckers (secundária) · [ficha](virais/2026-10-26_giubeckers_De9lNMuRYmy.md)
 - 7,2x · "Editado 100% com IA" que termina defendendo o humano · @omarcosvianna (secundária) · [ficha](virais/2026-11-06_omarcosvianna_DfagzsGv2GT.md)
-- 7,1x · Mentira absurda → revelação com IA (carro que não existe) · @leoboehme (secundária) · [ficha](virais/2026-10-20_leoboehme__DeuXePGPcQ5.md)
-- 6,4x · 4 prompts com escalada, contados por um personagem 3D · @ (secundária) · [ficha](virais/2026-10-28__aighostlab_DfDIDp4pnRT.md)
+- 7,1x · Mentira absurda → revelação com IA (carro que não existe) · @leoboehme_ (secundária) · [ficha](virais/2026-10-20_leoboehme__DeuXePGPcQ5.md)
+- 6,4x · 4 prompts com escalada, contados por um personagem 3D · @_aighostlab (secundária) · [ficha](virais/2026-10-28__aighostlab_DfDIDp4pnRT.md)
 - 6,0x · Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers (secundária) · [ficha](virais/2026-10-18_giubeckers_Deo9FIKRJSG.md)
 - 5,7x · Ferramenta grátis revelada em tela dividida com palavra-isca · @99hud (secundária) · [ficha](virais/2026-11-08_99hud_DffrHm4DmJ4.md)
-- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 - s/ mediana · Boato do dia checado em cards de manchete · @oandrenuneu (secundária) · [ficha](virais/2026-11-05_oandrenuneu_DfWQjPpTDt-.md)
 
-Esqueleto (da ficha mais forte, @jaybendonlifts):
+Esqueleto (da ficha mais forte, @jaybendonlifts_):
   1. 0–1 s: título fixo com a palavra "BREAKDOWN/BASTIDOR" e o layout já montado.
   2. 1–15 s: o resultado em cima; a cada corte, o nome do recurso que entrou (som, filtro, luz, ingrediente).
   3. 15–17 s: volta ao início para loop
 
 ### S101 · Reagindo ao próprio passado  (Reação e interação; alcance, comentário)
-- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 
-Esqueleto (da ficha mais forte, @eu.adrian):
-  1. 0–15 s · O vídeo que já provou.: Trecho mais forte de um conteúdo que já performou (do cliente ou do perfil), com título fixo em cima
-  2. 15–25 s · Virada para o mistério.: "Há [tempo] eu [fiz isso] e [resultado absurdo]. E eu não sabia por quê."
-  3. 25–35 s · Prova 1 + pergunta.: Um número na tela
-  4. 35–55 s · O mecanismo sem entregar.: O que foi feito para entender (estudo, teste, método), em 2 frases.
-  5. 55–90 s · Provas em escada.: 2 a 4 provas novas, cada uma maior que a anterior; a frase "isso não pode ser coincidência".
-  6. 90–100 s · Meta pública.: "Com isso eu vou chegar em [meta] até [data]."
-  7. 100–115 s · Isca.: "Comenta [PALAVRA] que eu te mando [o método/material]." A palavra em letras gigantes.
+Esqueleto (da ficha mais forte, @eu.adrian_g.s):
+  1. 0–15 s · O vídeo que já provou: Trecho mais forte de um conteúdo que já performou (do cliente ou do perfil), com título fixo em cima
+  2. 15–25 s · Virada para o mistério: "Há [tempo] eu [fiz isso] e [resultado absurdo]. E eu não sabia por quê."
+  3. 25–35 s · Prova 1 + pergunta: Um número na tela
+  4. 35–55 s · O mecanismo sem entregar: O que foi feito para entender (estudo, teste, método), em 2 frases.
+  5. 55–90 s · Provas em escada: 2 a 4 provas novas, cada uma maior que a anterior; a frase "isso não pode ser coincidência".
+  6. 90–100 s · Meta pública: "Com isso eu vou chegar em [meta] até [data]."
+  7. 100–115 s · Isca: "Comenta [PALAVRA] que eu te mando [o método/material]." A palavra em letras gigantes.
 
 ### S104 · B-roll + narração  (Sem rosto e processo; alcance, viabilidade)
 - 13,0x · Documentário de mesa com pergunta em aberto · @earn.edits · [ficha](virais/2026-05-14_earn.edits_DYURMKHoayc.md)
@@ -658,13 +658,13 @@ Esqueleto (da ficha mais forte, @rabbits):
   5. 2 s de preto.
 
 ### S116 · Making of da gravação  (Processo e bastidor; prova, alcance)
-- 391,2x · Breakdown de SFX com palavra-isca · @jaybendonlifts (secundária) · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
+- 391,2x · Breakdown de SFX com palavra-isca · @jaybendonlifts_ (secundária) · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
 - 137,3x · Slogan teimoso (o comercial que "não ficou claro") · @mario.petshop (secundária) · [ficha](virais/2026-09-16_mario.petshop_DdXQWAMBxt3.md)
 - 27,2x · Bastidor e resultado no mesmo instante (moldura de filme) · @rabbits (secundária) · [ficha](virais/2026-07-02_rabbits_DaSz7w0vL52.md)
 - 6,0x · Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers (secundária) · [ficha](virais/2026-10-18_giubeckers_Deo9FIKRJSG.md)
-- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 
-Esqueleto (da ficha mais forte, @jaybendonlifts):
+Esqueleto (da ficha mais forte, @jaybendonlifts_):
   1. 0–1 s: título fixo com a palavra "BREAKDOWN/BASTIDOR" e o layout já montado.
   2. 1–15 s: o resultado em cima; a cada corte, o nome do recurso que entrou (som, filtro, luz, ingrediente).
   3. 15–17 s: volta ao início para loop
@@ -686,7 +686,7 @@ Esqueleto (da ficha mais forte, @jaybendonlifts):
 - **Brand book em movimento** · 6,1x · Brand book em movimento em tela cheia 16:9 (Workflow Studio, "Work From Within") · @dacostamotion · [ficha](virais/2026-11-02_dacostamotion_DfPdO0_m6GZ.md)
 - **a lista se demonstra** · 4,7x · Série "Cena Criativa" ep. 5: 5 tipos de corte, cada um feito no próprio vídeo · @salleszk · [ficha](virais/2026-11-16_salleszk_Df0Psq5AUDb.md)
 - **conversa à distância** · 1,5x · Reflexão a dois à distância: história conhecida → princípio → aplicação, em collab · @salleszk · [ficha](virais/2026-08-17_salleszk_DcKH3u_oMrd.md)
-- **Viral dentro do viral** · s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- **Viral dentro do viral** · s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 
 ## Códigos do catálogo ainda sem exemplo real (65)
 
