@@ -56,6 +56,10 @@ Geração anterior, não segue o MDD.
 `virais/README.md`: uma ficha por vídeo que funcionou, com esqueleto, molde de fala e como aplicar. Feita pela skill
 `.claude/skills/engenharia-reversa-viral/` (também copiada para `~/.claude/skills` do PC).
 
+## 5c. Estudos de perfil
+`perfis/`: um arquivo por perfil estudado inteiro (números, ideias que funcionam, gramática de edição, links das fichas).
+Primeiro: `perfis/salleszk.md`.
+
 ## 6. Skills que só existiam no PC (cópia em `skills-locais/`)
 Copiadas de `~/.claude/skills` em 19/11/2026 para ficarem salvas no Git. A cópia é backup: a skill que roda
 continua sendo a do PC. Se editar lá, copie de novo para cá.

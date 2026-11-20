@@ -4,6 +4,8 @@ Cada linha é um vídeo que funcionou, estudado com a skill `engenharia-reversa-
 reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo de estruturas
 (`peformake-gestao/docs/ESTUDO-ROTEIRO-AUDIOVISUAL.md` §3c).
 
+Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)).
+
 ## O que se repete nos vídeos de topo (19/11/2026)
 - **Palavra-isca (S100)** aparece em boa parte dos que têm comentário alto: o vídeo mostra o resultado e guarda o material
   (som, arquivo, prompt, guia) para quem comentar. Funciona quando o que se promete é exatamente o que o vídeo mostrou.
@@ -23,6 +25,9 @@ reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo 
 |---|---|---|---|---|
 | Edit de rolê no beat (Tokyo à noite) · @rabbits (Guilherme Coelho) · 01/09/2025 | S-novo: "Edit de rolê" | E29 | 81,1x | [ficha](2025-09-01_rabbits_DOERCXTjaRg.md) |
 | Documentário de mesa com pergunta em aberto · @earn.edits · 14/05/2026 | S104 + S55 | E35 | 13,0x | [ficha](2026-05-14_earn.edits_DYURMKHoayc.md) |
+| Manifesto de valor próprio com tipografia em três vozes · @salleszk (Wesley Salles) · 04/06/2026 | S9 | E1 + E16 | 2,3x | [ficha](2026-06-04_salleszk_DZK3AfWgF3y.md) |
+| Ligação encenada: um amigo liga para o outro e os dois montam a reflexão · @salleszk (Wesley Salles) · 21/06/2026 | S44 | E19 + E-novo: ligação em corte | 37x | [ficha](2026-06-21_salleszk_DZ22sHBgKfz.md) |
+| "Dá pra fazer documentário só com o celular?": bastidor de 9 s e resultado emocionante · @salleszk (Wesley Salles) · 22/06/2026 | S113 + S64 | E28 + E19 | 1,7x | [ficha](2026-06-22_salleszk_DZ56xdPAz-e.md) |
 | Frase em 3 tempos até a marca pessoal · @aslaniedits · 28/06/2026 | S105 | E38 | 19,6x | [ficha](2026-06-28_aslaniedits_DaIq2aZTlln.md) |
 | Bastidor e resultado no mesmo instante (moldura de filme) · @rabbits · 02/07/2026 | S113 + S116 | E28 | 27,2x | [ficha](2026-07-02_rabbits_DaSz7w0vL52.md) |
 | POV do funcionário bem-humorado (esquete de trocadilho no balcão) · @mavicproducoes · 09/07/2026 | S70 | E18 | 10,0x | [ficha](2026-07-09_mavicproducoes_Dak-l_8hd9G.md) |
@@ -36,10 +41,12 @@ reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo 
 | Fofoca respondida com curta distópico · @giubeckers · 10/08/2026 | S-novo: "Resposta que vira curta" + S4 | E19 + E17 | 54,3x | [ficha](2026-08-10_giubeckers_Db3TIw4xcRS.md) |
 | Breakdown de SFX com palavra-isca · @jaybendonlifts_ (Jay Bendon) · 13/08/2026 | S100 + S116 | E20 | 391,2x | [ficha](2026-08-13_jaybendonlifts_Db_BY95IzKn.md) |
 | Brand book em movimento filmado na TV · @dacostamotion · 17/08/2026 | S40 + S9 + S109 | E38 + E21 | 20,2x | [ficha](2026-08-17_dacostamotion_DcJhc2SOKSd.md) |
+| Reflexão a dois à distância: história conhecida → princípio → aplicação, em collab · @salleszk (Wesley Salles) com @samir.andriola · 17/08/2026 | S44 | E22 | 1,5x | [ficha](2026-08-17_salleszk_DcKH3u_oMrd.md) |
 | Showreel com fio de videogame · @ahmedsami94 · 19/08/2026 | S-novo: "Showreel com fio narrativo" | E-novo: "Showreel temático" | 21,0x | [ficha](2026-08-19_ahmedsami94_DcOIGDdss_L.md) |
 | "Só eu que não sabia?" (função escondida do produto, só as mãos) · @omarcosvianna · 22/08/2026 | S53 | E22 + E21 | 9,8x | [ficha](2026-08-22_omarcosvianna_DcW3oCjvVro.md) |
 | Brandmotion no monitor (CleverMove) · @dacostamotion (José Emanuel) · 26/08/2026 | S40 | E38 | 98,6x | [ficha](2026-08-26_dacostamotion_DchQ4uzPqre.md) |
 | Tutorial com assinatura visual (fisheye + azul + laranja) · @_victorzk · 27/08/2026 | S50 | E9 | 13,0x | [ficha](2026-08-27__victorzk_DcjsyZRSkuA.md) |
+| Mural de investigação: dois personagens descobrem um padrão num quadro de fotos e fios · @salleszk (Wesley Salles) · 01/09/2026 | S-novo: mural de investigação encenado | E19 + E-novo: mural de investigação | 6,2x | [ficha](2026-09-01_salleszk_DcwrohHA3Ht.md) |
 | Brandmotion editorial em preto e branco (Workflow Studio) · @dacostamotion · 02/09/2026 | S-novo: "Brand book em movimento" | E38 | 24,6x | [ficha](2026-09-02_dacostamotion_DcygNrjOYUa.md) |
 | Vitrine sonora do brinde (comenta SFX) · @helalwork (Helal) · 03/09/2026 | S100 + S-novo: "Amostra do brinde" | E10 | 114,8x | [ficha](2026-09-03_helalwork_Dc1AHDotwvU.md) |
 | Edição de $5 x edição de $30, lado a lado no mesmo take · @vaishmediafilms (Vaisakh) · 04/09/2026 | S57 | E8 | 7,4x | [ficha](2026-09-04_vaishmediafilms_Dc4Bnn0vCQj.md) |
@@ -58,9 +65,11 @@ reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo 
 | Segredos do lugar em perguntas (POV: uma publicitária no mercado) · @giubeckers · 10/10/2026 | S95 + S55 | E17 | 93,4x | [ficha](2026-10-10_giubeckers_DeUW7htRxyx.md) |
 | Manifesto de marca em imagens no monitor (Idea.ai) · @dacostamotion · 12/10/2026 | S-novo: "Brand book em movimento" | E38 | 32,4x | [ficha](2026-10-12_dacostamotion_DeZZ7UIOWcl.md) |
 | Tutorial com o resultado em cima e a isca do arquivo · @ignaciovasconez · 13/10/2026 | S50 + S100 | E9 + E3 | 35,4x | [ficha](2026-10-13_ignaciovasconez_DecOTJJuFyQ.md) |
+| Oferta de serviço com um cenário prático por frase ("6 vagas em outubro") · @salleszk (Wesley Salles) · 14/10/2026 | S84 + S86 | E27 | 1,1x | [ficha](2026-10-14_salleszk_DefVZvwgS2s.md) |
 | Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers · 18/10/2026 | S50 + S51 | E17 | 6,0x | [ficha](2026-10-18_giubeckers_Deo9FIKRJSG.md) |
 | Mentira absurda → revelação com IA (carro que não existe) · @leoboehme_ · 20/10/2026 | S34 | E24 + E17 | 7,1x | [ficha](2026-10-20_leoboehme__DeuXePGPcQ5.md) |
 | Print de comentário + montagem "a vida que a profissão dá" · @omarcosvianna · 20/10/2026 | S79 + S108 | E22 | 10,3x | [ficha](2026-10-20_omarcosvianna_Deu8GenPJCG.md) |
+| Série "Cena Criativa" ep. 1: esquete de hospital com coisas de casa, abrindo pelo fim · @salleszk (Wesley Salles) · 20/10/2026 | S91 + S50 + S113 | E18 + E9 + E28 | 1,8x | [ficha](2026-10-20_salleszk_DeuprQaREwL.md) |
 | Mosaico 2x2: quatro edições rodando juntas (5 s) · @aslaniedits · 21/10/2026 | S-novo: "Mosaico de portfólio" | E-novo: "Mosaico 2x2 de vitrine" | 6,5x | [ficha](2026-10-21_aslaniedits_Dew85IgsLQg.md) |
 | Mistério de notícia com virada e pergunta aberta · @earn.edits · 25/10/2026 | S104 + S39 | E35 + E5 + E26 + E22 + E27 + E23 + E10 + E9 + E12 + E7 + E19 + E14 | 6,4x | [ficha](2026-10-25_earn.edits_De6bR-1OtGX.md) |
 | Ferramenta grátis contra a paga, demo em UI escura (+ palavra-isca) · @gab.gouvea · 26/10/2026 | S59 + S50 | E15 | 11,5x | [ficha](2026-10-26_gab.gouvea_De9lLWSsJAj.md) |
@@ -74,6 +83,9 @@ reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo 
 | Conta da economia em lista com avatar · @joao.escala1p1 · 04/11/2026 | S51 + S65 | E12 + E25 | 28,7x | [ficha](2026-11-04_joao.escala1p1_DfTIAPVRKX-.md) |
 | Pergunta em palavras que se decodificam (7 s, sem fala) · @aslaniedits · 05/11/2026 | S105 | E14 | 11,9x | [ficha](2026-11-05_aslaniedits_DfWvqYMM7uA.md) |
 | Boato do dia checado em cards de manchete · @oandrenuneu · 05/11/2026 | S52 + S55 + S100 | E26 |  | [ficha](2026-11-05_oandrenuneu_DfWQjPpTDt-.md) |
+| Série "Cena Criativa" ep. 2: 5 ângulos com o que tem em casa, cada um com o resultado na hora · @salleszk (Wesley Salles) · 05/11/2026 | S91 + S51 | E9 + E28 | 4,2x | [ficha](2026-11-05_salleszk_DfX3ecBAsyK.md) |
 | "Editado 100% com IA" que termina defendendo o humano · @omarcosvianna · 06/11/2026 | S1 + S8 | E1 + E16 + E40 | 7,2x | [ficha](2026-11-06_omarcosvianna_DfagzsGv2GT.md) |
 | Ferramenta grátis revelada em tela dividida com palavra-isca · @99hud · 08/11/2026 | S59 | E3 + E10 | 5,7x | [ficha](2026-11-08_99hud_DffrHm4DmJ4.md) |
+| Série "Cena Criativa" ep. 3: a TV da sala vira janela de trem, avião e cidade · @salleszk (Wesley Salles) · 10/11/2026 | S91 + S50 + S113 | E17 + E28 | 5,9x | [ficha](2026-11-10_salleszk_DfkzgmuA3-D.md) |
 | Série "Cena Criativa": ensina a montar a cena e grava a cena na hora · @salleszk (Wesley Salles) · 13/11/2026 | S91 + S50 + S113 | E1 + E19 |  | [ficha](2026-11-13_salleszk_DfsfXTHA4nW.md) |
+| Série "Cena Criativa" ep. 5: 5 tipos de corte, cada um feito no próprio vídeo · @salleszk (Wesley Salles) · 16/11/2026 | S91 + S51 + S-novo: a | E17 | 4,7x | [ficha](2026-11-16_salleszk_Df0Psq5AUDb.md) |
