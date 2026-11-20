@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Mic, Square } from 'lucide-react'
 import { cn } from '@/lib/cn'
-import { supabase } from '@/lib/supabase'
+import { useTranscriber } from '@/lib/transcriber'
 
 // Reconhecimento de fala do próprio navegador (grátis): Chrome, Edge e Android; no iPhone pode falhar. Só para o "ao vivo".
 type SpeechRec = { lang: string; continuous: boolean; interimResults: boolean; start: () => void; stop: () => void; onresult: ((e: { resultIndex: number; results: ArrayLike<{ isFinal: boolean; 0: { transcript: string } }> }) => void) | null; onerror: (() => void) | null }
@@ -15,6 +15,8 @@ const SpeechCtor = (): (new () => SpeechRec) | null => {
  * corrige. Se o servidor falhar, fica o texto ao vivo. O áudio não fica guardado.
  */
 export function VoiceNote({ onText, onLive, autoStart, className }: { onText: (text: string) => void; onLive?: (text: string) => void; autoStart?: boolean; className?: string }) {
+  // Equipe: voice-transcribe. Portal do cliente: transcrição pelo código do link (TranscriberCtx).
+  const transcribe = useTranscriber()
   const rec = useRef<MediaRecorder | null>(null)
   const speech = useRef<SpeechRec | null>(null)
   const finalText = useRef('')
@@ -62,14 +64,7 @@ export function VoiceNote({ onText, onLive, autoStart, className }: { onText: (t
         const typed = () => `${finalText.current}`.trim() || live.trim()
         try {
           const blob = new Blob(chunks.current, { type: r.mimeType || 'audio/webm' })
-          const form = new FormData()
-          form.append('audio', new File([blob], `nota.${(r.mimeType || 'audio/webm').includes('mp4') ? 'm4a' : 'webm'}`, { type: blob.type }))
-          const { data, error: err } = await supabase.functions.invoke('voice-transcribe', { body: form })
-          if (err) {
-            const ctx = (err as { context?: Response }).context
-            throw new Error(((typeof ctx?.json === 'function' ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não foi possível transcrever.')
-          }
-          const text = String((data as { text?: string }).text ?? '').trim() || typed()
+          const text = (await transcribe(blob)) || typed()
           if (text) onText(text)
           else setError('Não entendi a fala. Tente de novo mais perto do microfone.')
         } catch (e) {

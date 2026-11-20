@@ -34,10 +34,23 @@ describe('link do portal', () => {
     expect(portalSection(`#${TOKEN}/indicacoes`)).toBe('indicacoes')
     expect(portalSection(`#${TOKEN}`)).toBeNull()
     expect(portalSection(`#${TOKEN}/outra`)).toBeNull()
+    expect(portalSection(`#${TOKEN}/briefing`)).toBe('briefing')
+    expect(portalSection(`#${TOKEN}/perguntas/`)).toBe('perguntas')
+  })
+
+  it('briefing abaixo de 80% abre primeiro no Briefing', async () => {
+    const { startTab, briefShareMessage } = await import('./portalRules')
+    expect(startTab(null, 40)).toBe('briefing')
+    expect(startTab('perguntas', 79)).toBe('briefing')
+    expect(startTab('perguntas', 80)).toBe('perguntas')
+    expect(startTab(null, 95)).toBe('painel')
+    expect(startTab('indicacoes', null)).toBe('painel')
+    expect(briefShareMessage('Pizzaria X', 'https://a/portal#t/briefing', 'Ana Souza')).toContain('Olá, Ana!')
   })
 
   it('monta o link com o código depois do #', () => {
     expect(portalUrl('https://app.test', TOKEN)).toBe(`https://app.test/portal#${TOKEN}`)
+    expect(portalUrl('https://app.test', TOKEN, 'briefing')).toBe(`https://app.test/portal#${TOKEN}/briefing`)
   })
 })
 

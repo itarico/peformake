@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { PortalWhatsapp } from './PortalWhatsapp'
 import { useQuery } from '@tanstack/react-query'
 import { Moon, Sun } from 'lucide-react'
@@ -10,7 +10,11 @@ import { brl, brl0, changeLabel, currentPeriods, dailySpend, inRange, lastMonthR
 import { cn } from '@/lib/cn'
 import { useTheme } from '@/lib/theme'
 import { getPortal, getPortalMetrics } from './portalApi'
-import { historyRange, isInvalidLink, monthlyHistory, parsePortalToken, portalSection } from './portalRules'
+import { historyRange, isInvalidLink, monthlyHistory, parsePortalToken, portalSection, startTab, type PortalTab } from './portalRules'
+import { briefMonth, getPortalBrief, portalBriefKey, portalTranscribe, visibleQuestions } from './portalBriefApi'
+import { PortalBriefing } from './PortalBriefing'
+import { PortalQuestions } from './PortalQuestions'
+import { TranscriberCtx } from '@/lib/transcriber'
 import { PortalReferrals } from './PortalReferrals'
 import { PortalDeliveries } from './PortalDeliveries'
 import { PortalApprovals } from './PortalApprovals'
@@ -189,6 +193,17 @@ export function PortalPage() {
     retry: (count, error) => !isInvalidLink(error) && count < 1,
   })
 
+  const month = useMemo(() => briefMonth(), [])
+  const brief = useQuery({
+    queryKey: portalBriefKey(token ?? '', month),
+    queryFn: () => getPortalBrief(token as string, month),
+    enabled: !!token && portal.isSuccess,
+    retry: 1,
+  })
+  // Aba escolhida pelo cliente; até ele escolher, vale a de entrada (briefing abaixo de 80% abre primeiro no Briefing).
+  const [picked, setPicked] = useState<PortalTab | null>(null)
+  const transcriber = useMemo(() => (token ? portalTranscribe(token) : undefined), [token])
+
   useEffect(() => {
     document.title = portal.data ? `${portal.data.name} | Peformake` : 'Peformake'
     // Lembra o acesso neste aparelho: na próxima vez, é só tocar em Entrar → Sou cliente.
@@ -210,6 +225,14 @@ export function PortalPage() {
   }
 
   const data = portal.data
+  const tab: PortalTab = picked ?? startTab(section, brief.data ? brief.data.percent : null)
+  const openQ = brief.data ? visibleQuestions(brief.data.questions).filter((q) => q.status !== 'respondida').length : 0
+  const go = (t: PortalTab) => { setPicked(t); window.scrollTo({ top: 0 }) }
+  const TABS: [PortalTab, string, number | null][] = [
+    ['painel', 'Painel', null],
+    ['briefing', 'Briefing', brief.data && brief.data.percent < 100 ? brief.data.percent : null],
+    ['perguntas', 'Perguntas', openQ || null],
+  ]
   return (
     <Frame>
       <header className="flex flex-wrap items-center gap-4 py-2">
@@ -220,6 +243,32 @@ export function PortalPage() {
         </div>
       </header>
 
+      <nav role="tablist" aria-label="Partes do painel" className="flex gap-1 rounded-full border border-line bg-surface p-1">
+        {TABS.map(([id, label, badge]) => (
+          <button key={id} type="button" role="tab" aria-selected={tab === id} data-aba={id} onClick={() => go(id)}
+            className={cn('inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full px-3 text-[14px] font-semibold', tab === id ? 'bg-fill text-on-fill' : 'text-muted hover:text-ink')}>
+            {label}
+            {badge !== null && <span className={cn('rounded-full px-1.5 text-[11px] font-bold', tab === id ? 'bg-on-fill/20' : id === 'briefing' ? 'bg-warn-soft text-warn-ink' : 'bg-accent-soft text-accent-ink')}>{id === 'briefing' ? `${badge}%` : badge}</span>}
+          </button>
+        ))}
+      </nav>
+
+      {tab !== 'painel' && (
+        <TranscriberCtx.Provider value={transcriber!}>
+          {brief.isPending && <p role="status" className="text-muted">Carregando</p>}
+          {brief.isError && (
+            <div role="alert" className="flex flex-wrap items-center justify-between gap-2 rounded-3xl bg-warn-soft p-4 text-warn-ink">
+              <span className="font-medium">Não foi possível abrir agora.</span>
+              <Button variant="secondary" onClick={() => void brief.refetch()}>Tentar de novo</Button>
+            </div>
+          )}
+          {brief.data && tab === 'briefing' && <PortalBriefing token={token} month={month} brief={brief.data} onDone={() => go('perguntas')} />}
+          {brief.data && tab === 'perguntas' && <PortalQuestions token={token} month={month} brief={brief.data} />}
+        </TranscriberCtx.Provider>
+      )}
+
+      {tab === 'painel' && !picked && brief.isPending && <p role="status" className="text-muted">Carregando</p>}
+      {tab === 'painel' && (picked || !brief.isPending) && <>
       {section === 'indicacoes' && <PortalReferrals token={token} highlight />}
 
       <PortalOverview token={token} />
@@ -256,6 +305,7 @@ export function PortalPage() {
           {data.team.length === 0 ? <p className="mt-2 text-muted">A equipe ainda não foi definida.</p> : <div className="mt-3"><TeamList team={data.team} /></div>}
         </Card>
       </div>
+      </>}
 
       <p className="text-center text-[12px] text-muted">Painel exclusivo de {data.name}. Não compartilhe este link.</p>
     </Frame>

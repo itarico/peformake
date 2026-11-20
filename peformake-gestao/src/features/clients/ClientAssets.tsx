@@ -18,7 +18,7 @@ const FOLDERS: { id: FolderId; label: string }[] = [
   { id: 'contratos', label: 'Contratos' },
   { id: 'outros', label: 'Outros' },
 ]
-const SOURCE: Record<string, string> = { manual: 'Enviado pela equipe', creative: 'Criativo automático', report: 'Relatório gerado', strategy: 'Estratégia', agente: 'Feito pela Peformake' }
+const SOURCE: Record<string, string> = { manual: 'Enviado pela equipe', creative: 'Criativo automático', report: 'Relatório gerado', strategy: 'Estratégia', agente: 'Feito pela Peformake', portal: 'Enviado pelo cliente' }
 const MAX = 100 * 1024 * 1024
 
 interface Asset { id: string; folder: FolderId; name: string; bucket: string; path: string; mime: string; size: number; source: string; createdAt: string }

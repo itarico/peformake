@@ -10,13 +10,34 @@ export function parsePortalToken(hash: string): string | null {
   return TOKEN.test(token) ? token : null
 }
 
-/** Parte do portal que o link abre direto: /portal#<código>/indicacoes (vindo do fim da conversa). */
-export function portalSection(hash: string): 'indicacoes' | null {
-  return /^#?[A-Za-z0-9_-]{43}\/indicacoes\/?$/.test(hash.trim()) ? 'indicacoes' : null
+export type PortalSection = 'indicacoes' | 'briefing' | 'perguntas'
+/** Parte do portal que o link abre direto: /portal#<código>/indicacoes (fim da conversa), /briefing ou /perguntas. */
+export function portalSection(hash: string): PortalSection | null {
+  const m = /^#?[A-Za-z0-9_-]{43}\/(indicacoes|briefing|perguntas)\/?$/.exec(hash.trim())
+  return (m?.[1] as PortalSection | undefined) ?? null
 }
 
-export function portalUrl(origin: string, token: string): string {
-  return `${origin}/portal#${token}`
+export function portalUrl(origin: string, token: string, section?: PortalSection): string {
+  return `${origin}/portal#${token}${section ? `/${section}` : ''}`
+}
+
+/** Abas do portal: o cliente com briefing abaixo de 80% cai primeiro no Briefing (Italo, 20/11: "obrigatoriamente"). */
+export type PortalTab = 'painel' | 'briefing' | 'perguntas'
+export const BRIEF_REQUIRED = 80
+export function startTab(section: PortalSection | null, fixedPercent: number | null): PortalTab {
+  if (fixedPercent !== null && fixedPercent < BRIEF_REQUIRED) return 'briefing'
+  if (section === 'briefing' || section === 'perguntas') return section
+  return 'painel'
+}
+
+/** Mensagem do botão Enviar do passo Briefing (a equipe manda pelo WhatsApp dela). */
+export function briefShareMessage(clientName: string, url: string, person?: string | null): string {
+  const who = person?.trim() ? person.trim().split(/\s+/)[0] : clientName.trim()
+  return `Olá, ${who}! Para a estratégia da ${clientName.trim()} sair do jeito certo, preciso que você confira e complete o briefing no seu painel da Peformake. `
+    + `Dá para responder tocando nas opções, escrevendo ou falando, e mandar arquivos. Leva uns 10 minutos:
+${url}
+
+Obrigado!`
 }
 
 export function portalShareMessage(clientName: string, url: string): string {

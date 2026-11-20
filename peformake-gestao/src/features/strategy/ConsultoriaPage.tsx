@@ -24,6 +24,7 @@ import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { pickSendDoc } from './brief/sendRules'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { BriefingCard, StepCard, StrategyPart } from './brief/StrategyStrip'
+import { BriefSendDialog } from '@/features/portal/BriefSendDialog'
 import { BriefingView, useBriefStatus } from './brief/BriefingView'
 import { useBriefProgress } from './brief/briefApi'
 import { CONSULT_PATH, LIST_STEPS, clientMessage, diagReviewPath, listStep, nicheLinks, sortByListStep, statusChip, waLink, type ConsultRow, type ListStep, type Part, type PartState } from './consultRules'
@@ -233,7 +234,7 @@ function InfoDialog({ row, onClose }: { row: ConsultRow; onClose: () => void }) 
 
 // ───────── Documento ─────────
 type Doc = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
-type SendKind = 'diag' | 'mes' | 'trafego' | 'social' | 'av' | 'perguntas'
+type SendKind = 'diag' | 'mes' | 'trafego' | 'social' | 'av' | 'perguntas' | 'briefing'
 
 /**
  * Consultoria → cliente: UMA página com os cartões de apresentação empilhados, todos no mesmo padrão
@@ -342,6 +343,8 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {(send === 'mes' || send === 'trafego' || send === 'social') && st && <MonthlySendDialog strategyId={st.id} clientId={clientId} name={name} month={month} area={send === 'mes' ? undefined : send} onClose={() => setSend(null)} />}
       {send === 'av' && st && <MonthlySendDialog strategyId={st.id} clientId={clientId} name={name} month={month} av={avCount} onClose={() => setSend(null)} />}
       {send === 'perguntas' && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => setSend(null)} />}
+      {/* Briefing → Enviar (Italo, 20/11): link do PORTAL na aba Briefing, pelo WhatsApp da pessoa. */}
+      {send === 'briefing' && <BriefSendDialog clientId={clientId} name={name} onClose={() => setSend(null)} />}
       {deckOpen && <OrientationDialog title="Baixar o diagnóstico" name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(clientInput, o); setDeckOpen(false) }} />}
       {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}
       {info && <InfoDialog row={info} onClose={closeInfo} />}
@@ -381,7 +384,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {/* Passo a passo (Italo, 20/11): primeiro conhecer o cliente (briefing, perguntas, diagnóstico), depois a estratégia e as partes. */}
       <ol data-passos aria-label="Passo a passo do cliente" className="flex flex-col gap-2">
         <Step n={1} current={stepCur === 1} done={briefDone}>
-          <BriefingCard clientId={clientId} month={opts[1]!} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'estrategia', secao: null, parte: 'briefing', so: '1', mes: opts[1]!.slice(0, 7) })} />
+          <BriefingCard clientId={clientId} month={opts[1]!} onSend={() => openSend('briefing')} onOpen={() => go({ ver: 'estrategia', secao: null, parte: 'briefing', so: '1', mes: opts[1]!.slice(0, 7) })} />
         </Step>
         <Step n={2} current={stepCur === 2} done={askDone} locked={!briefDone} wait="o briefing chegar a 80%">
           <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />

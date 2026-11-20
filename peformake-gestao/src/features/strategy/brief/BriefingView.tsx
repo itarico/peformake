@@ -18,7 +18,7 @@ import { answerBrief, resetMonthQuestions, briefKey, briefMonthKey, briefQuestio
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
 import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, monthGuide, type Family } from './questionEngine'
-import { DIRECTION_QUIZ, MONTH_CHECKS, QUIZ } from './briefRules'
+import { DIRECTION_QUIZ, fixedStatus, MONTH_CHECKS, QUIZ } from './briefRules'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -32,10 +32,10 @@ export function useBriefStatus(clientId: string, month: string) {
   const qs = q.data ?? []
   const answered = qs.filter((x) => x.status === 'respondida').length
   const checks = briefChecks(b.data?.data ?? {}, m.data ?? {}, answered, qs.length || 8)
-  const fixed = checks.filter((c) => !MONTH_CHECKS.has(c.key))
+  const fixed = fixedStatus(b.data?.data ?? {})
   return { ready: b.isSuccess && m.isSuccess && q.isSuccess, percent: briefPercent(checks, answered, qs.length || 8), missing: briefMissing(checks), answered, total: qs.length || 8,
-    // Só o fixo (passo 1 da ficha): o do mês conta no passo Perguntas.
-    fixedPercent: briefPercent(fixed), fixedMissing: briefMissing(fixed) }
+    // Só o fixo (passo 1 da ficha): o do mês conta no passo Perguntas. O portal do cliente usa o mesmo cálculo.
+    fixedPercent: fixed.percent, fixedMissing: fixed.missing }
 }
 
 /** Medidor "Briefing X% completo" e o que falta (3 itens no máximo). */
@@ -56,7 +56,7 @@ export function BriefMeter({ percent, missing, compact }: { percent: number; mis
 type Icon = typeof Check
 
 /** Grupo de ícones (sem caixa de texto): o título é só uma palavra. */
-function Group({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
+export function Group({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
   if (!Children.toArray(children).length) return null
   return (
     <section className="flex flex-col gap-2">
@@ -67,7 +67,7 @@ function Group({ title, right, children }: { title: string; right?: ReactNode; c
 }
 
 /** Um item do briefing: ícone verde com ✓ quando feito, tracejado quando falta. Tocar abre o pop-up. */
-function Tile({ icon: I, label, title, done, count, isNew, onOpen }: { icon: Icon; label: string; title: string; done: boolean; count?: number; isNew?: boolean; onOpen: () => void }) {
+export function Tile({ icon: I, label, title, done, count, isNew, onOpen }: { icon: Icon; label: string; title: string; done: boolean; count?: number; isNew?: boolean; onOpen: () => void }) {
   return (
     <button type="button" onClick={onOpen} title={title} data-item={done ? 'feito' : 'falta'}
       className="relative flex min-h-[78px] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border border-line bg-surface px-1 py-2 text-center transition-colors hover:bg-raised/60">
@@ -83,7 +83,7 @@ function Tile({ icon: I, label, title, done, count, isNew, onOpen }: { icon: Ico
 }
 
 /** Anel do briefing (só o número no meio). */
-function Ring({ percent }: { percent: number }) {
+export function Ring({ percent }: { percent: number }) {
   const r = 20, c = 2 * Math.PI * r
   const tone = percent >= 80 ? 'text-ok' : percent >= 50 ? 'text-accent' : 'text-warn'
   return (

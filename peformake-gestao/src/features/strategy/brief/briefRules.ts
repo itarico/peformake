@@ -109,6 +109,12 @@ export function briefMissing(checks: Check[]): string[] {
   return checks.filter((c) => !c.done).sort((a, b) => b.weight - a.weight).map((c) => c.label)
 }
 
+/** Medidor só do briefing FIXO (passo 1 da ficha e o portal do cliente usam o mesmo número). */
+export function fixedStatus(f: BriefFixed): { percent: number; missing: string[]; checks: Check[] } {
+  const checks = briefChecks(f, {}, 0, 8).filter((c) => !MONTH_CHECKS.has(c.key))
+  return { percent: briefPercent(checks), missing: briefMissing(checks), checks }
+}
+
 // ───────── Listas acumulativas (concorrentes e referências): nunca duplica ─────────
 const norm = (s: string | undefined) => (s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/^https?:\/\/(www\.)?/, '').replace(/[/?#].*$|\s+|@/g, '')
 const linkKey = (s: string | undefined) => (s ?? '').toLowerCase().replace(/^https?:\/\/(www\.)?/, '').replace(/[?#].*$/, '').replace(/\/+$/, '')

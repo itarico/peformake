@@ -65,3 +65,12 @@ describe('trilha em profundidade', () => {
     expect(qs.find((q) => /novas, seminovas/i.test(q.question))?.cond?.has).toContain('moto')
   })
 })
+
+describe('cópia do motor na função portal-brief (rotina do dia 10)', () => {
+  it('é igual ao motor do sistema', async () => {
+    const { readFileSync } = await import('node:fs')
+    const { resolve } = await import('node:path')
+    const src = readFileSync(resolve(__dirname, 'questionEngine.ts'), 'utf8')
+    expect(readFileSync(resolve(__dirname, '../../../../supabase/functions/portal-brief/questionEngine.ts'), 'utf8')).toBe(src)
+  })
+})

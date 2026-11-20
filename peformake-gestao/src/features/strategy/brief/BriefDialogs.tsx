@@ -5,7 +5,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { VoiceNote } from '@/components/ui/VoiceNote'
 import { cn } from '@/lib/cn'
 import { fileUrl, type ClientQuestion } from '../questionsApi'
-import { transcribe } from './briefApi'
+import { useTranscriber } from '@/lib/transcriber'
 import { detectLink, fromLinkList, linkList, QUIZ, quizText, type BriefFixed, type LinkItem, type QuizStep, type TextKey } from './briefRules'
 import { IMPORT_ACCEPT, importProducts, productsFromText } from './productImport'
 import { productsFromUrl } from './briefApi'
@@ -100,9 +100,10 @@ export function QuizDialog({ title, steps, onDone, onClose }: { title: string; s
               <VoiceNote onText={(x) => setOther((o) => o.map((y, k) => (k === i ? (y.trim() ? `${y.trim()} ${x}` : x) : y)))} />
             </>
           : <>
-              <div className="flex flex-wrap gap-1.5" role="group" aria-label={st.q}>
-                {st.opts.map((o) => <button key={o} type="button" aria-pressed={cur.includes(o)} onClick={() => pick(o)} className={cn('min-h-10 cursor-pointer rounded-full border px-3.5 text-[13.5px] font-medium', cur.includes(o) ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o}</button>)}
-                <button type="button" aria-pressed={otherOpen || !!other[i]!.trim()} onClick={() => setOtherOpen(true)} className={cn('min-h-10 cursor-pointer rounded-full border border-dashed px-3.5 text-[13.5px] font-medium', other[i]!.trim() ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{other[i]!.trim() ? `Outro: ${other[i]}` : 'Outro'}</button>
+              {/* Muitas opções (ex.: os 12 arquétipos): chips menores para caber sem rolar no celular. */}
+              <div className={cn('flex flex-wrap', st.opts.length > 8 ? 'gap-1' : 'gap-1.5')} role="group" aria-label={st.q}>
+                {st.opts.map((o) => <button key={o} type="button" aria-pressed={cur.includes(o)} onClick={() => pick(o)} className={cn('cursor-pointer rounded-full border font-medium', st.opts.length > 8 ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', cur.includes(o) ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{o}</button>)}
+                <button type="button" aria-pressed={otherOpen || !!other[i]!.trim()} onClick={() => setOtherOpen(true)} className={cn('cursor-pointer rounded-full border border-dashed font-medium', st.opts.length > 8 ? 'min-h-9 px-2 text-[12px]' : 'min-h-10 px-3.5 text-[13.5px]', other[i]!.trim() ? 'border-transparent bg-fill text-on-fill' : 'border-line-strong hover:border-ink')}>{other[i]!.trim() ? `Outro: ${other[i]}` : 'Outro'}</button>
               </div>
               {otherOpen && <input autoFocus value={other[i]} onChange={(e) => setOther((o) => o.map((x, k) => (k === i ? e.target.value : x)))} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); setOtherOpen(false) } }} className={field} placeholder="Escreva a sua resposta" aria-label="Outra resposta" />}
             </>}
@@ -331,6 +332,7 @@ export function AttachButton({ files, onChange }: { files: File[]; onChange: (f:
 
 /** Gravador: grava, para, transcreve sozinho e mostra o áudio para ouvir. O áudio fica guardado junto da resposta. */
 function Recorder({ onDone }: { onDone: (blob: Blob, text: string) => void }) {
+  const transcribe = useTranscriber()
   const rec = useRef<MediaRecorder | null>(null)
   const chunks = useRef<Blob[]>([])
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -373,7 +375,7 @@ function Recorder({ onDone }: { onDone: (blob: Blob, text: string) => void }) {
 
 function SavedAudio({ path }: { path: string }) {
   const [url, setUrl] = useState<string | null>(null)
-  useEffect(() => { let on = true; void fileUrl(path).then((u) => on && setUrl(u)); return () => { on = false } }, [path])
+  useEffect(() => { let on = true; void fileUrl(path).then((u) => on && setUrl(u)).catch(() => null); return () => { on = false } }, [path])
   return url ? <audio controls src={url} className="h-9 w-full" /> : null
 }
 
