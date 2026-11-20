@@ -74,7 +74,8 @@ export function ContentBoard() {
   const [picked, setFilters] = useState<ContentFilters & { designerChosen?: boolean }>(() => (params.get('cliente') ? { ...EMPTY_FILTERS, clientId: params.get('cliente')!, designerChosen: true } : EMPTY_FILTERS))
   const autoDesigner = !picked.designerChosen && isDesigner && !canPlan && myStaffId ? myStaffId : null
   const filters: ContentFilters = useMemo(() => (autoDesigner ? { ...picked, designerId: autoDesigner } : picked), [picked, autoDesigner])
-  const [chosenTab, setTab] = useState<BoardColumn | null>(null)
+  // ?coluna=aprovado (links da Bete e dos avisos): abre direto naquela coluna.
+  const [chosenTab, setTab] = useState<BoardColumn | null>(() => BOARD_COLUMNS.find((c) => c.id === params.get('coluna'))?.id ?? null)
   const [editing, setEditing] = useState<Task | 'new' | null>(null)
 
   const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId, 'conteudo')), filters, clientName), [items.data, filters, clientName, isLive])
@@ -136,7 +137,7 @@ export function ContentBoard() {
 
   return (
     <>
-      {(alerts.length > 0 || stats.revisions > 0) && (
+      {alerts.length > 0 && (
         <div className="flex flex-wrap items-center gap-2" aria-label="Pendências e entrega do mês">
           {alerts.map((a) => (
             <button key={a.id} type="button" onClick={() => goTo(a.column)}
@@ -144,12 +145,13 @@ export function ContentBoard() {
               {a.tone === 'warn' && <AlertTriangle size={14} aria-hidden="true" />}{ALERT_TEXT[a.id](a.count)}
             </button>
           ))}
-          <span className="text-[12.5px] text-muted">
+          {/* Métrica e resumo do design só no computador: no celular o topo fica só com o que pede ação. */}
+          <span className="hidden text-[12.5px] text-muted md:inline">
             {stats.revisions > 0 && <>{stats.revisions} {stats.revisions === 1 ? 'ajuste' : 'ajustes'} no mês ({stats.withRevision} {stats.withRevision === 1 ? 'peça' : 'peças'})</>}
           </span>
         </div>
       )}
-      <DesignerSummary month={month} />
+      <div className="hidden md:block"><DesignerSummary month={month} /></div>
 
       <div className="flex items-center gap-2 md:flex-wrap">
         <label className="relative min-w-0 flex-1 md:flex-none">

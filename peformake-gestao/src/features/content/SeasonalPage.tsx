@@ -70,12 +70,12 @@ function ClientLine({ r }: { r: Row }) {
   })
   return (
     <li className="flex flex-wrap items-center gap-x-3 gap-y-2 py-2.5">
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0 basis-full truncate sm:basis-0 sm:flex-1">
         <span className="font-medium">{r.client}</span>
         {r.niche && <span className="ml-2 text-[12px] text-muted first-letter:uppercase">{r.niche}</span>}
       </span>
       {r.request ? <RequestChip req={r.request} /> : (
-        <>
+        <span className="ml-auto flex items-center gap-1">
           <button type="button" onClick={() => skip.mutate()} disabled={skip.isPending}
             title={r.kind === 'cliente' ? 'Apagar esta data do cliente' : 'Esconder esta data para este cliente'}
             className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2.5 text-[12px] text-muted hover:bg-raised hover:text-ink">
@@ -84,7 +84,7 @@ function ClientLine({ r }: { r: Row }) {
           {/* Vai para o designer do cliente; depois de mandar, a data sai da lista deste cliente (seasonal_skip). */}
           <NewArtButton start={{ clientId: r.client_id, text: askText(r), publishDate: r.date }} label="Mandar para o design"
             className="min-h-9 px-3 text-[13px]" onSent={() => skip.mutate()} />
-        </>
+        </span>
       )}
     </li>
   )
@@ -204,7 +204,7 @@ export function SeasonalPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-[18px] font-semibold">Datas sazonais</h2>
-          <p className="text-[13px] text-muted">Datas do nicho de cada cliente, as gerais e as do próprio cliente. Mande para o design com a ideia pronta.</p>
+          <p className="text-[13px] text-muted">Datas do nicho e do cliente. Mande ao design com a ideia pronta.</p>
         </div>
         <Button variant="secondary" onClick={() => setAdding(true)}><CalendarPlus size={16} aria-hidden="true" /> Nova data do cliente</Button>
       </div>

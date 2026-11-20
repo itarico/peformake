@@ -208,7 +208,8 @@ export function PortalPage() {
   // Nota 9 ou 10 no NPS do mês: "Indicar agora" abre o painel direto em Indicações.
   const [referrals, setReferrals] = useState(false)
   const [chat, setChat] = useState<{ on: boolean; allBrief?: boolean; n: number } | null>(null)
-  useEffect(() => { if (chat === null && brief.data) setChat({ on: needsChat(brief.data), n: 0 }) }, [brief.data, chat])
+  // Link de aprovação de arte (/aprovar): não abre a conversa; o cliente vai direto aprovar.
+  useEffect(() => { if (chat === null && brief.data) setChat({ on: section !== 'aprovar' && needsChat(brief.data), n: 0 }) }, [brief.data, chat, section])
 
   useEffect(() => {
     document.title = portal.data ? `${portal.data.name} | Peformake` : 'Peformake'

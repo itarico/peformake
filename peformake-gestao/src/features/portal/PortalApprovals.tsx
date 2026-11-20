@@ -149,7 +149,7 @@ export function PortalApprovals({ token }: { token: string }) {
   }
 
   return (
-    <section aria-labelledby="aprovar" className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
+    <section ref={(el) => { if (el && window.location.hash.endsWith('/aprovar') && !el.dataset.foco) { el.dataset.foco = '1'; el.scrollIntoView({ block: 'start' }) } }} aria-labelledby="aprovar" className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
       <div>
         <h2 id="aprovar" className="text-[17px] font-semibold tracking-tight">Artes e vídeos</h2>
         <p className="text-[13px] text-muted">{waiting > 0 ? `${waiting} ${waiting === 1 ? 'item espera' : 'itens esperam'} a sua aprovação.` : 'Nada esperando você agora.'}</p>

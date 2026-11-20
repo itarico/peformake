@@ -10,10 +10,10 @@ export function parsePortalToken(hash: string): string | null {
   return TOKEN.test(token) ? token : null
 }
 
-export type PortalSection = 'indicacoes' | 'briefing' | 'perguntas'
+export type PortalSection = 'indicacoes' | 'briefing' | 'perguntas' | 'aprovar'
 /** Parte do portal que o link abre direto: /portal#<código>/indicacoes (fim da conversa), /briefing ou /perguntas. */
 export function portalSection(hash: string): PortalSection | null {
-  const m = /^#?[A-Za-z0-9_-]{43}\/(indicacoes|briefing|perguntas)\/?$/.exec(hash.trim())
+  const m = /^#?[A-Za-z0-9_-]{43}\/(indicacoes|briefing|perguntas|aprovar)\/?$/.exec(hash.trim())
   return (m?.[1] as PortalSection | undefined) ?? null
 }
 
@@ -25,6 +25,8 @@ export function portalUrl(origin: string, token: string, section?: PortalSection
 export type PortalTab = 'painel' | 'briefing' | 'perguntas'
 export const BRIEF_REQUIRED = 80
 export function startTab(section: PortalSection | null, fixedPercent: number | null): PortalTab {
+  // Link de "arte pronta para aprovar" (/aprovar): vai direto às aprovações, mesmo com briefing incompleto.
+  if (section === 'aprovar') return 'painel'
   if (fixedPercent !== null && fixedPercent < BRIEF_REQUIRED) return 'briefing'
   if (section === 'briefing' || section === 'perguntas') return section
   return 'painel'

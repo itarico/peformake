@@ -142,7 +142,7 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
     <li className={cn('flex flex-col gap-2.5 overflow-hidden rounded-2xl border bg-surface p-3', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
       <RefCover images={images} title={itemTitle(item)} />
       <div className="flex items-center justify-between gap-2">
-        <p className="min-w-0 truncate text-[12px] text-muted">{KIND_LABEL[item.kind]}{extra ? ` · ${extra}` : ''}{mine ? '' : ` · ${staffName.split(' ')[0]}`}</p>
+        <p className="min-w-0 truncate text-[12px] text-muted">{KIND_LABEL[item.kind]}{extra ? ` · ${extra}` : ''}{mine ? '' : ` · ${item.designerId ? staffName.split(' ')[0] : 'sem responsável'}`}</p>
         {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>{c.text}</span>}
       </div>
       <Link to={`/conteudo/peca/${item.id}`} className="-mt-1 text-ink no-underline hover:underline">

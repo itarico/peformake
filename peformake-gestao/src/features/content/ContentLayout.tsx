@@ -12,8 +12,8 @@ const TABS: SectionTab[] = [
   { to: '/conteudo/quadro', label: 'Peças' },
   { to: '/conteudo/design', label: 'Design' },
   // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
-  { to: '/conteudo/datas', label: 'Datas sazonais' },
-  { to: '/conteudo/automatico', label: 'Modelo rápido' },
+  { to: '/conteudo/datas', label: 'Datas sazonais', short: 'Datas' },
+  { to: '/conteudo/automatico', label: 'Modelo rápido', short: 'Modelo' },
 ]
 
 export function MonthSwitcher() {
@@ -42,7 +42,6 @@ export function ContentLayout() {
     <>
       <SectionHeader
         title="Social Media"
-        sub="Estratégia aprovada vira briefing; a social media completa e manda ao design; o cliente aprova no portal."
         actions={<><MonthSwitcher /><NewArtButton iconOnMobile /></>}
         tabs={TABS}
       />

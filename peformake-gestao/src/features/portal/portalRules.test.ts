@@ -36,11 +36,13 @@ describe('link do portal', () => {
     expect(portalSection(`#${TOKEN}/outra`)).toBeNull()
     expect(portalSection(`#${TOKEN}/briefing`)).toBe('briefing')
     expect(portalSection(`#${TOKEN}/perguntas/`)).toBe('perguntas')
+    expect(portalSection(`#${TOKEN}/aprovar`)).toBe('aprovar')
   })
 
   it('briefing abaixo de 80% abre primeiro no Briefing', async () => {
     const { startTab, briefShareMessage } = await import('./portalRules')
     expect(startTab(null, 40)).toBe('briefing')
+    expect(startTab('aprovar', 40)).toBe('painel')
     expect(startTab('perguntas', 79)).toBe('briefing')
     expect(startTab('perguntas', 80)).toBe('perguntas')
     expect(startTab(null, 95)).toBe('painel')

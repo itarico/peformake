@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { cn } from '@/lib/cn'
 import { useProduction } from '@/features/production/useProduction'
@@ -31,6 +32,8 @@ export function DesignerPanel({ month }: { month: string }) {
   const { staffName, myStaffId, isDesigner, canPlan } = useProduction()
   const { stats } = useStats(month)
   const [pick, setPick] = useState<string | null>(null)
+  // No celular começa recolhido (uma linha): a fila, que é o trabalho, fica na primeira tela.
+  const [open, setOpen] = useState(() => typeof window === 'undefined' || window.matchMedia('(min-width: 768px)').matches)
   if (!stats || stats.length === 0) return null
   const mineOnly = isDesigner && !canPlan && myStaffId
   const list = mineOnly ? stats.filter((s) => s.designerId === myStaffId) : stats
@@ -45,10 +48,14 @@ export function DesignerPanel({ month }: { month: string }) {
     </div>
   )
   return (
-    <section aria-label="Desempenho do design" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-4">
+    <section aria-label="Desempenho do design" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface px-4 py-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-[15px] font-semibold">Desempenho no mês</h2>
-        {list.length > 1 && (
+        <button type="button" aria-expanded={open} onClick={() => setOpen((v) => !v)} className="flex min-h-9 min-w-0 cursor-pointer items-center gap-1.5 text-left">
+          <h2 className="shrink-0 text-[15px] font-semibold">Desempenho no mês</h2>
+          {!open && <span className="truncate text-[13px] text-muted">{s.delivered} entregues · {s.delivered ? `${pct(s.onTime, s.delivered)}% no prazo` : 'sem entregas'} · {s.pending} na fila</span>}
+          <ChevronDown size={16} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', open && 'rotate-180')} />
+        </button>
+        {open && list.length > 1 && (
           <div role="group" aria-label="Designer" className="flex flex-wrap gap-1">
             {[{ id: 'todos', name: 'Todos' }, ...list.map((x) => ({ id: x.designerId, name: staffName(x.designerId).split(' ')[0] ?? '' }))].map((o) => (
               <button key={o.id} type="button" aria-pressed={chosen === o.id} onClick={() => setPick(o.id)}
@@ -57,13 +64,13 @@ export function DesignerPanel({ month }: { month: string }) {
           </div>
         )}
       </div>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+      {open && <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {cell('Entregues', String(s.delivered))}
         {cell('No prazo', s.delivered ? `${pct(s.onTime, s.delivered)}%` : '—', s.delivered ? `${s.onTime} de ${s.delivered}` : undefined, s.delivered > 0 && pct(s.onTime, s.delivered) < 90)}
         {cell('Tempo médio fazendo', hoursLabel(s.avgHours), 'de "Comecei" à entrega')}
         {cell('Pediram ajuste', s.delivered ? `${pct(s.withRevision, s.delivered)}%` : '—', s.delivered ? `${s.withRevision} de ${s.delivered}` : undefined, s.delivered > 0 && pct(s.withRevision, s.delivered) > 30)}
         {cell('Na fila agora', String(s.pending), s.lateNow ? `${s.lateNow} atrasada${s.lateNow > 1 ? 's' : ''}` : 'nada atrasado', s.lateNow > 0)}
-      </div>
+      </div>}
     </section>
   )
 }

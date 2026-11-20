@@ -141,7 +141,7 @@ export function ContentPlanPage() {
             <div className="flex flex-wrap items-end justify-between gap-2">
               <div>
                 <h2 id="pecas" className="font-semibold">{clientName(clientId)}: peças de {monthLabel(month)}</h2>
-                <p className="text-[13px] text-muted">{sum.total} peças | {sum.noBriefing} sem briefing | {sum.inDesign} no design | {sum.waitingClient} com o cliente | {sum.approved} aprovadas</p>
+                <p className="text-[13px] text-muted">{sum.total} peças · {sum.noBriefing} sem briefing · {sum.inDesign} no design · {sum.waitingClient} com o cliente · {sum.approved} aprovadas</p>
               </div>
               {canPlan && (
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -169,10 +169,12 @@ export function ContentPlanPage() {
                     <span className="w-8 text-right text-[13px] tabular-nums text-muted">{i.number}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-medium">{itemTitle(i)}</span>
-                      <span className="block text-[12px] text-muted">{KIND_LABEL[i.kind]}{i.isExtra ? ' extra' : ''} | {staffName(i.designerId)}{i.publishDate ? ` | Publica ${i.publishDate.slice(8)}/${i.publishDate.slice(5, 7)}` : ''}</span>
+                      <span className="block text-[12px] text-muted">{KIND_LABEL[i.kind]}{i.isExtra ? ' extra' : ''} · {staffName(i.designerId)}{i.publishDate ? ` · Publica ${i.publishDate.slice(8)}/${i.publishDate.slice(5, 7)}` : ''}</span>
+                      {/* No celular o status vai embaixo do título, para o título não ficar espremido. */}
+                      <span className={cn('mt-1 inline-block rounded-full px-2 py-0.5 text-[11.5px] font-medium md:hidden', STATUS_TONE[i.status])}>{STATUS_LABEL[i.status]}</span>
                     </span>
                     {isLate(i, today) && <span className="text-[12px] font-semibold text-warn-ink">Atrasada</span>}
-                    <span className={cn('rounded-full px-2.5 py-1 text-[12px] font-medium', STATUS_TONE[i.status])}>{STATUS_LABEL[i.status]}</span>
+                    <span className={cn('hidden rounded-full px-2.5 py-1 text-[12px] font-medium md:inline', STATUS_TONE[i.status])}>{STATUS_LABEL[i.status]}</span>
                   </Link>
                 </li>
               ))}
