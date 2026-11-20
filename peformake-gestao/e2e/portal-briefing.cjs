@@ -12,8 +12,9 @@ const TOKEN = 'aB3_-'.repeat(8) + 'xyz';
 const fails = []; const calls = [];
 const CLIENT = '00000000-0000-4000-8000-000000000001';
 let brief = {};
-let questions = [];
+let questions = []; let npsDone = false;
 const reset = () => {
+  npsDone = false;
   brief = { publico: 'Mulheres de 25 a 44 anos do bairro', produtos: [{ nome: 'Pizza grande', preco: 'R$ 59,90' }] };
   questions = [
     { id: 'q1', question: 'O que vocês vendem ou fazem?', why: 'Pode marcar mais de um.', options: ['Motos', 'Carros', 'Peças e acessórios'], cond: null, answer: null, status: 'pendente', answered_via: null },
@@ -31,11 +32,13 @@ async function mock(route) {
   const p = u.pathname;
   const body = () => { try { return JSON.parse(req.postData() || '{}') } catch { return {} } };
   if (p === '/rest/v1/rpc/portal_get') return json({ name: 'Will motos', segment: 'Motos', logo_path: null, services: ['Consultoria'], team: [], has_traffic: false });
-  if (p === '/rest/v1/rpc/portal_brief') return json({ data: brief, known: { segment: 'Motos', instagram: '@willmotos', phone: '81988887777' }, links: [], voz: null, rivals: null, has_video: true, docs: [{ name: 'cardapio.pdf', at: '2026-11-20T12:00:00Z' }], questions });
+  if (p === '/rest/v1/rpc/portal_brief') return json({ data: brief, known: { segment: 'Motos', instagram: '@willmotos', phone: '81988887777' }, links: [], voz: null, rivals: null, has_video: true, docs: [{ name: 'cardapio.pdf', at: '2026-11-20T12:00:00Z' }], questions, brand: 'peformake', nps_done: npsDone });
   if (p === '/rest/v1/rpc/portal_brief_save') { const b = body(); calls.push(['save', b._token, Object.keys(b._patch || {})]); brief = { ...brief, ...b._patch }; return json(null) }
   if (p === '/rest/v1/rpc/portal_brief_answer') { const b = body(); calls.push(['answer', b._token, b._id]); questions = questions.map((q) => (q.id === b._id ? { ...q, answer: b._answer, status: 'respondida', answered_via: 'cliente' } : q)); return json(null) }
   if (p === '/rest/v1/rpc/consult_list') return json([{ client_id: CLIENT, name: 'Will motos', logo_path: null, segment: 'Motos', document: '29402375000160', consultoria: true, areas: { trafego: false, social: false, audiovisual: false }, status: 'falta_dados', stage: null, updated_at: '2026-11-20T10:00:00Z', suggestions: 0, can_generate: true, direction: null, questions_open: 0, questions_answered: 0, answers_new: 0 }]);
   if (p === '/rest/v1/rpc/brief_portal_link') { calls.push(['link']); return json(TOKEN) }
+  if (p === '/rest/v1/rpc/portal_brief_nps') { const b = body(); calls.push(['nps', b._token, b._score, b._comment]); if (b._score !== null && b._score !== undefined) npsDone = true; return json(null) }
+  if (p === '/rest/v1/rpc/portal_referrals') return json({ brand: 'peformake', items: [] });
   if (p.startsWith('/rest/v1/rpc/')) return json(null);
   if (p === '/rest/v1/clients') { const one = (req.headers()['accept'] || '').includes('vnd.pgrst.object'); return json(one ? { phone: '81988887777' } : [{ phone: '81988887777' }]) }
   if (p.startsWith('/rest/v1/')) return route.fulfill({ status: 200, contentType: 'application/json', headers: { ...h, 'content-range': '*/0' }, body: '[]' });
@@ -71,7 +74,7 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     await p.locator('[data-caixa]').fill('Atendimento rápido e preço justo');
     await p.locator('[data-enviar]').click(); await p.waitForTimeout(700);
     if (!calls.some((c) => c[0] === 'save' && c[1] === TOKEN && c[2].length > 0)) fails.push(`${dev}: a 1ª resposta não salvou (${JSON.stringify(calls)})`);
-    let sawSub = false; let answeredMom = false;
+    let sawSub = false; let answeredMom = false; let sawNps = false;
     for (let k = 0; k < 150; k++) {
       if (await p.locator('[data-ir-painel]').count()) break;
       const last = await p.locator('[data-portal-chat] ul > li').last().innerText();
@@ -80,15 +83,19 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
         await p.locator('[data-enviar]').click(); await p.waitForTimeout(800); answeredMom = true; continue;
       }
       if (/motos são novas/.test(last)) sawSub = true;
+      if (/De 0 a 10/.test(last)) { await p.locator('[data-nps] button', { hasText: /^10$/ }).click(); await p.waitForTimeout(800); continue }
+      if (/Indicaria alguém agora/.test(last)) { sawNps = true; await p.screenshot({ path: `${OUT}/portal-nps-${dev}.png` }); await p.getByRole('button', { name: 'Sim, indicar agora' }).click(); await p.waitForTimeout(800); break }
       await p.locator('[data-depois]').click(); await p.waitForTimeout(120);
     }
     if (!answeredMom) fails.push(`${dev}: a pergunta do mês não apareceu na conversa`);
     if (!sawSub) fails.push(`${dev}: depois de "Motos" devia vir a subpergunta das motos`);
     if (!calls.some((c) => c[0] === 'answer' && c[2] === 'q1')) fails.push(`${dev}: responder na conversa não chamou portal_brief_answer`);
-    await p.screenshot({ path: `${OUT}/portal-chat-fim-${dev}.png` });
-    await p.locator('[data-ir-painel]').click(); await p.waitForTimeout(800);
-    const tab = await p.locator('[role=tab][aria-selected=true]').innerText().catch(() => '');
-    if (!/Briefing/.test(tab)) fails.push(`${dev}: ao sair da conversa devia ir ao Briefing (foi "${tab}")`);
+    if (!sawNps) fails.push(`${dev}: o NPS não apareceu no fim das perguntas do mês`);
+    if (!calls.some((c) => c[0] === 'nps' && c[2] === 10)) fails.push(`${dev}: a nota não foi salva (${JSON.stringify(calls.filter((c) => c[0] === 'nps'))})`);
+    const ind = await p.locator('#indicacoes').count();
+    if (!ind) fails.push(`${dev}: "Indicar agora" devia abrir o painel em Indicações`);
+    await p.screenshot({ path: `${OUT}/portal-indicacoes-${dev}.png` });
+    await p.locator('[data-aba=briefing]').click(); await p.waitForTimeout(500);
     await p.screenshot({ path: `${OUT}/portal-briefing-${dev}.png`, fullPage: true });
     // Cada item do briefing (ver e revisar tudo).
     await p.getByRole('button', { name: 'Ver e revisar tudo' }).click(); await p.waitForTimeout(300);
@@ -122,7 +129,12 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     const prog = await p.locator('[data-progresso]').innerText().catch(() => '');
     // Briefing ainda abaixo de 80%: a conversa refaz o que falta antes das perguntas (obrigatório).
     if (!/^1 de \d+$/.test(prog)) fails.push(`${dev}: conversa sem progresso (${prog})`);
-    while (!(await p.locator('[data-ir-painel]').count())) { await p.locator('[data-depois]').click(); await p.waitForTimeout(120) }
+    // NPS já respondido no mês: não pergunta de novo.
+    for (let k = 0; k < 120 && !(await p.locator('[data-ir-painel]').count()); k++) {
+      const last = await p.locator('[data-portal-chat] ul > li').last().innerText();
+      if (/De 0 a 10/.test(last)) { fails.push(`${dev}: perguntou o NPS de novo no mesmo mês`); break }
+      await p.locator('[data-depois]').click(); await p.waitForTimeout(120)
+    }
     await p.locator('[data-ir-painel]').click(); await p.waitForTimeout(400);
     // Briefing completo (>= 80%): abre no Painel.
     brief = { ...brief, produtos: [{ nome: 'X', preco: 'R$ 1' }], publico: 'aaaa', diferenciais: 'aaaa', voz: 'aaaa', proibidos: 'aaa', quem_aparece: 'aaa', capacidade: 'aaa', proposito: 'aaa', percepcao: 'aaa', posicionamento: 'aaa', sem_concorrentes: true, referencias: [{ link: 'https://x.com' }], links: { site: 'https://a.com', instagram: 'https://instagram.com/a' }, momento: 'aaa', jornada: 'aaa', marketing: 'aaa', marca: 'aaa', meses_fortes: [12] };

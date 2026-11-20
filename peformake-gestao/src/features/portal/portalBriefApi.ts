@@ -17,6 +17,10 @@ export interface PortalBrief {
   questions: PortalQuestion[]
   percent: number
   missing: string[]
+  /** Marca de quem atende (cliente só do audiovisual: Ellcazo). */
+  brand: 'peformake' | 'ellcazo'
+  /** NPS deste mês já respondido (pergunta uma vez por mês). */
+  npsDone: boolean
 }
 
 interface Payload {
@@ -28,6 +32,8 @@ interface Payload {
   has_video: boolean
   docs: { name: string; at: string }[]
   questions: PortalQuestion[]
+  brand?: string | null
+  nps_done?: boolean
 }
 
 export const portalBriefKey = (token: string, month: string) => ['portal-brief', token, month] as const
@@ -46,7 +52,8 @@ export async function getPortalBrief(token: string, month: string): Promise<Port
   // O mesmo preenchimento automático da ficha: o cliente vê o que a Peformake já sabe e só revisa.
   const f = prefill(p.data ?? {}, { ...(p.known ?? {}), links: p.links ?? [], voz: p.voz ?? null, diagRivals: Array.isArray(p.rivals) ? p.rivals as never : null })
   const st = fixedStatus(f, !!p.has_video)
-  return { data: f, hasVideo: !!p.has_video, docs: p.docs ?? [], questions: (p.questions ?? []).map((q) => ({ ...q, options: Array.isArray(q.options) ? q.options : [] })), percent: st.percent, missing: st.missing }
+  return { data: f, hasVideo: !!p.has_video, docs: p.docs ?? [], questions: (p.questions ?? []).map((q) => ({ ...q, options: Array.isArray(q.options) ? q.options : [] })), percent: st.percent, missing: st.missing,
+    brand: p.brand === 'ellcazo' ? 'ellcazo' : 'peformake', npsDone: !!p.nps_done }
 }
 
 /** Perguntas que aparecem: a subpergunta só quando a resposta da mãe pede (mesma regra da conversa). */
@@ -93,5 +100,11 @@ export async function uploadAnswerFile(token: string, file: Blob, name: string):
 
 export async function answerPortalQuestion(token: string, id: string, answer: string, attachments: Att[]): Promise<void> {
   const { error } = await rpc('portal_brief_answer', { _token: token, _id: id, _answer: answer, _attachments: attachments.length ? attachments : null })
+  nice(error)
+}
+
+/** NPS do mês (mesmo lugar do NPS de sempre). Nota primeiro; o comentário depois, sem nota. */
+export async function savePortalNps(token: string, month: string, score: number | null, comment?: string): Promise<void> {
+  const { error } = await rpc('portal_brief_nps', { _token: token, _month: month, _score: score, _comment: comment ?? null })
   nice(error)
 }

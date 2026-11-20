@@ -80,3 +80,21 @@ describe('cartões novos do briefing (20/11)', () => {
     expect(missingFields({}, true)).toContain('sazonal')
   })
 })
+
+describe('NPS no fim das perguntas do mês', () => {
+  const qs = [q('a', 'Pergunta do mês', null, { status: 'respondida', answer: 'ok' })]
+  it('pergunta a nota uma vez por mês e o puxa-fio segue a nota', async () => {
+    const { NPS_KEY, NPS_COMMENT_KEY, npsFollowUp } = await import('./portalFlowRules')
+    expect(flowSteps([], {}, qs, 'P', { brand: 'peformake', done: false }).map((s) => s.key)).toEqual([NPS_KEY])
+    expect(flowSteps([], {}, qs, 'P', { brand: 'peformake', done: true })).toEqual([])
+    const depois = flowSteps([], { [NPS_KEY]: '5' }, qs, 'P', { brand: 'peformake', done: true })
+    expect(depois.map((s) => s.key)).toEqual([NPS_KEY, NPS_COMMENT_KEY])
+    expect(depois[1]!.q).toMatch(/decepcionou/)
+    expect(npsFollowUp(8).q).toMatch(/faltou para ser 10/)
+    expect(npsFollowUp(10).opts[0]).toMatch(/indicar/)
+    expect(flowSteps([], {}, qs, 'P', { brand: 'ellcazo', done: false })[0]!.q).toMatch(/Ellcazo/)
+  })
+  it('sem perguntas do mês, não pergunta a nota', () => {
+    expect(flowSteps([], {}, [], 'P', { brand: 'peformake', done: false })).toEqual([])
+  })
+})

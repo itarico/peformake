@@ -205,6 +205,8 @@ export function PortalPage() {
   const [picked, setPicked] = useState<PortalTab | null>(null)
   const transcriber = useMemo(() => (token ? portalTranscribe(token) : undefined), [token])
   // Conversa obrigatória (Italo, 20/11): ao abrir, se falta briefing (<80%) ou há perguntas do mês, abre direto no chat.
+  // Nota 9 ou 10 no NPS do mês: "Indicar agora" abre o painel direto em Indicações.
+  const [referrals, setReferrals] = useState(false)
   const [chat, setChat] = useState<{ on: boolean; allBrief?: boolean; n: number } | null>(null)
   useEffect(() => { if (chat === null && brief.data) setChat({ on: needsChat(brief.data), n: 0 }) }, [brief.data, chat])
 
@@ -232,7 +234,7 @@ export function PortalPage() {
   if (chat?.on && brief.data) return (
     <TranscriberCtx.Provider value={transcriber!}>
       <PortalChat key={chat.n} token={token} month={month} name={data.name} brief={brief.data} allBrief={chat.allBrief}
-        onDone={() => { setChat({ on: false, n: chat.n }); setPicked(brief.data && brief.data.percent < 100 ? 'briefing' : 'painel') }} />
+        onDone={(to) => { setChat({ on: false, n: chat.n }); setReferrals(to === 'indicacoes'); setPicked(to === 'indicacoes' ? 'painel' : brief.data && brief.data.percent < 100 ? 'briefing' : 'painel') }} />
     </TranscriberCtx.Provider>
   )
   const openChat = (allBrief: boolean) => setChat({ on: true, allBrief, n: (chat?.n ?? 0) + 1 })
@@ -280,7 +282,7 @@ export function PortalPage() {
 
       {tab === 'painel' && !picked && (brief.isPending || chat === null) && <p role="status" className="text-muted">Carregando</p>}
       {tab === 'painel' && (picked || (!brief.isPending && chat !== null)) && <>
-      {section === 'indicacoes' && <PortalReferrals token={token} highlight />}
+      {(section === 'indicacoes' || referrals) && <PortalReferrals token={token} highlight />}
 
       <PortalOverview token={token} />
 
@@ -294,7 +296,7 @@ export function PortalPage() {
 
       <PortalWhatsapp token={token} />
 
-      {section !== 'indicacoes' && <PortalReferrals token={token} />}
+      {section !== 'indicacoes' && !referrals && <PortalReferrals token={token} />}
 
       {data.hasTraffic ? (
         <Results token={token} />

@@ -7,15 +7,15 @@ import { competitorFromLink, detectLink, fromLinkList, linkList, mergeCompetitor
 import { productsFromText } from '@/features/strategy/brief/productImport'
 import { monthName, SKIP_LABEL } from '@/features/strategy/questionRules'
 import { cn } from '@/lib/cn'
-import { answerPortalQuestion, portalBriefKey, savePortalBrief, uploadAnswerFile, type PortalBrief } from './portalBriefApi'
-import { fieldPatch, flowSteps, linksIn, missingFields, namesIn, type FlowStep } from './portalFlowRules'
+import { answerPortalQuestion, portalBriefKey, savePortalBrief, savePortalNps, uploadAnswerFile, type PortalBrief } from './portalBriefApi'
+import { fieldPatch, flowSteps, linksIn, missingFields, namesIn, NPS_INDICAR, type FlowStep } from './portalFlowRules'
 import { BRIEF_REQUIRED } from './portalRules'
 
 const first = (name: string) => name.trim().split(/\s+/)[0] ?? name
 
 /** Precisa abrir a conversa? Briefing abaixo de 80% ou perguntas do mês em aberto. */
 export function needsChat(brief: PortalBrief): boolean {
-  return (brief.percent < BRIEF_REQUIRED && missingFields(brief.data, brief.hasVideo).length > 0) || flowSteps([], {}, brief.questions, '').length > 0
+  return (brief.percent < BRIEF_REQUIRED && missingFields(brief.data, brief.hasVideo).length > 0) || flowSteps([], {}, brief.questions, '', { brand: brief.brand, done: brief.npsDone }).length > 0
 }
 
 /**
@@ -23,7 +23,7 @@ export function needsChat(brief: PortalBrief): boolean {
  * grande (o texto aparece ao vivo na caixa), pelo teclado (ícone ou tocando na caixa) ou tocando numa opção. Não dá para
  * pular etapas: só "Responder depois" em cada pergunta. Cada resposta é salva na hora.
  */
-export function PortalChat({ token, month, name, brief, onDone, allBrief }: { token: string; month: string; name: string; brief: PortalBrief; onDone: () => void; allBrief?: boolean }) {
+export function PortalChat({ token, month, name, brief, onDone, allBrief }: { token: string; month: string; name: string; brief: PortalBrief; onDone: (to?: 'indicacoes') => void; allBrief?: boolean }) {
   const qc = useQueryClient()
   // O que falta no briefing fica fixo durante a conversa (responder a 1ª pergunta de um campo já o deixa preenchido).
   const [fields] = useState(() => (allBrief || brief.percent < BRIEF_REQUIRED ? missingFields(brief.data, brief.hasVideo) : []))
@@ -38,7 +38,7 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
   const pick = useRef<HTMLInputElement>(null)
   const end = useRef<HTMLDivElement>(null)
   const mes = monthName(month.slice(0, 7))
-  const steps = useMemo(() => flowSteps(fields, answers, brief.questions, `Perguntas de ${mes}`), [fields, answers, brief.questions, mes])
+  const steps = useMemo(() => flowSteps(fields, answers, brief.questions, `Perguntas de ${mes}`, { brand: brief.brand, done: brief.npsDone }), [fields, answers, brief.questions, mes, brief.brand, brief.npsDone])
   const left = steps.filter((s) => !handled.includes(s.key))
   const cur: FlowStep | undefined = left[0]
   const total = handled.length + left.length
@@ -47,6 +47,8 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
 
   const save = useMutation({
     mutationFn: async ({ step, value }: { step: FlowStep; value: string }) => {
+      if (step.kind === 'nps') { await savePortalNps(token, month, Number(value)); return }
+      if (step.kind === 'nps_comment') { if (value !== NPS_INDICAR && value !== 'Agora não') await savePortalNps(token, month, null, value); return }
       if (step.kind === 'question') {
         const atts = await Promise.all(files.map((x) => uploadAnswerFile(token, x, x.name)))
         await answerPortalQuestion(token, step.qid!, value || (files.length ? `Enviou: ${files.map((x) => x.name).join(', ')}` : ''), atts)
@@ -77,7 +79,8 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
     },
     onMutate: () => setProblem(null),
     onSuccess: async (_, { step, value }) => {
-      if (step.kind === 'quiz') setAnswers((a) => ({ ...a, [step.key]: value }))
+      if (step.kind === 'quiz' || step.kind === 'nps') setAnswers((a) => ({ ...a, [step.key]: value }))
+      if (step.kind === 'nps_comment' && value === NPS_INDICAR) { onDone('indicacoes'); return }
       setHistory((h) => [...h, ask(step), { from: 'cliente', text: value || '📎 Arquivo', at: '', files: files.map((x) => ({ name: x.name, type: x.type })) }])
       setHandled((h) => [...h, step.key])
       setText(''); setFiles([])
@@ -99,14 +102,14 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
   })
   const shown = live ? (text.trim() ? `${text.trim()} ${live}` : live) : text
   const busy = save.isPending
-  const greeting: ChatMsg = { from: 'ia', at: '', files: [], text: `Olá, ${first(name)}! Aqui é a Peformake. ${fields.length ? 'Vou completar o seu briefing e fazer as perguntas do mês' : `São as perguntas de ${mes}`}, uma por vez. Responda falando (toque no microfone), escrevendo ou tocando numa opção.` }
+  const greeting: ChatMsg = { from: 'ia', at: '', files: [], text: `Olá, ${first(name)}! Aqui é a ${brief.brand === 'ellcazo' ? 'Ellcazo' : 'Peformake'}. ${fields.length ? 'Vou completar o seu briefing e fazer as perguntas do mês' : `São as perguntas de ${mes}`}, uma por vez. Responda falando (toque no microfone), escrevendo ou tocando numa opção.` }
 
   return (
     <main data-portal-chat className="flex h-dvh flex-col overflow-hidden bg-canvas text-ink">
       <header className="flex shrink-0 items-center gap-3 border-b border-line bg-surface px-4 py-2.5">
-        <BrandLogo brand="peformake" className="size-9" />
+        <BrandLogo brand={brief.brand} className="size-9" />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[15px] font-semibold leading-tight">Peformake · {name}</p>
+          <p className="truncate text-[15px] font-semibold leading-tight">{brief.brand === 'ellcazo' ? 'Ellcazo' : 'Peformake'} · {name}</p>
           <div className="mt-1 flex items-center gap-2">
             <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised"><span className="block h-full rounded-full bg-accent transition-all" style={{ width: `${total ? Math.round((handled.length / total) * 100) : 100}%` }} /></span>
             <span data-progresso className="shrink-0 text-[11.5px] text-muted">{cur ? `${handled.length + 1} de ${total}` : 'Concluída'}</span>
@@ -127,15 +130,26 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
       <footer className="shrink-0 border-t border-line bg-surface px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2">
         <div className="mx-auto flex max-w-lg flex-col gap-2">
           {!cur ? (
-            <button type="button" data-ir-painel onClick={onDone} className="min-h-12 cursor-pointer rounded-full bg-brand px-5 text-[15px] font-semibold text-on-brand">Ir para o meu painel</button>
+            <button type="button" data-ir-painel onClick={() => onDone()} className="min-h-12 cursor-pointer rounded-full bg-brand px-5 text-[15px] font-semibold text-on-brand">Ir para o meu painel</button>
           ) : <>
             {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-1.5 text-[12.5px] text-warn-ink">{problem}</p>}
-            {cur.opts.length > 0 && (
+            {cur.kind === 'nps' && (
+              <div data-nps className="grid grid-cols-6 gap-1.5 sm:grid-cols-11" role="group" aria-label="Nota de 0 a 10">
+                {cur.opts.map((o) => <button key={o} type="button" disabled={busy} onClick={() => save.mutate({ step: cur, value: o })}
+                  className={cn('min-h-11 cursor-pointer rounded-xl border text-[15px] font-semibold disabled:opacity-50', Number(o) <= 6 ? 'border-line-strong' : Number(o) <= 8 ? 'border-[#eda100]/60' : 'border-ok-ink/50')}>{o}</button>)}
+              </div>
+            )}
+            {cur.kind === 'nps_comment' && cur.opts.length > 0 && (
+              <div className="flex gap-1.5">{cur.opts.map((o) => <button key={o} type="button" disabled={busy} onClick={() => save.mutate({ step: cur, value: o })}
+                className={cn('min-h-11 flex-1 cursor-pointer rounded-full border px-3 text-[14px] font-semibold disabled:opacity-50', o === NPS_INDICAR ? 'border-transparent bg-brand text-on-brand' : 'border-line-strong')}>{o}</button>)}</div>
+            )}
+            {cur.kind !== 'nps' && cur.kind !== 'nps_comment' && cur.opts.length > 0 && (
               <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 pb-0.5 [scrollbar-width:none]" role="group" aria-label="Opções">
                 {cur.opts.map((o) => <button key={o} type="button" aria-pressed={has(o)} disabled={busy} onClick={() => tap(o)}
                   className={cn('min-h-9 shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-3 text-[13.5px] font-medium disabled:opacity-50', has(o) ? 'border-transparent bg-fill text-on-fill' : 'border-accent/50 bg-accent-soft text-accent-ink')}>{o}</button>)}
               </div>
             )}
+            {cur.kind !== 'nps' && !(cur.kind === 'nps_comment' && cur.opts.length > 0) && <>
             <div className="relative">
               <textarea ref={box} data-caixa value={shown} readOnly={!!live} onChange={(e) => setText(e.target.value)} rows={2} maxLength={4000}
                 placeholder="Toque no microfone e fale, ou toque aqui para escrever" aria-label="Sua resposta"
@@ -156,6 +170,8 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
                 <button type="button" data-enviar aria-label="Enviar resposta" disabled={busy || !!live || (!text.trim() && !files.length)} onClick={send} className="grid size-11 cursor-pointer place-items-center rounded-full bg-brand text-on-brand disabled:opacity-40"><SendHorizontal size={18} aria-hidden="true" /></button>
               </span>
             </div>
+            </>}
+            {cur.kind === 'nps' && <button type="button" data-depois disabled={busy} onClick={later} className="min-h-10 cursor-pointer self-start px-1 text-[13px] font-semibold text-muted underline underline-offset-2">{SKIP_LABEL}</button>}
           </>}
         </div>
       </footer>
