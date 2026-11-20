@@ -105,8 +105,12 @@ async function monthly(db: SupabaseClient) {
         asked: ((hist.data ?? []) as { question: string; focus: string | null; pack: string | null }[]).filter((x) => !(x.pack === 'briefing_mes' && x.focus === focus)).map((x) => x.question),
         diagQuestions: Array.isArray((dg.data as { do_cliente?: unknown } | null)?.do_cliente) ? (dg.data as { do_cliente: unknown[] }).do_cliente as never : [],
       })
-      const put = await db.rpc('brief_questions_put', { _client: c.id, _month: month, _qs: qs })
-      if (put.error) { out[c.id] = `erro: ${put.error.message}`; continue }
+      // Perguntas escritas pelo agente do Claude (rotina do dia 8, source 'agente'): o motor é só reserva e não troca o pacote.
+      const ag = await db.from('client_questions').select('id').eq('client_id', c.id).eq('pack', 'briefing_mes').eq('focus', focus).eq('source', 'agente').neq('status', 'descartada').limit(1)
+      if (!(ag.data ?? []).length) {
+        const put = await db.rpc('brief_questions_put', { _client: c.id, _month: month, _qs: qs })
+        if (put.error) { out[c.id] = `erro: ${put.error.message}`; continue }
+      }
       const n = await db.rpc('brief_monthly_notify', { _client: c.id, _month: month })
       out[c.id] = String(n.data ?? n.error?.message ?? '')
     } catch (e) { out[c.id] = `erro: ${(e as Error).message}` }
