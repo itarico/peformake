@@ -6,6 +6,8 @@ Nada foi movido: cada arquivo continua no lugar original. Este índice só apont
 **Regra (Italo, 19/11/2026):** tudo novo de audiovisual (estudo, estrutura, edição, engenharia reversa, skill) entra
 nesta pasta e no Git no mesmo dia. Nunca fica só no PC.
 
+- **Todos os vídeos estudados (556), com link e pasta:** `INDICE-VIDEOS.md` (gerado por `ferramentas/indice_videos.py`).
+
 ## 1. Método e motor de roteiro (app peformake-gestao)
 | Arquivo | O que é |
 |---|---|
