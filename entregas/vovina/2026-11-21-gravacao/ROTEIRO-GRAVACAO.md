@@ -8,8 +8,8 @@ Contrato: 1 Reels editado no mês + 12 peças de feed; o resto da diária vira b
 Ninguém fala. Quem segura a câmera também pode ser a mão em quadro.
 
 ## Antes de ligar a câmera (confirmar com o cliente, 5 minutos)
-1. **Fermentação: 24h ou 48h?** No Reel de 19/10 a pizzaiola diz "no mínimo 24h"; o plano de dezembro usa "48h". Vai
-   escrito na tela: usar só o número que a casa pratica toda semana. Abaixo está "48h"; se for 24h, troca.
+1. **Fermentação: 24h** (dossiê da Vovina e Reel de 19/10). O "48h" do plano de dezembro está errado: tudo abaixo usa 24h.
+   "Vó" é só o nome da marca: nada de vovó como personagem nos textos. Bordão da casa: "Tá aprovada, viu?".
 2. **Combo de dezembro:** os roteiros usam o **Combo Mais Pedido** (Mussarela + Calabresa, R$ 69,90, do cardápio).
    Se o cliente criar o "Combo Família da Vó", troca só o nome e o preço na edição.
 3. **Recheio exato da Pizza da Vovó** (sabor do mês, R$ 61,90): o cardápio não descreve. Precisa para o texto na tela.
@@ -54,30 +54,30 @@ Ninguém fala. Quem segura a câmera também pode ser a mão em quadro.
 | Tempo | Imagem (macro, câmera lenta onde marcado) | Texto na tela | Som |
 |---|---|---|---|
 | 0–2 s | Borda partindo em duas, macro, lenta | POUCA GENTE EM SÃO LOURENÇO SABE DISSO | crosta quebrando |
-| 2–8 s | **Segredo 1:** mão abre a tampa da caixa de massa; bolhas de perto | 1 · ESSA MASSA FOI FEITA HÁ 2 DIAS | tampa abrindo |
+| 2–8 s | **Segredo 1:** mão abre a tampa da caixa de massa; bolhas de perto | 1 · ESSA MASSA DESCANSOU 24 HORAS | tampa abrindo |
 | 8–13 s | **Segredo 2:** mãos abrindo o disco sem rolo, bolhas aparecendo | 2 · ABERTA NA MÃO. SEM ROLO. | massa batendo na bancada |
 | 13–18 s | **Segredo 3:** concha espalhando o molho em espiral (de cima) | 3 · MOLHO FEITO AQUI, TODO DIA | molho |
 | 18–22 s | Pá entrando no forno; contagem na tela | 3 · 2 · 1 | forno |
 | 22–32 s | Pizza saindo, borda dourada, vapor na contraluz, queijo puxando (lenta). Sem texto | (sem texto) | silêncio + crosta |
-| 32–38 s | Fatia levantando de cima; logo e selo | NÃO É QUEIMADA. É TEMPO. · Peça pelo link da bio | mordida |
+| 32–38 s | Fatia levantando de cima; logo e selo | NÃO É QUEIMADA. É TEMPO. · TÁ APROVADA, VIU? | mordida |
 
 **Gravar a mais:** o gancho em 3 versões (borda partindo; queijo puxando; caixa abrindo com vapor) e cada segredo em
 plano aberto e fechado.
 
 ## Roteiro 2 · "Breakdown da pizza" (alcance, comentário)
 **Estrutura:** S100 Breakdown com palavra-isca (391x em @jaybendonlifts) + S112. **Duração:** 15 a 20 s, em loop.
-**Layout fixo:** título no topo "BREAKDOWN · PIZZA DA VÓ"; a pizza montando no centro, vista de cima, câmera no tripé
+**Layout fixo:** título no topo "BREAKDOWN · PIZZA VÓVINA"; a pizza montando no centro, vista de cima, câmera no tripé
 sem mexer (para o corte ficar invisível). A cada corte entra um item e o nome dele aparece embaixo, com o som dele.
 | Ordem | Imagem (de cima, mesmo enquadramento) | Rótulo | Som |
 |---|---|---|---|
-| 1 | Disco de massa aberto | MASSA DE 48H | massa caindo na bancada |
+| 1 | Disco de massa aberto | MASSA DE 24H | massa caindo na bancada |
 | 2 | Molho em espiral | MOLHO DA CASA | molho |
 | 3 | Chuva de mussarela | MUSSARELA | queijo caindo |
 | 4 | Calabresa e cebola | CALABRESA ARTESANAL | rodelas caindo |
 | 5 | Orégano caindo | ORÉGANO | (leve) |
 | 6 | Pizza pronta no mesmo lugar (corte seco do forno) | FORNO | crosta |
 | 7 | Volta ao disco cru (loop) | — | — |
-**Legenda:** "Comenta VÓ que a gente te manda o link do cardápio." Usar só se alguém da equipe responder os comentários
+**Legenda:** "Comenta APROVADA que a gente te manda o link do cardápio." Usar só se alguém da equipe responder os comentários
 no mesmo dia.
 
 ## Roteiro 3 · Anúncio 15 s: Combo Mais Pedido (vira anúncio de 18 a 20/12)
@@ -86,7 +86,7 @@ no mesmo dia.
 |---|---|---|
 | 0–2 s | Duas caixas abrindo juntas, de cima, com vapor | 2 PIZZAS GRANDES |
 | 2–6 s | Queijo puxando da mussarela; calabresa com cebola em macro | MUSSARELA + CALABRESA |
-| 6–10 s | Borda partindo; fatia saindo da caixa | MASSA DE 48H |
+| 6–10 s | Borda partindo; fatia saindo da caixa | MASSA DE 24H |
 | 10–15 s | As duas pizzas na mesa + logo | R$ 69,90 · PEÇA PELO CARDÁPIO DIGITAL |
 
 ## Roteiro 4 · Sabor do mês em ASMR: "Pizza da Vovó, receita caseira"
