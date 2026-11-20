@@ -168,7 +168,9 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
   const [note, setNote] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const per = importer ? (typeof window !== 'undefined' && window.innerHeight < 760 ? 4 : 6) : 4
-  const [mode, setMode] = useState<null | 'menu' | 'colar' | 'link'>(null)
+  const [mode, setMode] = useState<null | 'menu' | 'colar' | 'link' | 'audio'>(null)
+  // Italo, 20/11: um botão só "Adicionar": primeiro produto ou serviço, depois como (um por um, arquivo, colar, link, áudio).
+  const [kind, setKind] = useState<'produto' | 'servico'>('produto')
   const [paste, setPaste] = useState('')
   const [link, setLink] = useState('')
   /** Soma os produtos achados (sem repetir) e diz quantos vieram. */
@@ -178,7 +180,7 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
       const found = await get()
       const key = (x: unknown) => String(x ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\W+/g, '')
       const first = fields[0]!.key
-      const fresh = found.filter((p) => !items.some((x) => key(x[first]) === key(p.nome))).map((p) => ({ ...empty, ...p, novo: true }) as unknown as T)
+      const fresh = found.filter((p) => !items.some((x) => key(x[first]) === key(p.nome))).map((p) => ({ ...empty, ...p, ...(importer ? { tipo: kind } : {}), novo: true }) as unknown as T)
       setItems((c) => [...c, ...fresh])
       setNote(found.length ? `Encontrei ${found.length} ${found.length === 1 ? 'item' : 'itens'}${fresh.length < found.length ? ` (${found.length - fresh.length} já estavam)` : ''}. Confira, edite ou remova antes de salvar.` : 'Não achei produtos. Tente outro formato (Excel, PDF com texto ou colar a lista).')
       if (fresh.length) setPage(Math.floor(items.length / per))
@@ -200,20 +202,26 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
     setEdit(null)
   }
   if (importer && mode) return (
-    <Dialog open onClose={onClose} title="Importar a lista" description={mode === 'menu' ? 'Do jeito que estiver: o sistema acha nome e preço sozinho.' : mode === 'colar' ? 'Cole a lista inteira: um produto por linha, com o preço.' : 'Link do cardápio, catálogo ou site.'} size="md"
+    <Dialog open onClose={onClose} title="Adicionar" description={mode === 'menu' ? 'O que é e como você quer adicionar.' : mode === 'colar' ? 'Cole a lista inteira: um item por linha, com o preço.' : mode === 'audio' ? 'Fale os itens e os preços; o sistema separa um por linha.' : 'Link do cardápio, catálogo ou site.'} size="md"
       footer={<div className="flex gap-2">
-        {mode === 'colar' && <Button disabled={reading || !paste.trim()} onClick={() => void addFound(async () => productsFromText(paste))}>{reading ? 'Lendo' : 'Ler a lista'}</Button>}
+        {(mode === 'colar' || mode === 'audio') && <Button disabled={reading || !paste.trim()} onClick={() => void addFound(async () => productsFromText(paste))}>{reading ? 'Lendo' : 'Ler a lista'}</Button>}
         {mode === 'link' && <Button disabled={reading || !link.trim()} onClick={() => void addFound(() => productsFromUrl(link.trim()))}>{reading ? 'Lendo a página' : 'Ler o link'}</Button>}
         <Button variant="secondary" onClick={() => setMode(mode === 'menu' ? null : 'menu')}>Voltar</Button>
       </div>}>
       <div data-importar-modo={mode} className="flex flex-col gap-2">
         {mode === 'menu' && <>
+          <div role="group" aria-label="Produto ou serviço" className="flex gap-1.5">
+            {(['produto', 'servico'] as const).map((k) => <button key={k} type="button" aria-pressed={kind === k} onClick={() => setKind(k)} className={cn('min-h-10 flex-1 cursor-pointer rounded-full border text-[14px] font-semibold', kind === k ? 'border-transparent bg-fill text-on-fill' : 'border-line hover:border-ink')}>{k === 'produto' ? 'Produto' : 'Serviço'}</button>)}
+          </div>
+          <button type="button" onClick={() => { setMode(null); setEdit({ i: -1, v: { ...empty, tipo: kind } as T }) }} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><Pencil size={18} aria-hidden="true" /><span><b className="block text-[14px]">Um por um</b><span className="text-[12.5px] text-muted">Nome, preço e condições</span></span></button>
+          <button type="button" onClick={() => setMode('audio')} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><Mic size={18} aria-hidden="true" /><span><b className="block text-[14px]">Por áudio</b><span className="text-[12.5px] text-muted">Fale a lista com os preços</span></span></button>
           <button type="button" onClick={() => fileRef.current?.click()} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><FileUp size={18} aria-hidden="true" /><span><b className="block text-[14px]">Arquivo</b><span className="text-[12.5px] text-muted">PDF, Excel, Word, CSV ou foto do cardápio</span></span></button>
           <button type="button" onClick={() => setMode('colar')} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><ClipboardList size={18} aria-hidden="true" /><span><b className="block text-[14px]">Colar a lista</b><span className="text-[12.5px] text-muted">Do WhatsApp, de uma planilha ou de onde estiver</span></span></button>
           <button type="button" onClick={() => setMode('link')} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><Link2 size={18} aria-hidden="true" /><span><b className="block text-[14px]">Link</b><span className="text-[12.5px] text-muted">Cardápio digital, catálogo ou site</span></span></button>
           <input ref={fileRef} type="file" hidden accept={IMPORT_ACCEPT} data-importar onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void readFile(f) }} />
         </>}
         {mode === 'colar' && <textarea autoFocus rows={8} value={paste} onChange={(e) => setPaste(e.target.value)} className={area} placeholder={'Pizza grande — R$ 59,90\nCalzone — R$ 42\nRefri 2L — R$ 12'} aria-label="Lista de produtos" />}
+        {mode === 'audio' && <><VoiceNote onText={(x) => setPaste((c) => (c.trim() ? `${c.trim()}\n${x}` : x))} /><textarea rows={5} value={paste} onChange={(e) => setPaste(e.target.value)} className={area} placeholder="O que você falar aparece aqui. Dá para corrigir antes de ler." aria-label="Lista falada" /></>}
         {mode === 'link' && <input autoFocus value={link} onChange={(e) => setLink(e.target.value)} className={field} placeholder="https://…" inputMode="url" aria-label="Link da lista" />}
         {reading && mode === 'menu' && <p role="status" className="text-[12.5px] font-medium text-muted">Lendo o arquivo…</p>}
         {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[12.5px] font-medium text-accent-ink">{note}</p>}
@@ -263,8 +271,7 @@ export function ListDialog<T extends Record<string, unknown>>({ title, hint, ite
           })}
         </ul>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => setEdit({ i: -1, v: { ...empty } })}>{quick ? <><Pencil size={14} aria-hidden="true" /> Escrever</> : <><Plus size={14} aria-hidden="true" /> Adicionar</>}</Button>
-          {importer && <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => { setNote(null); setMode('menu') }}><FileUp size={14} aria-hidden="true" /> Importar<span className="max-sm:hidden"> lista</span></Button>}
+          <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => { if (importer) { setNote(null); setMode('menu') } else setEdit({ i: -1, v: { ...empty } }) }}>{quick ? <><Pencil size={14} aria-hidden="true" /> Escrever</> : <><Plus size={14} aria-hidden="true" /> Adicionar</>}</Button>
           {pages > 1 && <Pager page={page} pages={pages} onPage={setPage} />}
         </div>
         {error && <p role="alert" className="text-[12.5px] text-warn-ink">{error}</p>}

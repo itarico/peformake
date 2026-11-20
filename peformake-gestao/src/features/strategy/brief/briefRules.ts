@@ -1,7 +1,7 @@
 // Briefing do cliente (Estratégia interativa): o que o Italo preenche ANTES de gerar a estratégia do mês.
 // Dados fixos (client_briefs) + do mês (client_brief_months) + perguntas do mês (client_questions, pack 'briefing_mes').
 
-export interface Produto { nome: string; preco?: string; condicoes?: string }
+export interface Produto { nome: string; preco?: string; condicoes?: string; tipo?: 'produto' | 'servico' }
 export interface Concorrente { nome: string; link?: string; porque?: string; novo?: boolean; origem?: 'diagnostico' }
 export interface Referencia { link: string; porque?: string; tipo?: 'post' | 'video' | 'anuncio' | 'outro_nicho'; thumb?: string; numero?: string; novo?: boolean }
 export const LINK_KEYS = ['site', 'instagram', 'whatsapp', 'catalogo', 'gmn', 'agendamento'] as const
