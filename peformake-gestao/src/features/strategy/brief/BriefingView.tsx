@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { cn } from '@/lib/cn'
 import { MeetingNotes } from '../MeetingNotes'
 import { consultKey, saveConsultInfo, saveDirection, useConsultList } from '../consultApi'
@@ -14,7 +15,8 @@ import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
-import { FAMILIES, FAMILY_LABEL, familyOf, isFamily, type Family } from './questionEngine'
+import { FAMILY_LABEL, familyOf, isFamily, type Family } from './questionEngine'
+import { MONTH_CHECKS } from './briefRules'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -28,7 +30,10 @@ export function useBriefStatus(clientId: string, month: string) {
   const qs = q.data ?? []
   const answered = qs.filter((x) => x.status === 'respondida').length
   const checks = briefChecks(b.data?.data ?? {}, m.data ?? {}, answered, qs.length || 8)
-  return { ready: b.isSuccess && m.isSuccess && q.isSuccess, percent: briefPercent(checks, answered, qs.length || 8), missing: briefMissing(checks), answered, total: qs.length || 8 }
+  const fixed = checks.filter((c) => !MONTH_CHECKS.has(c.key))
+  return { ready: b.isSuccess && m.isSuccess && q.isSuccess, percent: briefPercent(checks, answered, qs.length || 8), missing: briefMissing(checks), answered, total: qs.length || 8,
+    // Só o fixo (passo 1 da ficha): o do mês conta no passo Perguntas.
+    fixedPercent: briefPercent(fixed), fixedMissing: briefMissing(fixed) }
 }
 
 /** Medidor "Briefing X% completo" e o que falta (3 itens no máximo). */
@@ -95,7 +100,7 @@ function Ring({ percent }: { percent: number }) {
  * A) dados fixos (o sistema já preenche o que sabe) · B) do mês · C) 8 perguntas do mês (cliente pelo link ou a equipe aqui, com áudio).
  * Tudo abre em pop-up; nada rola dentro do pop-up.
  */
-export function BriefingView({ clientId, name, month }: { clientId: string; name: string; month: string }) {
+export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientId: string; name: string; month: string; part?: 'fixo' | 'mes' }) {
   const qc = useQueryClient()
   const b = useBrief(clientId)
   const m = useBriefMonth(clientId, month)
@@ -162,26 +167,26 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
     ofertas: { kind: 'month', key: 'ofertas' }, meta: { kind: 'month', key: 'meta' }, datas_travam: { kind: 'month', key: 'datas_travam' },
   }
   const todo: NonNullable<Open>[] = [
-    ...briefChecks(f, mo, st.answered, qs.length || 8).filter((c) => !c.done).sort((a, b) => b.weight - a.weight).map((c) => STEP[c.key]).filter((x): x is NonNullable<Open> => !!x),
-    ...qs.filter((x) => x.status !== 'respondida').map((x) => ({ kind: 'q' as const, q: x })),
+    ...briefChecks(f, mo, st.answered, qs.length || 8).filter((c) => !c.done && (part === 'mes') === MONTH_CHECKS.has(c.key)).sort((a, b) => b.weight - a.weight).map((c) => STEP[c.key]).filter((x): x is NonNullable<Open> => !!x),
+    ...(part === 'mes' ? qs.filter((x) => x.status !== 'respondida').map((x) => ({ kind: 'q' as const, q: x })) : []),
   ]
   const startGuide = () => { if (!todo.length) return; setGuide({ steps: todo, i: 0 }); openStep(todo[0]!) }
 
   return (
     <div data-briefing className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <Ring percent={st.percent} />
+      {part === 'fixo' && <div className="flex items-center gap-3">
+        <Ring percent={st.fixedPercent} />
         <div className="min-w-0 flex-1 text-[13px] text-muted">{todo.length ? <><b className="text-ink">{todo.length}</b> para completar</> : <b className="text-ok-ink">Tudo pronto</b>}</div>
         <button type="button" data-ver-tudo onClick={() => setAll((v) => !v)} className="min-h-10 shrink-0 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{all ? 'Só o que falta' : 'Ver tudo'}</button>
         {todo.length > 0 && <Button data-completar variant="secondary" aria-label="Completar em passos" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /><span className="max-sm:hidden"> Completar</span></Button>}
         <Button data-conversar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setChat(true)}><MessageCircle size={15} aria-hidden="true" /> Conversar</Button>
-      </div>
-      {tipoOpen && <TipoDialog current={isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name)} busy={saveF.isPending}
-        onPick={(v) => saveF.mutate({ tipo: v }, { onSuccess: () => { setTipoOpen(false); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) } })} onClose={() => setTipoOpen(false)} />}
+      </div>}
+      {tipoOpen && <TipoDialog current={isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name)} label={f.tipo_label} busy={saveF.isPending}
+        onPick={(v, l) => saveF.mutate({ tipo: v, tipo_label: l }, { onSuccess: () => { setTipoOpen(false); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) } })} onClose={() => setTipoOpen(false)} />}
       {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} onClient={() => setOpen({ kind: 'enviar' })} />}
 
-      <Group title="O cliente">
-        <Tile icon={Building2} label="Tipo" title={isFamily(f.tipo) ? FAMILY_LABEL[f.tipo] : `Confirmar: ${FAMILY_LABEL[familyOf(b.data?.segment, b.data?.description, name)]}`} done={isFamily(f.tipo)} onOpen={() => setTipoOpen(true)} />
+      {part === 'fixo' && <Group title="O cliente">
+        <Tile icon={Building2} label="Tipo" title={f.tipo_label || (isFamily(f.tipo) ? FAMILY_LABEL[f.tipo] : `Confirmar: ${FAMILY_LABEL[familyOf(b.data?.segment, b.data?.description, name)]}`)} done={isFamily(f.tipo)} onOpen={() => setTipoOpen(true)} />
         {show(!!direction.trim()) && <Tile icon={Compass} label="Direção" title="Direcionamento da equipe" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />}
         {show(!!doc) && <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />}
         {show(prods.some((p) => p.preco)) && <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />}
@@ -195,15 +200,15 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         {show(!!f.quem_aparece) && <Tile icon={UserRound} label="Quem aparece" title={TEXT_FIELDS.quem_aparece.label} done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'text', key: 'quem_aparece' })} />}
         {show(!!f.quem_grava) && <Tile icon={Video} label="Quem grava" title={TEXT_FIELDS.quem_grava.label} done={!!f.quem_grava} onOpen={() => setOpen({ kind: 'text', key: 'quem_grava' })} />}
         {show(!!f.capacidade) && <Tile icon={Gauge} label="Capacidade" title={TEXT_FIELDS.capacidade.label} done={!!f.capacidade} onOpen={() => setOpen({ kind: 'text', key: 'capacidade' })} />}
-      </Group>
+      </Group>}
 
-      <Group title={mes}>
+      {part === 'mes' && <Group title={`Do mês: ${mes}`}>
         {show(!!mo.ofertas) && <Tile icon={Tag} label="Ofertas" title={MONTH_FIELDS.ofertas.label} done={!!mo.ofertas} onOpen={() => setOpen({ kind: 'month', key: 'ofertas' })} />}
         {show(!!mo.meta) && <Tile icon={Target} label="Meta" title={MONTH_FIELDS.meta.label} done={!!mo.meta} onOpen={() => setOpen({ kind: 'month', key: 'meta' })} />}
         {show(!!mo.datas_travam) && <Tile icon={CalendarX} label="Datas" title={MONTH_FIELDS.datas_travam.label} done={!!mo.datas_travam} onOpen={() => setOpen({ kind: 'month', key: 'datas_travam' })} />}
         {show(!!last.data?.summary) && <Tile icon={TrendingUp} label="Mês passado" title="O que funcionou no mês passado" done={!!last.data?.summary} onOpen={() => setOpen({ kind: 'funcionou' })} />}
         <MeetingNotes clientId={clientId} name={name} trigger={(o, n) => <Tile icon={NotebookPen} label="Reunião" title={n ? `${n} ajustes da reunião para fazer` : 'Anotar a reunião'} done={false} count={n} onOpen={o} />} />
-      </Group>
+      </Group>}
 
       {/* As perguntas saíram daqui (Italo, 20/11): têm o passo próprio "Perguntas" na ficha do cliente. */}
 
@@ -281,14 +286,32 @@ function DocumentDialog({ clientId, initial, onClose, onDone }: { clientId: stri
 }
 
 /** Escolher o tipo de negócio: um toque. As perguntas do mês ainda não enviadas são refeitas para o tipo novo. */
-function TipoDialog({ current, busy, onPick, onClose }: { current: Family; busy: boolean; onPick: (v: Family) => void; onClose: () => void }) {
+/** Tipos mais comuns: o rótulo que a equipe vê e a família do motor de perguntas por trás. Busca + "Outro" (Italo, 20/11). */
+const TIPOS: [string, Family][] = [
+  ['Associação, ONG ou instituição', 'terceiro_setor'], ['Igreja', 'terceiro_setor'], ['Político ou mandato', 'terceiro_setor'],
+  ['Escola', 'educacao'], ['Curso ou treinamento', 'educacao'], ['Faculdade', 'educacao'],
+  ['Clínica médica', 'saude'], ['Odontologia', 'saude'], ['Psicologia ou terapia', 'saude'], ['Nutrição', 'saude'], ['Fisioterapia', 'saude'], ['Farmácia', 'saude'],
+  ['Estética', 'beleza'], ['Salão de beleza', 'beleza'], ['Barbearia', 'beleza'], ['Academia ou estúdio fitness', 'beleza'],
+  ['Restaurante', 'comida'], ['Pizzaria', 'comida'], ['Hamburgueria', 'comida'], ['Delivery', 'comida'], ['Doceria ou confeitaria', 'comida'], ['Cafeteria', 'comida'], ['Padaria', 'comida'],
+  ['Bar', 'bar'], ['Casa noturna ou eventos', 'bar'],
+  ['Loja de roupas', 'varejo'], ['Ótica', 'varejo'], ['Pet shop', 'varejo'], ['Supermercado', 'varejo'], ['Loja de móveis', 'varejo'], ['Loja online', 'varejo'],
+  ['Concessionária ou revenda de veículos', 'automotivo'], ['Oficina', 'automotivo'], ['Autopeças', 'automotivo'],
+  ['Indústria', 'b2b'], ['Distribuidora', 'b2b'], ['Construtora', 'b2b'], ['Serviço para empresas', 'b2b'],
+  ['Advocacia', 'servicos'], ['Contabilidade', 'servicos'], ['Imobiliária', 'servicos'], ['Comunicação ou marketing', 'servicos'], ['Hotel ou pousada', 'servicos'], ['Fotografia ou vídeo', 'servicos'], ['Prestador de serviço', 'servicos'],
+]
+
+/** Escolher o tipo de negócio: busca entre os comuns ou escreve um novo ("Outro"). As perguntas não enviadas se refazem. */
+function TipoDialog({ current, label, busy, onPick, onClose }: { current: Family; label?: string; busy: boolean; onPick: (fam: Family, label: string) => void; onClose: () => void }) {
+  const [v, setV] = useState(label ?? '')
+  const known = TIPOS.find(([l]) => l.toLowerCase() === v.trim().toLowerCase())
+  const quick = TIPOS.filter(([, f]) => f === current).slice(0, 4)
   return (
-    <Dialog open onClose={onClose} title="Tipo de negócio" description="Define as perguntas do mês e o jeito da estratégia. Uma associação não é uma loja." size="md">
-      <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-        {FAMILIES.map((v) => (
-          <button key={v} type="button" disabled={busy} onClick={() => onPick(v)} aria-pressed={v === current}
-            className={cn('min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-[13.5px] leading-snug disabled:opacity-60', v === current ? 'border-ink bg-raised font-semibold' : 'border-line hover:border-ink')}>{FAMILY_LABEL[v]}</button>
-        ))}
+    <Dialog open onClose={onClose} title="Tipo de negócio" description="Define as perguntas do mês e o jeito da estratégia. Uma associação não é uma loja." size="md"
+      footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button disabled={busy || !v.trim()} onClick={() => onPick(known ? known[1] : current, v.trim())}>{busy ? 'Salvando' : 'Salvar'}</Button></>}>
+      <div className="flex flex-col gap-3">
+        <SearchSelect value={v} onChange={setV} options={TIPOS.map(([l]) => l)} placeholder="Busque: pizzaria, clínica, igreja..." limit={6} addLabel={(x) => `Outro: “${x}”`} />
+        {!v && <div className="flex flex-wrap gap-1.5">{quick.map(([l]) => <button key={l} type="button" onClick={() => setV(l)} className="min-h-9 cursor-pointer rounded-full border border-line px-3 text-[13px] hover:border-ink">{l}</button>)}</div>}
+        {v.trim() && !known && <p className="text-[12.5px] text-muted">Tipo novo: as perguntas seguem o jeito de “{FAMILY_LABEL[current]}”. Dá para trocar depois.</p>}
       </div>
     </Dialog>
   )

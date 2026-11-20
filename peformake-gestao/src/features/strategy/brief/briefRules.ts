@@ -26,6 +26,8 @@ export interface BriefFixed {
   quem_aparece?: string; quem_grava?: string; capacidade?: string
   /** Tipo de negócio (família do motor de perguntas). Sem ele, o sistema deduz pela descrição. */
   tipo?: string
+  /** Como a equipe chama o tipo (ex.: Pizzaria, Igreja, ou um tipo novo escrito à mão). */
+  tipo_label?: string
 }
 export interface BriefMonth { ofertas?: string; meta?: string; datas_travam?: string }
 
@@ -80,6 +82,9 @@ export function briefPercent(checks: Check[], answered = 0, total = 8): number {
 }
 
 /** O que falta, em palavras curtas (o que mais pesa primeiro). */
+/** Itens do briefing FIXO (o do mês entra no passo Perguntas, Italo 20/11). */
+export const MONTH_CHECKS = new Set(['ofertas', 'meta', 'datas_travam', 'perguntas'])
+
 export function briefMissing(checks: Check[]): string[] {
   return checks.filter((c) => !c.done).sort((a, b) => b.weight - a.weight).map((c) => c.label)
 }

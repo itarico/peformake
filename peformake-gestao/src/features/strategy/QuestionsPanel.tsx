@@ -11,11 +11,11 @@ import { useIsMobile } from '@/lib/useIsMobile'
 import { supabase } from '@/lib/supabase'
 import { ago } from '@/features/settings/AutomationsCenter'
 import { waLink } from './consultRules'
-import { ALL_MAX, chatInvite, chatLink, defaultToSend, MAX_PER_CHAT, nextMonthFocus, packLabel, weekStart } from './questionRules'
+import { ALL_MAX, chatInvite, chatLink, nextMonthFocus, packLabel, weekStart } from './questionRules'
 
 /** 1º dia do mês que vem (horário de Recife): é para ele que a estratégia e as perguntas se preparam. */
 const nextMonth01 = () => { const d = new Date(Date.now() - 3 * 3_600_000); const m = d.getUTCMonth() + 2; const y = d.getUTCFullYear() + (m > 12 ? 1 : 0); return `${y}-${String(m > 12 ? 1 : m).padStart(2, '0')}-01` }
-import { answerQuestion, discardQuestion, editAnswer, editQuestion, fileUrl, generateQuestions, openChat, questionsKey, useClientQuestions, type ClientQuestion } from './questionsApi'
+import { answerQuestion, discardQuestion, editAnswer, editQuestion, fileUrl, openChat, questionsKey, useClientQuestions, type ClientQuestion } from './questionsApi'
 import { Paged } from './SlideViewer'
 import { AttachButton } from './brief/BriefDialogs'
 import { answerBrief, refreshMonthQuestions, uploadFile } from './brief/briefApi'
@@ -33,12 +33,12 @@ export function QuestionsPanel({ clientId, name }: { clientId: string; name: str
   const open = all.filter((x) => x.status === 'pendente' || x.status === 'enviada')
   const answered = all.filter((x) => x.status === 'respondida').sort((a, b) => (b.answered_at ?? '').localeCompare(a.answered_at ?? ''))
   const session = q.data?.sessions?.[0] ?? null
-  const hasPack = all.some((x) => x.pack === weekStart())
 
+  // Sem API (regra de 20/11): o motor do sistema refaz as perguntas do mês que vem (só as ainda não enviadas).
   const gen = useMutation({
-    mutationFn: () => generateQuestions(clientId, hasPack),
+    mutationFn: () => refreshMonthQuestions(clientId, nextMonth01()),
     onMutate: () => setNote(null),
-    onSuccess: (r) => setNote(r.error ? { tone: 'warn', text: `Não deu: ${r.error}.` } : r.created ? { tone: 'ok', text: `${r.created} ${r.created === 1 ? 'pergunta nova' : 'perguntas novas'} no pacote da semana.` } : { tone: 'warn', text: r.skipped ? `Nada novo: ${r.skipped}.` : 'A IA não achou pergunta nova que valha a pena agora.' }),
+    onSuccess: () => setNote({ tone: 'ok', text: 'Perguntas do mês atualizadas pelo tipo de negócio do cliente.' }),
     onError: (e) => setNote({ tone: 'warn', text: (e as Error).message }),
     onSettled: refresh,
   })
@@ -50,11 +50,17 @@ export function QuestionsPanel({ clientId, name }: { clientId: string; name: str
   return (
     <div data-conteudo className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        <Button disabled={!open.length} onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente{open.length ? ` (${defaultToSend(open).length || Math.min(open.length, MAX_PER_CHAT)})` : ''}</Button>
-        <Button variant="secondary" disabled={gen.isPending} onClick={async () => { if (await ask(hasPack ? 'Gerar de novo o pacote desta semana? As perguntas ainda não enviadas saem da lista. Usa a IA (≈ US$ 0,03).' : 'Gerar as perguntas da semana agora? Usa a IA (≈ US$ 0,03).')) gen.mutate() }}>
-          <Sparkles size={15} aria-hidden="true" /> {gen.isPending ? 'Gerando' : hasPack ? 'Gerar de novo' : 'Gerar perguntas agora'}
+        <Button disabled={!open.length} onClick={() => setSendOpen(true)}><Send size={15} aria-hidden="true" /> Enviar ao cliente{open.length ? ` (${Math.min(open.length, ALL_MAX)})` : ''}</Button>
+        <Button variant="secondary" disabled={gen.isPending} onClick={() => gen.mutate()}>
+          <Sparkles size={15} aria-hidden="true" /> {gen.isPending ? 'Atualizando' : 'Atualizar perguntas'}
         </Button>
       </div>
+      {/* Progresso das respostas: sobe a cada resposta do cliente (Italo, 20/11). */}
+      {(open.length + answered.length) > 0 && (() => { const tot = open.length + answered.length; const pct = Math.round((answered.length / tot) * 100); return (
+        <div data-progresso className="flex flex-col gap-1">
+          <p className="text-[13px] text-muted"><b className="text-ink">{answered.length} de {tot}</b> respondidas</p>
+          <span aria-hidden="true" className="h-1.5 w-full max-w-md overflow-hidden rounded-full bg-raised"><span className={cn('block h-full rounded-full transition-[width]', pct === 100 ? 'bg-ok-ink' : 'bg-accent-ink')} style={{ width: `${pct}%` }} /></span>
+        </div>) })()}
       {note && <p role="status" className={cn('rounded-xl px-3 py-2 text-[13px]', note.tone === 'ok' ? 'bg-ok-soft text-ok-ink' : 'bg-warn-soft text-warn-ink')}>{note.text}</p>}
       {session && <SessionLine session={session} />}
 

@@ -1,5 +1,6 @@
 # Diário da rotina de melhoria contínua
 
+- 20/11: Briefing só FIXO (sem mês; o medidor e a trava do passo 1 contam só o fixo); o do mês (ofertas, meta, datas, mês passado, reunião) foi para o passo Perguntas. Perguntas com barra "x de y respondidas"; "Atualizar perguntas" usa o motor (sem API). Tipo de negócio com busca (45 tipos comuns) e "Outro" escrito à mão (tipo_label).
 - 20/11: Briefing aberto sozinho sem PDF/Enviar/Gerar de novo (são da estratégia) e sem o bloco de perguntas (têm passo próprio). Botão Conversar virou "Conversa sobre o negócio": Mandar para o cliente (padrão, link de conversa com áudio/arquivo) ou Eu respondo no Claude.
 - 20/11: Passo a passo: botão das Perguntas virou "Enviar" e saiu o Enviar do topo da ficha; Diagnóstico e as partes da estratégia só liberam com briefing em 80% e perguntas respondidas.
 - 20/11: Clientes (Resumo) em 3 blocos alinhados: Saúde da carteira (nota, NPS, saíram sem avisar), Entradas e saídas (gráfico + motivos), Quem atendemos (nichos, serviços, tempo de casa). Sem o cartão de nichos esticado criando buraco. Não conferido com dados reais (o mock do e2e não tem dash_clients).

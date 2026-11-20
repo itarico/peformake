@@ -104,6 +104,6 @@ export function StepCard({ title, line, action, onOpen, onTitle, primary, disabl
 /** Briefing no passo a passo: só a porcentagem em texto; a barra e os detalhes ficam dentro do Briefing. */
 export function BriefingCard({ clientId, month, onOpen }: { clientId: string; month: string; onOpen: () => void }) {
   const st = useBriefStatus(clientId, month)
-  const line = !st.ready ? 'Carregando' : st.percent >= 100 ? 'Completo' : `${st.percent}% preenchido${st.missing.length ? ` · falta ${st.missing.slice(0, 2).join(', ').toLowerCase()}` : ''}`
-  return <StepCard title="Briefing" line={line} action={st.percent >= 100 ? 'Ver' : 'Preencher'} onOpen={onOpen} />
+  const line = !st.ready ? 'Carregando' : st.fixedPercent >= 100 ? 'Completo' : `${st.fixedPercent}% preenchido${st.fixedMissing.length ? ` · falta ${st.fixedMissing.slice(0, 2).join(', ').toLowerCase()}` : ''}`
+  return <StepCard title="Briefing" line={line} action={st.fixedPercent >= 100 ? 'Ver' : 'Preencher'} onOpen={onOpen} />
 }

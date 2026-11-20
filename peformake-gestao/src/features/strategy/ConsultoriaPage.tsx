@@ -24,7 +24,7 @@ import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { pickSendDoc } from './brief/sendRules'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { BriefingCard, StepCard, StrategyPart } from './brief/StrategyStrip'
-import { useBriefStatus } from './brief/BriefingView'
+import { BriefingView, useBriefStatus } from './brief/BriefingView'
 import { useBriefProgress } from './brief/briefApi'
 import { CONSULT_PATH, targetMonth, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
@@ -322,7 +322,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
   // Cada passo só libera quando o anterior está pronto (Italo, 20/11). Briefing pronto = 80% (as respostas do cliente
   // contam no medidor, então exigir 100% travaria o passo 2 esperando ele mesmo).
-  const briefDone = briefSt.ready && briefSt.percent >= 80
+  const briefDone = briefSt.ready && briefSt.fixedPercent >= 80
   const askDone = toAsk === 0 && waiting === 0
   const stepCur = !briefDone ? 1 : !askDone ? 2 : !approved ? 3 : 4
 
@@ -338,6 +338,8 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   if (ver === 'perguntas') return (
     <section aria-label={`Perguntas de ${name}`} className="flex flex-col gap-3">
       {header}
+      {/* O do mês (ofertas, meta, datas, mês passado, reunião) mora aqui, junto das perguntas do mês (Italo, 20/11). */}
+      <BriefingView part="mes" clientId={clientId} name={name} month={opts[1]!} />
       <QuestionsPanel clientId={clientId} name={name} phone={phone.data ?? null} />
       {dialogs}
     </section>

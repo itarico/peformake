@@ -143,7 +143,8 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
     <div data-estrategia className="flex flex-col gap-3">
       {/* Uma linha só (Italo, 20/11: "a interface tá muito confusa"): mês · PDF · Enviar · Gerar de novo · ⋯. O título "Estratégia" já está no topo da página. */}
       <div data-acoes-topo className="flex items-center gap-1.5">
-        <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) })} />
+        {/* O briefing é fixo (Italo, 20/11): sem mês. */}
+        {tab !== 'briefing' && <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) })} />}
         {/* No Briefing não tem PDF, Enviar nem Gerar (Italo, 20/11: "baixar o quê? enviar o quê?"): esses são da estratégia. */}
         {tab !== 'briefing' && !ready && !busy && <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar estratégia</Button>}
         {tab !== 'briefing' && ready && <>
