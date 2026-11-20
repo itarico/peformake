@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { actionsFor, boardColumn, deliveryTarget, designQueue, fileCheck, filterItems, formOf, isLate, monthGrid, shortBriefing, specSummary, summarize, waitingOn, type ContentItem } from './contentRules'
+import { actionsFor, boardAlerts, boardColumn, deliveryStats, deliveryTarget, designQueue, fileCheck, filterItems, formOf, isLate, monthGrid, shortBriefing, specSummary, summarize, waitingOn, type ContentItem } from './contentRules'
 
 const item = (over: Partial<ContentItem>): ContentItem => ({
   id: 'i', planId: 'p', clientId: 'c', month: '2026-11-01', number: 1, kind: 'post', status: 'briefing', title: 'Promo', headline: null,
@@ -115,5 +115,22 @@ describe('quadro em 4 colunas', () => {
     expect(boardColumn(item({ status: 'client_review' }), now)).toBe('aprovado')
     expect(boardColumn(item({ status: 'published', updatedAt: '2026-11-11T12:00:00Z' }), now)).toBe('aprovado')
     expect(boardColumn(item({ status: 'published', updatedAt: '2026-11-01T12:00:00Z' }), now)).toBeNull()
+  })
+})
+
+describe('alertas e métricas do quadro (vindos do Peformake antigo)', () => {
+  const now = Date.parse('2026-11-19T12:00:00Z')
+  it('conta ajuste, revisão e cliente parado há mais de 2 dias', () => {
+    const list = [
+      item({ status: 'changes_requested', updatedAt: '2026-11-19T10:00:00Z' }),
+      item({ status: 'review', updatedAt: '2026-11-19T10:00:00Z' }),
+      item({ status: 'client_review', updatedAt: '2026-11-15T10:00:00Z' }),
+      item({ status: 'client_review', updatedAt: '2026-11-18T10:00:00Z' }),
+    ]
+    expect(boardAlerts(list, now).map((a) => [a.id, a.count])).toEqual([['ajuste', 1], ['cliente', 1], ['revisar', 1]])
+    expect(boardAlerts([], now)).toEqual([])
+  })
+  it('soma os ajustes do mês', () => {
+    expect(deliveryStats([item({ revisionCount: 2 }), item({ revisionCount: 0 }), item({ revisionCount: 1 })])).toEqual({ revisions: 3, withRevision: 2 })
   })
 })

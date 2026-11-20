@@ -11,12 +11,14 @@ import { DESIGN_AREAS, inArea, inAreas, useProduction } from '@/features/product
 import { ContentSummary } from '@/features/dashboard/Summaries'
 import { TaskDialog, type Task } from '@/features/social/SocialPage'
 import { SOURCE_LABEL, SOURCE_TONE } from '@/features/social/socialRules'
-import { listItems } from './contentApi'
+import { designOnTime, listItems } from './contentApi'
 import { useMonthParam } from './useMonthParam'
 import {
   BOARD_BADGE,
   BOARD_COLUMNS,
+  boardAlerts,
   boardColumn,
+  deliveryStats,
   briefingMissing,
   EMPTY_FILTERS,
   filterItems,
@@ -72,6 +74,7 @@ export function ContentBoard() {
   const filters: ContentFilters = useMemo(() => (autoDesigner ? { ...picked, designerId: autoDesigner } : picked), [picked, autoDesigner])
   const [chosenTab, setTab] = useState<BoardColumn | null>(null)
   const [editing, setEditing] = useState<Task | 'new' | null>(null)
+  const onTime = useQuery({ queryKey: ['design-on-time', month], queryFn: () => designOnTime(month), staleTime: 5 * 60_000 })
 
   const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId, 'conteudo')), filters, clientName), [items.data, filters, clientName, isLive])
   if (!items.data || !clients || !staff) {
@@ -120,8 +123,35 @@ export function ContentBoard() {
     )
   }
 
+  // Alertas de pendência e métricas de entrega (vieram do Peformake antigo): o que está parado aparece no topo, com 1 toque até a coluna.
+  const ALERT_TEXT = {
+    ajuste: (n: number) => `${n} ${n === 1 ? 'peça com ajuste pedido' : 'peças com ajuste pedido'}`,
+    cliente: (n: number) => `${n} com o cliente há mais de 2 dias: cobrar a aprovação`,
+    revisar: (n: number) => `${n} para revisar antes de ir ao cliente`,
+  } as const
+  const alerts = boardAlerts(visible, now)
+  const stats = deliveryStats(visible)
+  const delivered = (onTime.data ?? []).reduce((n, r) => n + r.delivered, 0)
+  const inTime = (onTime.data ?? []).reduce((n, r) => n + r.onTime, 0)
+  const goTo = (col: BoardColumn) => { setTab(col); document.querySelector(`[data-conteudo] > section[aria-label="${BOARD_COLUMNS.find((c) => c.id === col)?.label}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+
   return (
     <>
+      {(alerts.length > 0 || delivered > 0 || stats.revisions > 0) && (
+        <div className="flex flex-wrap items-center gap-2" aria-label="Pendências e entrega do mês">
+          {alerts.map((a) => (
+            <button key={a.id} type="button" onClick={() => goTo(a.column)}
+              className={cn('inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold', a.tone === 'warn' ? 'bg-warn-soft text-warn-ink' : 'bg-accent-soft text-accent-ink')}>
+              {a.tone === 'warn' && <AlertTriangle size={14} aria-hidden="true" />}{ALERT_TEXT[a.id](a.count)}
+            </button>
+          ))}
+          <span className="text-[12.5px] text-muted">
+            {delivered > 0 && <>Design no prazo: <b className={cn(inTime / delivered >= 0.9 ? 'text-ok-ink' : 'text-warn-ink')}>{inTime} de {delivered}</b></>}
+            {delivered > 0 && stats.revisions > 0 && ' · '}
+            {stats.revisions > 0 && <>{stats.revisions} {stats.revisions === 1 ? 'ajuste' : 'ajustes'} no mês ({stats.withRevision} {stats.withRevision === 1 ? 'peça' : 'peças'})</>}
+          </span>
+        </div>
+      )}
       <div className="flex flex-col gap-3 max-md:order-last"><ContentSummary month={month} /></div>
 
       <div className="flex items-center gap-2 md:flex-wrap">

@@ -342,3 +342,24 @@ export function boardColumn(item: Pick<ContentItem, 'status' | 'briefing' | 'upd
     case 'published': return now - new Date(item.updatedAt).getTime() <= 3 * 86_400_000 ? 'aprovado' : null
   }
 }
+
+/**
+ * Alertas de pendência do quadro (vieram do Peformake antigo, PendingAlertsSection): o que está parado e de quem é a vez.
+ * Cliente "parado" = com o cliente há mais de 2 dias sem resposta.
+ */
+export interface BoardAlert { id: 'ajuste' | 'revisar' | 'cliente'; count: number; column: BoardColumn; tone: 'warn' | 'info' }
+export function boardAlerts(items: readonly Pick<ContentItem, 'status' | 'updatedAt'>[], now: number): BoardAlert[] {
+  const ajuste = items.filter((i) => i.status === 'changes_requested').length
+  const revisar = items.filter((i) => i.status === 'review').length
+  const cliente = items.filter((i) => i.status === 'client_review' && now - new Date(i.updatedAt).getTime() > 2 * 86_400_000).length
+  const out: BoardAlert[] = []
+  if (ajuste) out.push({ id: 'ajuste', count: ajuste, column: 'producao', tone: 'warn' })
+  if (cliente) out.push({ id: 'cliente', count: cliente, column: 'aprovado', tone: 'warn' })
+  if (revisar) out.push({ id: 'revisar', count: revisar, column: 'producao', tone: 'info' })
+  return out
+}
+
+/** Métricas de entrega do mês (DeliveryMetrics do antigo): ajustes pedidos e peças que precisaram de ajuste. */
+export function deliveryStats(items: readonly Pick<ContentItem, 'revisionCount'>[]): { revisions: number; withRevision: number } {
+  return { revisions: items.reduce((n, i) => n + i.revisionCount, 0), withRevision: items.filter((i) => i.revisionCount > 0).length }
+}

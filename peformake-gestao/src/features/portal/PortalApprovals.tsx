@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, ExternalLink, PencilLine, Plus } from 'lucide-react'
+import { Check, CheckCheck, Download, ExternalLink, PencilLine, Plus } from 'lucide-react'
+import { ask } from '@/components/ui/confirm'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -37,6 +38,21 @@ const STATE: Record<string, [string, string]> = {
   delivered: ['Entregue', 'bg-ok-soft text-ok-ink'],
 }
 const imageUrl = (path: string) => supabase.storage.from('content-files').getPublicUrl(path).data.publicUrl
+/** Link que já baixa o arquivo com o nome certo (em vez de abrir na aba). */
+const downloadUrl = (path: string, name: string) => supabase.storage.from('content-files').getPublicUrl(path, { download: name }).data.publicUrl
+
+/** Baixa um por vez (o navegador junta tudo na pasta de downloads). Veio do "Baixar todas" do Peformake antigo. */
+async function downloadMany(files: { path: string; name: string }[]) {
+  for (const f of files) {
+    const a = document.createElement('a')
+    a.href = downloadUrl(f.path, f.name)
+    a.rel = 'noopener'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    await new Promise((r) => setTimeout(r, 400))
+  }
+}
 
 async function load(token: string): Promise<{ items: PortalItem[]; videos: PortalVideo[] }> {
   const { data, error } = await supabase.rpc('portal_content', { _token: token })
@@ -104,6 +120,8 @@ export function PortalApprovals({ token }: { token: string }) {
   const queryClient = useQueryClient()
   const query = useQuery({ queryKey: ['portal-content', token], queryFn: () => load(token) })
   const [problem, setProblem] = useState<string | null>(null)
+  const [bulk, setBulk] = useState(false)
+  const [downloading, setDownloading] = useState(false)
   const decide = useMutation({
     mutationFn: async ({ kind, id, approve, note }: { kind: 'item' | 'video'; id: string; approve: boolean; note: string }) => {
       const res = kind === 'item'
@@ -119,6 +137,16 @@ export function PortalApprovals({ token }: { token: string }) {
   const { items, videos } = query.data
   if (items.length === 0 && videos.length === 0) return null
   const waiting = items.filter((i) => i.status === 'client_review').length + videos.filter((v) => v.status === 'client_review').length
+  const toApprove = items.filter((i) => i.status === 'client_review')
+  const approvedFiles = items.filter((i) => i.status === 'approved' || i.status === 'published').flatMap((i) => i.files.map((f) => ({ path: f.path, name: f.name })))
+  // Aprovar todas de uma vez (como o "Aprovar semana inteira" do Peformake antigo): uma a uma, para cada peça ficar registrada.
+  const approveAll = async () => {
+    if (!(await ask(`Aprovar as ${toApprove.length} artes que esperam você?`))) return
+    setBulk(true)
+    try {
+      for (const i of toApprove) await decide.mutateAsync({ kind: 'item', id: i.id, approve: true, note: '' })
+    } catch { /* o erro já aparece em "problem" */ } finally { setBulk(false) }
+  }
 
   return (
     <section aria-labelledby="aprovar" className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
@@ -126,6 +154,20 @@ export function PortalApprovals({ token }: { token: string }) {
         <h2 id="aprovar" className="text-[17px] font-semibold tracking-tight">Artes e vídeos</h2>
         <p className="text-[13px] text-muted">{waiting > 0 ? `${waiting} ${waiting === 1 ? 'item espera' : 'itens esperam'} a sua aprovação.` : 'Nada esperando você agora.'}</p>
       </div>
+      {(toApprove.length > 1 || approvedFiles.length > 0) && (
+        <div className="flex flex-wrap gap-2">
+          {toApprove.length > 1 && (
+            <Button disabled={bulk || decide.isPending} onClick={() => void approveAll()}>
+              <CheckCheck size={16} aria-hidden="true" /> {bulk ? 'Aprovando' : `Aprovar todas (${toApprove.length})`}
+            </Button>
+          )}
+          {approvedFiles.length > 0 && (
+            <Button variant="secondary" disabled={downloading} onClick={() => { setDownloading(true); void downloadMany(approvedFiles).finally(() => setDownloading(false)) }}>
+              <Download size={16} aria-hidden="true" /> {downloading ? 'Baixando' : `Baixar aprovadas (${approvedFiles.length})`}
+            </Button>
+          )}
+        </div>
+      )}
       {problem && <p role="alert" className="font-medium text-warn-ink">{problem}</p>}
       {items.length > 0 && (
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -158,7 +200,7 @@ export function PortalApprovals({ token }: { token: string }) {
                 {i.title && <p className="font-semibold">{i.title}</p>}
                 {i.caption && <p className="line-clamp-6 whitespace-pre-wrap text-[13px] text-muted">{i.caption}</p>}
                 {i.status === 'changes_requested' && i.revision_note && <p className="text-[13px] text-muted">Seu pedido: {i.revision_note}</p>}
-                {i.status === 'client_review' && <Decide busy={decide.isPending} onDecide={(approve, note) => decide.mutate({ kind: 'item', id: i.id, approve, note })} />}
+                {i.status === 'client_review' && <Decide busy={decide.isPending || bulk} onDecide={(approve, note) => decide.mutate({ kind: 'item', id: i.id, approve, note })} />}
               </li>
             )
           })}
