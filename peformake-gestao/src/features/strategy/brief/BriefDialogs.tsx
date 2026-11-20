@@ -36,14 +36,28 @@ export function TextDialog({ title, hint, initial, onSave, onClose, busy, error,
   const [v, setV] = useState(initial)
   const steps = quizSteps ?? (quizKey ? QUIZ[quizKey] : undefined)
   const [quiz, setQuiz] = useState(false)
-  if (quiz && steps) return <QuizDialog title={title} steps={steps} onClose={() => setQuiz(false)} onDone={(t) => { setV((c) => (c.trim() ? `${c.trim()}\n${t}` : t)); setQuiz(false) }} />
+  // Italo, 20/11: antes de escrever, 3 jeitos de responder (Escolher, Digitar, Falar). Campo já preenchido abre direto no texto.
+  const [mode, setMode] = useState<'pick' | 'type' | 'talk'>(initial.trim() ? 'type' : 'pick')
+  const [live, setLive] = useState('')
+  if (quiz && steps) return <QuizDialog title={title} steps={steps} onClose={() => { setQuiz(false); setMode('type') }} onDone={(t) => { setV((c) => (c.trim() ? `${c.trim()}
+${t}` : t)); setQuiz(false); setMode('type') }} />
+  if (mode === 'pick') return (
+    <Dialog open onClose={onClose} title={title} description={hint} size="sm" footer={<Button variant="secondary" onClick={onClose}>Cancelar</Button>}>
+      <div data-modo-resposta className="grid grid-cols-1 gap-2">
+        <button type="button" onClick={() => setMode('talk')} className="flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl border border-transparent bg-fill px-3 text-left text-on-fill hover:opacity-90"><Mic size={18} aria-hidden="true" /><span><b className="block text-[14px]">Falar</b><span className="text-[12.5px] opacity-80">O jeito mais rápido: o texto aparece enquanto você fala</span></span></button>
+        {steps && <button type="button" onClick={() => setQuiz(true)} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><ListChecks size={18} aria-hidden="true" /><span><b className="block text-[14px]">Escolher</b><span className="text-[12.5px] text-muted">Perguntas com opções para tocar</span></span></button>}
+        <button type="button" onClick={() => setMode('type')} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-line px-3 text-left hover:border-ink"><Pencil size={18} aria-hidden="true" /><span><b className="block text-[14px]">Digitar</b><span className="text-[12.5px] text-muted">Escrever do seu jeito</span></span></button>
+      </div>
+    </Dialog>
+  )
+  const shown = live ? (v.trim() ? `${v.trim()} ${live}` : live) : v
   return (
     <Dialog open onClose={onClose} title={title} description={hint} size="sm" footer={<Footer busy={busy} onSave={() => onSave(v.trim())} onClose={onClose} />}>
       <div className="flex flex-col gap-2">
-        <textarea autoFocus rows={5} value={v} onChange={(e) => setV(e.target.value)} className={area} aria-label={title} />
+        <textarea autoFocus={mode === 'type'} rows={5} value={shown} readOnly={!!live} onChange={(e) => setV(e.target.value)} className={cn(area, live && 'text-muted')} aria-label={title} />
         <div className="flex flex-wrap items-start gap-2">
-          <VoiceNote onText={(t) => setV((c) => (c.trim() ? `${c.trim()} ${t}` : t))} />
-          {steps && <button type="button" onClick={() => setQuiz(true)} className="inline-flex min-h-9 w-fit cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold hover:border-ink"><ListChecks size={14} aria-hidden="true" /> Responder com opções</button>}
+          <VoiceNote autoStart={mode === 'talk'} onLive={setLive} onText={(t) => setV((c) => (c.trim() ? `${c.trim()} ${t}` : t))} />
+          {steps && <button type="button" onClick={() => setQuiz(true)} className="inline-flex min-h-9 w-fit cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold hover:border-ink"><ListChecks size={14} aria-hidden="true" /> Escolher opções</button>}
         </div>
         {error && <p role="alert" className="text-[12.5px] text-warn-ink">{error}</p>}
       </div>

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Mic, Square } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -14,7 +14,7 @@ const SpeechCtor = (): (new () => SpeechRec) | null => {
  * Botão de gravar: o texto aparece AO VIVO enquanto fala (Italo, 20/11) e, ao parar, a transcrição do servidor confere e
  * corrige. Se o servidor falhar, fica o texto ao vivo. O áudio não fica guardado.
  */
-export function VoiceNote({ onText, className }: { onText: (text: string) => void; className?: string }) {
+export function VoiceNote({ onText, onLive, autoStart, className }: { onText: (text: string) => void; onLive?: (text: string) => void; autoStart?: boolean; className?: string }) {
   const rec = useRef<MediaRecorder | null>(null)
   const speech = useRef<SpeechRec | null>(null)
   const finalText = useRef('')
@@ -39,7 +39,7 @@ export function VoiceNote({ onText, className }: { onText: (text: string) => voi
           if (r.isFinal) finalText.current = `${finalText.current} ${r[0].transcript}`.trim()
           else interim += r[0].transcript
         }
-        setLive(`${finalText.current} ${interim}`.trim())
+        setLive(`${finalText.current} ${interim}`.trim()); onLive?.(`${finalText.current} ${interim}`.trim())
       }
       s.onerror = () => {}
       s.start()
@@ -76,7 +76,7 @@ export function VoiceNote({ onText, className }: { onText: (text: string) => voi
           // Servidor falhou: usa o que o navegador já escreveu ao vivo.
           const t = typed()
           if (t) onText(t); else setError((e as Error).message)
-        } finally { setState('idle'); setLive('') }
+        } finally { setState('idle'); setLive(''); onLive?.('') }
       }
       r.start()
       rec.current = r
@@ -89,6 +89,9 @@ export function VoiceNote({ onText, className }: { onText: (text: string) => voi
     }
   }
   const stop = () => rec.current?.state === 'recording' && rec.current.stop()
+  // Escolheu "Falar" na tela anterior: já começa gravando.
+  const auto = useRef(false)
+  useEffect(() => { if (autoStart && !auto.current) { auto.current = true; void start() } })
 
   return (
     <span className={cn('flex flex-col gap-1', className)}>
@@ -96,7 +99,7 @@ export function VoiceNote({ onText, className }: { onText: (text: string) => voi
         className={cn('inline-flex min-h-9 w-fit cursor-pointer items-center gap-1.5 rounded-full border px-3 text-[13px] font-semibold disabled:opacity-60', state === 'rec' ? 'border-warn bg-warn-soft text-warn-ink' : 'border-line-strong hover:border-ink')}>
         {state === 'rec' ? <><Square size={13} aria-hidden="true" /> Parar · {Math.floor(secs / 60)}:{String(secs % 60).padStart(2, '0')}</> : state === 'busy' ? 'Conferindo o texto' : <><Mic size={14} aria-hidden="true" /> Falar em vez de digitar</>}
       </button>
-      {(state === 'rec' || state === 'busy') && live && <span aria-live="polite" data-ao-vivo className="line-clamp-3 rounded-xl bg-raised px-3 py-1.5 text-[13px] italic text-muted">{live}</span>}
+      {!onLive && (state === 'rec' || state === 'busy') && live && <span aria-live="polite" data-ao-vivo className="line-clamp-3 rounded-xl bg-raised px-3 py-1.5 text-[13px] italic text-muted">{live}</span>}
       {error && <span role="alert" className="text-[12px] font-medium text-warn-ink">{error}</span>}
     </span>
   )

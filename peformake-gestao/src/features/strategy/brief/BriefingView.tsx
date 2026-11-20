@@ -172,7 +172,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
     produtos: { kind: 'produtos' }, links: { kind: 'links' }, concorrentes: { kind: 'concorrentes' }, referencias: { kind: 'referencias' },
     publico: { kind: 'text', key: 'publico' }, diferenciais: { kind: 'text', key: 'diferenciais' }, voz: { kind: 'text', key: 'voz' }, proibidos: { kind: 'text', key: 'proibidos' },
     quem_aparece: { kind: 'text', key: 'quem_aparece' }, capacidade: { kind: 'text', key: 'capacidade' },
-    proposito: { kind: 'text', key: 'proposito' }, percepcao: { kind: 'text', key: 'percepcao' }, posicionamento: { kind: 'text', key: 'posicionamento' },
+    momento: { kind: 'text', key: 'momento' }, proposito: { kind: 'text', key: 'proposito' }, percepcao: { kind: 'text', key: 'percepcao' }, posicionamento: { kind: 'text', key: 'posicionamento' },
     ofertas: { kind: 'month', key: 'ofertas' }, meta: { kind: 'month', key: 'meta' }, datas_travam: { kind: 'month', key: 'datas_travam' },
   }
   const todo: NonNullable<Open>[] = [
@@ -196,6 +196,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
 
       {/* Essência da marca (Italo, 20/11): frameworks de marca (Círculo Dourado, Kapferer, arquétipos, posicionamento, JTBD). */}
       {part === 'fixo' && <Group title="Essência da marca">
+        {show(!!f.momento) && <Tile icon={TrendingUp} label={TEXT_FIELDS.momento.label} title={TEXT_FIELDS.momento.hint} done={!!f.momento} onOpen={() => setOpen({ kind: 'text', key: 'momento' })} />}
         {show(!!f.proposito) && <Tile icon={Compass} label={TEXT_FIELDS.proposito.label} title={TEXT_FIELDS.proposito.hint} done={!!f.proposito} onOpen={() => setOpen({ kind: 'text', key: 'proposito' })} />}
         {show(!!f.percepcao) && <Tile icon={Star} label={TEXT_FIELDS.percepcao.label} title={TEXT_FIELDS.percepcao.hint} done={!!f.percepcao} onOpen={() => setOpen({ kind: 'text', key: 'percepcao' })} />}
         {show(!!f.arquetipo) && <Tile icon={UserRound} label={TEXT_FIELDS.arquetipo.label} title={TEXT_FIELDS.arquetipo.hint} done={!!f.arquetipo} onOpen={() => setOpen({ kind: 'text', key: 'arquetipo' })} />}

@@ -25,6 +25,8 @@ export interface BriefFixed {
   voz?: string; proibidos?: string
   quem_aparece?: string; quem_grava?: string; capacidade?: string
   /** Essência da marca (Italo, 20/11): o agente lê tudo para entender como a empresa quer ser vista. */
+  /** Momento do negócio (SWOT): forças, fraquezas, onde está, onde quer chegar. */
+  momento?: string
   proposito?: string; percepcao?: string; arquetipo?: string; posicionamento?: string; historia?: string; jornada?: string; objecoes?: string; visao?: string
   /** Tipo de negócio (família do motor de perguntas). Sem ele, o sistema deduz pela descrição. */
   tipo?: string
@@ -37,9 +39,10 @@ export interface BriefMonth { ofertas?: string; meta?: string; datas_travam?: st
 
 /** Campos de texto do briefing (os de lista têm pop-up próprio). */
 export type TextKey = 'publico' | 'diferenciais' | 'voz' | 'proibidos' | 'quem_aparece' | 'quem_grava' | 'capacidade'
-  | 'proposito' | 'percepcao' | 'arquetipo' | 'posicionamento' | 'historia' | 'jornada' | 'objecoes' | 'visao'
+  | 'momento' | 'proposito' | 'percepcao' | 'arquetipo' | 'posicionamento' | 'historia' | 'jornada' | 'objecoes' | 'visao'
 export const TEXT_FIELDS: Record<TextKey, { label: string; hint: string }> = {
   publico: { label: 'Público', hint: 'Quem compra: idade, bairro, renda, o que busca.' },
+  momento: { label: 'Momento do negócio', hint: 'Pontos fortes e fracos, onde está hoje, onde quer chegar e o que impede (análise SWOT).' },
   proposito: { label: 'Propósito', hint: 'Por que a empresa existe além de ganhar dinheiro (Círculo Dourado: por quê, como, o quê).' },
   percepcao: { label: 'Como quer ser vista', hint: 'Como quer ser percebida, como é vista hoje e o que falta (Prisma de Identidade de Kapferer).' },
   arquetipo: { label: 'Personalidade', hint: 'O arquétipo da marca (os 12 arquétipos) e marcas que inspiram ou não.' },
@@ -81,6 +84,7 @@ export function briefChecks(f: BriefFixed, m: BriefMonth, answered: number, tota
     { key: 'proibidos', label: 'Proibidos', done: filled(f.proibidos), weight: 0.5 },
     { key: 'quem_aparece', label: 'Quem aparece', done: filled(f.quem_aparece), weight: 0.5 },
     { key: 'capacidade', label: 'Capacidade', done: filled(f.capacidade), weight: 0.5 },
+    { key: 'momento', label: 'Momento do negócio', done: filled(f.momento), weight: 0.5 },
     { key: 'proposito', label: 'Propósito', done: filled(f.proposito), weight: 0.5 },
     { key: 'percepcao', label: 'Como quer ser vista', done: filled(f.percepcao), weight: 0.5 },
     { key: 'posicionamento', label: 'Posicionamento', done: filled(f.posicionamento), weight: 0.5 },
@@ -303,6 +307,17 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     { q: 'Com que aparelho?', opts: ['Celular bom', 'Celular simples', 'Câmera'], when: W('Quem grava?', 'proprio', 'equipe', 'misto') },
     { q: 'Com que frequência dá para gravar?', opts: ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar'] },
     { q: 'Melhor dia e horário para gravar sem atrapalhar o movimento?', opts: [], open: true },
+  ],
+  momento: [
+    { q: 'O que a empresa faz muito bem hoje? (os pontos fortes)', opts: [], open: true },
+    { q: 'O que não está bom hoje?', opts: ['Poucos clientes novos', 'Cliente não volta', 'Preço pressionado', 'Equipe', 'Atendimento lento', 'Marca pouco conhecida', 'Redes sociais paradas'], multi: true },
+    { q: 'Conte mais sobre o que não está bom: desde quando e por quê?', opts: [], open: true },
+    { q: 'Como está o movimento hoje?', opts: ['Crescendo', 'Estável', 'Caindo', 'Sazonal (oscila)'] },
+    { q: 'Por que está caindo, na sua visão?', opts: [], open: true, when: W('Como está o movimento hoje?', 'caindo') },
+    { q: 'Onde a empresa quer chegar em 12 meses?', opts: [], open: true },
+    { q: 'O que impede de chegar lá hoje?', opts: ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Processo bagunçado'], multi: true },
+    { q: 'Que oportunidade vocês veem no mercado agora?', opts: [], open: true },
+    { q: 'O que preocupa (ameaças: concorrente novo, preço, crise)?', opts: [], open: true },
   ],
   proposito: [
     { q: 'Por que a empresa existe, além de ganhar dinheiro?', opts: ['Facilitar a vida das pessoas', 'Cuidar da saúde e do bem-estar', 'Trazer alegria', 'Dar acesso a quem não tinha', 'Valorizar a região', 'Transformar vidas'], multi: true },
