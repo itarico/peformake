@@ -1,6 +1,7 @@
 import { Children, useState, type ReactNode } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { SearchSelect } from '@/components/ui/SearchSelect'
@@ -17,7 +18,7 @@ import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, sav
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
 import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, type Family } from './questionEngine'
-import { DIRECTION_QUIZ, MONTH_CHECKS } from './briefRules'
+import { DIRECTION_QUIZ, MONTH_CHECKS, QUIZ } from './briefRules'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -112,6 +113,12 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
   const [semComp, setSemComp] = useState(false)
   // Briefing em conversa com a Bete (Italo, 20/11): o jeito principal de preencher; os blocos abaixo continuam para ajustar.
   const [chat, setChat] = useState(false)
+  const [gravOpen, setGravOpen] = useState(false)
+  // Cliente com vídeo (algum serviço ativo de audiovisual): só ele vê o cartão Gravação.
+  const hasVideo = useQuery({ queryKey: ['client-has-video', clientId], queryFn: async () => {
+    const { data } = await supabase.from('client_services').select('services!inner(is_audiovisual)').eq('client_id', clientId).eq('is_active', true).eq('services.is_audiovisual', true).limit(1)
+    return (data ?? []).length > 0
+  } })
   // Tipo de negócio (Italo, 20/11: "uma APM não é uma loja"): define as perguntas e o tom da estratégia.
   const [tipoOpen, setTipoOpen] = useState(false)
   // Compacto (Italo, 18/11): mostra só o que falta; o que já está feito fica atrás de "Ver tudo".
@@ -197,8 +204,8 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
         {show(refs.length > 0) && <Tile icon={Bookmark} label="Referências" title="Referências" done={refs.length > 0} count={refs.length} isNew={refs.some((r) => r.novo)} onOpen={() => setOpen({ kind: 'referencias' })} />}
         {show(!!f.voz) && <Tile icon={MessageCircle} label="Voz" title={TEXT_FIELDS.voz.label} done={!!f.voz} onOpen={() => setOpen({ kind: 'text', key: 'voz' })} />}
         {show(!!f.proibidos) && <Tile icon={Ban} label="Proibidos" title={TEXT_FIELDS.proibidos.label} done={!!f.proibidos} onOpen={() => setOpen({ kind: 'text', key: 'proibidos' })} />}
-        {show(!!f.quem_aparece) && <Tile icon={UserRound} label="Quem aparece" title={TEXT_FIELDS.quem_aparece.label} done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'text', key: 'quem_aparece' })} />}
-        {show(!!f.quem_grava) && <Tile icon={Video} label="Quem grava" title={TEXT_FIELDS.quem_grava.label} done={!!f.quem_grava} onOpen={() => setOpen({ kind: 'text', key: 'quem_grava' })} />}
+        {/* Gravação (Italo, 20/11): quem aparece + quem grava num cartão só, e só para cliente com vídeo. */}
+        {hasVideo.data && show(!!f.quem_aparece) && <Tile icon={Video} label="Gravação" title="Quem aparece, quem grava e quando" done={!!f.quem_aparece} onOpen={() => setGravOpen(true)} />}
         {show(!!f.capacidade) && <Tile icon={Gauge} label="Capacidade" title={TEXT_FIELDS.capacidade.label} done={!!f.capacidade} onOpen={() => setOpen({ kind: 'text', key: 'capacidade' })} />}
       </Group>}
 
@@ -221,6 +228,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
       {open?.kind === 'documento' && <DocumentDialog clientId={clientId} initial={doc} fixed={b.data?.saved ? (b.data?.data ?? {}) : {}} onClose={stop} onDone={() => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: consultKey }); next() }} />}
       {open?.kind === 'direcao' && <TextDialog key="direcao" title="Direcionamento do mês" hint="O que a IA não acha sozinha: objetivo do dono, o que ele pediu, o que não fazer. Toque em Responder com opções para um guia." quizSteps={DIRECTION_QUIZ} initial={direction} busy={saveDir.isPending} error={err(saveDir)} onClose={stop} onSave={(v) => saveDir.mutate(v)} />}
+      {gravOpen && <TextDialog key="gravacao" quizSteps={[...(QUIZ.quem_aparece ?? []), ...(QUIZ.quem_grava ?? [])]} title="Gravação" hint="Quem aparece, quem grava, com que aparelho e quando dá para gravar. Toque em Responder com opções." initial={[f.quem_aparece, f.quem_grava && f.quem_grava !== f.quem_aparece ? f.quem_grava : ''].filter(Boolean).join(' ')} busy={saveF.isPending} error={err(saveF)} onClose={() => setGravOpen(false)} onSave={(v) => saveF.mutate({ quem_aparece: v, quem_grava: v }, { onSuccess: () => setGravOpen(false) })} />}
       {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
       {open?.kind === 'month' && <TextDialog key={open.key} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
       {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate(v)} />}
