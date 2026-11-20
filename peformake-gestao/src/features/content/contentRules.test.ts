@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { actionsFor, boardAlerts, boardColumn, deliveryStats, deliveryTarget, designQueue, fileCheck, filterItems, formOf, isLate, monthGrid, shortBriefing, specSummary, summarize, waitingOn, type ContentItem } from './contentRules'
+import { actionsFor, boardAlerts, boardColumn, deliveryStats, designerStats, hoursLabel, type DesignWorkRow, deliveryTarget, designQueue, fileCheck, filterItems, formOf, isLate, monthGrid, shortBriefing, specSummary, summarize, waitingOn, type ContentItem } from './contentRules'
 
 const item = (over: Partial<ContentItem>): ContentItem => ({
   id: 'i', planId: 'p', clientId: 'c', month: '2026-11-01', number: 1, kind: 'post', status: 'briefing', title: 'Promo', headline: null,
@@ -132,5 +132,26 @@ describe('alertas e métricas do quadro (vindos do Peformake antigo)', () => {
   })
   it('soma os ajustes do mês', () => {
     expect(deliveryStats([item({ revisionCount: 2 }), item({ revisionCount: 0 }), item({ revisionCount: 1 })])).toEqual({ revisions: 3, withRevision: 2 })
+  })
+})
+
+describe('desempenho do designer', () => {
+  const now = Date.parse('2026-11-19T12:00:00Z')
+  const row = (o: Partial<DesignWorkRow>): DesignWorkRow => ({ designerId: 'a', status: 'client_review', startedAt: null, deliveredAt: null, onTime: null, revisions: 0, dueAt: null, ...o })
+  it('conta entregas do mês, no prazo, ajuste, tempo médio e fila', () => {
+    const s = designerStats([
+      row({ deliveredAt: '2026-11-10T15:00:00Z', startedAt: '2026-11-10T12:00:00Z', onTime: true }),
+      row({ deliveredAt: '2026-11-12T15:00:00Z', startedAt: '2026-11-12T10:00:00Z', onTime: false, revisions: 2 }),
+      row({ deliveredAt: '2026-10-30T15:00:00Z', onTime: true }),
+      row({ status: 'ready', dueAt: '2026-11-18T12:00:00Z' }),
+      row({ status: 'in_production', dueAt: '2026-11-20T12:00:00Z' }),
+      row({ designerId: 'b', status: 'approved', deliveredAt: '2026-09-01T10:00:00Z' }),
+    ], '2026-11-01', now)
+    expect(s).toEqual([{ designerId: 'a', delivered: 2, onTime: 1, avgHours: 4, withRevision: 1, pending: 2, lateNow: 1 }])
+  })
+  it('escreve o tempo médio em português', () => {
+    expect(hoursLabel(null)).toBe('—')
+    expect(hoursLabel(3.4)).toBe('3 h')
+    expect(hoursLabel(28)).toBe('1 dia e 4 h')
   })
 })

@@ -11,7 +11,8 @@ import { countdown } from '@/features/av/avRules'
 import { TONE_CLASS } from '@/features/av/AvShell'
 import { LoadState } from '@/features/traffic/LoadState'
 import { useProduction } from '@/features/production/useProduction'
-import { contentErrorMessage, designOnTime, downloadUrl, listDesignQueue, listFiles, setStatus, uploadFile, type ContentFile } from './contentApi'
+import { DesignerPanel } from './DesignerPanel'
+import { contentErrorMessage, downloadUrl, listDesignQueue, listFiles, setStatus, uploadFile, type ContentFile } from './contentApi'
 import { monthStart } from '@/features/traffic/planRules'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { deliveryTarget, designQueue, fileCheck, itemTitle, KIND_LABEL, shortBriefing, specSummary, STATUS_LABEL, type ContentItem } from './contentRules'
@@ -164,7 +165,6 @@ export function DesignPage() {
   // null = ninguém mexeu ainda: abre o primeiro cliente (o mais urgente), para o designer já ver o que fazer.
   const [open, setOpen] = useState<Set<string> | null>(null)
   const month = monthStart(todayInBrazil().slice(0, 7) + '-01', 0)
-  const score = useQuery({ queryKey: ['design-on-time', month], queryFn: () => designOnTime(month), staleTime: 5 * 60_000 })
 
   if (!queue.data || !clients || !staff) {
     return <LoadState isPending={queue.isPending || isPending} isError={queue.isError || isError} refetch={() => { refetch(); void queue.refetch() }} />
@@ -172,9 +172,6 @@ export function DesignPage() {
   const all = designQueue(queue.data.filter((i) => isLive(i.clientId, 'conteudo')), myStaffId)
   const mineCount = myStaffId ? all.filter((i) => i.designerId === myStaffId).length : 0
   const list = onlyMine && myStaffId ? all.filter((i) => i.designerId === myStaffId) : all
-  const mineScore = (score.data ?? []).filter((r) => (myStaffId && mineCount ? r.designerId === myStaffId : true))
-  const delivered = mineScore.reduce((n, r) => n + r.delivered, 0)
-  const onTime = mineScore.reduce((n, r) => n + r.onTime, 0)
   const filesOf = (id: string) => (files.data ?? []).filter((f) => f.itemId === id)
   // Agrupado por cliente (como no app antigo): só aparece cliente com arte para fazer; tocar no cliente abre as artes dele.
   const byClient = new Map<string, ContentItem[]>()
@@ -185,9 +182,9 @@ export function DesignPage() {
 
   return (
     <>
+      <DesignerPanel month={month} />
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-[14px] text-muted"><b className="text-ink">{all.length}</b> {all.length === 1 ? 'arte' : 'artes'} para fazer{mineCount ? ` · ${mineCount} suas` : ''}
-          {delivered > 0 && <> · <span className={cn('font-semibold', onTime / delivered >= 0.9 ? 'text-ok-ink' : 'text-warn-ink')}>{onTime} de {delivered} no prazo</span> este mês</>}</p>
+        <p className="text-[14px] text-muted"><b className="text-ink">{all.length}</b> {all.length === 1 ? 'arte' : 'artes'} para fazer{mineCount ? ` · ${mineCount} suas` : ''}</p>
         {mineCount > 0 && mineCount < all.length && (
           <label className="flex min-h-10 cursor-pointer items-center gap-2 text-[14px]">
             <input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} className="size-4" /> Só as minhas

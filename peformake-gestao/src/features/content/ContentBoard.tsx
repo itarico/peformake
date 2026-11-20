@@ -10,7 +10,8 @@ import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { DESIGN_AREAS, inArea, inAreas, useProduction } from '@/features/production/useProduction'
 import { TaskDialog, type Task } from '@/features/social/SocialPage'
 import { SOURCE_LABEL, SOURCE_TONE } from '@/features/social/socialRules'
-import { designOnTime, listItems } from './contentApi'
+import { listItems } from './contentApi'
+import { DesignerSummary } from './DesignerPanel'
 import { useMonthParam } from './useMonthParam'
 import {
   BOARD_BADGE,
@@ -73,7 +74,6 @@ export function ContentBoard() {
   const filters: ContentFilters = useMemo(() => (autoDesigner ? { ...picked, designerId: autoDesigner } : picked), [picked, autoDesigner])
   const [chosenTab, setTab] = useState<BoardColumn | null>(null)
   const [editing, setEditing] = useState<Task | 'new' | null>(null)
-  const onTime = useQuery({ queryKey: ['design-on-time', month], queryFn: () => designOnTime(month), staleTime: 5 * 60_000 })
 
   const visible = useMemo(() => filterItems((items.data ?? []).filter((i) => isLive(i.clientId, 'conteudo')), filters, clientName), [items.data, filters, clientName, isLive])
   if (!items.data || !clients || !staff) {
@@ -101,8 +101,8 @@ export function ContentBoard() {
           )}
           {taskList.length === 0 && <p className="px-1.5 text-[12px] text-muted">Nenhuma tarefa. Pedidos dos clientes e itens aprovados da estratégia aparecem aqui.</p>}
           {taskList.slice(0, 60).map((t) => (
-            <button key={t.id} type="button" onClick={() => setEditing(t)} className={cn('flex cursor-pointer flex-col gap-1 rounded-2xl border bg-surface p-3 text-left hover:border-ink', t.priority ? 'border-warn/50' : 'border-line')}>
-              <span className="flex items-center justify-between gap-2 text-[12px] text-muted">
+            <button key={t.id} type="button" onClick={() => setEditing(t)} className={cn('flex min-w-0 cursor-pointer flex-col gap-1 overflow-hidden rounded-2xl border bg-surface p-3 text-left hover:border-ink', t.priority ? 'border-warn/50' : 'border-line')}>
+              <span className="flex w-full min-w-0 items-center justify-between gap-2 text-[12px] text-muted">
                 <span className="min-w-0 truncate">{t.client_id ? clientName(t.client_id) : 'Geral'}{t.due_date ? ` · até ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : ''}</span>
                 <span className={cn('min-w-0 max-w-[55%] shrink truncate rounded-full px-2 py-0.5 text-[11px] font-semibold', SOURCE_TONE[t.source])}>{SOURCE_LABEL[t.source]}</span>
               </span>
@@ -130,13 +130,11 @@ export function ContentBoard() {
   } as const
   const alerts = boardAlerts(visible, now)
   const stats = deliveryStats(visible)
-  const delivered = (onTime.data ?? []).reduce((n, r) => n + r.delivered, 0)
-  const inTime = (onTime.data ?? []).reduce((n, r) => n + r.onTime, 0)
   const goTo = (col: BoardColumn) => { setTab(col); document.querySelector(`[data-conteudo] > section[aria-label="${BOARD_COLUMNS.find((c) => c.id === col)?.label}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 
   return (
     <>
-      {(alerts.length > 0 || delivered > 0 || stats.revisions > 0) && (
+      {(alerts.length > 0 || stats.revisions > 0) && (
         <div className="flex flex-wrap items-center gap-2" aria-label="Pendências e entrega do mês">
           {alerts.map((a) => (
             <button key={a.id} type="button" onClick={() => goTo(a.column)}
@@ -145,12 +143,11 @@ export function ContentBoard() {
             </button>
           ))}
           <span className="text-[12.5px] text-muted">
-            {delivered > 0 && <>Design no prazo: <b className={cn(inTime / delivered >= 0.9 ? 'text-ok-ink' : 'text-warn-ink')}>{inTime} de {delivered}</b></>}
-            {delivered > 0 && stats.revisions > 0 && ' · '}
             {stats.revisions > 0 && <>{stats.revisions} {stats.revisions === 1 ? 'ajuste' : 'ajustes'} no mês ({stats.withRevision} {stats.withRevision === 1 ? 'peça' : 'peças'})</>}
           </span>
         </div>
       )}
+      <DesignerSummary month={month} />
 
       <div className="flex items-center gap-2 md:flex-wrap">
         <label className="relative min-w-0 flex-1 md:flex-none">

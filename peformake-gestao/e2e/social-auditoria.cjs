@@ -24,8 +24,8 @@ let items = [
   { ...base, id: 'i3', number: 3, status: 'in_production', client_id: 'c2', plan_id: 'p2', designer_id: 's2', design_due_at: iso(-3), deadline: day(-1) },
   { ...base, id: 'i4', number: 4, status: 'ready', designer_id: null, design_due_at: iso(90), kind: 'carrossel', carousel_slides: [{ text: 'Capa' }, { text: '' }, { text: '' }] },
   { ...base, id: 'i5', number: 5, status: 'briefing', title: null, headline: null, briefing: null },
-  { ...base, id: 'i6', number: 6, status: 'client_review' },
-  { ...base, id: 'i7', number: 7, status: 'approved' },
+  { ...base, id: 'i6', number: 6, status: 'client_review', design_started_at: iso(-30), delivered_at: iso(-26), delivered_on_time: true },
+  { ...base, id: 'i7', number: 7, status: 'approved', design_started_at: iso(-60), delivered_at: iso(-50), delivered_on_time: false, revision_count: 1, designer_id: 's2' },
   { ...base, id: 'i8', number: 8, status: 'review', client_id: 'c3', plan_id: 'p3' },
 ]
 const plans = [{ id: 'p1', client_id: 'c1', month, notes: 'Natal e fim de ano. Oferta do panetone.', planned_at: null, sent_to_client_at: null }, { id: 'p2', client_id: 'c2', month, notes: null, planned_at: iso(-48), sent_to_client_at: null }, { id: 'p3', client_id: 'c3', month, notes: null, planned_at: null, sent_to_client_at: null }]

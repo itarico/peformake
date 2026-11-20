@@ -363,3 +363,54 @@ export function boardAlerts(items: readonly Pick<ContentItem, 'status' | 'update
 export function deliveryStats(items: readonly Pick<ContentItem, 'revisionCount'>[]): { revisions: number; withRevision: number } {
   return { revisions: items.reduce((n, i) => n + i.revisionCount, 0), withRevision: items.filter((i) => i.revisionCount > 0).length }
 }
+
+/** Uma peça vista pelo desempenho do design (colunas que o banco já grava no relógio do design). */
+export interface DesignWorkRow {
+  designerId: string; status: ContentStatus; startedAt: string | null; deliveredAt: string | null
+  onTime: boolean | null; revisions: number; dueAt: string | null
+}
+export interface DesignerStats {
+  designerId: string; delivered: number; onTime: number; avgHours: number | null
+  withRevision: number; pending: number; lateNow: number
+}
+const PENDING_DESIGN: readonly ContentStatus[] = ['ready', 'in_production', 'changes_requested']
+
+/**
+ * Desempenho de cada designer no mês (pedido do Italo, 19/11): entregas, no prazo, tempo médio fazendo
+ * (de "Comecei" até a entrega), quantas precisaram de ajuste e o que está na mão agora (e atrasado).
+ */
+export function designerStats(rows: readonly DesignWorkRow[], month: string, now: number): DesignerStats[] {
+  const start = Date.parse(month + 'T03:00:00Z')
+  const [y, m] = month.split('-').map(Number) as [number, number]
+  const end = Date.parse(`${m === 12 ? y + 1 : y}-${String(m === 12 ? 1 : m + 1).padStart(2, '0')}-01T03:00:00Z`)
+  const by = new Map<string, DesignerStats & { hours: number[] }>()
+  for (const r of rows) {
+    const s = by.get(r.designerId) ?? { designerId: r.designerId, delivered: 0, onTime: 0, avgHours: null, withRevision: 0, pending: 0, lateNow: 0, hours: [] }
+    const d = r.deliveredAt ? Date.parse(r.deliveredAt) : NaN
+    if (d >= start && d < end) {
+      s.delivered++
+      if (r.onTime) s.onTime++
+      if (r.revisions > 0) s.withRevision++
+      const st = r.startedAt ? Date.parse(r.startedAt) : NaN
+      if (st < d) s.hours.push((d - st) / 3_600_000)
+    }
+    if (PENDING_DESIGN.includes(r.status)) {
+      s.pending++
+      if (r.dueAt && Date.parse(r.dueAt) < now) s.lateNow++
+    }
+    by.set(r.designerId, s)
+  }
+  return [...by.values()]
+    .filter((s) => s.delivered > 0 || s.pending > 0)
+    .map(({ hours, ...s }) => ({ ...s, avgHours: hours.length ? Math.round((hours.reduce((a, b) => a + b, 0) / hours.length) * 10) / 10 : null }))
+    .sort((a, b) => b.pending - a.pending || b.delivered - a.delivered)
+}
+
+/** "3 h", "1 dia e 4 h": tempo médio fazendo a arte. */
+export function hoursLabel(h: number | null): string {
+  if (h === null) return '—'
+  if (h < 1) return `${Math.max(1, Math.round(h * 60))} min`
+  if (h < 24) return `${Math.round(h)} h`
+  const d = Math.floor(h / 24); const r = Math.round(h - d * 24)
+  return `${d} ${d === 1 ? 'dia' : 'dias'}${r ? ` e ${r} h` : ''}`
+}

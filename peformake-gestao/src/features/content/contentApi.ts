@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import { DESIGN_QUEUE, type CarouselSlide, type ContentItem, type ContentKind, type ContentStatus, type PieceSpec } from './contentRules'
+import { DESIGN_QUEUE, type CarouselSlide, type ContentItem, type ContentKind, type ContentStatus, type DesignWorkRow, type PieceSpec } from './contentRules'
 
 export interface ContentPlan {
   id: string
@@ -246,4 +246,23 @@ export async function designOnTime(month: string): Promise<DesignOnTime[]> {
   const { data, error } = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ data: { designer_id: string | null; delivered: number; on_time: number; late: number }[] | null; error: unknown }>)('design_on_time', { _month: month })
   if (error) throw error
   return (data ?? []).map((r) => ({ designerId: r.designer_id, delivered: r.delivered, onTime: r.on_time, late: r.late }))
+}
+
+/** Peças para o desempenho do design: entregues no mês ou ainda na fila. Colunas gravadas pelo relógio do design. */
+export async function listDesignWork(month: string): Promise<DesignWorkRow[]> {
+  const [y, m] = month.split('-').map(Number) as [number, number]
+  const next = `${m === 12 ? y + 1 : y}-${String(m === 12 ? 1 : m + 1).padStart(2, '0')}-01`
+  const q = supabase.from('content_items') as unknown as {
+    select: (c: string) => { not: (c: string, op: string, v: null) => { or: (f: string) => { limit: (n: number) => Promise<{ data: Record<string, unknown>[] | null; error: unknown }> } } }
+  }
+  const { data, error } = await q.select('designer_id, status, design_started_at, delivered_at, delivered_on_time, revision_count, design_due_at')
+    .not('designer_id', 'is', null)
+    .or(`and(delivered_at.gte.${month},delivered_at.lt.${next}),status.in.(ready,in_production,changes_requested)`)
+    .limit(5000)
+  if (error) throw error
+  return (data ?? []).map((r) => ({
+    designerId: String(r.designer_id), status: r.status as ContentStatus, startedAt: (r.design_started_at as string | null) ?? null,
+    deliveredAt: (r.delivered_at as string | null) ?? null, onTime: (r.delivered_on_time as boolean | null) ?? null,
+    revisions: Number(r.revision_count ?? 0), dueAt: (r.design_due_at as string | null) ?? null,
+  }))
 }
