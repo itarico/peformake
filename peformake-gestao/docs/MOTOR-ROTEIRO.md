@@ -1,5 +1,7 @@
 # Motor de roteiro (audiovisual): o que a IA segue
 
+> **Motor único:** a ordem das decisões e o código principal de cada camada estão em `acervo-audiovisual/MOTOR.md`. Estrutura = código S, com a gramática em `acervo-audiovisual/ESTRUTURAS/S__.md`; M, H e V são apelidos (ver `ESTRUTURAS/EQUIVALENCIAS.md`).
+
 Versão operacional de `ESTUDO-ROTEIRO-AUDIOVISUAL.md` (o porquê está lá; índice de seções no topo). O texto para a IA
 executar é `PROMPT-ROTEIRO-MASTER.md` (núcleo curto + módulos por etapa; também no banco:
 `select public.agent_instructions('roteiro-master');`). Radar e calendário: `RADAR-TENDENCIAS.md`.

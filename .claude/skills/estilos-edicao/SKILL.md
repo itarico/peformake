@@ -5,6 +5,8 @@ description: Biblioteca de estilos de edição da agência, aprendidos de ~85 v�
 
 # Estilos de edição — escolher, mesclar, executar
 
+> **Motor único:** a ordem das decisões e o código principal de cada camada estão em `acervo-audiovisual/MOTOR.md`. Estrutura = código S, com a gramática em `acervo-audiovisual/ESTRUTURAS/S__.md`; M, H e V são apelidos (ver `ESTRUTURAS/EQUIVALENCIAS.md`).
+
 **Nada é regra.** Esta biblioteca dá opções e o raciocínio; a escolha é por intenção. Leia junto com
 `video-tools/NARRATIVA.md` (princípios) — a narrativa vem antes do estilo.
 

@@ -1,5 +1,7 @@
 # Modelos de roteiro (preencher e adaptar — não copiar cego)
 
+> **Motor único:** a ordem das decisões e o código principal de cada camada estão em `acervo-audiovisual/MOTOR.md`. Estrutura = código S, com a gramática em `acervo-audiovisual/ESTRUTURAS/S__.md`; M, H e V são apelidos (ver `ESTRUTURAS/EQUIVALENCIAS.md`).
+
 Cada modelo traz a estrutura, a fonte que a validou e um exemplo para os nossos clientes. Tempos são ponto de
 partida. Tabela por batida: **tempo · fala · imagem · texto na tela · som**.
 

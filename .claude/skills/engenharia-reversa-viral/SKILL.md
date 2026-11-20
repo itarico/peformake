@@ -5,6 +5,8 @@ description: Pega um vídeo que viralizou (link do Instagram, TikTok, YouTube ou
 
 # Engenharia reversa de vídeo viral
 
+> **Motor único:** a ordem das decisões e o código principal de cada camada estão em `acervo-audiovisual/MOTOR.md`. Estrutura = código S, com a gramática em `acervo-audiovisual/ESTRUTURAS/S__.md`; M, H e V são apelidos (ver `ESTRUTURAS/EQUIVALENCIAS.md`).
+
 Objetivo: transformar um vídeo que funcionou em uma **estrutura** que a Peformake consegue repetir com outro assunto,
 outro cliente e outra pessoa, sem copiar o conteúdo. Copia-se a mecânica, nunca a fala, a marca ou a imagem.
 
@@ -37,6 +39,9 @@ um "S-novo".
 5. **Escrever a ficha** com o modelo abaixo e salvar em `acervo-audiovisual/virais/`. Acrescentar uma linha no
    `acervo-audiovisual/virais/README.md` e rodar `python acervo-audiovisual/ferramentas/mapa_estruturas.py` (refaz o
    mapa, o compacto da rotina e o resumo das funções de IA).
+   Antes de rodar o mapa, atualize a gramática do código em `acervo-audiovisual/ESTRUTURAS/S__.md` (linha na
+   Evidência, com o público do perfil; e Variações, se a ficha mostrou algo novo). Código sem página: criar pelo
+   `ESTRUTURAS/_MODELO.md`.
 6. **Commit e push** (regra do repo: tudo salvo no Git).
 
 ## Modelo da ficha
@@ -87,10 +92,11 @@ Material baixado fica na pasta de rascunho, nunca no Git.
 
 ## Modo 2: usar uma estrutura que já está na biblioteca
 
-1. Ler `acervo-audiovisual/MAPA-ESTRUTURAS.md` (código S por objetivo, os mais fortes, esqueleto) e escolher pelo
+1. Ler `acervo-audiovisual/MOTOR.md` e `MAPA-ESTRUTURAS.md` (código S por objetivo, placar, ficha de entrada do
+   cliente) e escolher pelo
    objetivo (alcance, seguidores, lead, venda) e pelo que o cliente consegue gravar. Lista completa:
    `acervo-audiovisual/virais/README.md`.
-2. Abrir a ficha e seguir o **esqueleto** e o **molde de fala**, trocando tudo pelo que é do cliente (MDD: de
+2. Abrir a gramática `ESTRUTURAS/S__.md` (e as fichas como prova) e seguir os **blocos** e o **molde de fala**, trocando tudo pelo que é do cliente (MDD: de
    dentro, com caso, número e palavra reais do cliente). Nada de dado inventado.
 3. No motor de roteiro, gravar `data.estrutura` com o código S da ficha e citar a ficha como referência.
 4. Passar na banca do motor (`peformake-gestao/docs/MOTOR-ROTEIRO.md`). A ficha não substitui a banca.

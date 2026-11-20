@@ -1,5 +1,7 @@
 # Manual de Edição Ellcazo — 1 página para decidir qualquer vídeo
 
+> **Motor único:** a ordem das decisões e o código principal de cada camada estão em `acervo-audiovisual/MOTOR.md`. Estrutura = código S, com a gramática em `acervo-audiovisual/ESTRUTURAS/S__.md`; M, H e V são apelidos (ver `ESTRUTURAS/EQUIVALENCIAS.md`).
+
 Nada aqui é regra fixa: é a ordem das decisões e onde está o conhecimento. Cada passo aponta para o arquivo certo.
 
 ## 1. Por quê (antes de abrir o bruto)

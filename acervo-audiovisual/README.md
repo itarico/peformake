@@ -6,6 +6,9 @@ Nada foi movido: cada arquivo continua no lugar original. Este índice só apont
 **Regra (Italo, 19/11/2026):** tudo novo de audiovisual (estudo, estrutura, edição, engenharia reversa, skill) entra
 nesta pasta e no Git no mesmo dia. Nunca fica só no PC.
 
+- **Comece por aqui: `MOTOR.md`.** Motor audiovisual único: a ordem das decisões (Reels e YouTube longo) e qual arquivo ou
+  skill responde cada passo. Estrutura = código S, com a gramática das 117 em `ESTRUTURAS/S__.md` (skill `estrutura-video`, modo de escolha, nichos, intenção e nota por etapa), a ficha de
+  entrada do cliente em `ESTRUTURAS/FICHA-ENTRADA.md` e os apelidos antigos (M, H, V, E) em `ESTRUTURAS/EQUIVALENCIAS.md`.
 - **Todos os vídeos estudados (556), com link e pasta:** `INDICE-VIDEOS.md` (gerado por `ferramentas/indice_videos.py`).
 
 ## 1. Método e motor de roteiro (app peformake-gestao)
@@ -70,6 +73,8 @@ Primeiro: `perfis/salleszk.md`.
   põe "nosso placar" em cada código; o motor prefere o que funcionou aqui e evita o que falhou.
 - Rotina na nuvem "Acervo: virais do dia, estruturas novas e placar" (todo dia 06:41): atualiza o placar, estuda 2 virais
   com estrutura nova e 1 vídeo do estoque salvo, refaz o mapa e escreve as lições do nicho às segundas.
+  Roteiro completo do ciclo (prioridade do que estudar, como ensinar a página, quando nasce estrutura nova):
+  `APRENDIZADO.md`.
 
 ## 5e. YouTube (canal)
 - `youtube/pesquisas/<tema>-<data>/`: outliers (skill `youtube-outliers`) e o `MAPA.md` com a lacuna e as pautas.

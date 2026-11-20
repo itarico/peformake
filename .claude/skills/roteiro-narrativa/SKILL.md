@@ -5,6 +5,8 @@ description: Escrever ou montar o ROTEIRO de um vídeo (do zero ou a partir do b
 
 # Roteiro e narrativa — do objetivo ao corte
 
+> **Motor único:** a ordem das decisões e o código principal de cada camada estão em `acervo-audiovisual/MOTOR.md`. Estrutura = código S, com a gramática em `acervo-audiovisual/ESTRUTURAS/S__.md`; M, H e V são apelidos (ver `ESTRUTURAS/EQUIVALENCIAS.md`).
+
 Base: `video-tools/NARRATIVA.md` (princípios — leia junto) + estudos em `video-tools/estilos/` (Giullya, YouTube
 documental, Kallaway, Naomie, Maestros) + **`video-tools/estilos/estudo_narrativas.md`** (construção narrativa de
 ~113 referências: 12 tipos de gancho G1–G12 com fórmula e exemplos por cliente, modelos M9–M18, retenção, CTAs,

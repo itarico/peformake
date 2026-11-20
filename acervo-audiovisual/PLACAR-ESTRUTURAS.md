@@ -9,6 +9,22 @@ Quem preenche: a rotina diária "Acervo: virais e placar" (lê `client_scan` fon
 publique/medir vídeo. Uma linha por vídeo; medir com pelo menos 7 dias no ar. Código pela ficha/roteiro do card
 (`strategy_cards.data.estrutura`); sem card, classificar pela legenda e pelos quadros e marcar "(classificado)".
 
+## Como o placar ensina (status por código, calculado pelo `mapa_estruturas.py`)
+- **testar**: 0 ou 1 vídeo medido. Ainda não diz nada; vale tentar de novo com outro tema.
+- **repetir**: 2 ou mais vídeos e média de 1,2x ou mais. Volta no mês seguinte com tema novo.
+- **neutro**: média entre 0,7x e 1,2x. Usar quando o objetivo pede; não é prioridade.
+- **descansar**: os 2 últimos vídeos do código no mesmo cliente em 0,7x ou menos. Fica 30 dias sem usar naquele cliente
+  (fadiga de fórmula: o público já sabe o que vem). Volta com uma variação, não com o mesmo molde.
+- **evitar**: 3 ou mais vídeos e média abaixo de 0,7x. Só volta com motivo escrito no card.
+Cada cliente tem o seu status; a média geral (todos os clientes) aparece ao lado como referência.
+
+## Para o placar valer (registro antes, não depois)
+1. O código S vai no card **antes** de gravar (`strategy_cards.data.estrutura`), com a hipótese em 1 linha
+   ("esquete vai trazer compartilhamento"). Classificar depois de publicado tende a encaixar o vídeo no que deu certo.
+2. Vídeo sem código no card entra marcado "(classificado)" e conta, mas o mapa mostra quantos são assim.
+3. Medir com 7 dias no ar ou mais, sempre contra a mediana dos últimos 12 Reels do próprio perfil.
+4. Na nota: o que mudou além da estrutura (impulsionado, collab, trend, horário). Vídeo impulsionado não entra na média.
+
 | Data | Cliente | Vídeo | Código | Views | Força | Nota |
 |---|---|---|---|---|---|---|
 | 2026-09-26 | VOVINA | https://www.instagram.com/reel/Ddw4ZTuPLiT/ | S70 | 1036 | 1,8x | esquete do motoboy "a pizza é boa mesmo?" (classificado) |
