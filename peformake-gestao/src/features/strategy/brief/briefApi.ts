@@ -64,6 +64,12 @@ export async function saveBriefMonth(clientId: string, month: string, data: Brie
   fail(error)
 }
 
+/** Tipo de negócio trocado: descarta as perguntas do mês ainda sem resposta (mesmo enviadas) para o motor refazer. */
+export async function resetMonthQuestions(clientId: string, month: string): Promise<void> {
+  const { error } = await rpc('brief_questions_reset', { _client: clientId, _month: month })
+  if (error) throw new Error('Não foi possível refazer as perguntas.')
+}
+
 /**
  * Monta as perguntas do mês pelo motor (sem IA) e grava. O banco só troca o pacote se ninguém mexeu nele ainda
  * (nada enviado nem respondido): perguntas antigas de outro tipo de negócio somem sozinhas.

@@ -14,7 +14,7 @@ import { field as fieldCls } from './BriefDialogs'
 import { SendQuestionsLoader } from '../QuestionsPanel'
 import { questionsKey, type ClientQuestion } from '../questionsApi'
 import { textPages, monthName } from '../monthlyRules'
-import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
+import { answerBrief, resetMonthQuestions, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
 import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, monthGuide, type Family } from './questionEngine'
@@ -191,7 +191,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
         <Button data-conversar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setChat(true)}><MessageCircle size={15} aria-hidden="true" /> Cliente preenche</Button>
       </div>}
       {tipoOpen && <TipoDialog current={isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name)} label={f.tipo_label} busy={saveF.isPending}
-        onPick={(v, l) => saveF.mutate({ tipo: v, tipo_label: l }, { onSuccess: () => { setTipoOpen(false); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) } })} onClose={() => setTipoOpen(false)} />}
+        onPick={(v, l) => saveF.mutate({ tipo: v, tipo_label: l }, { onSuccess: async () => { setTipoOpen(false); await resetMonthQuestions(clientId, month).catch(() => null); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }); void qc.invalidateQueries({ queryKey: ['client-questions', clientId] }) } })} onClose={() => setTipoOpen(false)} />}
       {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} onClient={() => setOpen({ kind: 'enviar' })} />}
 
       {/* Essência da marca (Italo, 20/11): frameworks de marca (Círculo Dourado, Kapferer, arquétipos, posicionamento, JTBD). */}

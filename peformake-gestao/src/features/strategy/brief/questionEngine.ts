@@ -53,6 +53,8 @@ export function familyFromReceita(nature?: string | null, cnae?: string | null):
 export function familyOf(segment?: string | null, description?: string | null, name?: string | null): Family {
   const t = norm(`${segment ?? ''} ${name ?? ''} ${(description ?? '').slice(0, 600)}`)
   const seg = norm(segment ?? '')
+  // O segmento manda (Italo, 20/11: a Peformake é assessoria de marketing "forte em gastronomia" e recebia pergunta de prato).
+  if (/assessoria|marketing|agencia|publicidade|comunicacao|consultoria|contabil|advoc|juridic|imobiliar|software|tecnologia/.test(seg)) return 'servicos'
   if (/sem fins lucrativos|associacao de|ong\b|instituto|igreja|fundacao|projeto social|filantrop/.test(t)) return 'terceiro_setor'
   if (/educa|escola|colegio|curso|faculdade/.test(seg) || /escola|colegio|cursinho/.test(t)) return 'educacao'
   if (/\bbar\b|petiscaria|boteco|choperia|pub\b|happy hour|drinks/.test(t)) return 'bar'
