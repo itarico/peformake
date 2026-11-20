@@ -13,6 +13,7 @@ import { questionsKey, type ClientQuestion } from '../questionsApi'
 import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
+import { BriefChat } from './BriefChat'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -102,6 +103,8 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   const st = useBriefStatus(clientId, month)
   const [open, setOpen] = useState<Open>(null)
   const [semComp, setSemComp] = useState(false)
+  // Briefing em conversa com a Bete (Italo, 20/11): o jeito principal de preencher; os blocos abaixo continuam para ajustar.
+  const [chat, setChat] = useState(false)
   // Compacto (Italo, 18/11): mostra só o que falta; o que já está feito fica atrás de "Ver tudo".
   const [all, setAll] = useState(false)
   const show = (done: boolean) => all || !done
@@ -167,8 +170,10 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         <Ring percent={st.percent} />
         <div className="min-w-0 flex-1 text-[13px] text-muted">{todo.length ? <><b className="text-ink">{todo.length}</b> para completar</> : <b className="text-ok-ink">Tudo pronto</b>}</div>
         <button type="button" data-ver-tudo onClick={() => setAll((v) => !v)} className="min-h-10 shrink-0 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{all ? 'Só o que falta' : 'Ver tudo'}</button>
-        {todo.length > 0 && <Button data-completar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /> Completar</Button>}
+        {todo.length > 0 && <Button data-completar variant="secondary" aria-label="Completar em passos" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /><span className="max-sm:hidden"> Completar</span></Button>}
+        <Button data-conversar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setChat(true)}><MessageCircle size={15} aria-hidden="true" /> Conversar</Button>
       </div>
+      {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} />}
 
       <Group title="O cliente">
         {show(!!direction.trim()) && <Tile icon={Compass} label="Direção" title="Direcionamento da equipe" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />}
