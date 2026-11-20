@@ -20,6 +20,15 @@ Cada etapa abaixo termina com nota de 0 a 10 (`ESTRUTURAS/AVALIACAO.md`): a nota
 Abaixo do mínimo, volta (no máximo 2 vezes; depois segue com a lacuna escrita e pergunta ao Italo).
 
 ## A ordem (Reels, TikTok, Shorts, anúncio)
+0. **Nunca do zero: pesquisa antes da ideia.** Todo vídeo nasce de pelo menos uma destas fontes, citada no card:
+   - **Dossiê do cliente** (negócio, produtos e serviços, preços, equipe, reputação, palavras reais do público, dono ×
+     como o cliente enxerga): etapa 0 do `peformake-gestao/docs/MOTOR-ROTEIRO.md`, cache `client_scan` fonte `dossie`.
+   - **Assunto do momento no nicho** (radar, calendário, hype com validade): `peformake-gestao/docs/RADAR-TENDENCIAS.md`
+     e skill `varredura-nicho` / `radar-criativos`; o que os concorrentes estão anunciando e o que viraliza no nicho.
+   - **Perguntas reais do público** (comentários, direct, WhatsApp, Google, perguntas que o sistema fez ao cliente no
+     briefing e no pré-roteiro de validação).
+   Nota da **etapa 0** (portão de conhecimento, `ESTRUTURAS/AVALIACAO.md`): abaixo de 7 não sai roteiro, sai a lista de
+   lacunas e perguntas para o cliente.
 1. **Por quê.** Objetivo único do vídeo, público, frase-alma ("deve SENTIR ___ e ACREDITAR que ___"), ação final.
    → skill `roteiro-narrativa` §1 · MDD (`skills-locais/mdd/`).
 2. **O que o cliente consegue gravar.** `ESTRUTURAS/FICHA-ENTRADA.md` (10 perguntas, guardadas na ficha do cliente em

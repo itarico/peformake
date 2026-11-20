@@ -27,6 +27,8 @@ quando escolhida: funciona como uma skill por estrutura, sem o custo.
 - `MAPA-ESTRUTURAS.md`: visão geral (por objetivo, por exigência, os mais fortes com o público de origem).
 
 ## Modo 1 · Escolher a melhor estrutura
+0. Nunca do zero: antes, a etapa 0 do `MOTOR.md` (dossiê do cliente, assunto do momento no nicho, pergunta real do
+   público), com nota 7 ou mais. A estrutura serve ao conteúdo pesquisado, não o contrário.
 1. Junte: objetivo do vídeo (etapa 1 do motor), nicho, ficha de entrada do cliente, estruturas usadas no mês.
 2. Rode:
    ```

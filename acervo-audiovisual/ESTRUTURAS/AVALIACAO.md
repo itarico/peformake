@@ -9,6 +9,15 @@ motivo não vale.
 Quem avalia: a mesma sessão, relendo como crítico (não como autor). No app, a etapa 5 é a banca do
 `peformake-gestao/docs/MOTOR-ROTEIRO.md`, que já tem 4 notas e o avaliador às cegas.
 
+## Etapa 0 · Pesquisa: nunca do zero (mínimo 7)
+| Critério | 10 é | Se falhar |
+|---|---|---|
+| Dossiê do cliente | atualizado no mês, com fonte em cada item (produto, preço, equipe, reputação, palavras do público) | completar o dossiê; o que faltar vira pergunta ao cliente |
+| Assunto do momento | o radar do nicho foi olhado; a ideia diz se é do momento (com validade) ou perene | olhar o radar antes de seguir |
+| Pergunta ou dor real | a ideia responde a uma pergunta ou dor real de quem compra (comentário, direct, briefing) | buscar a pergunta; sem ela, a ideia é suposição e fica marcada |
+| Mercado | sabe o que os concorrentes estão mostrando (para não repetir e achar a lacuna) | varredura do nicho |
+Abaixo de 7: não sai roteiro final; sai pré-roteiro de validação com as perguntas (igual ao portão 0b do motor do app).
+
 ## Etapa 1 · Por quê (mínimo 8)
 | Critério | 10 é | Se falhar, volta para |
 |---|---|---|
