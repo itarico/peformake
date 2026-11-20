@@ -26,7 +26,7 @@ import { StrategyBoard } from './brief/StrategyBoard'
 import { BriefingCard, StepCard, StrategyPart } from './brief/StrategyStrip'
 import { BriefingView, useBriefStatus } from './brief/BriefingView'
 import { useBriefProgress } from './brief/briefApi'
-import { CONSULT_PATH, targetMonth, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
+import { CONSULT_PATH, targetMonth, clientMessage, diagReviewPath, nicheLinks, sortByStrategy, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
 import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
@@ -283,17 +283,13 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   // O que o cliente vê (prévia, PDF): com a revisão aplicada (sem recusados, textos editados, dados preenchidos).
   const clientInput = useMemo(() => reviewedInput(deckInput, review.data?.state), [deckInput, review.data?.state])
   const openSend = (k: SendKind, n = 0) => { setPicker(false); setAvCount(n); setSend(k) }
-  const next = row ? nextStep(row) : null
 
   const header = (
     <header data-cliente-cabecalho className="flex items-center gap-2">
       <button type="button" onClick={ver ? () => go({ ver: null, secao: null, parte: null, so: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Voltar' : 'Consultoria'}</span></button>
       <span className="flex min-w-0 flex-1 items-center gap-2">
-        <ClientAvatar name={name} url={logo} size="sm" />
-        <span className="min-w-0">
-          <b className="block truncate text-[16px] leading-tight">{name}</b>
-          {next && next.label !== 'Abrir' && <span data-proximo className="block truncate text-[12px] text-muted">Agora: {next.label.charAt(0).toLowerCase() + next.label.slice(1)}</span>}
-        </span>
+        <ClientAvatar name={name} url={logo} size="md" />
+        <h1 className="min-w-0 truncate text-[22px] font-semibold tracking-tight md:text-[26px]">{name}</h1>
       </span>
       {/* "Enviar" do topo saiu (Italo, 20/11): cada passo envia o seu (Perguntas aqui; diagnóstico no ⋯; estratégia dentro dela). */}
       <ActionMenu label="Mais opções do cliente" actions={[

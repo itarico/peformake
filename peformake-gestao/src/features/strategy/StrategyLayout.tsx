@@ -41,11 +41,13 @@ export function StrategyLayout() {
   const { state } = useAuth()
   const roles = state.status === 'ready' ? state.user.roles : []
   const [params] = useSearchParams()
+  const location = useLocation()
   const TABS = tabsFor(params.get('cliente'))
   const home = TABS.find((t) => !t.roles || t.roles.some((r) => roles.includes(r)))?.to ?? CONSULT_PATH
   return (
     <>
-      <SectionHeader title="Estratégia" sub="Briefing, o agente escreve, você lê e baixa o PDF para o cliente gravar." tabs={TABS} />
+      {/* Dentro de um cliente (Italo, 20/11): sem o título da área; o topo é a logo e o nome do cliente. */}
+      {!(params.get('cliente') && location.pathname.includes('/consultoria')) && <SectionHeader title="Estratégia" sub="Briefing, o agente escreve, você lê e baixa o PDF para o cliente gravar." tabs={TABS} />}
       <Routes>
         <Route index element={<Navigate to={home} replace />} />
         <Route path="frameworks" element={<MovedTo to={CONSULT_PATH} />} />
