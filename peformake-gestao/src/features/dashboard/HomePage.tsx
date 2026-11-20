@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -57,10 +57,63 @@ function Kpi({ label, value, format, sub, tone, i }: { label: string; value: num
   )
 }
 
-/** Visão do dono: MRR, recebido, clientes, ticket e perdas. Tudo sai do banco, mês a mês. */
-function BusinessSection({ side }: { side: React.ReactNode }) {
-  const q = useQuery({ queryKey: ['dash-home-business', 12], queryFn: () => dashHomeBusiness(12) })
-  if (!q.data) return <Panel title="Negócio"><LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} /></Panel>
+/** Título de cada bloco do Início: ação primeiro, depois dinheiro, depois operação. */
+function Group({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section aria-label={title} className="flex flex-col gap-3">
+      <h2 className="px-1 text-[12px] font-semibold uppercase tracking-wide text-muted">{title}</h2>
+      {children}
+    </section>
+  )
+}
+
+/** Linha de cartões da mesma altura; o número de colunas acompanha quantos cartões existem (nunca sobra buraco). */
+function Row({ children }: { children: React.ReactNode }) {
+  const n = React.Children.toArray(children).filter(Boolean).length
+  if (n === 0) return null
+  const cols = n >= 3 ? 'lg:grid-cols-3' : n === 2 ? 'md:grid-cols-2' : ''
+  return <div className={cn('grid grid-cols-1 gap-3', cols)}>{children}</div>
+}
+
+/** Mostra só os 5 primeiros; o resto atrás de "Ver detalhes". */
+function TopBars({ rows, ...rest }: React.ComponentProps<typeof ValueBars>) {
+  const [open, setOpen] = useState(false)
+  const hidden = rows.length - 5
+  return (
+    <>
+      <ValueBars rows={open ? rows : rows.slice(0, 5)} {...rest} />
+      {hidden > 0 && (
+        <button type="button" onClick={() => setOpen((o) => !o)} className="mt-auto min-h-10 cursor-pointer self-start text-[13px] font-semibold text-accent-ink hover:underline">
+          {open ? 'Mostrar menos' : `Ver detalhes (+${hidden})`}
+        </button>
+      )}
+    </>
+  )
+}
+
+const useBusiness = () => useQuery({ queryKey: ['dash-home-business', 12], queryFn: () => dashHomeBusiness(12) })
+
+/** Faixa de números do dono (só admin): MRR, recebido, clientes, ticket e perdas. */
+function KpiStrip() {
+  const q = useBusiness()
+  if (!q.data) return q.isError ? <LoadState isPending={false} isError refetch={() => void q.refetch()} /> : null
+  const d: BusinessDash = q.data
+  const k = businessKpis(d)
+  return (
+    <section aria-label="Indicadores do negócio" className="grid grid-cols-2 overflow-hidden rounded-3xl border border-line bg-surface sm:grid-cols-3 xl:grid-cols-5 [&>*]:border-line max-sm:[&>*:nth-child(odd):not(:last-child)]:border-r max-sm:[&>*:nth-child(-n+4)]:border-b max-sm:[&>*:last-child]:col-span-2 sm:max-xl:[&>*:nth-child(-n+3)]:border-b sm:[&>*:not(:last-child)]:border-r">
+      <Kpi i={0} label="MRR (previsto no mês)" value={k.mrr} format={(n) => brl.format(n)} sub={<Delta pct={pctChange(k.mrr, k.mrrPrev3)} goodWhenUp suffix="em 3 meses" />} />
+      <Kpi i={1} label="Recebido no mês" value={k.realized === null ? null : k.received} format={(n) => brl.format(n)} sub={k.realized === null ? 'Nada lançado no caixa' : `${k.realized}% do previsto`} tone={k.realized !== null && k.realized < 70 ? 'warn' : undefined} />
+      <Kpi i={2} label="Clientes ativos" value={k.active} format={(n) => String(Math.round(n))} sub={`+${k.joined} entraram · −${k.left} saíram no mês`} />
+      <Kpi i={3} label="Ticket médio" value={k.ticket} format={(n) => brl.format(n)} sub={`${d.paying_clients} clientes pagando mensalidade`} />
+      <Kpi i={4} label="Perdas em 3 meses" value={k.churn3} format={(n) => `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`} sub={d.tenure_avg_months ? `Tempo médio de casa: ${d.tenure_avg_months.toLocaleString('pt-BR')} meses` : 'Sem histórico'} tone={k.churn3 !== null && k.churn3 >= 15 ? 'warn' : undefined} />
+    </section>
+  )
+}
+
+/** Dinheiro (só admin): receita mês a mês, maiores clientes, serviços e entrada/saída de clientes. */
+function MoneySection() {
+  const q = useBusiness()
+  if (!q.data) return <Panel title="Dinheiro"><LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} /></Panel>
   const d: BusinessDash = q.data
   const k = businessKpis(d)
   const months = d.months
@@ -68,15 +121,7 @@ function BusinessSection({ side }: { side: React.ReactNode }) {
   const serviceTotal = d.by_service.reduce((s, r) => s + r.amount, 0)
   return (
     <>
-      <section aria-label="Indicadores do negócio" className="grid grid-cols-2 divide-line overflow-hidden rounded-3xl border border-line bg-surface sm:grid-cols-3 xl:grid-cols-5 [&>*]:border-line max-sm:[&>*:nth-child(odd)]:border-r sm:[&>*:not(:last-child)]:border-r">
-        <Kpi i={0} label="MRR (previsto no mês)" value={k.mrr} format={(n) => brl.format(n)} sub={<Delta pct={pctChange(k.mrr, k.mrrPrev3)} goodWhenUp suffix="em 3 meses" />} />
-        <Kpi i={1} label="Recebido no mês" value={k.realized === null ? null : k.received} format={(n) => brl.format(n)} sub={k.realized === null ? 'Nada lançado no caixa' : `${k.realized}% do previsto`} tone={k.realized !== null && k.realized < 70 ? 'warn' : undefined} />
-        <Kpi i={2} label="Clientes ativos" value={k.active} format={(n) => String(Math.round(n))} sub={`+${k.joined} entraram · −${k.left} saíram no mês`} />
-        <Kpi i={3} label="Ticket médio" value={k.ticket} format={(n) => brl.format(n)} sub={`${d.paying_clients} clientes pagando mensalidade`} />
-        <Kpi i={4} label="Perdas em 3 meses" value={k.churn3} format={(n) => `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`} sub={d.tenure_avg_months ? `Tempo médio de casa: ${d.tenure_avg_months.toLocaleString('pt-BR')} meses` : 'Sem histórico'} tone={k.churn3 !== null && k.churn3 >= 15 ? 'warn' : undefined} />
-      </section>
-
-      <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
         <Panel title="MRR e recebido por mês" className="pf-rise lg:col-span-2" action={<Link to="/financeiro" className="inline-flex min-h-10 items-center gap-1 text-[13px] font-medium">Financeiro <ArrowRight size={14} aria-hidden="true" /></Link>}>
           <Insight>{revenueInsight(k)}</Insight>
           <MonthStackBars
@@ -87,23 +132,21 @@ function BusinessSection({ side }: { side: React.ReactNode }) {
             data={mrrSeries}
           />
         </Panel>
-        {side}
+        <Panel title="Maiores clientes" className="pf-rise">
+          <Insight>{concentrationInsight(k, d.top_clients[0]?.name)}</Insight>
+          <TopBars rows={d.top_clients.map((r) => ({ label: r.name, value: r.amount }))} format={(n) => brl.format(n)} total={mrrOf(months[months.length - 1])} swatch="bg-series-3" />
+        </Panel>
       </div>
-
-      <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <Row>
+        <Panel title="MRR por serviço" className="pf-rise">
+          <Insight>{serviceInsight(d.by_service)}</Insight>
+          <TopBars rows={d.by_service.map((r) => ({ label: r.name, value: r.amount }))} format={(n) => brl.format(n)} total={serviceTotal} />
+        </Panel>
         <Panel title="Clientes que entram e saem" className="pf-rise" action={<Link to="/clientes" className="inline-flex min-h-10 items-center gap-1 text-[13px] font-medium">Clientes <ArrowRight size={14} aria-hidden="true" /></Link>}>
           <Insight>{clientsInsight(k, d.lost_tenure_avg_months)}</Insight>
           <ClientFlow data={months.map((m) => ({ label: monthName(m.month), joined: m.joined, left: m.left, active: m.active }))} />
         </Panel>
-        <Panel title="MRR por serviço" className="pf-rise">
-          <Insight>{serviceInsight(d.by_service)}</Insight>
-          <ValueBars rows={d.by_service.map((r) => ({ label: r.name, value: r.amount }))} format={(n) => brl.format(n)} total={serviceTotal} />
-        </Panel>
-        <Panel title="Maiores clientes" className="pf-rise">
-          <Insight>{concentrationInsight(k, d.top_clients[0]?.name)}</Insight>
-          <ValueBars rows={d.top_clients.map((r) => ({ label: r.name, value: r.amount }))} format={(n) => brl.format(n)} total={mrrOf(months[months.length - 1])} swatch="bg-series-3" />
-        </Panel>
-      </div>
+      </Row>
     </>
   )
 }
@@ -115,7 +158,7 @@ function ActionList({ actions, loading, setup }: { actions: ActionItem[]; loadin
   const [pages, setPages] = useState(1)
   const { shown, more } = firstPages(sorted, pages)
   return (
-    <Panel title="Precisa de você" className="pf-rise" action={total > 0 ? <span className="text-[13px] tabular-nums text-muted">{total} {total === 1 ? 'item' : 'itens'}</span> : undefined}>
+    <Panel title="Precisa de você" className="pf-rise" action={total > 0 ? <span className="inline-flex min-h-10 items-center text-[13px] tabular-nums text-muted">{total} {total === 1 ? 'item' : 'itens'}</span> : undefined}>
       {loading && total === 0 && <p role="status" className="text-[13px] text-muted">Carregando</p>}
       {!loading && total === 0 && <p className="flex items-center gap-2 text-[14px] text-ok-ink"><CheckCircle2 size={16} aria-hidden="true" /> Tudo em dia.</p>}
       <ul className="-mx-2 flex flex-col">
@@ -193,7 +236,7 @@ function ClientsToCall() {
       {query.isPending && <p role="status" className="text-[13px] text-muted">Carregando</p>}
       {query.data && list.length === 0 && <p className="flex items-center gap-2 text-[14px] text-ok-ink"><CheckCircle2 size={16} aria-hidden="true" /> Nenhum cliente pedindo atenção.</p>}
       <ul className="-mx-2 flex flex-col">
-        {list.slice(0, 6).map((v) => (
+        {list.slice(0, 4).map((v) => (
           <li key={v.client.id}>
             <Link to={`/clientes/${v.client.id}`} className="flex min-h-12 items-center justify-between gap-3 rounded-xl px-2 py-1.5 text-ink no-underline hover:bg-raised">
               <span className="min-w-0 truncate font-medium">{v.client.name}</span>
@@ -202,6 +245,7 @@ function ClientsToCall() {
           </li>
         ))}
       </ul>
+      {list.length > 4 && <Link to="/clientes?atencao=any" className="mt-auto inline-flex min-h-10 items-center self-start text-[13px] font-semibold text-accent-ink hover:underline">Ver mais {list.length - 4}</Link>}
     </Panel>
   )
 }
@@ -299,23 +343,31 @@ function BusinessHome() {
       </header>
 
 
-      {can.admin ? <BusinessSection side={actionList} /> : (
-        <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
+      {can.admin && <KpiStrip />}
+
+      <Group title="Para fazer agora">
+        <Row>
           {actionList}
-          {demands.length > 0 && <Panel title="Demandas abertas" className="pf-rise lg:col-span-2"><DemandBars rows={demands} /></Panel>}
-        </div>
+          {can.traffic && <ClientsToCall />}
+          {can.operation && <DeliveriesPanel month={month} />}
+        </Row>
+      </Group>
+
+      {can.admin && (
+        <Group title="Dinheiro">
+          <MoneySection />
+        </Group>
       )}
 
-      <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {can.admin && demands.length > 0 && <Panel title="Demandas abertas" className="pf-rise"><DemandBars rows={demands} /></Panel>}
-        {t && <TrendPanel title="Investimento em anúncios" to="/trafego/painel" total={brl.format(t.totals.spend_cents / 100)} pct={pctChange(t.totals.spend_cents, t.previous.spend_cents)} goodWhenUp data={spend} format={(n) => brl.format(n)} />}
-        {m && <TrendPanel title="Novos contatos no WhatsApp" to="/whatsapp/conversas" total={String(m.new_contacts)} pct={pctChange(m.new_contacts, m.new_contacts_prev)} goodWhenUp data={contacts} format={(n) => `${n} contato${n === 1 ? '' : 's'}`} />}
-      </div>
-
-      <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-2">
-        {can.operation && <DeliveriesPanel month={month} />}
-        {can.traffic && <ClientsToCall />}
-      </div>
+      {(demands.length > 0 || t || m) && (
+        <Group title="Operação e tendências">
+          <Row>
+            {demands.length > 0 && <Panel title="Demandas abertas" className="pf-rise"><DemandBars rows={demands} /></Panel>}
+            {t && <TrendPanel title="Investimento em anúncios" to="/trafego/painel" total={brl.format(t.totals.spend_cents / 100)} pct={pctChange(t.totals.spend_cents, t.previous.spend_cents)} goodWhenUp data={spend} format={(n) => brl.format(n)} />}
+            {m && <TrendPanel title="Novos contatos no WhatsApp" to="/whatsapp/conversas" total={String(m.new_contacts)} pct={pctChange(m.new_contacts, m.new_contacts_prev)} goodWhenUp data={contacts} format={(n) => `${n} contato${n === 1 ? '' : 's'}`} />}
+          </Row>
+        </Group>
+      )}
     </>
   )
 }
