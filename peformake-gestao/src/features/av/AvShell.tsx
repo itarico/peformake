@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { Clapperboard } from 'lucide-react'
 import { AreaTabs } from '@/components/layout/SectionTabs'
 import { useAuth } from '@/auth/context'
-import { AV_MANAGER_ROLES, hasAnyRole } from '@/lib/roles'
+import { AV_MANAGER_ROLES, AV_PRICE_ROLES, hasAnyRole } from '@/lib/roles'
 import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 
 export function EllcazoHeader({ children, sub, actions }: { children: ReactNode; sub?: ReactNode; actions?: ReactNode }) {
@@ -24,10 +24,12 @@ export function EllcazoHeader({ children, sub, actions }: { children: ReactNode;
 export function AvTabs() {
   const { state } = useAuth()
   const manager = state.status === 'ready' && hasAnyRole(state.user.roles, AV_MANAGER_ROLES)
+  const prices = state.status === 'ready' && hasAnyRole(state.user.roles, AV_PRICE_ROLES)
   const tabs = [
     ...(manager ? [{ to: '/audiovisual', label: 'Agenda', end: true }] : []),
     { to: '/audiovisual/producao', label: 'Produção', end: false },
-    ...(manager ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }, { to: '/audiovisual/fotos', label: 'Fotos', end: false }] : []),
+    ...(prices ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }] : []),
+    ...(manager ? [{ to: '/audiovisual/fotos', label: 'Fotos', end: false }] : []),
   ]
   if (tabs.length < 2) return null
   return (

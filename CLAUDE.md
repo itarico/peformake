@@ -108,6 +108,7 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
 
 - Nunca peça, mostre ou digite chaves, tokens e senhas. O Italo cola segredos direto no Supabase (Edge Functions → Secrets).
 - Não entrar no sistema com a senha de ninguém.
+- **Funções do banco e visitante (anon):** função nova que precisa abrir sem login (portal, pagamento, orçamento, galeria, apresentação) recebe `_token`; qualquer outra nasce com `revoke execute ... from public, anon` (o Supabase libera para visitante por padrão). Valores em dinheiro nunca saem de função chamável por quem não é admin. Conferir com o teste de visitante de `docs/rotina-diario.md` (20/11) e `e2e/acessos.cjs`.
 
 ## Deploy
 

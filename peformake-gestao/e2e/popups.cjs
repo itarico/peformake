@@ -82,7 +82,8 @@ const tabsOf = (p) => p.evaluate(() => {
   return [...new Set([...tabs, ...groups])].filter(Boolean).slice(0, 8);
 });
 
-(async () => {
+module.exports = { mock, T, PAGES0, C0 };
+if (require.main === module) (async () => {
   const b = await chromium.launch();
   const rows = new Map();
   for (const [dev, opts] of [['desk', { viewport: { width: 1366, height: 800 } }], ['iphone', devices['iPhone 13']]]) {

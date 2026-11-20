@@ -6,7 +6,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
 import { CommercialRoutes } from '@/features/commercial/CommercialRoutes'
 import { WhatsAppRoutes } from '@/features/commercial/WhatsAppRoutes'
-import { AV_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, NOTIFICATION_ADMIN_ROLES, TRAFFIC_ROLES, hasAnyRole } from '@/lib/roles'
+import { AV_PRICE_ROLES, AV_ROLES, CONTENT_PLANNER_ROLES, CONTENT_ROLES, NOTIFICATION_ADMIN_ROLES, TRAFFIC_ROLES, hasAnyRole } from '@/lib/roles'
 import { MovedTo } from '@/components/layout/MovedTo'
 import { SiteGate } from '@/site/SiteGate'
 import { ConfirmHost } from '@/components/ui/confirm'
@@ -164,13 +164,16 @@ export function App() {
             <Route path="audiovisual/producao" element={<AvBoard />} />
             <Route path="audiovisual/projeto/:id" element={<AvProjectPage />} />
             <Route path="audiovisual/servicos" element={<MovedTo to="/configuracoes/audiovisual/servicos" />} />
-            <Route path="audiovisual/orcamentos" element={<AvQuotesPage />} />
             <Route path="audiovisual/fotos" element={<AvPhotosPage />} />
             <Route path="audiovisual/fotos/:id" element={<AvGalleryPage />} />
             <Route path="audiovisual/roteiros" element={<MovedTo to="/audiovisual/producao" />} />
             <Route path="audiovisual/plano-do-mes" element={<MovedTo to="/estrategia/consultoria" />} />
-            <Route path="audiovisual/orcamentos/novo" element={<AvQuoteEditor />} />
-            <Route path="audiovisual/orcamentos/:id" element={<AvQuoteEditor />} />
+            {/* Orçamentos têm valores: só admin e Ellcazo (o banco já esconde dos outros; a tela não abre vazia). */}
+            <Route element={<RequireRole roles={AV_PRICE_ROLES} />}>
+              <Route path="audiovisual/orcamentos" element={<AvQuotesPage />} />
+              <Route path="audiovisual/orcamentos/novo" element={<AvQuoteEditor />} />
+              <Route path="audiovisual/orcamentos/:id" element={<AvQuoteEditor />} />
+            </Route>
           </Route>
           <Route path="notificacoes" element={<NotificationsPage />} />
           <Route path="conta" element={<AccountPage />} />
