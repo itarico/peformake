@@ -93,6 +93,9 @@ continua sendo a do PC. Se editar lá, copie de novo para cá.
 - `roteiro-retencao/`, `narracao/`, `edicao-motion/`, `edicao-story/`, `radar-criativos/`, `ler-video/`,
   `clareza-video/`, `shorts-do-longo/`, `titulo-thumb-lab/`, `varredura-nicho/`
 
+- `openmotion*/` (8 skills do OpenMotion, estúdio de vídeo com agente, 20/11/2026). Para instalar o OpenMotion
+  num PC (repositório, MCP e skills): `ferramentas/openmotion/INSTALAR.md` e `instalar-openmotion.ps1`.
+
 Ficaram de fora as skills de terceiros instaladas (seedance, kling, hyperframes, remotion, ugc-ad-scripts,
 ad-hook-analyzer, humanizar, nem-parece-ia e outras): não são estudo da casa e podem ser reinstaladas.
 
