@@ -24,21 +24,34 @@ const SOURCE: Record<string, string> = { manual: 'Enviado pela equipe', creative
 const MAX = 100 * 1024 * 1024
 
 /**
- * Pedidos de arquivo do Briefing (Italo, 20/11): o que a estratégia precisa ver. O anexado entra na pasta Briefing
- * com o nome do pedido na frente ("Tabela de preços · arquivo.pdf"), e o pedido fica marcado. O agente lê tudo.
+ * Pedidos de arquivo do Briefing (Italo, 20/11): o que a estratégia precisa ver, por grupo. O anexado entra na pasta
+ * Briefing com o nome do pedido na frente ("Tabela de preços e condições · arquivo.pdf") e o pedido fica marcado. O agente lê tudo.
  */
-export const BRIEF_REQUESTS: { id: string; label: string; hint: string; match: RegExp; accept?: string }[] = [
-  { id: 'precos', label: 'Tabela de preços', hint: 'PDF, planilha ou foto', match: /tabela|preco/ },
-  { id: 'cardapio', label: 'Cardápio ou catálogo', hint: 'O que o cliente vê para escolher', match: /cardapio|catalogo|menu/ },
-  { id: 'fotos', label: 'Fotos dos produtos e do espaço', hint: 'Pode mandar várias', match: /foto/, accept: 'image/*,video/*' },
-  { id: 'marca', label: 'Logo e manual da marca', hint: 'PNG, PDF ou vetor; cores e fontes', match: /logo|manual/ },
-  { id: 'depoimentos', label: 'Depoimentos e prints de avaliações', hint: 'Prints do Google, WhatsApp, Instagram', match: /depoimento|avaliac|print/ },
-  { id: 'antigos', label: 'Relatórios ou campanhas antigas', hint: 'O que já foi feito e o resultado', match: /relatorio|campanha/ },
+export interface BriefRequest { id: string; group: string; label: string; match: RegExp; mime?: RegExp; accept?: string; optional?: boolean }
+export const BRIEF_REQUESTS: BriefRequest[] = [
+  { id: 'apresentacao', group: 'Empresa', label: 'Apresentação comercial', match: /apresenta/ },
+  { id: 'cnpj', group: 'Empresa', label: 'Cartão CNPJ', match: /cnpj/, optional: true },
+  { id: 'contrato', group: 'Empresa', label: 'Contrato social', match: /contrato social|contrato-social|contrato_social/, optional: true },
+  { id: 'produtos', group: 'O que vende', label: 'Lista de produtos e serviços', match: /lista de produtos|produtos|servicos/, accept: '.pdf,.xlsx,.docx,.csv,.txt,image/*' },
+  { id: 'cardapio', group: 'O que vende', label: 'Cardápio ou catálogo', match: /cardapio|catalogo|menu/ },
+  { id: 'precos', group: 'O que vende', label: 'Tabela de preços e condições', match: /tabela|preco|condic/ },
+  { id: 'logo', group: 'Marca', label: 'Logo em boa qualidade', match: /logo/ },
+  { id: 'manual', group: 'Marca', label: 'Manual da marca', match: /manual|identidade visual/ },
+  { id: 'fotos', group: 'Marca', label: 'Fotos (produtos, espaço, equipe)', match: /foto/, accept: 'image/*' },
+  { id: 'videos', group: 'Marca', label: 'Vídeos que já têm', match: /video/, mime: /^video\//, accept: 'video/*' },
+  { id: 'depoimentos', group: 'Prova', label: 'Depoimentos de clientes', match: /depoimento/ },
+  { id: 'avaliacoes', group: 'Prova', label: 'Prints de avaliações', match: /avaliac/, accept: 'image/*,.pdf' },
+  { id: 'premios', group: 'Prova', label: 'Prêmios, certificados e mídia', match: /premio|certificad|materia|midia/ },
+  { id: 'cases', group: 'Prova', label: 'Cases ou antes e depois', match: /case|antes e depois|antes-e-depois/ },
+  { id: 'campanhas', group: 'Marketing e vendas', label: 'Relatórios ou campanhas antigas', match: /relatorio|campanha/ },
+  { id: 'instagram', group: 'Marketing e vendas', label: 'Prints do Instagram (alcance)', match: /instagram|alcance|seguidor/, accept: 'image/*,.pdf' },
+  { id: 'whatsapp', group: 'Marketing e vendas', label: 'Mensagens do WhatsApp', match: /whatsapp|mensage/ },
+  { id: 'vendas', group: 'Marketing e vendas', label: 'Planilha de vendas por mês', match: /planilha de vendas|vendas|faturamento/ },
 ]
 const plain = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
-/** Pedido já atendido: tem arquivo com o nome do pedido na frente ou com a palavra dele no nome. */
-export function requestDone(req: { label: string; match: RegExp }, names: string[]): boolean {
-  return names.some((n) => plain(n).startsWith(plain(req.label)) || req.match.test(plain(n)))
+/** Pedido já atendido: tem arquivo com o nome do pedido na frente, a palavra dele no nome, ou o tipo certo (vídeo). */
+export function requestDone(req: Pick<BriefRequest, 'label' | 'match' | 'mime'>, files: { name: string; mime?: string }[]): boolean {
+  return files.some((f) => plain(f.name).startsWith(plain(req.label)) || req.match.test(plain(f.name)) || (!!req.mime && !!f.mime && req.mime.test(f.mime)))
 }
 
 interface Asset { id: string; folder: FolderId; name: string; bucket: string; path: string; mime: string; size: number; source: string; createdAt: string }
@@ -73,7 +86,8 @@ function Icon({ mime }: { mime: string }) {
 
 /** Todos os arquivos do cliente, de todos os serviços, em pastas. */
 /** `only`: uma pasta só, sem a lista de pastas (ex.: Documentos dentro do Briefing). */
-export function ClientAssets({ clientId, only }: { clientId: string; only?: FolderId }) {
+/** `done`: pedidos que o sistema já tem por outro caminho (ex.: cartão CNPJ da Receita). `onProducts`: a lista de produtos anexada entra em Produtos. */
+export function ClientAssets({ clientId, only, done: doneIds = [], onProducts }: { clientId: string; only?: FolderId; done?: string[]; onProducts?: (file: File) => Promise<string> }) {
   const queryClient = useQueryClient()
   const key = ['client-assets', clientId]
   const data = useQuery({ queryKey: key, queryFn: () => listAssets(clientId) })
@@ -85,10 +99,13 @@ export function ClientAssets({ clientId, only }: { clientId: string; only?: Fold
   // Pedido de arquivo que está sendo atendido (o nome dele vai na frente do arquivo).
   const [req, setReq] = useState<string | null>(null)
   const [importFor, setImportFor] = useState<string | null>(null)
+  const [note, setNote] = useState<string | null>(null)
   const reqInput = useRef<HTMLInputElement>(null)
   const upload = useMutation({
-    mutationFn: async (arg: File[] | { files: File[]; prefix?: string }) => {
-      const { files, prefix } = Array.isArray(arg) ? { files: arg, prefix: undefined } : arg
+    mutationFn: async (arg: File[] | { files: File[]; prefix?: string; products?: boolean }) => {
+      const { files, prefix, products } = Array.isArray(arg) ? { files: arg, prefix: undefined, products: false } : arg
+      // Lista de produtos: além de guardar o arquivo, lê e soma em Produtos (sem repetir).
+      if (products && onProducts) for (const f of files) setNote(await onProducts(f).catch((e: Error) => `Guardei o arquivo, mas não consegui ler os produtos: ${e.message}`))
       for (const file of files) {
         if (file.size > MAX) throw new Error(`${file.name} passa de 100 MB.`)
         const name = prefix ? `${prefix} · ${file.name}` : file.name
@@ -127,10 +144,10 @@ export function ClientAssets({ clientId, only }: { clientId: string; only?: Fold
   const list = data.data.filter((a) => a.folder === folder)
   const count = (f: FolderId) => data.data.filter((a) => a.folder === f).length
 
-  const names = list.map((a) => a.name)
+  const files = list.map((a) => ({ name: a.name, mime: a.mime }))
   const others = data.data.filter((a) => a.folder !== folder)
-  const pickReq = (r: (typeof BRIEF_REQUESTS)[number]) => {
-    setProblem(null); setReq(r.label)
+  const pickReq = (r: BriefRequest) => {
+    setProblem(null); setNote(null); setReq(r.label)
     if (reqInput.current) { reqInput.current.accept = r.accept ?? ''; reqInput.current.click() }
   }
 
@@ -148,20 +165,34 @@ export function ClientAssets({ clientId, only }: { clientId: string; only?: Fold
       </nav>}
 
       <div className="flex min-w-0 flex-col gap-2">
-        {only === 'briefing' && <ul data-pedidos aria-label="Arquivos que a estratégia precisa" className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-          {BRIEF_REQUESTS.map((r) => {
-            const done = requestDone(r, names)
+        {/* Pedidos por grupo: o que falta vira linha com Anexar e Importar; o que já tem vira etiqueta com ✓ (compacto). */}
+        {only === 'briefing' && <div data-pedidos className="flex flex-col gap-2.5">
+          {[...new Set(BRIEF_REQUESTS.map((r) => r.group))].map((g) => {
+            const rs = BRIEF_REQUESTS.filter((r) => r.group === g)
+            const isDone = (r: BriefRequest) => doneIds.includes(r.id) || requestDone(r, files)
+            const got = rs.filter(isDone), miss = rs.filter((r) => !isDone(r))
             return (
-              <li key={r.id} data-pedido={r.id} data-feito={done ? 'sim' : 'nao'} className="flex min-h-14 items-center gap-2.5 rounded-2xl border border-line bg-surface px-3 py-1.5">
-                <span aria-hidden="true" className={cn('grid size-8 shrink-0 place-items-center rounded-full', done ? 'bg-ok-soft text-ok-ink' : 'border border-dashed border-line-strong text-muted')}>{done ? <Check size={15} strokeWidth={3} /> : <FileUp size={15} />}</span>
-                <span className="min-w-0 flex-1"><b className="block truncate text-[13.5px]">{r.label}</b><span className="block truncate text-[12px] text-muted">{done ? 'Já anexado' : r.hint}</span></span>
-                <button type="button" disabled={upload.isPending} onClick={() => pickReq(r)} className="min-h-9 shrink-0 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-semibold hover:border-ink disabled:opacity-50">{upload.isPending && req === r.label ? 'Enviando' : 'Anexar'}</button>
-                {others.length > 0 && <button type="button" onClick={() => { setProblem(null); setImportFor(r.label) }} aria-label={`Importar ${r.label} de outra pasta`} title="Usar um arquivo que já está noutra pasta do cliente" className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full border border-line-strong hover:border-ink"><FolderInput size={15} aria-hidden="true" /></button>}
-              </li>
+              <section key={g} data-grupo={g} className="flex flex-col gap-1.5">
+                <h4 className="flex items-center gap-2 px-1 text-[12px] font-semibold text-muted">{g}<span className="tabular-nums">{got.length}/{rs.length}</span></h4>
+                {miss.length > 0 && <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
+                  {miss.map((r) => (
+                    <li key={r.id} data-pedido={r.id} data-feito="nao" className="flex min-h-11 items-center gap-2 rounded-xl border border-line bg-surface py-1 pl-3 pr-1">
+                      <span aria-hidden="true" className="grid size-6 shrink-0 place-items-center rounded-full border border-dashed border-line-strong text-muted"><FileUp size={12} /></span>
+                      <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">{r.label}{r.optional && <span className="font-normal text-muted"> (opcional)</span>}</span>
+                      <button type="button" disabled={upload.isPending} onClick={() => pickReq(r)} className="min-h-9 shrink-0 cursor-pointer rounded-full border border-line-strong px-3 text-[12.5px] font-semibold hover:border-ink disabled:opacity-50">{upload.isPending && req === r.label ? 'Enviando' : 'Anexar'}</button>
+                      {others.length > 0 && <button type="button" onClick={() => { setProblem(null); setImportFor(r.label) }} aria-label={`Importar ${r.label} de outra pasta`} title="Usar um arquivo que já está noutra pasta do cliente" className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full border border-line-strong hover:border-ink"><FolderInput size={15} aria-hidden="true" /></button>}
+                    </li>
+                  ))}
+                </ul>}
+                {got.length > 0 && <div className="flex flex-wrap gap-1.5">
+                  {got.map((r) => <button key={r.id} type="button" data-pedido={r.id} data-feito="sim" onClick={() => pickReq(r)} title="Já tem. Toque para anexar mais um" className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full bg-ok-soft px-3 text-[12.5px] font-semibold text-ok-ink hover:opacity-85"><Check size={13} strokeWidth={3} aria-hidden="true" />{r.label}</button>)}
+                </div>}
+              </section>
             )
           })}
-        </ul>}
-        {only === 'briefing' && <input ref={reqInput} type="file" multiple className="sr-only" aria-hidden="true" tabIndex={-1} onChange={(e) => { const files = [...(e.target.files ?? [])]; if (files.length) upload.mutate({ files, prefix: req ?? undefined }) }} />}
+          {note && <p role="status" className="text-[12.5px] text-muted">{note}</p>}
+        </div>}
+        {only === 'briefing' && <input ref={reqInput} type="file" multiple className="sr-only" aria-hidden="true" tabIndex={-1} onChange={(e) => { const files = [...(e.target.files ?? [])]; if (files.length) upload.mutate({ files, prefix: req ?? undefined, products: req === BRIEF_REQUESTS.find((r) => r.id === 'produtos')!.label }) }} />}
         {importFor && <ImportDialog title={importFor} files={others} busy={importAsset.isPending} error={importAsset.isError ? problem : null} onClose={() => setImportFor(null)} onPick={(a) => importAsset.mutate({ a, prefix: importFor })} />}
         <div
           onDragOver={(e) => e.preventDefault()}

@@ -3,7 +3,7 @@ import { briefChecks, briefMissing, briefPercent, mergeCompetitors, mergeReferen
 describe('briefing', () => {
   it('medidor vai de 0 a 100', () => {
     expect(briefPercent(briefChecks({}, {}, 0, 8), 0, 8)).toBe(0)
-    const full = { produtos: [{ nome: 'Pizza', preco: 'R$ 49' }], links: { site: 'https://a.com', instagram: 'https://ig.com/a' }, publico: 'Famílias', diferenciais: 'Forno a lenha', concorrentes: [{ nome: 'Xis' }], referencias: [{ link: 'https://y.com' }], voz: 'Leve', proibidos: 'Preço', quem_aparece: 'Dono', capacidade: '80 mesas', momento: 'Crescendo', proposito: 'Juntar a família', percepcao: 'Confiável', posicionamento: 'A pizza da família', jornada: 'Instagram e indicação', marketing: 'Anúncio deu certo', meses_fortes: [12], marca: 'Logo em PNG' }
+    const full = { produtos: [{ nome: 'Pizza', preco: 'R$ 49' }], links: { site: 'https://a.com', instagram: 'https://ig.com/a' }, publico: 'Famílias', diferenciais: 'Forno a lenha', concorrentes: [{ nome: 'Xis' }], referencias: [{ link: 'https://y.com' }], voz: 'Leve', proibidos: 'Preço', quem_aparece: 'Dono', capacidade: '80 mesas', momento: 'Crescendo', proposito: 'Juntar a família', percepcao: 'Confiável', posicionamento: 'A pizza da família', jornada: 'Instagram e indicação', marketing: 'Anúncio deu certo', meses_fortes: [12], marca: 'Logo em PNG', historias: 'O dia começa às 6h' }
     expect(briefPercent(briefChecks(full, { ofertas: 'Combo', meta: '300 pedidos', datas_travam: 'Nenhuma' }, 8, 8), 8, 8)).toBe(100)
     const half = briefPercent(briefChecks(full, { ofertas: 'Combo', meta: '300 pedidos', datas_travam: 'Nenhuma' }, 4, 8), 4, 8)
     expect(half).toBeGreaterThan(80); expect(half).toBeLessThan(100)
@@ -94,5 +94,18 @@ describe('guias que aprofundam', () => {
     expect(quizText(steps, ans)).not.toContain('R$')
     expect(quizMoney(steps, ans)).toEqual({ verba_anuncio: 'R$ 500 a 1.500' })
     expect(JSON.stringify(QUIZ.sazonalidade ?? []).toLowerCase()).not.toContain('comemorativ')
+  })
+})
+
+describe('histórias e assuntos', () => {
+  it('6 conversas; o puxa-fio só aparece uma vez e só com resposta curta', async () => {
+    const { QUIZ, HISTORIAS, visibleSteps } = await import('./briefRules')
+    const steps = QUIZ.historias!
+    expect(HISTORIAS).toHaveLength(6)
+    expect(steps).toHaveLength(12)
+    const curta = steps.map((_, i) => (i === 0 ? ['Corrido'] : []))
+    const longa = steps.map((_, i) => (i === 0 ? ['x'.repeat(400)] : []))
+    expect(visibleSteps(steps, curta)).toContain(1)
+    expect(visibleSteps(steps, longa)).not.toContain(1)
   })
 })

@@ -43,9 +43,9 @@ const check = async (p, tag, name) => {
   return m
 }
 const closeAll = async (p) => { for (let k = 0; k < 4 && (await p.locator('dialog[open]').count()); k++) { await p.keyboard.press('Escape'); await p.waitForTimeout(150) } }
-const NEW = ['Posicionamento', 'Propósito e história', 'Momento e futuro', 'Como o cliente compra', 'Jeito da marca', 'Marketing até hoje', 'Sazonalidade', 'Marca e acessos', 'Público', 'Como quer ser vista', 'Gravação']
+const NEW = ['Posicionamento', 'Propósito e história', 'Momento e futuro', 'Como o cliente compra', 'Jeito da marca', 'Marketing até hoje', 'Sazonalidade', 'Marca e acessos', 'Histórias e assuntos', 'Público', 'Como quer ser vista', 'Gravação']
 const OLD = ['Diferenciais', 'História', 'Visão', 'Objeções', 'Proibidos', 'Personalidade', 'Capacidade', 'Voz']
-const TEXT = ['Posicionamento', 'Propósito e história', 'Momento e futuro', 'Como o cliente compra', 'Jeito da marca', 'Marketing até hoje', 'Marca e acessos', 'Público', 'Como quer ser vista']
+const TEXT = ['Histórias e assuntos', 'Posicionamento', 'Propósito e história', 'Momento e futuro', 'Como o cliente compra', 'Jeito da marca', 'Marketing até hoje', 'Marca e acessos', 'Público', 'Como quer ser vista']
 
 ;(async () => {
   const b = await chromium.launch()
@@ -130,14 +130,14 @@ const TEXT = ['Posicionamento', 'Propósito e história', 'Momento e futuro', 'C
     // Gravação (cliente com vídeo).
     await tile('Gravação').click(); await p.waitForTimeout(300); await check(p, tag, 'Gravação'); await closeAll(p)
 
-    // Documentos: 6 pedidos, o já anexado marcado, Importar abre a lista das outras pastas.
+    // Documentos: 18 pedidos em 5 grupos, o já anexado marcado, Importar abre a lista das outras pastas.
     const reqs = await p.locator('[data-pedidos] [data-pedido]').evaluateAll((xs) => xs.map((x) => `${x.getAttribute('data-pedido')}:${x.getAttribute('data-feito')}`))
-    if (reqs.length !== 6) fails.push(`${tag}: ${reqs.length} pedidos de arquivo`)
+    if (reqs.length !== 18) fails.push(`${tag}: ${reqs.length} pedidos de arquivo`)
     if (!reqs.includes('precos:sim') || !reqs.includes('fotos:nao')) fails.push(`${tag}: marcação dos pedidos errada (${reqs.join(' ')})`)
     const anexar = p.locator('[data-pedido="fotos"] button', { hasText: 'Anexar' })
     const [chooser] = await Promise.all([p.waitForEvent('filechooser', { timeout: 3000 }).catch(() => null), anexar.click()])
     if (!chooser) fails.push(`${tag}: Anexar não abriu a escolha de arquivo`)
-    await p.locator('[data-pedido="marca"] button[aria-label^="Importar"]').click(); await p.waitForTimeout(300)
+    await p.locator('[data-pedido="logo"] button[aria-label^="Importar"]').click(); await p.waitForTimeout(300)
     const imp = await check(p, tag, 'Importar')
     if (imp && !(await p.locator('dialog[open] [data-importar] li').count())) fails.push(`${tag}: Importar sem arquivos das outras pastas`)
     await closeAll(p)

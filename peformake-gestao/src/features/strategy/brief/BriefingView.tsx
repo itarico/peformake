@@ -1,12 +1,13 @@
 import { Children, useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { Bookmark, Building2, CalendarRange, CalendarX, Check, Compass, IdCard, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, NotebookPen, Package, Route, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
+import { BookOpen, Bookmark, Building2, CalendarRange, CalendarX, Check, Compass, IdCard, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, NotebookPen, Package, Route, Star, Swords, Tag, Target, TrendingUp, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { SearchSelect } from '@/components/ui/SearchSelect'
 import { ClientAssets } from '@/features/clients/ClientAssets'
 import { useClientPermissions } from '@/features/clients/useClients'
+import { importProducts } from './productImport'
 import { cn } from '@/lib/cn'
 import { MeetingNotes } from '../MeetingNotes'
 import { consultKey, saveConsultInfo, saveDirection, useConsultList } from '../consultApi'
@@ -19,7 +20,7 @@ import { answerBrief, resetMonthQuestions, briefKey, briefMonthKey, briefQuestio
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, SeasonDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
 import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, monthGuide, type Family } from './questionEngine'
-import { CARD_MONEY, cardDone, cardText, DIRECTION_QUIZ, fixedStatus, MONTH_CHECKS, QUIZ, seasonText } from './briefRules'
+import { CARD_MONEY, cardDone, cardText, DIRECTION_QUIZ, fixedStatus, mergeProducts, MONTH_CHECKS, QUIZ, seasonText } from './briefRules'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -182,7 +183,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
     publico: { kind: 'text', key: 'publico' }, posicionamento: { kind: 'text', key: 'posicionamento' }, voz: { kind: 'text', key: 'voz' },
     quem_aparece: { kind: 'gravacao' }, momento: { kind: 'text', key: 'momento' }, proposito: { kind: 'text', key: 'proposito' },
     percepcao: { kind: 'text', key: 'percepcao' }, jornada: { kind: 'text', key: 'jornada' },
-    marketing: { kind: 'text', key: 'marketing' }, sazonalidade: { kind: 'sazonal' }, marca: { kind: 'text', key: 'marca' },
+    marketing: { kind: 'text', key: 'marketing' }, sazonalidade: { kind: 'sazonal' }, marca: { kind: 'text', key: 'marca' }, historias: { kind: 'text', key: 'historias' },
     ofertas: { kind: 'month', key: 'ofertas' }, meta: { kind: 'month', key: 'meta' }, datas_travam: { kind: 'month', key: 'datas_travam' },
   }
   const todo: NonNullable<Open>[] = [
@@ -230,10 +231,11 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       </Group>}
 
       {/* Novos (Italo, 20/11): o que já foi feito de marketing, os meses fortes e fracos, a marca e os acessos. */}
-      {part === 'fixo' && <Group title="Marketing">
+      {part === 'fixo' && <Group title="Marketing e conteúdo">
         {C('marketing', Megaphone)}
         {show(seasonDone) && <Tile icon={CalendarRange} label="Sazonalidade" title={seasonText(f) || TEXT_FIELDS.sazonalidade.hint} done={seasonDone} onOpen={() => setOpen({ kind: 'sazonal' })} />}
         {C('marca', KeyRound)}
+        {C('historias', BookOpen)}
       </Group>}
 
       {part === 'mes' && <Group title={`Do mês: ${mes}`}>
@@ -249,7 +251,12 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       {/* Documentos do cliente (Italo, 20/11): tudo o que ele mandar fica aqui; o agente lê antes de gerar. */}
       {part === 'fixo' && <section data-documentos className="flex flex-col gap-2">
         <h3 className="px-1 text-[12.5px] font-semibold uppercase tracking-wide text-muted">Documentos</h3>
-        <ClientAssets clientId={clientId} only="briefing" />
+        <ClientAssets clientId={clientId} only="briefing" done={[...(f.cnpj ? ['cnpj'] : []), ...(prods.some((p) => p.preco) ? ['produtos'] : [])]}
+          onProducts={async (file) => {
+            const { list, added } = mergeProducts(prods, await importProducts(file))
+            if (added) { await saveBrief(clientId, { ...f, produtos: list }); void qc.invalidateQueries({ queryKey: briefKey(clientId) }) }
+            return added ? `${added} ${added === 1 ? 'produto entrou' : 'produtos entraram'} em Produtos. Confira os preços lá.` : 'Guardei o arquivo; não achei produtos novos nele.'
+          }} />
       </section>}
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>

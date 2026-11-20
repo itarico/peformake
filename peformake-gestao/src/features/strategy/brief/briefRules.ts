@@ -30,10 +30,12 @@ export interface BriefFixed {
   proposito?: string; percepcao?: string; arquetipo?: string; posicionamento?: string; historia?: string; jornada?: string; objecoes?: string; visao?: string
   /** Marketing até hoje, marca e acessos, e o porquê da sazonalidade (Italo, 20/11). */
   marketing?: string; marca?: string; sazonalidade?: string
+  /** Histórias e assuntos (conversa de 1 a 3 minutos por pergunta): matéria-prima de artes, vídeos e textos. */
+  historias?: string
   /** Meses fortes e fracos (1 a 12). Datas comemorativas o sistema já sabe: não se pergunta. */
   meses_fortes?: number[]; meses_fracos?: number[]
   /** Valores em dinheiro: só administrador vê na tela; o agente lê. */
-  verba_anuncio?: string; ticket_medio?: string; faturamento_mes?: string
+  verba_anuncio?: string; ticket_medio?: string; faturamento_mes?: string; gasto_ano_cliente?: string; margem_principal?: string
   /** Tipo de negócio (família do motor de perguntas). Sem ele, o sistema deduz pela descrição. */
   tipo?: string
   /** Como a equipe chama o tipo (ex.: Pizzaria, Igreja, ou um tipo novo escrito à mão). */
@@ -46,7 +48,7 @@ export interface BriefMonth { ofertas?: string; meta?: string; datas_travam?: st
 /** Campos de texto do briefing (os de lista têm pop-up próprio). */
 export type TextKey = 'publico' | 'diferenciais' | 'voz' | 'proibidos' | 'quem_aparece' | 'quem_grava' | 'capacidade'
   | 'momento' | 'proposito' | 'percepcao' | 'arquetipo' | 'posicionamento' | 'historia' | 'jornada' | 'objecoes' | 'visao'
-  | 'marketing' | 'marca' | 'sazonalidade'
+  | 'marketing' | 'marca' | 'sazonalidade' | 'historias'
 export const TEXT_FIELDS: Record<TextKey, { label: string; hint: string }> = {
   publico: { label: 'Público', hint: 'Quem compra: idade, bairro, renda, o que busca e o melhor cliente.' },
   momento: { label: 'Momento e futuro', hint: 'Pontos fortes e fracos, quanto dá para atender, onde quer chegar e o que impede (SWOT e visão).' },
@@ -63,6 +65,7 @@ export const TEXT_FIELDS: Record<TextKey, { label: string; hint: string }> = {
   proibidos: { label: 'Proibidos', hint: 'O que nunca falar ou mostrar.' },
   marketing: { label: 'Marketing até hoje', hint: 'O que já fizeram (anúncio, influenciador, outra agência), o que funcionou, o que não funcionou e a verba.' },
   marca: { label: 'Marca e acessos', hint: 'Logo, cores, fontes e fotos, e quais acessos a Peformake já tem (Instagram, anúncios, Google).' },
+  historias: { label: 'Histórias e assuntos', hint: 'Conversas longas para virar conteúdo: o dia a dia, os clientes, o que ensinar, a história, os bastidores e os conselhos. Falar é o melhor jeito.' },
   sazonalidade: { label: 'Sazonalidade', hint: 'Os meses fortes e fracos do ano e por quê. As datas comemorativas o sistema já sabe.' },
   quem_aparece: { label: 'Quem aparece', hint: 'Quem pode aparecer nos vídeos.' },
   quem_grava: { label: 'Quem grava', hint: 'Ellcazo, o próprio cliente, a equipe dele.' },
@@ -103,14 +106,16 @@ export function cardText(f: BriefFixed, k: TextKey): string {
 }
 
 /** Dinheiro do briefing: só administrador vê e preenche na tela (CLAUDE.md); o agente lê. */
-export type MoneyKey = 'verba_anuncio' | 'ticket_medio' | 'faturamento_mes'
+export type MoneyKey = 'verba_anuncio' | 'ticket_medio' | 'faturamento_mes' | 'gasto_ano_cliente' | 'margem_principal'
 export const MONEY_FIELDS: Record<MoneyKey, { label: string; placeholder: string }> = {
   verba_anuncio: { label: 'Verba de anúncio por mês', placeholder: 'Ex.: R$ 1.500' },
   faturamento_mes: { label: 'Faturamento por mês', placeholder: 'Ex.: R$ 60 mil' },
   ticket_medio: { label: 'Ticket médio', placeholder: 'Ex.: R$ 120' },
+  gasto_ano_cliente: { label: 'Gasto por ano do cliente fiel', placeholder: 'Ex.: R$ 1.800' },
+  margem_principal: { label: 'Margem do produto principal', placeholder: 'Ex.: 35%' },
 }
 /** Que dinheiro cada cartão pergunta. */
-export const CARD_MONEY: Partial<Record<TextKey, MoneyKey[]>> = { marketing: ['verba_anuncio'], momento: ['faturamento_mes', 'ticket_medio'] }
+export const CARD_MONEY: Partial<Record<TextKey, MoneyKey[]>> = { marketing: ['verba_anuncio'], momento: ['faturamento_mes', 'ticket_medio'], publico: ['gasto_ano_cliente'], jornada: ['margem_principal'] }
 
 export const MONTHS_SHORT = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 export const MONTHS_FULL = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
@@ -140,6 +145,7 @@ export function briefChecks(f: BriefFixed, m: BriefMonth, answered: number, tota
     { key: 'marketing', label: 'Marketing até hoje', done: filled(f.marketing), weight: 0.75 },
     { key: 'sazonalidade', label: 'Sazonalidade', done: filled(f.meses_fortes) || filled(f.meses_fracos), weight: 0.5 },
     { key: 'marca', label: 'Marca e acessos', done: filled(f.marca), weight: 0.5 },
+    { key: 'historias', label: 'Histórias e assuntos', done: filled(f.historias), weight: 0.5 },
     { key: 'ofertas', label: 'Ofertas do mês', done: filled(m.ofertas), weight: 1 },
     { key: 'meta', label: 'Meta do mês', done: filled(m.meta), weight: 1 },
     { key: 'datas_travam', label: 'Datas que travam', done: filled(m.datas_travam), weight: 0.5 },
@@ -185,6 +191,14 @@ export function mergeReferences(cur: Referencia[], add: Referencia[], markNew = 
   const out = [...cur]
   for (const x of add) if (x.link?.trim() && !out.some((r) => linkKey(r.link) === linkKey(x.link))) out.push({ ...x, ...(markNew ? { novo: true } : {}) })
   return out
+}
+
+/** Soma produtos lidos de um arquivo sem repetir pelo nome (o que já existe fica como está). */
+export function mergeProducts(cur: Produto[], add: Produto[]): { list: Produto[]; added: number } {
+  const k = (x: string | undefined) => norm(x)
+  const list = [...cur]
+  for (const p of add) if (p.nome?.trim() && !list.some((c) => k(c.nome) === k(p.nome))) list.push(p)
+  return { list, added: list.length - cur.length }
 }
 
 /** Miniatura que dá para deduzir do link (YouTube). As outras vêm da coleta ou ficam com ícone. */
@@ -312,7 +326,7 @@ export function fromLinkList(items: LinkItem[], before: BriefFixed): Pick<BriefF
 export interface QuizStep {
   q: string; opts: string[]; multi?: boolean; open?: boolean
   /** Só aparece se a resposta da pergunta `q` tiver uma das palavras. `has: []`: aparece quando ela foi respondida (puxa-fio). */
-  when?: { q: string; has: string[] }
+  when?: { q: string; has: string[]; short?: number }
   /** Pergunta de dinheiro: a resposta vai para o campo de valor (só administrador vê), não para o texto. */
   money?: MoneyKey
 }
@@ -324,6 +338,22 @@ const aberta = (q: string, p?: string, when?: { q: string; has: string[] }): Qui
 /** É um puxa-fio (pergunta extra de aprofundar). */
 export const isFio = (s: QuizStep) => !!s.open && !!s.when && s.when.has.length === 0
 
+/**
+ * Histórias e assuntos (Italo, 20/11): 6 conversas grandes e abertas, de 1 a 3 minutos cada, para artes, vídeos e textos.
+ * Nada de pergunta "boba" ou de formulário. Resposta curta puxa o fio UMA vez.
+ */
+export const HISTORIAS: string[] = [
+  'Me conta como é um dia normal aí, do abrir ao fechar: o que acontece, quem chega, o que dá mais trabalho e o que você mais gosta de fazer.',
+  'Me conta sobre os seus clientes: as dúvidas que eles mais trazem, o que eles costumam errar antes de chegar até você, e algum atendimento que te marcou, seja engraçado, difícil ou emocionante.',
+  'Imagina que você vai ensinar alguém a escolher bem um produto ou serviço como o seu. O que você diria? O que diferencia um bom de um ruim, e o que as pessoas acreditam no seu ramo que não é verdade?',
+  'Conta a história de vocês desde o começo: por que começou, o momento mais difícil, a virada, e do que vocês têm mais orgulho hoje.',
+  'O que acontece aí dentro que o cliente não vê e ia achar interessante? Como é feito, quem faz, algum cuidado ou detalhe que ninguém imagina.',
+  'Se você fosse dar um conselho para alguém começando no seu ramo, o que diria? E qual a maior lição que o seu negócio te ensinou?',
+]
+export const HISTORIA_FIO = 'Me conta um caso real disso?'
+/** Resposta com menos que isso (caracteres) puxa o fio. */
+export const HISTORIA_CURTA = 240
+
 /** O que nunca falar (entra no guia do Jeito da marca; o portal ainda abre o campo antigo). */
 const PROIBIDOS: QuizStep[] = [
   { q: 'O que nunca falar ou mostrar?', opts: ['Política', 'Religião', 'Palavrão', 'Concorrente pelo nome', 'Preço baixo como foco', 'Bebida alcoólica', 'Crianças'], multi: true },
@@ -333,21 +363,26 @@ const PROIBIDOS: QuizStep[] = [
 
 export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
   proibidos: PROIBIDOS,
+  historias: HISTORIAS.flatMap((q) => [{ q, opts: [], open: true }, { q: HISTORIA_FIO, opts: [], open: true, when: { q, has: [], short: HISTORIA_CURTA } }]),
   publico: [
     { q: 'Quem mais compra?', opts: ['Mulheres', 'Homens', 'Casais', 'Famílias com filhos', 'Jovens', 'Empresas'], multi: true },
     { q: 'Idade dos filhos dessas famílias?', opts: ['Bebês', 'Crianças', 'Adolescentes'], multi: true, when: W('Quem mais compra?', 'familias') },
     { q: 'Que tipo de empresa compra e quem decide lá dentro?', opts: ['Pequenos comércios', 'Indústrias', 'Escritórios', 'Órgão público', 'Dono decide', 'Comprador decide'], multi: true, when: W('Quem mais compra?', 'empresas') },
     { q: 'Qual a idade?', opts: ['18 a 24', '25 a 34', '35 a 44', '45 a 59', '60 ou mais'], multi: true },
     { q: 'Onde mora ou trabalha?', opts: ['No bairro', 'Bairros vizinhos', 'Na cidade toda', 'Região metropolitana', 'Turistas', 'Outras cidades (online)'], multi: true },
+    { q: 'Até qual bairro ou raio atendem ou entregam?', opts: [], open: true },
     { q: 'Qual a renda?', opts: ['Popular', 'Classe média', 'Média alta', 'Alta'], multi: true },
-    ...aberta('Pense no seu melhor cliente: quem é ele, o que faz da vida e por que compra de vocês?', 'Por que ele é o melhor? O que tem de diferente dos outros?'),
+    ...aberta('Descreva o seu melhor cliente: quem é, o que compra e por que volta', 'Por que ele é o melhor? O que tem de diferente dos outros?'),
+    { q: 'Quantas vezes por ano um cliente fiel compra?', opts: ['1 vez', '2 a 4 vezes', '5 a 12 vezes', 'Toda semana'] },
+    { q: 'Quanto um cliente fiel gasta no ano?', opts: ['Até R$ 500', 'R$ 500 a 2 mil', 'R$ 2 a 10 mil', 'Mais de R$ 10 mil'], money: 'gasto_ano_cliente' },
     { q: 'O que faz a pessoa procurar vocês? (a dor ou o desejo)', opts: ['Resolver um problema urgente', 'Economizar', 'Se sentir bem', 'Status', 'Praticidade', 'Presentear'], multi: true },
     ...aberta('Conte com as palavras do cliente: o que ele diz quando chega ou elogia?', 'O que um cliente diria sobre vocês para um amigo?'),
     { q: 'O que mais pesa na compra?', opts: ['Preço', 'Qualidade', 'Rapidez', 'Atendimento', 'Experiência', 'Confiança na marca'], multi: true },
     { q: 'O que faz ele desistir de comprar?', opts: ['Preço', 'Demora', 'Desconfiança', 'Não achou o que queria', 'Atendimento'], multi: true },
     { q: 'Quando costuma comprar?', opts: ['Dia a dia', 'Fim de semana', 'À noite', 'No almoço', 'Datas especiais', 'Quando tem promoção'], multi: true },
     { q: 'Onde ele passa o tempo online?', opts: ['Instagram', 'TikTok', 'Facebook', 'YouTube', 'WhatsApp', 'Google'], multi: true },
-    ...aberta('Quem vocês NÃO querem atender? (o cliente que dá trabalho e não compensa)', 'Por que esse cliente não compensa?'),
+    ...aberta('E o cliente que dá trabalho e você não quer mais: como ele é?', 'Por que esse cliente não compensa?'),
+    ...aberta('Por que um cliente deixou de comprar com vocês? Conte um caso', 'O que daria para ter feito diferente?'),
   ],
   // Posicionamento + Diferenciais.
   posicionamento: [
@@ -362,6 +397,9 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     ...aberta('O que o cliente diria que vocês são? (a categoria)', 'E o que vocês gostariam que ele dissesse?'),
     { q: 'Por que acreditar? Qual a prova?', opts: ['Anos de mercado', 'Clientes atendidos', 'Depoimentos', 'Avaliações no Google', 'Prêmios ou certificação', 'Garantia', 'Antes e depois', 'Ainda não tem'], multi: true },
     { q: 'Contra quem competem de verdade?', opts: ['Concorrente direto', 'O cliente fazer sozinho', 'Não fazer nada', 'Loja online', 'Informal ou mais barato'], multi: true },
+    ...aberta('O que o concorrente faz melhor que vocês? Seja sincero', 'Por que vocês ainda não fazem igual?'),
+    ...aberta('Por que um cliente troca vocês pelo concorrente?', 'Me dá um exemplo real de quando isso aconteceu'),
+    ...aberta('Qual concorrente você admira e qual quer superar?', 'O que precisa acontecer para passar dele?'),
     ...aberta('Em uma frase: o que só vocês fazem e ninguém mais na região?', 'Por que você acha que só vocês fazem isso?'),
   ],
   // Jeito da marca = personalidade (arquétipo) + voz + proibidos.
@@ -377,6 +415,7 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     ...aberta('Uma marca que vocês NÃO querem parecer', 'Por que não? O que incomoda nela?'),
     ...aberta('Palavras ou expressões que a marca SEMPRE usa', 'Onde essas palavras aparecem hoje? (atendimento, post, placa)'),
     { q: 'Palavras que a marca NUNCA usa', opts: [], open: true },
+    ...aberta('O que você nunca faria, mesmo que vendesse muito?', 'Por que isso é inegociável?'),
     { q: 'Escreva (ou fale) uma frase do jeito que a marca diria no Instagram', opts: [], open: true },
     ...PROIBIDOS,
   ],
@@ -409,6 +448,8 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     ...aberta('E nos próximos 12 meses: o que precisa acontecer para ser um ano bom?', 'Como você vai saber que deu certo? Que número?'),
     { q: 'O que impede de chegar lá hoje?', opts: ['Falta de clientes', 'Equipe', 'Caixa', 'Tempo do dono', 'Concorrência', 'Processo bagunçado', 'Marca pouco conhecida'], multi: true },
     ...aberta('Que oportunidade vocês veem no mercado agora?', 'Por que você acha que ninguém aproveitou ainda?'),
+    ...aberta('Se a verba fosse ilimitada, o que faria amanhã?', 'E qual pedaço disso dá para começar pequeno, já?'),
+    ...aberta('Tem projeto parado esperando dinheiro ou tempo?', 'O que falta exatamente para destravar?'),
     ...aberta('O que preocupa (ameaças: concorrente novo, preço, crise)?', 'Já aconteceu algo assim? O que fizeram?'),
     { q: 'O que seria um sucesso absoluto com a Peformake em 12 meses?', opts: [], open: true },
   ],
@@ -419,11 +460,13 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     ...aberta('Quantas gerações e o que se mantém desde o começo?', 'Por que isso nunca mudou?', W('Como a empresa nasceu?', 'familia')),
     { q: 'Há quanto tempo existem?', opts: ['Menos de 1 ano', '1 a 3 anos', '3 a 10 anos', 'Mais de 10 anos'] },
     ...aberta('Conte o começo: quem, onde e o momento da virada', 'Lembra de um detalhe desse dia? (lugar, frase, sensação)'),
-    ...aberta('Qual foi a maior dificuldade e como superaram?', 'O que aprenderam com isso que usam até hoje?'),
     ...aberta('Um cliente ou caso que marcou a história', 'O que esse cliente diria sobre vocês?'),
     { q: 'Conquistas que dão orgulho', opts: ['Prêmio', 'Nova unidade', 'Cliente grande', 'Marca de vendas', 'Reconhecimento na mídia'], multi: true },
     ...aberta('O que mudaria na vida das pessoas se a empresa fechasse amanhã?', 'Por que você acha isso?'),
     ...aberta('Como vocês fazem isso de um jeito diferente (o "como")?', 'Me dá um exemplo real do dia a dia'),
+    ...aberta('Quais valores vocês não negociam?', 'Me dá um exemplo real de quando isso custou caro e vocês mantiveram'),
+    ...aberta('Do que a equipe mais se orgulha?', 'O que um cliente diria sobre isso?'),
+    ...aberta('Quem na equipe tem uma história boa para contar?', 'Qual é a história? Conte um pedaço'),
     { q: 'Em uma frase: qual é a missão?', opts: [], open: true },
   ],
   percepcao: [
@@ -438,8 +481,15 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
   // Como o cliente compra = jornada + objeções.
   jornada: [
     { q: 'Como o cliente descobre vocês?', opts: ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace'], multi: true },
+    ...aberta('Mais ou menos quanto vem de cada canal?', 'Como vocês sabem disso? (perguntam, cupom, palpite)'),
+    { q: 'Qual canal traz o cliente que mais compra ou volta?', opts: ['Instagram', 'Google', 'Indicação', 'Passou na frente', 'Anúncio', 'Marketplace'] },
+    { q: 'Quem mais indica vocês?', opts: ['Clientes', 'Parceiros', 'Profissionais da área', 'Ninguém em especial'], multi: true },
     { q: 'O que ele faz antes de comprar?', opts: ['Compara preço', 'Pede indicação', 'Olha avaliações', 'Visita o perfil', 'Pergunta no WhatsApp', 'Visita a loja'], multi: true },
     { q: 'Quanto tempo do primeiro contato até comprar?', opts: ['Na hora', 'No mesmo dia', 'Alguns dias', 'Semanas', 'Meses'] },
+    ...aberta('Quem responde o WhatsApp e em quanto tempo, em média?', 'E fora do horário, o que acontece?'),
+    ...aberta('Qual a frase ou pergunta que mais fecha venda?', 'Por que você acha que ela funciona?'),
+    { q: 'Têm meta por vendedor? Usam sistema ou CRM?', opts: ['Meta por vendedor', 'Usam CRM ou sistema', 'Só planilha', 'Nada disso'], multi: true },
+    { q: 'Qual a margem do produto principal?', opts: ['Até 20%', '20% a 40%', '40% a 60%', 'Mais de 60%', 'Não sei'], money: 'margem_principal' },
     { q: 'O que o cliente mais pergunta antes de comprar?', opts: ['Preço', 'Prazo', 'Garantia', 'Forma de pagamento', 'Se funciona', 'Onde fica'], multi: true },
     { q: 'O que ele fala quando não fecha?', opts: ['Tá caro', 'Vou pensar', 'Vou ver com alguém', 'Depois eu volto', 'Achei mais barato'], multi: true },
     ...aberta('Como vocês respondem hoje ao "tá caro"?', 'E funciona? O que o cliente responde?', W('O que ele fala quando não fecha?', 'caro', 'barato')),
@@ -447,7 +497,7 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     ...aberta('Que "trabalho" o cliente contrata quando compra de vocês? (o que ele quer resolver de verdade)', 'Me dá um exemplo real de um cliente'),
     { q: 'Quanto tempo leva do pedido à entrega (ou ao resultado)?', opts: [], open: true },
     { q: 'Depois de comprar ele volta ou indica?', opts: ['Volta todo mês', 'Volta às vezes', 'Compra uma vez', 'Indica muito'], multi: true },
-    { q: 'O que fazem no pós-venda?', opts: ['Mensagem de agradecimento', 'Pede avaliação', 'Cupom para voltar', 'Acompanha o resultado', 'Nada ainda'], multi: true },
+    { q: 'Fazem pós-venda ou pedem indicação? Como?', opts: ['Mensagem de agradecimento', 'Pede avaliação', 'Pede indicação', 'Cupom para voltar', 'Acompanha o resultado', 'Nada ainda'], multi: true },
   ],
   // Novo (Italo, 20/11): o que já foi feito, o que deu certo e a verba (dinheiro só para admin).
   marketing: [
@@ -457,6 +507,12 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     ...aberta('Que influenciador e qual foi o resultado?', 'Quanto vendeu ou quantos clientes vieram?', W('O que já fizeram de marketing?', 'influenciador')),
     ...aberta('O que funcionou melhor até hoje?', 'Por que você acha que funcionou?'),
     ...aberta('O que não funcionou?', 'Por que você acha que não deu certo?'),
+    ...aberta('Qual post ou vídeo mais deu resultado até hoje?', 'Por que você acha que ele funcionou?'),
+    ...aberta('Qual a nota no Google e o que mais aparece nas avaliações?', 'O que um cliente diria sobre isso?'),
+    ...aberta('Já tiveram crise ou reclamação pública? Como resolveram?', 'O que aprenderam com isso?'),
+    { q: 'Existe comunidade, grupo ou evento de clientes?', opts: ['Grupo no WhatsApp', 'Clube ou fidelidade', 'Evento para clientes', 'Ainda não'], multi: true },
+    ...aberta('Com quais negócios vizinhos ou parceiros dá para fazer ação juntos?', 'Já fizeram algo juntos? Como foi?'),
+    ...aberta('Tem influenciador, cliente famoso ou líder local que já é fã?', 'Como ele conheceu vocês?'),
     { q: 'Como vocês sabem se uma ação deu resultado?', opts: ['Pergunta como conheceu', 'Cupom ou código', 'Relatório da agência', 'Movimento na loja', 'Não medimos'], multi: true },
     { q: 'Quanto dá para investir em anúncio por mês?', opts: ['Até R$ 500', 'R$ 500 a 1.500', 'R$ 1.500 a 3 mil', 'R$ 3 a 10 mil', 'Mais de R$ 10 mil', 'Ainda não sei'], money: 'verba_anuncio' },
     { q: 'Tem conteúdo pronto que dá para reaproveitar?', opts: ['Fotos', 'Vídeos', 'Depoimentos', 'Posts antigos que foram bem', 'Não tem'], multi: true },
@@ -510,6 +566,8 @@ export function visibleSteps(steps: QuizStep[], answers: string[][], money = tru
       const got = nrm((answers[m] ?? []).join(' ')).trim()
       if (!got) return
       if (s.when.has.length && !s.when.has.some((h) => got.includes(nrm(h)))) return
+      // Puxa-fio de conversa longa: só quando a resposta veio curta (uma vez, sem cansar).
+      if (s.when.short && got.length >= s.when.short) return
     }
     shown.add(k); out.push(k)
   })
