@@ -18,6 +18,7 @@ import { IntegrationsPage } from '@/features/integrations/IntegrationsPage'
 import { NotificationSettingsPanel } from '@/features/notifications/NotificationsPage'
 import { AutomationsCenter, AutomationsLink } from './AutomationsCenter'
 import { CompanySettings } from './CompanySettings'
+import { ConsistencyCheck } from './ConsistencyCheck'
 
 // Menu das Configurações em grupos. Computador: menu na lateral. Celular: lista que abre cada página (sem barra de lado).
 // A Ellcazo (audiovisual) é a produtora dentro da Peformake: grupo próprio, sempre com o destaque de cor.
@@ -28,6 +29,7 @@ const GROUPS: Group[] = [
     { to: 'notificacoes', label: 'Notificações', hint: 'Avisos da equipe e mensagens ao cliente' },
     { to: 'inteligencia', label: 'Inteligência', hint: 'Quando o sistema avisa e sugere' },
     { to: 'metas', label: 'Metas', hint: 'Metas da empresa e de cada área' },
+    { to: 'conferencia', label: 'Conferência', hint: 'Erros de cadastro, cobrança e esteira dos clientes', roles: ADMIN_ROLES },
   ] },
   { id: 'conexoes', label: 'Conexões', items: [
     { to: 'integracoes', label: 'Integrações', hint: 'Meta, Google, Asaas, contratos e e-mail', roles: ADMIN_ROLES },
@@ -149,6 +151,7 @@ export function SettingsLayout() {
             <Route element={<RequireRole roles={ADMIN_ROLES} />}>
               <Route path="acessos" element={<MovedTo to="/equipe/membros" />} />
               <Route path="empresas" element={<CompanySettings />} />
+              <Route path="conferencia" element={<ConsistencyCheck />} />
             </Route>
             <Route path="*" element={<Navigate to="/configuracoes" replace />} />
           </Routes>
