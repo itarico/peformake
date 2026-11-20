@@ -1,5 +1,6 @@
 # Diário da rotina de melhoria contínua
 
+- 20/11: Áudio (Falar em vez de digitar) não funcionava: voice-transcribe não aceitava o cabeçalho x-client-info no CORS e o navegador barrava o envio; função corrigida (v7) e a tela não quebra mais com "e.json is not a function".
 - 20/11: Perguntas da Peformake saíam de comida/automotivo: tipo salvo errado + descrição "forte em gastronomia". Agora o SEGMENTO manda (assessoria/marketing/consultoria... = serviço); trocar o tipo descarta as perguntas do mês sem resposta (mesmo enviadas) e o motor refaz (brief_questions_reset). Peformake corrigida para serviço e suas 14 perguntas antigas descartadas.
 - 20/11: Dentro do cliente (Consultoria) sai o título "Estratégia" e o subtítulo; o topo é a logo e o nome do cliente (sem a linha "Agora:").
 - 20/11: Briefing: bloco Essência da marca (Propósito/Círculo Dourado, Como quer ser vista/Kapferer, Personalidade/12 arquétipos, Posicionamento, História, Jornada/JTBD, Objeções, Visão) com guias que aprofundam; Gravação = quem aparece + quem grava só p/ cliente com vídeo; Ofertas/Meta/Datas com guia montado dos produtos, do tipo de negócio e das datas do mês (monthGuide); botões renomeados Eu preencho / Cliente preenche; passo Briefing com Preencher + Enviar.

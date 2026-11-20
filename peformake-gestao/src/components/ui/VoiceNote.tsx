@@ -30,7 +30,7 @@ export function VoiceNote({ onText, className }: { onText: (text: string) => voi
           const { data, error: err } = await supabase.functions.invoke('voice-transcribe', { body: form })
           if (err) {
             const ctx = (err as { context?: Response }).context
-            throw new Error(((ctx ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não foi possível transcrever.')
+            throw new Error(((typeof ctx?.json === 'function' ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não foi possível transcrever.')
           }
           const text = String((data as { text?: string }).text ?? '').trim()
           if (text) onText(text)

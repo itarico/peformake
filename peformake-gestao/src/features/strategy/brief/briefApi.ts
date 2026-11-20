@@ -125,7 +125,7 @@ export async function transcribe(blob: Blob): Promise<string> {
   const { data, error } = await supabase.functions.invoke('voice-transcribe', { body: form })
   if (error) {
     const ctx = (error as { context?: Response }).context
-    throw new Error(((ctx ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não foi possível transcrever.')
+    throw new Error(((typeof ctx?.json === 'function' ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não foi possível transcrever.')
   }
   return String((data as { text?: string }).text ?? '').trim()
 }
@@ -135,7 +135,7 @@ export async function productsFromUrl(url: string): Promise<import('./briefRules
   const { data, error } = await supabase.functions.invoke('page-text', { body: { url } })
   if (error) {
     const ctx = (error as { context?: Response }).context
-    throw new Error(((ctx ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não consegui ler esta página. Tente o PDF ou cole a lista.')
+    throw new Error(((typeof ctx?.json === 'function' ? await ctx.json().catch(() => null) : null) as { error?: string } | null)?.error ?? 'Não consegui ler esta página. Tente o PDF ou cole a lista.')
   }
   const { parseProducts } = await import('./productImport')
   return parseProducts(((data as { lines?: string[] }).lines ?? []).map((l) => [l]))
