@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, Download, ExternalLink, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, Download, ExternalLink, FileText, MessageCircle, Presentation, Search, Send, Sparkles } from 'lucide-react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
@@ -21,6 +21,7 @@ import { useReview } from '@/features/review/reviewApi'
 import { applyFills, findFills, insertAdded, progress, reviewedInput, slideKeys } from '@/features/review/reviewRules'
 import { OrientationDialog, screenOrientation, type CardPrimary } from './DeckCard'
 import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
+import { pickSendDoc } from './brief/sendRules'
 import { StrategyBoard } from './brief/StrategyBoard'
 import { StrategyStrip } from './brief/StrategyStrip'
 import { useBriefProgress } from './brief/briefApi'
@@ -101,13 +102,16 @@ export function ConsultoriaPage() {
                 </button>
                 {step.go !== 'briefing' && <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px] max-md:hidden" onClick={() => go(r, null)}>Briefing</Button>}
                 <Button variant={step.go === 'revisar' ? 'primary' : 'secondary'} className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => go(r, step)}>{step.label}</Button>
+                {/* ⋯ por assunto (Italo, 19/11: "enviar ao cliente só mandava as perguntas"): Estratégia · Diagnóstico · Perguntas. */}
                 <ActionMenu label={`Mais opções de ${r.name.trim()}`} actions={[
-                  { label: 'Ver respostas novas', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: answers === 0, onClick: () => open(r.client_id, 'perguntas') },
-                  { label: 'Revisar diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: r.status !== 'pronto', href: diagReviewPath(r.client_id) },
-                  { label: diagBusy ? 'Diagnóstico com o agente' : 'Criar diagnóstico', icon: <Sparkles size={15} aria-hidden="true" />, disabled: diagBusy || gen.isPending, onClick: () => gen.mutate(r) },
-                  { label: 'Abrir apresentação do diagnóstico', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
-                  { label: 'Enviar diagnóstico no WhatsApp', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => setSending(r) },
-                  { label: 'Enviar perguntas', icon: <Send size={15} aria-hidden="true" />, onClick: () => setAsking(r) },
+                  { label: 'Estratégia: abrir', icon: <FileText size={15} aria-hidden="true" />, onClick: () => go(r, step.go === 'briefing' ? null : step) },
+                  { label: 'Estratégia: enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, hidden: !r.monthly || !['pronto', 'aprovado'].includes(r.monthly.status), onClick: () => setParams((c) => { const n = new URLSearchParams(c); for (const k of ['aba', 'ver', 'secao', 'parte']) n.delete(k); n.set('cliente', r.client_id); n.set('enviar', '1'); return n }) },
+                  { label: 'Diagnóstico: revisar', icon: <Presentation size={15} aria-hidden="true" />, hidden: r.status !== 'pronto', href: diagReviewPath(r.client_id) },
+                  { label: diagBusy ? 'Diagnóstico: o agente está fazendo' : 'Diagnóstico: criar', icon: <Sparkles size={15} aria-hidden="true" />, hidden: isApproved(r.status) || r.status === 'pronto', disabled: diagBusy || gen.isPending, onClick: () => gen.mutate(r) },
+                  { label: 'Diagnóstico: abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => { setProblem(null); openPublicDeck(r.client_id).catch((e) => setProblem((e as Error).message)) } },
+                  { label: 'Diagnóstico: enviar ao cliente', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: !isApproved(r.status), onClick: () => setSending(r) },
+                  { label: 'Perguntas: ver respostas novas', icon: <MessageCircle size={15} aria-hidden="true" />, hidden: answers === 0, onClick: () => open(r.client_id, 'perguntas') },
+                  { label: 'Perguntas: enviar ao cliente', icon: <Send size={15} aria-hidden="true" />, onClick: () => setAsking(r) },
                 ]} />
               </li>
             )
@@ -218,7 +222,8 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const [dirOpen, setDirOpen] = useState(false)
   const [send, setSend] = useState<SendKind | null>(null)
   const [avCount, setAvCount] = useState(0)
-  const [picker, setPicker] = useState(false)
+  // ?enviar=1 (do ⋯ da lista): já abre o "Enviar a…" com a estratégia do mês.
+  const [picker, setPicker] = useState(() => new URLSearchParams(window.location.search).get('enviar') === '1')
   const [deckOpen, setDeckOpen] = useState(false)
   const [sources, setSources] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
@@ -261,7 +266,9 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const agentDocs = useAgentDocs(clientId)
   const pdf = useMemo(() => latestDocs(agentDocs.data ?? []), [agentDocs.data])
   /** O PDF da Peformake que vale para cada envio (quando existe, o "Enviar" manda o PDF, não a versão do sistema). */
-  const pdfFor = (k: string) => k === 'mes' ? pdf.estrategia : k === 'trafego' ? (pdf.trafego ?? pdf.estrategia) : k === 'social' ? pdf.social : k === 'av' ? pdf.audiovisual : undefined
+  // Estratégia do mês: só o documento da estratégia ("Estratégia · …") do mês aberto ou do próximo; nunca um plano antigo da pasta.
+  const stratDoc = [month, opts[1]!, opts[0]!].map((m) => pickSendDoc(agentDocs.data ?? [], m, 'resumo')).find(Boolean) ?? undefined
+  const pdfFor = (k: string) => k === 'mes' ? stratDoc : k === 'trafego' ? (pdf.trafego ?? pdf.estrategia) : k === 'social' ? pdf.social : k === 'av' ? pdf.audiovisual : undefined
   const st = plan.data
   const questions = useClientQuestions(clientId)
   const toAsk = (questions.data?.questions ?? []).filter((x) => x.status === 'pendente').length
@@ -301,7 +308,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {picker && <SendPicker name={name} month={month} onClose={() => setPicker(false)}
         onPick={(k) => { const doc = pdfFor(k); if (doc) { setPicker(false); void sendDoc(doc, name, phone.data ?? null) } else openSend(k, avApproved) }} options={[
         { id: 'diag', label: 'Diagnóstico', ok: approved, why: ready ? 'Aprove o diagnóstico antes' : 'Ainda não está pronto' },
-        { id: 'mes' as const, label: 'Estratégia do mês (PDF)', ok: !!pdf.estrategia, why: 'Aprove a estratégia e gere o PDF antes' },
+        { id: 'mes' as const, label: 'Estratégia do mês', ok: !!stratDoc, why: 'Abra a estratégia e toque em Baixar PDF antes' },
         { id: 'perguntas', label: toAsk ? `Perguntas (${toAsk})` : 'Perguntas', ok: true },
       ]} />}
       {send === 'diag' && <SendDialog clientId={clientId} name={name} phone={phone.data ?? null} doc={doc} approved={approved} onDeck={() => setDeckOpen(true)} onClose={() => setSend(null)} onSent={refresh} />}

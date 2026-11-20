@@ -8,7 +8,8 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { MonthPick } from '../PlanCards'
 import { monthOptions, parseMonthParam } from '../monthlyRules'
-import { isHtml, sendDoc, useAgentDocs } from '../AgentDocs'
+import { sendDoc, useAgentDocs } from '../AgentDocs'
+import { pickSendDoc } from './sendRules'
 import { BriefingView, useBriefStatus } from './BriefingView'
 import { BoardStatus, GenerateDialog, MoreDialog } from './CardsView'
 import { boardState, type CardTab } from './cardRules'
@@ -29,6 +30,17 @@ export const BOARD_TABS = [
   { id: 'briefing', label: 'Briefing' },
 ] as const
 export type BoardTab = (typeof BOARD_TABS)[number]['id']
+
+/** O que cada parte traz e quem faz (Italo, 19/11: "um texto resumo dizendo como e o que cada um traz"). Uma linha, embaixo das abas. */
+export const PART_INFO: Record<BoardTab, string> = {
+  resumo: 'A tese do mês, os objetivos com número, as ofertas, as datas e as decisões. O agente escreve a partir do briefing; tudo o resto serve a isso.',
+  audiovisual: 'Os vídeos prontos para gravar: narração para o cliente, gravação (quadros e o que captar) e edição. Feitos pelo motor de roteiro, com nota mínima da banca.',
+  social: 'As peças do mês (carrossel, reels, stories, post) com texto, legenda e ideia de imagem real. Foco em ganhar seguidores e servir as ofertas.',
+  trafego: 'As campanhas do mês: objetivo, público, qual criativo usar, 3 opções de verba por dia e um teste A/B. Só se o cliente tem tráfego.',
+  atendimento: 'O roteiro de WhatsApp de cada oferta: mensagens da primeira resposta ao fechamento, objeções com resposta e follow-up.',
+  referencias: 'Concorrentes e posts de referência, com link e porquê. Vêm do briefing e da pesquisa do agente (os novos ganham o selo).',
+  briefing: 'O que o agente precisa saber do cliente neste mês. Quanto mais completo, melhor a estratégia.',
+}
 type TabDef = (typeof BOARD_TABS)[number]
 
 const tabClass = (active: boolean) => cn(
@@ -91,7 +103,9 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const tabs = BOARD_TABS.filter((t) => t.id === 'briefing' || (ready && !!b))
   const counts = ready && b ? Object.fromEntries(BOARD_TABS.filter((t) => t.id !== 'briefing').map((t) => [t.id, liveCards(b, t.id as CardTab).length])) as Partial<Record<BoardTab, number>> : undefined
   const asked = params.get('parte')
-  const tab = (tabs.some((t) => t.id === asked) ? asked : tabs[0]?.id ?? 'briefing') as BoardTab
+  // Sem ?parte: abre na primeira parte que tem conteúdo (Peformake só com vídeos abre em Vídeos, não num Resumo vazio).
+  const first = tabs.find((t) => t.id === 'briefing' || (counts?.[t.id] ?? 0) > 0)?.id
+  const tab = (tabs.some((t) => t.id === asked) ? asked : first ?? 'briefing') as BoardTab
   const [gen, setGen] = useState(false)
   const [pdfOpen, setPdfOpen] = useState(false)
   const [paste, setPaste] = useState(false)
@@ -107,14 +121,10 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   // "Enviar ao cliente": o arquivo mais novo da pasta Estratégia/Audiovisual (PDF do agente ou o documento salvo ao baixar).
   const docs = useAgentDocs(clientId)
   // No Audiovisual vai só a parte "Para o cliente" (a fala, as perguntas e o que levar; nada técnico).
-  const doc = (() => {
-    const all = (docs.data ?? []).filter((d) => d.folder === 'estrategia' || d.folder === 'audiovisual')
-    const cli = all.filter((d) => /^Audiovisual · Para o cliente/.test(d.name))
-    const pool = tab === 'audiovisual' && cli.length ? cli : all.filter((d) => !/^Audiovisual · /.test(d.name))
-    return pool.find((d) => !isHtml(d)) ?? pool[0] ?? null
-  })()
+  // Só documentos desta estratégia e deste mês (antes pegava o PDF mais novo da pasta, ex.: um "Plano de vendas" antigo).
+  const doc = pickSendDoc(docs.data ?? [], month, tab)
   const phone = useQuery({ queryKey: ['client-phone', clientId], queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null } })
-  const send = () => { if (!doc) { say('Baixe o PDF antes: ele fica salvo na pasta do cliente e é esse arquivo que vai.'); return } void sendDoc(doc, name, phone.data ?? null) }
+  const send = () => { if (!doc) { say('Ainda não tem o documento deste mês. Toque em Baixar PDF: ele fica salvo na pasta do cliente e é esse arquivo que vai.'); return } void sendDoc(doc, name, phone.data ?? null) }
   const area = tab !== 'briefing' && tab !== 'referencias' && tab !== 'resumo'
   return (
     <div data-estrategia className="flex flex-col gap-3">
@@ -124,12 +134,12 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
         <span className="ml-auto flex items-center gap-1.5">
           {!ready && !busy && <Button className="min-h-10 px-4 text-[13px]" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar estratégia</Button>}
           <ActionMenu label="Mais opções da estratégia" actions={[
-            { label: 'Briefing', icon: <ClipboardList size={15} aria-hidden="true" />, onClick: () => go({ parte: 'briefing' }), hidden: tab === 'briefing' },
-            { label: 'Mais ideias nesta parte', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setMore(true), hidden: !ready || !area || !b || (b.more_requests ?? []).some((r) => r.aba === tab) },
-            { label: 'Ver um por um', icon: <Play size={15} aria-hidden="true" />, onClick: () => go({ revisar: tab === 'briefing' ? 'todos' : tab }), hidden: !ready },
-            { label: 'Copiar pedido para o chat', icon: <MessageSquare size={15} aria-hidden="true" />, onClick: () => void copyShort(), hidden: busy },
-            { label: 'Copiar pedido completo', icon: <ClipboardCopy size={15} aria-hidden="true" />, onClick: () => void copyFull(), hidden: busy },
-            { label: 'Colar resultado', icon: <ClipboardPaste size={15} aria-hidden="true" />, onClick: () => setPaste(true), hidden: busy },
+            { label: 'Abrir o briefing', icon: <ClipboardList size={15} aria-hidden="true" />, onClick: () => go({ parte: 'briefing' }), hidden: tab === 'briefing' },
+            { label: 'Pedir mais ideias nesta parte ao agente', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setMore(true), hidden: !ready || !area || !b || (b.more_requests ?? []).some((r) => r.aba === tab) },
+            { label: 'Revisar um por um (aprovar ou recusar)', icon: <Play size={15} aria-hidden="true" />, onClick: () => go({ revisar: tab === 'briefing' ? 'todos' : tab }), hidden: !ready },
+            { label: 'Plano B: copiar pedido para o chat do Claude', icon: <MessageSquare size={15} aria-hidden="true" />, onClick: () => void copyShort(), hidden: busy },
+            { label: 'Plano B: copiar pedido completo (sem conector)', icon: <ClipboardCopy size={15} aria-hidden="true" />, onClick: () => void copyFull(), hidden: busy },
+            { label: 'Plano B: colar a resposta do chat', icon: <ClipboardPaste size={15} aria-hidden="true" />, onClick: () => setPaste(true), hidden: busy },
           ]} />
         </span>
         {ready && (
@@ -143,6 +153,7 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
       {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
       <BoardStatus board={b} />
       {tabs.length > 1 && <BoardTabs value={tab} tabs={tabs} counts={counts} onChange={(t) => go({ parte: t })} />}
+      {tabs.length > 1 && <p data-parte-info className="-mt-1 max-w-[80ch] text-[12.5px] leading-snug text-muted">{PART_INFO[tab]}</p>}
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
       {tab !== 'briefing' && b && ready && (liveCards(b, tab as CardTab).length > 0
         ? <StrategyReader board={b} tab={tab as CardTab} name={name} onChanged={refresh} />
