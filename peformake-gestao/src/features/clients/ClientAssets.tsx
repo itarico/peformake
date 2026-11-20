@@ -6,8 +6,9 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { ask } from '@/components/ui/confirm'
 
-type FolderId = 'estrategia' | 'relatorios' | 'design' | 'trafego' | 'audiovisual' | 'social' | 'contratos' | 'outros'
+export type FolderId = 'briefing' | 'estrategia' | 'relatorios' | 'design' | 'trafego' | 'audiovisual' | 'social' | 'contratos' | 'outros'
 const FOLDERS: { id: FolderId; label: string }[] = [
+  { id: 'briefing', label: 'Briefing' },
   { id: 'estrategia', label: 'Estratégia' },
   { id: 'relatorios', label: 'Relatórios' },
   { id: 'design', label: 'Design' },
@@ -51,11 +52,12 @@ function Icon({ mime }: { mime: string }) {
 }
 
 /** Todos os arquivos do cliente, de todos os serviços, em pastas. */
-export function ClientAssets({ clientId }: { clientId: string }) {
+/** `only`: uma pasta só, sem a lista de pastas (ex.: Documentos dentro do Briefing). */
+export function ClientAssets({ clientId, only }: { clientId: string; only?: FolderId }) {
   const queryClient = useQueryClient()
   const key = ['client-assets', clientId]
   const data = useQuery({ queryKey: key, queryFn: () => listAssets(clientId) })
-  const [folder, setFolder] = useState<FolderId>('estrategia')
+  const [folder, setFolder] = useState<FolderId>(only ?? 'estrategia')
   const [problem, setProblem] = useState<string | null>(null)
   const input = useRef<HTMLInputElement>(null)
   const refresh = () => void queryClient.invalidateQueries({ queryKey: key })
@@ -90,8 +92,8 @@ export function ClientAssets({ clientId }: { clientId: string }) {
   const count = (f: FolderId) => data.data.filter((a) => a.folder === f).length
 
   return (
-    <section aria-label="Arquivos do cliente" className="grid grid-cols-1 gap-3 md:grid-cols-[220px_minmax(0,1fr)]">
-      <nav aria-label="Pastas" className="flex gap-1 overflow-x-auto md:flex-col">
+    <section aria-label="Arquivos do cliente" className={cn('grid grid-cols-1 gap-3', !only && 'md:grid-cols-[220px_minmax(0,1fr)]')}>
+      {!only && <nav aria-label="Pastas" className="flex gap-1 overflow-x-auto md:flex-col">
         {FOLDERS.map((f) => (
           <button key={f.id} type="button" aria-pressed={folder === f.id} onClick={() => { setFolder(f.id); setProblem(null) }}
             className={cn('flex min-h-11 shrink-0 cursor-pointer items-center justify-between gap-3 rounded-2xl px-3.5 text-left font-medium',
@@ -100,7 +102,7 @@ export function ClientAssets({ clientId }: { clientId: string }) {
             <span className={cn('text-[12px] tabular-nums', folder === f.id ? 'opacity-80' : 'text-muted')}>{count(f.id)}</span>
           </button>
         ))}
-      </nav>
+      </nav>}
 
       <div className="flex min-w-0 flex-col gap-2">
         <div

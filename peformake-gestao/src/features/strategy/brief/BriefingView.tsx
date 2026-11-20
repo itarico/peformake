@@ -4,6 +4,7 @@ import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Lin
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { SearchSelect } from '@/components/ui/SearchSelect'
+import { ClientAssets } from '@/features/clients/ClientAssets'
 import { cn } from '@/lib/cn'
 import { MeetingNotes } from '../MeetingNotes'
 import { consultKey, saveConsultInfo, saveDirection, useConsultList } from '../consultApi'
@@ -15,8 +16,8 @@ import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
-import { FAMILY_LABEL, familyOf, isFamily, type Family } from './questionEngine'
-import { MONTH_CHECKS } from './briefRules'
+import { FAMILY_LABEL, familyFromReceita, familyOf, isFamily, type Family } from './questionEngine'
+import { DIRECTION_QUIZ, MONTH_CHECKS } from './briefRules'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -187,7 +188,6 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
 
       {part === 'fixo' && <Group title="O cliente">
         <Tile icon={Building2} label="Tipo" title={f.tipo_label || (isFamily(f.tipo) ? FAMILY_LABEL[f.tipo] : `Confirmar: ${FAMILY_LABEL[familyOf(b.data?.segment, b.data?.description, name)]}`)} done={isFamily(f.tipo)} onOpen={() => setTipoOpen(true)} />
-        {show(!!direction.trim()) && <Tile icon={Compass} label="Direção" title="Direcionamento da equipe" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />}
         {show(!!doc) && <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />}
         {show(prods.some((p) => p.preco)) && <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />}
         {show(links.length >= 2) && <Tile icon={Link2} label="Links" title="Links importantes" done={links.length >= 2} count={links.length} onOpen={() => setOpen({ kind: 'links' })} />}
@@ -203,6 +203,7 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       </Group>}
 
       {part === 'mes' && <Group title={`Do mês: ${mes}`}>
+        {show(!!direction.trim()) && <Tile icon={Compass} label="Direção" title="Direcionamento do mês" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />}
         {show(!!mo.ofertas) && <Tile icon={Tag} label="Ofertas" title={MONTH_FIELDS.ofertas.label} done={!!mo.ofertas} onOpen={() => setOpen({ kind: 'month', key: 'ofertas' })} />}
         {show(!!mo.meta) && <Tile icon={Target} label="Meta" title={MONTH_FIELDS.meta.label} done={!!mo.meta} onOpen={() => setOpen({ kind: 'month', key: 'meta' })} />}
         {show(!!mo.datas_travam) && <Tile icon={CalendarX} label="Datas" title={MONTH_FIELDS.datas_travam.label} done={!!mo.datas_travam} onOpen={() => setOpen({ kind: 'month', key: 'datas_travam' })} />}
@@ -211,10 +212,15 @@ export function BriefingView({ clientId, name, month, part = 'fixo' }: { clientI
       </Group>}
 
       {/* As perguntas saíram daqui (Italo, 20/11): têm o passo próprio "Perguntas" na ficha do cliente. */}
+      {/* Documentos do cliente (Italo, 20/11): tudo o que ele mandar fica aqui; o agente lê antes de gerar. */}
+      {part === 'fixo' && <section data-documentos className="flex flex-col gap-2">
+        <h3 className="px-1 text-[12.5px] font-semibold uppercase tracking-wide text-muted">Documentos</h3>
+        <ClientAssets clientId={clientId} only="briefing" />
+      </section>}
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
-      {open?.kind === 'documento' && <DocumentDialog clientId={clientId} initial={doc} onClose={stop} onDone={() => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: consultKey }); next() }} />}
-      {open?.kind === 'direcao' && <TextDialog key="direcao" title="Direcionamento da equipe" hint="O que a IA não acha sozinha: objetivo do dono, o que ele pediu, o que não fazer. Vale mais que a pesquisa." initial={direction} busy={saveDir.isPending} error={err(saveDir)} onClose={stop} onSave={(v) => saveDir.mutate(v)} />}
+      {open?.kind === 'documento' && <DocumentDialog clientId={clientId} initial={doc} fixed={b.data?.saved ? (b.data?.data ?? {}) : {}} onClose={stop} onDone={() => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: consultKey }); next() }} />}
+      {open?.kind === 'direcao' && <TextDialog key="direcao" title="Direcionamento do mês" hint="O que a IA não acha sozinha: objetivo do dono, o que ele pediu, o que não fazer. Toque em Responder com opções para um guia." quizSteps={DIRECTION_QUIZ} initial={direction} busy={saveDir.isPending} error={err(saveDir)} onClose={stop} onSave={(v) => saveDir.mutate(v)} />}
       {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate({ [open.key]: v })} />}
       {open?.kind === 'month' && <TextDialog key={open.key} title={MONTH_FIELDS[open.key].label} hint={MONTH_FIELDS[open.key].hint} initial={mo[open.key] ?? ''} busy={saveM.isPending} error={err(saveM)} onClose={stop} onSave={(v) => saveM.mutate({ [open.key]: v })} />}
       {open?.kind === 'links' && <LinksDialog brief={f} busy={saveF.isPending} error={err(saveF)} onClose={stop} onSave={(v) => saveF.mutate(v)} />}
@@ -258,7 +264,7 @@ function WorkedDialog({ text, period, onClose }: { text: string | null; period: 
 const fmtDoc = (d: string) => d.length === 14 ? d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5') : d.length === 11 ? d.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4') : d
 
 /** CPF ou CNPJ do cliente: com CNPJ, a Receita preenche a razão social, o endereço e o porte. Salva no cadastro. */
-function DocumentDialog({ clientId, initial, onClose, onDone }: { clientId: string; initial: string; onClose: () => void; onDone: () => void }) {
+function DocumentDialog({ clientId, initial, fixed, onClose, onDone }: { clientId: string; initial: string; fixed: BriefFixed; onClose: () => void; onDone: () => void }) {
   const [v, setV] = useState(initial)
   const [found, setFound] = useState<CompanyLookup | null>(null)
   const digits = v.replace(/\D/g, '')
@@ -267,18 +273,43 @@ function DocumentDialog({ clientId, initial, onClose, onDone }: { clientId: stri
     mutationFn: async () => {
       const rf = found ?? (digits.length === 14 ? await lookupCnpj(digits).catch(() => null) : null)
       await saveConsultInfo({ clientId, document: digits, legalName: rf?.legalName, address: rf?.address, size: rf?.size, capital: rf?.capital })
+      // Cartão CNPJ inteiro no briefing (o agente lê) e o tipo de negócio sai da Receita se ainda não foi escolhido.
+      if (rf) {
+        const fam = familyFromReceita(rf.nature, rf.cnae)
+        await saveBrief(clientId, { ...fixed, cnpj: { ...rf, cnpj: digits, lido_em: new Date().toISOString().slice(0, 10) }, ...(!isFamily(fixed.tipo) && fam ? { tipo: fam } : {}) })
+      }
     },
     onSuccess: onDone,
   })
+  const row = (k: string, val?: string | null) => val ? <div className="flex min-w-0 gap-1.5"><dt className="shrink-0 text-muted">{k}:</dt><dd className="min-w-0 truncate">{val}</dd></div> : null
   return (
-    <Dialog open onClose={onClose} title="CPF ou CNPJ" description="Com CNPJ, a Receita preenche a empresa sozinha." size="sm"
+    <Dialog open onClose={onClose} title="CPF ou CNPJ" description="Com CNPJ, a Receita preenche tudo sozinha: empresa, sócios, contato e atividades." size="md"
       footer={<div className="flex gap-2"><Button disabled={save.isPending || ![11, 14].includes(digits.length)} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button></div>}>
       <div data-documento className="flex flex-col gap-2">
         <span className="flex gap-2">
           <input autoFocus inputMode="numeric" autoComplete="off" value={v} onChange={(e) => { setV(e.target.value); setFound(null) }} className={fieldCls} placeholder="Só números" aria-label="CPF ou CNPJ" />
           {digits.length === 14 && <Button variant="secondary" className="mt-1 shrink-0 px-3" disabled={look.isPending} onClick={() => look.mutate()}>{look.isPending ? 'Buscando' : 'Buscar'}</Button>}
         </span>
-        {found && <p className="rounded-xl bg-ok-soft px-3 py-2 text-[12.5px] text-ok-ink"><b>{found.legalName}</b>{found.activity ? ` · ${found.activity}` : ''}</p>}
+        {found && (
+          <div data-cartao-cnpj className="flex flex-col gap-1.5 rounded-xl bg-ok-soft px-3 py-2.5 text-[12.5px] text-ink">
+            <b className="text-[13.5px] text-ok-ink">{found.tradeName || found.legalName}</b>
+            <dl className="grid grid-cols-1 gap-x-4 gap-y-0.5 sm:grid-cols-2">
+              {row('Razão social', found.legalName)}
+              {row('Situação', found.status)}
+              {row('Abertura', found.openedAt ? found.openedAt.split('-').reverse().join('/') : null)}
+              {row('Natureza', found.nature)}
+              {row('Atividade', found.activity)}
+              {row('Outras atividades', found.secondary?.length ? `${found.secondary.length}` : null)}
+              {row('Porte', found.size)}
+              {row('Regime', found.mei ? 'MEI' : found.simples ? 'Simples Nacional' : found.simples === false ? 'Fora do Simples' : null)}
+              {row('E-mail', found.email)}
+              {row('Telefone', [found.phone, found.phone2].filter(Boolean).join(' · ') || null)}
+              {row('Sócios', found.partners?.length ? found.partners.slice(0, 3).map((s) => s.name).join(', ') + (found.partners.length > 3 ? ` e +${found.partners.length - 3}` : '') : null)}
+              {row('Tipo sugerido', (() => { const f = familyFromReceita(found.nature, found.cnae); return f ? FAMILY_LABEL[f] : null })())}
+            </dl>
+            <p className="line-clamp-1 text-muted">{found.address}</p>
+          </div>
+        )}
         {(look.isError || save.isError) && <p role="alert" className="text-[12.5px] text-warn-ink">{((look.error ?? save.error) as Error).message}</p>}
       </div>
     </Dialog>

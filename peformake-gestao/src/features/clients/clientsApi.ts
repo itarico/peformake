@@ -438,6 +438,15 @@ export interface CompanyLookup {
   /** Porte pela Receita: micro, pequena, media ou grande. */
   size: 'micro' | 'pequena' | 'media' | 'grande' | null
   capital: number | null
+  /** Cartão CNPJ completo (Italo, 20/11: "puxar tudo que puder do CNPJ"). */
+  nature?: string | null
+  openedAt?: string | null
+  cnae?: string | null
+  secondary?: string[]
+  partners?: { name: string; role: string; age?: string }[]
+  phone2?: string | null
+  simples?: boolean | null
+  mei?: boolean | null
 }
 
 /** Dados públicos da Receita pelo CNPJ (BrasilAPI, grátis). CPF não tem consulta pública: só confere os dígitos. */
@@ -458,7 +467,17 @@ export async function lookupCnpj(cnpj: string): Promise<CompanyLookup> {
     part(d.cep) ? `CEP ${part(d.cep).replace(/^(\d{5})(\d{3})$/, '$1-$2')}` : '',
   ].filter(Boolean).join(' - ')
   const phone = part(d.ddd_telefone_1)
+  const raw = d as unknown as Record<string, unknown>
+  const list = (v: unknown) => (Array.isArray(v) ? v as Record<string, unknown>[] : [])
   return {
+    nature: part(d.natureza_juridica) || null,
+    openedAt: part(d.data_inicio_atividade) || null,
+    cnae: part(d.cnae_fiscal) || null,
+    secondary: list(raw.cnaes_secundarios).map((c) => part(c.descricao)).filter((x) => x && x !== 'Não informada'),
+    partners: list(raw.qsa).map((s) => ({ name: part(s.nome_socio), role: part(s.qualificacao_socio), age: part(s.faixa_etaria) || undefined })).filter((s) => s.name),
+    phone2: part(d.ddd_telefone_2) || null,
+    simples: raw.opcao_pelo_simples === null || raw.opcao_pelo_simples === undefined ? null : String(raw.opcao_pelo_simples) === 'true',
+    mei: raw.opcao_pelo_mei === null || raw.opcao_pelo_mei === undefined ? null : String(raw.opcao_pelo_mei) === 'true',
     legalName: part(d.razao_social),
     tradeName: part(d.nome_fantasia) || null,
     address,

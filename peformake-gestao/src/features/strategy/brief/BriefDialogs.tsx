@@ -32,9 +32,9 @@ function Footer({ busy, onSave, onClose, label = 'Salvar', disabled }: { busy?: 
 }
 
 /** Um campo de texto: escrever, falar (transcreve sozinho) ou responder tocando em opções (quiz). */
-export function TextDialog({ title, hint, initial, onSave, onClose, busy, error, quizKey }: { title: string; hint: string; initial: string; onSave: (v: string) => void; onClose: () => void; busy?: boolean; error?: string | null; quizKey?: TextKey }) {
+export function TextDialog({ title, hint, initial, onSave, onClose, busy, error, quizKey, quizSteps }: { title: string; hint: string; initial: string; onSave: (v: string) => void; onClose: () => void; busy?: boolean; error?: string | null; quizKey?: TextKey; quizSteps?: QuizStep[] }) {
   const [v, setV] = useState(initial)
-  const steps = quizKey ? QUIZ[quizKey] : undefined
+  const steps = quizSteps ?? (quizKey ? QUIZ[quizKey] : undefined)
   const [quiz, setQuiz] = useState(false)
   if (quiz && steps) return <QuizDialog title={title} steps={steps} onClose={() => setQuiz(false)} onDone={(t) => { setV((c) => (c.trim() ? `${c.trim()}\n${t}` : t)); setQuiz(false) }} />
   return (

@@ -30,6 +30,23 @@ export const FAMILY_LABEL: Record<Family, string> = {
 export const FAMILIES = Object.keys(FAMILY_LABEL) as Family[]
 export const isFamily = (v: unknown): v is Family => typeof v === 'string' && v in FAMILY_LABEL
 
+/** Tipo de negócio pela Receita: natureza jurídica (associação, igreja, fundação) e a atividade principal (CNAE). */
+export function familyFromReceita(nature?: string | null, cnae?: string | null): Family | null {
+  const n = norm(nature ?? '')
+  if (/associacao|organizacao religiosa|fundacao|partido|entidade sindical|servico social/.test(n)) return 'terceiro_setor'
+  const c = String(cnae ?? '').replace(/\D/g, '')
+  if (!c) return null
+  const d2 = c.slice(0, 2), d4 = c.slice(0, 4)
+  if (d2 === '85') return 'educacao'
+  if (d2 === '86' || d2 === '87' || d4 === '4771') return 'saude'
+  if (d4 === '9602' || d4 === '9313') return 'beleza'
+  if (d4 === '5611' || d4 === '5612' || d4 === '5620' || d4 === '1091' || d4 === '4721') return c === '5611204' || c === '5611205' ? 'bar' : 'comida'
+  if (d2 === '45') return 'automotivo'
+  if (d2 === '47') return 'varejo'
+  if (['10', '11', '13', '14', '15', '16', '17', '20', '22', '23', '24', '25', '28', '41', '42', '43', '46'].includes(d2)) return 'b2b'
+  return 'servicos'
+}
+
 /** O nicho pela descrição e pelo segmento (sem fins lucrativos e educação primeiro: são os mais diferentes). */
 export function familyOf(segment?: string | null, description?: string | null, name?: string | null): Family {
   const t = norm(`${segment ?? ''} ${name ?? ''} ${(description ?? '').slice(0, 600)}`)

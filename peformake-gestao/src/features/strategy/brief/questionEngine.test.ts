@@ -46,3 +46,13 @@ describe('tipo de negócio escolhido no briefing', () => {
     expect(txt).not.toMatch(/estoque|combo/i)
   })
 })
+
+describe('tipo pela Receita', () => {
+  it('associação vira instituição; CNAE 56 vira comida; 45 automotivo', async () => {
+    const { familyFromReceita } = await import('./questionEngine')
+    expect(familyFromReceita('399-9 - Associação Privada', '8513900')).toBe('terceiro_setor')
+    expect(familyFromReceita('213-5 - Empresário (Individual)', '5611201')).toBe('comida')
+    expect(familyFromReceita('206-2 - Sociedade Empresária Limitada', '4541203')).toBe('automotivo')
+    expect(familyFromReceita('213-5', '7420004')).toBe('servicos')
+  })
+})

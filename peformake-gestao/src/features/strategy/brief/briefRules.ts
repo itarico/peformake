@@ -28,6 +28,8 @@ export interface BriefFixed {
   tipo?: string
   /** Como a equipe chama o tipo (ex.: Pizzaria, Igreja, ou um tipo novo escrito à mão). */
   tipo_label?: string
+  /** Cartão CNPJ da Receita (o agente lê antes de gerar). */
+  cnpj?: Record<string, unknown>
 }
 export interface BriefMonth { ofertas?: string; meta?: string; datas_travam?: string }
 
@@ -264,6 +266,16 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
 }
 
 /** Junta as respostas do quiz num texto curto ("Quem mais compra: Mulheres, Casais. Idade: 25 a 34."). */
+/** Guia do Direcionamento da equipe (Italo, 20/11: "algo para nos guiar para sair uma resposta completa"). */
+export const DIRECTION_QUIZ: QuizStep[] = [
+  { q: 'O que o dono quer conquistar neste mês', opts: ['Vender mais', 'Lançar produto ou serviço', 'Clientes novos', 'Ganhar seguidores', 'Fortalecer a marca', 'Encher a agenda', 'Abrir unidade'], multi: true },
+  { q: 'O que ele pediu para a gente fazer', opts: ['Mais vídeos', 'Anúncios', 'Promoção', 'Evento', 'Influenciador', 'Parceria', 'Conteúdo educativo'], multi: true },
+  { q: 'Qual oferta ou produto é prioridade', opts: ['O carro-chefe', 'Um lançamento', 'Estoque parado', 'O de maior margem', 'Combo ou kit'], multi: true },
+  { q: 'O que NÃO fazer', opts: ['Falar de preço', 'Usar humor', 'Mostrar a equipe', 'Fazer promoção', 'Falar de concorrente', 'Temas políticos'], multi: true },
+  { q: 'Qual o tom que ele quer', opts: ['Sério e confiável', 'Leve e divertido', 'Premium', 'Próximo e popular', 'Técnico'], multi: true },
+  { q: 'O que mudou no negócio desde o mês passado', opts: ['Nada', 'Preço novo', 'Equipe nova', 'Reforma ou mudança', 'Produto novo', 'Problema a resolver'], multi: true },
+]
+
 export function quizText(steps: QuizStep[], answers: string[][]): string {
   return steps.map((s, i) => {
     const a = (answers[i] ?? []).map((x) => x.trim()).filter(Boolean)

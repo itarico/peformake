@@ -1,5 +1,6 @@
 # Diário da rotina de melhoria contínua
 
+- 20/11: Briefing: pasta "Briefing" nos arquivos do cliente aparece como Documentos dentro do Briefing (client_assets aceita folder briefing). Direcionamento foi para o bloco do mês e ganhou guia "Responder com opções" (DIRECTION_QUIZ). CNPJ puxa o cartão inteiro da BrasilAPI (natureza, abertura, CNAEs, sócios, e-mail, 2 telefones, Simples/MEI), salva em client_briefs.data.cnpj e define o tipo de negócio pela Receita (familyFromReceita) se ainda não escolhido. Capital social não aparece (dinheiro só admin).
 - 20/11: Briefing só FIXO (sem mês; o medidor e a trava do passo 1 contam só o fixo); o do mês (ofertas, meta, datas, mês passado, reunião) foi para o passo Perguntas. Perguntas com barra "x de y respondidas"; "Atualizar perguntas" usa o motor (sem API). Tipo de negócio com busca (45 tipos comuns) e "Outro" escrito à mão (tipo_label).
 - 20/11: Briefing aberto sozinho sem PDF/Enviar/Gerar de novo (são da estratégia) e sem o bloco de perguntas (têm passo próprio). Botão Conversar virou "Conversa sobre o negócio": Mandar para o cliente (padrão, link de conversa com áudio/arquivo) ou Eu respondo no Claude.
 - 20/11: Passo a passo: botão das Perguntas virou "Enviar" e saiu o Enviar do topo da ficha; Diagnóstico e as partes da estratégia só liberam com briefing em 80% e perguntas respondidas.
