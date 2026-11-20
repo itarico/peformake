@@ -49,6 +49,10 @@ Kit de edição: `video-tools/scripts/` (`decupar.py`, `montar.py`, `recortar.py
 `src/components/consulting/audiovisual/` (gerador e chat roteirista) e `supabase/functions/consulting-audiovisual-*`.
 Geração anterior, não segue o MDD.
 
+## 5b. Biblioteca de virais (engenharia reversa)
+`virais/README.md`: uma ficha por vídeo que funcionou, com esqueleto, molde de fala e como aplicar. Feita pela skill
+`.claude/skills/engenharia-reversa-viral/` (também copiada para `~/.claude/skills` do PC).
+
 ## 6. Skills que só existiam no PC (cópia em `skills-locais/`)
 Copiadas de `~/.claude/skills` em 19/11/2026 para ficarem salvas no Git. A cópia é backup: a skill que roda
 continua sendo a do PC. Se editar lá, copie de novo para cá.
