@@ -9,5 +9,5 @@ o próximo passo exato, faz commit e push. Quem terminar a tarefa apaga o item.
 - Domínio: em 19/11 o peformake.com ainda apontava para a Lovable. Não trocar links antes de conferir.
 
 ## Pendente pequeno (20/11)
-- Publicar a função `strategy-cards` (plano B pela API; o Git já tem ações, plano de vendas e Social só post/carrossel). Hoje todas as estratégias usam o agente da nuvem, já atualizado.
-- Testar o chat do briefing (botão Conversar) com um cliente real e ajustar o tom/opções pelos logs de `brief-chat`.
+- `strategy-cards` (API) NÃO publicar: regra de 20/11, gerar só pelo agente do Claude.
+- Testar o briefing em conversa no Claude (botão Conversar) com um cliente real e ajustar `agent_instructions(briefing-conversa)`.
