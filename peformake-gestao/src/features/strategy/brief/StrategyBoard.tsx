@@ -23,11 +23,12 @@ import { liveCards, StrategyReader } from './StrategyReader'
 
 export const BOARD_TABS = [
   // Italo, 20/11: Estratégia (o plano do mês: ações, ofertas, decisões), Vídeos, Social e Plano de vendas na frente.
+  // Ordem dos passos (Italo, 20/11): estratégia, plano de vendas, tráfego, vídeos e fotos, social media, referências.
   { id: 'resumo', label: 'Estratégia' },
-  { id: 'audiovisual', label: 'Vídeos' },
-  { id: 'social', label: 'Social media', short: 'Social' },
   { id: 'atendimento', label: 'Plano de vendas', short: 'Vendas' },
   { id: 'trafego', label: 'Tráfego' },
+  { id: 'audiovisual', label: 'Vídeos e fotos', short: 'Vídeos' },
+  { id: 'social', label: 'Social media', short: 'Social' },
   { id: 'referencias', label: 'Referências' },
   { id: 'briefing', label: 'Briefing' },
 ] as const

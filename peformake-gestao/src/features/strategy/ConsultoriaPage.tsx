@@ -31,7 +31,7 @@ import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
 import { SendDialog as MonthlySendDialog } from './MonthlyPanel'
 import { useMonthly } from './monthlyApi'
-import { monthOptions, parseMonthParam } from './monthlyRules'
+import { monthName, monthOptions, parseMonthParam } from './monthlyRules'
 
 
 const TONE = {
@@ -340,9 +340,15 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {header}
       {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink">{problem}</p>}
 
-      {/* O plano do mês antigo foi desligado em 16/11: a Estratégia interativa (briefing → cards → PDF) é o único caminho. */}
-      {<StrategyStrip clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, mes: opts[1]!.slice(0, 7) })} />}
-      {(
+      {/* Passo a passo (Italo, 20/11): primeiro conhecer o cliente (briefing, perguntas, diagnóstico), depois a estratégia e as partes. */}
+      <ol data-passos aria-label="Passo a passo do cliente" className="flex flex-col gap-2">
+        <Step n={1} title="Briefing" hint="Links, documentos, produtos, concorrentes">
+          <StrategyStrip only="briefing" clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, mes: opts[1]!.slice(0, 7) })} />
+        </Step>
+        <Step n={2} title="Perguntas" hint="O cliente responde por conversa: áudio, texto ou arquivo">
+          <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />
+        </Step>
+        <Step n={3} title="Diagnóstico" hint="O retrato real do cliente">
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
             onInfo={onInfo} onGenerate={() => act.mutate(() => requestDiag(clientId))} hasDoc={!!d} finishedAt={d?.finished_at ?? null}
@@ -350,10 +356,27 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
             onApprove={() => act.mutate(() => approveConsult(clientId))}
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
-      )}
-      {<QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />}
+        </Step>
+        <Step n={4} title={`Estratégia de ${monthName(opts[1]!).toLowerCase()}`} hint="Estratégia, plano de vendas, tráfego, vídeos e fotos, social media e referências">
+          <StrategyStrip only="estrategia" clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, mes: opts[1]!.slice(0, 7) })} />
+        </Step>
+      </ol>
       {dialogs}
     </section>
+  )
+}
+
+/** Um passo numerado do passo a passo do cliente: número, título curto e o bloco de sempre. */
+function Step({ n, title, hint, children }: { n: number; title: string; hint: string; children: React.ReactNode }) {
+  return (
+    <li data-passo={n} className="flex flex-col gap-1">
+      <div className="flex items-baseline gap-2 px-1">
+        <span aria-hidden="true" className="grid size-6 shrink-0 place-items-center self-center rounded-full bg-fill text-[12px] font-bold text-on-fill">{n}</span>
+        <h3 className="text-[14px] font-semibold">{title}</h3>
+        <span className="min-w-0 truncate text-[12px] text-muted max-sm:hidden">· {hint}</span>
+      </div>
+      {children}
+    </li>
   )
 }
 
