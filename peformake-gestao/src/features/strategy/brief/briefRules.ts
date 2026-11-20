@@ -1,7 +1,7 @@
 // Briefing do cliente (Estratégia interativa): o que o Italo preenche ANTES de gerar a estratégia do mês.
 // Dados fixos (client_briefs) + do mês (client_brief_months) + perguntas do mês (client_questions, pack 'briefing_mes').
 
-import { HISTORIAS, HISTORIA_CURTA, HISTORIA_FIO } from './questionEngine'
+import { HISTORIAS, HISTORIA_CURTA, HISTORIA_FIO, HISTORIA_FIOS } from './questionEngine'
 
 export interface Produto { nome: string; preco?: string; condicoes?: string; tipo?: 'produto' | 'servico' }
 export interface Concorrente { nome: string; link?: string; porque?: string; novo?: boolean; origem?: 'diagnostico' }
@@ -344,7 +344,7 @@ export const isFio = (s: QuizStep) => !!s.open && !!s.when && s.when.has.length 
  * Histórias e assuntos (Italo, 20/11): 6 conversas grandes e abertas, de 1 a 3 minutos cada, para artes, vídeos e textos.
  * Nada de pergunta "boba" ou de formulário. Resposta curta puxa o fio UMA vez.
  */
-export { HISTORIAS, HISTORIA_FIO, HISTORIA_CURTA }
+export { HISTORIAS, HISTORIA_FIO, HISTORIA_FIOS, HISTORIA_CURTA }
 
 /** O que nunca falar (entra no guia do Jeito da marca; o portal ainda abre o campo antigo). */
 const PROIBIDOS: QuizStep[] = [
@@ -355,7 +355,7 @@ const PROIBIDOS: QuizStep[] = [
 
 export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
   proibidos: PROIBIDOS,
-  historias: HISTORIAS.flatMap((q) => [{ q, opts: [], open: true }, { q: HISTORIA_FIO, opts: [], open: true, when: { q, has: [], short: HISTORIA_CURTA } }]),
+  historias: HISTORIAS.flatMap((q, i) => [{ q, opts: [], open: true }, { q: HISTORIA_FIOS[i] ?? HISTORIA_FIO, opts: [], open: true, when: { q, has: [], short: HISTORIA_CURTA } }]),
   publico: [
     { q: 'Quem mais compra?', opts: ['Mulheres', 'Homens', 'Casais', 'Famílias com filhos', 'Jovens', 'Empresas'], multi: true },
     { q: 'Idade dos filhos dessas famílias?', opts: ['Bebês', 'Crianças', 'Adolescentes'], multi: true, when: W('Quem mais compra?', 'familias') },
@@ -422,6 +422,7 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     { q: 'Com que aparelho?', opts: ['Celular bom', 'Celular simples', 'Câmera'], when: W('Quem grava?', 'proprio', 'equipe', 'misto') },
     { q: 'Com que frequência dá para gravar?', opts: ['Toda semana', 'A cada 15 dias', '1 vez por mês', 'Só quando marcar'] },
     { q: 'Melhor dia e horário para gravar sem atrapalhar o movimento?', opts: [], open: true },
+    { q: 'Onde dá para gravar? Como é a luz e o barulho do lugar?', opts: ['Tem bom espaço', 'Luz natural boa', 'Lugar barulhento', 'Espaço pequeno', 'Gravar fora'], multi: true },
   ],
   // Momento e futuro = SWOT + visão + capacidade de atendimento.
   momento: [
@@ -481,6 +482,9 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     ...aberta('Quem responde o WhatsApp e em quanto tempo, em média?', 'E fora do horário, o que acontece?'),
     ...aberta('Qual a frase ou pergunta que mais fecha venda?', 'Por que você acha que ela funciona?'),
     { q: 'Têm meta por vendedor? Usam sistema ou CRM?', opts: ['Meta por vendedor', 'Usam CRM ou sistema', 'Só planilha', 'Nada disso'], multi: true },
+    { q: 'Quais formas de pagamento aceitam?', opts: ['Pix', 'Cartão de crédito', 'Parcelado', 'Dinheiro', 'Boleto', 'Link de pagamento'], multi: true },
+    { q: 'Qual o horário de funcionamento (e de atendimento no WhatsApp)?', opts: [], open: true },
+    { q: 'Tem garantia, troca ou devolução? Como funciona?', opts: ['Garantia', 'Troca', 'Devolução', 'Não tem'], multi: true },
     { q: 'Qual a margem do produto principal?', opts: ['Até 20%', '20% a 40%', '40% a 60%', 'Mais de 60%', 'Não sei'], money: 'margem_principal' },
     { q: 'O que o cliente mais pergunta antes de comprar?', opts: ['Preço', 'Prazo', 'Garantia', 'Forma de pagamento', 'Se funciona', 'Onde fica'], multi: true },
     { q: 'O que ele fala quando não fecha?', opts: ['Tá caro', 'Vou pensar', 'Vou ver com alguém', 'Depois eu volto', 'Achei mais barato'], multi: true },
@@ -519,6 +523,8 @@ export const QUIZ: Partial<Record<TextKey, QuizStep[]>> = {
     { q: 'Tem manual da marca?', opts: ['Sim', 'Não', 'Não sei'] },
     { q: 'Tem fotos boas?', opts: ['Dos produtos', 'Do espaço', 'Da equipe', 'Do dono', 'Não tem fotos boas'], multi: true },
     { q: 'Que acessos a Peformake já tem?', opts: ['Instagram', 'Facebook', 'Gerenciador de anúncios (Meta)', 'Google Meu Negócio', 'Google Ads', 'Site', 'Nenhum ainda'], multi: true },
+    { q: 'Para onde o anúncio deve levar o cliente?', opts: ['WhatsApp', 'Site ou loja online', 'Instagram', 'Ligação', 'Ir até a loja'], multi: true },
+    { q: 'O site tem pixel da Meta ou tag do Google instalados?', opts: ['Sim', 'Não', 'Não sei', 'Não tem site'] },
     { q: 'Quem é o dono das contas?', opts: ['O dono da empresa', 'Alguém da equipe', 'A agência antiga', 'Não sei'], multi: true },
     ...aberta('Falta algum acesso? Qual e com quem está?', 'O que precisa para liberar? (quem, até quando)', W('Quem é o dono das contas?', 'agencia', 'nao sei', 'equipe')),
   ],

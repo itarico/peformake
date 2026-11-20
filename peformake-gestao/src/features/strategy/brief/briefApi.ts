@@ -75,6 +75,9 @@ export async function resetMonthQuestions(clientId: string, month: string): Prom
  * (nada enviado nem respondido): perguntas antigas de outro tipo de negócio somem sozinhas.
  */
 export async function refreshMonthQuestions(clientId: string, month: string): Promise<void> {
+      // Perguntas escritas pelo agente do Claude (rotina do dia 8, source 'agente'): o motor fixo é só reserva e não troca.
+      const ag = await db.from('client_questions').select('id').eq('client_id', clientId).eq('pack', 'briefing_mes').eq('focus', focusOf(month)).eq('source', 'agente').neq('status', 'descartada').limit(1)
+      if ((ag.data ?? []).length) return
       // Motor das perguntas (sem IA): nicho + o que falta no briefing + datas do mês + diagnóstico, sem repetir meses anteriores.
       const [cli, br, bm, hist, dg] = await Promise.all([
         db.from('clients').select('name, segment, description').eq('id', clientId).maybeSingle(),

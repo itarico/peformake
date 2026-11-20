@@ -156,6 +156,15 @@ export const HISTORIAS: string[] = [
   'Se você fosse dar um conselho para alguém começando no seu ramo, o que diria? E qual a maior lição que o seu negócio te ensinou?',
 ]
 export const HISTORIA_FIO = 'Me conta um caso real disso?'
+/** Puxa-fio de cada história (texto próprio: a mesma pergunta não pode voltar para o mesmo cliente). */
+export const HISTORIA_FIOS: string[] = [
+  'Me conta um caso real de um dia assim?',
+  'Me conta um caso real de um cliente assim?',
+  'Me conta um caso real de alguém que escolheu errado?',
+  'Me conta um caso real desse começo?',
+  'Me conta um caso real desses bastidores?',
+  'Me conta um caso real dessa lição?',
+]
 /** Resposta com menos que isso (caracteres) puxa o fio, uma vez. */
 export const HISTORIA_CURTA = 240
 
@@ -462,17 +471,19 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
   const kids: EngineQuestion[] = []
   const cal = monthDates(inp.month, fam).slice(0, 8)
   if (cal.length) {
-    const mother = `Quais datas de ${mes} você quer aproveitar?`
+    const y = inp.month.slice(0, 4)
+    // Com o ano: a mesma pergunta não pode voltar para o mesmo cliente (banco), e no ano seguinte ela tem que voltar.
+    const mother = `Quais datas de ${mes} de ${y} você quer aproveitar?`
     used.add(norm(mother))
     out.push({ area: 'consultoria', question: mother, why: 'Marque quantas quiser. Para cada uma, a gente pergunta o que fazer.', options: [...cal.map((d) => d.label), 'Nenhuma'] })
-    for (const d of cal) kids.push({ area: 'consultoria', question: `Para ${d.label}, o que vocês vão fazer?`, why: 'Pode marcar mais de uma ou responder falando.', options: DATE_ACTIONS, cond: { q: mother, has: [d.name] } })
+    for (const d of cal) kids.push({ area: 'consultoria', question: `Para ${d.label.includes('(') ? d.label.replace(')', `/${y})`) : `${d.label} de ${y}`}, o que vocês vão fazer?`, why: 'Pode marcar mais de uma ou responder falando.', options: DATE_ACTIONS, cond: { q: mother, has: [d.name] } })
   }
   // História do mês (rodízio): conversa longa para virar conteúdo; resposta curta puxa o fio uma vez.
   const hs = HISTORIAS.map((_, i) => HISTORIAS[(i + mi + (hash(inp.clientId) % HISTORIAS.length)) % HISTORIAS.length]!)
   const story = hs.find((h) => !asked.has(norm(h))) ?? hs[0]!
   used.add(norm(story))
   out.push({ area: 'audiovisual', question: story, why: 'Fale à vontade, de 1 a 3 minutos: vira vídeo, arte e texto.', options: [] })
-  kids.push({ area: 'audiovisual', question: HISTORIA_FIO, why: 'Um caso real deixa o conteúdo verdadeiro.', options: [], cond: { q: story, has: [], short: HISTORIA_CURTA } })
+  kids.push({ area: 'audiovisual', question: HISTORIA_FIOS[HISTORIAS.indexOf(story)] ?? HISTORIA_FIO, why: 'Um caso real deixa o conteúdo verdadeiro.', options: [], cond: { q: story, has: [], short: HISTORIA_CURTA } })
 
   // 2) Perguntas do diagnóstico que ficaram em aberto (até 2): são as mais deste cliente.
   for (const d of (inp.diagQuestions ?? []).slice(0, 6)) {
