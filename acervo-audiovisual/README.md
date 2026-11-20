@@ -69,6 +69,13 @@ Primeiro: `perfis/salleszk.md`.
 - Rotina na nuvem "Acervo: virais do dia, estruturas novas e placar" (todo dia 06:41): atualiza o placar, estuda 2 virais
   com estrutura nova e 1 vídeo do estoque salvo, refaz o mapa e escreve as lições do nicho às segundas.
 
+## 5e. YouTube (canal)
+- `youtube/pesquisas/<tema>-<data>/`: outliers (skill `youtube-outliers`) e o `MAPA.md` com a lacuna e as pautas.
+- `youtube/roteiros/`: roteiros longos (skill `roteiro-retencao`, MDD). Primeiro: GTA 6 e a ciência da espera (20/11/2026).
+- **Falta no Git (está só no outro PC, `D:\ITALO\CLAUDE\SHOPPE\canal-youtube\`):** `MDD-manual-v2.md` (base do método),
+  `LINHA-EDITORIAL.md`, roteiros e embalagens antigos, e o pipeline de narração e leitura de vídeo
+  (`D:\ITALO\CLAUDE\IA-LOCAL\`). Trazer na próxima ida ao outro PC (lembrete de 20/11).
+
 ## 6. Skills que só existiam no PC (cópia em `skills-locais/`)
 Copiadas de `~/.claude/skills` em 19/11/2026 para ficarem salvas no Git. A cópia é backup: a skill que roda
 continua sendo a do PC. Se editar lá, copie de novo para cá.
