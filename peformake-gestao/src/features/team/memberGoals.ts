@@ -49,7 +49,7 @@ export function progressText(g: Pick<CatalogGoal, 'unit' | 'better'>, v: GoalVal
   return `${done} no mês`
 }
 
-/** Estado inicial: o que já foi salvo, ou as sugeridas pelas funções (até 5). */
+/** Estado inicial: o que já foi salvo, ou as sugeridas pelas funções (até MAX_GOALS). */
 export function initDrafts(catalog: CatalogGoal[], saved: SavedGoal[], hasOwn: boolean): Record<string, GoalDraft> {
   const mine = new Map(saved.filter((g) => g.origem === (hasOwn ? 'pessoal' : 'funcao')).map((g) => [g.key, g]))
   let on = 0
@@ -72,7 +72,7 @@ export function suggestionText(c: Pick<CatalogGoal, 'unit' | 'has_history' | 'hi
 
 export const countOn = (d: Record<string, GoalDraft>) => Object.values(d).filter((x) => x.on).length
 
-/** Liga/desliga respeitando o máximo de 5. */
+/** Liga/desliga respeitando o máximo (MAX_GOALS). */
 export function toggleDraft(d: Record<string, GoalDraft>, key: string): Record<string, GoalDraft> {
   const cur = d[key]
   if (!cur) return d

@@ -94,7 +94,7 @@ async function confirmRemove(m: Member): Promise<boolean | null> {
   return ask(`${m.name} tem acesso ao sistema: remover o acesso também? (Voltar = mantém o acesso)`)
 }
 
-export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startPay }: { member: Member | null; isMe: boolean; onClose: () => void; startTab?: 'dados' | 'funcao' | 'acesso' | 'pagamento'; startPay?: 'contrato' }) {
+export function MemberDialog({ member, isMe, onClose, stayOnInvite = false, startTab = 'dados', startPay }: { member: Member | null; isMe: boolean; onClose: () => void; stayOnInvite?: boolean; startTab?: 'dados' | 'funcao' | 'acesso' | 'pagamento'; startPay?: 'contrato' }) {
   const queryClient = useQueryClient()
   const isNew = !member
   const [tab, setTab] = useState<'dados' | 'funcao' | 'acesso' | 'pagamento'>(startTab)
@@ -118,9 +118,13 @@ export function MemberDialog({ member, isMe, onClose, startTab = 'dados', startP
         level, areas: level === 'area' ? areas : [], skills,
       } })
       if (error) throw new Error(error.message)
-      return (data as { result: string }).result
+      return data as { result: string; id?: string }
     },
-    onSuccess: () => { refresh(); onClose() },
+    // Acesso recém-liberado: o pop-up fica aberto na aba Acesso com "Criar login agora" (sem reabrir a ficha).
+    onSuccess: (r) => {
+      refresh()
+      if (r.result === 'convidado' && member?.id && stayOnInvite) setTab('acesso'); else onClose()
+    },
     onError: (e) => setProblem((e as Error).message),
   })
   const remove = useMutation({
@@ -236,7 +240,9 @@ export function MembersPage() {
   const { state } = useAuth()
   const me = state.status === 'ready' ? state.user.id : ''
   const q = useQuery({ queryKey: ['access-members'], queryFn: listMembers })
-  const [open, setOpen] = useState<Member | 'new' | null>(null)
+  const [openState, setOpen] = useState<Member | 'new' | null>(null)
+  // A ficha aberta acompanha a lista (depois de salvar, o acesso novo aparece sem fechar o pop-up).
+  const open = openState && openState !== 'new' ? q.data?.find((m) => (openState.id ? m.id === openState.id : m.profile_id === openState.profile_id)) ?? openState : openState
   const [showOut, setShowOut] = useState(false)
   // Link direto (avisos): /equipe/membros?membro=<id>&aba=contrato abre a ficha no contrato.
   const [params, setParams] = useSearchParams()
@@ -286,7 +292,7 @@ export function MembersPage() {
           )}
         </section>
       )}
-      {open && <MemberDialog member={open === 'new' ? null : open} isMe={open !== 'new' && open.profile_id === me} onClose={() => setOpen(null)} />}
+      {open && <MemberDialog key={open === 'new' ? 'new' : open.id ?? open.profile_id ?? 'x'} member={open === 'new' ? null : open} isMe={open !== 'new' && open.profile_id === me} onClose={() => setOpen(null)} stayOnInvite />}
       {!open && linked && <MemberDialog member={linked} isMe={linked.profile_id === me} onClose={closeLinked}
         startTab={params.get('aba') === 'contrato' || params.get('aba') === 'pagamento' ? 'pagamento' : 'dados'} startPay={params.get('aba') === 'contrato' ? 'contrato' : undefined} />}
     </div>

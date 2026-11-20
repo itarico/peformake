@@ -311,7 +311,7 @@ function MyGoals({ staffId }: { staffId: string }) {
             <li key={g.key} className="flex items-center justify-between gap-2 rounded-xl bg-raised px-3 py-2 text-[13px]">
               <span className="min-w-0"><b className="block truncate font-medium">{goalTitle(g.key, g.param)}</b>
                 <span className="block truncate text-[12px] text-muted">{c ? progressText(c, { done: g.done ?? 0, total: g.total ?? 0, actual: g.actual }) : `${Math.round(g.actual ?? 0)} de ${Math.round(g.target)}`} · alvo {Math.round(g.target)}{c?.unit === 'pct' ? '%' : ''}</span></span>
-              <Chip tone={hit ? 'green' : 'yellow'}>{hit ? 'Batida' : `${g.pct ?? 0}%`}</Chip>
+              <Chip tone={hit ? 'green' : 'yellow'}>{hit ? 'Batida' : g.pct === null ? 'Sem dados' : `${g.pct}%`}</Chip>
             </li>
           )
         })}
