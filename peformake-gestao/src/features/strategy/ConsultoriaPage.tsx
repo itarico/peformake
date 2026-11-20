@@ -23,7 +23,8 @@ import { OrientationDialog, screenOrientation, type CardPrimary } from './DeckCa
 import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { pickSendDoc } from './brief/sendRules'
 import { StrategyBoard } from './brief/StrategyBoard'
-import { StrategyStrip } from './brief/StrategyStrip'
+import { BriefingCard, StepCard, StrategyPart } from './brief/StrategyStrip'
+import { useBriefStatus } from './brief/BriefingView'
 import { useBriefProgress } from './brief/briefApi'
 import { CONSULT_PATH, targetMonth, clientMessage, diagReviewPath, nextStep, nicheLinks, sortByStrategy, strategyProgress, strategyStep, statusChip, waLink, type ConsultRow, type Part, type PartState } from './consultRules'
 import { NicheLinkFields, saveNicheLinks, useClientLinkMap } from './NicheLinks'
@@ -31,7 +32,7 @@ import { QuestionsPanel, SendQuestionsLoader } from './QuestionsPanel'
 import { useClientQuestions } from './questionsApi'
 import { SendDialog as MonthlySendDialog } from './MonthlyPanel'
 import { useMonthly } from './monthlyApi'
-import { monthName, monthOptions, parseMonthParam } from './monthlyRules'
+import { monthOptions, parseMonthParam } from './monthlyRules'
 
 
 const TONE = {
@@ -255,6 +256,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   const today = useMemo(() => new Date(), [])
   // Sem ?mes: abre no mês que já tem plano (este mês; se não houver, o próximo), para não mostrar "Não criada" à toa.
   const opts = useMemo(() => monthOptions(today), [today])
+  const briefSt = useBriefStatus(clientId, opts[1]!)
   const p0 = useMonthly(clientId, opts[0]!)
   const p1 = useMonthly(clientId, opts[1]!)
   const month = params.get('mes') ? parseMonthParam(params.get('mes'), today) : p0.data ? opts[0]! : p1.data ? opts[1]! : parseMonthParam(null, today)
@@ -285,7 +287,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
   const header = (
     <header data-cliente-cabecalho className="flex items-center gap-2">
-      <button type="button" onClick={ver ? () => go({ ver: null, secao: null, parte: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Voltar' : 'Consultoria'}</span></button>
+      <button type="button" onClick={ver ? () => go({ ver: null, secao: null, parte: null, so: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Voltar' : 'Consultoria'}</span></button>
       <span className="flex min-w-0 flex-1 items-center gap-2">
         <ClientAvatar name={name} url={logo} size="sm" />
         <span className="min-w-0">
@@ -318,6 +320,12 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
     </>
   )
 
+  // Cada passo só libera quando o anterior está pronto (Italo, 20/11). Briefing pronto = 80% (as respostas do cliente
+  // contam no medidor, então exigir 100% travaria o passo 2 esperando ele mesmo).
+  const briefDone = briefSt.ready && briefSt.percent >= 80
+  const askDone = toAsk === 0 && waiting === 0
+  const stepCur = !briefDone ? 1 : !askDone ? 2 : !approved ? 3 : 4
+
   if (aba === 'relatorios') return <Navigate to={`/estrategia/relatorios?cliente=${clientId}`} replace />
   // Detalhe: o plano completo (seções, ações para aprovar, editar, refazer) ou as perguntas.
   if (ver === 'estrategia' || ver === 'plano') return (
@@ -342,13 +350,13 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
       {/* Passo a passo (Italo, 20/11): primeiro conhecer o cliente (briefing, perguntas, diagnóstico), depois a estratégia e as partes. */}
       <ol data-passos aria-label="Passo a passo do cliente" className="flex flex-col gap-2">
-        <Step n={1} title="Briefing" hint="Links, documentos, produtos, concorrentes">
-          <StrategyStrip only="briefing" clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, mes: opts[1]!.slice(0, 7) })} />
+        <Step n={1} current={stepCur === 1} done={briefDone}>
+          <BriefingCard clientId={clientId} month={opts[1]!} onOpen={() => go({ ver: 'estrategia', secao: null, parte: 'briefing', so: '1', mes: opts[1]!.slice(0, 7) })} />
         </Step>
-        <Step n={2} title="Perguntas" hint="O cliente responde por conversa: áudio, texto ou arquivo">
+        <Step n={2} current={stepCur === 2} done={askDone} locked={!briefDone} wait="o briefing chegar a 80%">
           <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />
         </Step>
-        <Step n={3} title="Diagnóstico" hint="O retrato real do cliente">
+        <Step n={3} current={stepCur === 3} done={approved}>
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
             loading={q.isPending} ready={ready} approved={approved} busy={act.isPending}
             onInfo={onInfo} onGenerate={() => act.mutate(() => requestDiag(clientId))} hasDoc={!!d} finishedAt={d?.finished_at ?? null}
@@ -357,25 +365,40 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
             onOpen={() => { if (approved) openPublicDeck(clientId).catch((e) => setProblem((e as Error).message)); else openPresentation(clientInput, screenOrientation()) }}
             onPdf={() => setDeckOpen(true)} onSend={() => openSend('diag')} onDetails={() => setSources(true)} />
         </Step>
-        <Step n={4} title={`Estratégia de ${monthName(opts[1]!).toLowerCase()}`} hint="Estratégia, plano de vendas, tráfego, vídeos e fotos, social media e referências">
-          <StrategyStrip only="estrategia" clientId={clientId} month={opts[1]!} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, mes: opts[1]!.slice(0, 7) })} />
-        </Step>
+        {/* Da estratégia em diante, cada parte é um passo e abre sozinha (sem a barra de abas). */}
+        {PARTS.map((p, i) => (
+          <Step key={p.tab} n={4 + i} last={i === PARTS.length - 1} current={stepCur === 4 && i === 0} done={false}>
+            <StrategyPart clientId={clientId} month={opts[1]!} tab={p.tab} label={p.label} onOpen={(parte) => go({ ver: 'estrategia', secao: null, parte, so: '1', mes: opts[1]!.slice(0, 7) })} />
+          </Step>
+        ))}
       </ol>
       {dialogs}
     </section>
   )
 }
 
-/** Um passo numerado do passo a passo do cliente: número, título curto e o bloco de sempre. */
-function Step({ n, title, hint, children }: { n: number; title: string; hint: string; children: React.ReactNode }) {
+const PARTS: { tab: 'resumo' | 'atendimento' | 'trafego' | 'audiovisual' | 'social' | 'referencias'; label: string }[] = [
+  { tab: 'resumo', label: 'Estratégia do mês' }, { tab: 'atendimento', label: 'Plano de vendas' }, { tab: 'trafego', label: 'Tráfego' },
+  { tab: 'audiovisual', label: 'Vídeos e fotos' }, { tab: 'social', label: 'Social media' }, { tab: 'referencias', label: 'Referências' },
+]
+
+/**
+ * Um passo do passo a passo (minimalista, Italo 20/11): o número ao lado do bloco de sempre; ✓ quando pronto.
+ * Travado até o passo anterior ficar pronto: fica apagado e diz o que falta.
+ */
+function Step({ n, done, locked, wait, current, last, children }: { n: number; done: boolean; locked?: boolean; wait?: string; current?: boolean; last?: boolean; children: React.ReactNode }) {
   return (
-    <li data-passo={n} className="flex flex-col gap-1">
-      <div className="flex items-baseline gap-2 px-1">
-        <span aria-hidden="true" className="grid size-6 shrink-0 place-items-center self-center rounded-full bg-fill text-[12px] font-bold text-on-fill">{n}</span>
-        <h3 className="text-[14px] font-semibold">{title}</h3>
-        <span className="min-w-0 truncate text-[12px] text-muted max-sm:hidden">· {hint}</span>
-      </div>
-      {children}
+    <li data-passo={n} data-travado={locked || undefined} className="relative flex items-center gap-2.5">
+      {/* Linha que liga uma bolinha à próxima (verde quando o passo está pronto). */}
+      {!last && <span aria-hidden="true" className={cn('absolute left-[13px] top-1/2 h-[calc(100%+8px)] w-0.5', done ? 'bg-ok-ink/50' : 'bg-line')} />}
+      <span title={locked && wait ? `Libera depois de ${wait}` : undefined} aria-label={done ? `Passo ${n} pronto` : current ? `Passo ${n}: agora` : `Passo ${n}`}
+        className={cn('relative z-[1] grid size-7 shrink-0 place-items-center rounded-full text-[12.5px] font-bold', done ? 'bg-ok-soft text-ok-ink' : current ? 'animate-pulse bg-amber-400 text-ink' : 'bg-raised text-muted')}>
+        {done ? <Check size={14} aria-hidden="true" /> : n}
+      </span>
+      {/* Botão de ação igual em todos os passos (Italo, 20/11): mesmo tamanho, sem ícone; escuro só no passo da vez. */}
+      <div inert={locked || undefined} title={locked && wait ? `Libera depois de ${wait}` : undefined} className={cn('min-w-0 flex-1 [&_[data-acao]]:min-w-28 [&_[data-acao]]:justify-center [&_[data-acao]_svg]:hidden',
+        '[&_[data-acao]]:border [&_[data-acao]]:font-semibold', current ? '[&_[data-acao]]:border-transparent [&_[data-acao]]:bg-brand [&_[data-acao]]:text-on-brand' : '[&_[data-acao]]:border-line-strong [&_[data-acao]]:bg-transparent [&_[data-acao]]:text-ink',
+        locked && 'pointer-events-none opacity-45')}>{children}</div>
     </li>
   )
 }
@@ -383,13 +406,7 @@ function Step({ n, title, hint, children }: { n: number; title: string; hint: st
 /** Perguntas numa faixa só: quantas estão abertas, respostas novas e "Mandar ao cliente" (o envio de sempre). */
 function QuestionsStrip({ toAsk, waiting, answers, onSend, onOpen }: { toAsk: number; waiting: number; answers: number; onSend: () => void; onOpen: () => void }) {
   const text = [answers > 0 ? `${answers} ${answers === 1 ? 'resposta nova' : 'respostas novas'}` : null, toAsk ? `${toAsk} ${toAsk === 1 ? 'pergunta aberta' : 'perguntas abertas'}` : null, waiting ? `${waiting} esperando o cliente` : null].filter(Boolean).join(' · ') || 'Perguntas em dia'
-  return (
-    <div data-perguntas className="flex items-center gap-2 rounded-2xl border border-line bg-surface px-3 py-2">
-      <MessageCircle size={16} aria-hidden="true" className="shrink-0 text-muted" />
-      <button type="button" onClick={onOpen} className="min-w-0 flex-1 cursor-pointer truncate text-left text-[13.5px]"><b className="font-semibold">Perguntas</b> <span className="text-muted">· {text}</span></button>
-      <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={onSend}><Send size={14} aria-hidden="true" /> <span className="max-sm:hidden">Mandar ao cliente</span><span className="sm:hidden">Mandar</span></Button>
-    </div>
-  )
+  return <div data-perguntas><StepCard title="Perguntas" line={text} action="Mandar" onOpen={onSend} onTitle={onOpen} /></div>
 }
 
 /** "Enviar" do cabeçalho: escolhe o que mandar (só o que está pronto). Cada opção abre o envio de sempre. */
@@ -445,7 +462,7 @@ function DiagCard({ clientId, input, status, stage, document, error, loading, re
       : status === 'gerando' ? (agent ? 'O agente está fazendo. Pode sair: fica salvo.' : `A IA está ${chip.sub ?? 'trabalhando'}. Leva uns 10 minutos.`)
         : status === 'na_fila' ? (agent ? 'Na fila do agente. Fica pronto em até 1 hora.' : 'Na fila. Toque em Criar para começar agora.')
           : status === 'limite' ? 'Limite do mês com IA atingido (Configurações → Automações).'
-            : status === 'erro' ? `Não deu certo: ${error ?? 'erro desconhecido'}`
+            : status === 'erro' ? (/\(\d{3}\)|IA|API|max_tokens|refusal/i.test(error ?? '') || !error ? 'Parou no meio. Toque em Criar para o agente fazer de novo.' : `Não deu certo: ${error}`)
               : status === 'falta_dados' ? 'Falta o CNPJ no cadastro do cliente para começar.'
                 : 'Ainda não tem. Toque em Criar e o agente faz em até 1 hora.')
     : p && !approved ? (() => { const m = [p.total - p.reviewed > 0 ? `${p.total - p.reviewed} slides` : null, p.toFill ? `${p.toFill} ${p.toFill === 1 ? 'dado' : 'dados'} para preencher` : null, info!.ideas > 0 ? `${info!.ideas} ideias do plano` : null].filter(Boolean); return m.length ? `Falta: ${m.join(' · ')}` : null })() : null
@@ -457,14 +474,13 @@ function DiagCard({ clientId, input, status, stage, document, error, loading, re
   return (
     // Faixa compacta (17/11): situação em 1 linha, 1 botão e o resto no ⋯ (a apresentação em slides continua lá).
     <div data-diagnostico className="flex items-center gap-3 rounded-2xl border border-line bg-surface px-3 py-2.5">
-      <Presentation size={16} aria-hidden="true" className="shrink-0 text-muted" />
       <div className="min-w-0 flex-1">
-        <b className="block truncate text-[14px] font-semibold">Diagnóstico <span className={cn('ms-1 rounded-full px-1.5 py-0.5 text-[11px] font-semibold', TONE[chip.tone])}>{done && !approved ? 'Revisado' : chip.label}</span></b>
-        <span className="block truncate text-[12.5px] text-muted">{missing ?? (p && !approved ? `${p.reviewed}/${p.total} slides revisados` : approved ? (locked ? `Aprovado · próximo em ${nextLabel}` : 'Aprovado · já dá para fazer o próximo') : '')}</span>
+        <b className="block truncate text-[14px] font-semibold">Diagnóstico</b>
+        <span className="block truncate text-[12.5px] text-muted">{done && !approved ? 'Revisado · ' : approved ? '' : `${chip.label} · `}{missing ?? (p && !approved ? `${p.reviewed}/${p.total} slides revisados` : approved ? (locked ? `Aprovado · próximo em ${nextLabel}` : 'Aprovado · já dá para fazer o próximo') : '')}</span>
       </div>
       {primary && (primary.href
-        ? <a href={primary.href} className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold no-underline hover:border-ink">{primary.label}</a>
-        : <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={primary.disabled} onClick={primary.onClick}>{primary.label}</Button>)}
+        ? <a data-acao href={primary.href} className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold no-underline hover:border-ink">{primary.label}</a>
+        : <Button data-acao variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={primary.disabled} onClick={primary.onClick}>{primary.label}</Button>)}
       <ActionMenu label="Mais opções do diagnóstico" actions={[
         { label: 'Ver detalhes e fontes', icon: <Search size={15} aria-hidden="true" />, hidden: !ready, onClick: onDetails },
         { label: 'Revisar em slides', icon: <Presentation size={15} aria-hidden="true" />, href: diagReviewPath(clientId), hidden: !ready || !approved },

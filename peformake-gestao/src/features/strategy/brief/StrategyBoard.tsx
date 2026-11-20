@@ -169,7 +169,9 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
       </div>
       {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
       <BoardStatus board={b} />
-      {tabs.length > 1 && <BoardTabs value={tab} tabs={tabs} counts={counts} onChange={(t) => go({ parte: t })} />}
+      {/* Aberta pelo cartão da parte (?so=1): mostra só ela, sem a barra de abas (Italo, 20/11). */}
+      {params.get('so') ? <h2 data-parte-sozinha className="text-[18px] font-semibold tracking-tight">{BOARD_TABS.find((t) => t.id === tab)?.label}</h2>
+        : tabs.length > 1 && <BoardTabs value={tab} tabs={tabs} counts={counts} onChange={(t) => go({ parte: t })} />}
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
       {tab !== 'briefing' && b && ready && (liveCards(b, tab as CardTab).length > 0
         ? <StrategyReader board={b} tab={tab as CardTab} name={name} onChanged={refresh} onReview={() => go({ revisar: tab })} />
