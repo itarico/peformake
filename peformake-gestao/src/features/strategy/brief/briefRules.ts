@@ -1,6 +1,8 @@
 // Briefing do cliente (Estratégia interativa): o que o Italo preenche ANTES de gerar a estratégia do mês.
 // Dados fixos (client_briefs) + do mês (client_brief_months) + perguntas do mês (client_questions, pack 'briefing_mes').
 
+import { HISTORIAS, HISTORIA_CURTA, HISTORIA_FIO } from './questionEngine'
+
 export interface Produto { nome: string; preco?: string; condicoes?: string; tipo?: 'produto' | 'servico' }
 export interface Concorrente { nome: string; link?: string; porque?: string; novo?: boolean; origem?: 'diagnostico' }
 export interface Referencia { link: string; porque?: string; tipo?: 'post' | 'video' | 'anuncio' | 'outro_nicho'; thumb?: string; numero?: string; novo?: boolean }
@@ -342,17 +344,7 @@ export const isFio = (s: QuizStep) => !!s.open && !!s.when && s.when.has.length 
  * Histórias e assuntos (Italo, 20/11): 6 conversas grandes e abertas, de 1 a 3 minutos cada, para artes, vídeos e textos.
  * Nada de pergunta "boba" ou de formulário. Resposta curta puxa o fio UMA vez.
  */
-export const HISTORIAS: string[] = [
-  'Me conta como é um dia normal aí, do abrir ao fechar: o que acontece, quem chega, o que dá mais trabalho e o que você mais gosta de fazer.',
-  'Me conta sobre os seus clientes: as dúvidas que eles mais trazem, o que eles costumam errar antes de chegar até você, e algum atendimento que te marcou, seja engraçado, difícil ou emocionante.',
-  'Imagina que você vai ensinar alguém a escolher bem um produto ou serviço como o seu. O que você diria? O que diferencia um bom de um ruim, e o que as pessoas acreditam no seu ramo que não é verdade?',
-  'Conta a história de vocês desde o começo: por que começou, o momento mais difícil, a virada, e do que vocês têm mais orgulho hoje.',
-  'O que acontece aí dentro que o cliente não vê e ia achar interessante? Como é feito, quem faz, algum cuidado ou detalhe que ninguém imagina.',
-  'Se você fosse dar um conselho para alguém começando no seu ramo, o que diria? E qual a maior lição que o seu negócio te ensinou?',
-]
-export const HISTORIA_FIO = 'Me conta um caso real disso?'
-/** Resposta com menos que isso (caracteres) puxa o fio. */
-export const HISTORIA_CURTA = 240
+export { HISTORIAS, HISTORIA_FIO, HISTORIA_CURTA }
 
 /** O que nunca falar (entra no guia do Jeito da marca; o portal ainda abre o campo antigo). */
 const PROIBIDOS: QuizStep[] = [

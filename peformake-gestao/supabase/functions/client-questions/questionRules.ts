@@ -126,10 +126,12 @@ export function nextQuestion(ids: string[], done: Set<string>, skipped: Set<stri
  * Subpergunta (cond) só entra quando a pergunta-mãe foi respondida e a resposta tem uma das palavras (sem acento,
  * sem maiúscula). Mãe pulada ou sem resposta: a filha some. `has` vazio: basta a mãe ter resposta.
  */
-export function condMet(cond: { q?: string; has?: string[] } | null | undefined, answers: { question: string; answer: string | null; status: string }[]): boolean {
+export function condMet(cond: { q?: string; has?: string[]; short?: number } | null | undefined, answers: { question: string; answer: string | null; status: string }[]): boolean {
   if (!cond?.q) return true
   const mom = answers.find((a) => norm(a.question) === norm(cond.q!))
   if (!mom || mom.status !== 'respondida' || !(mom.answer ?? '').trim()) return false
+  // Puxa-fio das histórias: só quando a resposta veio curta.
+  if (cond.short && (mom.answer ?? '').trim().length >= cond.short) return false
   const has = (cond.has ?? []).map(norm).filter(Boolean)
   if (!has.length) return true
   const a = norm(mom.answer ?? '')

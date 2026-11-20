@@ -6,8 +6,9 @@
 
 export type Family = 'bar' | 'comida' | 'saude' | 'beleza' | 'varejo' | 'automotivo' | 'b2b' | 'servicos' | 'educacao' | 'terceiro_setor'
 export type Area = 'consultoria' | 'vendas' | 'social' | 'audiovisual'
-/** cond: só pergunta se a resposta da pergunta `q` tiver uma das palavras de `has` (vazio = basta ter respondido). */
-export interface Cond { q: string; has: string[] }
+/** cond: só pergunta se a resposta da pergunta `q` tiver uma das palavras de `has` (vazio = basta ter respondido).
+ * `short`: só se a resposta veio curta (menos caracteres que isso): o puxa-fio das histórias. */
+export interface Cond { q: string; has: string[]; short?: number }
 export interface EngineQuestion { area: Area; question: string; why: string; options: string[]; cond?: Cond }
 export interface EngineInput {
   clientId: string; name: string; segment?: string | null; description?: string | null
@@ -67,15 +68,99 @@ export function familyOf(segment?: string | null, description?: string | null, n
   return 'servicos'
 }
 
-/** Datas que mexem com o mês (Recife). */
-const DATES: Record<number, string[]> = {
-  1: ['as férias de janeiro', 'a volta às aulas'], 2: ['o Carnaval', 'a volta às aulas'], 3: ['o Dia do Consumidor (15/03)', 'o Dia da Mulher (08/03)'],
-  4: ['a Páscoa'], 5: ['o Dia das Mães'], 6: ['o São João', 'o Dia dos Namorados (12/06)'], 7: ['as férias de julho'],
-  8: ['o Dia dos Pais'], 9: ['o Dia do Cliente (15/09)'], 10: ['o Dia das Crianças (12/10)'], 11: ['a Black Friday'], 12: ['o Natal', 'o Réveillon'],
+// ───────── Calendário do mês (Italo, 20/11): nacionais, Recife e Pernambuco, e as do nicho ─────────
+// Só datas confirmadas. Páscoa, Carnaval e Corpus Christi saem da conta da Páscoa; Dia das Mães, dos Pais e Black Friday,
+// do dia da semana. `fam`: só para esses tipos de negócio. Sem dia: o mês inteiro (Outubro Rosa, férias).
+const pad = (n: number) => String(n).padStart(2, '0')
+function easter(y: number): Date {
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3)
+  const h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451)
+  const month = Math.floor((h + l - 7 * m + 114) / 31), day = ((h + l - 7 * m + 114) % 31) + 1
+  return new Date(Date.UTC(y, month - 1, day))
 }
+const plus = (d: Date, n: number) => new Date(d.getTime() + n * 86400000)
+/** n-ésimo dia da semana (0 = domingo) do mês. */
+const nth = (y: number, m: number, wd: number, n: number) => { const first = new Date(Date.UTC(y, m - 1, 1)); return new Date(Date.UTC(y, m - 1, 1 + ((wd - first.getUTCDay() + 7) % 7) + (n - 1) * 7)) }
+type CalDate = { name: string; at: (y: number) => Date | null; month?: number; fam?: Family[] }
+const fixed = (m: number, d: number) => (y: number) => new Date(Date.UTC(y, m - 1, d))
+const CALENDAR: CalDate[] = [
+  { name: 'Férias de janeiro', at: () => null, month: 1 },
+  { name: 'Volta às aulas', at: () => null, month: 1 }, { name: 'Volta às aulas', at: () => null, month: 2 },
+  { name: 'Galo da Madrugada', at: (y) => plus(easter(y), -50) },
+  { name: 'Carnaval', at: (y) => plus(easter(y), -47) },
+  { name: 'Data Magna de Pernambuco', at: fixed(3, 6) },
+  { name: 'Dia da Mulher', at: fixed(3, 8) },
+  { name: 'Aniversário do Recife e de Olinda', at: fixed(3, 12) },
+  { name: 'Dia do Consumidor', at: fixed(3, 15) },
+  { name: 'Páscoa', at: (y) => easter(y) },
+  { name: 'Dia do Trabalho', at: fixed(5, 1) },
+  { name: 'Dia das Mães', at: (y) => nth(y, 5, 0, 2) },
+  { name: 'Dia da Indústria', at: fixed(5, 25), fam: ['b2b'] },
+  { name: 'Dia do Hambúrguer', at: fixed(5, 28), fam: ['comida', 'bar'] },
+  { name: 'Corpus Christi', at: (y) => plus(easter(y), 60) },
+  { name: 'Dia dos Namorados', at: fixed(6, 12) },
+  { name: 'São João', at: fixed(6, 24) },
+  { name: 'Férias de julho', at: () => null, month: 7 },
+  { name: 'Dia da Pizza', at: fixed(7, 10), fam: ['comida'] },
+  { name: 'Dia do Amigo', at: fixed(7, 20), fam: ['comida', 'bar'] },
+  { name: 'Dia do Motorista', at: fixed(7, 25), fam: ['automotivo'] },
+  { name: 'Dia dos Avós', at: fixed(7, 26) },
+  { name: 'Dia do Motociclista', at: fixed(7, 27), fam: ['automotivo'] },
+  { name: 'Dia Internacional da Cerveja', at: (y) => nth(y, 8, 5, 1), fam: ['bar'] },
+  { name: 'Dia do Estudante', at: fixed(8, 11), fam: ['educacao'] },
+  { name: 'Dia dos Pais', at: (y) => nth(y, 8, 0, 2) },
+  { name: 'Dia do Psicólogo', at: fixed(8, 27), fam: ['saude'] },
+  { name: 'Dia do Voluntário', at: fixed(8, 28), fam: ['terceiro_setor'] },
+  { name: 'Setembro Amarelo', at: () => null, month: 9, fam: ['saude', 'terceiro_setor'] },
+  { name: 'Independência', at: fixed(9, 7) },
+  { name: 'Dia da Beleza', at: fixed(9, 9), fam: ['beleza'] },
+  { name: 'Dia do Cliente', at: fixed(9, 15) },
+  { name: 'Outubro Rosa', at: () => null, month: 10, fam: ['saude', 'beleza', 'terceiro_setor'] },
+  { name: 'Dia dos Animais', at: fixed(10, 4), fam: ['varejo'] },
+  { name: 'Dia das Crianças', at: fixed(10, 12) },
+  { name: 'Dia do Professor', at: fixed(10, 15), fam: ['educacao'] },
+  { name: 'Dia do Médico', at: fixed(10, 18), fam: ['saude'] },
+  { name: 'Dia do Dentista', at: fixed(10, 25), fam: ['saude'] },
+  { name: 'Novembro Azul', at: () => null, month: 11, fam: ['saude', 'beleza'] },
+  { name: 'Proclamação da República', at: fixed(11, 15) },
+  { name: 'Dia da Consciência Negra', at: fixed(11, 20) },
+  { name: 'Black Friday', at: (y) => plus(nth(y, 11, 4, 4), 1) },
+  { name: 'Dia de Doar', at: (y) => plus(nth(y, 11, 4, 4), 5), fam: ['terceiro_setor'] },
+  { name: 'Natal', at: fixed(12, 25) },
+  { name: 'Réveillon', at: fixed(12, 31) },
+]
+export interface MonthDate { name: string; label: string }
+/** Datas do mês para este tipo de negócio, na ordem do calendário (as do mês inteiro primeiro). */
+export function monthDates(month: string, fam?: Family | null): MonthDate[] {
+  const y = Number(month.slice(0, 4)), mi = Number(month.slice(5, 7))
+  const out: { name: string; label: string; day: number }[] = []
+  for (const c of CALENDAR) {
+    if (c.fam && (!fam || !c.fam.includes(fam))) continue
+    const d = c.at(y)
+    if (d ? d.getUTCMonth() + 1 !== mi : c.month !== mi) continue
+    if (out.some((x) => x.name === c.name)) continue
+    out.push({ name: c.name, label: d ? `${c.name} (${pad(d.getUTCDate())}/${pad(mi)})` : c.name, day: d ? d.getUTCDate() : 0 })
+  }
+  return out.sort((a, b) => a.day - b.day).map(({ name, label }) => ({ name, label }))
+}
+/** O que fazer na data (o cliente marca e pode responder falando). */
+export const DATE_ACTIONS = ['Oferta especial', 'Produto da data', 'Evento', 'Só conteúdo']
+
+// ───────── Histórias e assuntos (Italo, 20/11): uma por mês, em rodízio; todas também no briefing ─────────
+export const HISTORIAS: string[] = [
+  'Me conta como é um dia normal aí, do abrir ao fechar: o que acontece, quem chega, o que dá mais trabalho e o que você mais gosta de fazer.',
+  'Me conta sobre os seus clientes: as dúvidas que eles mais trazem, o que eles costumam errar antes de chegar até você, e algum atendimento que te marcou, seja engraçado, difícil ou emocionante.',
+  'Imagina que você vai ensinar alguém a escolher bem um produto ou serviço como o seu. O que você diria? O que diferencia um bom de um ruim, e o que as pessoas acreditam no seu ramo que não é verdade?',
+  'Conta a história de vocês desde o começo: por que começou, o momento mais difícil, a virada, e do que vocês têm mais orgulho hoje.',
+  'O que acontece aí dentro que o cliente não vê e ia achar interessante? Como é feito, quem faz, algum cuidado ou detalhe que ninguém imagina.',
+  'Se você fosse dar um conselho para alguém começando no seu ramo, o que diria? E qual a maior lição que o seu negócio te ensinou?',
+]
+export const HISTORIA_FIO = 'Me conta um caso real disso?'
+/** Resposta com menos que isso (caracteres) puxa o fio, uma vez. */
+export const HISTORIA_CURTA = 240
 
 type T = { area: Area; q: string; why: string; options?: string[] }
-type Bank = Record<'oferta' | 'meta' | 'objecao' | 'operacao' | 'prova' | 'publico' | 'novidade' | 'limite', T[]>
+type Bank = Record<'oferta' | 'meta' | 'objecao' | 'operacao' | 'prova' | 'publico' | 'novidade' | 'limite' | 'passado' | 'proximo' | 'concorrencia' | 'ideias' | 'prioridade', T[]>
 
 // {mes} {produto} {data} {nome} viram dados do cliente. Cada categoria tem variações: o motor escolhe uma que ainda não foi feita.
 const BASE: Bank = {
@@ -110,6 +195,33 @@ const BASE: Bank = {
   ],
   limite: [
     { area: 'consultoria', q: 'Em {mes}, tem algo que a gente NÃO deve falar ou mostrar?', why: 'Evita retrabalho e erro com o público.', options: ['Nada', 'Preços', 'Rosto da equipe', 'Concorrentes'] },
+  ],
+  // Perguntas novas do mês (Italo, 20/11): valem para qualquer tipo de negócio.
+  passado: [
+    { area: 'vendas', q: 'O que mais vendeu no mês passado e o que encalhou?', why: 'Ex.: "o combo família voou; a sobremesa nova parou".' },
+    { area: 'social', q: 'Algum cliente elogiou ou reclamou de algo novo no mês passado?', why: 'Elogio vira prova; reclamação vira ajuste antes de virar problema.', options: ['Elogiou', 'Reclamou', 'Nada de novo'] },
+    { area: 'consultoria', q: 'O que aconteceu de diferente no mês passado (equipe, fornecedor, preço)?', why: 'Explica o resultado e muda o plano.', options: ['Nada', 'Equipe', 'Fornecedor', 'Preço', 'Espaço'] },
+    { area: 'consultoria', q: 'Bateram a meta do mês passado?', why: 'Para acertar a meta deste mês.', options: ['Passou', 'Bateu', 'Faltou um pouco', 'Faltou muito', 'Não tinha meta'] },
+  ],
+  proximo: [
+    { area: 'vendas', q: 'Tem produto, serviço ou novidade chegando em {mes}?', why: 'Ex.: "sabor novo dia 10"; "horário de domingo".', options: ['Sim', 'Não'] },
+    { area: 'vendas', q: 'Algum produto vai faltar ou subir de preço em {mes}?', why: 'Para não anunciar o que vai acabar.', options: ['Vai faltar', 'Vai subir', 'Nada muda'] },
+    { area: 'social', q: 'Tem evento, feira ou ação na região em {mes} de que dá para participar?', why: 'Ex.: "feira do bairro dia 14"; "corrida no domingo".' },
+    { area: 'consultoria', q: 'Algum dia de {mes} fecha ou muda de horário?', why: 'Evita anúncio rodando com a porta fechada.', options: ['Fecha', 'Muda o horário', 'Tudo normal'] },
+    { area: 'consultoria', q: 'Alguém da equipe sai de férias ou entra em {mes}?', why: 'Muda quem grava, quem atende e quanto dá para vender.', options: ['Férias', 'Gente nova', 'Nada muda'] },
+  ],
+  concorrencia: [
+    { area: 'social', q: 'Viu algum concorrente fazendo promoção ou ação nova?', why: 'Ex.: "a pizzaria da esquina lançou rodízio na terça".', options: ['Sim', 'Não reparei'] },
+    { area: 'social', q: 'Apareceu concorrente novo perto?', why: 'Diga o nome ou o @, se souber.', options: ['Sim', 'Não'] },
+  ],
+  ideias: [
+    { area: 'social', q: 'Tem ideia de post ou vídeo que você quer ver em {mes}?', why: 'Pode mandar um exemplo que viu e gostou.' },
+    { area: 'social', q: 'O que os clientes mais perguntaram neste mês?', why: 'Pergunta repetida vira conteúdo que responde antes.' },
+    { area: 'audiovisual', q: 'Tem bastidor ou acontecimento bom para mostrar?', why: 'Ex.: "chegou o forno novo"; "a equipe fez 1 ano".' },
+  ],
+  prioridade: [
+    { area: 'consultoria', q: 'Se só pudesse ter um resultado em {mes}, qual seria?', why: 'Uma coisa só: o plano gira em torno dela.', options: ['Vender mais', 'Clientes novos', 'Fortalecer a marca', 'Encher a agenda', 'Fidelizar'] },
+    { area: 'consultoria', q: 'O que mais te preocupa para {mes}?', why: 'Ex.: "o movimento cair depois do feriado".' },
   ],
 }
 
@@ -284,13 +396,19 @@ export function monthGuide(key: 'ofertas' | 'meta' | 'datas_travam', fam: Family
   const mi = Number(month.slice(5, 7))
   const mes = MESES[mi - 1] ?? 'o mês'
   const prods = products.map((p) => p.nome?.trim()).filter((x): x is string => !!x).slice(0, 8)
-  const dates = DATES[mi] ?? []
+  const cal = monthDates(month, fam)
+  const pick = `Quais datas de ${mes} vão ter algo especial?`
+  // Para cada data marcada, o que fazer (só aparece a da data escolhida).
+  const perDate: GuideStep[] = cal.length ? [
+    { q: pick, opts: [...cal.map((d) => d.label), 'Nenhuma'], multi: true },
+    ...cal.map((d) => ({ q: `Para ${d.label}, o que vocês vão fazer?`, opts: DATE_ACTIONS, multi: true, when: { q: pick, has: [d.name] } })),
+  ] : []
   if (key === 'ofertas') return [
     { q: `O que precisa vender mais em ${mes}?`, opts: prods.length ? prods : ['O carro-chefe', 'Um lançamento', 'O de maior margem', 'Estoque parado'], multi: true },
     { q: 'Que tipo de oferta faz sentido?', opts: OFFER_KIND[fam], multi: true },
     { q: 'Qual o preço ou a condição real da oferta?', opts: [], open: true },
     { q: 'Até quando vale e tem limite (estoque, vagas)?', opts: ['Até o fim do mês', 'Só um fim de semana', 'Até acabar o estoque', 'Vagas limitadas'], multi: true },
-    ...(dates.length ? [{ q: `Vai ter algo especial para ${dates.join(' ou ')}?`, opts: ['Sim, oferta da data', 'Produto especial da data', 'Evento', 'Não vamos usar'] }] : []),
+    ...perDate,
     { q: 'Alguma ação junto da oferta?', opts: ['Influenciador', 'Parceria com outro negócio', 'Sorteio', 'Evento', 'Indique e ganhe', 'Nenhuma'], multi: true },
   ]
   if (key === 'meta') return [
@@ -300,6 +418,7 @@ export function monthGuide(key: 'ofertas' | 'meta' | 'datas_travam', fam: Family
     { q: 'Por que esse número?', opts: ['Pagar as contas', 'Crescer em relação ao mês passado', 'Data forte no mês', 'Encher a capacidade', 'Lançamento'], multi: true },
   ]
   return [
+    ...(cal.length ? [{ q: `Alguma destas datas de ${mes} muda o funcionamento?`, opts: [...cal.map((d) => d.label), 'Nenhuma'], multi: true }] : []),
     { q: `Tem dia em ${mes} que não dá para gravar ou atender?`, opts: ['Feriado fechado', 'Férias da equipe', 'Reforma', 'Viagem do dono', 'Evento que lota', 'Nada trava'], multi: true },
     { q: 'Quais dias exatamente?', opts: [], open: true, when: { q: `Tem dia em ${mes} que não dá para gravar ou atender?`, has: ['feriado', 'ferias', 'reforma', 'viagem', 'evento'] } },
     { q: 'Mudança de horário no mês?', opts: ['Abre mais tarde', 'Fecha mais cedo', 'Abre domingo', 'Horário normal'], multi: true },
@@ -309,15 +428,20 @@ export function monthGuide(key: 'ofertas' | 'meta' | 'datas_travam', fam: Family
 /** Número estável a partir de um texto (mesmo cliente + mês = mesma escolha). */
 function hash(s: string): number { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) } return h >>> 0 }
 
-const ORDER: (keyof Bank)[] = ['oferta', 'meta', 'objecao', 'operacao', 'prova', 'publico', 'novidade', 'limite']
+// O que mais importa sempre entra; o resto gira mês a mês (nada fica esquecido).
+const CORE: (keyof Bank)[] = ['oferta', 'meta', 'prioridade', 'passado', 'proximo']
+const REST: (keyof Bank)[] = ['objecao', 'operacao', 'prova', 'publico', 'ideias', 'concorrencia', 'novidade', 'limite']
+/** Perguntas principais do mês (sem contar as subperguntas). */
+export const MONTH_MAIN = 10
 
-/** As 8 perguntas do mês para este cliente. */
+/** As perguntas do mês para este cliente (10 principais + subperguntas). */
 export function monthQuestions(inp: EngineInput): EngineQuestion[] {
   const fam = inp.family ?? familyOf(inp.segment, inp.description, inp.name)
   const mi = Number(inp.month.slice(5, 7))
   const mes = MESES[mi - 1] ?? ''
   const prod = (inp.products ?? []).find((p) => p.nome?.trim())?.nome?.trim() ?? 'seu carro-chefe'
-  const dates = DATES[mi] ?? []
+  const N = MONTH_MAIN
+  const ORDER = [...CORE, ...REST.map((_, i) => REST[(i + mi) % REST.length]!)]
   const asked = new Set(inp.asked.map(norm))
   const fill = (s: string, extra: Record<string, string> = {}) => Object.entries({ mes, produto: prod, nome: inp.name.trim(), ...extra }).reduce((t, [k, v]) => t.split(`{${k}}`).join(v), s)
   const out: EngineQuestion[] = []
@@ -334,18 +458,32 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
   else if (noPrice) push({ area: 'vendas', q: `Quanto custa hoje ${noPrice.nome}?`, why: 'Só preço real entra na estratégia.' })
   if (!(inp.competitors ?? []).length && !inp.noCompetitors) push({ area: 'social', q: 'Quem você vê como concorrente aqui perto? (nome ou @ do Instagram)', why: 'Ex.: "@pizzariadobairro e a Forno Bom". Se não tem, responda "não tenho".', options: ['Não tenho concorrente direto'] })
   else if ((inp.competitors ?? [])[0]) push({ area: 'social', q: `O que ${inp.competitors![0]!.nome} faz que você acha que funciona (ou que não funciona)?`, why: 'Ex.: "promoção de terça lota"; "atendimento demora".' })
-  if (dates.length) { const d = dates[hash(inp.clientId + inp.month) % dates.length]!; push({ area: 'consultoria', q: `Como você quer aproveitar ${d}?`, why: 'Planejamos antes para não perder a data.', options: ['Oferta especial', 'Produto da data', 'Evento', 'Não vamos usar'] }) }
+  // Calendário: o cliente marca as datas do mês e, para cada uma, diz o que fazer (Italo, 20/11).
+  const kids: EngineQuestion[] = []
+  const cal = monthDates(inp.month, fam).slice(0, 8)
+  if (cal.length) {
+    const mother = `Quais datas de ${mes} você quer aproveitar?`
+    used.add(norm(mother))
+    out.push({ area: 'consultoria', question: mother, why: 'Marque quantas quiser. Para cada uma, a gente pergunta o que fazer.', options: [...cal.map((d) => d.label), 'Nenhuma'] })
+    for (const d of cal) kids.push({ area: 'consultoria', question: `Para ${d.label}, o que vocês vão fazer?`, why: 'Pode marcar mais de uma ou responder falando.', options: DATE_ACTIONS, cond: { q: mother, has: [d.name] } })
+  }
+  // História do mês (rodízio): conversa longa para virar conteúdo; resposta curta puxa o fio uma vez.
+  const hs = HISTORIAS.map((_, i) => HISTORIAS[(i + mi + (hash(inp.clientId) % HISTORIAS.length)) % HISTORIAS.length]!)
+  const story = hs.find((h) => !asked.has(norm(h))) ?? hs[0]!
+  used.add(norm(story))
+  out.push({ area: 'audiovisual', question: story, why: 'Fale à vontade, de 1 a 3 minutos: vira vídeo, arte e texto.', options: [] })
+  kids.push({ area: 'audiovisual', question: HISTORIA_FIO, why: 'Um caso real deixa o conteúdo verdadeiro.', options: [], cond: { q: story, has: [], short: HISTORIA_CURTA } })
 
   // 2) Perguntas do diagnóstico que ficaram em aberto (até 2): são as mais deste cliente.
   for (const d of (inp.diagQuestions ?? []).slice(0, 6)) {
-    if (out.length >= 5) break
+    if (out.length >= 7) break
     if (out.filter((x) => x.why.startsWith('Do diagnóstico')).length >= 2) break
     if (d.pergunta?.trim()) push({ area: 'consultoria', q: d.pergunta.trim(), why: `Do diagnóstico: ${d.por_que?.trim() || 'ficou em aberto'}`.slice(0, 200) })
   }
 
   // 3) Banco do nicho (com a base): uma por categoria, a variação que ainda não foi feita.
   for (const cat of ORDER) {
-    if (out.length >= 8) break
+    if (out.length >= N) break
     if (cat === 'meta' && inp.meta?.trim()) continue
     if (cat === 'publico' && (inp.publico ?? '').trim().length > 40) continue
     // O nicho primeiro; a base só entra se o nicho não tem esta categoria ou já perguntou tudo dela.
@@ -358,11 +496,11 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
       if (ok) break
     }
   }
-  // 4) Completa até 8 com o que sobrou do banco do nicho e, se couber no nicho, da base (nunca repetindo).
+  // 4) Completa até N com o que sobrou do banco do nicho e, se couber no nicho, da base (nunca repetindo).
   for (const cat of ORDER) {
-    if (out.length >= 8) break
+    if (out.length >= N) break
     const own = BY_FAMILY[fam]?.[cat] ?? []
-    for (const t of [...own, ...(GENERIC_OK.has(fam) || !own.length ? BASE[cat] : [])]) { if (out.length >= 8) break; push(t) }
+    for (const t of [...own, ...(GENERIC_OK.has(fam) || !own.length ? BASE[cat] : [])]) { if (out.length >= N) break; push(t) }
   }
   // 5) Trilha em profundidade do tipo de negócio (subperguntas que aparecem conforme a resposta).
   const deep: EngineQuestion[] = []
@@ -376,5 +514,5 @@ export function monthQuestions(inp: EngineInput): EngineQuestion[] {
     }
   }
   walk(TRAIL[fam] ?? [], null)
-  return [...out.slice(0, 8), ...deep.slice(0, 14)]
+  return [...out.slice(0, N), ...kids, ...deep.slice(0, 14)]
 }
