@@ -77,7 +77,7 @@ export function flowSteps(fields: FlowField[], answers: Record<string, string>, 
   }
   for (const q of visibleQuestions(questions)) {
     if (q.status === 'respondida') continue
-    out.push({ key: `q:${q.id}`, group: monthLabel, q: q.question, hint: q.why, opts: q.options.slice(0, 6), multi: true, kind: 'question', qid: q.id })
+    out.push({ key: `q:${q.id}`, group: monthLabel, q: q.question, hint: q.why, opts: q.options.slice(0, 14), multi: true, kind: 'question', qid: q.id })
   }
   return out
 }

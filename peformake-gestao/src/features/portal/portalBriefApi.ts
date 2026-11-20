@@ -7,7 +7,7 @@ type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown;
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
 
 export interface PortalQuestion {
-  id: string; question: string; why: string | null; options: string[]; cond: { q?: string; has?: string[] } | null
+  id: string; question: string; why: string | null; options: string[]; cond: { q?: string; has?: string[]; short?: number } | null
   answer: string | null; status: string; answered_via: string | null
 }
 export interface PortalBrief {
