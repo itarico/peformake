@@ -41,7 +41,7 @@ const GROUPS: { title: string; text: string; fields: { key: Key; label: string; 
   {
     title: 'Prazos de entrega', text: 'Tempo para entregar depois do pedido ou da captação.',
     fields: [
-      { key: 'art_sla_hours', label: 'Arte', unit: 'horas' },
+      { key: 'art_sla_hours', label: 'Arte sem prazo do tipo (ver Design → Prazos)', unit: 'horas' },
       { key: 'video_sla_hours', label: 'Vídeo depois da captação', unit: 'horas' },
       { key: 'approval_stuck_days', label: 'Aprovação do cliente parada depois de', unit: 'dias' },
     ],

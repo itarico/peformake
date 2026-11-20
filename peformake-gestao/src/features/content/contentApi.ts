@@ -259,6 +259,7 @@ export function contentErrorMessage(error: unknown): string {
     if (e.message?.includes('ajustar')) return 'Escreva o que precisa ajustar.'
     if (e.message?.includes('titulo')) return 'Preencha título e briefing antes de mandar para o design.'
     if (e.message?.includes('publica')) return 'Só marca publicado depois de aprovado.'
+    if (e.message?.includes('Prioridade')) return 'Prioridade só vale antes da entrega da arte.'
     return 'Algum campo está fora do formato.'
   }
   return 'Não foi possível concluir. Nada foi alterado.'
