@@ -74,8 +74,10 @@ const CORE_SCHEMA = obj({
   ofertas: arr({ ...COMMON, condicao: s, quando: s, porque: s }),
   datas: arr({ ...COMMON, dia: s, uso: s }),
   decisoes: arr({ ...COMMON, porque: s }),
+  acoes: arr({ ...COMMON, o_que: s, como: s, quando: s, oferta: s, como_medir: s, opcoes: arr({ nome: s, link: s, porque: s }) }),
+  plano_vendas: obj({ ...COMMON, meta: s, ticket: s, quem_vende: s, canais: sa, etapas: arr({ etapa: s, o_que_fazer: s, quem: s }), semanas: arr({ semana: s, meta: s, foco: s }) }),
   pautas_av: arr({ tema: s, formato: s, funil: FUNIL, serve: s, inspirado_link: s }),
-  pautas_social: arr({ tema: s, formato: { type: 'string', enum: ['carrossel', 'reels', 'stories', 'post'] }, funil: FUNIL, serve: s }),
+  pautas_social: arr({ tema: s, formato: { type: 'string', enum: ['carrossel', 'post'] }, funil: FUNIL, serve: s }),
   campanhas: arr({ nome: s, objetivo: s, serve: s }),
 })
 const FORMATOS_AV = ['POV', 'bastidor', 'mito x verdade', 'antes e depois', 'tutorial', 'entrevista', 'trend', 'lista', 'reação', 'dia a dia', 'depoimento', 'desafio']
@@ -85,8 +87,10 @@ const CORE_TASK = (mes: string, nAv: number, nSocial: number, traffic: boolean) 
 - ofertas: as ofertas do mês com condição REAL e quando (ex.: "até 20/12"). Use as do briefing; sem oferta no briefing, proponha 1 e marque a suposição.
 - datas: as datas de ${mes} que usamos (dia e uso). Respeite as "datas que travam".
 - decisoes: 3 a 5 decisões do mês (o que fazer e o que NÃO fazer), cada uma com o porquê (dado).
+- acoes: 3 a 5 AÇÕES ESTRATÉGICAS do mês, além do conteúdo (ex.: chamar um influenciador local, parceria com outro negócio, evento ou ação na loja, sorteio, indicação). Cada uma: titulo (a ação), o_que (o que fazer, 1 a 2 frases), como (passo prático), quando, oferta (a oferta do mês que ela anuncia), como_medir e opcoes: até 5 opções concretas (ex.: 5 influenciadores com nome ou @, link e por que cada um). Use SÓ nomes e links que aparecem na pesquisa, na coleta ou no briefing; sem nome real, descreva o perfil ideal e marque a suposição. Parta do que está acontecendo no mercado e no nicho neste mês.
+- plano_vendas: 1 card. titulo curto; meta (número de vendas ou faturamento do mês, a partir do briefing), ticket (médio ou da oferta principal), quem_vende, canais (por onde vende: WhatsApp, loja, site...), etapas (3 a 6, da chegada do contato ao fechamento e pós-venda: etapa, o_que_fazer, quem) e semanas (4: semana, meta e foco, amarrados às ofertas e datas).
 - pautas_av: ${nAv} vídeos com tema e formato VARIADO (${FORMATOS_AV.join(', ')}); no máximo 2 do mesmo formato. Cruze com o que já deu certo no perfil, nas referências e nos concorrentes.
-- pautas_social: ${nSocial} peças (carrossel, reels, stories, post) com foco em GANHAR SEGUIDORES e servir as ofertas.
+- pautas_social: ${nSocial} peças SÓ de post ou carrossel (vídeo e Reels ficam no audiovisual) com foco em GANHAR SEGUIDORES e servir as ofertas.
 - campanhas: ${traffic ? '1 a 3 campanhas de tráfego (nome, objetivo, oferta que servem)' : 'lista vazia (cliente sem tráfego contratado; pode citar 1 se fizer muito sentido)'}.`
 
 // ───────── Audiovisual ─────────
@@ -116,13 +120,13 @@ ${ACERVO}`
 
 // ───────── Social ─────────
 const SOCIAL_CARD = obj({
-  ...COMMON, formato: { type: 'string', enum: ['carrossel', 'reels', 'stories', 'post'] }, ideia: s, slides: sa, copy: s, legenda: s, cta: s,
+  ...COMMON, formato: { type: 'string', enum: ['carrossel', 'post'] }, ideia: s, slides: sa, copy: s, legenda: s, cta: s,
   ideia_imagem: s, referencia_visual: obj({ link: s, porque: s }), data_sugerida: s,
 })
 const SOCIAL_SCHEMA = obj({ pecas: { type: 'array', items: SOCIAL_CARD } })
 const SOCIAL_TASK = (pautas: string, mes: string) => `Escreva as peças de SOCIAL MEDIA destas pautas, um card por pauta, na mesma ordem:
 ${pautas}
-Cada peça: ideia (1 frase); slides (carrossel: o texto de cada slide, 5 a 8; outros formatos: lista vazia); copy (o texto principal da arte ou do vídeo);
+Cada peça é post ou carrossel (nunca Reels, stories ou vídeo). Cada peça: ideia (1 frase); slides (carrossel: o texto de cada slide, 5 a 8; post: lista vazia); copy (o texto principal da arte);
 legenda (pronta para postar, até 6 linhas, com hashtags no fim); cta (chamada para ação); ideia_imagem (o que fotografar ou montar, só foto real);
 referencia_visual (link e porquê; "" se nenhum); data_sugerida (DD/MM dentro de ${mes}). Foco em ganhar seguidores e servir as ofertas.`
 
@@ -420,7 +424,7 @@ async function stepNucleo(db: SupabaseClient, ai: Anthropic, job: Board) {
   const ct = (p.contract ?? {}) as Row
   const nAv = Math.min(8, Math.max(4, Number(ct.videos ?? 0) + 2))
   const nSocial = Math.min(10, Math.max(6, Number(ct.social_qtd ?? 0) || 8))
-  const core = await write(db, ai, job.client_id, p.ctx, p.notes, 'nucleo', BRAIN, CORE_TASK(monthLabel(job.month), nAv, nSocial, !!ct.trafego), CORE_SCHEMA, job.attempts >= 2 ? 'low' : 'medium', 16000, job)
+  const core = await write(db, ai, job.client_id, p.ctx, p.notes, 'nucleo', BRAIN, CORE_TASK(monthLabel(job.month), nAv, nSocial, !!ct.trafego), CORE_SCHEMA, job.attempts >= 2 ? 'low' : 'medium', 22000, job)
   await advance(db, job, 'videos', { core })
 }
 
@@ -474,10 +478,12 @@ function cardsOf(p: Row, brief: Row): Row[] {
   ;(core.ofertas ?? []).forEach((x: Row, i: number) => out.push(card('resumo', 'oferta', 20 + i, x)))
   ;(core.datas ?? []).forEach((x: Row, i: number) => out.push(card('resumo', 'data', 40 + i, x)))
   ;(core.decisoes ?? []).forEach((x: Row, i: number) => out.push(card('resumo', 'decisao', 60 + i, x)))
+  ;(core.acoes ?? []).forEach((x: Row, i: number) => out.push(card('resumo', 'acao', 30 + i, x)))
+  if (core.plano_vendas?.titulo) out.push(card('atendimento', 'plano', 0, core.plano_vendas))
   Object.keys(p.out_av ?? {}).sort().flatMap((k) => (p.out_av[k]?.videos ?? []) as Row[]).forEach((x, i) => out.push(card('audiovisual', 'video', i, x)))
   ;((p.out_pecas?.social?.pecas ?? []) as Row[]).forEach((x, i) => out.push(card('social', 'peca', i, x)))
   ;((p.out_pecas?.trafego?.campanhas ?? []) as Row[]).forEach((x, i) => out.push(card('trafego', 'campanha', i, x)))
-  ;((p.out_pecas?.atendimento?.roteiros ?? []) as Row[]).forEach((x, i) => out.push(card('atendimento', 'roteiro', i, x)))
+  ;((p.out_pecas?.atendimento?.roteiros ?? []) as Row[]).forEach((x, i) => out.push(card('atendimento', 'roteiro', 10 + i, x)))
   // Referências: o que está no briefing (acumulativo), sem IA.
   ;((brief.concorrentes ?? []) as Row[]).forEach((x, i) => out.push({ tab: 'referencias', kind: 'concorrente', position: i, title: cut(x.nome, 160) || 'Concorrente', data: { link: x.link ?? '', porque: x.porque ?? '' }, is_new: !!x.novo, in_pdf: true }))
   ;((brief.referencias ?? []) as Row[]).forEach((x, i) => out.push({ tab: 'referencias', kind: x.tipo === 'outro_nicho' ? 'outro_nicho' : x.tipo === 'anuncio' ? 'anuncio' : 'referencia', position: 100 + i, title: cut(x.porque, 120) || cut(x.link, 80), data: { link: x.link, porque: x.porque ?? '', numero: x.numero ?? '', thumb: x.thumb ?? '' }, inspired: x.numero ? { link: x.link, numero: x.numero } : null, is_new: !!x.novo, in_pdf: true }))
@@ -512,7 +518,8 @@ async function redo(db: SupabaseClient, cardId: string, pedido: string): Promise
   if (cur.tab === 'referencias') throw new Error('Referência não se refaz: edite ou recuse.')
   const resumoSchema = (CORE_SCHEMA.properties as Row)
   const pick = cur.tab === 'resumo'
-    ? { schema: cur.kind === 'tese' ? resumoSchema.tese : (resumoSchema[{ objetivo: 'objetivos', oferta: 'ofertas', data: 'datas', decisao: 'decisoes' }[cur.kind as string] ?? 'decisoes'] as Row).items, model: BRAIN, max: 2000 }
+    ? { schema: cur.kind === 'tese' ? resumoSchema.tese : (resumoSchema[{ objetivo: 'objetivos', oferta: 'ofertas', data: 'datas', decisao: 'decisoes', acao: 'acoes' }[cur.kind as string] ?? 'decisoes'] as Row).items, model: BRAIN, max: 2500 }
+    : cur.kind === 'plano' ? { schema: resumoSchema.plano_vendas, model: BRAIN, max: 2500 }
     : TAB_SCHEMA[cur.tab]!
   const { data: board } = await db.from('strategy_boards').select('missing').eq('id', cur.board_id).maybeSingle()
   const { ctx } = await contextOf(db, cur.client_id, cur.month, ((board as Row | null)?.missing ?? []) as string[])

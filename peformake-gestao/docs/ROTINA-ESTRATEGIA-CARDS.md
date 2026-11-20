@@ -39,8 +39,10 @@ Campos comuns: `aba`, `tipo`, `titulo`, `funil` (atrair | provar | objecao | con
 | resumo | oferta | `condicao` (preço real), `quando`, `porque` |
 | resumo | data | `dia`, `uso` |
 | resumo | decisao (3 a 5) | `porque` |
+| resumo | acao (3 a 5) | ações estratégicas do mês além do conteúdo (influenciador, parceria, evento, sorteio...): `o_que`, `como`, `quando`, `oferta`, `como_medir`, `opcoes` [{`nome`, `link`, `porque`}] (até 5, só nomes reais) |
+| atendimento | plano (1, position 0) | plano de vendas: `meta`, `ticket`, `quem_vende`, `canais` [..], `etapas` [{`etapa`, `o_que_fazer`, `quem`}], `semanas` [{`semana`, `meta`, `foco`}] |
 | audiovisual | video (contrato + 2, entre 4 e 8) | `formato` (POV, bastidor, mito x verdade, antes e depois, tutorial, entrevista, trend...; no máximo 2 iguais), `ganchos` (exatamente 3), `roteiro` [{`cena`, `fala`}] completo, `outras_ideias` (exatamente 3 outros assuntos com o mesmo material), `referencia` {`link`, `porque`}, `cruzamento` (o que já deu certo), `filmar`; e sempre `objetivo_tag` (viralizar | escalar | vender | autoridade), `estrutura`, `intencao`, `notas`, `montagem` [{`t`, `visual`, `tipo`, `audio`, `texto_tela`}], `captar`, `edicao`, `extras` {`stories`, `reels_celular`, `fotos`}, `gravacao_como`, `producao.derivados` (a tela e o PDF leem). Roteiro: siga `agent_instructions('roteiro-master')` por módulo (NÚCLEO + o módulo da etapa) |
-| social | peca (6 a 10) | `formato` (carrossel, reels, stories, post), `ideia`, `slides` [texto], `copy`, `legenda`, `cta`, `ideia_imagem` (só foto real), `referencia_visual` {`link`, `porque`}, `data_sugerida` (DD/MM) |
+| social | peca (6 a 10) | `formato` (carrossel ou post; nunca Reels, stories ou vídeo, que ficam no audiovisual), `ideia`, `slides` [texto], `copy`, `legenda`, `cta`, `ideia_imagem` (só foto real), `referencia_visual` {`link`, `porque`}, `data_sugerida` (DD/MM) |
 | trafego | campanha (1 a 3, se tem tráfego) | `campanha`, `objetivo`, `publico`, `criativo` (título de um card aprovado/planejado), `verba_opcoes` [{`valor_dia`, `o_que_esperar`}] (3), `teste_ab` {`a`, `b`, `como_decidir`} |
 | atendimento | roteiro (1 por oferta) | `oferta`, `roteiro_whatsapp` [mensagens], `objecoes` [{`objecao`, `resposta`}], `follow_up` [{`quando`, `mensagem`}] |
 
