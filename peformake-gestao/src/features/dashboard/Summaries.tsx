@@ -232,16 +232,39 @@ export function ClientsSummary() {
         <StatTile label="NPS" value={nps === null ? '-' : String(nps)} hint={d.nps.answers ? `${npsLabel(nps)} | ${d.nps.answers} respostas em 180 dias` : 'Peça a nota pelo Comercial'} tone={nps !== null && nps < 0 ? 'warn' : 'default'} />
       </KpiRow>
 
+      {/* Em blocos (Italo, 20/11): saúde da carteira, movimento e quem atendemos. Cartões alinhados por linha, sem buracos. */}
+      <h2 className="mt-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-muted">Saúde da carteira</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-        <Panel title="Entradas e saídas" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
-          <FlowChart flow={d.flow} />
-        </Panel>
         <Panel title="Saúde da carteira" action={<span className="text-[12px] text-muted">{atRisk > 0 ? `${atRisk} em risco` : 'Ninguém em risco'}</span>}>
           <ScoreGauge label="Nota da carteira pela última avaliação de cada cliente" value={healthScore(d.health)} bands={HEALTH_GAUGE} />
           <p className="text-center text-[13px] text-muted">
             {d.unassessed > 0 ? `${d.unassessed} sem avaliação nos últimos 45 dias.` : 'Todos avaliados.'}
             {d.renewals_60d > 0 && ` ${d.renewals_60d} ${d.renewals_60d === 1 ? 'contrato vence' : 'contratos vencem'} em 60 dias.`}
           </p>
+        </Panel>
+        <Panel title="NPS" action={<span className="text-[12px] text-muted">{d.nps.answers} respostas</span>}>
+          <SegmentedBar label="Notas de 0 a 10" empty="Nenhuma nota ainda. Peça pelo Comercial." parts={[
+            { label: 'Promotores (9 e 10)', value: d.nps.promoters, color: 'bg-ok' },
+            { label: 'Neutros (7 e 8)', value: d.nps.neutral, color: 'bg-line-strong' },
+            { label: 'Detratores (0 a 6)', value: d.nps.detractors, color: 'bg-warn' },
+          ]} />
+        </Panel>
+        {(d.lost_suggested?.length ?? 0) > 0 && <LostSuggestions rows={d.lost_suggested!} />}
+      </div>
+      <h2 className="mt-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-muted">Entradas e saídas</h2>
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
+        <Panel className="xl:col-span-2" title="Entradas e saídas" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
+          <FlowChart flow={d.flow} />
+        </Panel>
+        <Panel title="Por que os clientes saíram" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
+          <RankBars label="Motivos de saída" format={fmt.int} empty="Nenhuma saída no período." rows={d.lost_reasons.slice(0, 4).map((r) => ({ label: r.reason, value: r.n, tone: 'warn' as const }))} />
+        </Panel>
+      </div>
+      <h2 className="mt-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-muted">Quem atendemos</h2>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <NicheChart />
+        <Panel title="Serviços mais contratados">
+          <RankBars label="Clientes ativos por serviço" format={fmt.int} rows={d.services.slice(0, 5).map((s) => ({ label: s.name, value: s.n }))} />
         </Panel>
         <Panel title="Tempo de casa" action={<span className="text-[12px] text-muted">Clientes ativos</span>}>
           <BucketBars label="Clientes por tempo com a gente" rows={[
@@ -253,21 +276,6 @@ export function ClientsSummary() {
             ...(b.unknown ? [{ label: 'Sem data', value: b.unknown }] : []),
           ]} />
         </Panel>
-        <Panel title="NPS" action={<span className="text-[12px] text-muted">{d.nps.answers} respostas</span>}>
-          <SegmentedBar label="Notas de 0 a 10" empty="Nenhuma nota ainda. Peça pelo Comercial." parts={[
-            { label: 'Promotores (9 e 10)', value: d.nps.promoters, color: 'bg-ok' },
-            { label: 'Neutros (7 e 8)', value: d.nps.neutral, color: 'bg-line-strong' },
-            { label: 'Detratores (0 a 6)', value: d.nps.detractors, color: 'bg-warn' },
-          ]} />
-        </Panel>
-        <NicheChart className="md:row-span-2" />
-        <Panel title="Serviços mais contratados">
-          <RankBars label="Clientes ativos por serviço" format={fmt.int} rows={d.services.slice(0, 5).map((s) => ({ label: s.name, value: s.n }))} />
-        </Panel>
-        <Panel title="Por que os clientes saíram" action={<span className="text-[12px] text-muted">Últimos 12 meses</span>}>
-          <RankBars label="Motivos de saída" format={fmt.int} empty="Nenhuma saída no período." rows={d.lost_reasons.slice(0, 4).map((r) => ({ label: r.reason, value: r.n, tone: 'warn' as const }))} />
-        </Panel>
-        {(d.lost_suggested?.length ?? 0) > 0 && <LostSuggestions rows={d.lost_suggested!} />}
       </div>
       <AvulsosBlock />
     </>
