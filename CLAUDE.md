@@ -103,6 +103,8 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
   documentos, prompts e o banco citam esses caminhos. O índice aponta para eles. Só mover trocando todas as citações
   na mesma entrega.
 - Fora do Git: vídeo e áudio brutos, pastas `venv-*`, modelos de IA e arquivos com chave ou senha.
+- Cliente **não fica preso a um estilo ou skill**: a cada vídeo escolhe-se a ficha/skill que serve à necessidade do
+  momento. Ficha de cliente (ex.: Disalp) guarda regras de entrega e conteúdo, não um estilo fixo.
 
 ## Segurança
 

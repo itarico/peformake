@@ -60,6 +60,30 @@ Estrutura do catálogo: S__ (+ S__) ou S-novo: <nome>
 ## Variações (3)
 ```
 
+## Ficha de edição (quando o que vale é o estilo, não o roteiro)
+
+Referência de edição (sem fala, ou onde a graça é o corte, a tipografia, o som) usa este modelo, no mesmo arquivo
+ou sozinho. Liga ao catálogo de estilos (`video-tools/estilos/catalogo_estilos.md`, E1–E39) e às técnicas dos
+estudos de editor (Milad T, @rabbits R, Vianna V, EarnEdits EE, dacosta DC).
+
+```markdown
+## Edição
+Estilo do catálogo: E__ (+ técnicas T__/R__/V__/EE__/DC__) ou E-novo: <nome>
+- Gancho visual (0–3 s):
+- Ritmo (planos, cortes/s, onde acelera e onde respira):
+- Tipografia e legenda (fonte, tamanho, posição, animação):
+- Transições e movimento de câmera (zoom, whip, máscara, 3D, parallax):
+- Cor, grão e textura:
+- Som (música, BPM, SFX, silêncio, onde o som manda no corte):
+- Como fazer (programa e passos: Premiere, After Effects, CapCut, Remotion, motion-pro):
+- Dificuldade (1 a 5) e tempo estimado por vídeo:
+- Em que tipo de cliente/vídeo cai bem e em qual não cai:
+```
+
+Ferramenta de preparo em lote: `acervo-audiovisual/ferramentas/preparar_video.py <URL> <pasta> [transcricao.txt]`
+(baixa, 24 quadros com o tempo, folha `contato.jpg`, meta; `WHISPER_MODELO=nenhum` pula a transcrição).
+Material baixado fica na pasta de rascunho, nunca no Git.
+
 ## Modo 2: usar uma estrutura que já está na biblioteca
 
 1. Ler `acervo-audiovisual/virais/README.md` e escolher pelo objetivo (alcance, seguidores, lead, venda) e pelo
