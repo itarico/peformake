@@ -112,7 +112,9 @@ const POPS = [
 ;(async () => {
   const b = await chromium.launch(); let fails = 0
   const bad = (m) => { fails++; console.log('  FALHOU ' + m) }
-  for (const [dev, opts] of [['desk', { viewport: { width: 1366, height: 800 } }], ['iphone', devices['iPhone 13']]]) {
+  // DEVS=desk,iphone,tablet,tablet-deitado (padrão: os quatro).
+  const ALL = { desk: { viewport: { width: 1366, height: 800 } }, iphone: devices['iPhone 13'], tablet: devices['iPad (gen 7)'], 'tablet-deitado': devices['iPad (gen 7) landscape'] }
+  for (const [dev, opts] of (process.env.DEVS || 'desk,iphone,tablet,tablet-deitado').split(',').map((d) => [d, ALL[d]])) {
     for (const role of (process.env.ROLES || 'admin,designer').split(',')) {
       const ctx = await b.newContext({ ...opts, colorScheme: 'light' }); await ctx.route('**/*', mock)
       await ctx.addInitScript((r) => localStorage.setItem('e2e_roles', r), role)

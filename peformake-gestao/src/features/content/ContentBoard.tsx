@@ -41,7 +41,7 @@ export function ItemCard({ item, clientName, staffName, today }: { item: Content
   return (
     <Link to={`/conteudo/peca/${item.id}`} className={cn('block rounded-2xl border border-line bg-surface p-3 text-ink no-underline hover:border-ink', item.status === 'published' && 'opacity-60')}>
       <p className="flex items-center justify-between gap-2 text-[12px] text-muted">
-        <span className="truncate">{clientName} · {KIND_LABEL[item.kind]} {item.number}{item.isExtra ? ' · Extra' : ''}</span>
+        <span className="min-w-0 truncate">{clientName} · {KIND_LABEL[item.kind]} {item.number}{item.isExtra ? ' · Extra' : ''}</span>
         {badge && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', badge.tone)}>{badge.label}</span>}
       </p>
       <p className="font-semibold leading-snug">{itemTitle(item)}</p>
@@ -104,8 +104,8 @@ export function ContentBoard() {
           {taskList.slice(0, 60).map((t) => (
             <button key={t.id} type="button" onClick={() => setEditing(t)} className={cn('flex cursor-pointer flex-col gap-1 rounded-2xl border bg-surface p-3 text-left hover:border-ink', t.priority ? 'border-warn/50' : 'border-line')}>
               <span className="flex items-center justify-between gap-2 text-[12px] text-muted">
-                <span className="truncate">{t.client_id ? clientName(t.client_id) : 'Geral'}{t.due_date ? ` · até ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : ''}</span>
-                <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', SOURCE_TONE[t.source])}>{SOURCE_LABEL[t.source]}</span>
+                <span className="min-w-0 truncate">{t.client_id ? clientName(t.client_id) : 'Geral'}{t.due_date ? ` · até ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : ''}</span>
+                <span className={cn('min-w-0 max-w-[55%] shrink truncate rounded-full px-2 py-0.5 text-[11px] font-semibold', SOURCE_TONE[t.source])}>{SOURCE_LABEL[t.source]}</span>
               </span>
               <span className="font-semibold leading-snug">{t.title}</span>
             </button>
@@ -176,8 +176,8 @@ export function ContentBoard() {
         </FilterSheet>
       </div>
 
-      {/* Celular: uma coluna por vez, escolhida nas abas. */}
-      <div role="tablist" aria-label="Colunas do quadro" className="grid grid-cols-4 rounded-full border border-line p-0.5 md:hidden">
+      {/* Celular e tablet (abaixo de 1280 px): uma coluna por vez, escolhida nas abas. */}
+      <div role="tablist" aria-label="Colunas do quadro" className="grid grid-cols-4 rounded-full border border-line p-0.5 xl:hidden">
         {BOARD_COLUMNS.map((c) => (
           <button key={c.id} type="button" role="tab" aria-selected={tab === c.id} onClick={() => setTab(c.id)}
             className={cn('min-h-11 min-w-0 cursor-pointer truncate rounded-full px-1 text-[12.5px] font-medium', tab === c.id ? 'bg-fill text-on-fill' : 'text-muted')}>
@@ -186,10 +186,10 @@ export function ContentBoard() {
         ))}
       </div>
 
-      <div data-conteudo className="grid grid-cols-1 gap-3 md:grid-cols-4">
+      <div data-conteudo className="grid grid-cols-1 gap-3 xl:grid-cols-4">
         {BOARD_COLUMNS.map((c) => (
-          <section key={c.id} aria-label={c.label} className={cn('flex min-w-0 flex-col gap-2 rounded-3xl bg-raised p-2.5', tab !== c.id && 'max-md:hidden')}>
-            <h2 className="flex items-center justify-between px-1.5 text-[13px] font-semibold max-md:hidden">
+          <section key={c.id} aria-label={c.label} className={cn('flex min-w-0 flex-col gap-2 rounded-3xl bg-raised p-2.5', tab !== c.id && 'max-xl:hidden')}>
+            <h2 className="flex items-center justify-between px-1.5 text-[13px] font-semibold max-xl:hidden">
               {c.label} <span className="font-normal text-muted">{count(c.id)}</span>
             </h2>
             {column(c.id)}
