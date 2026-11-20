@@ -821,7 +821,10 @@ export function GoalsChat() {
             <MessageCircle size={17} aria-hidden="true" className="text-accent-ink" />
             <span className="relative grid">
               {urgentCount > 0 && <span aria-hidden="true" className="absolute inset-0 animate-ping rounded-full bg-[#e5484d]/40 [animation-duration:2.4s]" />}
-              <span className={cn('relative grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] font-bold text-white', urgentCount ? 'bg-[#e5484d]' : 'bg-accent-ink')}>{todayItems.length}</span>
+              {/* Número só do que é urgente (Italo, 20/11: "134" vermelho poluía); o resto é um pontinho discreto. */}
+              {urgentCount > 0
+                ? <span className="relative grid h-5 min-w-5 place-items-center rounded-full bg-[#e5484d] px-1.5 text-[11px] font-bold text-white">{urgentCount > 99 ? '99+' : urgentCount}</span>
+                : <span className="relative size-2 rounded-full bg-accent-ink" />}
             </span>
           </button>
           <button type="button" onClick={hide} aria-label={`Recolher a ${BOT_NAME}`} title="Recolher"

@@ -52,8 +52,11 @@ const tabClass = (active: boolean) => cn(
 export function BoardTabs({ value, onChange, tabs = BOARD_TABS, counts }: { value: BoardTab; onChange: (t: BoardTab) => void; tabs?: readonly TabDef[]; counts?: Partial<Record<BoardTab, number>> }) {
   const [open, setOpen] = useState(false)
   const box = useRef<HTMLDivElement>(null)
+  // No celular: as 3 primeiras partes COM conteúdo (+ a aberta); as vazias ficam no "Mais" (Italo, 20/11: "Resumo 0" poluía).
   const idx = tabs.findIndex((t) => t.id === value)
-  const shown = new Set(idx >= 3 ? [0, 1, idx] : [0, 1, 2])
+  const full = tabs.map((t, i) => [t, i] as const).filter(([t]) => counts?.[t.id] === undefined || (counts[t.id] ?? 0) > 0).map(([, i]) => i)
+  const pick = (full.length ? full : tabs.map((_, i) => i)).slice(0, 3)
+  const shown = new Set(pick.includes(idx) || idx < 0 ? pick : [...pick.slice(0, 2), idx])
   const rest = tabs.filter((_, i) => !shown.has(i))
   useEffect(() => {
     if (!open) return
@@ -134,11 +137,23 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const area = tab !== 'briefing' && tab !== 'referencias' && tab !== 'resumo'
   return (
     <div data-estrategia className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-[16px] font-semibold">Estratégia</h2>
+      {/* Uma linha só (Italo, 20/11: "a interface tá muito confusa"): mês · PDF · Enviar · Gerar de novo · ⋯. O título "Estratégia" já está no topo da página. */}
+      <div data-acoes-topo className="flex items-center gap-1.5">
         <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) })} />
-        <span className="ml-auto flex items-center gap-1.5">
-          {!ready && !busy && <Button className="min-h-10 px-4 text-[13px]" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar estratégia</Button>}
+        {!ready && !busy && <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar estratégia</Button>}
+        {ready && <>
+          <Button className="min-h-10 min-w-0 flex-1 px-3 text-[13px] sm:flex-none" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> <span><span className="max-sm:hidden">Baixar </span>PDF</span></Button>
+            {/* Enviar = o que está aberto (Italo, 19/11): na parte Vídeos, os roteiros "Para o cliente"; nas outras, a estratégia. */}
+            <ActionMenu label="Enviar ao cliente" className="min-w-0 flex-1 sm:flex-none" trigger={<><Send size={14} aria-hidden="true" /> <span>Enviar<span className="max-sm:hidden"> ao cliente</span></span></>}
+              title={doc ? `Vai: ${docLabel(doc.name)}` : 'Ainda não tem o documento deste mês: toque em Baixar PDF antes.'} actions={[
+                { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, disabled: !doc, onClick: () => doc && void openDoc(doc) },
+                { label: 'Copiar link', icon: <Link2 size={15} aria-hidden="true" />, disabled: !doc, onClick: () => void copyLink() },
+                { label: 'Abrir no meu WhatsApp', icon: <MessageSquare size={15} aria-hidden="true" />, disabled: !doc, onClick: send },
+                { label: 'Enviar automático (WhatsApp da Peformake)', icon: <Send size={15} aria-hidden="true" />, disabled: !doc || autoSend.isPending, onClick: () => void sendAuto() },
+              ]} />
+          <Button variant="secondary" aria-label="Gerar de novo" title="Gerar de novo" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setGen(true)}><RefreshCw size={14} aria-hidden="true" /> <span className="max-md:hidden">Gerar de novo</span></Button>
+        </>}
+        <span className="ml-auto shrink-0">
           <ActionMenu label="Mais opções da estratégia" actions={[
             { label: 'Abrir o briefing', icon: <ClipboardList size={15} aria-hidden="true" />, onClick: () => go({ parte: 'briefing' }), hidden: tab === 'briefing' },
             { label: 'Pedir mais ideias nesta parte ao agente', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setMore(true), hidden: !ready || !area || !b || (b.more_requests ?? []).some((r) => r.aba === tab) },
@@ -148,29 +163,14 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
             { label: 'Plano B: colar a resposta do chat', icon: <ClipboardPaste size={15} aria-hidden="true" />, onClick: () => setPaste(true), hidden: busy },
           ]} />
         </span>
-        {ready && (
-          <div data-acoes-topo className="flex w-full flex-wrap gap-2">
-            <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> Baixar PDF</Button>
-            {/* Enviar = o que está aberto (Italo, 19/11): na parte Vídeos, os roteiros "Para o cliente"; nas outras, a estratégia. */}
-            <ActionMenu label="Enviar ao cliente" className="flex-1 sm:flex-none" trigger={<><Send size={14} aria-hidden="true" /> <span>Enviar<span className="max-sm:hidden"> ao cliente</span></span></>}
-              title={doc ? `Vai: ${docLabel(doc.name)}` : 'Ainda não tem o documento deste mês: toque em Baixar PDF antes.'} actions={[
-                { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, disabled: !doc, onClick: () => doc && void openDoc(doc) },
-                { label: 'Copiar link', icon: <Link2 size={15} aria-hidden="true" />, disabled: !doc, onClick: () => void copyLink() },
-                { label: 'Abrir no meu WhatsApp', icon: <MessageSquare size={15} aria-hidden="true" />, disabled: !doc, onClick: send },
-                { label: 'Enviar automático (WhatsApp da Peformake)', icon: <Send size={15} aria-hidden="true" />, disabled: !doc || autoSend.isPending, onClick: () => void sendAuto() },
-              ]} />
-            <Button variant="secondary" aria-label="Gerar de novo" className="min-h-10 px-3 text-[13px]" onClick={() => setGen(true)}><RefreshCw size={14} aria-hidden="true" /> <span className="max-sm:hidden">Gerar de novo</span></Button>
-          </div>
-        )}
       </div>
       {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
       <BoardStatus board={b} />
       {tabs.length > 1 && <BoardTabs value={tab} tabs={tabs} counts={counts} onChange={(t) => go({ parte: t })} />}
-      {tabs.length > 1 && <p data-parte-info className="-mt-1 max-w-[80ch] text-[12.5px] leading-snug text-muted">{PART_INFO[tab]}</p>}
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
       {tab !== 'briefing' && b && ready && (liveCards(b, tab as CardTab).length > 0
         ? <StrategyReader board={b} tab={tab as CardTab} name={name} onChanged={refresh} onReview={() => go({ revisar: tab })} />
-        : <EmptyPart label={BOARD_TABS.find((t) => t.id === tab)?.label ?? ''} asked={(b.more_requests ?? []).some((r) => r.aba === tab)} canAsk={area} onAsk={() => setMore(true)} />)}
+        : <EmptyPart label={BOARD_TABS.find((t) => t.id === tab)?.label ?? ''} info={PART_INFO[tab]} asked={(b.more_requests ?? []).some((r) => r.aba === tab)} canAsk={area} onAsk={() => setMore(true)} />)}
       {tab === 'briefing' && busy && <p className="rounded-2xl border border-dashed border-line px-3 py-6 text-center text-[13px] text-muted">O agente está escrevendo. Pode sair: fica salvo e aparece aqui.</p>}
       {gen && <GenerateDialog clientId={clientId} month={month} missing={brief.missing} percent={brief.percent} regenerate={ready} onClose={() => setGen(false)} onBriefing={() => { setGen(false); go({ parte: 'briefing' }) }} />}
       {more && b && <MoreDialog boardId={b.id} tab={tab as CardTab} count={liveCards(b, tab as CardTab).length} onClose={() => setMore(false)} onDone={() => { setMore(false); refresh() }} />}
@@ -182,10 +182,11 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
 }
 
 /** Parte sem nada neste mês: diz o porquê e oferece 1 ação (pedir ao agente), sem atrapalhar. */
-function EmptyPart({ label, asked, canAsk, onAsk }: { label: string; asked: boolean; canAsk: boolean; onAsk: () => void }) {
+function EmptyPart({ label, info, asked, canAsk, onAsk }: { label: string; info: string; asked: boolean; canAsk: boolean; onAsk: () => void }) {
   return (
     <div data-parte-vazia className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-line px-4 py-8 text-center">
       <p className="text-[14px] font-semibold">{label}: nada neste mês ainda</p>
+      <p data-parte-info className="max-w-[60ch] text-[12.5px] leading-snug text-muted">{info}</p>
       {asked
         ? <p role="status" className="text-[13px] text-muted">Pedido feito ao agente. Fica pronto em até 1 hora e aparece aqui.</p>
         : canAsk

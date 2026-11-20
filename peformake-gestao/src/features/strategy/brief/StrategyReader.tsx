@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { Check, ExternalLink, FileMinus, FilePlus, PencilLine, Play, RefreshCw, Star } from 'lucide-react'
+import { Check, ChevronDown, ExternalLink, FileMinus, FilePlus, PencilLine, Play, RefreshCw, Star } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { Button } from '@/components/ui/Button'
 import { thumbOf } from './briefRules'
@@ -168,50 +168,48 @@ function VideoList({ cards, actions, more, onChanged, onReview }: { cards: Strat
 }
 
 /**
- * Lista de itens que se aprovam (vídeos e peças do social, Italo 19-20/11): todos de uma vez, cada um com objetivo,
- * etiquetas, estrelas da equipe (1 a 3), Abrir e Aprovar. Só o aprovado entra no PDF; "Aprovar 1 por 1" abre a revisão.
+ * Lista de itens que se aprovam (vídeos e peças do social, Italo 19-20/11; enxuta em 20/11: "a interface tá muito confusa").
+ * Cada linha: número, título, objetivo e etiqueta curta, estrelas e um só botão (Aprovar ou o ✓). Tocar na linha abre o item.
+ * No topo, uma barra de progresso "x de y aprovados" e "Aprovar 1 por 1" só enquanto falta aprovar.
  */
 function PieceList({ cards, label, tags, render, onChanged, onReview }: { cards: StrategyCard[]; label: [string, string]; tags: (c: StrategyCard) => string[]; render: (c: StrategyCard, i: number) => ReactNode; onChanged: () => void; onReview?: () => void }) {
   const [open, setOpen] = useState<string | null>(cards.length === 1 ? cards[0]!.id : null)
   const [err, setErr] = useState<string | null>(null)
   const approve = useMutation({ mutationFn: (id: string) => approveCard(id), onSuccess: onChanged, onError: (e) => setErr((e as Error).message) })
   const rate = useMutation({ mutationFn: ({ c, n }: { c: StrategyCard; n: number }) => patchCard(c.id, { data: { ...c.data, estrelas: n } }), onSuccess: onChanged, onError: (e) => setErr((e as Error).message) })
-  const ok = cards.filter((c) => c.status === 'aprovado').length
-  const tag = 'rounded-full px-2 py-0.5 text-[11.5px] font-semibold'
+  const tag = 'max-w-full truncate rounded-full px-2 py-0.5 text-[11.5px] font-semibold'
   return (
     <div data-lista-roteiros className="flex flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="text-[13px] text-muted"><b className="text-ink">{cards.length} {cards.length === 1 ? label[0] : label[1]}</b> · {ok} {ok === 1 ? 'aprovado' : 'aprovados'} · só aprovado entra no PDF</p>
-        {onReview && ok < cards.length && <Button variant="secondary" className="ml-auto min-h-10 px-3 text-[13px]" onClick={onReview}><Play size={14} aria-hidden="true" /> Aprovar 1 por 1</Button>}
-      </div>
+      <ApproveHeader cards={cards} label={label} onReview={onReview} />
       {err && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[12.5px] text-warn-ink">{err}</p>}
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col overflow-hidden rounded-2xl border border-line bg-surface">
         {cards.map((c, i) => {
-          const obj = objetivoTag(c); const extra = tags(c).filter(Boolean); const stars = starsOf(c); const done = c.status === 'aprovado'; const isOpen = open === c.id
+          const obj = objetivoTag(c); const extra = tags(c).filter(Boolean).map(shortTag); const stars = starsOf(c); const done = c.status === 'aprovado'; const isOpen = open === c.id
           return (
-            <li key={c.id} data-roteiro-item={c.id} className="flex min-w-0 flex-col gap-2">
-              <div className={cn('flex w-full min-w-0 flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border bg-surface px-3 py-3 md:px-4', isOpen ? 'border-ink' : 'border-line')}>
-                <button type="button" onClick={() => setOpen(isOpen ? null : c.id)} aria-expanded={isOpen} className="flex min-w-0 flex-1 basis-full cursor-pointer flex-col gap-1 text-left md:basis-64">
-                  <span className="line-clamp-2 break-words text-[15px] font-semibold"><span className="text-muted tabular-nums">{String(i + 1).padStart(2, '0')} · </span>{c.title}</span>
-                  <span className="flex flex-wrap gap-1.5">
+            <li key={c.id} data-roteiro-item={c.id} className="flex min-w-0 flex-col border-b border-line last:border-b-0">
+              <div className={cn('flex min-w-0 items-start gap-2 px-3 py-2.5 md:px-4', isOpen && 'bg-raised/60')}>
+                <span className="mt-0.5 w-6 shrink-0 text-[13px] font-semibold tabular-nums text-muted">{String(i + 1).padStart(2, '0')}</span>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <button type="button" onClick={() => setOpen(isOpen ? null : c.id)} aria-expanded={isOpen} aria-label={`${isOpen ? 'Fechar' : 'Abrir'} ${c.title}`} className="flex min-w-0 cursor-pointer items-start gap-1.5 text-left">
+                    <span className="line-clamp-2 min-w-0 flex-1 break-words text-[15px] font-semibold leading-snug">{cleanTitle(c.title)}</span>
+                    <ChevronDown size={16} aria-hidden="true" className={cn('mt-1 shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
+                  </button>
+                  <div className="flex min-w-0 flex-wrap items-center gap-1.5">
                     {obj && <span data-objetivo={obj} className={cn(tag, 'bg-accent-soft text-accent-ink')}>{OBJETIVO_LABEL[obj]}</span>}
-                    {extra.map((x) => <span key={x} data-estrutura-tag className={cn(tag, 'bg-raised text-ink')}>{x}</span>)}
-                  </span>
-                </button>
-                <span role="group" aria-label={`Nota de ${c.title}`} className="flex items-center">
-                  {[1, 2, 3].map((n) => (
-                    <button key={n} type="button" aria-label={`${n} ${n === 1 ? 'estrela' : 'estrelas'}`} aria-pressed={stars >= n} disabled={rate.isPending} onClick={() => rate.mutate({ c, n: stars === n ? 0 : n })}
-                      className="grid size-9 cursor-pointer place-items-center text-muted hover:text-ink"><Star size={17} aria-hidden="true" className={stars >= n ? 'fill-amber-400 text-amber-500' : ''} /></button>
-                  ))}
-                </span>
-                <span className="ml-auto flex items-center gap-1.5">
-                  <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => setOpen(isOpen ? null : c.id)}>{isOpen ? 'Fechar' : 'Abrir'}</Button>
-                  {done
-                    ? <span data-aprovado className="inline-flex min-h-10 items-center gap-1 rounded-full bg-ok-soft px-3 text-[13px] font-semibold text-ok-ink"><Check size={14} aria-hidden="true" /> Aprovado</span>
-                    : <Button className="min-h-10 px-3 text-[13px]" disabled={approve.isPending} onClick={() => approve.mutate(c.id)}><Check size={14} aria-hidden="true" /> Aprovar</Button>}
-                </span>
+                    {extra.map((x) => <span key={x} data-estrutura-tag className={cn(tag, 'max-w-[55%] bg-raised font-medium text-muted')}>{x}</span>)}
+                    <span role="group" aria-label={`Nota de ${c.title}`} className="-my-1 flex items-center">
+                      {[1, 2, 3].map((n) => (
+                        <button key={n} type="button" aria-label={`${n} ${n === 1 ? 'estrela' : 'estrelas'}`} aria-pressed={stars >= n} disabled={rate.isPending} onClick={() => rate.mutate({ c, n: stars === n ? 0 : n })}
+                          className="grid size-8 cursor-pointer place-items-center text-line-strong hover:text-ink"><Star size={15} aria-hidden="true" className={stars >= n ? 'fill-amber-400 text-amber-500' : ''} /></button>
+                      ))}
+                    </span>
+                  </div>
+                </div>
+                {done
+                  ? <span data-aprovado title="Aprovado: entra no PDF" className="grid size-9 shrink-0 place-items-center rounded-full bg-ok-soft text-ok-ink"><Check size={16} aria-hidden="true" /><span className="sr-only">Aprovado</span></span>
+                  : <Button className="min-h-9 shrink-0 px-3 text-[13px]" disabled={approve.isPending} onClick={() => approve.mutate(c.id)}>Aprovar</Button>}
               </div>
-              {isOpen && render(c, i)}
+              {isOpen && <div className="border-t border-line bg-raised/40 p-2 md:p-3">{render(c, i)}</div>}
             </li>
           )
         })}
@@ -220,13 +218,22 @@ function PieceList({ cards, label, tags, render, onChanged, onReview }: { cards:
   )
 }
 
-/** Linha de cima das partes que se aprovam: quantos, quantos aprovados e "Aprovar 1 por 1". */
+/** "V1 · De dentro" → "De dentro" (o número já está na linha). */
+function cleanTitle(t: string): string { return t.replace(/^\s*V\d+\s*[·:-]\s*/i, '') }
+/** Etiqueta curta: "POV do especialista com relógio correndo: lista de 3…" → só o que vem antes dos dois-pontos. */
+function shortTag(t: string): string { const x = t.split(/[:(]/)[0]!.trim(); return x.length > 34 ? `${x.slice(0, 32)}…` : x }
+
+/** Linha de cima das partes que se aprovam: barra "x de y aprovados" e "Aprovar 1 por 1" enquanto falta. */
 function ApproveHeader({ cards, label, onReview }: { cards: StrategyCard[]; label: [string, string]; onReview?: () => void }) {
   const ok = cards.filter((c) => c.status === 'aprovado').length
+  const pct = cards.length ? Math.round((ok / cards.length) * 100) : 0
   return (
-    <div data-aprovacao className="flex flex-wrap items-center gap-2">
-      <p className="text-[13px] text-muted"><b className="text-ink">{cards.length} {cards.length === 1 ? label[0] : label[1]}</b> · {ok} {ok === 1 ? 'aprovado' : 'aprovados'} · só aprovado entra no PDF</p>
-      {onReview && ok < cards.length && <Button variant="secondary" className="ml-auto min-h-10 px-3 text-[13px]" onClick={onReview}><Play size={14} aria-hidden="true" /> Aprovar 1 por 1</Button>}
+    <div data-aprovacao className="flex min-h-10 items-center gap-3" title="Só o aprovado entra no PDF">
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <p className="text-[13px] text-muted"><b className="text-ink">{ok} de {cards.length}</b> {cards.length === 1 ? label[0] : label[1]} {cards.length === 1 ? 'aprovado' : 'aprovados'}{ok === cards.length ? ' · tudo no PDF' : ''}</p>
+        <span aria-hidden="true" className="h-1 w-full max-w-60 overflow-hidden rounded-full bg-raised"><span className={cn('block h-full rounded-full', ok === cards.length ? 'bg-ok-ink' : 'bg-accent-ink')} style={{ width: `${pct}%` }} /></span>
+      </div>
+      {onReview && ok < cards.length && <Button variant="secondary" className="min-h-9 shrink-0 px-3 text-[13px]" onClick={onReview}><Play size={14} aria-hidden="true" /> 1 por 1</Button>}
     </div>
   )
 }
