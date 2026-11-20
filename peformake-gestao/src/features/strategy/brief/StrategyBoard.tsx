@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, ClipboardCopy, ClipboardPaste, ClipboardList, FileDown, MessageSquare, Play, Plus, RefreshCw, Send, Sparkles } from 'lucide-react'
+import { ChevronDown, ExternalLink, Link2, ClipboardCopy, ClipboardPaste, ClipboardList, FileDown, MessageSquare, Play, Plus, RefreshCw, Send, Sparkles } from 'lucide-react'
 import { ActionMenu } from '@/components/ui/ActionMenu'
 import { Button } from '@/components/ui/Button'
 import { useSearchParams } from 'react-router-dom'
@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { MonthPick } from '../PlanCards'
 import { monthOptions, parseMonthParam } from '../monthlyRules'
-import { sendDoc, useAgentDocs } from '../AgentDocs'
+import { confirmApprove, docLabel, openDoc, sendDoc, signed, useAgentDocs, useApproveDoc } from '../AgentDocs'
 import { pickSendDoc } from './sendRules'
 import { BriefingView, useBriefStatus } from './BriefingView'
 import { BoardStatus, GenerateDialog, MoreDialog } from './CardsView'
@@ -124,6 +124,12 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   // Só documentos desta estratégia e deste mês (antes pegava o PDF mais novo da pasta, ex.: um "Plano de vendas" antigo).
   const doc = pickSendDoc(docs.data ?? [], month, tab)
   const phone = useQuery({ queryKey: ['client-phone', clientId], queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null } })
+  const copyLink = async () => { if (!doc) return; try { say(await copyText(await signed(doc, 60 * 60 * 24 * 14)) ? 'Link copiado (vale 14 dias).' : 'Não consegui copiar.') } catch (e) { say((e as Error).message) } }
+  const autoSend = useApproveDoc()
+  const sendAuto = async () => {
+    if (!doc || !(await confirmApprove(doc, name))) return
+    autoSend.mutate(doc, { onSuccess: (n) => say(n ? `Enviado pelo WhatsApp da Peformake (${n} ${n === 1 ? 'contato' : 'contatos'}).` : 'O cliente não tem WhatsApp de aprovação no cadastro. Use "Abrir no meu WhatsApp".'), onError: (e) => say((e as Error).message) })
+  }
   const send = () => { if (!doc) { say('Ainda não tem o documento deste mês. Toque em Baixar PDF: ele fica salvo na pasta do cliente e é esse arquivo que vai.'); return } void sendDoc(doc, name, phone.data ?? null) }
   const area = tab !== 'briefing' && tab !== 'referencias' && tab !== 'resumo'
   return (
@@ -145,7 +151,14 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
         {ready && (
           <div data-acoes-topo className="flex w-full flex-wrap gap-2">
             <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> Baixar PDF</Button>
-            <Button variant="secondary" aria-label="Enviar ao cliente" className="min-h-10 flex-1 px-3 text-[13px] sm:flex-none" onClick={send}><Send size={14} aria-hidden="true" /> <span>Enviar<span className="max-sm:hidden"> ao cliente</span></span></Button>
+            {/* Enviar = o que está aberto (Italo, 19/11): na parte Vídeos, os roteiros "Para o cliente"; nas outras, a estratégia. */}
+            <ActionMenu label="Enviar ao cliente" className="flex-1 sm:flex-none" trigger={<><Send size={14} aria-hidden="true" /> <span>Enviar<span className="max-sm:hidden"> ao cliente</span></span></>}
+              title={doc ? `Vai: ${docLabel(doc.name)}` : 'Ainda não tem o documento deste mês: toque em Baixar PDF antes.'} actions={[
+                { label: 'Abrir', icon: <ExternalLink size={15} aria-hidden="true" />, disabled: !doc, onClick: () => doc && void openDoc(doc) },
+                { label: 'Copiar link', icon: <Link2 size={15} aria-hidden="true" />, disabled: !doc, onClick: () => void copyLink() },
+                { label: 'Abrir no meu WhatsApp', icon: <MessageSquare size={15} aria-hidden="true" />, disabled: !doc, onClick: send },
+                { label: 'Enviar automático (WhatsApp da Peformake)', icon: <Send size={15} aria-hidden="true" />, disabled: !doc || autoSend.isPending, onClick: () => void sendAuto() },
+              ]} />
             <Button variant="secondary" aria-label="Gerar de novo" className="min-h-10 px-3 text-[13px]" onClick={() => setGen(true)}><RefreshCw size={14} aria-hidden="true" /> <span className="max-sm:hidden">Gerar de novo</span></Button>
           </div>
         )}
@@ -156,7 +169,7 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
       {tabs.length > 1 && <p data-parte-info className="-mt-1 max-w-[80ch] text-[12.5px] leading-snug text-muted">{PART_INFO[tab]}</p>}
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
       {tab !== 'briefing' && b && ready && (liveCards(b, tab as CardTab).length > 0
-        ? <StrategyReader board={b} tab={tab as CardTab} name={name} onChanged={refresh} />
+        ? <StrategyReader board={b} tab={tab as CardTab} name={name} onChanged={refresh} onReview={() => go({ revisar: tab })} />
         : <EmptyPart label={BOARD_TABS.find((t) => t.id === tab)?.label ?? ''} asked={(b.more_requests ?? []).some((r) => r.aba === tab)} canAsk={area} onAsk={() => setMore(true)} />)}
       {tab === 'briefing' && busy && <p className="rounded-2xl border border-dashed border-line px-3 py-6 text-center text-[13px] text-muted">O agente está escrevendo. Pode sair: fica salvo e aparece aqui.</p>}
       {gen && <GenerateDialog clientId={clientId} month={month} missing={brief.missing} percent={brief.percent} regenerate={ready} onClose={() => setGen(false)} onBriefing={() => { setGen(false); go({ parte: 'briefing' }) }} />}

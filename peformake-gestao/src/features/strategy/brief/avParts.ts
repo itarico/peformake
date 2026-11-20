@@ -308,3 +308,23 @@ export function videoFacts(c: Pick<StrategyCard, 'data'>): { key: 'estrutura' | 
   if (der.length) out.push({ key: 'derivados', label: 'Derivados', value: derNames.length ? `${der.length} · ${summary(derNames.join(' · '), 80)}` : String(der.length) })
   return out
 }
+
+// ───────── Lista de roteiros (Italo, 19/11): objetivo, estrutura e estrelas ─────────
+
+export type ObjetivoTag = 'viralizar' | 'escalar' | 'vender' | 'autoridade'
+export const OBJETIVO_LABEL: Record<ObjetivoTag, string> = { viralizar: 'Viralizar', escalar: 'Escalar', vender: 'Vender', autoridade: 'Autoridade' }
+/** O objetivo do vídeo: `objetivo_tag` gravado pelo motor ou, sem ele, deduzido do funil (atrair → viralizar; provar → autoridade; objeção/converter → vender). */
+export function objetivoTag(c: Pick<StrategyCard, 'data' | 'funnel'>): ObjetivoTag | null {
+  const t = norm(str((c.data as Any)?.objetivo_tag))
+  if (t === 'viralizar' || t === 'escalar' || t === 'vender' || t === 'autoridade') return t
+  return c.funnel === 'atrair' ? 'viralizar' : c.funnel === 'provar' ? 'autoridade' : c.funnel === 'objecao' || c.funnel === 'converter' ? 'vender' : null
+}
+/** "S61" → "S61 · Depoimento" (catálogo do estudo); objeto {nome} vira o nome. */
+export function estruturaTag(c: Pick<StrategyCard, 'data'>, catalog: Record<string, string>): string {
+  const e = (c.data as Any)?.estrutura
+  if (e && typeof e === 'object' && !Array.isArray(e)) return str(e.nome) || str(e.codigo)
+  const code = str(e).toUpperCase().match(/^S\d{1,3}/)?.[0]
+  return code ? (catalog[code] ? `${code} · ${catalog[code]}` : code) : str(e)
+}
+/** Estrelas da equipe (1 a 3) guardadas em `data.estrelas`; 0 = sem nota. */
+export const starsOf = (c: Pick<StrategyCard, 'data'>) => { const n = Number((c.data as Any)?.estrelas); return n >= 1 && n <= 3 ? Math.round(n) : 0 }

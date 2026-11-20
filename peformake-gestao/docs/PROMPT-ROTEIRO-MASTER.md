@@ -56,7 +56,7 @@ Conhecimento do cliente ≥ 7 (abaixo: pré-roteiro de validação com perguntas
    "publicacao":{"capa":"…","primeira_linha":"…","legenda":"…","cta_comentario":"…"},"pos_video":{"palavra":"…","resposta":"…"}},
  "auditoria":{"etapas":{},"interrogatorio":[],"banca":{"criativa":{},"fidelidade":[],"autenticidade":"","conhecimento":""},"cego":null,"rodadas":1},
  "referencia_nota":{"aderencia":4,"estrutura":5,"prova":5,"viabilidade":3,"originalidade":4,"nota":8.3,"descartadas":[]},
- "logline":"…","arco":["…"],
+ "logline":"…","arco":["…"],"objetivo_tag":"viralizar|escalar|vender|autoridade",
  "montagem":[{"t":"0–3s","visual":"…","tipo":"fala|apoio|detalhe|insert|grafico|texto","audio":"…","texto_tela":"…"}],
  "captar":["…"],"edicao":"2 a 4 frases: ritmo, legenda, trilha, fecho",
  "extras":{"stories":["…"],"reels_celular":["…"],"fotos":[{"tema":"…","como":"…","referencia":{"link":"…","porque":"…"}}]},

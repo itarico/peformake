@@ -1,15 +1,17 @@
 import { useState, type ReactNode } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { ExternalLink, FileMinus, FilePlus, PencilLine, RefreshCw } from 'lucide-react'
+import { Check, ExternalLink, FileMinus, FilePlus, PencilLine, Play, RefreshCw, Star } from 'lucide-react'
 import { cn } from '@/lib/cn'
+import { Button } from '@/components/ui/Button'
 import { thumbOf } from './briefRules'
 import type { CardTab, StrategyBoardData, StrategyCard } from './cardRules'
-import { patchCard } from './strategyApi'
+import { approveCard, patchCard } from './strategyApi'
 import { videoDoc, type ScriptDoc } from './scriptRules'
 import { DetailsDialog, RedoDialog, VideoEditDialog } from './ReaderDialogs'
 import { CardDialog } from './CardDialog'
 import { DialogTabs } from '@/components/ui/DialogTabs'
-import { AV_PARTS, videoFacts, videoHead, type AvPart } from './avParts'
+import { AV_PARTS, estruturaTag, objetivoTag, OBJETIVO_LABEL, starsOf, videoFacts, videoHead, type AvPart } from './avParts'
+import { ESTRUTURAS } from './estruturas'
 import { EditView, NarrationView, ShootView } from './AvPartsView'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -25,7 +27,7 @@ export const liveCards = (b: StrategyBoardData, tab: CardTab) => b.cards.filter(
  * (número e tipo, título grande, quem fala, a fala em parágrafos, direção só entre colchetes). Sem selos de funil/meta.
  * Por item, só: Editar · Refazer · Tirar do PDF; o resto em "Ver detalhes".
  */
-export function StrategyReader({ board, tab, name, onChanged }: { board: StrategyBoardData; tab: CardTab; name: string; onChanged: () => void }) {
+export function StrategyReader({ board, tab, name, onChanged, onReview }: { board: StrategyBoardData; tab: CardTab; name: string; onChanged: () => void; onReview?: () => void }) {
   const cards = liveCards(board, tab)
   const [edit, setEdit] = useState<StrategyCard | null>(null)
   const [redo, setRedo] = useState<StrategyCard | null>(null)
@@ -36,7 +38,7 @@ export function StrategyReader({ board, tab, name, onChanged }: { board: Strateg
   const more = (c: StrategyCard, doc?: ScriptDoc) => <button type="button" onClick={() => setDetails({ c, doc })} className="min-h-10 cursor-pointer self-start text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">Ver detalhes</button>
   return (
     <div data-leitura={tab} className="flex flex-col gap-3">
-      {tab === 'audiovisual' && cards.map((c, i) => <VideoArticle key={c.id} c={c} index={i} doc={videoDoc(c, i)} actions={actions(c)} more={more} />)}
+      {tab === 'audiovisual' && <VideoList cards={cards} actions={actions} more={more} onChanged={onChanged} onReview={onReview} />}
       {tab === 'resumo' && <Resumo cards={cards} actions={actions} more={more} />}
       {tab === 'social' && cards.map((c, i) => <Article key={c.id} c={c} kicker={`${String(i + 1).padStart(2, '0')} / ${s(c.data.formato) || 'Peça'}`} actions={actions(c)} more={more(c)}>
         {s(c.data.ideia) && <P>{s(c.data.ideia)}</P>}
@@ -149,6 +151,59 @@ function VideoFacts({ c }: { c: StrategyCard }) {
         </div>
       ))}
     </dl>
+  )
+}
+
+/**
+ * Vídeos como LISTA (Italo, 19/11): todos os roteiros de uma vez, cada um com objetivo, estrutura, estrelas da equipe (1 a 3)
+ * e Aprovar. Só vídeo aprovado entra no PDF. Abrir mostra o roteiro inteiro logo abaixo; "Aprovar 1 por 1" abre a revisão.
+ */
+function VideoList({ cards, actions, more, onChanged, onReview }: { cards: StrategyCard[]; actions: (c: StrategyCard) => ReactNode; more: (c: StrategyCard, doc?: ScriptDoc) => ReactNode; onChanged: () => void; onReview?: () => void }) {
+  const [open, setOpen] = useState<string | null>(cards.length === 1 ? cards[0]!.id : null)
+  const [err, setErr] = useState<string | null>(null)
+  const approve = useMutation({ mutationFn: (id: string) => approveCard(id), onSuccess: onChanged, onError: (e) => setErr((e as Error).message) })
+  const rate = useMutation({ mutationFn: ({ c, n }: { c: StrategyCard; n: number }) => patchCard(c.id, { data: { ...c.data, estrelas: n } }), onSuccess: onChanged, onError: (e) => setErr((e as Error).message) })
+  const ok = cards.filter((c) => c.status === 'aprovado').length
+  const tag = 'rounded-full px-2 py-0.5 text-[11.5px] font-semibold'
+  return (
+    <div data-lista-roteiros className="flex flex-col gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-[13px] text-muted"><b className="text-ink">{cards.length} {cards.length === 1 ? 'roteiro' : 'roteiros'}</b> · {ok} {ok === 1 ? 'aprovado' : 'aprovados'} · só aprovado entra no PDF</p>
+        {onReview && ok < cards.length && <Button variant="secondary" className="ml-auto min-h-10 px-3 text-[13px]" onClick={onReview}><Play size={14} aria-hidden="true" /> Aprovar 1 por 1</Button>}
+      </div>
+      {err && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[12.5px] text-warn-ink">{err}</p>}
+      <ul className="flex flex-col gap-2">
+        {cards.map((c, i) => {
+          const obj = objetivoTag(c); const est = estruturaTag(c, ESTRUTURAS); const stars = starsOf(c); const done = c.status === 'aprovado'; const isOpen = open === c.id
+          return (
+            <li key={c.id} data-roteiro-item={c.id} className="flex min-w-0 flex-col gap-2">
+              <div className={cn('flex w-full min-w-0 flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border bg-surface px-3 py-3 md:px-4', isOpen ? 'border-ink' : 'border-line')}>
+                <button type="button" onClick={() => setOpen(isOpen ? null : c.id)} aria-expanded={isOpen} className="flex min-w-0 flex-1 basis-full cursor-pointer flex-col gap-1 text-left md:basis-64">
+                  <span className="line-clamp-2 break-words text-[15px] font-semibold"><span className="text-muted tabular-nums">{String(i + 1).padStart(2, '0')} · </span>{c.title}</span>
+                  <span className="flex flex-wrap gap-1.5">
+                    {obj && <span data-objetivo={obj} className={cn(tag, 'bg-accent-soft text-accent-ink')}>{OBJETIVO_LABEL[obj]}</span>}
+                    {est && <span data-estrutura-tag className={cn(tag, 'bg-raised text-ink')}>{est}</span>}
+                  </span>
+                </button>
+                <span role="group" aria-label={`Nota de ${c.title}`} className="flex items-center">
+                  {[1, 2, 3].map((n) => (
+                    <button key={n} type="button" aria-label={`${n} ${n === 1 ? 'estrela' : 'estrelas'}`} aria-pressed={stars >= n} disabled={rate.isPending} onClick={() => rate.mutate({ c, n: stars === n ? 0 : n })}
+                      className="grid size-9 cursor-pointer place-items-center text-muted hover:text-ink"><Star size={17} aria-hidden="true" className={stars >= n ? 'fill-amber-400 text-amber-500' : ''} /></button>
+                  ))}
+                </span>
+                <span className="ml-auto flex items-center gap-1.5">
+                  <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => setOpen(isOpen ? null : c.id)}>{isOpen ? 'Fechar' : 'Abrir'}</Button>
+                  {done
+                    ? <span data-aprovado className="inline-flex min-h-10 items-center gap-1 rounded-full bg-ok-soft px-3 text-[13px] font-semibold text-ok-ink"><Check size={14} aria-hidden="true" /> Aprovado</span>
+                    : <Button className="min-h-10 px-3 text-[13px]" disabled={approve.isPending} onClick={() => approve.mutate(c.id)}><Check size={14} aria-hidden="true" /> Aprovar</Button>}
+                </span>
+              </div>
+              {isOpen && <VideoArticle c={c} index={i} doc={videoDoc(c, i)} actions={actions(c)} more={more} />}
+            </li>
+          )
+        })}
+      </ul>
+    </div>
   )
 }
 

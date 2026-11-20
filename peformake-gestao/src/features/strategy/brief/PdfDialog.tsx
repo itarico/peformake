@@ -35,7 +35,8 @@ function printNow(w: Window | null, html: string) {
  */
 export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: StrategyBoardData; clientId: string; name: string; onClose: () => void; onDone: () => void }) {
   const live = board.cards.filter((c) => c.status !== 'recusado')
-  const going = live.filter((c) => c.in_pdf)
+  // Vídeo só vai se a equipe aprovou (Italo, 19/11); o resto continua: o que está no PDF é aprovado ao baixar.
+  const going = live.filter((c) => c.in_pdf && (c.tab !== 'audiovisual' || c.status === 'aprovado'))
   const out = live.length - going.length
   const toApprove = going.filter((c) => c.status !== 'aprovado')
   const byTab = Object.entries(going.reduce<Record<string, number>>((m, c) => ({ ...m, [c.tab]: (m[c.tab] ?? 0) + 1 }), {}))

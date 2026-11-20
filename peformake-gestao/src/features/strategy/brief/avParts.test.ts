@@ -90,3 +90,16 @@ describe('resumo do motor acima de "Ver detalhes"', () => {
     expect(videoFacts({ data: {} })).toEqual([])
   })
 })
+
+describe('lista de roteiros: objetivo, estrutura e estrelas', () => {
+  it('objetivo do motor ou deduzido do funil', async () => {
+    const { objetivoTag, estruturaTag, starsOf } = await import('./avParts')
+    expect(objetivoTag({ data: { objetivo_tag: 'Escalar' }, funnel: 'atrair' })).toBe('escalar')
+    expect(objetivoTag({ data: {}, funnel: 'provar' })).toBe('autoridade')
+    expect(objetivoTag({ data: {}, funnel: null })).toBeNull()
+    expect(estruturaTag({ data: { estrutura: 'S61' } }, { S61: 'Depoimento' })).toBe('S61 · Depoimento')
+    expect(estruturaTag({ data: { estrutura: { nome: 'Vazamento' } } }, {})).toBe('Vazamento')
+    expect(starsOf({ data: { estrelas: 2 } })).toBe(2)
+    expect(starsOf({ data: { estrelas: 7 } })).toBe(0)
+  })
+})

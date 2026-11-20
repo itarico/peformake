@@ -13,7 +13,8 @@ export interface MenuAction {
 }
 
 /** Botão "⋯" com as ações menos usadas. Fecha ao escolher, ao clicar fora ou com Esc. */
-export function ActionMenu({ label, actions, className }: { label: string; actions: MenuAction[]; className?: string }) {
+/** `trigger`: troca o ⋯ por um botão com texto (ex.: "Enviar"); `title`: linha curta no topo do menu (ex.: o que vai). */
+export function ActionMenu({ label, actions, className, trigger, title }: { label: string; actions: MenuAction[]; className?: string; trigger?: ReactNode; title?: string }) {
   const [open, setOpen] = useState(false)
   const box = useRef<HTMLDivElement>(null)
   const visible = actions.filter((a) => !a.hidden)
@@ -31,11 +32,12 @@ export function ActionMenu({ label, actions, className }: { label: string; actio
   return (
     <div ref={box} className={cn('relative', className)}>
       <button type="button" aria-label={label} aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}
-        className="grid size-11 cursor-pointer place-items-center rounded-full border md:size-9 border-line text-muted hover:border-ink hover:text-ink">
-        <MoreHorizontal size={16} aria-hidden="true" />
+        className={trigger ? 'inline-flex min-h-10 w-full cursor-pointer items-center justify-center gap-1.5 rounded-full border border-line-strong bg-surface px-3 text-[13px] font-semibold text-ink hover:border-ink' : 'grid size-11 cursor-pointer place-items-center rounded-full border md:size-9 border-line text-muted hover:border-ink hover:text-ink'}>
+        {trigger ?? <MoreHorizontal size={16} aria-hidden="true" />}
       </button>
       {open && (
         <div role="menu" className="absolute right-0 top-full z-30 mt-1 flex min-w-52 flex-col rounded-2xl border border-line bg-surface p-1 shadow-lg">
+          {title && <p className="max-w-72 px-3 pb-1 pt-2 text-[12px] leading-snug text-muted">{title}</p>}
           {visible.map((a) => a.href ? (
             <a key={a.label} role="menuitem" href={a.href} target="_blank" rel="noreferrer" onClick={() => setOpen(false)} className={cn(item, 'text-ink no-underline')}>{a.icon}{a.label}</a>
           ) : (
