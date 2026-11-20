@@ -102,6 +102,6 @@ Vindo do checkout `C:\Users\intal\peformake` (estava só lá, sem commit):
 - `acervo-audiovisual/treino/milad_build/`: o treino de recriar o reel do Milad em HyperFrames (só o código; a imagem,
   o som e os quadros de referência ficaram no PC em `D:\PEFORMAKE\TREINO\milad_build\`)
 
-Ficaram de fora por serem de cliente: `video-tools/clientes/`, as composições e logos de Disalp, MF, 3LM e Menudo
+Fichas de edição por cliente em `video-tools/clientes/` (Disalp, MF Máquinas, 3LM, Natália/Menudo; subidas em 20/11). Ficaram de fora as composições e logos de Disalp, MF, 3LM e Menudo
 (`src/compositions/{Disalp,mf,tlm,menudo}`, `public/<cliente>/`). Por isso `remotion/src/Root.tsx` importa arquivos que
 não estão aqui: para rodar o kit em outra máquina, apague essas 4 linhas de import ou traga as pastas do PC.
