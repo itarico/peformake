@@ -8,9 +8,6 @@ o próximo passo exato, faz commit e push. Quem terminar a tarefa apaga o item.
 - Próximo passo: seguir `peformake-gestao/docs/PROMPT-PENDENCIAS-TECNICAS.md` do item 1 ao 4.
 - Domínio: em 19/11 o peformake.com ainda apontava para a Lovable. Não trocar links antes de conferir.
 
-## Equipe: migração esperando (20/11)
-- `supabase/migrations/20261121030000_equipe_fontes_metas.sql` NÃO aplicada (independe da anterior): fontes de so_parada e re_reunioes, meta nova tr_resultados, tarefas de social no placar. Próximo passo: aplicar e conferir member_ote e team_board como admin em transação desfeita.
-
 ## Pendente pequeno (20/11)
 - `strategy-cards` (API) NÃO publicar: regra de 20/11, gerar só pelo agente do Claude.
 - Testar o briefing em conversa no Claude (botão Conversar) com um cliente real e ajustar `agent_instructions(briefing-conversa)`.

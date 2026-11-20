@@ -1,5 +1,4 @@
--- ATENÇÃO: AINDA NÃO APLICADA NO BANCO (20/11). Independe da 20261121010000_equipe_revisao (pode rodar antes ou depois).
--- Segura: cada troca confere o trecho; se algum não bater, para com erro e não muda nada.
+-- APLICADA em 20/11 pelo Italo no SQL Editor (ponto do tr_resultados trocado por regexp_replace, que ignora espaços; mesmo efeito). Conferida no banco.
 -- Revisão da área de cada membro (20/11/2026), fonte de cada número:
 -- 1) Social, "Nenhuma peça parada na aprovação": contava o tempo desde a última edição qualquer da peça (updated_at).
 --    Agora conta desde que a peça foi para o cliente (histórico content_events; sem histórico, cai no updated_at).
