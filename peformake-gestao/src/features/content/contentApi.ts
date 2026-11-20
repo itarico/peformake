@@ -32,14 +32,14 @@ export interface ContentEvent {
   createdAt: string
 }
 
-const ITEM_COLUMNS = 'id, plan_id, client_id, number, kind, status, title, headline, subtitle, cta, briefing, caption, observations, reference_links, publish_date, deadline, designer_id, is_extra, revision_note, revision_count, legacy_final_urls, updated_at, piece_type, spec, carousel_slides, design_due_at'
+const ITEM_COLUMNS = 'id, plan_id, client_id, number, kind, status, title, headline, subtitle, cta, briefing, caption, observations, reference_links, publish_date, deadline, designer_id, is_extra, revision_note, revision_count, legacy_final_urls, updated_at, piece_type, spec, carousel_slides, design_due_at, priority'
 
 type ItemRow = {
   id: string; plan_id: string; client_id: string; number: number; kind: string; status: string; title: string | null; headline: string | null
   subtitle: string | null; cta: string | null; briefing: string | null; caption: string | null; observations: string | null; reference_links: string[]
   publish_date: string | null; deadline: string | null; designer_id: string | null; is_extra: boolean; revision_note: string | null
   revision_count: number; legacy_final_urls: string[]; updated_at: string
-  piece_type?: string | null; spec?: unknown; carousel_slides?: unknown; design_due_at?: string | null
+  piece_type?: string | null; spec?: unknown; carousel_slides?: unknown; design_due_at?: string | null; priority?: boolean
 }
 
 function slidesOf(v: unknown): CarouselSlide[] {
@@ -50,7 +50,7 @@ function slidesOf(v: unknown): CarouselSlide[] {
 function toItem(r: ItemRow, month: string): ContentItem {
   return {
     id: r.id, planId: r.plan_id, clientId: r.client_id, month, number: r.number, kind: (r.piece_type || r.kind) as ContentKind,
-    carouselSlides: slidesOf(r.carousel_slides), designDueAt: r.design_due_at ?? null, spec: (r.spec && typeof r.spec === 'object' && !Array.isArray(r.spec) ? r.spec : {}) as PieceSpec, status: r.status as ContentStatus,
+    carouselSlides: slidesOf(r.carousel_slides), designDueAt: r.design_due_at ?? null, priority: !!r.priority, spec: (r.spec && typeof r.spec === 'object' && !Array.isArray(r.spec) ? r.spec : {}) as PieceSpec, status: r.status as ContentStatus,
     title: r.title, headline: r.headline, subtitle: r.subtitle, cta: r.cta, briefing: r.briefing, caption: r.caption, observations: r.observations,
     referenceLinks: r.reference_links ?? [], publishDate: r.publish_date, deadline: r.deadline, designerId: r.designer_id, isExtra: r.is_extra,
     revisionNote: r.revision_note, revisionCount: r.revision_count, legacyFinalUrls: r.legacy_final_urls ?? [], updatedAt: r.updated_at,
@@ -190,6 +190,31 @@ export async function deleteItem(id: string): Promise<void> {
 
 export async function setStatus(id: string, status: ContentStatus, note: string | null): Promise<void> {
   const { error } = await supabase.rpc('content_item_set_status', { _item_id: id, _status: status, _note: note })
+  if (error) throw error
+}
+
+// RPCs novas (20/11) ainda fora dos tipos gerados.
+const rpcAny = supabase.rpc.bind(supabase) as unknown as (f: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>
+
+/** Prioridade: passa na frente na fila do design e avisa o designer. */
+export async function setPriority(id: string, on: boolean): Promise<void> {
+  const { error } = await rpcAny('content_item_priority', { _item_id: id, _on: on })
+  if (error) throw error
+}
+
+export type SlaKey = 'post' | 'story' | 'anuncio' | 'carrossel' | 'reels' | 'impressao' | 'banner' | 'vetor'
+export const SLA_KEYS: SlaKey[] = ['post', 'story', 'anuncio', 'carrossel', 'reels', 'impressao', 'banner', 'vetor']
+
+/** Prazo máximo de entrega do design por tipo de arte (horas). */
+export async function getSlaHours(): Promise<Record<SlaKey, number>> {
+  const { data, error } = await supabase.from('design_settings').select('*').maybeSingle()
+  if (error) throw error
+  const raw = ((data as Record<string, unknown> | null)?.sla_hours ?? {}) as Record<string, unknown>
+  return Object.fromEntries(SLA_KEYS.map((k) => [k, Number(raw[k]) || (['carrossel', 'reels', 'impressao', 'banner', 'vetor'].includes(k) ? 48 : 24)])) as Record<SlaKey, number>
+}
+
+export async function saveSlaHours(hours: Record<SlaKey, number>): Promise<void> {
+  const { error } = await rpcAny('design_sla_save', { _hours: hours })
   if (error) throw error
 }
 

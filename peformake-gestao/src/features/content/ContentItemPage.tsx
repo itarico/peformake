@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, FileUp, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, FileUp, Flame, Pencil, Trash2 } from 'lucide-react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { PieceEditor } from './PieceEditor'
 import { DeliverDialog } from './DesignPage'
@@ -24,10 +24,12 @@ import {
   listEvents,
   listFiles,
   removeFile,
+  setPriority,
   setStatus,
   uploadFile,
   type ContentFile,
 } from './contentApi'
+import { PriorityBadge } from './PriorityBadge'
 import { actionsFor, briefingMissing, fileCheck, itemTitle, KIND_LABEL, specSummary, STATUS_LABEL, STATUS_TONE, waitingOn, type ContentItem, type StatusAction } from './contentRules'
 
 const field = 'min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink disabled:opacity-70'
@@ -279,6 +281,17 @@ export function ContentItemPage() {
     onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['content-items'] }); navigate(`/conteudo/planejamento?mes=${data.data?.plan.month}&cliente=${data.data?.item.clientId}`) },
   })
 
+  const priority = useMutation({
+    mutationFn: (on: boolean) => setPriority(id, on),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['content-item', id] })
+      void queryClient.invalidateQueries({ queryKey: ['content-items'] })
+      void queryClient.invalidateQueries({ queryKey: ['design-queue'] })
+      void queryClient.invalidateQueries({ queryKey: ['content-events', id] })
+    },
+  })
+  const canPrioritize = !!status && ['briefing', 'ready', 'in_production', 'changes_requested'].includes(status)
+
   if (!data.data || !files.data) return <LoadState isPending={data.isPending || files.isPending} isError={data.isError || files.isError} refetch={() => { void data.refetch(); void files.refetch() }} />
   const { item, plan } = data.data
   const hasFinal = files.data.some((f) => f.role === 'final') || item.legacyFinalUrls.length > 0
@@ -293,14 +306,22 @@ export function ContentItemPage() {
           <p className="text-[13px] text-muted">{KIND_LABEL[item.kind]} {item.number}{item.isExtra ? ' | Extra' : ''}</p>
           <h1 className="text-2xl font-semibold tracking-tight">{itemTitle(item)}</h1>
         </div>
-        {canPlan && (item.status === 'briefing' || item.status === 'ready') && (
-          <ActionMenu label="Mais ações da peça" className="shrink-0" actions={[{
-            label: remove.isPending ? 'Excluindo' : 'Excluir peça', danger: true, icon: <Trash2 size={15} aria-hidden="true" />, disabled: remove.isPending,
-            onClick: () => void ask('Excluir esta peça? Não tem volta.').then((ok) => ok && remove.mutate()),
-          }]} />
+        {canPlan && (canPrioritize || item.status === 'briefing' || item.status === 'ready') && (
+          <ActionMenu label="Mais ações da peça" className="shrink-0" actions={[
+            ...(canPrioritize ? [{
+              label: item.priority ? 'Tirar prioridade' : 'Marcar como prioridade', icon: <Flame size={15} aria-hidden="true" />, disabled: priority.isPending,
+              onClick: () => priority.mutate(!item.priority),
+            }] : []),
+            ...(item.status === 'briefing' || item.status === 'ready' ? [{
+              label: remove.isPending ? 'Excluindo' : 'Excluir peça', danger: true, icon: <Trash2 size={15} aria-hidden="true" />, disabled: remove.isPending,
+              onClick: () => void ask('Excluir esta peça? Não tem volta.').then((ok) => ok && remove.mutate()),
+            }] : []),
+          ]} />
         )}
       </div>
+      {item.priority && <PriorityBadge className="self-start" />}
       {remove.isError && <p role="alert" className="font-medium text-warn-ink">{contentErrorMessage(remove.error)}</p>}
+      {priority.isError && <p role="alert" className="font-medium text-warn-ink">{contentErrorMessage(priority.error)}</p>}
       <AiTakeoverBanner itemId={item.id} />
       {/* No celular a Etapa (o que fazer agora) vem primeiro; no computador fica na coluna da direita. */}
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_380px]">

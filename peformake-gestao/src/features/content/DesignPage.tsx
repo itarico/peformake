@@ -12,6 +12,8 @@ import { TONE_CLASS } from '@/features/av/AvShell'
 import { LoadState } from '@/features/traffic/LoadState'
 import { useProduction } from '@/features/production/useProduction'
 import { DesignerPanel } from './DesignerPanel'
+import { PriorityBadge } from './PriorityBadge'
+import { DesignSlaButton } from './DesignSla'
 import { contentErrorMessage, downloadUrl, listDesignQueue, listFiles, setStatus, uploadFile, type ContentFile } from './contentApi'
 import { monthStart } from '@/features/traffic/planRules'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
@@ -108,11 +110,12 @@ function QueueCard({ item, files, now, mine, clientName, staffName, onDeliver }:
   })
   const extra = specSummary(item)
   return (
-    <li className={cn('flex flex-col gap-2 rounded-2xl border bg-surface p-3', c?.tone === 'red' ? 'border-warn/60' : 'border-line')}>
+    <li className={cn('flex flex-col gap-2 rounded-2xl border bg-surface p-3', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
       <div className="flex items-start justify-between gap-2">
         <Link to={`/conteudo/peca/${item.id}`} className="min-w-0 text-ink no-underline">
           <p className="truncate text-[12px] text-muted">{clientName} · {KIND_LABEL[item.kind]}{mine ? '' : ` · ${staffName}`}</p>
           <p className="font-semibold leading-snug">{itemTitle(item)}</p>
+          {item.priority && <PriorityBadge className="mt-1" />}
         </Link>
         {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>Entrega {c.text}</span>}
       </div>
@@ -185,11 +188,14 @@ export function DesignPage() {
       <DesignerPanel month={month} />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-[14px] text-muted"><b className="text-ink">{all.length}</b> {all.length === 1 ? 'arte' : 'artes'} para fazer{mineCount ? ` · ${mineCount} suas` : ''}</p>
-        {mineCount > 0 && mineCount < all.length && (
-          <label className="flex min-h-10 cursor-pointer items-center gap-2 text-[14px]">
-            <input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} className="size-4" /> Só as minhas
-          </label>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          {mineCount > 0 && mineCount < all.length && (
+            <label className="flex min-h-10 cursor-pointer items-center gap-2 text-[14px]">
+              <input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} className="size-4" /> Só as minhas
+            </label>
+          )}
+          <DesignSlaButton />
+        </div>
       </div>
       {list.length === 0 ? (
         <div data-conteudo className="rounded-3xl border border-line bg-surface p-6">
@@ -203,14 +209,15 @@ export function DesignPage() {
             const c = countdown(deliveryTarget(items[0]!), now)
             const late = items.some((x) => countdown(deliveryTarget(x), now)?.tone === 'red')
             const adjust = items.filter((x) => x.status === 'changes_requested').length
+            const prio = items.filter((x) => x.priority).length
             return (
-              <li key={cid} className={cn('rounded-2xl border bg-surface', late ? 'border-warn/60' : 'border-line')}>
+              <li key={cid} className={cn('rounded-2xl border bg-surface', late || prio ? 'border-warn/60' : 'border-line')}>
                 <button type="button" aria-expanded={isOpen} onClick={() => toggle(cid)}
                   className="flex min-h-14 w-full cursor-pointer items-center gap-3 px-3 py-2 text-left">
                   <span className="grid size-9 shrink-0 place-items-center rounded-full bg-raised text-[14px] font-semibold text-ink">{clientName(cid).slice(0, 1)}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">{clientName(cid)}</span>
-                    <span className="block text-[12.5px] text-muted">{items.length} {items.length === 1 ? 'arte' : 'artes'} para fazer{adjust ? ` · ${adjust} com ajuste` : ''}</span>
+                    <span className="block text-[12.5px] text-muted">{items.length} {items.length === 1 ? 'arte' : 'artes'} para fazer{adjust ? ` · ${adjust} com ajuste` : ''}{prio ? <b className="font-semibold text-warn-ink"> · {prio} prioridade</b> : ''}</span>
                   </span>
                   {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>Próxima {c.text}</span>}
                   <ChevronDown size={18} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />

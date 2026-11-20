@@ -1,5 +1,4 @@
--- PENDENTE (19/11): ainda NÃO aplicada no Supabase (a aplicação foi recusada pela trava de permissão da sessão). Aplicar e depois ligar as telas de prioridade, prazos e desempenho.
--- Social/Design (pedido do Italo, 19/11): prazo de entrega por tipo de arte, botão Prioridade e desempenho do designer.
+-- Social/Design (pedido do Italo, 19/11; aplicada em 20/11): prazo de entrega por tipo de arte, botão Prioridade e desempenho do designer.
 
 -- 1. Prioridade: a social media marca e a peça passa na frente na fila do design.
 alter table public.content_items add column if not exists priority boolean not null default false;
@@ -46,8 +45,7 @@ begin
   return new;
 end $$;
 
-drop trigger if exists content_item_design_clock on public.content_items;
-create trigger content_item_design_clock before insert or update of status on public.content_items
+create or replace trigger content_item_design_clock before insert or update of status on public.content_items
   for each row execute function public.content_item_design_clock();
 
 -- Salvar os prazos (admin ou head).

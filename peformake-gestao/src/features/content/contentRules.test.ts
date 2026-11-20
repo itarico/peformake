@@ -80,6 +80,14 @@ describe('fila do design', () => {
     ]
     expect(designQueue(list, 'eu').map((i) => i.id)).toEqual(['d', 'c', 'b', 'a'])
   })
+  it('prioridade passa na frente do ajuste e do prazo', () => {
+    const list = [
+      item({ id: 'a', status: 'ready', deadline: '2026-11-14' }),
+      item({ id: 'b', status: 'changes_requested', deadline: '2026-11-15' }),
+      item({ id: 'c', status: 'ready', deadline: '2026-11-30', priority: true }),
+    ]
+    expect(designQueue(list, null).map((i) => i.id)).toEqual(['c', 'b', 'a'])
+  })
   it('alvo da entrega: prazo às 18h, senão publicação às 9h', () => {
     expect(deliveryTarget({ deadline: '2026-11-14', publishDate: '2026-11-16' })).toBe('2026-11-14T18:00:00-03:00')
     expect(deliveryTarget({ deadline: null, publishDate: '2026-11-16' })).toBe('2026-11-16T09:00:00-03:00')

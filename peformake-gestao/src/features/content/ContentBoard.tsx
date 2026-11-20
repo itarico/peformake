@@ -12,6 +12,7 @@ import { TaskDialog, type Task } from '@/features/social/SocialPage'
 import { SOURCE_LABEL, SOURCE_TONE } from '@/features/social/socialRules'
 import { listItems } from './contentApi'
 import { DesignerSummary } from './DesignerPanel'
+import { PriorityBadge } from './PriorityBadge'
 import { useMonthParam } from './useMonthParam'
 import {
   BOARD_BADGE,
@@ -46,6 +47,7 @@ export function ItemCard({ item, clientName, staffName, today }: { item: Content
       </p>
       <p className="font-semibold leading-snug">{itemTitle(item)}</p>
       <p className="mt-1 flex flex-wrap items-center gap-x-2 text-[12px] text-muted">
+        {item.priority && <PriorityBadge />}
         <span>{staffName}</span>
         {item.deadline && <span className={cn(late && 'font-semibold text-warn-ink')}>{late && <AlertTriangle size={12} className="mr-0.5 inline" aria-hidden="true" />}Prazo {item.deadline.slice(8)}/{item.deadline.slice(5, 7)}</span>}
         {item.revisionCount > 0 && <span>{item.revisionCount} ajuste{item.revisionCount > 1 ? 's' : ''}</span>}

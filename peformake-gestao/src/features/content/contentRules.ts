@@ -42,6 +42,8 @@ export interface ContentItem {
   deadline: string | null
   /** Hora-limite da entrega do design (prazo de Configurações → Inteligência, gravado quando vai para o design). */
   designDueAt?: string | null
+  /** Marcada pela social media: passa na frente na fila do design (sai sozinha quando a arte é entregue). */
+  priority?: boolean
   designerId: string | null
   isExtra: boolean
   revisionNote: string | null
@@ -297,11 +299,13 @@ export function deliveryTarget(item: Pick<ContentItem, 'deadline' | 'publishDate
   return null
 }
 
-/** Ordem da fila: as minhas primeiro, depois ajuste pedido, depois a entrega mais próxima. */
-export function designQueue<T extends Pick<ContentItem, 'status' | 'designerId' | 'deadline' | 'publishDate' | 'designDueAt'>>(items: readonly T[], myStaffId: string | null): T[] {
+/** Ordem da fila: as minhas primeiro, depois prioridade, depois ajuste pedido, depois a entrega mais próxima. */
+export function designQueue<T extends Pick<ContentItem, 'status' | 'designerId' | 'deadline' | 'publishDate' | 'designDueAt' | 'priority'>>(items: readonly T[], myStaffId: string | null): T[] {
   return items.filter((i) => DESIGN_QUEUE.includes(i.status)).sort((a, b) => {
     const mine = Number(b.designerId === myStaffId && !!myStaffId) - Number(a.designerId === myStaffId && !!myStaffId)
     if (mine) return mine
+    const prio = Number(!!b.priority) - Number(!!a.priority)
+    if (prio) return prio
     const adj = Number(b.status === 'changes_requested') - Number(a.status === 'changes_requested')
     if (adj) return adj
     return (deliveryTarget(a) ?? '9999').localeCompare(deliveryTarget(b) ?? '9999')
