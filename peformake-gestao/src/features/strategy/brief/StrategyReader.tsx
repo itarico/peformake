@@ -35,23 +35,27 @@ export function StrategyReader({ board, tab, name, onChanged, onReview }: { boar
   const pdf = useMutation({ mutationFn: (c: StrategyCard) => patchCard(c.id, { in_pdf: !c.in_pdf }), onSuccess: onChanged })
   if (!cards.length) return <p data-leitura={tab} className="rounded-2xl border border-dashed border-line px-3 py-8 text-center text-[13px] text-muted">Nada nesta parte.</p>
   const actions = (c: StrategyCard) => <ItemActions c={c} onEdit={() => setEdit(c)} onRedo={() => setRedo(c)} onPdf={() => pdf.mutate(c)} />
+  // Social, Tráfego e Atendimento (19/11): igual aos vídeos, cada item tem Aprovar e só o aprovado vai para o PDF.
+  const approvable = tab === 'social' || tab === 'trafego' || tab === 'atendimento'
+  const foot = (c: StrategyCard) => <div className="flex flex-wrap items-center gap-3">{approvable && <ApproveButton c={c} onChanged={onChanged} />}{more(c)}</div>
   const more = (c: StrategyCard, doc?: ScriptDoc) => <button type="button" onClick={() => setDetails({ c, doc })} className="min-h-10 cursor-pointer self-start text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">Ver detalhes</button>
   return (
     <div data-leitura={tab} className="flex flex-col gap-3">
       {tab === 'audiovisual' && <VideoList cards={cards} actions={actions} more={more} onChanged={onChanged} onReview={onReview} />}
       {tab === 'resumo' && <Resumo cards={cards} actions={actions} more={more} />}
-      {tab === 'social' && cards.map((c, i) => <Article key={c.id} c={c} kicker={`${String(i + 1).padStart(2, '0')} / ${s(c.data.formato) || 'Peça'}`} actions={actions(c)} more={more(c)}>
+      {approvable && <ApproveHeader cards={cards} label={tab === 'social' ? ['peça', 'peças'] : tab === 'trafego' ? ['campanha', 'campanhas'] : ['roteiro', 'roteiros']} onReview={onReview} />}
+      {tab === 'social' && cards.map((c, i) => <Article key={c.id} c={c} kicker={`${String(i + 1).padStart(2, '0')} / ${s(c.data.formato) || 'Peça'}`} actions={actions(c)} more={foot(c)}>
         {s(c.data.ideia) && <P>{s(c.data.ideia)}</P>}
         {arr(c.data.slides).length > 0 && <ol className="flex list-decimal flex-col gap-1 pl-5 text-[15px] leading-relaxed">{arr(c.data.slides).map((x, k) => <li key={k}>{s(x)}</li>)}</ol>}
         {s(c.data.legenda) && <Labeled label="Legenda"><P>{s(c.data.legenda)}</P></Labeled>}
         {s(c.data.cta) && <Labeled label="Chamada"><P>{s(c.data.cta)}</P></Labeled>}
       </Article>)}
-      {tab === 'trafego' && cards.map((c) => <Article key={c.id} c={c} kicker={s(c.data.objetivo) || 'Campanha'} actions={actions(c)} more={more(c)}>
+      {tab === 'trafego' && cards.map((c) => <Article key={c.id} c={c} kicker={s(c.data.objetivo) || 'Campanha'} actions={actions(c)} more={foot(c)}>
         {s(c.data.publico) && <Labeled label="Público"><P>{s(c.data.publico)}</P></Labeled>}
         {s(c.data.criativo) && <Labeled label="Criativo"><P>{s(c.data.criativo)}</P></Labeled>}
         {arr(c.data.verba_opcoes).length > 0 && <Labeled label="Verba por dia"><ul className="flex flex-col gap-1 text-[15px]">{arr(c.data.verba_opcoes).map((o, k) => <li key={k}><b>{s(o.valor_dia)}</b>{s(o.o_que_esperar) && <span className="text-muted"> · {s(o.o_que_esperar)}</span>}</li>)}</ul></Labeled>}
       </Article>)}
-      {tab === 'atendimento' && cards.map((c) => <Article key={c.id} c={c} kicker="WhatsApp" actions={actions(c)} more={more(c)}>
+      {tab === 'atendimento' && cards.map((c) => <Article key={c.id} c={c} kicker="WhatsApp" actions={actions(c)} more={foot(c)}>
         {arr(c.data.roteiro_whatsapp).map((m, k) => <P key={k}>{s(m)}</P>)}
         {arr(c.data.objecoes).length > 0 && <Labeled label="Se o cliente disser">{arr(c.data.objecoes).map((o, k) => <div key={k} className="flex flex-col gap-0.5"><b className="text-[15px]">“{s(o.objecao)}”</b><P>{s(o.resposta)}</P></div>)}</Labeled>}
       </Article>)}
@@ -205,6 +209,27 @@ function VideoList({ cards, actions, more, onChanged, onReview }: { cards: Strat
       </ul>
     </div>
   )
+}
+
+/** Linha de cima das partes que se aprovam: quantos, quantos aprovados e "Aprovar 1 por 1". */
+function ApproveHeader({ cards, label, onReview }: { cards: StrategyCard[]; label: [string, string]; onReview?: () => void }) {
+  const ok = cards.filter((c) => c.status === 'aprovado').length
+  return (
+    <div data-aprovacao className="flex flex-wrap items-center gap-2">
+      <p className="text-[13px] text-muted"><b className="text-ink">{cards.length} {cards.length === 1 ? label[0] : label[1]}</b> · {ok} {ok === 1 ? 'aprovado' : 'aprovados'} · só aprovado entra no PDF</p>
+      {onReview && ok < cards.length && <Button variant="secondary" className="ml-auto min-h-10 px-3 text-[13px]" onClick={onReview}><Play size={14} aria-hidden="true" /> Aprovar 1 por 1</Button>}
+    </div>
+  )
+}
+
+/** Aprovar um item (vira tarefa/pauta na área) ou mostrar que já está aprovado. */
+function ApproveButton({ c, onChanged }: { c: StrategyCard; onChanged: () => void }) {
+  const go = useMutation({ mutationFn: () => approveCard(c.id), onSuccess: onChanged })
+  if (c.status === 'aprovado') return <span data-aprovado className="inline-flex min-h-10 items-center gap-1 rounded-full bg-ok-soft px-3 text-[13px] font-semibold text-ok-ink"><Check size={14} aria-hidden="true" /> Aprovado</span>
+  return <>
+    <Button className="min-h-10 px-3 text-[13px]" disabled={go.isPending} onClick={() => go.mutate()}><Check size={14} aria-hidden="true" /> {go.isPending ? 'Aprovando' : 'Aprovar'}</Button>
+    {go.isError && <span role="alert" className="text-[12.5px] text-warn-ink">{(go.error as Error).message}</span>}
+  </>
 }
 
 const RESUMO_GROUPS: { kind: string; label: string }[] = [{ kind: 'objetivo', label: 'Objetivos' }, { kind: 'oferta', label: 'Ofertas' }, { kind: 'data', label: 'Datas' }, { kind: 'decisao', label: 'Decisões' }]

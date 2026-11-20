@@ -9,6 +9,7 @@
 // `data.referencia` {link, porque}. Sem montagem: deduz dos blocos do roteiro. O que falta some sem deixar buraco.
 // Funções puras: a tela (AvPartsView) e o PDF (strategyDoc) usam o mesmo modelo.
 import type { StrategyCard } from './cardRules'
+import { ESTRUTURAS } from './estruturas'
 import { isFreeAnswer, splitSpeaker, usefulDirection, videoDoc, type Question } from './scriptRules'
 
 type Any = any // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -244,7 +245,7 @@ export function shootPart(c: Pick<StrategyCard, 'data' | 'inspired'>): ShootPart
   const est = d.estrutura
   const estrutura = typeof est === 'object' && est && !Array.isArray(est)
     ? { nome: str(est.nome), passos: toLines(est.passos) }
-    : { nome: str(est), passos: toLines(d.arco) }
+    : { nome: estruturaTag(c, ESTRUTURAS), passos: toLines(d.arco) }
   const roteiro = (Array.isArray(d.roteiro) ? d.roteiro : []).map((s: Any, i: number) => {
     const raw = typeof s === 'string' ? s : str(s?.fala)
     const { speaker, text } = splitSpeaker(raw)

@@ -35,8 +35,9 @@ function printNow(w: Window | null, html: string) {
  */
 export function PdfDialog({ board, clientId, name, onClose, onDone }: { board: StrategyBoardData; clientId: string; name: string; onClose: () => void; onDone: () => void }) {
   const live = board.cards.filter((c) => c.status !== 'recusado')
-  // Vídeo só vai se a equipe aprovou (Italo, 19/11); o resto continua: o que está no PDF é aprovado ao baixar.
-  const going = live.filter((c) => c.in_pdf && (c.tab !== 'audiovisual' || c.status === 'aprovado'))
+  // Vídeos, social, tráfego e atendimento só vão se a equipe aprovou (Italo, 19/11); Resumo e Referências: o que está no PDF é aprovado ao baixar.
+  const NEEDS_OK = ['audiovisual', 'social', 'trafego', 'atendimento']
+  const going = live.filter((c) => c.in_pdf && (!NEEDS_OK.includes(c.tab) || c.status === 'aprovado'))
   const out = live.length - going.length
   const toApprove = going.filter((c) => c.status !== 'aprovado')
   const byTab = Object.entries(going.reduce<Record<string, number>>((m, c) => ({ ...m, [c.tab]: (m[c.tab] ?? 0) + 1 }), {}))

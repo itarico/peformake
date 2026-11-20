@@ -7,6 +7,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { VoiceNote } from '@/components/ui/VoiceNote'
 import { ask } from '@/components/ui/confirm'
 import { cn } from '@/lib/cn'
+import { useIsMobile } from '@/lib/useIsMobile'
 import { supabase } from '@/lib/supabase'
 import { ago } from '@/features/settings/AutomationsCenter'
 import { waLink } from './consultRules'
@@ -187,6 +188,8 @@ function SendQuestionsDialog({ clientId, name, phone, person, open, onClose, onD
   const toggle = (id: string) => setPicked((c) => { const n = new Set(c); if (n.has(id)) n.delete(id); else if (n.size < cap) n.add(id); return n })
   const full = picked.size >= cap
   const wa = msg ? waLink(phone, msg) : null
+  // No celular cabem 3 por página sem rolagem no pop-up (medido no iPhone 13, 19/11).
+  const mobile = useIsMobile()
   return (
     <Dialog open onClose={onClose} title={msg ? `Mandar para ${name}` : 'Quais perguntas enviar?'} size="md"
       description={msg ? 'O sistema não envia sozinho. Confira e mande pelo seu WhatsApp.' : all ? `Todas as ${Math.min(open.length, ALL_MAX)} perguntas num link só. O cliente responde uma de cada vez, pelo celular.` : `Escolha até ${MAX_PER_CHAT}, ou mande todas. O cliente responde uma de cada vez, pelo celular.`}
@@ -205,7 +208,7 @@ function SendQuestionsDialog({ clientId, name, phone, person, open, onClose, onD
               <button type="button" aria-pressed={all} onClick={() => pickAll(true)} className={cn('min-h-9 cursor-pointer rounded-full border px-3.5 text-[13px] font-semibold', all ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:text-ink')}>Todas ({Math.min(open.length, ALL_MAX)})</button>
             </div>
           )}
-          <Paged items={open} per={4} render={(x) => (
+          <Paged items={open} per={mobile ? 3 : 4} render={(x) => (
             <label className={cn('flex min-h-11 items-start gap-2.5 rounded-xl border border-line px-3 py-2', full && !picked.has(x.id) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer')}>
               <input type="checkbox" checked={picked.has(x.id)} disabled={full && !picked.has(x.id)} onChange={() => toggle(x.id)} className="mt-0.5 size-4.5 shrink-0 accent-[var(--color-accent)]" />
               <span className="min-w-0 text-[13.5px] leading-snug"><span className="line-clamp-2">{x.question}</span><span className="text-[11.5px] text-muted">{packLabel(x.pack, x.focus)}</span></span>
@@ -216,7 +219,7 @@ function SendQuestionsDialog({ clientId, name, phone, person, open, onClose, onD
       )}
       {msg && (
         <div className="flex flex-col gap-2">
-          <textarea value={msg} onChange={(e) => setMsg(e.target.value)} rows={8} className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[13.5px]" />
+          <textarea value={msg} onChange={(e) => setMsg(e.target.value)} rows={mobile ? 6 : 8} className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3 py-2 text-[13.5px]" />
           {!phone && <p className="text-[12px] text-muted">Cliente sem WhatsApp no cadastro: copie e mande pelo seu aparelho. <Link to={`/clientes/${clientId}?passo=empresa`} className="font-semibold">Cadastrar telefone</Link></p>}
           {wa && <button type="button" onClick={() => { void navigator.clipboard?.writeText(msg); setCopied(true) }} className="self-start text-[12.5px] font-semibold text-accent-ink">{copied ? 'Copiado' : 'Copiar mensagem'}</button>}
         </div>
