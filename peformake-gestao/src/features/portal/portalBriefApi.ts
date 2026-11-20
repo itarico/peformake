@@ -45,7 +45,7 @@ export async function getPortalBrief(token: string, month: string): Promise<Port
   const p = data as Payload
   // O mesmo preenchimento automático da ficha: o cliente vê o que a Peformake já sabe e só revisa.
   const f = prefill(p.data ?? {}, { ...(p.known ?? {}), links: p.links ?? [], voz: p.voz ?? null, diagRivals: Array.isArray(p.rivals) ? p.rivals as never : null })
-  const st = fixedStatus(f)
+  const st = fixedStatus(f, !!p.has_video)
   return { data: f, hasVideo: !!p.has_video, docs: p.docs ?? [], questions: (p.questions ?? []).map((q) => ({ ...q, options: Array.isArray(q.options) ? q.options : [] })), percent: st.percent, missing: st.missing }
 }
 

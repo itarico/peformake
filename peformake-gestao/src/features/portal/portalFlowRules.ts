@@ -1,11 +1,11 @@
 // Conversa do portal (Italo, 20/11): o cliente responde dentro do portal, num chat no estilo WhatsApp, uma pergunta por vez.
 // Primeiro o que falta no briefing (quando está abaixo de 80%), depois as perguntas do mês. Sem IA: as perguntas vêm dos
 // guias do briefing (QUIZ, com `when`) e do motor do mês (client_questions, com `cond`).
-import { QUIZ, TEXT_FIELDS, fixedStatus, quizText, type BriefFixed, type QuizStep, type TextKey } from '@/features/strategy/brief/briefRules'
+import { MONTHS_FULL, QUIZ, TEXT_FIELDS, fixedStatus, quizMoney, quizText, visibleSteps, type BriefFixed, type MoneyKey, type QuizStep, type TextKey } from '@/features/strategy/brief/briefRules'
 import { visibleQuestions, type PortalQuestion } from './portalBriefApi'
 
 export type ListField = 'produtos' | 'links' | 'concorrentes' | 'referencias'
-export type FlowField = TextKey | 'gravacao' | ListField
+export type FlowField = TextKey | 'gravacao' | 'sazonal' | ListField
 
 export interface FlowStep {
   key: string
@@ -17,6 +17,7 @@ export interface FlowStep {
   kind: 'quiz' | 'list' | 'question'
   field?: FlowField
   qid?: string
+  money?: MoneyKey
 }
 
 const LIST: Record<ListField, { label: string; q: string; hint: string; opts?: string[] }> = {
@@ -30,16 +31,28 @@ export const MAX_PER_FIELD = 4
 
 /** Campos que faltam no briefing, do que mais pesa para o que menos pesa (fica fixo durante a conversa). */
 export function missingFields(f: BriefFixed, hasVideo: boolean): FlowField[] {
-  return fixedStatus(f).checks.filter((c) => !c.done).sort((a, b) => b.weight - a.weight)
-    .map((c) => (c.key === 'quem_aparece' && hasVideo ? 'gravacao' : c.key) as FlowField)
+  return fixedStatus(f, hasVideo).checks.filter((c) => !c.done).sort((a, b) => b.weight - a.weight)
+    .map((c) => (c.key === 'quem_aparece' ? 'gravacao' : c.key === 'sazonalidade' ? 'sazonal' : c.key) as FlowField)
+}
+
+/** Sazonalidade na conversa: os meses por nome (viram números em meses_fortes e meses_fracos) e o porquê. */
+export const SEASON_STEPS: QuizStep[] = [
+  { q: 'Em quais meses vocês vendem mais?', opts: MONTHS_FULL.map((m) => m[0]!.toUpperCase() + m.slice(1)), multi: true },
+  { q: 'E em quais meses vende menos?', opts: MONTHS_FULL.map((m) => m[0]!.toUpperCase() + m.slice(1)), multi: true },
+  { q: 'Por que esses meses são assim?', opts: [], open: true },
+]
+export const monthsIn = (text: string): number[] => {
+  const t = n(text)
+  return MONTHS_FULL.map((m, i) => (t.includes(n(m)) ? i + 1 : 0)).filter(Boolean)
 }
 
 export function fieldSteps(field: FlowField): QuizStep[] {
+  if (field === 'sazonal') return SEASON_STEPS
   if (field === 'gravacao') return [...(QUIZ.quem_aparece ?? []), ...(QUIZ.quem_grava ?? [])]
   if (isList(field)) return []
   return QUIZ[field] ?? [{ q: TEXT_FIELDS[field].hint, opts: [], open: true }]
 }
-export const fieldLabel = (field: FlowField) => (field === 'gravacao' ? 'Gravação' : isList(field) ? LIST[field].label : TEXT_FIELDS[field].label)
+export const fieldLabel = (field: FlowField) => (field === 'gravacao' ? 'Gravação' : field === 'sazonal' ? 'Sazonalidade' : isList(field) ? LIST[field].label : TEXT_FIELDS[field].label)
 
 const n = (x: string) => x.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
@@ -49,17 +62,17 @@ export function flowSteps(fields: FlowField[], answers: Record<string, string>, 
   for (const field of fields) {
     if (isList(field)) { const l = LIST[field]; out.push({ key: `${field}:0`, group: l.label, q: l.q, hint: l.hint, opts: l.opts ?? [], kind: 'list', field }); continue }
     const steps = fieldSteps(field)
-    // No máximo 4 perguntas por campo (o resto fica no Briefing para quem quiser), mais as subperguntas que a resposta abrir.
+    // Mesma regra da equipe (visibleSteps): subpergunta pela resposta e puxa-fio depois de responder. No máximo 4 perguntas
+    // principais por campo (o resto fica na aba Briefing); subperguntas e puxa-fios entram atrás da que os abriu.
+    const vis = new Set(visibleSteps(steps, steps.map((_, j) => (answers[`${field}:${j}`] ? [answers[`${field}:${j}`]!] : []))))
     let base = 0
     const kept = new Set<number>()
     steps.forEach((s, j) => {
-      if (s.when) {
-        const m = steps.findIndex((x) => x.q === s.when!.q)
-        const got = n(answers[`${field}:${m}`] ?? '')
-        if (!kept.has(m) || !got || !s.when.has.some((h) => got.includes(n(h)))) return
-      } else if (++base > MAX_PER_FIELD) return
+      if (!vis.has(j)) return
+      if (s.when) { if (!kept.has(steps.findIndex((x) => x.q === s.when!.q))) return }
+      else if (!s.money && ++base > MAX_PER_FIELD) return // a verba sempre entra
       kept.add(j)
-      out.push({ key: `${field}:${j}`, group: fieldLabel(field), q: s.q, opts: s.opts, multi: s.multi, kind: 'quiz', field })
+      out.push({ key: `${field}:${j}`, group: fieldLabel(field), q: s.q, opts: s.opts, multi: s.multi, kind: 'quiz', field, ...(s.money ? { money: s.money } : {}) })
     })
   }
   for (const q of visibleQuestions(questions)) {
@@ -69,11 +82,17 @@ export function flowSteps(fields: FlowField[], answers: Record<string, string>, 
   return out
 }
 
-/** Texto salvo no campo do briefing: as respostas do guia daquele campo, como a equipe já recebe hoje. */
-export function fieldText(field: FlowField, answers: Record<string, string>): string {
+/** O que salvar no briefing com as respostas do guia: o texto do cartão (sem as de dinheiro), o dinheiro à parte e os meses. */
+export function fieldPatch(field: FlowField, answers: Record<string, string>): Partial<BriefFixed> {
   const steps = fieldSteps(field)
-  return quizText(steps, steps.map((_, j) => (answers[`${field}:${j}`] ? [answers[`${field}:${j}`]!] : [])))
+  const arr = steps.map((_, j) => (answers[`${field}:${j}`] ? [answers[`${field}:${j}`]!] : []))
+  if (field === 'sazonal') return { meses_fortes: monthsIn(arr[0]?.[0] ?? ''), meses_fracos: monthsIn(arr[1]?.[0] ?? ''), ...(arr[2]?.[0] ? { sazonalidade: arr[2][0] } : {}) }
+  const text = quizText(steps, arr.map((a, j) => (steps[j]!.money ? [] : a)))
+  const money = quizMoney(steps, arr)
+  if (field === 'gravacao') return { quem_aparece: text, quem_grava: text }
+  return { ...(text ? { [field]: text } : {}), ...money }
 }
+export const fieldText = (field: FlowField, answers: Record<string, string>) => String(Object.values(fieldPatch(field, answers))[0] ?? '')
 
 /** Links colados ou falados: tudo o que parece endereço (com ou sem http). */
 export function linksIn(text: string): string[] {

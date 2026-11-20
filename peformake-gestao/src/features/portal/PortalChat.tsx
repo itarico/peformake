@@ -8,7 +8,7 @@ import { productsFromText } from '@/features/strategy/brief/productImport'
 import { monthName, SKIP_LABEL } from '@/features/strategy/questionRules'
 import { cn } from '@/lib/cn'
 import { answerPortalQuestion, portalBriefKey, savePortalBrief, uploadAnswerFile, type PortalBrief } from './portalBriefApi'
-import { fieldText, flowSteps, linksIn, missingFields, namesIn, type FlowStep } from './portalFlowRules'
+import { fieldPatch, flowSteps, linksIn, missingFields, namesIn, type FlowStep } from './portalFlowRules'
 import { BRIEF_REQUIRED } from './portalRules'
 
 const first = (name: string) => name.trim().split(/\s+/)[0] ?? name
@@ -54,8 +54,7 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
       }
       const field = step.field!
       if (step.kind === 'quiz') {
-        const t = fieldText(field, { ...answers, [step.key]: value })
-        await savePortalBrief(token, field === 'gravacao' ? { quem_aparece: t, quem_grava: t } : { [field]: t })
+        await savePortalBrief(token, fieldPatch(field, { ...answers, [step.key]: value }))
         return
       }
       if (field === 'produtos') {

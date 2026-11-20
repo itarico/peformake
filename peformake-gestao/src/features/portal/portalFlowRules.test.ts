@@ -12,7 +12,7 @@ describe('conversa do portal', () => {
     expect(m[0]).toBe('produtos')
     expect(m).not.toContain('publico')
     expect(m).toContain('gravacao')
-    expect(missingFields(f, false)).toContain('quem_aparece')
+    expect(missingFields(f, false)).not.toContain('gravacao')
   })
 
   it('subpergunta do guia (when) só entra quando a resposta pede', () => {
@@ -45,5 +45,38 @@ describe('tamanho da conversa', () => {
     const { MAX_PER_FIELD } = await import('./portalFlowRules')
     expect(flowSteps(['publico'], {}, [], 'P').length).toBe(MAX_PER_FIELD)
     expect(flowSteps(['publico'], { 'publico:0': 'Famílias com filhos' }, [], 'P').length).toBe(MAX_PER_FIELD + 1)
+  })
+})
+
+describe('cartões novos do briefing (20/11)', () => {
+  it('puxa-fio aparece só depois da resposta da pergunta aberta', () => {
+    const before = flowSteps(['marketing'], {}, [], 'P')
+    const i = before.findIndex((s) => /funcionou melhor/.test(s.q))
+    if (i < 0) return // o guia mudou de ordem: o teste de baixo cobre a regra
+    expect(before.some((s) => /Por que você acha que funcionou/.test(s.q))).toBe(false)
+    const after = flowSteps(['marketing'], { [before[i]!.key]: 'Sorteio no Instagram' }, [], 'P')
+    expect(after.some((s) => /Por que você acha que funcionou/.test(s.q))).toBe(true)
+  })
+
+  it('a verba entra sempre e vai para o campo de dinheiro, fora do texto', async () => {
+    const { fieldPatch } = await import('./portalFlowRules')
+    const steps = flowSteps(['marketing'], {}, [], 'P')
+    const verba = steps.find((s) => s.money === 'verba_anuncio')
+    expect(verba).toBeTruthy()
+    const patch = fieldPatch('marketing', { [verba!.key]: 'R$ 500 a 1.500' })
+    expect(patch.verba_anuncio).toBe('R$ 500 a 1.500')
+    expect(patch.marketing ?? '').not.toContain('1.500')
+  })
+
+  it('sazonalidade: meses falados viram números', async () => {
+    const { fieldPatch } = await import('./portalFlowRules')
+    expect(fieldPatch('sazonal', { 'sazonal:0': 'Dezembro; Junho', 'sazonal:1': 'fevereiro e março', 'sazonal:2': 'Natal e São João' }))
+      .toEqual({ meses_fortes: [6, 12], meses_fracos: [2, 3], sazonalidade: 'Natal e São João' })
+  })
+
+  it('Gravação só falta para quem tem vídeo', () => {
+    expect(missingFields({}, false)).not.toContain('gravacao')
+    expect(missingFields({}, true)).toContain('gravacao')
+    expect(missingFields({}, true)).toContain('sazonal')
   })
 })

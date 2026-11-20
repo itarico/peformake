@@ -1,17 +1,17 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Ban, Bookmark, Compass, FileText, FileUp, Gauge, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
+import { Bookmark, CalendarRange, Compass, FileText, FileUp, KeyRound, Link2, ListChecks, Megaphone, MessageCircle, Package, Route, Star, Swords, Target, TrendingUp, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { GuideCtx, LinksDialog, ListDialog, TextDialog } from '@/features/strategy/brief/BriefDialogs'
+import { GuideCtx, LinksDialog, ListDialog, SeasonDialog, TextDialog } from '@/features/strategy/brief/BriefDialogs'
 import { Group, Ring, Tile } from '@/features/strategy/brief/BriefingView'
 import {
-  competitorFromLink, fixedStatus, linkList, netOf, QUIZ, short, TEXT_FIELDS,
+  CARD_MONEY, cardDone, cardText, competitorFromLink, fixedStatus, linkList, netOf, QUIZ, seasonText, short, TEXT_FIELDS,
   type BriefFixed, type Concorrente, type Produto, type Referencia, type TextKey,
 } from '@/features/strategy/brief/briefRules'
 import { BRIEF_REQUIRED } from './portalRules'
 import { portalBriefKey, savePortalBrief, uploadBriefDoc, type PortalBrief } from './portalBriefApi'
 
-type Open = { kind: 'text'; key: TextKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'gravacao' }
+type Open = { kind: 'text'; key: TextKey } | { kind: 'links' | 'produtos' | 'concorrentes' | 'referencias' | 'gravacao' | 'sazonal' }
 
 const when = (iso: string) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', timeZone: 'America/Recife' })
 
@@ -42,18 +42,19 @@ export function PortalBriefing({ token, month, brief, onDone, onChat }: { token:
   // O que falta, do que mais pesa para o que menos pesa (o mesmo medidor da ficha do cliente).
   const STEP: Record<string, Open> = {
     produtos: { kind: 'produtos' }, links: { kind: 'links' }, concorrentes: { kind: 'concorrentes' }, referencias: { kind: 'referencias' },
-    publico: { kind: 'text', key: 'publico' }, diferenciais: { kind: 'text', key: 'diferenciais' }, voz: { kind: 'text', key: 'voz' }, proibidos: { kind: 'text', key: 'proibidos' },
-    quem_aparece: brief.hasVideo ? { kind: 'gravacao' } : { kind: 'text', key: 'quem_aparece' }, capacidade: { kind: 'text', key: 'capacidade' },
-    momento: { kind: 'text', key: 'momento' }, proposito: { kind: 'text', key: 'proposito' }, percepcao: { kind: 'text', key: 'percepcao' }, posicionamento: { kind: 'text', key: 'posicionamento' },
+    quem_aparece: { kind: 'gravacao' }, sazonalidade: { kind: 'sazonal' },
   }
-  const todo = fixedStatus(f).checks.filter((c) => !c.done).sort((a, b) => b.weight - a.weight).map((c) => STEP[c.key]).filter((x): x is Open => !!x)
+  // Cartões de texto (os juntos contam feito com qualquer chave dele, igual à ficha da equipe).
+  const todo = fixedStatus(f, brief.hasVideo).checks.filter((c) => !c.done).sort((a, b) => b.weight - a.weight)
+    .map((c) => STEP[c.key] ?? (c.key in TEXT_FIELDS ? { kind: 'text' as const, key: c.key as TextKey } : undefined)).filter((x): x is Open => !!x)
 
   const prods = f.produtos ?? []
   const links = linkList(f)
   const comps = f.concorrentes ?? []
   const refs = f.referencias ?? []
-  const T = (key: TextKey, icon: typeof Star, label = TEXT_FIELDS[key].label) =>
-    show(!!f[key]) && <Tile key={key} icon={icon} label={label} title={TEXT_FIELDS[key].hint} done={!!f[key]} onOpen={() => setOpen({ kind: 'text', key })} />
+  const T = (key: TextKey, icon: typeof Star) =>
+    show(cardDone(f, key)) && <Tile key={key} icon={icon} label={TEXT_FIELDS[key].label} title={TEXT_FIELDS[key].hint} done={cardDone(f, key)} onOpen={() => setOpen({ kind: 'text', key })} />
+  const seasonDone = !!(f.meses_fortes?.length || f.meses_fracos?.length)
 
   return (
     <section aria-label="Briefing" data-portal-briefing className="flex flex-col gap-4">
@@ -72,35 +73,37 @@ export function PortalBriefing({ token, month, brief, onDone, onChat }: { token:
         </div>
       </div>
 
+      {/* Mesmos cartões da ficha da equipe (juntos desde 20/11): o cliente responde o que é dele, inclusive a verba. */}
       <Group title="Seu negócio">
         {show(prods.some((p) => p.preco)) && <Tile icon={Package} label="Produtos" title="Produtos e serviços com preço" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />}
         {show(links.length >= 2) && <Tile icon={Link2} label="Links" title="Site, Instagram, WhatsApp, cardápio..." done={links.length >= 2} count={links.length} onOpen={() => setOpen({ kind: 'links' })} />}
         {T('publico', Users)}
-        {T('diferenciais', Star)}
+        {T('jornada', Route)}
         {show(comps.length > 0 || !!f.sem_concorrentes) && <Tile icon={Swords} label="Concorrentes" title="Concorrentes" done={comps.length > 0 || !!f.sem_concorrentes} count={comps.length} onOpen={() => { setSemComp(!!f.sem_concorrentes); setOpen({ kind: 'concorrentes' }) }} />}
         {show(refs.length > 0) && <Tile icon={Bookmark} label="Referências" title="Posts, vídeos ou anúncios que você gosta" done={refs.length > 0} count={refs.length} onOpen={() => setOpen({ kind: 'referencias' })} />}
-        {T('voz', MessageCircle, 'Voz')}
-        {T('proibidos', Ban)}
-        {brief.hasVideo ? show(!!f.quem_aparece) && <Tile icon={Video} label="Gravação" title="Quem aparece, quem grava e quando" done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'gravacao' })} /> : T('quem_aparece', Video)}
-        {T('capacidade', Gauge, 'Capacidade')}
+        {brief.hasVideo && show(!!f.quem_aparece) && <Tile icon={Video} label="Gravação" title="Quem aparece, quem grava e quando" done={!!f.quem_aparece} onOpen={() => setOpen({ kind: 'gravacao' })} />}
       </Group>
 
       <Group title="Essência da marca">
-        {T('momento', TrendingUp, 'Momento')}
+        {T('posicionamento', Target)}
         {T('proposito', Compass)}
         {T('percepcao', Star)}
-        {T('arquetipo', UserRound)}
-        {T('posicionamento', Target)}
-        {T('historia', NotebookPen)}
-        {T('jornada', TrendingUp)}
-        {T('objecoes', Ban)}
-        {T('visao', Gauge)}
+        {T('voz', MessageCircle)}
+        {T('momento', TrendingUp)}
+      </Group>
+
+      <Group title="Marketing">
+        {T('marketing', Megaphone)}
+        {show(seasonDone) && <Tile icon={CalendarRange} label="Sazonalidade" title={seasonText(f) || TEXT_FIELDS.sazonalidade.hint} done={seasonDone} onOpen={() => setOpen({ kind: 'sazonal' })} />}
+        {T('marca', KeyRound)}
       </Group>
 
       <BriefDocs token={token} docs={brief.docs} onSent={() => void refresh()} />
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
-        {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={f[open.key] ?? ''} busy={save.isPending} error={err} onClose={stop} onSave={(v) => save.mutate({ [open.key]: v })} />}
+        {open?.kind === 'text' && <TextDialog key={open.key} quizKey={open.key} title={TEXT_FIELDS[open.key].label} hint={TEXT_FIELDS[open.key].hint} initial={cardText(f, open.key)} busy={save.isPending} error={err} onClose={stop}
+          money={CARD_MONEY[open.key]?.map((k) => ({ key: k, value: f[k] ?? '' }))} onSave={(v, money) => save.mutate({ [open.key]: v, ...(money ?? {}) })} />}
+        {open?.kind === 'sazonal' && <SeasonDialog fortes={f.meses_fortes ?? []} fracos={f.meses_fracos ?? []} porque={f.sazonalidade ?? ''} busy={save.isPending} error={err} onClose={stop} onSave={(v) => save.mutate(v)} />}
         {open?.kind === 'gravacao' && <TextDialog key="gravacao" quizSteps={[...(QUIZ.quem_aparece ?? []), ...(QUIZ.quem_grava ?? [])]} title="Gravação" hint="Quem aparece, quem grava, com que aparelho e quando dá para gravar. Toque em Responder com opções." initial={[f.quem_aparece, f.quem_grava && f.quem_grava !== f.quem_aparece ? f.quem_grava : ''].filter(Boolean).join(' ')} busy={save.isPending} error={err} onClose={stop} onSave={(v) => save.mutate({ quem_aparece: v, quem_grava: v })} />}
         {open?.kind === 'links' && <LinksDialog brief={f} busy={save.isPending} error={err} onClose={stop} onSave={(v) => save.mutate(v)} />}
         {open?.kind === 'produtos' && <ListDialog<Produto & Record<string, unknown>> importer title="Produtos e serviços" hint="Toque em Adicionar: um por um, por áudio, arquivo, colar a lista ou link do cardápio. Coloque o preço de hoje." items={prods as (Produto & Record<string, unknown>)[]} empty={{ nome: '', preco: '', condicoes: '' }}

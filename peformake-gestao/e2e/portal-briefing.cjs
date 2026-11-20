@@ -125,7 +125,7 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     while (!(await p.locator('[data-ir-painel]').count())) { await p.locator('[data-depois]').click(); await p.waitForTimeout(120) }
     await p.locator('[data-ir-painel]').click(); await p.waitForTimeout(400);
     // Briefing completo (>= 80%): abre no Painel.
-    brief = { ...brief, produtos: [{ nome: 'X', preco: 'R$ 1' }], publico: 'aaaa', diferenciais: 'aaaa', voz: 'aaaa', proibidos: 'aaa', quem_aparece: 'aaa', capacidade: 'aaa', proposito: 'aaa', percepcao: 'aaa', posicionamento: 'aaa', sem_concorrentes: true, referencias: [{ link: 'https://x.com' }], links: { site: 'https://a.com', instagram: 'https://instagram.com/a' } };
+    brief = { ...brief, produtos: [{ nome: 'X', preco: 'R$ 1' }], publico: 'aaaa', diferenciais: 'aaaa', voz: 'aaaa', proibidos: 'aaa', quem_aparece: 'aaa', capacidade: 'aaa', proposito: 'aaa', percepcao: 'aaa', posicionamento: 'aaa', sem_concorrentes: true, referencias: [{ link: 'https://x.com' }], links: { site: 'https://a.com', instagram: 'https://instagram.com/a' }, momento: 'aaa', jornada: 'aaa', marketing: 'aaa', marca: 'aaa', meses_fortes: [12] };
     questions = questions.map((x) => ({ ...x, status: 'respondida', answer: 'ok' }));
     await p.goto(`${BASE}/portal#${TOKEN}/perguntas`); await p.reload(); await p.waitForTimeout(1500);
     if (await p.locator('[data-portal-chat]').count()) fails.push(`${dev}: com briefing completo e tudo respondido não devia abrir a conversa`);
