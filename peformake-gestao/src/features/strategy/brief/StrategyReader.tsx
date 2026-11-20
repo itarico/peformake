@@ -36,20 +36,22 @@ export function StrategyReader({ board, tab, name, onChanged, onReview }: { boar
   if (!cards.length) return <p data-leitura={tab} className="rounded-2xl border border-dashed border-line px-3 py-8 text-center text-[13px] text-muted">Nada nesta parte.</p>
   const actions = (c: StrategyCard) => <ItemActions c={c} onEdit={() => setEdit(c)} onRedo={() => setRedo(c)} onPdf={() => pdf.mutate(c)} />
   // Social, Tráfego e Atendimento (19/11): igual aos vídeos, cada item tem Aprovar e só o aprovado vai para o PDF.
-  const approvable = tab === 'social' || tab === 'trafego' || tab === 'atendimento'
+  const approvable = tab === 'trafego' || tab === 'atendimento'
   const foot = (c: StrategyCard) => <div className="flex flex-wrap items-center gap-3">{approvable && <ApproveButton c={c} onChanged={onChanged} />}{more(c)}</div>
   const more = (c: StrategyCard, doc?: ScriptDoc) => <button type="button" onClick={() => setDetails({ c, doc })} className="min-h-10 cursor-pointer self-start text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">Ver detalhes</button>
   return (
     <div data-leitura={tab} className="flex flex-col gap-3">
       {tab === 'audiovisual' && <VideoList cards={cards} actions={actions} more={more} onChanged={onChanged} onReview={onReview} />}
       {tab === 'resumo' && <Resumo cards={cards} actions={actions} more={more} />}
-      {approvable && <ApproveHeader cards={cards} label={tab === 'social' ? ['peça', 'peças'] : tab === 'trafego' ? ['campanha', 'campanhas'] : ['roteiro', 'roteiros']} onReview={onReview} />}
-      {tab === 'social' && cards.map((c, i) => <Article key={c.id} c={c} kicker={`${String(i + 1).padStart(2, '0')} / ${s(c.data.formato) || 'Peça'}`} actions={actions(c)} more={foot(c)}>
-        {s(c.data.ideia) && <P>{s(c.data.ideia)}</P>}
-        {arr(c.data.slides).length > 0 && <ol className="flex list-decimal flex-col gap-1 pl-5 text-[15px] leading-relaxed">{arr(c.data.slides).map((x, k) => <li key={k}>{s(x)}</li>)}</ol>}
-        {s(c.data.legenda) && <Labeled label="Legenda"><P>{s(c.data.legenda)}</P></Labeled>}
-        {s(c.data.cta) && <Labeled label="Chamada"><P>{s(c.data.cta)}</P></Labeled>}
-      </Article>)}
+      {approvable && <ApproveHeader cards={cards} label={tab === 'trafego' ? ['campanha', 'campanhas'] : ['roteiro', 'roteiros']} onReview={onReview} />}
+      {tab === 'social' && <PieceList cards={cards} label={['peça', 'peças']} onChanged={onChanged} onReview={onReview}
+        tags={(c) => [s(c.data.formato) || 'Peça']}
+        render={(c, i) => <Article c={c} kicker={`${String(i + 1).padStart(2, '0')} / ${s(c.data.formato) || 'Peça'}`} actions={actions(c)} more={more(c)}>
+          {s(c.data.ideia) && <P>{s(c.data.ideia)}</P>}
+          {arr(c.data.slides).length > 0 && <ol className="flex list-decimal flex-col gap-1 pl-5 text-[15px] leading-relaxed">{arr(c.data.slides).map((x, k) => <li key={k}>{s(x)}</li>)}</ol>}
+          {s(c.data.legenda) && <Labeled label="Legenda"><P>{s(c.data.legenda)}</P></Labeled>}
+          {s(c.data.cta) && <Labeled label="Chamada"><P>{s(c.data.cta)}</P></Labeled>}
+        </Article>} />}
       {tab === 'trafego' && cards.map((c) => <Article key={c.id} c={c} kicker={s(c.data.objetivo) || 'Campanha'} actions={actions(c)} more={foot(c)}>
         {s(c.data.publico) && <Labeled label="Público"><P>{s(c.data.publico)}</P></Labeled>}
         {s(c.data.criativo) && <Labeled label="Criativo"><P>{s(c.data.criativo)}</P></Labeled>}
@@ -158,11 +160,18 @@ function VideoFacts({ c }: { c: StrategyCard }) {
   )
 }
 
-/**
- * Vídeos como LISTA (Italo, 19/11): todos os roteiros de uma vez, cada um com objetivo, estrutura, estrelas da equipe (1 a 3)
- * e Aprovar. Só vídeo aprovado entra no PDF. Abrir mostra o roteiro inteiro logo abaixo; "Aprovar 1 por 1" abre a revisão.
- */
+/** Vídeos como LISTA (Italo, 19/11): a estrutura é a etiqueta extra; Abrir mostra o roteiro inteiro logo abaixo. */
 function VideoList({ cards, actions, more, onChanged, onReview }: { cards: StrategyCard[]; actions: (c: StrategyCard) => ReactNode; more: (c: StrategyCard, doc?: ScriptDoc) => ReactNode; onChanged: () => void; onReview?: () => void }) {
+  return <PieceList cards={cards} label={['roteiro', 'roteiros']} onChanged={onChanged} onReview={onReview}
+    tags={(c) => [estruturaTag(c, ESTRUTURAS)]}
+    render={(c, i) => <VideoArticle c={c} index={i} doc={videoDoc(c, i)} actions={actions(c)} more={more} />} />
+}
+
+/**
+ * Lista de itens que se aprovam (vídeos e peças do social, Italo 19-20/11): todos de uma vez, cada um com objetivo,
+ * etiquetas, estrelas da equipe (1 a 3), Abrir e Aprovar. Só o aprovado entra no PDF; "Aprovar 1 por 1" abre a revisão.
+ */
+function PieceList({ cards, label, tags, render, onChanged, onReview }: { cards: StrategyCard[]; label: [string, string]; tags: (c: StrategyCard) => string[]; render: (c: StrategyCard, i: number) => ReactNode; onChanged: () => void; onReview?: () => void }) {
   const [open, setOpen] = useState<string | null>(cards.length === 1 ? cards[0]!.id : null)
   const [err, setErr] = useState<string | null>(null)
   const approve = useMutation({ mutationFn: (id: string) => approveCard(id), onSuccess: onChanged, onError: (e) => setErr((e as Error).message) })
@@ -172,13 +181,13 @@ function VideoList({ cards, actions, more, onChanged, onReview }: { cards: Strat
   return (
     <div data-lista-roteiros className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
-        <p className="text-[13px] text-muted"><b className="text-ink">{cards.length} {cards.length === 1 ? 'roteiro' : 'roteiros'}</b> · {ok} {ok === 1 ? 'aprovado' : 'aprovados'} · só aprovado entra no PDF</p>
+        <p className="text-[13px] text-muted"><b className="text-ink">{cards.length} {cards.length === 1 ? label[0] : label[1]}</b> · {ok} {ok === 1 ? 'aprovado' : 'aprovados'} · só aprovado entra no PDF</p>
         {onReview && ok < cards.length && <Button variant="secondary" className="ml-auto min-h-10 px-3 text-[13px]" onClick={onReview}><Play size={14} aria-hidden="true" /> Aprovar 1 por 1</Button>}
       </div>
       {err && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[12.5px] text-warn-ink">{err}</p>}
       <ul className="flex flex-col gap-2">
         {cards.map((c, i) => {
-          const obj = objetivoTag(c); const est = estruturaTag(c, ESTRUTURAS); const stars = starsOf(c); const done = c.status === 'aprovado'; const isOpen = open === c.id
+          const obj = objetivoTag(c); const extra = tags(c).filter(Boolean); const stars = starsOf(c); const done = c.status === 'aprovado'; const isOpen = open === c.id
           return (
             <li key={c.id} data-roteiro-item={c.id} className="flex min-w-0 flex-col gap-2">
               <div className={cn('flex w-full min-w-0 flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border bg-surface px-3 py-3 md:px-4', isOpen ? 'border-ink' : 'border-line')}>
@@ -186,7 +195,7 @@ function VideoList({ cards, actions, more, onChanged, onReview }: { cards: Strat
                   <span className="line-clamp-2 break-words text-[15px] font-semibold"><span className="text-muted tabular-nums">{String(i + 1).padStart(2, '0')} · </span>{c.title}</span>
                   <span className="flex flex-wrap gap-1.5">
                     {obj && <span data-objetivo={obj} className={cn(tag, 'bg-accent-soft text-accent-ink')}>{OBJETIVO_LABEL[obj]}</span>}
-                    {est && <span data-estrutura-tag className={cn(tag, 'bg-raised text-ink')}>{est}</span>}
+                    {extra.map((x) => <span key={x} data-estrutura-tag className={cn(tag, 'bg-raised text-ink')}>{x}</span>)}
                   </span>
                 </button>
                 <span role="group" aria-label={`Nota de ${c.title}`} className="flex items-center">
@@ -202,7 +211,7 @@ function VideoList({ cards, actions, more, onChanged, onReview }: { cards: Strat
                     : <Button className="min-h-10 px-3 text-[13px]" disabled={approve.isPending} onClick={() => approve.mutate(c.id)}><Check size={14} aria-hidden="true" /> Aprovar</Button>}
                 </span>
               </div>
-              {isOpen && <VideoArticle c={c} index={i} doc={videoDoc(c, i)} actions={actions(c)} more={more} />}
+              {isOpen && render(c, i)}
             </li>
           )
         })}
