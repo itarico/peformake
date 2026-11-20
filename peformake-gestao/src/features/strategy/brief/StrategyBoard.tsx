@@ -144,8 +144,9 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
       {/* Uma linha só (Italo, 20/11: "a interface tá muito confusa"): mês · PDF · Enviar · Gerar de novo · ⋯. O título "Estratégia" já está no topo da página. */}
       <div data-acoes-topo className="flex items-center gap-1.5">
         <MonthPick month={month} options={monthOptions(today)} onPick={(m) => go({ mes: m.slice(0, 7) })} />
-        {!ready && !busy && <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar estratégia</Button>}
-        {ready && <>
+        {/* No Briefing não tem PDF, Enviar nem Gerar (Italo, 20/11: "baixar o quê? enviar o quê?"): esses são da estratégia. */}
+        {tab !== 'briefing' && !ready && !busy && <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setGen(true)}><Sparkles size={14} aria-hidden="true" /> Gerar estratégia</Button>}
+        {tab !== 'briefing' && ready && <>
           <Button className="min-h-10 min-w-0 flex-1 px-3 text-[13px] sm:flex-none" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> <span><span className="max-sm:hidden">Baixar </span>PDF</span></Button>
             {/* Enviar = o que está aberto (Italo, 19/11): na parte Vídeos, os roteiros "Para o cliente"; nas outras, a estratégia. */}
             <ActionMenu label="Enviar ao cliente" className="min-w-0 flex-1 sm:flex-none" trigger={<><Send size={14} aria-hidden="true" /> <span>Enviar<span className="max-sm:hidden"> ao cliente</span></span></>}
@@ -157,15 +158,15 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
               ]} />
           <Button variant="secondary" aria-label="Gerar de novo" title="Gerar de novo" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={() => setGen(true)}><RefreshCw size={14} aria-hidden="true" /> <span className="max-md:hidden">Gerar de novo</span></Button>
         </>}
-        <span className="ml-auto shrink-0">
+        {tab !== 'briefing' && <span className="ml-auto shrink-0">
           <ActionMenu label="Mais opções da estratégia" actions={[
-            { label: 'Abrir o briefing', icon: <ClipboardList size={15} aria-hidden="true" />, onClick: () => go({ parte: 'briefing' }), hidden: tab === 'briefing' },
+            { label: 'Abrir o briefing', icon: <ClipboardList size={15} aria-hidden="true" />, onClick: () => go({ parte: 'briefing' }) },
             { label: 'Pedir mais ideias nesta parte ao agente', icon: <Plus size={15} aria-hidden="true" />, onClick: () => setMore(true), hidden: !ready || !area || !b || (b.more_requests ?? []).some((r) => r.aba === tab) },
-            { label: 'Revisar um por um (aprovar ou recusar)', icon: <Play size={15} aria-hidden="true" />, onClick: () => go({ revisar: tab === 'briefing' ? 'todos' : tab }), hidden: !ready },
+            { label: 'Revisar um por um (aprovar ou recusar)', icon: <Play size={15} aria-hidden="true" />, onClick: () => go({ revisar: tab }), hidden: !ready },
             // Italo, 20/11: "isso me deixa perdido". Os 3 do plano B viraram 1 item; o passo a passo fica no pop-up.
             { label: 'Fazer pelo chat do Claude', icon: <MessageSquare size={15} aria-hidden="true" />, onClick: () => setChat(true), hidden: busy },
           ]} />
-        </span>
+        </span>}
       </div>
       {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
       <BoardStatus board={b} />

@@ -1,6 +1,6 @@
 import { Children, useState, type ReactNode } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, Mic, NotebookPen, Package, Send, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
+import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, NotebookPen, Package, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
@@ -178,7 +178,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
       </div>
       {tipoOpen && <TipoDialog current={isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name)} busy={saveF.isPending}
         onPick={(v) => saveF.mutate({ tipo: v }, { onSuccess: () => { setTipoOpen(false); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) } })} onClose={() => setTipoOpen(false)} />}
-      {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} />}
+      {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} onClient={() => setOpen({ kind: 'enviar' })} />}
 
       <Group title="O cliente">
         <Tile icon={Building2} label="Tipo" title={isFamily(f.tipo) ? FAMILY_LABEL[f.tipo] : `Confirmar: ${FAMILY_LABEL[familyOf(b.data?.segment, b.data?.description, name)]}`} done={isFamily(f.tipo)} onOpen={() => setTipoOpen(true)} />
@@ -205,27 +205,7 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         <MeetingNotes clientId={clientId} name={name} trigger={(o, n) => <Tile icon={NotebookPen} label="Reunião" title={n ? `${n} ajustes da reunião para fazer` : 'Anotar a reunião'} done={false} count={n} onOpen={o} />} />
       </Group>
 
-      <section data-perguntas className="flex flex-col gap-2">
-        <div className="flex min-h-9 items-center gap-2 px-1">
-          <h3 className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">Perguntas {st.answered}/{qs.length || 8}</h3>
-          <Button variant="secondary" className="ml-auto min-h-9 px-3 text-[12.5px]" onClick={() => setOpen({ kind: 'enviar' })}><Send size={13} aria-hidden="true" /> Mandar</Button>
-        </div>
-        {q.isPending && <p className="px-1 text-[13px] text-muted">Carregando</p>}
-        {q.isError && <p role="alert" className="px-1 text-[13px] text-warn-ink">{(q.error as Error).message}</p>}
-        <div className="grid max-w-[480px] grid-cols-8 gap-1.5">
-          {qs.map((x, n) => {
-            const ok = x.status === 'respondida', wait = x.status === 'enviada'
-            return (
-              <button key={x.id} type="button" data-pergunta={n + 1} title={x.question} aria-label={`Pergunta ${n + 1}: ${x.question}${ok ? ' (respondida)' : wait ? ' (esperando o cliente)' : ''}`} onClick={() => setOpen({ kind: 'q', q: x })}
-                className={cn('relative grid aspect-square w-full cursor-pointer place-items-center rounded-full text-[14px] font-bold transition-colors',
-                  ok ? 'bg-ok text-white' : wait ? 'border-2 border-accent text-accent-ink' : 'border border-dashed border-line-strong text-muted hover:bg-raised/60')}>
-                {ok ? <Check size={17} strokeWidth={3} aria-hidden="true" /> : n + 1}
-                {(x.attachments ?? []).some((a) => a.type?.startsWith('audio')) && <Mic size={11} aria-hidden="true" className="absolute -right-0.5 -top-0.5 rounded-full bg-surface text-muted" />}
-              </button>
-            )
-          })}
-        </div>
-      </section>
+      {/* As perguntas saíram daqui (Italo, 20/11): têm o passo próprio "Perguntas" na ficha do cliente. */}
 
       <GuideCtx.Provider value={guide ? { at: guide.i + 1, total: guide.steps.length, skip: next } : null}>
       {open?.kind === 'documento' && <DocumentDialog clientId={clientId} initial={doc} onClose={stop} onDone={() => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: consultKey }); next() }} />}

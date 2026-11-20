@@ -21,7 +21,7 @@ export function briefChatPrompt(name: string, clientId: string, month: string): 
  * ("a API acaba rápido"). Este botão copia o pedido e abre o Claude; lá a Bete pergunta conforme a resposta, traz opções
  * do momento do mercado, aceita áudio e grava sozinha no briefing. Ao voltar para cá, o briefing já aparece preenchido.
  */
-export function BriefChat({ clientId, month, name, onClose }: { clientId: string; month: string; name: string; onClose: () => void }) {
+export function BriefChat({ clientId, month, name, onClose, onClient }: { clientId: string; month: string; name: string; onClose: () => void; onClient: () => void }) {
   const qc = useQueryClient()
   const [note, setNote] = useState<string | null>(null)
   const go = async () => {
@@ -31,14 +31,13 @@ export function BriefChat({ clientId, month, name, onClose }: { clientId: string
   }
   const close = () => { void qc.invalidateQueries({ queryKey: briefKey(clientId) }); void qc.invalidateQueries({ queryKey: briefMonthKey(clientId, month) }); onClose() }
   return (
-    <Dialog open onClose={close} title="Conversar com a Bete" description={`Briefing de ${name} em conversa, no Claude`}
-      footer={<><Button variant="secondary" onClick={close}>Fechar</Button><Button onClick={() => void go()}><ExternalLink size={15} aria-hidden="true" /> Copiar e abrir o Claude</Button></>}>
-      <ol className="flex list-decimal flex-col gap-1.5 pl-5 text-[14px] leading-relaxed">
-        <li>Toque em <b>Copiar e abrir o Claude</b> e cole o pedido numa conversa nova.</li>
-        <li>A Bete lê tudo do cliente, olha o momento do mercado e pergunta uma coisa por vez, com opções numeradas.</li>
-        <li>Responda com o número, escrevendo ou por áudio. Ela grava no briefing enquanto conversa.</li>
-      </ol>
-      <p className="mt-2 text-[12.5px] text-muted">Roda na assinatura do Claude, sem gastar a API. Precisa do conector do Supabase ligado no Claude.</p>
+    <Dialog open onClose={close} title="Conversa sobre o negócio" description={`Quem responde o briefing de ${name}?`}
+      footer={<><Button variant="secondary" onClick={() => void go()}><ExternalLink size={15} aria-hidden="true" /> Eu respondo no Claude</Button><Button onClick={() => { close(); onClient() }}>Mandar para o cliente</Button></>}>
+      {/* Italo, 20/11: "em vez de deixar 100% por nossa responsabilidade", o cliente responde pela conversa (o padrão). */}
+      <div className="flex flex-col gap-2 text-[14px] leading-relaxed">
+        <p><b>O cliente responde (recomendado):</b> ele recebe um link e responde no celular, uma pergunta por vez, por áudio, texto, foto ou arquivo. As respostas entram no briefing.</p>
+        <p><b>Eu respondo:</b> abre o Claude com a Bete, que pergunta conforme a sua resposta e grava no briefing. Roda na assinatura, sem API; precisa do conector do Supabase.</p>
+      </div>
       {note && <p role="status" className="mt-2 rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
     </Dialog>
   )
