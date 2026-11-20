@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { ClientQuestion } from '../questionsApi'
 import { briefChecks, briefMissing, briefPercent, focusOf, prefill, type BriefFixed, type BriefMonth } from './briefRules'
-import { monthQuestions } from './questionEngine'
+import { isFamily, monthQuestions } from './questionEngine'
 
 type Rpc = (fn: string, a?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 const rpc = supabase.rpc.bind(supabase) as unknown as Rpc
@@ -26,7 +26,7 @@ export function useBrief(clientId: string) {
     queryFn: async () => {
       const [b, c, l, v, dg, ln] = await Promise.all([
         db.from('client_briefs').select('data, updated_at').eq('client_id', clientId).maybeSingle(),
-        db.from('clients').select('description, target_audience, value_proposition, competitors, instagram, website, phone, document').eq('id', clientId).maybeSingle(),
+        db.from('clients').select('segment, description, target_audience, value_proposition, competitors, instagram, website, phone, document').eq('id', clientId).maybeSingle(),
         db.from('client_links').select('name, url').eq('client_id', clientId).limit(30),
         db.from('client_brand_voice').select('essencia, tom, evitar').eq('client_id', clientId).maybeSingle(),
         db.from('consult_docs').select('rivals:doc->diagnostico->mercado->concorrentes').eq('client_id', clientId).maybeSingle(),
@@ -37,6 +37,7 @@ export function useBrief(clientId: string) {
       const saved = (b.data?.data ?? {}) as BriefFixed
       return { data: prefill(saved, { ...(c.data ?? {}), links: l.data ?? [], voz: v.data ?? null, diagRivals: Array.isArray(dg.data?.rivals) ? dg.data.rivals : null }), saved: !!b.data, updatedAt: (b.data?.updated_at as string | null) ?? null,
         // CPF/CNPJ do cadastro: se já tem, o briefing mostra preenchido; só pede quando falta.
+        segment: (c.data?.segment as string | null) ?? null, description: (c.data?.description as string | null) ?? null,
         document: (c.data?.document as string | null) ?? null, legalName: ((ln.data as { legal_name?: string } | null)?.legal_name) ?? null }
     },
   })
@@ -63,11 +64,11 @@ export async function saveBriefMonth(clientId: string, month: string, data: Brie
   fail(error)
 }
 
-/** As 8 perguntas do mês (cria na primeira vez). O cliente responde pelo link de sempre ou a equipe responde aqui. */
-export function useBriefQuestions(clientId: string, month: string) {
-  return useQuery({
-    queryKey: briefQuestionsKey(clientId, month),
-    queryFn: async () => {
+/**
+ * Monta as perguntas do mês pelo motor (sem IA) e grava. O banco só troca o pacote se ninguém mexeu nele ainda
+ * (nada enviado nem respondido): perguntas antigas de outro tipo de negócio somem sozinhas.
+ */
+export async function refreshMonthQuestions(clientId: string, month: string): Promise<void> {
       // Motor das perguntas (sem IA): nicho + o que falta no briefing + datas do mês + diagnóstico, sem repetir meses anteriores.
       const [cli, br, bm, hist, dg] = await Promise.all([
         db.from('clients').select('name, segment, description').eq('id', clientId).maybeSingle(),
@@ -79,12 +80,21 @@ export function useBriefQuestions(clientId: string, month: string) {
       const f = (br.data?.data ?? {}) as BriefFixed
       const qs = monthQuestions({
         clientId, name: cli.data?.name ?? '', segment: cli.data?.segment, description: cli.data?.description, month,
+        family: isFamily(f.tipo) ? f.tipo : null,
         products: f.produtos, competitors: f.concorrentes, noCompetitors: f.sem_concorrentes, publico: f.publico, meta: (bm.data?.data as BriefMonth | undefined)?.meta,
         asked: ((hist.data ?? []) as { question: string; focus: string | null; pack: string | null }[]).filter((x) => !(x.pack === 'briefing_mes' && x.focus === focusOf(month))).map((x) => x.question),
         diagQuestions: Array.isArray(dg.data?.do_cliente) ? dg.data.do_cliente : [],
       })
       const { error: e1 } = await rpc('brief_questions_put', { _client: clientId, _month: month, _qs: qs })
       if (e1) throw new Error(e1.code === '42501' ? 'Só administrador ou head de marketing.' : 'Não foi possível abrir as perguntas.')
+}
+
+/** As 8 perguntas do mês (cria na primeira vez). O cliente responde pelo link de sempre ou a equipe responde aqui. */
+export function useBriefQuestions(clientId: string, month: string) {
+  return useQuery({
+    queryKey: briefQuestionsKey(clientId, month),
+    queryFn: async () => {
+      await refreshMonthQuestions(clientId, month)
       const { data, error } = await db.from('client_questions').select('id, client_id, area, pack, focus, question, why, answer, status, source, options, attachments, audio_pending, sent_to_portal_at, answered_at, answered_via, created_at')
         .eq('client_id', clientId).eq('pack', 'briefing_mes').eq('focus', focusOf(month)).order('created_at')
       if (error) throw new Error('Não foi possível abrir as perguntas.')

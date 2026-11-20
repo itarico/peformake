@@ -12,10 +12,13 @@ import { supabase } from '@/lib/supabase'
 import { ago } from '@/features/settings/AutomationsCenter'
 import { waLink } from './consultRules'
 import { ALL_MAX, chatInvite, chatLink, defaultToSend, MAX_PER_CHAT, nextMonthFocus, packLabel, weekStart } from './questionRules'
+
+/** 1º dia do mês que vem (horário de Recife): é para ele que a estratégia e as perguntas se preparam. */
+const nextMonth01 = () => { const d = new Date(Date.now() - 3 * 3_600_000); const m = d.getUTCMonth() + 2; const y = d.getUTCFullYear() + (m > 12 ? 1 : 0); return `${y}-${String(m > 12 ? 1 : m).padStart(2, '0')}-01` }
 import { answerQuestion, discardQuestion, editAnswer, editQuestion, fileUrl, generateQuestions, openChat, questionsKey, useClientQuestions, type ClientQuestion } from './questionsApi'
 import { Paged } from './SlideViewer'
 import { AttachButton } from './brief/BriefDialogs'
-import { answerBrief, uploadFile } from './brief/briefApi'
+import { answerBrief, refreshMonthQuestions, uploadFile } from './brief/briefApi'
 
 /** Estratégia → Consultoria → cliente → Perguntas: o pacote da semana, envio (por humano) e as respostas. */
 export function QuestionsPanel({ clientId, name }: { clientId: string; name: string; phone: string | null }) {
@@ -172,45 +175,41 @@ function AnswerDialog({ q, onClose, onDone }: { q: ClientQuestion; onClose: () =
 
 /** Envio sempre por humano: escolhe as perguntas, o sistema marca como enviadas e prepara a mensagem com o link. */
 function SendQuestionsDialog({ clientId, name, phone, person, open, onClose, onDone }: { clientId: string; name: string; phone: string | null; person: string | null; open: ClientQuestion[]; onClose: () => void; onDone: () => void }) {
-  const initial = useMemo(() => defaultToSend(open), [open])
-  const [picked, setPicked] = useState<Set<string>>(() => new Set((initial.length ? initial : open.map((x) => x.id)).slice(0, MAX_PER_CHAT)))
+  // Italo, 20/11: o cliente responde numa CONVERSA (uma por vez, áudio, texto ou arquivo), então vão todas marcadas;
+  // a equipe só desmarca o que não quer. Ordem: as do mês primeiro, depois as do diagnóstico.
+  const list = useMemo(() => [...open].sort((a, b) => Number(b.pack === 'briefing_mes') - Number(a.pack === 'briefing_mes') || a.created_at.localeCompare(b.created_at)).slice(0, ALL_MAX), [open])
+  const [picked, setPicked] = useState<Set<string>>(() => new Set(list.map((x) => x.id)))
   const [msg, setMsg] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
-  // "Todas": manda todas as perguntas abertas num link só (até 30); o padrão continua 4 por conversa.
-  const [all, setAll] = useState(false)
-  const cap = all ? ALL_MAX : MAX_PER_CHAT
-  const pickAll = (on: boolean) => { setAll(on); setPicked(new Set((on ? open.map((x) => x.id) : (initial.length ? initial : open.map((x) => x.id))).slice(0, on ? ALL_MAX : MAX_PER_CHAT))) }
   const prep = useMutation({
-    mutationFn: () => openChat(clientId, open.filter((x) => picked.has(x.id)).map((x) => x.id)),
+    mutationFn: () => openChat(clientId, list.filter((x) => picked.has(x.id)).map((x) => x.id)),
     onSuccess: (token) => { setMsg(chatInvite(name, picked.size, chatLink(window.location.origin, token), nextMonthFocus(weekStart()), person)); onDone() },
   })
-  // Até 4 por conversa: com 4 marcadas, as outras ficam travadas até desmarcar uma.
-  const toggle = (id: string) => setPicked((c) => { const n = new Set(c); if (n.has(id)) n.delete(id); else if (n.size < cap) n.add(id); return n })
-  const full = picked.size >= cap
+  const toggle = (id: string) => setPicked((c) => { const n = new Set(c); if (n.has(id)) n.delete(id); else n.add(id); return n })
+  const allOn = picked.size === list.length
   const wa = msg ? waLink(phone, msg) : null
   // No celular cabem 3 por página sem rolagem no pop-up (medido no iPhone 13, 19/11).
   const mobile = useIsMobile()
+  const mins = Math.max(2, Math.round(picked.size * 1.2))
   return (
-    <Dialog open onClose={onClose} title={msg ? `Mandar para ${name}` : 'Quais perguntas enviar?'} size="md"
-      description={msg ? 'O sistema não envia sozinho. Confira e mande pelo seu WhatsApp.' : all ? `Todas as ${Math.min(open.length, ALL_MAX)} perguntas num link só. O cliente responde uma de cada vez, pelo celular.` : `Escolha até ${MAX_PER_CHAT}, ou mande todas. O cliente responde uma de cada vez, pelo celular.`}
+    <Dialog open onClose={onClose} title={msg ? `Mandar para ${name}` : `Conversa com ${name}`} size="md"
+      description={msg ? 'O sistema não envia sozinho. Confira e mande pelo seu WhatsApp.' : 'O cliente recebe um link e responde no celular, uma pergunta por vez, por áudio, texto, foto ou arquivo.'}
       footer={msg
         ? <div className="flex flex-wrap gap-2">
             {wa ? <a href={wa} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-4 font-semibold text-on-brand no-underline"><MessageCircle size={15} aria-hidden="true" /> Abrir no WhatsApp</a>
               : <Button onClick={() => { void navigator.clipboard?.writeText(msg); setCopied(true) }}>{copied ? 'Copiado' : 'Copiar mensagem'}</Button>}
             <Button variant="secondary" onClick={onClose}>Fechar</Button>
           </div>
-        : <div className="flex flex-wrap items-center gap-2"><Button disabled={!picked.size || prep.isPending} onClick={() => prep.mutate()}>{prep.isPending ? 'Preparando' : 'Preparar mensagem'}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button><span className={cn('ml-auto text-[13px] font-semibold tabular-nums', full ? 'text-accent-ink' : 'text-muted')} aria-live="polite">{picked.size} de {all ? Math.min(open.length, ALL_MAX) : MAX_PER_CHAT}</span></div>}>
+        : <div className="flex flex-wrap items-center gap-2"><Button disabled={!picked.size || prep.isPending} onClick={() => prep.mutate()}>{prep.isPending ? 'Preparando' : `Preparar conversa (${picked.size})`}</Button><Button variant="secondary" onClick={onClose}>Cancelar</Button><span className="ml-auto text-[12.5px] text-muted" aria-live="polite">≈ {mins} min para o cliente</span></div>}>
       {!msg && (
         <div className="flex flex-col gap-2">
-          {open.length > MAX_PER_CHAT && (
-            <div className="flex flex-wrap gap-1.5" role="group" aria-label="Quantas perguntas">
-              <button type="button" aria-pressed={!all} onClick={() => pickAll(false)} className={cn('min-h-9 cursor-pointer rounded-full border px-3.5 text-[13px] font-semibold', !all ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:text-ink')}>Até {MAX_PER_CHAT}</button>
-              <button type="button" aria-pressed={all} onClick={() => pickAll(true)} className={cn('min-h-9 cursor-pointer rounded-full border px-3.5 text-[13px] font-semibold', all ? 'border-transparent bg-fill text-on-fill' : 'border-line text-muted hover:text-ink')}>Todas ({Math.min(open.length, ALL_MAX)})</button>
-            </div>
-          )}
-          <Paged items={open} per={mobile ? 3 : 4} render={(x) => (
-            <label className={cn('flex min-h-11 items-start gap-2.5 rounded-xl border border-line px-3 py-2', full && !picked.has(x.id) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer')}>
-              <input type="checkbox" checked={picked.has(x.id)} disabled={full && !picked.has(x.id)} onChange={() => toggle(x.id)} className="mt-0.5 size-4.5 shrink-0 accent-[var(--color-accent)]" />
+          <div className="flex items-center gap-2">
+            <p className="min-w-0 flex-1 text-[13px] text-muted"><b className="text-ink">{picked.size} de {list.length}</b> marcadas</p>
+            <button type="button" onClick={() => setPicked(new Set(allOn ? [] : list.map((x) => x.id)))} className="min-h-9 cursor-pointer px-1 text-[13px] font-semibold text-muted underline underline-offset-2 hover:text-ink">{allOn ? 'Desmarcar todas' : 'Marcar todas'}</button>
+          </div>
+          <Paged items={list} per={mobile ? 3 : 4} render={(x) => (
+            <label className="flex min-h-11 cursor-pointer items-start gap-2.5 rounded-xl border border-line px-3 py-2">
+              <input type="checkbox" checked={picked.has(x.id)} onChange={() => toggle(x.id)} className="mt-0.5 size-4.5 shrink-0 accent-[var(--color-accent)]" />
               <span className="min-w-0 text-[13.5px] leading-snug"><span className="line-clamp-2">{x.question}</span><span className="text-[11.5px] text-muted">{packLabel(x.pack, x.focus)}</span></span>
             </label>
           )} />
@@ -242,6 +241,8 @@ export function SendQuestionsButton({ clientId, name, className, compact }: { cl
 export function SendQuestionsLoader({ clientId, name, onClose }: { clientId: string; name: string; onClose: () => void }) {
   const qc = useQueryClient()
   const q = useClientQuestions(clientId)
+  // Perguntas do mês que vem sempre do jeito do cliente (tipo de negócio): se o pacote ainda não foi enviado, o motor refaz.
+  const fresh = useQuery({ queryKey: ['questions-refresh', clientId, nextMonth01()], queryFn: async () => { await refreshMonthQuestions(clientId, nextMonth01()).catch(() => null); await qc.invalidateQueries({ queryKey: questionsKey(clientId) }); return true }, retry: false, staleTime: 60_000 })
   const phone = useQuery({
     queryKey: ['client-phone', clientId],
     queryFn: async () => { const { data } = await supabase.from('clients').select('phone').eq('id', clientId).maybeSingle(); return (data?.phone as string | null) ?? null },
@@ -256,15 +257,15 @@ export function SendQuestionsLoader({ clientId, name, onClose }: { clientId: str
     },
   })
   const refresh = () => void qc.invalidateQueries({ queryKey: questionsKey(clientId) })
-  const gen = useMutation({ mutationFn: () => generateQuestions(clientId, false), onSettled: refresh })
-  if (q.isPending || phone.isPending || person.isPending) return <Dialog open onClose={onClose} title={`Perguntas para ${name}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Carregando</p></Dialog>
+  // Sem API (regra de 20/11): "Gerar" usa o motor de perguntas do sistema, de graça.
+  const gen = useMutation({ mutationFn: () => refreshMonthQuestions(clientId, nextMonth01()), onSettled: refresh })
+  if (fresh.isPending || q.isPending || phone.isPending || person.isPending) return <Dialog open onClose={onClose} title={`Perguntas para ${name}`} size="sm"><p role="status" className="py-4 text-center text-[13px] text-muted">Carregando</p></Dialog>
   const open = (q.data?.questions ?? []).filter((x) => x.status === 'pendente' || x.status === 'enviada')
   if (!open.length) {
     return (
       <Dialog open onClose={onClose} title={`Perguntas para ${name}`} size="sm"
         footer={<div className="flex gap-2"><Button disabled={gen.isPending} onClick={() => gen.mutate()}><Sparkles size={15} aria-hidden="true" /> {gen.isPending ? 'Gerando' : 'Gerar perguntas agora'}</Button><Button variant="secondary" onClick={onClose}>Fechar</Button></div>}>
-        <p className="text-[13.5px]">Nenhuma pergunta aberta para este cliente. A IA prepara até 4 toda segunda; se quiser, gere agora (≈ US$ 0,03).</p>
-        {gen.data && !gen.data.created && <p role="status" className="mt-2 text-[12.5px] text-warn-ink">{gen.data.error ?? gen.data.skipped ?? 'A IA não achou pergunta nova que valha a pena agora.'}</p>}
+        <p className="text-[13.5px]">Nenhuma pergunta aberta para este cliente. Gere as do mês que vem: saem do jeito do tipo de negócio dele, sem custo.</p>
         {gen.isError && <p role="alert" className="mt-2 text-[12.5px] text-warn-ink">{(gen.error as Error).message}</p>}
       </Dialog>
     )

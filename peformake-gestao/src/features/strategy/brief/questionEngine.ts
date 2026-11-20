@@ -9,6 +9,8 @@ export type Area = 'consultoria' | 'vendas' | 'social' | 'audiovisual'
 export interface EngineQuestion { area: Area; question: string; why: string; options: string[] }
 export interface EngineInput {
   clientId: string; name: string; segment?: string | null; description?: string | null
+  /** Tipo de negócio escolhido pela equipe no briefing: manda sobre o que o sistema deduz. */
+  family?: Family | null
   month: string // AAAA-MM-01
   products?: { nome: string; preco?: string }[]; competitors?: { nome: string }[]; noCompetitors?: boolean
   publico?: string; meta?: string
@@ -18,6 +20,15 @@ export interface EngineInput {
 
 const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim()
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
+
+/** Tipos de negócio, como a equipe escolhe no briefing (Italo, 20/11: "uma APM não é uma loja"). */
+export const FAMILY_LABEL: Record<Family, string> = {
+  terceiro_setor: 'Instituição sem fins lucrativos (associação, ONG, igreja)', educacao: 'Escola ou curso', saude: 'Saúde (clínica, consultório)',
+  beleza: 'Beleza e estética', comida: 'Comida (restaurante, delivery, doceria)', bar: 'Bar ou casa noturna', varejo: 'Loja (varejo, ótica, moda)',
+  automotivo: 'Automotivo (motos, carros, peças)', b2b: 'Vende para empresas (indústria, distribuidora)', servicos: 'Prestador de serviço',
+}
+export const FAMILIES = Object.keys(FAMILY_LABEL) as Family[]
+export const isFamily = (v: unknown): v is Family => typeof v === 'string' && v in FAMILY_LABEL
 
 /** O nicho pela descrição e pelo segmento (sem fins lucrativos e educação primeiro: são os mais diferentes). */
 export function familyOf(segment?: string | null, description?: string | null, name?: string | null): Family {
@@ -155,7 +166,7 @@ const ORDER: (keyof Bank)[] = ['oferta', 'meta', 'objecao', 'operacao', 'prova',
 
 /** As 8 perguntas do mês para este cliente. */
 export function monthQuestions(inp: EngineInput): EngineQuestion[] {
-  const fam = familyOf(inp.segment, inp.description, inp.name)
+  const fam = inp.family ?? familyOf(inp.segment, inp.description, inp.name)
   const mi = Number(inp.month.slice(5, 7))
   const mes = MESES[mi - 1] ?? ''
   const prod = (inp.products ?? []).find((p) => p.nome?.trim())?.nome?.trim() ?? 'seu carro-chefe'

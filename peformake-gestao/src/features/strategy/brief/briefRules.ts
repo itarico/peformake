@@ -24,6 +24,8 @@ export interface BriefFixed {
   concorrentes_off?: string[]
   voz?: string; proibidos?: string
   quem_aparece?: string; quem_grava?: string; capacidade?: string
+  /** Tipo de negócio (família do motor de perguntas). Sem ele, o sistema deduz pela descrição. */
+  tipo?: string
 }
 export interface BriefMonth { ofertas?: string; meta?: string; datas_travam?: string }
 

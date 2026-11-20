@@ -102,6 +102,7 @@ describe('envio e conversa', () => {
     expect(chatInvite('Will motos', 1, link, '2026-12', null, new Date('2026-11-12T11:00:00Z'))).toMatch(/^Bom dia, Will motos!.*esta pergunta rápida.*planejar dezembro/s)
     expect(packLabel(null)).toBe('Do diagnóstico')
     expect(packLabel('2026-11-23', 'proximo_mes')).toBe('Semana de 23/11 · mês que vem')
+    expect(packLabel('briefing_mes', '2026-12')).toBe('Briefing de dezembro')
   })
 })
 

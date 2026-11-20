@@ -45,6 +45,12 @@ export const monthName = (ym: string) => MONTHS[Number(ym.slice(5, 7)) - 1] ?? y
 /** Rótulo curto do pacote para a tela: "Semana de 10/11" ou "Diagnóstico". */
 export function packLabel(pack: string | null, focus?: string | null): string {
   if (!pack) return 'Do diagnóstico'
+  if (pack === 'briefing_mes') {
+    const m = /^(\d{4})-(\d{2})/.exec(focus ?? '')
+    const MES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
+    return m ? `Briefing de ${MES[Number(m[2]) - 1]}` : 'Briefing do mês'
+  }
+  if (!/^\d{4}-\d{2}-\d{2}/.test(pack)) return 'Pergunta da equipe'
   const label = `Semana de ${pack.slice(8, 10)}/${pack.slice(5, 7)}`
   return focus === 'proximo_mes' ? `${label} · mês que vem` : label
 }

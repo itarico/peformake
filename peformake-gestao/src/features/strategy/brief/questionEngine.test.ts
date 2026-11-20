@@ -37,3 +37,12 @@ describe('motor de perguntas (sem IA)', () => {
     expect(q.filter((x) => x.why.startsWith('Do diagnóstico'))).toHaveLength(2)
   })
 })
+
+describe('tipo de negócio escolhido no briefing', () => {
+  it('manda sobre o que o sistema deduz (APM não recebe pergunta de loja)', () => {
+    const qs = monthQuestions({ clientId: 'apm', name: 'APM', segment: 'Varejo', description: 'loja', month: '2026-12-01', asked: [], family: 'terceiro_setor', products: [{ nome: 'Contribuição', preco: 'R$ 50' }], competitors: [{ nome: 'x' }] })
+    const txt = qs.map((q) => q.question).join(' | ')
+    expect(txt).toMatch(/instituição/i)
+    expect(txt).not.toMatch(/estoque|combo/i)
+  })
+})

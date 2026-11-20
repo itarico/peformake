@@ -1,6 +1,6 @@
 import { Children, useState, type ReactNode } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Ban, Bookmark, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, Mic, NotebookPen, Package, Send, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
+import { Ban, Bookmark, Building2, CalendarX, Check, Compass, Gauge, IdCard, Link2, ListChecks, MessageCircle, Mic, NotebookPen, Package, Send, Star, Swords, Tag, Target, TrendingUp, UserRound, Users, Video } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
@@ -14,6 +14,7 @@ import { textPages, monthName } from '../monthlyRules'
 import { answerBrief, briefKey, briefMonthKey, briefQuestionsKey, saveBrief, saveBriefMonth, uploadAudio, uploadFile, useBrief, useBriefMonth, useBriefQuestions, useLastMonthly } from './briefApi'
 import { AnswerDialog, GuideCtx, LinksDialog, ListDialog, TextDialog } from './BriefDialogs'
 import { BriefChat } from './BriefChat'
+import { FAMILIES, FAMILY_LABEL, familyOf, isFamily, type Family } from './questionEngine'
 import {
   briefChecks, briefMissing, briefPercent, competitorFromLink, linkList, MONTH_FIELDS, netOf, short, TEXT_FIELDS,
   type BriefFixed, type BriefMonth, type Concorrente, type MonthKey, type Produto, type Referencia, type TextKey,
@@ -105,6 +106,8 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
   const [semComp, setSemComp] = useState(false)
   // Briefing em conversa com a Bete (Italo, 20/11): o jeito principal de preencher; os blocos abaixo continuam para ajustar.
   const [chat, setChat] = useState(false)
+  // Tipo de negócio (Italo, 20/11: "uma APM não é uma loja"): define as perguntas e o tom da estratégia.
+  const [tipoOpen, setTipoOpen] = useState(false)
   // Compacto (Italo, 18/11): mostra só o que falta; o que já está feito fica atrás de "Ver tudo".
   const [all, setAll] = useState(false)
   const show = (done: boolean) => all || !done
@@ -173,9 +176,12 @@ export function BriefingView({ clientId, name, month }: { clientId: string; name
         {todo.length > 0 && <Button data-completar variant="secondary" aria-label="Completar em passos" className="min-h-10 shrink-0 px-3 text-[13px]" onClick={startGuide}><ListChecks size={15} aria-hidden="true" /><span className="max-sm:hidden"> Completar</span></Button>}
         <Button data-conversar className="min-h-10 shrink-0 px-4 text-[13px]" onClick={() => setChat(true)}><MessageCircle size={15} aria-hidden="true" /> Conversar</Button>
       </div>
+      {tipoOpen && <TipoDialog current={isFamily(f.tipo) ? f.tipo : familyOf(b.data?.segment, b.data?.description, name)} busy={saveF.isPending}
+        onPick={(v) => saveF.mutate({ tipo: v }, { onSuccess: () => { setTipoOpen(false); void qc.invalidateQueries({ queryKey: briefQuestionsKey(clientId, month) }) } })} onClose={() => setTipoOpen(false)} />}
       {chat && <BriefChat clientId={clientId} month={month} name={name} onClose={() => setChat(false)} />}
 
       <Group title="O cliente">
+        <Tile icon={Building2} label="Tipo" title={isFamily(f.tipo) ? FAMILY_LABEL[f.tipo] : `Confirmar: ${FAMILY_LABEL[familyOf(b.data?.segment, b.data?.description, name)]}`} done={isFamily(f.tipo)} onOpen={() => setTipoOpen(true)} />
         {show(!!direction.trim()) && <Tile icon={Compass} label="Direção" title="Direcionamento da equipe" done={!!direction.trim()} onOpen={() => setOpen({ kind: 'direcao' })} />}
         {show(!!doc) && <Tile icon={IdCard} label={doc.length === 11 ? 'CPF' : 'CNPJ'} title={doc ? `${fmtDoc(doc)}${b.data?.legalName ? ` · ${b.data.legalName}` : ''}` : 'CPF ou CNPJ'} done={!!doc} onOpen={() => setOpen({ kind: 'documento' })} />}
         {show(prods.some((p) => p.preco)) && <Tile icon={Package} label="Produtos" title="Produtos e serviços" done={prods.some((p) => p.preco)} count={prods.length} onOpen={() => setOpen({ kind: 'produtos' })} />}
@@ -289,6 +295,20 @@ function DocumentDialog({ clientId, initial, onClose, onDone }: { clientId: stri
         </span>
         {found && <p className="rounded-xl bg-ok-soft px-3 py-2 text-[12.5px] text-ok-ink"><b>{found.legalName}</b>{found.activity ? ` · ${found.activity}` : ''}</p>}
         {(look.isError || save.isError) && <p role="alert" className="text-[12.5px] text-warn-ink">{((look.error ?? save.error) as Error).message}</p>}
+      </div>
+    </Dialog>
+  )
+}
+
+/** Escolher o tipo de negócio: um toque. As perguntas do mês ainda não enviadas são refeitas para o tipo novo. */
+function TipoDialog({ current, busy, onPick, onClose }: { current: Family; busy: boolean; onPick: (v: Family) => void; onClose: () => void }) {
+  return (
+    <Dialog open onClose={onClose} title="Tipo de negócio" description="Define as perguntas do mês e o jeito da estratégia. Uma associação não é uma loja." size="md">
+      <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+        {FAMILIES.map((v) => (
+          <button key={v} type="button" disabled={busy} onClick={() => onPick(v)} aria-pressed={v === current}
+            className={cn('min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-[13.5px] leading-snug disabled:opacity-60', v === current ? 'border-ink bg-raised font-semibold' : 'border-line hover:border-ink')}>{FAMILY_LABEL[v]}</button>
+        ))}
       </div>
     </Dialog>
   )
