@@ -35,7 +35,8 @@ um "S-novo".
    6. O que é da pessoa e não se copia? (carisma, lugar, história, autoridade)
    7. O que é mecânica e se copia? (ordem dos blocos, tipo de gancho, ritmo, recurso visual)
 5. **Escrever a ficha** com o modelo abaixo e salvar em `acervo-audiovisual/virais/`. Acrescentar uma linha no
-   `acervo-audiovisual/virais/README.md`.
+   `acervo-audiovisual/virais/README.md` e rodar `python acervo-audiovisual/ferramentas/mapa_estruturas.py` (refaz o
+   mapa, o compacto da rotina e o resumo das funções de IA).
 6. **Commit e push** (regra do repo: tudo salvo no Git).
 
 ## Modelo da ficha
@@ -86,8 +87,9 @@ Material baixado fica na pasta de rascunho, nunca no Git.
 
 ## Modo 2: usar uma estrutura que já está na biblioteca
 
-1. Ler `acervo-audiovisual/virais/README.md` e escolher pelo objetivo (alcance, seguidores, lead, venda) e pelo
-   que o cliente consegue gravar.
+1. Ler `acervo-audiovisual/MAPA-ESTRUTURAS.md` (código S por objetivo, os mais fortes, esqueleto) e escolher pelo
+   objetivo (alcance, seguidores, lead, venda) e pelo que o cliente consegue gravar. Lista completa:
+   `acervo-audiovisual/virais/README.md`.
 2. Abrir a ficha e seguir o **esqueleto** e o **molde de fala**, trocando tudo pelo que é do cliente (MDD: de
    dentro, com caso, número e palavra reais do cliente). Nada de dado inventado.
 3. No motor de roteiro, gravar `data.estrutura` com o código S da ficha e citar a ficha como referência.

@@ -1,5 +1,6 @@
 // Textos fixos do plano de execução do mês. Mudar aqui muda o cache do prompt (a primeira chamada depois fica mais cara).
 // O diagnóstico (consult-diagnosis) é o passado e a situação; este plano é a EXECUÇÃO do mês: o quê, como e quando, pronto para produzir.
+import { ESTRUTURAS_PROVADAS } from './estruturasProvadas.ts'
 
 export const AREAS = ['trafego', 'social', 'design', 'audiovisual', 'vendas', 'atendimento'] as const
 export const OBJETIVOS = ['vender', 'autoridade', 'posicionamento', 'relacionamento', 'educar'] as const
@@ -124,6 +125,7 @@ export const PIECES_SCHEMA = obj({
     direcao_arte: obj({ fundo: s, tipografia: s, elementos: s, foto_ou_video: s }),
     slides: arr({ titulo: s, texto: s }),
     texto_na_tela: sa,
+    estrutura: s,
     roteiro: obj({ duracao: s, cenas: arr({ imagem: s, fala: s, texto_tela: s }), fechamento: s }),
     legenda: s, cta: s, hashtags: sa,
     metrica: obj({ nome: s, meta: s }),
@@ -242,7 +244,7 @@ Para cada peça (todos os campos; o que não se aplica fica "" ou []):
 - gancho: a primeira frase/tela que para a rolagem.
 - direcao_arte: fundo, tipografia, elementos (selo da série, logo, grafismo do guia) e foto_ou_video (o que a imagem mostra). Coerente com o posicionamento visual.
 - carrossel: slides com titulo e texto de cada tela (5 a 8 telas; a 1ª é o gancho, a última é a chamada). post: 1 slide com o texto da arte.
-- reels/vídeo: roteiro com duração, cenas (imagem, fala, texto_tela) e fechamento; texto_na_tela com os textos que aparecem. Diga quem fala.
+- reels/vídeo: estrutura = o código S da <acervo> que o roteiro segue (ex.: "S113"; varie no mês; nenhuma serve: ""); roteiro com duração, cenas (imagem, fala, texto_tela) que seguem os passos dessa estrutura com o conteúdo deste cliente, e fechamento; texto_na_tela com os textos que aparecem. Diga quem fala. Copie só a mecânica da estrutura, nunca a fala, a marca ou a imagem do exemplo. Nas outras peças, estrutura = "".
 - story: slides = as telas, com o texto e o adesivo (enquete, caixinha, link).
 - legenda pronta (com quebra de linha), cta, hashtags (3 a 6).
 - metrica: o número que mostra que a peça funcionou e a meta.
@@ -255,7 +257,11 @@ Para cada peça (todos os campos; o que não se aplica fica "" ou []):
   direcao: 1 linha de como o vídeo deve parecer (câmera, luz, ritmo).
   filmagem: enquadramento, luz, locacao, quem_aparece, levar (o que levar/separar no dia) e takes_extras (cenas a mais para corte e anúncio).
   engajamento: pergunta_comentario (o que pedir nos comentários) e audio (áudio em alta da <coleta> que combina, ou "som ambiente").
-- observacoes_internas: dúvidas, autorizações, o que confirmar (nunca dentro da copy).`
+- observacoes_internas: dúvidas, autorizações, o que confirmar (nunca dentro da copy).
+
+<acervo> (estruturas de vídeo com exemplo real no acervo da Peformake; força = vezes a mediana do perfil de origem, não garante aqui)
+${ESTRUTURAS_PROVADAS}
+</acervo>`
 
 export const TRAFFIC_TASK = (mes: string, semanas: string) => `Monte a ESTRATÉGIA DE TRÁFEGO PAGO de ${mes} (${semanas}).
 - resumo: a lógica do mês em 2 frases, a partir dos números dos anúncios. verba_mes: sugestão de verba do mês (use a verba atual dos dados como base; mudança sempre como sugestão com o porquê).

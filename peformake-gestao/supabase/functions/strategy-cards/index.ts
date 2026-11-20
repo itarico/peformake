@@ -11,6 +11,7 @@
 // refazer = só aquele card. Cada chamada fica em ai_usage_log; o teto do mês (ai_settings) é conferido antes.
 import Anthropic from 'npm:@anthropic-ai/sdk@1.8.0'
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2.45.4'
+import { ESTRUTURAS_PROVADAS } from './estruturasProvadas.ts'
 
 // ───────── Textos fixos (mudar aqui muda o cache do prompt: a primeira chamada depois fica mais cara) ─────────
 
@@ -90,21 +91,28 @@ const CORE_TASK = (mes: string, nAv: number, nSocial: number, traffic: boolean) 
 
 // ───────── Audiovisual ─────────
 const AV_CARD = obj({
-  ...COMMON, formato: s, ganchos: sa, roteiro: arr({ cena: s, fala: s }), outras_ideias: sa,
+  ...COMMON, formato: s, estrutura: s, arco: sa, ganchos: sa, roteiro: arr({ cena: s, fala: s }), outras_ideias: sa,
   referencia: obj({ link: s, porque: s }), cruzamento: s, filmar: s,
 })
 const AV_SCHEMA = obj({ videos: { type: 'array', items: AV_CARD } })
+const ACERVO = `<acervo> (estruturas com exemplo real no acervo da Peformake; força = vezes a mediana do perfil de origem, não garante aqui)
+${ESTRUTURAS_PROVADAS}
+</acervo>`
 const AV_TASK = (pautas: string) => `Escreva os VÍDEOS do audiovisual (Ellcazo) destas pautas, um card por pauta, na mesma ordem:
 ${pautas}
 Cada vídeo:
 - titulo curto; formato (o da pauta).
+- estrutura: o código S da <acervo> abaixo que melhor serve à pauta (ex.: "S113"); no máximo 2 vídeos com o mesmo código. Nenhuma serve: o código S mais próximo do catálogo ou "".
+- arco: os passos dessa estrutura já com o conteúdo DESTE cliente (4 a 7 itens curtos). O roteiro segue o arco. Copie só a mecânica, nunca a fala, a marca ou a imagem do exemplo.
 - ganchos: EXATAMENTE 3 ganchos diferentes para os 2 primeiros segundos (a fala ou o texto na tela).
 - roteiro: completo, cena a cena (4 a 8 cenas): "cena" = o que aparece (plano, ação, local); "fala" = TODA a fala ou o texto na tela daquela cena. Use o 1º gancho.
 - outras_ideias: EXATAMENTE 3 ideias de OUTROS assuntos usando o mesmo conteúdo gravado (ex.: o mesmo bastidor vira um "mito x verdade").
 - referencia: o link (do briefing, da coleta ou da pesquisa) e por que; "" se nenhum.
 - cruzamento: 1 frase com o que já deu certo (perfil, referência ou concorrente) que sustenta esta ideia.
 - filmar: onde, com quem (respeite "quem aparece") e o que levar, em 1 a 2 frases.
-Sem tráfego no roteiro.`
+Sem tráfego no roteiro.
+
+${ACERVO}`
 
 // ───────── Social ─────────
 const SOCIAL_CARD = obj({
@@ -510,7 +518,7 @@ async function redo(db: SupabaseClient, cardId: string, pedido: string): Promise
   const { ctx } = await contextOf(db, cur.client_id, cur.month, ((board as Row | null)?.missing ?? []) as string[])
   const now = { titulo: cur.title, funil: cur.funnel ?? '', serve: cur.serves ?? '', meta: cur.goal ?? '', inspirado: cur.inspired ?? { link: '', numero: '' }, suposicao: cur.assumed ?? '', ...cur.data }
   const ai = new Anthropic()
-  const out = await write(db, ai, cur.client_id, ctx, '', `refazer:${cur.tab}`, pick.model, `<card>\n${JSON.stringify(now)}\n</card>\n\n${REDO_TASK(pedido)}`, pick.schema as Record<string, unknown>, 'low', pick.max)
+  const out = await write(db, ai, cur.client_id, ctx, '', `refazer:${cur.tab}`, pick.model, `<card>\n${JSON.stringify(now)}\n</card>\n\n${REDO_TASK(pedido)}${cur.tab === 'audiovisual' ? `\nNo vídeo: estrutura = código S da <acervo> que melhor serve; arco = os passos com o conteúdo deste cliente; o roteiro segue o arco.\n\n${ACERVO}` : ''}`, pick.schema as Record<string, unknown>, 'low', pick.max)
   const next = card(cur.tab, cur.kind, cur.position, out)
   const { data: saved, error } = await db.from('strategy_cards').update({ ...next, status: 'proposta', regen_count: Number(cur.regen_count ?? 0) + 1, updated_at: new Date().toISOString() }).eq('id', cardId).select('*').maybeSingle()
   if (error) throw new Error('Não foi possível salvar o card novo.')

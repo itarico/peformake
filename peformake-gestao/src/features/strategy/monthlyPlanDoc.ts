@@ -2,6 +2,8 @@
 // Separado da apresentação do cliente (monthlyDeck). Vem de monthly_strategies.doc.plano (função monthly-strategy).
 // Identidade Peformake: ciano #1FC8DB, petróleo #056F84, azul-escuro #0B3C44 e branco. Tudo é escapado; só links http(s) viram link.
 
+import { ESTRUTURAS } from './brief/estruturas'
+
 type Any = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export interface PlanInput { name: string; month: string; doc: Any | null | undefined }
@@ -78,7 +80,9 @@ function pieceCard(p: Any): string {
   const art = c.direcao_arte ? `<div class="kv"><b>Direção de arte</b><span>Fundo: ${esc(c.direcao_arte.fundo)} · Tipografia: ${esc(c.direcao_arte.tipografia)} · Elementos: ${esc(c.direcao_arte.elementos)} · Imagem: ${esc(c.direcao_arte.foto_ou_video)}</span></div>` : ''
   const slides = arr(c.slides).length ? `<ol class="slides">${arr(c.slides).map((s) => `<li><b>${esc(s.titulo)}</b>${s.texto ? ` ${txt(s.texto)}` : ''}</li>`).join('')}</ol>` : ''
   const cenas = arr(c.roteiro?.cenas)
-  const roteiro = cenas.length ? `<div class="kv"><b>Roteiro${c.roteiro?.duracao ? ` (${esc(c.roteiro.duracao)})` : ''}</b></div>${table(['#', 'Imagem', 'Fala', 'Texto na tela'], cenas.map((s, i) => [String(i + 1), txt(s.imagem), txt(s.fala), txt(s.texto_tela)]), 'tight')}${c.roteiro?.fechamento ? `<p><b>Fechamento:</b> ${txt(c.roteiro.fechamento)}</p>` : ''}` : ''
+  const est = String(c.estrutura ?? '').toUpperCase().match(/^S\d{1,3}/)?.[0]
+  const estLabel = est ? ` · ${esc(ESTRUTURAS[est] ? `${est} ${ESTRUTURAS[est]}` : est)}` : ''
+  const roteiro = cenas.length ? `<div class="kv"><b>Roteiro${c.roteiro?.duracao ? ` (${esc(c.roteiro.duracao)})` : ''}${estLabel}</b></div>${table(['#', 'Imagem', 'Fala', 'Texto na tela'], cenas.map((s, i) => [String(i + 1), txt(s.imagem), txt(s.fala), txt(s.texto_tela)]), 'tight')}${c.roteiro?.fechamento ? `<p><b>Fechamento:</b> ${txt(c.roteiro.fechamento)}</p>` : ''}` : ''
   const onScreen = arr(c.texto_na_tela).length ? `<div class="kv"><b>Texto na tela</b><span>${arr(c.texto_na_tela).map(esc).join(' · ')}</span></div>` : ''
   const caption = c.legenda ? `<div class="caption"><b>Legenda</b><p>${txt(c.legenda)}</p>${arr(c.hashtags).length ? `<p class="muted">${arr(c.hashtags).map((h) => esc(String(h).startsWith('#') ? h : `#${h}`)).join(' ')}</p>` : ''}</div>` : ''
   const ads = arr(c.anuncio).length ? `<div class="kv"><b>Versões para anúncio (testar)</b></div>${table(['Gancho', 'Texto principal', 'Título'], arr(c.anuncio).map((a) => [txt(a.gancho), txt(a.texto_principal), txt(a.titulo)]), 'tight')}` : ''

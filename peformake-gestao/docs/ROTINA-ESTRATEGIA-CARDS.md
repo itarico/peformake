@@ -19,7 +19,7 @@ Ordem: refazer (rápido) → gerar → pdf. No máximo 3 quadros "gerar" por rod
    - Não repetir: títulos de `strategy_cards` de meses anteriores do cliente.
    - O contrato (`client_services`) é só referência: proponha o que faz sentido; a equipe escolhe o que vai para o PDF.
 3. Pesquise rápido (Firecrawl, até 5 buscas): concorrentes agora, posts/vídeos de sucesso do nicho (com link e número), datas do mês.
-4. Audiovisual: leia `select public.agent_instructions('roteiro-master');` e use **por módulo** (NÚCLEO + só o módulo da etapa: M0 dossiê, M5 roteirista, M6 diretor, M7 editor, M9 banca); o dossiê do mês fica em `client_scan` (`source`='dossie', `query`='motor-roteiro', upsert).
+4. Audiovisual: leia `select public.agent_instructions('roteiro-master');` e use **por módulo** (NÚCLEO + só o módulo da etapa: M0 dossiê, M1 mix, M2 curador (comece pelo acervo `acervo-audiovisual/MAPA-ESTRUTURAS-COMPACTO.md` e abra a ficha escolhida em `acervo-audiovisual/virais/`), M5 roteirista, M6 diretor, M7 editor, M9 banca); o dossiê do mês fica em `client_scan` (`source`='dossie', `query`='motor-roteiro', upsert).
 5. Escreva os cards. Método e qualidade: skill `.claude/skills/peformake-estudo-mes/` (estratégia → audiovisual → social → tráfego → venda).
    Tudo curto: card é decisão ou peça pronta, nunca parágrafo longo. O que veio do que **faltou no briefing** (`faltou_no_briefing`)
    vai em `suposicao` (1 linha); sem suposição, `""`.

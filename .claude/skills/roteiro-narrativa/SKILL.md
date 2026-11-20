@@ -8,7 +8,9 @@ description: Escrever ou montar o ROTEIRO de um vídeo (do zero ou a partir do b
 Base: `video-tools/NARRATIVA.md` (princípios — leia junto) + estudos em `video-tools/estilos/` (Giullya, YouTube
 documental, Kallaway, Naomie, Maestros) + **`video-tools/estilos/estudo_narrativas.md`** (construção narrativa de
 ~113 referências: 12 tipos de gancho G1–G12 com fórmula e exemplos por cliente, modelos M9–M18, retenção, CTAs,
-locução, ficha de escopo em 13 itens, 12 erros). **Nada é regra fixa**: escolha e mescle pela intenção, com um porquê.
+locução, ficha de escopo em 13 itens, 12 erros). **Estruturas com exemplo real:** `acervo-audiovisual/MAPA-ESTRUTURAS.md` (código S por objetivo, os mais fortes e o
+esqueleto) e as fichas em `acervo-audiovisual/virais/` (molde de fala e como aplicar); use a mecânica, nunca a fala.
+**Nada é regra fixa**: escolha e mescle pela intenção, com um porquê.
 Modelos prontos para preencher: `MODELOS.md` (M1–M24; M25–M38 em `IDEIAS_MDD.md`). **Caixa de ideias do
 Método De Dentro do Italo:** `IDEIAS_MDD.md` (D1–D78: achar a tese de dentro, garimpo de histórias, ordem de
 contar, desfecho intencional, gerador de premissas de humor, teste da boca, cadeia de retenção, vídeo longo) —

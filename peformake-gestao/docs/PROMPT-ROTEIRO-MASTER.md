@@ -130,14 +130,17 @@ conhecimento da banca.
 6. **Estrutura (ESTUDO §3c, S1–S117):** leia as já usadas
    (`select month, title, data->>'estrutura' from strategy_cards where client_id='<id>' and tab='audiovisual' and month >= '<AAAA-MM-01>'::date - interval '3 months' and data ? 'estrutura';`).
    ≥ 2 vídeos com estrutura nunca usada pelo cliente; nenhuma repetida no mês (salvo série); ≥ 1 de um grupo (A–M)
-   inédito para ele. Grave `estrutura` em todo card.
+   inédito para ele. Grave `estrutura` em todo card. Entre as que servem ao objetivo da vaga, prefira as que têm exemplo
+   real no acervo (`acervo-audiovisual/MAPA-ESTRUTURAS-COMPACTO.md`, tabela "Por objetivo" em `MAPA-ESTRUTURAS.md`).
 7. **Do momento:** trend aprovada no radar → módulo MT; assunto grande (lançamento, final, evento) → módulo MH.
 **Saída:** Repertório + Eixo, personas, tese, tabela do mix (vaga · papel · objetivo · fase · persona · CEP · formato ·
 linguagem · estrutura · momento · por que existe · desvio da orientação e porquê, se houver).
 
 ## M2 · CURADOR DE REFERÊNCIAS · Estudo: §3b (anúncio), §12, §10.5
-Por vaga, 2–3 candidatas (Recife/PE, Brasil, mundo; outras redes; Biblioteca de Anúncios, TikTok Creative Center, acervo
-`video-tools/estilos/`, `video-tools/estudos-perfis/`). Nota 0–5: aderência (peso 2), estrutura replicável, prova
+Por vaga, 2–3 candidatas. **Comece pelo acervo de virais** (`acervo-audiovisual/MAPA-ESTRUTURAS-COMPACTO.md`: código S,
+força no perfil de origem e esqueleto; a ficha completa em `acervo-audiovisual/virais/` já traz a engenharia reversa,
+o molde de fala e o que não copiar). Depois: Recife/PE, Brasil, mundo; outras redes; Biblioteca de Anúncios, TikTok
+Creative Center, `video-tools/estilos/`, `video-tools/estudos-perfis/`, `acervo-audiovisual/perfis/`. Nota 0–5: aderência (peso 2), estrutura replicável, prova
 (sem número ≤ 2), viabilidade, originalidade. Nota = (2×aderência + resto) ÷ 3; **use ≥ 7 com aderência ≥ 3**. Global
 explica por que funciona aqui. ≥ 1 de fora do nicho no mês. Perfil do próprio cliente não é referência; nunca a mesma em
 dois vídeos. **Engenharia reversa:** gancho · batidas com tempo · prova · oferta · CTA · linguagem · mecanismo.
@@ -157,7 +160,10 @@ dita antes (Voss) → oferta (Hormozi; escassez só verdadeira) → um CTA (suav
 ## M5 · ROTEIRISTA · Estudo: §2, §4, §9, §10.1, §10.2, §10.6, §13, §21 (entrevista), §27 (humor), §28, §29
 Não use roteiros anteriores (de nenhum cliente) como modelo: cada roteiro nasce do dossiê, da persona e da referência deste vídeo.
 1. Logline e premissa; **frase-alma** (depois de ver, [persona] deve SENTIR ___ e ACREDITAR que ___); intenção.
-2. Estrutura pela duração (beat sheet, Story Circle, ABT, Kishōtenketsu). Cliente herói, marca guia.
+2. Estrutura pela duração (beat sheet, Story Circle, ABT, Kishōtenketsu). Cliente herói, marca guia. Referência do
+   acervo escolhida no M2: siga o **esqueleto** e o **molde de fala** da ficha com o conteúdo real do cliente (só a
+   mecânica; nunca a fala, a marca ou a imagem): `estrutura` = o código (ex.: "S113"), `arco` = os passos adaptados ao
+   cliente, `inspirado` = link e número do vídeo original da ficha.
 3. **Fala contínua palavra por palavra**, 1ª pessoa, **um bloco por momento do arco** (nunca uma frase por plano).
    Cada frase tem função e empurra a próxima. Quem aparece se apresenta depois do gancho (apresentar, objeção, prova).
    Uma virada a cada 15–20 s. Fecho responde ao gancho; imagem final espelha a de abertura. Velocidade de referência:

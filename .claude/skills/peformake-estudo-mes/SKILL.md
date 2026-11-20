@@ -85,6 +85,7 @@ Skills: `anthropic-skills:performake-content-agent`, `anthropic-skills:mdd`.
 
 ### 3.2 Audiovisual (pasta `audiovisual`, identidade Ellcazo: verde-limão/branco, preto só nos detalhes, nunca fundo preto)
 Skills: `anthropic-skills:redator-audiovisual-agencia`, `anthropic-skills:mdd`. Repertório obrigatório: **estudo de vídeos do Italo** (no repositório desde 13/11/2026):
+  - **acervo de virais (primeiro):** `acervo-audiovisual/MAPA-ESTRUTURAS.md` (código S por objetivo, os mais fortes, esqueleto) e as fichas em `acervo-audiovisual/virais/` (engenharia reversa, molde de fala, o que não copiar); estudos de perfil em `acervo-audiovisual/perfis/`. Cada vídeo cita o código S e a ficha que usou;
   - `video-tools/estilos/catalogo_estilos.md` (estilos E1–E40: quando usar, estrutura, parâmetros) e `receitas_estilos.md`;
   - estudos por perfil em `video-tools/estilos/estudo_*.md` (@rabbits, @omarcosvianna, @earn.edits, @dacostamotion, AslaniEdits, @giubeckers, mavic, maestros IA, narrativas, YouTube), `licoes_profissionais.md`, `tecnicas_vistas.md`, `sound_design.md`;
   - `video-tools/NARRATIVA.md` (princípios de narrativa da Ellcazo/Peformake) e `video-tools/MANUAL_EDICAO.md`;
