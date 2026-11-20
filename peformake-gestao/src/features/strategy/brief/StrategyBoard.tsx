@@ -37,7 +37,7 @@ const tabClass = (active: boolean) => cn(
 )
 
 /** Partes da estratégia: no celular, 3 + "Mais" (o padrão do sistema); no computador, todas. */
-export function BoardTabs({ value, onChange, tabs = BOARD_TABS }: { value: BoardTab; onChange: (t: BoardTab) => void; tabs?: readonly TabDef[] }) {
+export function BoardTabs({ value, onChange, tabs = BOARD_TABS, counts }: { value: BoardTab; onChange: (t: BoardTab) => void; tabs?: readonly TabDef[]; counts?: Partial<Record<BoardTab, number>> }) {
   const [open, setOpen] = useState(false)
   const box = useRef<HTMLDivElement>(null)
   const idx = tabs.findIndex((t) => t.id === value)
@@ -49,7 +49,9 @@ export function BoardTabs({ value, onChange, tabs = BOARD_TABS }: { value: Board
     document.addEventListener('mousedown', close); document.addEventListener('keydown', close)
     return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', close) }
   }, [open])
-  const label = (t: TabDef) => ('short' in t ? <><span className="md:hidden">{t.short}</span><span className="max-md:hidden">{t.label}</span></> : t.label)
+  const n = (t: TabDef) => counts?.[t.id]
+  const badge = (t: TabDef) => n(t) === undefined ? null : <span aria-label={`${n(t)} ${n(t) === 1 ? 'item' : 'itens'}`} className={cn('rounded-full px-1.5 text-[11px] font-semibold tabular-nums', n(t) ? 'bg-raised text-ink' : 'text-muted/70')}>{n(t)}</span>
+  const label = (t: TabDef) => <>{'short' in t ? <><span className="md:hidden">{t.short}</span><span className="max-md:hidden">{t.label}</span></> : t.label}{badge(t)}</>
   return (
     <div ref={box} className="relative flex border-b border-line">
       <div role="tablist" aria-label="Partes da estratégia" className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -60,7 +62,7 @@ export function BoardTabs({ value, onChange, tabs = BOARD_TABS }: { value: Board
       {rest.length > 0 && <button type="button" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)} className={cn(tabClass(false), 'md:hidden')}>Mais <ChevronDown size={15} aria-hidden="true" /></button>}
       {open && (
         <div role="menu" className="absolute right-0 top-full z-30 mt-1 flex min-w-52 flex-col rounded-2xl border border-line bg-surface p-1 shadow-lg md:hidden">
-          {rest.map((t) => <button key={t.id} type="button" role="menuitem" onClick={() => { onChange(t.id); setOpen(false) }} className="flex min-h-11 cursor-pointer items-center gap-1.5 rounded-xl px-3 text-left text-[14px] font-medium hover:bg-raised">{t.label}</button>)}
+          {rest.map((t) => <button key={t.id} type="button" role="menuitem" onClick={() => { onChange(t.id); setOpen(false) }} className="flex min-h-11 cursor-pointer items-center gap-1.5 rounded-xl px-3 text-left text-[14px] font-medium hover:bg-raised">{t.label}{badge(t)}</button>)}
         </div>
       )}
     </div>
@@ -84,8 +86,10 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
   const b = board.data ?? null
   const busy = boardState(b).busy
   const ready = !!b && ['pronto', 'aprovado'].includes(b.status)
-  // Só as partes que têm conteúdo (mais o Briefing); sem estratégia, só o Briefing.
-  const tabs = BOARD_TABS.filter((t) => t.id === 'briefing' || (ready && b && liveCards(b, t.id as CardTab).length > 0))
+  // Com estratégia pronta, TODAS as partes aparecem (Italo, 19/11: "mostrar todas as estratégias"), com a contagem;
+  // parte vazia mostra o que fazer (pedir ao agente). Sem estratégia, só o Briefing.
+  const tabs = BOARD_TABS.filter((t) => t.id === 'briefing' || (ready && !!b))
+  const counts = ready && b ? Object.fromEntries(BOARD_TABS.filter((t) => t.id !== 'briefing').map((t) => [t.id, liveCards(b, t.id as CardTab).length])) as Partial<Record<BoardTab, number>> : undefined
   const asked = params.get('parte')
   const tab = (tabs.some((t) => t.id === asked) ? asked : tabs[0]?.id ?? 'briefing') as BoardTab
   const [gen, setGen] = useState(false)
@@ -131,22 +135,38 @@ export function StrategyBoard({ clientId, name }: { clientId: string; name: stri
         {ready && (
           <div data-acoes-topo className="flex w-full flex-wrap gap-2">
             <Button className="min-h-10 flex-1 px-4 text-[13px] sm:flex-none" onClick={() => setPdfOpen(true)}><FileDown size={14} aria-hidden="true" /> Baixar PDF</Button>
-            <Button variant="secondary" aria-label="Enviar ao cliente" className="min-h-10 flex-1 px-3 text-[13px] sm:flex-none" onClick={send}><Send size={14} aria-hidden="true" /> Enviar<span className="max-sm:hidden"> ao cliente</span></Button>
+            <Button variant="secondary" aria-label="Enviar ao cliente" className="min-h-10 flex-1 px-3 text-[13px] sm:flex-none" onClick={send}><Send size={14} aria-hidden="true" /> <span>Enviar<span className="max-sm:hidden"> ao cliente</span></span></Button>
             <Button variant="secondary" aria-label="Gerar de novo" className="min-h-10 px-3 text-[13px]" onClick={() => setGen(true)}><RefreshCw size={14} aria-hidden="true" /> <span className="max-sm:hidden">Gerar de novo</span></Button>
           </div>
         )}
       </div>
       {note && <p role="status" className="rounded-xl bg-accent-soft px-3 py-2 text-[13px] font-medium text-accent-ink">{note}</p>}
       <BoardStatus board={b} />
-      {tabs.length > 1 && <BoardTabs value={tab} tabs={tabs} onChange={(t) => go({ parte: t })} />}
+      {tabs.length > 1 && <BoardTabs value={tab} tabs={tabs} counts={counts} onChange={(t) => go({ parte: t })} />}
       {tab === 'briefing' && <BriefingView clientId={clientId} name={name} month={month} />}
-      {tab !== 'briefing' && b && ready && <StrategyReader board={b} tab={tab as CardTab} name={name} onChanged={refresh} />}
+      {tab !== 'briefing' && b && ready && (liveCards(b, tab as CardTab).length > 0
+        ? <StrategyReader board={b} tab={tab as CardTab} name={name} onChanged={refresh} />
+        : <EmptyPart label={BOARD_TABS.find((t) => t.id === tab)?.label ?? ''} asked={(b.more_requests ?? []).some((r) => r.aba === tab)} canAsk={area} onAsk={() => setMore(true)} />)}
       {tab === 'briefing' && busy && <p className="rounded-2xl border border-dashed border-line px-3 py-6 text-center text-[13px] text-muted">O agente está escrevendo. Pode sair: fica salvo e aparece aqui.</p>}
       {gen && <GenerateDialog clientId={clientId} month={month} missing={brief.missing} percent={brief.percent} regenerate={ready} onClose={() => setGen(false)} onBriefing={() => { setGen(false); go({ parte: 'briefing' }) }} />}
       {more && b && <MoreDialog boardId={b.id} tab={tab as CardTab} count={liveCards(b, tab as CardTab).length} onClose={() => setMore(false)} onDone={() => { setMore(false); refresh() }} />}
       {params.get('revisar') && b && ready && <ReviewMode board={b} name={name} tab={params.get('revisar') === 'todos' ? null : params.get('revisar')} onClose={() => go({ revisar: null })} onChanged={refresh} />}
       {paste && <PasteDialog clientId={clientId} month={month} onClose={() => setPaste(false)} onDone={() => { refresh(); say('Importado. Confira nas partes.'); go({ parte: null }) }} />}
       {pdfOpen && b && <PdfDialog board={b} clientId={clientId} name={name} onClose={() => setPdfOpen(false)} onDone={refresh} />}
+    </div>
+  )
+}
+
+/** Parte sem nada neste mês: diz o porquê e oferece 1 ação (pedir ao agente), sem atrapalhar. */
+function EmptyPart({ label, asked, canAsk, onAsk }: { label: string; asked: boolean; canAsk: boolean; onAsk: () => void }) {
+  return (
+    <div data-parte-vazia className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-line px-4 py-8 text-center">
+      <p className="text-[14px] font-semibold">{label}: nada neste mês ainda</p>
+      {asked
+        ? <p role="status" className="text-[13px] text-muted">Pedido feito ao agente. Fica pronto em até 1 hora e aparece aqui.</p>
+        : canAsk
+          ? <><p className="text-[13px] text-muted">O agente escreve esta parte sem mexer no resto da estratégia.</p><Button className="min-h-10 px-4 text-[13px]" onClick={onAsk}><Sparkles size={14} aria-hidden="true" /> Pedir ao agente</Button></>
+          : <p className="text-[13px] text-muted">Sai junto quando a estratégia for gerada de novo.</p>}
     </div>
   )
 }

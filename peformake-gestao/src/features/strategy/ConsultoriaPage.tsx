@@ -281,7 +281,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
 
   const header = (
     <header data-cliente-cabecalho className="flex items-center gap-2">
-      <button type="button" onClick={ver ? () => go({ ver: null, secao: null, parte: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Planejamento' : 'Consultoria'}</span></button>
+      <button type="button" onClick={ver ? () => go({ ver: null, secao: null, parte: null }) : onBack} aria-label={ver ? 'Voltar para o cliente' : 'Voltar para a lista'} className="inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full pr-1 text-[13px] font-semibold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /><span className="max-sm:hidden">{ver ? 'Voltar' : 'Consultoria'}</span></button>
       <span className="flex min-w-0 flex-1 items-center gap-2">
         <ClientAvatar name={name} url={logo} size="sm" />
         <span className="min-w-0">
@@ -413,15 +413,18 @@ function DiagCard({ clientId, input, status, stage, document, error, loading, re
   const locked = !!next && next > new Date()
   const nextLabel = next ? next.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''
   const missing = !ready
-    ? (loading ? null : !hasDoc ? 'Ainda não tem. O agente do Claude faz em até 1 hora.'
+    // A situação vem primeiro (na fila / fazendo), mesmo sem documento: antes dizia "Ainda não tem" + Criar com o selo "Na fila".
+    ? (loading ? null
       : status === 'gerando' ? (agent ? 'O agente está fazendo. Pode sair: fica salvo.' : `A IA está ${chip.sub ?? 'trabalhando'}. Leva uns 10 minutos.`)
-      : status === 'falta_dados' ? 'Ainda não tem. O agente do Claude faz em até 1 hora.'
-        : status === 'na_fila' ? (agent ? 'Na fila do agente. Fica pronto em até 1 hora.' : 'Na fila.')
+        : status === 'na_fila' ? (agent ? 'Na fila do agente. Fica pronto em até 1 hora.' : 'Na fila. Toque em Criar para começar agora.')
           : status === 'limite' ? 'Limite do mês com IA atingido (Configurações → Automações).'
-            : status === 'erro' ? `Não deu certo: ${error ?? 'erro desconhecido'}` : null)
+            : status === 'erro' ? `Não deu certo: ${error ?? 'erro desconhecido'}`
+              : status === 'falta_dados' ? 'Falta o CNPJ no cadastro do cliente para começar.'
+                : 'Ainda não tem. Toque em Criar e o agente faz em até 1 hora.')
     : p && !approved ? (() => { const m = [p.total - p.reviewed > 0 ? `${p.total - p.reviewed} slides` : null, p.toFill ? `${p.toFill} ${p.toFill === 1 ? 'dado' : 'dados'} para preencher` : null, info!.ideas > 0 ? `${info!.ideas} ideias do plano` : null].filter(Boolean); return m.length ? `Falta: ${m.join(' · ')}` : null })() : null
   let primary: CardPrimary | null = null
-  if (!hasDoc || status === 'falta_dados' || status === 'erro' || status === 'limite' || (status === 'na_fila' && !agent)) primary = { label: 'Criar', icon: <Sparkles size={15} aria-hidden="true" />, onClick: onGenerate, disabled: busy }
+  const working = status === 'gerando' || (status === 'na_fila' && agent)
+  if ((!hasDoc && !working) || status === 'falta_dados' || status === 'erro' || status === 'limite' || (status === 'na_fila' && !agent)) primary = { label: 'Criar', icon: <Sparkles size={15} aria-hidden="true" />, onClick: onGenerate, disabled: busy }
   else if (ready && !approved) primary = { label: 'Revisar', icon: <Presentation size={15} aria-hidden="true" />, href: diagReviewPath(clientId) }
   else if (ready) primary = { label: 'Abrir apresentação', icon: <Presentation size={15} aria-hidden="true" />, onClick: onOpen }
   return (

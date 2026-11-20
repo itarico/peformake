@@ -8,6 +8,8 @@ const src = fileURLToPath(new URL('../../src', import.meta.url))
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
   plugins: [react(), tailwindcss()],
+  // Não procura postcss.config na raiz do repositório (é do site antigo da Lovable e quebra o CSS aqui).
+  css: { postcss: {} },
   resolve: { alias: { '@': src } },
   define: { 'import.meta.env.VITE_SUPABASE_URL': JSON.stringify('https://wkkzcjnxyylrqoolmmhi.supabase.co'), 'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify('sb_publishable_t1g3kHG-weQdyGcG9jJHYg_l1hkYcYn') },
   server: { port: 5200, fs: { allow: [fileURLToPath(new URL('../..', import.meta.url))] } },

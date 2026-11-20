@@ -171,3 +171,11 @@ describe('cliente só de audiovisual', () => {
     expect(targetMonth(new Date(2026, 11, 3))).toBe('2027-01')
   })
 })
+
+describe('diagnóstico na fila do agente', () => {
+  it('não pede para gerar o que já foi pedido; o próximo passo segue para a estratégia', () => {
+    expect(nextStep(row({ status: 'na_fila', stage: 'agente' })).kind).toBe('aguardar')
+    expect(nextStep(row({ status: 'na_fila', stage: 'research' })).label).toBe('Gerar diagnóstico')
+    expect(nextStep(row({ status: 'na_fila', stage: 'agente', questions_open: 3 })).label).toBe('Mandar perguntas')
+  })
+})

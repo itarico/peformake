@@ -196,14 +196,15 @@ export function nextStep(r: Pick<ConsultRow, 'client_id' | 'status' | 'document'
   }
   if (r.status === 'falta_dados') return { kind: 'dados', label: 'Informar CNPJ' }
   if (r.status === 'erro') return { kind: 'gerar', label: 'Tentar de novo' }
-  if (r.status === 'na_fila') return { kind: 'gerar', label: 'Gerar diagnóstico' }
+  // Na fila do agente: não é ação de ninguém (antes dizia "Gerar diagnóstico" com o pedido já feito).
+  if (r.status === 'na_fila' && r.stage !== 'agente') return { kind: 'gerar', label: 'Gerar diagnóstico' }
   if (r.status === 'pronto') return { kind: 'link', label: 'Revisar diagnóstico', href: diagReviewPath(r.client_id) }
   if ((r.answers_new ?? 0) > 0) return { kind: 'aba', label: 'Ver respostas', tab: 'perguntas' }
   const m = r.monthly
   if (m && ['pronto', 'aprovado'].includes(m.status) && m.pending > 0) return { kind: 'aba', label: `Revisar estratégia de ${mesOf(m.month)}`, tab: 'estrategia' }
   if (r.status === 'aprovado') return { kind: 'enviar', label: 'Enviar diagnóstico' }
   if ((r.questions_open ?? 0) > 0) return { kind: 'perguntas', label: 'Mandar perguntas' }
-  if (r.status === 'gerando' || r.status === 'limite') return { kind: 'aguardar', label: r.status === 'limite' ? 'Limite do mês' : 'Gerando' }
+  if (r.status === 'gerando' || r.status === 'limite' || r.status === 'na_fila') return { kind: 'aguardar', label: r.status === 'limite' ? 'Limite do mês' : r.status === 'na_fila' ? 'Diagnóstico na fila' : 'Gerando' }
   return { kind: 'aba', label: 'Abrir', tab: 'diagnostico' }
 }
 
