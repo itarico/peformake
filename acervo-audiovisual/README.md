@@ -3,6 +3,9 @@
 Tudo sobre roteiro, criação, storytelling, gravação e edição que está no Git. Levantamento de 19/11/2026.
 Nada foi movido: cada arquivo continua no lugar original. Este índice só aponta onde está cada coisa.
 
+**Regra (Italo, 19/11/2026):** tudo novo de audiovisual (estudo, estrutura, edição, engenharia reversa, skill) entra
+nesta pasta e no Git no mesmo dia. Nunca fica só no PC.
+
 ## 1. Método e motor de roteiro (app peformake-gestao)
 | Arquivo | O que é |
 |---|---|

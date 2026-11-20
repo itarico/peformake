@@ -92,6 +92,18 @@ Qualquer mudança (nome de tela, caminho/rota, aba, campo, status, regra) tem qu
 - IA no sistema (Claude pela API, funções do Supabase): sem limite por dia (decisão do Italo em 11/11; cada geração fica registrada em ai_generations), teto de gasto do mês em Configurações → Automações (ai_settings, padrão US$ 90) e cada chamada registrada em ai_usage_log. Direcionamento da equipe por cliente/área fica em client_directions e tem prioridade sobre a pesquisa automática.
 - Exceção aprovada pelo Italo em 12/11/2026: vídeo entregue pela edição vai direto ao cliente e avisa no WhatsApp automaticamente (desligável em Configurações → Automações)
 
+## Acervo audiovisual: tudo no Git (regra do Italo, 19/11/2026)
+
+- Tudo o que se aprender ou criar de **roteiro, estrutura, edição, estilo, engenharia reversa e skill voltada ao
+  audiovisual** vai para `acervo-audiovisual/` e entra no Git (commit e push) no mesmo dia. **Nunca fica só no PC.**
+- Porta de entrada: `acervo-audiovisual/README.md` (índice único). Fichas de vídeo estudado: `acervo-audiovisual/virais/`
+  (skill `engenharia-reversa-viral`). Skill que rodar fora do repo (`~/.claude/skills`) ganha cópia em
+  `acervo-audiovisual/skills-locais/`; mudou lá, copia de novo.
+- O que já existia (`peformake-gestao/docs/*ROTEIRO*`, `video-tools/`, `.claude/skills/`) **não se move**: vários
+  documentos, prompts e o banco citam esses caminhos. O índice aponta para eles. Só mover trocando todas as citações
+  na mesma entrega.
+- Fora do Git: vídeo e áudio brutos, pastas `venv-*`, modelos de IA e arquivos com chave ou senha.
+
 ## Segurança
 
 - Nunca peça, mostre ou digite chaves, tokens e senhas. O Italo cola segredos direto no Supabase (Edge Functions → Secrets).
