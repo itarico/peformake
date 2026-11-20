@@ -1,4 +1,4 @@
-import { ArtRequestButton } from './ArtRequest'
+import { NewArtButton } from './NewArt'
 import { Suspense } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Navigate, Outlet } from 'react-router-dom'
@@ -13,7 +13,7 @@ const TABS: SectionTab[] = [
   { to: '/conteudo/design', label: 'Design' },
   // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
   { to: '/conteudo/datas', label: 'Datas sazonais' },
-  { to: '/conteudo/automatico', label: 'Pedidos de arte' },
+  { to: '/conteudo/automatico', label: 'Modelo rápido' },
 ]
 
 export function MonthSwitcher() {
@@ -42,8 +42,8 @@ export function ContentLayout() {
     <>
       <SectionHeader
         title="Social Media"
-        sub="Social media planeja e manda para o design; o designer entrega direto ao cliente, que aprova no portal."
-        actions={<><MonthSwitcher /><ArtRequestButton iconOnMobile /></>}
+        sub="Estratégia aprovada vira briefing; a social media completa e manda ao design; o cliente aprova no portal."
+        actions={<><MonthSwitcher /><NewArtButton iconOnMobile /></>}
         tabs={TABS}
       />
       <Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense>

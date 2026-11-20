@@ -96,12 +96,14 @@ const PAGES = [
 ]
 // Pop-ups: [tela, nome, como abrir]
 const POPS = [
-  ['/conteudo/quadro', 'pedir-arte', (p) => p.getByRole('button', { name: 'Pedir arte' }).first().click()],
+  ['/conteudo/quadro', 'nova-arte', (p) => p.getByRole('button', { name: 'Nova arte' }).first().click()],
+  ['/conteudo/quadro', 'nova-arte-fotos', async (p) => { await p.getByRole('button', { name: 'Nova arte' }).first().click(); await p.locator('#nova-arte-cliente').fill('Padaria'); await p.keyboard.press('ArrowDown'); await p.keyboard.press('Enter'); await p.getByLabel('O que a arte precisa ter').fill('Teste de arte para o designer'); await p.getByRole('button', { name: 'Continuar' }).click() }],
   ['/conteudo/quadro', 'tarefa', async (p) => { if (await p.getByRole('tab', { name: /Tarefas/ }).isVisible()) await p.getByRole('tab', { name: /Tarefas/ }).click(); await p.getByText('Responder pedido de story do cliente').click() }],
   ['/conteudo/quadro', 'nova-tarefa', async (p) => { if (await p.getByRole('tab', { name: /Tarefas/ }).isVisible()) await p.getByRole('tab', { name: /Tarefas/ }).click(); await p.getByRole('button', { name: /^Tarefa$/ }).click() }],
   ['/conteudo/design', 'entregar', (p) => p.getByRole('button', { name: 'Entregar arte' }).first().click()],
   ['/conteudo/datas', 'nova-data', (p) => p.getByRole('button', { name: /Nova data/ }).click()],
   ['/conteudo/datas', 'mandar-design', (p) => p.getByRole('button', { name: 'Mandar para o design' }).first().click()],
+  ['/conteudo/automatico', 'ajustes-modelo', (p) => p.getByRole('button', { name: 'Ajustes' }).click()],
   ['/conteudo/automatico', 'modelo-rapido', (p) => p.getByRole('button', { name: /modelo rápido/i }).click()],
   ['/conteudo/peca/i1', 'editar-peca', (p) => p.getByRole('button', { name: 'Editar' }).first().click()],
   ['/conteudo/peca/i8', 'pedir-ajuste', async (p) => { await p.getByRole('button', { name: 'Outras ações da peça' }).click(); await p.getByRole('menuitem', { name: 'Pedir ajuste' }).click() }],

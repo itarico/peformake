@@ -7,7 +7,8 @@ import { Dialog } from '@/components/ui/Dialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
-import { ArtRequestButton, STEPS, useClients } from './ArtRequest'
+import { STEPS, useClients } from './ArtRequest'
+import { NewArtButton } from './NewArt'
 
 // ===== Datas sazonais de cada cliente, com o pedido ao agente de design já com a ideia =====
 
@@ -80,8 +81,9 @@ function ClientLine({ r }: { r: Row }) {
             className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2.5 text-[12px] text-muted hover:bg-raised hover:text-ink">
             <EyeOff size={14} aria-hidden="true" /> Não serve
           </button>
-          <ArtRequestButton clientId={r.client_id} initialText={askText(r)} seasonKey={r.season_key} label="Mandar para o design"
-            title={`${r.name} · ${r.client}`} className="min-h-9 px-3 text-[13px]" />
+          {/* Vai para o designer do cliente; depois de mandar, a data sai da lista deste cliente (seasonal_skip). */}
+          <NewArtButton start={{ clientId: r.client_id, text: askText(r), publishDate: r.date }} label="Mandar para o design"
+            className="min-h-9 px-3 text-[13px]" onSent={() => skip.mutate()} />
         </>
       )}
     </li>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { AlertTriangle, CheckCircle2, ImagePlus, Loader2, Sparkles } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ImagePlus, Loader2, Settings2, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context'
 import { Button } from '@/components/ui/Button'
@@ -10,7 +10,6 @@ import { cn } from '@/lib/cn'
 import { hasAnyRole, NOTIFICATION_ADMIN_ROLES } from '@/lib/roles'
 import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
-import { ArtRequestsPanel } from './ArtRequest'
 
 interface CreativeRequest {
   id: string
@@ -162,16 +161,15 @@ function Settings({ initial }: { initial: DesignSettings }) {
   })
   const change = (next: DesignSettings) => { setS(next); save.mutate(next) }
   return (
-    <section aria-label="Configurações do criativo automático" className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5">
-      <h2 className="font-semibold">Configurações</h2>
+    <div className="flex flex-col gap-3">
       <DriveAccount />
       <label className="flex cursor-pointer items-start gap-3">
         <input type="checkbox" checked={s.autoEnabled} onChange={(e) => change({ ...s, autoEnabled: e.target.checked })} className="mt-1 size-5" />
-        <span><b className="font-semibold">Criar artes sozinho</b><span className="block text-[13px] text-muted">Quando o cliente pede arte no WhatsApp, o agente escreve e o servidor monta com a foto do Drive.</span></span>
+        <span><b className="font-semibold">Criar artes sozinho</b><span className="block text-[13px] text-muted">Pedido de arte no WhatsApp vira arte no modelo, com a foto do Drive.</span></span>
       </label>
       <label className="flex cursor-pointer items-start gap-3">
         <input type="checkbox" checked={s.autoToPortal} onChange={(e) => change({ ...s, autoToPortal: e.target.checked })} className="mt-1 size-5" />
-        <span><b className="font-semibold">Mandar direto ao portal do cliente</b><span className="block text-[13px] text-muted">Desligado, a arte fica em Conteúdo para a equipe revisar antes.</span></span>
+        <span><b className="font-semibold">Mandar direto ao portal do cliente</b><span className="block text-[13px] text-muted">Desligado, a equipe revisa antes.</span></span>
       </label>
       <label className="flex cursor-pointer items-start gap-3">
         <input type="checkbox" checked={s.aiTakeover} onChange={(e) => change({ ...s, aiTakeover: e.target.checked })} className="mt-1 size-5" />
@@ -184,14 +182,14 @@ function Settings({ initial }: { initial: DesignSettings }) {
       </label>
       <label className="flex cursor-pointer items-start gap-3">
         <input type="checkbox" checked={s.autoReply} onChange={(e) => change({ ...s, autoReply: e.target.checked })} className="mt-1 size-5" />
-        <span><b className="font-semibold">Responder o cliente quando o pedido entra</b><span className="block text-[13px] text-muted">Frase curta escrita pelo agente no jeito daquele cliente, aprendido nas conversas.</span></span>
+        <span><b className="font-semibold">Responder o cliente quando o pedido entra</b><span className="block text-[13px] text-muted">Frase curta no jeito daquele cliente.</span></span>
       </label>
       <label className="flex cursor-pointer items-start gap-3">
         <input type="checkbox" checked={s.replyGroups} onChange={(e) => change({ ...s, replyGroups: e.target.checked })} className="mt-1 size-5" />
-        <span><b className="font-semibold">Responder também nos grupos</b><span className="block text-[13px] text-muted">Quando o pedido vem do grupo do cliente, a resposta sai no grupo.</span></span>
+        <span><b className="font-semibold">Responder também nos grupos</b><span className="block text-[13px] text-muted">Se o pedido vier do grupo do cliente.</span></span>
       </label>
       {save.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">Só admin ou head mudam isso.</p>}
-    </section>
+    </div>
   )
 }
 
@@ -199,6 +197,7 @@ export function AutoCreativePage() {
   const { state } = useAuth()
   const isAdmin = state.status === 'ready' && hasAnyRole(state.user.roles, NOTIFICATION_ADMIN_ROLES)
   const [open, setOpen] = useState(false)
+  const [config, setConfig] = useState(false)
   const data = useQuery({ queryKey: ['creative-auto'], queryFn: loadAll, refetchInterval: (q) => (q.state.data?.requests.some((r) => r.status === 'queued' || r.status === 'rendering') ? 4000 : 30_000) })
   if (!data.data) return <LoadState isPending={data.isPending} isError={data.isError} refetch={() => void data.refetch()} />
   const { requests, clients, settings } = data.data
@@ -208,14 +207,21 @@ export function AutoCreativePage() {
 
   return (
     <>
-      <ArtRequestsPanel />
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-line bg-surface p-5">
         <div className="max-w-[70ch]">
           <h2 className="flex items-center gap-2 text-[15px] font-semibold"><ImagePlus size={17} aria-hidden="true" /> Modelo rápido</h2>
-          <p className="text-[13px] text-muted">Para quando você já tem a chamada pronta: aplica o modelo fixo da Peformake (foto + chamada + botão) em segundos. Os pedidos do WhatsApp do cliente também passam por aqui.</p>
+          <p className="text-[13px] text-muted">Foto + chamada + botão no modelo da Peformake, pronto em segundos.</p>
         </div>
-        <Button variant="secondary" onClick={() => setOpen(true)}>Usar modelo rápido</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={() => setOpen(true)}>Usar modelo rápido</Button>
+          {isAdmin && settings && <Button variant="secondary" onClick={() => setConfig(true)}><Settings2 size={15} aria-hidden="true" /> Ajustes</Button>}
+        </div>
       </div>
+      {isAdmin && settings && (
+        <Dialog open={config} onClose={() => setConfig(false)} title="Ajustes do modelo rápido" description="Só admin e head mudam. Salva sozinho.">
+          {config && <Settings key={JSON.stringify(settings)} initial={settings} />}
+        </Dialog>
+      )}
       <Dialog open={open} onClose={() => setOpen(false)} title="Pedir arte" description="Sai em menos de um minuto, com a foto real da pasta do cliente.">
         {open && <NewRequest clients={clients} onClose={() => setOpen(false)} />}
       </Dialog>
@@ -226,7 +232,7 @@ export function AutoCreativePage() {
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid grid-cols-1 gap-3">
         <section aria-label="Pedidos" className="overflow-hidden rounded-3xl border border-line bg-surface">
           <h2 className="border-b border-line bg-raised/50 px-5 py-2.5 text-[13px] font-semibold">Modelo rápido: últimos pedidos</h2>
           <ul>
@@ -252,7 +258,6 @@ export function AutoCreativePage() {
             {shown.length === 0 && <li className="p-6 text-center text-muted">Nenhum pedido no modelo rápido ainda. Toque em <b>Usar modelo rápido</b>.</li>}
           </ul>
         </section>
-        {isAdmin && settings && <Settings key={JSON.stringify(settings)} initial={settings} />}
       </div>
     </>
   )

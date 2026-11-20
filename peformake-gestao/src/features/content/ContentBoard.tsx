@@ -8,7 +8,6 @@ import { supabase } from '@/lib/supabase'
 import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { DESIGN_AREAS, inArea, inAreas, useProduction } from '@/features/production/useProduction'
-import { ContentSummary } from '@/features/dashboard/Summaries'
 import { TaskDialog, type Task } from '@/features/social/SocialPage'
 import { SOURCE_LABEL, SOURCE_TONE } from '@/features/social/socialRules'
 import { designOnTime, listItems } from './contentApi'
@@ -152,7 +151,6 @@ export function ContentBoard() {
           </span>
         </div>
       )}
-      <div className="flex flex-col gap-3 max-md:order-last"><ContentSummary month={month} /></div>
 
       <div className="flex items-center gap-2 md:flex-wrap">
         <label className="relative min-w-0 flex-1 md:flex-none">
