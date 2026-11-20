@@ -60,6 +60,15 @@ Geração anterior, não segue o MDD.
 `perfis/`: um arquivo por perfil estudado inteiro (números, ideias que funcionam, gramática de edição, links das fichas).
 Primeiro: `perfis/salleszk.md`.
 
+## 5d. Mapa, placar e rotina diária (o motor que se aprimora)
+- `MAPA-ESTRUTURAS.md`: código S por objetivo, os mais fortes, esqueleto por código, S-novo e códigos sem exemplo.
+  `MAPA-ESTRUTURAS-COMPACTO.md` é a versão lida pela fila da estratégia (roteiro-master M1/M2/M5). Os dois e o
+  `estruturasProvadas.ts` das funções saem de `ferramentas/mapa_estruturas.py`: ficha nova ou placar novo, rode o script.
+- `PLACAR-ESTRUTURAS.md`: cada Reel publicado de cliente com o código S e a força (views ÷ mediana do perfil). O mapa
+  põe "nosso placar" em cada código; o motor prefere o que funcionou aqui e evita o que falhou.
+- Rotina na nuvem "Acervo: virais do dia, estruturas novas e placar" (todo dia 06:41): atualiza o placar, estuda 2 virais
+  com estrutura nova e 1 vídeo do estoque salvo, refaz o mapa e escreve as lições do nicho às segundas.
+
 ## 6. Skills que só existiam no PC (cópia em `skills-locais/`)
 Copiadas de `~/.claude/skills` em 19/11/2026 para ficarem salvas no Git. A cópia é backup: a skill que roda
 continua sendo a do PC. Se editar lá, copie de novo para cá.

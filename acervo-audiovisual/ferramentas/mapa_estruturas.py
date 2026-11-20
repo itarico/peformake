@@ -102,6 +102,24 @@ def itens(esq):
 def resumo_esq(esq, limite=6):
     return [(f'{t}: {x}' if t else x) for t, x in itens(esq)[:limite]]
 
+# ---------- Placar: o resultado dos NOSSOS vídeos publicados (auto-aprimoramento) ----------
+placar = {}
+PLACAR = RAIZ / 'acervo-audiovisual' / 'PLACAR-ESTRUTURAS.md'
+if PLACAR.exists():
+    for l in PLACAR.read_text(encoding='utf-8').splitlines():
+        m = re.match(r'\|\s*\d{4}-\d\d-\d\d\s*\|\s*([^|]+?)\s*\|[^|]*\|\s*S(\d{1,3})\s*\|[^|]*\|\s*(\d+(?:[.,]\d+)?)\s*x', l)
+        if m:
+            placar.setdefault(int(m.group(2)), []).append((m.group(1), num(m.group(3))))
+
+def placar_txt(n):
+    v = placar.get(n)
+    if not v:
+        return ''
+    media = sum(x for _, x in v) / len(v)
+    clientes = sorted({c for c, _ in v})
+    sinal = ' · EVITAR (3+ vídeos abaixo de 0,7x)' if len(v) >= 3 and media < 0.7 else (' · funcionou aqui' if media >= 1.3 else '')
+    return f'nosso placar: {len(v)} vídeo(s), média {media:.1f}x'.replace('.', ',') + f' ({", ".join(clientes)}){sinal}'
+
 # ---------- MAPA completo ----------
 out = ['# Mapa de estruturas (gerado das fichas de virais)', '',
        'Gerado por `acervo-audiovisual/ferramentas/mapa_estruturas.py` a partir de `acervo-audiovisual/virais/`.',
@@ -116,6 +134,12 @@ out = ['# Mapa de estruturas (gerado das fichas de virais)', '',
 for a, b, nome, obj in GRUPOS:
     cs = [f'S{n} ({len(por_s[n])})' for n in range(a, b + 1) if n in por_s]
     out.append(f'| {nome} (S{a}–S{b}) | {obj} | {", ".join(cs) or "nenhum ainda"} |')
+out += ['', '## Nosso placar (vídeos publicados de clientes)', '',
+        'De `PLACAR-ESTRUTURAS.md`. Vale mais que a força nos perfis de fora: é o que funcionou com o nosso público.', '']
+for n in sorted(placar, key=lambda n: -sum(x for _, x in placar[n]) / len(placar[n])):
+    out.append(f'- S{n} {nomes.get("S"+str(n), "?")}: {placar_txt(n)}')
+if not placar:
+    out.append('- (vazio)')
 out += ['', '## Os mais fortes (força no perfil)', '']
 for f in sorted([f for f in fichas if f['forca']], key=lambda f: -f['forca'])[:15]:
     cod = ' + '.join('S' + c for c in f['codigos']) or ('S-novo: ' + f['novo'])
@@ -125,6 +149,8 @@ for n in sorted(por_s):
     lista = sorted(por_s[n], key=chave)
     g, obj = grupo(n)
     out.append(f'### S{n} · {nomes.get("S"+str(n), "?")}  ({g}; {obj})')
+    if placar_txt(n):
+        out.append(f'**{placar_txt(n).capitalize()}**')
     for principal, f in lista:
         papel = '' if principal else ' (secundária)'
         dif = ' · difícil de repetir' if f['dificil'] else ''
@@ -148,7 +174,12 @@ c = ['# Acervo de estruturas provadas (gerado das fichas; não editar à mão)',
      'Uso: no M2 (curador), para cada vaga escolha um código S abaixo que sirva ao objetivo; prefira o de maior força.',
      'No M5 (roteirista), siga o esqueleto trocando tudo pelo conteúdo real do cliente (MDD). Grave data.estrutura com o',
      'código e cite a ficha em inspirado {link, numero}. Copie a mecânica, nunca a fala, a marca ou a imagem.',
-     'Força = Nx a mediana do perfil de origem: mede o vídeo lá, não garante aqui. A banca (M9) continua valendo.', '']
+     'Força = Nx a mediana do perfil de origem: mede o vídeo lá, não garante aqui. A banca (M9) continua valendo.',
+     'Nosso placar (vídeos publicados de clientes, PLACAR-ESTRUTURAS.md) vale mais que a força de fora: prefira o que',
+     'funcionou aqui; código marcado EVITAR só com motivo escrito no card.', '', '## Nosso placar']
+for n in sorted(placar, key=lambda n: -sum(x for _, x in placar[n]) / len(placar[n])):
+    c.append(f'- S{n} {nomes.get("S"+str(n), "?")}: {placar_txt(n)}')
+c.append('')
 for n in sorted(por_s):
     lista = sorted(por_s[n], key=chave)
     melhor = lista[0][1]
@@ -156,6 +187,8 @@ for n in sorted(por_s):
     refs = '; '.join(f"{f['perfil']} {fx(f)} \"{f['titulo'][:70]}\"" for _, f in lista[:3])
     c.append(f'## S{n} {nomes.get("S"+str(n), "?")} · {obj}')
     c.append(f'Exemplos: {refs}. Ficha: virais/{melhor["arq"]}')
+    if placar_txt(n):
+        c.append(placar_txt(n).capitalize())
     for l in resumo_esq(melhor['esq'], 7):
         c.append(re.sub(r'\*\*', '', l)[:220])
     c.append('')
@@ -178,7 +211,10 @@ for f in sorted([f for f in fichas if f['forca'] and f['codigos'] and itens(f['e
         break
 ts = ('// Gerado por acervo-audiovisual/ferramentas/mapa_estruturas.py a partir das fichas de virais. Não editar à mão.\n'
       '// Estruturas com exemplo real no acervo, uma por código, da mais forte para a menos forte.\n'
-      'export const ESTRUTURAS_PROVADAS = ' + json.dumps('\n'.join('- ' + l for l in top), ensure_ascii=False) + '\n')
+      'export const ESTRUTURAS_PROVADAS = ' + json.dumps('\n'.join(['- ' + l for l in top] + (
+          ['Nosso placar (vídeos publicados de clientes; vale mais que a força de fora): ' + '; '.join(
+              f'S{n} {placar_txt(n)}' for n in sorted(placar, key=lambda n: -sum(x for _, x in placar[n]) / len(placar[n])))]
+          if placar else [])), ensure_ascii=False) + '\n')
 for fn in ('strategy-cards', 'monthly-strategy'):  # uma cópia por função (publicação simples, sem pasta compartilhada)
     (RAIZ / 'peformake-gestao' / 'supabase' / 'functions' / fn / 'estruturasProvadas.ts').write_text(ts, encoding='utf-8')
 print(len(fichas), 'fichas;', len(por_s), 'códigos;', len(novos), 'S-novo;', len(top), 'no resumo curto')

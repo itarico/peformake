@@ -5,6 +5,19 @@ Uso: no M2 (curador), para cada vaga escolha um código S abaixo que sirva ao ob
 No M5 (roteirista), siga o esqueleto trocando tudo pelo conteúdo real do cliente (MDD). Grave data.estrutura com o
 código e cite a ficha em inspirado {link, numero}. Copie a mecânica, nunca a fala, a marca ou a imagem.
 Força = Nx a mediana do perfil de origem: mede o vídeo lá, não garante aqui. A banca (M9) continua valendo.
+Nosso placar (vídeos publicados de clientes, PLACAR-ESTRUTURAS.md) vale mais que a força de fora: prefira o que
+funcionou aqui; código marcado EVITAR só com motivo escrito no card.
+
+## Nosso placar
+- S70 Esquete de 2 pessoas (M19–M24): nosso placar: 1 vídeo(s), média 1,8x (VOVINA) · funcionou aqui
+- S59 Novidade → mecanismo → ressalva: nosso placar: 1 vídeo(s), média 1,6x (VOVINA) · funcionou aqui
+- S112 Do zero ao pronto: nosso placar: 1 vídeo(s), média 1,3x (VOVINA) · funcionou aqui
+- S52 Mito × verdade: nosso placar: 1 vídeo(s), média 1,1x (VOVINA)
+- S22 UGC teste/review: nosso placar: 1 vídeo(s), média 1,0x (VOVINA)
+- S50 Tutorial: nosso placar: 1 vídeo(s), média 1,0x (VOVINA)
+- S84 Oferta / promo: nosso placar: 4 vídeo(s), média 0,8x (VOVINA)
+- S69 Bastidor da qualidade: nosso placar: 1 vídeo(s), média 0,7x (VOVINA)
+- S83 Comum × o nosso: nosso placar: 1 vídeo(s), média 0,5x (VOVINA)
 
 ## S1 Talking head com tese · autoridade, posicionamento
 Exemplos: @omarcosvianna 7,2x ""Editado 100% com IA" que termina defendendo o humano"; @omarcosvianna 15,1x "3 motivos em formato horizontal"; @giubeckers 7,2x "Um filme famoso explica as 3 camadas da atenção (ensaio no carro, 2 mi". Ficha: virais/2026-11-06_omarcosvianna_DfagzsGv2GT.md
@@ -46,6 +59,7 @@ Exemplos: @dacostamotion 32,4x "Manifesto de marca em imagens no monitor (Idea.a
 
 ## S22 UGC teste/review · prova, conversão
 Exemplos: @marcolamaia 36,8x "Review de produto que não existe (troca por IA)"; @omarcosvianna 14,3x "POV de casal: unboxing do equipamento". Ficha: virais/2026-10-29_marcolamaia_DfFaVmAitkU.md
+Nosso placar: 1 vídeo(s), média 1,0x (vovina)
 0-5 s · O impossível como normal: "Olha o [produto que eu não tenho/não existe ainda]." Título de 2 palavras.
 5-10 s · O antes real: Mostrar o objeto comum e o gesto que "transforma".
 10-25 s · Closes: 3 detalhes, cada um mais perto.
@@ -153,6 +167,7 @@ Exemplos: @earn.edits 6,3x "Biografia de uma obra com "fato estranho" no meio". 
 
 ## S50 Tutorial · salvar, autoridade
 Exemplos: @ignaciovasconez 35,4x "Tutorial com o resultado em cima e a isca do arquivo"; @sanji.chien 13,1x "Resultado primeiro, depois "como fazer em 3 passos" (+ palavra-isca)"; @_victorzk 13,0x "Tutorial com assinatura visual (fisheye + azul + laranja)". Ficha: virais/2026-10-13_ignaciovasconez_DecOTJJuFyQ.md
+Nosso placar: 1 vídeo(s), média 1,0x (vovina)
 0-7 s · Resultado em cima, rosto embaixo: "Hoje te ensino a [resultado]."
 7-15 s · A objeção: "Nunca foi tão fácil, sem [o que dá medo]."
 15-30 s · 3 passos: com a tela/mãos em cima.
@@ -170,6 +185,7 @@ Exemplos: @joao.escala1p1 28,7x "Conta da economia em lista com avatar"; @adrian
 
 ## S52 Mito × verdade · salvar, autoridade
 Exemplos: @oandrenuneu s/ mediana "Boato do dia checado em cards de manchete". Ficha: virais/2026-11-05_oandrenuneu_DfWQjPpTDt-.md
+Nosso placar: 1 vídeo(s), média 1,1x (vovina)
 0–4 s: "Esse é [A]. E esse é [B]. Não é montagem."
 4–20 s: o fato real que gerou o assunto, em frases de 2 s.
 20–40 s: o boato, com o tamanho dele (curtidas, compartilhamentos).
@@ -204,6 +220,7 @@ Exemplos: @vaishmediafilms 7,4x "Edição de $5 x edição de $30, lado a lado n
 
 ## S59 Novidade → mecanismo → ressalva · salvar, autoridade
 Exemplos: @gab.gouvea 11,5x "Ferramenta grátis contra a paga, demo em UI escura (+ palavra-isca)"; @ashokreddyai 10,1x "Novidade de IA com vitrine visual + palavra-isca"; @99hud 5,7x "Ferramenta grátis revelada em tela dividida com palavra-isca". Ficha: virais/2026-10-26_gab.gouvea_De9lLWSsJAj.md
+Nosso placar: 1 vídeo(s), média 1,6x (vovina) · funcionou aqui
 0-5 s: uma história com rival conhecido (o comum do mercado).
 5-14 s: o que a alternativa faz.
 14-24 s: "o comum é bom, o problema é [3 dores]".
@@ -238,6 +255,7 @@ Exemplos: @joao.escala1p1 28,7x "Conta da economia em lista com avatar"; @omarco
 
 ## S70 Esquete de 2 pessoas (M19–M24) · alcance, seguidores
 Exemplos: @mario.petshop 11,4x "Esquete de perseguição com disfarce no balcão"; @mavicproducoes 10,0x "POV do funcionário bem-humorado (esquete de trocadilho no balcão)"; @salleszk 1,8x "Série "Cena Criativa" ep. 1: esquete de hospital com coisas de casa, a". Ficha: virais/2026-09-21_mario.petshop_Ddjl9Nehis3.md
+Nosso placar: 1 vídeo(s), média 1,8x (vovina) · funcionou aqui
 0-7 s: diálogo em conflito na rua, com bordão.
 7-14 s: perseguição curta (planos de pé, corrida).
 14-30 s: o fugitivo disfarçado dentro do negócio do cliente, como funcionário.
@@ -285,6 +303,7 @@ Exemplos: @omarcosvianna 20,2x "Bastidor que deu errado → 3·2·1 → vídeo d
 
 ## S84 Oferta / promo · conversão
 Exemplos: @salleszk 1,1x "Oferta de serviço com um cenário prático por frase ("6 vagas em outubr"; @rabbits 27,2x "Bastidor e resultado no mesmo instante (moldura de filme)". Ficha: virais/2026-10-14_salleszk_DefVZvwgS2s.md
+Nosso placar: 4 vídeo(s), média 0,8x (vovina)
 0–2 s: imagem física forte + "Você, [público]".
 2–5 s: a dor em metáfora visual.
 5–9 s: "Tive uma ideia para [mês]".
@@ -406,6 +425,7 @@ Exemplos: @dacostamotion 21,6x "Logo nascendo na tela filmada"; @dacostamotion 2
 
 ## S112 Do zero ao pronto · alcance, viabilidade
 Exemplos: @dacostamotion 21,6x "Logo nascendo na tela filmada". Ficha: virais/2026-09-10_dacostamotion_DdGvHpxOcpv.md
+Nosso placar: 1 vídeo(s), média 1,3x (vovina) · funcionou aqui
 0–2 s: tela ou ferramenta de trabalho filmada em ângulo, com um pedaço do ambiente (mesa, luz, objeto).
 2–10 s: a coisa sendo construída por etapas visíveis.
 10–15 s: a revelação do resultado.

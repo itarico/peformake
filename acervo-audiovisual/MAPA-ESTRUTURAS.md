@@ -29,6 +29,20 @@ Como usar (motor de roteiro, M2 curador e M5 roteirista):
 | Sem rosto e processo (S104–S112) | alcance, viabilidade | S104 (4), S105 (6), S106 (1), S107 (1), S108 (1), S109 (3), S112 (1) |
 | Processo e bastidor (S113–S117) | prova, alcance | S113 (7), S115 (1), S116 (5) |
 
+## Nosso placar (vídeos publicados de clientes)
+
+De `PLACAR-ESTRUTURAS.md`. Vale mais que a força nos perfis de fora: é o que funcionou com o nosso público.
+
+- S70 Esquete de 2 pessoas (M19–M24): nosso placar: 1 vídeo(s), média 1,8x (VOVINA) · funcionou aqui
+- S59 Novidade → mecanismo → ressalva: nosso placar: 1 vídeo(s), média 1,6x (VOVINA) · funcionou aqui
+- S112 Do zero ao pronto: nosso placar: 1 vídeo(s), média 1,3x (VOVINA) · funcionou aqui
+- S52 Mito × verdade: nosso placar: 1 vídeo(s), média 1,1x (VOVINA)
+- S22 UGC teste/review: nosso placar: 1 vídeo(s), média 1,0x (VOVINA)
+- S50 Tutorial: nosso placar: 1 vídeo(s), média 1,0x (VOVINA)
+- S84 Oferta / promo: nosso placar: 4 vídeo(s), média 0,8x (VOVINA)
+- S69 Bastidor da qualidade: nosso placar: 1 vídeo(s), média 0,7x (VOVINA)
+- S83 Comum × o nosso: nosso placar: 1 vídeo(s), média 0,5x (VOVINA)
+
 ## Os mais fortes (força no perfil)
 
 - **391,2x** · S100 + S116 + S45 · Breakdown de SFX com palavra-isca · @jaybendonlifts_ · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
@@ -102,6 +116,7 @@ Esqueleto (da ficha mais forte, @dacostamotion):
   6. 47-54 s: símbolo e logo.
 
 ### S22 · UGC teste/review  (UGC e cliente; prova, conversão)
+**Nosso placar: 1 vídeo(s), média 1,0x (vovina)**
 - 36,8x · Review de produto que não existe (troca por IA) · @marcolamaia (secundária) · [ficha](virais/2026-10-29_marcolamaia_DfFaVmAitkU.md)
 - 14,3x · POV de casal: unboxing do equipamento · @omarcosvianna (secundária) · [ficha](virais/2026-08-03_omarcosvianna_Dblnw4hvGNE.md)
 
@@ -244,6 +259,7 @@ Esqueleto (da ficha mais forte, @earn.edits):
   7. 36-42 s: CTA.
 
 ### S50 · Tutorial  (Educativo; salvar, autoridade)
+**Nosso placar: 1 vídeo(s), média 1,0x (vovina)**
 - 35,4x · Tutorial com o resultado em cima e a isca do arquivo · @ignaciovasconez · [ficha](virais/2026-10-13_ignaciovasconez_DecOTJJuFyQ.md)
 - 13,1x · Resultado primeiro, depois "como fazer em 3 passos" (+ palavra-isca) · @sanji.chien · [ficha](virais/2026-10-06_sanji.chien_DeJ_gTHs-FB.md)
 - 13,0x · Tutorial com assinatura visual (fisheye + azul + laranja) · @_victorzk · [ficha](virais/2026-08-27__victorzk_DcjsyZRSkuA.md)
@@ -281,6 +297,7 @@ Esqueleto (da ficha mais forte, @joao.escala1p1):
   6. 29-36 s · Isca: com o checklist e seguir.
 
 ### S52 · Mito × verdade  (Educativo; salvar, autoridade)
+**Nosso placar: 1 vídeo(s), média 1,1x (vovina)**
 - s/ mediana · Boato do dia checado em cards de manchete · @oandrenuneu · [ficha](virais/2026-11-05_oandrenuneu_DfWQjPpTDt-.md)
 
 Esqueleto (da ficha mais forte, @oandrenuneu):
@@ -329,6 +346,7 @@ Esqueleto (da ficha mais forte, @vaishmediafilms):
   3. 25-27 s: CTA dentro do card + assinatura fixa fora.
 
 ### S59 · Novidade → mecanismo → ressalva  (Educativo; salvar, autoridade)
+**Nosso placar: 1 vídeo(s), média 1,6x (vovina) · funcionou aqui**
 - 11,5x · Ferramenta grátis contra a paga, demo em UI escura (+ palavra-isca) · @gab.gouvea · [ficha](virais/2026-10-26_gab.gouvea_De9lLWSsJAj.md)
 - 10,1x · Novidade de IA com vitrine visual + palavra-isca · @ashokreddyai · [ficha](virais/2026-10-08_ashokreddyai_DePNgrmToh9.md)
 - 5,7x · Ferramenta grátis revelada em tela dividida com palavra-isca · @99hud · [ficha](virais/2026-11-08_99hud_DffrHm4DmJ4.md)
@@ -376,6 +394,7 @@ Esqueleto (da ficha mais forte, @joao.escala1p1):
   6. 29-36 s · Isca: com o checklist e seguir.
 
 ### S70 · Esquete de 2 pessoas (M19–M24)  (Humor e trend; alcance, seguidores)
+**Nosso placar: 1 vídeo(s), média 1,8x (vovina) · funcionou aqui**
 - 11,4x · Esquete de perseguição com disfarce no balcão · @mario.petshop · [ficha](virais/2026-09-21_mario.petshop_Ddjl9Nehis3.md)
 - 10,0x · POV do funcionário bem-humorado (esquete de trocadilho no balcão) · @mavicproducoes · [ficha](virais/2026-07-09_mavicproducoes_Dak-l_8hd9G.md)
 - 1,8x · Série "Cena Criativa" ep. 1: esquete de hospital com coisas de casa, abrindo pelo fim · @salleszk (secundária) · [ficha](virais/2026-10-20_salleszk_DeuprQaREwL.md)
@@ -439,6 +458,7 @@ Esqueleto (da ficha mais forte, @omarcosvianna):
   5. 26–37 s: argumento curto + CTA com contato.
 
 ### S84 · Oferta / promo  (Venda direta; conversão)
+**Nosso placar: 4 vídeo(s), média 0,8x (vovina)**
 - 1,1x · Oferta de serviço com um cenário prático por frase ("6 vagas em outubro") · @salleszk · [ficha](virais/2026-10-14_salleszk_DefVZvwgS2s.md)
 - 27,2x · Bastidor e resultado no mesmo instante (moldura de filme) · @rabbits (secundária) · [ficha](virais/2026-07-02_rabbits_DaSz7w0vL52.md)
 
@@ -625,6 +645,7 @@ Esqueleto (da ficha mais forte, @dacostamotion):
   4. 15–21 s: variação curta e volta ao estado final, para o vídeo rodar em loop.
 
 ### S112 · Do zero ao pronto  (Sem rosto e processo; alcance, viabilidade)
+**Nosso placar: 1 vídeo(s), média 1,3x (vovina) · funcionou aqui**
 - 21,6x · Logo nascendo na tela filmada · @dacostamotion (secundária) · [ficha](virais/2026-09-10_dacostamotion_DdGvHpxOcpv.md)
 
 Esqueleto (da ficha mais forte, @dacostamotion):
