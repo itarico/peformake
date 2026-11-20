@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/auth/context'
 import { AV_MANAGER_ROLES, CONTENT_PLANNER_ROLES, hasAnyRole } from '@/lib/roles'
 import { supabase } from '@/lib/supabase'
+import { logoPublicUrl } from '@/features/clients/clientsApi'
 
 export interface ClientOption {
   id: string
@@ -12,6 +13,8 @@ export interface ClientOption {
   areas: string[]
   /** Fixo ou TCV. Avulso só recebe trabalho quando pede. */
   recurring: boolean
+  /** Logo do cliente (link público), ou null. */
+  logoUrl?: string | null
 }
 
 /**
@@ -38,7 +41,7 @@ export const inArea = (c: ClientOption, area: OpArea) => inAreas(c, AREA_SERVICE
 async function listClients(): Promise<ClientOption[]> {
   const { data, error } = await supabase.rpc('production_clients', {} as Record<string, never>)
   if (error) throw error
-  return (data ?? []).map((c) => ({ id: c.id, name: c.name, isActive: c.is_active, areas: c.areas ?? [], recurring: (c as { recurring?: boolean }).recurring !== false }))
+  return (data ?? []).map((c) => ({ id: c.id, name: c.name, isActive: c.is_active, areas: c.areas ?? [], recurring: (c as { recurring?: boolean }).recurring !== false, logoUrl: logoPublicUrl((c as { logo_path?: string | null }).logo_path ?? null) }))
 }
 
 async function listStaff(): Promise<{ id: string; name: string; mainRole: string | null }[]> {
@@ -64,6 +67,10 @@ export function useProduction() {
     const map = new Map((clients.data ?? []).map((c) => [c.id, c.name]))
     return (id: string) => map.get(id) ?? 'Cliente'
   }, [clients.data])
+  const clientLogo = useMemo(() => {
+    const map = new Map((clients.data ?? []).map((c) => [c.id, c.logoUrl ?? null]))
+    return (id: string) => map.get(id) ?? null
+  }, [clients.data])
   const staffName = useMemo(() => {
     const map = new Map((staff.data ?? []).map((s) => [s.id, s.name]))
     return (id: string | null) => (id ? map.get(id) ?? 'Equipe' : 'Sem responsável')
@@ -88,6 +95,7 @@ export function useProduction() {
     staff: staff.data,
     myStaffId: me.data ?? null,
     clientName,
+    clientLogo,
     staffName,
     isPending: clients.isPending || staff.isPending,
     isError: clients.isError || staff.isError,

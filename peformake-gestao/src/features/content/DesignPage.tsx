@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { GuideButton } from '@/features/clients/BrandGuideCard'
+import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { countdown } from '@/features/av/avRules'
@@ -97,8 +98,30 @@ export function DeliverDialog({ item, finals, clientName, onClose }: { item: Con
   )
 }
 
-function QueueCard({ item, files, now, mine, clientName, staffName, onDeliver }: {
-  item: ContentItem; files: ContentFile[]; now: number; mine: boolean; clientName: string; staffName: string; onDeliver: () => void
+const IMG_EXT = /\.(png|jpe?g|webp|gif|avif)(\?|$)/i
+/** Link de referência que é foto (abre como capa do cartão). */
+const isImageLink = (url: string) => IMG_EXT.test(url) || url.includes('/reference-images/')
+function previewUrl(path: string): string {
+  return supabase.storage.from('content-files').getPublicUrl(path).data.publicUrl
+}
+
+/** Capa do cartão: a primeira foto de referência que a social media mandou (pedido do Italo, 20/11). */
+function RefCover({ images, title }: { images: string[]; title: string }) {
+  const [failed, setFailed] = useState(false)
+  if (images.length === 0 || failed) return null
+  return (
+    <a href={images[0]} target="_blank" rel="noopener noreferrer" aria-label={`Abrir a referência de ${title}`}
+      className="relative -mx-3 -mt-3 block aspect-[16/9] overflow-hidden rounded-t-2xl border-b border-line bg-raised">
+      <img src={images[0]} alt="" loading="lazy" onError={() => setFailed(true)} className="size-full object-cover transition-transform duration-300 hover:scale-[1.03]" />
+      {images.length > 1 && (
+        <span className="absolute bottom-2 right-2 rounded-full bg-black/65 px-2 py-0.5 text-[11px] font-semibold text-white">+{images.length - 1} referência{images.length > 2 ? 's' : ''}</span>
+      )}
+    </a>
+  )
+}
+
+function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
+  item: ContentItem; files: ContentFile[]; now: number; mine: boolean; staffName: string; onDeliver: () => void
 }) {
   const queryClient = useQueryClient()
   const refs = files.filter((f) => f.role === 'reference')
@@ -109,48 +132,53 @@ function QueueCard({ item, files, now, mine, clientName, staffName, onDeliver }:
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['design-queue'] }),
   })
   const extra = specSummary(item)
+  const images = [
+    ...refs.filter((f) => f.mime.startsWith('image/')).map((f) => previewUrl(f.path)),
+    ...item.referenceLinks.filter(isImageLink),
+  ]
+  const otherLinks = item.referenceLinks.filter((l) => !isImageLink(l))
+  const started = item.status === 'in_production'
   return (
-    <li className={cn('flex flex-col gap-2 rounded-2xl border bg-surface p-3', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
-      <div className="flex items-start justify-between gap-2">
-        <Link to={`/conteudo/peca/${item.id}`} className="min-w-0 text-ink no-underline">
-          <p className="truncate text-[12px] text-muted">{clientName} · {KIND_LABEL[item.kind]}{mine ? '' : ` · ${staffName}`}</p>
-          <p className="font-semibold leading-snug">{itemTitle(item)}</p>
-          {item.priority && <PriorityBadge className="mt-1" />}
-        </Link>
-        {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>Entrega {c.text}</span>}
+    <li className={cn('flex flex-col gap-2.5 overflow-hidden rounded-2xl border bg-surface p-3', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
+      <RefCover images={images} title={itemTitle(item)} />
+      <div className="flex items-center justify-between gap-2">
+        <p className="min-w-0 truncate text-[12px] text-muted">{KIND_LABEL[item.kind]}{extra ? ` · ${extra}` : ''}{mine ? '' : ` · ${staffName.split(' ')[0]}`}</p>
+        {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>{c.text}</span>}
       </div>
+      <Link to={`/conteudo/peca/${item.id}`} className="-mt-1 text-ink no-underline hover:underline">
+        <p className="line-clamp-2 font-semibold leading-snug">{itemTitle(item)}</p>
+      </Link>
+      {item.priority && <PriorityBadge />}
       {item.status === 'changes_requested' && item.revisionNote
-        ? <p className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>
+        ? <p className="line-clamp-3 rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>
         : shortBriefing(item) && <p className="line-clamp-2 text-[13px] text-muted">{shortBriefing(item)}</p>}
-      {extra && <p className="text-[12px] font-medium">{extra}</p>}
-      {item.referenceLinks.length > 0 && (
+      {otherLinks.length > 0 && (
         <p className="flex flex-wrap gap-1.5">
-          {item.referenceLinks.slice(0, 4).map((l) => (
-            <a key={l} href={l} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-[160px] items-center gap-1 truncate rounded-full border border-line px-2 py-0.5 text-[12px]">
+          {otherLinks.slice(0, 3).map((l) => (
+            <a key={l} href={l} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-[180px] items-center gap-1 truncate rounded-full border border-line px-2 py-0.5 text-[12px]">
               <Link2 size={11} aria-hidden="true" /> {hostOf(l)}
             </a>
           ))}
         </p>
       )}
-      <div className="flex flex-wrap items-center gap-2">
-        <Button onClick={onDeliver}><Send size={15} aria-hidden="true" /> Entregar arte</Button>
+      <div className="mt-auto flex items-center gap-2 pt-1">
+        <Button className="flex-1" onClick={onDeliver}><Send size={15} aria-hidden="true" /> Entregar arte</Button>
+        {started
+          ? <span className="shrink-0 rounded-full bg-raised px-3 py-2 text-[12.5px] font-medium text-muted">{STATUS_LABEL.in_production}</span>
+          : <Button variant="secondary" className="shrink-0" disabled={start.isPending} onClick={() => start.mutate()}>{start.isPending ? 'Marcando' : 'Comecei'}</Button>}
+      </div>
+      <div className="-mb-1 flex items-center justify-between gap-2 border-t border-line pt-1">
+        {item.clientId ? <GuideButton clientId={item.clientId} start="visual" className="-ml-2" /> : <span />}
         {refs.length > 0 && (
-          <Button variant="secondary" disabled={busy} onClick={() => {
+          <button type="button" disabled={busy} onClick={() => {
             setBusy(true)
             // Baixou as referências: a peça já fica Em produção e o tempo começa a contar.
-            if (item.status !== 'in_production') start.mutate()
+            if (!started) start.mutate()
             void downloadAll(refs).finally(() => setBusy(false))
-          }}>
-            <Download size={15} aria-hidden="true" /> {busy ? 'Baixando' : `Baixar referências (${refs.length})`}
-          </Button>
-        )}
-        {item.status !== 'in_production' && (
-          <button type="button" disabled={start.isPending} onClick={() => start.mutate()} className="min-h-10 cursor-pointer px-2 text-[13px] font-medium text-muted hover:text-ink">
-            {start.isPending ? 'Marcando' : 'Comecei'}
+          }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 text-[12.5px] font-medium text-muted hover:bg-raised hover:text-ink">
+            <Download size={14} aria-hidden="true" /> {busy ? 'Baixando' : `Baixar referências (${refs.length})`}
           </button>
         )}
-        {item.status === 'in_production' && <span className="text-[12px] text-muted">{STATUS_LABEL.in_production}</span>}
-        {item.clientId && <GuideButton clientId={item.clientId} start="visual" className="ml-auto" />}
       </div>
     </li>
   )
@@ -159,7 +187,7 @@ function QueueCard({ item, files, now, mine, clientName, staffName, onDeliver }:
 /** Aba Design: a fila do designer, com o tempo de entrega, referências e a entrega em 3 toques. */
 export function DesignPage() {
   const now = useNow()
-  const { clients, staff, myStaffId, clientName, staffName, isPending, isError, refetch, isLive } = useProduction()
+  const { clients, staff, myStaffId, clientName, clientLogo, staffName, isPending, isError, refetch, isLive } = useProduction()
   const queue = useQuery({ queryKey: ['design-queue'], queryFn: listDesignQueue, refetchInterval: 120_000 })
   const ids = useMemo(() => (queue.data ?? []).map((i) => i.id), [queue.data])
   const files = useQuery({ queryKey: ['design-queue-files', ids], queryFn: () => listFiles(ids), enabled: ids.length > 0 })
@@ -214,19 +242,19 @@ export function DesignPage() {
               <li key={cid} className={cn('rounded-2xl border bg-surface', late || prio ? 'border-warn/60' : 'border-line')}>
                 <button type="button" aria-expanded={isOpen} onClick={() => toggle(cid)}
                   className="flex min-h-14 w-full cursor-pointer items-center gap-3 px-3 py-2 text-left">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-raised text-[14px] font-semibold text-ink">{clientName(cid).slice(0, 1)}</span>
+                  <ClientAvatar name={clientName(cid)} url={clientLogo(cid)} size="row" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">{clientName(cid)}</span>
                     <span className="block text-[12.5px] text-muted">{items.length} {items.length === 1 ? 'arte' : 'artes'} para fazer{adjust ? ` · ${adjust} com ajuste` : ''}{prio ? <b className="font-semibold text-warn-ink"> · {prio} prioridade</b> : ''}</span>
                   </span>
-                  {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>Próxima {c.text}</span>}
+                  {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}><span className="hidden sm:inline">Próxima </span>{c.text}</span>}
                   <ChevronDown size={18} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
                 </button>
                 {isOpen && (
                   <ul className="grid grid-cols-1 gap-3 border-t border-line p-3 md:grid-cols-2 xl:grid-cols-3">
                     {items.map((i) => (
                       <QueueCard key={i.id} item={i} files={filesOf(i.id)} now={now} mine={i.designerId === myStaffId && !!myStaffId}
-                        clientName={clientName(i.clientId)} staffName={staffName(i.designerId)} onDeliver={() => setDelivering(i)} />
+                        staffName={staffName(i.designerId)} onDeliver={() => setDelivering(i)} />
                     ))}
                   </ul>
                 )}
