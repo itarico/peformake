@@ -433,13 +433,34 @@ hosts = '\n'.join(f'<div id="{c.id}" class="clip" data-composition-id="{c.id}" d
 <html lang="pt-BR"><head><meta charset="utf-8"><title>Se o Brasil fosse Panem{" (teste)" if TESTE else ""}</title>
 <script src="assets/gsap.min.js"></script>
 <style>body{{margin:0}}#main{{position:relative;width:1920px;height:1080px;overflow:hidden;background:{CARVAO}}}</style></head>
-<body><div id="main" data-composition-id="main" data-start="0" data-duration="{DUR:.4f}" data-width="1920" data-height="1080" data-fps="{FPS}">
+<body><div id="main" data-composition-id="main" data-start="0" data-duration="{math.floor(DUR * 1e6) / 1e6:.6f}" data-width="1920" data-height="1080" data-fps="{FPS}">
 {hosts}
 </div>
 <script>window.__timelines = window.__timelines || {{}}; window.__timelines.main = gsap.timeline({{paused:true}});</script></body></html>
 ''', encoding='utf-8')
 for a, b in zip(CENAS, CENAS[1:]):
     if abs(a.fim - b.ini) > 1e-6: print('AVISO: buraco/sobreposição entre', a.id, b.id, round(a.fim, 3), round(b.ini, 3))
+# partes para renderizar com pouco disco (o render paralelo guarda todos os quadros no Temp): index_parte1..N.html
+NP = 1 if TESTE else 4
+if NP > 1:
+    alvo = DUR / NP; grupos = [[]]
+    for c in CENAS:
+        if grupos[-1] and c.ini >= alvo * len(grupos) and len(grupos) < NP: grupos.append([])
+        grupos[-1].append(c)
+    for k, g in enumerate(grupos, 1):
+        t0 = g[0].ini; t1 = g[-1].fim if k < len(grupos) else DUR
+        hs = chr(10).join(f'<div id="{c.id}" class="clip" data-composition-id="{c.id}" data-composition-src="compositions/{c.id}.html" '
+                          f'data-start="{c.ini - t0:.4f}" data-duration="{c.fim - c.ini:.4f}" data-track-index="0" data-track-kind="graphics"></div>' for c in g)
+        (OUT / f'index_parte{k}.html').write_text(f'''<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Panem parte {k}</title>
+<script src="assets/gsap.min.js"></script>
+<style>body{{margin:0}}#main{{position:relative;width:1920px;height:1080px;overflow:hidden;background:{CARVAO}}}</style></head>
+<body><div id="main" data-composition-id="main" data-start="0" data-duration="{math.floor((t1 - t0) * 1e6) / 1e6:.6f}" data-width="1920" data-height="1080" data-fps="{FPS}">
+{hs}
+</div>
+<script>window.__timelines = window.__timelines || {{}}; window.__timelines.main = gsap.timeline({{paused:true}});</script></body></html>
+''', encoding='utf-8')
+        print(f'parte {k}: {t0:.2f} a {t1:.2f} s ({len(g)} cenas, {round((t1 - t0) * FPS)} quadros)')
 json.dump({'dur': DUR, 'linha': LINHA, 'eventos': sorted(EVENTOS, key=lambda e: e['t']), 'trilha': TRILHA, 'respiros': RESPIROS,
            'cenas': [{'id': c.id, 'ini': c.ini, 'fim': c.fim} for c in CENAS]},
           open(OUT / 'eventos.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
