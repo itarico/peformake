@@ -63,7 +63,7 @@ Geração anterior, não segue o MDD.
 
 ## 5c. Estudos de perfil
 `perfis/`: um arquivo por perfil estudado inteiro (números, ideias que funcionam, gramática de edição, links das fichas).
-Primeiro: `perfis/salleszk.md`.
+Primeiro: `perfis/salleszk.md`. Transições: `perfis/willrvail.md` (Will Vail, 21/11/2026).
 
 ## 5d. Mapa, placar e rotina diária (o motor que se aprimora)
 - `MAPA-ESTRUTURAS.md`: código S por objetivo, os mais fortes, esqueleto por código, S-novo e códigos sem exemplo.
@@ -97,6 +97,9 @@ continua sendo a do PC. Se editar lá, copie de novo para cá.
   num PC (repositório, MCP e skills): `ferramentas/openmotion/INSTALAR.md` e `instalar-openmotion.ps1`.
   Aprendizados de uso real (duração em quadros inteiros, import por ZIP, atraso dos efeitos do Pixabay):
   `ferramentas/openmotion/APRENDIZADOS.md`. Exemplo completo: `youtube/roteiros/taoismo/montagem/v70-openmotion/`.
+- `transicoes-willrvail/` (21/11/2026): receitas das transições do @willrvail (flash cut, negativo, whip, silhueta,
+  match cut, tinta como luma matte, light leak, wipe por objeto, glitch) em ffmpeg, Remotion, HTML+GSAP e Premiere,
+  com 6 transições prontas para o documentário do Taoísmo. Estudo do perfil: `perfis/willrvail.md`.
 
 Ficaram de fora as skills de terceiros instaladas (seedance, kling, hyperframes, remotion, ugc-ad-scripts,
 ad-hook-analyzer, humanizar, nem-parece-ia e outras): não são estudo da casa e podem ser reinstaladas.

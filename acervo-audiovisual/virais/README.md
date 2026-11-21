@@ -4,7 +4,7 @@ Cada linha é um vídeo que funcionou, estudado com a skill `engenharia-reversa-
 reutilizável, o molde de fala e como aplicar em cliente. Código S = catálogo de estruturas
 (`peformake-gestao/docs/ESTUDO-ROTEIRO-AUDIOVISUAL.md` §3c).
 
-Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)).
+Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md), [@willrvail](../perfis/willrvail.md)).
 
 ## O que se repete nos vídeos de topo (19/11/2026)
 - **Palavra-isca (S100)** aparece em boa parte dos que têm comentário alto: o vídeo mostra o resultado e guarda o material
@@ -24,6 +24,7 @@ Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)
 | Vídeo | Estrutura | Estilo | Força no perfil | Ficha |
 |---|---|---|---|---|
 | Edit de rolê no beat (Tokyo à noite) · @rabbits (Guilherme Coelho) · 01/09/2025 | S-novo: "Edit de rolê" | E29 | 81,1x | [ficha](2025-09-01_rabbits_DOERCXTjaRg.md) |
+| Match cut com mancha de tinta (luma matte): "é mais fácil do que parece" · @willrvail (Will Vail) · 09/04/2026 | S50 + S116 | E9 | 2,7x | [ficha](2026-04-09_willrvail_DW6eZHpjWxc.md) |
 | Documentário de mesa com pergunta em aberto · @earn.edits · 14/05/2026 | S104 + S55 | E35 | 13,0x | [ficha](2026-05-14_earn.edits_DYURMKHoayc.md) |
 | Manifesto de valor próprio com tipografia em três vozes · @salleszk (Wesley Salles) · 04/06/2026 | S9 | E1 + E16 | 2,3x | [ficha](2026-06-04_salleszk_DZK3AfWgF3y.md) |
 | Ligação encenada: um amigo liga para o outro e os dois montam a reflexão · @salleszk (Wesley Salles) · 21/06/2026 | S44 | E19 + E-novo: ligação em corte | 37x | [ficha](2026-06-21_salleszk_DZ22sHBgKfz.md) |
@@ -65,6 +66,7 @@ Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)
 | Segredos do lugar em perguntas (POV: uma publicitária no mercado) · @giubeckers · 10/10/2026 | S95 + S55 | E17 | 93,4x | [ficha](2026-10-10_giubeckers_DeUW7htRxyx.md) |
 | Manifesto de marca em imagens no monitor (Idea.ai) · @dacostamotion · 12/10/2026 | S-novo: "Brand book em movimento" | E38 | 32,4x | [ficha](2026-10-12_dacostamotion_DeZZ7UIOWcl.md) |
 | Tutorial com o resultado em cima e a isca do arquivo · @ignaciovasconez · 13/10/2026 | S50 + S100 | E9 + E3 | 35,4x | [ficha](2026-10-13_ignaciovasconez_DecOTJJuFyQ.md) |
+| Breakdown de 12 efeitos com a lista crescendo na tela · @willrvail (Will Vail) · 13/10/2026 | S-novo: "Breakdown de viral alheio" + S100 | E3 | 8,0x | [ficha](2026-10-13_willrvail_Deb-VcJRpxp.md) |
 | Oferta de serviço com um cenário prático por frase ("6 vagas em outubro") · @salleszk (Wesley Salles) · 14/10/2026 | S84 + S86 | E27 | 1,1x | [ficha](2026-10-14_salleszk_DefVZvwgS2s.md) |
 | Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers · 18/10/2026 | S50 + S51 | E17 | 6,0x | [ficha](2026-10-18_giubeckers_Deo9FIKRJSG.md) |
 | Mentira absurda → revelação com IA (carro que não existe) · @leoboehme_ · 20/10/2026 | S34 | E24 + E17 | 7,1x | [ficha](2026-10-20_leoboehme__DeuXePGPcQ5.md) |
@@ -87,5 +89,8 @@ Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)
 | "Editado 100% com IA" que termina defendendo o humano · @omarcosvianna · 06/11/2026 | S1 + S8 | E1 + E16 + E40 | 7,2x | [ficha](2026-11-06_omarcosvianna_DfagzsGv2GT.md) |
 | Ferramenta grátis revelada em tela dividida com palavra-isca · @99hud · 08/11/2026 | S59 | E3 + E10 | 5,7x | [ficha](2026-11-08_99hud_DffrHm4DmJ4.md) |
 | Série "Cena Criativa" ep. 3: a TV da sala vira janela de trem, avião e cidade · @salleszk (Wesley Salles) · 10/11/2026 | S91 + S50 + S113 | E17 + E28 | 5,9x | [ficha](2026-11-10_salleszk_DfkzgmuA3-D.md) |
+| Breakdown de joias: vazamento de luz, filme queimado, raio X · @willrvail (Will Vail) · 12/11/2026 | S-novo: "Breakdown de viral alheio" + S100 | E3 | 3,2x | [ficha](2026-11-12_willrvail_DfnuZFyv6eQ.md) |
 | Série "Cena Criativa": ensina a montar a cena e grava a cena na hora · @salleszk (Wesley Salles) · 13/11/2026 | S91 + S50 + S113 | E1 + E19 |  | [ficha](2026-11-13_salleszk_DfsfXTHA4nW.md) |
 | Série "Cena Criativa" ep. 5: 5 tipos de corte, cada um feito no próprio vídeo · @salleszk (Wesley Salles) · 16/11/2026 | S91 + S51 + S-novo: a | E17 | 4,7x | [ficha](2026-11-16_salleszk_Df0Psq5AUDb.md) |
+| Breakdown de oficina: corte relâmpago, negativo e borrão · @willrvail (Will Vail) · 17/11/2026 | S-novo: "Breakdown de viral alheio" + S100 | E3 | 6,2x | [ficha](2026-11-17_willrvail_Df2NAP3R7KC.md) |
+| Breakdown de óculos em vermelho: obturador baixo, negativo ciano e silhueta · @willrvail (Will Vail) · 20/11/2026 | S-novo: "Breakdown de viral alheio" + S100 | E3 | 1,0x | [ficha](2026-11-20_willrvail_Df97b3bxVUL.md) |

@@ -1,2 +1,5 @@
 youtube/pesquisas/*/thumbs/
 youtube/pesquisas/*/*/thumbs/
+
+# Brutos de estudo (videos e quadros baixados): ficam so no PC
+_brutos/
