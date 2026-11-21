@@ -487,7 +487,7 @@ Dá errado quando: As opções são parecidas demais ou pequenas no celular: nin
 ## S100 Palavra-isca · alcance, comentário
 Exige: nada especial · funil T/F · regulado: com cuidado · 8-45 s
 Mecanismo: O vídeo mostra algo que a pessoa quer levar e diz que só leva quem comentar uma palavra. Cada comentário empurra o alcance e abre uma conversa na mensagem direta, onde a entrega vira lead. O vídeo entrega o bastante para provar o valor (a amostra, o resultado, os passos rápidos) e segura o que não dá para copiar de cabeça (o arquivo, o passo que falta, o link). Quanto mais o vídeo é a própria amos
-Exemplos: @jaybendonlifts_ 391,2x (público: editores/criadores de vídeo) "Breakdown de SFX com palavra-isca"; @helalwork 114,8x (público: editores/criadores de vídeo) "Vitrine sonora do brinde (comenta SFX)"; @marcolamaia 36,8x (público: editores/criadores de vídeo) "Review de produto que não existe (troca por IA)". Ficha: virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md
+Exemplos: @jaybendonlifts_ 391,2x (público: editores/criadores de vídeo) "Breakdown de SFX com palavra-isca"; @helalwork 114,8x (público: editores/criadores de vídeo) "Vitrine sonora do brinde (comenta SFX)"; @willrvail 8,0x "Breakdown de 12 efeitos com a lista crescendo na tela". Ficha: virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md
 0–10% · Gancho: O resultado ou a amostra já na tela, com um título do que é. Em vídeo de até 12 s, o título já é o pedido ("Comenta [PALAVRA]").
 10–40% · Prova: Vitrine do que se ganha: exemplos, itens, antes e depois, um por batida.
 40–80% · Tensão: O "como" em passos rápidos ou numa lista com escalada; o essencial fica guardado para a isca.
@@ -620,10 +620,14 @@ Dá errado quando: O erro é encenado de forma óbvia e parece falso.; Não há 
 - Brand book em movimento · 24,6x · @dacostamotion · virais/2026-09-02_dacostamotion_DcygNrjOYUa.md
 - Showreel com fio narrativo · 21,0x · @ahmedsami94 · virais/2026-08-19_ahmedsami94_DcOIGDdss_L.md
 - Pergunta ao júri · 9,4x · @aslaniedits · virais/2026-10-08_aslaniedits_DeOuD_xMFYZ.md
+- Breakdown de viral alheio · 8,0x · @willrvail · virais/2026-10-13_willrvail_Deb-VcJRpxp.md
 - Falso anúncio de fim · 7,2x · @mavicproducoes · virais/2026-09-17_mavicproducoes_DdZPZhdxpgQ.md
 - Mosaico de portfólio · 6,5x · @aslaniedits · virais/2026-10-21_aslaniedits_Dew85IgsLQg.md
 - mural de investigação encenado · 6,2x · @salleszk · virais/2026-09-01_salleszk_DcwrohHA3Ht.md
+- Breakdown de viral alheio · 6,2x · @willrvail · virais/2026-11-17_willrvail_Df2NAP3R7KC.md
 - Brand book em movimento · 6,1x · @dacostamotion · virais/2026-11-02_dacostamotion_DfPdO0_m6GZ.md
 - a lista se demonstra · 4,7x · @salleszk · virais/2026-11-16_salleszk_Df0Psq5AUDb.md
+- Breakdown de viral alheio · 3,2x · @willrvail · virais/2026-11-12_willrvail_DfnuZFyv6eQ.md
 - conversa à distância · 1,5x · @salleszk · virais/2026-08-17_salleszk_DcKH3u_oMrd.md
+- Breakdown de viral alheio · 1,0x · @willrvail · virais/2026-11-20_willrvail_Df97b3bxVUL.md
 - Viral dentro do viral · s/ mediana · @eu.adrian_g.s · virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md

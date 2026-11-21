@@ -94,3 +94,4 @@ Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)
 | Série "Cena Criativa" ep. 5: 5 tipos de corte, cada um feito no próprio vídeo · @salleszk (Wesley Salles) · 16/11/2026 | S91 + S51 + S-novo: a | E17 | 4,7x | [ficha](2026-11-16_salleszk_Df0Psq5AUDb.md) |
 | Breakdown de oficina: corte relâmpago, negativo e borrão · @willrvail (Will Vail) · 17/11/2026 | S-novo: "Breakdown de viral alheio" + S100 | E3 | 6,2x | [ficha](2026-11-17_willrvail_Df2NAP3R7KC.md) |
 | Breakdown de óculos em vermelho: obturador baixo, negativo ciano e silhueta · @willrvail (Will Vail) · 20/11/2026 | S-novo: "Breakdown de viral alheio" + S100 | E3 | 1,0x | [ficha](2026-11-20_willrvail_Df97b3bxVUL.md) |
+| Carrossel de 20 edições 16:9: acento de 1 a 3 quadros, estrobo de silhueta, HUD de jogo e som que abafa e volta · @sam.john.creates (Sam John) · 17/11/2026 | S100 | E3 + E29 + E8 + E40 |  | [ficha](2026-11-17_sam.john.creates_Df2LedmCsjm.md) |

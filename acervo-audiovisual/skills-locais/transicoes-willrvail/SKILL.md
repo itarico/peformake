@@ -348,3 +348,41 @@ tl.fromTo(q1('[data-hf-id="t6-luz"]'),{x:-900,opacity:0},{x:1920,opacity:1,durat
 
 **Antes de exportar:** duração da composição em número inteiro de quadros, `hyperframes check --json`, e o SFX adiantado
 pelo ataque de cada arquivo (ver `ferramentas/openmotion/APRENDIZADOS.md`).
+
+---
+
+## Referência Df2LedmCsjm (@sam.john.creates, carrossel de 20 edições 16:9, 17/11/2026)
+Ficha completa com a tabela quadro a quadro: `acervo-audiovisual/virais/2026-11-17_sam.john.creates_Df2LedmCsjm.md`.
+Medido a 30 qps (para 24 qps, multiplique os quadros por 0,8 e arredonde). Não é do @willrvail; mesma família de linguagem.
+
+### Transições novas (somam às receitas 1 a 9)
+| Nome | Quadros | Easing | Como fazer | Som |
+|---|---|---|---|---|
+| 10. Estrobo de silhueta (fundo troca, figura fica) | 1 a 2 q por cor, 6 a 8 q no total | seco | figura recortada (ou pictograma) por cima de fundos sólidos alternando preto, branco e 1 cor de destaque | 1 tick agudo por troca, baixo (-6 a 0 dB sobre a música) |
+| 11. Recorte branco da forma seguinte | 1 q | seco | máscara da figura/objeto do plano SEGUINTE preenchida de branco sobre o plano atual; depois corte seco (ou whip) | riser de 0,6 s terminando no corte |
+| 12. Rampa de exposição até o branco | 4 q subindo, corte para plano escuro | ease-in | brilho/exposição em keyframe até estourar (luz 50 → 150 → 220 → 250) | música em passa-baixa abrindo 0,4 s antes + swell; impacto ou shimmer no branco |
+| 13. Troca de mapa de cor por quadro | 1 q por gradação, 3 a 6 q | seco | o mesmo plano em térmico, cinza, negativo, um por quadro | estalos digitais em rajada |
+| 14. Pixel stretch (arrasto vertical) | 3 a 5 q | ease-in | esticar uma linha de pixels até cobrir a tela | whoosh curto |
+| 15. Moldura que salta (portal) | 3 q de entrada | ease-out com overshoot leve | moldura listrada de 2 cores escala de 1,15 para 1 com o plano seguinte dentro | **1 s de silêncio antes** e impacto brilhante no quadro (+15 a +20 dB) |
+| 16. Wipe branco de 1 q | 1 q | seco | faixa branca cobrindo 70 % do quadro, vindo de cima | queda da música, riser e drop 0,5 s depois |
+| 17. Flip para negativo segurado | 0 q, segura 1 s | seco | o mesmo plano invertido, sem cortar | nenhum: a música baixa 3 dB |
+| 18. HUD de videogame | entra elemento a elemento, 3 a 6 q cada | ease-out | nome do lugar em serifada de RPG no topo, barra de vida, minimapa, caixa de missão; desenhar o próprio HUD | blip de interface por elemento |
+
+### Som: o que os números ensinam (20 vídeos, 384 cortes)
+- 58 % dos cortes têm ataque de som a até 100 ms (acaso: 34 %). Entre os sincronizados, **o som vem 15 ms antes** (meio
+  quadro). No ffmpeg: `adelay` = (tempo do corte - 0,015 - ataque do arquivo) em ms.
+- Efeito pontual fica **0 a +6 dB** sobre a música. Impacto forte (+10 a +20 dB) só depois de **silêncio ou passa-baixa**.
+- **Respiro a cada 10 a 15 s:** música abafada (passa-baixa até 500 Hz) por 0,3 a 1 s, ou silêncio de 0,5 a 1 s; volta
+  com riser de 0,6 s (+15 a +28 dB) terminando no corte, ou impacto no primeiro quadro.
+- Fade para o preto: passa-baixa fechando junto com a imagem; a música volta forte 0,5 s depois.
+- Transição sem som também vale (negativo de 2 q só com a música).
+
+Passa-baixa com rampa (ffmpeg; trilha.wav, abafa de 10,2 s a 11,0 s e cala até 11,3 s):
+```bash
+ffmpeg -i trilha.wav -af "lowpass=f=500:enable='between(t,10.2,11.0)',volume=0:enable='between(t,11.0,11.3)'" trilha_respiro.wav
+```
+(O `lowpass` com `enable` liga seco; para descer em rampa, faça 3 degraus: 4000, 1500 e 500 Hz em fatias de 0,25 s.)
+
+Onde achar sons parecidos (sem baixar agora): Freesound com filtro "Creative Commons 0" e Pixabay (licença própria, não
+CC0, uso comercial). Buscas: "tick click short", "camera shutter", "glitch digital", "whoosh short", "riser",
+"reverse riser", "sub drop", "cinematic hit", "boom impact", "ui click", "game notification", "shimmer".

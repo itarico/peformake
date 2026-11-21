@@ -3,7 +3,7 @@
 Gerado por `acervo-audiovisual/ferramentas/mapa_estruturas.py` a partir de `acervo-audiovisual/virais/`.
 Não editar à mão: escreva ou corrija a ficha e rode o script de novo.
 
-66 fichas · 52 códigos S com exemplo real · 16 candidatos a S-novo.
+72 fichas · 52 códigos S com exemplo real · 20 candidatos a S-novo.
 
 Porta de entrada: `acervo-audiovisual/MOTOR.md`. Como usar (motor de roteiro, M2 curador e M5 roteirista):
 1. Tire da mesa o que o cliente não consegue gravar (`ESTRUTURAS/FICHA-ENTRADA.md` e a tabela "Por exigência").
@@ -24,14 +24,14 @@ Porta de entrada: `acervo-audiovisual/MOTOR.md`. Como usar (motor de roteiro, M2
 | UGC e cliente (S21–S28) | prova, conversão | S22 (2), S23 (1), S24 (1) |
 | Gancho visual e quebra (S29–S38) | alcance | S32 (1), S34 (2), S37 (1), S38 (1) |
 | História (S39–S49) | alcance, conexão | S39 (1), S40 (6), S44 (3), S45 (1), S48 (2), S49 (1) |
-| Educativo (S50–S60) | salvar, autoridade | S50 (11), S51 (7), S52 (1), S53 (2), S55 (4), S57 (1), S59 (3) |
+| Educativo (S50–S60) | salvar, autoridade | S50 (12), S51 (7), S52 (1), S53 (2), S55 (4), S57 (1), S59 (3) |
 | Prova (S61–S69) | conversão, objeção | S63 (2), S64 (1), S65 (2) |
 | Humor e trend (S70–S80) | alcance, seguidores | S70 (4), S72 (2), S74 (1), S75 (1), S79 (1) |
 | Venda direta (S81–S90) | conversão | S81 (1), S84 (2), S85 (1), S86 (1) |
 | Série e recorrência (S91–S96) | seguidores, retenção | S91 (6), S95 (1) |
-| Reação e interação (S97–S103) | alcance, comentário | S97 (1), S99 (1), S100 (20), S101 (1) |
+| Reação e interação (S97–S103) | alcance, comentário | S97 (1), S99 (1), S100 (25), S101 (1) |
 | Sem rosto e processo (S104–S112) | alcance, viabilidade | S104 (4), S105 (6), S106 (1), S107 (1), S108 (1), S109 (3), S112 (1) |
-| Processo e bastidor (S113–S117) | prova, alcance | S113 (7), S115 (1), S116 (5) |
+| Processo e bastidor (S113–S117) | prova, alcance | S113 (7), S115 (1), S116 (6) |
 
 ## Por exigência (o que o cliente precisa ter)
 
@@ -419,6 +419,7 @@ Mecanismo: O objeto é o herói e fica no centro o vídeo todo; só o cenário, 
 - 13,0x (público: editores/criadores de vídeo) · Tutorial com assinatura visual (fisheye + azul + laranja) · @_victorzk · [ficha](virais/2026-08-27__victorzk_DcjsyZRSkuA.md)
 - 8,2x (público: editores/criadores de vídeo) · Mesma pose, quatro tratamentos, e o "como eu fiz" (16:9, palavra-isca) · @melikazaghari · [ficha](virais/2026-11-01_melikazaghari_DfM8Y32IQUY.md)
 - 6,0x (público: marketing e conteúdo) · Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers · [ficha](virais/2026-10-18_giubeckers_Deo9FIKRJSG.md)
+- 2,7x · Match cut com mancha de tinta (luma matte): "é mais fácil do que parece" · @willrvail · [ficha](virais/2026-04-09_willrvail_DW6eZHpjWxc.md)
 - 11,5x (público: outro (IA e ferramentas)) · Ferramenta grátis contra a paga, demo em UI escura (+ palavra-isca) · @gab.gouvea (secundária) · [ficha](virais/2026-10-26_gab.gouvea_De9lLWSsJAj.md)
 - 10,1x (público: outro (IA e ferramentas)) · Novidade de IA com vitrine visual + palavra-isca · @ashokreddyai (secundária) · [ficha](virais/2026-10-08_ashokreddyai_DePNgrmToh9.md)
 - 7,4x (público: editores/criadores de vídeo) · "Ainda fazem isso na mão": original + arquivo = resultado, depois a tela filmada · @nomadatoast (secundária) · [ficha](virais/2026-09-24_nomadatoast_DdrD7WQpYK7.md)
@@ -711,6 +712,11 @@ Mecanismo: O vídeo põe na tela algo para julgar (duas opções, ou uma peça c
 ### S100 · Palavra-isca  (Reação e interação; alcance, comentário)
 - 391,2x (público: editores/criadores de vídeo) · Breakdown de SFX com palavra-isca · @jaybendonlifts_ · [ficha](virais/2026-08-13_jaybendonlifts_Db_BY95IzKn.md)
 - 114,8x (público: editores/criadores de vídeo) · Vitrine sonora do brinde (comenta SFX) · @helalwork · [ficha](virais/2026-09-03_helalwork_Dc1AHDotwvU.md)
+- 8,0x · Breakdown de 12 efeitos com a lista crescendo na tela · @willrvail · [ficha](virais/2026-10-13_willrvail_Deb-VcJRpxp.md)
+- 6,2x · Breakdown de vídeo de oficina: corte relâmpago, negativo e borrão · @willrvail · [ficha](virais/2026-11-17_willrvail_Df2NAP3R7KC.md)
+- s/ mediana (público: editores/criadores de vídeo) · Carrossel "as 20 edições 16:9 favoritas do ano": transições de 1 a 3 quadros e som que respira · @sam.john.creates · [ficha](virais/2026-11-17_sam.john.creates_Df2LedmCsjm.md)
+- 3,2x · Breakdown de joias: vazamento de luz, filme queimado, raio X e match cut · @willrvail · [ficha](virais/2026-11-12_willrvail_DfnuZFyv6eQ.md)
+- 1,0x · Breakdown de óculos em vermelho: obturador baixo, negativo ciano e silhueta · @willrvail · [ficha](virais/2026-11-20_willrvail_Df97b3bxVUL.md)
 - 36,8x (público: editores/criadores de vídeo) · Review de produto que não existe (troca por IA) · @marcolamaia (secundária) · [ficha](virais/2026-10-29_marcolamaia_DfFaVmAitkU.md)
 - 35,4x (público: editores/criadores de vídeo) · Tutorial com o resultado em cima e a isca do arquivo · @ignaciovasconez (secundária) · [ficha](virais/2026-10-13_ignaciovasconez_DecOTJJuFyQ.md)
 - 28,7x (público: outro (IA e ferramentas)) · Conta da economia em lista com avatar · @joao.escala1p1 (secundária) · [ficha](virais/2026-11-04_joao.escala1p1_DfTIAPVRKX-.md)
@@ -865,6 +871,7 @@ Mecanismo: O vídeo começa no estado ruim (o velho, o quebrado, o sujo) e termi
 - 27,2x (público: editores/criadores de vídeo) · Bastidor e resultado no mesmo instante (moldura de filme) · @rabbits (secundária) · [ficha](virais/2026-07-02_rabbits_DaSz7w0vL52.md)
 - 6,0x (público: marketing e conteúdo) · Tutorial em 4 fundamentos numerados com a tela da câmera · @giubeckers (secundária) · [ficha](virais/2026-10-18_giubeckers_Deo9FIKRJSG.md)
 - s/ mediana (público: marketing e conteúdo) · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s (secundária) · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
+- 2,7x · Match cut com mancha de tinta (luma matte): "é mais fácil do que parece" · @willrvail (secundária) · [ficha](virais/2026-04-09_willrvail_DW6eZHpjWxc.md)
 
 **Gramática** ([ESTRUTURAS/S116.md](ESTRUTURAS/S116.md)) · exige: nada especial · funil T/M · regulado: com cuidado
 Mecanismo: Mostrar a costura do próprio vídeo (quem grava, o take que deu errado, o recurso que entrou em cada corte) transforma uma peça comum em conteúdo de bastidor. O público sente que viu algo de dentro, e o resultado limpo, quando aparece, vira prova de trabalho. O erro e a reprovação humanizam a marca; o "como foi feito" ensina e faz salvar. Funciona como vídeo inteiro ou como os últimos segundos depois do conteúdo.
@@ -884,12 +891,16 @@ Mecanismo: Mostrar a costura do próprio vídeo (quem grava, o take que deu erra
 - **Brand book em movimento** · 24,6x · Brandmotion editorial em preto e branco (Workflow Studio) · @dacostamotion · [ficha](virais/2026-09-02_dacostamotion_DcygNrjOYUa.md)
 - **Showreel com fio narrativo** · 21,0x · Showreel com fio de videogame · @ahmedsami94 · [ficha](virais/2026-08-19_ahmedsami94_DcOIGDdss_L.md)
 - **Pergunta ao júri** · 9,4x · "O cliente rejeitou. Por quê?" (tela filmada em loop de 6 s) · @aslaniedits · [ficha](virais/2026-10-08_aslaniedits_DeOuD_xMFYZ.md)
+- **Breakdown de viral alheio** · 8,0x · Breakdown de 12 efeitos com a lista crescendo na tela · @willrvail · [ficha](virais/2026-10-13_willrvail_Deb-VcJRpxp.md)
 - **Falso anúncio de fim** · 7,2x · "A Mavic vai acabar": falso luto da marca que vira escassez · @mavicproducoes · [ficha](virais/2026-09-17_mavicproducoes_DdZPZhdxpgQ.md)
 - **Mosaico de portfólio** · 6,5x · Mosaico 2x2: quatro edições rodando juntas (5 s) · @aslaniedits · [ficha](virais/2026-10-21_aslaniedits_Dew85IgsLQg.md)
 - **mural de investigação encenado** · 6,2x · Mural de investigação: dois personagens descobrem um padrão num quadro de fotos e fios · @salleszk · [ficha](virais/2026-09-01_salleszk_DcwrohHA3Ht.md)
+- **Breakdown de viral alheio** · 6,2x · Breakdown de vídeo de oficina: corte relâmpago, negativo e borrão · @willrvail · [ficha](virais/2026-11-17_willrvail_Df2NAP3R7KC.md)
 - **Brand book em movimento** · 6,1x · Brand book em movimento em tela cheia 16:9 (Workflow Studio, "Work From Within") · @dacostamotion · [ficha](virais/2026-11-02_dacostamotion_DfPdO0_m6GZ.md)
 - **a lista se demonstra** · 4,7x · Série "Cena Criativa" ep. 5: 5 tipos de corte, cada um feito no próprio vídeo · @salleszk · [ficha](virais/2026-11-16_salleszk_Df0Psq5AUDb.md)
+- **Breakdown de viral alheio** · 3,2x · Breakdown de joias: vazamento de luz, filme queimado, raio X e match cut · @willrvail · [ficha](virais/2026-11-12_willrvail_DfnuZFyv6eQ.md)
 - **conversa à distância** · 1,5x · Reflexão a dois à distância: história conhecida → princípio → aplicação, em collab · @salleszk · [ficha](virais/2026-08-17_salleszk_DcKH3u_oMrd.md)
+- **Breakdown de viral alheio** · 1,0x · Breakdown de óculos em vermelho: obturador baixo, negativo ciano e silhueta · @willrvail · [ficha](virais/2026-11-20_willrvail_Df97b3bxVUL.md)
 - **Viral dentro do viral** · s/ mediana · Viral dentro do viral (método provado + palavra-isca) · @eu.adrian_g.s · [ficha](virais/2026-08-08_eu.adrian_g.s_DbxGVvpNDkH.md)
 
 ## Códigos do catálogo ainda sem exemplo real (65)
