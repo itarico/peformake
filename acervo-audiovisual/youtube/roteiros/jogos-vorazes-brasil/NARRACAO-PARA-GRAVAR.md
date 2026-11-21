@@ -1,6 +1,6 @@
-# Panem · narração para gravar (Italo)
+# Panem · narração para gravar (Italo) · v3
 
-Versão de 21/11/2026, tirada do `ROTEIRO-v2.md` (já com a checagem de `checagem.md`). 1.645 palavras, cerca de 11 min
+Versão de 21/11/2026, tirada do `ROTEIRO-v3.md` (checagem + retorno do Italo: sem apostas, com as arenas, Capital nova e desfecho). 1.799 palavras, cerca de 11 min 30 s
 de voz. Uma linha numerada = um take. A numeração é a mesma da voz-guia e das cenas (`montagem/falas.json`): se mudar
 uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 
@@ -31,6 +31,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 | bets | béts |
 
 ---
+
 
 ## Bloco 0 · Gancho do desafio (B0.wav, cerca de 42 s)
 1. Imagina que o Brasil acordou amanhã dividido em doze distritos.
@@ -181,40 +182,57 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 120. Mas o formato estava pronto: **um espetáculo nacional, ao vivo, na sala de todo mundo**.
 121. Como em Panem.
 
-## Bloco 5 · A Capital e a revelação (B8.wav, cerca de 1 min 01 s)
-122. A resposta fácil é Brasília.
-123. E os números ajudam.
-124. O Distrito Federal tem o maior PIB por pessoa do Brasil: duas vezes e meia a média do país.
-125. A maior renda média: quase três mil reais por pessoa, mais de três vezes a do Maranhão.
-126. E também a maior desigualdade de renda do país.
-127. Mas eu fui atrás da conta inteira: somei o PIB dos cinco mil quinhentos e setenta municípios do Brasil, do maior para o menor. [pausa]
-128. (baixo) Com **oitenta e quatro cidades**, já deu metade do país.
-129. Um vírgula cinco por cento dos municípios.
-130. E os mil e trezentos menores, todos juntos, não chegam a um por cento.
-131. Então a Capital do Brasil não é um lugar no mapa.
-132. **É um arquipélago de oitenta e quatro cidades**, espalhadas por quase todos os distritos.
-133. (baixo) Uma parte da Capital pode estar a meia hora da sua casa.
+## Bloco V4 · Os Jogos no Brasil (B8.wav, cerca de 40 s)
+122. E se os Jogos fossem aqui? [pausa]
+123. Em Panem, a arena muda a cada edição: floresta, deserto, praia, gelo.
+124. O Brasil tem quase todas.
+125. Os Lençóis Maranhenses, um deserto de dunas com lagoas no meio, que virou Patrimônio Mundial em 2024.
+126. Fica no Maranhão, o Distrito 6.
+127. O Pantanal, uma das maiores áreas alagadas do planeta.
+128. A Amazônia, a maior floresta tropical do mundo.
+129. E o desfile dos tributos nem precisaria ser construído.
+130. Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Rio.
+131. Só falta a Capital assistindo.
 
-## Bloco 6 · O espelho (B9.wav, cerca de 35 s)
-134. Panem incomoda porque não inventou nada.
-135. Só deixou à vista.
-136. E o circo de hoje nem precisa de arena, nem de rádio, nem de TV.
-137. Cabe no bolso.
-138. Em 2024, o Banco Central calculou que os brasileiros mandavam entre dezoito e vinte e um bilhões de reais **por mês**, só via Pix, para sites de apostas.
-139. Em agosto daquele ano, foram vinte e quatro milhões de pessoas.
-140. Pão, circo e um sorteio.
-141. (baixo) A diferença é que, aqui, quem compra o bilhete somos nós.
+## Bloco 5 · A Capital e a revelação (B9.wav, cerca de 1 min 16 s)
+132. E aqui está a pegadinha do começo.
+133. A resposta fácil é Brasília.
+134. A renda média do Distrito Federal é a maior do país, mais de três vezes a do Maranhão.
+135. Mas Brasília, sozinha, tem só três por cento de tudo o que o Brasil produz.
+136. A cidade de São Paulo tem quase dez.
+137. Então eu fui atrás da conta inteira: somei o PIB dos cinco mil quinhentos e setenta municípios do Brasil, do maior para o menor. [pausa]
+138. (baixo) Com **oitenta e quatro cidades**, já deu metade do país.
+139. E os mil e trezentos menores, todos juntos, não chegam a um por cento.
+140. Agora olha onde ficam essas oitenta e quatro.
+141. Parauapebas, a cidade da mina de Carajás, está na lista.
+142. (baixo) **Um pedaço da Capital fica dentro do Distrito 12.**
+143. Maricá, a do petróleo, também.
+144. E várias cidades de refinaria, de porto e de sede de empresa.
+145. Então a Capital do Brasil não é um lugar no mapa.
+146. **É um arquipélago de oitenta e quatro cidades**, espalhadas por quase todos os distritos.
+147. (baixo) Uma parte da Capital pode estar a meia hora da sua casa.
 
-## Bloco 7 · Resultado e CTA (B10.wav, cerca de 36 s)
-142. Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.
-143. Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**.
-144. Eu quero ver qual distrito tem mais tributo aqui no canal.
-145. E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.
-146. No Brasil, são três estados que juntos não chegam a um por cento do PIB.
-147. Quais?
-148. Na tela final.
+## Bloco 6 · O desfecho (B10.wav, cerca de 43 s)
+148. Panem incomoda porque não inventou nada.
+149. Só deixou à vista.
+150. Roma tinha o Coliseu.
+151. O Brasil de 1939 tinha o rádio.
+152. Em 1970, a televisão.
+153. O circo muda de forma, mas a função é a mesma: fazer o distrito não olhar para o mapa.
+154. No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.
+155. (baixo) Você não precisa de arco e flecha para isso.
+156. Agora você tem o que os distritos de Panem nunca tiveram: o mapa inteiro.
+157. O que o seu estado produz, quanto fica com ele e para onde vai.
+
+## Bloco 7 · Resultado e CTA (B11.wav, cerca de 36 s)
+158. Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.
+159. Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**.
+160. Eu quero ver qual distrito tem mais tributo aqui no canal.
+161. E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.
+162. No Brasil, são três estados que juntos não chegam a um por cento do PIB.
+163. Quais?
+164. Na tela final.
 
 ---
 
-## Títulos e capa
-Iguais ao `ROTEIRO-v2.md`: título 1, "Se o Brasil fosse Panem: em qual distrito você nasceria?", e capas A/B sem nada do filme.
+Título: "Se o Brasil fosse Panem: em qual distrito você nasceria?". Capas em `EMBALAGEM.md`.
