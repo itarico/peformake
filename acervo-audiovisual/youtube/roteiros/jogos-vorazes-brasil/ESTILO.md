@@ -35,6 +35,17 @@ rótulos mono espaçados em toda tela; ícones de clip-art. Regra daqui para fre
 | Retrato com produto + número em bloco vermelho + saudação | cartaz do Distrito 3 | confirma o molde do cartaz por distrito |
 | Mapa 3D azul com anéis de HUD | banco de imagem | **não usar**: é exatamente o visual genérico que lê como IA. Fica só a ideia de extrusão no holograma do sorteio, na nossa paleta |
 
+### Terceira leva: linguagem (Italo, 21/11/2026)
+- **Foto de arquivo:** P&B de alto contraste, preto fechado e grão (referência: corredor noir). Fotos de época sempre assim.
+- **Folha de contato vermelha:** tira de filme com números de borda (21, 21A, 22), tarja preta em rosto e círculo de giz
+  no quadro que importa. Usar quando a fala "vai atrás" de algo (Carajás, "fui atrás da conta", as 84 cidades).
+- **Película:** borda de filme com perfuração e queima laranja/vermelha como passagem entre arquivo e presente.
+- **Atmosfera:** fumaça, poeira, sombra, luz vermelha pontual e grão. Sempre discretas, sem competir com a imagem.
+- **Câmera:** zoom lento, aproximação em detalhe, panorâmica em foto, parallax discreto em imagem parada.
+- **Transições:** corte seco (padrão), flicker de projetor, falha analógica, interferência de transmissão, passagem por
+  imagem de arquivo.
+- **Sobreposições:** timecode, número de arquivo, legenda documental, marcação geográfica, informação de contexto pequena.
+
 ## Nunca
 - Tordo, logos, pôsteres, fontes e slogans oficiais; atores; frames do filme fora dos até 8 trechos de 5 s do trailer
   (faixa V3, com alternativa pronta, em `creditos-trechos.csv`).

@@ -1,26 +1,28 @@
-"""Monta o projeto HyperFrames/OpenMotion do vídeo Panem a partir da voz (palavras.json) e do plano de cenas.
-Cada animação dispara na PALAVRA dita (alinhada pelo texto), nunca por proporção. Gatilho em palavra estimada = erro.
-Também escreve eventos.json (efeitos e trilha no tempo final) para o sonorizar.py e linha.json (onde cada frase cai).
+"""Monta o projeto HyperFrames/OpenMotion do vídeo Panem a partir da voz (palavras.json). Visual: ESTILO.md
+(manual "Arquivos de Panem" + referências do Italo, 21/11/2026): mapa investigativo com relevo real, foto de arquivo P&B,
+documento de papel datilografado, cartela em brasa, atmosfera discreta (grão, fumaça, poeira, queima de película).
+Cada animação dispara na PALAVRA dita (alinhada pelo texto). Gatilho em palavra de tempo estimado = erro.
+Escreve eventos.json (efeitos, trilha, respiros, linha) para o sonorizar.py.
 
 Uso: python construir.py <midia> <audio> <saida_projeto> [teste]
   teste = só o bloco 0 e o Distrito XII (o teste de 60 s)."""
 import sys, json, re, pathlib, shutil, unicodedata, math
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from panem_ui import *
+from panem_ui import carregar_mapa, rotulo_distrito
 
 MID, AUD, OUT = map(pathlib.Path, sys.argv[1:4]); TESTE = len(sys.argv) > 4 and sys.argv[4] == 'teste'
 FPS = 24
 PAL = {p['n']: p for p in json.loads((AUD / 'palavras.json').read_text(encoding='utf-8'))}
 M = carregar_mapa(MID / 'geo' / 'mapa.json')
 MUN = json.loads((MID / 'geo' / 'municipios.json').read_text(encoding='utf-8'))
+CARVAO, CONCRETO, SANGUE, PAPEL, MARFIM, LARANJA, OURO = '#111315', '#35383A', '#C4242B', '#C2B79F', '#E6E2D9', '#E0892B', '#F2A51F'
 
-# ---------- linha do tempo final: frases escolhidas + respiros extras (o som é remontado no sonorizar com o mesmo mapa)
+# ---------- linha do tempo final
 TRECHOS = [(1, 8), (17, 24)] if TESTE else [(1, max(PAL))]
-EXTRA_DEPOIS = {8: 1.7}            # segundos a mais depois da frase (cartão de título após a frase 8)
-ENTRE_TRECHOS = 0.6                # no teste: o título encosta no corte para o D12
+EXTRA_DEPOIS = {8: 1.9}            # cartela de título depois da frase 8
+ENTRE_TRECHOS = 0.6
 LINHA = {}; t = 0.6
 for a, b in TRECHOS:
-    base = PAL[a]['ini']
     for n in range(a, b + 1):
         if n > a: t += PAL[n]['ini'] - PAL[n - 1]['fim']
         LINHA[n] = {'ini': round(t, 3), 'fim': round(t + PAL[n]['fim'] - PAL[n]['ini'], 3), 'orig_ini': PAL[n]['ini'], 'orig_fim': PAL[n]['fim']}
@@ -31,313 +33,322 @@ DUR = math.ceil((t + 0.4) * FPS) / FPS
 def norm(w):
     w = unicodedata.normalize('NFD', w.lower()); w = ''.join(c for c in w if unicodedata.category(c) != 'Mn')
     return re.sub(r'[^a-z0-9]', '', w)
-
 def W(n, palavra, k=0, fim=False):
-    """Tempo final da palavra `palavra` (k-ésima ocorrência) na frase n."""
     alvo = norm(palavra); hits = [p for p in PAL[n]['palavras'] if norm(p['w']) == alvo]
     if len(hits) <= k: raise SystemExit(f'palavra "{palavra}" não está na frase {n}: {[p["w"] for p in PAL[n]["palavras"]]}')
     p = hits[k]
     if p.get('est'): raise SystemExit(f'palavra "{palavra}" da frase {n} tem tempo estimado: revisar à mão')
-    off = LINHA[n]['ini'] - PAL[n]['ini']
-    return round((p['fim'] if fim else p['ini']) + off, 3)
-
+    return round((p['fim'] if fim else p['ini']) + LINHA[n]['ini'] - PAL[n]['ini'], 3)
 def F(n, fim=False): return LINHA[n]['fim' if fim else 'ini']
-def q(t): return math.ceil(t * FPS - 1e-6) / FPS   # quadro inteiro
+def q(t): return math.ceil(t * FPS - 1e-6) / FPS
 
-EVENTOS = []   # (tempo, arquivo de som, ganho em dB sobre a trilha) -> sonorizar.py
+EVENTOS, TRILHA, RESPIROS = [], [], []
 def som(tempo, arq, db=0): EVENTOS.append({'t': round(tempo, 3), 'sfx': arq, 'db': db})
-TRILHA = []    # (tempo, faixa, ganho) trocas de trilha por emoção
-RESPIROS = []  # (ini, fim) trilha em silêncio/abafada
 
 CENAS = []
 class Cena:
-    def __init__(s, cid, ini, fim): s.id, s.ini, s.fim = cid, q(ini), q(fim); s.corpo, s.js, s.css = [], [], []
+    def __init__(s, cid, ini, fim): s.id, s.ini, s.fim = cid, q(ini), q(fim); s.corpo, s.js, s.css = [], [], []; s.nid = 0
     def r(s, t): return round(t - s.ini, 3)
+    def uid(s, base): s.nid += 1; return f'{s.id}-{base}{s.nid}'
     def h(s, html): s.corpo.append(html); return s
     def a(s, js): s.js.append(js); return s
-    def entra(s, sel, t, dur=5, y=14, x=0):
-        s.a(f'tl.fromTo(q1("{sel}"),{{opacity:0,y:{y},x:{x}}},{{opacity:1,y:0,x:0,duration:{dur}/24,ease:"power2.out"}},{s.r(t)});')
-    def sai(s, sel, t, dur=4):
-        s.a(f'tl.to(q1("{sel}"),{{opacity:0,duration:{dur}/24,ease:"power1.in"}},{s.r(t)});')
-    def carimba(s, sel, t, ano=1.35):
-        s.a(f'tl.fromTo(q1("{sel}"),{{opacity:0,scale:{ano}}},{{opacity:1,scale:1,duration:2/24,ease:"power4.out"}},{s.r(t)});')
+    def entra(s, sel, t, dur=6, y=10):
+        s.a(f'tl.fromTo(q1("{sel}"),{{opacity:0,y:{y}}},{{opacity:1,y:0,duration:{dur}/24,ease:"power2.out"}},{s.r(t)});')
+    def sai(s, sel, t, dur=5):
+        s.a(f'tl.fromTo(q1("{sel}"),{{opacity:1}},{{opacity:0,duration:{dur}/24,ease:"power1.in",immediateRender:false}},{s.r(t)});')
+    def carimba(s, sel, t, ano=1.3):
+        s.a(f'tl.fromTo(q1("{sel}"),{{opacity:0,scale:{ano}}},{{opacity:.9,scale:1,duration:2/24,ease:"power4.out"}},{s.r(t)});')
     def fim_(s): CENAS.append(s); return s
 
-# ---------- peças reutilizáveis
-def mapa(c, pid, estado, x=760, y=40, tam=960, explodir=0.0, numerais=True):
-    c.h(f'<div class="abs" id="{pid}-w" style="left:0;top:0;width:1920px;height:1080px">' + svg_mapa(M, estado, x, y, tam, pid, numerais, explodir) + '</div>')
-def xy(px, py, x=760, y=40, tam=960): return x + px * tam / 1000, y + py * tam / 1000
-def kin(c, kid, texto, x, y, tam, cor=OSSO, cls='regime'):
-    c.h(f'<div class="abs {cls}" id="{kid}" style="left:{x}px;top:{y}px;font-size:{tam}px;line-height:.92;color:{cor};opacity:0">{texto}</div>')
-def fonte(c, fid, texto, x=110, y=900):
-    c.h(f'<div class="abs mono" id="{fid}" style="left:{x}px;top:{y}px;font-size:20px;color:{CINZA};opacity:0">FONTE: {texto}</div>')
-def etiqueta(c, eid, texto, x=110, y=150, cor=VERM):
-    c.h(f'<div class="abs" id="{eid}" style="left:{x}px;top:{y}px;background:{cor};color:{OSSO};padding:8px 18px 6px;opacity:0">'
-        f'<span class="regime" style="font-size:54px">{texto}</span></div>')
+# ---------- peças
+X, Y, T = 650, -50, 1220                     # mapa investigativo: grande, sangrando para fora do quadro
+def mp(px, py): return X + px * T / 1000, Y + py * T / 1000
+C14 = math.cos(math.radians(14)); W_ = 39.6 * C14; S_ = 1000 / max(W_, 39.3)
+def geo(lon, lat): return mp((lon + 74.2) * C14 * S_ + (1000 - W_ * S_) / 2, (5.4 - lat) * S_ + (1000 - 39.3 * S_) / 2)
+
+def mapa(c, pid, acesos=(), brasas=False, desenhar=False):
+    traco = ' pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" stroke-linecap="butt"' if desenhar else ''
+    ufs = ''.join(f'<path id="{pid}-{s}" data-dist="{u["dist"]}" d="{u["d"]}" fill="{SANGUE}" fill-opacity="{.28 if u["dist"] in acesos else 0}" '
+                  f'stroke="{SANGUE if u["dist"] in acesos else MARFIM}" stroke-opacity="{1 if u["dist"] in acesos else .28}" '
+                  f'stroke-width="{2.2 if u["dist"] in acesos else 1}" vector-effect="non-scaling-stroke"{traco}/>' for s, u in M.items())
+    br = ''
+    if brasas:
+        for o in MUN[:84]:
+            r = max(2.5, min(22, math.sqrt(o[2] / 1e6) * 0.55))
+            br += (f'<g class="{pid}-br" opacity="0"><circle cx="{o[0]}" cy="{o[1]}" r="{r * 3.2:.1f}" fill="url(#{pid}-halo)"/>'
+                   f'<circle cx="{o[0]}" cy="{o[1]}" r="{r:.1f}" fill="url(#{pid}-nuc)"/></g>')
+    c.h(f'''<div class="abs" id="{pid}-w" style="left:0;top:0;width:1920px;height:1080px">
+<img class="abs" id="{pid}-rel" src="assets/img/relevo.png" style="left:{X}px;top:{Y}px;width:{T}px;height:{T}px">
+<svg class="abs" style="left:{X}px;top:{Y}px" width="{T}" height="{T}" viewBox="0 0 1000 1000">
+<defs><radialGradient id="{pid}-halo"><stop offset="0" stop-color="#FF8A2A" stop-opacity=".55"/><stop offset=".45" stop-color="{SANGUE}" stop-opacity=".18"/><stop offset="1" stop-color="{SANGUE}" stop-opacity="0"/></radialGradient>
+<radialGradient id="{pid}-nuc"><stop offset="0" stop-color="#FFF1C9"/><stop offset=".45" stop-color="#FFB443"/><stop offset="1" stop-color="#E0461E"/></radialGradient></defs>
+{ufs}<g style="mix-blend-mode:screen">{br}</g></svg></div>
+<div class="abs" style="inset:0;background:linear-gradient(90deg,{CARVAO} 0%,rgba(17,19,21,.8) 28%,rgba(17,19,21,0) 50%)"></div>''')
+
+def ponto_capital(c, pid):
+    x, y = mp(M['DF']['cx'], M['DF']['cy'])
+    c.h(f'<div class="abs" id="{pid}-cap" style="left:{x - 9:.0f}px;top:{y - 9:.0f}px;width:18px;height:18px;border-radius:50%;background:{PAPEL};box-shadow:0 0 0 6px rgba(194,183,159,.22);opacity:0"></div>'
+        f'<div class="abs mono" id="{pid}-capl" style="left:{x + 18:.0f}px;top:{y - 12:.0f}px;font-size:17px;color:{PAPEL};opacity:0">CAPITAL</div>')
+
+def foto(c, pid, src, z0=1.0, z1=1.07, ox='50%', oy='50%'):
+    c.h(f'<img class="abs" id="{pid}" src="assets/img/{src}" style="left:-96px;top:-54px;width:2112px;height:1188px">')
+    c.a(f'tl.fromTo(q1("#{pid}"),{{scale:{z0},transformOrigin:"{ox} {oy}"}},{{scale:{z1},duration:{c.fim - c.ini:.2f},ease:"none"}},0);')
+
+def godard(c, gid, texto, x, y, tam, cor=MARFIM):
+    c.h(f'<div class="abs tit" id="{gid}" style="left:{x}px;top:{y}px;font-size:{tam}px;color:{cor};opacity:0;text-shadow:0 2px 24px rgba(0,0,0,.45)">{texto}</div>')
+
+def lower(c, lid, sup, tit):
+    c.h(f'''<div class="abs" id="{lid}" style="left:110px;top:820px;width:780px;height:150px;opacity:0">
+<div class="abs" style="inset:0;background:{CARVAO};opacity:.94"></div><div class="abs" style="left:0;top:0;width:9px;height:150px;background:{SANGUE}"></div>
+<div class="abs mono" style="left:45px;top:32px;font-size:23px;color:{PAPEL};letter-spacing:3px">{sup}</div>
+<div class="abs txt" style="left:45px;top:73px;font-size:43px;font-weight:700;color:{MARFIM}">{tit}</div></div>''')
+
+def meta(c, texto):
+    c.h(f'<div class="abs mono" style="left:110px;top:72px;font-size:22px;color:{PAPEL};letter-spacing:4px;opacity:.85">{texto}</div>')
+
+def credito(c, texto):
+    c.h(f'<div class="abs mono" style="right:60px;bottom:22px;font-size:14px;color:{MARFIM};opacity:.6;letter-spacing:1.5px">{texto}</div>')
+
+def atmosfera(c, nome, opac=.18, ini=0.0):
+    vid = c.uid('atm')
+    c.h(f'<video id="{vid}" class="clip abs" src="assets/video/{nome}.mp4" muted playsinline data-start="0" data-duration="{c.fim - c.ini:.3f}" '
+        f'data-media-start="{ini}" style="left:0;top:0;width:1920px;height:1080px;object-fit:cover;mix-blend-mode:screen;opacity:{opac}"></video>')
+
+def papel(c, pid, rot=-1.2):
+    """Abre a folha de papel na mesa; feche com c.h('</div>') depois de pôr o conteúdo."""
+    c.h(f'''<div class="abs" style="inset:0;background:radial-gradient(ellipse at 45% 40%,#2a2723 0%,{CARVAO} 70%)"></div>
+<div class="abs" id="{pid}" style="left:360px;top:70px;width:1200px;height:940px">
+<div style="position:absolute;inset:0;transform:rotate({rot}deg);box-shadow:0 30px 60px rgba(0,0,0,.6)">
+<img src="assets/img/papel.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(255,240,210,.18) 0%,rgba(0,0,0,0) 50%,rgba(40,25,10,.35) 100%)"></div>
+<div style="position:absolute;inset:34px;border:3px solid rgba(53,56,58,.75)"></div>
+<div class="mono" style="position:absolute;left:80px;top:72px;font-size:24px;color:{CONCRETO};letter-spacing:5px">CAPITAL / REGISTRO DE TRIBUTO</div>
+<div style="position:absolute;left:80px;right:80px;top:112px;height:2px;background:{CONCRETO}"></div>''')
+
+def fecha_papel(c): c.h('</div></div>')
+
+def datilo(c, did, texto, x, y, tam=34, cor='#1b1a18'):
+    """Linha datilografada: revela letra por letra (passos) no tempo da palavra."""
+    c.h(f'<div id="{did}" style="position:absolute;left:{x}px;top:{y}px;white-space:pre;overflow:hidden;width:0;font-family:\'Plex Mono\';font-weight:500;font-size:{tam}px;color:{cor}">{texto}</div>')
+    return len(texto), tam * 0.6 * len(texto) + 6
+
+def digita(c, did, n, larg, t, cps=22):
+    d = max(n / cps, 2 / 24)
+    c.a(f'tl.fromTo(q1("#{did}"),{{width:0}},{{width:{larg:.0f},duration:{d:.2f},ease:"steps({n})"}},{c.r(t)});')
+    som(t, 'taoismo/maquina_1', -6)
 
 # ======================================================================== BLOCO 0 · GANCHO
 TRILHA.append((0.0, 'gancho', 0))
-# --- frases 1 e 2: o Brasil racha em 12 distritos; rotas convergem para a Capital
+# frases 1 e 2: o Brasil visto de cima; os estados se desenham; 12 distritos; rotas até a Capital
 c = Cena('abre', 0, F(3))
-todos_off = {d: 'off' for d in range(1, 13)}
-mapa(c, 'ab', todos_off, numerais=False)
-c.h(f'<svg class="abs" style="left:760px;top:40px" width="960" height="960" viewBox="0 0 1000 1000" id="ab-rotas">'
-    + ''.join(f'<path id="ab-r{d}" d="M{rotulo_distrito(M, d)[0]:.0f},{rotulo_distrito(M, d)[1]:.0f} L{M["DF"]["cx"]},{M["DF"]["cy"]}" '
-              f'stroke="{OURO}" stroke-width="2.4" stroke-dasharray="1" stroke-dashoffset="1" pathLength="1" fill="none" stroke-linecap="butt" opacity=".9"/>'
-              for d in range(1, 13)) + '</svg>')
-kin(c, 'ab-12', '12', 110, 200, 380, OSSO, 'num')
-kin(c, 'ab-dist', 'DISTRITOS', 120, 580, 130, VERM)
-kin(c, 'ab-cap', 'CAPITAL', 110, 250, 150, OURO)
-kin(c, 'ab-nada', 'PRODUZ: QUASE NADA', 116, 420, 40, OSSO, 'mono')
-c.a('tl.fromTo(q("#ab-w path"),{opacity:0},{opacity:1,duration:18/24,stagger:0.02,ease:"power1.out"},0);')
-c.a('tl.set(q1("#ab-dfanel"),{opacity:0},0); tl.set(q1("#ab-w circle"),{opacity:0},0);')
+mapa(c, 'ab', desenhar=True); ponto_capital(c, 'ab')
+meta(c, 'REGISTRO 000 · CENSO DOS DISTRITOS')
+pts = {d: mp(*rotulo_distrito(M, d)) for d in range(1, 13)}; capx, capy = mp(M['DF']['cx'], M['DF']['cy'])
+c.h('<svg class="abs" style="left:0;top:0" width="1920" height="1080">' + ''.join(
+    f'<path class="ab-rota" d="M{x:.0f},{y:.0f} L{capx:.0f},{capy:.0f}" stroke="{SANGUE}" stroke-width="2" stroke-opacity=".85" fill="none" '
+    f'pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" stroke-linecap="butt"/>' for d, (x, y) in pts.items()) + '</svg>')
+godard(c, 'ab-12', '12', 110, 250, 300)
+godard(c, 'ab-dist', 'DISTRITOS', 118, 560, 110)
+godard(c, 'ab-nada', 'PRODUZ<br>QUASE NADA', 118, 300, 96, PAPEL)
+c.a('tl.fromTo(q1("#ab-rel"),{opacity:0},{opacity:1,duration:1.2,ease:"power1.out"},0);')
+c.a(f'tl.fromTo(q1("#ab-w"),{{scale:1.06,transformOrigin:"62% 50%"}},{{scale:1,duration:{F(3):.2f},ease:"sine.out"}},0);')
+t_br = W(1, 'Brasil')
+c.a(f'tl.to(q("#ab-w path"),{{attr:{{"stroke-dashoffset":0}},duration:1.4,stagger:0.03,ease:"power1.inOut"}},{c.r(t_br)});')
 t_div = W(1, 'dividido')
-# rachadura: cada distrito se separa um pouco do centro e escurece em vermelho, um por vez (ordem XII -> I)
 for i, d in enumerate(range(12, 0, -1)):
-    mx, my = centro_distrito(M, d); dx, dy = (mx - 520) * .035, (my - 470) * .035
-    c.a(f'tl.to(q("#ab-w path[data-dist=\\"{d}\\"]"),{{x:{dx:.1f},y:{dy:.1f},fill:"{VERM_E}",stroke:"#8A2A22",duration:6/24,ease:"power2.out"}},{c.r(t_div) + i * 0.05:.3f});')
-som(t_div, 'taoismo/papel_2', -2)
-c.entra('#ab-12', W(1, 'doze'), 5); c.entra('#ab-dist', W(1, 'distritos'), 5)
-som(W(1, 'doze'), 'sfx/ui', 0)
-# frase 2: rotas de cada distrito até a Capital; a Capital acende em dourado
+    c.a(f'tl.to(q("#ab-w path[data-dist=\\"{d}\\"]"),{{attr:{{"fill-opacity":.16,stroke:"{SANGUE}","stroke-opacity":.9}},duration:4/24}},{c.r(t_div) + i * 0.06:.3f});')
+som(t_div, 'taoismo/papel_2', -4)
+c.entra('#ab-12', W(1, 'doze')); c.entra('#ab-dist', W(1, 'distritos'))
 t_prod = W(2, 'produz'); t_cap = W(2, 'Capital')
 c.sai('#ab-12', t_prod - 0.2); c.sai('#ab-dist', t_prod - 0.2)
-c.a(f'tl.to(q("#ab-rotas path"),{{attr:{{"stroke-dashoffset":0}},duration:{t_cap - t_prod:.2f},stagger:0.04,ease:"power1.inOut"}},{c.r(t_prod)});')
-c.a(f'tl.to(q("#ab-w circle"),{{opacity:1,duration:6/24}},{c.r(t_cap)});')
-c.entra('#ab-cap', t_cap, 5); som(t_cap, 'taoismo/impacto_3', -3)
-c.entra('#ab-nada', W(2, 'quase'), 4)
+c.a(f'tl.to(q(".ab-rota"),{{attr:{{"stroke-dashoffset":0}},duration:{max(.4, t_cap - t_prod):.2f},stagger:0.04,ease:"power1.inOut"}},{c.r(t_prod)});')
+c.entra('#ab-cap', t_cap, 4, 0); c.entra('#ab-capl', t_cap, 4, 0); som(t_cap, 'taoismo/impacto_3', -2)
+c.entra('#ab-nada', W(2, 'quase'))
+atmosfera(c, 'fumaca', .10)
 c.fim_()
 
-# --- frase 3: a urna do sorteio; jovens de 12 a 18 anos; arena ao vivo
+# frase 3: o sorteio. Foto real de um sorteio de jovens para a guerra (EUA, 1969), em P&B
 c = Cena('urna', F(3), F(4))
-fol = ''.join(f'<rect id="ur-f{i}" x="{-150 + (i % 6) * 50 + (i // 6) * 18}" y="{-30 - (i // 6) * 26 - (i % 3) * 6}" width="34" height="20" rx="2" fill="{OSSO}" '
-              f'transform="rotate({(i * 37) % 50 - 25})" opacity="0"/>' for i in range(12))
-c.h(f'''<svg class="abs" style="left:1060px;top:170px" width="620" height="760" viewBox="-310 -380 620 760">
-<path d="M-200,-260 Q-230,240 0,300 Q230,240 200,-260" fill="rgba(237,230,216,.05)" stroke="{OSSO}" stroke-width="4"/>
-<ellipse cx="0" cy="-260" rx="200" ry="34" fill="none" stroke="{OSSO}" stroke-width="4"/>
-<path d="M-150,300 L-120,350 L120,350 L150,300" fill="none" stroke="{OSSO}" stroke-width="4"/>
-<g id="ur-folhas" transform="translate(0,230)">{fol}</g>
-<text x="0" y="40" text-anchor="middle" font-family="BigS" font-weight="900" font-size="64" fill="{VERM}" opacity=".9">COLHEITA</text></svg>''')
-kin(c, 'ur-sort', 'SORTEIO', 110, 230, 150, VERM)
-kin(c, 'ur-ida', '12 A 18', 110, 380, 230, OSSO, 'num')
-kin(c, 'ur-anos', 'ANOS', 120, 610, 120, OSSO)
-c.h(f'<div class="abs cantos" id="ur-hud" style="left:60px;top:60px;width:1800px;height:960px;opacity:0"></div>'
-    f'<div class="abs mono" id="ur-vivo" style="left:100px;top:96px;font-size:28px;color:{VERM};opacity:0">● AO VIVO · ARENA</div>')
-c.entra('#ur-sort', W(3, 'sorteio'), 4)
-for i in range(12):
-    c.a(f'tl.fromTo(q1("#ur-f{i}"),{{opacity:0,y:-520}},{{opacity:1,y:0,duration:10/24,ease:"power2.in"}},{c.r(W(3, "sorteio")) + i * 0.07:.3f});')
-som(W(3, 'sorteio'), 'sfx/papeis', 0)
-c.sai('#ur-sort', W(3, 'jovens') - 0.1)
-c.entra('#ur-ida', W(3, 'doze'), 5); c.entra('#ur-anos', W(3, 'anos'), 4)
-c.a(f'tl.fromTo(q1("#ur-hud"),{{opacity:0,scale:1.06}},{{opacity:1,scale:1,duration:4/24,ease:"power2.out"}},{c.r(W(3, "arena"))});')
-c.entra('#ur-vivo', W(3, 'arena'), 3, 0); som(W(3, 'arena'), 'sfx/beep', -2)
+foto(c, 'ur-f', 'sorteio.jpg', 1.0, 1.09, '50%', '42%')
+c.h(f'<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(17,19,21,.82) 0%,rgba(17,19,21,.2) 55%,rgba(17,19,21,0) 70%)"></div>')
+meta(c, 'ARQUIVO 001 · SORTEIO REAL')
+c.h(f'<div class="abs txt" id="ur-leg" style="left:112px;top:870px;width:900px;font-size:24px;line-height:1.35;color:{MARFIM};opacity:0">'
+    f'Sorteio real: alistamento para a Guerra do Vietnã, EUA, 1969.</div>')
+godard(c, 'ur-ida', '12 A 18<br>ANOS', 110, 300, 190)
+credito(c, 'FOTO: SELECTIVE SERVICE SYSTEM · DOMÍNIO PÚBLICO')
+c.entra('#ur-leg', W(3, 'sorteio')); som(W(3, 'sorteio'), 'sfx/papeis', -4)
+c.entra('#ur-ida', W(3, 'doze'))
+atmosfera(c, 'poeira', .14)
 c.fim_()
 
-# --- frase 4: anota o seu estado (campo de HUD com cursor)
-c = Cena('anota', F(4), F(5))
-c.h(f'''<div class="abs" id="an-campo" style="left:360px;top:560px;width:1200px;height:150px;border:4px solid {OSSO};opacity:0;
-display:flex;align-items:center;padding-left:40px;font-family:Plex;font-weight:700;font-size:56px;letter-spacing:4px">MEU ESTADO:&nbsp;
-<span id="an-cur" style="display:inline-block;width:30px;height:62px;background:{VERM}"></span></div>''')
-kin(c, 'an-tit', 'ANOTA O SEU ESTADO', 360, 330, 170, VERM)
-c.entra('#an-tit', W(4, 'anota'), 4); som(W(4, 'anota'), 'taoismo/maquina_1', -4)
-c.entra('#an-campo', W(4, 'estado'), 4)
-c.a(f'tl.to(q1("#an-cur"),{{opacity:0,duration:0.01,repeat:{int((F(5) - W(4, "estado")) / 0.5)},yoyo:true,repeatDelay:0.49}},{c.r(W(4, "estado"))});')
+# frases 4 e 5: a folha de registro na mesa; "meu estado" e as 4 perguntas são datilografadas na palavra
+c = Cena('folha', F(4), F(6))
+papel(c, 'fo-p')
+n0, l0 = datilo(c, 'fo-est', 'MEU ESTADO: ______________', 80, 170, 40)
+perg = [('distrito', 'DISTRITO ........... ?'), ('produziria', 'VOCÊ PRODUZ ........ ?'), ('chance', 'CHANCE NA COLHEITA . ?'), ('ganharia', 'SUA RENDA × CAPITAL  ?')]
+ids = []
+for i, (w, txt) in enumerate(perg):
+    n, l = datilo(c, f'fo-q{i}', txt, 80, 330 + i * 92, 36); ids.append((w, f'fo-q{i}', n, l))
+fecha_papel(c)
+c.a('tl.fromTo(q1("#fo-p"),{opacity:0,y:30},{opacity:1,y:0,duration:8/24,ease:"power2.out"},0);'); som(F(4), 'taoismo/papel_1', -4)
+digita(c, 'fo-est', n0, l0, W(4, 'anota'))
+for w, did, n, l in ids: digita(c, did, n, l, W(5, w))
+c.a(f'tl.fromTo(q1("#fo-p"),{{scale:1,transformOrigin:"50% 30%"}},{{scale:1.05,duration:{F(6) - F(4):.2f},ease:"none",immediateRender:false}},8/24);')
+atmosfera(c, 'poeira', .12, 4)
 c.fim_()
 
-# --- frase 5: a ficha em branco, linha a linha
-def ficha_html(c, pid, d=None, L=930):
-    """Ficha do tributo (HUD). d=None: em branco, com '?'."""
-    dd = DIST[d] if d else None
-    rom = ROMANO[d] if d else '?'
-    chips = ''.join(f'<span class="chip" id="{pid}-p{i}" style="opacity:0">◆ {p}</span>' for i, p in enumerate(dd['produz'])) if dd else '<span class="chip">?</span>'
-    pontos = ''.join(f'<span style="display:inline-block;width:14px;height:14px;margin:3px;border-radius:2px;background:{VERM if (i == 37 and dd) else "#2E2A27"}" '
-                     f'{"id=" + chr(34) + pid + "-alvo" + chr(34) if i == 37 else ""}></span>' for i in range(96))
-    seg = lambda cls, cor: ''.join(f'<span class="{cls}" style="flex:1;margin-right:4px;background:{cor}"></span>' for i in range(20))
-    renda = (f'R$ {dd["reais"]} <span style="color:{CINZA}">×</span> <span style="color:{OURO}">R$ 2.999</span>' if dd and dd['reais']
-             else (f'<span style="color:{OURO}">CAPITAL R$ 2.999</span>' if dd else '?'))
-    cab = f'TRIBUTO Nº 0417 · DISTRITO {rom} · {dd["estado"] if dd else "?"}' if dd else 'TRIBUTO Nº ???? · DISTRITO ? · ?'
-    c.h(f'''<div class="abs cantos" id="{pid}-cantos" style="left:{L}px;top:70px;width:900px;height:830px;opacity:0"></div>
-<div class="abs" id="{pid}-fundo" style="left:{L}px;top:70px;width:900px;height:830px;background:rgba(26,23,21,.9);opacity:0"></div>
-<div class="abs" id="{pid}" style="left:{L}px;top:70px;width:900px">
- <div class="mono" id="{pid}-cab" style="background:{VERM};color:{PRETO};font-weight:700;font-size:22px;padding:10px 26px;display:flex;justify-content:space-between;opacity:0">
-  <span>{cab}</span><span>FICHA</span></div>
- <div style="padding:22px 40px 0">
-  <div id="{pid}-l0" style="display:flex;align-items:flex-end;gap:30px;opacity:0">
-   <div><div class="mono rot">DISTRITO</div><div class="regime" id="{pid}-rom" style="font-size:190px;color:{VERM}">{rom}</div></div>
-   <div style="padding-bottom:18px"><div class="regime" style="font-size:96px">{dd['estado'] if dd and len(dd['estado']) < 12 else (dd['ufs'] if dd else '')}</div>
-    <div class="mono" style="font-size:24px;color:{OURO};margin-top:8px">{dd['nome'] if dd else ''}</div></div>
-   <div style="margin-left:auto;padding-bottom:30px">{icone(dd['icone'], OSSO, 96, 2.6) if dd else ''}</div></div>
-  <div class="linha" id="{pid}-l1" style="opacity:0"><div class="mono rot">VOCÊ PRODUZ</div><div style="margin-top:12px">{chips}</div></div>
-  <div class="linha" id="{pid}-l2" style="display:flex;gap:30px;align-items:center;opacity:0">
-   <div style="flex:1"><div class="mono rot">CHANCE NA COLHEITA</div>
-    <div class="num" id="{pid}-chance" style="font-size:84px;line-height:1;margin-top:6px">{('1 <span style="font-size:44px;color:' + CINZA + '">EM</span> ' + dd['chance']) if dd else '?'}</div></div>
-   <div id="{pid}-urna" style="width:300px;line-height:0">{pontos}</div></div>
-  <div class="linha" id="{pid}-l3" style="opacity:0"><div class="mono rot" style="display:flex;justify-content:space-between"><span>SUA RENDA × CAPITAL</span>
-    <span style="color:{OSSO}">{renda}</span></div>
-   <div class="barra">{seg(pid + '-sv', VERM) if dd else seg('x', '#2A2624')}</div><div class="barra" style="height:14px;margin-top:8px">{seg(pid + '-sc', OURO)}</div>
-   <div style="display:flex;justify-content:space-between;margin-top:6px"><span class="num" id="{pid}-pct" style="font-size:54px;color:{VERM}">{str(dd['renda']) + ' %' if dd else '?'}</span>
-    <span class="mono" style="font-size:20px;color:{OURO};padding-top:24px">CAPITAL = 100 %</span></div></div>
- </div></div>''')
-    c.css.append(f'''.linha{{border-top:2px solid #2E2A27;padding:22px 0 18px}} .rot{{font-size:20px;color:{CINZA}}}
-.chip{{display:inline-flex;align-items:center;gap:10px;border:2px solid {OSSO};padding:6px 14px;margin-right:12px;font-family:"Plex";font-weight:700;font-size:24px;letter-spacing:2px}}
-.barra{{display:flex;height:34px;margin-top:10px}}''')
-
-def ficha_entra(c, pid, t):
-    c.a(f'tl.fromTo(q1("#{pid}-fundo"),{{opacity:0,x:80}},{{opacity:1,x:0,duration:6/24,ease:"power3.out"}},{c.r(t)});')
-    c.a(f'tl.fromTo(q1("#{pid}-cantos"),{{opacity:0,scale:1.05}},{{opacity:1,scale:1,duration:5/24,ease:"power2.out"}},{c.r(t) + 0.12:.3f});')
-    c.entra(f'#{pid}-cab', t + 0.2, 4, 0, -30); som(t, 'sfx/whoosh', -2); som(t + 0.2, 'sfx/ui', -4)
-
-c = Cena('ficha0', F(5), F(6))
-ficha_html(c, 'fz', None, 510)
-ficha_entra(c, 'fz', F(5) + 0.05)
-for i, w in enumerate(['distrito', 'produziria', 'chance', 'ganharia']):
-    tw = W(5, w); c.entra(f'#fz-l{i}', tw, 4); som(tw, 'sfx/beep', -6)
-c.fim_()
-
-# --- frases 6 e 7: a pegadinha. A Capital apaga; 84 pontos dourados piscam pelo mapa
+# frases 6 a 8: a pegadinha. A Capital apaga; as 84 cidades acendem como brasas
 c = Cena('pega', F(6), F(8))
-mapa(c, 'pg', {d: 'apagado' for d in range(1, 13)}, numerais=False)
-pts = ''.join(f'<circle class="pg-c" cx="{o[0]}" cy="{o[1]}" r="{max(4, min(16, math.sqrt(o[2] / 4e6) * 2.4)):.1f}" fill="{OURO}" opacity="0"/>' for o in MUN[:84])
-c.h(f'<svg class="abs" style="left:760px;top:40px" width="960" height="960" viewBox="0 0 1000 1000">{pts}</svg>')
-kin(c, 'pg-peg', 'PEGADINHA', 110, 380, 200, OSSO)
-kin(c, 'pg-nao', 'NÃO É<br>AQUI', 110, 330, 190, VERM)
-c.entra('#pg-peg', W(6, 'pegadinha'), 4)
-c.a(f'tl.fromTo(q1("#pg-w"),{{scale:1,transformOrigin:"{(760 + M["DF"]["cx"] * .96) / 19.2:.1f}% {(40 + M["DF"]["cy"] * .96) / 10.8:.1f}%"}},{{scale:1.08,duration:{F(7, True) - F(6):.2f},ease:"sine.inOut"}},0);')
-t_nao = W(7, 'não'); c.sai('#pg-peg', t_nao - 0.15, 2)
-c.a(f'tl.set(q("#pg-w circle"),{{opacity:0}},{c.r(t_nao)});')          # a Capital apaga seco
-c.entra('#pg-nao', t_nao, 2, 0)
-RESPIROS.append((F(7) - 0.05, t_nao)); som(t_nao, 'sfx/canhao2', 8)      # respiro + tiro de canhão
+mapa(c, 'pg', acesos=set(range(1, 13)), brasas=True); ponto_capital(c, 'pg')
+c.a('tl.set(q("#pg-cap,#pg-capl"),{opacity:1},0);')
+meta(c, 'REGISTRO 000 · CENSO DOS DISTRITOS')
+c.a(f'tl.fromTo(q1("#pg-w"),{{scale:1,transformOrigin:"{capx / 19.2:.1f}% {capy / 10.8:.1f}%"}},{{scale:1.1,duration:{F(8) - F(6):.2f},ease:"sine.inOut"}},0);')
+t_nao = W(7, 'não')
+c.a(f'tl.set(q("#pg-cap,#pg-capl"),{{opacity:0}},{c.r(t_nao)});')
+c.a(f'tl.to(q("#pg-w path"),{{attr:{{"fill-opacity":0,"stroke-opacity":.18,stroke:"{MARFIM}"}},duration:6/24}},{c.r(t_nao)});')
+RESPIROS.append((F(7) - 0.05, t_nao)); som(t_nao, 'sfx/canhao2', 8)
 t_pen = W(7, 'pensando')
-c.a(f'tl.to(q(".pg-c"),{{opacity:1,duration:2/24,stagger:{0.7 / 84:.4f}}},{c.r(t_pen)});')
-c.a(f'tl.to(q(".pg-c"),{{opacity:0,duration:6/24}},{c.r(F(8)) - 0.25:.3f});')
-som(t_pen, 'sfx/glitch', -6)
+c.a(f'tl.to(q(".pg-br"),{{opacity:1,duration:3/24,stagger:{0.9 / 84:.4f}}},{c.r(t_pen)});'); som(t_pen, 'sfx/riser', -6)
+atmosfera(c, 'fumaca', .10, 6)
 c.fim_()
 
-# --- frase 8: números oficiais (carimbo) + cartão de título com estrobo de silhueta (3 trocas em 1 s)
+# frase 8 + cartela: as fontes são datilografadas; queima de película; "SE O BRASIL FOSSE PANEM" em brasa
 c = Cena('titulo', F(8), F(8, True) + EXTRA_DEPOIS[8])
-c.h(f'<div class="abs" id="ti-bg" style="inset:0;background:{PRETO}"></div>')
-c.h(f'<div class="abs" id="ti-sil" style="left:0;top:0;width:1920px;height:1080px">'
-    f'<svg class="abs" style="left:760px;top:40px" width="960" height="960" viewBox="0 0 1000 1000">'
-    + ''.join(f'<path d="{u["d"]}" fill="{GRAFITE}" stroke="{OSSO}" stroke-opacity=".35" stroke-width="1.2" vector-effect="non-scaling-stroke"/>' for u in M.values())
-    + '</svg></div>')
-c.h(f'<div class="abs" id="ti-selo" style="left:110px;top:420px;border:6px solid {VERM};padding:18px 30px 12px;transform:rotate(-4deg);opacity:0">'
-    f'<div class="mono" style="font-size:26px;color:{VERM}">NÚMEROS OFICIAIS</div><div class="regime" style="font-size:64px;color:{VERM}">IBGE · ANM · ANP · ANTAQ · BC</div></div>')
-c.h(f'<div class="abs" id="ti-tit" style="left:0;width:1920px;top:360px;text-align:center;opacity:0">'
-    f'<div class="mono" style="font-size:30px;color:{OURO}">★ POR DENTRO ★</div>'
-    f'<div class="regime" style="font-size:210px;color:{OSSO}">SE O BRASIL</div><div class="regime" style="font-size:210px;color:{VERM}">FOSSE PANEM</div></div>')
-t_of = W(8, 'oficiais'); c.carimba('#ti-selo', t_of); som(t_of, 'taoismo/carimbo_1', 2)
-t_s = F(8, True) + 0.1
-c.sai('#ti-selo', t_s, 2)
-for k, cor in enumerate([VERM, PRETO, VERM]):          # estrobo: o fundo troca, a silhueta do Brasil fica (8 q cada = 3 trocas/s)
-    c.a(f'tl.set(q1("#ti-bg"),{{background:"{cor}"}},{c.r(t_s) + k * 8 / 24:.3f});'); som(t_s + k * 8 / 24 - 0.015, 'sfx/beep', -4)
-c.a(f'tl.set(q1("#ti-bg"),{{background:"{PRETO}"}},{c.r(t_s) + 24 / 24:.3f});')
-c.a(f'tl.to(q1("#ti-sil"),{{opacity:.25,duration:6/24}},{c.r(t_s) + 1.0:.3f});')
-c.carimba('#ti-tit', t_s + 1.0, 1.15); som(t_s + 1.0, 'taoismo/impacto_1', 6)
+mapa(c, 'ti', brasas=True)
+c.a('tl.set(q(".ti-br"),{opacity:1},0);')
+n, l = datilo(c, 'ti-fontes', 'FONTES: IBGE · ANM · ANP · ANTAQ · BANCO CENTRAL', 112, 520, 26, MARFIM)
+digita(c, 'ti-fontes', n, l, W(8, 'oficiais'), 40)
+t_q = F(8, True) + 0.05
+c.h('<div class="abs" id="ti-preto" style="inset:0;background:#0a0a0a;opacity:0"></div>')
+c.h(f'''<div class="abs" id="ti-cart" style="left:0;top:0;width:1920px;height:1080px;display:flex;align-items:center;justify-content:center;gap:34px;opacity:0">
+<span class="tit gasto" style="font-size:150px;color:#D8261C">BRASIL</span><span class="fina gasto" style="font-size:136px;color:#E9731E">FOSSE</span><span class="tit gasto" style="font-size:150px;color:{OURO}">PANEM</span></div>
+<div class="abs mono" id="ti-se" style="left:0;right:0;top:420px;text-align:center;font-size:28px;letter-spacing:12px;color:#8a8579;opacity:0">SE O</div>''')
+c.h(f'<video id="ti-queima" class="clip abs" src="assets/video/queima.mp4" muted playsinline data-start="{c.r(t_q - 0.35):.3f}" data-duration="1.4" '
+    f'data-media-start="2.5" style="left:0;top:0;width:1920px;height:1080px;object-fit:cover;mix-blend-mode:screen;opacity:.85"></video>')
+c.a(f'tl.fromTo(q1("#ti-preto"),{{opacity:0}},{{opacity:1,duration:3/24}},{c.r(t_q):.3f});')
+for k, o in enumerate([1, .55, 1, .75, 1]):          # flicker de projetor: 5 passos em 0,6 s, amplitude baixa
+    c.a(f'tl.set(q("#ti-cart,#ti-se"),{{opacity:{o}}},{c.r(t_q + 0.3) + k * 3 / 24:.3f});')
+som(t_q - 0.2, 'sfx/whoosh2', 0); som(t_q + 0.3, 'taoismo/impacto_1', 6)
 c.fim_()
 
-# ======================================================================== DISTRITO XII (teste e bloco 2)
+# ======================================================================== DISTRITO XII
 TRILHA.append((F(17) - 0.6, 'marcha', 0))
-def regua_html(c, atual, feitos, aparece_t=None):
-    c.h(f'<div class="abs" id="rg" style="left:0;top:0;width:1920px;height:1080px">{regua(atual, feitos)}</div>')
+# frase 17: "no livro, o Distrito 12 cava carvão": meninos nas minas de carvão (Lewis Hine, 1911)
+c = Cena('d12a', F(17) - 0.6, W(18, 'Brasil'))
+foto(c, 'da-f', 'carvao.jpg', 1.08, 1.0, '45%', '40%')
+c.h(f'<div class="abs" style="inset:0;background:linear-gradient(0deg,rgba(17,19,21,.7) 0%,rgba(17,19,21,0) 45%)"></div>')
+meta(c, 'ARQUIVO 012 · NO LIVRO')
+lower(c, 'da-lt', 'DISTRITO 12 · NO LIVRO', 'CARVÃO E FOME')
+credito(c, 'LEWIS HINE, 1911 · DOMÍNIO PÚBLICO')
+c.entra('#da-lt', W(17, '12'), 6, 0); som(W(17, '12'), 'taoismo/papel_2', -6)
+atmosfera(c, 'poeira', .16)
+c.fim_()
 
-c = Cena('d12a', F(17) - 0.6, F(19))
-mapa(c, 'da', {}, numerais=False)
-regua_html(c, None, set())
-etiqueta(c, 'da-et', 'DISTRITO XII', 110, 150)
-c.h(f'<div class="abs mono" id="da-liv" style="left:114px;top:232px;font-size:26px;color:{OSSO};opacity:0">NO LIVRO: CARVÃO E FOME</div>')
-kin(c, 'da-pa', 'PARÁ', 100, 320, 260, VERM)
-pa = M['PA']; cx, cy = xy(pa['cx'], pa['cy'])
-lon, lat = -50.17, -6.07                               # Serra dos Carajás (mina N4), aproximado
-C14 = math.cos(math.radians(14)); W_ = (-34.6 + 74.2) * C14; H_ = 39.3; S_ = 1000 / max(W_, H_)
-kx, ky = xy((lon + 74.2) * C14 * S_ + (1000 - W_ * S_) / 2, (5.4 - lat) * S_ + (1000 - H_ * S_) / 2)
-c.h('<div class="abs" id="da-pinw" style="left:0;top:0;width:1920px;height:1080px">')
-c.h(f'<div class="abs" id="da-pin" style="left:{kx - 12:.0f}px;top:{ky - 12:.0f}px;width:24px;height:24px;border-radius:50%;background:{OURO};opacity:0"></div>'
-    f'<div class="abs mono" id="da-kl" style="left:{kx + 22:.0f}px;top:{ky - 14:.0f}px;font-size:22px;color:{OURO};opacity:0">SERRA DOS CARAJÁS</div></div>')
-t12 = W(17, '12')
-c.a(f'tl.set(q1("#rg-12"),{{background:"rgba(193,39,29,.14)",borderTopColor:"{VERM}"}},{c.r(t12)}); tl.set(q1("#rg-n"),{{innerHTML:"01/12"}},{c.r(t12)});'); som(t12, 'sfx/ui', -3)
-c.entra('#da-et', t12, 4, 0, -20); c.entra('#da-liv', W(17, 'carvão'), 4)
+# frase 18: "No Brasil, é o Pará, da serra de Carajás": o mapa; o Pará acende; círculo em Carajás
+c = Cena('d12b', W(18, 'Brasil'), F(19))
+mapa(c, 'db'); ponto_capital(c, 'db'); c.a('tl.set(q("#db-cap,#db-capl"),{opacity:1},0);')
+meta(c, 'REGISTRO 012 · CENSO DOS DISTRITOS')
+pax, pay = mp(*rotulo_distrito(M, 12)); kx, ky = geo(-50.17, -6.07)
+c.h(f'<div class="abs cod" id="db-pa" style="left:{pax - 26:.0f}px;top:{pay - 18:.0f}px;opacity:0">PA</div>')
+c.h(f'''<div class="abs" id="db-circ" style="left:{kx - 62:.0f}px;top:{ky - 62:.0f}px;width:124px;height:124px;border-radius:50%;border:4px solid {LARANJA};box-shadow:0 0 18px rgba(224,137,43,.45);opacity:0"></div>
+<div class="abs" id="db-pt" style="left:{kx - 7:.0f}px;top:{ky - 7:.0f}px;width:14px;height:14px;border-radius:50%;background:{SANGUE};opacity:0"></div>
+<div class="abs" id="db-lin" style="left:{kx - 260:.0f}px;top:{ky + 4:.0f}px;width:196px;height:1px;background:{LARANJA};opacity:0"></div>
+<div class="abs it" id="db-rot" style="left:{kx - 450:.0f}px;top:{ky - 12:.0f}px;opacity:0">Serra dos Carajás</div>''')
+godard(c, 'db-par', 'PARÁ', 110, 330, 220)
 t_pa = W(18, 'Pará')
-c.a(f'tl.to(q1("#da-PA"),{{fill:"{VERM}",stroke:"#FF6A5A",duration:8/24,ease:"power2.out"}},{c.r(t_pa)});')
-c.h(f'<div class="abs regime" id="da-xii" style="left:{cx - 60:.0f}px;top:{cy - 50:.0f}px;font-size:96px;color:{OSSO};opacity:0;'
-    f'text-shadow:0 0 0 {PRETO},3px 3px 0 {PRETO}">XII</div>')
-c.carimba('#da-xii', t_pa + 0.15, 1.6); som(t_pa + 0.15, 'taoismo/carimbo_2', 2)
-c.entra('#da-pa', t_pa, 5)
-c.a(f'tl.to(q("#da-w,#da-pinw"),{{scale:1.12,transformOrigin:"{cx / 19.2:.1f}% {cy / 10.8:.1f}%",duration:{F(19) - t_pa:.2f},ease:"sine.inOut"}},{c.r(t_pa)});')
-t_car = W(18, 'Carajás')
-c.carimba('#da-pin', t_car, 2.2); c.entra('#da-kl', t_car, 4, 0, -10); som(t_car, 'sfx/beep', -6)
+c.a(f'tl.to(q("#db-w path[data-dist=\\"12\\"]"),{{attr:{{"fill-opacity":.28,"stroke-opacity":1,"stroke-width":2.2,stroke:"{SANGUE}"}},duration:6/24}},{c.r(t_pa)});')
+c.entra('#db-pa', t_pa, 3, 0); c.entra('#db-par', t_pa); som(t_pa, 'taoismo/carimbo_2', 0)
+t_k = W(18, 'Carajás')
+c.a(f'tl.fromTo(q1("#db-circ"),{{opacity:0,scale:1.6}},{{opacity:1,scale:1,duration:6/24,ease:"power2.out"}},{c.r(t_k)});')
+for s in ['#db-pt', '#db-lin', '#db-rot']: c.entra(s, t_k + 0.1, 4, 0)
+som(t_k, 'taoismo/pagina_1', -4)
+c.a(f'tl.fromTo(q1("#db-w"),{{scale:1,transformOrigin:"{kx / 19.2:.1f}% {ky / 10.8:.1f}%"}},{{scale:1.08,duration:{c.fim - c.ini:.2f},ease:"sine.inOut"}},0);')
+credito(c, 'RELEVO: NATURAL EARTH · MALHA: IBGE')
+atmosfera(c, 'fumaca', .08)
 c.fim_()
 
-# --- frases 19 e 20: a mina vista do satélite + 39 % dos royalties + 39,6 % da madeira nativa
-c = Cena('d12b', F(19), F(21))
-c.h(f'''<div class="abs" id="db-foto" style="left:860px;top:110px;width:960px;height:720px;overflow:hidden;border:3px solid {OSSO}">
-<img id="db-img" src="assets/img/carajas_satelite_duo.jpg" style="position:absolute;left:0;top:0;width:960px;height:720px;object-fit:cover"></div>
-<div class="abs mono" style="left:860px;top:70px;font-size:20px;color:{OSSO}">SATÉLITE · MINA DE CARAJÁS (PA)</div>
-<div class="abs mono" style="left:860px;top:842px;font-size:16px;color:{CINZA}">IMAGEM: NASA/ASTER · DOMÍNIO PÚBLICO</div>''')
-regua_html(c, 12, set())
-kin(c, 'db-39', '39%', 96, 180, 330, OSSO, 'num')
-kin(c, 'db-roy', 'DOS ROYALTIES<br>DA MINERAÇÃO', 110, 560, 96, VERM)
-fonte(c, 'db-f1', 'ANM · CFEM 2025', 114, 800)
-kin(c, 'db-396', '39,6%', 96, 180, 330, OSSO, 'num')
-kin(c, 'db-mad', 'DA MADEIRA<br>NATIVA', 110, 560, 96, VERM)
-fonte(c, 'db-f2', 'IBGE · PEVS 2025', 114, 800)
-c.a(f'tl.fromTo(q1("#db-img"),{{scale:1}},{{scale:1.06,transformOrigin:"55% 45%",duration:{F(21) - F(19):.2f},ease:"none"}},0);')
-c.a(f'tl.fromTo(q1("#db-foto"),{{opacity:0}},{{opacity:1,duration:5/24}},0);')
-t39 = W(19, 'trinta'); c.entra('#db-39', t39, 4); som(t39, 'taoismo/impacto_3', -2)
-c.entra('#db-roy', W(19, 'royalties'), 4); c.entra('#db-f1', W(19, 'royalties') + 0.2, 4)
+# frases 19 e 20: a mina vista do satélite; 39 % dos royalties; 39,6 % da madeira nativa
+c = Cena('d12c', F(19), F(21))
+foto(c, 'dc-f', 'carajas.jpg', 1.0, 1.08, '70%', '35%')
+c.h(f'<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(17,19,21,.88) 0%,rgba(17,19,21,.5) 38%,rgba(17,19,21,0) 62%)"></div>')
+meta(c, 'REGISTRO 012 · CENSO DOS DISTRITOS')
+c.h(f'<div class="abs mono" style="right:110px;top:72px;font-size:19px;color:{MARFIM};opacity:.75;letter-spacing:4px">06°04′S · 50°10′O</div>')
+godard(c, 'dc-39', '39%', 104, 220, 260)
+c.h(f'<div class="abs txt" id="dc-roy" style="left:112px;top:510px;width:660px;font-size:44px;line-height:1.2;color:{MARFIM};opacity:0">dos royalties da mineração do Brasil vêm do Pará</div>')
+c.h(f'<div class="abs mono" id="dc-f1" style="left:112px;top:640px;font-size:18px;color:{PAPEL};letter-spacing:3px;opacity:0">FONTE: ANM · CFEM 2025</div>')
+godard(c, 'dc-40', '39,6%', 104, 220, 260)
+c.h(f'<div class="abs txt" id="dc-mad" style="left:112px;top:510px;width:660px;font-size:44px;line-height:1.2;color:{MARFIM};opacity:0">da madeira nativa cortada no Brasil sai do Pará</div>')
+c.h(f'<div class="abs mono" id="dc-f2" style="left:112px;top:640px;font-size:18px;color:{PAPEL};letter-spacing:3px;opacity:0">FONTE: IBGE · PEVS 2025</div>')
+lower(c, 'dc-lt', 'DISTRITO 12 · PARÁ', 'A MINA DE CARAJÁS')
+credito(c, 'IMAGEM: NASA/JPL · ASTER · DOMÍNIO PÚBLICO')
+c.entra('#dc-lt', F(19) + 0.1, 6, 0)
+t39 = W(19, 'trinta'); c.entra('#dc-39', t39); som(t39, 'taoismo/impacto_3', -4)
+c.entra('#dc-roy', W(19, 'royalties')); c.entra('#dc-f1', W(19, 'royalties') + 0.3)
 t40 = W(20, 'quarenta')
-for s in ['#db-39', '#db-roy', '#db-f1']: c.sai(s, t40 - 0.12, 3)
-c.entra('#db-396', t40, 4); som(t40, 'taoismo/impacto_3', -2)
-c.entra('#db-mad', W(20, 'madeira'), 4); c.entra('#db-f2', W(20, 'madeira') + 0.2, 4)
+for s in ['#dc-39', '#dc-roy', '#dc-f1']: c.sai(s, t40 - 0.15, 3)
+c.entra('#dc-40', t40); c.entra('#dc-mad', W(20, 'madeira')); c.entra('#dc-f2', W(20, 'madeira') + 0.3); som(t40, 'taoismo/impacto_3', -4)
 c.fim_()
 
-# --- frases 21 a 24: a ficha do tributo do Distrito XII
-c = Cena('d12c', F(21), F(24, True) + 0.6)
-mapa(c, 'dc', {12: 'aceso'}, 40, 110, 820)
-regua_html(c, 12, set())
-ficha_html(c, 'fx', 12)
-c.h(f'<div class="abs mono" id="fx-fonte" style="left:930px;top:918px;width:900px;font-size:15px;color:{CINZA};letter-spacing:1.5px;opacity:0">'
-    'FONTE: IBGE, CENSO 2022 · ANM, CFEM 2025 · SIMULAÇÃO NOSSA: 4 TRIBUTOS POR DISTRITO, JOVENS DE 12 A 18 ANOS</div>')
-kin(c, 'fx-terco', '1/3<br>DA CAPITAL', 120, 330, 150, VERM)
-c.h(f'<div class="abs" id="fx-carimbo" style="left:1560px;top:150px;border:8px solid {VERM};padding:10px 30px 4px;transform:rotate(-8deg);opacity:0">'
-    f'<span class="regime" style="font-size:150px;color:{VERM}">XII</span></div>')
-c.a('tl.fromTo(q1("#dc-w"),{opacity:0},{opacity:1,duration:6/24},0);')
-ficha_entra(c, 'fx', W(21, 'Ficha')); c.entra('#fx-l0', W(21, 'tributo'), 4); c.entra('#fx-fonte', W(21, 'tributo'), 6)
-for i, p in enumerate(['minério', 'madeira']):
-    tw = W(21, p); c.entra(f'#fx-p{i}', tw, 3, 0, -16); som(tw, 'sfx/beep', -6)
-c.a(f'tl.set(q1("#fx-l1"),{{opacity:1}},{c.r(W(21, "produz")):.3f});')
-t_ch = W(22, 'chance'); c.entra('#fx-l2', t_ch, 4); som(t_ch, 'sfx/papeis', -4)
-c.a(f'tl.fromTo(q1("#fx-alvo"),{{scale:1}},{{scale:1.7,duration:3/24,yoyo:true,repeat:5,ease:"sine.inOut"}},{c.r(W(22, "uma")):.3f});')
-t_rd = W(23, 'renda'); c.entra('#fx-l3', t_rd, 4)
-c.a(f'tl.from(q(".fx-sc"),{{opacity:0,duration:2/24,stagger:1/48}},{c.r(t_rd):.3f});')
+# frases 21 a 24: a ficha do tributo do Distrito 12, datilografada na mesa
+c = Cena('d12d', F(21), F(24, True) + 0.6)
+papel(c, 'fx-p', -0.8)
+c.h(f'<div class="tit" style="position:absolute;left:76px;top:138px;font-size:120px;color:{CARVAO}">DISTRITO 12</div>'
+    f'<div class="mono" style="position:absolute;left:80px;top:282px;font-size:28px;color:{CONCRETO};letter-spacing:5px">PARÁ · MINERAÇÃO</div>')
+linhas = [(21, 'minério', 'PRODUZ ............. minério, madeira'), (22, 'uma', 'CHANCE NA COLHEITA . 1 em 252.831'),
+          (23, 'novecentos', 'RENDA MÉDIA ........ R$ 994 por pessoa'), (23, 'reais', 'CAPITAL ............ R$ 2.999')]
+lids = []
+for i, (n_, w, txt) in enumerate(linhas):
+    nn, ll = datilo(c, f'fx-l{i}', txt, 80, 370 + i * 72, 32); lids.append((n_, w, f'fx-l{i}', nn, ll))
+c.h(f'''<div style="position:absolute;left:80px;top:690px;width:1040px;height:20px;background:rgba(53,56,58,.25)"><div id="fx-bar" style="width:0;height:100%;background:{SANGUE}"></div></div>
+<div class="mono" id="fx-pct" style="position:absolute;left:80px;top:724px;font-size:22px;color:{CONCRETO};letter-spacing:4px;opacity:0">33 % DA RENDA DA CAPITAL</div>
+<div id="fx-car" style="position:absolute;right:90px;top:560px;border:8px solid {SANGUE};padding:8px 26px 2px;transform:rotate(-8deg);opacity:0">
+<span class="tit gasto" style="font-size:64px;color:{SANGUE}">UM TERÇO</span></div>
+<div class="mono" style="position:absolute;left:80px;top:842px;font-size:15px;color:{CONCRETO};letter-spacing:1.5px">IBGE, CENSO 2022 · ANM, CFEM 2025 · SIMULAÇÃO NOSSA: 4 TRIBUTOS, JOVENS DE 12 A 18 ANOS · VISUALIZAÇÃO EDITORIAL</div>''')
+fecha_papel(c)
+c.a(f'tl.fromTo(q1("#fx-p"),{{opacity:0,y:40}},{{opacity:1,y:0,duration:8/24,ease:"power2.out"}},{c.r(W(21, "Ficha"))});'); som(W(21, 'Ficha'), 'taoismo/papel_1', -2)
+for n_, w, did, nn, ll in lids: digita(c, did, nn, ll, W(n_, w), 30)
 t_r = W(23, 'novecentos')
-nseg = round(DIST[12]['renda'] / 5)
-c.a(f'tl.set(q(".fx-sv"),{{background:"#2A2624"}},0);')
-c.a(f'tl.to(q(".fx-sv:nth-child(-n+{nseg})"),{{background:"{VERM}",duration:1/24,stagger:{(W(23, "reais", fim=True) - t_r) / nseg:.3f}}},{c.r(t_r):.3f});')
-som(t_r, 'sfx/moedas', -2)
-t_ter = W(24, 'terço'); c.entra('#fx-terco', t_ter, 4)
-c.a(f'tl.to(q1("#dc-w"),{{opacity:.18,duration:5/24}},{c.r(t_ter) - 0.1:.3f});'); som(t_ter, 'taoismo/impacto_2', 2)
-c.carimba('#fx-carimbo', F(24, True) + 0.15, 1.6); som(F(24, True) + 0.15, 'taoismo/carimbo_1', 3)
+c.a(f'tl.fromTo(q1("#fx-bar"),{{width:"0%"}},{{width:"33%",duration:{W(23, "reais", fim=True) - t_r:.2f},ease:"power2.out"}},{c.r(t_r)});')
+c.entra('#fx-pct', W(23, 'reais', fim=True))
+t_ter = W(24, 'terço')
+c.a(f'tl.fromTo(q1("#fx-car"),{{opacity:0,scale:1.3,rotation:-8}},{{opacity:.9,scale:1,rotation:-8,duration:2/24,ease:"power4.out"}},{c.r(t_ter)});')
+som(t_ter, 'taoismo/carimbo_1', 3)
+atmosfera(c, 'poeira', .12, 9)
 c.fim_()
 
 # ======================================================================== escrever o projeto
 OUT.mkdir(parents=True, exist_ok=True)
-for sub in ['compositions', 'assets/fonts', 'assets/img']: (OUT / sub).mkdir(parents=True, exist_ok=True)
+for sub in ['compositions', 'assets/fonts']: (OUT / sub).mkdir(parents=True, exist_ok=True)
 for f in (MID / 'fontes').glob('*.ttf'): shutil.copy(f, OUT / 'assets/fonts' / f.name)
-for f in (MID / 'img').glob('*_duo.jpg'): shutil.copy(f, OUT / 'assets/img' / f.name)
-gsap = pathlib.Path.home() / '.claude/mcp/openmotion/node_modules/gsap/dist/gsap.min.js'
-shutil.copy(gsap, OUT / 'assets/gsap.min.js')
-FONTES = fontes_css('../assets/fonts').replace('../assets', 'assets')
-for i, c in enumerate(CENAS):
+shutil.copytree(MID / 'assets' / 'img', OUT / 'assets' / 'img', dirs_exist_ok=True)
+shutil.copytree(MID / 'assets' / 'video', OUT / 'assets' / 'video', dirs_exist_ok=True)
+shutil.copy(pathlib.Path.home() / '.claude/mcp/openmotion/node_modules/gsap/dist/gsap.min.js', OUT / 'assets/gsap.min.js')
+FONTES = '''@font-face{font-family:"Anton";src:url("assets/fonts/Anton-Regular.ttf")}
+@font-face{font-family:"Oswald";src:url("assets/fonts/Oswald[wght].ttf");font-weight:200 700}
+@font-face{font-family:"Plex Sans";src:url("assets/fonts/IBMPlexSans[wdth,wght].ttf");font-weight:100 700}
+@font-face{font-family:"Plex Mono";src:url("assets/fonts/IBMPlexMono-Medium.ttf");font-weight:500}
+@font-face{font-family:"Plex Mono";src:url("assets/fonts/IBMPlexMono-Bold.ttf");font-weight:700}'''
+BASE = f'''#root{{position:absolute;inset:0;overflow:hidden;background:{CARVAO}}}
+#root .abs{{position:absolute}} #root .tit{{font-family:"Anton";text-transform:uppercase;line-height:.95}}
+#root .fina{{font-family:"Oswald";font-weight:300;text-transform:uppercase;line-height:.95}}
+#root .txt{{font-family:"Plex Sans";font-weight:500}} #root .mono{{font-family:"Plex Mono";font-weight:500;text-transform:uppercase}}
+#root .cod{{background:{SANGUE};color:{CARVAO};font-family:"Plex Mono";font-weight:700;font-size:22px;padding:2px 8px;letter-spacing:1px}}
+#root .it{{font-family:"Plex Mono";font-style:italic;font-size:17px;color:{LARANJA};border:1px solid {LARANJA};padding:3px 10px;background:rgba(17,19,21,.85)}}
+#root .gasto{{filter:url(#gasto)}}
+#root .grao{{position:absolute;inset:0;pointer-events:none;opacity:.08;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}}
+#root .vinheta{{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 60%,rgba(0,0,0,.55) 100%)}}'''
+GASTO = '''<svg width="0" height="0" style="position:absolute"><filter id="gasto"><feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="3" seed="3" result="n"/>
+<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.75 1.32" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter></svg>'''
+for c in CENAS:
     dur = round(c.fim - c.ini, 4)
     (OUT / 'compositions' / f'{c.id}.html').write_text(f'''<template id="{c.id}-template">
 <div id="root" data-composition-id="{c.id}" data-width="1920" data-height="1080" data-duration="{dur}" data-layout-allow-overflow data-layout-allow-overlap>
-<div class="tela">
+{GASTO}
 {chr(10).join(c.corpo)}
-<div class="grao"></div><div class="vinheta"></div></div>
+<div class="grao"></div><div class="vinheta"></div>
 </div>
 <style>{FONTES}
-#root{{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;background:{PRETO}}}
-{CSS_BASE}
+{BASE}
 {chr(10).join(dict.fromkeys(c.css))}</style>
 <script>
 (function(){{
@@ -351,23 +362,19 @@ window.__timelines = window.__timelines || {{}}; window.__timelines["{c.id}"] = 
 </script>
 </template>
 ''', encoding='utf-8')
-hosts = '\n'.join(f'<div id="h-{c.id}" class="clip" data-composition-id="{c.id}" data-composition-src="compositions/{c.id}.html" '
+hosts = '\n'.join(f'<div id="{c.id}" class="clip" data-composition-id="{c.id}" data-composition-src="compositions/{c.id}.html" '
                   f'data-start="{c.ini:.4f}" data-duration="{c.fim - c.ini:.4f}" data-track-index="0" data-track-kind="graphics"></div>' for c in CENAS)
 (OUT / 'index.html').write_text(f'''<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><title>Se o Brasil fosse Panem{" (teste)" if TESTE else ""}</title>
 <script src="assets/gsap.min.js"></script>
-<style>body{{margin:0}}#main{{position:relative;width:1920px;height:1080px;overflow:hidden;background:{PRETO}}}</style></head>
+<style>body{{margin:0}}#main{{position:relative;width:1920px;height:1080px;overflow:hidden;background:{CARVAO}}}</style></head>
 <body><div id="main" data-composition-id="main" data-start="0" data-duration="{DUR:.4f}" data-width="1920" data-height="1080" data-fps="{FPS}">
 {hosts}
 </div>
 <script>window.__timelines = window.__timelines || {{}}; window.__timelines.main = gsap.timeline({{paused:true}});</script></body></html>
 ''', encoding='utf-8')
-# conferências: cenas encostadas, sem buraco nem sobreposição
 for a, b in zip(CENAS, CENAS[1:]):
-    if abs(a.fim - b.ini) > 1e-6 : print('AVISO: buraco/sobreposição entre', a.id, b.id, a.fim, b.ini)
-if TESTE:   # no teste, o trecho entre o título e o D12 é um corte seco
-    tt = [c for c in CENAS if c.id == 'titulo'][0]; d = [c for c in CENAS if c.id == 'd12a'][0]
-    if d.ini < tt.fim: raise SystemExit('trechos sobrepostos')
+    if abs(a.fim - b.ini) > 1e-6: print('AVISO: buraco/sobreposição entre', a.id, b.id, round(a.fim, 3), round(b.ini, 3))
 json.dump({'dur': DUR, 'linha': LINHA, 'eventos': sorted(EVENTOS, key=lambda e: e['t']), 'trilha': TRILHA, 'respiros': RESPIROS,
            'cenas': [{'id': c.id, 'ini': c.ini, 'fim': c.fim} for c in CENAS]},
           open(OUT / 'eventos.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
