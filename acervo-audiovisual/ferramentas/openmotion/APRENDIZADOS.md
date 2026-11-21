@@ -22,3 +22,12 @@ Primeiro uso: cenas novas do documentário do Taoísmo v70 (20/11/2026). Scripts
 - Vários efeitos do Pixabay começam com silêncio. Exemplos: `carimbo_1` bate em 0,55 s, `sino_1` em 0,62 s, `tinta_*` em cerca de 0,3 s. Colocar o arquivo no tempo do objeto deixa o som atrasado.
 - Correção usada no v70: medir o ataque de cada arquivo (primeiro ponto acima de 10% do pico) e adiantar o som nesse valor. A sincronia ficou entre 0 e 40 ms.
 - O foley do v60 ainda não tem essa correção.
+
+## v80 do Taoísmo (21/11/2026): o que valeu para vídeo longo
+
+- **Download do Wikimedia:** muitos pedidos seguidos levam a erro 429 por IP, que dura de 2 a 10 minutos. Para mais de 30 arquivos, espaçar 8 a 10 s e respeitar o `Retry-After`. Não contornar o limite por outro caminho (o sistema de permissões bloqueia). A miniatura de PDF só sai em larguras-padrão; 2400 px deu erro 400.
+- **Disco:** o render de 18 mil quadros com alfa ocupa dezenas de GB. Quadros e saídas vão para o G: (`G:\lucas\...`), nunca para o C:.
+- **Whisper no PC:** a GPU não tem cublas64_12.dll; usar CPU. O modelo médio com o áudio inteiro estoura a memória; transcrever frase por frase com o modelo small resolve.
+- **Chrome headless:** máscara CSS (`mask-image`) apontando para arquivo local é bloqueada; a silhueta foi feita com `filter: brightness(0)` na própria figura recortada.
+- **Premiere pela ponte MCP:** `import_folder` e a importação para dentro de pasta falham (`targetBin.importFiles is not a function`). `execute_extendscript` com `app.project.importFiles(lista, true, pasta, false)` importa em lote, mas a ponte fica sem responder até o Premiere terminar. `add_to_timeline_batch` com cerca de 130 clipes por chamada funciona. Fechar o projeto derruba o painel da ponte; para reabrir, `verify_premiere_connection`.
+- **Planos longos:** dividir automaticamente todo plano acima de 3,6 s, com outra câmera na mesma imagem, garante o ritmo de 2 a 4 s sem precisar escrever cada plano.
