@@ -98,3 +98,23 @@ describe('NPS no fim das perguntas do mês', () => {
     expect(flowSteps([], {}, [], 'P', { brand: 'peformake', done: false })).toEqual([])
   })
 })
+
+describe('briefing em blocos', () => {
+  it('confirma o que já sabemos, separa por bloco e estima o tempo', async () => {
+    const { briefSteps, BLOCKS, minutes, stepSeconds } = await import('./portalFlowRules')
+    const f = { produtos: [{ nome: 'Pizza', preco: 'R$ 50' }], publico: 'Famílias do bairro' }
+    const steps = briefSteps(f, missingFields(f, false), {}, false, 0)
+    expect(steps[0]!.kind).toBe('confirm')
+    expect(steps[0]!.q).toContain('Pizza R$ 50')
+    expect(steps.find((s) => s.key === 'confirmar:2')!.q).toContain('Famílias do bairro')
+    const blocks = steps.map((s) => s.block!)
+    expect([...blocks].sort((a, b) => a - b)).toEqual(blocks)
+    expect(steps.at(-1)!.kind).toBe('docs')
+    expect(steps.every((s) => BLOCKS.some((b) => b.n === s.block))).toBe(true)
+    expect(minutes(steps.filter((s) => s.block === 2).reduce((t, s) => t + stepSeconds(s), 0))).toBeGreaterThan(0)
+  })
+  it('com 3 ou mais documentos não pede arquivos de novo', async () => {
+    const { briefSteps } = await import('./portalFlowRules')
+    expect(briefSteps({}, [], {}, false, 3).some((s) => s.kind === 'docs')).toBe(false)
+  })
+})

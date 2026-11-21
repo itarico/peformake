@@ -71,9 +71,28 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     if (area < 160) fails.push(`${dev}: sobra pouco espaço para as mensagens (${area}px)`);
     if (!(await p.locator('[data-microfone]').count())) fails.push(`${dev}: sem o microfone grande`);
     await p.screenshot({ path: `${OUT}/portal-chat-${dev}.png` });
-    await p.locator('[data-caixa]').fill('Atendimento rápido e preço justo');
+    // Blocos: o cabeçalho mostra o bloco e o tempo; o 1º passo confirma o que já sabemos (sem perguntar de novo).
+    const bloco = await p.locator('[data-bloco]').innerText().catch(() => '');
+    if (!/^Bloco 1 de 5 · O seu negócio · falta uns \d+ min$/.test(bloco)) fails.push(`${dev}: cabeçalho do bloco errado ("${bloco}")`);
+    const first = await p.locator('[data-portal-chat] ul > li').last().innerText();
+    if (!/já está com a gente/.test(first) || !/Pizza grande/.test(first)) fails.push(`${dev}: o 1º passo devia confirmar o que já sabemos ("${first.slice(0, 80)}")`);
+    await p.locator('[data-portal-chat] [role=group] button', { hasText: 'Está tudo certo' }).click();
+    await p.locator('[data-enviar]').click(); await p.waitForTimeout(500);
+    // 2º passo (pergunta de verdade): responde e salva.
+    await p.locator('[data-caixa]').fill('Pizza grande R$ 59,90; Calzone R$ 42');
     await p.locator('[data-enviar]').click(); await p.waitForTimeout(700);
-    if (!calls.some((c) => c[0] === 'save' && c[1] === TOKEN && c[2].length > 0)) fails.push(`${dev}: a 1ª resposta não salvou (${JSON.stringify(calls)})`);
+    if (!calls.some((c) => c[0] === 'save' && c[1] === TOKEN && c[2].length > 0)) fails.push(`${dev}: a resposta não salvou (${JSON.stringify(calls)})`);
+    // Parar e voltar: recarrega a página e continua de onde parou.
+    await p.reload(); await p.waitForTimeout(1500);
+    if (!(await p.locator('[data-continuar]').count())) fails.push(`${dev}: ao voltar devia perguntar "Continuar de onde parou?"`);
+    else {
+      const msg = await p.locator('[data-portal-chat] ul > li').last().innerText();
+      if (!/Você parou no bloco 1/.test(msg)) fails.push(`${dev}: mensagem de retomar errada ("${msg}")`);
+      await p.screenshot({ path: `${OUT}/portal-chat-retomar-${dev}.png` });
+      await p.locator('[data-continuar]').click(); await p.waitForTimeout(300);
+      const prog = await p.locator('[data-progresso]').innerText();
+      if (/^1 de /.test(prog)) fails.push(`${dev}: ao continuar voltou para o início (${prog})`);
+    }
     let sawSub = false; let answeredMom = false; let sawNps = false;
     for (let k = 0; k < 150; k++) {
       if (await p.locator('[data-ir-painel]').count()) break;
@@ -127,8 +146,8 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     await p.locator('[data-responder]').click(); await p.waitForTimeout(500);
     if (!(await p.locator('[data-portal-chat]').count())) fails.push(`${dev}: "Responder" devia abrir a conversa`);
     const prog = await p.locator('[data-progresso]').innerText().catch(() => '');
-    // Briefing ainda abaixo de 80%: a conversa refaz o que falta antes das perguntas (obrigatório).
-    if (!/^1 de \d+$/.test(prog)) fails.push(`${dev}: conversa sem progresso (${prog})`);
+    // Briefing ainda abaixo de 80%: a conversa volta, mas do ponto onde parou (o que já foi feito não repete).
+    if (!/^\d+ de \d+$/.test(prog)) fails.push(`${dev}: conversa sem progresso (${prog})`);
     // NPS já respondido no mês: não pergunta de novo.
     for (let k = 0; k < 120 && !(await p.locator('[data-ir-painel]').count()); k++) {
       const last = await p.locator('[data-portal-chat] ul > li').last().innerText();

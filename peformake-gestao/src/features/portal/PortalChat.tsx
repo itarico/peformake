@@ -7,11 +7,18 @@ import { competitorFromLink, detectLink, fromLinkList, linkList, mergeCompetitor
 import { productsFromText } from '@/features/strategy/brief/productImport'
 import { monthName, SKIP_LABEL } from '@/features/strategy/questionRules'
 import { cn } from '@/lib/cn'
-import { answerPortalQuestion, portalBriefKey, savePortalBrief, savePortalNps, uploadAnswerFile, type PortalBrief } from './portalBriefApi'
-import { fieldPatch, flowSteps, linksIn, missingFields, namesIn, NPS_INDICAR, type FlowStep } from './portalFlowRules'
+import { answerPortalQuestion, portalBriefKey, savePortalBrief, savePortalNps, uploadAnswerFile, uploadBriefDoc, type PortalBrief } from './portalBriefApi'
+import { BLOCKS, briefSteps, fieldPatch, flowSteps, linksIn, minutes, missingFields, namesIn, NPS_INDICAR, stepSeconds, type FlowStep } from './portalFlowRules'
 import { BRIEF_REQUIRED } from './portalRules'
 
 const first = (name: string) => name.trim().split(/\s+/)[0] ?? name
+/** Onde o cliente parou fica guardado neste aparelho: ao voltar, continua do mesmo ponto. */
+const memKey = (token: string) => `pf-briefing:${token}`
+const readMem = (token: string): string[] => { try { const v = JSON.parse(localStorage.getItem(memKey(token)) ?? '[]'); return Array.isArray(v) ? v.map(String) : [] } catch { return [] } }
+const writeMem = (token: string, keys: string[]) => { try { localStorage.setItem(memKey(token), JSON.stringify(keys.filter((k) => !/^(q:|nps:)/.test(k)))) } catch { /* sem armazenamento */ } }
+/** Correção do que já sabíamos vai para o cartão principal do bloco (o agente lê). */
+const FIX_FIELD: Record<number, 'diferenciais' | 'publico' | 'posicionamento' | 'momento'> = { 1: 'diferenciais', 2: 'publico', 3: 'posicionamento', 4: 'momento' }
+const OK_CONFIRM = 'Está tudo certo'
 
 /** Precisa abrir a conversa? Briefing abaixo de 80% ou perguntas do mês em aberto. */
 export function needsChat(brief: PortalBrief): boolean {
@@ -28,7 +35,10 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
   // O que falta no briefing fica fixo durante a conversa (responder a 1ª pergunta de um campo já o deixa preenchido).
   const [fields] = useState(() => (allBrief || brief.percent < BRIEF_REQUIRED ? missingFields(brief.data, brief.hasVideo) : []))
   const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [handled, setHandled] = useState<string[]>([])
+  // Já respondido ou deixado para depois em outra visita (o briefing): não volta.
+  const [before] = useState<string[]>(() => readMem(token))
+  const [handled, setHandled] = useState<string[]>(before)
+  const [resumed, setResumed] = useState(false)
   const [history, setHistory] = useState<ChatMsg[]>([])
   const [text, setText] = useState('')
   const [live, setLive] = useState('')
@@ -38,10 +48,22 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
   const pick = useRef<HTMLInputElement>(null)
   const end = useRef<HTMLDivElement>(null)
   const mes = monthName(month.slice(0, 7))
-  const steps = useMemo(() => flowSteps(fields, answers, brief.questions, `Perguntas de ${mes}`, { brand: brief.brand, done: brief.npsDone }), [fields, answers, brief.questions, mes, brief.brand, brief.npsDone])
+  const briefMode = allBrief || brief.percent < BRIEF_REQUIRED
+  const steps = useMemo(() => [
+    ...(briefMode ? briefSteps(brief.data, fields, answers, brief.hasVideo, brief.docs.length) : []),
+    ...flowSteps([], answers, brief.questions, `Perguntas de ${mes}`, { brand: brief.brand, done: brief.npsDone }),
+  ], [briefMode, brief.data, fields, answers, brief.hasVideo, brief.docs.length, brief.questions, mes, brief.brand, brief.npsDone])
+  useEffect(() => { writeMem(token, handled) }, [token, handled])
   const left = steps.filter((s) => !handled.includes(s.key))
   const cur: FlowStep | undefined = left[0]
-  const total = handled.length + left.length
+  const done = steps.length - left.length
+  const total = steps.length
+  // Bloco atual: nome, número e tempo que falta nele.
+  const block = cur?.block ? BLOCKS.find((b) => b.n === cur.block) : undefined
+  const blockLeft = block ? minutes(left.filter((x) => x.block === block.n).reduce((t, x) => t + stepSeconds(x), 0)) : 0
+  const lastBlock = useRef<number | null>(null)
+  // Voltou depois de parar no meio do briefing: pergunta se continua antes de seguir.
+  const askResume = !resumed && !!block && steps.some((x) => x.block && before.includes(x.key))
   const f: BriefFixed = brief.data
   useEffect(() => { end.current?.scrollIntoView({ block: 'end' }) }, [history.length, cur?.key, live])
 
@@ -52,6 +74,14 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
       if (step.kind === 'question') {
         const atts = await Promise.all(files.map((x) => uploadAnswerFile(token, x, x.name)))
         await answerPortalQuestion(token, step.qid!, value || (files.length ? `Enviou: ${files.map((x) => x.name).join(', ')}` : ''), atts)
+        return
+      }
+      if (step.kind === 'docs') { for (const x of files) await uploadBriefDoc(token, x); return }
+      if (step.kind === 'confirm') {
+        if (value && value !== OK_CONFIRM) {
+          const k = FIX_FIELD[step.block ?? 1]!
+          await savePortalBrief(token, { [k]: `${(f[k] ?? '').trim()}\nCorreção do cliente: ${value}`.trim() })
+        }
         return
       }
       const field = step.field!
@@ -81,7 +111,7 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
     onSuccess: async (_, { step, value }) => {
       if (step.kind === 'quiz' || step.kind === 'nps') setAnswers((a) => ({ ...a, [step.key]: value }))
       if (step.kind === 'nps_comment' && value === NPS_INDICAR) { onDone('indicacoes'); return }
-      setHistory((h) => [...h, ask(step), { from: 'cliente', text: value || '📎 Arquivo', at: '', files: files.map((x) => ({ name: x.name, type: x.type })) }])
+      setHistory((h) => [...h, ...intro(step), ask(step), { from: 'cliente', text: value || (files.length > 1 ? `📎 ${files.length} arquivos` : '📎 Arquivo'), at: '', files: files.map((x) => ({ name: x.name, type: x.type })) }])
       setHandled((h) => [...h, step.key])
       setText(''); setFiles([])
       await qc.invalidateQueries({ queryKey: portalBriefKey(token, month) })
@@ -90,8 +120,16 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
   })
   const later = () => {
     if (!cur) return
-    setHistory((h) => [...h, ask(cur), { from: 'cliente', text: SKIP_LABEL, at: '', files: [] }])
+    setHistory((h) => [...h, ...intro(cur), ask(cur), { from: 'cliente', text: SKIP_LABEL, at: '', files: [] }])
     setHandled((h) => [...h, cur.key]); setText(''); setFiles([]); setProblem(null)
+  }
+  /** Abertura de cada bloco ("2. Clientes e vendas · cerca de 6 min"), uma vez, antes da 1ª pergunta dele. */
+  function intro(step: FlowStep): ChatMsg[] {
+    if (!step.block || lastBlock.current === step.block) return []
+    lastBlock.current = step.block
+    const b = BLOCKS.find((x) => x.n === step.block)!
+    const secs = steps.filter((x) => x.block === b.n && !handled.includes(x.key)).reduce((t, x) => t + stepSeconds(x), 0)
+    return [{ from: 'ia', at: '', files: [], text: `${b.n}. ${b.label} · cerca de ${minutes(secs)} min` }]
   }
   const send = () => { const v = text.trim(); if (cur && (v || files.length)) save.mutate({ step: cur, value: v }) }
   const has = (o: string) => text.split(/\s*;\s*/).includes(o)
@@ -102,7 +140,9 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
   })
   const shown = live ? (text.trim() ? `${text.trim()} ${live}` : live) : text
   const busy = save.isPending
-  const greeting: ChatMsg = { from: 'ia', at: '', files: [], text: `Olá, ${first(name)}! Aqui é a ${brief.brand === 'ellcazo' ? 'Ellcazo' : 'Peformake'}. ${fields.length ? 'Vou completar o seu briefing e fazer as perguntas do mês' : `São as perguntas de ${mes}`}, uma por vez. Responda falando (toque no microfone), escrevendo ou tocando numa opção.` }
+  const briefMin = minutes(steps.filter((x) => x.block).reduce((t, x) => t + stepSeconds(x), 0))
+  const nBlocks = BLOCKS.filter((b) => steps.some((x) => x.block === b.n)).length
+  const greeting: ChatMsg = { from: 'ia', at: '', files: [], text: `Olá, ${first(name)}! Aqui é a ${brief.brand === 'ellcazo' ? 'Ellcazo' : 'Peformake'}. ${briefMode ? `Vamos completar o seu briefing em ${nBlocks} blocos (uns ${briefMin} min no total) e depois as perguntas do mês` : `São as perguntas de ${mes}`}, uma por vez. Pode parar quando quiser: cada resposta fica salva e você continua de onde parou. Responda falando (toque no microfone), escrevendo ou tocando numa opção.` }
 
   return (
     <main data-portal-chat className="flex h-dvh flex-col overflow-hidden bg-canvas text-ink">
@@ -111,9 +151,10 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
         <div className="min-w-0 flex-1">
           <p className="truncate text-[15px] font-semibold leading-tight">{brief.brand === 'ellcazo' ? 'Ellcazo' : 'Peformake'} · {name}</p>
           <div className="mt-1 flex items-center gap-2">
-            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised"><span className="block h-full rounded-full bg-accent transition-all" style={{ width: `${total ? Math.round((handled.length / total) * 100) : 100}%` }} /></span>
-            <span data-progresso className="shrink-0 text-[11.5px] text-muted">{cur ? `${handled.length + 1} de ${total}` : 'Concluída'}</span>
+            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised"><span className="block h-full rounded-full bg-accent transition-all" style={{ width: `${total ? Math.round((done / total) * 100) : 100}%` }} /></span>
+            <span data-progresso className="shrink-0 text-[11.5px] text-muted">{cur ? `${done + 1} de ${total}` : 'Concluída'}</span>
           </div>
+          {block && <p data-bloco className="mt-0.5 truncate text-[11.5px] text-muted">Bloco {block.n} de {BLOCKS.length} · {block.label} · falta uns {blockLeft} min</p>}
         </div>
       </header>
 
@@ -121,7 +162,9 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
         <ul className="mx-auto flex max-w-lg flex-col gap-2">
           <Bubble m={greeting} />
           {history.map((m, i) => <Bubble key={i} m={m} faded={m.from === 'cliente' && m.text === SKIP_LABEL} />)}
-          {cur && <Bubble m={ask(cur)} />}
+          {askResume && block && <Bubble m={{ from: 'ia', at: '', files: [], text: `Você parou no bloco ${block.n} (${block.label}). Continuar de onde parou?` }} />}
+          {!askResume && cur?.block && block && lastBlock.current !== cur.block && <Bubble m={{ from: 'ia', at: '', files: [], text: `${block.n}. ${block.label} · cerca de ${blockLeft} min` }} />}
+          {!askResume && cur && <Bubble m={ask(cur)} />}
           {!cur && <Bubble m={{ from: 'ia', at: '', files: [], text: `Pronto, ${first(name)}! Suas respostas já estão com a equipe. Obrigado!` }} />}
         </ul>
         <div ref={end} />
@@ -129,7 +172,9 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
 
       <footer className="shrink-0 border-t border-line bg-surface px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2">
         <div className="mx-auto flex max-w-lg flex-col gap-2">
-          {!cur ? (
+          {askResume ? (
+            <button type="button" data-continuar onClick={() => setResumed(true)} className="min-h-12 cursor-pointer rounded-full bg-brand px-5 text-[15px] font-semibold text-on-brand">Continuar</button>
+          ) : !cur ? (
             <button type="button" data-ir-painel onClick={() => onDone()} className="min-h-12 cursor-pointer rounded-full bg-brand px-5 text-[15px] font-semibold text-on-brand">Ir para o meu painel</button>
           ) : <>
             {problem && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-1.5 text-[12.5px] text-warn-ink">{problem}</p>}
@@ -163,8 +208,8 @@ export function PortalChat({ token, month, name, brief, onDone, allBrief }: { to
               </span>
               <VoiceNote big key={cur.key} onLive={setLive} onText={(t) => setText((c) => (c.trim() ? `${c.trim()} ${t}` : t))} />
               <span className="flex items-center justify-end gap-1">
-                {cur.kind === 'question' && <>
-                  <input ref={pick} type="file" multiple hidden accept="image/*,video/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" onChange={(e) => { const add = [...(e.target.files ?? [])]; e.target.value = ''; if (add.length) setFiles([...files, ...add].slice(0, 6)) }} />
+                {(cur.kind === 'question' || cur.kind === 'docs') && <>
+                  <input ref={pick} type="file" multiple hidden accept="image/*,video/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" onChange={(e) => { const add = [...(e.target.files ?? [])]; e.target.value = ''; if (add.length) setFiles([...files, ...add].slice(0, cur.kind === 'docs' ? 10 : 6)) }} />
                   <button type="button" aria-label="Mandar foto ou documento" disabled={busy} onClick={() => pick.current?.click()} className="grid size-11 cursor-pointer place-items-center rounded-full text-muted hover:bg-raised disabled:opacity-50"><Paperclip size={19} aria-hidden="true" /></button>
                 </>}
                 <button type="button" data-enviar aria-label="Enviar resposta" disabled={busy || !!live || (!text.trim() && !files.length)} onClick={send} className="grid size-11 cursor-pointer place-items-center rounded-full bg-brand text-on-brand disabled:opacity-40"><SendHorizontal size={18} aria-hidden="true" /></button>

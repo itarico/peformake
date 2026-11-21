@@ -1,7 +1,7 @@
 // Conversa do portal (Italo, 20/11): o cliente responde dentro do portal, num chat no estilo WhatsApp, uma pergunta por vez.
 // Primeiro o que falta no briefing (quando está abaixo de 80%), depois as perguntas do mês. Sem IA: as perguntas vêm dos
 // guias do briefing (QUIZ, com `when`) e do motor do mês (client_questions, com `cond`).
-import { MONTHS_FULL, QUIZ, TEXT_FIELDS, fixedStatus, quizMoney, quizText, visibleSteps, type BriefFixed, type MoneyKey, type QuizStep, type TextKey } from '@/features/strategy/brief/briefRules'
+import { MONTHS_FULL, QUIZ, TEXT_FIELDS, cardDone, cardText, fixedStatus, linkList, seasonText, short, quizMoney, quizText, visibleSteps, type BriefFixed, type MoneyKey, type QuizStep, type TextKey } from '@/features/strategy/brief/briefRules'
 import { visibleQuestions, type PortalQuestion } from './portalBriefApi'
 
 export type ListField = 'produtos' | 'links' | 'concorrentes' | 'referencias'
@@ -14,7 +14,9 @@ export interface FlowStep {
   hint?: string | null
   opts: string[]
   multi?: boolean
-  kind: 'quiz' | 'list' | 'question' | 'nps' | 'nps_comment'
+  kind: 'quiz' | 'list' | 'question' | 'nps' | 'nps_comment' | 'confirm' | 'docs'
+  /** Bloco do briefing (1 a 5); 0 = perguntas do mês. */
+  block?: number
   field?: FlowField
   qid?: string
   money?: MoneyKey
@@ -123,4 +125,50 @@ export function linksIn(text: string): string[] {
 /** Nomes de concorrentes de uma frase: separa por vírgula, ponto e vírgula, linha ou " e ". */
 export function namesIn(text: string): string[] {
   return text.split(/[,;\n]+|\s+e\s+/i).map((s) => s.trim().replace(/^[-•.]+\s*/, '')).filter((s) => s.length > 1).slice(0, 10)
+}
+
+// ───────── Briefing em blocos (Italo, 20/11: "pode ser longo, mas não pode cansar") ─────────
+export interface Block { n: number; label: string; fields: FlowField[] }
+export const BLOCKS: Block[] = [
+  { n: 1, label: 'O seu negócio', fields: ['produtos', 'links', 'concorrentes', 'referencias', 'gravacao'] },
+  { n: 2, label: 'Clientes e vendas', fields: ['publico', 'jornada', 'sazonal', 'marketing'] },
+  { n: 3, label: 'Marca e jeito de falar', fields: ['posicionamento', 'proposito', 'percepcao', 'voz', 'marca'] },
+  { n: 4, label: 'Momento e histórias', fields: ['momento', 'historias'] },
+  { n: 5, label: 'Arquivos', fields: [] },
+]
+export const blockOf = (f: FlowField): number => BLOCKS.find((b) => b.fields.includes(f))?.n ?? 4
+/** Segundos estimados por pergunta: tocar é rápido, falar ou escrever leva mais. */
+export const stepSeconds = (s: Pick<FlowStep, 'kind' | 'opts'>): number =>
+  s.kind === 'docs' ? 120 : s.kind === 'confirm' ? 15 : s.kind === 'list' ? 60 : s.opts.length ? 20 : 60
+export const minutes = (secs: number) => Math.max(1, Math.round(secs / 60))
+
+/** O que já sabemos de cada bloco, em linhas curtas, para o cliente só confirmar (sem perguntar de novo). */
+export function knownLines(f: BriefFixed, block: number, hasVideo: boolean): string[] {
+  const out: string[] = []
+  const b = BLOCKS.find((x) => x.n === block)
+  for (const field of b?.fields ?? []) {
+    if (field === 'produtos' && (f.produtos ?? []).some((p) => p.preco)) out.push(`Produtos: ${(f.produtos ?? []).slice(0, 3).map((p) => `${p.nome}${p.preco ? ` ${p.preco}` : ''}`).join('; ')}${(f.produtos ?? []).length > 3 ? '…' : ''}`)
+    else if (field === 'links' && linkList(f).length) out.push(`Links: ${linkList(f).slice(0, 3).map((l) => l.url.replace(/^https?:\/\/(www\.)?/, '')).join(', ')}`)
+    else if (field === 'concorrentes' && ((f.concorrentes ?? []).length || f.sem_concorrentes)) out.push(f.sem_concorrentes && !(f.concorrentes ?? []).length ? 'Concorrentes: não tem concorrente direto' : `Concorrentes: ${(f.concorrentes ?? []).slice(0, 4).map((c) => c.nome).join(', ')}`)
+    else if (field === 'gravacao' && hasVideo && f.quem_aparece) out.push(`Gravação: ${short(f.quem_aparece, 80)}`)
+    else if (field === 'sazonal' && seasonText(f)) out.push(`Sazonalidade: ${seasonText(f)}`)
+    else if (field !== 'referencias' && field !== 'gravacao' && field !== 'sazonal' && !isList(field) && cardDone(f, field as TextKey)) out.push(`${TEXT_FIELDS[field as TextKey].label}: ${short(cardText(f, field as TextKey), 90)}`)
+  }
+  return out
+}
+
+/**
+ * Os passos do briefing, bloco por bloco: primeiro confirmar o que já sabemos do bloco, depois o que falta.
+ * `missing` fica fixo durante a conversa (responder a 1ª pergunta de um campo já o deixa preenchido).
+ */
+export function briefSteps(f: BriefFixed, missing: FlowField[], answers: Record<string, string>, hasVideo: boolean, docs: number): FlowStep[] {
+  const out: FlowStep[] = []
+  for (const b of BLOCKS) {
+    const known = b.n === 5 ? [] : knownLines(f, b.n, hasVideo)
+    if (known.length) out.push({ key: `confirmar:${b.n}`, group: b.label, block: b.n, kind: 'confirm', q: `Isto já está com a gente sobre ${b.label.toLowerCase()}. Está certo?\n${known.map((k) => `• ${k}`).join('\n')}`, hint: 'Se algo mudou, fale ou escreva a correção.', opts: ['Está tudo certo'] })
+    const fields = missing.filter((x) => blockOf(x) === b.n)
+    for (const s of flowSteps(fields, answers, [], '')) out.push({ ...s, group: b.label, block: b.n })
+    if (b.n === 5 && docs < 3) out.push({ key: 'arquivos:0', group: b.label, block: 5, kind: 'docs', q: 'Mande o que tiver: logo, cardápio ou lista de produtos, tabela de preços, fotos, apresentação.', hint: 'Toque no clipe para escolher os arquivos. Pode mandar vários.', opts: [] })
+  }
+  return out
 }
