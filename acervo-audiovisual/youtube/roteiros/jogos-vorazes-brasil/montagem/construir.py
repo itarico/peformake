@@ -6,7 +6,7 @@ Escreve eventos.json (efeitos, trilha, respiros, linha) para o sonorizar.py.
 
 Uso: python construir.py <midia> <audio> <saida_projeto> [teste]
   teste = só o bloco 0 e o Distrito XII (o teste de 60 s)."""
-import sys, json, re, pathlib, shutil, unicodedata, math
+import subprocess, sys, json, re, pathlib, shutil, unicodedata, math
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from panem_ui import carregar_mapa, rotulo_distrito
 
@@ -99,16 +99,21 @@ def foto(c, pid, src, z0=1.0, z1=1.07, ox='50%', oy='50%'):
 
 def filme(c, pid, src, z0=1.0, z1=1.06, borda='PANEM ▸ 74', quadro='12A'):
     """Still do filme num quadro de película (perfuração + número de borda), com crédito. Até 5 s na tela."""
+    trecho, mov = '', MID / 'assets' / 'video' / 'filme' / (src[6:-4] + '.mp4')    # trecho em movimento (até 5 s); o still é o último quadro dele
+    if src.startswith('filme_t_') and mov.exists():
+        dm = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(mov)], capture_output=True, text=True).stdout)
+        trecho = (f'<video id="{pid}-v" class="clip" src="assets/video/filme/{mov.name}" muted playsinline data-start="0" data-duration="{min(dm, c.fim - c.ini) - 0.05:.3f}" '
+                  f'data-media-start="0" style="position:absolute;left:-60px;top:-30px;width:1760px;height:880px;object-fit:cover"></video>')
     furos = ''.join(f'<div style="width:34px;height:26px;border-radius:5px;background:#d9cdb4;opacity:.85"></div>' for _ in range(22))
     c.h(f'''<div class="abs" id="{pid}-w" style="left:130px;top:60px;width:1660px;height:960px;background:#0b0b0b">
 <div style="position:absolute;left:24px;right:24px;top:20px;display:flex;justify-content:space-between">{furos}</div>
 <div style="position:absolute;left:24px;right:24px;bottom:20px;display:flex;justify-content:space-between">{furos}</div>
 <div style="position:absolute;left:10px;top:70px;width:1640px;height:820px;overflow:hidden">
-<img id="{pid}" src="assets/img/{src}" style="position:absolute;left:-60px;top:-30px;width:1760px;height:880px"></div>
+<img id="{pid}" src="assets/img/{src}" style="position:absolute;left:-60px;top:-30px;width:1760px;height:880px">{trecho}</div>
 <div class="mono" style="position:absolute;left:40px;top:893px;font-size:22px;color:{LARANJA}">{borda}</div>
 <div class="mono" style="position:absolute;right:40px;top:893px;font-size:22px;color:{LARANJA}">▸ {quadro}</div></div>''')
-    c.a(f'tl.fromTo(q1("#{pid}"),{{scale:{z0},transformOrigin:"50% 50%"}},{{scale:{z1},duration:{c.fim - c.ini:.2f},ease:"none"}},0);')
-    credito(c, 'IMAGEM DE DIVULGAÇÃO · JOGOS VORAZES · © LIONSGATE')
+    c.a(f'tl.fromTo(q("#{pid},#{pid}-v"),{{scale:{z0},transformOrigin:"50% 50%"}},{{scale:{z1},duration:{c.fim - c.ini:.2f},ease:"none"}},0);')
+    credito(c, 'TRECHO DE TRAILER OFICIAL · JOGOS VORAZES · © LIONSGATE' if trecho else 'IMAGEM DE DIVULGAÇÃO · JOGOS VORAZES · © LIONSGATE')
 
 def godard(c, gid, texto, x, y, tam, cor=MARFIM):
     c.h(f'<div class="abs tit" id="{gid}" style="left:{x}px;top:{y}px;font-size:{tam}px;color:{cor};opacity:0;text-shadow:0 2px 24px rgba(0,0,0,.45)">{texto}</div>')
@@ -182,47 +187,54 @@ def marca(c, mid, x, y, w, t, cor=OURO):
     c.h(f'<div class="abs gasto" id="{mid}" style="left:{x}px;top:{y}px;width:{w}px;height:12px;background:{cor};opacity:.85;transform-origin:0 50%;transform:scaleX(0)"></div>')
     c.a(f'tl.fromTo(q1("#{mid}"),{{scaleX:0}},{{scaleX:1,duration:8/24,ease:"power2.out"}},{c.r(t)});')
 
-# ======================================================================== BLOCO 0 · GANCHO
+# ======================================================================== BLOCO 0 · GANCHO (roteiro v4: imagem e movimento desde o quadro 0)
 TRILHA.append((0.0, 'gancho', 0))
-# frases 1 e 2: o Brasil visto de cima; os estados se desenham; 12 distritos; rotas até a Capital
-c = Cena('abre', 0, F(3))
-mapa(c, 'ab', desenhar=True); ponto_capital(c, 'ab')
+capx, capy = mp(M['DF']['cx'], M['DF']['cy'])
+# frase 1: "Se o Brasil fosse Panem, um sorteio podia te mandar para uma arena." A urna da colheita já no quadro 0, empurrando rápido
+c = Cena('urna', 0, W(1, 'arena'))
+filme(c, 'ur-f', 'filme_t_colheita.jpg', 1.14, 1.0, 'PANEM ▸ A COLHEITA', '12A')
+c.a('tl.fromTo(q1("#ur-f-w"),{scale:1.06},{scale:1,duration:0.9,ease:"expo.out"},0);')
+c.h('<div class="abs" style="left:130px;top:130px;width:1000px;height:820px;background:linear-gradient(90deg,rgba(11,11,11,.85) 0%,rgba(11,11,11,0) 100%)"></div>')
+c.h(f'<div class="abs mono" id="ur-bra" style="left:190px;top:250px;font-size:34px;letter-spacing:10px;color:{OURO}">SE O BRASIL FOSSE PANEM</div>')
+godard(c, 'ur-sor', 'SORTEIO', 190, 320, 220); c.entra('#ur-sor', W(1, 'sorteio'))
+som(0.0, 'taoismo/impacto_2', 0); som(W(1, 'sorteio'), 'sfx/papeis', -4)
+projetor(c, '#ur-f-w', 0.0); atmosfera(c, 'luz', .22)
+c.fim_()
+c = Cena('arena', W(1, 'arena'), F(2))
+filme(c, 'ar-f', 'filme_t_arena.jpg', 1.04, 1.0, 'PANEM ▸ A ARENA', '13')
+godard(c, 'ar-g', 'ARENA', 190, 700, 160, MARFIM); c.entra('#ar-g', W(1, 'arena'), 4)
+som(W(1, 'arena'), 'taoismo/impacto_2', -2); atmosfera(c, 'luz', .22, 3)
+c.fim_()
+
+# frases 2 e 3: as rotas dos estados até a Capital; na palavra "Brasília", um X; depois os 12 distritos acendem estado por estado
+c = Cena('abre', F(2), F(4))
+mapa(c, 'ab'); ponto_capital(c, 'ab')
 meta(c, 'REGISTRO 000 · CENSO DOS DISTRITOS')
-pts = {d: mp(*rotulo_distrito(M, d)) for d in range(1, 13)}; capx, capy = mp(M['DF']['cx'], M['DF']['cy'])
+pts = {d: mp(*rotulo_distrito(M, d)) for d in range(1, 13)}
 c.h('<svg class="abs" style="left:0;top:0" width="1920" height="1080">' + ''.join(
     f'<path class="ab-rota" d="M{x:.0f},{y:.0f} L{capx:.0f},{capy:.0f}" stroke="{SANGUE}" stroke-width="2" stroke-opacity=".85" fill="none" '
     f'pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" stroke-linecap="butt"/>' for d, (x, y) in pts.items()) + '</svg>')
+c.h(f'<div class="abs tit" id="ab-x" style="left:{capx - 70:.0f}px;top:{capy - 105:.0f}px;font-size:200px;color:{SANGUE};opacity:0">X</div>')
+godard(c, 'ab-capt', 'A CAPITAL', 110, 250, 120, PAPEL)
+godard(c, 'ab-nao', 'NÃO É<br>BRASÍLIA', 110, 400, 170, OURO)
 godard(c, 'ab-12', '12', 110, 250, 300)
 godard(c, 'ab-dist', 'DISTRITOS', 118, 560, 110)
-godard(c, 'ab-nada', 'PRODUZ<br>QUASE NADA', 118, 300, 96, PAPEL)
-c.a('tl.fromTo(q1("#ab-rel"),{opacity:0},{opacity:1,duration:1.2,ease:"power1.out"},0);')
-c.a(f'tl.fromTo(q1("#ab-w"),{{scale:1.06,transformOrigin:"62% 50%"}},{{scale:1,duration:{F(3):.2f},ease:"sine.out"}},0);')
-t_br = W(1, 'Brasil')
-c.a(f'tl.to(q("#ab-w path"),{{attr:{{"stroke-dashoffset":0}},duration:1.4,stagger:0.03,ease:"power1.inOut"}},{c.r(t_br)});')
-t_div = W(1, 'dividido')
+c.a(f'tl.fromTo(q1("#ab-w"),{{scale:1.12,transformOrigin:"{capx / 19.2:.1f}% {capy / 10.8:.1f}%"}},{{scale:1,duration:{F(4) - F(2):.2f},ease:"sine.out"}},0);')
+t_cap = W(2, 'Capital')
+c.entra('#ab-capt', t_cap, 3); c.entra('#ab-cap', t_cap, 3, 0); c.entra('#ab-capl', t_cap, 3, 0)
+t_tr = W(2, 'trabalho')
+c.a(f'tl.to(q(".ab-rota"),{{attr:{{"stroke-dashoffset":0}},duration:0.9,stagger:0.04,ease:"power1.inOut"}},{c.r(t_tr)});'); som(t_tr, 'sfx/whoosh', -6)
+t_bsb = W(2, 'Brasília')
+c.carimba('#ab-x', t_bsb, 1.6); c.entra('#ab-nao', t_bsb, 3); som(t_bsb, 'taoismo/carimbo_1', 4)
+t3 = F(3)
+for s in ['#ab-x', '#ab-nao', '#ab-capt']: c.sai(s, t3 - 0.1, 3)
+c.a(f'tl.to(q(".ab-rota"),{{opacity:0,duration:0.3}},{c.r(t3)});')
+t_doze = W(3, 'doze')
 for i, d in enumerate(range(12, 0, -1)):
-    c.a(f'tl.to(q("#ab-w path[data-dist=\\"{d}\\"]"),{{attr:{{"fill-opacity":.16,stroke:"{SANGUE}","stroke-opacity":.9}},duration:4/24}},{c.r(t_div) + i * 0.06:.3f});')
-som(t_div, 'taoismo/papel_2', -4)
-c.entra('#ab-12', W(1, 'doze')); c.entra('#ab-dist', W(1, 'distritos'))
-t_prod = W(2, 'produz'); t_cap = W(2, 'Capital')
-c.sai('#ab-12', t_prod - 0.2); c.sai('#ab-dist', t_prod - 0.2)
-c.a(f'tl.to(q(".ab-rota"),{{attr:{{"stroke-dashoffset":0}},duration:{max(.4, t_cap - t_prod):.2f},stagger:0.04,ease:"power1.inOut"}},{c.r(t_prod)});')
-c.entra('#ab-cap', t_cap, 4, 0); c.entra('#ab-capl', t_cap, 4, 0); som(t_cap, 'taoismo/impacto_3', -2)
-c.entra('#ab-nada', W(2, 'quase'))
+    c.a(f'tl.to(q("#ab-w path[data-dist=\\"{d}\\"]"),{{attr:{{"fill-opacity":.2,stroke:"{SANGUE}","stroke-opacity":.95,"stroke-width":2}},duration:3/24}},{c.r(t_doze) + i * 0.07:.3f});')
+    som(t_doze + i * 0.07, 'sfx/ui', -14)
+c.entra('#ab-12', t_doze); c.entra('#ab-dist', W(3, 'distritos'))
 atmosfera(c, 'fumaca', .10)
-c.fim_()
-
-# frase 3: o sorteio (still da colheita, Distrito 12, com a urna) e, na palavra "arena", a cornucópia vista do alto
-c = Cena('urna', F(3), W(3, 'arena'))
-filme(c, 'ur-f', 'filme_colheita_urna.jpg', 1.0, 1.05, 'PANEM ▸ A COLHEITA', '12A')
-c.h(f'<div class="abs" style="left:130px;top:130px;width:1000px;height:820px;background:linear-gradient(90deg,rgba(11,11,11,.85) 0%,rgba(11,11,11,0) 100%)"></div>')
-godard(c, 'ur-ida', '12 A 18<br>ANOS', 190, 330, 190)
-c.entra('#ur-ida', W(3, 'doze')); som(W(3, 'sorteio'), 'sfx/papeis', -4)
-projetor(c, '#ur-f-w', F(3)); atmosfera(c, 'luz', .22)
-c.fim_()
-c = Cena('arena', W(3, 'arena'), F(4))
-filme(c, 'ar-f', 'filme_arena_cornucopia.jpg', 1.04, 1.0, 'PANEM ▸ A ARENA', '13')
-som(W(3, 'arena'), 'taoismo/impacto_2', -2); atmosfera(c, 'luz', .22, 3)
 c.fim_()
 
 # frases 4 e 5: a folha de registro na mesa; "meu estado" e as 4 perguntas são datilografadas na palavra
@@ -235,27 +247,31 @@ for i, (w, txt) in enumerate(perg):
     n, l = datilo(c, f'fo-q{i}', txt, 80, 330 + i * 92, 36); ids.append((w, f'fo-q{i}', n, l))
 fita(c, -40, -18, -14); fita(c, 1060, -10, 10)
 fecha_papel(c)
-c.a('tl.fromTo(q1("#fo-p"),{opacity:0,y:30},{opacity:1,y:0,duration:8/24,ease:"power2.out"},0);'); som(F(4), 'taoismo/papel_1', -4)
+c.a('tl.fromTo(q1("#fo-p"),{opacity:0,y:30},{opacity:1,y:0,duration:6/24,ease:"power2.out"},0);'); som(F(4), 'taoismo/papel_1', -4)
 digita(c, 'fo-est', n0, l0, W(4, 'anota'))
 for w, did, n, l in ids: digita(c, did, n, l, W(5, w))
-c.a(f'tl.fromTo(q1("#fo-p"),{{scale:1,transformOrigin:"50% 30%"}},{{scale:1.05,duration:{F(6) - F(4):.2f},ease:"none",immediateRender:false}},8/24);')
+c.a(f'tl.fromTo(q1("#fo-p"),{{scale:1,transformOrigin:"50% 30%"}},{{scale:1.06,duration:{F(6) - F(4):.2f},ease:"none",immediateRender:false}},6/24);')
 atmosfera(c, 'poeira', .12, 4)
 c.fim_()
 
-# frases 6 a 8: a pegadinha. A Capital apaga; as 84 cidades acendem como brasas
+# frases 6 e 7: onde a Capital fica de verdade. O ponto de Brasília apaga; as 84 cidades acendem como brasas
 c = Cena('pega', F(6), F(8))
 mapa(c, 'pg', acesos=set(range(1, 13)), brasas=True); ponto_capital(c, 'pg')
 c.a('tl.set(q("#pg-cap,#pg-capl"),{opacity:1},0);')
 meta(c, 'REGISTRO 000 · CENSO DOS DISTRITOS')
-c.a(f'tl.fromTo(q1("#pg-w"),{{scale:1,transformOrigin:"{capx / 19.2:.1f}% {capy / 10.8:.1f}%"}},{{scale:1.1,duration:{F(8) - F(6):.2f},ease:"sine.inOut"}},0);')
-t_nao = W(7, 'não')
-c.a(f'tl.set(q("#pg-cap,#pg-capl"),{{opacity:0}},{c.r(t_nao)});')
-c.a(f'tl.to(q("#pg-w path"),{{attr:{{"fill-opacity":0,"stroke-opacity":.18,stroke:"{MARFIM}"}},duration:6/24}},{c.r(t_nao)});')
-RESPIROS.append((F(7) - 0.05, t_nao)); som(t_nao, 'sfx/canhao2', 8)
-t_pen = W(7, 'pensando')
-c.a(f'tl.to(q(".pg-br"),{{opacity:1,duration:3/24,stagger:{0.9 / 84:.4f}}},{c.r(t_pen)});'); som(t_pen, 'sfx/riser', -6)
+c.a(f'tl.fromTo(q1("#pg-w"),{{scale:1,transformOrigin:"{capx / 19.2:.1f}% {capy / 10.8:.1f}%"}},{{scale:1.12,duration:{F(8) - F(6):.2f},ease:"sine.inOut"}},0);')
+t_ver = W(6, 'verdade')
+c.a(f'tl.set(q("#pg-cap,#pg-capl"),{{opacity:0}},{c.r(t_ver)});')
+c.a(f'tl.to(q("#pg-w path"),{{attr:{{"fill-opacity":0,"stroke-opacity":.18,stroke:"{MARFIM}"}},duration:6/24}},{c.r(t_ver)});')
+c.a(f'tl.to(q(".pg-br"),{{opacity:1,duration:3/24,stagger:{0.9 / 84:.4f}}},{c.r(t_ver)});'); som(t_ver, 'sfx/riser', -6)
+godard(c, 'pg-g', 'ONDE FICA<br>A CAPITAL?', 110, 250, 120, MARFIM); c.entra('#pg-g', W(6, 'onde'))
+t_meia = W(7, 'meia')
+RESPIROS.append((F(7) - 0.05, t_meia)); som(t_meia, 'sfx/canhao2', 8)
+c.sai('#pg-g', t_meia - 0.1, 3)
+godard(c, 'pg-h', 'A MEIA HORA<br>DA SUA CASA', 110, 330, 140, OURO); c.entra('#pg-h', t_meia)
 atmosfera(c, 'fumaca', .10, 6)
 c.fim_()
+
 
 # frase 8 + cartela: as fontes são datilografadas; queima de película; "SE O BRASIL FOSSE PANEM" em brasa
 c = Cena('titulo', F(8), F(8, True) + EXTRA_DEPOIS[8])
@@ -272,7 +288,7 @@ c.h(f'<video id="ti-queima" class="clip abs" src="assets/video/queima.mp4" muted
     f'data-media-start="2.5" style="left:0;top:0;width:1920px;height:1080px;object-fit:cover;mix-blend-mode:screen;opacity:.85"></video>')
 c.a(f'tl.fromTo(q1("#ti-preto"),{{opacity:0}},{{opacity:1,duration:3/24}},{c.r(t_q):.3f});')
 for k, o in enumerate([1, .55, 1, .75, 1]):          # flicker de projetor: 5 passos em 0,6 s, amplitude baixa
-    c.a(f'tl.set(q("#ti-cart,#ti-se"),{{opacity:{o}}},{c.r(t_q + 0.3) + k * 3 / 24:.3f});')
+    c.a(f'tl.set(q("#ti-cart,#ti-se"),{{opacity:{o}}},{c.r(t_q + 0.12) + k * 3 / 24:.3f});')
 som(t_q - 0.2, 'sfx/whoosh2', 0); som(t_q + 0.3, 'taoismo/impacto_1', 6)
 c.fim_()
 
@@ -361,7 +377,7 @@ c.h(f'''<div style="position:absolute;left:80px;top:690px;width:1040px;height:20
 <div class="mono" id="fx-pct" style="position:absolute;left:80px;top:724px;font-size:22px;color:{CONCRETO};letter-spacing:4px;opacity:0">33 % DA RENDA DA CAPITAL</div>
 <div id="fx-car" style="position:absolute;right:90px;top:560px;border:8px solid {SANGUE};padding:8px 26px 2px;transform:rotate(-8deg);opacity:0">
 <span class="tit gasto" style="font-size:64px;color:{SANGUE}">UM TERÇO</span></div>
-<div class="mono" style="position:absolute;left:80px;top:842px;font-size:15px;color:{CONCRETO};letter-spacing:1.5px">IBGE, CENSO 2022 · ANM, CFEM 2025 · SIMULAÇÃO NOSSA: 4 TRIBUTOS, JOVENS DE 12 A 18 ANOS · VISUALIZAÇÃO EDITORIAL</div>''')
+<div class="mono" style="position:absolute;left:80px;top:842px;font-size:15px;color:{CONCRETO};letter-spacing:1.5px">IBGE, CENSO 2022 · ANM, CFEM 2025 · SIMULAÇÃO NOSSA: 4 TRIBUTOS, 12 A 18 ANOS</div>''')
 fecha_papel(c)
 c.a(f'tl.fromTo(q1("#fx-p"),{{opacity:0,y:40}},{{opacity:1,y:0,duration:8/24,ease:"power2.out"}},{c.r(W(21, "Ficha"))});'); som(W(21, 'Ficha'), 'taoismo/papel_1', -2)
 for n_, w, did, nn, ll in lids: digita(c, did, nn, ll, W(n_, w), 30)
@@ -409,7 +425,9 @@ for c in CENAS:
     (OUT / 'compositions' / f'{c.id}.html').write_text(f'''<template id="{c.id}-template">
 <div id="root" data-composition-id="{c.id}" data-width="1920" data-height="1080" data-duration="{dur}" data-layout-allow-overflow data-layout-allow-overlap>
 {GASTO}
+<div class="abs" id="cam" style="left:0;top:0;width:1920px;height:1080px">
 {chr(10).join(c.corpo)}
+</div>
 <div class="grao"></div><div class="vinheta"></div>
 </div>
 <style>{FONTES}
@@ -421,6 +439,7 @@ const tl = gsap.timeline({{paused:true}});
 const R = document.querySelector('[data-composition-id="{c.id}"]');
 const q = s => R.querySelectorAll(s); const q1 = s => R.querySelector(s);
 {chr(10).join(c.js)}
+tl.fromTo(q1("#cam"),{{scale:1,x:0}},{{scale:1.035,x:-14,transformOrigin:"50% 50%",duration:{dur},ease:"none"}},0);   // câmera lenta em toda cena: nada fica parado
 tl.set({{}}, {{}}, {dur - 0.01});
 window.__timelines = window.__timelines || {{}}; window.__timelines["{c.id}"] = tl;
 }})();
