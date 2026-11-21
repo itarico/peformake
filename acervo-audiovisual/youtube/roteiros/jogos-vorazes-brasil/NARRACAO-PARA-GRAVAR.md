@@ -1,6 +1,6 @@
-# Panem · narração para gravar (Italo) · v3
+# Panem · narração para gravar (Italo) · v4
 
-Versão de 21/11/2026, tirada do `ROTEIRO-v3.md` (checagem + retorno do Italo: sem apostas, com as arenas, Capital nova e desfecho). 1.799 palavras, cerca de 11 min 30 s
+Versão de 21/11/2026, tirada do `ROTEIRO-v4.md` (abertura nova, vídeo atemporal, nenhum estado repetido, dado novo no Distrito 1, reality nas arenas). 1.829 palavras, cerca de 11 min 30 s
 de voz. Uma linha numerada = um take. A numeração é a mesma da voz-guia e das cenas (`montagem/falas.json`): se mudar
 uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 
@@ -28,25 +28,24 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 | quinquagésimos | quin-qua-GÉ-si-mos |
 | DIP | dip (uma palavra) |
 | Pix | piks |
-| bets | béts |
 
 ---
 
 
 ## Bloco 0 · Gancho do desafio (B0.wav, cerca de 42 s)
-1. Imagina que o Brasil acordou amanhã dividido em doze distritos.
-2. Cada um produz uma coisa para uma Capital que não produz quase nada.
-3. E uma vez por ano, um sorteio escolhe jovens de doze a dezoito anos para lutar numa arena.
+1. Se o Brasil fosse Panem, um sorteio podia te mandar para uma arena.
+2. E a Capital que vive do trabalho do seu estado não seria Brasília.
+3. Eu encaixei o Brasil nos doze distritos de Jogos Vorazes, estado por estado.
 4. Agora faz o seguinte: anota aí o seu estado.
-5. Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance de ser sorteado e quanto você ganharia comparado à Capital.
-6. Só que tem uma pegadinha.
-7. (baixo) **A Capital do Brasil não é onde você está pensando.** [pausa]
+5. Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance na colheita e quanto você ganharia comparado à Capital.
+6. E vai descobrir onde a Capital fica de verdade.
+7. (baixo) **Ela pode estar a meia hora da sua casa.** [pausa]
 8. E todos os números deste vídeo são oficiais.
 
 ## Bloco 1 · Panem em 40 segundos (B1.wav, cerca de 41 s)
 9. Em Jogos Vorazes, Panem é o que sobrou dos Estados Unidos: uma Capital rica e distritos que trabalham para ela.
-10. Como punição por uma revolta, todo ano cada distrito entrega dois jovens para os Jogos, ao vivo, como um reality show.
-11. No filme que acabou de estrear, Amanhecer na Colheita, é pior: são os quinquagésimos Jogos, e cada distrito entrega **quatro**.
+10. Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito entrega dois jovens para os Jogos, ao vivo, como um reality show.
+11. Nos quinquagésimos Jogos foi pior: cada distrito entregou **quatro**.
 12. E o nome Panem não é por acaso.
 13. Vem do latim: **panem et circenses**.
 14. Pão e circo.
@@ -65,7 +64,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 24. (baixo) **Um terço da Capital.**
 *Distrito 11, lavoura: Bahia, Pernambuco, Alagoas, Sergipe e Piauí.*
 25. O Distrito 11 é o pomar de Panem.
-26. Aqui, é o Nordeste agrícola do Vale do São Francisco.
+26. Aqui, são cinco estados: Bahia, Pernambuco, Alagoas, Sergipe e Piauí.
 27. Bahia e Pernambuco colhem setenta e sete por cento da manga do Brasil.
 28. Pernambuco colhe quase quarenta por cento da uva.
 29. **Ficha.** É o distrito mais populoso do mapa: quase trinta e dois milhões de pessoas.
@@ -119,7 +118,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 68. Agora, o distrito mais impressionante do mapa.
 69. O Distrito 6 faz os trens que levam a riqueza até a Capital.
 70. No Brasil, é o Maranhão.
-71. Pela ferrovia de Carajás, o minério do Pará desce até São Luís.
+71. Pela ferrovia de Carajás, o minério do Distrito 12 desce até São Luís.
 72. Lá, no terminal de Ponta da Madeira, entra no navio.
 73. Em 2025, esse terminal movimentou cento e setenta e dois milhões de toneladas.
 74. Foi o maior terminal privado do país.
@@ -169,7 +168,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 *Distrito 1, luxo: São Paulo.*
 110. E o Distrito 1, o do luxo, que vive quase como a Capital.
 111. São Paulo tem **trinta e um por cento** de todo o PIB do Brasil.
-112. Só a cidade de São Paulo tem quase dez por cento.
+112. Só a cidade de São Paulo produz mais do que doze estados inteiros somados.
 113. **Ficha.** É o distrito mais difícil de ser sorteado: uma em quase um milhão.
 114. E a renda chega a setenta por cento da Capital.
 115. Então, se São Paulo é só o Distrito 1, quem é a Capital?
@@ -188,50 +187,52 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 124. O Brasil tem quase todas.
 125. Os Lençóis Maranhenses, um deserto de dunas com lagoas no meio, que virou Patrimônio Mundial em 2024.
 126. Fica no Maranhão, o Distrito 6.
-127. O Pantanal, uma das maiores áreas alagadas do planeta.
+127. O Pantanal, entre o Distrito 9 e o 10, uma das maiores áreas alagadas do planeta.
 128. A Amazônia, a maior floresta tropical do mundo.
-129. E o desfile dos tributos nem precisaria ser construído.
-130. Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Rio.
-131. Só falta a Capital assistindo.
+129. E gente tentando sobreviver no mato, na frente das câmeras, a TV brasileira já mostra há mais de vinte anos.
+130. E o desfile dos tributos nem precisaria ser construído.
+131. Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Distrito 5.
+132. Só falta a Capital assistindo.
 
 ## Bloco 5 · A Capital e a revelação (B9.wav, cerca de 1 min 16 s)
-132. E aqui está a pegadinha do começo.
-133. A resposta fácil é Brasília.
-134. A renda média do Distrito Federal é a maior do país, mais de três vezes a do Maranhão.
-135. Mas Brasília, sozinha, tem só três por cento de tudo o que o Brasil produz.
-136. A cidade de São Paulo tem quase dez.
-137. Então eu fui atrás da conta inteira: somei o PIB dos cinco mil quinhentos e setenta municípios do Brasil, do maior para o menor. [pausa]
-138. (baixo) Com **oitenta e quatro cidades**, já deu metade do país.
-139. E os mil e trezentos menores, todos juntos, não chegam a um por cento.
-140. Agora olha onde ficam essas oitenta e quatro.
-141. Parauapebas, a cidade da mina de Carajás, está na lista.
-142. (baixo) **Um pedaço da Capital fica dentro do Distrito 12.**
-143. Maricá, a do petróleo, também.
-144. E várias cidades de refinaria, de porto e de sede de empresa.
-145. Então a Capital do Brasil não é um lugar no mapa.
-146. **É um arquipélago de oitenta e quatro cidades**, espalhadas por quase todos os distritos.
-147. (baixo) Uma parte da Capital pode estar a meia hora da sua casa.
+133. Lembra do começo?
+134. Eu disse que a Capital não seria Brasília.
+135. E os números de Brasília enganam.
+136. A renda média do Distrito Federal é a maior do país, mais de três vezes a do Maranhão.
+137. Mas Brasília, sozinha, tem só três por cento de tudo o que o Brasil produz.
+138. A cidade de São Paulo tem quase dez.
+139. Então eu fui atrás da conta inteira: somei o PIB dos cinco mil quinhentos e setenta municípios do Brasil, do maior para o menor. [pausa]
+140. (baixo) Com **oitenta e quatro cidades**, já deu metade do país.
+141. E os mil e trezentos menores, todos juntos, não chegam a um por cento.
+142. Agora olha onde ficam essas oitenta e quatro.
+143. Parauapebas, a cidade da mina de Carajás, está na lista.
+144. (baixo) **Um pedaço da Capital fica dentro do Distrito 12.**
+145. Maricá, a do petróleo, também.
+146. E várias cidades de refinaria, de porto e de sede de empresa.
+147. Então a Capital do Brasil não é um lugar no mapa.
+148. **É um arquipélago de oitenta e quatro cidades**, espalhadas por quase todos os distritos.
+149. (baixo) Uma parte da Capital pode estar a meia hora da sua casa.
 
 ## Bloco 6 · O desfecho (B10.wav, cerca de 43 s)
-148. Panem incomoda porque não inventou nada.
-149. Só deixou à vista.
-150. Roma tinha o Coliseu.
-151. O Brasil de 1939 tinha o rádio.
-152. Em 1970, a televisão.
-153. O circo muda de forma, mas a função é a mesma: fazer o distrito não olhar para o mapa.
-154. No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.
-155. (baixo) Você não precisa de arco e flecha para isso.
-156. Agora você tem o que os distritos de Panem nunca tiveram: o mapa inteiro.
-157. O que o seu estado produz, quanto fica com ele e para onde vai.
+150. Panem incomoda porque não inventou nada.
+151. Só deixou à vista.
+152. Roma tinha o Coliseu.
+153. O Brasil de 1939 tinha o rádio.
+154. Em 1970, a televisão.
+155. O circo muda de forma, mas a função é a mesma: fazer o distrito não olhar para o mapa.
+156. No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.
+157. (baixo) Você não precisa de arco e flecha para isso.
+158. Agora você tem o que os distritos de Panem nunca tiveram: o mapa inteiro.
+159. O que o seu estado produz, quanto fica com ele e para onde vai.
 
 ## Bloco 7 · Resultado e CTA (B11.wav, cerca de 36 s)
-158. Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.
-159. Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**.
-160. Eu quero ver qual distrito tem mais tributo aqui no canal.
-161. E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.
-162. No Brasil, são três estados que juntos não chegam a um por cento do PIB.
-163. Quais?
-164. Na tela final.
+160. Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.
+161. Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**.
+162. Eu quero ver qual distrito tem mais tributo aqui no canal.
+163. E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.
+164. No Brasil, são três estados que juntos não chegam a um por cento do PIB.
+165. Quais?
+166. Na tela final.
 
 ---
 

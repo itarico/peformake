@@ -42,11 +42,11 @@ def norm(s):
 frases = []
 for l in ROT.read_text(encoding='utf-8').splitlines():
     m = re.match(r'^(\d+)\. (.*)', l)
-    if not m or int(m.group(1)) > 164 or 'Frases ' in m.group(2): continue
+    if not m or int(m.group(1)) > 166 or 'Frases ' in m.group(2): continue
     txt = m.group(2)
     limpo = re.sub(r'\[pausa\]|\(baixo\)|\*\*', '', txt).strip()
     frases.append({'n': int(m.group(1)), 'texto': limpo, 'pausa': '[pausa]' in txt, 'tok': norm(limpo)})
-frases = frases[:164]
+frases = frases[:166]
 
 # ---------- transcrição: lista de palavras (uma palavra falada pode virar vários tokens, ex. números) ----------
 W = []

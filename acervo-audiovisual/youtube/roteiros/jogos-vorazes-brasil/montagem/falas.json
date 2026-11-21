@@ -2,19 +2,19 @@
  {
   "bloco": "0",
   "sub": "GANCHO DO DESAFIO",
-  "texto": "Imagina que o Brasil acordou amanhã dividido em doze distritos.",
+  "texto": "Se o Brasil fosse Panem, um sorteio podia te mandar para uma arena.",
   "n": 1
  },
  {
   "bloco": "0",
   "sub": "GANCHO DO DESAFIO",
-  "texto": "Cada um produz uma coisa para uma Capital que não produz quase nada.",
+  "texto": "E a Capital que vive do trabalho do seu estado não seria Brasília.",
   "n": 2
  },
  {
   "bloco": "0",
   "sub": "GANCHO DO DESAFIO",
-  "texto": "E uma vez por ano, um sorteio escolhe jovens de doze a dezoito anos para lutar numa arena.",
+  "texto": "Eu encaixei o Brasil nos doze distritos de Jogos Vorazes, estado por estado.",
   "n": 3
  },
  {
@@ -26,19 +26,19 @@
  {
   "bloco": "0",
   "sub": "GANCHO DO DESAFIO",
-  "texto": "Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance de ser sorteado e quanto você ganharia comparado à Capital.",
+  "texto": "Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance na colheita e quanto você ganharia comparado à Capital.",
   "n": 5
  },
  {
   "bloco": "0",
   "sub": "GANCHO DO DESAFIO",
-  "texto": "Só que tem uma pegadinha.",
+  "texto": "E vai descobrir onde a Capital fica de verdade.",
   "n": 6
  },
  {
   "bloco": "0",
   "sub": "GANCHO DO DESAFIO",
-  "texto": "**A Capital do Brasil não é onde você está pensando.** [pausa]",
+  "texto": "**Ela pode estar a meia hora da sua casa.** [pausa]",
   "n": 7
  },
  {
@@ -56,13 +56,13 @@
  {
   "bloco": "1",
   "sub": "PANEM EM 40 SEGUNDOS",
-  "texto": "Como punição por uma revolta, todo ano cada distrito entrega dois jovens para os Jogos, ao vivo, como um reality show.",
+  "texto": "Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito entrega dois jovens para os Jogos, ao vivo, como um reality show.",
   "n": 10
  },
  {
   "bloco": "1",
   "sub": "PANEM EM 40 SEGUNDOS",
-  "texto": "No filme que acabou de estrear, Amanhecer na Colheita, é pior: são os quinquagésimos Jogos, e cada distrito entrega **quatro**.",
+  "texto": "Nos quinquagésimos Jogos foi pior: cada distrito entregou **quatro**.",
   "n": 11
  },
  {
@@ -152,7 +152,7 @@
  {
   "bloco": "2",
   "sub": "Distrito 11, lavoura: Bahia, Pernambuco, Alagoas, Sergipe e Piauí.",
-  "texto": "Aqui, é o Nordeste agrícola do Vale do São Francisco.",
+  "texto": "Aqui, são cinco estados: Bahia, Pernambuco, Alagoas, Sergipe e Piauí.",
   "n": 26
  },
  {
@@ -422,7 +422,7 @@
  {
   "bloco": "3",
   "sub": "Distrito 6, transporte: Maranhão.",
-  "texto": "Pela ferrovia de Carajás, o minério do Pará desce até São Luís.",
+  "texto": "Pela ferrovia de Carajás, o minério do Distrito 12 desce até São Luís.",
   "n": 71
  },
  {
@@ -668,7 +668,7 @@
  {
   "bloco": "4",
   "sub": "Distrito 1, luxo: São Paulo.",
-  "texto": "Só a cidade de São Paulo tem quase dez por cento.",
+  "texto": "Só a cidade de São Paulo produz mais do que doze estados inteiros somados.",
   "n": 112
  },
  {
@@ -758,7 +758,7 @@
  {
   "bloco": "V4",
   "sub": "OS JOGOS NO BRASIL",
-  "texto": "O Pantanal, uma das maiores áreas alagadas do planeta.",
+  "texto": "O Pantanal, entre o Distrito 9 e o 10, uma das maiores áreas alagadas do planeta.",
   "n": 127
  },
  {
@@ -770,217 +770,229 @@
  {
   "bloco": "V4",
   "sub": "OS JOGOS NO BRASIL",
-  "texto": "E o desfile dos tributos nem precisaria ser construído.",
+  "texto": "E gente tentando sobreviver no mato, na frente das câmeras, a TV brasileira já mostra há mais de vinte anos.",
   "n": 129
  },
  {
   "bloco": "V4",
   "sub": "OS JOGOS NO BRASIL",
-  "texto": "Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Rio.",
+  "texto": "E o desfile dos tributos nem precisaria ser construído.",
   "n": 130
  },
  {
   "bloco": "V4",
   "sub": "OS JOGOS NO BRASIL",
-  "texto": "Só falta a Capital assistindo.",
+  "texto": "Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Distrito 5.",
   "n": 131
  },
  {
-  "bloco": "5",
-  "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "E aqui está a pegadinha do começo.",
+  "bloco": "V4",
+  "sub": "OS JOGOS NO BRASIL",
+  "texto": "Só falta a Capital assistindo.",
   "n": 132
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "A resposta fácil é Brasília.",
+  "texto": "Lembra do começo?",
   "n": 133
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "A renda média do Distrito Federal é a maior do país, mais de três vezes a do Maranhão.",
+  "texto": "Eu disse que a Capital não seria Brasília.",
   "n": 134
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Mas Brasília, sozinha, tem só três por cento de tudo o que o Brasil produz.",
+  "texto": "E os números de Brasília enganam.",
   "n": 135
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "A cidade de São Paulo tem quase dez.",
+  "texto": "A renda média do Distrito Federal é a maior do país, mais de três vezes a do Maranhão.",
   "n": 136
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Então eu fui atrás da conta inteira: somei o PIB dos cinco mil quinhentos e setenta municípios do Brasil, do maior para o menor. [pausa]",
+  "texto": "Mas Brasília, sozinha, tem só três por cento de tudo o que o Brasil produz.",
   "n": 137
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Com **oitenta e quatro cidades**, já deu metade do país.",
+  "texto": "A cidade de São Paulo tem quase dez.",
   "n": 138
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "E os mil e trezentos menores, todos juntos, não chegam a um por cento.",
+  "texto": "Então eu fui atrás da conta inteira: somei o PIB dos cinco mil quinhentos e setenta municípios do Brasil, do maior para o menor. [pausa]",
   "n": 139
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Agora olha onde ficam essas oitenta e quatro.",
+  "texto": "Com **oitenta e quatro cidades**, já deu metade do país.",
   "n": 140
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Parauapebas, a cidade da mina de Carajás, está na lista.",
+  "texto": "E os mil e trezentos menores, todos juntos, não chegam a um por cento.",
   "n": 141
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "**Um pedaço da Capital fica dentro do Distrito 12.**",
+  "texto": "Agora olha onde ficam essas oitenta e quatro.",
   "n": 142
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Maricá, a do petróleo, também.",
+  "texto": "Parauapebas, a cidade da mina de Carajás, está na lista.",
   "n": 143
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "E várias cidades de refinaria, de porto e de sede de empresa.",
+  "texto": "**Um pedaço da Capital fica dentro do Distrito 12.**",
   "n": 144
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Então a Capital do Brasil não é um lugar no mapa.",
+  "texto": "Maricá, a do petróleo, também.",
   "n": 145
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "**É um arquipélago de oitenta e quatro cidades**, espalhadas por quase todos os distritos.",
+  "texto": "E várias cidades de refinaria, de porto e de sede de empresa.",
   "n": 146
  },
  {
   "bloco": "5",
   "sub": "A CAPITAL E A REVELAÇÃO",
-  "texto": "Uma parte da Capital pode estar a meia hora da sua casa.",
+  "texto": "Então a Capital do Brasil não é um lugar no mapa.",
   "n": 147
  },
  {
-  "bloco": "6",
-  "sub": "O DESFECHO",
-  "texto": "Panem incomoda porque não inventou nada.",
+  "bloco": "5",
+  "sub": "A CAPITAL E A REVELAÇÃO",
+  "texto": "**É um arquipélago de oitenta e quatro cidades**, espalhadas por quase todos os distritos.",
   "n": 148
  },
  {
-  "bloco": "6",
-  "sub": "O DESFECHO",
-  "texto": "Só deixou à vista.",
+  "bloco": "5",
+  "sub": "A CAPITAL E A REVELAÇÃO",
+  "texto": "Uma parte da Capital pode estar a meia hora da sua casa.",
   "n": 149
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "Roma tinha o Coliseu.",
+  "texto": "Panem incomoda porque não inventou nada.",
   "n": 150
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "O Brasil de 1939 tinha o rádio.",
+  "texto": "Só deixou à vista.",
   "n": 151
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "Em 1970, a televisão.",
+  "texto": "Roma tinha o Coliseu.",
   "n": 152
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "O circo muda de forma, mas a função é a mesma: fazer o distrito não olhar para o mapa.",
+  "texto": "O Brasil de 1939 tinha o rádio.",
   "n": 153
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.",
+  "texto": "Em 1970, a televisão.",
   "n": 154
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "Você não precisa de arco e flecha para isso.",
+  "texto": "O circo muda de forma, mas a função é a mesma: fazer o distrito não olhar para o mapa.",
   "n": 155
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "Agora você tem o que os distritos de Panem nunca tiveram: o mapa inteiro.",
+  "texto": "No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.",
   "n": 156
  },
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "O que o seu estado produz, quanto fica com ele e para onde vai.",
+  "texto": "Você não precisa de arco e flecha para isso.",
   "n": 157
  },
  {
-  "bloco": "7",
-  "sub": "RESULTADO E CTA",
-  "texto": "Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.",
+  "bloco": "6",
+  "sub": "O DESFECHO",
+  "texto": "Agora você tem o que os distritos de Panem nunca tiveram: o mapa inteiro.",
   "n": 158
  },
  {
-  "bloco": "7",
-  "sub": "RESULTADO E CTA",
-  "texto": "Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**.",
+  "bloco": "6",
+  "sub": "O DESFECHO",
+  "texto": "O que o seu estado produz, quanto fica com ele e para onde vai.",
   "n": 159
  },
  {
   "bloco": "7",
   "sub": "RESULTADO E CTA",
-  "texto": "Eu quero ver qual distrito tem mais tributo aqui no canal.",
+  "texto": "Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.",
   "n": 160
  },
  {
   "bloco": "7",
   "sub": "RESULTADO E CTA",
-  "texto": "E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.",
+  "texto": "Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**.",
   "n": 161
  },
  {
   "bloco": "7",
   "sub": "RESULTADO E CTA",
-  "texto": "No Brasil, são três estados que juntos não chegam a um por cento do PIB.",
+  "texto": "Eu quero ver qual distrito tem mais tributo aqui no canal.",
   "n": 162
  },
  {
   "bloco": "7",
   "sub": "RESULTADO E CTA",
-  "texto": "Quais?",
+  "texto": "E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.",
   "n": 163
  },
  {
   "bloco": "7",
   "sub": "RESULTADO E CTA",
-  "texto": "Na tela final.",
+  "texto": "No Brasil, são três estados que juntos não chegam a um por cento do PIB.",
   "n": 164
+ },
+ {
+  "bloco": "7",
+  "sub": "RESULTADO E CTA",
+  "texto": "Quais?",
+  "n": 165
+ },
+ {
+  "bloco": "7",
+  "sub": "RESULTADO E CTA",
+  "texto": "Na tela final.",
+  "n": 166
  }
 ]

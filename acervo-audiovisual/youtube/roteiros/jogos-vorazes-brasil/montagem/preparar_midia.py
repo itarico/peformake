@@ -41,6 +41,11 @@ f = Image.open(MID / 'img' / 'carajas_satelite.jpg').convert('RGB')
 f = ImageEnhance.Color(f).enhance(0.45); f = ImageEnhance.Contrast(f).enhance(1.12); f = ImageEnhance.Brightness(f).enhance(0.78)
 r, g, b = f.split(); f = Image.merge('RGB', (r.point(lambda v: int(v * .95)), g, b.point(lambda v: min(255, int(v * 1.06 + 4)))))
 cobrir(f).save(A / 'img' / 'carajas.jpg', quality=92)
+for nome in ['lencois', 'pantanal', 'amazonia', 'sapucai']:   # arenas brasileiras (bloco V4): cor contida, tom documental
+    if (MID / 'img' / f'{nome}.jpg').exists():
+        f = Image.open(MID / 'img' / f'{nome}.jpg').convert('RGB')
+        f = ImageEnhance.Color(f).enhance(0.62); f = ImageEnhance.Contrast(f).enhance(1.1); f = ImageEnhance.Brightness(f).enhance(0.85)
+        cobrir(f).save(A / 'img' / f'{nome}.jpg', quality=92)
 shutil.copy(MID / 'relevo' / 'relevo.png', A / 'img' / 'relevo.png')
 p = Image.open(MID / 'tex' / 'Paper001.jpg').convert('RGB'); cobrir(p, 1920, 1080).save(A / 'img' / 'papel.jpg', quality=90)
 

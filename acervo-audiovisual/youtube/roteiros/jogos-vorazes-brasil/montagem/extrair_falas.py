@@ -2,7 +2,7 @@
 Saída: falas.json [{n, bloco, sub, texto}] usado pela narração, pela voz-guia e pelas cenas."""
 import re, json, sys, pathlib
 aqui = pathlib.Path(__file__).resolve().parent
-src = (aqui.parent / 'ROTEIRO-v3.md').read_text(encoding='utf-8')
+src = (aqui.parent / 'ROTEIRO-v4.md').read_text(encoding='utf-8')
 fala = src.split('## Fala (palavra por palavra)')[1].split('**Contagem:**')[0]
 bloco = sub = None; out = []
 for ln in fala.splitlines():
