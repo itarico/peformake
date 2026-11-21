@@ -94,6 +94,19 @@ def foto(c, pid, src, z0=1.0, z1=1.07, ox='50%', oy='50%'):
     c.h(f'<img class="abs" id="{pid}" src="assets/img/{src}" style="left:-96px;top:-54px;width:2112px;height:1188px">')
     c.a(f'tl.fromTo(q1("#{pid}"),{{scale:{z0},transformOrigin:"{ox} {oy}"}},{{scale:{z1},duration:{c.fim - c.ini:.2f},ease:"none"}},0);')
 
+def filme(c, pid, src, z0=1.0, z1=1.06, borda='PANEM ▸ 74', quadro='12A'):
+    """Still do filme num quadro de película (perfuração + número de borda), com crédito. Até 5 s na tela."""
+    furos = ''.join(f'<div style="width:34px;height:26px;border-radius:5px;background:#d9cdb4;opacity:.85"></div>' for _ in range(22))
+    c.h(f'''<div class="abs" id="{pid}-w" style="left:130px;top:60px;width:1660px;height:960px;background:#0b0b0b">
+<div style="position:absolute;left:24px;right:24px;top:20px;display:flex;justify-content:space-between">{furos}</div>
+<div style="position:absolute;left:24px;right:24px;bottom:20px;display:flex;justify-content:space-between">{furos}</div>
+<div style="position:absolute;left:10px;top:70px;width:1640px;height:820px;overflow:hidden">
+<img id="{pid}" src="assets/img/{src}" style="position:absolute;left:-60px;top:-30px;width:1760px;height:880px"></div>
+<div class="mono" style="position:absolute;left:40px;top:893px;font-size:22px;color:{LARANJA}">{borda}</div>
+<div class="mono" style="position:absolute;right:40px;top:893px;font-size:22px;color:{LARANJA}">▸ {quadro}</div></div>''')
+    c.a(f'tl.fromTo(q1("#{pid}"),{{scale:{z0},transformOrigin:"50% 50%"}},{{scale:{z1},duration:{c.fim - c.ini:.2f},ease:"none"}},0);')
+    credito(c, 'IMAGEM DE DIVULGAÇÃO · JOGOS VORAZES · © LIONSGATE')
+
 def godard(c, gid, texto, x, y, tam, cor=MARFIM):
     c.h(f'<div class="abs tit" id="{gid}" style="left:{x}px;top:{y}px;font-size:{tam}px;color:{cor};opacity:0;text-shadow:0 2px 24px rgba(0,0,0,.45)">{texto}</div>')
 
@@ -167,18 +180,16 @@ c.entra('#ab-nada', W(2, 'quase'))
 atmosfera(c, 'fumaca', .10)
 c.fim_()
 
-# frase 3: o sorteio. Foto real de um sorteio de jovens para a guerra (EUA, 1969), em P&B
-c = Cena('urna', F(3), F(4))
-foto(c, 'ur-f', 'sorteio.jpg', 1.0, 1.09, '50%', '42%')
-c.h(f'<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(17,19,21,.82) 0%,rgba(17,19,21,.2) 55%,rgba(17,19,21,0) 70%)"></div>')
-meta(c, 'ARQUIVO 001 · SORTEIO REAL')
-c.h(f'<div class="abs txt" id="ur-leg" style="left:112px;top:870px;width:900px;font-size:24px;line-height:1.35;color:{MARFIM};opacity:0">'
-    f'Sorteio real: alistamento para a Guerra do Vietnã, EUA, 1969.</div>')
-godard(c, 'ur-ida', '12 A 18<br>ANOS', 110, 300, 190)
-credito(c, 'FOTO: SELECTIVE SERVICE SYSTEM · DOMÍNIO PÚBLICO')
-c.entra('#ur-leg', W(3, 'sorteio')); som(W(3, 'sorteio'), 'sfx/papeis', -4)
-c.entra('#ur-ida', W(3, 'doze'))
-atmosfera(c, 'poeira', .14)
+# frase 3: o sorteio (still da colheita, Distrito 12, com a urna) e, na palavra "arena", a cornucópia vista do alto
+c = Cena('urna', F(3), W(3, 'arena'))
+filme(c, 'ur-f', 'filme_colheita_urna.jpg', 1.0, 1.05, 'PANEM ▸ A COLHEITA', '12A')
+c.h(f'<div class="abs" style="left:130px;top:130px;width:1000px;height:820px;background:linear-gradient(90deg,rgba(11,11,11,.85) 0%,rgba(11,11,11,0) 100%)"></div>')
+godard(c, 'ur-ida', '12 A 18<br>ANOS', 190, 330, 190)
+c.entra('#ur-ida', W(3, 'doze')); som(W(3, 'sorteio'), 'sfx/papeis', -4)
+c.fim_()
+c = Cena('arena', W(3, 'arena'), F(4))
+filme(c, 'ar-f', 'filme_arena_cornucopia.jpg', 1.04, 1.0, 'PANEM ▸ A ARENA', '13')
+som(W(3, 'arena'), 'taoismo/impacto_2', -2)
 c.fim_()
 
 # frases 4 e 5: a folha de registro na mesa; "meu estado" e as 4 perguntas são datilografadas na palavra
@@ -235,11 +246,11 @@ c.fim_()
 TRILHA.append((F(17) - 0.6, 'marcha', 0))
 # frase 17: "no livro, o Distrito 12 cava carvão": meninos nas minas de carvão (Lewis Hine, 1911)
 c = Cena('d12a', F(17) - 0.6, W(18, 'Brasil'))
-foto(c, 'da-f', 'carvao.jpg', 1.08, 1.0, '45%', '40%')
+foto(c, 'da-f', 'mineiros_sc.jpg', 1.08, 1.0, '50%', '40%')
 c.h(f'<div class="abs" style="inset:0;background:linear-gradient(0deg,rgba(17,19,21,.7) 0%,rgba(17,19,21,0) 45%)"></div>')
-meta(c, 'ARQUIVO 012 · NO LIVRO')
+meta(c, 'ARQUIVO 012 · O CARVÃO DE VERDADE')
 lower(c, 'da-lt', 'DISTRITO 12 · NO LIVRO', 'CARVÃO E FOME')
-credito(c, 'LEWIS HINE, 1911 · DOMÍNIO PÚBLICO')
+credito(c, 'MINEIROS DE CARVÃO, SANTA CATARINA · WIKIMEDIA COMMONS · CC0')
 c.entra('#da-lt', W(17, '12'), 6, 0); som(W(17, '12'), 'taoismo/papel_2', -6)
 atmosfera(c, 'poeira', .16)
 c.fim_()

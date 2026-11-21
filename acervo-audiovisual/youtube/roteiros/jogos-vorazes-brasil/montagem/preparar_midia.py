@@ -16,8 +16,12 @@ def arquivo_pb(src, dst):
     im = im.point(lambda v: int(255 * (v / 255) ** 1.25)); im = ImageEnhance.Contrast(im).enhance(1.25)
     cobrir(im).convert('RGB').save(dst, quality=92)
 
-arquivo_pb(MID / 'img' / 'sorteio_1969.jpg', A / 'img' / 'sorteio.jpg')
-arquivo_pb(MID / 'img' / 'carvao_hine.jpg', A / 'img' / 'carvao.jpg')
+for nome in ['mineiros_sc', 'carvao_sc']:                 # mineiros de carvão de Santa Catarina (CC0)
+    if (MID / 'img' / f'{nome}.jpg').exists(): arquivo_pb(MID / 'img' / f'{nome}.jpg', A / 'img' / f'{nome}.jpg')
+# stills de divulgação dos filmes (até 5 s cada, com crédito): cor contida, contraste leve, no tamanho do quadro de película
+for f in sorted((MID / 'filme').glob('*.jpg')):
+    im = Image.open(f).convert('RGB'); im = ImageEnhance.Color(im).enhance(0.6); im = ImageEnhance.Contrast(im).enhance(1.08)
+    cobrir(im, 1760, 880).save(A / 'img' / f'filme_{f.stem}.jpg', quality=92)
 f = Image.open(MID / 'img' / 'carajas_satelite.jpg').convert('RGB')
 f = ImageEnhance.Color(f).enhance(0.45); f = ImageEnhance.Contrast(f).enhance(1.12); f = ImageEnhance.Brightness(f).enhance(0.78)
 r, g, b = f.split(); f = Image.merge('RGB', (r.point(lambda v: int(v * .95)), g, b.point(lambda v: min(255, int(v * 1.06 + 4)))))

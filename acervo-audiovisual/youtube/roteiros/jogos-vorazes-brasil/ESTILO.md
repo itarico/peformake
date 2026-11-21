@@ -51,3 +51,22 @@ rótulos mono espaçados em toda tela; ícones de clip-art. Regra daqui para fre
   (faixa V3, com alternativa pronta, em `creditos-trechos.csv`).
 - Documento inventado como se fosse oficial do cânone: marcar "visualização editorial".
 - HUD futurista, glitch ou partícula sem função; vermelho em todo título.
+
+## Stills dos filmes enviados pelo Italo (21/11/2026)
+Regra: foto de divulgação/quadro do filme por até 5 s, com crédito "imagem de divulgação · Jogos Vorazes · © Lionsgate",
+dentro do quadro de película, sempre com a narração por cima; cada um tem alternativa pronta (faixa V3 no Premiere).
+Imagem real de pessoa ou lugar tem que ser do Brasil; o filme só aparece quando a fala é sobre Panem.
+Arquivos em `C:\Claude\canal-youtube\panem\midia\filme\` (fora do Git).
+
+| Frase | Still | Alternativa própria |
+|---|---|---|
+| 3 "um sorteio escolhe jovens" | colheita_urna | urna desenhada no papel |
+| 3 "...numa arena" | arena_cornucopia | relevo com círculo |
+| 9 "uma Capital rica" | desfile_carruagem_capital ou capital_aeronave | mapa com a Capital acesa |
+| 10 "entrega dois jovens" | colheita_pacificadores | ficha em branco |
+| 10 "ao vivo, como um reality show" | desfile_aberto / desfile_snow_praca | TV antiga desenhada |
+| 11 "entrega quatro" | turne_saudacao (urna de vidro) | urna com 4 papéis |
+| 16 "do distrito mais pobre até o mais rico" | desfile_aereo_bandeiras (bandeiras 12, 11, 10) | régua dos distritos |
+| V1 "espetáculo para não pensar na fome" | desfile_snow | cartaz "PÃO É ORDEM" |
+| 6 "o espelho" | punhos / povo_pacificadores | colagem rebelde |
+| reserva | snow_mesa, hospital_saudacao, cantiga_anfiteatro | — |
