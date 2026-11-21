@@ -11,6 +11,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from panem_ui import carregar_mapa, rotulo_distrito
 
 MID, AUD, OUT = map(pathlib.Path, sys.argv[1:4]); TESTE = len(sys.argv) > 4 and sys.argv[4] == 'teste'
+VOZ_FINAL = len(sys.argv) > 4 and sys.argv[4] == 'final'     # voz do Italo: nenhuma palavra estimada pode virar gatilho
 FPS = 24
 PAL = {p['n']: p for p in json.loads((AUD / 'palavras.json').read_text(encoding='utf-8'))}
 M = carregar_mapa(MID / 'geo' / 'mapa.json')
@@ -37,7 +38,9 @@ def W(n, palavra, k=0, fim=False):
     alvo = norm(palavra); hits = [p for p in PAL[n]['palavras'] if norm(p['w']) == alvo]
     if len(hits) <= k: raise SystemExit(f'palavra "{palavra}" não está na frase {n}: {[p["w"] for p in PAL[n]["palavras"]]}')
     p = hits[k]
-    if p.get('est'): raise SystemExit(f'palavra "{palavra}" da frase {n} tem tempo estimado: revisar à mão')
+    if p.get('est'):
+        if TESTE or VOZ_FINAL: raise SystemExit(f'palavra "{palavra}" da frase {n} tem tempo estimado: revisar à mão')
+        print(f'AVISO: "{palavra}" (frase {n}) com tempo estimado na voz-guia; conferir na voz final')
     return round((p['fim'] if fim else p['ini']) + LINHA[n]['ini'] - PAL[n]['ini'], 3)
 def F(n, fim=False): return LINHA[n]['fim' if fim else 'ini']
 def q(t): return math.ceil(t * FPS - 1e-6) / FPS
@@ -344,7 +347,7 @@ c.entra('#dc-40', t40); c.entra('#dc-mad', W(20, 'madeira')); c.entra('#dc-f2', 
 c.fim_()
 
 # frases 21 a 24: a ficha do tributo do Distrito 12, datilografada na mesa
-c = Cena('d12d', F(21), F(24, True) + 0.6)
+c = Cena('d12d', F(21), F(24, True) + 0.6 if TESTE else F(25))
 papel(c, 'fx-p', -0.8)
 c.h(f'<div class="tit" style="position:absolute;left:76px;top:138px;font-size:120px;color:{CARVAO}">DISTRITO 12</div>'
     f'<div class="mono" style="position:absolute;left:80px;top:282px;font-size:28px;color:{CONCRETO};letter-spacing:5px">PARÁ · MINERAÇÃO</div>')
@@ -371,6 +374,10 @@ c.a(f'tl.fromTo(q1("#fx-car"),{{opacity:0,scale:1.3,rotation:-8}},{{opacity:.9,s
 som(t_ter, 'taoismo/carimbo_1', 3)
 atmosfera(c, 'poeira', .12, 9)
 c.fim_()
+
+if not TESTE:
+    exec((pathlib.Path(__file__).resolve().parent / 'cenas_resto.py').read_text(encoding='utf-8'))
+CENAS.sort(key=lambda c: c.ini); TRILHA.sort(key=lambda x: x[0])
 
 # ======================================================================== escrever o projeto
 OUT.mkdir(parents=True, exist_ok=True)

@@ -16,6 +16,21 @@ def arquivo_pb(src, dst):
     im = im.point(lambda v: int(255 * (v / 255) ** 1.25)); im = ImageEnhance.Contrast(im).enhance(1.25)
     cobrir(im).convert('RGB').save(dst, quality=92)
 
+if (MID / 'img' / 'coliseu.jpg').exists(): arquivo_pb(MID / 'img' / 'coliseu.jpg', A / 'img' / 'coliseu.jpg')   # Roma: a fala cita Roma
+# vídeos reais de trabalho por distrito (pastas videos_reais/D12_PA, D11_..., Capital): 1920x1080, 24 qps, sem som, tom documental
+import re as _re
+(A / 'video' / 'real').mkdir(parents=True, exist_ok=True)
+for pasta in sorted((MID / 'videos_reais').glob('*')):
+    if not pasta.is_dir(): continue
+    pref = 'CAP' if pasta.name.upper().startswith('CAP') else _re.match(r'(D\d+)', pasta.name.upper()).group(1) if _re.match(r'D\d+', pasta.name.upper()) else None
+    if not pref: continue
+    for i, v in enumerate(sorted(pasta.glob('*.mp4'))):
+        dst = A / 'video' / 'real' / f'{pref}_{i:02d}.mp4'
+        if dst.exists() and dst.stat().st_mtime > v.stat().st_mtime: continue
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(v), '-t', '14', '-an', '-vf',
+                        'scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,fps=24,eq=saturation=0.72:contrast=1.06:brightness=-0.03',
+                        '-c:v', 'libx264', '-crf', '21', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-g', '24', str(dst)], check=True)
+        (A / 'video' / 'real' / f'{pref}_{i:02d}.txt').write_text(str(v), encoding='utf-8')
 for nome in ['mineiros_sc', 'carvao_sc']:                 # mineiros de carvão de Santa Catarina (CC0)
     if (MID / 'img' / f'{nome}.jpg').exists(): arquivo_pb(MID / 'img' / f'{nome}.jpg', A / 'img' / f'{nome}.jpg')
 # stills de divulgação dos filmes (até 5 s cada, com crédito): cor contida, contraste leve, no tamanho do quadro de película
