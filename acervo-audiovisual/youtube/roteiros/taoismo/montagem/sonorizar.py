@@ -62,7 +62,9 @@ _cache = {}
 def som(nome, ss=0, dur=None):
     k = (nome, ss, dur)
     if k not in _cache:
-        x = ler(AUD / 'sfx' / f'{nome}.mp3', ss, dur); _cache[k] = x * db(-12 - max(-60, 20 * np.log10(np.abs(x).max() + 1e-9)))
+        x = ler(AUD / 'sfx' / f'{nome}.mp3', ss, dur)
+        ini = np.where(np.abs(x).max(axis=1) > np.abs(x).max() * .05)[0]  # muitos efeitos do Pixabay começam com silêncio (0,3 a 0,6 s): corta para o som bater na hora
+        x = x[max(0, ini[0] - int(.005 * SR)):] if len(ini) else x; _cache[k] = x * db(-12 - max(-60, 20 * np.log10(np.abs(x).max() + 1e-9)))
     return _cache[k].copy()
 AGUA = ('rio', 'li-river', 'canion', 'guilin')
 tinta = ['tinta_1', 'tinta_2', 'tinta_3']
