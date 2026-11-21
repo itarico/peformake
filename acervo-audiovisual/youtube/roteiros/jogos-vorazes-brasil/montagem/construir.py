@@ -150,6 +150,35 @@ def digita(c, did, n, larg, t, cps=22):
     c.a(f'tl.fromTo(q1("#{did}"),{{width:0}},{{width:{larg:.0f},duration:{d:.2f},ease:"steps({n})"}},{c.r(t)});')
     som(t, 'taoismo/maquina_1', -6)
 
+# ---------- efeitos de edição (pedido do Italo, 21/11/2026): queima de película, match cut, textura e colagem estilo Vox
+def queima(c, ini_rel, dur, media=2.5, opac=.85):
+    """Queima de película (vídeo real, modo tela) por cima da passagem."""
+    vid = c.uid('qm')
+    c.h(f'<video id="{vid}" class="clip abs" src="assets/video/queima.mp4" muted playsinline data-start="{max(0, ini_rel):.3f}" data-duration="{dur:.3f}" '
+        f'data-media-start="{media}" style="left:0;top:0;width:1920px;height:1080px;object-fit:cover;mix-blend-mode:screen;opacity:{opac}"></video>')
+
+def projetor(c, sel, t):
+    """Flicker de projetor ao entrar no arquivo: 3 passos em 0,25 s, amplitude baixa."""
+    for k, o in enumerate([.55, 1, .8, 1]): c.a(f'tl.set(q1("{sel}"),{{opacity:{o}}},{c.r(t) + k * 2 / 24:.3f});')
+
+def fita(c, x, y, rot, w=180):
+    """Fita adesiva (colagem): dentro da folha, coordenadas da folha."""
+    c.h(f'<div style="position:absolute;left:{x}px;top:{y}px;width:{w}px;height:46px;transform:rotate({rot}deg);background:rgba(232,222,196,.72);'
+        f'box-shadow:0 1px 4px rgba(0,0,0,.25);mix-blend-mode:normal"></div>')
+
+def giz(c, gid, cx, cy, rx, ry, t, cor=MARFIM, larg=5, dur=10 / 24):
+    """Círculo à mão (giz ou caneta) que se desenha no tempo da palavra."""
+    c.h(f'<svg class="abs" style="left:0;top:0;overflow:visible" width="1920" height="1080"><ellipse id="{gid}" cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" '
+        f'transform="rotate(-6 {cx} {cy})" fill="none" stroke="{cor}" stroke-width="{larg}" filter="url(#giz)" pathLength="1" stroke-dasharray="1.08" '
+        f'stroke-dashoffset="1.08" stroke-linecap="round" opacity=".92"/></svg>')
+    c.a(f'tl.to(q1("#{gid}"),{{attr:{{"stroke-dashoffset":0}},duration:{dur:.2f},ease:"power2.inOut"}},{c.r(t)});')
+    som(t, 'taoismo/pincel_2', -6)
+
+def marca(c, mid, x, y, w, t, cor=OURO):
+    """Marca-texto passando sob o dado."""
+    c.h(f'<div class="abs gasto" id="{mid}" style="left:{x}px;top:{y}px;width:{w}px;height:12px;background:{cor};opacity:.85;transform-origin:0 50%;transform:scaleX(0)"></div>')
+    c.a(f'tl.fromTo(q1("#{mid}"),{{scaleX:0}},{{scaleX:1,duration:8/24,ease:"power2.out"}},{c.r(t)});')
+
 # ======================================================================== BLOCO 0 · GANCHO
 TRILHA.append((0.0, 'gancho', 0))
 # frases 1 e 2: o Brasil visto de cima; os estados se desenham; 12 distritos; rotas até a Capital
@@ -186,10 +215,11 @@ filme(c, 'ur-f', 'filme_colheita_urna.jpg', 1.0, 1.05, 'PANEM ▸ A COLHEITA', '
 c.h(f'<div class="abs" style="left:130px;top:130px;width:1000px;height:820px;background:linear-gradient(90deg,rgba(11,11,11,.85) 0%,rgba(11,11,11,0) 100%)"></div>')
 godard(c, 'ur-ida', '12 A 18<br>ANOS', 190, 330, 190)
 c.entra('#ur-ida', W(3, 'doze')); som(W(3, 'sorteio'), 'sfx/papeis', -4)
+projetor(c, '#ur-f-w', F(3)); atmosfera(c, 'luz', .22)
 c.fim_()
 c = Cena('arena', W(3, 'arena'), F(4))
 filme(c, 'ar-f', 'filme_arena_cornucopia.jpg', 1.04, 1.0, 'PANEM ▸ A ARENA', '13')
-som(W(3, 'arena'), 'taoismo/impacto_2', -2)
+som(W(3, 'arena'), 'taoismo/impacto_2', -2); atmosfera(c, 'luz', .22, 3)
 c.fim_()
 
 # frases 4 e 5: a folha de registro na mesa; "meu estado" e as 4 perguntas são datilografadas na palavra
@@ -200,6 +230,7 @@ perg = [('distrito', 'DISTRITO ........... ?'), ('produziria', 'VOCÊ PRODUZ ...
 ids = []
 for i, (w, txt) in enumerate(perg):
     n, l = datilo(c, f'fo-q{i}', txt, 80, 330 + i * 92, 36); ids.append((w, f'fo-q{i}', n, l))
+fita(c, -40, -18, -14); fita(c, 1060, -10, 10)
 fecha_papel(c)
 c.a('tl.fromTo(q1("#fo-p"),{opacity:0,y:30},{opacity:1,y:0,duration:8/24,ease:"power2.out"},0);'); som(F(4), 'taoismo/papel_1', -4)
 digita(c, 'fo-est', n0, l0, W(4, 'anota'))
@@ -250,8 +281,9 @@ foto(c, 'da-f', 'mineiros_sc.jpg', 1.08, 1.0, '50%', '40%')
 c.h(f'<div class="abs" style="inset:0;background:linear-gradient(0deg,rgba(17,19,21,.7) 0%,rgba(17,19,21,0) 45%)"></div>')
 meta(c, 'ARQUIVO 012 · O CARVÃO DE VERDADE')
 lower(c, 'da-lt', 'DISTRITO 12 · NO LIVRO', 'CARVÃO E FOME')
-credito(c, 'MINEIROS DE CARVÃO, SANTA CATARINA · WIKIMEDIA COMMONS · CC0')
+credito(c, 'MINEIROS DE CARVÃO DE CRICIÚMA (SC) · FOTO: ANAPFANA · CC0')
 c.entra('#da-lt', W(17, '12'), 6, 0); som(W(17, '12'), 'taoismo/papel_2', -6)
+queima(c, c.fim - c.ini - 0.45, 0.45, 2.25); som(c.fim - 0.35, 'sfx/whoosh', -2)
 atmosfera(c, 'poeira', .16)
 c.fim_()
 
@@ -276,6 +308,12 @@ som(t_k, 'taoismo/pagina_1', -4)
 c.a(f'tl.fromTo(q1("#db-w"),{{scale:1,transformOrigin:"{kx / 19.2:.1f}% {ky / 10.8:.1f}%"}},{{scale:1.08,duration:{c.fim - c.ini:.2f},ease:"sine.inOut"}},0);')
 credito(c, 'RELEVO: NATURAL EARTH · MALHA: IBGE')
 atmosfera(c, 'fumaca', .08)
+queima(c, 0, 0.6, 2.7)
+# match cut: no fim, a câmera mergulha no círculo de Carajás; na cena seguinte o mesmo círculo envolve a mina na foto
+tz = c.fim - c.ini - 0.42
+c.a(f'tl.to(q("#db-w,#db-circ,#db-pt"),{{scale:3.2,duration:0.42,ease:"expo.in",transformOrigin:"{kx / 19.2:.1f}% {ky / 10.8:.1f}%"}},{tz:.3f});')
+c.a(f'tl.to(q("#db-lin,#db-rot,#db-par,#db-pa"),{{opacity:0,duration:0.15}},{tz:.3f});')
+som(c.fim - 0.3, 'sfx/whoosh2', -2)
 c.fim_()
 
 # frases 19 e 20: a mina vista do satélite; 39 % dos royalties; 39,6 % da madeira nativa
@@ -293,6 +331,11 @@ c.h(f'<div class="abs mono" id="dc-f2" style="left:112px;top:640px;font-size:18p
 lower(c, 'dc-lt', 'DISTRITO 12 · PARÁ', 'A MINA DE CARAJÁS')
 credito(c, 'IMAGEM: NASA/JPL · ASTER · DOMÍNIO PÚBLICO')
 c.entra('#dc-lt', F(19) + 0.1, 6, 0)
+MX, MY = 1400, 380                                     # a mina na foto de satélite (mesmo ponto do círculo do mapa)
+c.h(f'<div class="abs" id="dc-circ" style="left:{MX - 200}px;top:{MY - 200}px;width:400px;height:400px;border-radius:50%;border:5px solid {LARANJA};box-shadow:0 0 22px rgba(224,137,43,.5)"></div>')
+c.a(f'tl.fromTo(q1("#dc-circ"),{{scale:1.6,opacity:1}},{{scale:1,opacity:0,duration:0.9,ease:"expo.out"}},0);')
+giz(c, 'dc-giz', MX, MY, 330, 230, W(19, 'Pará'))
+marca(c, 'dc-mk', 112, 556, 600, W(19, 'royalties'))
 t39 = W(19, 'trinta'); c.entra('#dc-39', t39); som(t39, 'taoismo/impacto_3', -4)
 c.entra('#dc-roy', W(19, 'royalties')); c.entra('#dc-f1', W(19, 'royalties') + 0.3)
 t40 = W(20, 'quarenta')
@@ -310,6 +353,7 @@ linhas = [(21, 'minério', 'PRODUZ ............. minério, madeira'), (22, 'uma'
 lids = []
 for i, (n_, w, txt) in enumerate(linhas):
     nn, ll = datilo(c, f'fx-l{i}', txt, 80, 370 + i * 72, 32); lids.append((n_, w, f'fx-l{i}', nn, ll))
+fita(c, -36, -16, -12); fita(c, 1050, -12, 9)
 c.h(f'''<div style="position:absolute;left:80px;top:690px;width:1040px;height:20px;background:rgba(53,56,58,.25)"><div id="fx-bar" style="width:0;height:100%;background:{SANGUE}"></div></div>
 <div class="mono" id="fx-pct" style="position:absolute;left:80px;top:724px;font-size:22px;color:{CONCRETO};letter-spacing:4px;opacity:0">33 % DA RENDA DA CAPITAL</div>
 <div id="fx-car" style="position:absolute;right:90px;top:560px;border:8px solid {SANGUE};padding:8px 26px 2px;transform:rotate(-8deg);opacity:0">
@@ -321,6 +365,7 @@ for n_, w, did, nn, ll in lids: digita(c, did, nn, ll, W(n_, w), 30)
 t_r = W(23, 'novecentos')
 c.a(f'tl.fromTo(q1("#fx-bar"),{{width:"0%"}},{{width:"33%",duration:{W(23, "reais", fim=True) - t_r:.2f},ease:"power2.out"}},{c.r(t_r)});')
 c.entra('#fx-pct', W(23, 'reais', fim=True))
+giz(c, 'fx-giz', 360 + 551, 70 + 531, 100, 36, W(23, 'novecentos') + 0.6, SANGUE, 4)
 t_ter = W(24, 'terço')
 c.a(f'tl.fromTo(q1("#fx-car"),{{opacity:0,scale:1.3,rotation:-8}},{{opacity:.9,scale:1,rotation:-8,duration:2/24,ease:"power4.out"}},{c.r(t_ter)});')
 som(t_ter, 'taoismo/carimbo_1', 3)
@@ -349,7 +394,9 @@ BASE = f'''#root{{position:absolute;inset:0;overflow:hidden;background:{CARVAO}}
 #root .grao{{position:absolute;inset:0;pointer-events:none;opacity:.08;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}}
 #root .vinheta{{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 60%,rgba(0,0,0,.55) 100%)}}'''
 GASTO = '''<svg width="0" height="0" style="position:absolute"><filter id="gasto"><feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="3" seed="3" result="n"/>
-<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.75 1.32" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter></svg>'''
+<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.75 1.32" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter>
+<filter id="giz" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="t"/>
+<feDisplacementMap in="SourceGraphic" in2="t" scale="5"/></filter></svg>'''
 for c in CENAS:
     dur = round(c.fim - c.ini, 4)
     (OUT / 'compositions' / f'{c.id}.html').write_text(f'''<template id="{c.id}-template">
