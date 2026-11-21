@@ -212,8 +212,8 @@ da Capital (R$ 2.999).
 | D2 · Pedra e minério | MG + ES | nome de estado que é literalmente "minas"; minério, pedra e café | MG tem 45,15 % da CFEM de 2025; MG e ES colhem 75,6 % do café | 54 % | 1 em 550.353 |
 | D3 · Tecnologia | AM | a Zona Franca monta eletrônicos e motos no meio da floresta | Polo de Manaus faturou R$ 227,67 bi em 2025 | 33 % | 1 em 127.742 |
 | D4 · Pesca | CE + RN + PB | o mar de cultivo do Nordeste | 87 % do camarão de cativeiro do país | 37 % | 1 em 410.997 |
-| D5 · Energia | RJ | o petróleo do pré-sal | mais de 85 % do petróleo do país; Maricá tem o 4º maior PIB municipal | 62 % | 1 em 347.316 |
-| D6 · Transporte | MA | ferrovia e porto que levam o minério embora | Ponta da Madeira, 172,4 mi t em 2025, maior terminal do país; menor PIB per capita (R$ 22.021) | 30 % | 1 em 213.570 |
+| D5 · Energia | RJ | o petróleo do pré-sal | 87,8 % do petróleo do país (2025); Maricá tem o 4º maior PIB municipal | 62 % | 1 em 347.316 |
+| D6 · Transporte | MA | ferrovia e porto que levam o minério embora | Ponta da Madeira, 172,4 mi t em 2025, maior terminal privado do país (quase o tamanho do complexo de Santos, 186,4 mi t); menor PIB per capita (R$ 22.021) | 30 % | 1 em 213.570 |
 | D7 · Madeira | PR | floresta plantada de pinus e eucalipto | 21,0 % da madeira plantada (e 39,2 % da tilápia) | 66 % | 1 em 262.762 |
 | D8 · Têxtil | SC | Vale do Itajaí, malharia e confecção | 20,1 % dos empregos têxteis do país com 3,7 % da população; menor Gini (0,452) | 74 % | 1 em 165.306 |
 | D9 · Grãos | MT + RS | soja no Centro-Oeste, arroz no Sul | MT colhe 30,4 % da soja; RS, 69,2 % do arroz | 66 % | 1 em 321.980 |
@@ -223,11 +223,12 @@ da Capital (R$ 2.999).
 | Bônus: D13 · "o esquecido" | AC + RR + AP | três estados que o mapa econômico esquece | 2,2 mi de pessoas e 0,73 % do PIB | 37 % | 1 em 70.599 |
 
 **Os 3 achados mais fortes:**
-1. **Distrito 6:** o Maranhão embarca mais carga que Santos e tem a menor renda do país.
+1. **Distrito 6:** um terminal do Maranhão vale quase o porto de Santos inteiro e tem a menor renda do país.
 2. **Distrito 12:** o Pará recolhe 39 % dos royalties do minério e tem um terço da renda da Capital.
 3. **A Capital real** não é Brasília: são 84 cidades espalhadas no mapa, que somam metade do PIB.
 
 ## 4. Pendências antes de gravar (`checagem-fatos`)
+Resolvidas em 21/11/2026: ver `checagem.md` (RJ 87,8 %; Santos corrigido para "quase do tamanho"; Res Gestae confirmado).
 - [CONFIRMAR] O percentual anual do petróleo do RJ em 2025 (Anuário ANP 2026).
 - [CONFIRMAR] O volume de Ponta da Madeira e de Santos no Anuário ANTAQ 2025 (hoje vem de reportagens que citam a ANTAQ).
 - [CONFIRMAR] A tradução do trecho 15 das *Res Gestae* ("pouco mais de 200 mil").

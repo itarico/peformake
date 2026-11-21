@@ -111,7 +111,7 @@ para a base e vira a barra de linha do tempo, que entra.
 |---|---|---|---|
 | "Roma, começo do século dois. Juvenal" | busto romano recortado (foto de museu em domínio público) sobre o pergaminho; a etiqueta vermelha "~100 d.C." entra | "JUVENAL" atrás do busto | cordas |
 | "pão e jogos de circo" | o cartão de citação: "JUVENAL · SÁTIRA X" | "PANEM ET CIRCENSES" | (nenhum) |
-| "trigo público para a plebe... mais de duzentas mil" | sacos de trigo de papel se empilhando até formar o número "200 MIL" | "200.000 PESSOAS" · "Res Gestae, 15" | grãos caindo |
+| "trigo público para a plebe... mais de duzentas mil" | sacos de trigo de papel se empilhando até formar o número "200 MIL" | "+200.000 PESSOAS" · "Res Gestae, 15" | grãos caindo |
 | "Coliseu... cem dias de jogos" | gravura antiga do Coliseu (domínio público), com Ken Burns; um calendário que vira 100 folhas | "ANO 80 · 100 DIAS" | multidão distante |
 | "Comida para não ter fome, espetáculo para não pensar na fome" | tela dividida: o pão à esquerda e a arena à direita, que se fundem no "P" de PANEM | "PÃO + CIRCO = PANEM" | batida |
 | "o Brasil tem a própria versão" | a câmera volta ao mapa do Brasil; a barra de linha do tempo desce e some | (nenhum) | marcha volta |
@@ -121,8 +121,8 @@ para a base e vira a barra de linha do tempo, que entra.
 |---|---|---|---|---|
 | VIII · Têxtil · SC | carretel de linha | "1 EM CADA 5 EMPREGOS TÊXTEIS" · "3,7 % DA POPULAÇÃO" (IBGE · CEMPRE 2024) | tear industrial (Pexels) | a barra de renda chega a 74 %, a mais perto da dourada; o selo "MENOR DESIGUALDADE · GINI 0,452" |
 | VII · Madeira · PR | tora de pinus | "21 % DA MADEIRA PLANTADA" (IBGE · PEVS 2025) e o bônus de um peixe de papel com "39 % DA TILÁPIA" | pinheiral plantado (Wikimedia) | barra em 66 % |
-| VI · Transporte · MA | vagão de trem | **cena-choque:** dois navios de papel lado a lado, "PONTA DA MADEIRA 172,4 MI T" e "SANTOS 142,8 MI T"; o do Maranhão afunda mais na água de tanto peso (ANTAQ 2025) | trem de minério de Carajás (Wikimedia, CC) | um trem atravessa a tela da esquerda para a direita e sai do quadro: "o trem não para aqui"; a barra de renda em 30 %, a menor, pisca vermelha |
-| V · Energia · RJ | gota de petróleo | "+85 % DO PETRÓLEO DO BRASIL" (ANP/MME 2025); o ranking de PIB municipal em que Maricá sobe para o 4º lugar e passa Belo Horizonte (IBGE · PIB 2023) | plataforma no mar (Agência Brasil) | barra em 62 %; selo "GINI 0,574" |
+| VI · Transporte · MA | vagão de trem | **cena-choque:** dois navios de papel lado a lado, "PONTA DA MADEIRA 172,4 MI T" (um terminal) e "SANTOS, TODO O COMPLEXO 186,4 MI T"; os dois afundam quase igual na água (ANTAQ e APS 2025) | trem de minério de Carajás (Wikimedia, CC) | um trem atravessa a tela da esquerda para a direita e sai do quadro: "o trem não para aqui"; a barra de renda em 30 %, a menor, pisca vermelha |
+| V · Energia · RJ | gota de petróleo | "~88 % DO PETRÓLEO DO BRASIL" (ANP 2025); o ranking de PIB municipal em que Maricá sobe para o 4º lugar e passa Belo Horizonte (IBGE · PIB 2023) | plataforma no mar (Agência Brasil) | barra em 62 %; selo "GINI 0,574" |
 Saída do D5: uma onda de rádio sai do Rio de Janeiro no mapa e vira a transição para o V2.
 
 ## V2 · O RÁDIO, 1939 (6:20 a 6:55)
