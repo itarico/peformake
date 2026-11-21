@@ -26,7 +26,7 @@
  {
   "bloco": "0",
   "sub": "GANCHO DO DESAFIO",
-  "texto": "Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance na colheita e quanto você ganharia comparado à Capital.",
+  "texto": "Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance de ser sorteado e quanto você ganharia comparado à Capital.",
   "n": 5
  },
  {
@@ -56,7 +56,7 @@
  {
   "bloco": "1",
   "sub": "PANEM EM 40 SEGUNDOS",
-  "texto": "Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito entrega dois jovens para os Jogos, ao vivo, como um reality show.",
+  "texto": "Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito sorteia dois jovens, os tributos, para lutar até a morte numa arena, ao vivo, como um reality show.",
   "n": 10
  },
  {
@@ -308,7 +308,7 @@
  {
   "bloco": "V1",
   "sub": "VIRADA: ROMA",
-  "texto": "A Suzanne Collins deu essa frase de nome ao país dela.",
+  "texto": "A autora de Jogos Vorazes, Suzanne Collins, usou essa frase para batizar o país da história.",
   "n": 52
  },
  {
@@ -776,7 +776,7 @@
  {
   "bloco": "V4",
   "sub": "OS JOGOS NO BRASIL",
-  "texto": "E o desfile dos tributos nem precisaria ser construído.",
+  "texto": "E o desfile em que os tributos são exibidos ao público nem precisaria ser construído.",
   "n": 130
  },
  {
@@ -932,7 +932,7 @@
  {
   "bloco": "6",
   "sub": "O DESFECHO",
-  "texto": "No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.",
+  "texto": "No livro, tudo muda quando uma garota do Distrito 12, que caça com arco e flecha, entende o jogo e para de jogar do jeito que a Capital quer.",
   "n": 156
  },
  {
@@ -974,7 +974,7 @@
  {
   "bloco": "7",
   "sub": "RESULTADO E CTA",
-  "texto": "E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.",
+  "texto": "E eu deixei um distrito de fora de propósito: o 13, que na história foi riscado do mapa.",
   "n": 163
  },
  {

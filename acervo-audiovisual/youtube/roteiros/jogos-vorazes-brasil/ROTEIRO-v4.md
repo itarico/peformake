@@ -3,7 +3,7 @@
 v4 de 21/11/2026 (2º retorno do Italo): abertura que prende nos 3 primeiros segundos; vídeo atemporal (sai "o filme
 que acabou de estrear"; entra a colheita); nenhum estado citado em dois distritos (sai "Nordeste" do D11; o D6 cita "o
 minério do Distrito 12"); dado novo no D1 (a cidade de SP produz mais que 12 estados somados, IBGE 2023); linha do
-reality de sobrevivência nas arenas. Mesma numeração de frases até a 128; da 129 em diante, +1.
+reality de sobrevivência nas arenas; quem nunca viu Jogos Vorazes entende tudo (tributo, colheita, arena até a morte, a autora e a heroína explicados na primeira vez). Mesma numeração de frases até a 128; da 129 em diante, +1.
 v3 de 21/11/2026 (retorno do Italo): sai a parte das apostas; entra "os Jogos no Brasil" (arenas e desfile); a Capital
 vira revelação de verdade (Brasília tem só 3,3 % do PIB; Parauapebas e Maricá estão entre as 84); final com desfecho.
 v2 (checagem) em `ROTEIRO-v2.md`; v1 em `ROTEIRO.md`.
@@ -77,7 +77,7 @@ salário comparado à Capital) e vira o ritmo do vídeo. Hipótese a validar na 
 > E a Capital que vive do trabalho do seu estado não seria Brasília.
 > Eu encaixei o Brasil nos doze distritos de Jogos Vorazes, estado por estado.
 > Agora faz o seguinte: anota aí o seu estado.
-> Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance na colheita e quanto você ganharia comparado à Capital.
+> Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance de ser sorteado e quanto você ganharia comparado à Capital.
 > E vai descobrir onde a Capital fica de verdade.
 > **Ela pode estar a meia hora da sua casa.** [pausa]
 > E todos os números deste vídeo são oficiais.
@@ -89,7 +89,7 @@ salário comparado à Capital) e vira o ritmo do vídeo. Hipótese a validar na 
 
 ### 1 · PANEM EM 40 SEGUNDOS (0:35 a 1:15)
 > Em Jogos Vorazes, Panem é o que sobrou dos Estados Unidos: uma Capital rica e distritos que trabalham para ela.
-> Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito entrega dois jovens para os Jogos, ao vivo, como um reality show.
+> Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito sorteia dois jovens, os tributos, para lutar até a morte numa arena, ao vivo, como um reality show.
 > Nos quinquagésimos Jogos foi pior: cada distrito entregou **quatro**.
 > E o nome Panem não é por acaso. Vem do latim: **panem et circenses**. Pão e circo.
 > Guarda essa expressão, porque ela volta. Agora vamos montar o mapa, do distrito mais pobre do livro até o mais rico.
@@ -129,7 +129,7 @@ salário comparado à Capital) e vira o ritmo do vídeo. Hipótese a validar na 
 > O pão era literal: trigo público para a plebe. O imperador Augusto registrou pouco mais de duzentas mil pessoas recebendo.
 > E o Coliseu foi inaugurado no ano oitenta com cem dias de jogos.
 > Comida para não ter fome, espetáculo para não ter tempo de pensar na fome.
-> A Suzanne Collins deu essa frase de nome ao país dela. E o Brasil tem a própria versão. Mas antes, mais quatro distritos.
+> A autora de Jogos Vorazes, Suzanne Collins, usou essa frase para batizar o país da história. E o Brasil tem a própria versão. Mas antes, mais quatro distritos.
 
 ### 3 · DISTRITOS 8 A 5 (4:30 a 6:20)
 *Meso loop:* qual distrito tem um terminal que vale um porto inteiro?
@@ -207,7 +207,7 @@ salário comparado à Capital) e vira o ritmo do vídeo. Hipótese a validar na 
 > O Pantanal, entre o Distrito 9 e o 10, uma das maiores áreas alagadas do planeta.
 > A Amazônia, a maior floresta tropical do mundo.
 > E gente tentando sobreviver no mato, na frente das câmeras, a TV brasileira já mostra há mais de vinte anos.
-> E o desfile dos tributos nem precisaria ser construído. Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Distrito 5.
+> E o desfile em que os tributos são exibidos ao público nem precisaria ser construído. Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Distrito 5.
 > Só falta a Capital assistindo.
 
 ### 5 · A CAPITAL E A REVELAÇÃO (9:20 a 10:25)
@@ -227,14 +227,14 @@ salário comparado à Capital) e vira o ritmo do vídeo. Hipótese a validar na 
 ### 6 · O DESFECHO (10:25 a 10:55)
 > Panem incomoda porque não inventou nada. Só deixou à vista.
 > Roma tinha o Coliseu. O Brasil de 1939 tinha o rádio. Em 1970, a televisão. O circo muda de forma, mas a função é a mesma: fazer o distrito não olhar para o mapa.
-> No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.
+> No livro, tudo muda quando uma garota do Distrito 12, que caça com arco e flecha, entende o jogo e para de jogar do jeito que a Capital quer.
 > Você não precisa de arco e flecha para isso.
 > Agora você tem o que os distritos de Panem nunca tiveram: o mapa inteiro. O que o seu estado produz, quanto fica com ele e para onde vai.
 
 ### 7 · RESULTADO E CTA (10:20 a 10:45)
 > Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.
 > Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**. Eu quero ver qual distrito tem mais tributo aqui no canal.
-> E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu. No Brasil, são três estados que juntos não chegam a um por cento do PIB. Quais? Na tela final.
+> E eu deixei um distrito de fora de propósito: o 13, que na história foi riscado do mapa. No Brasil, são três estados que juntos não chegam a um por cento do PIB. Quais? Na tela final.
 
 **Contagem:** 1.640 palavras de fala. A 2,4 palavras/s, dá 11:23. A 150 palavras/min, 10:56. Dentro da meta de 8 a 12 min.
 

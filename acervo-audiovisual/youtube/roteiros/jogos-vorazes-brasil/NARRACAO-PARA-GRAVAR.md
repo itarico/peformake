@@ -1,6 +1,6 @@
 # Panem · narração para gravar (Italo) · v4
 
-Versão de 21/11/2026, tirada do `ROTEIRO-v4.md` (abertura nova, vídeo atemporal, nenhum estado repetido, dado novo no Distrito 1, reality nas arenas). 1.829 palavras, cerca de 11 min 30 s
+Versão de 21/11/2026, tirada do `ROTEIRO-v4.md` (abertura nova, vídeo atemporal, nenhum estado repetido, dado novo no Distrito 1, reality nas arenas). 1.853 palavras, cerca de 11 min 30 s
 de voz. Uma linha numerada = um take. A numeração é a mesma da voz-guia e das cenas (`montagem/falas.json`): se mudar
 uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 
@@ -37,14 +37,14 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 2. E a Capital que vive do trabalho do seu estado não seria Brasília.
 3. Eu encaixei o Brasil nos doze distritos de Jogos Vorazes, estado por estado.
 4. Agora faz o seguinte: anota aí o seu estado.
-5. Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance na colheita e quanto você ganharia comparado à Capital.
+5. Até o fim do vídeo você vai saber em qual distrito nasceu, o que você produziria, a sua chance de ser sorteado e quanto você ganharia comparado à Capital.
 6. E vai descobrir onde a Capital fica de verdade.
 7. (baixo) **Ela pode estar a meia hora da sua casa.** [pausa]
 8. E todos os números deste vídeo são oficiais.
 
 ## Bloco 1 · Panem em 40 segundos (B1.wav, cerca de 41 s)
 9. Em Jogos Vorazes, Panem é o que sobrou dos Estados Unidos: uma Capital rica e distritos que trabalham para ela.
-10. Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito entrega dois jovens para os Jogos, ao vivo, como um reality show.
+10. Como punição por uma revolta, todo ano, numa cerimônia chamada colheita, cada distrito sorteia dois jovens, os tributos, para lutar até a morte numa arena, ao vivo, como um reality show.
 11. Nos quinquagésimos Jogos foi pior: cada distrito entregou **quatro**.
 12. E o nome Panem não é por acaso.
 13. Vem do latim: **panem et circenses**.
@@ -94,7 +94,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 49. O imperador Augusto registrou pouco mais de duzentas mil pessoas recebendo.
 50. E o Coliseu foi inaugurado no ano oitenta com cem dias de jogos.
 51. Comida para não ter fome, espetáculo para não ter tempo de pensar na fome.
-52. A Suzanne Collins deu essa frase de nome ao país dela.
+52. A autora de Jogos Vorazes, Suzanne Collins, usou essa frase para batizar o país da história.
 53. E o Brasil tem a própria versão.
 54. Mas antes, mais quatro distritos.
 
@@ -190,7 +190,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 127. O Pantanal, entre o Distrito 9 e o 10, uma das maiores áreas alagadas do planeta.
 128. A Amazônia, a maior floresta tropical do mundo.
 129. E gente tentando sobreviver no mato, na frente das câmeras, a TV brasileira já mostra há mais de vinte anos.
-130. E o desfile dos tributos nem precisaria ser construído.
+130. E o desfile em que os tributos são exibidos ao público nem precisaria ser construído.
 131. Já existe uma avenida feita para isso, com arquibancada dos dois lados e transmissão ao vivo: a Sapucaí, no Distrito 5.
 132. Só falta a Capital assistindo.
 
@@ -220,7 +220,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 153. O Brasil de 1939 tinha o rádio.
 154. Em 1970, a televisão.
 155. O circo muda de forma, mas a função é a mesma: fazer o distrito não olhar para o mapa.
-156. No livro, tudo muda quando uma garota do Distrito 12 entende o jogo e para de jogar do jeito que a Capital quer.
+156. No livro, tudo muda quando uma garota do Distrito 12, que caça com arco e flecha, entende o jogo e para de jogar do jeito que a Capital quer.
 157. (baixo) Você não precisa de arco e flecha para isso.
 158. Agora você tem o que os distritos de Panem nunca tiveram: o mapa inteiro.
 159. O que o seu estado produz, quanto fica com ele e para onde vai.
@@ -229,7 +229,7 @@ uma frase aqui, rode `python montagem/extrair_falas.py` de novo.
 160. Agora pega o estado que você anotou e acha no mapa: o seu distrito, a sua chance e o seu salário comparado à Capital.
 161. Comenta aqui embaixo: **qual é o seu distrito e qual foi a sua chance**.
 162. Eu quero ver qual distrito tem mais tributo aqui no canal.
-163. E eu deixei um distrito de fora de propósito: o 13, o que todo mundo acha que sumiu.
+163. E eu deixei um distrito de fora de propósito: o 13, que na história foi riscado do mapa.
 164. No Brasil, são três estados que juntos não chegam a um por cento do PIB.
 165. Quais?
 166. Na tela final.
