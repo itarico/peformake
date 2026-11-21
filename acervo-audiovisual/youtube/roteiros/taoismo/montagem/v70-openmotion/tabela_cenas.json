@@ -1,0 +1,37 @@
+[
+ {
+  "id": "corte",
+  "inicio_clip": 0.0,
+  "dur": 10.89,
+  "inicio_filme": 26.93,
+  "cena_idx": 4
+ },
+ {
+  "id": "mapa",
+  "inicio_clip": 10.9167,
+  "dur": 19.02,
+  "inicio_filme": 305.1,
+  "cena_idx": 22
+ },
+ {
+  "id": "livro",
+  "inicio_clip": 29.9583,
+  "dur": 24.98,
+  "inicio_filme": 324.12,
+  "cena_idx": 23
+ },
+ {
+  "id": "yinyang",
+  "inicio_clip": 54.9583,
+  "dur": 13.91,
+  "inicio_filme": 458.73,
+  "cena_idx": 32
+ },
+ {
+  "id": "funciona",
+  "inicio_clip": 68.875,
+  "dur": 5.01,
+  "inicio_filme": 502.72,
+  "cena_idx": 35
+ }
+]

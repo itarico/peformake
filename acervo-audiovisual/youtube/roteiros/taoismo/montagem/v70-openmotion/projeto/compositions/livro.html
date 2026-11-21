@@ -1,0 +1,71 @@
+<template id="livro-template">
+<div id="root" data-composition-id="livro" data-hf-id="livro-root" data-width="1920" data-height="1080" data-duration="24.98">
+<div class="data abs" data-hf-id="livro-rot" style="left:150px;top:150px;font-size:30px">junta tudo</div>
+<div class="abs neg" data-hf-id="livro-n1" style="left:150px;top:230px">não caiu pronto do céu<i class="corte" data-hf-id="livro-r1"></i></div>
+<div class="abs neg" data-hf-id="livro-n2" style="left:150px;top:330px">nem saiu de uma tarde na fronteira<i class="corte" data-hf-id="livro-r2"></i></div>
+<svg width="1920" height="1080" data-hf-id="livro-svg"><path id="livro-linha" data-hf-id="livro-linha" d="M120,560 C600,548 1100,572 1520,556" fill="none" stroke="#1A1714" stroke-width="6" stroke-linecap="butt" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+<path id="livro-linha2" data-hf-id="livro-linha2" d="M1520,556 C1580,554 1620,556 1660,556" fill="none" stroke="#B3261E" stroke-width="6" stroke-dasharray="4 14" stroke-linecap="round" opacity="0"/></svg>
+<div class="abs est" data-hf-id="livro-e0" style="left:90px;top:420px;width:220px"><div class="han h">口</div><div class="pt"></div><div class="nm">falado</div></div>
+<div class="abs est" data-hf-id="livro-e1" style="left:295px;top:420px;width:220px"><div class="han h">心</div><div class="pt"></div><div class="nm">decorado</div></div>
+<div class="abs est" data-hf-id="livro-e2" style="left:500px;top:420px;width:220px"><div class="han h">竹</div><div class="pt"></div><div class="nm">bambu</div></div>
+<div class="abs est" data-hf-id="livro-e3" style="left:705px;top:420px;width:220px"><div class="han h">帛</div><div class="pt"></div><div class="nm">seda</div></div>
+<div class="abs est" data-hf-id="livro-e4" style="left:910px;top:420px;width:220px"><div class="han h">刪</div><div class="pt"></div><div class="nm">cortado</div></div>
+<div class="abs est" data-hf-id="livro-e5" style="left:1115px;top:420px;width:220px"><div class="han h">＋</div><div class="pt"></div><div class="nm">ampliado</div></div>
+<div class="abs est" data-hf-id="livro-e6" style="left:1320px;top:420px;width:220px"><div class="han h">改</div><div class="pt"></div><div class="nm">reorganizado</div></div>
+
+<div class="it abs" data-hf-id="livro-sec" style="left:1560px;top:470px;font-size:34px">séculos depois</div>
+<div class="abs" data-hf-id="livro-81" style="left:1590px;top:360px;width:310px;text-align:center;white-space:nowrap"><div class="han" style="font-size:66px;color:#B3261E;line-height:1.1">八十一章</div><div class="tit" style="font-size:44px;margin-top:136px">81 capítulos</div></div>
+<div class="abs" data-hf-id="livro-f1" style="left:150px;top:700px;font-size:66px;font-weight:700">A sabedoria é antiga.</div>
+<div class="abs" data-hf-id="livro-f2" style="left:150px;top:780px;font-size:66px;font-weight:700;color:#B3261E">Quem escreveu, ninguém sabe ao certo.</div>
+</div>
+<style>
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/266ea924-91ff-42c1-a18a-8baaab35a710.ttf");font-weight:600;font-style:normal}
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/4799178e-c462-432d-9542-6ec3e73a38a9.ttf");font-weight:700;font-style:normal}
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/5bc43c41-e7be-4449-b0b6-5558629f1483.ttf");font-weight:500;font-style:italic}
+@font-face{font-family:"Noto Serif SC Black";src:url("assets/fonts/ff9fb718-d553-4a28-8c7f-fee676ecdbcb.ttf");font-weight:900;font-style:normal}
+@font-face{font-family:"Courier Prime";src:url("assets/fonts/1e542e93-d85c-47d7-9f1a-6e616264baf9.ttf");font-weight:700;font-style:normal}
+#root{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;color:#1A1714;font-family:"Cormorant Garamond",serif;
+background:radial-gradient(ellipse at 50% 45%,rgba(255,250,235,.9) 0%,rgba(239,228,204,0) 55%),#EFE4CC}
+#root .abs{position:absolute}
+#root .han{font-family:"Noto Serif SC Black";font-weight:900}
+#root .data{font-family:"Courier Prime";font-weight:700;letter-spacing:2px;color:#B3261E;text-transform:uppercase}
+#root .tit{font-weight:700;text-transform:uppercase;letter-spacing:2px;line-height:.95}
+#root .it{font-style:italic;font-weight:500}
+#root svg{position:absolute;left:0;top:0}
+#root .neg{font-size:78px;font-weight:600;white-space:nowrap}
+#root .corte{position:absolute;left:-10px;right:-10px;top:52%;height:7px;background:#B3261E;transform-origin:0 50%;border-radius:4px}
+#root .est{text-align:center}
+#root .est .h{font-size:76px;line-height:1}
+#root .est .pt{width:26px;height:26px;border-radius:50%;background:#1A1714;margin:30px auto 0}
+#root .est .nm{font-size:40px;font-weight:700;margin-top:22px}
+</style>
+<script>
+(function(){
+const tl = gsap.timeline({paused:true});
+const R = document.querySelector('[data-composition-id="livro"]');
+const q = s => R.querySelectorAll(s);
+const q1 = s => R.querySelector(s);
+tl.fromTo(q1('[data-hf-id="livro-rot"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.5},.3);
+tl.fromTo(q1('[data-hf-id="livro-n1"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power2.out"},2.85);
+tl.fromTo(q1('[data-hf-id="livro-r1"]'),{scaleX:0},{scaleX:1,duration:.4,ease:"power2.in"},4.9);
+tl.fromTo(q1('[data-hf-id="livro-n2"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power2.out"},5.7);
+tl.fromTo(q1('[data-hf-id="livro-r2"]'),{scaleX:0},{scaleX:1,duration:.45,ease:"power2.in"},8.0);
+tl.to([q1('[data-hf-id="livro-n1"]'),q1('[data-hf-id="livro-n2"]'),q1('[data-hf-id="livro-rot"]')],{opacity:0,y:-20,duration:.5},8.7);
+tl.to('#livro-linha',{attr:{"stroke-dashoffset":0},duration:6.3,ease:"none"},9.0);
+const T=[9.65,10.13,11.45,12.93,13.29,14.17,15.15];
+q('.est').forEach((e,i)=>{tl.fromTo(e.querySelector('.pt'),{scale:0},{scale:1,duration:.3,ease:"back.out(3)"},T[i]-.1);
+ tl.fromTo(e.querySelector('.h'),{opacity:0,y:-24},{opacity:1,y:0,duration:.4,ease:"power3.out"},T[i]-.1);
+ tl.fromTo(e.querySelector('.nm'),{opacity:0,y:14},{opacity:1,y:0,duration:.35},T[i]);});
+tl.to('#livro-linha2',{opacity:1,duration:.5},15.6);
+tl.fromTo(q1('[data-hf-id="livro-sec"]'),{opacity:0},{opacity:1,duration:.5},15.8);
+tl.to(q1('[data-hf-id="livro-sec"]'),{opacity:0,duration:.4},18.2);
+tl.fromTo(q1('[data-hf-id="livro-81"]'),{opacity:0,scale:.7,transformOrigin:"50% 30%"},{opacity:1,scale:1,duration:.6,ease:"back.out(1.8)"},18.6);
+tl.to(q('.est'),{opacity:.4,duration:.6},20.3);
+tl.fromTo(q1('[data-hf-id="livro-f1"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power2.out"},20.6);
+tl.fromTo(q1('[data-hf-id="livro-f2"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power2.out"},22.4);
+tl.set({}, {}, 24.97);
+window.__timelines = window.__timelines || {};
+window.__timelines["livro"] = tl;
+})();
+</script>
+</template>

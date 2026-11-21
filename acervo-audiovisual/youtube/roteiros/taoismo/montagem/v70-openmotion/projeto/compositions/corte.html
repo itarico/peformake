@@ -1,0 +1,68 @@
+<template id="corte-template">
+<div id="root" data-composition-id="corte" data-hf-id="corte-root" data-width="1920" data-height="1080" data-duration="10.89">
+<div class="data abs" data-hf-id="corte-rot" style="left:150px;top:180px;font-size:30px">o livro de hoje</div>
+<div class="it abs" data-hf-id="corte-orig" style="left:150px;top:230px;font-size:64px">não é o original</div>
+<div class="col abs" data-hf-id="corte-col0" style="left:1030px;top:190px"><div class="han meia cima" data-hf-id="corte-c0a">道可道</div><div class="han meia baixo" data-hf-id="corte-c0b">非常</div></div>
+<div class="col abs" data-hf-id="corte-col1" style="left:1126px;top:190px"><div class="han meia cima" data-hf-id="corte-c1a">名可名</div><div class="han meia baixo" data-hf-id="corte-c1b">非常</div></div>
+<div class="col abs" data-hf-id="corte-col2" style="left:1222px;top:190px"><div class="han meia cima" data-hf-id="corte-c2a">無名天</div><div class="han meia baixo" data-hf-id="corte-c2b">地之</div></div>
+<div class="col abs" data-hf-id="corte-col3" style="left:1318px;top:190px"><div class="han meia cima" data-hf-id="corte-c3a">始有名</div><div class="han meia baixo" data-hf-id="corte-c3b">萬物</div></div>
+<div class="col abs" data-hf-id="corte-col4" style="left:1414px;top:190px"><div class="han meia cima" data-hf-id="corte-c4a">之母常</div><div class="han meia baixo" data-hf-id="corte-c4b">無欲</div></div>
+<div class="col abs" data-hf-id="corte-col5" style="left:1510px;top:190px"><div class="han meia cima" data-hf-id="corte-c5a">道可名</div><div class="han meia baixo" data-hf-id="corte-c5b">非常</div></div>
+<div class="col abs" data-hf-id="corte-col6" style="left:1606px;top:190px"><div class="han meia cima" data-hf-id="corte-c6a">天地之</div><div class="han meia baixo" data-hf-id="corte-c6b">始有</div></div>
+<div class="col abs" data-hf-id="corte-col7" style="left:1702px;top:190px"><div class="han meia cima" data-hf-id="corte-c7a">萬物之</div><div class="han meia baixo" data-hf-id="corte-c7b">母名</div></div>
+
+<svg width="1920" height="1080" data-hf-id="corte-svg"><path id="corte-risco" data-hf-id="corte-risco" d="M980,470 C1200,430 1500,420 1820,360" fill="none" stroke="#B3261E" stroke-width="16" stroke-linecap="butt" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>
+<div class="tit abs palavra" data-hf-id="corte-p1" style="left:150px;top:420px;font-size:104px">Cortado</div>
+<div class="tit abs palavra" data-hf-id="corte-p2" style="left:150px;top:530px;font-size:104px">Reorganizado</div>
+<div class="tit abs palavra" data-hf-id="corte-p3" style="left:150px;top:640px;font-size:104px;color:#B3261E">Reescrito</div>
+<div class="it abs" data-hf-id="corte-sec" style="left:156px;top:770px;font-size:56px">durante séculos</div>
+</div>
+<style>
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/266ea924-91ff-42c1-a18a-8baaab35a710.ttf");font-weight:600;font-style:normal}
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/4799178e-c462-432d-9542-6ec3e73a38a9.ttf");font-weight:700;font-style:normal}
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/5bc43c41-e7be-4449-b0b6-5558629f1483.ttf");font-weight:500;font-style:italic}
+@font-face{font-family:"Noto Serif SC Black";src:url("assets/fonts/ff9fb718-d553-4a28-8c7f-fee676ecdbcb.ttf");font-weight:900;font-style:normal}
+@font-face{font-family:"Courier Prime";src:url("assets/fonts/1e542e93-d85c-47d7-9f1a-6e616264baf9.ttf");font-weight:700;font-style:normal}
+#root{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;color:#1A1714;font-family:"Cormorant Garamond",serif;
+background:radial-gradient(ellipse at 50% 45%,rgba(255,250,235,.9) 0%,rgba(239,228,204,0) 55%),#EFE4CC}
+#root .abs{position:absolute}
+#root .han{font-family:"Noto Serif SC Black";font-weight:900}
+#root .data{font-family:"Courier Prime";font-weight:700;letter-spacing:2px;color:#B3261E;text-transform:uppercase}
+#root .tit{font-weight:700;text-transform:uppercase;letter-spacing:2px;line-height:.95}
+#root .it{font-style:italic;font-weight:500}
+#root svg{position:absolute;left:0;top:0}
+#root .col{width:84px}
+#root .meia{writing-mode:vertical-rl;font-size:72px;line-height:1;letter-spacing:14px}
+#root .baixo{margin-top:14px}
+</style>
+<script>
+(function(){
+const tl = gsap.timeline({paused:true});
+const R = document.querySelector('[data-composition-id="corte"]');
+const q = s => R.querySelectorAll(s);
+const q1 = s => R.querySelector(s);
+tl.fromTo(q1('[data-hf-id="corte-rot"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.5,ease:"power2.out"},.4);
+tl.fromTo(q('.col'),{opacity:0,y:-30},{opacity:1,y:0,duration:.7,stagger:.18,ease:"power2.out"},.3);
+tl.fromTo(q1('[data-hf-id="corte-orig"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power2.out"},3.6);
+tl.to([q1('[data-hf-id="corte-rot"]'),q1('[data-hf-id="corte-orig"]')],{opacity:.35,duration:.5},6.0);
+// cortado: risco vermelho e as colunas se partem
+tl.fromTo(q1('[data-hf-id="corte-p1"]'),{opacity:0,x:-40},{opacity:1,x:0,duration:.45,ease:"power3.out"},6.35);
+tl.to('#corte-risco',{attr:{"stroke-dashoffset":0},duration:.35,ease:"power2.in"},6.38);
+tl.to(q('.cima'),{y:-34,x:-10,rotation:-3,duration:.5,ease:"power3.out"},6.62);
+tl.to(q('.baixo'),{y:34,x:10,rotation:3,duration:.5,ease:"power3.out"},6.62);
+tl.to('#corte-risco',{opacity:0,duration:.4},7.1);
+// reorganizado: as colunas trocam de lugar
+tl.fromTo(q1('[data-hf-id="corte-p2"]'),{opacity:0,x:-40},{opacity:1,x:0,duration:.45,ease:"power3.out"},7.1);
+const ordem=[5,2,7,0,6,1,4,3];
+q('.col').forEach((c,i)=>tl.to(c,{x:(ordem[i]-i)*96,duration:.9,ease:"power2.inOut"},7.2+i*.03));
+// reescrito: tres caracteres somem e voltam em vermelho
+tl.fromTo(q1('[data-hf-id="corte-p3"]'),{opacity:0,x:-40},{opacity:1,x:0,duration:.45,ease:"power3.out"},8.3);
+tl.to(q('.meia'),{color:"#1A1714"},0);
+[1,4,6].forEach((k,j)=>{const el=q('.baixo')[k];tl.to(el,{opacity:0,duration:.25},8.4+j*.15);tl.to(el,{color:"#B3261E",duration:.01},8.66+j*.15);tl.to(el,{opacity:1,duration:.35},8.67+j*.15);});
+tl.fromTo(q1('[data-hf-id="corte-sec"]'),{opacity:0,y:16},{opacity:1,y:0,duration:.6,ease:"power2.out"},9.4);
+tl.set({}, {}, 10.88);
+window.__timelines = window.__timelines || {};
+window.__timelines["corte"] = tl;
+})();
+</script>
+</template>

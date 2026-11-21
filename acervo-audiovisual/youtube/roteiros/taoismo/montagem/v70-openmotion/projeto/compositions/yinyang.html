@@ -1,0 +1,59 @@
+<template id="yinyang-template">
+<div id="root" data-composition-id="yinyang" data-hf-id="yinyang-root" data-width="1920" data-height="1080" data-duration="13.91">
+<div class="data abs" data-hf-id="yy-rot" style="left:0;right:0;top:56px;text-align:center;font-size:30px">nunca foi uma coisa só</div>
+<svg width="1920" height="1080" data-hf-id="yy-svg"><path class="lig" data-hf-id="yy-l0" d="M796,330 L650,240" stroke="#1A1714" stroke-width="3" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><path class="lig" data-hf-id="yy-l1" d="M1124,330 L1270,240" stroke="#1A1714" stroke-width="3" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><path class="lig" data-hf-id="yy-l2" d="M1124,590 L1270,680" stroke="#1A1714" stroke-width="3" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><path class="lig" data-hf-id="yy-l3" d="M796,590 L650,680" stroke="#1A1714" stroke-width="3" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+ <g id="yy-taiji" data-hf-id="yy-taiji">
+  <circle cx="960" cy="460" r="210" fill="#F7F0DF"/>
+  <path d="M960,250 A210,210 0 0 1 960,670 A105.0,105.0 0 0 1 960,460 A105.0,105.0 0 0 0 960,250Z" fill="#1A1714"/>
+  <circle cx="960" cy="355.0" r="32.3" fill="#F7F0DF"/><circle cx="960" cy="565.0" r="32.3" fill="#1A1714"/>
+ </g>
+ <circle id="yy-aro" data-hf-id="yy-aro" cx="960" cy="460" r="214" fill="none" stroke="#1A1714" stroke-width="7" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+ <circle id="yy-aro2" data-hf-id="yy-aro2" cx="1390" cy="690" r="120" fill="none" stroke="#B3261E" stroke-width="5" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+</svg>
+<div class="abs face" data-hf-id="yy-f0" style="left:360px;top:160px;width:340px"><div class="han fh">哲</div><div class="fn">filosofia</div></div>
+<div class="abs face" data-hf-id="yy-f1" style="left:1220px;top:160px;width:340px"><div class="han fh">教</div><div class="fn">religião</div></div>
+<div class="abs face" data-hf-id="yy-f2" style="left:1220px;top:620px;width:340px"><div class="han fh">醫</div><div class="fn">medicina</div></div>
+<div class="abs face" data-hf-id="yy-f3" style="left:360px;top:620px;width:340px"><div class="han fh">政</div><div class="fn">política</div></div>
+<div class="data abs" data-hf-id="yy-prat" style="left:1130px;top:810px;width:520px;text-align:center;font-size:30px">o lado prático: tai chi, qigong</div>
+</div>
+<style>
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/266ea924-91ff-42c1-a18a-8baaab35a710.ttf");font-weight:600;font-style:normal}
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/4799178e-c462-432d-9542-6ec3e73a38a9.ttf");font-weight:700;font-style:normal}
+@font-face{font-family:"Cormorant Garamond";src:url("assets/fonts/5bc43c41-e7be-4449-b0b6-5558629f1483.ttf");font-weight:500;font-style:italic}
+@font-face{font-family:"Noto Serif SC Black";src:url("assets/fonts/ff9fb718-d553-4a28-8c7f-fee676ecdbcb.ttf");font-weight:900;font-style:normal}
+@font-face{font-family:"Courier Prime";src:url("assets/fonts/1e542e93-d85c-47d7-9f1a-6e616264baf9.ttf");font-weight:700;font-style:normal}
+#root{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;color:#1A1714;font-family:"Cormorant Garamond",serif;
+background:radial-gradient(ellipse at 50% 45%,rgba(255,250,235,.9) 0%,rgba(239,228,204,0) 55%),#EFE4CC}
+#root .abs{position:absolute}
+#root .han{font-family:"Noto Serif SC Black";font-weight:900}
+#root .data{font-family:"Courier Prime";font-weight:700;letter-spacing:2px;color:#B3261E;text-transform:uppercase}
+#root .tit{font-weight:700;text-transform:uppercase;letter-spacing:2px;line-height:.95}
+#root .it{font-style:italic;font-weight:500}
+#root svg{position:absolute;left:0;top:0}
+#root .face{text-align:center}
+#root .fh{font-size:84px;line-height:1}
+#root .fn{font-size:48px;font-weight:700;margin-top:8px}
+</style>
+<script>
+(function(){
+const tl = gsap.timeline({paused:true});
+const R = document.querySelector('[data-composition-id="yinyang"]');
+const q = s => R.querySelectorAll(s);
+const q1 = s => R.querySelector(s);
+tl.fromTo('#yy-aro',{attr:{"stroke-dashoffset":1}},{attr:{"stroke-dashoffset":0},duration:1.2,ease:"power2.inOut"},.2);
+tl.fromTo('#yy-taiji',{opacity:0,scale:.7,transformOrigin:"50% 50%"},{opacity:1,scale:1,duration:1.2,ease:"power2.out"},.5);
+tl.fromTo('#yy-taiji',{rotation:0},{rotation:120,duration:13.6,ease:"none"},.3);
+tl.fromTo(q1('[data-hf-id="yy-rot"]'),{opacity:0,y:20},{opacity:1,y:0,duration:.5},1.9);
+const T=[2.96,3.66,4.48,5.68];
+q('.face').forEach((f,i)=>{tl.to(q('.lig')[i],{attr:{"stroke-dashoffset":0},duration:.35,ease:"power2.out"},T[i]-.25);
+ tl.fromTo(f,{opacity:0,scale:.8},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},T[i]-.05);});
+tl.to([q('.face')[0],q('.face')[1],q('.face')[3],q('.lig')[0],q('.lig')[1],q('.lig')[3],q1('[data-hf-id="yy-rot"]')],{opacity:.28,duration:.7},10.9);
+tl.to(q('.face')[2],{color:"#B3261E",scale:1.08,duration:.5},11.2);
+tl.to('#yy-aro2',{attr:{"stroke-dashoffset":0},duration:.6,ease:"power2.out"},11.3);
+tl.fromTo(q1('[data-hf-id="yy-prat"]'),{opacity:0,y:10},{opacity:1,y:0,duration:.5},11.9);
+tl.set({}, {}, 13.9);
+window.__timelines = window.__timelines || {};
+window.__timelines["yinyang"] = tl;
+})();
+</script>
+</template>

@@ -1,5 +1,6 @@
 # Diário da rotina de melhoria contínua
 
+- 2026-11-20: Taoísmo v70 (taoismo_final_v70.mp4): 5 cenas novas feitas no OpenMotion (tipografia cinética, mapa dos achados, linha do tempo do livro, yin-yang, partículas de tinta) sobre o v60, foley novo nessas cenas com o atraso dos efeitos do Pixabay compensado, créditos em audio/v70_creditos-audio.csv. Scripts em acervo-audiovisual/youtube/roteiros/taoismo/montagem/v70-openmotion, aprendizados em ferramentas/openmotion/APRENDIZADOS.md. Falta o Italo assistir e escolher entre v60 e v70.
 - 2026-11-20: Taoísmo finalizado (legenda com fundo, barra do tempo corrigida, v60 com trilha e foley, PUBLICAR.md com capítulos, créditos e thumb). Roteiro novo: Rockstar/GTA 6 (marketing do silêncio) em youtube/roteiros/rockstar-gta6-marketing-2026-11-20 com FATOS.md e narração para gravar.
 - 2026-11-20: Taoísmo v60 com trilha por emoção, ducking e foley real (Pixabay, sem Content ID), script sonorizar.py e créditos no acervo. OpenMotion fica para uma sessão nova (MCP só aparece depois de reiniciar).
 - 2026-11-20: Canal YouTube, proposta de posicionamento ultranichado (estratégia/marketing por trás de tudo, estilo Sala de Guerra) em acervo-audiovisual/youtube/POSICIONAMENTO-CANAL.md; pesquisa de outliers em youtube/pesquisas/nicho-estrategia-2026-11-20. Falta aprovação do Italo.
