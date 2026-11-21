@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="400" viewBox="0 0 1500 400">
+<rect width="1500" height="400" fill="#111315"/>
+<g font-family="Arial,sans-serif">
+<rect x="40" y="40" width="270" height="230" fill="#111315" stroke="#777" stroke-width="2"/><text x="40" y="315" fill="#E6E2D9" font-size="28">CARVÃO</text><text x="40" y="355" fill="#C2B79F" font-size="22">#111315</text>
+<rect x="340" y="40" width="270" height="230" fill="#35383A"/><text x="340" y="315" fill="#E6E2D9" font-size="28">CONCRETO</text><text x="340" y="355" fill="#C2B79F" font-size="22">#35383A</text>
+<rect x="640" y="40" width="270" height="230" fill="#A51E25"/><text x="640" y="315" fill="#E6E2D9" font-size="28">SANGUE</text><text x="640" y="355" fill="#C2B79F" font-size="22">#A51E25</text>
+<rect x="940" y="40" width="230" height="230" fill="#C2B79F"/><text x="940" y="315" fill="#E6E2D9" font-size="28">PAPEL</text><text x="940" y="355" fill="#C2B79F" font-size="22">#C2B79F</text>
+<rect x="1200" y="40" width="260" height="230" fill="#E6E2D9"/><text x="1200" y="315" fill="#E6E2D9" font-size="28">MARFIM</text><text x="1200" y="355" fill="#C2B79F" font-size="22">#E6E2D9</text>
+</g></svg>

@@ -129,4 +129,4 @@ def regua(atual, feitos, x=110, y=968, larg=1700, capital_aberta=False):
     n = len(feitos | {atual}) if atual else len(feitos)
     return (f'<div class="abs" style="left:{x}px;top:{y}px;width:{larg}px;height:62px">{h}</div>'
             f'<div class="abs mono" style="left:{x}px;top:{y - 34}px;font-size:20px;color:{CINZA}">MAPA DE PANEM · DISTRITOS REVELADOS '
-            f'<span style="color:{OSSO}">{n:02d}/12</span></div>')
+            f'<span id="rg-n" style="color:{OSSO}">{n:02d}/12</span></div>')

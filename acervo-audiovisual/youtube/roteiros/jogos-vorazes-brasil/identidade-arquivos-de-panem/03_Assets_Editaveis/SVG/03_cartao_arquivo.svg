@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+<rect width="1200" height="700" fill="#C2B79F"/>
+<rect x="34" y="34" width="1132" height="632" fill="none" stroke="#35383A" stroke-width="3"/>
+<text x="80" y="105" fill="#35383A" font-family="monospace" font-size="25" letter-spacing="4">CAPITÓLIO / REGISTRO CENTRAL</text>
+<line x1="80" y1="135" x2="1120" y2="135" stroke="#35383A" stroke-width="2"/>
+<text x="80" y="245" fill="#111315" font-family="Arial, sans-serif" font-size="64" font-weight="bold">DOCUMENTO</text>
+<text x="80" y="315" fill="#35383A" font-family="monospace" font-size="28">CLASSIFICAÇÃO: ARQUIVO EDITORIAL</text>
+<text x="80" y="390" fill="#35383A" font-family="monospace" font-size="25">Nº DE REGISTRO: 001-____</text>
+<text x="80" y="440" fill="#35383A" font-family="monospace" font-size="25">DATA: ____ / ____ / ____</text>
+<rect x="820" y="470" width="280" height="110" fill="none" stroke="#A51E25" stroke-width="8" transform="rotate(-8 960 525)"/>
+<text x="960" y="540" text-anchor="middle" fill="#A51E25" font-family="Arial, sans-serif" font-size="40" font-weight="bold" transform="rotate(-8 960 525)">ARQUIVADO</text>
+</svg>

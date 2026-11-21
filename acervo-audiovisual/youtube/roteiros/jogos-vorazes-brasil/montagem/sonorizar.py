@@ -1,0 +1,79 @@
+"""Som do vídeo Panem a partir de eventos.json (gerado pelo construir.py).
+- Voz: cada frase recortada do arquivo de voz (tempos originais) e posta no tempo final da linha.
+- Trilha por emoção: troca na marca do bloco, com crossfade de 1,5 s; ducking pela voz (-9 dB sob a fala).
+- Respiro: trilha em silêncio no intervalo marcado (o impacto que vem depois soa sozinho).
+- SFX: ataque medido (1º ponto acima de 10 % do pico) e o som adiantado para bater 15 ms ANTES do quadro;
+  nível = trilha + db do evento (0 a +6 dB; impacto depois de respiro até +10 dB).
+- Saídas (48 kHz): voz.wav, trilha.wav, sfx.wav (faixas A1, A2, A3 do Premiere) e mix.wav a -14 LUFS.
+Uso: python sonorizar.py <projeto com eventos.json> <pasta audio> <voz.wav> <saida>"""
+import sys, json, pathlib, subprocess, numpy as np, soundfile as sf
+PROJ, AUD, VOZ, OUT = map(pathlib.Path, sys.argv[1:5]); OUT.mkdir(parents=True, exist_ok=True)
+SR = 48000
+E = json.loads((PROJ / 'eventos.json').read_text(encoding='utf-8'))
+N = int(E['dur'] * SR)
+
+def carrega(p):
+    r = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(p), '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True)
+    return np.frombuffer(r.stdout, dtype=np.float32).reshape(-1, 2).copy()
+def rms(x): return float(np.sqrt(np.mean(x ** 2)) + 1e-9)
+def db(v): return 10 ** (v / 20)
+
+# ---------- voz
+v = carrega(VOZ); voz = np.zeros((N, 2), np.float32)
+for n, L in E['linha'].items():
+    a, b = int((L['orig_ini'] - 0.04) * SR), int((L['orig_fim'] + 0.12) * SR)
+    seg = v[a:b].copy(); f = int(0.01 * SR); seg[:f] *= np.linspace(0, 1, f)[:, None]; seg[-f:] *= np.linspace(1, 0, f)[:, None]
+    o = int((L['ini'] - 0.04) * SR); voz[o:o + len(seg)] += seg[:N - o]
+voz *= db(-18) / rms(voz[np.abs(voz).max(1) > 0.01])          # voz em torno de -18 dBFS RMS na fala
+
+# ---------- trilha por emoção
+MUS = db(-27)                                                  # trilha sem fala ~ -27 dBFS RMS
+trilha = np.zeros((N, 2), np.float32); cues = E['trilha'] + [[E['dur'], None, 0]]
+for (t0, nome, g), (t1, _, _) in zip(cues, cues[1:]):
+    m = carrega(AUD / 'trilha' / f'{nome}.mp3'); m *= MUS * db(g) / rms(m)
+    a, b = int(t0 * SR), min(N, int((t1 + 1.5) * SR)); L = b - a
+    while len(m) < L: m = np.concatenate([m, m])
+    seg = m[:L].copy(); fi = int(1.0 * SR) if t0 > 0 else int(0.3 * SR); fo = int(1.5 * SR)
+    seg[:fi] *= np.linspace(0, 1, fi)[:, None]
+    if b < N: seg[-fo:] *= np.linspace(1, 0, fo)[:, None]
+    trilha[a:b] += seg
+# ducking: envelope da voz (ataque 60 ms, soltura 350 ms)
+env = np.abs(voz).max(1); hop = 480; e = env[:len(env) // hop * hop].reshape(-1, hop).max(1) > 0.004
+g = np.ones(len(e)); alvo = np.where(e, db(-9), 1.0); cur = 1.0
+for i, al in enumerate(alvo):
+    k = 0.6 if al < cur else 0.1; cur += (al - cur) * k; g[i] = cur
+g = np.repeat(g, hop); g = np.pad(g, (0, N - len(g)), constant_values=1.0)
+trilha *= g[:, None]
+for a, b in E['respiros']:
+    ia, ib = int(a * SR), int(b * SR); r = int(0.05 * SR)
+    trilha[ia:ia + r] *= np.linspace(1, 0, r)[:, None]; trilha[ia + r:ib] = 0
+    vol = int(0.4 * SR); trilha[ib:ib + vol] *= np.linspace(0, 1, vol)[:, None]
+
+# ---------- efeitos
+sfx = np.zeros((N, 2), np.float32); cache = {}
+for ev in E['eventos']:
+    nome = ev['sfx']
+    if nome not in cache:
+        p = (pathlib.Path('C:/Claude/canal-youtube/taoismo/audio/sfx') / (nome.split('/', 1)[1] + '.mp3')) if nome.startswith('taoismo/') else AUD / f'{nome}.mp3'
+        x = carrega(p); pk = np.abs(x).max(); at = int(np.argmax(np.abs(x).max(1) > 0.1 * pk))
+        x = x[: at + int(2.5 * SR)]                              # no máximo 2,5 s depois do ataque
+        x[-int(0.2 * SR):] *= np.linspace(1, 0, int(0.2 * SR))[:, None]
+        ativo = x[at: at + int(0.25 * SR)]
+        cache[nome] = (x / rms(ativo), at)
+    x, at = cache[nome]
+    o = int((ev['t'] - 0.015) * SR) - at
+    nivel = MUS * db(ev['db'] + 3)
+    if o < 0: x, o = x[-o:], 0
+    L = min(len(x), N - o); sfx[o:o + L] += x[:L] * nivel
+
+# ---------- saída
+for nome, arr in [('voz', voz), ('trilha', trilha), ('sfx', sfx)]: sf.write(OUT / f'{nome}.wav', arr, SR, subtype='FLOAT')
+mix = voz + trilha + sfx; sf.write(OUT / 'mix_bruto.wav', mix, SR, subtype='FLOAT')
+r = subprocess.run(['ffmpeg', '-v', 'info', '-i', str(OUT / 'mix_bruto.wav'), '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json', '-f', 'null', '-'],
+                   capture_output=True, text=True)
+j = json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(OUT / 'mix_bruto.wav'), '-af',
+                f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}:measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true",
+                '-ar', str(SR), str(OUT / 'mix.wav')], check=True)
+(OUT / 'mix_bruto.wav').unlink()
+print('mix ok', E['dur'], 's | entrada', j['input_i'], 'LUFS | eventos', len(E['eventos']))
