@@ -8,14 +8,14 @@ for _m in ('cublas', 'cudnn'):
     except Exception: pass
 from faster_whisper import WhisperModel
 AQUI = pathlib.Path(__file__).resolve().parent
-src = AQUI / 'narracao-adobe-72.wav'
+src = AQUI / os.environ.get('SRC', 'narracao-adobe-50.wav')
 INI = float(os.environ.get('INI', 0)); SUF = os.environ.get('SUF', '')  # trecho: começa em INI s, saída transcricao<SUF>.json
 pcm = subprocess.run(['ffmpeg', '-v', 'error', '-ss', str(INI), '-t', os.environ.get('DURA', '99999'), '-i', str(src), '-ac', '1', '-ar', '16000', '-f', 's16le', '-'], capture_output=True, check=True).stdout
 audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
 modelo = WhisperModel(sys.argv[1] if len(sys.argv) > 1 else 'small', device=os.environ.get('DEV', 'cuda'), compute_type=os.environ.get('CT', 'int8_float16'))
 segs, info = modelo.transcribe(audio, language='pt', word_timestamps=True, vad_filter=True,
                                # retakes repetem frases: sem isso o Whisper entra no fallback de temperatura e trava
-                               condition_on_previous_text=False, temperature=0.0, compression_ratio_threshold=None, beam_size=5,
+                               condition_on_previous_text=False, temperature=0.0, compression_ratio_threshold=None, beam_size=int(os.environ.get('BEAM', 5)),
                                initial_prompt='Tao Te Ching, Laozi, Mawangdui, Guodian, Sima Qian, Hangu, Zhang Daoling, Xuanzong, Dunhuang, wu wei, qigong, tai chi, Liu Pai Lin.')
 out = []
 for s in segs:
