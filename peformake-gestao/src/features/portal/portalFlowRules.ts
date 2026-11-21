@@ -1,7 +1,7 @@
 // Conversa do portal (Italo, 20/11): o cliente responde dentro do portal, num chat no estilo WhatsApp, uma pergunta por vez.
 // Primeiro o que falta no briefing (quando está abaixo de 80%), depois as perguntas do mês. Sem IA: as perguntas vêm dos
 // guias do briefing (QUIZ, com `when`) e do motor do mês (client_questions, com `cond`).
-import { MONTHS_FULL, QUIZ, TEXT_FIELDS, cardDone, cardText, fixedStatus, linkList, seasonText, short, quizMoney, quizText, visibleSteps, type BriefFixed, type MoneyKey, type QuizStep, type TextKey } from '@/features/strategy/brief/briefRules'
+import { MONTHS_FULL, QUIZ, TEXT_FIELDS, stepKind, type StepKind, cardDone, cardText, fixedStatus, linkList, seasonText, short, quizMoney, quizText, visibleSteps, type BriefFixed, type MoneyKey, type QuizStep, type TextKey } from '@/features/strategy/brief/briefRules'
 import { visibleQuestions, type PortalQuestion } from './portalBriefApi'
 
 export type ListField = 'produtos' | 'links' | 'concorrentes' | 'referencias'
@@ -17,6 +17,8 @@ export interface FlowStep {
   kind: 'quiz' | 'list' | 'question' | 'nps' | 'nps_comment' | 'confirm' | 'docs'
   /** Bloco do briefing (1 a 5); 0 = perguntas do mês. */
   block?: number
+  /** Como responde (Italo, 21/11): aberta = microfone grande e texto ao vivo; curta = campo; num = número; opcoes = tocar. Só a aberta tem áudio. */
+  input?: StepKind
   field?: FlowField
   qid?: string
   money?: MoneyKey
@@ -72,7 +74,7 @@ export function npsFollowUp(score: number): { q: string; opts: string[] } {
 export function flowSteps(fields: FlowField[], answers: Record<string, string>, questions: PortalQuestion[], monthLabel: string, nps?: { brand: string; done: boolean }): FlowStep[] {
   const out: FlowStep[] = []
   for (const field of fields) {
-    if (isList(field)) { const l = LIST[field]; out.push({ key: `${field}:0`, group: l.label, q: l.q, hint: l.hint, opts: l.opts ?? [], kind: 'list', field }); continue }
+    if (isList(field)) { const l = LIST[field]; out.push({ key: `${field}:0`, group: l.label, q: l.q, hint: l.hint, opts: l.opts ?? [], kind: 'list', field, input: 'aberta' }); continue }
     const steps = fieldSteps(field)
     // Mesma regra da equipe (visibleSteps): subpergunta pela resposta e puxa-fio depois de responder. No máximo 4 perguntas
     // principais por campo (o resto fica na aba Briefing); subperguntas e puxa-fios entram atrás da que os abriu.
@@ -84,21 +86,21 @@ export function flowSteps(fields: FlowField[], answers: Record<string, string>, 
       if (s.when) { if (!kept.has(steps.findIndex((x) => x.q === s.when!.q))) return }
       else if (s.money !== 'verba_anuncio' && ++base > MAX_PER_FIELD) return // a verba de anúncio sempre entra
       kept.add(j)
-      out.push({ key: `${field}:${j}`, group: fieldLabel(field), q: s.q, opts: s.opts, multi: s.multi, kind: 'quiz', field, ...(s.money ? { money: s.money } : {}) })
+      out.push({ key: `${field}:${j}`, group: fieldLabel(field), q: s.q, opts: s.opts, multi: s.multi, kind: 'quiz', field, input: stepKind(s), ...(s.money ? { money: s.money } : {}) })
     })
   }
   for (const q of visibleQuestions(questions)) {
     if (q.status === 'respondida') continue
-    out.push({ key: `q:${q.id}`, group: monthLabel, q: q.question, hint: q.why, opts: q.options.slice(0, 14), multi: true, kind: 'question', qid: q.id })
+    out.push({ key: `q:${q.id}`, group: monthLabel, q: q.question, hint: q.why, opts: q.options.slice(0, 14), multi: true, kind: 'question', qid: q.id, input: q.options.length ? 'opcoes' : 'aberta' })
   }
   // NPS no fim das perguntas do mês, uma vez por mês (o puxa-fio segue a nota dada nesta conversa).
   if (nps && questions.length && (!nps.done || answers[NPS_KEY] !== undefined)) {
     const who = nps.brand === 'ellcazo' ? 'a Ellcazo' : 'a Peformake'
-    out.push({ key: NPS_KEY, group: 'Avaliação', q: `De 0 a 10, quanto você indicaria ${who} para um amigo?`, opts: Array.from({ length: 11 }, (_, i) => String(i)), kind: 'nps' })
+    out.push({ key: NPS_KEY, group: 'Avaliação', q: `De 0 a 10, quanto você indicaria ${who} para um amigo?`, opts: Array.from({ length: 11 }, (_, i) => String(i)), kind: 'nps', input: 'opcoes' })
     const score = Number(answers[NPS_KEY])
     if (answers[NPS_KEY] !== undefined && Number.isFinite(score)) {
       const f = npsFollowUp(score)
-      out.push({ key: NPS_COMMENT_KEY, group: 'Avaliação', q: f.q, hint: score >= 9 ? null : 'Pode falar: o microfone é o jeito mais rápido.', opts: f.opts, kind: 'nps_comment' })
+      out.push({ key: NPS_COMMENT_KEY, group: 'Avaliação', q: f.q, hint: score >= 9 ? null : 'Pode falar: o microfone é o jeito mais rápido.', opts: f.opts, kind: 'nps_comment', input: f.opts.length ? 'opcoes' : 'aberta' })
     }
   }
   return out
@@ -138,8 +140,8 @@ export const BLOCKS: Block[] = [
 ]
 export const blockOf = (f: FlowField): number => BLOCKS.find((b) => b.fields.includes(f))?.n ?? 4
 /** Segundos estimados por pergunta: tocar é rápido, falar ou escrever leva mais. */
-export const stepSeconds = (s: Pick<FlowStep, 'kind' | 'opts'>): number =>
-  s.kind === 'docs' ? 120 : s.kind === 'confirm' ? 15 : s.kind === 'list' ? 60 : s.opts.length ? 20 : 60
+export const stepSeconds = (s: Pick<FlowStep, 'kind' | 'opts' | 'input'>): number =>
+  s.kind === 'docs' ? 120 : s.kind === 'confirm' ? 15 : (s.input ?? (s.opts.length ? 'opcoes' : 'aberta')) === 'aberta' ? 50 : 10
 export const minutes = (secs: number) => Math.max(1, Math.round(secs / 60))
 
 /** O que já sabemos de cada bloco, em linhas curtas, para o cliente só confirmar (sem perguntar de novo). */
@@ -165,7 +167,7 @@ export function briefSteps(f: BriefFixed, missing: FlowField[], answers: Record<
   const out: FlowStep[] = []
   for (const b of BLOCKS) {
     const known = b.n === 5 ? [] : knownLines(f, b.n, hasVideo)
-    if (known.length) out.push({ key: `confirmar:${b.n}`, group: b.label, block: b.n, kind: 'confirm', q: `Isto já está com a gente sobre ${b.label.toLowerCase()}. Está certo?\n${known.map((k) => `• ${k}`).join('\n')}`, hint: 'Se algo mudou, fale ou escreva a correção.', opts: ['Está tudo certo'] })
+    if (known.length) out.push({ key: `confirmar:${b.n}`, group: b.label, block: b.n, kind: 'confirm', input: 'aberta', q: `Isto já está com a gente sobre ${b.label.toLowerCase()}. Está certo?\n${known.map((k) => `• ${k}`).join('\n')}`, hint: 'Se algo mudou, fale ou escreva a correção.', opts: ['Está tudo certo'] })
     const fields = missing.filter((x) => blockOf(x) === b.n)
     for (const s of flowSteps(fields, answers, [], '')) out.push({ ...s, group: b.label, block: b.n })
     if (b.n === 5 && docs < 3) out.push({ key: 'arquivos:0', group: b.label, block: 5, kind: 'docs', q: 'Mande o que tiver: logo, cardápio ou lista de produtos, tabela de preços, fotos, apresentação.', hint: 'Toque no clipe para escolher os arquivos. Pode mandar vários.', opts: [] })

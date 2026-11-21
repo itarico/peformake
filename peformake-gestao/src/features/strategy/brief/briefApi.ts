@@ -106,7 +106,7 @@ export function useBriefQuestions(clientId: string, month: string) {
     queryKey: briefQuestionsKey(clientId, month),
     queryFn: async () => {
       await refreshMonthQuestions(clientId, month)
-      const { data, error } = await db.from('client_questions').select('id, client_id, area, pack, focus, question, why, answer, status, source, options, attachments, audio_pending, sent_to_portal_at, answered_at, answered_via, created_at')
+      const { data, error } = await db.from('client_questions').select('id, client_id, area, pack, focus, question, why, answer, status, source, options, attachments, audio_pending, sent_to_portal_at, answered_at, answered_via, created_at, cond')
         .eq('client_id', clientId).eq('pack', 'briefing_mes').eq('focus', focusOf(month)).order('created_at')
       if (error) throw new Error('Não foi possível abrir as perguntas.')
       return ((data ?? []) as ClientQuestion[]).filter((q) => q.status !== 'descartada')

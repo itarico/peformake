@@ -106,7 +106,12 @@ export function StepCard({ title, line, action, onOpen, onTitle, primary, disabl
 export function BriefingCard({ clientId, month, onOpen, onSend }: { clientId: string; month: string; onOpen: () => void; onSend?: () => void }) {
   const st = useBriefStatus(clientId, month)
   const line = !st.ready ? 'Carregando' : st.fixedPercent >= 100 ? 'Completo' : `${st.fixedPercent}% preenchido${st.fixedMissing.length ? ` · falta ${st.fixedMissing.slice(0, 2).join(', ').toLowerCase()}` : ''}`
-  // Preencher (a equipe) ou Enviar (o cliente preenche pelo portal, aba Briefing), Italo 20/11.
-  return <StepCard title="Briefing" line={line} action={st.fixedPercent >= 100 ? 'Ver' : 'Preencher'} onOpen={onOpen}
-    extra={onSend && st.fixedPercent < 100 ? <Button variant="secondary" className="min-h-10 shrink-0 px-4 text-[13px]" onClick={onSend}>Enviar</Button> : undefined} />
+  // Duas saídas (Italo, 21/11): "Nós respondemos" (a equipe; no celular abre o chat) ou "Enviar para o cliente" (o portal).
+  return <StepCard title="Briefing" line={line} action={st.fixedPercent >= 100 ? 'Ver' : 'Nós respondemos'} onOpen={onOpen}
+    extra={onSend && st.fixedPercent < 100 ? <SendButton onClick={onSend} /> : undefined} />
+}
+
+/** "Enviar para o cliente" (no celular só "Enviar", para caber ao lado do "Nós respondemos"). */
+export function SendButton({ onClick }: { onClick: () => void }) {
+  return <Button data-enviar-cliente variant="secondary" aria-label="Enviar para o cliente" className="min-h-10 shrink-0 px-4 text-[13px]" onClick={onClick}>Enviar<span className="max-md:hidden"> para o cliente</span></Button>
 }

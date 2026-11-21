@@ -118,3 +118,15 @@ describe('briefing em blocos', () => {
     expect(briefSteps({}, [], {}, false, 3).some((s) => s.kind === 'docs')).toBe(false)
   })
 })
+
+describe('tipo de cada pergunta (Italo, 21/11)', () => {
+  it('aberta tem áudio; curta, número e opções não', async () => {
+    const { flowSteps: fs } = await import('./portalFlowRules')
+    const all = fs(['publico', 'marketing', 'sazonal'], {}, [], 'P')
+    expect(all.every((s) => ['aberta', 'curta', 'num', 'opcoes'].includes(s.input!))).toBe(true)
+    const saz = fs(['sazonal'], {}, [], 'P')
+    expect(saz.map((s) => s.input)).toEqual(['opcoes', 'opcoes', 'aberta'])
+    const qs = fs([], {}, [q('a', 'Bateram a meta?', null, { options: ['Sim', 'Não'] }), q('b', 'Conta a história')], 'P')
+    expect(qs.map((s) => s.input)).toEqual(['opcoes', 'aberta'])
+  })
+})

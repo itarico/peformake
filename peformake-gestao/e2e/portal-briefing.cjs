@@ -40,6 +40,7 @@ async function mock(route) {
   if (p === '/rest/v1/rpc/portal_brief_nps') { const b = body(); calls.push(['nps', b._token, b._score, b._comment]); if (b._score !== null && b._score !== undefined) npsDone = true; return json(null) }
   if (p === '/rest/v1/rpc/portal_referrals') return json({ brand: 'peformake', items: [] });
   if (p.startsWith('/rest/v1/rpc/')) return json(null);
+  if (p === '/rest/v1/client_briefs' && req.method() === 'POST') return json([], 201);
   if (p === '/rest/v1/clients') { const one = (req.headers()['accept'] || '').includes('vnd.pgrst.object'); return json(one ? { phone: '81988887777' } : [{ phone: '81988887777' }]) }
   if (p.startsWith('/rest/v1/')) return route.fulfill({ status: 200, contentType: 'application/json', headers: { ...h, 'content-range': '*/0' }, body: '[]' });
   return json({});
@@ -73,11 +74,13 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     await p.screenshot({ path: `${OUT}/portal-chat-${dev}.png` });
     // Blocos: o cabeçalho mostra o bloco e o tempo; o 1º passo confirma o que já sabemos (sem perguntar de novo).
     const bloco = await p.locator('[data-bloco]').innerText().catch(() => '');
-    if (!/^Bloco 1 de 5 · O seu negócio · falta uns \d+ min$/.test(bloco)) fails.push(`${dev}: cabeçalho do bloco errado ("${bloco}")`);
+    if (!/^Bloco 1 de 5 · O seu negócio$/.test(bloco)) fails.push(`${dev}: cabeçalho do bloco errado ("${bloco}")`);
     const first = await p.locator('[data-portal-chat] ul > li').last().innerText();
     if (!/já está com a gente/.test(first) || !/Pizza grande/.test(first)) fails.push(`${dev}: o 1º passo devia confirmar o que já sabemos ("${first.slice(0, 80)}")`);
-    await p.locator('[data-portal-chat] [role=group] button', { hasText: 'Está tudo certo' }).click();
-    await p.locator('[data-enviar]').click(); await p.waitForTimeout(500);
+    const tempo = await p.locator('[data-progresso]').innerText();
+    if (!/^uns \d+ min$/.test(tempo)) fails.push(`${dev}: devia mostrar só o tempo que falta ("${tempo}")`);
+    // Tocar em "Está tudo certo" já envia (sem Enviar).
+    await p.locator('[data-portal-chat] [role=group] button', { hasText: 'Está tudo certo' }).click(); await p.waitForTimeout(500);
     // 2º passo (pergunta de verdade): responde e salva.
     await p.locator('[data-caixa]').fill('Pizza grande R$ 59,90; Calzone R$ 42');
     await p.locator('[data-enviar]').click(); await p.waitForTimeout(700);
@@ -90,8 +93,8 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
       if (!/Você parou no bloco 1/.test(msg)) fails.push(`${dev}: mensagem de retomar errada ("${msg}")`);
       await p.screenshot({ path: `${OUT}/portal-chat-retomar-${dev}.png` });
       await p.locator('[data-continuar]').click(); await p.waitForTimeout(300);
-      const prog = await p.locator('[data-progresso]').innerText();
-      if (/^1 de /.test(prog)) fails.push(`${dev}: ao continuar voltou para o início (${prog})`);
+      const msg2 = await p.locator('[data-portal-chat] ul > li').last().innerText();
+      if (/já está com a gente sobre o seu negócio/.test(msg2)) fails.push(`${dev}: ao continuar voltou para o início`);
     }
     let sawSub = false; let answeredMom = false; let sawNps = false;
     for (let k = 0; k < 150; k++) {
@@ -147,7 +150,7 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
     if (!(await p.locator('[data-portal-chat]').count())) fails.push(`${dev}: "Responder" devia abrir a conversa`);
     const prog = await p.locator('[data-progresso]').innerText().catch(() => '');
     // Briefing ainda abaixo de 80%: a conversa volta, mas do ponto onde parou (o que já foi feito não repete).
-    if (!/^\d+ de \d+$/.test(prog)) fails.push(`${dev}: conversa sem progresso (${prog})`);
+    if (!/^uns \d+ min$/.test(prog)) fails.push(`${dev}: conversa sem progresso (${prog})`);
     // NPS já respondido no mês: não pergunta de novo.
     for (let k = 0; k < 120 && !(await p.locator('[data-ir-painel]').count()); k++) {
       const last = await p.locator('[data-portal-chat] ul > li').last().innerText();
@@ -176,6 +179,27 @@ const esc = async (p) => { for (let k = 0; k < 3 && (await p.locator('dialog[ope
       if (!calls.some((c) => c[0] === 'link')) fails.push(`${dev}: Enviar não pediu brief_portal_link`);
       await p.screenshot({ path: `${OUT}/portal-briefing-enviar-${dev}.png` });
       await esc(p);
+    }
+    // "Nós respondemos": no celular abre o mesmo chat do portal, gravando como resposta da equipe; no computador, os cartões.
+    const team = p.locator('[data-passos] li').first().getByRole('button', { name: 'Nós respondemos' });
+    if (!(await team.count())) fails.push(`${dev}: passo Briefing sem "Nós respondemos"`);
+    else {
+      await team.click(); await p.waitForTimeout(1500);
+      const chat = await p.locator('[data-equipe-chat] [data-portal-chat]').count();
+      if (dev === 'iphone' && !chat) fails.push(`${dev}: "Nós respondemos" no celular devia abrir o chat`);
+      if (dev === 'desk' && chat) fails.push(`${dev}: no computador "Nós respondemos" devia abrir os cartões, não o chat`);
+      if (chat) {
+        const g = await p.locator('[data-portal-chat] ul > li').first().innerText();
+        if (!/Respondendo por Will motos/.test(g)) fails.push(`${dev}: o chat da equipe devia dizer por quem está respondendo ("${g.slice(0, 60)}")`);
+        for (let k = 0; k < 30 && !(await p.locator('[data-microfone]').count()); k++) { await p.locator('[data-depois]').click(); await p.waitForTimeout(100) }
+        await p.locator('[data-caixa]').fill('Resposta da equipe');
+        const saved = p.waitForRequest((r) => r.url().includes('/rest/v1/client_briefs') && r.method() === 'POST', { timeout: 5000 }).then(() => true).catch(() => false);
+        await p.locator('[data-enviar]').click();
+        if (!(await saved)) fails.push(`${dev}: a resposta da equipe não gravou no briefing (client_briefs)`);
+        await p.screenshot({ path: `${OUT}/equipe-chat-${dev}.png` });
+        await p.locator('[data-fechar-chat]').click(); await p.waitForTimeout(300);
+        if (await p.locator('[data-equipe-chat]').count()) fails.push(`${dev}: o X não fechou o chat da equipe`);
+      }
     }
     if (errs.length) fails.push(`${dev}: erros na página: ${errs.slice(0, 3).join(' | ')}`);
     await ctx.close();

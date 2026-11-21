@@ -23,7 +23,8 @@ import { OrientationDialog, screenOrientation, type CardPrimary } from './DeckCa
 import { latestDocs, sendDoc, useAgentDocs } from './AgentDocs'
 import { pickSendDoc } from './brief/sendRules'
 import { StrategyBoard } from './brief/StrategyBoard'
-import { BriefingCard, StepCard, StrategyPart } from './brief/StrategyStrip'
+import { BriefingCard, SendButton, StepCard, StrategyPart } from './brief/StrategyStrip'
+import { isPhone, TeamChat } from './brief/TeamChat'
 import { BriefSendDialog } from '@/features/portal/BriefSendDialog'
 import { BriefingView, useBriefStatus } from './brief/BriefingView'
 import { useBriefProgress } from './brief/briefApi'
@@ -249,6 +250,8 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
   })
   const [dirOpen, setDirOpen] = useState(false)
   const [send, setSend] = useState<SendKind | null>(null)
+  // "Nós respondemos" no celular: o chat do portal, gravando como resposta da equipe.
+  const [teamChat, setTeamChat] = useState<'briefing' | 'perguntas' | null>(null)
   const [avCount, setAvCount] = useState(0)
   // ?enviar=1 (do ⋯ da lista): já abre o "Enviar a…" com a estratégia do mês.
   const [picker, setPicker] = useState(() => new URLSearchParams(window.location.search).get('enviar') === '1')
@@ -341,6 +344,7 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {send === 'av' && st && <MonthlySendDialog strategyId={st.id} clientId={clientId} name={name} month={month} av={avCount} onClose={() => setSend(null)} />}
       {send === 'perguntas' && <SendQuestionsLoader clientId={clientId} name={name} onClose={() => setSend(null)} />}
       {/* Briefing → Enviar (Italo, 20/11): link do PORTAL na aba Briefing, pelo WhatsApp da pessoa. */}
+      {teamChat && <TeamChat clientId={clientId} name={name} month={opts[1]!} part={teamChat} onClose={() => setTeamChat(null)} />}
       {send === 'briefing' && <BriefSendDialog clientId={clientId} name={name} onClose={() => setSend(null)} />}
       {deckOpen && <OrientationDialog title="Baixar o diagnóstico" name={name} onClose={() => setDeckOpen(false)} onPick={(o) => { printDeck(clientInput, o); setDeckOpen(false) }} />}
       {sources && <DetailsDialog doc={doc} onClose={() => setSources(false)} />}
@@ -381,10 +385,11 @@ function ConsultDocView({ clientId, row, onBack, onInfo, info, closeInfo }: { cl
       {/* Passo a passo (Italo, 20/11): primeiro conhecer o cliente (briefing, perguntas, diagnóstico), depois a estratégia e as partes. */}
       <ol data-passos aria-label="Passo a passo do cliente" className="flex flex-col gap-2">
         <Step n={1} current={stepCur === 1} done={briefDone}>
-          <BriefingCard clientId={clientId} month={opts[1]!} onSend={() => openSend('briefing')} onOpen={() => go({ ver: 'estrategia', secao: null, parte: 'briefing', so: '1', mes: opts[1]!.slice(0, 7) })} />
+          <BriefingCard clientId={clientId} month={opts[1]!} onSend={() => openSend('briefing')} onOpen={() => (isPhone() && !briefSt.ready ? null : isPhone() && briefSt.fixedPercent < 100 ? setTeamChat('briefing') : go({ ver: 'estrategia', secao: null, parte: 'briefing', so: '1', mes: opts[1]!.slice(0, 7) }))} />
         </Step>
         <Step n={2} current={stepCur === 2} done={askDone} locked={!briefDone} wait="o briefing chegar a 80%">
-          <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })} />
+          <QuestionsStrip toAsk={toAsk} waiting={waiting} answers={row?.answers_new ?? 0} onSend={() => openSend('perguntas')} onOpen={() => go({ ver: 'perguntas' })}
+            onTeam={() => (isPhone() ? setTeamChat('perguntas') : go({ ver: 'perguntas' }))} />
         </Step>
         <Step n={3} current={stepCur === 3} done={approved} locked={!briefDone || !askDone} wait={!briefDone ? 'o briefing chegar a 80%' : 'o cliente responder as perguntas'}>
         <DiagCard clientId={clientId} name={name} input={deckInput} status={status} stage={d?.stage ?? row?.stage ?? null} document={row?.document ?? null} error={d?.error ?? null}
@@ -434,9 +439,10 @@ function Step({ n, done, locked, wait, current, last, children }: { n: number; d
 }
 
 /** Perguntas numa faixa só: quantas estão abertas, respostas novas e "Mandar ao cliente" (o envio de sempre). */
-function QuestionsStrip({ toAsk, waiting, answers, onSend, onOpen }: { toAsk: number; waiting: number; answers: number; onSend: () => void; onOpen: () => void }) {
+function QuestionsStrip({ toAsk, waiting, answers, onSend, onOpen, onTeam }: { toAsk: number; waiting: number; answers: number; onSend: () => void; onOpen: () => void; onTeam: () => void }) {
   const text = [answers > 0 ? `${answers} ${answers === 1 ? 'resposta nova' : 'respostas novas'}` : null, toAsk ? `${toAsk} ${toAsk === 1 ? 'pergunta aberta' : 'perguntas abertas'}` : null, waiting ? `${waiting} esperando o cliente` : null].filter(Boolean).join(' · ') || 'Perguntas em dia'
-  return <div data-perguntas><StepCard title="Perguntas" line={text} action="Enviar" onOpen={onSend} onTitle={onOpen} /></div>
+  // Duas saídas (Italo, 21/11): "Nós respondemos" (no celular abre o chat da equipe) ou "Enviar para o cliente".
+  return <div data-perguntas><StepCard title="Perguntas" line={text} action="Nós respondemos" onOpen={onTeam} onTitle={onOpen} extra={<SendButton onClick={onSend} />} /></div>
 }
 
 /** "Enviar" do cabeçalho: escolhe o que mandar (só o que está pronto). Cada opção abre o envio de sempre. */
