@@ -31,3 +31,13 @@ Primeiro uso: cenas novas do documentário do Taoísmo v70 (20/11/2026). Scripts
 - **Chrome headless:** máscara CSS (`mask-image`) apontando para arquivo local é bloqueada; a silhueta foi feita com `filter: brightness(0)` na própria figura recortada.
 - **Premiere pela ponte MCP:** `import_folder` e a importação para dentro de pasta falham (`targetBin.importFiles is not a function`). `execute_extendscript` com `app.project.importFiles(lista, true, pasta, false)` importa em lote, mas a ponte fica sem responder até o Premiere terminar. `add_to_timeline_batch` com cerca de 130 clipes por chamada funciona. Fechar o projeto derruba o painel da ponte; para reabrir, `verify_premiere_connection`.
 - **Planos longos:** dividir automaticamente todo plano acima de 3,6 s, com outra câmera na mesma imagem, garante o ritmo de 2 a 4 s sem precisar escrever cada plano.
+
+## v80 reprovada (retorno do Italo, 21/11/2026): o que não fazer de novo
+
+- **"Adicionar cenas" quer dizer somar, não refazer.** A v80 trocou todas as animações aprovadas da v60/v70 por planos novos. O certo: manter a base (cenas do `proj.json` da sessão de roteiro e as 5 cenas OpenMotion da v70) e só inserir imagem nova onde a narração cita exatamente aquilo, no lugar de trecho repetitivo ou longo, nunca no lugar de uma animação que já ilustrava a frase.
+- **Regra de ouro:** cada imagem ilustra a frase que está sendo dita naquele momento. Sem imagem que ilustre, fica a animação da base. Imagem "parecida" ou de enchimento conta como aleatória.
+- **Ritmo de 2 a 4 s não é cortar por relógio.** Dividir plano longo automaticamente, com outra câmera na mesma imagem, gerou troca de imagem sem relação com a fala. O corte acompanha a frase e a palavra citada, não um teto de segundos.
+- **Movimento:** menos e mais lento. A câmera só se move para levar o olho ao que a fala cita. Parallax e balanço contínuos em todo plano cansam e parecem aleatórios.
+- **Texto Tinocando:** só nas palavras-chave, no quadro exato da palavra. Não pôr título em toda frase.
+- **Sincronia com a fala:** remapear cada cena pela frase correspondente no áudio novo, alinhando pelo texto (transcrição por palavra do áudio final), não por tempo absoluto nem por proporção dentro da frase. Gatilho que não bate com palavra transcrita não pode cair em posição estimada: revisar à mão.
+- **Aprovação por trecho:** antes do render inteiro, mandar 60 s de teste (abertura) para o Italo aprovar. Render completo só depois do ok.
