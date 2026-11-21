@@ -19,7 +19,7 @@ for f in falas:
         pista.append(sil(g)); t += g
     txt = re.sub(r'\(baixo\)|\*', '', f['texto']); pausa = '[pausa]' in txt; txt = txt.replace('[pausa]', '').strip()
     for a, b in FALAR.items(): txt = re.sub(r'\b' + re.escape(a) + r'\b', b, txt)
-    s, sr = k.create(txt, voice='pm_alex', speed=1.0, lang='pt-br'); assert sr == SR
+    s, sr = k.create(txt, voice='pm_alex', speed=float(__import__('os').environ.get('VEL', '0.9')), lang='pt-br'); assert sr == SR
     s = s.astype(np.float32)
     nz = np.nonzero(np.abs(s) > 0.01)[0]
     if len(nz): s = s[max(0, nz[0] - 600): nz[-1] + 1200]

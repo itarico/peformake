@@ -42,7 +42,7 @@ ficha = (svg_mapa(M, {12: 'aceso'}, 40, 110, 820, 'f', numerais=True) + f'''
 <div class="abs" style="left:930px;top:70px;width:900px;height:830px;background:rgba(26,23,21,.86)"></div>
 <div class="abs" style="left:930px;top:70px;width:900px">
  <div class="mono" style="background:{VERM};color:{PRETO};font-weight:700;font-size:22px;padding:10px 26px;display:flex;justify-content:space-between">
-  <span>FICHA DO TRIBUTO</span><span>Nº 0412</span></div>
+  <span>TRIBUTO Nº 0417 · DISTRITO XII · PARÁ</span><span>FICHA</span></div>
  <div style="padding:22px 40px 0">
   <div style="display:flex;align-items:flex-end;gap:30px">
    <div><div class="mono rot">DISTRITO</div><div class="regime" style="font-size:190px;color:{VERM}">XII</div></div>

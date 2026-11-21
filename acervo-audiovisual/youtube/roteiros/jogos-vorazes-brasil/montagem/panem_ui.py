@@ -36,6 +36,7 @@ ICONES = {
     'peixe': 'M6 24 Q20 10 34 24 Q20 38 6 24 Z M34 24 L44 14 L44 34 Z M14 22 L15 23',
     'chip': 'M14 14 L34 14 L34 34 L14 34 Z M20 20 L28 20 L28 28 L20 28 Z M18 6 L18 14 M24 6 L24 14 M30 6 L30 14 M18 34 L18 42 M24 34 L24 42 M30 34 L30 42 M6 18 L14 18 M6 30 L14 30 M34 18 L42 18 M34 30 L42 30',
     'pedra': 'M8 34 L14 16 L28 10 L40 20 L38 36 L22 40 Z M14 16 L22 26 L40 20 M22 26 L22 40',
+    'cadeado': 'M14 22 L34 22 L34 42 L14 42 Z M18 22 L18 14 Q24 4 30 14 L30 22 M24 30 L24 34',
     'diamante': 'M8 18 L16 8 L32 8 L40 18 L24 42 Z M8 18 L40 18 M16 8 L20 18 L24 42 M32 8 L28 18 L24 42',
 }
 
@@ -111,9 +112,9 @@ def svg_mapa(mapa, estado, x, y, tam, pid='m', numerais=True, explodir=0.0, trac
             f'<filter id="{pid}-sombra"><feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="{VERM}" flood-opacity=".55"/></filter></defs>'
             f'<g filter="url(#{pid}-sombra)">{"".join(g)}</g>{brilho}{nums}</svg>')
 
-def regua(atual, feitos, x=160, y=968, larg=1600):
-    """Régua dos 12 distritos (XII a I) na base, com o atual aceso e o contador."""
-    cel = larg / 12; h = ''
+def regua(atual, feitos, x=110, y=968, larg=1700, capital_aberta=False):
+    """Régua fixa: os 12 distritos (XII a I) e a Capital trancada no fim; o atual aceso e o contador."""
+    cel = larg / 13; h = ''
     for i, d in enumerate(range(12, 0, -1)):
         st = 'aceso' if d == atual else ('feito' if d in feitos else 'off')
         cor = VERM if st == 'aceso' else ('#8A2A22' if st == 'feito' else '#3A3532')
@@ -121,6 +122,10 @@ def regua(atual, feitos, x=160, y=968, larg=1600):
         h += (f'<div class="abs" id="rg-{d}" style="left:{i * cel:.0f}px;top:0;width:{cel - 8:.0f}px;height:62px;border-top:4px solid {cor};'
               f'display:flex;align-items:center;gap:10px;padding-left:6px;background:{"rgba(193,39,29,.14)" if st == "aceso" else "transparent"}">'
               f'{icone(DIST[d]["icone"], tx, 30, 3.4)}<span class="regime" style="font-size:30px;color:{tx}">{ROMANO[d]}</span></div>')
+    cc = OURO if capital_aberta else '#6B5A30'
+    h += (f'<div class="abs" id="rg-cap" style="left:{12 * cel:.0f}px;top:0;width:{cel:.0f}px;height:62px;border-top:4px solid {cc};'
+          f'display:flex;align-items:center;gap:8px;padding-left:6px">{icone("diamante" if capital_aberta else "cadeado", cc, 30, 3.4)}'
+          f'<span class="mono" style="font-size:19px;color:{cc};letter-spacing:2px">CAPITAL</span></div>')
     n = len(feitos | {atual}) if atual else len(feitos)
     return (f'<div class="abs" style="left:{x}px;top:{y}px;width:{larg}px;height:62px">{h}</div>'
             f'<div class="abs mono" style="left:{x}px;top:{y - 34}px;font-size:20px;color:{CINZA}">MAPA DE PANEM · DISTRITOS REVELADOS '
