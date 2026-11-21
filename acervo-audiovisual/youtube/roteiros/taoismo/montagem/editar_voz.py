@@ -139,7 +139,7 @@ for f in frases:
         print('frase', f['n'], 'tirada do buraco entre vizinhas')
 saida.sort(key=lambda x: x['n'])
 
-pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(BASE / 'audio' / 'narracao-adobe-72.wav'), '-ac', '1', '-ar', str(SR), '-f', 's16le', '-'],
+pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(BASE / 'audio' / 'narracao-adobe-50.wav'), '-ac', '1', '-ar', str(SR), '-f', 's16le', '-'],
                      capture_output=True, check=True).stdout
 a = np.frombuffer(pcm, np.int16).astype(np.float32)
 partes = [np.zeros(int(.6 * SR), np.float32)]; t = .6; fade = int(.012 * SR)
