@@ -4,17 +4,23 @@
 import glob as _glob
 
 REAL = MID / 'assets' / 'video' / 'real'
-def real(c, pref, k=0, ini=0.0, z0=1.0, z1=1.06):
-    """Vídeo real de trabalho no estado (pasta do distrito). Devolve False se não houver."""
+def real(c, pref, k=0, ini=0.0, z0=1.0, z1=1.06, ini_rel=0.0, dur=None, pos=None):
+    """Vídeo real de trabalho no estado (pasta do distrito), k = índice do clipe. Devolve False se não houver."""
     arqs = sorted(pathlib.Path(p) for p in _glob.glob(str(REAL / f'{pref}_*.mp4')))
     if not arqs: return False
-    src = arqs[k % len(arqs)].name; wid = c.uid('rv')
-    c.h(f'<div class="abs" id="{wid}" style="left:0;top:0;width:1920px;height:1080px;overflow:hidden">'
-        f'<video id="{wid}-v" class="clip abs" src="assets/video/real/{src}" muted playsinline data-start="0" data-duration="{c.fim - c.ini:.3f}" '
-        f'data-media-start="{ini}" style="left:0;top:0;width:1920px;height:1080px;object-fit:cover"></video></div>')
-    c.a(f'tl.fromTo(q1("#{wid}"),{{scale:{z0},transformOrigin:"50% 50%"}},{{scale:{z1},duration:{c.fim - c.ini:.2f},ease:"none"}},0);')
+    src = arqs[k % len(arqs)].name; wid = c.uid('rv'); dur = dur or (c.fim - c.ini - ini_rel)
+    html = (f'<div class="abs" id="{wid}" style="left:0;top:0;width:1920px;height:1080px;overflow:hidden">'
+            f'<video id="{wid}-v" class="clip abs" src="assets/video/real/{src}" muted playsinline data-start="{ini_rel:.3f}" data-duration="{dur:.3f}" '
+            f'data-media-start="{ini}" style="left:0;top:0;width:1920px;height:1080px;object-fit:cover"></video></div>')
+    if pos is None: c.h(html)
+    else: c.corpo.insert(pos, html)
+    c.a(f'tl.fromTo(q1("#{wid}"),{{scale:{z0},transformOrigin:"50% 50%"}},{{scale:{z1},duration:{dur:.2f},ease:"none"}},{ini_rel:.3f});')
     CREDV.add(src)
     return True
+# ordem dos clipes por número dito (índice do arquivo na pasta do distrito); CC e governo na frente.
+# Fora por risco: D8/03 (telejornal afiliado da Record) e D3/04 (afiliada do SBT).
+ORDEM = {'D11': [0, 4], 'D10': [1, 2, 1], 'D9': [0, 2], 'D8': [0, 3, 1], 'D7': [2, 0], 'D6': [2, 3, 0], 'D5': [2, 1], 'D4': [2], 'D3': [0, 1],
+         'D2': [0, 2], 'D1': [0, 2], 'CAP': [2, 0, 3]}
 CREDV = set()
 
 FEITOS = [12]
@@ -49,7 +55,13 @@ def mapa_dist(c, pid, num, t_luz, nome, ufs):
 
 def dado(c, pid, pref, nums, sup, tit, k=0, fundo_mapa=None):
     """Vídeo real do estado + número-âncora no tempo da palavra + fonte + lower third."""
-    if not real(c, pref, k):
+    ordem = ORDEM.get(pref, [k]); tem = False
+    for i, (t, *_r) in enumerate(nums):
+        ini_rel = 0.0 if i == 0 else t - c.ini - 0.04
+        fim_rel = (nums[i + 1][0] - c.ini - 0.04) if i + 1 < len(nums) else (c.fim - c.ini)
+        k_ = ordem[i % len(ordem)]; rep_ = sum(1 for j in range(i) if ordem[j % len(ordem)] == k_)
+        tem = real(c, pref, k_, 0.5 + 4.0 * rep_, ini_rel=max(0, ini_rel), dur=fim_rel - max(0, ini_rel)) or tem
+    if not tem:
         mapa(c, pid + 'm', acesos={fundo_mapa} if fundo_mapa else ())
     c.h(f'<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(17,19,21,.88) 0%,rgba(17,19,21,.55) 40%,rgba(17,19,21,.05) 70%)"></div>')
     lower(c, pid + '-lt', sup, tit); c.entra(f'#{pid}-lt', c.ini + 0.1, 6, 0)
@@ -188,6 +200,10 @@ c.a(f'tl.to(q("#p9-w path"),{{attr:{{"stroke-dashoffset":0}},duration:1.2,stagge
 godard(c, 'p9-g', 'DO MAIS POBRE<br>AO MAIS RICO', 110, 340, 110); c.entra('#p9-g', W(16, 'pobre'))
 queima(c, 0, 0.6, 2.7)
 c.fim_()
+
+_c12 = [x for x in CENAS if x.id == 'd12c'][0]
+real(_c12, 'D12', 4, 0.5, ini_rel=W(20, 'quarenta') - _c12.ini - 0.04, dur=_c12.fim - W(20, 'quarenta') + 0.04, pos=1)
+_c12.a(f'tl.to(q1("#dc-giz"),{{opacity:0,duration:0.1}},{_c12.r(W(20, "quarenta")) - 0.05:.3f});')
 
 # ======================================================================== DISTRITOS 11 A 9
 c = Cena('d11i', F(25), W(26, 'Nordeste')); intro(c, 'd11i', 11, 'O POMAR', W(25, '11')); c.fim_()
