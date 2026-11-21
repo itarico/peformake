@@ -119,14 +119,21 @@ for k, cs in enumerate(cands):
         if k == 0:
             melhor[k][j] = (pontos(c), None); continue
         # anterior: qualquer candidato da frase k-1 que termina antes do início deste (ou a frase k-1 pulada)
+        # olha até 6 frases para trás (cada frase pulada custa 60) e fica com o melhor caminho; antes só olhava a frase
+        # anterior mais próxima com candidato, e um falso positivo curto dela ("E se os Jogos fossem aqui?") quebrava a cadeia
         best = (INF, None)
-        kk = k - 1; penal = 0
-        while kk >= 0 and best[0] == INF:
+        for kk in range(k - 1, max(-1, k - 8), -1):
+            penal = 60 * (k - 1 - kk)
             for jj, (pt, _) in melhor[kk].items():
-                if cands[kk][jj]['b'] < c['a'] and pt > best[0]: best = (pt, (kk, jj))
-            if best[0] == INF: penal += 60; kk -= 1
-        if best[0] == INF and kk < 0: best = (0, None)
-        melhor[k][j] = (best[0] + pontos(c) - penal, best[1])
+                if cands[kk][jj]['b'] < c['a'] and pt - penal > best[0]: best = (pt - penal, (kk, jj))
+        if best[0] == INF:   # nada perto: procura mais longe (como antes)
+            kk = k - 8; penal = 60 * 7
+            while kk >= 0 and best[0] == INF:
+                for jj, (pt, _) in melhor[kk].items():
+                    if cands[kk][jj]['b'] < c['a'] and pt - penal > best[0]: best = (pt - penal, (kk, jj))
+                if best[0] == INF: penal += 60; kk -= 1
+        if best[0] == INF: best = (0, None)
+        melhor[k][j] = (best[0] + pontos(c), best[1])
 # reconstrução: melhor final
 fim_k = max(range(len(frases)), key=lambda k: max([p for p, _ in melhor[k].values()] or [INF]) + k * 1000 * (1 if melhor[k] else 0))
 k = len(frases) - 1
