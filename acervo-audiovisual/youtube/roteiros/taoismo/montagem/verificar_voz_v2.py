@@ -19,7 +19,7 @@ fr = json.loads((AQUI / 'frases_v2.json').read_text(encoding='utf-8'))['frases']
 pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(AQUI / 'voz_editada_v2.wav'), '-ac', '1', '-ar', '16000', '-f', 's16le', '-'], capture_output=True, check=True).stdout
 audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
 m = WhisperModel('large-v3-turbo', device='cuda', compute_type='int8_float16')
-segs, _ = m.transcribe(audio, language='pt', word_timestamps=True, vad_filter=False, condition_on_previous_text=False, temperature=0.0,
+segs, _ = m.transcribe(audio, language='pt', word_timestamps=True, vad_filter=False, condition_on_previous_text=False, temperature=0.0, beam_size=1,
                        initial_prompt='Tao Te Ching, Laozi, Mawangdui, Guodian, Sima Qian, Hangu, Zhang Daoling, Xuanzong, Dunhuang, wu wei, qigong, tai chi, Liu Pai Lin.')
 P = [w for s in segs for w in (s.words or [])]
 (AQUI / 'transcricao_voz_v2.json').write_text(json.dumps([{'p': w.word.strip(), 'ini': round(w.start, 2), 'fim': round(w.end, 2)} for w in P], ensure_ascii=False), encoding='utf-8')

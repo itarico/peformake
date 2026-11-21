@@ -64,8 +64,11 @@ NW = len(W)
 # ---------- 1. candidatos por frase ----------
 def alinhar(ftok, i0, i1):
     """Alinha a frase com W[i0:i1]. Devolve (cobertura, índices de W que batem, pares (ia, iw))."""
-    sm = SequenceMatcher(None, ftok, toks[i0:i1], autojunk=False)
-    pares = [(b.a + k, i0 + b.b + k) for b in sm.get_matching_blocks() for k in range(b.size)]
+    # alinha de trás para frente: em empate, o casamento cai na versão mais tardia (o retake),
+    # e o começo abandonado ("se um homem só | se um homem só escreveu") fica de fora
+    fa, fw = ftok[::-1], toks[i0:i1][::-1]; nA, nW = len(fa), len(fw)
+    sm = SequenceMatcher(None, fa, fw, autojunk=False)
+    pares = sorted((nA - 1 - (b.a + k), i0 + nW - 1 - (b.b + k)) for b in sm.get_matching_blocks() for k in range(b.size))
     return len(pares) / max(1, len(ftok)), pares
 
 def candidatos(f):
@@ -188,7 +191,7 @@ def trechos(f, c):
         if i > 0 and W[i]['ini'] - W[i - 1]['fim'] < .35: keep.insert(0, i - 1)
     for _ in range(min(3, falta_fim)):
         i = keep[-1]
-        if i + 1 < NW and W[i + 1]['ini'] - W[i]['fim'] < 1.0: keep.append(i + 1)
+        if i + 1 < NW and W[i + 1]['ini'] - W[i]['fim'] < 4.5: keep.append(i + 1)  # ex.: "168 ... a.C." dito depois de uma pausa
     # trechos: índices seguidos e sem pausa longa (pausa de gravação vira respiro curto)
     rs = [[keep[0], keep[0]]]
     for i in keep[1:]:
@@ -231,6 +234,14 @@ for k, f in enumerate(frases):
         rel.append(f"- {f['n']}: **não achada**"); continue
     ts = trechos(f, c)
     spans = [cortes(a, b) for a, b in ts]
+    # nunca reaproveitar áudio da frase anterior
+    lim_ant = next((x['src_fim'] for x in reversed(saida)), 0)
+    spans = [(max(a, lim_ant + .02), b) for a, b in spans if b > lim_ant + .1]
+    # nem invadir o começo da frase seguinte ("... Te Tao Ching | a ordem")
+    if k + 1 in escolha:
+        lim_prox = vale(W[escolha[k + 1]['a']]['ini'] - .25, W[escolha[k + 1]['a']]['ini'] + .02)
+        spans = [(a, min(b, lim_prox)) for a, b in spans if a < lim_prox - .1]
+    if not spans: rel.append(f"- {f['n']}: **sem áudio próprio** (sobreposta à anterior)"); continue
     usados = [toks[i] for a, b in ts for i in range(a, b + 1)]
     cob = round(c['cob'], 2)
     saida.append({'n': f['n'], 'texto': f['texto'], 'pausa': f['pausa'], 'spans': spans, 'src_ini': spans[0][0], 'src_fim': spans[-1][1], 'nota': cob,
