@@ -1,5 +1,12 @@
 # Posicionamento do canal (proposta de 20/11/2026, para o Italo aprovar)
 
+## Premissa obrigatória de todo vídeo (regra do Italo, 21/11/2026)
+Todo vídeo do Por Dentro é **conhecimento, não só entretenimento**. Mesmo com tema em alta (Jogos Vorazes, GTA):
+1. **Mostra algo por dentro que as pessoas não sabem**: o mecanismo por trás, um dado ou um fato pouco conhecido.
+2. **É fato verificável**: cada número e cada afirmação têm fonte. O que não for checado sai, e conta nossa é avisada na tela (skill `checagem-fatos` antes de gravar).
+3. **Fecha com reflexão**: o que aquilo revela sobre nós ou sobre o mundo hoje.
+O formato e o estilo de apresentação podem variar a cada vídeo. Essa premissa não varia. Roteiro que não cumprir os 3 pontos volta.
+
 ## O problema do "Por Dentro" atual
 O canal explica qualquer assunto pela lente "o mecanismo por trás". Essa lente é ampla demais: o Taoísmo compete com
 Tinocando e Nostalgia no terreno deles, e o GTA 6 compete com canais de games. O espectador não sabe o que esperar do
