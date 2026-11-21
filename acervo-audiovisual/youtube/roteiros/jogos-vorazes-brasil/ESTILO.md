@@ -24,6 +24,17 @@ rótulos mono espaçados em toda tela; ícones de clip-art. Regra daqui para fre
 | Mesa de holograma com "sinais vitais do tributo" | sala de controle dos Idealizadores | só no sorteio (frase 3) | a fazer |
 | Cartaz construtivista: raios, bandeira, multidão com faixas em português | "Rise against the Capitol" (de fã) | final, "o espelho" | a fazer |
 
+### Segunda leva de referências (21/11/2026)
+| Peça | Referência (só a mecânica) | Onde |
+|---|---|---|
+| Cartaz em 2 tons com slogan em par ("X É Y") | pôster do Ministério da Verdade (1984) | viradas: "PÃO É ORDEM · CIRCO É PAZ" |
+| Cartaz art déco com fileira de figuras repetidas, raios e faixa de título | "Protect the Capitol" (de fã) | V2, DIP 1939: fileiras de rádios iguais, "OUÇA A HORA DO BRASIL" |
+| Título de distrito art déco: número enorme e silhueta industrial real embaixo | "District 12 Resist" (de fã) | cartela de cada distrito (sem a saudação de 3 dedos, que é símbolo da franquia) |
+| Parede de telas | sala de vigilância | V3, TV de 1970: a mesma imagem em dezenas de TVs, uma por casa |
+| Névoa com luz vermelha por trás e silhuetas | Pacificadores com faixas vermelhas | clima da Capital nas viradas (só luz e névoa, sem soldado nem arma) |
+| Retrato com produto + número em bloco vermelho + saudação | cartaz do Distrito 3 | confirma o molde do cartaz por distrito |
+| Mapa 3D azul com anéis de HUD | banco de imagem | **não usar**: é exatamente o visual genérico que lê como IA. Fica só a ideia de extrusão no holograma do sorteio, na nossa paleta |
+
 ## Nunca
 - Tordo, logos, pôsteres, fontes e slogans oficiais; atores; frames do filme fora dos até 8 trechos de 5 s do trailer
   (faixa V3, com alternativa pronta, em `creditos-trechos.csv`).
