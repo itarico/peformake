@@ -16,8 +16,9 @@ body{width:1920px;height:1080px;overflow:hidden;background:#EFE4CC;position:rela
 .han{font-family:'Noto Serif SC';font-weight:900}
 .selo{position:absolute;width:118px;height:118px;border:6px solid #B3261E;color:#B3261E;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC';font-weight:900;font-size:44px;line-height:1;border-radius:8px;text-align:center;opacity:.9}
 .fonte{position:absolute;font-family:'Inter';font-weight:600;font-size:20px;letter-spacing:.5px;color:rgba(26,23,20,.6)}
-#leg{position:absolute;left:180px;right:180px;bottom:58px;text-align:center;font-family:'Inter';font-weight:600;font-size:36px;line-height:1.25;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.9),0 0 3px #000}
-#barra{position:absolute;left:420px;right:420px;bottom:215px;height:3px;background:rgba(26,23,20,.3);transition:none}
+#leg{position:absolute;left:180px;right:180px;bottom:58px;text-align:center;font-family:'Inter';font-weight:600;font-size:34px;line-height:1.55;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+#leg span{background:rgba(20,16,12,.66);padding:4px 16px;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+#barra{position:absolute;left:420px;right:420px;bottom:250px;height:3px;background:rgba(26,23,20,.3);transition:none}
 #barra i{position:absolute;top:-8px;width:19px;height:19px;border-radius:50%;background:#EFE4CC;border:3px solid #1A1714;transform:translateX(-50%)}
 #barra i.on{background:#B3261E;border-color:#B3261E}
 #barra em{position:absolute;top:18px;transform:translateX(-50%);font-family:'Courier Prime';font-style:normal;font-size:18px;white-space:nowrap}
@@ -40,7 +41,7 @@ const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2, out=t=>1-Math.pow(1-t,3);
 function rnd(i){const x=Math.sin(i*12.9898)*43758.5453;return x-Math.floor(x);}
 const po=$('poeira'); for(let i=0;i<50;i++){const d=document.createElement('div');d.style.cssText='position:absolute;border-radius:50%;background:rgba(60,40,15,.45)';d.dataset.x=rnd(i+100)*1920;d.dataset.y=rnd(i+200)*1080;d.dataset.v=(rnd(i+300)-.5)*14;d.dataset.w=1+rnd(i+400)*3;po.appendChild(d);}
 let PROJ=null, cenaAtual=-1;
-const EP=[['c. 500 a.C.',0],['300 a.C.',.14],['168 a.C.',.22],['733',.48],['1788',.72],['anos 1970',.86],['hoje',1]];
+const EP=[['c. 500 a.C.',0],['300 a.C.',.17],['168 a.C.',.33],['733',.5],['1788',.67],['anos 1970',.84],['hoje',1]];
 EP.forEach(([n,x],i)=>{const d=document.createElement('i');d.style.left=(x*100)+'%';d.id='ep'+i;$('barra').appendChild(d);const e=document.createElement('em');e.textContent=n;e.style.left=(x*100)+'%';$('barra').appendChild(e);});
 function show(el,p,dy=24){if(!el)return;el.style.opacity=clamp(p);el.style.transform=`translateY(${(1-out(clamp(p)))*dy}px)`;}
 function selo(el,p){if(!el)return;el.style.opacity=p>0?.9:0;el.style.transform=`rotate(-6deg) scale(${1.7-0.7*out(p)})`;}
@@ -145,7 +146,7 @@ window.render=async function(tg){
   // vídeo real: toca em vaivém se o clipe for mais curto que a cena; mapa 3D (hold) para no último quadro
   if(c.frames){const N=c.frames.n,k=Math.floor(tl*24);let n;if(c.frames.hold)n=Math.min(N-1,k);else{const P=2*N-2;const m=k%P;n=m<N?m:P-m;}const v=$('v');const src=c.frames.dir+'/'+String(n+1).padStart(5,'0')+'.jpg';if(v&&v.dataset.s!==src){v.dataset.s=src;await new Promise(r=>{v.onload=r;v.onerror=r;v.src=src;});}}
   // legenda: a frase falada agora
-  const f=PROJ.frases.find(x=>tg>=x.ini&&tg<x.fim+.25); $('leg').textContent=f?f.texto:'';
+  const f=PROJ.frases.find(x=>tg>=x.ini&&tg<x.fim+.25); const lg=$('leg'); if(lg.dataset.t!==(f?f.texto:'')){lg.dataset.t=f?f.texto:'';lg.innerHTML=f?`<span>${f.texto.replace(/</g,'&lt;')}</span>`:'';}
   // barra de linha do tempo: aparece nas cenas com época
   const ep=c.epoca; $('barra').style.opacity=ep!=null?1:0; EP.forEach((e,k)=>$('ep'+k).className=(ep!=null&&k<=ep)?'on':'');
   // transição de tinta nos limites de bloco
