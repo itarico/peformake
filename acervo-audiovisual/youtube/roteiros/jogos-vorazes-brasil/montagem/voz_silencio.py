@@ -16,6 +16,9 @@ if 121 in fr and 122 in fr and 123 not in fr:
     fr[123] = dict(fr[122]); fr[123]['n'] = 123; fr[123]['src_ini'] = fr[121]['src_ini']; del fr[121], fr[122]
 ordem = sorted(fr); ini_src = {n: fr[n]['src_ini'] for n in ordem}
 
+# Cortes internos do editar_voz que tiravam FALA (o Whisper não marcou as palavras de número): voltam inteiros.
+# Frase 17 (105,2 s), frase 20 'quarenta por cento' (118,7 s), frase 73 'cento e setenta e dois' (352,0 s).
+DEVOLVE = [105.2, 118.7, 352.0]; DEVOLVIDO = []
 # ---------- 1. mesma lista de pedaços da voz_continua: ('s', fonte, c, d) ou ('z', duração)
 P = []
 for i, n in enumerate(ordem):
@@ -31,6 +34,7 @@ for i, n in enumerate(ordem):
             sp = [list(x) for x in fr[n]['spans']]; sp[0][0] = a; sp[-1][1] = b; juntos = [sp[0]]
             for c, d in sp[1:]:
                 tem_fala = any(w['ini'] >= juntos[-1][1] - 0.05 and w['fim'] <= c + 0.05 for w in PAL)
+                if any(abs(juntos[-1][1] - g) < 0.6 for g in DEVOLVE): tem_fala = True; DEVOLVIDO.append(c - juntos[-1][1])
                 if tem_fala or c - juntos[-1][1] < 0.3: juntos[-1][1] = d
                 else: juntos[-1][1] += 0.15; juntos.append([c - 0.15, d])
             for c, d in juntos: P.append(['s', 'G', c, d])
@@ -50,7 +54,10 @@ def corta(P, c0, c1):
         if b > i1:
             out.append(['s', p[1], p[2] + (i1 - a) / SR, p[3]] if p[0] == 's' else ['z', (b - i1) / SR])
     return out
-for rodada in ([(201.70, 203.30), (361.40, 362.85)], [(544.52, 546.67)], [(602.67, 605.37), (736.37, 739.10)]):
+assert len(DEVOLVIDO) == 3, DEVOLVIDO
+D12, D3 = DEVOLVIDO[0] + DEVOLVIDO[1], sum(DEVOLVIDO)     # os tempos abaixo eram da voz sem os trechos devolvidos
+print('trechos devolvidos (s):', [round(x, 2) for x in DEVOLVIDO])
+for rodada in ([(201.70 + D12, 203.30 + D12), (361.40 + D3, 362.85 + D3)], [(544.52 + D3, 546.67 + D3)], [(602.67 + D3, 605.37 + D3), (736.37 + D3, 739.10 + D3)]):
     for c0, c1 in sorted(rodada, reverse=True): P = corta(P, c0, c1)
 tot = sum(dur(p) for p in P) / SR
 at, _ = sf.read(ATUAL, dtype='float32')
@@ -109,6 +116,7 @@ if os.environ.get('DEBUG'):
             ws = ' '.join(w['p'] for w in PAL if p[0] == 's' and p[1] == 'G' and w['ini'] >= p[2] - 0.05 and w['fim'] <= p[3] + 0.05)
             print(round(t, 2), p[0], [round(x, 2) if isinstance(x, float) else x for x in p[1:]], ws[:90])
         t += n
+json.dump([[x if not hasattr(x, 'item') else float(x) for x in p] for p in P], open(str(SAIDA) + '.pecas.json', 'w'))
 # ---------- 4. gravar
 F = int(0.008 * SR); partes = []
 for p in P:
@@ -117,8 +125,5 @@ for p in P:
     if len(x) > 2 * F: x[:F] *= np.linspace(0, 1, F); x[-F:] *= np.linspace(1, 0, F)
     partes.append(x)
 voz = np.concatenate(partes)
-if len(voz) < len(at): voz = np.concatenate([voz, np.zeros(len(at) - len(voz), np.float32)])
-sf.write(SAIDA, voz[:len(at)], SR, subtype='PCM_24')
-for tt in (100, 300, 500, 700):
-    i = int(tt * SR); print('confere', tt, round(float(np.abs(voz[i:i + SR] - at[i:i + SR]).max()), 4))
-print('gravado', SAIDA, round(len(at) / SR, 2), 's')
+sf.write(SAIDA, voz, SR, subtype='PCM_24')
+print('gravado', SAIDA, round(len(voz) / SR, 2), 's')

@@ -77,10 +77,14 @@ for ev in E['eventos']:
         x = x[: at + int(2.5 * SR)]                              # no máximo 2,5 s depois do ataque
         x[-int(0.2 * SR):] *= np.linspace(1, 0, int(0.2 * SR))[:, None]
         ativo = x[at: at + int(0.25 * SR)]
-        cache[nome] = (x / rms(ativo), at)
+        cache[nome] = (x / np.abs(x).max(), at)                 # normalizado pelo PICO: o nível abaixo é o pico do efeito
     x, at = cache[nome]
     o = int((ev['t'] - 0.015) * SR) - at
-    nivel = MUS * db(ev['db'] + 3)
+    # Efeito sempre ABAIXO da fala (retorno do Italo, 23/11): pico em -17 dBFS quando há fala por perto (os picos da voz ficam
+    # entre 0 e -6 dBFS); só no silêncio (impacto depois de respiro, cartela) ele sobe para -9 dBFS.
+    _i0, _i1 = max(0, int((ev['t'] - 0.25) * SR)), int((ev['t'] + 0.9) * SR)
+    tem_voz = _i1 > _i0 and float(np.abs(voz[_i0:_i1]).max()) > 0.02
+    nivel = db((-17 if tem_voz else -9) + max(-6, min(6, ev['db'])) * 0.35)   # pico do efeito em dBFS (pico da voz: 0 a -6)
     if o < 0: x, o = x[-o:], 0
     L = min(len(x), N - o); sfx[o:o + L] += x[:L] * nivel
 
@@ -90,8 +94,10 @@ mix = voz + trilha + sfx; sf.write(OUT / 'mix_bruto.wav', mix, SR, subtype='FLOA
 r = subprocess.run(['ffmpeg', '-v', 'info', '-i', str(OUT / 'mix_bruto.wav'), '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json', '-f', 'null', '-'],
                    capture_output=True, text=True)
 j = json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
+# Ganho FIXO até -14 LUFS + limitador de pico. O loudnorm em dois passos caía no modo dinâmico quando o pico estourava
+# e ficava abaixando e subindo a voz no meio das palavras.
+ganho = -14.0 - float(j['input_i'])
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(OUT / 'mix_bruto.wav'), '-af',
-                f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}:measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true",
-                '-ar', str(SR), str(OUT / 'mix.wav')], check=True)
+                f"volume={ganho:.2f}dB,alimiter=limit=0.84:attack=3:release=60:level=false", '-ar', str(SR), str(OUT / 'mix.wav')], check=True)
 (OUT / 'mix_bruto.wav').unlink()
-print('mix ok', E['dur'], 's | entrada', j['input_i'], 'LUFS | eventos', len(E['eventos']))
+print('mix ok', E['dur'], 's | entrada', j['input_i'], 'LUFS | ganho', round(ganho, 2), 'dB | eventos', len(E['eventos']))
