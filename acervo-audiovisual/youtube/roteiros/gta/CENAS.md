@@ -81,7 +81,7 @@ Card de título por 2 s: `QUEM FICA COM O SEU DINHEIRO` impresso no cupom.
 | "saiu no dia dezenove de novembro, só para PlayStation 5 e Xbox" | **trecho do jogo T1** (faixa V3) dentro de um monitor desenhado sobre o balcão | `19/11/2026 · PS5 · XBOX SERIES` · crédito do trecho | ruído de TV ligando |
 | "Standard... Ultimate..." | duas etiquetas penduradas lado a lado: `STANDARD R$ 449,90` e `ULTIMATE R$ 549,90` | `FONTE: PS STORE BR` | etiqueta |
 | "Vingadores: Ultimato... um vírgula dois bilhão em cinco dias" | gráfico de barras em linha de cupom: uma barra curta (Ultimato, 5 dias) e uma barra 3,2 vezes maior (GTA VI, 1 dia) | `US$ 1,2 BI · 5 DIAS` x `US$ 3,79 BI · 1 DIA` · `FONTE: DISNEY 2019 · TAKE-TWO 2026` · selo `CONTA NOSSA: 3,2x` | moedas caindo |
-| "soma as pré-vendas, e é uma estimativa" | asterisco gigante amarelo cola na barra do GTA | `* INCLUI PRÉ-VENDAS · ESTIMATIVA DA EMPRESA · BILHETERIA ≠ VAREJO` | caneta |
+| "é uma estimativa... venda no varejo" | asterisco gigante amarelo cola na barra do GTA | `* ESTIMATIVA DA EMPRESA · VAREJO, NÃO BILHETERIA` | caneta |
 | "trinta e quatro por cento de um salário mínimo" | um contracheque desenhado (R$ 1.621); um terço dele é recortado e cola na etiqueta da Ultimate | `34 % DO SALÁRIO MÍNIMO` · `FONTE: DECRETO 12.797/2025` · `CONTA NOSSA` | tesoura |
 | "A caixa do GTA VI não tem disco" | caixa de papelão genérica (sem a arte oficial) se abre de cima; dentro, só um papelzinho | `SEM DISCO` | caixa abrindo, silêncio |
 | "Dentro, tem um código" | close no papelzinho: `XXXX-XXXX-XXXX` em Plex Mono; o código vira uma seta que aponta para dois ícones de loja genéricos (sem logo) | `CÓDIGO → LOJA DIGITAL` · `FONTE: ROCKSTAR, 24/06/2026, VIA OMELETE` | bip |
@@ -126,7 +126,7 @@ Card de título por 2 s: `QUEM FICA COM O SEU DINHEIRO` impresso no cupom.
 | "Epic contra a Apple... sob juramento" | cartão de prova: manchete de 2021 (TweakTown, "Microsoft exec: our 30% commission is required to build Xbox consoles"); martelo de juiz desenhado | `EPIC x APPLE · MAIO/2021 · DEPOIMENTO DA MICROSOFT` | martelo |
 | "trinta por cento" | `30 %` gigante em Archivo Black | `30 % · XBOX NO CONSOLE` (`12 % NO PC`, menor) | moedas |
 | "o hardware do Xbox nunca deu lucro" | um console genérico (silhueta, sem marca) sobre o balcão com a etiqueta `LUCRO: R$ 0` | `FONTE: GEEKWIRE, MAIO/2021` | bip |
-| "Na Sony, a fatia é a mesma" | cartão de prova: manchete sobre o processo coletivo no Reino Unido | `PLAYSTATION: 30 % · SEGUNDO O PROCESSO COLETIVO NO REINO UNIDO` | papel |
+| "Na Sony, a fatia é a mesma" | cartão de prova: manchete sobre o processo coletivo no Reino Unido | `PLAYSTATION: 30 % · SEGUNDO O PROCESSO COLETIVO NO REINO UNIDO` · depois carimbo `REJEITADO 17/11/2026` | papel |
 | "Esse contrato não é público" | envelope lacrado com `TAKE-TWO x LOJAS` e carimbo `NÃO PÚBLICO` | `NÃO PÚBLICO` | carimbo |
 | "entre setenta e seis e noventa e sete reais" | **a 2ª fatia é recortada** e cai no envelope `LOJA` | `R$ 76 A R$ 97` · `CONTA NOSSA · SIMULAÇÃO` | tesoura, envelope |
 | "vendido sem lucro... paga pedágio" | animação: o console vira uma cancela de pedágio; cada caixa de jogo que passa deixa uma moeda | `CADA JOGO PAGA PEDÁGIO` | moeda a cada caixa |

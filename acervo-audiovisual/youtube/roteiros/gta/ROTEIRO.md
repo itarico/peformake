@@ -164,8 +164,8 @@ Números por extenso para a narração. `[pausa]` = 1 s. **Negrito** = ênfase.
 *Meso loop:* por que lá fora são setenta e nove dólares e aqui quatrocentos e quarenta e nove reais?
 > Vamos começar pela peça: o cupom.
 > O GTA VI saiu no dia dezenove de novembro, só para PlayStation 5 e Xbox. No Brasil, a edição Standard custa quatrocentos e quarenta e nove e noventa. A Ultimate, quinhentos e quarenta e nove e noventa.
-> Para comparar: o maior fim de semana de estreia da história do cinema foi o de Vingadores: Ultimato, em 2019. Um vírgula dois bilhão de dólares, em cinco dias.
-> O GTA VI fez mais que o triplo. Em um dia. Com dois detalhes: esse número soma as pré-vendas, e é uma estimativa da própria empresa.
+> Para comparar: a maior estreia mundial da história do cinema ainda é a de Vingadores: Ultimato, em 2019. Um vírgula dois bilhão de dólares, em cinco dias.
+> O GTA VI fez mais que o triplo. Em um dia. Com dois detalhes: é uma estimativa da própria empresa, e é venda no varejo, não bilheteria.
 > Aqui, a edição mais cara custa trinta e quatro por cento de um salário mínimo.
 > E tem uma coisa estranha na prateleira. **A caixa do GTA VI não tem disco.**
 > Dentro, tem um código. Você abre, digita e baixa o jogo pela loja da Sony ou da Microsoft.
@@ -209,7 +209,7 @@ Números por extenso para a narração. `[pausa]` = 1 s. **Negrito** = ênfase.
 > Lembra da caixa sem disco? No PlayStation ou no Xbox, o jogo passa pela loja de quem fabrica o console.
 > E quanto essa loja cobra? Em 2021, num julgamento nos Estados Unidos, a Epic contra a Apple, uma executiva da Microsoft disse sob juramento: a loja do Xbox fica com **trinta por cento** de cada jogo vendido no console.
 > Segundo ela, o hardware do Xbox nunca deu lucro. A comissão da loja é o que paga o console.
-> Na Sony, a fatia é a mesma: trinta por cento. Tanto que essa comissão virou alvo de um processo coletivo no Reino Unido.
+> Na Sony, a fatia é a mesma: trinta por cento. Tanto que essa comissão virou alvo de um processo coletivo no Reino Unido. Na semana passada, o tribunal rejeitou o processo e deu razão à Sony.
 > Agora, um cuidado: a Take-Two é a maior cliente que uma loja dessas pode ter. Ela pode ter negociado uma taxa menor. **Esse contrato não é público.**
 > Então eu uso o padrão do mercado: trinta por cento do que sobrou.
 > Fazendo a conta, a loja fica com algo entre setenta e seis e noventa e sete reais.

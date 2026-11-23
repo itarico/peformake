@@ -49,10 +49,10 @@ Texto puro para colar numa IA de voz: `NARRACAO-texto.txt`.
 9. Vamos começar pela peça: o cupom.
 10. O GTA VI saiu no dia dezenove de novembro, só para PlayStation 5 e Xbox.
 11. No Brasil, a edição Standard custa quatrocentos e quarenta e nove e noventa. A Ultimate, quinhentos e quarenta e nove e noventa.
-12. Para comparar: o maior fim de semana de estreia da história do cinema foi o de Vingadores: Ultimato, em dois mil e dezenove.
+12. Para comparar: a maior estreia mundial da história do cinema ainda é a de Vingadores: Ultimato, em dois mil e dezenove.
 13. Um vírgula dois bilhão de dólares, em cinco dias.
 14. O GTA VI fez mais que o triplo. **Em um dia.**
-15. Com dois detalhes: esse número soma as pré-vendas, e é uma estimativa da própria empresa.
+15. Com dois detalhes: é uma estimativa da própria empresa, e é venda no varejo, não bilheteria.
 16. Aqui, a edição mais cara custa trinta e quatro por cento de um salário mínimo.
 17. E tem uma coisa estranha na prateleira. [pausa] **A caixa do GTA VI não tem disco.**
 18. Dentro, tem um código. Você abre, digita e baixa o jogo pela loja da Sony ou da Microsoft.
@@ -102,7 +102,7 @@ Texto puro para colar numa IA de voz: `NARRACAO-texto.txt`.
 56. Em dois mil e vinte e um, num julgamento nos Estados Unidos, a Epic contra a Apple, uma executiva da Microsoft disse sob juramento:
 57. a loja do Xbox fica com **trinta por cento** de cada jogo vendido no console.
 58. Segundo ela, o hardware do Xbox nunca deu lucro. A comissão da loja é o que paga o console.
-59. Na Sony, a fatia é a mesma: trinta por cento. Tanto que essa comissão virou alvo de um processo coletivo no Reino Unido.
+59. Na Sony, a fatia é a mesma: trinta por cento. Tanto que essa comissão virou alvo de um processo coletivo no Reino Unido. Na semana passada, o tribunal rejeitou o processo e deu razão à Sony.
 60. Agora, um cuidado: a Take-Two é a maior cliente que uma loja dessas pode ter. Ela pode ter negociado uma taxa menor.
 61. **Esse contrato não é público.**
 62. Então eu uso o padrão do mercado: trinta por cento do que sobrou.
