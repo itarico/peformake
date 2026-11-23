@@ -21,14 +21,27 @@ def db(v): return 10 ** (v / 20)
 # ---------- voz
 v = carrega(VOZ); voz = np.zeros((N, 2), np.float32)
 _gr = sorted((int(k), L) for k, L in E['linha'].items() if L['orig_fim'] > L['orig_ini'])   # frases gravadas, em ordem
-for i, (n, L) in enumerate(_gr):
-    # voz contínua: cada frase vai até pouco antes da seguinte (nunca corta a ponta da última palavra)
-    fim_src = _gr[i + 1][1]['orig_ini'] - 0.12 if i + 1 < len(_gr) else L['orig_fim'] + 0.6
-    fim_src = max(L['orig_fim'] + 0.05, min(fim_src, L['orig_fim'] + 0.6))
-    a, b = max(0, int((L['orig_ini'] - 0.12) * SR)), int(fim_src * SR)
-    if b - a < int(0.05 * SR): continue
-    seg = v[a:b].copy(); f = int(0.01 * SR); seg[:f] *= np.linspace(0, 1, f)[:, None]; seg[-f:] *= np.linspace(1, 0, f)[:, None]
-    o = int(L['ini'] * SR) - (int(L['orig_ini'] * SR) - a); voz[o:o + len(seg)] += seg[:N - o]
+# A voz entra em BLOCOS contínuos, sem recorte por frase: frases seguidas com o mesmo deslocamento (vídeo - voz) são
+# copiadas de uma vez. Recortar por frase no tempo do Whisper picava palavra (fade no meio da fala e trecho dobrado).
+blocos = []
+for n, L in _gr:
+    d = L['ini'] - L['orig_ini']
+    if blocos and abs(d - blocos[-1][0]) < 0.02: blocos[-1][2] = L['orig_fim']
+    else: blocos.append([d, L['orig_ini'], L['orig_fim']])
+_env = np.abs(v).max(1)
+def _vale(t0, t1):                                    # ponto mais silencioso entre t0 e t1 (s), para a emenda dos blocos
+    a, b = int(max(0, t0) * SR), int(min(len(v) / SR, t1) * SR)
+    if b - a < 480: return t0
+    k = _env[a:b][:(b - a) // 480 * 480].reshape(-1, 480).max(1); return (a + int(np.argmin(k)) * 480 + 240) / SR
+for i, (d, t0, t1) in enumerate(blocos):
+    ini = 0.0 if i == 0 else _vale(blocos[i - 1][2], t0)
+    fim = len(v) / SR if i + 1 == len(blocos) else _vale(t1, blocos[i + 1][1])
+    a, b = int(ini * SR), int(fim * SR); seg = v[a:b].copy(); f = int(0.008 * SR)
+    seg[:f] *= np.linspace(0, 1, f)[:, None]; seg[-f:] *= np.linspace(1, 0, f)[:, None]
+    o = a + int(round(d * SR))
+    if o < 0: seg = seg[-o:]; o = 0
+    voz[o:o + len(seg)] += seg[:max(0, N - o)]
+print('blocos de voz:', len(blocos))
 voz *= db(-18) / rms(voz[np.abs(voz).max(1) > 0.01])          # voz em torno de -18 dBFS RMS na fala
 
 # ---------- trilha por emoção
