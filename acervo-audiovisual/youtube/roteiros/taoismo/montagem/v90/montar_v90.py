@@ -48,6 +48,6 @@ async def main():
     from playwright.async_api import async_playwright
     async with async_playwright() as p: await asyncio.gather(*[worker(p, w) for w in range(WORKERS)])
 asyncio.run(main())
-nome = 'video_v90.mp4' if sys.argv[1] == 'tudo' else f'trecho_{int(t0)}_{int(t1)}.mp4'
+nome = 'video_v90b.mp4' if sys.argv[1] == 'tudo' else f'trecho_{int(t0)}_{int(t1)}.mp4'
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-framerate', str(FPS), '-i', str(QD / '%06d.jpg'), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', str(TRAB / nome)], check=True)
 shutil.rmtree(QD); print('ok', TRAB / nome)

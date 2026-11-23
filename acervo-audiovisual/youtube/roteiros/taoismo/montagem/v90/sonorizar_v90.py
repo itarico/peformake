@@ -61,7 +61,7 @@ fala = (env > db(-38)).astype(np.float32)
 g = np.empty_like(fala); a, r = 1 - np.exp(-1 / (.04 * SR)), 1 - np.exp(-1 / (.4 * SR)); v = 0.0
 for i in range(0, len(fala), 48):  # passo de 1 ms basta
     alvo = fala[i]; v += (alvo - v) * (1 - (1 - (a if alvo > v else r)) ** 48); g[i:i + 48] = v
-musica *= (db(-10) * (1 - g) + db(-16) * g)[:, None]  # v90: trilha mais baixa (pedido do Italo, 23/11)
+musica *= (db(-16) * (1 - g) + db(-22) * g)[:, None]  # v90b: trilha 6 dB mais baixa (Italo: musica mais alta que a narracao, 23/11)
 
 # ---------- foley ----------
 _cache = {}
