@@ -1,0 +1,8504 @@
+{
+"duracao": 684.32,
+"frases": [
+{
+"n": "1",
+"texto": "Em 1972, no sul da China, médicos abriram o corpo de uma mulher que tinha morrido havia mais de dois mil anos.",
+"palavras": [
+{
+"p": "Em",
+"ini": 0.0,
+"fim": 0.2
+},
+{
+"p": "1972,",
+"ini": 0.2,
+"fim": 1.1
+},
+{
+"p": "no",
+"ini": 2.46,
+"fim": 2.66
+},
+{
+"p": "sul",
+"ini": 2.66,
+"fim": 2.8
+},
+{
+"p": "da",
+"ini": 2.8,
+"fim": 2.94
+},
+{
+"p": "China,",
+"ini": 2.94,
+"fim": 3.24
+},
+{
+"p": "médicos",
+"ini": 4.0,
+"fim": 4.48
+},
+{
+"p": "abriram",
+"ini": 4.48,
+"fim": 5.02
+},
+{
+"p": "o",
+"ini": 5.02,
+"fim": 5.18
+},
+{
+"p": "corpo",
+"ini": 5.18,
+"fim": 5.46
+},
+{
+"p": "de",
+"ini": 5.46,
+"fim": 5.64
+},
+{
+"p": "uma",
+"ini": 5.64,
+"fim": 5.78
+},
+{
+"p": "mulher",
+"ini": 5.78,
+"fim": 6.06
+},
+{
+"p": "que",
+"ini": 6.06,
+"fim": 6.28
+},
+{
+"p": "tinha",
+"ini": 6.28,
+"fim": 6.52
+},
+{
+"p": "morrido",
+"ini": 6.52,
+"fim": 6.96
+},
+{
+"p": "havia",
+"ini": 6.96,
+"fim": 7.14
+},
+{
+"p": "mais",
+"ini": 7.14,
+"fim": 7.5
+},
+{
+"p": "de",
+"ini": 7.5,
+"fim": 7.64
+},
+{
+"p": "dois",
+"ini": 7.64,
+"fim": 7.8
+},
+{
+"p": "mil",
+"ini": 7.8,
+"fim": 8.02
+},
+{
+"p": "anos.",
+"ini": 8.02,
+"fim": 8.4
+}
+],
+"ini": 0.0,
+"fim": 8.4,
+"cobertura": 1.0
+},
+{
+"n": "2",
+"texto": "A pele ainda estava macia. Os braços ainda dobravam.",
+"palavras": [
+{
+"p": "A",
+"ini": 9.34,
+"fim": 9.48
+},
+{
+"p": "pele",
+"ini": 9.48,
+"fim": 9.86
+},
+{
+"p": "ainda",
+"ini": 9.86,
+"fim": 10.2
+},
+{
+"p": "estava",
+"ini": 10.2,
+"fim": 10.62
+},
+{
+"p": "macia.",
+"ini": 10.62,
+"fim": 11.18
+},
+{
+"p": "Os",
+"ini": 12.24,
+"fim": 12.36
+},
+{
+"p": "braços",
+"ini": 12.36,
+"fim": 12.82
+},
+{
+"p": "ainda",
+"ini": 12.82,
+"fim": 13.1
+},
+{
+"p": "dobravam.",
+"ini": 13.1,
+"fim": 13.74
+}
+],
+"ini": 9.34,
+"fim": 13.74,
+"cobertura": 1.0
+},
+{
+"n": "3",
+"texto": "E nas veias dela ainda tinha sangue.",
+"palavras": [
+{
+"p": "E",
+"ini": 14.6,
+"fim": 14.8
+},
+{
+"p": "nas",
+"ini": 14.8,
+"fim": 14.96
+},
+{
+"p": "veias",
+"ini": 14.96,
+"fim": 15.38
+},
+{
+"p": "dela,",
+"ini": 15.38,
+"fim": 15.76
+},
+{
+"p": "ainda",
+"ini": 16.22,
+"fim": 16.5
+},
+{
+"p": "tinha",
+"ini": 16.5,
+"fim": 16.74
+},
+{
+"p": "sangue.",
+"ini": 16.74,
+"fim": 17.36
+}
+],
+"ini": 14.6,
+"fim": 17.36,
+"cobertura": 1.0
+},
+{
+"n": "4",
+"texto": "No estômago, cento e trinta sementes de melão: a última refeição, poucas horas antes de morrer.",
+"palavras": [
+{
+"p": "No",
+"ini": 18.26,
+"fim": 18.36
+},
+{
+"p": "estômago,",
+"ini": 18.36,
+"fim": 18.88
+},
+{
+"p": "cento",
+"ini": 19.52,
+"fim": 19.94
+},
+{
+"p": "e",
+"ini": 19.94,
+"fim": 19.98
+},
+{
+"p": "trinta",
+"ini": 19.98,
+"fim": 20.24
+},
+{
+"p": "sementes",
+"ini": 20.24,
+"fim": 20.86
+},
+{
+"p": "de",
+"ini": 20.86,
+"fim": 21.02
+},
+{
+"p": "melão.",
+"ini": 21.02,
+"fim": 21.34
+},
+{
+"p": "A",
+"ini": 21.98,
+"fim": 22.1
+},
+{
+"p": "última",
+"ini": 22.1,
+"fim": 22.34
+},
+{
+"p": "refeição,",
+"ini": 22.34,
+"fim": 22.9
+},
+{
+"p": "poucas",
+"ini": 23.5,
+"fim": 23.76
+},
+{
+"p": "horas",
+"ini": 23.76,
+"fim": 24.0
+},
+{
+"p": "antes",
+"ini": 24.0,
+"fim": 24.3
+},
+{
+"p": "de",
+"ini": 24.3,
+"fim": 24.46
+},
+{
+"p": "morrer.",
+"ini": 24.46,
+"fim": 24.82
+}
+],
+"ini": 18.26,
+"fim": 24.82,
+"cobertura": 1.0
+},
+{
+"n": "5",
+"texto": "O nome dela era Xin Zhui, uma nobre da dinastia Han.",
+"palavras": [
+{
+"p": "O",
+"ini": 24.82,
+"fim": 25.74
+},
+{
+"p": "nome",
+"ini": 25.74,
+"fim": 25.92
+},
+{
+"p": "dela",
+"ini": 25.92,
+"fim": 26.2
+},
+{
+"p": "era",
+"ini": 26.2,
+"fim": 26.72
+},
+{
+"p": "uma",
+"ini": 28.12,
+"fim": 28.4
+},
+{
+"p": "nobre",
+"ini": 28.4,
+"fim": 28.8
+},
+{
+"p": "da",
+"ini": 28.8,
+"fim": 28.98
+},
+{
+"p": "dinastia",
+"ini": 28.98,
+"fim": 29.48
+},
+{
+"p": "Han,",
+"ini": 29.48,
+"fim": 29.8
+}
+],
+"ini": 24.82,
+"fim": 29.8,
+"cobertura": 0.82
+},
+{
+"n": "6",
+"texto": "Mas o corpo nem foi a maior descoberta daquela colina.",
+"palavras": [
+{
+"p": "mas",
+"ini": 30.62,
+"fim": 30.86
+},
+{
+"p": "o",
+"ini": 30.86,
+"fim": 30.98
+},
+{
+"p": "corpo",
+"ini": 30.98,
+"fim": 31.28
+},
+{
+"p": "nem",
+"ini": 31.28,
+"fim": 31.78
+},
+{
+"p": "foi",
+"ini": 31.78,
+"fim": 32.12
+},
+{
+"p": "a",
+"ini": 32.12,
+"fim": 32.24
+},
+{
+"p": "maior",
+"ini": 32.24,
+"fim": 32.46
+},
+{
+"p": "descoberta",
+"ini": 32.46,
+"fim": 33.14
+},
+{
+"p": "daquela",
+"ini": 33.14,
+"fim": 33.42
+},
+{
+"p": "colina.",
+"ini": 33.42,
+"fim": 33.84
+}
+],
+"ini": 30.62,
+"fim": 33.84,
+"cobertura": 1.0
+},
+{
+"n": "7",
+"texto": "Um ano depois, na tumba ao lado, que se acredita ser a do filho dela, os arqueólogos acharam uma caixa de laca.",
+"palavras": [
+{
+"p": "Um",
+"ini": 34.62,
+"fim": 34.92
+},
+{
+"p": "ano",
+"ini": 34.92,
+"fim": 35.06
+},
+{
+"p": "depois,",
+"ini": 35.06,
+"fim": 35.34
+},
+{
+"p": "na",
+"ini": 35.9,
+"fim": 36.06
+},
+{
+"p": "tumba",
+"ini": 36.06,
+"fim": 36.4
+},
+{
+"p": "ao",
+"ini": 36.4,
+"fim": 36.48
+},
+{
+"p": "lado,",
+"ini": 36.48,
+"fim": 36.76
+},
+{
+"p": "que",
+"ini": 37.3,
+"fim": 37.36
+},
+{
+"p": "se",
+"ini": 37.36,
+"fim": 37.46
+},
+{
+"p": "acredita",
+"ini": 37.46,
+"fim": 37.86
+},
+{
+"p": "a",
+"ini": 37.86,
+"fim": 38.04
+},
+{
+"p": "do",
+"ini": 38.2,
+"fim": 38.34
+},
+{
+"p": "filho",
+"ini": 38.34,
+"fim": 38.62
+},
+{
+"p": "dela,",
+"ini": 38.62,
+"fim": 38.98
+},
+{
+"p": "os",
+"ini": 39.68,
+"fim": 39.82
+},
+{
+"p": "arqueólogos",
+"ini": 39.82,
+"fim": 40.42
+},
+{
+"p": "acharam",
+"ini": 40.42,
+"fim": 40.88
+},
+{
+"p": "uma",
+"ini": 40.88,
+"fim": 41.16
+},
+{
+"p": "caixa",
+"ini": 41.16,
+"fim": 41.46
+},
+{
+"p": "de",
+"ini": 41.46,
+"fim": 41.62
+},
+{
+"p": "laca,",
+"ini": 41.62,
+"fim": 41.94
+}
+],
+"ini": 34.62,
+"fim": 41.94,
+"cobertura": 0.95
+},
+{
+"n": "8",
+"texto": "Dentro, rolos de seda. E num deles estava o livro que, há séculos, ensina as pessoas a pararem de forçar a vida.",
+"palavras": [
+{
+"p": "dentro,",
+"ini": 42.6,
+"fim": 43.06
+},
+{
+"p": "rolos",
+"ini": 43.54,
+"fim": 43.84
+},
+{
+"p": "de",
+"ini": 43.84,
+"fim": 43.98
+},
+{
+"p": "seda,",
+"ini": 43.98,
+"fim": 44.32
+},
+{
+"p": "e",
+"ini": 45.1,
+"fim": 45.28
+},
+{
+"p": "num",
+"ini": 45.28,
+"fim": 45.4
+},
+{
+"p": "deles",
+"ini": 45.4,
+"fim": 45.72
+},
+{
+"p": "estava",
+"ini": 45.72,
+"fim": 46.42
+},
+{
+"p": "o",
+"ini": 46.42,
+"fim": 46.64
+},
+{
+"p": "livro",
+"ini": 46.64,
+"fim": 46.9
+},
+{
+"p": "que",
+"ini": 46.9,
+"fim": 47.24
+},
+{
+"p": "há",
+"ini": 47.24,
+"fim": 47.6
+},
+{
+"p": "séculos",
+"ini": 47.6,
+"fim": 48.04
+},
+{
+"p": "ensina",
+"ini": 48.04,
+"fim": 49.02
+},
+{
+"p": "as",
+"ini": 49.02,
+"fim": 49.2
+},
+{
+"p": "pessoas",
+"ini": 49.2,
+"fim": 49.54
+},
+{
+"p": "a",
+"ini": 49.54,
+"fim": 49.8
+},
+{
+"p": "pararem",
+"ini": 49.8,
+"fim": 50.22
+},
+{
+"p": "de",
+"ini": 50.22,
+"fim": 50.36
+},
+{
+"p": "forçar",
+"ini": 50.36,
+"fim": 50.76
+},
+{
+"p": "a",
+"ini": 50.76,
+"fim": 50.88
+},
+{
+"p": "vida,",
+"ini": 50.88,
+"fim": 51.16
+}
+],
+"ini": 42.6,
+"fim": 51.16,
+"cobertura": 1.0
+},
+{
+"n": "9",
+"texto": "O Tao Te Ching.",
+"palavras": [
+{
+"p": "o",
+"ini": 52.0,
+"fim": 52.1
+},
+{
+"p": "te",
+"ini": 52.32,
+"fim": 52.54
+}
+],
+"ini": 52.0,
+"fim": 52.54,
+"cobertura": 0.5
+},
+{
+"n": "10",
+"texto": "De trás para frente.",
+"palavras": [
+{
+"p": "de",
+"ini": 53.56,
+"fim": 53.82
+},
+{
+"p": "trás",
+"ini": 53.82,
+"fim": 54.06
+},
+{
+"p": "para",
+"ini": 54.06,
+"fim": 54.28
+},
+{
+"p": "frente.",
+"ini": 54.28,
+"fim": 54.7
+}
+],
+"ini": 53.56,
+"fim": 54.7,
+"cobertura": 1.0
+},
+{
+"n": "11",
+"texto": "E não era erro de quem copiou. Era a pista de que o livro que você encontra hoje em qualquer livraria não é o original.",
+"palavras": [
+{
+"p": "E",
+"ini": 55.38,
+"fim": 55.88
+},
+{
+"p": "não",
+"ini": 55.88,
+"fim": 56.0
+},
+{
+"p": "era",
+"ini": 56.0,
+"fim": 56.18
+},
+{
+"p": "erro",
+"ini": 56.18,
+"fim": 56.52
+},
+{
+"p": "de",
+"ini": 56.52,
+"fim": 56.66
+},
+{
+"p": "quem",
+"ini": 56.66,
+"fim": 56.8
+},
+{
+"p": "copiou,",
+"ini": 56.8,
+"fim": 57.26
+},
+{
+"p": "era",
+"ini": 57.86,
+"fim": 58.16
+},
+{
+"p": "a",
+"ini": 58.16,
+"fim": 58.28
+},
+{
+"p": "pista",
+"ini": 58.28,
+"fim": 58.58
+},
+{
+"p": "de",
+"ini": 58.58,
+"fim": 59.3
+},
+{
+"p": "que",
+"ini": 59.3,
+"fim": 59.4
+},
+{
+"p": "o",
+"ini": 59.4,
+"fim": 59.5
+},
+{
+"p": "livro",
+"ini": 59.5,
+"fim": 59.72
+},
+{
+"p": "que",
+"ini": 59.72,
+"fim": 59.88
+},
+{
+"p": "encontra",
+"ini": 60.12,
+"fim": 60.46
+},
+{
+"p": "hoje",
+"ini": 60.46,
+"fim": 60.82
+},
+{
+"p": "em",
+"ini": 60.82,
+"fim": 60.92
+},
+{
+"p": "qualquer",
+"ini": 60.92,
+"fim": 61.26
+},
+{
+"p": "livraria",
+"ini": 61.26,
+"fim": 61.92
+},
+{
+"p": "não",
+"ini": 61.92,
+"fim": 62.72
+},
+{
+"p": "é",
+"ini": 62.72,
+"fim": 62.94
+},
+{
+"p": "o",
+"ini": 62.94,
+"fim": 63.36
+},
+{
+"p": "original.",
+"ini": 63.36,
+"fim": 63.72
+}
+],
+"ini": 55.38,
+"fim": 63.72,
+"cobertura": 0.96
+},
+{
+"n": "12",
+"texto": "Ele foi cortado, reorganizado e reescrito durante séculos. Mudou de forma sem quebrar.",
+"palavras": [
+{
+"p": "Ele",
+"ini": 64.64,
+"fim": 64.78
+},
+{
+"p": "foi",
+"ini": 64.78,
+"fim": 64.92
+},
+{
+"p": "cortado,",
+"ini": 64.92,
+"fim": 65.52
+},
+{
+"p": "reorganizado",
+"ini": 66.04,
+"fim": 66.76
+},
+{
+"p": "e",
+"ini": 66.76,
+"fim": 67.38
+},
+{
+"p": "reescrito",
+"ini": 67.38,
+"fim": 67.86
+},
+{
+"p": "durante",
+"ini": 67.86,
+"fim": 68.52
+},
+{
+"p": "séculos.",
+"ini": 68.52,
+"fim": 69.0
+},
+{
+"p": "Mudou",
+"ini": 69.92,
+"fim": 70.3
+},
+{
+"p": "de",
+"ini": 70.3,
+"fim": 70.44
+},
+{
+"p": "forma",
+"ini": 70.44,
+"fim": 70.82
+},
+{
+"p": "sem",
+"ini": 70.82,
+"fim": 71.36
+},
+{
+"p": "quebrar.",
+"ini": 71.36,
+"fim": 71.72
+}
+],
+"ini": 64.64,
+"fim": 71.72,
+"cobertura": 1.0
+},
+{
+"n": "12b",
+"texto": "Até o fim deste vídeo você vai entender quem escreveu esse livro, o que ele realmente ensina, o que a ciência achou quando foi testar, e vai sair com três jeitos de usar essa ideia amanhã de manhã.",
+"palavras": [
+{
+"p": "Até",
+"ini": 72.48,
+"fim": 72.82
+},
+{
+"p": "o",
+"ini": 72.82,
+"fim": 72.94
+},
+{
+"p": "fim",
+"ini": 72.94,
+"fim": 73.1
+},
+{
+"p": "deste",
+"ini": 73.1,
+"fim": 73.3
+},
+{
+"p": "vídeo",
+"ini": 73.3,
+"fim": 73.7
+},
+{
+"p": "você",
+"ini": 73.7,
+"fim": 74.34
+},
+{
+"p": "vai",
+"ini": 74.34,
+"fim": 74.46
+},
+{
+"p": "entender",
+"ini": 74.46,
+"fim": 74.82
+},
+{
+"p": "quem",
+"ini": 74.82,
+"fim": 75.14
+},
+{
+"p": "escreveu",
+"ini": 75.14,
+"fim": 75.58
+},
+{
+"p": "esse",
+"ini": 75.58,
+"fim": 75.72
+},
+{
+"p": "livro,",
+"ini": 75.72,
+"fim": 76.04
+},
+{
+"p": "o",
+"ini": 76.72,
+"fim": 76.94
+},
+{
+"p": "que",
+"ini": 76.94,
+"fim": 77.04
+},
+{
+"p": "ele",
+"ini": 77.04,
+"fim": 77.36
+},
+{
+"p": "realmente",
+"ini": 77.36,
+"fim": 77.72
+},
+{
+"p": "ensina,",
+"ini": 77.72,
+"fim": 78.26
+},
+{
+"p": "o",
+"ini": 78.74,
+"fim": 78.94
+},
+{
+"p": "que",
+"ini": 78.94,
+"fim": 79.06
+},
+{
+"p": "a",
+"ini": 79.06,
+"fim": 79.2
+},
+{
+"p": "ciência",
+"ini": 79.2,
+"fim": 79.5
+},
+{
+"p": "achou",
+"ini": 79.5,
+"fim": 79.92
+},
+{
+"p": "quando",
+"ini": 79.92,
+"fim": 80.16
+},
+{
+"p": "foi",
+"ini": 80.16,
+"fim": 80.38
+},
+{
+"p": "testar",
+"ini": 80.38,
+"fim": 80.96
+},
+{
+"p": "e",
+"ini": 80.96,
+"fim": 81.78
+},
+{
+"p": "vai",
+"ini": 81.78,
+"fim": 81.94
+},
+{
+"p": "sair",
+"ini": 81.94,
+"fim": 82.26
+},
+{
+"p": "com",
+"ini": 82.26,
+"fim": 82.5
+},
+{
+"p": "três",
+"ini": 82.5,
+"fim": 82.82
+},
+{
+"p": "jeitos",
+"ini": 82.82,
+"fim": 83.24
+},
+{
+"p": "de",
+"ini": 83.24,
+"fim": 83.48
+},
+{
+"p": "usar",
+"ini": 83.48,
+"fim": 83.8
+},
+{
+"p": "essa",
+"ini": 83.8,
+"fim": 84.04
+},
+{
+"p": "ideia",
+"ini": 84.04,
+"fim": 84.42
+},
+{
+"p": "amanhã",
+"ini": 84.42,
+"fim": 85.1
+},
+{
+"p": "de",
+"ini": 85.1,
+"fim": 85.26
+},
+{
+"p": "manhã.",
+"ini": 85.26,
+"fim": 85.6
+}
+],
+"ini": 72.48,
+"fim": 85.6,
+"cobertura": 1.0
+},
+{
+"n": "13",
+"texto": "Primeiro, a ideia.",
+"palavras": [
+{
+"p": "Primeiro,",
+"ini": 86.54,
+"fim": 87.14
+},
+{
+"p": "a",
+"ini": 87.56,
+"fim": 87.8
+},
+{
+"p": "ideia,",
+"ini": 87.8,
+"fim": 88.16
+}
+],
+"ini": 86.54,
+"fim": 88.16,
+"cobertura": 1.0
+},
+{
+"n": "14",
+"texto": "Tao quer dizer caminho.",
+"palavras": [
+{
+"p": "quer",
+"ini": 89.36,
+"fim": 89.56
+},
+{
+"p": "dizer",
+"ini": 89.56,
+"fim": 89.88
+},
+{
+"p": "caminho,",
+"ini": 89.88,
+"fim": 90.44
+}
+],
+"ini": 89.36,
+"fim": 90.44,
+"cobertura": 0.75
+},
+{
+"n": "15",
+"texto": "Mas não é uma estrada.",
+"palavras": [
+{
+"p": "mas",
+"ini": 91.38,
+"fim": 91.64
+},
+{
+"p": "não",
+"ini": 91.64,
+"fim": 91.78
+},
+{
+"p": "é",
+"ini": 91.78,
+"fim": 91.92
+},
+{
+"p": "uma",
+"ini": 91.92,
+"fim": 92.04
+},
+{
+"p": "estrada,",
+"ini": 92.04,
+"fim": 92.48
+}
+],
+"ini": 91.38,
+"fim": 92.48,
+"cobertura": 1.0
+},
+{
+"n": "16",
+"texto": "É o jeito como as coisas funcionam quando ninguém está forçando.",
+"palavras": [
+{
+"p": "é",
+"ini": 93.32,
+"fim": 93.4
+},
+{
+"p": "o",
+"ini": 93.4,
+"fim": 93.52
+},
+{
+"p": "jeito",
+"ini": 93.52,
+"fim": 93.74
+},
+{
+"p": "como",
+"ini": 93.74,
+"fim": 94.0
+},
+{
+"p": "as",
+"ini": 94.0,
+"fim": 94.16
+},
+{
+"p": "coisas",
+"ini": 94.16,
+"fim": 94.4
+},
+{
+"p": "funcionam",
+"ini": 94.4,
+"fim": 94.98
+},
+{
+"p": "quando",
+"ini": 94.98,
+"fim": 95.18
+},
+{
+"p": "ninguém",
+"ini": 95.18,
+"fim": 95.5
+},
+{
+"p": "está",
+"ini": 95.5,
+"fim": 95.8
+},
+{
+"p": "forçando,",
+"ini": 95.8,
+"fim": 96.36
+}
+],
+"ini": 93.32,
+"fim": 96.36,
+"cobertura": 1.0
+},
+{
+"n": "17",
+"texto": "O rio que desce.",
+"palavras": [
+{
+"p": "o",
+"ini": 96.98,
+"fim": 97.12
+},
+{
+"p": "rio",
+"ini": 97.12,
+"fim": 97.36
+},
+{
+"p": "que",
+"ini": 97.36,
+"fim": 97.54
+},
+{
+"p": "desce,",
+"ini": 97.54,
+"fim": 97.94
+}
+],
+"ini": 96.98,
+"fim": 97.94,
+"cobertura": 1.0
+},
+{
+"n": "18",
+"texto": "A semente que vira árvore.",
+"palavras": [
+{
+"p": "a",
+"ini": 98.6,
+"fim": 98.68
+},
+{
+"p": "semente",
+"ini": 98.68,
+"fim": 99.08
+},
+{
+"p": "que",
+"ini": 99.08,
+"fim": 99.32
+},
+{
+"p": "vira",
+"ini": 99.32,
+"fim": 99.6
+},
+{
+"p": "árvore,",
+"ini": 99.6,
+"fim": 99.96
+}
+],
+"ini": 98.6,
+"fim": 99.96,
+"cobertura": 1.0
+},
+{
+"n": "19",
+"texto": "O dia que vira noite.",
+"palavras": [
+{
+"p": "o",
+"ini": 100.82,
+"fim": 100.94
+},
+{
+"p": "dia",
+"ini": 100.94,
+"fim": 101.22
+},
+{
+"p": "que",
+"ini": 101.22,
+"fim": 101.66
+},
+{
+"p": "vira",
+"ini": 101.66,
+"fim": 101.96
+},
+{
+"p": "noite,",
+"ini": 102.0,
+"fim": 102.3
+}
+],
+"ini": 100.82,
+"fim": 102.3,
+"cobertura": 1.0
+},
+{
+"n": "20",
+"texto": "Não é um deus dando ordens, nem uma lista de regras.",
+"palavras": [
+{
+"p": "não",
+"ini": 102.94,
+"fim": 103.08
+},
+{
+"p": "é",
+"ini": 103.08,
+"fim": 103.22
+},
+{
+"p": "um",
+"ini": 103.22,
+"fim": 103.34
+},
+{
+"p": "Deus",
+"ini": 103.34,
+"fim": 103.62
+},
+{
+"p": "dando",
+"ini": 103.62,
+"fim": 103.98
+},
+{
+"p": "ordens,",
+"ini": 103.98,
+"fim": 104.54
+},
+{
+"p": "lista",
+"ini": 105.32,
+"fim": 105.78
+},
+{
+"p": "de",
+"ini": 105.78,
+"fim": 105.96
+},
+{
+"p": "regras,",
+"ini": 105.96,
+"fim": 106.38
+}
+],
+"ini": 102.94,
+"fim": 106.38,
+"cobertura": 0.82
+},
+{
+"n": "21",
+"texto": "O próprio livro avisa logo na primeira linha: \"o Tao de que se pode falar não é o Tao eterno\".",
+"palavras": [
+{
+"p": "o",
+"ini": 107.0,
+"fim": 107.26
+},
+{
+"p": "próprio",
+"ini": 107.26,
+"fim": 107.58
+},
+{
+"p": "livro",
+"ini": 107.58,
+"fim": 108.02
+},
+{
+"p": "avisa",
+"ini": 108.02,
+"fim": 108.9
+},
+{
+"p": "logo",
+"ini": 108.9,
+"fim": 109.2
+},
+{
+"p": "na",
+"ini": 109.2,
+"fim": 109.36
+},
+{
+"p": "primeira",
+"ini": 109.36,
+"fim": 109.66
+},
+{
+"p": "linha,",
+"ini": 109.66,
+"fim": 110.02
+},
+{
+"p": "o",
+"ini": 110.86,
+"fim": 111.08
+},
+{
+"p": "de",
+"ini": 111.3,
+"fim": 111.48
+},
+{
+"p": "que",
+"ini": 111.48,
+"fim": 111.58
+},
+{
+"p": "se",
+"ini": 111.58,
+"fim": 111.68
+},
+{
+"p": "pode",
+"ini": 111.68,
+"fim": 111.86
+},
+{
+"p": "falar",
+"ini": 111.86,
+"fim": 112.16
+},
+{
+"p": "não",
+"ini": 112.16,
+"fim": 112.72
+},
+{
+"p": "é",
+"ini": 112.72,
+"fim": 112.98
+},
+{
+"p": "o",
+"ini": 112.98,
+"fim": 113.22
+},
+{
+"p": "eterno,",
+"ini": 113.32,
+"fim": 113.98
+}
+],
+"ini": 107.0,
+"fim": 113.98,
+"cobertura": 0.9
+},
+{
+"n": "22",
+"texto": "Ou seja: qualquer definição vai ficar curta. E ele começa admitindo isso.",
+"palavras": [
+{
+"p": "Ou",
+"ini": 113.98,
+"fim": 114.38
+},
+{
+"p": "seja,",
+"ini": 114.38,
+"fim": 114.72
+},
+{
+"p": "qualquer",
+"ini": 115.32,
+"fim": 115.52
+},
+{
+"p": "definição",
+"ini": 115.52,
+"fim": 116.22
+},
+{
+"p": "vai",
+"ini": 116.22,
+"fim": 116.4
+},
+{
+"p": "ficar",
+"ini": 116.4,
+"fim": 116.66
+},
+{
+"p": "curta,",
+"ini": 116.66,
+"fim": 117.22
+},
+{
+"p": "e",
+"ini": 117.84,
+"fim": 118.02
+},
+{
+"p": "ele",
+"ini": 118.02,
+"fim": 118.14
+},
+{
+"p": "começa",
+"ini": 118.14,
+"fim": 118.48
+},
+{
+"p": "admitindo",
+"ini": 118.48,
+"fim": 119.2
+},
+{
+"p": "isso.",
+"ini": 119.2,
+"fim": 119.44
+}
+],
+"ini": 113.98,
+"fim": 119.44,
+"cobertura": 1.0
+},
+{
+"n": "23",
+"texto": "Daí vem a ideia mais famosa e mais mal entendida do livro: wu wei.",
+"palavras": [
+{
+"p": "Daí",
+"ini": 120.2,
+"fim": 120.54
+},
+{
+"p": "vem",
+"ini": 120.54,
+"fim": 120.66
+},
+{
+"p": "a",
+"ini": 120.66,
+"fim": 120.76
+},
+{
+"p": "ideia",
+"ini": 120.76,
+"fim": 121.08
+},
+{
+"p": "mais",
+"ini": 121.08,
+"fim": 121.46
+},
+{
+"p": "famosa",
+"ini": 121.46,
+"fim": 122.04
+},
+{
+"p": "e",
+"ini": 122.04,
+"fim": 122.26
+},
+{
+"p": "mais",
+"ini": 122.26,
+"fim": 122.46
+},
+{
+"p": "mal",
+"ini": 122.46,
+"fim": 122.74
+},
+{
+"p": "-entendida",
+"ini": 122.74,
+"fim": 123.22
+},
+{
+"p": "do",
+"ini": 123.22,
+"fim": 123.38
+},
+{
+"p": "livro,",
+"ini": 123.38,
+"fim": 123.64
+}
+],
+"ini": 120.2,
+"fim": 123.64,
+"cobertura": 0.86
+},
+{
+"n": "24",
+"texto": "A tradução comum é \"não agir\". E muita gente lê como preguiça.",
+"palavras": [
+{
+"p": "A",
+"ini": 125.44,
+"fim": 125.7
+},
+{
+"p": "tradução",
+"ini": 125.7,
+"fim": 126.08
+},
+{
+"p": "comum",
+"ini": 126.08,
+"fim": 126.56
+},
+{
+"p": "é",
+"ini": 126.56,
+"fim": 127.1
+},
+{
+"p": "não",
+"ini": 127.1,
+"fim": 127.3
+},
+{
+"p": "agir.",
+"ini": 127.3,
+"fim": 127.68
+},
+{
+"p": "E",
+"ini": 128.42,
+"fim": 128.5
+},
+{
+"p": "muita",
+"ini": 128.5,
+"fim": 128.66
+},
+{
+"p": "gente",
+"ini": 128.66,
+"fim": 128.94
+},
+{
+"p": "lê",
+"ini": 128.94,
+"fim": 129.24
+},
+{
+"p": "como",
+"ini": 129.24,
+"fim": 129.52
+},
+{
+"p": "preguiça,",
+"ini": 129.52,
+"fim": 130.08
+}
+],
+"ini": 125.44,
+"fim": 130.08,
+"cobertura": 1.0
+},
+{
+"n": "25",
+"texto": "Não é.",
+"palavras": [
+{
+"p": "não",
+"ini": 130.64,
+"fim": 130.78
+},
+{
+"p": "é.",
+"ini": 130.78,
+"fim": 130.96
+}
+],
+"ini": 130.64,
+"fim": 130.96,
+"cobertura": 1.0
+},
+{
+"n": "26",
+"texto": "Wu wei é agir sem forçar.",
+"palavras": [
+{
+"p": "é",
+"ini": 132.46,
+"fim": 132.78
+},
+{
+"p": "agir",
+"ini": 132.78,
+"fim": 133.04
+},
+{
+"p": "sem",
+"ini": 133.04,
+"fim": 133.2
+},
+{
+"p": "forçar,",
+"ini": 133.2,
+"fim": 133.6
+}
+],
+"ini": 132.46,
+"fim": 133.6,
+"cobertura": 0.67
+},
+{
+"n": "27",
+"texto": "Agir na hora certa. E parar de gastar força com o que não depende de você.",
+"palavras": [
+{
+"p": "agir",
+"ini": 134.38,
+"fim": 134.7
+},
+{
+"p": "na",
+"ini": 134.7,
+"fim": 134.82
+},
+{
+"p": "hora",
+"ini": 134.82,
+"fim": 134.96
+},
+{
+"p": "certa,",
+"ini": 134.96,
+"fim": 135.34
+},
+{
+"p": "e",
+"ini": 136.06,
+"fim": 136.14
+},
+{
+"p": "parar",
+"ini": 136.14,
+"fim": 136.32
+},
+{
+"p": "de",
+"ini": 136.32,
+"fim": 136.56
+},
+{
+"p": "gastar",
+"ini": 136.56,
+"fim": 136.84
+},
+{
+"p": "força",
+"ini": 136.84,
+"fim": 137.2
+},
+{
+"p": "com",
+"ini": 137.2,
+"fim": 137.44
+},
+{
+"p": "o",
+"ini": 137.44,
+"fim": 137.56
+},
+{
+"p": "que",
+"ini": 137.56,
+"fim": 137.64
+},
+{
+"p": "não",
+"ini": 137.64,
+"fim": 137.88
+},
+{
+"p": "depende",
+"ini": 137.88,
+"fim": 138.26
+},
+{
+"p": "de",
+"ini": 138.26,
+"fim": 138.52
+},
+{
+"p": "você.",
+"ini": 138.52,
+"fim": 138.84
+}
+],
+"ini": 134.38,
+"fim": 138.84,
+"cobertura": 1.0
+},
+{
+"n": "28",
+"texto": "O exemplo que o livro usa é a água.",
+"palavras": [
+{
+"p": "O",
+"ini": 139.72,
+"fim": 139.84
+},
+{
+"p": "exemplo",
+"ini": 139.84,
+"fim": 140.12
+},
+{
+"p": "que",
+"ini": 140.12,
+"fim": 140.4
+},
+{
+"p": "livro",
+"ini": 140.5,
+"fim": 140.62
+},
+{
+"p": "usa",
+"ini": 140.62,
+"fim": 141.02
+},
+{
+"p": "é",
+"ini": 141.02,
+"fim": 141.3
+},
+{
+"p": "a",
+"ini": 141.3,
+"fim": 141.48
+},
+{
+"p": "água,",
+"ini": 141.48,
+"fim": 141.8
+}
+],
+"ini": 139.72,
+"fim": 141.8,
+"cobertura": 0.89
+},
+{
+"n": "29",
+"texto": "A água é mole. Não tem forma. Cede para qualquer coisa.",
+"palavras": [
+{
+"p": "a",
+"ini": 142.4,
+"fim": 142.48
+},
+{
+"p": "água",
+"ini": 142.48,
+"fim": 142.76
+},
+{
+"p": "é",
+"ini": 142.76,
+"fim": 142.92
+},
+{
+"p": "mole,",
+"ini": 142.92,
+"fim": 143.26
+},
+{
+"p": "não",
+"ini": 143.76,
+"fim": 143.92
+},
+{
+"p": "tem",
+"ini": 143.92,
+"fim": 144.06
+},
+{
+"p": "forma.",
+"ini": 144.06,
+"fim": 144.44
+},
+{
+"p": "para",
+"ini": 145.54,
+"fim": 145.72
+},
+{
+"p": "qualquer",
+"ini": 145.72,
+"fim": 145.98
+},
+{
+"p": "coisa.",
+"ini": 145.98,
+"fim": 146.4
+}
+],
+"ini": 142.4,
+"fim": 146.4,
+"cobertura": 0.91
+},
+{
+"n": "30",
+"texto": "E mesmo assim abre cânions na rocha.",
+"palavras": [
+{
+"p": "E",
+"ini": 146.4,
+"fim": 147.1
+},
+{
+"p": "mesmo",
+"ini": 147.1,
+"fim": 147.3
+},
+{
+"p": "assim,",
+"ini": 147.3,
+"fim": 147.66
+},
+{
+"p": "na",
+"ini": 148.86,
+"fim": 149.04
+},
+{
+"p": "rocha.",
+"ini": 149.04,
+"fim": 149.38
+}
+],
+"ini": 146.4,
+"fim": 149.38,
+"cobertura": 0.71
+},
+{
+"n": "31",
+"texto": "Ela não vence a pedra no choque.",
+"palavras": [
+{
+"p": "Ela",
+"ini": 150.1,
+"fim": 150.4
+},
+{
+"p": "não",
+"ini": 150.4,
+"fim": 150.58
+},
+{
+"p": "vence",
+"ini": 150.58,
+"fim": 150.82
+},
+{
+"p": "a",
+"ini": 150.82,
+"fim": 150.94
+},
+{
+"p": "pedra",
+"ini": 150.94,
+"fim": 151.2
+},
+{
+"p": "no",
+"ini": 151.2,
+"fim": 151.34
+},
+{
+"p": "choque.",
+"ini": 151.34,
+"fim": 151.7
+}
+],
+"ini": 150.1,
+"fim": 151.7,
+"cobertura": 1.0
+},
+{
+"n": "32",
+"texto": "Ela vence porque não para, contorna e volta todo dia.",
+"palavras": [
+{
+"p": "Ela",
+"ini": 152.32,
+"fim": 152.5
+},
+{
+"p": "vence",
+"ini": 152.5,
+"fim": 152.96
+},
+{
+"p": "porque",
+"ini": 152.96,
+"fim": 153.58
+},
+{
+"p": "não",
+"ini": 153.58,
+"fim": 153.74
+},
+{
+"p": "para.",
+"ini": 153.74,
+"fim": 154.04
+},
+{
+"p": "Contorna",
+"ini": 154.72,
+"fim": 155.32
+},
+{
+"p": "e",
+"ini": 155.32,
+"fim": 155.74
+},
+{
+"p": "volta",
+"ini": 155.74,
+"fim": 155.98
+},
+{
+"p": "todo",
+"ini": 155.98,
+"fim": 156.18
+},
+{
+"p": "dia.",
+"ini": 156.18,
+"fim": 156.5
+}
+],
+"ini": 152.32,
+"fim": 156.5,
+"cobertura": 1.0
+},
+{
+"n": "33",
+"texto": "Guarda essa imagem da água. Ela é a chave do vídeo inteiro.",
+"palavras": [
+{
+"p": "Guarda",
+"ini": 157.38,
+"fim": 157.76
+},
+{
+"p": "essa",
+"ini": 157.76,
+"fim": 157.88
+},
+{
+"p": "imagem",
+"ini": 157.88,
+"fim": 158.18
+},
+{
+"p": "da",
+"ini": 158.18,
+"fim": 158.36
+},
+{
+"p": "água.",
+"ini": 158.36,
+"fim": 158.66
+},
+{
+"p": "Ela",
+"ini": 159.32,
+"fim": 159.48
+},
+{
+"p": "é",
+"ini": 159.48,
+"fim": 159.58
+},
+{
+"p": "a",
+"ini": 159.58,
+"fim": 159.66
+},
+{
+"p": "chave",
+"ini": 159.66,
+"fim": 159.96
+},
+{
+"p": "do",
+"ini": 159.96,
+"fim": 160.12
+},
+{
+"p": "vídeo",
+"ini": 160.12,
+"fim": 160.34
+},
+{
+"p": "inteiro.",
+"ini": 160.34,
+"fim": 160.72
+}
+],
+"ini": 157.38,
+"fim": 160.72,
+"cobertura": 1.0
+},
+{
+"n": "34",
+"texto": "Porque a pergunta agora é outra: quem pensou isso?",
+"palavras": [
+{
+"p": "Porque",
+"ini": 161.44,
+"fim": 161.88
+},
+{
+"p": "a",
+"ini": 161.88,
+"fim": 161.96
+},
+{
+"p": "pergunta",
+"ini": 161.96,
+"fim": 162.18
+},
+{
+"p": "agora",
+"ini": 162.18,
+"fim": 162.56
+},
+{
+"p": "é",
+"ini": 162.56,
+"fim": 162.74
+},
+{
+"p": "outra.",
+"ini": 162.74,
+"fim": 163.02
+},
+{
+"p": "Quem",
+"ini": 163.84,
+"fim": 163.92
+},
+{
+"p": "pensou",
+"ini": 163.92,
+"fim": 164.3
+},
+{
+"p": "isso?",
+"ini": 164.3,
+"fim": 164.54
+}
+],
+"ini": 161.44,
+"fim": 164.54,
+"cobertura": 1.0
+},
+{
+"n": "35",
+"texto": "A resposta tradicional tem nome: Laozi. Quer dizer, mais ou menos, \"velho mestre\".",
+"palavras": [
+{
+"p": "A",
+"ini": 165.28,
+"fim": 165.52
+},
+{
+"p": "tradicional",
+"ini": 165.82,
+"fim": 166.48
+},
+{
+"p": "tem",
+"ini": 166.48,
+"fim": 166.68
+},
+{
+"p": "nome,",
+"ini": 166.68,
+"fim": 167.02
+},
+{
+"p": "Quer",
+"ini": 168.86,
+"fim": 169.04
+},
+{
+"p": "dizer,",
+"ini": 169.04,
+"fim": 169.34
+},
+{
+"p": "mais",
+"ini": 169.78,
+"fim": 169.88
+},
+{
+"p": "ou",
+"ini": 169.88,
+"fim": 170.06
+},
+{
+"p": "menos,",
+"ini": 170.06,
+"fim": 170.3
+},
+{
+"p": "Velho",
+"ini": 170.94,
+"fim": 171.32
+},
+{
+"p": "Mestre.",
+"ini": 171.32,
+"fim": 171.66
+}
+],
+"ini": 165.28,
+"fim": 171.66,
+"cobertura": 0.85
+},
+{
+"n": "36",
+"texto": "A história clássica diz que ele viveu uns quinhentos anos antes de Cristo e trabalhava nos arquivos da corte.",
+"palavras": [
+{
+"p": "A",
+"ini": 171.66,
+"fim": 172.64
+},
+{
+"p": "história",
+"ini": 172.64,
+"fim": 172.88
+},
+{
+"p": "clássica",
+"ini": 172.88,
+"fim": 173.5
+},
+{
+"p": "diz",
+"ini": 173.5,
+"fim": 174.08
+},
+{
+"p": "que",
+"ini": 174.08,
+"fim": 174.22
+},
+{
+"p": "ele",
+"ini": 174.22,
+"fim": 174.32
+},
+{
+"p": "viveu",
+"ini": 174.32,
+"fim": 174.78
+},
+{
+"p": "uns",
+"ini": 174.78,
+"fim": 175.0
+},
+{
+"p": "anos",
+"ini": 175.32,
+"fim": 175.8
+},
+{
+"p": "antes",
+"ini": 175.8,
+"fim": 176.06
+},
+{
+"p": "de",
+"ini": 176.06,
+"fim": 176.22
+},
+{
+"p": "Cristo",
+"ini": 176.22,
+"fim": 176.56
+},
+{
+"p": "e",
+"ini": 176.56,
+"fim": 177.16
+},
+{
+"p": "trabalhava",
+"ini": 177.16,
+"fim": 177.74
+},
+{
+"p": "nos",
+"ini": 177.74,
+"fim": 178.14
+},
+{
+"p": "arquivos",
+"ini": 178.14,
+"fim": 178.6
+},
+{
+"p": "da",
+"ini": 178.6,
+"fim": 178.74
+},
+{
+"p": "Corte.",
+"ini": 178.74,
+"fim": 179.06
+}
+],
+"ini": 171.66,
+"fim": 179.06,
+"cobertura": 0.95
+},
+{
+"n": "37",
+"texto": "E a lenda é linda.",
+"palavras": [
+{
+"p": "a",
+"ini": 180.14,
+"fim": 180.26
+},
+{
+"p": "lenda",
+"ini": 180.26,
+"fim": 180.52
+},
+{
+"p": "é",
+"ini": 180.52,
+"fim": 180.74
+},
+{
+"p": "linda.",
+"ini": 180.74,
+"fim": 181.08
+}
+],
+"ini": 180.14,
+"fim": 181.08,
+"cobertura": 0.8
+},
+{
+"n": "38",
+"texto": "Cansado da decadência do reino, Laozi vai embora para o oeste, montado num búfalo.",
+"palavras": [
+{
+"p": "Cansado",
+"ini": 181.76,
+"fim": 182.44
+},
+{
+"p": "da",
+"ini": 182.44,
+"fim": 182.92
+},
+{
+"p": "decadência",
+"ini": 182.92,
+"fim": 183.32
+},
+{
+"p": "do",
+"ini": 183.32,
+"fim": 183.52
+},
+{
+"p": "reino,",
+"ini": 183.52,
+"fim": 183.84
+},
+{
+"p": "vai",
+"ini": 184.76,
+"fim": 185.28
+},
+{
+"p": "embora",
+"ini": 185.28,
+"fim": 185.6
+},
+{
+"p": "para",
+"ini": 185.6,
+"fim": 185.84
+},
+{
+"p": "o",
+"ini": 185.84,
+"fim": 185.94
+},
+{
+"p": "oeste,",
+"ini": 185.94,
+"fim": 186.3
+},
+{
+"p": "montado",
+"ini": 186.74,
+"fim": 187.14
+},
+{
+"p": "num",
+"ini": 187.14,
+"fim": 187.28
+},
+{
+"p": "búfalo.",
+"ini": 187.28,
+"fim": 187.66
+}
+],
+"ini": 181.76,
+"fim": 187.66,
+"cobertura": 0.93
+},
+{
+"n": "39",
+"texto": "Na fronteira, no passo de Hangu, o guarda reconhece que aquele velho é um sábio.",
+"palavras": [
+{
+"p": "Na",
+"ini": 188.54,
+"fim": 188.64
+},
+{
+"p": "fronteira,",
+"ini": 188.64,
+"fim": 189.16
+},
+{
+"p": "no",
+"ini": 189.48,
+"fim": 189.62
+},
+{
+"p": "passo",
+"ini": 189.62,
+"fim": 189.84
+},
+{
+"p": "de",
+"ini": 189.84,
+"fim": 190.0
+},
+{
+"p": "o",
+"ini": 190.96,
+"fim": 191.06
+},
+{
+"p": "guarda",
+"ini": 191.06,
+"fim": 191.4
+},
+{
+"p": "reconhece",
+"ini": 191.4,
+"fim": 191.98
+},
+{
+"p": "que",
+"ini": 191.98,
+"fim": 192.34
+},
+{
+"p": "aquele",
+"ini": 192.34,
+"fim": 192.54
+},
+{
+"p": "velho",
+"ini": 192.54,
+"fim": 192.98
+},
+{
+"p": "é",
+"ini": 192.98,
+"fim": 193.2
+},
+{
+"p": "um",
+"ini": 193.2,
+"fim": 193.3
+},
+{
+"p": "sábio",
+"ini": 193.3,
+"fim": 193.7
+}
+],
+"ini": 188.54,
+"fim": 193.7,
+"cobertura": 0.93
+},
+{
+"n": "40",
+"texto": "E pede: antes de partir, deixa por escrito o que você sabe.",
+"palavras": [
+{
+"p": "e",
+"ini": 193.7,
+"fim": 194.34
+},
+{
+"p": "pede.",
+"ini": 194.34,
+"fim": 194.62
+},
+{
+"p": "Antes",
+"ini": 195.5,
+"fim": 195.8
+},
+{
+"p": "de",
+"ini": 195.8,
+"fim": 195.96
+},
+{
+"p": "partir,",
+"ini": 195.96,
+"fim": 196.2
+},
+{
+"p": "deixa",
+"ini": 196.76,
+"fim": 197.12
+},
+{
+"p": "por",
+"ini": 197.12,
+"fim": 197.28
+},
+{
+"p": "escrito",
+"ini": 197.28,
+"fim": 197.66
+},
+{
+"p": "o",
+"ini": 197.66,
+"fim": 198.02
+},
+{
+"p": "que",
+"ini": 198.02,
+"fim": 198.1
+}
+],
+"ini": 193.7,
+"fim": 198.1,
+"cobertura": 0.83
+},
+{
+"n": "41",
+"texto": "Laozi escreve uns cinco mil caracteres, entrega, atravessa a fronteira.",
+"palavras": [
+{
+"p": "escreve",
+"ini": 199.94,
+"fim": 200.8
+},
+{
+"p": "uns",
+"ini": 200.8,
+"fim": 200.92
+},
+{
+"p": "mil",
+"ini": 201.22,
+"fim": 201.38
+},
+{
+"p": "caracteres,",
+"ini": 201.38,
+"fim": 202.08
+},
+{
+"p": "entrega,",
+"ini": 202.58,
+"fim": 203.12
+},
+{
+"p": "atravessa",
+"ini": 203.54,
+"fim": 204.04
+},
+{
+"p": "a",
+"ini": 204.04,
+"fim": 204.22
+},
+{
+"p": "fronteira.",
+"ini": 204.22,
+"fim": 204.68
+}
+],
+"ini": 199.94,
+"fim": 204.68,
+"cobertura": 0.8
+},
+{
+"n": "42",
+"texto": "E nunca mais é visto.",
+"palavras": [
+{
+"p": "e",
+"ini": 204.68,
+"fim": 205.7
+},
+{
+"p": "nunca",
+"ini": 205.7,
+"fim": 205.82
+},
+{
+"p": "mais",
+"ini": 205.82,
+"fim": 206.14
+},
+{
+"p": "é",
+"ini": 206.14,
+"fim": 206.3
+},
+{
+"p": "visto.",
+"ini": 206.3,
+"fim": 206.54
+}
+],
+"ini": 204.68,
+"fim": 206.54,
+"cobertura": 1.0
+},
+{
+"n": "43",
+"texto": "O problema é a data.",
+"palavras": [
+{
+"p": "O",
+"ini": 207.24,
+"fim": 207.44
+},
+{
+"p": "problema",
+"ini": 207.44,
+"fim": 207.78
+},
+{
+"p": "é",
+"ini": 207.78,
+"fim": 208.26
+},
+{
+"p": "a",
+"ini": 208.26,
+"fim": 208.38
+},
+{
+"p": "data.",
+"ini": 208.38,
+"fim": 208.64
+}
+],
+"ini": 207.24,
+"fim": 208.64,
+"cobertura": 1.0
+},
+{
+"n": "44",
+"texto": "A biografia mais antiga de Laozi foi escrita pelo historiador Sima Qian por volta de cem antes de Cristo.",
+"palavras": [
+{
+"p": "A",
+"ini": 209.56,
+"fim": 209.66
+},
+{
+"p": "biografia",
+"ini": 209.66,
+"fim": 210.18
+},
+{
+"p": "mais",
+"ini": 210.18,
+"fim": 210.42
+},
+{
+"p": "antiga",
+"ini": 210.42,
+"fim": 210.8
+},
+{
+"p": "de",
+"ini": 210.8,
+"fim": 210.94
+},
+{
+"p": "foi",
+"ini": 211.26,
+"fim": 212.12
+},
+{
+"p": "escrita",
+"ini": 212.12,
+"fim": 212.54
+},
+{
+"p": "pelo",
+"ini": 212.54,
+"fim": 212.78
+},
+{
+"p": "historiador",
+"ini": 212.78,
+"fim": 213.32
+},
+{
+"p": "por",
+"ini": 214.18,
+"fim": 214.88
+},
+{
+"p": "volta",
+"ini": 214.88,
+"fim": 215.16
+},
+{
+"p": "de",
+"ini": 215.16,
+"fim": 215.4
+}
+],
+"ini": 209.56,
+"fim": 215.4,
+"cobertura": 0.63
+},
+{
+"n": "45",
+"texto": "Uns quatrocentos anos depois.",
+"palavras": [
+{
+"p": "uns",
+"ini": 217.18,
+"fim": 217.36
+},
+{
+"p": "anos",
+"ini": 217.68,
+"fim": 218.26
+},
+{
+"p": "depois,",
+"ini": 218.26,
+"fim": 218.56
+}
+],
+"ini": 217.18,
+"fim": 218.56,
+"cobertura": 0.75
+},
+{
+"n": "46",
+"texto": "E o próprio Sima Qian já registra versões diferentes de quem ele teria sido.",
+"palavras": [
+{
+"p": "e",
+"ini": 219.34,
+"fim": 219.7
+},
+{
+"p": "o",
+"ini": 219.7,
+"fim": 219.8
+},
+{
+"p": "próprio",
+"ini": 219.8,
+"fim": 220.1
+},
+{
+"p": "já",
+"ini": 220.82,
+"fim": 221.52
+},
+{
+"p": "registra",
+"ini": 221.52,
+"fim": 222.04
+},
+{
+"p": "versões",
+"ini": 222.04,
+"fim": 222.36
+},
+{
+"p": "diferentes",
+"ini": 222.36,
+"fim": 222.68
+},
+{
+"p": "de",
+"ini": 222.68,
+"fim": 223.08
+},
+{
+"p": "quem",
+"ini": 223.08,
+"fim": 223.34
+},
+{
+"p": "ele",
+"ini": 223.34,
+"fim": 223.52
+},
+{
+"p": "teria",
+"ini": 223.52,
+"fim": 223.74
+},
+{
+"p": "sido.",
+"ini": 223.74,
+"fim": 224.16
+}
+],
+"ini": 219.34,
+"fim": 224.16,
+"cobertura": 0.86
+},
+{
+"n": "47",
+"texto": "Por isso muitos estudiosos acham que Laozi pode ser uma lenda, ou um nome que juntou a voz de vários autores.",
+"palavras": [
+{
+"p": "Por",
+"ini": 224.96,
+"fim": 225.34
+},
+{
+"p": "isso,",
+"ini": 225.34,
+"fim": 225.6
+},
+{
+"p": "muitos",
+"ini": 225.96,
+"fim": 226.3
+},
+{
+"p": "estudiosos",
+"ini": 226.3,
+"fim": 227.24
+},
+{
+"p": "acham",
+"ini": 227.24,
+"fim": 227.68
+},
+{
+"p": "que",
+"ini": 227.68,
+"fim": 227.82
+},
+{
+"p": "pode",
+"ini": 228.22,
+"fim": 229.04
+},
+{
+"p": "ser",
+"ini": 229.04,
+"fim": 229.28
+},
+{
+"p": "uma",
+"ini": 229.28,
+"fim": 229.46
+},
+{
+"p": "lenda",
+"ini": 229.46,
+"fim": 229.82
+},
+{
+"p": "ou",
+"ini": 229.82,
+"fim": 230.7
+},
+{
+"p": "um",
+"ini": 230.7,
+"fim": 230.86
+},
+{
+"p": "nome",
+"ini": 230.86,
+"fim": 231.12
+},
+{
+"p": "que",
+"ini": 231.12,
+"fim": 231.32
+},
+{
+"p": "juntou",
+"ini": 231.32,
+"fim": 231.74
+},
+{
+"p": "a",
+"ini": 231.74,
+"fim": 231.84
+},
+{
+"p": "voz",
+"ini": 231.84,
+"fim": 232.04
+},
+{
+"p": "de",
+"ini": 232.04,
+"fim": 232.2
+},
+{
+"p": "vários",
+"ini": 232.2,
+"fim": 232.52
+},
+{
+"p": "autores",
+"ini": 232.52,
+"fim": 233.02
+}
+],
+"ini": 224.96,
+"fim": 233.02,
+"cobertura": 0.95
+},
+{
+"n": "48",
+"texto": "E tem um jeito de testar isso.",
+"palavras": [
+{
+"p": "e",
+"ini": 233.62,
+"fim": 234.12
+},
+{
+"p": "tem",
+"ini": 234.12,
+"fim": 234.3
+},
+{
+"p": "um",
+"ini": 234.3,
+"fim": 234.48
+},
+{
+"p": "jeito",
+"ini": 234.48,
+"fim": 234.66
+},
+{
+"p": "de",
+"ini": 234.66,
+"fim": 235.28
+},
+{
+"p": "testar",
+"ini": 235.28,
+"fim": 235.7
+},
+{
+"p": "isso.",
+"ini": 235.7,
+"fim": 235.94
+}
+],
+"ini": 233.62,
+"fim": 235.94,
+"cobertura": 1.0
+},
+{
+"n": "49",
+"texto": "Se um homem só escreveu o livro de uma vez, as cópias mais antigas tinham que ser iguais à de hoje.",
+"palavras": [
+{
+"p": "Se",
+"ini": 236.74,
+"fim": 237.02
+},
+{
+"p": "um",
+"ini": 237.02,
+"fim": 237.2
+},
+{
+"p": "homem",
+"ini": 237.2,
+"fim": 237.48
+},
+{
+"p": "só",
+"ini": 237.48,
+"fim": 237.72
+},
+{
+"p": "escreveu",
+"ini": 237.72,
+"fim": 238.22
+},
+{
+"p": "o",
+"ini": 238.22,
+"fim": 238.3
+},
+{
+"p": "livro",
+"ini": 238.3,
+"fim": 238.56
+},
+{
+"p": "de",
+"ini": 238.56,
+"fim": 238.7
+},
+{
+"p": "uma",
+"ini": 238.7,
+"fim": 238.82
+},
+{
+"p": "vez,",
+"ini": 238.82,
+"fim": 239.2
+},
+{
+"p": "as...",
+"ini": 239.42,
+"fim": 239.94
+},
+{
+"p": "cópias",
+"ini": 240.02,
+"fim": 240.44
+},
+{
+"p": "mais",
+"ini": 240.44,
+"fim": 240.72
+},
+{
+"p": "antigas",
+"ini": 240.72,
+"fim": 241.3
+},
+{
+"p": "tinham",
+"ini": 241.3,
+"fim": 241.64
+},
+{
+"p": "que",
+"ini": 241.64,
+"fim": 241.8
+},
+{
+"p": "ser",
+"ini": 241.8,
+"fim": 242.0
+},
+{
+"p": "iguais",
+"ini": 242.0,
+"fim": 242.38
+},
+{
+"p": "à",
+"ini": 242.38,
+"fim": 242.64
+},
+{
+"p": "de",
+"ini": 242.64,
+"fim": 242.76
+},
+{
+"p": "hoje.",
+"ini": 242.76,
+"fim": 243.08
+}
+],
+"ini": 236.74,
+"fim": 243.08,
+"cobertura": 1.0
+},
+{
+"n": "50",
+"texto": "Elas não são.",
+"palavras": [
+{
+"p": "Elas",
+"ini": 243.84,
+"fim": 244.16
+},
+{
+"p": "não",
+"ini": 244.16,
+"fim": 244.3
+},
+{
+"p": "são.",
+"ini": 244.3,
+"fim": 244.58
+}
+],
+"ini": 243.84,
+"fim": 244.58,
+"cobertura": 1.0
+},
+{
+"n": "51",
+"texto": "Em 1993, numa outra tumba, em Guodian, apareceram feixes de tiras de bambu.",
+"palavras": [
+{
+"p": "Em",
+"ini": 245.38,
+"fim": 245.54
+},
+{
+"p": "1993,",
+"ini": 245.54,
+"fim": 246.92
+},
+{
+"p": "numa",
+"ini": 247.74,
+"fim": 248.08
+},
+{
+"p": "outra",
+"ini": 248.08,
+"fim": 248.44
+},
+{
+"p": "tumba,",
+"ini": 248.44,
+"fim": 249.02
+},
+{
+"p": "em",
+"ini": 249.46,
+"fim": 249.54
+},
+{
+"p": "apareceram",
+"ini": 250.6,
+"fim": 251.32
+},
+{
+"p": "feixes",
+"ini": 251.32,
+"fim": 251.82
+},
+{
+"p": "de",
+"ini": 251.82,
+"fim": 252.08
+},
+{
+"p": "tiras",
+"ini": 252.08,
+"fim": 252.46
+},
+{
+"p": "de",
+"ini": 252.46,
+"fim": 252.54
+},
+{
+"p": "bambu.",
+"ini": 252.54,
+"fim": 252.94
+}
+],
+"ini": 245.38,
+"fim": 252.94,
+"cobertura": 0.92
+},
+{
+"n": "52",
+"texto": "É a cópia mais antiga que se conhece do texto, de uns trezentos anos antes de Cristo.",
+"palavras": [
+{
+"p": "É",
+"ini": 253.74,
+"fim": 254.16
+},
+{
+"p": "a",
+"ini": 254.16,
+"fim": 254.26
+},
+{
+"p": "cópia",
+"ini": 254.26,
+"fim": 254.56
+},
+{
+"p": "mais",
+"ini": 254.56,
+"fim": 254.86
+},
+{
+"p": "antiga",
+"ini": 254.86,
+"fim": 255.34
+},
+{
+"p": "que",
+"ini": 255.34,
+"fim": 255.52
+},
+{
+"p": "se",
+"ini": 255.52,
+"fim": 255.64
+},
+{
+"p": "conhece",
+"ini": 255.64,
+"fim": 256.06
+},
+{
+"p": "do",
+"ini": 256.06,
+"fim": 256.24
+},
+{
+"p": "texto",
+"ini": 256.24,
+"fim": 256.6
+},
+{
+"p": "de",
+"ini": 256.6,
+"fim": 257.26
+},
+{
+"p": "uns",
+"ini": 257.26,
+"fim": 257.38
+},
+{
+"p": "anos",
+"ini": 257.62,
+"fim": 258.14
+},
+{
+"p": "antes",
+"ini": 258.14,
+"fim": 258.46
+},
+{
+"p": "de",
+"ini": 258.46,
+"fim": 258.64
+},
+{
+"p": "Cristo.",
+"ini": 258.64,
+"fim": 259.0
+}
+],
+"ini": 253.74,
+"fim": 259.0,
+"cobertura": 0.94
+},
+{
+"n": "53",
+"texto": "E ela é estranha.",
+"palavras": [
+{
+"p": "E",
+"ini": 259.66,
+"fim": 260.02
+},
+{
+"p": "ela",
+"ini": 260.02,
+"fim": 260.26
+},
+{
+"p": "é",
+"ini": 260.26,
+"fim": 260.52
+},
+{
+"p": "estranha.",
+"ini": 260.52,
+"fim": 261.1
+}
+],
+"ini": 259.66,
+"fim": 261.1,
+"cobertura": 1.0
+},
+{
+"n": "54",
+"texto": "Tem só um pedaço do livro.",
+"palavras": [
+{
+"p": "Tem",
+"ini": 261.1,
+"fim": 262.22
+},
+{
+"p": "só",
+"ini": 262.22,
+"fim": 262.54
+},
+{
+"p": "um",
+"ini": 262.54,
+"fim": 262.82
+},
+{
+"p": "pedaço",
+"ini": 262.82,
+"fim": 263.26
+},
+{
+"p": "do",
+"ini": 263.26,
+"fim": 263.44
+},
+{
+"p": "livro,",
+"ini": 263.44,
+"fim": 263.74
+}
+],
+"ini": 261.1,
+"fim": 263.74,
+"cobertura": 1.0
+},
+{
+"n": "55",
+"texto": "Não tem os oitenta e um capítulos.",
+"palavras": [
+{
+"p": "não",
+"ini": 264.4,
+"fim": 264.7
+},
+{
+"p": "tem",
+"ini": 264.7,
+"fim": 264.94
+},
+{
+"p": "os",
+"ini": 264.94,
+"fim": 265.1
+},
+{
+"p": "capítulos,",
+"ini": 265.58,
+"fim": 266.4
+}
+],
+"ini": 264.4,
+"fim": 266.4,
+"cobertura": 0.57
+},
+{
+"n": "56",
+"texto": "A ordem é outra.",
+"palavras": [
+{
+"p": "a",
+"ini": 267.24,
+"fim": 267.38
+},
+{
+"p": "ordem",
+"ini": 267.38,
+"fim": 267.72
+},
+{
+"p": "é",
+"ini": 267.72,
+"fim": 267.86
+},
+{
+"p": "outra,",
+"ini": 267.86,
+"fim": 268.1
+}
+],
+"ini": 267.24,
+"fim": 268.1,
+"cobertura": 1.0
+},
+{
+"n": "57",
+"texto": "Parece menos um livro pronto e mais uma coleção de ensinamentos ainda sendo montada.",
+"palavras": [
+{
+"p": "parece",
+"ini": 268.72,
+"fim": 269.08
+},
+{
+"p": "menos",
+"ini": 269.08,
+"fim": 269.46
+},
+{
+"p": "um",
+"ini": 269.46,
+"fim": 269.68
+},
+{
+"p": "livro",
+"ini": 269.68,
+"fim": 269.94
+},
+{
+"p": "pronto",
+"ini": 269.94,
+"fim": 270.36
+},
+{
+"p": "e",
+"ini": 270.36,
+"fim": 271.0
+},
+{
+"p": "mais",
+"ini": 271.0,
+"fim": 271.26
+},
+{
+"p": "uma",
+"ini": 271.26,
+"fim": 271.48
+},
+{
+"p": "coleção",
+"ini": 271.48,
+"fim": 271.94
+},
+{
+"p": "de",
+"ini": 271.94,
+"fim": 272.1
+},
+{
+"p": "ensinamentos",
+"ini": 272.1,
+"fim": 272.66
+},
+{
+"p": "ainda",
+"ini": 272.66,
+"fim": 272.96
+},
+{
+"p": "sendo",
+"ini": 272.96,
+"fim": 273.26
+},
+{
+"p": "montada.",
+"ini": 273.26,
+"fim": 273.78
+}
+],
+"ini": 268.72,
+"fim": 273.78,
+"cobertura": 1.0
+},
+{
+"n": "58",
+"texto": "Depois vem a tumba do filho de Xin Zhui, em Mawangdui, fechada em 168 antes de Cristo.",
+"palavras": [
+{
+"p": "Depois",
+"ini": 274.48,
+"fim": 274.96
+},
+{
+"p": "vem",
+"ini": 274.96,
+"fim": 275.44
+},
+{
+"p": "a",
+"ini": 275.44,
+"fim": 275.56
+},
+{
+"p": "tumba",
+"ini": 275.56,
+"fim": 275.88
+},
+{
+"p": "do",
+"ini": 275.88,
+"fim": 275.98
+},
+{
+"p": "filho",
+"ini": 275.98,
+"fim": 276.24
+},
+{
+"p": "de",
+"ini": 276.24,
+"fim": 276.46
+},
+{
+"p": "em",
+"ini": 276.94,
+"fim": 277.64
+},
+{
+"p": "fechada",
+"ini": 278.82,
+"fim": 279.38
+},
+{
+"p": "em",
+"ini": 279.38,
+"fim": 279.64
+},
+{
+"p": "168",
+"ini": 279.64,
+"fim": 280.78
+}
+],
+"ini": 274.48,
+"fim": 280.78,
+"cobertura": 0.65
+},
+{
+"n": "59",
+"texto": "Ali estavam duas cópias quase completas, em seda.",
+"palavras": [
+{
+"p": "Ali",
+"ini": 282.62,
+"fim": 282.98
+},
+{
+"p": "estavam",
+"ini": 282.98,
+"fim": 283.96
+},
+{
+"p": "duas",
+"ini": 283.96,
+"fim": 284.34
+},
+{
+"p": "cópias",
+"ini": 284.34,
+"fim": 284.82
+},
+{
+"p": "quase",
+"ini": 284.82,
+"fim": 285.2
+},
+{
+"p": "completas",
+"ini": 285.2,
+"fim": 285.92
+},
+{
+"p": "em",
+"ini": 285.92,
+"fim": 286.5
+},
+{
+"p": "seda.",
+"ini": 286.5,
+"fim": 286.84
+}
+],
+"ini": 282.62,
+"fim": 286.84,
+"cobertura": 1.0
+},
+{
+"n": "60",
+"texto": "E nas duas, a parte da virtude, o Te, vem antes da parte do caminho, o Tao.",
+"palavras": [
+{
+"p": "E",
+"ini": 286.84,
+"fim": 287.64
+},
+{
+"p": "nas",
+"ini": 287.64,
+"fim": 287.78
+},
+{
+"p": "duas,",
+"ini": 287.78,
+"fim": 288.04
+},
+{
+"p": "a",
+"ini": 288.68,
+"fim": 288.74
+},
+{
+"p": "parte",
+"ini": 288.74,
+"fim": 289.02
+},
+{
+"p": "da",
+"ini": 289.02,
+"fim": 289.2
+},
+{
+"p": "virtude,",
+"ini": 289.2,
+"fim": 289.72
+},
+{
+"p": "o",
+"ini": 290.14,
+"fim": 290.22
+},
+{
+"p": "vem",
+"ini": 290.94,
+"fim": 291.14
+},
+{
+"p": "antes",
+"ini": 291.14,
+"fim": 291.42
+},
+{
+"p": "da",
+"ini": 291.42,
+"fim": 291.58
+},
+{
+"p": "parte",
+"ini": 291.58,
+"fim": 291.82
+},
+{
+"p": "do",
+"ini": 291.82,
+"fim": 291.96
+},
+{
+"p": "caminho,",
+"ini": 291.96,
+"fim": 292.18
+},
+{
+"p": "o",
+"ini": 292.98,
+"fim": 293.14
+}
+],
+"ini": 286.84,
+"fim": 293.14,
+"cobertura": 0.88
+},
+{
+"n": "61",
+"texto": "Ou seja: por um tempo, o livro se chamava, na prática, Te Tao Ching.",
+"palavras": [
+{
+"p": "ou",
+"ini": 293.92,
+"fim": 293.96
+},
+{
+"p": "seja,",
+"ini": 293.96,
+"fim": 294.26
+},
+{
+"p": "por",
+"ini": 295.1,
+"fim": 295.24
+},
+{
+"p": "um",
+"ini": 295.24,
+"fim": 295.38
+},
+{
+"p": "tempo,",
+"ini": 295.38,
+"fim": 295.72
+},
+{
+"p": "o",
+"ini": 296.26,
+"fim": 296.38
+},
+{
+"p": "livro",
+"ini": 296.38,
+"fim": 296.54
+},
+{
+"p": "se",
+"ini": 296.54,
+"fim": 296.72
+},
+{
+"p": "chamava",
+"ini": 296.72,
+"fim": 297.16
+},
+{
+"p": "na",
+"ini": 297.16,
+"fim": 297.28
+},
+{
+"p": "prática,",
+"ini": 297.28,
+"fim": 297.76
+}
+],
+"ini": 293.92,
+"fim": 297.76,
+"cobertura": 0.79
+},
+{
+"n": "62",
+"texto": "A ordem que todo mundo conhece foi uma escolha de edição, feita depois.",
+"palavras": [
+{
+"p": "ordem",
+"ini": 300.38,
+"fim": 300.66
+},
+{
+"p": "que",
+"ini": 300.66,
+"fim": 300.76
+},
+{
+"p": "todo",
+"ini": 300.76,
+"fim": 300.92
+},
+{
+"p": "mundo",
+"ini": 300.92,
+"fim": 301.12
+},
+{
+"p": "conhece",
+"ini": 301.12,
+"fim": 301.62
+},
+{
+"p": "foi",
+"ini": 301.62,
+"fim": 301.8
+},
+{
+"p": "uma",
+"ini": 301.8,
+"fim": 301.96
+},
+{
+"p": "escolha",
+"ini": 301.96,
+"fim": 302.34
+},
+{
+"p": "de",
+"ini": 302.34,
+"fim": 302.5
+},
+{
+"p": "edição,",
+"ini": 302.5,
+"fim": 302.9
+},
+{
+"p": "feita",
+"ini": 303.2,
+"fim": 303.62
+},
+{
+"p": "depois.",
+"ini": 303.62,
+"fim": 303.96
+}
+],
+"ini": 300.38,
+"fim": 303.96,
+"cobertura": 0.92
+},
+{
+"n": "63",
+"texto": "E em 2009 a Universidade de Pequim recebeu mais um lote de tiras de bambu com outra versão do texto.",
+"palavras": [
+{
+"p": "E",
+"ini": 304.82,
+"fim": 305.16
+},
+{
+"p": "em",
+"ini": 305.16,
+"fim": 305.28
+},
+{
+"p": "2009,",
+"ini": 305.28,
+"fim": 306.06
+},
+{
+"p": "a",
+"ini": 306.6,
+"fim": 306.62
+},
+{
+"p": "Universidade",
+"ini": 306.62,
+"fim": 307.2
+},
+{
+"p": "de",
+"ini": 307.2,
+"fim": 307.46
+},
+{
+"p": "recebeu",
+"ini": 307.78,
+"fim": 308.78
+},
+{
+"p": "mais",
+"ini": 308.78,
+"fim": 308.98
+},
+{
+"p": "um",
+"ini": 308.98,
+"fim": 309.2
+},
+{
+"p": "lote",
+"ini": 309.2,
+"fim": 309.6
+},
+{
+"p": "de",
+"ini": 309.6,
+"fim": 309.66
+},
+{
+"p": "tiras",
+"ini": 309.66,
+"fim": 310.0
+},
+{
+"p": "de",
+"ini": 310.0,
+"fim": 310.08
+},
+{
+"p": "com",
+"ini": 310.42,
+"fim": 311.02
+},
+{
+"p": "outra",
+"ini": 311.02,
+"fim": 311.32
+},
+{
+"p": "versão",
+"ini": 311.32,
+"fim": 311.68
+},
+{
+"p": "do",
+"ini": 311.68,
+"fim": 311.84
+},
+{
+"p": "texto.",
+"ini": 311.84,
+"fim": 312.12
+}
+],
+"ini": 304.82,
+"fim": 312.12,
+"cobertura": 0.9
+},
+{
+"n": "64",
+"texto": "Esse apareceu no mercado de antiguidades, então os pesquisadores tratam a origem com cuidado.",
+"palavras": [
+{
+"p": "Esse",
+"ini": 313.1,
+"fim": 313.46
+},
+{
+"p": "apareceu",
+"ini": 313.46,
+"fim": 314.24
+},
+{
+"p": "no",
+"ini": 314.24,
+"fim": 314.4
+},
+{
+"p": "mercado",
+"ini": 314.4,
+"fim": 314.8
+},
+{
+"p": "de",
+"ini": 314.8,
+"fim": 315.02
+},
+{
+"p": "antigüidades,",
+"ini": 315.02,
+"fim": 315.58
+},
+{
+"p": "então",
+"ini": 316.28,
+"fim": 316.68
+},
+{
+"p": "os",
+"ini": 316.68,
+"fim": 317.36
+},
+{
+"p": "pesquisadores",
+"ini": 317.36,
+"fim": 317.98
+},
+{
+"p": "tratam",
+"ini": 317.98,
+"fim": 318.6
+},
+{
+"p": "a",
+"ini": 318.6,
+"fim": 318.9
+},
+{
+"p": "origem",
+"ini": 318.9,
+"fim": 319.3
+},
+{
+"p": "com",
+"ini": 319.3,
+"fim": 319.46
+},
+{
+"p": "cuidado.",
+"ini": 319.46,
+"fim": 319.88
+}
+],
+"ini": 313.1,
+"fim": 319.88,
+"cobertura": 1.0
+},
+{
+"n": "65",
+"texto": "Mas ele aponta para o mesmo lado.",
+"palavras": [
+{
+"p": "Mas",
+"ini": 320.66,
+"fim": 321.16
+},
+{
+"p": "ele",
+"ini": 321.16,
+"fim": 321.3
+},
+{
+"p": "aponta",
+"ini": 321.3,
+"fim": 321.66
+},
+{
+"p": "para",
+"ini": 321.66,
+"fim": 321.92
+},
+{
+"p": "o",
+"ini": 321.92,
+"fim": 322.02
+},
+{
+"p": "mesmo",
+"ini": 322.02,
+"fim": 322.18
+},
+{
+"p": "lado,",
+"ini": 322.18,
+"fim": 322.58
+}
+],
+"ini": 320.66,
+"fim": 322.58,
+"cobertura": 1.0
+},
+{
+"n": "66",
+"texto": "Junta tudo e a resposta aparece.",
+"palavras": [
+{
+"p": "junta",
+"ini": 323.34,
+"fim": 323.74
+},
+{
+"p": "tudo",
+"ini": 323.74,
+"fim": 324.04
+},
+{
+"p": "e",
+"ini": 324.04,
+"fim": 324.8
+},
+{
+"p": "a",
+"ini": 324.8,
+"fim": 324.88
+},
+{
+"p": "resposta",
+"ini": 324.88,
+"fim": 325.22
+},
+{
+"p": "aparece.",
+"ini": 325.22,
+"fim": 325.7
+}
+],
+"ini": 323.34,
+"fim": 325.7,
+"cobertura": 1.0
+},
+{
+"n": "67",
+"texto": "O Tao Te Ching não caiu pronto do céu nem saiu de uma tarde na fronteira.",
+"palavras": [
+{
+"p": "O",
+"ini": 325.7,
+"fim": 326.64
+},
+{
+"p": "não",
+"ini": 327.44,
+"fim": 327.74
+},
+{
+"p": "caiu",
+"ini": 327.74,
+"fim": 328.04
+},
+{
+"p": "pronto",
+"ini": 328.04,
+"fim": 328.28
+},
+{
+"p": "do",
+"ini": 328.28,
+"fim": 328.48
+},
+{
+"p": "céu",
+"ini": 328.48,
+"fim": 328.76
+},
+{
+"p": "nem",
+"ini": 328.76,
+"fim": 329.1
+},
+{
+"p": "saiu",
+"ini": 329.1,
+"fim": 329.42
+},
+{
+"p": "de",
+"ini": 329.42,
+"fim": 329.54
+},
+{
+"p": "uma",
+"ini": 329.54,
+"fim": 329.66
+},
+{
+"p": "tarde",
+"ini": 329.66,
+"fim": 329.96
+},
+{
+"p": "na",
+"ini": 329.96,
+"fim": 330.08
+},
+{
+"p": "fronteira.",
+"ini": 330.08,
+"fim": 330.6
+}
+],
+"ini": 325.7,
+"fim": 330.6,
+"cobertura": 0.81
+},
+{
+"n": "68",
+"texto": "Ele foi falado, decorado, copiado em bambu, copiado em seda, cortado, ampliado e reorganizado.",
+"palavras": [
+{
+"p": "Ele",
+"ini": 331.0,
+"fim": 331.36
+},
+{
+"p": "foi",
+"ini": 331.36,
+"fim": 331.52
+},
+{
+"p": "falado,",
+"ini": 331.52,
+"fim": 332.04
+},
+{
+"p": "decorado,",
+"ini": 332.44,
+"fim": 332.9
+},
+{
+"p": "copiado",
+"ini": 333.2,
+"fim": 333.58
+},
+{
+"p": "em",
+"ini": 333.58,
+"fim": 333.7
+},
+{
+"p": "bambu,",
+"ini": 333.7,
+"fim": 334.08
+},
+{
+"p": "copiado",
+"ini": 334.4,
+"fim": 334.84
+},
+{
+"p": "em",
+"ini": 334.84,
+"fim": 334.98
+},
+{
+"p": "seda,",
+"ini": 334.98,
+"fim": 335.34
+},
+{
+"p": "cortado,",
+"ini": 335.74,
+"fim": 336.28
+},
+{
+"p": "ampliado",
+"ini": 336.68,
+"fim": 337.3
+},
+{
+"p": "e",
+"ini": 337.3,
+"fim": 337.7
+},
+{
+"p": "reorganizado.",
+"ini": 337.7,
+"fim": 338.52
+}
+],
+"ini": 331.0,
+"fim": 338.52,
+"cobertura": 1.0
+},
+{
+"n": "69",
+"texto": "Só séculos depois virou os oitenta e um capítulos que a gente lê.",
+"palavras": [
+{
+"p": "Só",
+"ini": 339.38,
+"fim": 339.66
+},
+{
+"p": "séculos",
+"ini": 339.66,
+"fim": 340.02
+},
+{
+"p": "depois",
+"ini": 340.02,
+"fim": 340.42
+},
+{
+"p": "virou",
+"ini": 340.42,
+"fim": 341.14
+},
+{
+"p": "os",
+"ini": 341.14,
+"fim": 341.38
+},
+{
+"p": "capítulos",
+"ini": 341.94,
+"fim": 342.6
+},
+{
+"p": "que",
+"ini": 342.6,
+"fim": 342.82
+},
+{
+"p": "a",
+"ini": 342.82,
+"fim": 342.88
+},
+{
+"p": "gente",
+"ini": 342.88,
+"fim": 343.06
+},
+{
+"p": "lê.",
+"ini": 343.06,
+"fim": 343.32
+}
+],
+"ini": 339.38,
+"fim": 343.32,
+"cobertura": 0.77
+},
+{
+"n": "70",
+"texto": "A sabedoria é antiga. Quem escreveu é que ninguém sabe ao certo.",
+"palavras": [
+{
+"p": "A",
+"ini": 344.26,
+"fim": 344.38
+},
+{
+"p": "sabedoria",
+"ini": 344.38,
+"fim": 344.84
+},
+{
+"p": "é",
+"ini": 344.84,
+"fim": 345.16
+},
+{
+"p": "antiga.",
+"ini": 345.16,
+"fim": 345.58
+},
+{
+"p": "Quem",
+"ini": 346.42,
+"fim": 346.48
+},
+{
+"p": "escreveu",
+"ini": 346.48,
+"fim": 347.06
+},
+{
+"p": "é",
+"ini": 347.06,
+"fim": 347.42
+},
+{
+"p": "que",
+"ini": 347.42,
+"fim": 347.52
+},
+{
+"p": "ninguém",
+"ini": 347.52,
+"fim": 347.74
+},
+{
+"p": "sabe",
+"ini": 347.74,
+"fim": 348.16
+},
+{
+"p": "ao",
+"ini": 348.16,
+"fim": 348.3
+},
+{
+"p": "certo.",
+"ini": 348.3,
+"fim": 348.56
+}
+],
+"ini": 344.26,
+"fim": 348.56,
+"cobertura": 1.0
+},
+{
+"n": "71",
+"texto": "E repara: o livro fez com ele mesmo o que manda a gente fazer.",
+"palavras": [
+{
+"p": "E",
+"ini": 349.44,
+"fim": 349.64
+},
+{
+"p": "repara,",
+"ini": 349.64,
+"fim": 350.02
+},
+{
+"p": "o",
+"ini": 350.74,
+"fim": 350.92
+},
+{
+"p": "livro",
+"ini": 350.92,
+"fim": 351.16
+},
+{
+"p": "fez",
+"ini": 351.16,
+"fim": 351.46
+},
+{
+"p": "com",
+"ini": 351.46,
+"fim": 351.62
+},
+{
+"p": "ele",
+"ini": 351.62,
+"fim": 351.86
+},
+{
+"p": "mesmo",
+"ini": 351.86,
+"fim": 352.16
+},
+{
+"p": "o",
+"ini": 352.16,
+"fim": 352.8
+},
+{
+"p": "que",
+"ini": 352.8,
+"fim": 352.92
+},
+{
+"p": "manda",
+"ini": 352.92,
+"fim": 353.3
+},
+{
+"p": "a",
+"ini": 353.3,
+"fim": 353.44
+},
+{
+"p": "gente",
+"ini": 353.44,
+"fim": 353.62
+},
+{
+"p": "fazer.",
+"ini": 353.62,
+"fim": 353.98
+}
+],
+"ini": 349.44,
+"fim": 353.98,
+"cobertura": 1.0
+},
+{
+"n": "72",
+"texto": "Não brigou para ficar igual. Mudou de forma, como a água, e por isso chegou até aqui.",
+"palavras": [
+{
+"p": "Não",
+"ini": 353.98,
+"fim": 355.02
+},
+{
+"p": "brigou",
+"ini": 355.02,
+"fim": 355.4
+},
+{
+"p": "para",
+"ini": 355.4,
+"fim": 355.64
+},
+{
+"p": "ficar",
+"ini": 355.64,
+"fim": 355.88
+},
+{
+"p": "igual,",
+"ini": 355.88,
+"fim": 356.2
+},
+{
+"p": "mudou",
+"ini": 356.88,
+"fim": 357.26
+},
+{
+"p": "de",
+"ini": 357.26,
+"fim": 357.38
+},
+{
+"p": "forma",
+"ini": 357.38,
+"fim": 357.78
+},
+{
+"p": "como",
+"ini": 357.78,
+"fim": 358.3
+},
+{
+"p": "a",
+"ini": 358.3,
+"fim": 358.46
+},
+{
+"p": "água,",
+"ini": 358.46,
+"fim": 358.76
+},
+{
+"p": "e",
+"ini": 359.48,
+"fim": 359.54
+},
+{
+"p": "por",
+"ini": 359.54,
+"fim": 359.7
+},
+{
+"p": "isso...",
+"ini": 359.7,
+"fim": 359.98
+},
+{
+"p": "chegou",
+"ini": 360.0,
+"fim": 360.64
+},
+{
+"p": "até",
+"ini": 360.64,
+"fim": 360.92
+},
+{
+"p": "aqui.",
+"ini": 360.92,
+"fim": 361.16
+}
+],
+"ini": 353.98,
+"fim": 361.16,
+"cobertura": 1.0
+},
+{
+"n": "73",
+"texto": "Se você curte entender o que tem por dentro das coisas, se inscreve. É o que a gente faz aqui.",
+"palavras": [
+{
+"p": "Se",
+"ini": 362.04,
+"fim": 362.2
+},
+{
+"p": "você",
+"ini": 362.2,
+"fim": 362.4
+},
+{
+"p": "curte",
+"ini": 362.4,
+"fim": 362.82
+},
+{
+"p": "entender",
+"ini": 362.82,
+"fim": 363.24
+},
+{
+"p": "o",
+"ini": 363.24,
+"fim": 363.46
+},
+{
+"p": "que",
+"ini": 363.46,
+"fim": 363.54
+},
+{
+"p": "tem",
+"ini": 363.54,
+"fim": 363.78
+},
+{
+"p": "por",
+"ini": 363.78,
+"fim": 363.98
+},
+{
+"p": "dentro",
+"ini": 363.98,
+"fim": 364.3
+},
+{
+"p": "das",
+"ini": 364.3,
+"fim": 364.56
+},
+{
+"p": "coisas,",
+"ini": 364.56,
+"fim": 364.98
+},
+{
+"p": "se",
+"ini": 365.48,
+"fim": 365.9
+},
+{
+"p": "inscreve.",
+"ini": 365.9,
+"fim": 366.44
+},
+{
+"p": "É",
+"ini": 367.08,
+"fim": 367.24
+},
+{
+"p": "o",
+"ini": 367.24,
+"fim": 367.32
+},
+{
+"p": "que",
+"ini": 367.32,
+"fim": 367.4
+},
+{
+"p": "a",
+"ini": 367.4,
+"fim": 367.5
+},
+{
+"p": "gente",
+"ini": 367.5,
+"fim": 367.64
+},
+{
+"p": "faz",
+"ini": 367.64,
+"fim": 367.9
+},
+{
+"p": "aqui,",
+"ini": 367.9,
+"fim": 368.24
+}
+],
+"ini": 362.04,
+"fim": 368.24,
+"cobertura": 1.0
+},
+{
+"n": "74",
+"texto": "Porque o mais surpreendente vem agora.",
+"palavras": [
+{
+"p": "porque",
+"ini": 368.86,
+"fim": 369.2
+},
+{
+"p": "o",
+"ini": 369.2,
+"fim": 369.32
+},
+{
+"p": "mais",
+"ini": 369.32,
+"fim": 369.54
+},
+{
+"p": "surpreendente",
+"ini": 369.54,
+"fim": 370.36
+},
+{
+"p": "vem",
+"ini": 370.36,
+"fim": 370.84
+},
+{
+"p": "agora.",
+"ini": 370.84,
+"fim": 371.22
+}
+],
+"ini": 368.86,
+"fim": 371.22,
+"cobertura": 1.0
+},
+{
+"n": "75",
+"texto": "O livro que ensina a não forçar nada virou lei.",
+"palavras": [
+{
+"p": "O",
+"ini": 372.3,
+"fim": 372.44
+},
+{
+"p": "livro",
+"ini": 372.44,
+"fim": 372.7
+},
+{
+"p": "que",
+"ini": 372.7,
+"fim": 372.94
+},
+{
+"p": "ensina",
+"ini": 372.94,
+"fim": 373.4
+},
+{
+"p": "a",
+"ini": 373.4,
+"fim": 373.7
+},
+{
+"p": "não",
+"ini": 373.7,
+"fim": 373.84
+},
+{
+"p": "forçar",
+"ini": 373.84,
+"fim": 374.28
+},
+{
+"p": "nada",
+"ini": 374.28,
+"fim": 374.74
+},
+{
+"p": "virou",
+"ini": 374.74,
+"fim": 375.52
+},
+{
+"p": "lei.",
+"ini": 375.52,
+"fim": 375.8
+}
+],
+"ini": 372.3,
+"fim": 375.8,
+"cobertura": 1.0
+},
+{
+"n": "76",
+"texto": "Se você conhece o taoísmo pela imagem que chegou aqui, um velhinho calmo dizendo \"vá com o fluxo\", se prepara.",
+"palavras": [
+{
+"p": "Se",
+"ini": 376.98,
+"fim": 377.18
+},
+{
+"p": "você",
+"ini": 377.18,
+"fim": 377.36
+},
+{
+"p": "conhece",
+"ini": 377.36,
+"fim": 377.76
+},
+{
+"p": "o",
+"ini": 377.76,
+"fim": 377.9
+},
+{
+"p": "taoísmo",
+"ini": 377.9,
+"fim": 378.42
+},
+{
+"p": "pela",
+"ini": 378.42,
+"fim": 378.6
+},
+{
+"p": "imagem",
+"ini": 378.6,
+"fim": 378.96
+},
+{
+"p": "que",
+"ini": 378.96,
+"fim": 379.18
+},
+{
+"p": "chegou",
+"ini": 379.18,
+"fim": 379.46
+},
+{
+"p": "aqui,",
+"ini": 379.46,
+"fim": 379.84
+},
+{
+"p": "um",
+"ini": 380.4,
+"fim": 380.54
+},
+{
+"p": "velhinho",
+"ini": 380.54,
+"fim": 380.92
+},
+{
+"p": "calmo",
+"ini": 380.92,
+"fim": 381.38
+},
+{
+"p": "dizendo,",
+"ini": 381.38,
+"fim": 381.74
+},
+{
+"p": "vá",
+"ini": 382.3,
+"fim": 382.6
+},
+{
+"p": "com",
+"ini": 382.6,
+"fim": 382.82
+},
+{
+"p": "o",
+"ini": 382.82,
+"fim": 382.96
+},
+{
+"p": "fluxo,",
+"ini": 382.96,
+"fim": 383.4
+},
+{
+"p": "se",
+"ini": 383.68,
+"fim": 383.86
+},
+{
+"p": "prepara.",
+"ini": 383.86,
+"fim": 384.38
+}
+],
+"ini": 376.98,
+"fim": 384.38,
+"cobertura": 1.0
+},
+{
+"n": "77",
+"texto": "Na China, o taoísmo virou religião organizada.",
+"palavras": [
+{
+"p": "Na",
+"ini": 385.16,
+"fim": 385.42
+},
+{
+"p": "China",
+"ini": 385.42,
+"fim": 385.72
+},
+{
+"p": "o",
+"ini": 385.72,
+"fim": 386.48
+},
+{
+"p": "taoísmo",
+"ini": 386.48,
+"fim": 387.02
+},
+{
+"p": "virou",
+"ini": 387.02,
+"fim": 387.34
+},
+{
+"p": "religião",
+"ini": 387.34,
+"fim": 387.84
+},
+{
+"p": "organizada,",
+"ini": 387.84,
+"fim": 388.68
+}
+],
+"ini": 385.16,
+"fim": 388.68,
+"cobertura": 1.0
+},
+{
+"n": "78",
+"texto": "Com sacerdotes, templos, talismãs, exorcismos e um panteão inteiro de deuses.",
+"palavras": [
+{
+"p": "com",
+"ini": 389.54,
+"fim": 389.8
+},
+{
+"p": "sacerdotes,",
+"ini": 389.8,
+"fim": 390.52
+},
+{
+"p": "templos,",
+"ini": 390.96,
+"fim": 391.48
+},
+{
+"p": "talismãs,",
+"ini": 391.84,
+"fim": 392.54
+},
+{
+"p": "exorcismos",
+"ini": 392.8,
+"fim": 393.6
+},
+{
+"p": "e",
+"ini": 393.6,
+"fim": 394.0
+},
+{
+"p": "um",
+"ini": 394.0,
+"fim": 394.1
+},
+{
+"p": "panteão",
+"ini": 394.1,
+"fim": 394.62
+},
+{
+"p": "inteiro",
+"ini": 394.62,
+"fim": 395.1
+},
+{
+"p": "de",
+"ini": 395.1,
+"fim": 395.36
+},
+{
+"p": "deuses.",
+"ini": 395.36,
+"fim": 395.72
+}
+],
+"ini": 389.54,
+"fim": 395.72,
+"cobertura": 1.0
+},
+{
+"n": "79",
+"texto": "Por volta do século dois depois de Cristo, um homem chamado Zhang Daoling disse ter recebido uma revelação de Laozi, que a essa altura já era tratado como divindade.",
+"palavras": [
+{
+"p": "Por",
+"ini": 396.68,
+"fim": 396.98
+},
+{
+"p": "volta",
+"ini": 396.98,
+"fim": 397.2
+},
+{
+"p": "do",
+"ini": 397.2,
+"fim": 397.42
+},
+{
+"p": "século",
+"ini": 397.42,
+"fim": 397.74
+},
+{
+"p": "depois",
+"ini": 398.0,
+"fim": 398.28
+},
+{
+"p": "de",
+"ini": 398.28,
+"fim": 398.46
+},
+{
+"p": "Cristo,",
+"ini": 398.46,
+"fim": 398.78
+},
+{
+"p": "um",
+"ini": 399.46,
+"fim": 399.6
+},
+{
+"p": "homem",
+"ini": 399.6,
+"fim": 399.88
+},
+{
+"p": "chamado",
+"ini": 399.88,
+"fim": 400.36
+},
+{
+"p": "disse",
+"ini": 401.52,
+"fim": 402.48
+},
+{
+"p": "ter",
+"ini": 402.48,
+"fim": 402.74
+},
+{
+"p": "recebido",
+"ini": 402.74,
+"fim": 403.32
+},
+{
+"p": "uma",
+"ini": 403.32,
+"fim": 403.64
+},
+{
+"p": "revelação",
+"ini": 403.64,
+"fim": 404.2
+},
+{
+"p": "de",
+"ini": 404.2,
+"fim": 404.44
+},
+{
+"p": "que",
+"ini": 405.4,
+"fim": 405.76
+},
+{
+"p": "a",
+"ini": 405.76,
+"fim": 405.86
+},
+{
+"p": "essa",
+"ini": 405.86,
+"fim": 406.04
+},
+{
+"p": "altura",
+"ini": 406.04,
+"fim": 406.42
+},
+{
+"p": "já",
+"ini": 406.42,
+"fim": 406.98
+},
+{
+"p": "era",
+"ini": 406.98,
+"fim": 407.2
+},
+{
+"p": "tratado",
+"ini": 407.2,
+"fim": 407.72
+},
+{
+"p": "como",
+"ini": 407.72,
+"fim": 407.92
+},
+{
+"p": "divindade.",
+"ini": 407.92,
+"fim": 408.56
+}
+],
+"ini": 396.68,
+"fim": 408.56,
+"cobertura": 0.86
+},
+{
+"n": "80",
+"texto": "Ele fundou o Caminho dos Mestres Celestiais.",
+"palavras": [
+{
+"p": "Ele",
+"ini": 409.44,
+"fim": 409.78
+},
+{
+"p": "fundou",
+"ini": 409.78,
+"fim": 410.22
+},
+{
+"p": "o",
+"ini": 410.22,
+"fim": 410.5
+},
+{
+"p": "caminho",
+"ini": 410.5,
+"fim": 410.7
+},
+{
+"p": "dos",
+"ini": 410.7,
+"fim": 411.02
+},
+{
+"p": "mestres",
+"ini": 411.02,
+"fim": 411.38
+},
+{
+"p": "celestiais.",
+"ini": 411.38,
+"fim": 412.14
+}
+],
+"ini": 409.44,
+"fim": 412.14,
+"cobertura": 1.0
+},
+{
+"n": "81",
+"texto": "O apelido é ainda melhor: Caminho das Cinco Medidas de Arroz, que era a contribuição de cada membro.",
+"palavras": [
+{
+"p": "O",
+"ini": 412.8,
+"fim": 412.96
+},
+{
+"p": "apelido",
+"ini": 412.96,
+"fim": 413.44
+},
+{
+"p": "é",
+"ini": 413.44,
+"fim": 413.74
+},
+{
+"p": "ainda",
+"ini": 413.74,
+"fim": 413.92
+},
+{
+"p": "melhor.",
+"ini": 413.92,
+"fim": 414.24
+},
+{
+"p": "Caminho",
+"ini": 415.26,
+"fim": 415.74
+},
+{
+"p": "das",
+"ini": 415.74,
+"fim": 415.88
+},
+{
+"p": "Cinco",
+"ini": 415.88,
+"fim": 416.26
+},
+{
+"p": "Medidas",
+"ini": 416.26,
+"fim": 416.68
+},
+{
+"p": "de",
+"ini": 416.68,
+"fim": 416.8
+},
+{
+"p": "Arroz,",
+"ini": 416.8,
+"fim": 417.2
+},
+{
+"p": "que",
+"ini": 417.98,
+"fim": 418.0
+},
+{
+"p": "era",
+"ini": 418.0,
+"fim": 418.24
+},
+{
+"p": "a",
+"ini": 418.24,
+"fim": 418.44
+},
+{
+"p": "contribuição",
+"ini": 418.44,
+"fim": 419.04
+},
+{
+"p": "de",
+"ini": 419.04,
+"fim": 419.22
+},
+{
+"p": "cada",
+"ini": 419.22,
+"fim": 419.4
+},
+{
+"p": "membro.",
+"ini": 419.4,
+"fim": 419.8
+}
+],
+"ini": 412.8,
+"fim": 419.8,
+"cobertura": 1.0
+},
+{
+"n": "82",
+"texto": "Séculos depois, o taoísmo chegou ao trono.",
+"palavras": [
+{
+"p": "Séculos",
+"ini": 420.66,
+"fim": 421.12
+},
+{
+"p": "depois,",
+"ini": 421.12,
+"fim": 421.44
+},
+{
+"p": "o",
+"ini": 422.12,
+"fim": 422.24
+},
+{
+"p": "chegou",
+"ini": 422.56,
+"fim": 422.92
+},
+{
+"p": "ao",
+"ini": 422.92,
+"fim": 423.16
+},
+{
+"p": "trono.",
+"ini": 423.16,
+"fim": 423.44
+}
+],
+"ini": 420.66,
+"fim": 423.44,
+"cobertura": 0.86
+},
+{
+"n": "83",
+"texto": "A família imperial da dinastia Tang dizia descender do próprio Laozi. O sobrenome deles era Li, o mesmo que a tradição dá a ele.",
+"palavras": [
+{
+"p": "A",
+"ini": 424.2,
+"fim": 424.32
+},
+{
+"p": "família",
+"ini": 424.32,
+"fim": 424.64
+},
+{
+"p": "imperial",
+"ini": 424.64,
+"fim": 425.18
+},
+{
+"p": "da",
+"ini": 425.18,
+"fim": 425.38
+},
+{
+"p": "dinastia",
+"ini": 425.38,
+"fim": 425.88
+},
+{
+"p": "Tang",
+"ini": 425.88,
+"fim": 426.2
+},
+{
+"p": "dizia",
+"ini": 426.2,
+"fim": 427.16
+},
+{
+"p": "descender",
+"ini": 427.16,
+"fim": 427.68
+},
+{
+"p": "do",
+"ini": 427.68,
+"fim": 427.92
+},
+{
+"p": "próprio",
+"ini": 427.92,
+"fim": 428.32
+},
+{
+"p": "O",
+"ini": 429.74,
+"fim": 429.88
+},
+{
+"p": "sobrenome",
+"ini": 429.88,
+"fim": 430.24
+},
+{
+"p": "deles",
+"ini": 430.24,
+"fim": 430.62
+},
+{
+"p": "era",
+"ini": 430.62,
+"fim": 431.1
+},
+{
+"p": "Li,",
+"ini": 431.1,
+"fim": 431.38
+},
+{
+"p": "o",
+"ini": 432.12,
+"fim": 432.22
+},
+{
+"p": "mesmo",
+"ini": 432.22,
+"fim": 432.48
+},
+{
+"p": "que",
+"ini": 432.48,
+"fim": 432.72
+},
+{
+"p": "a",
+"ini": 432.72,
+"fim": 432.82
+},
+{
+"p": "tradição",
+"ini": 432.82,
+"fim": 433.24
+},
+{
+"p": "da",
+"ini": 433.24,
+"fim": 433.52
+}
+],
+"ini": 424.2,
+"fim": 433.52,
+"cobertura": 0.88
+},
+{
+"n": "84",
+"texto": "E em 733 o imperador Xuanzong mandou que cada casa tivesse uma cópia do Tao Te Ching.",
+"palavras": [
+{
+"p": "E",
+"ini": 434.84,
+"fim": 435.1
+},
+{
+"p": "em",
+"ini": 435.1,
+"fim": 435.22
+},
+{
+"p": "733,",
+"ini": 435.22,
+"fim": 436.14
+},
+{
+"p": "o",
+"ini": 437.0,
+"fim": 437.04
+},
+{
+"p": "Xuanzong",
+"ini": 437.46,
+"fim": 438.6
+},
+{
+"p": "mandou",
+"ini": 438.6,
+"fim": 439.68
+},
+{
+"p": "que",
+"ini": 439.68,
+"fim": 439.84
+},
+{
+"p": "cada",
+"ini": 439.84,
+"fim": 440.02
+},
+{
+"p": "casa",
+"ini": 440.02,
+"fim": 440.44
+},
+{
+"p": "tivesse",
+"ini": 440.44,
+"fim": 440.96
+},
+{
+"p": "uma",
+"ini": 440.96,
+"fim": 441.2
+},
+{
+"p": "cópia",
+"ini": 441.2,
+"fim": 441.6
+},
+{
+"p": "do",
+"ini": 441.6,
+"fim": 441.74
+},
+{
+"p": "Tao",
+"ini": 441.74,
+"fim": 441.94
+},
+{
+"p": "Te",
+"ini": 441.94,
+"fim": 442.08
+},
+{
+"p": "Ching.",
+"ini": 442.08,
+"fim": 442.36
+}
+],
+"ini": 434.84,
+"fim": 442.36,
+"cobertura": 0.94
+},
+{
+"n": "85",
+"texto": "Pensa na ironia.",
+"palavras": [
+{
+"p": "Pensa",
+"ini": 442.36,
+"fim": 443.58
+},
+{
+"p": "na",
+"ini": 443.58,
+"fim": 443.72
+},
+{
+"p": "ironia,",
+"ini": 443.72,
+"fim": 444.06
+}
+],
+"ini": 442.36,
+"fim": 444.06,
+"cobertura": 1.0
+},
+{
+"n": "86",
+"texto": "O livro que ensina a não forçar nada... virou leitura obrigatória por decreto.",
+"palavras": [
+{
+"p": "o",
+"ini": 444.76,
+"fim": 444.9
+},
+{
+"p": "livro",
+"ini": 444.9,
+"fim": 445.12
+},
+{
+"p": "que",
+"ini": 445.12,
+"fim": 445.34
+},
+{
+"p": "ensina",
+"ini": 445.34,
+"fim": 445.78
+},
+{
+"p": "a",
+"ini": 445.78,
+"fim": 446.32
+},
+{
+"p": "não",
+"ini": 446.32,
+"fim": 446.42
+},
+{
+"p": "forçar",
+"ini": 446.42,
+"fim": 446.74
+},
+{
+"p": "nada",
+"ini": 446.74,
+"fim": 447.16
+},
+{
+"p": "virou",
+"ini": 447.16,
+"fim": 448.46
+},
+{
+"p": "leitura",
+"ini": 448.46,
+"fim": 448.9
+},
+{
+"p": "obrigatória",
+"ini": 448.9,
+"fim": 449.58
+},
+{
+"p": "por",
+"ini": 449.58,
+"fim": 449.82
+},
+{
+"p": "decreto",
+"ini": 449.82,
+"fim": 450.42
+}
+],
+"ini": 444.76,
+"fim": 450.42,
+"cobertura": 1.0
+},
+{
+"n": "87",
+"texto": "E nas cavernas de Dunhuang, no noroeste da China, sobraram textos taoístas medievais cheios de demônios, catástrofes e promessas de salvação.",
+"palavras": [
+{
+"p": "e",
+"ini": 450.42,
+"fim": 451.12
+},
+{
+"p": "nas",
+"ini": 451.12,
+"fim": 451.26
+},
+{
+"p": "cavernas",
+"ini": 451.26,
+"fim": 451.9
+},
+{
+"p": "de",
+"ini": 451.9,
+"fim": 452.32
+},
+{
+"p": "Dunhuang",
+"ini": 452.32,
+"fim": 452.82
+},
+{
+"p": "no",
+"ini": 452.82,
+"fim": 453.44
+},
+{
+"p": "noroeste",
+"ini": 453.44,
+"fim": 453.9
+},
+{
+"p": "da",
+"ini": 453.9,
+"fim": 454.06
+},
+{
+"p": "China",
+"ini": 454.06,
+"fim": 454.36
+},
+{
+"p": "sobraram",
+"ini": 454.36,
+"fim": 455.36
+},
+{
+"p": "textos",
+"ini": 455.36,
+"fim": 455.84
+},
+{
+"p": "taoístas",
+"ini": 455.84,
+"fim": 456.38
+},
+{
+"p": "medievais",
+"ini": 456.38,
+"fim": 456.96
+},
+{
+"p": "cheios",
+"ini": 456.96,
+"fim": 457.6
+},
+{
+"p": "de",
+"ini": 457.6,
+"fim": 457.7
+},
+{
+"p": "demônios,",
+"ini": 457.7,
+"fim": 458.14
+},
+{
+"p": "catástrofes",
+"ini": 458.62,
+"fim": 459.28
+},
+{
+"p": "e",
+"ini": 459.28,
+"fim": 459.54
+},
+{
+"p": "promessas",
+"ini": 459.54,
+"fim": 460.0
+},
+{
+"p": "de",
+"ini": 460.0,
+"fim": 460.14
+},
+{
+"p": "salvação.",
+"ini": 460.14,
+"fim": 460.72
+}
+],
+"ini": 450.42,
+"fim": 460.72,
+"cobertura": 1.0
+},
+{
+"n": "88",
+"texto": "Nada a ver com o sábio sereno da montanha.",
+"palavras": [
+{
+"p": "Nada",
+"ini": 461.14,
+"fim": 461.7
+},
+{
+"p": "a",
+"ini": 461.7,
+"fim": 462.0
+},
+{
+"p": "ver",
+"ini": 462.0,
+"fim": 462.22
+},
+{
+"p": "com",
+"ini": 462.22,
+"fim": 462.46
+},
+{
+"p": "o",
+"ini": 462.46,
+"fim": 462.56
+},
+{
+"p": "sábio",
+"ini": 462.56,
+"fim": 462.92
+},
+{
+"p": "sereno",
+"ini": 462.92,
+"fim": 463.36
+},
+{
+"p": "da",
+"ini": 463.36,
+"fim": 463.5
+},
+{
+"p": "montanha.",
+"ini": 463.5,
+"fim": 463.96
+}
+],
+"ini": 461.14,
+"fim": 463.96,
+"cobertura": 1.0
+},
+{
+"n": "89",
+"texto": "O taoísmo nunca foi uma coisa só. Foi filosofia, religião, medicina e política.",
+"palavras": [
+{
+"p": "O",
+"ini": 464.74,
+"fim": 464.94
+},
+{
+"p": "taoísmo",
+"ini": 464.94,
+"fim": 465.52
+},
+{
+"p": "nunca",
+"ini": 465.52,
+"fim": 466.02
+},
+{
+"p": "foi",
+"ini": 466.02,
+"fim": 466.32
+},
+{
+"p": "uma",
+"ini": 466.32,
+"fim": 466.44
+},
+{
+"p": "coisa",
+"ini": 466.44,
+"fim": 466.66
+},
+{
+"p": "só.",
+"ini": 466.66,
+"fim": 466.96
+},
+{
+"p": "Foi",
+"ini": 467.62,
+"fim": 467.8
+},
+{
+"p": "filosofia,",
+"ini": 467.8,
+"fim": 468.46
+},
+{
+"p": "religião,",
+"ini": 468.98,
+"fim": 469.38
+},
+{
+"p": "medicina",
+"ini": 470.06,
+"fim": 470.54
+},
+{
+"p": "e",
+"ini": 470.54,
+"fim": 470.84
+},
+{
+"p": "política.",
+"ini": 470.84,
+"fim": 471.2
+}
+],
+"ini": 464.74,
+"fim": 471.2,
+"cobertura": 1.0
+},
+{
+"n": "90",
+"texto": "E o que chegou até nós, no Ocidente e no Brasil, foi o lado mais prático.",
+"palavras": [
+{
+"p": "E",
+"ini": 471.84,
+"fim": 472.4
+},
+{
+"p": "o",
+"ini": 472.4,
+"fim": 472.46
+},
+{
+"p": "que",
+"ini": 472.46,
+"fim": 472.52
+},
+{
+"p": "chegou",
+"ini": 472.52,
+"fim": 472.74
+},
+{
+"p": "até",
+"ini": 472.74,
+"fim": 473.0
+},
+{
+"p": "nós,",
+"ini": 473.0,
+"fim": 473.34
+},
+{
+"p": "no",
+"ini": 473.72,
+"fim": 473.9
+},
+{
+"p": "Ocidente",
+"ini": 473.9,
+"fim": 474.36
+},
+{
+"p": "e",
+"ini": 474.36,
+"fim": 474.7
+},
+{
+"p": "no",
+"ini": 474.7,
+"fim": 474.8
+},
+{
+"p": "Brasil,",
+"ini": 474.8,
+"fim": 475.1
+},
+{
+"p": "foi",
+"ini": 475.62,
+"fim": 475.9
+},
+{
+"p": "o",
+"ini": 475.9,
+"fim": 476.0
+},
+{
+"p": "lado",
+"ini": 476.0,
+"fim": 476.2
+},
+{
+"p": "mais",
+"ini": 476.2,
+"fim": 476.42
+},
+{
+"p": "prático.",
+"ini": 476.42,
+"fim": 476.92
+}
+],
+"ini": 471.84,
+"fim": 476.92,
+"cobertura": 1.0
+},
+{
+"n": "91",
+"texto": "O livro chegou à Europa em 1788, numa tradução para o latim feita por missionários jesuítas, apresentada à Sociedade Real, em Londres.",
+"palavras": [
+{
+"p": "O",
+"ini": 477.72,
+"fim": 477.82
+},
+{
+"p": "livro",
+"ini": 477.82,
+"fim": 478.1
+},
+{
+"p": "chegou",
+"ini": 478.1,
+"fim": 478.42
+},
+{
+"p": "à",
+"ini": 478.42,
+"fim": 478.68
+},
+{
+"p": "Europa",
+"ini": 478.68,
+"fim": 479.06
+},
+{
+"p": "em",
+"ini": 479.06,
+"fim": 479.5
+},
+{
+"p": "numa",
+"ini": 481.82,
+"fim": 482.2
+},
+{
+"p": "tradução",
+"ini": 482.2,
+"fim": 482.66
+},
+{
+"p": "para",
+"ini": 482.66,
+"fim": 482.96
+},
+{
+"p": "o",
+"ini": 482.96,
+"fim": 483.06
+},
+{
+"p": "latim",
+"ini": 483.06,
+"fim": 483.44
+},
+{
+"p": "feita",
+"ini": 483.44,
+"fim": 483.96
+},
+{
+"p": "por",
+"ini": 483.96,
+"fim": 484.18
+},
+{
+"p": "missionários",
+"ini": 484.18,
+"fim": 484.76
+},
+{
+"p": "jesuitas",
+"ini": 484.76,
+"fim": 485.46
+},
+{
+"p": "apresentada",
+"ini": 485.46,
+"fim": 486.64
+},
+{
+"p": "à",
+"ini": 486.64,
+"fim": 486.94
+},
+{
+"p": "sociedade",
+"ini": 486.94,
+"fim": 487.24
+},
+{
+"p": "real",
+"ini": 487.24,
+"fim": 487.72
+},
+{
+"p": "em",
+"ini": 487.72,
+"fim": 488.14
+},
+{
+"p": "Londres,",
+"ini": 488.14,
+"fim": 488.56
+}
+],
+"ini": 477.72,
+"fim": 488.56,
+"cobertura": 0.95
+},
+{
+"n": "92",
+"texto": "E no caminho foi encolhendo até virar frase de pôster.",
+"palavras": [
+{
+"p": "e",
+"ini": 489.18,
+"fim": 489.34
+},
+{
+"p": "no",
+"ini": 489.34,
+"fim": 489.42
+},
+{
+"p": "caminho",
+"ini": 489.42,
+"fim": 489.68
+},
+{
+"p": "foi",
+"ini": 489.68,
+"fim": 490.28
+},
+{
+"p": "encolhendo",
+"ini": 490.28,
+"fim": 490.76
+},
+{
+"p": "até",
+"ini": 490.76,
+"fim": 491.06
+},
+{
+"p": "virar",
+"ini": 491.06,
+"fim": 491.36
+},
+{
+"p": "frase",
+"ini": 491.36,
+"fim": 491.66
+},
+{
+"p": "de",
+"ini": 491.66,
+"fim": 491.82
+},
+{
+"p": "poster.",
+"ini": 491.82,
+"fim": 492.1
+}
+],
+"ini": 489.18,
+"fim": 492.1,
+"cobertura": 1.0
+},
+{
+"n": "93",
+"texto": "No Brasil, a porta foi o corpo.",
+"palavras": [
+{
+"p": "No",
+"ini": 493.12,
+"fim": 493.36
+},
+{
+"p": "Brasil,",
+"ini": 493.36,
+"fim": 493.64
+},
+{
+"p": "a",
+"ini": 494.26,
+"fim": 494.42
+},
+{
+"p": "porta",
+"ini": 494.42,
+"fim": 494.66
+},
+{
+"p": "foi",
+"ini": 494.66,
+"fim": 494.88
+},
+{
+"p": "o",
+"ini": 494.88,
+"fim": 494.98
+},
+{
+"p": "corpo.",
+"ini": 494.98,
+"fim": 495.24
+}
+],
+"ini": 493.12,
+"fim": 495.24,
+"cobertura": 1.0
+},
+{
+"n": "94",
+"texto": "Em meados dos anos 1970 chegou a São Paulo o mestre chinês Liu Pai Lin, que ensinou tai chi e meditação até morrer, em 2000, e espalhou essa linhagem pelo país.",
+"palavras": [
+{
+"p": "Em",
+"ini": 495.94,
+"fim": 496.08
+},
+{
+"p": "meados",
+"ini": 496.08,
+"fim": 496.46
+},
+{
+"p": "dos",
+"ini": 496.46,
+"fim": 496.72
+},
+{
+"p": "anos",
+"ini": 496.72,
+"fim": 496.94
+},
+{
+"p": "1970,",
+"ini": 496.94,
+"fim": 497.78
+},
+{
+"p": "chegou",
+"ini": 498.74,
+"fim": 499.22
+},
+{
+"p": "a",
+"ini": 499.22,
+"fim": 499.38
+},
+{
+"p": "São",
+"ini": 499.38,
+"fim": 499.52
+},
+{
+"p": "Paulo,",
+"ini": 499.52,
+"fim": 499.92
+},
+{
+"p": "o",
+"ini": 500.24,
+"fim": 500.32
+},
+{
+"p": "mestre",
+"ini": 500.32,
+"fim": 500.62
+},
+{
+"p": "chinês",
+"ini": 500.62,
+"fim": 501.04
+},
+{
+"p": "Liu",
+"ini": 501.04,
+"fim": 501.76
+},
+{
+"p": "que",
+"ini": 503.24,
+"fim": 503.34
+},
+{
+"p": "ensinou",
+"ini": 503.34,
+"fim": 503.76
+},
+{
+"p": "e",
+"ini": 504.32,
+"fim": 504.6
+},
+{
+"p": "meditação",
+"ini": 504.6,
+"fim": 505.12
+},
+{
+"p": "até",
+"ini": 505.12,
+"fim": 505.32
+},
+{
+"p": "morrer",
+"ini": 505.32,
+"fim": 505.74
+},
+{
+"p": "em",
+"ini": 505.74,
+"fim": 506.24
+},
+{
+"p": "2000,",
+"ini": 506.24,
+"fim": 506.54
+},
+{
+"p": "e",
+"ini": 507.16,
+"fim": 507.42
+},
+{
+"p": "espalhou",
+"ini": 507.42,
+"fim": 507.8
+},
+{
+"p": "essa",
+"ini": 507.8,
+"fim": 508.02
+},
+{
+"p": "linhagem",
+"ini": 508.02,
+"fim": 508.44
+},
+{
+"p": "pelo",
+"ini": 508.44,
+"fim": 508.66
+},
+{
+"p": "país.",
+"ini": 508.66,
+"fim": 508.9
+}
+],
+"ini": 495.94,
+"fim": 508.9,
+"cobertura": 0.87
+},
+{
+"n": "95",
+"texto": "Então a pergunta que importa é: isso funciona, ou é só sensação boa?",
+"palavras": [
+{
+"p": "Então,",
+"ini": 509.68,
+"fim": 510.02
+},
+{
+"p": "a",
+"ini": 510.58,
+"fim": 510.66
+},
+{
+"p": "pergunta",
+"ini": 510.66,
+"fim": 510.96
+},
+{
+"p": "que",
+"ini": 510.96,
+"fim": 511.24
+},
+{
+"p": "importa",
+"ini": 511.24,
+"fim": 511.52
+},
+{
+"p": "é,",
+"ini": 511.52,
+"fim": 512.0
+},
+{
+"p": "isso",
+"ini": 512.62,
+"fim": 512.84
+},
+{
+"p": "funciona",
+"ini": 512.84,
+"fim": 513.34
+},
+{
+"p": "ou",
+"ini": 513.34,
+"fim": 514.02
+},
+{
+"p": "é",
+"ini": 514.02,
+"fim": 514.2
+},
+{
+"p": "só",
+"ini": 514.2,
+"fim": 514.4
+},
+{
+"p": "sensação",
+"ini": 514.4,
+"fim": 515.04
+},
+{
+"p": "boa?",
+"ini": 515.04,
+"fim": 515.36
+}
+],
+"ini": 509.68,
+"fim": 515.36,
+"cobertura": 1.0
+},
+{
+"n": "96",
+"texto": "Primeiro, o que a ciência não faz: ela não testa o Tao.",
+"palavras": [
+{
+"p": "Primeiro,",
+"ini": 516.1,
+"fim": 516.58
+},
+{
+"p": "o",
+"ini": 517.12,
+"fim": 517.22
+},
+{
+"p": "que",
+"ini": 517.22,
+"fim": 517.3
+},
+{
+"p": "a",
+"ini": 517.3,
+"fim": 517.46
+},
+{
+"p": "ciência",
+"ini": 517.46,
+"fim": 517.7
+},
+{
+"p": "não",
+"ini": 517.7,
+"fim": 517.94
+},
+{
+"p": "faz?",
+"ini": 517.94,
+"fim": 518.24
+},
+{
+"p": "Ela",
+"ini": 518.94,
+"fim": 519.1
+},
+{
+"p": "não",
+"ini": 519.1,
+"fim": 519.3
+},
+{
+"p": "testa",
+"ini": 519.3,
+"fim": 519.74
+},
+{
+"p": "o",
+"ini": 519.74,
+"fim": 519.9
+}
+],
+"ini": 516.1,
+"fim": 519.9,
+"cobertura": 0.92
+},
+{
+"n": "97",
+"texto": "Uma ordem invisível do universo não cabe num laboratório.",
+"palavras": [
+{
+"p": "Uma",
+"ini": 520.78,
+"fim": 520.94
+},
+{
+"p": "ordem",
+"ini": 520.94,
+"fim": 521.34
+},
+{
+"p": "invisível",
+"ini": 521.34,
+"fim": 522.12
+},
+{
+"p": "do",
+"ini": 522.12,
+"fim": 522.3
+},
+{
+"p": "universo",
+"ini": 522.3,
+"fim": 522.78
+},
+{
+"p": "não",
+"ini": 522.78,
+"fim": 523.44
+},
+{
+"p": "cabe",
+"ini": 523.44,
+"fim": 523.72
+},
+{
+"p": "num",
+"ini": 523.72,
+"fim": 524.02
+},
+{
+"p": "laboratório.",
+"ini": 524.02,
+"fim": 524.7
+}
+],
+"ini": 520.78,
+"fim": 524.7,
+"cobertura": 1.0
+},
+{
+"n": "98",
+"texto": "E não existe prova de que o qi, a energia vital da tradição, seja uma energia física que dá para medir.",
+"palavras": [
+{
+"p": "E",
+"ini": 525.18,
+"fim": 525.52
+},
+{
+"p": "não",
+"ini": 525.52,
+"fim": 525.62
+},
+{
+"p": "existe",
+"ini": 525.62,
+"fim": 525.92
+},
+{
+"p": "prova",
+"ini": 525.92,
+"fim": 526.38
+},
+{
+"p": "de",
+"ini": 526.38,
+"fim": 527.08
+},
+{
+"p": "que",
+"ini": 527.08,
+"fim": 527.22
+},
+{
+"p": "o",
+"ini": 527.22,
+"fim": 527.36
+},
+{
+"p": "a",
+"ini": 528.14,
+"fim": 528.22
+},
+{
+"p": "energia",
+"ini": 528.22,
+"fim": 528.48
+},
+{
+"p": "vital",
+"ini": 528.48,
+"fim": 528.98
+},
+{
+"p": "da",
+"ini": 528.98,
+"fim": 529.24
+},
+{
+"p": "tradição,",
+"ini": 529.24,
+"fim": 529.74
+},
+{
+"p": "seja",
+"ini": 530.42,
+"fim": 530.7
+},
+{
+"p": "uma",
+"ini": 530.7,
+"fim": 530.96
+},
+{
+"p": "energia",
+"ini": 530.96,
+"fim": 531.26
+},
+{
+"p": "física",
+"ini": 531.26,
+"fim": 531.88
+},
+{
+"p": "que",
+"ini": 531.88,
+"fim": 532.14
+},
+{
+"p": "dá",
+"ini": 532.14,
+"fim": 532.46
+},
+{
+"p": "para",
+"ini": 532.46,
+"fim": 532.82
+},
+{
+"p": "medir,",
+"ini": 532.82,
+"fim": 533.28
+}
+],
+"ini": 525.18,
+"fim": 533.28,
+"cobertura": 0.95
+},
+{
+"n": "99",
+"texto": "Mas as práticas dá para testar. E testaram.",
+"palavras": [
+{
+"p": "mas",
+"ini": 534.12,
+"fim": 534.28
+},
+{
+"p": "as",
+"ini": 534.28,
+"fim": 534.44
+},
+{
+"p": "práticas",
+"ini": 534.44,
+"fim": 534.98
+},
+{
+"p": "dá",
+"ini": 534.98,
+"fim": 535.34
+},
+{
+"p": "para",
+"ini": 535.34,
+"fim": 535.56
+},
+{
+"p": "testar",
+"ini": 535.56,
+"fim": 536.06
+},
+{
+"p": "e",
+"ini": 536.06,
+"fim": 536.68
+},
+{
+"p": "testaram",
+"ini": 536.68,
+"fim": 537.18
+}
+],
+"ini": 534.12,
+"fim": 537.18,
+"cobertura": 1.0
+},
+{
+"n": "100",
+"texto": "Em 2026, pesquisadores juntaram vinte e seis revisões científicas sobre tai chi e qigong, publicadas em dez anos.",
+"palavras": [
+{
+"p": "em",
+"ini": 537.18,
+"fim": 537.96
+},
+{
+"p": "2026.",
+"ini": 537.96,
+"fim": 539.26
+},
+{
+"p": "pesquisadores",
+"ini": 540.12,
+"fim": 540.62
+},
+{
+"p": "juntaram",
+"ini": 540.62,
+"fim": 541.3
+},
+{
+"p": "revisões",
+"ini": 542.04,
+"fim": 542.68
+},
+{
+"p": "científicas",
+"ini": 542.68,
+"fim": 543.58
+},
+{
+"p": "sobre",
+"ini": 543.58,
+"fim": 544.04
+},
+{
+"p": "Tai",
+"ini": 544.04,
+"fim": 544.4
+},
+{
+"p": "Chi",
+"ini": 544.4,
+"fim": 544.68
+},
+{
+"p": "e",
+"ini": 544.68,
+"fim": 545.24
+},
+{
+"p": "Qigong,",
+"ini": 545.24,
+"fim": 545.68
+},
+{
+"p": "publicadas",
+"ini": 546.08,
+"fim": 546.76
+},
+{
+"p": "em",
+"ini": 546.76,
+"fim": 547.02
+},
+{
+"p": "anos.",
+"ini": 547.28,
+"fim": 547.62
+}
+],
+"ini": 537.18,
+"fim": 547.62,
+"cobertura": 0.78
+},
+{
+"n": "101",
+"texto": "Resultado: evidência de alta certeza para duas coisas.",
+"palavras": [
+{
+"p": "Resultado?",
+"ini": 548.56,
+"fim": 549.24
+},
+{
+"p": "Evidência",
+"ini": 550.16,
+"fim": 550.78
+},
+{
+"p": "de",
+"ini": 550.78,
+"fim": 551.0
+},
+{
+"p": "alta",
+"ini": 551.0,
+"fim": 551.4
+},
+{
+"p": "certeza",
+"ini": 551.4,
+"fim": 551.94
+},
+{
+"p": "para",
+"ini": 551.94,
+"fim": 552.24
+},
+{
+"p": "duas",
+"ini": 552.24,
+"fim": 552.52
+},
+{
+"p": "coisas.",
+"ini": 552.52,
+"fim": 553.04
+}
+],
+"ini": 548.56,
+"fim": 553.04,
+"cobertura": 1.0
+},
+{
+"n": "102",
+"texto": "Baixar a pressão de quem tem hipertensão.",
+"palavras": [
+{
+"p": "Baixar",
+"ini": 554.06,
+"fim": 554.46
+},
+{
+"p": "a",
+"ini": 554.46,
+"fim": 554.54
+},
+{
+"p": "pressão",
+"ini": 554.54,
+"fim": 554.98
+},
+{
+"p": "de",
+"ini": 554.98,
+"fim": 555.14
+},
+{
+"p": "quem",
+"ini": 555.14,
+"fim": 555.34
+},
+{
+"p": "tem",
+"ini": 555.34,
+"fim": 555.54
+},
+{
+"p": "hipertensão.",
+"ini": 555.54,
+"fim": 556.54
+}
+],
+"ini": 554.06,
+"fim": 556.54,
+"cobertura": 1.0
+},
+{
+"n": "103",
+"texto": "E melhorar a densidade dos ossos em mulheres depois da menopausa.",
+"palavras": [
+{
+"p": "E",
+"ini": 557.48,
+"fim": 557.52
+},
+{
+"p": "melhorar",
+"ini": 557.52,
+"fim": 558.02
+},
+{
+"p": "a",
+"ini": 558.02,
+"fim": 558.1
+},
+{
+"p": "densidade",
+"ini": 558.1,
+"fim": 558.64
+},
+{
+"p": "dos",
+"ini": 558.64,
+"fim": 558.94
+},
+{
+"p": "ossos",
+"ini": 558.94,
+"fim": 559.3
+},
+{
+"p": "em",
+"ini": 559.3,
+"fim": 559.46
+},
+{
+"p": "mulheres",
+"ini": 559.46,
+"fim": 559.74
+},
+{
+"p": "depois",
+"ini": 559.74,
+"fim": 560.48
+},
+{
+"p": "da",
+"ini": 560.48,
+"fim": 560.66
+},
+{
+"p": "menopausa.",
+"ini": 560.66,
+"fim": 561.24
+}
+],
+"ini": 557.48,
+"fim": 561.24,
+"cobertura": 1.0
+},
+{
+"n": "104",
+"texto": "Outras condições aparecem com certeza moderada, e muitos estudos ainda são fracos.",
+"palavras": [
+{
+"p": "Outras",
+"ini": 561.24,
+"fim": 562.66
+},
+{
+"p": "condições",
+"ini": 562.66,
+"fim": 563.2
+},
+{
+"p": "aparecem",
+"ini": 563.2,
+"fim": 564.2
+},
+{
+"p": "com",
+"ini": 564.2,
+"fim": 564.36
+},
+{
+"p": "certeza",
+"ini": 564.36,
+"fim": 564.66
+},
+{
+"p": "moderada",
+"ini": 564.66,
+"fim": 565.36
+},
+{
+"p": "e",
+"ini": 565.36,
+"fim": 566.1
+},
+{
+"p": "muitos",
+"ini": 566.1,
+"fim": 566.36
+},
+{
+"p": "estudos",
+"ini": 566.36,
+"fim": 567.02
+},
+{
+"p": "ainda",
+"ini": 567.02,
+"fim": 567.26
+},
+{
+"p": "são",
+"ini": 567.26,
+"fim": 567.52
+},
+{
+"p": "fracos",
+"ini": 567.52,
+"fim": 567.98
+}
+],
+"ini": 561.24,
+"fim": 567.98,
+"cobertura": 1.0
+},
+{
+"n": "105",
+"texto": "E nenhuma das revisões que olharam efeitos colaterais achou evento grave.",
+"palavras": [
+{
+"p": "e",
+"ini": 567.98,
+"fim": 568.96
+},
+{
+"p": "nenhuma",
+"ini": 568.96,
+"fim": 569.34
+},
+{
+"p": "das",
+"ini": 569.34,
+"fim": 569.54
+},
+{
+"p": "revisões",
+"ini": 569.54,
+"fim": 570.04
+},
+{
+"p": "que",
+"ini": 570.04,
+"fim": 570.3
+},
+{
+"p": "olharam",
+"ini": 570.3,
+"fim": 570.94
+},
+{
+"p": "efeitos",
+"ini": 570.94,
+"fim": 571.54
+},
+{
+"p": "colaterais",
+"ini": 571.54,
+"fim": 572.22
+},
+{
+"p": "achou",
+"ini": 572.22,
+"fim": 573.1
+},
+{
+"p": "evento",
+"ini": 573.2,
+"fim": 573.44
+},
+{
+"p": "grave.",
+"ini": 573.44,
+"fim": 573.84
+}
+],
+"ini": 567.98,
+"fim": 573.84,
+"cobertura": 1.0
+},
+{
+"n": "106",
+"texto": "Faz sentido: é movimento lento, equilíbrio, respiração e atenção no corpo ao mesmo tempo.",
+"palavras": [
+{
+"p": "Faz",
+"ini": 574.64,
+"fim": 574.86
+},
+{
+"p": "sentido,",
+"ini": 574.86,
+"fim": 575.26
+},
+{
+"p": "é",
+"ini": 576.0,
+"fim": 576.16
+},
+{
+"p": "movimento",
+"ini": 576.16,
+"fim": 576.38
+},
+{
+"p": "lento,",
+"ini": 576.38,
+"fim": 576.96
+},
+{
+"p": "equilíbrio,",
+"ini": 577.52,
+"fim": 577.96
+},
+{
+"p": "respiração",
+"ini": 578.42,
+"fim": 579.06
+},
+{
+"p": "e",
+"ini": 579.06,
+"fim": 579.5
+},
+{
+"p": "atenção",
+"ini": 579.5,
+"fim": 579.78
+},
+{
+"p": "no",
+"ini": 579.78,
+"fim": 580.02
+},
+{
+"p": "corpo",
+"ini": 580.02,
+"fim": 580.4
+},
+{
+"p": "ao",
+"ini": 580.4,
+"fim": 580.78
+},
+{
+"p": "mesmo",
+"ini": 580.78,
+"fim": 581.0
+},
+{
+"p": "tempo.",
+"ini": 581.0,
+"fim": 581.42
+}
+],
+"ini": 574.64,
+"fim": 581.42,
+"cobertura": 1.0
+},
+{
+"n": "107",
+"texto": "Então a conclusão honesta é esta: funciona para algumas coisas, de verdade, e é complemento, não substitui médico.",
+"palavras": [
+{
+"p": "Então,",
+"ini": 581.9,
+"fim": 582.32
+},
+{
+"p": "a",
+"ini": 582.88,
+"fim": 582.92
+},
+{
+"p": "conclusão",
+"ini": 582.92,
+"fim": 583.3
+},
+{
+"p": "honesta",
+"ini": 583.3,
+"fim": 584.06
+},
+{
+"p": "é",
+"ini": 584.06,
+"fim": 584.3
+},
+{
+"p": "esta,",
+"ini": 584.3,
+"fim": 584.66
+},
+{
+"p": "funciona",
+"ini": 585.46,
+"fim": 585.86
+},
+{
+"p": "para",
+"ini": 585.86,
+"fim": 586.16
+},
+{
+"p": "algumas",
+"ini": 586.16,
+"fim": 586.4
+},
+{
+"p": "coisas,",
+"ini": 586.4,
+"fim": 586.88
+},
+{
+"p": "de",
+"ini": 587.42,
+"fim": 587.56
+},
+{
+"p": "verdade",
+"ini": 587.56,
+"fim": 587.92
+},
+{
+"p": "e",
+"ini": 587.92,
+"fim": 588.68
+},
+{
+"p": "é",
+"ini": 588.68,
+"fim": 588.78
+},
+{
+"p": "complemento,",
+"ini": 588.78,
+"fim": 589.54
+},
+{
+"p": "não",
+"ini": 589.54,
+"fim": 590.0
+},
+{
+"p": "médico,",
+"ini": 590.58,
+"fim": 590.98
+}
+],
+"ini": 581.9,
+"fim": 590.98,
+"cobertura": 0.94
+},
+{
+"n": "108",
+"texto": "Mas o que mais me interessa nem é o tai chi.",
+"palavras": [
+{
+"p": "mas",
+"ini": 591.76,
+"fim": 591.98
+},
+{
+"p": "o",
+"ini": 591.98,
+"fim": 592.1
+},
+{
+"p": "que",
+"ini": 592.1,
+"fim": 592.16
+},
+{
+"p": "mais",
+"ini": 592.16,
+"fim": 592.38
+},
+{
+"p": "me",
+"ini": 592.38,
+"fim": 592.54
+},
+{
+"p": "interessa",
+"ini": 592.54,
+"fim": 593.06
+},
+{
+"p": "nem",
+"ini": 593.06,
+"fim": 593.62
+},
+{
+"p": "é",
+"ini": 593.62,
+"fim": 593.86
+},
+{
+"p": "o",
+"ini": 593.86,
+"fim": 593.96
+},
+{
+"p": "tai",
+"ini": 593.96,
+"fim": 594.18
+},
+{
+"p": "chi.",
+"ini": 594.18,
+"fim": 594.44
+}
+],
+"ini": 591.76,
+"fim": 594.44,
+"cobertura": 1.0
+},
+{
+"n": "109",
+"texto": "É a ideia de dois mil anos que você pode usar hoje, sem levantar da cadeira.",
+"palavras": [
+{
+"p": "É",
+"ini": 595.34,
+"fim": 595.54
+},
+{
+"p": "a",
+"ini": 595.54,
+"fim": 595.64
+},
+{
+"p": "ideia",
+"ini": 595.64,
+"fim": 595.94
+},
+{
+"p": "de",
+"ini": 595.94,
+"fim": 596.16
+},
+{
+"p": "dois",
+"ini": 596.16,
+"fim": 596.42
+},
+{
+"p": "mil",
+"ini": 596.42,
+"fim": 596.66
+},
+{
+"p": "anos",
+"ini": 596.66,
+"fim": 596.96
+},
+{
+"p": "que",
+"ini": 596.96,
+"fim": 597.12
+},
+{
+"p": "você",
+"ini": 597.12,
+"fim": 597.32
+},
+{
+"p": "pode",
+"ini": 597.32,
+"fim": 597.56
+},
+{
+"p": "usar",
+"ini": 597.56,
+"fim": 597.78
+},
+{
+"p": "hoje,",
+"ini": 597.78,
+"fim": 598.12
+},
+{
+"p": "sem",
+"ini": 598.5,
+"fim": 598.8
+},
+{
+"p": "levantar",
+"ini": 598.8,
+"fim": 599.28
+},
+{
+"p": "da",
+"ini": 599.28,
+"fim": 599.38
+},
+{
+"p": "cadeira.",
+"ini": 599.38,
+"fim": 599.78
+}
+],
+"ini": 595.34,
+"fim": 599.78,
+"cobertura": 1.0
+},
+{
+"n": "110",
+"texto": "Volta lá para o rolo de seda de trás para frente.",
+"palavras": [
+{
+"p": "Volta",
+"ini": 600.54,
+"fim": 600.88
+},
+{
+"p": "lá",
+"ini": 600.88,
+"fim": 601.04
+},
+{
+"p": "para",
+"ini": 601.04,
+"fim": 601.22
+},
+{
+"p": "o",
+"ini": 601.22,
+"fim": 601.32
+},
+{
+"p": "rolo",
+"ini": 601.32,
+"fim": 601.52
+},
+{
+"p": "de",
+"ini": 601.52,
+"fim": 601.66
+},
+{
+"p": "seda",
+"ini": 601.66,
+"fim": 601.94
+},
+{
+"p": "de",
+"ini": 601.94,
+"fim": 602.1
+},
+{
+"p": "trás",
+"ini": 602.1,
+"fim": 602.36
+},
+{
+"p": "para",
+"ini": 602.36,
+"fim": 602.64
+},
+{
+"p": "frente.",
+"ini": 602.64,
+"fim": 603.0
+}
+],
+"ini": 600.54,
+"fim": 603.0,
+"cobertura": 1.0
+},
+{
+"n": "111",
+"texto": "Ele resume tudo: um texto que não nasceu pronto, mudou de ordem, de forma e de uso, e mesmo assim chegou até você.",
+"palavras": [
+{
+"p": "Ele",
+"ini": 603.88,
+"fim": 604.06
+},
+{
+"p": "resume",
+"ini": 604.06,
+"fim": 604.34
+},
+{
+"p": "tudo.",
+"ini": 604.34,
+"fim": 604.66
+},
+{
+"p": "Um",
+"ini": 605.38,
+"fim": 605.54
+},
+{
+"p": "texto",
+"ini": 605.54,
+"fim": 605.8
+},
+{
+"p": "que",
+"ini": 605.8,
+"fim": 606.02
+},
+{
+"p": "não",
+"ini": 606.02,
+"fim": 606.16
+},
+{
+"p": "nasceu",
+"ini": 606.16,
+"fim": 606.48
+},
+{
+"p": "pronto,",
+"ini": 606.48,
+"fim": 606.88
+},
+{
+"p": "mudou",
+"ini": 607.2,
+"fim": 607.52
+},
+{
+"p": "de",
+"ini": 607.52,
+"fim": 607.7
+},
+{
+"p": "ordem,",
+"ini": 607.7,
+"fim": 608.1
+},
+{
+"p": "de",
+"ini": 608.4,
+"fim": 608.56
+},
+{
+"p": "forma",
+"ini": 608.56,
+"fim": 608.98
+},
+{
+"p": "e",
+"ini": 608.98,
+"fim": 609.32
+},
+{
+"p": "de",
+"ini": 609.32,
+"fim": 609.44
+},
+{
+"p": "uso,",
+"ini": 609.44,
+"fim": 609.74
+},
+{
+"p": "e",
+"ini": 610.18,
+"fim": 610.4
+},
+{
+"p": "mesmo",
+"ini": 610.4,
+"fim": 610.6
+},
+{
+"p": "assim",
+"ini": 610.6,
+"fim": 610.98
+},
+{
+"p": "chegou",
+"ini": 610.98,
+"fim": 611.76
+},
+{
+"p": "até",
+"ini": 611.76,
+"fim": 612.06
+},
+{
+"p": "você.",
+"ini": 612.06,
+"fim": 612.42
+}
+],
+"ini": 603.88,
+"fim": 612.42,
+"cobertura": 1.0
+},
+{
+"n": "112",
+"texto": "Como a água.",
+"palavras": [
+{
+"p": "Como",
+"ini": 613.24,
+"fim": 613.66
+},
+{
+"p": "a",
+"ini": 613.66,
+"fim": 613.84
+},
+{
+"p": "água.",
+"ini": 613.84,
+"fim": 614.08
+}
+],
+"ini": 613.24,
+"fim": 614.08,
+"cobertura": 1.0
+},
+{
+"n": "113",
+"texto": "Então aqui vão três jeitos de usar o wu wei amanhã.",
+"palavras": [
+{
+"p": "Então",
+"ini": 614.7,
+"fim": 614.94
+},
+{
+"p": "aqui",
+"ini": 614.94,
+"fim": 615.24
+},
+{
+"p": "vão",
+"ini": 615.24,
+"fim": 615.6
+},
+{
+"p": "três",
+"ini": 615.6,
+"fim": 615.9
+},
+{
+"p": "jeitos",
+"ini": 615.9,
+"fim": 616.26
+},
+{
+"p": "de",
+"ini": 616.26,
+"fim": 616.4
+},
+{
+"p": "usar",
+"ini": 616.4,
+"fim": 616.66
+},
+{
+"p": "o",
+"ini": 616.66,
+"fim": 616.9
+},
+{
+"p": "amanhã.",
+"ini": 617.26,
+"fim": 617.78
+}
+],
+"ini": 614.7,
+"fim": 617.78,
+"cobertura": 0.82
+},
+{
+"n": "114",
+"texto": "Um. Antes de gastar energia, pergunta: isso depende de mim?",
+"palavras": [
+{
+"p": "Antes",
+"ini": 619.92,
+"fim": 619.92
+},
+{
+"p": "de",
+"ini": 619.92,
+"fim": 620.08
+},
+{
+"p": "gastar",
+"ini": 620.08,
+"fim": 620.42
+},
+{
+"p": "energia,",
+"ini": 620.42,
+"fim": 620.74
+},
+{
+"p": "pergunta.",
+"ini": 621.22,
+"fim": 621.4
+},
+{
+"p": "Isso",
+"ini": 622.2,
+"fim": 622.34
+},
+{
+"p": "depende",
+"ini": 622.34,
+"fim": 622.6
+},
+{
+"p": "de",
+"ini": 622.6,
+"fim": 622.8
+},
+{
+"p": "mim?",
+"ini": 622.8,
+"fim": 622.92
+}
+],
+"ini": 619.92,
+"fim": 622.92,
+"cobertura": 0.9
+},
+{
+"n": "115",
+"texto": "Se não depende, solta. Se depende, faz agora.",
+"palavras": [
+{
+"p": "Se",
+"ini": 623.5,
+"fim": 623.68
+},
+{
+"p": "não",
+"ini": 623.68,
+"fim": 623.78
+},
+{
+"p": "depende,",
+"ini": 623.78,
+"fim": 624.02
+},
+{
+"p": "solta.",
+"ini": 624.6,
+"fim": 624.94
+},
+{
+"p": "Se",
+"ini": 625.56,
+"fim": 625.56
+},
+{
+"p": "depende,",
+"ini": 625.56,
+"fim": 625.9
+},
+{
+"p": "faz",
+"ini": 626.24,
+"fim": 626.38
+},
+{
+"p": "agora.",
+"ini": 626.38,
+"fim": 626.7
+}
+],
+"ini": 623.5,
+"fim": 626.7,
+"cobertura": 1.0
+},
+{
+"n": "116",
+"texto": "A maior parte do cansaço vem de brigar com o que já está fora do seu controle.",
+"palavras": [
+{
+"p": "A",
+"ini": 627.32,
+"fim": 627.44
+},
+{
+"p": "maior",
+"ini": 627.44,
+"fim": 627.64
+},
+{
+"p": "parte",
+"ini": 627.64,
+"fim": 627.94
+},
+{
+"p": "do",
+"ini": 627.94,
+"fim": 628.1
+},
+{
+"p": "cansaço",
+"ini": 628.1,
+"fim": 628.6
+},
+{
+"p": "vem",
+"ini": 628.6,
+"fim": 628.8
+},
+{
+"p": "de",
+"ini": 628.8,
+"fim": 628.94
+},
+{
+"p": "brigar",
+"ini": 628.94,
+"fim": 629.26
+},
+{
+"p": "com",
+"ini": 629.26,
+"fim": 629.44
+},
+{
+"p": "o",
+"ini": 629.44,
+"fim": 629.56
+},
+{
+"p": "que",
+"ini": 629.56,
+"fim": 629.64
+},
+{
+"p": "já",
+"ini": 629.64,
+"fim": 629.8
+},
+{
+"p": "está",
+"ini": 629.8,
+"fim": 630.0
+},
+{
+"p": "fora",
+"ini": 630.0,
+"fim": 630.32
+},
+{
+"p": "do",
+"ini": 630.32,
+"fim": 630.46
+},
+{
+"p": "seu",
+"ini": 630.46,
+"fim": 630.58
+},
+{
+"p": "controle.",
+"ini": 630.58,
+"fim": 631.0
+}
+],
+"ini": 627.32,
+"fim": 631.0,
+"cobertura": 1.0
+},
+{
+"n": "117",
+"texto": "Dois. Quando bater de frente não funcionar, contorna.",
+"palavras": [
+{
+"p": "Quando",
+"ini": 633.2,
+"fim": 633.34
+},
+{
+"p": "bater",
+"ini": 633.34,
+"fim": 633.56
+},
+{
+"p": "de",
+"ini": 633.56,
+"fim": 633.74
+},
+{
+"p": "frente",
+"ini": 633.74,
+"fim": 633.96
+},
+{
+"p": "não",
+"ini": 633.96,
+"fim": 634.16
+},
+{
+"p": "funcionar,",
+"ini": 634.16,
+"fim": 634.78
+},
+{
+"p": "contorna.",
+"ini": 635.0,
+"fim": 635.52
+}
+],
+"ini": 633.2,
+"fim": 635.52,
+"cobertura": 0.88
+},
+{
+"n": "118",
+"texto": "Muda a ordem, muda o caminho, muda o momento. O objetivo continua; o jeito muda.",
+"palavras": [
+{
+"p": "Muda",
+"ini": 636.3,
+"fim": 636.48
+},
+{
+"p": "a",
+"ini": 636.48,
+"fim": 636.62
+},
+{
+"p": "ordem,",
+"ini": 636.62,
+"fim": 636.94
+},
+{
+"p": "muda",
+"ini": 637.36,
+"fim": 637.56
+},
+{
+"p": "o",
+"ini": 637.56,
+"fim": 637.64
+},
+{
+"p": "caminho,",
+"ini": 637.64,
+"fim": 637.84
+},
+{
+"p": "muda",
+"ini": 638.54,
+"fim": 638.74
+},
+{
+"p": "o",
+"ini": 638.74,
+"fim": 638.8
+},
+{
+"p": "momento.",
+"ini": 638.8,
+"fim": 639.12
+},
+{
+"p": "O",
+"ini": 640.04,
+"fim": 640.16
+},
+{
+"p": "objetivo",
+"ini": 640.16,
+"fim": 640.46
+},
+{
+"p": "continua,",
+"ini": 640.46,
+"fim": 640.98
+},
+{
+"p": "o",
+"ini": 641.7,
+"fim": 641.78
+},
+{
+"p": "jeito",
+"ini": 641.78,
+"fim": 642.02
+},
+{
+"p": "muda.",
+"ini": 642.02,
+"fim": 642.48
+}
+],
+"ini": 636.3,
+"fim": 642.48,
+"cobertura": 1.0
+},
+{
+"n": "119",
+"texto": "Foi isso que salvou esse livro.",
+"palavras": [
+{
+"p": "Foi",
+"ini": 643.06,
+"fim": 643.26
+},
+{
+"p": "isso",
+"ini": 643.26,
+"fim": 643.52
+},
+{
+"p": "que",
+"ini": 643.52,
+"fim": 643.66
+},
+{
+"p": "salvou",
+"ini": 643.66,
+"fim": 644.02
+},
+{
+"p": "esse",
+"ini": 644.02,
+"fim": 644.24
+},
+{
+"p": "livro.",
+"ini": 644.24,
+"fim": 644.48
+}
+],
+"ini": 643.06,
+"fim": 644.48,
+"cobertura": 1.0
+},
+{
+"n": "120",
+"texto": "Três. Pouco, todo dia, vence muito, de vez em quando.",
+"palavras": [
+{
+"p": "Pouco.",
+"ini": 646.8,
+"fim": 647.26
+},
+{
+"p": "Todo",
+"ini": 647.7,
+"fim": 647.78
+},
+{
+"p": "dia,",
+"ini": 647.78,
+"fim": 648.2
+},
+{
+"p": "vence",
+"ini": 648.66,
+"fim": 648.84
+},
+{
+"p": "muito.",
+"ini": 648.84,
+"fim": 649.18
+},
+{
+"p": "De",
+"ini": 649.72,
+"fim": 649.8
+},
+{
+"p": "vez",
+"ini": 649.8,
+"fim": 649.94
+},
+{
+"p": "em",
+"ini": 649.94,
+"fim": 650.04
+},
+{
+"p": "quando.",
+"ini": 650.04,
+"fim": 650.28
+}
+],
+"ini": 646.8,
+"fim": 650.28,
+"cobertura": 0.9
+},
+{
+"n": "121",
+"texto": "A água não abre o cânion com uma onda. Abre porque não para.",
+"palavras": [
+{
+"p": "A",
+"ini": 651.1,
+"fim": 651.34
+},
+{
+"p": "água",
+"ini": 651.34,
+"fim": 651.56
+},
+{
+"p": "não",
+"ini": 651.56,
+"fim": 651.74
+},
+{
+"p": "abre",
+"ini": 651.74,
+"fim": 651.98
+},
+{
+"p": "o",
+"ini": 651.98,
+"fim": 652.12
+},
+{
+"p": "cânion",
+"ini": 652.12,
+"fim": 652.42
+},
+{
+"p": "com",
+"ini": 652.42,
+"fim": 652.68
+},
+{
+"p": "uma",
+"ini": 652.68,
+"fim": 652.9
+},
+{
+"p": "onda.",
+"ini": 652.9,
+"fim": 653.12
+},
+{
+"p": "Abre",
+"ini": 653.12,
+"fim": 654.14
+},
+{
+"p": "porque",
+"ini": 654.14,
+"fim": 654.38
+},
+{
+"p": "não",
+"ini": 654.38,
+"fim": 654.56
+},
+{
+"p": "para,",
+"ini": 654.56,
+"fim": 654.88
+}
+],
+"ini": 651.1,
+"fim": 654.88,
+"cobertura": 1.0
+},
+{
+"n": "122",
+"texto": "Num mundo que manda forçar tudo, mais esforço, mais controle, mais pressa, agir na hora certa e parar de lutar contra o que não depende de você não é preguiça.",
+"palavras": [
+{
+"p": "num",
+"ini": 655.3,
+"fim": 655.86
+},
+{
+"p": "mundo",
+"ini": 655.86,
+"fim": 656.18
+},
+{
+"p": "que",
+"ini": 656.18,
+"fim": 656.36
+},
+{
+"p": "manda",
+"ini": 656.36,
+"fim": 656.62
+},
+{
+"p": "forçar",
+"ini": 656.62,
+"fim": 656.96
+},
+{
+"p": "tudo,",
+"ini": 656.96,
+"fim": 657.28
+},
+{
+"p": "mais",
+"ini": 657.82,
+"fim": 658.08
+},
+{
+"p": "esforço,",
+"ini": 658.08,
+"fim": 658.6
+},
+{
+"p": "mais",
+"ini": 658.94,
+"fim": 659.08
+},
+{
+"p": "controle.",
+"ini": 659.08,
+"fim": 659.52
+},
+{
+"p": "mais",
+"ini": 660.1,
+"fim": 660.24
+},
+{
+"p": "agir",
+"ini": 661.38,
+"fim": 661.7
+},
+{
+"p": "na",
+"ini": 661.7,
+"fim": 661.9
+},
+{
+"p": "hora",
+"ini": 661.9,
+"fim": 662.1
+},
+{
+"p": "certa",
+"ini": 662.1,
+"fim": 662.52
+},
+{
+"p": "e",
+"ini": 662.52,
+"fim": 663.06
+},
+{
+"p": "parar",
+"ini": 663.06,
+"fim": 663.3
+},
+{
+"p": "de",
+"ini": 663.3,
+"fim": 663.46
+},
+{
+"p": "lutar",
+"ini": 663.46,
+"fim": 663.78
+},
+{
+"p": "contra",
+"ini": 663.78,
+"fim": 664.12
+},
+{
+"p": "o",
+"ini": 664.12,
+"fim": 664.24
+},
+{
+"p": "que",
+"ini": 664.24,
+"fim": 664.38
+},
+{
+"p": "não",
+"ini": 664.38,
+"fim": 664.5
+},
+{
+"p": "depende",
+"ini": 664.5,
+"fim": 664.88
+},
+{
+"p": "de",
+"ini": 664.88,
+"fim": 665.12
+},
+{
+"p": "você",
+"ini": 665.12,
+"fim": 665.5
+},
+{
+"p": "não",
+"ini": 665.5,
+"fim": 666.04
+},
+{
+"p": "é",
+"ini": 666.04,
+"fim": 666.18
+},
+{
+"p": "preguiça.",
+"ini": 666.18,
+"fim": 666.68
+}
+],
+"ini": 655.3,
+"fim": 666.68,
+"cobertura": 0.97
+},
+{
+"n": "123",
+"texto": "É estratégia.",
+"palavras": [
+{
+"p": "É",
+"ini": 667.58,
+"fim": 667.78
+},
+{
+"p": "estratégia.",
+"ini": 667.78,
+"fim": 668.48
+}
+],
+"ini": 667.58,
+"fim": 668.48,
+"cobertura": 1.0
+},
+{
+"n": "124",
+"texto": "E se uma ideia de dois mil anos pode ser tão mal entendida, imagina o que fizeram com os estoicos.",
+"palavras": [
+{
+"p": "E",
+"ini": 669.32,
+"fim": 669.64
+},
+{
+"p": "se",
+"ini": 669.64,
+"fim": 669.7
+},
+{
+"p": "uma",
+"ini": 669.7,
+"fim": 669.86
+},
+{
+"p": "ideia",
+"ini": 669.86,
+"fim": 670.22
+},
+{
+"p": "de",
+"ini": 670.22,
+"fim": 670.6
+},
+{
+"p": "dois",
+"ini": 670.6,
+"fim": 670.82
+},
+{
+"p": "mil",
+"ini": 670.82,
+"fim": 671.06
+},
+{
+"p": "anos",
+"ini": 671.06,
+"fim": 671.34
+},
+{
+"p": "pode",
+"ini": 671.34,
+"fim": 671.6
+},
+{
+"p": "ser",
+"ini": 671.6,
+"fim": 671.84
+},
+{
+"p": "tão",
+"ini": 671.84,
+"fim": 672.08
+},
+{
+"p": "mal",
+"ini": 672.08,
+"fim": 672.36
+},
+{
+"p": "-entendida,",
+"ini": 672.36,
+"fim": 673.02
+},
+{
+"p": "imagina",
+"ini": 673.68,
+"fim": 674.22
+},
+{
+"p": "o",
+"ini": 674.22,
+"fim": 674.68
+},
+{
+"p": "que",
+"ini": 674.68,
+"fim": 674.78
+},
+{
+"p": "fizeram",
+"ini": 674.78,
+"fim": 675.24
+},
+{
+"p": "com",
+"ini": 675.24,
+"fim": 675.4
+},
+{
+"p": "os",
+"ini": 675.4,
+"fim": 675.54
+},
+{
+"p": "estoicos,",
+"ini": 675.54,
+"fim": 675.96
+}
+],
+"ini": 669.32,
+"fim": 675.96,
+"cobertura": 1.0
+},
+{
+"n": "125",
+"texto": "O que eles realmente diziam, e o que a internet inventou, está no próximo vídeo. Aqui.",
+"palavras": [
+{
+"p": "o",
+"ini": 677.06,
+"fim": 677.18
+},
+{
+"p": "que",
+"ini": 677.18,
+"fim": 677.28
+},
+{
+"p": "eles",
+"ini": 677.28,
+"fim": 677.48
+},
+{
+"p": "realmente",
+"ini": 677.48,
+"fim": 677.92
+},
+{
+"p": "diziam",
+"ini": 677.92,
+"fim": 678.6
+},
+{
+"p": "e",
+"ini": 678.6,
+"fim": 679.38
+},
+{
+"p": "o",
+"ini": 679.38,
+"fim": 679.48
+},
+{
+"p": "que",
+"ini": 679.48,
+"fim": 679.62
+},
+{
+"p": "a",
+"ini": 679.62,
+"fim": 680.0
+},
+{
+"p": "internet",
+"ini": 680.0,
+"fim": 680.42
+},
+{
+"p": "inventou",
+"ini": 680.42,
+"fim": 681.18
+},
+{
+"p": "está",
+"ini": 681.18,
+"fim": 681.92
+},
+{
+"p": "no",
+"ini": 681.92,
+"fim": 682.08
+},
+{
+"p": "próximo",
+"ini": 682.08,
+"fim": 682.4
+},
+{
+"p": "vídeo.",
+"ini": 682.4,
+"fim": 682.86
+},
+{
+"p": "Aqui.",
+"ini": 683.42,
+"fim": 683.78
+}
+],
+"ini": 677.06,
+"fim": 683.78,
+"cobertura": 1.0
+}
+]
+}
