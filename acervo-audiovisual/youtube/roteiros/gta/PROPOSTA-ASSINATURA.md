@@ -42,3 +42,17 @@ nosso: cerca de 30 por minuto no 1º minuto e no mínimo 18 depois, nenhuma imag
 ## Ideia extra (depende de 1 frase nova na narração)
 Mostrar, com crédito, a conta da CNBC (cópias x preço cheio) e refazer na tela tirando imposto e loja. Entraria no bloco
 5, logo depois de "De quarenta a cinquenta por cento". Se o Italo já tiver gerado a voz, fica para um Short.
+
+## v2 (pedido do Italo, 23/11/2026): Vox com cara de GTA, pouco texto
+"Cuidado para não trazer muito texto e ficar poluído", "estilo Vox", "edição diferente", "algo que retrate o GTA".
+Direção nova, "Missão: siga o dinheiro" (`montagem/quadros_teste_v2.py`; quadros `v2_*.png`):
+- **Mundo:** pôr do sol de Leonida (roxo, magenta, laranja), coqueiros em silhueta, meio-tom de jornal por cima (Vox).
+  Fotos reais do Brasil entram recortadas em meio-tom, com marca-texto amarelo no trecho que a voz lê (Vox).
+- **Fio condutor:** mapa de GPS com rota amarela. O dinheiro sai de "VOCÊ" e passa por 3 pontos (imposto, loja,
+  Take-Two). Cada bloco é um trecho da rota.
+- **Placar:** dinheiro em verde no canto, perde em vermelho a cada parada.
+- **Cartela "FATIA COBRADA":** faixa preta inclinada no meio da tela fechando cada fatia (homenagem às telas de missão,
+  com palavras nossas).
+- **Texto:** no máximo 1 palavra-chave grande por cena e a fonte pequena no rodapé. Legenda de missão embaixo só nas
+  viradas.
+- Nada da Rockstar: sem fonte, logo, arte ou interface do jogo. Os trechos do trailer seguem a regra dos 5 s na V3.
