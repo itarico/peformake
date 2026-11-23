@@ -41,3 +41,9 @@ Primeiro uso: cenas novas do documentário do Taoísmo v70 (20/11/2026). Scripts
 - **Texto Tinocando:** só nas palavras-chave, no quadro exato da palavra. Não pôr título em toda frase.
 - **Sincronia com a fala:** remapear cada cena pela frase correspondente no áudio novo, alinhando pelo texto (transcrição por palavra do áudio final), não por tempo absoluto nem por proporção dentro da frase. Gatilho que não bate com palavra transcrita não pode cair em posição estimada: revisar à mão.
 - **Aprovação por trecho:** antes do render inteiro, mandar 60 s de teste (abertura) para o Italo aprovar. Render completo só depois do ok.
+
+## GTA VI (23/11/2026): Manim reprovado para este estilo
+- Cena da conta (barra que perde fatias) feita em Manim: o Italo achou "horrível". Barra chapada sem textura,
+  sem foto e sem colagem destoa do estilo risografia/colagem aprovado nos quadros v3.
+- Regra: gráfico de conta também vira colagem (nota de dinheiro em meio-tom rasgada em fatias, envelopes, rabisco,
+  grão). Manim só serve se o vídeo inteiro for de gráfico limpo, o que não é o caso do canal.
