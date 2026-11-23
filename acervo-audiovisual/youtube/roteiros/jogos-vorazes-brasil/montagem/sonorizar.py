@@ -20,10 +20,15 @@ def db(v): return 10 ** (v / 20)
 
 # ---------- voz
 v = carrega(VOZ); voz = np.zeros((N, 2), np.float32)
-for n, L in E['linha'].items():
-    a, b = int((L['orig_ini'] - 0.04) * SR), int((L['orig_fim'] + 0.12) * SR)
+_gr = sorted((int(k), L) for k, L in E['linha'].items() if L['orig_fim'] > L['orig_ini'])   # frases gravadas, em ordem
+for i, (n, L) in enumerate(_gr):
+    # voz contínua: cada frase vai até pouco antes da seguinte (nunca corta a ponta da última palavra)
+    fim_src = _gr[i + 1][1]['orig_ini'] - 0.12 if i + 1 < len(_gr) else L['orig_fim'] + 0.6
+    fim_src = max(L['orig_fim'] + 0.05, min(fim_src, L['orig_fim'] + 0.6))
+    a, b = max(0, int((L['orig_ini'] - 0.12) * SR)), int(fim_src * SR)
+    if b - a < int(0.05 * SR): continue
     seg = v[a:b].copy(); f = int(0.01 * SR); seg[:f] *= np.linspace(0, 1, f)[:, None]; seg[-f:] *= np.linspace(1, 0, f)[:, None]
-    o = int((L['ini'] - 0.04) * SR); voz[o:o + len(seg)] += seg[:N - o]
+    o = int(L['ini'] * SR) - (int(L['orig_ini'] * SR) - a); voz[o:o + len(seg)] += seg[:N - o]
 voz *= db(-18) / rms(voz[np.abs(voz).max(1) > 0.01])          # voz em torno de -18 dBFS RMS na fala
 
 # ---------- trilha por emoção

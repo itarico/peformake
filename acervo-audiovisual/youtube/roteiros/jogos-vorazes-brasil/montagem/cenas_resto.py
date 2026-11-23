@@ -19,7 +19,7 @@ def real(c, pref, k=0, ini=0.0, z0=1.0, z1=1.06, ini_rel=0.0, dur=None, pos=None
     return True
 # ordem dos clipes por número dito (índice do arquivo na pasta do distrito); CC e governo na frente.
 # Fora por risco: D8/03 (telejornal afiliado da Record) e D3/04 (afiliada do SBT).
-ORDEM = {'D11': [0, 4], 'D10': [1, 2, 1], 'D9': [0, 2], 'D8': [0, 3, 1], 'D7': [2, 0], 'D6': [2, 3, 0], 'D5': [2, 1], 'D4': [2], 'D3': [0, 1],
+ORDEM = {'D11': [0, 4], 'D10': [1, 2, 2], 'D9': [0, 2], 'D8': [0, 3, 1], 'D7': [2, 0], 'D6': [2, 3, 0], 'D5': [2, 1], 'D4': [2], 'D3': [0, 1],
          'D2': [0, 2], 'D1': [0, 2], 'CAP': [2, 0, 3]}
 CREDV = set()
 

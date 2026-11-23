@@ -14,6 +14,11 @@ MID, AUD, OUT = map(pathlib.Path, sys.argv[1:4]); TESTE = len(sys.argv) > 4 and 
 VOZ_FINAL = len(sys.argv) > 4 and sys.argv[4] == 'final'     # voz do Italo: nenhuma palavra estimada pode virar gatilho
 FPS = 24
 PAL = {p['n']: p for p in json.loads((AUD / 'palavras.json').read_text(encoding='utf-8'))}
+FALTAM = []                       # frase não gravada: vira duração zero no lugar dela (as cenas dela somem; W cai no início)
+for _n in range(1, max(PAL) + 1):
+    if _n not in PAL:
+        _ant = PAL[_n - 1]; PAL[_n] = {'n': _n, 'ini': _ant['fim'], 'fim': _ant['fim'], 'palavras': []}; FALTAM.append(_n)
+if FALTAM: print('AVISO: frases sem gravação:', FALTAM)
 M = carregar_mapa(MID / 'geo' / 'mapa.json')
 MUN = json.loads((MID / 'geo' / 'municipios.json').read_text(encoding='utf-8'))
 CARVAO, CONCRETO, SANGUE, PAPEL, MARFIM, LARANJA, OURO = '#111315', '#35383A', '#C4242B', '#C2B79F', '#E6E2D9', '#E0892B', '#F2A51F'
@@ -35,12 +40,13 @@ def norm(w):
     w = unicodedata.normalize('NFD', w.lower()); w = ''.join(c for c in w if unicodedata.category(c) != 'Mn')
     return re.sub(r'[^a-z0-9]', '', w)
 def W(n, palavra, k=0, fim=False):
+    if n in FALTAM: return LINHA[n]['ini']
     alvo = norm(palavra); hits = [p for p in PAL[n]['palavras'] if norm(p['w']) == alvo]
     if len(hits) <= k: raise SystemExit(f'palavra "{palavra}" não está na frase {n}: {[p["w"] for p in PAL[n]["palavras"]]}')
     p = hits[k]
     if p.get('est'):
-        if TESTE or VOZ_FINAL: raise SystemExit(f'palavra "{palavra}" da frase {n} tem tempo estimado: revisar à mão')
-        print(f'AVISO: "{palavra}" (frase {n}) com tempo estimado na voz-guia; conferir na voz final')
+        if TESTE: raise SystemExit(f'palavra "{palavra}" da frase {n} tem tempo estimado: revisar à mão')
+        print(f'AVISO: "{palavra}" (frase {n}) com tempo estimado; conferir no Premiere')
     return round((p['fim'] if fim else p['ini']) + LINHA[n]['ini'] - PAL[n]['ini'], 3)
 def F(n, fim=False): return LINHA[n]['fim' if fim else 'ini']
 def q(t): return math.ceil(t * FPS - 1e-6) / FPS
@@ -393,6 +399,7 @@ c.fim_()
 
 if not TESTE:
     exec((pathlib.Path(__file__).resolve().parent / 'cenas_resto.py').read_text(encoding='utf-8'))
+CENAS[:] = [c for c in CENAS if c.fim - c.ini >= 1 / FPS]   # cena de frase não gravada some
 CENAS.sort(key=lambda c: c.ini); TRILHA.sort(key=lambda x: x[0])
 
 # ======================================================================== escrever o projeto
