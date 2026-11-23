@@ -2,7 +2,7 @@
 
 Cortados de `panem_final_v3.mp4` com a skill `shorts-do-longo` (modo blur: o 16:9 inteiro no centro, fundo desfocado),
 título de gancho em cima (Anton, marfim + ouro) e legenda embaixo (uma frase por vez, até 3 linhas de 30 caracteres).
-Arquivos: `C:\Claude\canal-youtube\panem\shorts\final\` e Drive da Ellcazo, pasta "Por Dentro - Videos/Shorts Panem".
+Arquivos: `C:\Claude\canal-youtube\panem\shorts\final\` (a cópia no Drive da Ellcazo foi apagada em 23/11 a pedido do Italo).
 Cortes: `shorts_cortes.json` (tempos tirados de `montagem/final_v5/eventos.json`, pelo número da frase).
 
 | # | Arquivo | Frases | Duração | Título na tela | Título do Short |
