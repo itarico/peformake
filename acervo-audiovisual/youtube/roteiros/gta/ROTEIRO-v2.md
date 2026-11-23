@@ -80,6 +80,7 @@ Números por extenso. `[pausa]` = 1 s. **Negrito** = ênfase.
 > Na faixa, de cento e vinte e seis a cento e noventa e oito reais. **Antes de você ver um centavo.**
 > Segunda parada: a loja.
 > Lembra da caixa do jogo? Ela não tem disco. Tem um código. Até quem compra na prateleira acaba na loja da Sony ou da Microsoft.
+> E um detalhe para quem ainda vai comprar: no varejo, essa caixa já saiu por menos de quatrocentos reais. Mais barata que o mesmo jogo direto na loja digital, que ficou fora da Black Friday.
 > E essa loja cobra pedágio. Em dois mil e vinte e um, num julgamento nos Estados Unidos, uma executiva da Microsoft disse sob juramento: a loja do Xbox fica com **trinta por cento** de cada jogo vendido no console.
 > Na Sony, a fatia é a mesma. Tanto que virou processo coletivo no Reino Unido. Na semana passada, o tribunal deu razão à Sony.
 > Você é o maior cliente dessas lojas. Talvez pague menos. Mas esse contrato não é público, então eu fico com os trinta.
@@ -148,6 +149,7 @@ Números por extenso. `[pausa]` = 1 s. **Negrito** = ênfase.
 | Zelnick: "dava para ter feito outras escolhas de preço" | confirmado (declaração) | TweakTown 113040; Destructoid | dito como paráfrase |
 | PS4 2013: 63 % imposto, vendia com prejuízo | confirmado | Tecnoblog 21/10/2013; NPR; Engadget | |
 | Imposto do jogo 28 % a 44 % | estimativa | Tributo Devido; Numerando/IBPT | |
+| Caixa no varejo abaixo de R$ 400; jogo fora da Black Friday da PS Store | confirmado (preços do dia, mudam) | `CHECAGEM-2026-11-23.md` (KaBum R$ 371,91 com cupom; Mercado Livre R$ 391,41) | conferir no dia da gravação |
 | Caixa sem disco | confirmado | Rockstar 24/06/2026 via Omelete | |
 | Xbox 30 %; Xbox nunca deu lucro | confirmado (depoimento) | Epic x Apple, mai/2021 | |
 | Processo britânico rejeitado | confirmado | `CHECAGEM-2026-11-23.md` (17/11/2026) | |
