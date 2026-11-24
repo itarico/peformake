@@ -45,8 +45,7 @@ export function FinanceWhatsappPage() {
               ))}
             </div>
             {s && !s.enabled && <span className="rounded-full bg-warn-soft px-3 py-1.5 text-[12.5px] font-semibold text-warn-ink">Leitura desligada: ligue em Canais</span>}
-            {s?.enabled && <span className="rounded-full bg-ok-soft px-3 py-1.5 text-[12.5px] font-semibold text-ok-ink">Lendo os canais ligados</span>}
-            {h?.transcribe_missing && <span title="O áudio fica para ouvir e completar na revisão até a chave ser colada no Supabase." className="rounded-full bg-raised px-3 py-1.5 text-[12.5px] text-muted"><Mic size={12} className="mr-1 inline" aria-hidden="true" />Áudio sem transcrição (falta a chave do serviço de voz)</span>}
+            {h?.transcribe_missing && <span className="rounded-full bg-warn-soft px-3 py-1.5 text-[12.5px] font-medium text-warn-ink"><Mic size={12} className="mr-1 inline" aria-hidden="true" />Áudio não é transcrito: falta a chave de voz no servidor</span>}
           </div>
           {part === 'revisar' && <ReviewPart data={review} />}
           {part === 'canais' && overview.data && <ChannelsPart data={overview.data} />}

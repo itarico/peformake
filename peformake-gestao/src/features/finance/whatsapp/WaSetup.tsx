@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AlertTriangle, Check, MessageCircle, Phone, Plus, Users } from 'lucide-react'
+import { AlertTriangle, Check, MessageCircle, Phone, Plus, Users, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { ask } from '@/components/ui/confirm'
@@ -50,11 +50,18 @@ export function ChannelsPart({ data }: { data: WaOverview }) {
   const h = data.health
   return (
     <>
-      <section aria-label="Chaves" className="grid gap-x-6 rounded-3xl border border-line bg-surface p-4 sm:grid-cols-2">
-        <Toggle on={s.enabled} label="Ler os canais ligados" hint="Leitor por regras, sem IA: custo zero." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { enabled: v } } })} />
-        <Toggle on={s.reply_enabled} label="Responder no grupo" hint={h.wasender_missing ? 'Falta a chave do Wasender no servidor: a resposta fica na fila.' : 'Uma linha curta: "Anotado ✓ ...". Só mensagem interna.'} onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { reply_enabled: v } } })} />
-        <Toggle on={s.reimburse_enabled} label={'"Do meu bolso" vira reembolso'} hint="Só vira conta a pagar (próximo dia de pagamento da pessoa) depois do OK na revisão." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { reimburse_enabled: v } } })} />
-        <Toggle on={s.pix_enabled} label="Botão Pagar reembolso por Pix" hint="Pelo Asaas, sempre com a sua confirmação." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { pix_enabled: v } } })} />
+      <section aria-label="Chaves" className="flex flex-col gap-1 rounded-3xl border border-line bg-surface p-4">
+        <div className="grid gap-x-6 sm:grid-cols-2">
+          <Toggle on={s.enabled} label="Ler os canais ligados" onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { enabled: v } } })} />
+          <Toggle on={s.reply_enabled} label="Responder no grupo" hint={h.wasender_missing ? 'Falta a chave do Wasender no servidor: a resposta fica na fila.' : undefined} onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { reply_enabled: v } } })} />
+        </div>
+        <details className="group">
+          <summary className="flex min-h-10 cursor-pointer list-none items-center gap-1 text-[13px] font-medium text-muted hover:text-ink">Mais opções<ChevronDown size={14} aria-hidden="true" className="transition-transform group-open:rotate-180" /></summary>
+          <div className="grid gap-x-6 pt-1 sm:grid-cols-2">
+            <Toggle on={s.reimburse_enabled} label={'"Do meu bolso" vira reembolso'} hint="Vira conta a pagar depois do OK na revisão." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { reimburse_enabled: v } } })} />
+            <Toggle on={s.pix_enabled} label="Pagar reembolso por Pix" hint="Pelo Asaas, sempre com a sua confirmação." onChange={(v) => save.mutate({ fn: 'fin_wa_settings_save', args: { _data: { pix_enabled: v } } })} />
+          </div>
+        </details>
       </section>
       {save.problem && <p role="alert" className="rounded-xl bg-warn-soft px-4 py-2.5 font-medium text-warn-ink">{save.problem}</p>}
 
@@ -72,22 +79,24 @@ export function ChannelsPart({ data }: { data: WaOverview }) {
               <button type="button" onClick={() => setEditing(c)} className="min-w-0 flex-1 cursor-pointer text-left">
                 <span className="block truncate font-semibold">{c.group_name ?? c.name}</span>
                 <span className={cn('block text-[12.5px]', c.kind === 'grupo' && !c.chat_jid ? 'font-medium text-warn-ink' : 'text-muted')}>
-                  {c.kind === 'grupo' ? (c.chat_jid ? 'Grupo encontrado ✓' : 'Esperando o número da Peformake entrar no grupo') : phoneLabel(c.phone_key)}
-                  {' · '}{c.default_unit ? (c.default_unit === 'ellcazo' ? 'Ellcazo' : 'Peformake') : 'empresa pelo conteúdo'}
+                  {[c.kind === 'grupo' ? (c.chat_jid ? 'Grupo' : 'Esperando o número da Peformake entrar no grupo') : phoneLabel(c.phone_key),
+                    c.default_unit ? (c.default_unit === 'ellcazo' ? 'Ellcazo' : 'Peformake') : null].filter(Boolean).join(' · ')}
                   {!c.accept_entrada ? ' · só despesas' : !c.accept_saida ? ' · só entradas' : ''}
                 </span>
               </button>
-              <label className="flex min-h-10 cursor-pointer items-center gap-1.5 text-[13px] font-semibold">
-                <input type="checkbox" checked={c.enabled} onChange={(e) => save.mutate({ fn: 'fin_wa_channel_save', args: { _id: c.id, _data: { enabled: e.target.checked } } })} className="size-4" />
-                {c.enabled ? 'Ligado' : 'Desligado'}
-              </label>
+              <button type="button" role="switch" aria-checked={c.enabled} aria-label={`Ler ${c.group_name ?? c.name}`}
+                onClick={() => save.mutate({ fn: 'fin_wa_channel_save', args: { _id: c.id, _data: { enabled: !c.enabled } } })}
+                className={cn('relative mt-2 inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors', c.enabled ? 'bg-ok' : 'bg-line-strong')}>
+                <span className={cn('inline-block size-5 rounded-full bg-surface shadow transition-transform', c.enabled ? 'translate-x-5' : 'translate-x-0.5')} />
+              </button>
             </li>
           ))}
         </ul>
       )}
-      <p className="text-[12.5px] text-muted">
-        Exemplos que o sistema entende: <b className="text-ink">paguei 89,90 no canva</b> · <b className="text-ink">gastei 250 de gasolina na captação da transpetro</b> · <b className="text-ink">recebi 1.200 da Will Motos</b> · <b className="text-ink">uber 32,50 ellcazo</b> · <b className="text-ink">paguei do meu bolso 60 estacionamento</b>. Para corrigir, responda a mensagem com <b className="text-ink">corrige 230</b> ou <b className="text-ink">cancela</b>.
-      </p>
+      <details className="group text-[12.5px] text-muted">
+        <summary className="flex min-h-10 cursor-pointer list-none items-center gap-1 font-medium hover:text-ink">Como escrever no grupo<ChevronDown size={14} aria-hidden="true" className="transition-transform group-open:rotate-180" /></summary>
+        <p><b className="text-ink">paguei 89,90 no canva</b> · <b className="text-ink">gastei 250 de gasolina na captação da transpetro</b> · <b className="text-ink">recebi 1.200 da Will Motos</b> · <b className="text-ink">uber 32,50 ellcazo</b> · <b className="text-ink">paguei do meu bolso 60 estacionamento</b>. Para corrigir, responda a mensagem com <b className="text-ink">corrige 230</b> ou <b className="text-ink">cancela</b>.</p>
+      </details>
       {editing && <ChannelDialog channel={typeof editing === 'string' ? null : editing} kind={typeof editing === 'string' ? editing : editing.kind} data={data} onClose={() => setEditing(null)} />}
     </>
   )
