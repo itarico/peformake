@@ -100,15 +100,17 @@ Deno.serve(async (request) => {
         else if (job.kind === 'reels') params.media_type = 'REELS'
         if (job.caption && job.kind !== 'story') params.caption = job.caption
         container = String((await call(job.token, 'POST', `${job.ig_id}/media`, params)).id)
+        await db.from('ig_posts').update({ container_id: container }).eq('id', job.id)
       }
 
-      // Vídeo: o Instagram baixa e processa antes de liberar. Espera até ~50 s nesta rodada.
-      let ready = !video
-      for (let i = 0; i < 10 && !ready; i++) {
-        const st = await call(job.token, 'GET', container, { fields: 'status_code' })
+      // Toda mídia (foto de story também) passa pelo processamento da Meta antes de publicar; publicar antes dá
+      // "Media ID is not available". Espera até ~50 s nesta rodada (foto costuma levar 2 a 5 s).
+      let ready = false
+      for (let i = 0; i < 12 && !ready; i++) {
+        const st = await call(job.token, 'GET', container, { fields: 'status_code,status' })
         if (st.status_code === 'FINISHED') ready = true
-        else if (st.status_code === 'ERROR' || st.status_code === 'EXPIRED') throw new Error('o vídeo não pôde ser processado (confira formato MP4, proporção e duração)')
-        else await sleep(5000)
+        else if (st.status_code === 'ERROR' || st.status_code === 'EXPIRED') throw new Error(`${video ? 'o vídeo' : 'a imagem'} não pôde ser processado(a): ${String(st.status ?? st.status_code)}`)
+        else await sleep(video ? 5000 : 2000)
       }
       if (!ready) {
         if (job.tries >= 6) { await done(job.id, 'erro', { container, error: 'O Instagram não terminou de processar o vídeo. Tente com um arquivo menor.' }); results[job.id] = 'desistiu' }
@@ -116,7 +118,14 @@ Deno.serve(async (request) => {
         continue
       }
 
-      const published = await call(job.token, 'POST', `${job.ig_id}/media_publish`, { creation_id: container })
+      let published: { id: string }
+      try {
+        published = await call(job.token, 'POST', `${job.ig_id}/media_publish`, { creation_id: container })
+      } catch (e) {
+        // Ainda processando do lado da Meta: tenta de novo na próxima rodada, sem criar outra mídia.
+        if (/not available|not ready|9007/i.test((e as Error).message) && job.tries < 6) { await done(job.id, 'aguardando', { container }); results[job.id] = 'aguardando'; continue }
+        throw e
+      }
       let link: string | null = null
       try { link = String((await call(job.token, 'GET', String(published.id), { fields: 'permalink' })).permalink ?? '') || null } catch { /* story não tem link público */ }
       await done(job.id, 'publicado', { container, media: String(published.id), link })
