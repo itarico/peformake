@@ -1,0 +1,16 @@
+{
+  "name": "Guia do Italo",
+  "short_name": "Guia",
+  "description": "Rotina, estudo e tarefas do dia, com progresso e sequência.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F7FB",
+  "theme_color": "#3B5BFF",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

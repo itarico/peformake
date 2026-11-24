@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Guia do Italo</title>
+<meta name="theme-color" content="#3B5BFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Guia">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: app de uma mão. Topo = nível, sequência e % do dia; centro = missões do dia; abas embaixo */
+:root{
+  --bg:#F5F7FB; --surface:#FFFFFF; --ink:#101828; --muted:#667085; --line:#E4E7EC;
+  --accent:#3B5BFF; --accent-soft:#E8ECFF; --xp:#E9A400; --xp-soft:#FFF4D6; --ok:#12A150; --ok-soft:#E3F6EB; --flame:#F2611D; --late:#D0402B;
+  --display:"Sora","Segoe UI",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0B1120; --surface:#131B2E; --ink:#EEF2FA; --muted:#98A2B8; --line:#222C43;
+  --accent:#7B91FF; --accent-soft:#1D2750; --xp:#FFC53D; --xp-soft:#3A2D0B; --ok:#3DD68C; --ok-soft:#10301F; --flame:#FF8A4C; --late:#FF7A66; color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--body);
+  padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) calc(88px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:18px;padding-top:14px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
+h2{font-size:1.05rem;font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+
+/* topo */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:16px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.ring{--p:0;width:74px;height:74px;border-radius:50%;background:conic-gradient(var(--ok) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;transition:background .4s}
+.ring>div{width:58px;height:58px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font:800 1.05rem var(--display)}
+.lvl{display:flex;flex-direction:column;gap:6px;min-width:0}
+.lvl-name{font:700 1rem var(--display)}
+.xpbar{height:8px;border-radius:99px;background:var(--xp-soft);overflow:hidden}
+.xpbar i{display:block;height:100%;background:var(--xp);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.streak{display:flex;flex-direction:column;align-items:center;gap:0;color:var(--flame);min-width:56px}
+.streak b{font:800 1.6rem/1 var(--display)}
+.streak span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.week{display:flex;justify-content:space-between;gap:4px}
+.wd{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.7rem;color:var(--muted)}
+.wd i{width:100%;max-width:34px;height:6px;border-radius:99px;background:var(--line)}
+.wd.ok i{background:var(--flame)}
+.wd.today{color:var(--ink);font-weight:600}
+
+/* missões */
+.missions{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.m{display:grid;grid-template-columns:52px 1fr 44px;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 12px 12px 14px;transition:transform .15s, background .3s, border-color .3s}
+.m .t{font:600 .86rem var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.m .body{min-width:0;display:flex;flex-direction:column;gap:2px}
+.m .ttl{font-weight:600;overflow-wrap:anywhere}
+.m .sub{font-size:.82rem;color:var(--muted);overflow-wrap:anywhere}
+.m.now{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.m.now .t{color:var(--accent)}
+.m.done{background:var(--ok-soft);border-color:transparent}
+.m.done .ttl{color:var(--muted);text-decoration:line-through}
+.m.past:not(.done){opacity:.75}
+.chk{width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;padding:0;transition:transform .15s, background .2s, border-color .2s}
+.chk svg{width:20px;height:20px;opacity:0;transform:scale(.4);transition:all .2s}
+.done .chk,.chk[aria-pressed="true"]{background:var(--ok);border-color:var(--ok)}
+.done .chk svg,.chk[aria-pressed="true"] svg{opacity:1;transform:scale(1);color:#fff}
+.chk:active{transform:scale(.9)}
+.tag-now{font:700 .62rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+
+/* cartões e listas */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.input{flex:1;min-width:0;border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg)}
+.btn{border:0;border-radius:14px;padding:12px 16px;background:var(--accent);color:#fff;font-weight:600}
+.btn.ghost{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.btn.full{width:100%}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.li{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.li:first-child{border-top:0}
+.li .chk{width:32px;height:32px}
+.li .chk svg{width:16px;height:16px}
+.li .ttl{overflow-wrap:anywhere}
+.li.done .ttl{color:var(--muted);text-decoration:line-through}
+.li .meta{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.li.late .meta{color:var(--late)}
+.del{border:0;background:none;color:var(--muted);padding:6px}
+.group-h{font:700 .74rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:4px}
+.tip{background:var(--accent-soft);border-radius:16px;padding:12px 14px;font-size:.88rem}
+.tip code{font-weight:700}
+.phrase{display:flex;align-items:center;gap:8px;font-style:italic;font-size:.92rem}
+.say{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:4px 10px;font-size:.78rem;font-style:normal}
+.lnk{color:var(--accent);font-size:.9rem}
+textarea.input{min-height:90px;resize:vertical;width:100%}
+
+/* você */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.stat b{font:800 1.35rem var(--display)}
+.stat span{font-size:.72rem;color:var(--muted)}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.badge{border:1px dashed var(--line);border-radius:16px;padding:12px 8px;text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center;font-size:.78rem;color:var(--muted)}
+.badge .ic{width:36px;height:36px;border-radius:50%;background:var(--line);display:grid;place-items:center;font:800 .9rem var(--display);color:var(--surface)}
+.badge.got{border-style:solid;border-color:var(--xp);background:var(--xp-soft);color:var(--ink)}
+.badge.got .ic{background:var(--xp)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:90px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;font-size:.68rem;color:var(--muted)}
+.bars i{width:100%;border-radius:6px 6px 3px 3px;background:var(--accent);min-height:3px}
+
+/* abas */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);
+  padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.tabs nav{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:14px;color:var(--muted);font-size:.72rem;font-weight:600}
+.tabs button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+.tabs svg{width:22px;height:22px}
+
+/* efeitos */
+.pop{position:fixed;z-index:20;pointer-events:none;font:800 1rem var(--display);color:var(--xp);animation:up .9s ease-out forwards}
+@keyframes up{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-46px) scale(1.2)}}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:14px;font-weight:600;max-width:90vw;text-align:center;animation:fade 2.6s ease forwards}
+@keyframes fade{0%{opacity:0;transform:translate(-50%,10px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+.login{min-height:80vh;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.login h1{font-size:2rem;font-weight:800}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <section class="login" id="login" hidden>
+    <h1>Guia do Italo</h1>
+    <p class="muted">Entre com o mesmo e-mail e senha do app da Peformake.</p>
+    <form id="loginForm" style="display:flex;flex-direction:column;gap:10px">
+      <label for="email" class="small muted">E-mail</label>
+      <input class="input" id="email" type="email" autocomplete="username" required>
+      <label for="pass" class="small muted">Senha</label>
+      <input class="input" id="pass" type="password" autocomplete="current-password" required>
+      <button class="btn full" type="submit">Entrar</button>
+      <span class="small muted" id="loginMsg" role="status"></span>
+    </form>
+  </section>
+
+  <div id="main" hidden>
+    <!-- HOJE -->
+    <section data-view="hoje" style="display:flex;flex-direction:column;gap:16px">
+      <div class="hero">
+        <div class="ring" id="ring"><div id="ringTxt">0%</div></div>
+        <div class="lvl">
+          <span class="small muted" id="dateTxt"></span>
+          <span class="lvl-name" id="lvlName">Nível 1</span>
+          <div class="xpbar" aria-hidden="true"><i id="xpBar"></i></div>
+          <span class="small muted" id="xpTxt">0 XP</span>
+        </div>
+        <div class="streak" aria-label="Dias seguidos">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c1 3.5-1.6 5.3-3 7.4C7.6 11.5 7 13 7 14.7A5 5 0 0 0 12 20a5 5 0 0 0 5-5.3c0-2.5-1.4-4.2-2.4-5.3.1 1.6-.4 2.8-1.4 3.5C13.6 9.7 13.5 5.4 12 2Z"/></svg>
+          <b id="streakN">0</b><span>seguidos</span>
+        </div>
+      </div>
+      <div class="week" id="week" aria-label="Últimos 7 dias"></div>
+      <div class="row" style="justify-content:space-between"><h2>Missões de hoje</h2><span class="small muted" id="missCount"></span></div>
+      <ul class="missions" id="missions"></ul>
+    </section>
+
+    <!-- TAREFAS -->
+    <section data-view="tarefas" hidden style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="font-size:1.4rem">Tarefas</h2>
+      <form class="row" id="taskForm">
+        <input class="input" id="taskInput" maxlength="300" placeholder="O que precisa ser feito?" aria-label="Nova tarefa" autocomplete="off">
+        <button class="btn" type="submit">Adicionar</button>
+      </form>
+      <div class="tip">No WhatsApp, mande para <b>você mesmo</b>: <code>+ ligar para o contador</code> vira tarefa. <code>recado: …</code> vai para o professor.</div>
+      <div class="card" id="taskCard"></div>
+    </section>
+
+    <!-- ESTUDO -->
+    <section data-view="estudo" hidden style="display:flex;flex-direction:column;gap:14px">
+      <div><span class="small muted" id="progName"></span><h2 style="font-size:1.4rem" id="studyTitle">Estudo de hoje</h2><p class="muted small" id="studyFoco" style="margin:4px 0 0"></p></div>
+      <ul class="list card" id="studyList"></ul>
+      <div class="card">
+        <h2>Recado para o professor</h2>
+        <textarea class="input" id="recado" placeholder="O que fez, o que travou, uma dúvida. Use o microfone do teclado para falar." aria-label="Recado para o professor"></textarea>
+        <button class="btn" id="sendRecado" type="button">Enviar recado</button>
+        <span class="small muted" id="recadoMsg" role="status"></span>
+      </div>
+    </section>
+
+    <!-- VOCÊ -->
+    <section data-view="voce" hidden style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="font-size:1.4rem">Você</h2>
+      <div class="stats" id="stats"></div>
+      <div class="card"><h2>Últimos 14 dias</h2><div class="bars" id="bars"></div></div>
+      <div class="card"><h2>Conquistas</h2><div class="badges" id="badges"></div></div>
+      <button class="btn ghost" id="logout" type="button">Sair</button>
+    </section>
+  </div>
+</div>
+
+<div class="tabs" id="tabs" hidden><nav aria-label="Seções">
+  <button data-tab="hoje" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.6"/></svg>Hoje</button>
+  <button data-tab="tarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>Tarefas</button>
+  <button data-tab="estudo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5.5c2.5-1 5.5-1 8 .5 2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>Estudo</button>
+  <button data-tab="voce"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-7M21 20H3"/></svg>Você</button>
+</nav></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
