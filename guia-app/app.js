@@ -137,7 +137,7 @@
       const hasDetail = missionDetail(s, t, true);
       if (s.tipo === "trabalho") { const n = openTasks(t).length; body.append(el("span", "sub", n ? n + (n === 1 ? " tarefa aberta" : " tarefas abertas") : "Sem tarefas abertas")); body.addEventListener("click", () => go("tarefas")); }
       else if (s.tipo === "estudo") { const ls = lessonsOf(t); body.append(el("span", "sub", ls.length ? ls.map(x => trilhaInfo(x.trilha).nome).join(" + ") : "Plano de estudo sai na segunda")); body.addEventListener("click", () => go("estudo")); }
-      else if (hasDetail) { body.append(el("span", "sub", open ? "fechar" : "ver detalhes")); body.setAttribute("aria-expanded", open ? "true" : "false"); body.addEventListener("click", () => { open ? S.openMiss.delete(s.id) : S.openMiss.add(s.id); renderMissions(t); }); }
+      else if (hasDetail) { const run = TIMER_IDS.includes(s.id) && timerState(s.id); body.append(el("span", "sub", run ? (run.run ? "cronômetro rodando" : "cronômetro pausado") : open ? "fechar" : (TIMER_IDS.includes(s.id) ? "abrir cronômetro" : "ver detalhes"))); body.setAttribute("aria-expanded", open ? "true" : "false"); body.addEventListener("click", () => { open ? S.openMiss.delete(s.id) : S.openMiss.add(s.id); renderMissions(t); }); }
       row.append(body);
       const btn = el("button", "chk"); btn.type = "button"; btn.innerHTML = CHECK_SVG; btn.setAttribute("aria-pressed", done ? "true" : "false");
       btn.setAttribute("aria-label", (done ? "Desmarcar: " : "Concluir: ") + title); btn.addEventListener("click", ev => toggleSlot(t, s.id, !done, ev));
@@ -146,11 +146,38 @@
       ul.append(li);
     });
   }
+  // cronômetro: guarda o início no aparelho; ao parar, salva os minutos
+  const TIMER_IDS = ["leitura", "duolingo"];
+  const timerKey = id => "guia-timer-" + id;
+  function timerState(id) { try { return JSON.parse(localStorage.getItem(timerKey(id)) || "null"); } catch (e) { return null; } }
+  function timerSet(id, v) { try { v ? localStorage.setItem(timerKey(id), JSON.stringify(v)) : localStorage.removeItem(timerKey(id)); } catch (e) {} }
+  const fmtClock = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+  function minutesToday(atividade) { return S.resultados.filter(r => r.tipo === "tempo" && r.dia === today() && (!atividade || (r.dados && r.dados.atividade === atividade))).reduce((s, r) => s + (Number(r.dados && r.dados.minutos) || 0), 0); }
+  async function saveTime(atividade, minutos, extra) {
+    if (minutos < 1) return;
+    const row = { dia: today(), licao: today() + ":" + atividade, trilha: (extra && extra.trilha) || atividade, tipo: "tempo", dados: { atividade, minutos: Math.round(minutos), ...(extra || {}) } };
+    S.resultados.push({ ...row, criado_em: new Date().toISOString() });
+    if (!DEMO && S.sb) { const r = await S.sb.from("guia_resultados").insert(row); if (r.error) toast("Não salvou o tempo."); }
+  }
+  function timerView(id, label, onDone) {
+    const box = el("div", "timer"); const clock = el("b", "timer-clock", "0:00"); const total = el("span", "muted small");
+    const btn = el("button", "btn", "Iniciar"); btn.type = "button"; const stop = el("button", "btn ghost", "Terminar e salvar"); stop.type = "button";
+    let iv = null;
+    const paint = () => { const st = timerState(id); const secs = st ? (st.acc || 0) + (st.run ? (Date.now() - st.run) / 1000 : 0) : 0; clock.textContent = fmtClock(secs);
+      btn.textContent = st && st.run ? "Pausar" : st ? "Continuar" : "Iniciar"; stop.hidden = !st; const m = minutesToday(id); total.textContent = m ? "Hoje: " + m + " min de " + label.toLowerCase() : ""; };
+    btn.addEventListener("click", () => { const st = timerState(id) || { acc: 0 }; if (st.run) { st.acc += (Date.now() - st.run) / 1000; st.run = null; } else st.run = Date.now(); timerSet(id, st); paint(); });
+    stop.addEventListener("click", async () => { const st = timerState(id); if (!st) return; const secs = (st.acc || 0) + (st.run ? (Date.now() - st.run) / 1000 : 0); timerSet(id, null);
+      await saveTime(id, secs / 60); toast(Math.round(secs / 60) + " min de " + label.toLowerCase() + " salvos"); if (onDone && secs >= 60) onDone(); paint(); });
+    iv = setInterval(() => { if (!box.isConnected) clearInterval(iv); else paint(); }, 1000); paint();
+    const row = el("div", "row"); row.append(btn, stop); box.append(el("span", "lsec-h", "Cronômetro de " + label.toLowerCase()), clock, row, total); return box;
+  }
+
   function workoutFor(d) { const w = S.treino; return w && w.dias ? w.dias[String(dowOf(d))] || null : null; }
   const MEAL = { cafe: "cafe", almoco: "almoco", lanche: "lanche", jantar: "jantar" };
   function missionDetail(s, t, onlyCheck) {
     if (s.id === "academia" && workoutFor(t)) return onlyCheck ? true : workoutView(t);
     if (MEAL[s.id] && S.nutri) return onlyCheck ? true : mealView(s.id);
+    if (TIMER_IDS.includes(s.id)) { if (onlyCheck) return true; const box = el("div", "mdetail"); if (s.detalhe) box.append(el("p", "small", s.detalhe)); box.append(timerView(s.id, s.id === "leitura" ? "Leitura" : "Duolingo", () => { if (!doneMap(t)[s.id]) toggleSlot(t, s.id, true); })); return box; }
     if (s.detalhe) return onlyCheck ? true : el("div", "mdetail", s.detalhe);
     return onlyCheck ? false : null;
   }
@@ -229,7 +256,8 @@
   function renderStudy(t) {
     const ls = lessonsOf(t);
     const prog = S.crono && S.crono.semanas ? S.crono.semanas.find(w => t >= w.de && t <= w.ate) : null;
-    $("progName").textContent = prog ? "Semana " + prog.n + " de " + S.crono.semanas.length + " · " + prog.tema : "";
+    const mAula = minutesToday("aula");
+    $("progName").textContent = (prog ? "Semana " + prog.n + " de " + S.crono.semanas.length + " · " + prog.tema : "") + (mAula ? " · hoje: " + mAula + " min de estudo" : "");
     $("todayN").textContent = ls.length ? ls.filter((a, gi) => provaOf(t, gi)).length + " de " + ls.length + " feitas" : "sem aula hoje";
     renderReview();
     const box = $("todayCards"); box.replaceChildren();
@@ -282,10 +310,15 @@
   // ---------- a aula, um passo por vez ----------
   const P = { dia: null, gi: 0, step: 0, answers: {}, graded: null };
   const STEP_NAMES = ["Aula", "Exemplo", "Tarefa", "Prova"];
-  function openPlayer(dia, gi) { Object.assign(P, { dia, gi, step: 0, answers: {}, graded: null, check: null }); $("player").hidden = false; document.body.style.overflow = "hidden"; drawPlayer(); }
-  function closePlayer() { $("player").hidden = true; document.body.style.overflow = ""; stopRecIfAny(); render(); }
+  function openPlayer(dia, gi) { Object.assign(P, { dia, gi, step: 0, answers: {}, graded: null, check: null, t0: Date.now() }); $("player").hidden = false; document.body.style.overflow = "hidden"; drawPlayer(); }
+  function closePlayer() {
+    $("player").hidden = true; document.body.style.overflow = ""; stopRecIfAny(); stopSpeak();
+    const a = lessonsOf(P.dia)[P.gi]; const mins = (Date.now() - (P.t0 || Date.now())) / 60000;
+    if (a && mins >= 1) saveTime("aula", Math.min(mins, 180), { trilha: a.trilha, licao: lessonId(P.dia, P.gi) });
+    render();
+  }
   function drawPlayer() {
-    const a = lessonsOf(P.dia)[P.gi]; if (!a) return closePlayer();
+    const a = lessonsOf(P.dia)[P.gi]; if (!a) return closePlayer(); if (speaking) stopSpeak();
     const tr = trilhaInfo(a.trilha); const pl = $("player"); pl.style.setProperty("--c", tr.cor);
     $("plTag").textContent = tr.nome;
     const dots = $("plDots"); dots.replaceChildren();
@@ -310,7 +343,8 @@
       body.append(el("span", "lsec-h", "Tarefa"));
       const f = feitosOf(P.dia); const ul = el("ul", "list");
       (a.pratica || []).forEach((p, pi) => {
-        const li = checkLine(P.dia, P.gi + "." + pi, p.titulo, f.has(P.gi + "." + pi), (p.min || 0) + " min", true);
+        const TIPO = { video: "Vídeo", filme: "Filme", artigo: "Artigo", pdf: "PDF", podcast: "Áudio", acao: "Ação prática", questoes: "Questões", leitura: "Leitura" };
+        const li = checkLine(P.dia, P.gi + "." + pi, (p.tipo && TIPO[p.tipo] ? TIPO[p.tipo] + " · " : "") + p.titulo, f.has(P.gi + "." + pi), (p.min || 0) + " min", true);
         const b = li.querySelector(".lbody");
         if (p.detalhe) b.append(el("span", "muted small", p.detalhe));
         (p.falar || []).forEach(x => { const r = el("span", "phrase"); r.append(el("span", null, x)); if ("speechSynthesis" in window) { const sb = el("button", "say", "Ouvir"); sb.type = "button"; sb.addEventListener("click", () => speak(x)); r.append(sb); } b.append(r); });
@@ -373,6 +407,19 @@
     drawPlayer();
   });
   $("plClose").addEventListener("click", closePlayer);
+  // ouvir: lê em voz alta o que está na tela da aula
+  let speaking = false;
+  function stopSpeak() { try { speechSynthesis.cancel(); } catch (e) {} speaking = false; $("plSpeak").textContent = "Ouvir"; $("plSpeak").classList.remove("rec"); }
+  function ptVoice() { const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || []; return vs.find(v => /pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null; }
+  $("plSpeak").addEventListener("click", () => {
+    if (!("speechSynthesis" in window)) { toast("Este aparelho não lê em voz alta."); return; }
+    if (speaking) return stopSpeak();
+    const parts = [...$("plBody").querySelectorAll(".pl-title, .lesson-p, .lesson-ex, .qa-q, .lbody > .ttl, .lbody > .muted")].map(n => n.textContent.trim()).filter(Boolean);
+    if (!parts.length) return;
+    speechSynthesis.cancel(); speaking = true; $("plSpeak").textContent = "Parar"; $("plSpeak").classList.add("rec");
+    const v = ptVoice();
+    parts.forEach((txt, i) => { const u = new SpeechSynthesisUtterance(txt); u.lang = "pt-BR"; if (v) u.voice = v; u.rate = 1.05; if (i === parts.length - 1) u.onend = stopSpeak; speechSynthesis.speak(u); });
+  });
 
   // ---------- gravação da tarefa: o professor mede ----------
   let REC = null;
@@ -540,7 +587,7 @@
     const xp = totalXP(), L = levelOf(xp); const st = $("stats"); st.replaceChildren();
     const acertos = Object.values(S.cartoes).reduce((s, c) => s + (c.acertos || 0), 0);
     [[String(streakAt(t)), "dias seguidos"], [String(bestStreak()), "melhor sequência"], [String(L), "nível"],
-     [String(countDone("academia")), "treinos"], [String(Math.round(minutesBy(null) / 6) / 10) + " h", "de estudo"], [S.resultados.some(r => r.tipo === "prova") ? fmtNota(avg(S.resultados.filter(r => r.tipo === "prova").map(r => Number(r.nota)))) : "–", "média nas provas"]]
+     [String(countDone("academia")), "treinos"], [String(Math.round(S.resultados.filter(r => r.tipo === "tempo").reduce((s, r) => s + (Number(r.dados && r.dados.minutos) || 0), 0) / 6) / 10) + " h", "de estudo medidas"], [S.resultados.some(r => r.tipo === "prova") ? fmtNota(avg(S.resultados.filter(r => r.tipo === "prova").map(r => Number(r.nota)))) : "–", "média nas provas"]]
       .forEach(([v, k]) => { const c = el("div", "stat"); c.append(el("b", null, v), el("span", null, k)); st.append(c); });
     const bars = $("bars"); bars.replaceChildren();
     for (let i = 13; i >= 0; i--) { const d = addDays(t, -i), p = dayPct(d); const c = el("div"); const bar = el("i"); bar.style.height = Math.max(3, p) + "%"; if (p >= VALID) bar.style.background = "var(--flame)"; c.append(bar, el("span", null, DOW1[dowOf(d)])); bars.append(c); }

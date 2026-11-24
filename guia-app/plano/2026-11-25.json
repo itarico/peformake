@@ -4,77 +4,130 @@
   {
    "trilha": "oratoria",
    "tema": "A estrutura que vende",
-   "objetivo": "Um pitch de 5 frases que começa pelo problema do cliente.",
+   "objetivo": "Montar e gravar um pitch de 5 frases que começa pelo problema do cliente.",
    "aula": [
-    "Quem compra não compra serviço: compra a saída de um problema. Por isso o pitch começa pelo problema dele, nas palavras dele.",
-    "A estrutura tem 5 partes. 1) Problema: o que dói. 2) Custo: quanto isso custa hoje (dinheiro, tempo, paciente perdido). 3) Caminho: o que muda. 4) Prova: um caso real com número. 5) Próximo passo: um pedido pequeno e claro.",
-    "Custo é a parte que quase todo mundo pula, e é a que cria urgência. Sem custo, o problema vira 'um dia eu resolvo'.",
-    "O próximo passo deve ser pequeno: 15 minutos, um diagnóstico gratuito, uma análise. Pedir o contrato na primeira fala assusta."
+    "Quem compra não compra serviço: compra a saída de um problema. Por isso o pitch começa pelo problema dele, nas palavras dele, e não pela sua empresa.",
+    "Simon Sinek mostrou que as marcas que mais engajam começam pelo 'por quê' e só depois falam do 'como' e do 'o quê'. Em venda local, o 'por quê' do cliente é a dor dele: a agenda vazia, o salão parado, o anúncio que não traz ninguém.",
+    "A estrutura tem 5 partes. 1) Problema: o que dói. 2) Custo: quanto isso custa hoje, em dinheiro, tempo ou cliente perdido. 3) Caminho: o que muda. 4) Prova: um caso real com número. 5) Próximo passo: um pedido pequeno e claro.",
+    "O custo é a parte que quase todo mundo pula, e é ela que cria urgência. Sem custo, o problema vira 'um dia eu resolvo'. Com custo, vira 'estou perdendo dinheiro toda semana'.",
+    "A prova precisa de número: '4 para 11 pacientes em 60 dias' convence; 'resultados incríveis' não. E o próximo passo deve ser fácil de aceitar: 15 minutos, um diagnóstico gratuito. Pedir o contrato na primeira fala assusta."
    ],
    "exemplo": "1) 'Muita clínica em Boa Viagem tem agenda cheia na segunda e vazia na quarta.' 2) 'Cada horário vazio é uns R$ 300 que não voltam.' 3) 'A gente coloca anúncio e conteúdo para encher os dias fracos.' 4) 'Na clínica X, a quarta passou de 4 para 11 pacientes em 60 dias.' 5) 'Posso te mostrar em 15 minutos onde está o vazamento da sua agenda?'",
    "pratica": [
     {
-     "min": 15,
-     "titulo": "Escreva seu pitch nas 5 partes",
-     "detalhe": "Uma frase por parte. Proibido começar com 'a Peformake é'."
+     "tipo": "video",
+     "min": 18,
+     "titulo": "Simon Sinek: como grandes líderes inspiram ação (TED)",
+     "detalhe": "Ative a legenda em português. Anote o 'círculo dourado': por quê, como, o quê.",
+     "links": [
+      {
+       "rotulo": "Assistir (18 min)",
+       "url": "https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action"
+      }
+     ]
     },
     {
-     "min": 10,
-     "titulo": "Grave a versão 2 e compare com ontem",
-     "detalhe": "Mesmos 4 números: ritmo, vícios, primeira frase, fechamento."
+     "tipo": "acao",
+     "min": 12,
+     "titulo": "Escreva o seu pitch em 5 frases",
+     "detalhe": "Uma frase por parte: problema, custo, caminho, prova (com número real de um cliente seu), próximo passo. Proibido começar com 'a Peformake é'."
+    },
+    {
+     "tipo": "acao",
+     "min": 5,
+     "titulo": "Grave a versão 2 e compare com a de ontem",
+     "detalhe": "Use a gravação abaixo. Compare ritmo, vícios, primeira frase e fechamento."
     }
    ],
    "feynman": "Explique a estrutura de 5 partes para alguém da sua equipe em 1 minuto, com um exemplo de cliente real.",
    "prova": [
     {
-     "p": "Qual a ordem das 5 partes do pitch?",
+     "p": "Qual é a ordem correta das 5 partes?",
      "opcoes": [
-      "Prova, preço, problema, prazo, pedido",
+      "Prova, custo, problema, caminho, próximo passo",
       "Problema, custo, caminho, prova, próximo passo",
-      "Empresa, serviços, preço, prova, contrato"
+      "Caminho, problema, prova, custo, próximo passo",
+      "Problema, caminho, custo, próximo passo, prova"
      ],
      "certa": 1,
-     "explica": "Começa pelo cliente, termina num pedido."
+     "explica": ""
     },
     {
-     "p": "Qual parte cria urgência e quase todo mundo pula?",
+     "p": "Na lógica de Sinek aplicada à venda local, o 'porquê' do cliente é:",
      "opcoes": [
-      "O caminho",
-      "O custo do problema hoje",
-      "A prova"
+      "A missão da sua agência",
+      "A dor que ele sente no negócio",
+      "O preço do serviço",
+      "O nome da sua empresa"
      ],
      "certa": 1,
-     "explica": "Sem custo, o problema vira 'um dia eu resolvo'."
+     "explica": "Você começa pelo motivo dele, não pelo seu."
     },
     {
-     "p": "Qual é um bom próximo passo?",
+     "p": "Qual destas frases é de CUSTO?",
      "opcoes": [
-      "'Fecha o contrato hoje?'",
-      "'Posso te mostrar em 15 minutos onde está o vazamento?'",
-      "'Qualquer coisa me chama.'"
+      "'Cuidamos do seu Instagram.'",
+      "'Cada horário vazio são uns R$ 300 que não voltam.'",
+      "'Atendemos clínicas em Recife.'",
+      "'Podemos conversar amanhã?'"
      ],
      "certa": 1,
-     "explica": "Pequeno, concreto e fácil de aceitar."
+     "explica": ""
     },
     {
-     "p": "A prova no pitch deve ter:",
+     "p": "Qual prova é mais forte?",
      "opcoes": [
-      "Um caso real com número",
-      "Uma opinião sua",
+      "'Nossos clientes adoram.'",
+      "'Somos referência em Recife.'",
+      "'Na clínica X, a quarta foi de 4 para 11 pacientes em 60 dias.'",
+      "'Temos uma equipe experiente.'"
+     ],
+     "certa": 2,
+     "explica": "Número e prazo tornam a prova verificável."
+    },
+    {
+     "p": "Aplicação: um dono de pizzaria diz que o salão só enche no fim de semana. Qual é o melhor PRÓXIMO PASSO?",
+     "opcoes": [
+      "'Fecha o pacote de 3 meses?'",
+      "'Posso te mostrar em 15 minutos como encher a terça?'",
+      "'Me chama quando quiser.'",
+      "'Te mando nossa tabela de preços.'"
+     ],
+     "certa": 1,
+     "explica": "Pequeno, concreto e ligado à dor dele."
+    },
+    {
+     "p": "Aplicação: você só tem 20 segundos. Qual parte NÃO pode faltar além do problema?",
+     "opcoes": [
+      "A história da empresa",
+      "O custo e o próximo passo",
+      "A lista de serviços",
       "O preço"
      ],
-     "certa": 0,
-     "explica": "Número convence mais que adjetivo."
+     "certa": 1,
+     "explica": "Sem custo não há urgência; sem próximo passo a conversa morre."
     },
     {
-     "p": "Aplicação: um dono de restaurante diz 'meu salão enche só no fim de semana'. Qual é a frase de CUSTO no pitch?",
+     "p": "Pegadinha: 'Começar com o preço mostra transparência e acelera a venda.' Isso é:",
      "opcoes": [
-      "'A gente faz anúncio no Instagram.'",
-      "'Cada terça vazia são umas 40 mesas que não voltam.'",
-      "'Posso te mostrar em 15 minutos?'"
+      "Verdade, sempre",
+      "Falso: preço antes de valor vira comparação de preço",
+      "Verdade só para clínicas",
+      "Indiferente"
      ],
      "certa": 1,
-     "explica": "Custo é traduzir o problema em perda concreta."
+     "explica": ""
+    },
+    {
+     "p": "Análise: um pitch tem problema, caminho e próximo passo, mas o cliente responde 'vou pensar'. O que provavelmente faltou?",
+     "opcoes": [
+      "Mais serviços",
+      "Custo e prova",
+      "Falar mais rápido",
+      "Um desconto"
+     ],
+     "certa": 1,
+     "explica": "Sem custo e prova, não há urgência nem confiança."
     }
    ],
    "gravar": {
@@ -82,30 +135,56 @@
     "segundos": 120
    },
    "checagem": {
-    "p": "Qual frase começa pelo problema do cliente?",
+    "p": "Segundo Sinek, por onde as marcas que mais engajam começam a falar?",
     "opcoes": [
-     "'A Peformake tem 5 anos de mercado.'",
-     "'Sua agenda tem buraco no meio da semana?'",
-     "'Fazemos tráfego e conteúdo.'"
+     "Pelo produto (o quê)",
+     "Pelo motivo (o porquê)",
+     "Pelo preço"
     ],
     "certa": 1,
-    "explica": "Começar pelo problema prende; começar por você afasta."
+    "explica": "No pitch, o 'porquê' é a dor do cliente."
    }
   },
   {
    "trilha": "ingles",
    "tema": "Seu pitch em inglês",
-   "objetivo": "Falar 3 frases de venda sem ler.",
+   "objetivo": "Entender um pitch em inglês e falar o seu, sem ler.",
    "aula": [
-    "Aprender língua por frase inteira funciona melhor do que por palavra solta: o cérebro guarda o pedaço pronto para usar.",
-    "O caminho é ouvir, repetir junto (shadowing), repetir sozinho e depois falar sem olhar. Erro de pronúncia faz parte: o objetivo é ser entendido, não soar nativo.",
-    "Três frases resolvem um pitch curto em inglês: o problema, o custo e o próximo passo."
+    "Aprender língua por frase inteira funciona melhor do que por palavra solta: o cérebro guarda o pedaço pronto para usar na hora.",
+    "O caminho tem 4 passos: ouvir com legenda em inglês, repetir junto com o áudio (shadowing), repetir sozinho e, por fim, falar sem olhar. Errar a pronúncia faz parte: o objetivo é ser entendido.",
+    "Um pitch curto em inglês usa a mesma estrutura do português: problem, cost, solution, proof, next step. As palavras mudam, a lógica não.",
+    "Hoje você vai ouvir um especialista falar sobre comunicação, ler exemplos reais de pitch em inglês e montar o seu com 3 frases."
    ],
    "exemplo": "'Most clinics in Recife are invisible online.' (o problema) · 'That costs them new patients every week.' (o custo) · 'We fix that in ninety days, and we can show you how.' (o caminho e o próximo passo)",
    "pratica": [
     {
+     "tipo": "video",
+     "min": 8,
+     "titulo": "Chris Anderson: o segredo do TED para falar em público",
+     "detalhe": "Assista com a legenda em INGLÊS. Anote 3 palavras novas.",
+     "links": [
+      {
+       "rotulo": "Assistir (8 min)",
+       "url": "https://www.ted.com/talks/chris_anderson_ted_s_secret_to_great_public_speaking"
+      }
+     ]
+    },
+    {
+     "tipo": "artigo",
      "min": 10,
-     "titulo": "Ouça e repita 5 vezes cada frase",
+     "titulo": "Leia 3 exemplos de elevator pitch (HubSpot, em inglês)",
+     "detalhe": "Sublinhe 5 expressões que você usaria no seu pitch.",
+     "links": [
+      {
+       "rotulo": "Abrir o artigo",
+       "url": "https://blog.hubspot.com/sales/elevator-pitch-examples"
+      }
+     ]
+    },
+    {
+     "tipo": "acao",
+     "min": 6,
+     "titulo": "Shadowing: ouça e repita 5 vezes cada frase",
      "falar": [
       "Most clinics in Recife are invisible online.",
       "That costs them new patients every week.",
@@ -113,71 +192,98 @@
      ]
     },
     {
-     "min": 10,
-     "titulo": "Grave as 3 frases sem olhar"
-    },
-    {
-     "min": 10,
-     "titulo": "Ouça 10 min de TED com legenda em inglês",
-     "links": [
-      {
-       "rotulo": "Abrir o TED",
-       "url": "https://www.ted.com/talks/julian_treasure_how_to_speak_so_that_people_want_to_listen"
-      }
-     ]
+     "tipo": "acao",
+     "min": 4,
+     "titulo": "Grave as 3 frases sem ler"
     }
    ],
    "feynman": "Fale as 3 frases em inglês para a câmera, sem ler, e comente aqui como se saiu.",
    "prova": [
     {
-     "p": "'That costs them new patients every week' fala de:",
+     "p": "'Elevator pitch' significa:",
+     "opcoes": [
+      "Uma venda no elevador",
+      "Uma apresentação curta, do tempo de um elevador",
+      "Um anúncio pago",
+      "Um contrato"
+     ],
+     "certa": 1,
+     "explica": ""
+    },
+    {
+     "p": "Na frase 'That costs them new patients every week', a palavra 'costs' indica:",
      "opcoes": [
       "O caminho",
       "O custo",
-      "O preço"
+      "A prova",
+      "O próximo passo"
      ],
      "certa": 1,
-     "explica": "É a frase do custo."
+     "explica": ""
+    },
+    {
+     "p": "Qual frase é um próximo passo em inglês?",
+     "opcoes": [
+      "'Most clinics are invisible online.'",
+      "'Can I show you how in fifteen minutes?'",
+      "'We have a great team.'",
+      "'That costs them patients.'"
+     ],
+     "certa": 1,
+     "explica": ""
     },
     {
      "p": "'Invisible online' quer dizer:",
      "opcoes": [
+      "Sem estoque",
       "Invisível na internet",
-      "Desligado",
-      "Sem estoque"
+      "Desconectado do Wi-Fi",
+      "Sem site bonito"
      ],
-     "certa": 0,
+     "certa": 1,
      "explica": ""
     },
     {
      "p": "Shadowing é:",
      "opcoes": [
+      "Traduzir palavra por palavra",
+      "Repetir junto com o áudio, imitando ritmo e som",
       "Ler em silêncio",
-      "Repetir junto com o áudio, imitando",
-      "Traduzir palavra por palavra"
+      "Escrever o que ouviu"
      ],
      "certa": 1,
-     "explica": "É a técnica mais rápida para a pronúncia."
+     "explica": ""
     },
     {
-     "p": "Como aprender inglês de negócios mais rápido?",
+     "p": "Aplicação: como dizer 'em 90 dias' no seu pitch?",
      "opcoes": [
-      "Decorar palavras soltas",
-      "Aprender frases inteiras que você vai usar",
-      "Estudar só gramática"
+      "'In ninety days'",
+      "'At ninety days'",
+      "'On ninety days'",
+      "'For ninety day'"
      ],
-     "certa": 1,
-     "explica": "O cérebro guarda o pedaço pronto."
+     "certa": 0,
+     "explica": ""
     },
     {
-     "p": "Aplicação: qual frase em inglês serve de próximo passo?",
+     "p": "Aplicação: qual frase prova resultado?",
      "opcoes": [
-      "'Most clinics are invisible online.'",
-      "'Can I show you how in 15 minutes?'",
-      "'That costs them patients.'"
+      "'We are the best agency.'",
+      "'One clinic went from 4 to 11 patients in 60 days.'",
+      "'We love marketing.'",
+      "'Call us today.'"
      ],
      "certa": 1,
-     "explica": "Próximo passo é um pedido pequeno."
+     "explica": "Número concreto é prova."
+    },
+    {
+     "p": "Pegadinha: para ser entendido em inglês você precisa ter sotaque nativo.",
+     "opcoes": [
+      "Verdade",
+      "Falso: o objetivo é clareza, não sotaque"
+     ],
+     "certa": 1,
+     "explica": ""
     }
    ],
    "gravar": {
@@ -185,13 +291,13 @@
     "segundos": 45
    },
    "checagem": {
-    "p": "O que é shadowing?",
+    "p": "Qual a ordem certa para aprender a falar uma frase?",
     "opcoes": [
-     "Repetir junto com o áudio, imitando",
-     "Traduzir mentalmente",
-     "Ler em silêncio"
+     "Falar sem olhar, depois ouvir",
+     "Ouvir, repetir junto, repetir sozinho, falar sem olhar",
+     "Ler a tradução e decorar"
     ],
-    "certa": 0,
+    "certa": 1,
     "explica": ""
    }
   }
