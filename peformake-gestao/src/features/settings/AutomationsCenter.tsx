@@ -63,8 +63,9 @@ const routineUrl = (id: string) => `https://claude.ai/code/routines/${id}`
 export function AutomationsLink({ module, modules }: { module?: AutoModule; modules?: AutoModule[] }) {
   const { state } = useAuth()
   const roles = state.status === 'ready' ? state.user.roles : []
-  const allowed = roles.includes('admin') || roles.includes('head_marketing')
   const mods = modules ?? (module ? [module] : [])
+  // Configuração do Social Media (conteúdo e design) só o admin vê (pedido do Italo, 24/11).
+  const allowed = roles.includes('admin') || (roles.includes('head_marketing') && !mods.includes('conteudo'))
   // Só o ponto vermelho do ícone: não precisa reler a cada tela (5 min); a central aberta relê na hora.
   // Quem não vê o ícone (não é admin nem gestor) nem chega a perguntar ao banco.
   const list = useAutomations(5 * 60_000, allowed && mods.length > 0)

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, Download, FileUp, Image as ImageIcon, Link2, Send } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { AlertTriangle, ChevronDown, Download, FileUp, Image as ImageIcon, Link2, Send } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { GuideButton } from '@/features/clients/BrandGuideCard'
@@ -14,12 +13,13 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { useAuth } from '@/auth/context'
 import { useProduction } from '@/features/production/useProduction'
 import { DesignerPanel } from './DesignerPanel'
+import { BriefDialog } from './NewArt'
 import { PriorityBadge } from './PriorityBadge'
 import { DesignSlaButton } from './DesignSla'
 import { contentErrorMessage, downloadUrl, listDesignQueue, listFiles, setStatus, uploadFile, type ContentFile } from './contentApi'
 import { monthStart } from '@/features/traffic/planRules'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
-import { deliveryTarget, designQueue, fileCheck, itemTitle, KIND_LABEL, shortBriefing, specSummary, STATUS_LABEL, type ContentItem } from './contentRules'
+import { deliveryTarget, designQueue, fileCheck, itemTitle, KIND_LABEL, shortBriefing, specSummary, type ContentItem } from './contentRules'
 
 function useNow(): number {
   const [now, setNow] = useState(() => Date.now())
@@ -107,7 +107,7 @@ function previewUrl(path: string): string {
 }
 
 /** Capa do cartão: a primeira foto de referência que a social media mandou (pedido do Italo, 20/11). */
-function RefCover({ images, links, title }: { images: string[]; links: string[]; title: string }) {
+function RefCover({ images, links, title, onOpen }: { images: string[]; links: string[]; title: string; onOpen: () => void }) {
   const [failed, setFailed] = useState(false)
   // Sem foto mas com link (post do Instagram, Pinterest): busca a imagem do link para o cartão parecer a postagem.
   const link = images.length === 0 ? links[0] : undefined
@@ -122,19 +122,19 @@ function RefCover({ images, links, title }: { images: string[]; links: string[];
   // Todo cartão tem o lugar da imagem, mesmo sem referência: a fila fica com o mesmo desenho.
   if (!src || failed) {
     return (
-      <div className="-mx-3 -mt-3 flex h-24 items-center justify-center gap-2 border-b border-line bg-raised text-[13px] text-muted">
-        <ImageIcon size={18} aria-hidden="true" /> {link && thumb.isPending ? 'Buscando a referência' : 'Sem imagem de referência'}
-      </div>
+      <button type="button" onClick={onOpen} aria-label={`Abrir o briefing de ${title}`} className="-mx-3 -mt-3 flex aspect-[4/5] cursor-pointer flex-col items-center justify-center gap-2 border-b border-line bg-raised text-[13px] text-muted">
+        <ImageIcon size={22} aria-hidden="true" /> {link && thumb.isPending ? 'Buscando a referência' : 'Sem referência'}
+      </button>
     )
   }
   return (
-    <a href={images[0] ?? link} target="_blank" rel="noopener noreferrer" aria-label={`Abrir a referência de ${title}`}
-      className="relative -mx-3 -mt-3 block aspect-[16/9] overflow-hidden rounded-t-2xl border-b border-line bg-raised">
+    <button type="button" onClick={onOpen} aria-label={`Abrir o briefing de ${title}`}
+      className="relative -mx-3 -mt-3 block aspect-[4/5] cursor-pointer overflow-hidden rounded-t-2xl border-b border-line bg-raised">
       <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} className="size-full object-cover transition-transform duration-300 hover:scale-[1.03]" />
       {images.length > 1 && (
         <span className="absolute bottom-2 right-2 rounded-full bg-black/65 px-2 py-0.5 text-[11px] font-semibold text-white">+{images.length - 1} referência{images.length > 2 ? 's' : ''}</span>
       )}
-    </a>
+    </button>
   )
 }
 
@@ -156,19 +156,24 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
   ]
   const otherLinks = item.referenceLinks.filter((l) => !isImageLink(l))
   const started = item.status === 'in_production'
+  const [viewing, setViewing] = useState(false)
+  // Abrir o briefing já marca Em produção e o tempo conta (sem botão "Comecei", pedido do Italo, 24/11).
+  const view = () => { setViewing(true); if (!started && !start.isPending) start.mutate() }
   return (
     <li className={cn('flex flex-col gap-2.5 overflow-hidden rounded-2xl border bg-surface p-3', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
-      <RefCover images={images} links={otherLinks} title={itemTitle(item)} />
+      <RefCover images={images} links={otherLinks} title={itemTitle(item)} onOpen={view} />
       <div className="flex items-center justify-between gap-2">
         <p className="min-w-0 truncate text-[12px] text-muted">{KIND_LABEL[item.kind]}{extra ? ` · ${extra}` : ''}{mine ? '' : ` · ${item.designerId ? staffName.split(' ')[0] : 'sem responsável'}`}</p>
         {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>{c.text}</span>}
       </div>
-      <Link to={`/conteudo/peca/${item.id}`} className="-mt-1 text-ink no-underline hover:underline">
-        <p className="line-clamp-2 font-semibold leading-snug">{itemTitle(item)}</p>
-      </Link>
+      {/* Tocar abre o briefing num pop-up, só para ver e baixar (pedido do Italo, 24/11). */}
+      <button type="button" onClick={view} className="-mt-1 cursor-pointer text-left text-ink hover:underline">
+        <p className="line-clamp-2 text-[14px] font-semibold leading-snug">{itemTitle(item)}</p>
+      </button>
+      {viewing && <BriefDialog item={item} readOnly onClose={() => setViewing(false)} />}
       {item.priority && <PriorityBadge />}
       {item.status === 'changes_requested' && item.revisionNote
-        ? <p className="line-clamp-3 rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>
+        ? <p className="line-clamp-2 rounded-xl bg-warn-soft px-2.5 py-1.5 text-[12.5px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>
         : shortBriefing(item) && <p className="line-clamp-2 text-[13px] text-muted">{shortBriefing(item)}</p>}
       {otherLinks.length > 0 && (
         <p className="flex flex-wrap gap-1.5">
@@ -180,10 +185,7 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
         </p>
       )}
       <div className="mt-auto flex items-center gap-2 pt-1">
-        <Button className="min-h-10 flex-1 px-3 text-[13px]" onClick={onDeliver}><Send size={14} aria-hidden="true" /> Entregar arte</Button>
-        {started
-          ? <span className="shrink-0 rounded-full bg-raised px-3 py-2 text-[12.5px] font-medium text-muted">{STATUS_LABEL.in_production}</span>
-          : <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={start.isPending} onClick={() => start.mutate()}>{start.isPending ? 'Marcando' : 'Comecei'}</Button>}
+        <Button className="min-h-10 w-full px-3 text-[13px]" onClick={onDeliver}><Send size={14} aria-hidden="true" /> Entregar arte</Button>
       </div>
       <div className="-mb-1 flex items-center justify-between gap-2 border-t border-line pt-1">
         {item.clientId ? <GuideButton clientId={item.clientId} start="visual" className="-ml-2" /> : <span />}
@@ -193,8 +195,8 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
             // Baixou as referências: a peça já fica Em produção e o tempo começa a contar.
             if (!started) start.mutate()
             void downloadAll(refs).finally(() => setBusy(false))
-          }} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 text-[12.5px] font-medium text-muted hover:bg-raised hover:text-ink">
-            <Download size={14} aria-hidden="true" /> {busy ? 'Baixando' : `Baixar referências (${refs.length})`}
+          }} aria-label={`Baixar referências (${refs.length})`} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 text-[12.5px] font-medium text-muted hover:bg-raised hover:text-ink">
+            <Download size={14} aria-hidden="true" /> {busy ? 'Baixando' : `Baixar (${refs.length})`}
           </button>
         )}
       </div>
@@ -214,8 +216,8 @@ export function DesignPage() {
   const files = useQuery({ queryKey: ['design-queue-files', ids], queryFn: () => listFiles(ids), enabled: ids.length > 0 })
   const [delivering, setDelivering] = useState<ContentItem | null>(null)
   const [onlyMine, setOnlyMine] = useState(false)
-  // null = ninguém mexeu ainda: abre o primeiro cliente (o mais urgente), para o designer já ver o que fazer.
-  const [open, setOpen] = useState<Set<string> | null>(null)
+  // Clientes começam fechados (resumidos), pedido do Italo, 24/11.
+  const [open, setOpen] = useState<Set<string>>(new Set())
   const month = monthStart(todayInBrazil().slice(0, 7) + '-01', 0)
 
   if (!queue.data || !clients || !staff) {
@@ -227,9 +229,11 @@ export function DesignPage() {
   const filesOf = (id: string) => (files.data ?? []).filter((f) => f.itemId === id)
   // Agrupado por cliente (como no app antigo): só aparece cliente com arte para fazer; tocar no cliente abre as artes dele.
   const byClient = new Map<string, ContentItem[]>()
-  for (const i of list) byClient.set(i.clientId, [...(byClient.get(i.clientId) ?? []), i])
-  const groups = [...byClient.entries()]
-  const opened = open ?? new Set(groups[0] ? [groups[0][0]] : [])
+  // Do mais atrasado para o menos atrasado: dentro do cliente e entre os clientes (pedido do Italo, 24/11).
+  const due = (x: ContentItem) => deliveryTarget(x) ?? '9999'
+  for (const i of [...list].sort((a, b) => due(a).localeCompare(due(b)))) byClient.set(i.clientId, [...(byClient.get(i.clientId) ?? []), i])
+  const groups = [...byClient.entries()].sort((a, b) => due(a[1][0]!).localeCompare(due(b[1][0]!)))
+  const opened = open
   const toggle = (id: string) => setOpen(() => { const n = new Set(opened); if (n.has(id)) n.delete(id); else n.add(id); return n })
 
   return (
@@ -254,13 +258,13 @@ export function DesignPage() {
       ) : (
         <ul data-conteudo aria-label="Fila do design por cliente" className="flex flex-col gap-2">
           {groups.map(([cid, items]) => {
-            const isOpen = groups.length === 1 || opened.has(cid)
+            const isOpen = opened.has(cid)
             const c = countdown(deliveryTarget(items[0]!), now)
             const late = items.some((x) => countdown(deliveryTarget(x), now)?.tone === 'red')
             const adjust = items.filter((x) => x.status === 'changes_requested').length
             const prio = items.filter((x) => x.priority).length
             return (
-              <li key={cid} className={cn('rounded-2xl border bg-surface', late || prio ? 'border-warn/60' : 'border-line')}>
+              <li key={cid} className="rounded-2xl border border-line bg-surface">
                 <button type="button" aria-expanded={isOpen} onClick={() => toggle(cid)}
                   className="flex min-h-14 w-full cursor-pointer items-center gap-3 px-3 py-2 text-left">
                   <ClientAvatar name={clientName(cid)} url={clientLogo(cid)} size="row" />
@@ -268,11 +272,13 @@ export function DesignPage() {
                     <span className="block truncate font-semibold">{clientName(cid)}</span>
                     <span className="block text-[12.5px] text-muted">{items.length} {items.length === 1 ? 'arte' : 'artes'} para fazer{adjust ? ` · ${adjust} com ajuste` : ''}{prio ? <b className="font-semibold text-warn-ink"> · {prio} prioridade</b> : ''}</span>
                   </span>
-                  {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}><span className="hidden sm:inline">Próxima </span>{c.text}</span>}
+                  {/* Atrasado: ícone de alerta e quanto tempo (no lugar do contorno vermelho). */}
+                  {c && <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>
+                    {late && <AlertTriangle size={13} aria-label="Atrasada" />}{!late && <span className="hidden sm:inline">Próxima </span>}{c.text}</span>}
                   <ChevronDown size={18} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
                 </button>
                 {isOpen && (
-                  <ul className="grid grid-cols-1 gap-3 border-t border-line p-3 sm:grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
+                  <ul className="grid grid-cols-2 gap-3 border-t border-line p-3 md:grid-cols-3 xl:grid-cols-4">
                     {items.map((i) => (
                       <QueueCard key={i.id} item={i} files={filesOf(i.id)} now={now} mine={i.designerId === myStaffId && !!myStaffId}
                         staffName={staffName(i.designerId)} onDeliver={() => setDelivering(i)} />

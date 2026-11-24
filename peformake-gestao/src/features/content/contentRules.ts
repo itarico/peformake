@@ -16,6 +16,11 @@ export interface PieceSpec {
   /** Vetor: o que vetorizar e formatos pedidos. */
   vectorWhat?: string
   formats?: string[]
+  /** Agendar no briefing (24/11): hora de publicar, agendar sozinho ao aprovar e o retorno do banco. */
+  scheduleAt?: string
+  autoSchedule?: boolean
+  scheduleIssue?: string
+  scheduledAuto?: boolean
 }
 
 export interface CarouselSlide { text: string }
@@ -269,10 +274,12 @@ export function summarize(items: readonly ContentItem[], today: string): PlanSum
   }
 }
 
-const SAFE_EXT = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'mp4', 'mov', 'pdf', 'webm', 'mp3']
+const SAFE_EXT = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'mp4', 'mov', 'pdf', 'webm', 'mp3', 'ogg', 'opus', 'm4a', 'wav', 'aac']
 const MIME_BY_EXT: Record<string, string> = {
   png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif',
   mp4: 'video/mp4', mov: 'video/quicktime', pdf: 'application/pdf', webm: 'audio/webm', mp3: 'audio/mpeg',
+  // Áudio do briefing (WhatsApp manda .ogg/.opus; iPhone, .m4a). 24/11.
+  ogg: 'audio/ogg', opus: 'audio/ogg', m4a: 'audio/mp4', wav: 'audio/wav', aac: 'audio/aac',
 }
 
 export function fileCheck(name: string, size: number): { ext: string; mime: string } | string {

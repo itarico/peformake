@@ -4,7 +4,7 @@ import { ArrowLeft, CalendarClock, CalendarHeart, Check, PencilLine, Send, Spark
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
-import { BrandGuidePage } from '@/features/clients/BrandGuideCard'
+import { GuideButton } from '@/features/clients/BrandGuideCard'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { LoadState } from '@/features/traffic/LoadState'
 import { monthStart } from '@/features/traffic/planRules'
@@ -14,7 +14,7 @@ import { contentErrorMessage, fileUrl, listFiles, listItems, listPlans, setStatu
 import { PlanNotes } from './ContentPlanPage'
 import { KIND_LABEL, STATUS_LABEL, STATUS_TONE, type ContentItem } from './contentRules'
 import { IgPerformance } from './IgPerformance'
-import { NewArtButton } from './NewArt'
+import { BriefDialog, NewArtButton } from './NewArt'
 import { SchedulePage } from './SchedulePage'
 import { clientLogoUrl, socialClientsBoard } from './SocialClientsPage'
 import { TasksBoard } from './TasksBoard'
@@ -28,7 +28,6 @@ const TABS = [
   { id: 'sugestoes', label: 'Sugestões' },
   { id: 'tarefas', label: 'Tarefas' },
   { id: 'agendar', label: 'Agendar' },
-  { id: 'guia', label: 'Guia de marca' },
   { id: 'desempenho', label: 'Desempenho' },
 ] as const
 type Tab = (typeof TABS)[number]['id']
@@ -41,7 +40,7 @@ interface Suggestions {
 }
 interface Seasonal { client_id: string; key: string; name: string; date: string; days: number; idea: string; request: unknown }
 
-function useClientItems(clientId: string, months: string[]) {
+export function useClientItems(clientId: string, months: string[]) {
   return useQuery({
     queryKey: ['social-client-items', clientId, months.join(',')],
     queryFn: async () => {
@@ -55,7 +54,7 @@ function useClientItems(clientId: string, months: string[]) {
   })
 }
 
-function Thumb({ file, className }: { file?: { path: string; mime: string }; className?: string }) {
+export function Thumb({ file, className }: { file?: { path: string; mime: string }; className?: string }) {
   if (!file) return <span className={cn('flex items-center justify-center bg-raised text-[11px] text-muted', className)}>Sem imagem</span>
   return file.mime.startsWith('video/')
     ? <video src={fileUrl(file.path)} muted preload="metadata" className={cn('bg-raised object-cover', className)} />
@@ -64,18 +63,23 @@ function Thumb({ file, className }: { file?: { path: string; mime: string }; cla
       : <span className={cn('flex items-center justify-center bg-raised text-[11px] text-muted', className)}>Arquivo</span>
 }
 
-function ArtCard({ item, file, children }: { item: ContentItem; file?: { path: string; mime: string }; children?: React.ReactNode }) {
+/** Cartão da arte: tocar abre o pop-up do briefing (ver a arte, mudar texto e material), sem sair da tela. */
+export function ArtCard({ item, file, client, children }: { item: ContentItem; file?: { path: string; mime: string }; client?: string; children?: React.ReactNode }) {
+  const [open, setOpen] = useState(false)
   return (
     <li className="flex flex-col gap-1.5">
-      <Link to={`/conteudo/peca/${item.id}`} className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface text-ink no-underline hover:border-line-strong">
+      <button type="button" onClick={() => setOpen(true)} aria-label={`Abrir ${item.title || 'arte'}`}
+        className="flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-line bg-surface text-left text-ink hover:border-line-strong">
         <Thumb file={file} className="aspect-[4/5] w-full" />
         <span className="flex flex-col gap-1 p-2.5">
+          {client && <span className="truncate text-[12px] font-semibold text-accent-ink">{client}</span>}
           <span className="text-[11px] text-muted">#{item.number} · {KIND_LABEL[item.kind]}{item.publishDate ? ` · ${dm(item.publishDate)}` : ''}</span>
           <span className="line-clamp-2 text-[13px] font-semibold leading-snug">{item.title || 'Sem título'}</span>
           <span className={cn('self-start rounded-full px-2 py-0.5 text-[11px] font-semibold', STATUS_TONE[item.status])}>{STATUS_LABEL[item.status]}</span>
         </span>
-      </Link>
+      </button>
       {children}
+      {open && <BriefDialog item={item} onClose={() => setOpen(false)} />}
     </li>
   )
 }
@@ -133,7 +137,11 @@ function BriefingTab({ clientId, owed }: { clientId: string; owed: number }) {
         <p className={cn('text-[14px]', missing > 0 ? 'font-medium text-warn-ink' : 'text-muted')}>
           {owed ? (missing > 0 ? `Faltam ${missing} de ${owed} criativos neste mês` : `${inMonth.length} de ${owed} criativos no mês`) : `${inMonth.length} criativos no mês`}
         </p>
-        <NewArtButton start={{ clientId, publishDate: startDate }} label="Novo briefing" />
+        <div className="flex items-center gap-2">
+          {/* Guia de marca resumido dentro do Briefing (pedido do Italo, 24/11): abre em pop-up. */}
+          <GuideButton clientId={clientId} start="posicionamento" />
+          <NewArtButton start={{ clientId, publishDate: startDate }} label="Novo briefing" />
+        </div>
       </div>
 
       {open.length === 0 && <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Nenhuma arte em andamento. Toque em Novo briefing.</p>}
@@ -145,8 +153,14 @@ function BriefingTab({ clientId, owed }: { clientId: string; owed: number }) {
           <Button variant="secondary" className={small} disabled={act.isPending} onClick={() => setAsking({ item: i, mode: 'reprovar' })} aria-label="Não aprovar" title="Não aprovar"><X size={15} aria-hidden="true" /></Button>
         </div>
       ))}
-      {group('Aprovada, falta agendar', toSchedule, () => (
-        <Button className={small} onClick={() => setParams((cur) => { const n = new URLSearchParams(cur); n.set('aba', 'agendar'); return n })}><CalendarClock size={15} aria-hidden="true" /> Agendar</Button>
+      {group('Aprovada, falta agendar', toSchedule, (i) => (
+        <>
+          {/* Agendou sozinho ao aprovar ou não deu (data passou etc.): o banco grava em spec (content_item_auto_schedule). */}
+          {i.spec.scheduledAuto && i.spec.scheduleAt
+            ? <p className="rounded-xl bg-ok-soft px-2 py-1.5 text-[12px] font-medium text-ok-ink">Agendada para {new Date(i.spec.scheduleAt).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })}</p>
+            : i.spec.scheduleIssue && <p className="rounded-xl bg-warn-soft px-2 py-1.5 text-[12px] font-medium text-warn-ink">{i.spec.scheduleIssue}</p>}
+          {!i.spec.scheduledAuto && <Button className={small} onClick={() => setParams((cur) => { const n = new URLSearchParams(cur); n.set('aba', 'agendar'); return n })}><CalendarClock size={15} aria-hidden="true" /> Agendar</Button>}
+        </>
       ))}
       {group('Na produção', inProd, (i) => i.status === 'briefing'
         ? <Button className={small} disabled={act.isPending} onClick={() => act.mutate({ item: i, mode: 'produzir' })}><Send size={15} aria-hidden="true" /> Mandar produzir</Button>
@@ -287,7 +301,6 @@ export function SocialClientPage() {
       {tab === 'sugestoes' && <SuggestionsTab clientId={id} />}
       {tab === 'tarefas' && <TasksBoard clientId={id} />}
       {tab === 'agendar' && <SchedulePage clientId={id} />}
-      {tab === 'guia' && <BrandGuidePage clientId={id} />}
       {tab === 'desempenho' && <IgPerformance clientId={id} />}
     </div>
   )

@@ -4,6 +4,8 @@ import { Check, ExternalLink, FileText, Lightbulb, Newspaper, Plus, Sparkles, X 
 import { Link, NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { VoiceNote } from '@/components/ui/VoiceNote'
+import { fillTask } from '@/lib/voiceFill'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { MonthSwitcher } from '@/features/content/ContentLayout'
@@ -212,8 +214,20 @@ export function TaskDialog({ task, clients, onClose }: { task: Task | null; clie
     </>}>
       <div className="flex flex-col gap-3">
         {task && <p className={cn('self-start rounded-full px-2.5 py-0.5 text-[12px] font-semibold', SOURCE_TONE[task.source])}>{SOURCE_LABEL[task.source]}</p>}
+        {/* Falar em vez de digitar (Italo, 24/11): a fala vira o que fazer, detalhes, prazo, prioridade e rede. */}
+        <div className="flex items-center gap-2 sm:rounded-2xl sm:bg-raised sm:px-3 sm:py-2">
+          <VoiceNote onText={(t) => {
+            const f = fillTask(t)
+            setD((cur) => ({
+              ...cur, title: cur.title.trim() ? cur.title : f.title, description: cur.description.trim() ? `${cur.description.trim()}
+${f.description}` : f.description,
+              due_date: f.due_date ?? cur.due_date, priority: cur.priority || f.priority, network: !task && f.network ? (f.network as Network) : cur.network,
+            }))
+          }} />
+          <span className="hidden text-[13px] text-muted sm:inline">Grave um áudio: o sistema preenche os campos.</span>
+        </div>
         <label className="flex flex-col text-[13px] font-semibold">O que fazer<input value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} maxLength={200} className={field} /></label>
-        <label className="flex flex-col text-[13px] font-semibold">Detalhes<textarea rows={3} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={4000} className={cn(field, 'py-2')} /></label>
+        <label className="flex flex-col text-[13px] font-semibold">Detalhes<textarea rows={2} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={4000} className={cn(field, 'py-2')} /></label>
         {!task && (
           <label className="flex flex-col text-[13px] font-semibold">Cliente
             <select value={d.client_id} onChange={(e) => setD({ ...d, client_id: e.target.value })} className={field}><option value="">Geral</option>{clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>

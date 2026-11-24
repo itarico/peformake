@@ -60,7 +60,7 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       await p.goto(`http://localhost:${PORT}/conteudo`); await p.waitForTimeout(1500);
       const url = new URL(p.url()).pathname;
       if (role === 'designer' && url !== '/conteudo/design') bad(`${dev} designer abriu ${url} (esperado /conteudo/design)`);
-      if (role === 'admin' && url !== '/conteudo/quadro') bad(`${dev} admin abriu ${url}`);
+      if (role === 'admin' && url !== '/conteudo/planejamento') bad(`${dev} admin abriu ${url}`);
       await p.goto(`http://localhost:${PORT}/conteudo/design`); await p.waitForTimeout(1200);
       // Abre os clientes fechados um por um (a lista muda a cada clique; o 1º já vem aberto).
       for (let n = 0; n < 20; n++) { const c = p.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]'); if (!(await c.count())) break; await c.first().click(); await p.waitForTimeout(100) }
@@ -84,8 +84,10 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
         if (dev === 'iphone') { await p.getByRole('tab', { name: /Tarefas/ }).click(); await p.waitForTimeout(200) }
         if (!(await p.getByText('Responder pedido de story do cliente').isVisible())) bad(`${dev} quadro: tarefa não aparece`);
         await p.screenshot({ path: `e2e/capturas/quadro-${dev}.png`, fullPage: true });
-        await p.getByText('Responder pedido de story do cliente').click(); await p.waitForTimeout(300);
-        const tm = await measure(p); if (!tm || tm.sh > tm.ch) bad(`${dev} pop-up da tarefa rola ${JSON.stringify(tm)}`);
+        if (await p.getByText('Responder pedido de story do cliente').isVisible()) {
+          await p.getByText('Responder pedido de story do cliente').click(); await p.waitForTimeout(300);
+          const tm = await measure(p); if (!tm || tm.sh > tm.ch) bad(`${dev} pop-up da tarefa rola ${JSON.stringify(tm)}`);
+        }
         await p.keyboard.press('Escape');
         await p.goto(`http://localhost:${PORT}/conteudo/peca/i1?editar=1`); await p.waitForTimeout(1500);
         if (await sideScroll(p)) bad(`${dev} peça: rolagem de lado`);

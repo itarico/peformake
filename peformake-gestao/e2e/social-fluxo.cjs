@@ -1,6 +1,6 @@
 // Fluxo de ponta a ponta de Social media e Design (21/11), com dados FALSOS no navegador (nada vai ao banco nem ao WhatsApp).
 // 1. Social media pede a arte no pop-up "Nova arte" (vai direto para o designer, status ready).
-// 2. Designer abre a fila do Design, toca em "Comecei" e "Entregar arte" com o arquivo (status client_review).
+// 2. Designer abre a fila do Design, abre o briefing (marca Em produção) e "Entregar arte" com o arquivo (status client_review).
 // 3. Cliente abre o link do aviso (/portal#<código>/aprovar): mesmo com briefing incompleto e perguntas do mês,
 //    NÃO cai na conversa obrigatória; vê a arte e aprova (status approved).
 // 4. Social media abre a peça e marca como publicada (status published).
@@ -19,7 +19,8 @@ const base = { plan_id: 'p1', client_id: 'c1', kind: 'post', subtitle: null, cap
 let items; let files; let events; let newId
 const plans = [{ id: 'p1', client_id: 'c1', month, notes: 'Natal.', planned_at: null, sent_to_client_at: null }]
 const reset = () => { items = []; files = []; events = []; newId = 0 }
-const RPC = { production_clients: C, production_staff: S, my_staff_id: 's1', seasonal_board: [] }
+const RPC = { production_clients: C, production_staff: S, my_staff_id: 's1', seasonal_board: [],
+  social_clients_board: [{ id: 'c1', name: 'Padaria Sol', logo_path: null, legacy_logo_url: null, owed: 8, planned: 0, approved: 0, review: 0, no_brief: 0, suggestions: 0, tasks: 0 }] }
 const fails = []; const calls = []
 function filt(rows, params) {
   for (const [k, v] of params) {
@@ -82,26 +83,32 @@ const status = (id) => items.find((x) => x.id === id)?.status
     try {
       // 1. Social media pede a arte.
       let s = await open('admin')
-      await s.pg.goto(BASE + '/conteudo/quadro', { waitUntil: 'networkidle' })
-      await s.pg.getByRole('button', { name: 'Nova arte' }).first().click(); await s.pg.waitForTimeout(400)
-      if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Nova arte rola`)
-      await s.pg.locator('#nova-arte-cliente').fill('Padaria'); await s.pg.keyboard.press('ArrowDown'); await s.pg.keyboard.press('Enter')
-      await s.pg.getByRole('radio', { name: 'Carrossel' }).click()
-      await s.pg.getByLabel('O que a arte precisa ter').fill('Carrossel com os 3 sabores de panetone e o preço de cada um.')
+      // 24/11: o briefing nasce dentro do cliente, por etapas (formato, texto, material).
+      await s.pg.goto(BASE + '/conteudo/cliente/c1', { waitUntil: 'networkidle' })
+      await s.pg.getByRole('button', { name: 'Novo briefing' }).first().click(); await s.pg.waitForTimeout(400)
+      if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Novo briefing rola`)
+      await s.pg.getByRole('radio', { name: 'Carrossel' }).click(); await s.pg.waitForTimeout(200)
+      await s.pg.getByLabel('Briefing: o que a arte precisa ter').fill('Carrossel com os 3 sabores de panetone e o preço de cada um.')
+      if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Novo briefing (texto) rola`)
       await s.pg.getByRole('button', { name: 'Continuar' }).click(); await s.pg.waitForTimeout(300)
       if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Nova arte (fotos) rola`)
       await s.pg.getByRole('button', { name: 'Mandar para o design' }).click(); await s.pg.waitForTimeout(1200)
       const id = items[0]?.id
       if (status(id) !== 'ready') fails.push(`${dev}: pedido não foi para o design (status ${status(id)})`)
-      if (!s.pg.url().includes(`/conteudo/peca/${id}`)) fails.push(`${dev}: depois de pedir, não abriu a peça (${s.pg.url()})`)
+      if (!s.pg.url().includes('/conteudo/cliente/c1')) fails.push(`${dev}: depois de pedir, saiu da tela do cliente (${s.pg.url()})`)
       await done(s, '1-pedido')
 
       // 2. Designer produz e entrega.
       s = await open('designer')
       await s.pg.goto(BASE + '/conteudo/design', { waitUntil: 'networkidle' })
+      // Clientes começam fechados (24/11): abre o grupo. Sem "Comecei": abrir o briefing já marca Em produção.
+      for (let n = 0; n < 20; n++) { const g = s.pg.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]'); if (!(await g.count())) break; await g.first().click(); await s.pg.waitForTimeout(100) }
       const card = s.pg.locator('li', { hasText: 'Carrossel com os 3 sabores' }).last()
-      await card.getByRole('button', { name: 'Comecei' }).click(); await s.pg.waitForTimeout(600)
-      if (status(id) !== 'in_production') fails.push(`${dev}: "Comecei" não marcou em produção (${status(id)})`)
+      await card.getByRole('button', { name: /Abrir o briefing/ }).click(); await s.pg.waitForTimeout(700)
+      if (status(id) !== 'in_production') fails.push(`${dev}: abrir o briefing não marcou em produção (${status(id)})`)
+      if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up do briefing no Design rola`)
+      if (await s.pg.getByRole('button', { name: 'Salvar' }).count()) fails.push(`${dev}: designer consegue editar o briefing`)
+      await s.pg.keyboard.press('Escape'); await s.pg.waitForTimeout(300)
       await card.getByRole('button', { name: 'Entregar arte' }).click(); await s.pg.waitForTimeout(400)
       if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Entregar arte rola`)
       await s.pg.setInputFiles('#entrega-arquivo', png); await s.pg.waitForTimeout(300)

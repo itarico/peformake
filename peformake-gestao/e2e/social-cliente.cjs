@@ -96,6 +96,24 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!aj || aj.body._status !== 'changes_requested' || aj.body._note !== 'Trocar a cor do fundo') fails.push(`${dev}: ajuste errado ${JSON.stringify(aj)}`)
       await shot('3-revisar')
 
+      // 3b. Tocar na arte abre o pop-up (sem sair da tela): arte entregue, texto e material; salvar grava.
+      await pg.getByRole('button', { name: 'Abrir Panetone artesanal' }).click(); await pg.waitForTimeout(700)
+      if (!(await pg.getByRole('img', { name: 'Arte entregue' }).count())) fails.push(`${dev}: pop-up sem a arte entregue`)
+      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up da arte rola`)
+      await pg.keyboard.press('Escape'); await pg.waitForTimeout(300)
+      await pg.getByRole('button', { name: 'Abrir Cesta de Natal' }).click(); await pg.waitForTimeout(700)
+      if (!/\/conteudo\/cliente\/c1/.test(pg.url())) fails.push(`${dev}: tocar na arte saiu da tela`)
+      await pg.getByLabel('Título (headline)').fill('Cesta completa')
+      await pg.getByLabel('Subtítulo').fill('Entrega no bairro')
+      if (await popupScrolls(pg)) { fails.push(`${dev}: pop-up do briefing rola (texto)`); await shot('3b-texto-rola') }
+      await pg.getByRole('tab', { name: 'Material' }).click(); await pg.waitForTimeout(300)
+      if (!(await pg.getByRole('button', { name: /Áudio/ }).count())) fails.push(`${dev}: sem botão de áudio`)
+      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up do briefing rola (material)`)
+      await pg.getByRole('button', { name: 'Salvar' }).click(); await pg.waitForTimeout(700)
+      const sv = calls.filter((c) => c.fn === 'content_item_save').pop()
+      if (!sv || sv.body._item_id !== 'i2' || sv.body._data.headline !== 'Cesta completa' || sv.body._data.subtitle !== 'Entrega no bairro') fails.push(`${dev}: salvar briefing errado ${JSON.stringify(sv && sv.body._data)}`)
+      await shot('3b-popup')
+
       // 4. Sugestões: aprovar a ação do plano do mês.
       await pg.getByRole('tab', { name: /Sugestões/ }).click(); await pg.waitForTimeout(900)
       await pg.locator('li', { hasText: 'Arte da promoção de fim de ano' }).getByRole('button', { name: 'Aprovar' }).click(); await pg.waitForTimeout(700)
@@ -116,10 +134,12 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!href || !href.includes('cliente=c1')) fails.push(`${dev}: Criar post de dentro do cliente sem trava (${href})`)
 
       // 6. Guia de marca organizado.
-      await pg.getByRole('tab', { name: /Guia de marca/ }).click(); await pg.waitForTimeout(900)
+      // Guia de marca resumido num pop-up dentro do Briefing (24/11).
+      await pg.getByRole('tab', { name: /Briefing/ }).click(); await pg.waitForTimeout(700)
+      await pg.getByRole('button', { name: /Guia da marca/ }).first().click(); await pg.waitForTimeout(900)
       const t6 = await pg.evaluate(() => document.body.innerText)
-      if (!t6.includes('O pão quentinho do bairro') || !t6.includes('Voz e copy')) fails.push(`${dev}: guia sem as partes`)
-      await shot('6-guia')
+      if (!t6.includes('O pão quentinho do bairro')) fails.push(`${dev}: guia sem as partes`)
+      await shot('6-guia'); await pg.keyboard.press('Escape'); await pg.waitForTimeout(300)
 
       // 7. Desempenho: cartões com variação, alcance por dia e posts que mais alcançaram.
       await pg.getByRole('tab', { name: /Desempenho/ }).click(); await pg.waitForTimeout(1200)
