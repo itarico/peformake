@@ -12,7 +12,7 @@ Legenda de prioridade: 🔴 destrava dinheiro agora · 🟡 próximo trimestre �
 | 1.2 | Google Meu Negócio e SEO local de verdade | 🔴 | Canal mais barato para o ICP local; base do GEO local |
 | 1.3 | Funil de aquisição da própria agência: oferta de entrada (diagnóstico grátis) → reunião → proposta | 🔴 | Gargalo declarado: ninguém sabe que a Peformake existe |
 | 1.4 | Prova social e cases: como transformar resultado de cliente em ativo de venda | 🔴 | O produto é bom, falta mostrar |
-| 1.5 | Métricas que importam: CAC, LTV, payback, churn, taxa de renovação (North Star) | 🟡 | Precificar e decidir canal com número, não sensação |
+| 1.5 | Métricas que importam: CAC, LTV, payback, churn, taxa de renovação (North Star); medir venda real do anúncio (CAPI, GA4, atribuição) | 🔴 | Precificar e decidir canal com número, não sensação |
 | 1.6 | Testes A/B e significância — quando um resultado é real ou sorte | 🟡 | Evitar tomar decisão em cima de ruído |
 | 1.7 | Posicionamento e categoria (April Dunford, "Obviously Awesome") | 🟡 | Diferenciar a Peformake de "mais uma agência" |
 | 1.8 | Comportamento do consumidor e economia comportamental (Kahneman, Cialdini) | 🟢 | Base de toda copy e oferta |
@@ -56,6 +56,7 @@ Inglês entra **em toda aula** (bloco de 5–10 min) com o vocabulário do próp
 | 5.1 | Agentes e automações que economizam horas da agência (Claude, skills, tarefas agendadas) | 🔴 |
 | 5.2 | Prompting estruturado e avaliação de saída de IA (não confiar cego) | 🟡 |
 | 5.3 | Produto SaaS: validação antes de construir (Gastromake) | 🟡 |
+| 5.4 | Vídeo com IA como serviço: custo, consistência de personagem, direito de uso, contrato | 🔴 |
 
 ## Trilha 6 — Gestão, liderança e você
 
@@ -147,7 +148,25 @@ Objetivo declarado: melhorar o físico. Antes de qualquer programa de carga: che
 | 13.4 | Condicionamento para o que você curte: kart (pescoço, core, resistência), praia, esportes radicais | 🟡 |
 | 13.5 | Medir progresso sem se enganar: carga, medidas, fotos, não só a balança | 🟡 |
 
-## Como as 13 trilhas cabem numa aula por semana
+## Trilha 14 — Licitação e venda para o governo e estatais
+
+Pedido do Italo em 24/11/2026. Ponte direta com a Ellcazo: vídeo institucional, campanha e cobertura de evento são compras frequentes de prefeituras, governos e estatais, e já existe trabalho para a Transpetro em andamento.
+
+| # | Tema | Prioridade | Nota |
+|---|---|---|---|
+| 14.1 | O mapa: quem compra e por qual lei. Órgãos públicos seguem a **Lei 14.133/2021**; estatais como Transpetro e Petrobras seguem a **Lei 13.303/2016** e regulamento próprio (na Transpetro, o RLCT, com disputa no portal **Petronect**) | 🔴 | Errar a lei = ler o edital errado |
+| 14.2 | Onde achar oportunidade: PNCP (Portal Nacional de Contratações Públicas), Compras.gov.br, Petronect, portais de Pernambuco e prefeituras | 🔴 | |
+| 14.3 | Ler um edital em 20 minutos: objeto, termo de referência, habilitação, critério de julgamento, prazos, garantia, penalidades | 🔴 | Habilidade-mãe da trilha |
+| 14.4 | Habilitação: certidões, balanço, atestado de capacidade técnica, SICAF. Montar a "pasta pronta" da Ellcazo e da Peformake | 🔴 | Sem pasta pronta, perde o prazo |
+| 14.5 | Vantagens de ME/EPP (LC 123/2006): empate ficto, prazo para regularizar certidão, cotas exclusivas para pequenas | 🟡 | |
+| 14.6 | Formar preço para governo: custo real, impostos, margem, preço inexequível, não entrar no "leilão para baixo" | 🟡 | Liga com as aulas 02 e 03 |
+| 14.7 | Pregão eletrônico na prática: proposta, lances, recurso, impugnação | 🟡 | |
+| 14.8 | Contratação direta e dispensa por valor: a porta de entrada mais fácil para pequena empresa | 🟡 | |
+| 14.9 | Depois de ganhar: contrato, execução, medição, atraso de pagamento, sanções | 🟢 | |
+
+Ferramenta recomendada: plugin **vectorgov** (Lei 14.133, jurisprudência do TCU, catálogo CATMAT/CATSER, com link de fonte).
+
+## Como as 14 trilhas cabem numa aula por semana
 
 As áreas que você listou são **sinais, não regra fixa**. O professor decide o que entra pelo momento. Cada aula tem:
 - **1 tema principal**, escolhido pela ordem de decisão do método;
@@ -170,3 +189,16 @@ Uma aula a cada quatro vem daqui. São coisas que empresários que aprenderam na
 8. **Reforma tributária brasileira (IBS/CBS, transição 2026–2033)** — muda preço de serviço; afeta proposta de agência e produtora.
 9. **Aprender a aprender** — o próprio método deste professor; quem domina isso aprende qualquer coisa sozinho.
 10. **Escrita clara** — pensar escrevendo. Memo de 1 página para decidir. Separa estrategista de executor.
+
+### Pontos cegos tirados das suas sessões (24/11/2026)
+
+Lidos dos títulos e resumos das suas sessões de 27/10 a 24/11. São *HIPÓTESES* até você confirmar.
+
+11. **Você virou o gargalo.** Cerca de 12 sessões estavam paradas esperando uma decisão sua: aprovar migração do banco, escolher público de anúncio, confirmar exclusão, aprovar cena. Aprender: **regras de decisão delegada** ("o que o Claude ou a equipe pode decidir sozinho, até qual valor ou risco") e **limite de trabalho em andamento**. Trilha 6.
+12. **Direito autoral no YouTube.** Vídeos com GTA VI, Jogos Vorazes e filmes baixados como referência. Aprender: Content ID, uso de obra de terceiros, política de conteúdo reutilizado e de IA da monetização. Um *strike* derruba o canal inteiro.
+13. **Day trading.** Estudo da FGV com dados da CVM (2019) mostrou que a quase totalidade de quem insistiu no day trade de mini-índice perdeu dinheiro. Aprender antes de arriscar: probabilidade, custo, reserva. Trilha 4.
+14. **Cobrança e contrato.** Dívida de cliente (Cia Coffee) e 31 clientes sem CPF/CNPJ para a cobrança automática. Aprender: contrato com multa e juros, régua de cobrança, quando negociar. Trilhas 3.4 e 4.2.
+15. **Aprovar o que não entende.** Você aprova migrações de banco do Supabase e publicações no Vercel. Aprender o mínimo para saber o risco de cada "sim". Trilha 7.2 sobe para 🔴.
+16. **Medir o que o anúncio vende de verdade.** Conversions API (CAPI), GA4, atribuição: hoje o relatório para no clique. Trilha 1.5 sobe para 🔴.
+17. **Vídeo com IA como serviço.** Projetos de vídeo com IA (Transpetro, OpenArt, Higgsfield). Aprender: custo por segundo e resolução, consistência de personagem, direito de uso da imagem gerada, o que pôr no contrato com o cliente. Nova linha 5.4.
+18. **WhatsApp não oficial (Wasender).** Risco de bloqueio do número e de LGPD. Usar número separado e saber o que a lei exige. Liga com o ponto cego 2.
