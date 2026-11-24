@@ -25,13 +25,13 @@
   const xpForLevel = L => 100 * L * (L - 1) / 2;
 
   const S = { sb: null, agenda: null, corpo: null, semana: null, trilhas: [], crono: null, aulas: {}, registro: {}, estudo: {}, tarefas: [], cartoes: {},
-    resultados: [], open: new Set(), reveal: new Set(), lastLevel: null, lastPct: null, cronoAll: false };
+    resultados: [], treino: null, nutri: null, openMiss: new Set(), open: new Set(), reveal: new Set(), lastLevel: null, lastPct: null, cronoAll: false };
 
   // ---------------- dados ----------------
   async function fetchJSON(path) { try { const r = await fetch(path, { cache: "no-cache" }); return r.ok ? await r.json() : null; } catch (e) { return null; } }
   async function loadPlano() {
-    const [tr, cr] = await Promise.all([fetchJSON("/plano/trilhas.json"), fetchJSON("/plano/cronograma.json")]);
-    if (tr) S.trilhas = tr; if (cr) S.crono = cr;
+    const [tr, cr, tw, nu] = await Promise.all([fetchJSON("/plano/trilhas.json"), fetchJSON("/plano/cronograma.json"), fetchJSON("/plano/treino.json"), fetchJSON("/plano/nutricao.json")]);
+    if (tr) S.trilhas = tr; if (cr) S.crono = cr; if (tw) S.treino = tw; if (nu) S.nutri = nu;
     const t = today();
     const dias = new Set((S.crono ? S.crono.dias : []).map(d => d.dia).filter(d => d <= addDays(t, 1)));
     Object.keys(S.estudo).forEach(d => dias.add(d));
@@ -124,21 +124,78 @@
     $("missCount").textContent = sl.filter(s => dm[s.id]).length + " de " + sl.length;
     if (!sl.length) { ul.append(el("li", "muted small", "Sua agenda aparece aqui quando o professor publicar.")); return; }
     sl.forEach(s => {
-      const done = !!dm[s.id];
-      const li = el("li", "m" + (done ? " done" : "") + (s.id === nid && !done ? " now" : "") + (s.h < hm && s.id !== nid ? " past" : ""));
-      li.append(el("span", "t", s.h));
-      const body = el("div", "body");
+      const done = !!dm[s.id], open = S.openMiss.has(s.id);
+      const li = el("li", "mwrap");
+      const row = el("div", "m" + (done ? " done" : "") + (s.id === nid && !done ? " now" : "") + (s.h < hm && s.id !== nid ? " past" : ""));
+      row.append(el("span", "t", s.h));
+      const body = el("button", "body mbtn"); body.type = "button";
       if (s.id === nid && !done) body.append(el("span", "tag-now", "agora"));
-      let title = s.titulo; if (s.id === "academia" && S.corpo && S.corpo.proximo) title += " · " + S.corpo.proximo;
+      let title = s.titulo; const wd = workoutFor(t);
+      if (s.id === "academia" && wd) title = "Academia · " + wd.nome.replace(/^[A-D] · /, "");
       body.append(el("span", "ttl", title));
-      if (s.tipo === "trabalho") { const n = openTasks(t).length; body.append(el("span", "sub", n ? n + (n === 1 ? " tarefa aberta" : " tarefas abertas") + " · tocar para ver" : "Sem tarefas abertas")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("tarefas")); }
-      else if (s.tipo === "estudo") { const ls = lessonsOf(t); body.append(el("span", "sub", ls.length ? ls.map(x => trilhaInfo(x.trilha).nome).join(" + ") + " · tocar para estudar" : "Plano de estudo sai na segunda")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("estudo")); }
-      else if (s.detalhe) body.append(el("span", "sub", s.detalhe));
-      li.append(body);
+      const hasDetail = missionDetail(s, t, true);
+      if (s.tipo === "trabalho") { const n = openTasks(t).length; body.append(el("span", "sub", n ? n + (n === 1 ? " tarefa aberta" : " tarefas abertas") : "Sem tarefas abertas")); body.addEventListener("click", () => go("tarefas")); }
+      else if (s.tipo === "estudo") { const ls = lessonsOf(t); body.append(el("span", "sub", ls.length ? ls.map(x => trilhaInfo(x.trilha).nome).join(" + ") : "Plano de estudo sai na segunda")); body.addEventListener("click", () => go("estudo")); }
+      else if (hasDetail) { body.append(el("span", "sub", open ? "fechar" : "ver detalhes")); body.setAttribute("aria-expanded", open ? "true" : "false"); body.addEventListener("click", () => { open ? S.openMiss.delete(s.id) : S.openMiss.add(s.id); renderMissions(t); }); }
+      row.append(body);
       const btn = el("button", "chk"); btn.type = "button"; btn.innerHTML = CHECK_SVG; btn.setAttribute("aria-pressed", done ? "true" : "false");
       btn.setAttribute("aria-label", (done ? "Desmarcar: " : "Concluir: ") + title); btn.addEventListener("click", ev => toggleSlot(t, s.id, !done, ev));
-      li.append(btn); ul.append(li);
+      row.append(btn); li.append(row);
+      if (open && hasDetail) li.append(missionDetail(s, t, false));
+      ul.append(li);
     });
+  }
+  function workoutFor(d) { const w = S.treino; return w && w.dias ? w.dias[String(dowOf(d))] || null : null; }
+  const MEAL = { cafe: "cafe", almoco: "almoco", lanche: "lanche", jantar: "jantar" };
+  function missionDetail(s, t, onlyCheck) {
+    if (s.id === "academia" && workoutFor(t)) return onlyCheck ? true : workoutView(t);
+    if (MEAL[s.id] && S.nutri) return onlyCheck ? true : mealView(s.id);
+    if (s.detalhe) return onlyCheck ? true : el("div", "mdetail", s.detalhe);
+    return onlyCheck ? false : null;
+  }
+  function lastLoad(exId) { const r = S.resultados.filter(x => x.tipo === "treino" && x.dados && x.dados.exercicio === exId && x.dia < today()).sort((a, b) => b.dia.localeCompare(a.dia))[0]; return r ? r.dados.carga : null; }
+  function todayLoad(exId, t) { const r = S.resultados.filter(x => x.tipo === "treino" && x.dados && x.dados.exercicio === exId && x.dia === t).pop(); return r ? r.dados : null; }
+  function workoutView(t) {
+    const w = workoutFor(t), box = el("div", "mdetail");
+    box.append(el("b", "wk-title", w.nome));
+    const strat = el("details", "mini-fold"); strat.append(el("summary", null, "Como fazer: " + S.treino.estrategia.titulo));
+    const ol = el("ol", "strat"); S.treino.estrategia.passos.forEach(p => ol.append(el("li", null, p))); strat.append(ol, el("p", "muted small", S.treino.estrategia.drop));
+    box.append(strat);
+    w.exercicios.forEach(x => {
+      const done = todayLoad(x.id, t); const card = el("div", "ex" + (done ? " done" : ""));
+      const img = el("img"); img.src = x.imgs[0]; img.alt = x.nome + " (" + x.maquina + ")"; img.loading = "lazy"; img.width = 92; img.height = 92;
+      let f = 0; img.addEventListener("click", () => { f = 1 - f; img.src = x.imgs[f]; });
+      const info = el("div", "ex-info");
+      info.append(el("span", "ttl", x.nome), el("span", "muted small", x.maquina),
+        el("span", "ex-sets", x.series + " séries · " + x.reps + (x.piramide ? " (pirâmide)" : "") + " · descanso " + x.descanso), el("span", "muted small", x.dica));
+      const prev = lastLoad(x.id);
+      const form = el("div", "ex-log"); const inp = el("input", "input ex-kg"); inp.type = "number"; inp.inputMode = "decimal"; inp.placeholder = prev ? "última: " + prev + " kg" : "kg da última série"; inp.setAttribute("aria-label", "Carga da última série em kg: " + x.nome);
+      if (done) inp.value = done.carga || "";
+      const ok = el("button", "btn small-btn" + (done ? " ok-btn" : ""), done ? "Feito" : "Feito?"); ok.type = "button";
+      ok.addEventListener("click", ev => logExercise(t, x, inp.value, ev));
+      form.append(inp, ok); info.append(form);
+      card.append(img, info); box.append(card);
+    });
+    box.append(el("p", "muted small", "Toque na foto para ver o movimento. " + S.treino.cardio));
+    return box;
+  }
+  async function logExercise(t, x, kg, ev) {
+    const carga = kg === "" ? null : Number(String(kg).replace(",", "."));
+    const row = { dia: t, licao: t + ":treino", trilha: "treino", tipo: "treino", dados: { exercicio: x.id, nome: x.nome, carga } };
+    S.resultados.push({ ...row, criado_em: new Date().toISOString() }); pop(ev, "+5 XP");
+    const w = workoutFor(t); const all = w.exercicios.every(e => todayLoad(e.id, t));
+    if (all && !doneMap(t).academia) toggleSlot(t, "academia", true); else renderMissions(t);
+    if (!DEMO) { const r = await S.sb.from("guia_resultados").insert(row); if (r.error) toast("Não salvou o exercício."); }
+  }
+  function mealView(id) {
+    const n = S.nutri, box = el("div", "mdetail");
+    const real = n.refeicoes && n.refeicoes[id];
+    if (real) { const ul = el("ul", "plain"); real.forEach(i => ul.append(el("li", null, i))); box.append(ul); return box; }
+    box.append(el("p", "small", n.mensagem));
+    const prov = n.provisorio; if (prov && prov.refeicoes[id]) { box.append(el("span", "lsec-h", "Por enquanto")); const ul = el("ul", "plain"); prov.refeicoes[id].forEach(i => ul.append(el("li", null, i))); box.append(ul); }
+    if (prov) prov.cuidados.forEach(c => box.append(el("p", "muted small", c)));
+    box.append(fileButton("Enviar o plano da nutricionista (foto ou PDF)", { tipo: "plano_nutricionista" }, "nutricao"));
+    return box;
   }
 
   // ---------------- tarefas ----------------
@@ -255,6 +312,7 @@
       });
       body.append(ul);
       if (a.gravar) body.append(recorderBox(a, tr));
+      if (a.foto) { const fb = el("div", "recbox"); fb.append(el("span", "lsec-h", "Envie aqui"), el("p", "lesson-p", a.foto.prompt), fileButton("Tirar foto ou escolher arquivo", { tipo: "tarefa", licao: lessonId(P.dia, P.gi) }, a.trilha)); body.append(fb); }
       btn.textContent = "Ir para a prova";
     } else if (P.step === 3) {
       body.append(el("span", "lsec-h", "Prova · sem consultar"));
@@ -363,6 +421,26 @@
     const path = P.dia + "/" + P.gi + "-" + Date.now() + "." + ext;
     const { error } = await S.sb.storage.from("guia-audios").upload(path, blob, { contentType: blob.type || "audio/webm" });
     return error ? null : path;
+  }
+
+  function fileButton(label, meta, trilha) {
+    const wrap = el("div", "comment"); const inp = el("input"); inp.type = "file"; inp.accept = "image/*,application/pdf"; inp.hidden = true;
+    const btn = el("button", "btn ghost small-btn", label); btn.type = "button"; const st = el("span", "muted small");
+    btn.addEventListener("click", () => inp.click());
+    inp.addEventListener("change", async () => {
+      const f = inp.files && inp.files[0]; if (!f) return; if (f.size > 15000000) { st.textContent = "Arquivo grande demais (até 15 MB)."; return; }
+      st.textContent = "Enviando…";
+      if (DEMO) { st.textContent = "Enviado (modo demonstração)."; return; }
+      const ext = (f.name.split(".").pop() || "jpg").toLowerCase().slice(0, 5);
+      const path = today() + "/" + (meta.tipo || "foto") + "-" + Date.now() + "." + ext;
+      const up = await S.sb.storage.from("guia-fotos").upload(path, f, { contentType: f.type || "image/jpeg" });
+      if (up.error) { st.textContent = "Não enviou. Tente de novo."; return; }
+      const row = { dia: today(), licao: meta.licao || (today() + ":" + (meta.tipo || "foto")), trilha: trilha || "geral", tipo: "foto", dados: meta, audio_path: path };
+      const r = await S.sb.from("guia_resultados").insert(row);
+      S.resultados.push({ ...row, criado_em: new Date().toISOString() });
+      st.textContent = r.error ? "Arquivo salvo, mas não registrou. Avise o professor." : "Enviado. O professor vai analisar.";
+    });
+    wrap.append(btn, inp, st); return wrap;
   }
 
   function checkLine(dia, key, label, on, meta, inPlayer) {
@@ -500,6 +578,7 @@
   $("taskMic").replaceWith(micButton($("taskInput"), $("taskMsg")));
   $("chatBtn").href = CHAT_URL;
   $("generalVoice").append(voiceBox("[recado geral] ", "Fale ou escreva para o professor…"));
+  $("generalVoice").append(fileButton("Enviar foto ou PDF ao professor", { tipo: "geral" }, "geral"));
   // gravação rápida no Hoje: vira tarefa ou recado
   $("quickMic").addEventListener("click", () => { $("quickSheet").hidden = false; $("quickText").value = ""; $("quickMsg").textContent = ""; startVoice($("quickText"), $("quickRec"), $("quickMsg")); });
   $("quickRec").addEventListener("click", () => startVoice($("quickText"), $("quickRec"), $("quickMsg")));

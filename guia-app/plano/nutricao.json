@@ -1,0 +1,27 @@
+{
+ "status": "aguardando",
+ "mensagem": "O plano com gramas precisa vir da sua nutricionista. Mande a foto ou o PDF do plano dela aqui que o professor transforma em refeições com horário e quantidade.",
+ "provisorio": {
+  "aviso": "Enquanto o plano dela não chega: só o básico combinado na sessão de treino e nutrição, sem gramas inventadas.",
+  "refeicoes": {
+   "cafe": [
+    "3 ovos",
+    "Pão (como você já come)",
+    "Copo de água ao acordar"
+   ],
+   "almoco": [
+    "Prato normal com porção maior de frango ou carne",
+    "1ª garrafa de água até aqui"
+   ],
+   "lanche": [
+    "Iogurte natural ou 1 copo de leite",
+    "2ª garrafa de água até o fim da tarde"
+   ]
+  },
+  "cuidados": [
+   "Você relatou hipoglicemia: não fique mais de 4 horas sem comer.",
+   "Gases e barriga estufada: anote o que comeu quando acontecer e mande no recado."
+  ]
+ },
+ "refeicoes": {}
+}
