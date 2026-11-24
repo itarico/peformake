@@ -14,7 +14,7 @@ export function AvSettingsForm() {
   const [saved, setSaved] = useState(false)
   useEffect(() => { if (q.data) setF(q.data) }, [q.data])
   const save = useMutation({
-    mutationFn: () => saveAvSettings({ edit_hours: f!.edit_hours, raw_until_hour: f!.raw_until_hour, default_duration_min: f!.default_duration_min, checkin_radius_m: f!.checkin_radius_m, notify_client: f!.notify_client, notify_team: f!.notify_team, auto_client_whatsapp: f!.auto_client_whatsapp }),
+    mutationFn: () => saveAvSettings({ delivery_days: f!.delivery_days ?? 3, edit_hours: f!.edit_hours, raw_until_hour: f!.raw_until_hour, default_duration_min: f!.default_duration_min, checkin_radius_m: f!.checkin_radius_m, notify_client: f!.notify_client, notify_team: f!.notify_team, auto_client_whatsapp: f!.auto_client_whatsapp }),
     onSuccess: () => { setSaved(true); setTimeout(() => setSaved(false), 2500); void queryClient.invalidateQueries({ queryKey: ['av-settings'] }) },
   })
   if (!f) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
@@ -27,6 +27,7 @@ export function AvSettingsForm() {
   return (
     <section className="flex max-w-3xl flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
       <div className="grid gap-4 sm:grid-cols-2">
+        {num('delivery_days', 'Prazo de entrega', 'Dias depois da gravação. Ao agendar, a entrega já entra no calendário e nas Tarefas.', 0, 60, 'dias')}
         {num('edit_hours', 'Prazo da edição', 'Conta a partir do envio do bruto. O ideal é entregar no dia seguinte.', 2, 240, 'horas')}
         {num('raw_until_hour', 'Bruto até', 'Hora limite, no dia da gravação, para mandar o material bruto.', 12, 23, 'h do mesmo dia')}
         {num('default_duration_min', 'Duração padrão da gravação', 'Usada para o lembrete de checkout.', 30, 720, 'minutos')}

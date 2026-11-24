@@ -119,9 +119,9 @@ export async function calendarCall<T = unknown>(body: Record<string, unknown>): 
   return out as T
 }
 
-export interface AvSettings { edit_hours: number; raw_until_hour: number; default_duration_min: number; checkin_radius_m: number; calendar_account_ids: string[]; notify_client: boolean; notify_team: boolean; auto_client_whatsapp: boolean }
+export interface AvSettings { delivery_days?: number; edit_hours: number; raw_until_hour: number; default_duration_min: number; checkin_radius_m: number; calendar_account_ids: string[]; notify_client: boolean; notify_team: boolean; auto_client_whatsapp: boolean }
 export async function getAvSettings(): Promise<AvSettings> {
-  const { data, error } = await supabase.from('av_settings').select('edit_hours, raw_until_hour, default_duration_min, checkin_radius_m, calendar_account_ids, notify_client, notify_team, auto_client_whatsapp').eq('id', true).single()
+  const { data, error } = await supabase.from('av_settings').select('delivery_days, edit_hours, raw_until_hour, default_duration_min, checkin_radius_m, calendar_account_ids, notify_client, notify_team, auto_client_whatsapp').eq('id', true).single()
   if (error) throw error
   return data as unknown as AvSettings
 }

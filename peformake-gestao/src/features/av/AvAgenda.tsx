@@ -8,11 +8,12 @@ import { supabase } from '@/lib/supabase'
 import { MonthSwitcher } from '@/features/content/ContentLayout'
 import { monthGrid } from '@/features/content/contentRules'
 import { useMonthParam } from '@/features/content/useMonthParam'
-import { AV_AREAS, inAreas, useProduction } from '@/features/production/useProduction'
+import { useProduction } from '@/features/production/useProduction'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { monthLabel } from '@/features/traffic/planRules'
 import { calendarCall, getAvSettings, listProjects, saveAvSettings, type CalendarResult } from './avApi'
 import type { AvProject } from './avRules'
+import { AvClientsPanel } from './AvClientsPanel'
 import { AvShell } from './AvShell'
 import { ScheduleDialog } from './ScheduleDialog'
 
@@ -26,7 +27,7 @@ export function AvAgenda() {
   const navigate = useNavigate()
   const [month] = useMonthParam()
   const today = todayInBrazil()
-  const { clients, clientName, isLive } = useProduction()
+  const { clientName, isLive } = useProduction()
   const [dialog, setDialog] = useState<{ client?: string; day?: string } | null>(null)
   const last = useMemo(() => { const d = new Date(`${month}T12:00:00Z`); d.setUTCMonth(d.getUTCMonth() + 1); return d.toISOString().slice(0, 10) }, [month])
 
@@ -56,11 +57,12 @@ export function AvAgenda() {
   })
 
   const shoots = (projects.data ?? []).filter((p) => p.shootAt && p.status !== 'cancelled' && isLive(p.clientId, 'audiovisual') && p.shootAt.slice(0, 7) === month.slice(0, 7))
-  const shotClients = new Set(shoots.map((p) => p.clientId))
-  const toSchedule = (clients ?? []).filter((c) => c.isActive && c.recurring && inAreas(c, AV_AREAS) && !shotClients.has(c.id)).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
   const googleEvents = (calendar.data?.events ?? []).filter((e) => !e.av_project_id)
-  const byDay = new Map<string, { shoots: AvProject[]; events: typeof googleEvents }>()
-  const slot = (d: string) => { if (!byDay.has(d)) byDay.set(d, { shoots: [], events: [] }); return byDay.get(d)! }
+  // Entregas: o prazo nasce sozinho ao agendar (gravação + dias de entrega das Configurações) e aparece no dia em que vence.
+  const deliveries = (projects.data ?? []).filter((p) => p.dueDate && p.shootAt && !['delivered', 'cancelled'].includes(p.status) && isLive(p.clientId, 'audiovisual'))
+  const byDay = new Map<string, { shoots: AvProject[]; events: typeof googleEvents; deliveries: AvProject[] }>()
+  const slot = (d: string) => { if (!byDay.has(d)) byDay.set(d, { shoots: [], events: [], deliveries: [] }); return byDay.get(d)! }
+  for (const p of deliveries) slot(p.dueDate as string).deliveries.push(p)
   for (const p of shoots) slot(dayOf(p.shootAt as string)).shoots.push(p)
   for (const e of googleEvents) slot(e.all_day ? e.start.slice(0, 10) : dayOf(e.start)).events.push(e)
   const agendaDays = [...byDay.keys()].filter((d) => d.slice(0, 7) === month.slice(0, 7) && (d >= today || month.slice(0, 7) !== today.slice(0, 7))).sort()
@@ -103,6 +105,11 @@ export function AvAgenda() {
                       <span className="block truncate opacity-80">{p.shootConfirmedAt ? 'Confirmado' : 'Esperando o cliente'}{p.location ? ` · ${p.location}` : ''}</span>
                     </Link>
                   ))}
+                  {s.deliveries.map((p) => (
+                    <Link key={`e${p.id}`} to={`/audiovisual/projeto/${p.id}`} className={cn('block truncate rounded-lg px-2 py-1.5 text-[13px] font-medium no-underline', (p.dueDate as string) < today ? 'bg-warn-soft text-warn-ink' : 'border border-dashed border-line-strong text-ink')}>
+                      Entrega · {clientName(p.clientId)}
+                    </Link>
+                  ))}
                   {s.events.map((e) => (
                     <a key={e.account_id + e.id} href={e.link ?? undefined} target="_blank" rel="noreferrer" className="block truncate rounded-lg bg-raised px-2 py-1.5 text-[13px] text-muted no-underline">
                       {e.all_day ? '' : `${hourOf(e.start)} `}{e.summary}
@@ -136,6 +143,11 @@ export function AvAgenda() {
                                 <span className="block truncate opacity-80">{p.shootConfirmedAt ? 'Confirmado' : 'Esperando o cliente'}</span>
                               </Link>
                             ))}
+                            {s?.deliveries.map((p) => (
+                              <Link key={`e${p.id}`} to={`/audiovisual/projeto/${p.id}`} className={cn('block truncate rounded-lg px-1.5 py-1 text-[12px] font-medium no-underline', (p.dueDate as string) < today ? 'bg-warn-soft text-warn-ink' : 'border border-dashed border-line-strong text-ink')}>
+                                Entrega · {clientName(p.clientId)}
+                              </Link>
+                            ))}
                             {s?.events.slice(0, 3).map((e) => (
                               <a key={e.account_id + e.id} href={e.link ?? undefined} target="_blank" rel="noreferrer" className="block truncate rounded-lg bg-raised px-1.5 py-1 text-[12px] text-muted no-underline hover:text-ink" title={`${e.account}: ${e.summary}`}>
                                 {e.all_day ? '' : `${hourOf(e.start)} `}{e.summary}
@@ -151,26 +163,13 @@ export function AvAgenda() {
               ))}
             </tbody>
           </table>
-          <p className="mt-1 text-[12px] text-muted">Verde: gravação da Ellcazo. Cinza: outros compromissos do Google Agenda. Clique no dia para agendar.</p>
+          <p className="mt-1 text-[12px] text-muted">Verde: gravação. Tracejado: entrega do vídeo. Cinza: Google Agenda. Clique no dia para agendar.</p>
         </div>
 
-        <aside aria-labelledby="para-agendar" className="flex flex-col gap-2 self-start rounded-3xl border border-line bg-surface p-4">
-          <h2 id="para-agendar" className="font-semibold">Para agendar <span className="text-muted">· {toSchedule.length}</span></h2>
-          <p className="text-[12px] text-muted">Clientes fixos com vídeo no plano e sem gravação marcada em {monthLabel(month).toLowerCase()}.</p>
-          <ul className="flex flex-col">
-            {toSchedule.map((c) => (
-              <li key={c.id} className="border-t border-line first:border-t-0">
-                <button type="button" onClick={() => setDialog({ client: c.id })} className="flex min-h-11 w-full cursor-pointer items-center justify-between gap-2 py-1.5 text-left text-[14px] font-medium hover:text-accent-ink">
-                  {c.name}<CalendarPlus size={15} aria-hidden="true" className="shrink-0 text-muted" />
-                </button>
-              </li>
-            ))}
-            {toSchedule.length === 0 && <li className="py-3 text-[13px] text-ok-ink">Todos os clientes já têm gravação no mês.</li>}
-          </ul>
-        </aside>
+        <AvClientsPanel onSchedule={(id) => setDialog({ client: id })} />
       </div>
 
-      {dialog && <ScheduleDialog clientId={dialog.client} day={dialog.day} onClose={() => setDialog(null)} onSaved={(id) => navigate(`/audiovisual/projeto/${id}`)} />}
+      {dialog && <ScheduleDialog clientId={dialog.client} day={dialog.day} onClose={() => setDialog(null)} onSaved={(id) => { void queryClient.invalidateQueries({ queryKey: ['av-clients-panel'] }); navigate(`/audiovisual/projeto/${id}`) }} />}
     </AvShell>
   )
 }

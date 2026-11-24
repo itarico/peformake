@@ -17,6 +17,7 @@ const EllcazoClientSheet = lazy(() => import('@/features/clients/EllcazoClientSh
 const ClientFormPage = lazy(() => import('@/features/clients/ClientFormPage').then((m) => ({ default: m.ClientFormPage })))
 const ClientsPage = lazy(() => import('@/features/clients/ClientsPage').then((m) => ({ default: m.ClientsPage })))
 const AvBoard = lazy(() => import('@/features/av/AvBoard').then((m) => ({ default: m.AvBoard })))
+const AvTasksPage = lazy(() => import('@/features/av/AvTasksPage').then((m) => ({ default: m.AvTasksPage })))
 const AvProjectPage = lazy(() => import('@/features/av/AvProjectPage').then((m) => ({ default: m.AvProjectPage })))
 const ContentBoard = lazy(() => import('@/features/content/ContentBoard').then((m) => ({ default: m.ContentBoard })))
 // Desligado até a integração com o Instagram (12/11): const ContentCalendar = lazy(() => import('@/features/content/ContentCalendar').then((m) => ({ default: m.ContentCalendar })))
@@ -168,6 +169,7 @@ export function App() {
           <Route element={<RequireRole roles={AV_ROLES} />}>
             <Route path="audiovisual" element={<AvHome />} />
             <Route path="audiovisual/producao" element={<AvBoard />} />
+            <Route path="audiovisual/tarefas" element={<AvTasksPage />} />
             <Route path="audiovisual/projeto/:id" element={<AvProjectPage />} />
             <Route path="audiovisual/servicos" element={<MovedTo to="/configuracoes/audiovisual/servicos" />} />
             <Route path="audiovisual/fotos" element={<AvPhotosPage />} />

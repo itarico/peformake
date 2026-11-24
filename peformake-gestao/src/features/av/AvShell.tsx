@@ -28,6 +28,7 @@ export function AvTabs() {
   const tabs = [
     ...(manager ? [{ to: '/audiovisual', label: 'Agenda', end: true }] : []),
     { to: '/audiovisual/producao', label: 'Produção', end: false },
+    { to: '/audiovisual/tarefas', label: 'Tarefas', end: false },
     ...(prices ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }] : []),
     ...(manager ? [{ to: '/audiovisual/fotos', label: 'Fotos', end: false }] : []),
   ]
