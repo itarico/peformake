@@ -27,6 +27,7 @@ const files = [
 ]
 const PIXEL = Buffer.from('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=', 'base64')
 const uploads = []
+const partsCalls = []
 // PNG 1x1 para testar a conversão para JPG no Postar avulso.
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
 async function mock(route) {
@@ -42,6 +43,7 @@ async function mock(route) {
   if (p.startsWith('/rest/v1/rpc/')) {
     const fn = p.split('/').pop()
     if (fn === 'ig_post_save') { saved.push(body); posts.push({ id: 'n' + saved.length, account_id: body._account, content_item_id: body._item, kind: body._kind, media_path: body._media_path, media_mime: body._media_mime, caption: body._caption, scheduled_at: body._at, status: 'agendado', permalink: null, error: null }); return json('n' + saved.length) }
+    if (fn === 'ig_post_media_parts') { partsCalls.push(body); return json(null) }
     if (fn === 'ig_post_cancel') { canceled.push(body._id); posts = posts.filter((x) => x.id !== body._id); return json(null) }
     if (fn === 'ig_connect_start') { connectAsked = body; return json('a'.repeat(64)) }
     return json({ production_clients: C, production_staff: [], my_staff_id: null }[fn] ?? null)
@@ -116,6 +118,23 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!q || q._account !== 'a0' || q._item !== null || q._kind !== 'post' || q._media_mime !== 'image/jpeg' || !/^instagram\/avulso\/a0\/.+\.jpg$/.test(q._media_path) || q._caption !== 'Post avulso de teste') fails.push(`${dev}: post avulso salvo errado ${JSON.stringify(q)}`)
       if (!uploads.some((u) => u.includes('content-files/instagram/avulso/a0/'))) fails.push(`${dev}: arquivo não subiu`)
       if (await pg.locator('dialog[open]').count()) fails.push(`${dev}: pop-up Postar não fechou`)
+
+      // Vídeo de 95 MB (acima do limite de 50 MB do Supabase): sobe em 3 partes e avisa o banco das partes.
+      if (dev === 'desk') {
+        const nUp = uploads.length; const nSaved = saved.length
+        await pg.getByRole('button', { name: 'Postar', exact: true }).click(); await pg.waitForTimeout(350)
+        await pg.locator('#post-conta').click(); await pg.locator('#post-conta').pressSequentially('@peformake', { delay: 20 }); await pg.waitForTimeout(300); await pg.getByRole('option', { name: /@peformake/ }).first().click()
+        const big = path.join(require('os').tmpdir(), 'pf-grande.mp4'); if (!fs.existsSync(big)) fs.writeFileSync(big, Buffer.alloc(95 * 1024 * 1024, 1))
+        await pg.getByLabel('Arquivo').setInputFiles(big); await pg.waitForTimeout(500)
+        await pg.getByRole('dialog').getByRole('button', { name: 'Postar agora' }).click()
+        for (let t = 0; t < 60 && partsCalls.length === 0; t++) await pg.waitForTimeout(500)
+        const ups = uploads.slice(nUp)
+        if (ups.length !== 3 || !ups.every((u, i) => u.endsWith(`.mp4.part${i}`))) fails.push(`${dev}: vídeo grande não subiu em 3 partes ${JSON.stringify(ups)}`)
+        const v = saved[nSaved]
+        if (!v || v._kind !== 'reels' || v._media_mime !== 'video/mp4') fails.push(`${dev}: vídeo grande salvo errado ${JSON.stringify(v)}`)
+        const pp = partsCalls[0]
+        if (!pp || pp._parts !== 3 || pp._size !== 95 * 1024 * 1024) fails.push(`${dev}: partes não avisadas ao banco ${JSON.stringify(pp)}`)
+      }
       await shot('2-depois')
     } catch (e) { fails.push(`${dev}: ${e.message.split('\n')[0]}`) }
     if (errs.length) fails.push(`${dev}: erro no navegador: ${errs[0]}`)

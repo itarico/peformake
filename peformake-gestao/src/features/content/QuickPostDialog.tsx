@@ -12,7 +12,10 @@ import { KIND_LABEL_IG, mediaProblem, scheduleError, toInstant, type IgKind } fr
 // Tabelas e funções de 24/11/2026 (migração instagram_agendar): ainda fora dos tipos gerados.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
-const MAX_BYTES = 50 * 1024 * 1024
+// O plano gratuito do Supabase aceita até 50 MB por arquivo: vídeo maior sobe em partes de 45 MB e a publicação manda as
+// partes para a Meta (upload retomável). Teto de 1 GB por vídeo.
+const PART_BYTES = 45 * 1024 * 1024
+const MAX_BYTES = 1024 * 1024 * 1024
 
 export interface QuickAccount { id: string; label: string }
 
@@ -56,11 +59,12 @@ export function QuickPostDialog({ accounts, onClose }: { accounts: QuickAccount[
   const [day, setDay] = useState(today)
   const [hour, setHour] = useState('18:00')
   const [caption, setCaption] = useState('')
+  const [progress, setProgress] = useState<string | null>(null)
 
   const video = !!file && file.type.startsWith('video/')
   // A imagem vira JPG antes de subir, então a checagem considera o JPG.
   const mime = !file ? '' : video ? file.type : 'image/jpeg'
-  const problem = !file ? null : video && file.size > MAX_BYTES ? 'Arquivo acima de 50 MB. Diminua o vídeo e tente de novo.' : mediaProblem(kind, mime)
+  const problem = !file ? null : video && file.size > MAX_BYTES ? 'Vídeo acima de 1 GB. Diminua o vídeo e tente de novo.' : mediaProblem(kind, mime)
   const at = now ? new Date().toISOString() : toInstant(day, hour)
   const past = !now && (!at || new Date(at).getTime() < Date.now())
   const picked = accounts.find((a) => a.label === account)
@@ -79,14 +83,31 @@ export function QuickPostDialog({ accounts, onClose }: { accounts: QuickAccount[
       const ready = video ? file : await prepareImage(file, kind)
       const ext = video ? (ready.type === 'video/quicktime' ? 'mov' : 'mp4') : 'jpg'
       const path = `instagram/avulso/${picked.id}/${crypto.randomUUID()}.${ext}`
-      const up = await supabase.storage.from('content-files').upload(path, ready, { contentType: ready.type, upsert: false })
-      if (up.error) throw new Error('Não foi possível enviar o arquivo. Confira a internet e tente de novo.')
-      const { error } = await db.rpc('ig_post_save', { _id: null, _account: picked.id, _item: null, _kind: kind, _media_path: path, _media_mime: ready.type, _caption: caption, _at: at })
+      const fail = () => new Error('Não foi possível enviar o arquivo. Confira a internet e tente de novo.')
+      const parts = video && ready.size > PART_BYTES ? Math.ceil(ready.size / PART_BYTES) : 0
+      if (parts > 0) {
+        for (let i = 0; i < parts; i++) {
+          setProgress(`Enviando parte ${i + 1} de ${parts}`)
+          const blob = ready.slice(i * PART_BYTES, Math.min(ready.size, (i + 1) * PART_BYTES), ready.type)
+          const up = await supabase.storage.from('content-files').upload(`${path}.part${i}`, blob, { contentType: ready.type, upsert: false })
+          if (up.error) throw fail()
+        }
+      } else {
+        setProgress('Enviando')
+        const up = await supabase.storage.from('content-files').upload(path, ready, { contentType: ready.type, upsert: false })
+        if (up.error) throw fail()
+      }
+      const { data: postId, error } = await db.rpc('ig_post_save', { _id: null, _account: picked.id, _item: null, _kind: kind, _media_path: path, _media_mime: ready.type, _caption: caption, _at: at })
       if (error) throw error
+      if (parts > 0) {
+        const { error: partsError } = await db.rpc('ig_post_media_parts', { _id: postId, _parts: parts, _size: ready.size })
+        if (partsError) throw partsError
+      }
       // Postar agora: chama a publicação na hora (sem esperar a rotina de 5 minutos). Se falhar, a rotina publica depois.
       if (now) await db.rpc('ig_publish_now', {})
     },
     onSuccess: async () => { await queryClient.invalidateQueries({ queryKey: ['ig-schedule'] }); onClose() },
+    onSettled: () => setProgress(null),
   })
 
   const kinds: IgKind[] = video ? ['reels', 'story'] : ['post', 'story']
@@ -94,7 +115,7 @@ export function QuickPostDialog({ accounts, onClose }: { accounts: QuickAccount[
     <Dialog open onClose={onClose} title="Postar no Instagram" size="sm"
       footer={<><Button variant="secondary" onClick={onClose}>Voltar</Button>
         <Button disabled={!picked || !file || !!problem || past || save.isPending} onClick={() => save.mutate()}>
-          {save.isPending ? 'Enviando' : now ? 'Postar agora' : 'Agendar'}
+          {save.isPending ? (progress ?? 'Enviando') : now ? 'Postar agora' : 'Agendar'}
         </Button></>}>
       <div className="flex flex-col gap-3">
         <div>
@@ -109,7 +130,7 @@ export function QuickPostDialog({ accounts, onClose }: { accounts: QuickAccount[
           </button>
           <div className="min-w-0 flex-1 text-[13px]">
             <button type="button" onClick={() => input.current?.click()} className="cursor-pointer font-semibold text-accent-ink underline-offset-2 hover:underline">{file ? 'Trocar arquivo' : 'Escolher foto ou vídeo'}</button>
-            <p className="truncate text-muted">{file ? file.name : 'Foto se ajusta sozinha. Vídeo MP4 ou MOV, até 50 MB.'}</p>
+            <p className="truncate text-muted">{file ? file.name : 'Foto se ajusta sozinha. Vídeo MP4 ou MOV, até 1 GB.'}</p>
           </div>
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" className="hidden" aria-label="Arquivo"
             onChange={(e) => choose(e.target.files?.[0])} />
