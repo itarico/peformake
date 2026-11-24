@@ -23,7 +23,6 @@ o próximo passo exato, faz commit e push. Quem terminar a tarefa apaga o item.
 - Instagram: banco, funções e tela no ar. Falta do Italo: segredo `META_APP_SECRET` no Supabase; convidar o Instagram como Testador do Instagram no app da Meta (Casos de uso → Instagram → login unificado → 2. Gerar tokens de acesso) e aceitar no Instagram; tocar em Conectar Instagram em /conteudo/agendar; agendar 1 post de teste e conferir.
 
 ## Portal: índice antigo de link (24/11)
-- Rodar no SQL Editor: `drop index if exists public.client_portal_links_one_team_link;`. O índice novo (`client_portal_links_one_per_origin`) já existe. Sem isso, mandar vídeo para o cliente aprovar falha quando ele já tem link de portal da equipe ou do briefing.
 
 ## Mini curso do cliente no portal (pedido do Italo, 24/11): NÃO começado
 - Videoaulas dentro de Estratégia/Consultoria, liberadas no portal do cliente ao contratar: treinar a equipe comercial, gravar os próprios vídeos, atendimento dos leads do tráfego.

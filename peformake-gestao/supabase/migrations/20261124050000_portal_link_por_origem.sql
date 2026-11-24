@@ -25,5 +25,5 @@ begin
 end;
 $function$;
 
--- FALTA APLICAR (o conector recusa "drop"): sem esta linha o índice antigo continua barrando o segundo link.
-drop index if exists public.client_portal_links_one_team_link;
+-- O índice antigo (client_portal_links_one_team_link) ficou: com o link fixo (migração 20261124070000) cada cliente
+-- tem um link só e ele não atrapalha mais.

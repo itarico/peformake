@@ -1,7 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, MessageCircle, Phone } from 'lucide-react'
+import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { ArrowLeft, MessageCircle, Pencil, Phone } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
+import { Button } from '@/components/ui/Button'
 import { CenteredMessage } from '@/components/ui/CenteredMessage'
+import { Dialog } from '@/components/ui/Dialog'
+import { Field } from '@/components/ui/Field'
 import { AV_LABEL, type AvStatus } from '@/features/av/avRules'
 import { brl, dayLabel, todayBR } from '@/features/finance/money'
 import { cn } from '@/lib/cn'
@@ -12,7 +16,7 @@ import { logoPublicUrl } from './clientsApi'
 import { Block, ErrorBox } from './ui'
 
 interface Sheet {
-  id: string; name: string; logo_path: string | null; legacy_logo_url: string | null; is_active: boolean; instagram: string | null
+  id: string; name: string; logo_path: string | null; legacy_logo_url: string | null; is_active: boolean; instagram: string | null; email?: string | null; document?: string | null
   contact: string; phone: string | null
   projects: { id: string; title: string; status: AvStatus; shoot_at: string | null; due_date: string | null; delivered_at: string | null }[]
   invoices: { id: string; description: string; amount: number; due_date: string; status: string; paid_at: string | null }[]
@@ -20,9 +24,45 @@ interface Sheet {
 
 type Rpc = (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
 
+/** A Ellcazo edita o básico do cliente dela (função ellcazo_client_update; o banco barra cliente que não é do audiovisual). */
+function EditClient({ c, onClose }: { c: Sheet; onClose: () => void }) {
+  const queryClient = useQueryClient()
+  const [f, setF] = useState({ name: c.name, phone: c.phone ?? '', email: c.email ?? '', instagram: c.instagram ?? '', document: c.document ?? '' })
+  const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF((x) => ({ ...x, [k]: e.target.value }))
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await (supabase.rpc.bind(supabase) as unknown as Rpc)('ellcazo_client_update', { _client: c.id, _data: f })
+      if (error) throw new Error(error.message)
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['ellcazo-client-sheet', c.id] })
+      void queryClient.invalidateQueries({ queryKey: ['av-clients-panel'] })
+      onClose()
+    },
+  })
+  return (
+    <Dialog open onClose={onClose} title="Editar cliente" size="sm"
+      footer={<><Button variant="secondary" onClick={onClose}>Voltar</Button><Button disabled={f.name.trim().length < 2 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar'}</Button></>}>
+      <div className="flex flex-col gap-3">
+        <Field label="Nome" autoFocus maxLength={120} value={f.name} onChange={set('name')} />
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="WhatsApp" inputMode="tel" maxLength={20} value={f.phone} onChange={set('phone')} placeholder="77 99999-0000" />
+          <Field label="CPF ou CNPJ" inputMode="numeric" maxLength={18} value={f.document} onChange={set('document')} />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="E-mail" type="email" maxLength={120} value={f.email} onChange={set('email')} />
+          <Field label="Instagram" maxLength={60} value={f.instagram} onChange={set('instagram')} placeholder="@perfil" />
+        </div>
+        {save.error && <p role="alert" className="text-[14px] font-medium text-warn-ink">Não foi possível salvar. Nada foi alterado.</p>}
+      </div>
+    </Dialog>
+  )
+}
+
 /** Ficha resumida do cliente para quem é da Ellcazo: contato, projetos e faturas da Ellcazo. Nada da Peformake. */
 export function EllcazoClientSheet() {
   const { id = '' } = useParams()
+  const [editing, setEditing] = useState(false)
   const q = useQuery({
     queryKey: ['ellcazo-client-sheet', id],
     queryFn: async () => {
@@ -53,12 +93,14 @@ export function EllcazoClientSheet() {
           <h1 className="truncate text-[22px] font-semibold tracking-tight md:text-3xl">{c.name}</h1>
           <p className="truncate text-[13px] text-muted">{c.contact !== c.name ? `${c.contact} · ` : ''}{c.is_active ? 'Cliente ativo' : 'Cliente inativo'}</p>
         </div>
+        <Button variant="secondary" onClick={() => setEditing(true)}><Pencil size={15} aria-hidden="true" /> Editar</Button>
       </header>
+      {editing && <EditClient c={c} onClose={() => setEditing(false)} />}
 
       <div className="flex flex-wrap gap-2">
         {wa && <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-fill px-4 font-semibold text-on-fill no-underline"><MessageCircle size={16} aria-hidden="true" /> WhatsApp</a>}
         {c.phone && <a href={`tel:+${c.phone.length <= 11 ? '55' + c.phone : c.phone}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline hover:border-ink"><Phone size={16} aria-hidden="true" /> Ligar</a>}
-        {!c.phone && <p className="text-[13px] text-muted">Sem telefone cadastrado. Peça ao administrador para completar o contato.</p>}
+        {!c.phone && <p className="text-[13px] text-muted">Sem telefone cadastrado. Toque em Editar para completar.</p>}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
