@@ -10,12 +10,24 @@ FONTE = r'C\:/Claude/canal-youtube/gta6/midia/fontes/Anton-400.ttf'
 CREME, ESCURO = '0xF1E6D2', '0x160A10'
 GEO = {'monitor': (384, 170, 1152, 648), 'player': (355, 160, 1209, 680)}
 arqs = []
+
+
+def textos(t):
+    """drawtext das palavras-chave que a cena de baixo mostraria nesse intervalo (Italo: texto não pode ficar atrás da foto)."""
+    out = ''
+    for x in t.get('textos', []):
+        r = max(0.0, x['t'] - t['t']); txt = x['txt'].replace(':', r'\:')
+        out += (f",drawtext=fontfile='{FONTE}':text='{txt}':fontsize={x.get('tam', 150)}:fontcolor={x.get('cor', CREME)}:shadowcolor={ESCURO}:shadowx=7:shadowy=7"
+                f":x=(w-tw)/2:y=h*{x.get('y', 0.70)}:enable='gte(t,{r:.3f})'")
+    return out
+
+
 for k, t in enumerate(EV['trechos']):
     if t['geo'] == 'tela':   # plano gerado por IA (Nim): tela cheia, cor puxada para a paleta, grão e a marca ILUSTRAÇÃO
         saida = OUT / f'trecho_{k + 1:02d}.mov'; arqs.append(saida)
         vf = (f"[0:v]trim=start={t['ss']}:duration={t['dur']},setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,"
               f"eq=saturation=0.7:contrast=1.08,colorbalance=rs=0.12:gs=-0.04:bs=0.06:rh=0.08:bh=-0.04,noise=alls=14:allf=t,vignette=PI/4,"
-              f"drawtext=fontfile='{FONTE}':text='ILUSTRAÇÃO':fontsize=30:fontcolor={CREME}:box=1:boxcolor={ESCURO}@0.8:boxborderw=10:x=w-tw-60:y=50,format=yuva444p10le")
+              f"drawtext=fontfile='{FONTE}':text='ILUSTRAÇÃO':fontsize=30:fontcolor={CREME}:box=1:boxcolor={ESCURO}@0.8:boxborderw=10:x=w-tw-60:y=50" + textos(t) + ",format=yuva444p10le")
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(SRC / t['arq']), '-filter_complex', vf, '-an', '-c:v', 'prores_ks', '-profile:v', '4444',
                         '-pix_fmt', 'yuva444p10le', '-r', '24', str(saida)], check=True)
         print('ilustração', k + 1, t['t'], t['arq']); continue
@@ -27,7 +39,7 @@ for k, t in enumerate(EV['trechos']):
           f"noise=alls=10:allf=t,eq=saturation=0.85:contrast=1.05,pad={w + 2 * borda}:{h + 2 * borda}:{borda}:{borda}:color={CREME},format=yuva444p[v];"
           f"color=c=black@0.0:s=1920x1080:r=24:d={t['dur']},format=yuva444p[bg];"
           f"[bg][v]overlay={x - borda}:{y - borda}:format=auto,"
-          f"drawtext=fontfile='{FONTE}':text='{cred}':fontsize=30:fontcolor={CREME}:box=1:boxcolor={ESCURO}@0.85:boxborderw=10:x={x}:y={y + h + borda + 18},format=yuva444p10le")
+          f"drawtext=fontfile='{FONTE}':text='{cred}':fontsize=30:fontcolor={CREME}:box=1:boxcolor={ESCURO}@0.85:boxborderw=10:x={x}:y={y + h + borda + 18}" + textos(t) + ",format=yuva444p10le")
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(SRC / t['arq']), '-filter_complex', vf, '-an', '-c:v', 'prores_ks', '-profile:v', '4444',
                     '-pix_fmt', 'yuva444p10le', '-r', '24', str(saida)], check=True)
     print('trecho', k + 1, t['t'], t['arq'], t['ss'], t['dur'])

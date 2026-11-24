@@ -48,7 +48,15 @@ trilha *= (1 - 0.7 * env)[:, None]   # e mais 10 dB quando há fala
 fx = np.zeros((N, 2), np.float32)
 faixas = SAIDA.with_name(SAIDA.stem + '_faixas'); faixas.mkdir(exist_ok=True)
 cache = {}
-for i, e in enumerate(EV['eventos']):
+# menos efeitos (Italo, 23/11: "som de Minecraft cavando terra" = os papéis repetidos; e efeitos altos demais):
+# sem som de papel; no máximo 1 efeito a cada 2,5 s; impacto e carimbo só nas palavras-chave
+FORA = {'papel_1.mp3', 'papel_2.mp3', 'papeis.mp3', 'maquina_1.mp3'}
+_ult = -9.0; _evs = []
+for e in sorted(EV['eventos'], key=lambda e: e['t']):
+    if e['sfx'] in FORA or e['t'] - _ult < 2.5: continue
+    _evs.append(e); _ult = e['t']
+print('efeitos mantidos', len(_evs), 'de', len(EV['eventos']))
+for i, e in enumerate(_evs):
     if e['t'] >= DUR: continue
     if e['sfx'] not in cache:
         x = ler(AUD / 'sfx' / e['sfx']); cache[e['sfx']] = (x, ataque(x))
@@ -56,7 +64,7 @@ for i, e in enumerate(EV['eventos']):
     ini = e['t'] - 0.015 - at
     corte = max(0, -ini); ini = max(0, ini)
     x = x[int(corte * SR):]
-    x = x * (v_rms * db(-14 + min(e.get('db', 0), 4)) / rms(x))   # efeito sempre abaixo da voz (-14 a -10 dB)
+    x = x * (v_rms * db(-20 + min(e.get('db', 0), 3) * .5) / rms(x))   # efeito bem abaixo da voz (-20 a -18,5 dB)
     a = int(ini * SR); n = min(len(x), N - a)
     fx[a:a + n] += x[:n]
     sf.write(faixas / f'fx_{i:03d}_{e["t"]:.2f}_{e["sfx"].replace(".mp3", "")}.wav', x, SR, subtype='PCM_24')
@@ -65,4 +73,4 @@ sf.write(faixas / 'voz.wav', voz, SR, subtype='PCM_24'); sf.write(faixas / 'tril
 tmp = SAIDA.with_suffix('.pre.wav'); sf.write(tmp, mix, SR, subtype='FLOAT')
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(tmp), '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-ar', str(SR), str(SAIDA)], check=True)
 tmp.unlink()
-print('mix', SAIDA, round(DUR, 2), 's; efeitos', len(EV['eventos']))
+print('mix', SAIDA, round(DUR, 2), 's; efeitos', len(_evs))
