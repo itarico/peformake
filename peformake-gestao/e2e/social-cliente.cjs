@@ -123,11 +123,6 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!t4.includes('Pauta do mês') || !t4.includes('Natal')) fails.push(`${dev}: Sugestões sem pauta ou datas`)
       await shot('4-sugestoes')
 
-      // 5. Tarefas só do cliente.
-      await pg.getByRole('tab', { name: /Tarefas/ }).click(); await pg.waitForTimeout(900)
-      const t5 = await pg.evaluate(() => document.body.innerText)
-      if (!t5.includes('Responder comentários') || t5.includes('Tarefa de outro cliente')) fails.push(`${dev}: tarefas não filtraram pelo cliente`)
-
       // 5b. Agendar dentro do cliente: Criar post abre preso ao Instagram do cliente.
       await pg.getByRole('tab', { name: /Agendar/ }).click(); await pg.waitForTimeout(900)
       const href = await pg.getByRole('link', { name: /Criar post/ }).getAttribute('href').catch(() => null)
@@ -148,6 +143,15 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (calls.some((c) => c.fn === 'ig-insights')) fails.push(`${dev}: desempenho buscou de novo com cópia recente`)
       if (await sideScroll(pg)) fails.push(`${dev}: desempenho rola de lado`)
       await shot('7-desempenho')
+
+      // 8. Revisar (todas as artes do mês): etapas, contagem por cliente e Agendar leva ao cliente.
+      await pg.goto(`${BASE}/conteudo/revisar`); await pg.waitForTimeout(1500)
+      const t8 = await pg.evaluate(() => document.body.innerText)
+      for (const s of ['Prontas para aprovar', 'Aprovadas', 'Em produção', 'Padaria Sol', 'feitas']) if (!t8.includes(s)) fails.push(`${dev}: revisar sem "${s}"`)
+      if (await sideScroll(pg)) fails.push(`${dev}: revisar rola de lado`)
+      await shot('8-revisar')
+      await pg.getByRole('button', { name: 'Agendar' }).first().click(); await pg.waitForTimeout(900)
+      if (!/\/conteudo\/cliente\/c1/.test(pg.url()) || !pg.url().includes('aba=agendar')) fails.push(`${dev}: Agendar do Revisar não levou ao cliente (${pg.url()})`)
     } catch (e) { fails.push(`${dev}: ${e.message.split('\n')[0]}`) }
     if (errs.length) fails.push(`${dev}: erro no navegador: ${errs[0]}`)
     await ctx.close()

@@ -29,6 +29,7 @@ const SocialTasksBoard = lazy(() => import('@/features/content/TasksBoard').then
 const SchedulePage = lazy(() => import('@/features/content/SchedulePage').then((m) => ({ default: m.SchedulePage })))
 const SeasonalPage = lazy(() => import('@/features/content/SeasonalPage').then((m) => ({ default: m.SeasonalPage })))
 const SocialClientsPage = lazy(() => import('@/features/content/SocialClientsPage').then((m) => ({ default: m.SocialClientsPage })))
+const MonthArtsPage = lazy(() => import('@/features/content/MonthArtsPage').then((m) => ({ default: m.MonthArtsPage })))
 const PostComposer = lazy(() => import('@/features/content/PostComposer').then((m) => ({ default: m.PostComposer })))
 const BulkSchedule = lazy(() => import('@/features/content/BulkSchedule').then((m) => ({ default: m.BulkSchedule })))
 const SocialClientPage = lazy(() => import('@/features/content/SocialClientPage').then((m) => ({ default: m.SocialClientPage })))
@@ -157,6 +158,7 @@ export function App() {
               <Route path="tarefas" element={<SocialTasksBoard />} />
               <Route path="agendar" element={<SchedulePage />} />
               <Route path="design" element={<DesignPage />} />
+              <Route path="revisar" element={<MonthArtsPage />} />
               <Route path="calendario" element={<MovedTo to="/conteudo/quadro" />} />
               <Route path="planejamento" element={<SocialClientsPage />} />
               <Route path="cliente/:id" element={<SocialClientPage />} />

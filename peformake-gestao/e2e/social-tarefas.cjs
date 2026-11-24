@@ -1,6 +1,6 @@
 // Social Media: tarefas separadas das artes e designer só com a tela dele (24/11), com dados FALSOS no navegador.
-// 1. Admin: abas Artes · Tarefas · Design · Planejamento (+ Mais). Artes sem coluna de tarefas. Tarefas em A fazer · Fazendo · Feito,
-//    cartão padronizado (origem, título, cliente, prazo), Começar/Concluir mudam a etapa, "Virar arte" abre o Nova arte preenchido.
+// 1. Admin: Tarefas geral em A fazer · Fazendo · Feito, agrupada por cliente (logo e contagem; título só ao abrir);
+//    o pop-up da tarefa aceita, recusa com motivo e vira arte (24/11).
 // 2. Designer: qualquer endereço de /conteudo cai no Design; sem abas, sem "Nova arte", sem botão "Prazos"; cartão sempre com o lugar da imagem.
 // 3. Admin no Design: vê o botão "Prazos".
 // Uso: npx vite --config e2e/shell/vite.config.ts --port 5199 --strictPort &  PORT=5199 OUT=pasta node e2e/social-tarefas.cjs
@@ -31,6 +31,7 @@ async function mock(route) {
   if (p.endsWith('/functions/v1/ref-thumb')) return json({ thumbs: {} })
   if (p.startsWith('/rest/v1/rpc/')) {
     const fn = p.split('/').pop()
+    if (fn === 'social_task_refuse' || fn === 'social_task_to_art') { saves.push({ fn, ...body }); return json(null) }
     if (fn === 'social_task_save') { saves.push(body); const t = tasks.find((x) => x.id === body._id); if (t && body._data.status) t.status = body._data.status; return json(null) }
     return json({ production_clients: C, production_staff: S, my_staff_id: 's1', seasonal_board: [] }[fn] ?? null)
   }
@@ -55,32 +56,43 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
     }
     const close = async ({ ctx, pg, errs }, name) => { if (await sideScroll(pg)) fails.push(`${dev} ${name}: rolagem de lado`); if (errs.length) fails.push(`${dev} ${name}: erro ${errs[0]}`); await pg.screenshot({ path: path.join(OUT, `${dev}-${name}.png`) }); await ctx.close() }
     try {
-      // 1. Admin: artes sem tarefas; tarefas no quadro próprio.
+      // 1. Admin: Tarefas é geral (24/11), agrupada por cliente com a logo; tocar abre os títulos; o pop-up decide.
       let s = await open('admin'); const pg = s.pg
-      await pg.goto(BASE + '/conteudo/quadro', { waitUntil: 'networkidle' })
-      const cols = await pg.locator('[data-conteudo] > section').evaluateAll((l) => l.map((e) => e.getAttribute('aria-label')))
-      if (cols.join() !== 'Briefings,Produção,Aprovado') fails.push(`${dev}: colunas das artes = ${cols.join()}`)
-      if (await pg.getByText('Responder pedido de story').count()) fails.push(`${dev}: tarefa ainda aparece no quadro das artes`)
-      await pg.goto(BASE + '/conteudo/quadro?coluna=tarefas', { waitUntil: 'networkidle' })
-      if (!pg.url().includes('/conteudo/tarefas')) fails.push(`${dev}: link antigo da coluna Tarefas não levou à tela nova (${pg.url()})`)
+      await pg.goto(BASE + '/conteudo/tarefas', { waitUntil: 'networkidle' })
       const tcols = await pg.locator('[data-conteudo] > section').evaluateAll((l) => l.map((e) => e.getAttribute('aria-label')))
       if (tcols.join() !== 'A fazer,Fazendo,Feito') fails.push(`${dev}: colunas das tarefas = ${tcols.join()}`)
-      for (const t of ['Cliente pediu', 'Sistema sugeriu']) if (!(await pg.getByText(t).count())) fails.push(`${dev}: sem a origem "${t}"`)
-      const first = await pg.locator('section[aria-label="A fazer"] li').first().innerText()
-      if (!/Responder pedido de story/.test(first)) fails.push(`${dev}: a tarefa com prioridade devia vir primeiro`)
+      if (await pg.getByText('Responder pedido de story do cliente').count()) fails.push(`${dev}: título aparece antes de abrir o cliente`)
+      const group = pg.locator('section[aria-label="A fazer"] button[aria-expanded]', { hasText: 'Padaria Sol' })
+      if (!(await group.innerText()).includes('2 tarefas')) fails.push(`${dev}: grupo do cliente sem a contagem`)
+      await group.click(); await pg.waitForTimeout(200)
+      const first = await pg.locator('section[aria-label="A fazer"] li li').first().innerText()
+      if (!/Responder pedido de story/.test(first) || !/Cliente pediu/.test(first)) fails.push(`${dev}: a tarefa do cliente com prioridade devia vir primeiro (${first})`)
       if (await pg.getByText('Arquivar destaques antigos').count()) fails.push(`${dev}: tarefa feita há mais de 7 dias ainda aparece`)
-      await pg.locator('li', { hasText: 'Responder pedido de story' }).getByRole('button', { name: 'Começar' }).click(); await pg.waitForTimeout(500)
-      if (saves[0]?._id !== 't1' || saves[0]?._data.status !== 'fazendo') fails.push(`${dev}: Começar não mudou a etapa (${JSON.stringify(saves[0])})`)
-      await pg.getByRole('button', { name: 'Do sistema' }).click(); await pg.waitForTimeout(200)
-      if (await pg.getByText('Trocar a bio do Instagram').count()) fails.push(`${dev}: filtro "Do sistema" mostrou tarefa minha`)
-      await pg.locator('li', { hasText: 'Post da campanha de Natal' }).getByRole('button', { name: 'Virar arte' }).click(); await pg.waitForTimeout(400)
-      const text = await pg.getByLabel('O que a arte precisa ter').inputValue().catch(() => '')
-      if (!/Post da campanha de Natal/.test(text)) fails.push(`${dev}: Virar arte não levou o texto da tarefa (${text})`)
-      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up Virar arte rola`)
-      await pg.screenshot({ path: path.join(OUT, `${dev}-pop-virar-arte.png`) }); await pg.keyboard.press('Escape')
+      // Aceitar
+      await pg.getByRole('button', { name: /Responder pedido de story/ }).click(); await pg.waitForTimeout(400)
+      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up da tarefa rola`)
+      await pg.getByRole('button', { name: 'Aceitar' }).click(); await pg.waitForTimeout(500)
+      if (saves[0]?._id !== 't1' || saves[0]?._data?.status !== 'fazendo') fails.push(`${dev}: Aceitar não mudou a etapa (${JSON.stringify(saves[0])})`)
+      // Virar arte
+      if (!(await pg.getByRole('button', { name: /Post da campanha de Natal/ }).count())) await group.click()
+      await pg.getByRole('button', { name: /Post da campanha de Natal/ }).click(); await pg.waitForTimeout(400)
+      await pg.getByRole('button', { name: 'Virar arte' }).click(); await pg.waitForTimeout(200)
+      await pg.getByRole('radio', { name: 'Carrossel' }).click()
+      await pg.getByRole('button', { name: 'Mandar para o design' }).click(); await pg.waitForTimeout(500)
+      const art = saves.find((x) => x.fn === 'social_task_to_art')
+      if (!art || art._id !== 't2' || art._kind !== 'carrossel') fails.push(`${dev}: Virar arte errado (${JSON.stringify(art)})`)
+      // Recusar com motivo
+      if (dev === 'iphone') { await pg.getByRole('tab', { name: /Fazendo/ }).click(); await pg.waitForTimeout(200) }
+      await pg.locator('section[aria-label="Fazendo"] button[aria-expanded]', { hasText: 'Geral' }).click(); await pg.waitForTimeout(200)
+      await pg.getByRole('button', { name: /Trocar a bio do Instagram/ }).click(); await pg.waitForTimeout(400)
+      await pg.getByRole('button', { name: 'Recusar' }).click(); await pg.waitForTimeout(200)
+      await pg.getByLabel('Por que não vai ser feita').fill('O cliente desistiu')
+      await pg.getByRole('button', { name: 'Recusar tarefa' }).click(); await pg.waitForTimeout(500)
+      const ref = saves.find((x) => x.fn === 'social_task_refuse')
+      if (!ref || ref._id !== 't3' || ref._reason !== 'O cliente desistiu') fails.push(`${dev}: Recusar errado (${JSON.stringify(ref)})`)
       await pg.getByRole('button', { name: 'Tarefa', exact: true }).click(); await pg.waitForTimeout(300)
       if (await popupScrolls(pg)) fails.push(`${dev}: pop-up Nova tarefa rola`)
-      await pg.keyboard.press('Escape'); await pg.getByRole('button', { name: 'Todas' }).click()
+      await pg.keyboard.press('Escape')
       await close(s, 'tarefas')
 
       // 2. Designer: só a tela dele.
@@ -93,7 +105,7 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (await s.pg.getByRole('button', { name: 'Prazos' }).count()) fails.push(`${dev}: designer vê o botão Prazos`)
       if (await s.pg.getByRole('button', { name: 'Nova arte' }).count()) fails.push(`${dev}: designer vê Nova arte`)
       for (let n = 0; n < 5; n++) { const c = s.pg.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]'); if (!(await c.count())) break; await c.first().click(); await s.pg.waitForTimeout(100) }
-      const covers = await s.pg.getByText('Sem imagem de referência').count()
+      const covers = await s.pg.getByText('Sem referência').count()
       if (covers !== 2) fails.push(`${dev}: ${covers} cartões com o lugar da imagem (esperado 2)`)
       if (!(await s.pg.getByText(/em \d dia/).count())) fails.push(`${dev}: designer não vê o tempo da arte`)
       await close(s, 'designer')

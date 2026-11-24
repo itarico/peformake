@@ -17,7 +17,6 @@ import { IgPerformance } from './IgPerformance'
 import { BriefDialog, NewArtButton } from './NewArt'
 import { SchedulePage } from './SchedulePage'
 import { clientLogoUrl, socialClientsBoard } from './SocialClientsPage'
-import { TasksBoard } from './TasksBoard'
 import { useMonthParam } from './useMonthParam'
 
 // RPCs de 24/11/2026 ainda fora dos tipos gerados.
@@ -26,7 +25,6 @@ const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<str
 const TABS = [
   { id: 'briefing', label: 'Briefing' },
   { id: 'sugestoes', label: 'Sugestões' },
-  { id: 'tarefas', label: 'Tarefas' },
   { id: 'agendar', label: 'Agendar' },
   { id: 'desempenho', label: 'Desempenho' },
 ] as const
@@ -274,7 +272,7 @@ export function SocialClientPage() {
   const row = board.data?.find((r) => r.id === id)
   if (!board.data) return <LoadState isPending={board.isPending} isError={board.isError} refetch={() => void board.refetch()} />
   if (!row) return <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Este cliente não tem social media ou design ativo. <Link to="/conteudo/planejamento">Voltar</Link></p>
-  const badge: Partial<Record<Tab, number>> = { briefing: row.review, sugestoes: row.suggestions, tarefas: row.tasks }
+  const badge: Partial<Record<Tab, number>> = { briefing: row.review, sugestoes: row.suggestions }
   const go = (t: Tab) => setParams((cur) => { const n = new URLSearchParams(cur); if (t === 'briefing') n.delete('aba'); else n.set('aba', t); return n }, { replace: true })
 
   return (
@@ -299,7 +297,6 @@ export function SocialClientPage() {
 
       {tab === 'briefing' && <BriefingTab clientId={id} owed={row.owed} />}
       {tab === 'sugestoes' && <SuggestionsTab clientId={id} />}
-      {tab === 'tarefas' && <TasksBoard clientId={id} />}
       {tab === 'agendar' && <SchedulePage clientId={id} />}
       {tab === 'desempenho' && <IgPerformance clientId={id} />}
     </div>

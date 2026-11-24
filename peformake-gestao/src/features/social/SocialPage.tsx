@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, ExternalLink, FileText, Lightbulb, Newspaper, Plus, Sparkles, X } from 'lucide-react'
+import { Check, ExternalLink, FileText, Lightbulb, Newspaper, Palette, Play, Plus, Send, Sparkles, X } from 'lucide-react'
 import { Link, NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -15,7 +15,7 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { monthLabel } from '@/features/traffic/planRules'
 import { COLUMNS, NETWORKS, NETWORK_LABEL, SOURCE_LABEL, SOURCE_TONE, briefingProgress, type Network, type TaskSource, type TaskStatus } from './socialRules'
 
-export interface Task { id: string; client_id: string | null; title: string; description: string | null; status: TaskStatus; source: TaskSource; network: Network; priority: boolean; due_date: string | null; ref_table: string | null; ref_id: string | null; created_at: string }
+export interface Task { id: string; client_id: string | null; title: string; description: string | null; status: TaskStatus; source: TaskSource; network: Network; priority: boolean; due_date: string | null; ref_table: string | null; ref_id: string | null; created_at: string; refused_at?: string | null; refuse_reason?: string | null; art_id?: string | null }
 interface News { id: string; network: Network; title: string; summary: string; what_to_do: string | null; impact: 'alto' | 'medio' | 'baixo'; source_url: string | null; published_at: string | null; status: string; created_at: string }
 interface Suggestion { id: string; client_id: string | null; network: Network; title: string; body: string; reason: string | null; status: string; created_at: string }
 interface Doc { id: string; client_id: string; kind: 'estrategia' | 'relatorio'; network: Network; month: string; status: string; summary: string | null; body: string | null; requested_at: string }
@@ -190,52 +190,103 @@ export function Board() {
   )
 }
 
+const ART_KINDS = [{ id: 'post', label: 'Post' }, { id: 'carrossel', label: 'Carrossel' }, { id: 'story', label: 'Story' }, { id: 'reels', label: 'Reels' }, { id: 'anuncio', label: 'Anúncio' }] as const
+
+/**
+ * Pop-up da tarefa. Decidir é funcional (pedido do Italo, 24/11): aceitar (começar), recusar com o motivo ou virar arte
+ * (vai para o design com o texto e os arquivos que o cliente mandou). Falar em vez de digitar preenche os campos.
+ */
 export function TaskDialog({ task, clients, onClose }: { task: Task | null; clients: { id: string; name: string }[]; onClose: () => void }) {
   const queryClient = useQueryClient()
   const [d, setD] = useState({ title: task?.title ?? '', description: task?.description ?? '', client_id: task?.client_id ?? '', network: task?.network ?? 'instagram', due_date: task?.due_date ?? '', priority: task?.priority ?? false })
+  const [mode, setMode] = useState<'normal' | 'recusar' | 'arte'>('normal')
+  const [reason, setReason] = useState('')
+  const [kind, setKind] = useState<(typeof ART_KINDS)[number]['id']>('post')
+  const refresh = () => {
+    for (const k of [['social', 'tasks'], ['design-queue'], ['social-client-items'], ['content-items']]) void queryClient.invalidateQueries({ queryKey: k })
+    onClose()
+  }
   const save = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.rpc('social_task_save', { _id: task?.id ?? null, _data: d })
       if (error) throw error
     },
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['social', 'tasks'] }); onClose() },
+    onSuccess: refresh,
   })
-  const done = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.rpc('social_task_save', { _id: task!.id, _data: { status: 'feito' } })
+  const setStatus = useMutation({
+    mutationFn: async (status: TaskStatus) => {
+      const { error } = await supabase.rpc('social_task_save', { _id: task!.id, _data: { status } })
       if (error) throw error
     },
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['social', 'tasks'] }); onClose() },
+    onSuccess: refresh,
   })
+  const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>
+  const refuse = useMutation({
+    mutationFn: async () => { const { error } = await rpc('social_task_refuse', { _id: task!.id, _reason: reason }); if (error) throw error },
+    onSuccess: refresh,
+  })
+  const toArt = useMutation({
+    mutationFn: async () => { const { error } = await rpc('social_task_to_art', { _id: task!.id, _kind: kind }); if (error) throw error },
+    onSuccess: refresh,
+  })
+  const busy = save.isPending || setStatus.isPending || refuse.isPending || toArt.isPending
+  const failed = save.isError || setStatus.isError || refuse.isError || toArt.isError
+  const open = !!task?.id && task.status !== 'feito'
+
+  const footer = mode === 'recusar'
+    ? <><Button variant="secondary" onClick={() => setMode('normal')}>Voltar</Button><Button disabled={reason.trim().length < 3 || busy} onClick={() => refuse.mutate()}>{refuse.isPending ? 'Recusando' : 'Recusar tarefa'}</Button></>
+    : mode === 'arte'
+      ? <><Button variant="secondary" onClick={() => setMode('normal')}>Voltar</Button><Button disabled={busy} onClick={() => toArt.mutate()}><Send size={15} aria-hidden="true" /> {toArt.isPending ? 'Enviando' : 'Mandar para o design'}</Button></>
+      : <>
+          {open && <Button variant="secondary" disabled={busy} onClick={() => setMode('recusar')}><X size={15} aria-hidden="true" /> Recusar</Button>}
+          {open && task?.client_id && !task.art_id && <Button variant="secondary" disabled={busy} onClick={() => setMode('arte')}><Palette size={15} aria-hidden="true" /> Virar arte</Button>}
+          {open && task?.status === 'a_fazer' && <Button variant="secondary" disabled={busy} onClick={() => setStatus.mutate('fazendo')}><Play size={15} aria-hidden="true" /> Aceitar</Button>}
+          {open && task?.status !== 'a_fazer' && <Button variant="secondary" disabled={busy} onClick={() => setStatus.mutate('feito')}><Check size={15} aria-hidden="true" /> Concluir</Button>}
+          <Button disabled={d.title.trim().length < 2 || busy} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
+        </>
+
   return (
-    <Dialog open onClose={onClose} title={task ? 'Tarefa' : 'Nova tarefa'} size="sm" footer={<>
-      {task && task.status !== 'feito' && <Button variant="secondary" disabled={done.isPending} onClick={() => done.mutate()}><Check size={15} aria-hidden="true" /> Concluir</Button>}
-      <Button disabled={d.title.trim().length < 2 || save.isPending} onClick={() => save.mutate()}>{save.isPending ? 'Salvando' : 'Salvar'}</Button>
-    </>}>
-      <div className="flex flex-col gap-3">
-        {task && <p className={cn('self-start rounded-full px-2.5 py-0.5 text-[12px] font-semibold', SOURCE_TONE[task.source])}>{SOURCE_LABEL[task.source]}</p>}
+    <Dialog open onClose={onClose} title={mode === 'recusar' ? 'Recusar tarefa' : mode === 'arte' ? 'Virar arte' : task?.id ? 'Tarefa' : 'Nova tarefa'} description={mode !== 'normal' ? d.title : undefined} size="sm" footer={footer}>
+      {mode === 'recusar' && (
+        <label className="flex flex-col text-[13px] font-semibold">Por que não vai ser feita
+          <textarea rows={3} autoFocus maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} className={cn(field, 'py-2')} />
+        </label>
+      )}
+      {mode === 'arte' && (
+        <div className="flex flex-col gap-2">
+          <p className="text-[13px] text-muted">Vai para o designer do cliente com o texto e os arquivos do pedido.</p>
+          <div role="radiogroup" aria-label="Formato" className="grid grid-cols-3 gap-1.5">
+            {ART_KINDS.map((k) => (
+              <button key={k.id} type="button" role="radio" aria-checked={kind === k.id} onClick={() => setKind(k.id)}
+                className={cn('min-h-11 cursor-pointer rounded-xl border text-[13px] font-semibold', kind === k.id ? 'border-accent bg-accent-soft' : 'border-line text-muted')}>{k.label}</button>
+            ))}
+          </div>
+        </div>
+      )}
+      <div hidden={mode !== 'normal'} className="flex flex-col gap-3">
+        {task?.source && <p className={cn('self-start rounded-full px-2.5 py-0.5 text-[12px] font-semibold', SOURCE_TONE[task.source])}>{SOURCE_LABEL[task.source]}</p>}
+        {task?.refused_at && <p className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink"><b>Recusada:</b> {task.refuse_reason}</p>}
         {/* Falar em vez de digitar (Italo, 24/11): a fala vira o que fazer, detalhes, prazo, prioridade e rede. */}
         <div className="flex items-center gap-2 sm:rounded-2xl sm:bg-raised sm:px-3 sm:py-2">
           <VoiceNote onText={(t) => {
             const f = fillTask(t)
             setD((cur) => ({
-              ...cur, title: cur.title.trim() ? cur.title : f.title, description: cur.description.trim() ? `${cur.description.trim()}
-${f.description}` : f.description,
-              due_date: f.due_date ?? cur.due_date, priority: cur.priority || f.priority, network: !task && f.network ? (f.network as Network) : cur.network,
+              ...cur, title: cur.title.trim() ? cur.title : f.title, description: cur.description.trim() ? `${cur.description.trim()}\n${f.description}` : f.description,
+              due_date: f.due_date ?? cur.due_date, priority: cur.priority || f.priority, network: !task?.id && f.network ? (f.network as Network) : cur.network,
             }))
           }} />
           <span className="hidden text-[13px] text-muted sm:inline">Grave um áudio: o sistema preenche os campos.</span>
         </div>
         <label className="flex flex-col text-[13px] font-semibold">O que fazer<input value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} maxLength={200} className={field} /></label>
         <label className="flex flex-col text-[13px] font-semibold">Detalhes<textarea rows={2} value={d.description} onChange={(e) => setD({ ...d, description: e.target.value })} maxLength={4000} className={cn(field, 'py-2')} /></label>
-        {!task && (
+        {!task?.id && !task?.client_id && (
           <label className="flex flex-col text-[13px] font-semibold">Cliente
             <select value={d.client_id} onChange={(e) => setD({ ...d, client_id: e.target.value })} className={field}><option value="">Geral</option>{clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
           </label>
         )}
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col text-[13px] font-semibold">Rede
-            <select value={d.network} disabled={!!task} onChange={(e) => setD({ ...d, network: e.target.value as Network })} className={field}>
+            <select value={d.network} disabled={!!task?.id} onChange={(e) => setD({ ...d, network: e.target.value as Network })} className={field}>
               {NETWORKS.map((n) => <option key={n.id} value={n.id}>{n.label}</option>)}<option value="geral">Geral</option>
             </select>
           </label>
@@ -243,8 +294,8 @@ ${f.description}` : f.description,
         </div>
         <label className="flex min-h-11 items-center gap-2 font-medium"><input type="checkbox" checked={d.priority} onChange={(e) => setD({ ...d, priority: e.target.checked })} className="size-4" /> Prioridade</label>
         {task?.ref_table === 'content_items' && task.ref_id && <Link to={`/conteudo/peca/${task.ref_id}`} className="text-[13px] font-medium underline">Abrir a peça</Link>}
-        {save.isError && <p role="alert" className="font-medium text-warn-ink">Não foi possível salvar.</p>}
       </div>
+      {failed && <p role="alert" className="mt-2 font-medium text-warn-ink">Não foi possível salvar. Tente de novo.</p>}
     </Dialog>
   )
 }

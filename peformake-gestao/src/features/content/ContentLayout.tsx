@@ -12,9 +12,13 @@ const TABS: SectionTab[] = [
   // o briefing nasce dentro do cliente (Planejamento → cliente → Briefing).
   // O designer só enxerga a tela dele (Design); o resto é de quem planeja (pedido do Italo, 24/11).
   // Artes e Tarefas ficam só dentro de cada cliente (pedido do Italo, 24/11). As rotas continuam para os links antigos.
-  // Só Planejamento e Design no menu (pedido do Italo, 24/11). Agendar fica dentro de cada cliente; a rota geral continua.
+  // Planejamento, Design e Revisar no menu (pedido do Italo, 24/11). Agendar fica dentro de cada cliente; a rota geral continua.
   { to: '/conteudo/planejamento', label: 'Planejamento', roles: CONTENT_PLANNER_ROLES },
   { to: '/conteudo/design', label: 'Design' },
+  // Revisar (24/11): todas as artes do mês de todos os clientes, por etapa, com Agendar.
+  { to: '/conteudo/revisar', label: 'Revisar', roles: CONTENT_PLANNER_ROLES },
+  // Tarefas é geral (24/11): kanban agrupado por cliente, com a logo; pedido do cliente chega aqui.
+  { to: '/conteudo/tarefas', label: 'Tarefas', roles: CONTENT_PLANNER_ROLES },
   // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
   // Datas sazonais e Modelo rápido saíram do menu (pedido do Italo, 24/11: "por enquanto"). As rotas continuam.
 ]

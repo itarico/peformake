@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, ChevronRight, Play, Plus } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { AlertTriangle, ChevronDown, Plus } from 'lucide-react'
+import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { Button } from '@/components/ui/Button'
 import { SearchSelect } from '@/components/ui/SearchSelect'
 import { cn } from '@/lib/cn'
@@ -10,7 +10,6 @@ import { DESIGN_AREAS, inAreas, useProduction } from '@/features/production/useP
 import { TaskDialog, type Task } from '@/features/social/SocialPage'
 import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
-import { NewArtButton } from './NewArt'
 import { groupTasks, ORIGIN_LABEL, ORIGIN_TONE, taskOrigin, TASK_COLUMNS, type TaskOrigin } from './taskBoardRules'
 
 async function listTasks(): Promise<Task[]> {
@@ -24,28 +23,20 @@ const FILTERS: { id: TaskOrigin | 'todas'; label: string }[] = [
 ]
 
 /**
- * Tarefas do Social Media, separadas das artes (pedido do Italo, 24/11): o que o cliente pediu, o que o sistema sugeriu
- * (estratégia aprovada, agente) e o que a pessoa anotou. Todo cartão tem o mesmo desenho: origem, o que fazer, cliente e prazo.
- * Tarefa que é uma arte vira arte com 1 toque ("Virar arte") e sai daqui.
+ * Tarefas do Social Media, gerais e separadas das artes (pedido do Italo, 24/11): o que o cliente pediu (pedido de arte
+ * pelo WhatsApp também chega aqui), o que o sistema sugeriu e o que a pessoa anotou. Em cada coluna, agrupadas por
+ * cliente com a logo; tocar abre os títulos e tocar na tarefa abre o pop-up para aceitar, recusar ou virar arte.
  */
 export function TasksBoard({ clientId }: { clientId?: string } = {}) {
-  const queryClient = useQueryClient()
   const today = todayInBrazil()
-  const { clients, clientName, isLive, isPending, isError, refetch } = useProduction()
+  const { clients, clientName, clientLogo, isLive, isPending, isError, refetch } = useProduction()
   const tasks = useQuery({ queryKey: ['social', 'tasks', 'kanban'], queryFn: listTasks })
   const [filter, setFilter] = useState<TaskOrigin | 'todas'>('todas')
   // Dentro do cliente o filtro é fixo; na aba geral dá para escolher o cliente.
   const [pickedClient, setPickedClient] = useState('')
   const [chosenTab, setTab] = useState<(typeof TASK_COLUMNS)[number]['id'] | null>(null)
   const [editing, setEditing] = useState<Task | 'new' | null>(null)
-
-  const move = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: Task['status'] }) => {
-      const { error } = await supabase.rpc('social_task_save', { _id: id, _data: { status } })
-      if (error) throw error
-    },
-    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['social', 'tasks'] }),
-  })
+  const [openRows, setOpenRows] = useState<Set<string>>(new Set())
 
   const cols = useMemo(() => {
     const only = clientId ?? clients?.find((c) => c.name === pickedClient)?.id ?? null
@@ -61,31 +52,26 @@ export function TasksBoard({ clientId }: { clientId?: string } = {}) {
     const origin = taskOrigin(t.source)
     const late = !!t.due_date && t.due_date < today && t.status !== 'feito'
     return (
-      <li key={t.id} className={cn('flex min-w-0 flex-col gap-2 rounded-2xl border bg-surface p-3', t.priority || late ? 'border-warn/50' : 'border-line', t.status === 'feito' && 'opacity-60')}>
-        <button type="button" onClick={() => setEditing(t)} className="flex min-w-0 cursor-pointer flex-col gap-1 text-left">
-          <span className="flex w-full min-w-0 items-center justify-between gap-2 text-[12px] text-muted">
-            <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', ORIGIN_TONE[origin])}>{ORIGIN_LABEL[origin]}</span>
-            <span className={cn('min-w-0 truncate', late && 'font-semibold text-warn-ink')}>{t.client_id ? clientName(t.client_id) : 'Geral'}{t.due_date ? ` · até ${t.due_date.slice(8)}/${t.due_date.slice(5, 7)}` : ''}</span>
+      <li key={t.id}>
+        <button type="button" onClick={() => setEditing(t)}
+          className={cn('flex w-full min-w-0 cursor-pointer flex-col gap-1 rounded-xl border bg-surface p-2.5 text-left hover:border-line-strong', t.status === 'feito' && 'opacity-60', late ? 'border-warn/50' : 'border-line')}>
+          <span className="flex w-full min-w-0 items-center justify-between gap-2 text-[11.5px] text-muted">
+            <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', t.refused_at ? 'bg-raised text-muted' : ORIGIN_TONE[origin])}>{t.refused_at ? 'Recusada' : t.art_id ? 'Virou arte' : ORIGIN_LABEL[origin]}</span>
+            {t.due_date && <span className={cn('shrink-0 tabular-nums', late && 'font-semibold text-warn-ink')}>até {t.due_date.slice(8)}/{t.due_date.slice(5, 7)}</span>}
           </span>
-          <span className="font-semibold leading-snug">{t.title}</span>
+          <span className="line-clamp-2 text-[13.5px] font-semibold leading-snug">{t.priority && <AlertTriangle size={13} className="mr-1 inline text-warn-ink" aria-label="Prioridade" />}{t.title}</span>
         </button>
-        {t.status !== 'feito' && (
-          <div className="flex flex-wrap gap-1.5">
-            {t.status === 'a_fazer'
-              ? <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'fazendo' })}><Play size={14} aria-hidden="true" /> Começar</Button>
-              : <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'feito' })}><Check size={14} aria-hidden="true" /> Concluir</Button>}
-            {/* "Fazer o planejamento do mês" nasce sozinha (cliente com social ou design e mês sem arte) e fecha na primeira arte. */}
-            {t.ref_table === 'plano_mes' && <Link to={t.client_id ? `/conteudo/cliente/${t.client_id}` : '/conteudo/planejamento'} className="inline-flex min-h-10 items-center gap-1 px-2 text-[13px] font-medium text-accent-ink no-underline hover:underline">Planejar <ChevronRight size={14} aria-hidden="true" /></Link>}
-            {t.ref_table !== 'content_items' && t.ref_table !== 'plano_mes' && (
-              <NewArtButton label="Virar arte" variant="secondary" className="min-h-10 px-3 text-[13px]"
-                start={{ clientId: t.client_id ?? undefined, text: [t.title, t.description].filter(Boolean).join('. ') }}
-                onSent={() => move.mutate({ id: t.id, status: 'feito' })} />
-            )}
-          </div>
-        )}
       </li>
     )
   }
+
+  // Agrupado por cliente dentro da coluna (pedido do Italo, 24/11): a logo e quantas; tocar abre os títulos.
+  const byClient = (list: Task[]) => {
+    const m = new Map<string, Task[]>()
+    for (const t of list) m.set(t.client_id ?? '', [...(m.get(t.client_id ?? '') ?? []), t])
+    return [...m.entries()].sort((a, b) => Number(b[1].some((x) => x.priority)) - Number(a[1].some((x) => x.priority)) || b[1].length - a[1].length)
+  }
+  const toggle = (key: string) => setOpenRows((cur) => { const n = new Set(cur); if (n.has(key)) n.delete(key); else n.add(key); return n })
 
   return (
     <>
@@ -121,7 +107,28 @@ export function TasksBoard({ clientId }: { clientId?: string } = {}) {
           <section key={c.id} aria-label={c.label} className={cn('flex min-w-0 flex-col gap-2 rounded-3xl bg-raised p-2.5', tab !== c.id && 'max-xl:hidden')}>
             <h2 className="flex items-center justify-between px-1.5 text-[13px] font-semibold max-xl:hidden">{c.label} <span className="font-normal text-muted">{cols[c.id].length}</span></h2>
             {cols[c.id].length === 0 && <p className="px-1.5 text-[12px] text-muted">{c.empty}</p>}
-            <ul className="flex flex-col gap-2">{cols[c.id].slice(0, 60).map(card)}</ul>
+            <ul className="flex flex-col gap-1.5">
+              {byClient(cols[c.id].slice(0, 120)).map(([cid, list]) => {
+                const key = `${c.id}:${cid}`
+                const isOpen = openRows.has(key)
+                const late = list.some((t) => !!t.due_date && t.due_date < today && t.status !== 'feito')
+                const asked = list.filter((t) => taskOrigin(t.source) === 'cliente' && !t.refused_at).length
+                return (
+                  <li key={key} className="rounded-2xl bg-surface">
+                    <button type="button" aria-expanded={isOpen} onClick={() => toggle(key)} className="flex min-h-12 w-full cursor-pointer items-center gap-2 px-2.5 py-1.5 text-left">
+                      {cid ? <ClientAvatar name={clientName(cid)} url={clientLogo(cid)} size="row" /> : <span className="flex size-8 items-center justify-center rounded-full bg-raised text-[11px] font-semibold text-muted">Geral</span>}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[13.5px] font-semibold">{cid ? clientName(cid) : 'Geral'}</span>
+                        <span className="block text-[12px] text-muted">{list.length} {list.length === 1 ? 'tarefa' : 'tarefas'}{asked ? ` · ${asked} do cliente` : ''}</span>
+                      </span>
+                      {late && <AlertTriangle size={15} className="shrink-0 text-warn-ink" aria-label="Atrasada" />}
+                      <ChevronDown size={16} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
+                    </button>
+                    {isOpen && <ul className="flex flex-col gap-1.5 px-2 pb-2">{list.map(card)}</ul>}
+                  </li>
+                )
+              })}
+            </ul>
           </section>
         ))}
       </div>
