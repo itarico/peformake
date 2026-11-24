@@ -374,6 +374,37 @@ pressa), 8:20 (a roupa de Confúcio), 9:40 (mudou de roupa).
    x "O império que durou 15 anos").
 4. Teste de estilo da "Sala do Conselho" (1 cena: as três cartas e a tira de bambu) antes de produzir tudo.
 
+## 8. Alternativa: estrutura do Copas ("O que é tecnocracia?", 24/11/2026)
+O Italo trouxe o vídeo do Copas como referência ("explica bem detalhado como foi aplicado no mundo"). A ficha está em
+`../../../virais/2026-10-15_copas_MPvgbS8GZVw.md`. A estrutura dele cabe neste tema quase sem ajuste, porque o
+fecho dele (o híbrido) é exatamente o "confuciano por fora, legalista por dentro".
+
+**Pergunta fixa** (volta 4 vezes): "Como se governa milhões de pessoas que você nunca viu: com medo, com vergonha ou
+deixando em paz?"
+
+| # | Bloco (Copas) | No vídeo da China | Tempo |
+|---|---|---|---|
+| 1 | Gancho por analogia | "Seu filho fez besteira. Você castiga, conversa ou deixa ele aprender sozinho? Na empresa, o funcionário errou: multa, treinamento ou autonomia? Agora troca o filho por 20 milhões de pessoas." Mais "e se alguém já tivesse testado os três?" | 0:00-0:45 |
+| 2 | Pergunta fixa + 3 teasers | O império que durou 15 anos; a lei achada num túmulo em 1975; o imperador que admitiu o truque por escrito | 0:45-1:05 |
+| 3 | Caso de abertura | A chuva de 209 a.C. e os 900 recrutas (o gancho da seção 5.5, encurtado) | 1:05-1:50 |
+| 4 | Lente + combinado | "Aqui no Por Dentro a gente mostra quem ganha com isso e como funciona sem você perceber"; mapa; "não é aula de religião nem de partido"; "primeiro o melhor argumento de cada um, depois os furos"; "fontes na descrição" | 1:50-2:40 |
+| 5 | O que é | As três escolas lado a lado (tabela 1.1) em 3 cartas; "não são religiões: são respostas à mesma pergunta" | 2:40-4:30 |
+| 6 | O melhor argumento de cada um | Legalista: lei igual para todos, mérito no lugar do sangue (Shang Yang). Confuciano: a vergonha governa mais barato que o medo (Analectos 2.3). Taoísta: quanto mais lei, mais ladrão (Laozi 57) | 4:30-7:30 |
+| 7 | Você já vive isso sem perceber | O exame de seleção da China (605 a 1905) e o concurso público; o quadro de valores na parede, a meta na planilha e o "faz do seu jeito" na empresa | 7:30-8:45 |
+| 8 | Quem aplicou de verdade | Qin (15 anos), Wen e Jing (o taoísta que encheu os cofres), Wu (o confuciano por fora). A objeção dita pelo narrador: "mas e a China de hoje?" (Mao e Qin Shi Huang, a estátua de Confúcio de 2011) | 8:45-11:30 |
+| 9 | Por que agora | A IA e o crédito social; o Brasil com lei para tudo; callback: "lembra dos 900 recrutas?" | 11:30-13:00 |
+| 10 | Os furos de cada um | Os três criadores do Legalismo mortos pela própria lei; o confuciano que pune por dentro; o taoísta que precisa de lei clara por baixo; a lei "leve" que matava | 13:00-15:30 |
+| 11 | A lente do canal | O vigia muda de lugar: no muro, na sua cabeça ou some da vista. O Confucionismo como o marketing de legitimidade da mão legalista | 15:30-17:00 |
+| 12 | Híbrido + opinião | A frase do imperador Xuan (Hanshu 9); "nenhum dos três sozinho"; frase-síntese; a opinião do Italo: qual deles governa você e onde está o vigia | 17:00-19:00 |
+
+Comparação com a seção 5 (ângulo A, "você herdou um império"):
+- **Seção 5:** 11 min 30 s, com o espectador no centro, votação e placar. É mais jogo e retém mais na metade.
+- **Esta seção:** de 17 a 19 min, mais completa e com mais autoridade. Copia uma estrutura que já rendeu 7x os inscritos do canal dele.
+- **É possível juntar as duas:** os blocos do Copas mais o placar e a votação da seção 5 dentro do bloco 8.
+
+**Visual:** o Copas usa linha neon sobre preto, um estilo leve de produzir em volume. Pode substituir ou combinar com a
+"Sala do Conselho" (laca e bambu, seção 5.4). Teste: 1 cena em cada estilo antes de decidir.
+
 ## 7. Fontes
 - Burning of books and burying of scholars (Nylan 2001, Kern 2010, Li Kaiyuan 2010, Shiji 6): https://en.wikipedia.org/wiki/Burning_of_books_and_burying_of_scholars
 - Huang-Lao (Van Ess 1993, Peerenboom, Roth, Tang Lan 1975): https://en.wikipedia.org/wiki/Huang%E2%80%93Lao

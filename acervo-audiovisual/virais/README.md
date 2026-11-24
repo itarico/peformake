@@ -47,6 +47,7 @@ Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)
 | "Só eu que não sabia?" (função escondida do produto, só as mãos) · @omarcosvianna · 22/08/2026 | S53 | E22 + E21 | 9,8x | [ficha](2026-08-22_omarcosvianna_DcW3oCjvVro.md) |
 | "Treinei minha própria IA" (dor → em vez de X fiz Y → prova → isca) · @johnbucog · 24/08/2026 | S100 + S-novo: "Prompt × treino" | E1 + E16 | n/d | [ficha](2026-08-24_johnbucog_Dcb4oFBBSFH.md) |
 | Brandmotion no monitor (CleverMove) · @dacostamotion (José Emanuel) · 26/08/2026 | S40 | E38 | 98,6x | [ficha](2026-08-26_dacostamotion_DchQ4uzPqre.md) |
+| Sistema de governo explicado como sistema (a favor → furos → híbrido), YouTube 26 min · Copas · 15/10/2026 | S-novo: "Debate de modelo honesto" | E-novo: "Linha neon em fundo preto" | 7,4x inscritos | [ficha](2026-10-15_copas_MPvgbS8GZVw.md) |
 | Tutorial com assinatura visual (fisheye + azul + laranja) · @_victorzk · 27/08/2026 | S50 | E9 | 13,0x | [ficha](2026-08-27__victorzk_DcjsyZRSkuA.md) |
 | Mural de investigação: dois personagens descobrem um padrão num quadro de fotos e fios · @salleszk (Wesley Salles) · 01/09/2026 | S-novo: mural de investigação encenado | E19 + E-novo: mural de investigação | 6,2x | [ficha](2026-09-01_salleszk_DcwrohHA3Ht.md) |
 | Brandmotion editorial em preto e branco (Workflow Studio) · @dacostamotion · 02/09/2026 | S-novo: "Brand book em movimento" | E38 | 24,6x | [ficha](2026-09-02_dacostamotion_DcygNrjOYUa.md) |
