@@ -143,6 +143,7 @@ export function TeamTasksBoard({ area, clientArea }: { area: TeamArea; clientAre
           </section>
         ))}
       </div>
+      {move.isError && <p role="alert" className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[14px] font-medium text-warn-ink">Não foi possível mover a tarefa. Tente de novo.</p>}
       {editing && <TaskForm area={area} task={editing === 'new' ? null : editing} clients={areaClients} onClose={() => setEditing(null)} />}
     </>
   )

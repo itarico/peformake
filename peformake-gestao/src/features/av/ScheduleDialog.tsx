@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { MapPin, Wand2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -46,16 +46,19 @@ export function ScheduleDialog({ project, clientId, day, onClose, onSaved }: {
   // Sem rolagem: Quando · Onde · Equipe.
   const [tab, setTab] = useState<'quando' | 'onde' | 'equipe'>('quando')
   const coords = coordsFromMapsLink(f.point)
+  // Guarda a gravação criada: se um passo seguinte falhar e a pessoa tocar em Salvar de novo, não nasce uma segunda gravação.
+  const createdId = useRef<string | null>(null)
   const save = useMutation({
     mutationFn: async () => {
       if (!f.client) throw new Error('Escolha o cliente.')
       if (!f.day || !f.time) throw new Error('Escolha o dia e a hora.')
-      const id = await scheduleShoot(project?.id ?? null, {
+      const id = await scheduleShoot(project?.id ?? createdId.current, {
         client_id: f.client, shoot_at: new Date(`${f.day}T${f.time}:00-03:00`).toISOString(), duration_min: Number(f.duration), location: f.location,
         ...(coords ? { lat: coords.lat, lng: coords.lng } : f.point.trim() === '' ? { lat: '', lng: '' } : {}),
         videomaker_id: f.videomaker, editor_id: f.editor, scriptwriter_id: f.scriptwriter, notes: f.notes,
       })
-      if (f.auto && (!f.videomaker || !f.editor)) await autoAssign(id)
+      createdId.current = id
+      if (f.auto && (!f.videomaker || !f.editor)) { try { await autoAssign(id) } catch { /* a gravação já está salva; a equipe pode ser escolhida depois */ } }
       let calendar: string | null = null
       try { await calendarCall({ action: 'upsert', project_id: id }) } catch (e) { calendar = (e as Error).message }
       return { id, calendar }

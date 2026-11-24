@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Plus, Settings2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
+import { hasAnyRole } from '@/lib/roles'
 import { LoadState } from '@/features/traffic/LoadState'
 import { useProduction } from '@/features/production/useProduction'
 import { AvTabs, EllcazoHeader } from './AvBoard'
@@ -15,6 +17,8 @@ const TONE: Record<QuoteStatus, string> = {
 
 /** Orçamentos da Ellcazo: lista, situação e acesso aos valores base da calculadora. */
 export function AvQuotesPage() {
+  const { state } = useAuth()
+  const canConfigure = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing'])
   const { clientName } = useProduction()
   const quotes = useQuery({ queryKey: ['av-quotes'], queryFn: listQuotes })
   const [filter, setFilter] = useState<QuoteStatus | 'todos'>('todos')
@@ -39,7 +43,7 @@ export function AvQuotesPage() {
           ))}
         </div>
         <div className="hidden gap-2 md:flex">
-          <Link to="/configuracoes/audiovisual/orcamento" className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline hover:border-ink"><Settings2 size={16} aria-hidden="true" /> Serviços e regras</Link>
+          {canConfigure && <Link to="/configuracoes/audiovisual/orcamento" className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline hover:border-ink"><Settings2 size={16} aria-hidden="true" /> Serviços e regras</Link>}
           <Link to="/audiovisual/orcamentos/novo" className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-fill px-4 font-semibold text-on-fill no-underline"><Plus size={16} aria-hidden="true" /> Novo orçamento</Link>
         </div>
       </div>

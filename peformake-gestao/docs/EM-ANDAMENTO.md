@@ -21,3 +21,6 @@ o próximo passo exato, faz commit e push. Quem terminar a tarefa apaga o item.
 ## Tráfego → Vendas e Instagram (24/11): falta o teste real
 - Vendas: banco e funções no ar. Apagar venda já funciona (marca como cancelada). Falta: conectar o WhatsApp de um cliente-piloto e fazer 1 clique real num anúncio.
 - Instagram: banco, funções e tela no ar. Falta do Italo: segredo `META_APP_SECRET` no Supabase; convidar o Instagram como Testador do Instagram no app da Meta (Casos de uso → Instagram → login unificado → 2. Gerar tokens de acesso) e aceitar no Instagram; tocar em Conectar Instagram em /conteudo/agendar; agendar 1 post de teste e conferir.
+
+## Portal: índice antigo de link (24/11)
+- Rodar no SQL Editor: `drop index if exists public.client_portal_links_one_team_link;`. O índice novo (`client_portal_links_one_per_origin`) já existe. Sem isso, mandar vídeo para o cliente aprovar falha quando ele já tem link de portal da equipe ou do briefing.

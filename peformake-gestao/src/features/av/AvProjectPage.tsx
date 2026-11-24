@@ -251,8 +251,9 @@ function EditBox({ p }: { p: AvProject }) {
 function CancelLink({ p }: { p: AvProject }) {
   const queryClient = useQueryClient()
   const { canManageAv } = useProduction()
-  const cancel = useMutation({ mutationFn: () => setAvStatus(p.id, 'cancelled', null), onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['av-project', p.id] }); void queryClient.invalidateQueries({ queryKey: ['av-projects'] }) } })
+  const cancel = useMutation({ mutationFn: () => setAvStatus(p.id, 'cancelled', null), onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['av-project', p.id] }); void queryClient.invalidateQueries({ queryKey: ['av-projects'] }); void queryClient.invalidateQueries({ queryKey: ['av-clients-panel'] }) } })
   if (!canManageAv) return null
+  if (cancel.isError) return <p role="alert" className="self-start text-[13px] font-medium text-warn-ink">Não foi possível cancelar: {avErrorMessage(cancel.error)}</p>
   return <button type="button" disabled={cancel.isPending} onClick={() => { void ask('Cancelar este projeto? Ele sai da produção.').then((ok) => { if (ok) cancel.mutate() }) }} className="self-start text-[13px] text-muted underline hover:text-warn-ink">Cancelar projeto</button>
 }
 
@@ -279,7 +280,8 @@ export function AvProjectPage() {
       <StageTrack p={p} />
       <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-[minmax(0,1fr)_400px]">
         <div className="flex flex-col gap-3">
-          {['edicao', 'cliente', 'entregue'].includes(stageOf(p) ?? '') && <EditBox p={p} />}
+          {/* Gravado (captured) já mostra a Edição: sem isso o projeto ficava sem botão para seguir quando o bruto chegou por fora do link da equipe. */}
+          {(['edicao', 'cliente', 'entregue'].includes(stageOf(p) ?? '') || p.status === 'captured') && <EditBox p={p} />}
           <ScriptBox p={p} />
           {p.status !== 'cancelled' && p.status !== 'delivered' && <CancelLink p={p} />}
         </div>
