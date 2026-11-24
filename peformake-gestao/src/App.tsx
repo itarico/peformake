@@ -29,6 +29,8 @@ const SocialTasksBoard = lazy(() => import('@/features/content/TasksBoard').then
 const SchedulePage = lazy(() => import('@/features/content/SchedulePage').then((m) => ({ default: m.SchedulePage })))
 const SeasonalPage = lazy(() => import('@/features/content/SeasonalPage').then((m) => ({ default: m.SeasonalPage })))
 const SocialClientsPage = lazy(() => import('@/features/content/SocialClientsPage').then((m) => ({ default: m.SocialClientsPage })))
+const PostComposer = lazy(() => import('@/features/content/PostComposer').then((m) => ({ default: m.PostComposer })))
+const BulkSchedule = lazy(() => import('@/features/content/BulkSchedule').then((m) => ({ default: m.BulkSchedule })))
 const SocialClientPage = lazy(() => import('@/features/content/SocialClientPage').then((m) => ({ default: m.SocialClientPage })))
 const NotificationsPage = lazy(() => import('@/features/notifications/NotificationsPage').then((m) => ({ default: m.NotificationsPage })))
 const HomePage = lazy(() => import('@/features/dashboard/HomePage').then((m) => ({ default: m.HomePage })))
@@ -158,6 +160,8 @@ export function App() {
               <Route path="calendario" element={<MovedTo to="/conteudo/quadro" />} />
               <Route path="planejamento" element={<SocialClientsPage />} />
               <Route path="cliente/:id" element={<SocialClientPage />} />
+              <Route path="agendar/novo" element={<PostComposer />} />
+              <Route path="agendar/massa" element={<BulkSchedule />} />
               <Route path="datas" element={<SeasonalPage />} />
               <Route path="automatico" element={<AutoCreativePage />} />
               <Route path="servicos" element={<MovedTo to="/comercial/servicos?area=design" />} />

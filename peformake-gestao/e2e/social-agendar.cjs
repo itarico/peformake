@@ -28,6 +28,7 @@ const files = [
 const PIXEL = Buffer.from('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=', 'base64')
 const uploads = []
 const partsCalls = []
+const creates = []; const calls = []
 // PNG 1x1 para testar a conversão para JPG no Postar avulso.
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
 async function mock(route) {
@@ -44,6 +45,8 @@ async function mock(route) {
     const fn = p.split('/').pop()
     if (fn === 'ig_post_save') { saved.push(body); posts.push({ id: 'n' + saved.length, account_id: body._account, content_item_id: body._item, kind: body._kind, media_path: body._media_path, media_mime: body._media_mime, caption: body._caption, scheduled_at: body._at, status: 'agendado', permalink: null, error: null }); return json('n' + saved.length) }
     if (fn === 'ig_post_media_parts') { partsCalls.push(body); return json(null) }
+    if (fn === 'ig_post_create') { creates.push(body); return json(body._repeat_count || 1) }
+    calls.push(fn)
     if (fn === 'ig_post_cancel') { canceled.push(body._id); posts = posts.filter((x) => x.id !== body._id); return json(null) }
     if (fn === 'ig_connect_start') { connectAsked = body; return json('a'.repeat(64)) }
     return json({ production_clients: C, production_staff: [], my_staff_id: null }[fn] ?? null)
@@ -105,36 +108,76 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pg.getByRole('button', { name: 'Sim, confirmar' }).click(); await pg.waitForTimeout(700)
       if (canceled[0] !== 'p2') fails.push(`${dev}: cancelar não chamou o banco`)
 
-      // Postar avulso: escolhe o Instagram, sobe PNG (vira JPG), posta agora.
-      await pg.getByRole('button', { name: 'Postar', exact: true }).click(); await pg.waitForTimeout(350)
-      await pg.locator('#post-conta').click(); await pg.locator('#post-conta').pressSequentially('@peformake', { delay: 20 }); await pg.waitForTimeout(300); await pg.getByRole('option', { name: /@peformake/ }).first().click(); await pg.waitForTimeout(200)
-      await pg.getByLabel('Arquivo').setInputFiles({ name: 'foto.png', mimeType: 'image/png', buffer: PNG }); await pg.waitForTimeout(300)
-      await pg.getByLabel('Legenda').fill('Post avulso de teste')
-      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up Postar rola`)
-      await shot('pop-postar')
-      const before = saved.length
-      await pg.getByRole('dialog').getByRole('button', { name: 'Postar agora' }).click(); await pg.waitForTimeout(1200)
-      const q = saved[before]
-      if (!q || q._account !== 'a0' || q._item !== null || q._kind !== 'post' || q._media_mime !== 'image/jpeg' || !/^instagram\/avulso\/a0\/.+\.jpg$/.test(q._media_path) || q._caption !== 'Post avulso de teste') fails.push(`${dev}: post avulso salvo errado ${JSON.stringify(q)}`)
-      if (!uploads.some((u) => u.includes('content-files/instagram/avulso/a0/'))) fails.push(`${dev}: arquivo não subiu`)
-      if (await pg.locator('dialog[open]').count()) fails.push(`${dev}: pop-up Postar não fechou`)
+      // Calendário: o dia com publicação tem contador e filtra a lista.
+      if (!(await pg.locator('section[aria-label="Calendário"]').count())) fails.push(`${dev}: sem calendário`)
 
-      // Vídeo de 95 MB (acima do limite de 50 MB do Supabase): sobe em 3 partes e avisa o banco das partes.
+      // Criar post (tela no estilo do Instagram): 3 fotos viram carrossel, a PNG vira JPG.
+      const pick = async (id) => { await pg.locator(id).click(); await pg.locator(id).pressSequentially('@peformake', { delay: 20 }); await pg.waitForTimeout(300); await pg.getByRole('option', { name: /@peformake/ }).first().click(); await pg.waitForTimeout(200) }
+      await pg.getByRole('link', { name: /Criar post/ }).click(); await pg.waitForTimeout(1200)
+      if (!/agendar\/novo/.test(pg.url())) fails.push(`${dev}: Criar post não abriu (${pg.url()})`)
+      await pick('#compor-conta')
+      await pg.getByLabel('Arquivos').setInputFiles([{ name: 'a.png', mimeType: 'image/png', buffer: PNG }, { name: 'b.png', mimeType: 'image/png', buffer: PNG }, { name: 'c.png', mimeType: 'image/png', buffer: PNG }])
+      await pg.waitForTimeout(800)
+      if (!(await pg.getByText('carrossel com 3').count())) fails.push(`${dev}: não reconheceu o carrossel`)
+      await pg.getByLabel('Legenda').fill('Carrossel de teste')
+      if (await sideScroll(pg)) fails.push(`${dev}: criar post rola de lado`)
+      await shot('3-criar')
+      const nC = creates.length
+      await pg.getByRole('button', { name: 'Publicar' }).click()
+      for (let t = 0; t < 30 && creates.length === nC; t++) await pg.waitForTimeout(300)
+      const c = creates[nC]
+      if (!c) fails.push(`${dev}: alerta na tela: ${(await pg.locator('[role=alert]').allInnerTexts()).join(' | ')} botão: ${await pg.getByRole('button', { name: /Publicar|Enviando|Programando/ }).first().innerText().catch(() => '?')}`)
+      if (!c || c._kind !== 'post' || c._media.length !== 3 || !c._media.every((m) => m.mime === 'image/jpeg' && m.path.endsWith('.jpg')) || c._caption !== 'Carrossel de teste') fails.push(`${dev}: carrossel salvo errado ${JSON.stringify(c)}`)
+      if (!calls.includes('ig_publish_now')) fails.push(`${dev}: Publicar não chamou a publicação na hora`)
+      await pg.waitForTimeout(800)
+
+      // Story que repete todo dia, 5 vezes, agendado.
+      await pg.goto(`${BASE}/conteudo/agendar/novo`); await pg.waitForTimeout(1200)
+      await pick('#compor-conta')
+      await pg.getByLabel('Arquivos').setInputFiles({ name: 's.png', mimeType: 'image/png', buffer: PNG }); await pg.waitForTimeout(500)
+      await pg.getByRole('radio', { name: 'Story' }).click()
+      await pg.getByRole('radio', { name: 'Agendar' }).click()
+      const tomorrow2 = new Date(Date.now() + 2 * 864e5).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' })
+      await pg.locator('input[type=date]').fill(tomorrow2); await pg.locator('input[type=time]').fill('09:00')
+      await pg.getByRole('radio', { name: 'Todo dia' }).click()
+      await pg.getByLabel('Quantas vezes').fill('5')
+      const nS = creates.length
+      await pg.getByRole('button', { name: 'Agendar', exact: true }).last().click()
+      for (let t = 0; t < 30 && creates.length === nS; t++) await pg.waitForTimeout(300)
+      const st = creates[nS]
+      if (!st || st._kind !== 'story' || st._repeat_every !== 'dia' || st._repeat_count !== 5 || st._at !== new Date(`${tomorrow2}T09:00:00-03:00`).toISOString()) fails.push(`${dev}: story repetido errado ${JSON.stringify(st)}`)
+      await pg.waitForTimeout(800)
+
+      // Vídeo de 95 MB (acima do limite de 50 MB do Supabase): sobe em 3 partes.
       if (dev === 'desk') {
-        const nUp = uploads.length; const nSaved = saved.length
-        await pg.getByRole('button', { name: 'Postar', exact: true }).click(); await pg.waitForTimeout(350)
-        await pg.locator('#post-conta').click(); await pg.locator('#post-conta').pressSequentially('@peformake', { delay: 20 }); await pg.waitForTimeout(300); await pg.getByRole('option', { name: /@peformake/ }).first().click()
+        await pg.goto(`${BASE}/conteudo/agendar/novo`); await pg.waitForTimeout(1200)
+        await pick('#compor-conta')
         const big = path.join(require('os').tmpdir(), 'pf-grande.mp4'); if (!fs.existsSync(big)) fs.writeFileSync(big, Buffer.alloc(95 * 1024 * 1024, 1))
-        await pg.getByLabel('Arquivo').setInputFiles(big); await pg.waitForTimeout(500)
-        await pg.getByRole('dialog').getByRole('button', { name: 'Postar agora' }).click()
-        for (let t = 0; t < 60 && partsCalls.length === 0; t++) await pg.waitForTimeout(500)
+        await pg.getByLabel('Arquivos').setInputFiles(big); await pg.waitForTimeout(1500)
+        const nUp = uploads.length; const nV = creates.length
+        await pg.getByRole('button', { name: 'Publicar' }).click()
+        for (let t = 0; t < 120 && creates.length === nV; t++) await pg.waitForTimeout(500)
         const ups = uploads.slice(nUp)
-        if (ups.length !== 3 || !ups.every((u, i) => u.endsWith(`.mp4.part${i}`))) fails.push(`${dev}: vídeo grande não subiu em 3 partes ${JSON.stringify(ups)}`)
-        const v = saved[nSaved]
-        if (!v || v._kind !== 'reels' || v._media_mime !== 'video/mp4') fails.push(`${dev}: vídeo grande salvo errado ${JSON.stringify(v)}`)
-        const pp = partsCalls[0]
-        if (!pp || pp._parts !== 3 || pp._size !== 95 * 1024 * 1024) fails.push(`${dev}: partes não avisadas ao banco ${JSON.stringify(pp)}`)
+        if (ups.length !== 3 || !ups.every((u, k) => u.endsWith(`.mp4.part${k}`))) fails.push(`${dev}: vídeo grande não subiu em 3 partes ${JSON.stringify(ups)}`)
+        const v = creates[nV]
+        if (!v || v._kind !== 'reels' || v._media[0].parts !== 3 || v._media[0].size !== 95 * 1024 * 1024) fails.push(`${dev}: vídeo grande salvo errado ${JSON.stringify(v)}`)
+        await pg.waitForTimeout(800)
       }
+
+      // Em massa: 2 fotos, distribuídas um por dia.
+      await pg.goto(`${BASE}/conteudo/agendar/massa`); await pg.waitForTimeout(1200)
+      await pick('#massa-conta')
+      await pg.getByLabel('Arquivos').setInputFiles([{ name: 'm1.png', mimeType: 'image/png', buffer: PNG }, { name: 'm2.png', mimeType: 'image/png', buffer: PNG }]); await pg.waitForTimeout(800)
+      await pg.getByRole('button', { name: 'Distribuir' }).click()
+      if (await sideScroll(pg)) fails.push(`${dev}: em massa rola de lado`)
+      await shot('4-massa')
+      const nB = creates.length
+      await pg.getByRole('button', { name: /^Programar 2$/ }).click()
+      for (let t = 0; t < 30 && creates.length < nB + 2; t++) await pg.waitForTimeout(300)
+      const b1 = creates[nB]; const b2 = creates[nB + 1]
+      if (!b1 || !b2 || b1._at === b2._at || new Date(b2._at) - new Date(b1._at) !== 864e5) fails.push(`${dev}: em massa não distribuiu um por dia ${JSON.stringify([b1?._at, b2?._at])}`)
+      if (!(await pg.getByText('Programado').count())) fails.push(`${dev}: em massa sem "Programado"`)
+      await pg.goto(`${BASE}/conteudo/agendar`); await pg.waitForTimeout(1200)
       await shot('2-depois')
     } catch (e) { fails.push(`${dev}: ${e.message.split('\n')[0]}`) }
     if (errs.length) fails.push(`${dev}: erro no navegador: ${errs[0]}`)

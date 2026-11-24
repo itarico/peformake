@@ -1,14 +1,14 @@
-// Social Media → Agendar: publica no Instagram o que venceu. Chamada pela rotina ig-publish (a cada 5 minutos).
-// Passos da API oficial (Content Publishing): cria o contêiner em /{ig}/media, espera o vídeo processar (status_code)
+// Social Media → Agendar: publica no Instagram o que venceu. Chamada pela rotina ig-publish (a cada minuto).
+// Passos da API oficial (Content Publishing): cria o contêiner em /{ig}/media, espera processar (status_code)
 // e publica em /{ig}/media_publish. Imagem precisa ser JPG e o arquivo precisa estar num link público (balde content-files).
-// Vídeo que ainda está processando fica "aguardando" e a próxima rodada termina. Depois de 6 tentativas vira erro.
+// O que ainda está processando fica "aguardando" e a próxima rodada termina. Depois de 6 tentativas vira erro.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
 
 const GRAPH = 'https://graph.facebook.com/v27.0'
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { 'Content-Type': 'application/json' } })
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-interface Job { id: string; kind: 'post' | 'reels' | 'story'; media_path: string; media_mime: string; caption: string | null; container_id: string | null; tries: number; ig_id: string; token: string | null; media_parts?: number; media_size?: number | null }
+interface Job { id: string; kind: 'post' | 'reels' | 'story'; media_path: string; media_mime: string; caption: string | null; container_id: string | null; tries: number; ig_id: string; token: string | null; media_parts?: number; media_size?: number | null; media?: { path: string; mime: string }[] }
 
 const RUPLOAD = 'https://rupload.facebook.com/ig-api-upload/v27.0'
 
@@ -83,7 +83,30 @@ Deno.serve(async (request) => {
       const video = job.media_mime.startsWith('video/')
 
       let container = job.container_id
-      const parts = video ? Number(job.media_parts ?? 0) : 0
+      // Carrossel (2 a 10 arquivos): um contêiner por arquivo (is_carousel_item), espera cada um processar e junta no
+      // contêiner CAROUSEL com a legenda. O contêiner final segue o mesmo caminho de espera e publicação abaixo.
+      const items = Array.isArray(job.media) ? job.media : []
+      if (!container && items.length > 1) {
+        const children: string[] = []
+        for (const it of items) {
+          const url = db.storage.from('content-files').getPublicUrl(it.path).data.publicUrl
+          const isVideo = it.mime.startsWith('video/')
+          const child = String((await call(job.token, 'POST', `${job.ig_id}/media`,
+            isVideo ? { media_type: 'VIDEO', video_url: url, is_carousel_item: 'true' } : { image_url: url, is_carousel_item: 'true' })).id)
+          for (let i = 0; i < 24; i++) {
+            const st = await call(job.token, 'GET', child, { fields: 'status_code,status' })
+            if (st.status_code === 'FINISHED') break
+            if (st.status_code === 'ERROR' || st.status_code === 'EXPIRED') throw new Error(`um arquivo do carrossel não pôde ser processado: ${String(st.status ?? st.status_code)}`)
+            await sleep(isVideo ? 4000 : 1500)
+          }
+          children.push(child)
+        }
+        const params: Record<string, string> = { media_type: 'CAROUSEL', children: children.join(',') }
+        if (job.caption) params.caption = job.caption
+        container = String((await call(job.token, 'POST', `${job.ig_id}/media`, params)).id)
+        await db.from('ig_posts').update({ container_id: container }).eq('id', job.id)
+      }
+      const parts = video && items.length <= 1 ? Number(job.media_parts ?? 0) : 0
       if (parts > 0) {
         // Vídeo em partes: contêiner retomável e envio das partes direto para a Meta.
         if (!container) {

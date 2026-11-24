@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarClock, Camera, CheckCircle2, ExternalLink, Plus, Send } from 'lucide-react'
-import { useSearchParams } from 'react-router-dom'
+import { CalendarClock, Camera, CheckCircle2, ExternalLink, Layers, Plus, Send } from 'lucide-react'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { ask } from '@/components/ui/confirm'
 import { Dialog } from '@/components/ui/Dialog'
@@ -11,7 +11,7 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
-import { QuickPostDialog } from './QuickPostDialog'
+import { IgCalendar } from './IgCalendar'
 import { CONNECT_MESSAGE, defaultKind, igLoginUrl, KIND_LABEL_IG, mediaProblem, POST_STATUS, scheduleError, toInstant, type IgKind, type IgPostStatus } from './scheduleRules'
 
 // Tabelas e funções de 24/11/2026 (migração instagram_agendar): ainda fora dos tipos gerados.
@@ -23,14 +23,14 @@ const when = (iso: string) => new Date(iso).toLocaleString('pt-BR', { weekday: '
 
 interface Account { id: string; clientId: string | null; username: string; status: string }
 interface Ready { id: string; clientId: string; kind: string; title: string; caption: string | null; path: string; mime: string }
-interface Post { id: string; accountId: string; itemId: string | null; kind: IgKind; path: string; mime: string; caption: string | null; at: string; status: IgPostStatus; permalink: string | null; error: string | null }
+interface Post { id: string; accountId: string; itemId: string | null; kind: IgKind; path: string; mime: string; caption: string | null; at: string; status: IgPostStatus; permalink: string | null; error: string | null; count: number; series: string | null }
 
 async function load(): Promise<{ accounts: Account[]; ready: Ready[]; posts: Post[] }> {
   const [acc, items, posts] = await Promise.all([
     db.from('ig_accounts').select('id, client_id, username, status').order('username'),
     db.from('content_items').select('id, client_id, kind, title, briefing, caption').eq('status', 'approved').order('publish_date').limit(80),
-    db.from('ig_posts').select('id, account_id, content_item_id, kind, media_path, media_mime, caption, scheduled_at, status, permalink, error')
-      .neq('status', 'cancelado').gte('scheduled_at', new Date(Date.now() - 7 * 864e5).toISOString()).order('scheduled_at').limit(120),
+    db.from('ig_posts').select('id, account_id, content_item_id, kind, media_path, media_mime, caption, scheduled_at, status, permalink, error, media, series_id')
+      .neq('status', 'cancelado').gte('scheduled_at', new Date(Date.now() - 40 * 864e5).toISOString()).order('scheduled_at').limit(400),
   ])
   if (acc.error) throw acc.error
   if (items.error) throw items.error
@@ -45,9 +45,10 @@ async function load(): Promise<{ accounts: Account[]; ready: Ready[]; posts: Pos
     ready: (items.data ?? []).filter((i: { id: string }) => fileOf.has(i.id)).map((i: Record<string, string | null>) => ({
       id: i.id!, clientId: i.client_id!, kind: i.kind!, title: (i.title || i.briefing || 'Arte sem título')!.slice(0, 90), caption: i.caption, ...fileOf.get(i.id!)!,
     })),
-    posts: (posts.data ?? []).map((p: Record<string, string | null>) => ({
+    posts: (posts.data ?? []).map((p: Record<string, string | null> & { media?: unknown[] }) => ({
       id: p.id!, accountId: p.account_id!, itemId: p.content_item_id, kind: p.kind as IgKind, path: p.media_path!, mime: p.media_mime!, caption: p.caption,
       at: p.scheduled_at!, status: p.status as IgPostStatus, permalink: p.permalink, error: p.error,
+      count: Array.isArray(p.media) && p.media.length > 1 ? p.media.length : 1, series: p.series_id,
     })),
   }
 }
@@ -115,7 +116,8 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   const [connecting, setConnecting] = useState(false)
   const [pick, setPick] = useState(() => (clientId ? clientName(clientId) : OWN))
   const [scheduling, setScheduling] = useState<Ready | null>(null)
-  const [posting, setPosting] = useState(false)
+  const [day, setDay] = useState<string | null>(null)
+  const location = useLocation()
   const back = params.get('instagram')
 
   const connect = useMutation({
@@ -127,6 +129,11 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   })
   const cancel = useMutation({
     mutationFn: async (id: string) => { const { error } = await db.rpc('ig_post_cancel', { _id: id }); if (error) throw error },
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['ig-schedule'] }),
+  })
+  // Story que repete: cancela as próximas da série de uma vez.
+  const cancelSeries = useMutation({
+    mutationFn: async (series: string) => { const { error } = await db.rpc('ig_series_cancel', { _series: series }); if (error) throw error },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['ig-schedule'] }),
   })
 
@@ -145,8 +152,10 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   const scheduledItems = new Set(posts.filter((p) => p.status !== 'erro').map((p) => p.itemId))
   const waiting = ready.filter((r) => !scheduledItems.has(r.id))
   const accountById = new Map(accounts.map((a) => [a.id, a]))
-  // Postar avulso: qualquer Instagram conectado, escolhido pelo nome do cliente e pelo @.
-  const connected = accounts.filter((a) => a.status === 'conectado').map((a) => ({ id: a.id, label: `${a.clientId ? clientName(a.clientId) : 'Peformake'} · @${a.username}` }))
+  const connected = accounts.filter((a) => a.status === 'conectado')
+  // Criar e Em massa voltam para onde a pessoa estava; dentro do cliente a conta já vai escolhida.
+  const extra = `volta=${encodeURIComponent(location.pathname + location.search)}${connected.length === 1 ? `&conta=${connected[0]!.id}` : ''}`
+  const dayPosts = day ? posts.filter((p) => new Date(p.at).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) === day) : posts.filter((p) => p.status !== 'publicado' || new Date(p.at).getTime() > Date.now() - 2 * 864e5)
   const options = [OWN, ...clients.map((c) => c.name)]
   const pickedClient = pick === OWN ? null : clients.find((c) => c.name === pick)?.id ?? undefined
 
@@ -169,11 +178,12 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
           {accounts.length === 0 && <li className="text-[14px] text-muted">Nenhum Instagram conectado ainda.</li>}
         </ul>
         <div className="flex flex-wrap gap-2">
-          {connected.length > 0 && <Button onClick={() => setPosting(true)}><Send size={16} aria-hidden="true" /> Postar</Button>}
+          {connected.length > 0 && <Link to={`/conteudo/agendar/novo?${extra}`} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-fill px-4 font-semibold text-on-fill no-underline"><Send size={16} aria-hidden="true" /> Criar post</Link>}
+          {connected.length > 0 && <Link to={`/conteudo/agendar/massa?${extra}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 font-semibold text-ink no-underline hover:border-ink"><Layers size={16} aria-hidden="true" /> Em massa</Link>}
           <Button variant="secondary" onClick={() => setConnecting(true)}><Plus size={16} aria-hidden="true" /> Conectar Instagram</Button>
         </div>
       </div>
-      {posting && <QuickPostDialog accounts={connected} onClose={() => setPosting(false)} />}
+
 
       <section aria-label="Prontas para agendar" className="flex flex-col gap-2">
         <h2 className="text-[15px] font-semibold">Prontas para agendar <span className="font-normal text-muted">{waiting.length}</span></h2>
@@ -197,16 +207,21 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
         </ul>
       </section>
 
+      <IgCalendar posts={posts} fileUrl={fileUrl} selected={day} onSelect={setDay} />
+
       <section aria-label="Agendadas" className="flex flex-col gap-2">
-        <h2 className="text-[15px] font-semibold">Agendadas e publicadas <span className="font-normal text-muted">{posts.length}</span></h2>
+        <h2 className="flex items-center justify-between gap-2 text-[15px] font-semibold">
+          <span>{day ? `Dia ${day.slice(8)}/${day.slice(5, 7)}` : 'Próximas e recentes'} <span className="font-normal text-muted">{dayPosts.length}</span></span>
+          {day && <button type="button" onClick={() => setDay(null)} className="min-h-10 cursor-pointer text-[13px] font-medium text-accent-ink">Ver todas</button>}
+        </h2>
         <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
-          {posts.map((p) => {
+          {dayPosts.map((p) => {
             const st = POST_STATUS[p.status]
             return (
               <li key={p.id} className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-b-0">
                 <Thumb path={p.path} mime={p.mime} />
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold first-letter:uppercase">{when(p.at)} <span className="font-normal text-muted">· {KIND_LABEL_IG[p.kind]} · @{accountById.get(p.accountId)?.username ?? '?'}</span></p>
+                  <p className="font-semibold first-letter:uppercase">{when(p.at)} <span className="font-normal text-muted">· {p.count > 1 ? `Carrossel · ${p.count}` : KIND_LABEL_IG[p.kind]}{p.series ? ' · repete' : ''} · @{accountById.get(p.accountId)?.username ?? '?'}</span></p>
                   <p className="truncate text-[13px] text-muted">{p.caption ?? 'Sem legenda'}</p>
                   {p.error && <p className="text-[13px] text-warn-ink">{p.error}</p>}
                 </div>
@@ -217,11 +232,15 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
                     <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={cancel.isPending}
                       onClick={() => { void ask(`Cancelar a publicação de ${when(p.at)}?`).then((ok) => { if (ok) cancel.mutate(p.id) }) }}>Cancelar</Button>
                   )}
+                  {p.series && p.status === 'agendado' && (
+                    <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={cancelSeries.isPending}
+                      onClick={() => { void ask('Cancelar todas as próximas repetições deste story?').then((ok) => { if (ok) cancelSeries.mutate(p.series!) }) }}>Parar série</Button>
+                  )}
                 </div>
               </li>
             )
           })}
-          {posts.length === 0 && <li className="p-8 text-center text-muted">Nenhuma publicação agendada.</li>}
+          {dayPosts.length === 0 && <li className="p-8 text-center text-muted">{day ? 'Nada neste dia.' : 'Nenhuma publicação agendada.'}</li>}
         </ul>
       </section>
 
