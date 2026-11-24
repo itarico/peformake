@@ -157,10 +157,10 @@ begin
       'leads', (select count(*) from public.wa_leads l where l.client_id = c.id and l.last_at > now() - interval '30 days'),
       'from_ads', (select count(*) from public.wa_leads l where l.client_id = c.id and l.source = 'anuncio' and l.last_at > now() - interval '30 days'),
       'hints', (select count(*) from public.wa_leads l where l.client_id = c.id and l.sale_hint
-                and not exists (select 1 from public.client_sales s where s.lead_id = l.id)),
-      'sales', (select count(*) from public.client_sales s where s.client_id = c.id and s.sold_at > now() - interval '30 days'),
-      'value_cents', (select coalesce(sum(s.value_cents), 0) from public.client_sales s where s.client_id = c.id and s.sold_at > now() - interval '30 days'),
-      'send_errors', (select count(*) from public.client_sales s where s.client_id = c.id and s.meta_status = 'erro')
+                and not exists (select 1 from public.client_sales s where s.lead_id = l.id and s.canceled_at is null)),
+      'sales', (select count(*) from public.client_sales s where s.client_id = c.id and s.canceled_at is null and s.sold_at > now() - interval '30 days'),
+      'value_cents', (select coalesce(sum(s.value_cents), 0) from public.client_sales s where s.client_id = c.id and s.canceled_at is null and s.sold_at > now() - interval '30 days'),
+      'send_errors', (select count(*) from public.client_sales s where s.client_id = c.id and s.canceled_at is null and s.meta_status = 'erro')
     ) as r
     from public.clients c
     left join public.client_tracking t on t.client_id = c.id
@@ -252,6 +252,8 @@ end $$;
 revoke execute on function public.traffic_sale_save(uuid, uuid, bigint, timestamptz, text) from public, anon;
 grant execute on function public.traffic_sale_save(uuid, uuid, bigint, timestamptz, text) to authenticated;
 
+-- Apagar venda = marcar como cancelada (a linha fica para auditoria; some das telas e das contas).
+alter table public.client_sales add column if not exists canceled_at timestamptz;
 create or replace function public.traffic_sale_delete(_id uuid)
 returns void language plpgsql security definer set search_path to '' as $$
 begin
@@ -261,7 +263,7 @@ begin
   if exists (select 1 from public.client_sales where id = _id and meta_status = 'enviado') then
     raise exception 'Venda já enviada à Meta não pode ser apagada' using errcode = 'PF015';
   end if;
-  delete from public.client_sales where id = _id;
+  update public.client_sales set canceled_at = now() where id = _id and canceled_at is null;
 end $$;
 revoke execute on function public.traffic_sale_delete(uuid) from public, anon;
 grant execute on function public.traffic_sale_delete(uuid) to authenticated;

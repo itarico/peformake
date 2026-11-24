@@ -44,7 +44,7 @@ export async function listLeads(clientId: string): Promise<Lead[]> {
 export async function listSales(clientId: string): Promise<Sale[]> {
   const { data, error } = await db.from('client_sales')
     .select('id, lead_id, value_cents, sold_at, note, meta_status, meta_error')
-    .eq('client_id', clientId).order('sold_at', { ascending: false }).limit(60)
+    .eq('client_id', clientId).is('canceled_at', null).order('sold_at', { ascending: false }).limit(60)
   if (error) throw error
   return (data ?? []).map((r: Record<string, unknown>) => ({
     id: r.id as string, leadId: r.lead_id as string | null, valueCents: Number(r.value_cents), soldAt: r.sold_at as string,
