@@ -1,0 +1,86 @@
+[
+ {
+  "id": "oratoria",
+  "nome": "Oratória",
+  "cor": "#7C5CFF",
+  "descricao": "Falar para vender: estrutura, voz, pausa, presença."
+ },
+ {
+  "id": "vendas",
+  "nome": "Vendas",
+  "cor": "#E8590C",
+  "descricao": "Perguntas, objeções, preço e fechamento."
+ },
+ {
+  "id": "marketing",
+  "nome": "Marketing",
+  "cor": "#0CA678",
+  "descricao": "Aquisição da Peformake: GEO, SEO local, funil, prova social, métricas."
+ },
+ {
+  "id": "ingles",
+  "nome": "Inglês",
+  "cor": "#1C7ED6",
+  "descricao": "Inglês de negócios: ouvir, falar e ler marketing."
+ },
+ {
+  "id": "licitacao",
+  "nome": "Licitação",
+  "cor": "#5C940D",
+  "descricao": "Vender para governo e estatais."
+ },
+ {
+  "id": "financas",
+  "nome": "Finanças",
+  "cor": "#C2255C",
+  "descricao": "Margem, caixa, impostos e patrimônio."
+ },
+ {
+  "id": "programacao",
+  "nome": "Programação",
+  "cor": "#495057",
+  "descricao": "Entender o código dos seus sistemas."
+ },
+ {
+  "id": "ia",
+  "nome": "IA e automação",
+  "cor": "#3B5BDB",
+  "descricao": "Agentes e automações que economizam horas."
+ },
+ {
+  "id": "gestao",
+  "nome": "Gestão",
+  "cor": "#862E9C",
+  "descricao": "Foco, sócios, delegar, decidir."
+ },
+ {
+  "id": "desenvolvimento",
+  "nome": "Desenvolvimento pessoal",
+  "cor": "#D6336C",
+  "descricao": "Disciplina com sistema, não com força de vontade."
+ },
+ {
+  "id": "ciencia",
+  "nome": "Ciência e corpo",
+  "cor": "#0B7285",
+  "descricao": "Biologia do sono, do treino e do cérebro."
+ },
+ {
+  "id": "gastronomia",
+  "nome": "Gastronomia",
+  "cor": "#E67700",
+  "descricao": "Cozinhar e entender restaurante (Gastromake)."
+ },
+ {
+  "id": "musica",
+  "nome": "Música",
+  "cor": "#AE3EC9",
+  "descricao": "Ritmo e trilha para edição."
+ },
+ {
+  "id": "aprender",
+  "nome": "Aprender a aprender",
+  "cor": "#868E96",
+  "descricao": "O método por trás de tudo."
+ }
+]

@@ -1,0 +1,99 @@
+{
+ "dia": "2026-11-24",
+ "assuntos": [
+  {
+   "trilha": "oratoria",
+   "tema": "Diagnóstico da sua fala de venda",
+   "objetivo": "Ter o seu ponto de partida em números.",
+   "aula": [
+    "Ninguém melhora o que não mede. Atleta grava o treino; comunicador grava a fala. Hoje você não vai tentar falar bem: vai descobrir como fala.",
+    "Quatro números dizem quase tudo sobre uma fala de venda: o ritmo (palavras por minuto), os vícios (né, tipo, assim, então), a primeira frase (prende ou não) e o fechamento (termina pedindo um próximo passo ou só para de falar).",
+    "Ritmo bom para vender fica perto de 130 a 160 palavras por minuto. Muito rápido soa ansioso; muito lento, inseguro. Vício não é crime, mas cada 'né' tira um pouco da sua autoridade.",
+    "Julian Treasure, especialista em som e comunicação, mostra que as pessoas param de ouvir por hábitos como reclamar, exagerar e dar desculpa, e voltam a ouvir quando a voz tem ritmo, pausa e intenção."
+   ],
+   "exemplo": "Pitch fraco: 'Então, né, a Peformake é uma agência que faz marketing, tráfego, conteúdo…' (começa por você, lista serviço, não pede nada). Pitch forte: 'Sua agenda tem buraco no meio da semana? A gente enche com paciente certo. Posso te mostrar em 15 minutos onde está o vazamento?'",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Grave o pitch sem roteiro (2 min)",
+     "detalhe": "Para um dono de clínica: o que a Peformake faz e por que ele deveria te ouvir. Não regrave: a primeira versão é o diagnóstico."
+    },
+    {
+     "min": 10,
+     "titulo": "Assista ao TED de Julian Treasure",
+     "detalhe": "Anote os 7 hábitos que afastam quem escuta.",
+     "links": [
+      {
+       "rotulo": "Abrir o TED (10 min)",
+       "url": "https://www.ted.com/talks/julian_treasure_how_to_speak_so_that_people_want_to_listen"
+      }
+     ]
+    },
+    {
+     "min": 5,
+     "titulo": "Meça a gravação",
+     "detalhe": "Transcreva 1 minuto e conte as palavras. Conte os vícios. Dê nota 0 a 10 para a primeira frase e para o fechamento."
+    }
+   ],
+   "teste": [
+    {
+     "p": "Qual a faixa de ritmo boa para vender?",
+     "r": "Perto de 130 a 160 palavras por minuto."
+    },
+    {
+     "p": "Quais são os 4 números da fala de venda?",
+     "r": "Ritmo, vícios, primeira frase e fechamento (próximo passo)."
+    },
+    {
+     "p": "Por que começar com 'a Peformake é…' é fraco?",
+     "r": "Porque começa por você, não pelo problema do cliente, e não prende nos primeiros segundos."
+    }
+   ],
+   "feynman": "Grave 30 segundos explicando para um amigo por que medir a própria fala é o primeiro passo."
+  },
+  {
+   "trilha": "vendas",
+   "tema": "Desconto de Black Friday sem pagar para vender",
+   "objetivo": "Saber quanto precisa vender a mais para empatar.",
+   "aula": [
+    "Margem de contribuição é o que sobra de cada venda: preço menos custo do produto menos taxas. É desse dinheiro que sai a estrutura e o lucro.",
+    "O desconto sai inteiro da margem, não do preço. Se a margem é R$ 23 e você dá R$ 12 de desconto, a margem cai pela metade. Por isso 20% de desconto pode exigir quase o dobro de vendas para lucrar o mesmo.",
+    "Fórmula de bolso: volume extra para empatar = (margem antes ÷ margem depois) − 1.",
+    "Kit costuma ganhar de desconto: dilui a taxa fixa por item e economiza embalagem. O cliente sente que ganhou ('2 por 99'), e você protege a margem."
+   ],
+   "exemplo": "Percata a R$ 59,90 com margem de R$ 23,42. Com 20% off, a margem vai para R$ 13,84: 23,42 ÷ 13,84 − 1 = 69% a mais de vendas só para empatar. Kit de 2 por R$ 99,90 deixa R$ 30,91 de margem contra R$ 27,68 de dois pares com desconto.",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Leia a Aula 03 completa",
+     "links": [
+      {
+       "rotulo": "Abrir a aula",
+       "url": "https://github.com/itarico/peformake/blob/claude/personalized-oxford-professor-a8vnsm/professor/aulas/2026-11-24-aula-03-black-friday-margem.md"
+      }
+     ]
+    },
+    {
+     "min": 15,
+     "titulo": "Faça a conta do seu produto mais vendido",
+     "detalhe": "Margem cheia, margem com o desconto que você ia dar e margem do kit. Confira a taxa atual na Central do Vendedor."
+    }
+   ],
+   "teste": [
+    {
+     "p": "O que é margem de contribuição?",
+     "r": "Preço menos custo do produto menos taxas: o que sobra de cada venda."
+    },
+    {
+     "p": "Margem de R$ 30 cai para R$ 15 com desconto. Quanto vender a mais para empatar?",
+     "r": "30 ÷ 15 − 1 = 100%, o dobro."
+    },
+    {
+     "p": "Por que kit costuma ganhar de desconto?",
+     "r": "Dilui a taxa fixa e a embalagem e preserva a margem, enquanto o cliente percebe ganho."
+    }
+   ],
+   "feynman": "Explique em voz alta, como para um vendedor iniciante, por que 20% de desconto não é 20% a menos de lucro."
+  }
+ ]
+}

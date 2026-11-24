@@ -1,0 +1,95 @@
+{
+ "dia": "2026-11-25",
+ "assuntos": [
+  {
+   "trilha": "oratoria",
+   "tema": "A estrutura que vende",
+   "objetivo": "Um pitch de 5 frases que começa pelo problema do cliente.",
+   "aula": [
+    "Quem compra não compra serviço: compra a saída de um problema. Por isso o pitch começa pelo problema dele, nas palavras dele.",
+    "A estrutura tem 5 partes. 1) Problema: o que dói. 2) Custo: quanto isso custa hoje (dinheiro, tempo, paciente perdido). 3) Caminho: o que muda. 4) Prova: um caso real com número. 5) Próximo passo: um pedido pequeno e claro.",
+    "Custo é a parte que quase todo mundo pula, e é a que cria urgência. Sem custo, o problema vira 'um dia eu resolvo'.",
+    "O próximo passo deve ser pequeno: 15 minutos, um diagnóstico gratuito, uma análise. Pedir o contrato na primeira fala assusta."
+   ],
+   "exemplo": "1) 'Muita clínica em Boa Viagem tem agenda cheia na segunda e vazia na quarta.' 2) 'Cada horário vazio é uns R$ 300 que não voltam.' 3) 'A gente coloca anúncio e conteúdo para encher os dias fracos.' 4) 'Na clínica X, a quarta passou de 4 para 11 pacientes em 60 dias.' 5) 'Posso te mostrar em 15 minutos onde está o vazamento da sua agenda?'",
+   "pratica": [
+    {
+     "min": 15,
+     "titulo": "Escreva seu pitch nas 5 partes",
+     "detalhe": "Uma frase por parte. Proibido começar com 'a Peformake é'."
+    },
+    {
+     "min": 10,
+     "titulo": "Grave a versão 2 e compare com ontem",
+     "detalhe": "Mesmos 4 números: ritmo, vícios, primeira frase, fechamento."
+    }
+   ],
+   "teste": [
+    {
+     "p": "Quais são as 5 partes do pitch?",
+     "r": "Problema, custo, caminho, prova e próximo passo."
+    },
+    {
+     "p": "Qual parte cria urgência e quase todo mundo pula?",
+     "r": "O custo do problema hoje."
+    },
+    {
+     "p": "Como deve ser o próximo passo?",
+     "r": "Pequeno e claro, como 15 minutos ou um diagnóstico gratuito."
+    }
+   ],
+   "feynman": "Explique a estrutura de 5 partes para alguém da sua equipe em 1 minuto, com um exemplo de cliente real."
+  },
+  {
+   "trilha": "ingles",
+   "tema": "Seu pitch em inglês",
+   "objetivo": "Falar 3 frases de venda sem ler.",
+   "aula": [
+    "Aprender língua por frase inteira funciona melhor do que por palavra solta: o cérebro guarda o pedaço pronto para usar.",
+    "O caminho é ouvir, repetir junto (shadowing), repetir sozinho e depois falar sem olhar. Erro de pronúncia faz parte: o objetivo é ser entendido, não soar nativo.",
+    "Três frases resolvem um pitch curto em inglês: o problema, o custo e o próximo passo."
+   ],
+   "exemplo": "'Most clinics in Recife are invisible online.' (o problema) · 'That costs them new patients every week.' (o custo) · 'We fix that in ninety days, and we can show you how.' (o caminho e o próximo passo)",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Ouça e repita 5 vezes cada frase",
+     "falar": [
+      "Most clinics in Recife are invisible online.",
+      "That costs them new patients every week.",
+      "We fix that in ninety days, and we can show you how."
+     ]
+    },
+    {
+     "min": 10,
+     "titulo": "Grave as 3 frases sem olhar"
+    },
+    {
+     "min": 10,
+     "titulo": "Ouça 10 min de TED com legenda em inglês",
+     "links": [
+      {
+       "rotulo": "Abrir o TED",
+       "url": "https://www.ted.com/talks/julian_treasure_how_to_speak_so_that_people_want_to_listen"
+      }
+     ]
+    }
+   ],
+   "teste": [
+    {
+     "p": "Como se diz 'invisível na internet' na frase do pitch?",
+     "r": "Invisible online."
+    },
+    {
+     "p": "Complete: 'That costs them new patients every ___.'",
+     "r": "Week."
+    },
+    {
+     "p": "Qual a técnica de repetir junto com o áudio?",
+     "r": "Shadowing."
+    }
+   ],
+   "feynman": "Fale as 3 frases em inglês para a câmera, sem ler, e comente aqui como se saiu."
+  }
+ ]
+}

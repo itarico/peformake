@@ -1,0 +1,103 @@
+{
+ "dia": "2026-11-26",
+ "assuntos": [
+  {
+   "trilha": "vendas",
+   "tema": "SPIN: perguntar vende mais que falar",
+   "objetivo": "8 perguntas prontas para uma reunião com clínica.",
+   "aula": [
+    "Neil Rackham estudou milhares de reuniões de venda e viu que quem mais vende pergunta mais e fala menos. Daí nasceu o SPIN.",
+    "S, de Situação: entender o cenário ('como chegam seus pacientes hoje?'). P, de Problema: achar o que incomoda ('o que mais te frustra na agenda?').",
+    "I, de Implicação: fazer o cliente sentir o tamanho do problema ('quanto custa uma semana fraca?'). É a pergunta mais poderosa e a menos usada.",
+    "N, de Necessidade: levar o cliente a dizer o valor da solução ('se a quarta ficasse cheia, o que mudaria para você?'). Quando ele mesmo diz o valor, você não precisa convencer."
+   ],
+   "exemplo": "Situação: 'Hoje de onde vêm seus novos pacientes?' · Problema: 'Tem dia da semana que fica vazio?' · Implicação: 'Quantos horários vazios por mês isso dá, mais ou menos?' · Necessidade: 'Se esses horários enchessem, quanto entraria a mais no fim do mês?'",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Leia o resumo do SPIN",
+     "links": [
+      {
+       "rotulo": "RD Station: SPIN Selling",
+       "url": "https://www.rdstation.com/blog/vendas/spin-selling/"
+      }
+     ]
+    },
+    {
+     "min": 10,
+     "titulo": "Escreva 8 perguntas (2 de cada tipo) para uma clínica"
+    },
+    {
+     "min": 10,
+     "titulo": "Simule por voz no app do Claude",
+     "detalhe": "'Seja a dona de uma clínica desconfiada de agência; eu sou o vendedor.' Use as perguntas."
+    }
+   ],
+   "teste": [
+    {
+     "p": "O que significa cada letra do SPIN?",
+     "r": "Situação, Problema, Implicação e Necessidade (de solução)."
+    },
+    {
+     "p": "Qual tipo de pergunta é o mais poderoso e o menos usado?",
+     "r": "Implicação: faz o cliente sentir o tamanho do problema."
+    },
+    {
+     "p": "Por que a pergunta de Necessidade funciona?",
+     "r": "Porque o próprio cliente diz o valor da solução."
+    }
+   ],
+   "feynman": "Explique o SPIN em 1 minuto usando um exemplo da Ellcazo, não de clínica."
+  },
+  {
+   "trilha": "licitacao",
+   "tema": "O mapa: quem compra e por qual lei",
+   "objetivo": "Saber qual lei vale para cada comprador público.",
+   "aula": [
+    "Governo compra muito, e compra por regras. A primeira coisa é saber qual regra vale, porque ela muda o edital inteiro.",
+    "Prefeituras, estados, Distrito Federal e União seguem a Lei 14.133/2021, a Nova Lei de Licitações. Ela define as modalidades (como o pregão), os documentos e os prazos.",
+    "Empresas estatais, como Petrobras e Transpetro, seguem outra lei: a 13.303/2016, a Lei das Estatais, mais um regulamento próprio de cada empresa. Na Petrobras e na Transpetro a disputa acontece no portal Petronect.",
+    "Tudo o que a Lei 14.133 exige publicar fica centralizado no PNCP, o Portal Nacional de Contratações Públicas. É lá que você procura oportunidades de prefeituras e órgãos."
+   ],
+   "exemplo": "Uma prefeitura do interior de PE quer um vídeo institucional: Lei 14.133, edital no PNCP. A Transpetro quer cobertura de evento: Lei 13.303, regulamento da Transpetro, disputa no Petronect. Mesmo serviço, regras diferentes.",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Leia a página oficial da Nova Lei de Licitações",
+     "links": [
+      {
+       "rotulo": "gov.br/compras",
+       "url": "https://www.gov.br/compras/pt-br/nllc/"
+      }
+     ]
+    },
+    {
+     "min": 15,
+     "titulo": "Procure 1 edital de vídeo ou publicidade no PNCP",
+     "detalhe": "Busque 'audiovisual' ou 'publicidade' em Pernambuco. Anote só: órgão, objeto, valor estimado e data da disputa.",
+     "links": [
+      {
+       "rotulo": "Abrir o PNCP",
+       "url": "https://pncp.gov.br/"
+      }
+     ]
+    }
+   ],
+   "teste": [
+    {
+     "p": "Qual lei vale para prefeituras e órgãos?",
+     "r": "Lei 14.133/2021, a Nova Lei de Licitações."
+    },
+    {
+     "p": "Qual lei vale para estatais como a Transpetro?",
+     "r": "Lei 13.303/2016 (Lei das Estatais), com regulamento próprio; disputa no Petronect."
+    },
+    {
+     "p": "Onde ficam as publicações da Lei 14.133?",
+     "r": "No PNCP, o Portal Nacional de Contratações Públicas."
+    }
+   ],
+   "feynman": "Explique para o seu sócio, em 1 minuto, por que um edital da Transpetro é diferente de um de prefeitura."
+  }
+ ]
+}

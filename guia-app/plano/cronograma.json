@@ -1,0 +1,382 @@
+{
+ "programa": "Oratória para vender · 4 semanas",
+ "semanas": [
+  {
+   "n": 1,
+   "de": "2026-11-24",
+   "ate": "2026-11-29",
+   "tema": "Diagnóstico, estrutura do pitch e perguntas"
+  },
+  {
+   "n": 2,
+   "de": "2026-11-30",
+   "ate": "2026-12-06",
+   "tema": "Voz e presença"
+  },
+  {
+   "n": 3,
+   "de": "2026-12-07",
+   "ate": "2026-12-13",
+   "tema": "Reunião de venda completa"
+  },
+  {
+   "n": 4,
+   "de": "2026-12-14",
+   "ate": "2026-12-20",
+   "tema": "Prova final e pitch em inglês"
+  }
+ ],
+ "dias": [
+  {
+   "dia": "2026-11-24",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Diagnóstico da sua fala de venda"
+    },
+    {
+     "trilha": "vendas",
+     "tema": "Desconto de Black Friday sem pagar para vender"
+    }
+   ]
+  },
+  {
+   "dia": "2026-11-25",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "A estrutura que vende"
+    },
+    {
+     "trilha": "ingles",
+     "tema": "Seu pitch em inglês"
+    }
+   ]
+  },
+  {
+   "dia": "2026-11-26",
+   "assuntos": [
+    {
+     "trilha": "vendas",
+     "tema": "SPIN: perguntar vende mais que falar"
+    },
+    {
+     "trilha": "licitacao",
+     "tema": "O mapa: quem compra e por qual lei"
+    }
+   ]
+  },
+  {
+   "dia": "2026-11-27",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Voz: respiração, dicção e pausa"
+    },
+    {
+     "trilha": "financas",
+     "tema": "NFS-e Nacional e os impostos de 2027"
+    }
+   ]
+  },
+  {
+   "dia": "2026-11-28",
+   "assuntos": [
+    {
+     "trilha": "vendas",
+     "tema": "Objeções sem dar desconto"
+    },
+    {
+     "trilha": "ciencia",
+     "tema": "Sono: o bloco que segura os outros"
+    }
+   ]
+  },
+  {
+   "dia": "2026-11-29",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Prova da semana 1"
+    },
+    {
+     "trilha": "marketing",
+     "tema": "GEO: aparecer quando o cliente pergunta para a IA"
+    }
+   ]
+  },
+  {
+   "dia": "2026-11-30",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Voz: projeção e volume"
+    },
+    {
+     "trilha": "licitacao",
+     "tema": "Onde achar editais: PNCP e portais"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-01",
+   "assuntos": [
+    {
+     "trilha": "ingles",
+     "tema": "Perguntas de reunião em inglês"
+    },
+    {
+     "trilha": "programacao",
+     "tema": "APIs: como a NFS-e funciona por dentro"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-02",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Ritmo: velocidade e ênfase"
+    },
+    {
+     "trilha": "marketing",
+     "tema": "Google Meu Negócio que traz cliente"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-03",
+   "assuntos": [
+    {
+     "trilha": "vendas",
+     "tema": "Preço por valor, não por hora"
+    },
+    {
+     "trilha": "desenvolvimento",
+     "tema": "Hábito: gatilho, rotina, recompensa"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-04",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Presença em câmera"
+    },
+    {
+     "trilha": "financas",
+     "tema": "Margem de contribuição"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-05",
+   "assuntos": [
+    {
+     "trilha": "licitacao",
+     "tema": "Ler um edital em 20 minutos"
+    },
+    {
+     "trilha": "ciencia",
+     "tema": "Dopamina e hábito"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-06",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Prova da semana 2"
+    },
+    {
+     "trilha": "ingles",
+     "tema": "Listening: marketing sem legenda"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-07",
+   "assuntos": [
+    {
+     "trilha": "vendas",
+     "tema": "Roteiro da reunião de diagnóstico"
+    },
+    {
+     "trilha": "licitacao",
+     "tema": "Documentos de habilitação"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-08",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Storytelling: antes e depois"
+    },
+    {
+     "trilha": "ia",
+     "tema": "Conferir o que a IA entrega"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-09",
+   "assuntos": [
+    {
+     "trilha": "vendas",
+     "tema": "Fechamento: próximo passo claro"
+    },
+    {
+     "trilha": "marketing",
+     "tema": "Cases que vendem"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-10",
+   "assuntos": [
+    {
+     "trilha": "ingles",
+     "tema": "E-mail para cliente em inglês"
+    },
+    {
+     "trilha": "gestao",
+     "tema": "Regras de decisão delegada"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-11",
+   "assuntos": [
+    {
+     "trilha": "vendas",
+     "tema": "Negociação: ancoragem e concessões"
+    },
+    {
+     "trilha": "financas",
+     "tema": "Fluxo de caixa"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-12",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Reunião simulada completa"
+    },
+    {
+     "trilha": "gastronomia",
+     "tema": "Ficha técnica e CMV"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-13",
+   "assuntos": [
+    {
+     "trilha": "aprender",
+     "tema": "Revisão geral do mês"
+    },
+    {
+     "trilha": "desenvolvimento",
+     "tema": "Nunca falhar 2 vezes"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-14",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Pitch de 60 s em inglês: roteiro"
+    },
+    {
+     "trilha": "licitacao",
+     "tema": "Vantagens de ME e EPP"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-15",
+   "assuntos": [
+    {
+     "trilha": "ingles",
+     "tema": "Ensaiar o pitch em inglês"
+    },
+    {
+     "trilha": "programacao",
+     "tema": "Banco de dados e Supabase"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-16",
+   "assuntos": [
+    {
+     "trilha": "vendas",
+     "tema": "Objeções difíceis"
+    },
+    {
+     "trilha": "marketing",
+     "tema": "CAC, LTV e churn"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-17",
+   "assuntos": [
+    {
+     "trilha": "oratoria",
+     "tema": "Prova final: reunião gravada"
+    },
+    {
+     "trilha": "ciencia",
+     "tema": "Treino de força: progressão de carga"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-18",
+   "assuntos": [
+    {
+     "trilha": "ingles",
+     "tema": "Pitch final gravado"
+    },
+    {
+     "trilha": "financas",
+     "tema": "Pró-labore e separar CPF de CNPJ"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-19",
+   "assuntos": [
+    {
+     "trilha": "aprender",
+     "tema": "Revisão do mês"
+    },
+    {
+     "trilha": "musica",
+     "tema": "Ritmo e corte de vídeo"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-20",
+   "assuntos": [
+    {
+     "trilha": "aprender",
+     "tema": "Avaliação do programa"
+    },
+    {
+     "trilha": "aprender",
+     "tema": "Revisão espaçada: como você vai estudar sozinho"
+    }
+   ]
+  }
+ ]
+}

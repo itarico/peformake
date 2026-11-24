@@ -143,6 +143,38 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
 .tr-meta{font-size:.74rem;color:var(--muted)}
 .tr-bar{height:5px;border-radius:99px;background:var(--line);overflow:hidden}
 .tr-bar i{display:block;height:100%;background:var(--c)}
+.learn{font-size:.95rem;border-left:3px solid var(--c);padding-left:8px}
+.learn b{color:var(--c)}
+.review{border-color:var(--xp);background:var(--xp-soft)}
+.qa{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.qa-q{margin:0;font-weight:600}
+.qa-a{margin:0;padding:10px 12px;border-radius:12px;background:var(--bg)}
+.done-qa .qa-q{color:var(--muted)}
+.ok-btn{background:var(--ok)}
+.lesson-head{border:0;background:none;padding:0;text-align:left;display:flex;flex-direction:column;gap:8px;width:100%}
+.open-hint{font-size:.82rem;font-weight:600;color:var(--c)}
+.lsec{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.lsec-h{font:700 .74rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--c)}
+.lesson-p{margin:0;line-height:1.6}
+.lesson-ex{margin:0;line-height:1.6;padding:12px;border-radius:12px;background:var(--bg);border-left:3px solid var(--c)}
+.lbody{display:flex;flex-direction:column;gap:6px;min-width:0}
+.crow{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.crow:first-child{border-top:0}
+.crow.today{background:var(--accent-soft);margin:0 -16px;padding:10px 16px}
+.crow.past{opacity:.6}
+.cdate{display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.cdate b{font:800 1.1rem var(--display)}
+.cdate span{font-size:.7rem;color:var(--muted)}
+.citems{display:flex;flex-direction:column;gap:3px;min-width:0}
+.citem{font-size:.86rem;overflow-wrap:anywhere}
+.citem b{color:var(--c)}
+.cstat{font-size:.74rem;color:var(--muted);font-weight:600}
+.mic.rec{background:var(--late);color:#fff;border-color:var(--late)}
+.mic svg{width:16px;height:16px;vertical-align:-3px}
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:11;width:58px;height:58px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:grid;place-items:center;box-shadow:0 8px 24px rgba(59,91,255,.35)}
+.fab svg{width:26px;height:26px}
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(10,15,30,.45);display:flex;align-items:flex-end}
+.sheet-in{width:100%;max-width:560px;margin:0 auto;background:var(--surface);border-radius:24px 24px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:10px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -188,25 +220,28 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
       <form class="row" id="taskForm">
         <input class="input" id="taskInput" maxlength="300" placeholder="O que precisa ser feito?" aria-label="Nova tarefa" autocomplete="off">
         <button class="btn" type="submit">Adicionar</button>
+        <span id="taskMic"></span>
       </form>
-      <div class="tip">No WhatsApp, mande para <b>você mesmo</b>: <code>+ ligar para o contador</code> vira tarefa. <code>recado: …</code> vai para o professor.</div>
+      <span class="small muted" id="taskMsg" role="status"></span>
+      <div class="tip">No WhatsApp, mande para <b>você mesmo</b>: <code>+ ligar para o contador</code> vira tarefa. <code>recado: …</code> vai para o professor. Áudio também vale: comece falando "tarefa" ou "recado".</div>
       <div class="card" id="taskCard"></div>
     </section>
 
     <!-- ESTUDO -->
     <section data-view="estudo" hidden style="display:flex;flex-direction:column;gap:14px">
-      <div><span class="small muted" id="progName"></span><h2 style="font-size:1.4rem" id="studyTitle">Estudo de hoje</h2><p class="muted small" id="studyFoco" style="margin:4px 0 0"></p></div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span class="small muted" id="progName"></span>
+        <h2 style="font-size:1.45rem" id="studyTitle">Hoje você aprende</h2>
+        <div id="studyFoco" style="display:flex;flex-direction:column;gap:4px"></div>
+      </div>
+      <div class="card review" id="review" hidden></div>
       <div id="todayCards" style="display:flex;flex-direction:column;gap:12px"></div>
+      <div class="row" style="justify-content:space-between"><h2>Cronograma</h2></div>
+      <div class="card" id="crono" style="gap:0"></div>
       <a class="btn full chat" id="chatBtn" href="#" target="_blank" rel="noopener">Falar com o professor no chat</a>
-      <div class="row" style="justify-content:space-between"><h2>Suas trilhas</h2><span class="small muted">meta: 10 h por trilha</span></div>
+      <div class="row" style="justify-content:space-between"><h2>Suas trilhas</h2><span class="small muted">meta: 10 h cada</span></div>
       <div class="trs" id="trilhas"></div>
-      <div class="card subj" id="trilhaDetail" hidden></div>
-      <details class="card">
-        <summary style="cursor:pointer;font-weight:600">Recado geral para o professor</summary>
-        <textarea class="input" id="recado" placeholder="O que fez, o que travou, uma dúvida. Use o microfone do teclado para falar." aria-label="Recado para o professor" style="margin-top:10px"></textarea>
-        <button class="btn" id="sendRecado" type="button" style="margin-top:8px">Enviar recado</button>
-        <span class="small muted" id="recadoMsg" role="status"></span>
-      </details>
+      <div class="card"><h2>Recado para o professor</h2><div id="generalVoice"></div></div>
     </section>
 
     <!-- VOCÊ -->
@@ -217,6 +252,17 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
       <div class="card"><h2>Conquistas</h2><div class="badges" id="badges"></div></div>
       <button class="btn ghost" id="logout" type="button">Sair</button>
     </section>
+  </div>
+</div>
+
+<button class="fab" id="quickMic" type="button" hidden aria-label="Falar: tarefa ou recado"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+<div class="sheet" id="quickSheet" hidden role="dialog" aria-label="Falar">
+  <div class="sheet-in">
+    <div class="row" style="justify-content:space-between"><h2>Fale</h2><button class="del" id="quickClose" type="button">Fechar</button></div>
+    <textarea class="input" id="quickText" placeholder="Fale uma tarefa ou um recado para o professor" aria-label="Texto falado"></textarea>
+    <span class="small muted" id="quickMsg" role="status"></span>
+    <div class="row"><button class="btn ghost small-btn mic" id="quickRec" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg> Falar</button></div>
+    <div class="row"><button class="btn" id="quickTask" type="button">Virar tarefa</button><button class="btn ghost" id="quickNote" type="button">Mandar ao professor</button></div>
   </div>
 </div>
 

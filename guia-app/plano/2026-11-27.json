@@ -1,0 +1,99 @@
+{
+ "dia": "2026-11-27",
+ "assuntos": [
+  {
+   "trilha": "oratoria",
+   "tema": "Voz: respiração, dicção e pausa",
+   "objetivo": "Falar com mais clareza e menos pressa.",
+   "aula": [
+    "Voz é músculo. Dicção melhora com exercício diário curto, como academia: pouco e sempre.",
+    "Respirar pela barriga (diafragma) dá ar para terminar a frase sem acelerar no fim. Quem respira só no peito corre para chegar ao ponto antes do ar acabar.",
+    "Articular é abrir a boca e dar a cada sílaba o seu espaço. O exercício da caneta entre os dentes obriga a língua e os lábios a trabalharem mais; quando você tira a caneta, a fala sai mais limpa.",
+    "Pausa é a ferramenta mais barata da oratória. Uma pausa antes de um número ou de um pedido diz ao cliente: 'isso aqui importa'. E ela substitui o 'né'."
+   ],
+   "exemplo": "Sem pausa: 'A gente aumentou de quatro para onze pacientes em sessenta dias né e posso te mostrar.' Com pausa: 'A gente aumentou de quatro… para onze pacientes. Em sessenta dias. [pausa] Posso te mostrar como?'",
+   "pratica": [
+    {
+     "min": 8,
+     "titulo": "Respiração pela barriga",
+     "detalhe": "Deitado, mão na barriga. Inspire em 4 tempos, segure 4, solte em 6 com um 'sss'. 8 vezes."
+    },
+    {
+     "min": 10,
+     "titulo": "Articulação com caneta",
+     "detalhe": "Caneta atravessada entre os dentes, leia o pitch exagerando as sílabas. Depois sem a caneta. 3 vezes."
+    },
+    {
+     "min": 7,
+     "titulo": "Grave a versão 3 com pausas marcadas",
+     "detalhe": "Pausa antes do número e antes do próximo passo."
+    }
+   ],
+   "teste": [
+    {
+     "p": "Por que respirar pela barriga ajuda a não acelerar?",
+     "r": "Dá ar para terminar a frase sem correr no final."
+    },
+    {
+     "p": "Para que serve o exercício da caneta?",
+     "r": "Obriga a articular mais; sem a caneta, a fala sai mais limpa."
+    },
+    {
+     "p": "Onde colocar pausa no pitch?",
+     "r": "Antes de números e antes do pedido (próximo passo)."
+    }
+   ],
+   "feynman": "Grave 30 segundos lendo o pitch com pausas e comente se percebeu diferença."
+  },
+  {
+   "trilha": "financas",
+   "tema": "NFS-e Nacional e os impostos de 2027",
+   "objetivo": "Entender o que a integração da Peformake precisa prever.",
+   "aula": [
+    "Desde 1º de novembro de 2026, micro e pequena empresa do Simples que presta serviço emite a nota fiscal pelo Emissor Nacional da NFS-e (Resolução CGSN 191/2026, confirmada pela Receita Federal).",
+    "Em 1º de janeiro de 2027 entram os impostos novos da reforma, IBS e CBS, que passam a aparecer destacados na nota. A integração que vocês estão fazendo precisa ter esses campos.",
+    "Emitir por API exige certificado digital (A1 é arquivo, bom para sistema; A3 é cartão ou token) e o código certo de cada serviço. Código errado faz a nota ser rejeitada ou cobrar imposto errado.",
+    "No sistema novo o imposto gera crédito para quem compra. Cliente grande, fora do Simples, passa a comparar o custo líquido (preço menos crédito). Para cliente pequeno, isso pesa pouco."
+   ],
+   "exemplo": "Ellcazo cobra R$ 11.000 de uma distribuidora (Lucro Real). Se o crédito que ela recupera for menor do que com um concorrente no regime regular, o custo líquido da Ellcazo fica maior, mesmo com preço menor na nota. Números fictícios; quem decide o regime é o contador.",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Leia o aviso oficial da Receita",
+     "detalhe": "Anote: desde quando vale, quem é obrigado, o que muda em janeiro.",
+     "links": [
+      {
+       "rotulo": "Receita Federal",
+       "url": "https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/simples-nacional-nfs-e-nacional-sera-obrigatoria-para-me-e-epp-a-partir-de-1o-de-novembro-de-2026/"
+      }
+     ]
+    },
+    {
+     "min": 15,
+     "titulo": "Leia a Aula 02 (partes 3 a 6)",
+     "links": [
+      {
+       "rotulo": "Abrir a aula",
+       "url": "https://github.com/itarico/peformake/blob/claude/personalized-oxford-professor-a8vnsm/professor/aulas/2026-11-09-aula-02-reforma-tributaria.md"
+      }
+     ]
+    }
+   ],
+   "teste": [
+    {
+     "p": "Desde quando a ME e EPP de serviço emite pelo Emissor Nacional?",
+     "r": "1º de novembro de 2026."
+    },
+    {
+     "p": "O que entra na nota em 1º/1/2027?",
+     "r": "Os impostos IBS e CBS destacados."
+    },
+    {
+     "p": "O que a emissão por API exige?",
+     "r": "Certificado digital (A1 ou A3) e o código certo do serviço."
+    }
+   ],
+   "feynman": "Explique para o seu sócio em 1 minuto o que a integração da nota precisa ter pronto até janeiro."
+  }
+ ]
+}

@@ -1,0 +1,88 @@
+{
+ "dia": "2026-11-28",
+ "assuntos": [
+  {
+   "trilha": "vendas",
+   "tema": "Objeções sem dar desconto",
+   "objetivo": "3 respostas treinadas para as objeções mais comuns.",
+   "aula": [
+    "Objeção é uma pergunta disfarçada. 'Tá caro' quase nunca quer dizer 'não tenho dinheiro'; quer dizer 'ainda não vi valor suficiente'.",
+    "O método tem 3 passos. Acolher: 'faz sentido pensar nisso'. Perguntar: 'caro comparado com o quê?'. Responder com valor: o custo do problema e uma prova.",
+    "Desconto como primeira resposta ensina ao cliente que seu preço era inventado. E, como você viu na aula de margem, desconto sai inteiro do seu lucro.",
+    "'Vou pensar' costuma esconder uma dúvida não dita. A pergunta é: 'claro. O que ficou em dúvida para você?'"
+   ],
+   "exemplo": "Cliente: 'Tá caro.' Você: 'Faz sentido olhar isso. Caro comparado com o quê?' Cliente: 'Com o rapaz que faz post por 600.' Você: 'Entendi. O post resolve a quarta vazia? Lembra que cada horário vazio é uns R$ 300. A clínica X recuperou 7 horários por semana.'",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Escreva 3 respostas: 'tá caro', 'vou pensar', 'já tenho agência'",
+     "detalhe": "Cada uma com os 3 passos: acolher, perguntar, responder com valor."
+    },
+    {
+     "min": 15,
+     "titulo": "Treine por voz com o Claude",
+     "detalhe": "Peça para ele usar as 3 objeções contra você, uma de cada vez."
+    }
+   ],
+   "teste": [
+    {
+     "p": "O que 'tá caro' costuma significar?",
+     "r": "Que o cliente ainda não viu valor suficiente."
+    },
+    {
+     "p": "Quais são os 3 passos para responder uma objeção?",
+     "r": "Acolher, perguntar e responder com valor (custo do problema + prova)."
+    },
+    {
+     "p": "Por que não dar desconto como primeira resposta?",
+     "r": "Ensina que o preço era inventado e o desconto sai inteiro da margem."
+    }
+   ],
+   "feynman": "Grave a sua resposta para 'já tenho agência' e comente aqui como ficou."
+  },
+  {
+   "trilha": "ciencia",
+   "tema": "Sono: o bloco que segura os outros",
+   "objetivo": "Entender por que dormir cedo vale mais que motivação.",
+   "aula": [
+    "Durante o sono o cérebro organiza o que você aprendeu no dia e prepara espaço para aprender mais. Estudar e dormir mal desperdiça parte do estudo.",
+    "Pouco sono derruba força de vontade, humor e decisão. Quando você diz que 'falta disciplina', muitas vezes falta sono.",
+    "Regularidade importa: dormir e acordar no mesmo horário, inclusive no fim de semana, ajuda mais do que compensar depois.",
+    "Ambiente faz metade do trabalho: quarto escuro e fresco, e celular longe da cama, porque a tela e o conteúdo mantêm o cérebro em alerta."
+   ],
+   "exemplo": "Academia às 6h exige dormir às 22h30 para ter 7 horas de sono. Se você dorme às 2h, a academia das 6h vira briga com o próprio corpo, e quem perde é a sequência.",
+   "pratica": [
+    {
+     "min": 20,
+     "titulo": "Assista: Matt Walker, o sono é seu superpoder (TED)",
+     "links": [
+      {
+       "rotulo": "Abrir o TED",
+       "url": "https://www.ted.com/talks/matt_walker_sleep_is_your_superpower"
+      }
+     ]
+    },
+    {
+     "min": 5,
+     "titulo": "Escreva 3 regras de sono que você vai seguir",
+     "detalhe": "Comente aqui. Elas entram na sua agenda."
+    }
+   ],
+   "teste": [
+    {
+     "p": "O que o cérebro faz com o que você estudou enquanto dorme?",
+     "r": "Organiza e consolida o aprendizado."
+    },
+    {
+     "p": "Por que falta de sono parece falta de disciplina?",
+     "r": "Porque derruba força de vontade, humor e decisão."
+    },
+    {
+     "p": "Quais são 2 regras de ambiente para dormir melhor?",
+     "r": "Quarto escuro e fresco, celular longe da cama."
+    }
+   ],
+   "feynman": "Explique em voz alta por que o bloco das 22h30 é o mais importante da sua agenda."
+  }
+ ]
+}

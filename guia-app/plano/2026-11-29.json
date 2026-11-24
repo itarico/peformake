@@ -1,0 +1,86 @@
+{
+ "dia": "2026-11-29",
+ "assuntos": [
+  {
+   "trilha": "oratoria",
+   "tema": "Prova da semana 1",
+   "objetivo": "Comparar a terça com o domingo, em números.",
+   "aula": [
+    "Na tutoria de Oxford, a semana termina com uma prova prática: você mostra o que consegue fazer, não o que leu.",
+    "Hoje você grava o pitch final usando tudo da semana: estrutura de 5 partes, perguntas, pausas e voz.",
+    "Depois compara com a gravação de terça nos mesmos 4 números. A diferença é o seu progresso real."
+   ],
+   "exemplo": "Terça: 185 palavras por minuto, 9 'né', primeira frase nota 4. Domingo: 150 palavras por minuto, 3 'né', primeira frase nota 8. Esse é o tipo de número que o professor quer ver no seu comentário.",
+   "pratica": [
+    {
+     "min": 15,
+     "titulo": "Grave o pitch final (2 min)"
+    },
+    {
+     "min": 10,
+     "titulo": "Compare com a gravação de terça",
+     "detalhe": "Ritmo, vícios, primeira frase, fechamento."
+    }
+   ],
+   "teste": [
+    {
+     "p": "Quais são as 5 partes do pitch?",
+     "r": "Problema, custo, caminho, prova e próximo passo."
+    },
+    {
+     "p": "Onde vai a pausa?",
+     "r": "Antes de números e antes do pedido."
+    },
+    {
+     "p": "Qual faixa de ritmo é boa para vender?",
+     "r": "Perto de 130 a 160 palavras por minuto."
+    }
+   ],
+   "feynman": "Comente aqui os números de terça e de domingo, lado a lado."
+  },
+  {
+   "trilha": "marketing",
+   "tema": "GEO: aparecer quando o cliente pergunta para a IA",
+   "objetivo": "Ter a linha de base da Peformake nas IAs.",
+   "aula": [
+    "SEO é convencer o Google a te colocar numa lista. GEO é convencer a IA a te citar pelo nome quando ela responde.",
+    "A IA faz três coisas: busca páginas, filtra as fontes confiáveis e resume citando quem usou. Você só aparece no resumo se passou na busca e no filtro.",
+    "Quatro sinais fazem a IA citar uma empresa: estar em muitos lugares com o mesmo nome e descrição, ter respostas diretas no site, ter prova com números e ser mencionada por terceiros.",
+    "Boa parte do que funciona para SEO também funciona para GEO. Você não começa do zero."
+   ],
+   "exemplo": "Uma clínica com Google Meu Negócio completo, 80 avaliações, uma página respondendo 'quanto custa harmonização em Recife' e uma matéria num portal do bairro tem muito mais chance de ser citada do que uma clínica só com Instagram bonito.",
+   "pratica": [
+    {
+     "min": 10,
+     "titulo": "Leia a Aula 01",
+     "links": [
+      {
+       "rotulo": "Abrir a aula",
+       "url": "https://github.com/itarico/peformake/blob/claude/personalized-oxford-professor-a8vnsm/professor/aulas/2026-11-04-aula-01-geo.md"
+      }
+     ]
+    },
+    {
+     "min": 15,
+     "titulo": "Pergunte a 3 IAs: 'melhor agência de marketing para clínicas em Recife'",
+     "detalhe": "ChatGPT, Gemini e Perplexity. Comente aqui quem apareceu: essa é a linha de base da Peformake."
+    }
+   ],
+   "teste": [
+    {
+     "p": "Qual a diferença entre SEO e GEO?",
+     "r": "SEO coloca você numa lista; GEO faz a IA te citar pelo nome na resposta."
+    },
+    {
+     "p": "Quais são os 4 sinais que fazem a IA citar uma empresa?",
+     "r": "Presença consistente, respostas diretas, prova com números e menção de terceiros."
+    },
+    {
+     "p": "Anúncio pago faz a IA te recomendar?",
+     "r": "Não. Anúncio compra clique, não citação."
+    }
+   ],
+   "feynman": "Explique GEO para um dono de clínica em 1 minuto, sem usar a palavra GEO."
+  }
+ ]
+}
