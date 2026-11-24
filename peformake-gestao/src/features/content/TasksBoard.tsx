@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, Play, Plus } from 'lucide-react'
+import { Check, ChevronRight, Play, Plus } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
@@ -68,7 +69,9 @@ export function TasksBoard() {
             {t.status === 'a_fazer'
               ? <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'fazendo' })}><Play size={14} aria-hidden="true" /> Começar</Button>
               : <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'feito' })}><Check size={14} aria-hidden="true" /> Concluir</Button>}
-            {t.ref_table !== 'content_items' && (
+            {/* "Fazer o planejamento do mês" nasce sozinha (cliente com social ou design e mês sem arte) e fecha na primeira arte. */}
+            {t.ref_table === 'plano_mes' && <Link to="/conteudo/planejamento" className="inline-flex min-h-10 items-center gap-1 px-2 text-[13px] font-medium text-accent-ink no-underline hover:underline">Planejar <ChevronRight size={14} aria-hidden="true" /></Link>}
+            {t.ref_table !== 'content_items' && t.ref_table !== 'plano_mes' && (
               <NewArtButton label="Virar arte" variant="secondary" className="min-h-10 px-3 text-[13px]"
                 start={{ clientId: t.client_id ?? undefined, text: [t.title, t.description].filter(Boolean).join('. ') }}
                 onSent={() => move.mutate({ id: t.id, status: 'feito' })} />

@@ -13,7 +13,7 @@ const NOTICE_PRIO: Record<string, Prio> = {
   billing_late: 0, crm_sale_pending: 0, fin_wa_review: 3,
   crm_complaint: 1, crm_nps_detractor: 1, rating_low: 1, content_client_changes_requested: 1, av_client_changes_requested: 1,
   client_answer: 1, crm_new_lead: 1, site_lead: 1, social_request: 1,
-  task_waiting: 2, contract_waiting: 2, content_changes_requested: 2,
+  task_waiting: 2, cadastro_falhas: 2, contract_waiting: 2, content_changes_requested: 2,
   content_review: 3, av_review: 3, content_ready: 3,
 }
 export const noticePrio = (kind: string | undefined): Prio => (kind && kind in NOTICE_PRIO ? NOTICE_PRIO[kind]! : 4)

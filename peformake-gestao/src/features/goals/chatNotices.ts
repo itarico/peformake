@@ -40,6 +40,7 @@ const KIND: Record<string, { icon: string; label: string; many: (n: number) => s
   client_referral: { icon: '🎁', label: 'Ver indicação', many: (n) => `${n} indicações de clientes` },
   social_request: { icon: '📣', label: 'Ver pedido', many: (n) => `${n} pedidos de conteúdo` },
   task_waiting: { icon: '⏳', label: 'Ver tarefa', many: (n) => `${n} tarefas esperando você` },
+  cadastro_falhas: { icon: '🧩', label: 'Corrigir', many: (n) => `${n} avisos de cadastro para corrigir` },
   team_highlight: { icon: '⭐', label: 'Ver', many: (n) => `${n} destaques da equipe` },
 }
 const DEFAULT = { icon: '🔔', label: 'Abrir', many: (n: number) => `${n} avisos novos` }

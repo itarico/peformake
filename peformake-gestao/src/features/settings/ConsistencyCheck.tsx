@@ -17,6 +17,7 @@ export const ISSUE_LABEL: Record<string, string> = {
   venda_sem_lancamento: 'Venda sem fatura',
   audiovisual_sem_projeto: 'Sem captação no mês',
   social_sem_plano: 'Sem plano do mês',
+  sem_documento: 'Fatura sem CPF/CNPJ',
 }
 
 async function listIssues(): Promise<Issue[]> {
