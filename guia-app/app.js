@@ -163,10 +163,10 @@
   function renderStudy(t) {
     const ls = lessonsOf(t);
     const prog = S.crono && S.crono.semanas ? S.crono.semanas.find(w => t >= w.de && t <= w.ate) : null;
-    $("progName").textContent = S.crono ? S.crono.programa + (prog ? " · semana " + prog.n + ": " + prog.tema : "") : "";
-    $("studyTitle").textContent = ls.length ? "Hoje você aprende" : "Sem aula hoje";
-    const sub = $("studyFoco"); sub.replaceChildren();
-    ls.forEach((a, i) => { const s = el("span", "learn"); const tr = trilhaInfo(a.trilha); s.style.setProperty("--c", tr.cor); s.append(el("b", null, (i + 1) + ". " + tr.nome + ": "), document.createTextNode(a.tema)); sub.append(s); });
+    $("progName").textContent = prog ? "Semana " + prog.n + " de " + S.crono.semanas.length + " · " + prog.tema : "";
+    $("studyTitle").textContent = "Estudo";
+    $("todayN").textContent = ls.length ? ls.map(a => trilhaInfo(a.trilha).nome).join(" + ") : "sem aula hoje";
+    $("trilhasN").textContent = S.trilhas.length ? Math.round(minutesBy(null) / 6) / 10 + " h estudadas" : "";
     renderReview();
     const box = $("todayCards"); box.replaceChildren();
     ls.forEach((a, gi) => box.append(lessonCard(t, a, gi)));
@@ -175,9 +175,9 @@
 
   function renderReview() {
     const box = $("review"); box.replaceChildren(); const due = dueCards();
-    if (!due.length) { box.hidden = true; return; } box.hidden = false;
-    const head = el("div", "subj-head"); head.append(el("h3", null, "Revisão de hoje"), el("span", "meta", due.length + (due.length === 1 ? " pergunta" : " perguntas"))); box.append(head);
-    box.append(el("p", "muted small", "Responda de memória, em voz alta, antes de ver a resposta. É isso que fixa."));
+    $("foldReview").hidden = !due.length; if (!due.length) return;
+    $("reviewN").textContent = due.length + (due.length === 1 ? " pergunta" : " perguntas");
+    box.append(el("p", "muted small", "Responda de memória antes de ver a resposta."));
     due.forEach(([id, c]) => box.append(qaItem(id, c.p, c.r, trilhaInfo(c.trilha))));
   }
   function qaItem(id, p, r, tr) {
@@ -197,9 +197,9 @@
     const mins = 5 + (a.pratica || []).reduce((s, p) => s + (Number(p.min) || 0), 0);
     const head = el("button", "lesson-head"); head.type = "button"; head.setAttribute("aria-expanded", opened ? "true" : "false");
     const top = el("div", "subj-head"); top.append(el("span", "subj-tag", tr.nome), el("span", "meta", nDone + "/" + (nP + 1) + " · " + mins + " min")); head.append(top);
-    head.append(el("h3", "subj-title", a.tema)); if (a.objetivo) head.append(el("span", "muted small", "Objetivo: " + a.objetivo));
+    head.append(el("h3", "subj-title", a.tema));
     const bar = el("span", "tr-bar"); const bi = el("i"); bi.style.width = Math.round(100 * nDone / (nP + 1)) + "%"; bar.append(bi); head.append(bar);
-    head.append(el("span", "open-hint", opened ? "Fechar aula" : "Abrir aula"));
+    if (opened && a.objetivo) head.append(el("span", "muted small", "Objetivo: " + a.objetivo));
     head.addEventListener("click", () => { opened ? S.open.delete(key) : S.open.add(key); render(); });
     card.append(head);
     if (!opened) return card;
@@ -271,7 +271,7 @@
       const c = el("div", "tr" + (todayIds.has(tr.id) ? " today" : "")); c.style.setProperty("--c", tr.cor);
       c.append(el("span", "tr-name", tr.nome), el("span", "tr-meta", (m >= 60 ? (Math.round(m / 6) / 10) + " h" : m + " min") + " de 10 h"));
       const bar = el("span", "tr-bar"); const i = el("i"); i.style.width = pct + "%"; bar.append(i); c.append(bar);
-      c.append(el("span", "tr-meta", next.length ? "Próxima: " + short(next[0].dia) + " · " + next[0].tema : "Sem aula marcada ainda"));
+      if (next.length) c.title = "Próxima: " + short(next[0].dia) + " · " + next[0].tema;
       grid.append(c);
     });
   }

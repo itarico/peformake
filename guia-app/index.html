@@ -185,6 +185,16 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px}
 .seg button{border:0;background:none;border-radius:10px;padding:10px 4px;font-weight:600;color:var(--muted);font-size:.88rem}
 .seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.fold{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.fold>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px;font:700 1rem var(--display)}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin:-4px 4px 0 0;transition:transform .2s;flex:none}
+.fold[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
+.fold-n{margin-left:auto;font:500 .82rem var(--body);color:var(--muted)}
+.fold-body{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+.fold-body .subj{border-radius:16px}
+.fold-body .card{border:0;padding:0}
+#foldReview{border-color:var(--xp)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -238,20 +248,17 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
     </section>
 
     <!-- ESTUDO -->
-    <section data-view="estudo" hidden style="display:flex;flex-direction:column;gap:14px">
-      <div style="display:flex;flex-direction:column;gap:6px">
+    <section data-view="estudo" hidden style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:4px">
+        <h2 style="font-size:1.45rem" id="studyTitle">Estudo</h2>
         <span class="small muted" id="progName"></span>
-        <h2 style="font-size:1.45rem" id="studyTitle">Hoje você aprende</h2>
-        <div id="studyFoco" style="display:flex;flex-direction:column;gap:4px"></div>
       </div>
-      <div class="card review" id="review" hidden></div>
-      <div id="todayCards" style="display:flex;flex-direction:column;gap:12px"></div>
-      <div class="row" style="justify-content:space-between"><h2>Cronograma</h2></div>
-      <div class="card" id="crono" style="gap:0"></div>
-      <a class="btn full chat" id="chatBtn" href="#" target="_blank" rel="noopener">Falar com o professor no chat</a>
-      <div class="row" style="justify-content:space-between"><h2>Suas trilhas</h2><span class="small muted">meta: 10 h cada</span></div>
-      <div class="trs" id="trilhas"></div>
-      <div class="card"><h2>Recado para o professor</h2><div id="generalVoice"></div></div>
+      <details class="fold" id="foldReview" hidden><summary><span>Revisão</span><span class="fold-n" id="reviewN"></span></summary><div class="fold-body" id="review"></div></details>
+      <details class="fold" open><summary><span>Aulas de hoje</span><span class="fold-n" id="todayN"></span></summary><div class="fold-body" id="todayCards"></div></details>
+      <details class="fold"><summary><span>Cronograma</span><span class="fold-n">4 semanas</span></summary><div class="fold-body" id="crono"></div></details>
+      <details class="fold"><summary><span>Trilhas</span><span class="fold-n" id="trilhasN"></span></summary><div class="fold-body"><div class="trs" id="trilhas"></div></div></details>
+      <details class="fold"><summary><span>Falar com o professor</span></summary><div class="fold-body"><div id="generalVoice"></div><a class="lnk" id="chatBtn" href="#" target="_blank" rel="noopener">Abrir o chat do professor</a></div></details>
+      <div hidden id="studyFoco"></div>
     </section>
 
     <!-- VOCÊ -->
