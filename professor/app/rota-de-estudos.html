@@ -1,0 +1,299 @@
+<title>Rota de Estudos do Italo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: uma coluna estreita tipo caderno de bolso; "Hoje" no topo, semana e acervo abaixo */
+:root{
+  --bg:#F3F6F7; --surface:#FFFFFF; --ink:#13232B; --muted:#5B6B72; --line:#D9E2E5;
+  --sea:#0B6E79; --sea-soft:#DDEFF1; --sun:#E8973A; --sun-soft:#FBEBD7; --ok:#2F8A4E;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D171B; --surface:#14232A; --ink:#E6EEF0; --muted:#94A6AD; --line:#24363E;
+  --sea:#4FC1CC; --sea-soft:#15353B; --sun:#F0AE5E; --sun-soft:#3A2A16; --ok:#5BC27D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D171B; --surface:#14232A; --ink:#E6EEF0; --muted:#94A6AD; --line:#24363E;
+  --sea:#4FC1CC; --sea-soft:#15353B; --sun:#F0AE5E; --sun-soft:#3A2A16; --ok:#5BC27D; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.25rem;font-weight:700}
+h3{font-size:1rem;font-weight:600}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+a{color:var(--sea);text-underline-offset:3px}
+header{display:flex;flex-direction:column;gap:8px}
+.focus{background:var(--sea-soft);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.today{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:16px}
+.today-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.meter{display:flex;align-items:center;gap:10px;min-width:180px;flex:1;max-width:260px}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--sun);width:0;transition:width .3s}
+.num{font:500 .85rem var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.blocks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.block{display:grid;grid-template-columns:28px 52px 1fr;gap:10px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.block:first-child{border-top:0}
+.block input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ok)}
+.block .min{font:500 .8rem var(--mono);color:var(--muted);padding-top:3px}
+.block .txt{min-width:0;display:flex;flex-direction:column;gap:4px}
+.block.done .txt h3{text-decoration:line-through;color:var(--muted)}
+.tag{display:inline-block;font:500 .68rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:6px;background:var(--sea-soft);color:var(--sea);margin-right:6px}
+.tag.en{background:var(--sun-soft);color:var(--sun)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;padding:6px 10px;border:1px solid var(--line);border-radius:99px;text-decoration:none;color:var(--ink);background:var(--bg)}
+.chip:hover{border-color:var(--sea)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.say{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:5px 10px;font-size:.85rem}
+.say[hidden]{display:none}
+.phrase{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-style:italic}
+.note{display:flex;flex-direction:column;gap:8px}
+textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);color:var(--ink);font:inherit}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:9px 14px;background:var(--sea);color:var(--surface);font-weight:600}
+.status{font-size:.85rem;color:var(--muted)}
+.week{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.day{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px;text-align:left;color:var(--ink);display:flex;flex-direction:column;gap:6px;min-width:0}
+.day[aria-pressed="true"]{border-color:var(--sea);box-shadow:inset 0 0 0 1px var(--sea)}
+.day .d{font:500 .72rem var(--mono);text-transform:uppercase;color:var(--muted)}
+.day .t{font-size:.82rem;line-height:1.3;overflow-wrap:anywhere}
+.day .bar{height:5px}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.list li{padding:12px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:3px}
+.list li:first-child{border-top:0}
+.pill{font:500 .7rem/1 var(--mono);padding:4px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;align-self:flex-start}
+.pill.aberta{background:var(--sun-soft);color:var(--sun)}
+.pill.feita{background:var(--sea-soft);color:var(--ok)}
+.prog{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.prog div{border-top:3px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:2px}
+.prog div.now{border-top-color:var(--sun)}
+.wpm{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.wpm input{width:90px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:500 1rem var(--mono)}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+footer{font-size:.82rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Professor do Italo · 1 hora por dia</span>
+    <h1>Rota de Estudos</h1>
+    <div class="focus" id="focus">
+      <span class="eyebrow">Foco da semana</span>
+      <strong id="focusTitle">Carregando a semana…</strong>
+      <span class="muted" id="focusGoal"></span>
+    </div>
+  </header>
+
+  <section class="today" aria-labelledby="dayTitle">
+    <div class="today-head">
+      <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+        <span class="eyebrow" id="dayDate">Hoje</span>
+        <h2 id="dayTitle">O plano do dia aparece aqui</h2>
+        <span class="muted" id="dayWhy"></span>
+      </div>
+      <div class="meter" aria-label="Progresso do dia">
+        <div class="bar"><i id="dayBar"></i></div>
+        <span class="num" id="dayNum">0/60 min</span>
+      </div>
+    </div>
+    <ol class="blocks" id="blocks">
+      <li class="empty">Quando o professor publicar a semana, os blocos de estudo aparecem aqui. Marque cada um ao terminar.</li>
+    </ol>
+    <div class="note">
+      <label for="note"><h3>Anotação do dia</h3></label>
+      <span class="muted" style="font-size:.85rem">O que travou, o que aprendeu, seus números (palavras por minuto, vícios). O professor lê isto antes da próxima aula.</span>
+      <textarea id="note" placeholder="Ex.: 172 palavras/min, falei 'né' 9 vezes, a primeira frase não prendeu."></textarea>
+      <div class="row"><button class="btn" id="saveNote" type="button">Salvar anotação</button><span class="status" id="noteStatus" role="status"></span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="weekH" style="display:flex;flex-direction:column;gap:12px">
+    <h2 id="weekH">Esta semana</h2>
+    <div class="week" id="week"></div>
+  </section>
+
+  <section class="wpm" aria-labelledby="wpmH">
+    <h3 id="wpmH">Medidor de ritmo da fala</h3>
+    <span class="muted" style="font-size:.9rem">Grave 1 minuto falando, transcreva (o celular faz) e conte as palavras. Para vender, a faixa confortável fica perto de 130 a 160 palavras por minuto.</span>
+    <div class="row"><label for="words">Palavras em 1 minuto</label><input id="words" type="number" inputmode="numeric" min="0" max="400" value="150"><span class="num" id="wpmOut"></span></div>
+  </section>
+
+  <section aria-labelledby="progH" style="display:flex;flex-direction:column;gap:12px">
+    <h2 id="progH">Programa: oratória para vender</h2>
+    <div class="prog" id="prog"></div>
+  </section>
+
+  <section aria-labelledby="aulasH" style="display:flex;flex-direction:column;gap:8px">
+    <h2 id="aulasH">Aulas</h2>
+    <ul class="list" id="aulas"><li class="muted">Carregando…</li></ul>
+  </section>
+
+  <section aria-labelledby="recH" style="display:flex;flex-direction:column;gap:8px">
+    <h2 id="recH">Acervo</h2>
+    <ul class="list" id="recursos"><li class="muted">Carregando…</li></ul>
+  </section>
+
+  <section aria-labelledby="corpoH" style="display:flex;flex-direction:column;gap:8px">
+    <h2 id="corpoH">Corpo e treino</h2>
+    <p class="muted" id="corpo" style="margin:0">Me conta no chat como você treina hoje (quantas vezes por semana, o quê, alguma lesão) e o seu treino entra aqui ao lado dos estudos.</p>
+  </section>
+
+  <footer id="foot">Para conversar com o professor, use o chat do Claude. Esta página mostra o plano e guarda o que você marca.</footer>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
+  let db = null, tts = null, days = [], selected = null, unsubDays = null;
+
+  function localISO(d){ const z = new Date(d.getTime() - d.getTimezoneOffset()*60000); return z.toISOString().slice(0,10); }
+  function fmtDate(iso){ const [y,m,dd] = iso.split("-").map(Number); const d = new Date(y,m-1,dd); return DOW[d.getDay()] + " " + String(dd).padStart(2,"0") + "/" + String(m).padStart(2,"0"); }
+  function safeUrl(u){ return typeof u === "string" && u.startsWith("https://") ? u : null; }
+  function el(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = String(text); return e; }
+  function total(day){ return (day.blocos||[]).reduce((s,b)=>s+(Number(b.min)||0),0); }
+  function doneMin(day){ const f = new Set(day.feitos||[]); return (day.blocos||[]).reduce((s,b,i)=>s+(f.has(i)?(Number(b.min)||0):0),0); }
+
+  // medidor de ritmo
+  function wpm(){ const n = Number($("words").value)||0; let msg;
+    if(n === 0) msg = ""; else if(n < 120) msg = n + " pal/min · devagar, pode soar inseguro";
+    else if(n <= 165) msg = n + " pal/min · boa faixa para vender";
+    else msg = n + " pal/min · rápido, use pausas"; $("wpmOut").textContent = msg; }
+  $("words").addEventListener("input", wpm); wpm();
+
+  function pickDefault(){
+    const today = localISO(new Date());
+    const exact = days.find(d => d.data === today);
+    if(exact) return exact;
+    const next = days.find(d => d.data > today);
+    return next || days[days.length-1] || null;
+  }
+
+  function renderWeek(){
+    const w = $("week"); w.replaceChildren();
+    if(!days.length){ w.append(el("div","empty","A semana ainda não foi publicada.")); return; }
+    days.forEach(d => {
+      const b = el("button","day"); b.type = "button";
+      b.setAttribute("aria-pressed", selected && selected.data === d.data ? "true" : "false");
+      b.append(el("span","d",fmtDate(d.data)), el("span","t",d.titulo||""));
+      const bar = el("div","bar"); const i = document.createElement("i");
+      const t = total(d) || 1; i.style.width = Math.round(100*doneMin(d)/t) + "%"; bar.append(i); b.append(bar);
+      b.addEventListener("click", () => { selected = d; renderDay(); renderWeek(); });
+      w.append(b);
+    });
+  }
+
+  function renderDay(){
+    const d = selected;
+    const list = $("blocks"); list.replaceChildren();
+    if(!d){ list.append(el("li","empty","Quando o professor publicar a semana, os blocos de estudo aparecem aqui.")); return; }
+    const today = localISO(new Date());
+    $("dayDate").textContent = (d.data === today ? "Hoje · " : "") + fmtDate(d.data);
+    $("dayTitle").textContent = d.titulo || "";
+    $("dayWhy").textContent = d.foco || "";
+    const f = new Set(d.feitos||[]);
+    (d.blocos||[]).forEach((b, idx) => {
+      const li = el("li","block" + (f.has(idx) ? " done" : ""));
+      const cb = document.createElement("input"); cb.type = "checkbox"; cb.id = "b-" + d.data + "-" + idx; cb.checked = f.has(idx);
+      cb.setAttribute("aria-label", "Marcar como feito: " + (b.titulo||""));
+      cb.addEventListener("change", () => toggle(d, idx, cb.checked));
+      const txt = el("div","txt");
+      const h = el("h3"); if(b.tipo){ h.append(el("span","tag" + (b.tipo === "inglês" ? " en" : ""), b.tipo)); } h.append(document.createTextNode(b.titulo||""));
+      txt.append(h);
+      if(b.detalhe) txt.append(el("span","muted",b.detalhe));
+      if(Array.isArray(b.falar) && b.falar.length){
+        b.falar.forEach(p => { const row = el("div","phrase"); row.append(el("span",null,p));
+          const s = el("button","say","Ouvir"); s.type = "button"; s.hidden = !tts;
+          s.addEventListener("click", () => { if(tts) tts.speak(String(p), {language:"en", rate:0.9}).catch(()=>{}); });
+          row.append(s); txt.append(row); });
+      }
+      const links = (b.links||[]).filter(l => safeUrl(l.url));
+      if(links.length){ const lw = el("div","links"); links.forEach(l => { const a = el("a","chip", l.rotulo || "Abrir"); a.href = safeUrl(l.url); a.target = "_blank"; a.rel = "noopener"; lw.append(a); }); txt.append(lw); }
+      li.append(cb, el("span","min", (b.min||0) + " min"), txt);
+      list.append(li);
+    });
+    const t = total(d) || 60, dm = doneMin(d);
+    $("dayBar").style.width = Math.round(100*dm/t) + "%";
+    $("dayNum").textContent = dm + "/" + t + " min";
+    const note = $("note"); if(document.activeElement !== note) note.value = d.nota || "";
+    $("noteStatus").textContent = "";
+  }
+
+  async function toggle(d, idx, on){
+    const f = new Set(d.feitos||[]); on ? f.add(idx) : f.delete(idx);
+    d.feitos = [...f].sort((a,b)=>a-b); renderDay(); renderWeek();
+    if(!db) return;
+    try { await db.doc("dias/" + d.data).update({ feitos: d.feitos }); }
+    catch(e){ $("noteStatus").textContent = "Não consegui salvar a marcação. Tente de novo."; }
+  }
+
+  $("saveNote").addEventListener("click", async () => {
+    const d = selected; if(!d) return;
+    const v = $("note").value.slice(0, 4000);
+    if(!db){ $("noteStatus").textContent = "Abra a página logado no Claude para salvar."; return; }
+    $("noteStatus").textContent = "Salvando…";
+    try { await db.doc("dias/" + d.data).update({ nota: v, notaEm: new Date().toISOString() }); d.nota = v; $("noteStatus").textContent = "Salvo. O professor vai ler."; }
+    catch(e){ $("noteStatus").textContent = "Não salvou. Confira a conexão e tente de novo."; }
+  });
+
+  function renderMeta(m){
+    if(!m) return;
+    $("focusTitle").textContent = m.titulo || "";
+    $("focusGoal").textContent = m.objetivo || "";
+    const p = $("prog"); p.replaceChildren();
+    (m.programa||[]).forEach(s => { const c = el("div", s.atual ? "now" : null);
+      c.append(el("span","eyebrow", "Semana " + s.n + (s.datas ? " · " + s.datas : "")), el("strong",null,s.tema||""));
+      if(s.resultado) c.append(el("span","muted",s.resultado)); p.append(c); });
+    if(m.corpo) $("corpo").textContent = m.corpo;
+  }
+
+  function renderAulas(snap){
+    const ul = $("aulas"); ul.replaceChildren();
+    if(snap.empty){ ul.append(el("li","muted","Nenhuma aula publicada ainda.")); return; }
+    snap.docs.map(x=>x.data()).sort((a,b)=>(a.numero||0)-(b.numero||0)).forEach(a => {
+      const li = el("li"); li.append(el("span","pill " + (a.status === "feita" ? "feita" : "aberta"), a.status === "feita" ? "feita" : "aberta"));
+      const h = el("h3"); const u = safeUrl(a.url);
+      if(u){ const link = el("a",null,"Aula " + a.numero + " · " + a.titulo); link.href = u; link.target = "_blank"; link.rel = "noopener"; h.append(link); }
+      else h.textContent = "Aula " + a.numero + " · " + a.titulo;
+      li.append(h); if(a.resumo) li.append(el("span","muted",a.resumo)); ul.append(li); });
+  }
+
+  function renderRecursos(snap){
+    const ul = $("recursos"); ul.replaceChildren();
+    if(snap.empty){ ul.append(el("li","muted","O acervo aparece aqui.")); return; }
+    snap.docs.map(x=>x.data()).sort((a,b)=>(a.ordem||0)-(b.ordem||0)).forEach(r => {
+      const li = el("li"); const head = el("div","row");
+      head.append(el("span","tag", r.tipo || "link"));
+      const u = safeUrl(r.url); const t = u ? el("a",null,r.titulo) : el("strong",null,r.titulo);
+      if(u){ t.href = u; t.target = "_blank"; t.rel = "noopener"; }
+      head.append(t); li.append(head); if(r.porque) li.append(el("span","muted",r.porque)); ul.append(li); });
+  }
+
+  async function start(){
+    const use = window.claude && window.claude.use;
+    if(!use){ $("focusTitle").textContent = "Abra esta página no Claude para ver o plano."; return; }
+    window.claude.use("tts").then(t => { tts = t; if(selected) renderDay(); }).catch(()=>{});
+    db = await window.claude.use("db").catch(()=>null);
+    if(!db){ $("focusTitle").textContent = "Entre na sua conta do Claude para ver o plano."; return; }
+    const timer = setTimeout(() => { if(!days.length) $("focusTitle").textContent = "O plano está demorando para carregar. Confira a conexão."; }, 10000);
+    db.doc("meta/semana").onSnapshot(s => { clearTimeout(timer); renderMeta(s.exists ? s.data() : null); }, () => clearTimeout(timer));
+    unsubDays = db.collection("dias").orderBy("data").onSnapshot(s => {
+      clearTimeout(timer);
+      const prevSel = selected && selected.data;
+      days = s.docs.map(x => ({ ...x.data(), data: x.data().data || x.id }));
+      selected = (prevSel && days.find(d => d.data === prevSel)) || pickDefault();
+      renderDay(); renderWeek();
+    }, () => { clearTimeout(timer); $("focusTitle").textContent = "Não consegui ler o plano agora."; });
+    db.collection("aulas").onSnapshot(renderAulas, ()=>{});
+    db.collection("recursos").onSnapshot(renderRecursos, ()=>{});
+  }
+  start();
+})();
+</script>

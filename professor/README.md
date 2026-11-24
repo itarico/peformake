@@ -9,6 +9,10 @@ Sistema de ensino pessoal no padrão de tutoria de Oxford, baseado em ciência d
 | `diario-de-aprendizagem.md` | Memória: aulas dadas, notas, fila de revisão espaçada |
 | `aulas/` | Uma aula por semana, gerada automaticamente toda segunda |
 
+## Rota de Estudos (página no celular)
+
+https://claude.ai/artifact/QhwHiXPtMUHxowNuHahM4V. O código fica em `professor/app/rota-de-estudos.html`. É o plano de 1 hora por dia: você marca os blocos e escreve a anotação, e o professor lê isso toda segunda antes de montar a semana seguinte. A conversa continua no chat do Claude.
+
 ## Como usar
 
 1. Toda segunda de manhã chega uma aula nova em `aulas/` e um aviso no celular.
