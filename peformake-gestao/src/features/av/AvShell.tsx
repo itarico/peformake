@@ -28,6 +28,8 @@ export function AvTabs() {
   // Mesmas regras das Configurações: serviços e preços só administrador; prazos e avisos, administrador e head de marketing.
   const admin = state.status === 'ready' && state.user.roles.includes('admin')
   const settings = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing'])
+  const clientsList = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing', 'traffic_manager'])
+  const finance = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'ellcazo'])
   const tabs = [
     ...(manager ? [{ to: '/audiovisual', label: 'Agenda', end: true }] : []),
     { to: '/audiovisual/producao', label: 'Produção', end: false },
@@ -35,6 +37,9 @@ export function AvTabs() {
     ...(prices ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }] : []),
     ...(manager ? [{ to: '/audiovisual/fotos', label: 'Fotos', end: false }] : []),
     // Uso raro: ficam em "Mais". Serviços e preços são do administrador; prazos e avisos, de quem gerencia.
+    // A Ellcazo é uma perna da Peformake: os clientes e o financeiro dela abrem daqui, já filtrados (pedido do Italo, 24/11).
+    ...(clientsList ? [{ to: '/clientes?empresa=ellcazo', label: 'Clientes da Ellcazo', end: false, more: true }] : []),
+    ...(finance ? [{ to: '/financeiro?empresa=ellcazo', label: 'Financeiro da Ellcazo', end: false, more: true }] : []),
     ...(admin ? [{ to: '/configuracoes/audiovisual/servicos', label: 'Serviços e preços', end: false, more: true }] : []),
     ...(settings ? [{ to: '/configuracoes/audiovisual', label: 'Prazos e avisos', end: true, more: true }] : []),
   ]

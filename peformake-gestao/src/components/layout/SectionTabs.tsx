@@ -77,7 +77,7 @@ export function AreaTabs({ tabs, label, keepMes }: { tabs: { to: string; label: 
     document.addEventListener('keydown', close)
     return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', close) }
   }, [open])
-  const href = (to: string) => (keepMes ? `${to}?mes=${keepMes}` : to)
+  const href = (to: string) => (keepMes ? `${to}${to.includes('?') ? '&' : '?'}mes=${keepMes}` : to)
   return (
     <div ref={box} className="relative -mx-4 flex border-b border-line px-4 md:mx-0 md:px-0">
       <nav aria-label={label} className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
