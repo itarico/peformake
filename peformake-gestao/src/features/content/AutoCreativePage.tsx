@@ -49,9 +49,9 @@ async function loadAll() {
   }
 }
 
-function NewRequest({ clients, onClose }: { clients: { id: string; name: string }[]; onClose: () => void }) {
+function NewRequest({ clients, onClose, clientId = '' }: { clients: { id: string; name: string }[]; onClose: () => void; clientId?: string }) {
   const queryClient = useQueryClient()
-  const [d, setD] = useState({ clientId: '', brief: '', headline: '', subtitle: '', cta: 'Chame no WhatsApp', caption: '', feed: true, story: true })
+  const [d, setD] = useState({ clientId, brief: '', headline: '', subtitle: '', cta: 'Chame no WhatsApp', caption: '', feed: true, story: true })
   const set = (k: keyof typeof d, v: string | boolean) => setD((c) => ({ ...c, [k]: v }))
   const send = useMutation({
     mutationFn: async () => {
@@ -259,6 +259,23 @@ export function AutoCreativePage() {
           </ul>
         </section>
       </div>
+    </>
+  )
+}
+
+/**
+ * Botão de ação "Modelo rápido" dentro do cliente (Social Media → cliente): abre o mesmo pedido da aba Modelo rápido já com
+ * o cliente escolhido. O sistema pega a foto real da pasta do cliente, põe a chamada e o botão no modelo da Peformake e
+ * devolve feed e story prontos em segundos; a arte entra como peça do mês e aparece em Revisar.
+ */
+export function QuickModelButton({ clientId, clientName }: { clientId: string; clientName: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button variant="secondary" aria-label="Modelo rápido" className="max-md:size-11 max-md:px-0" onClick={() => setOpen(true)}><ImagePlus size={16} aria-hidden="true" /> <span className="max-md:hidden">Modelo rápido</span></Button>
+      <Dialog open={open} onClose={() => setOpen(false)} title="Modelo rápido" description={`${clientName} · foto real da pasta do cliente, pronta em segundos.`}>
+        {open && <NewRequest clients={[{ id: clientId, name: clientName }]} clientId={clientId} onClose={() => setOpen(false)} />}
+      </Dialog>
     </>
   )
 }

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, ChevronRight, Play, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
+import { SearchSelect } from '@/components/ui/SearchSelect'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { DESIGN_AREAS, inAreas, useProduction } from '@/features/production/useProduction'
@@ -27,12 +28,14 @@ const FILTERS: { id: TaskOrigin | 'todas'; label: string }[] = [
  * (estratégia aprovada, agente) e o que a pessoa anotou. Todo cartão tem o mesmo desenho: origem, o que fazer, cliente e prazo.
  * Tarefa que é uma arte vira arte com 1 toque ("Virar arte") e sai daqui.
  */
-export function TasksBoard() {
+export function TasksBoard({ clientId }: { clientId?: string } = {}) {
   const queryClient = useQueryClient()
   const today = todayInBrazil()
   const { clients, clientName, isLive, isPending, isError, refetch } = useProduction()
   const tasks = useQuery({ queryKey: ['social', 'tasks', 'kanban'], queryFn: listTasks })
   const [filter, setFilter] = useState<TaskOrigin | 'todas'>('todas')
+  // Dentro do cliente o filtro é fixo; na aba geral dá para escolher o cliente.
+  const [pickedClient, setPickedClient] = useState('')
   const [chosenTab, setTab] = useState<(typeof TASK_COLUMNS)[number]['id'] | null>(null)
   const [editing, setEditing] = useState<Task | 'new' | null>(null)
 
@@ -45,9 +48,11 @@ export function TasksBoard() {
   })
 
   const cols = useMemo(() => {
-    const live = (tasks.data ?? []).filter((t) => (!t.client_id || isLive(t.client_id, 'conteudo')) && (filter === 'todas' || taskOrigin(t.source) === filter))
+    const only = clientId ?? clients?.find((c) => c.name === pickedClient)?.id ?? null
+    const live = (tasks.data ?? []).filter((t) => (!t.client_id || isLive(t.client_id, 'conteudo')) && (filter === 'todas' || taskOrigin(t.source) === filter)
+      && (!only || t.client_id === only))
     return groupTasks(live, Date.now())
-  }, [tasks.data, filter, isLive])
+  }, [tasks.data, filter, isLive, clientId, clients, pickedClient])
 
   if (!tasks.data || !clients) return <LoadState isPending={tasks.isPending || isPending} isError={tasks.isError || isError} refetch={() => { refetch(); void tasks.refetch() }} />
   const tab = chosenTab ?? (TASK_COLUMNS.find((c) => cols[c.id].length > 0)?.id ?? 'a_fazer')
@@ -70,7 +75,7 @@ export function TasksBoard() {
               ? <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'fazendo' })}><Play size={14} aria-hidden="true" /> Começar</Button>
               : <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'feito' })}><Check size={14} aria-hidden="true" /> Concluir</Button>}
             {/* "Fazer o planejamento do mês" nasce sozinha (cliente com social ou design e mês sem arte) e fecha na primeira arte. */}
-            {t.ref_table === 'plano_mes' && <Link to="/conteudo/planejamento" className="inline-flex min-h-10 items-center gap-1 px-2 text-[13px] font-medium text-accent-ink no-underline hover:underline">Planejar <ChevronRight size={14} aria-hidden="true" /></Link>}
+            {t.ref_table === 'plano_mes' && <Link to={t.client_id ? `/conteudo/cliente/${t.client_id}` : '/conteudo/planejamento'} className="inline-flex min-h-10 items-center gap-1 px-2 text-[13px] font-medium text-accent-ink no-underline hover:underline">Planejar <ChevronRight size={14} aria-hidden="true" /></Link>}
             {t.ref_table !== 'content_items' && t.ref_table !== 'plano_mes' && (
               <NewArtButton label="Virar arte" variant="secondary" className="min-h-10 px-3 text-[13px]"
                 start={{ clientId: t.client_id ?? undefined, text: [t.title, t.description].filter(Boolean).join('. ') }}
@@ -91,7 +96,15 @@ export function TasksBoard() {
               className={cn('min-h-10 cursor-pointer rounded-full px-3.5 text-[13px] font-medium', filter === f.id ? 'bg-fill text-on-fill' : 'border border-line text-muted hover:text-ink')}>{f.label}</button>
           ))}
         </div>
-        <Button variant="secondary" onClick={() => setEditing('new')}><Plus size={16} aria-hidden="true" /> Tarefa</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          {!clientId && (
+            <div className="w-56 max-w-full">
+              <SearchSelect id="tarefas-cliente" value={pickedClient} onChange={setPickedClient} allowNew={false} placeholder="Todos os clientes"
+                options={clients.filter((c) => c.isActive && inAreas(c, DESIGN_AREAS)).map((c) => c.name)} />
+            </div>
+          )}
+          <Button variant="secondary" onClick={() => setEditing('new')}><Plus size={16} aria-hidden="true" /> Tarefa</Button>
+        </div>
       </div>
 
       <div role="tablist" aria-label="Colunas das tarefas" className="grid grid-cols-3 rounded-full border border-line p-0.5 xl:hidden">
@@ -112,7 +125,7 @@ export function TasksBoard() {
           </section>
         ))}
       </div>
-      {editing && <TaskDialog task={editing === 'new' ? null : editing} clients={clients.filter((c) => inAreas(c, DESIGN_AREAS))} onClose={() => setEditing(null)} />}
+      {editing && <TaskDialog task={editing === 'new' ? (clientId ? ({ client_id: clientId } as unknown as Task) : null) : editing} clients={clients.filter((c) => inAreas(c, DESIGN_AREAS))} onClose={() => setEditing(null)} />}
     </>
   )
 }

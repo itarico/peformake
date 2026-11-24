@@ -14,7 +14,7 @@ import { useMonthParam } from './useMonthParam'
 import { isLate, itemTitle, KIND_LABEL, STATUS_LABEL, STATUS_TONE, summarize } from './contentRules'
 
 /** Pauta do mês: lê na página; editar abre em pop-up (regra de interface 1). */
-function PlanNotes({ plan, canPlan }: { plan: ContentPlan; canPlan: boolean }) {
+export function PlanNotes({ plan, canPlan }: { plan: ContentPlan; canPlan: boolean }) {
   const queryClient = useQueryClient()
   const [notes, setNotes] = useState(plan.notes ?? '')
   const [editing, setEditing] = useState(false)

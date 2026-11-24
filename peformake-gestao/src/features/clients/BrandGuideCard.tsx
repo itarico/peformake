@@ -280,3 +280,59 @@ export function GuideButton({ clientId, start = 'design', className }: { clientI
     </>
   )
 }
+
+/**
+ * Guia da marca em página inteira (Social Media → cliente → Guia de marca, pedido do Italo de 24/11/2026: "mais organizado").
+ * Cabeçalho com logo, quanto está pronto e as ações; cada parte num cartão próprio, com Editar na própria parte.
+ */
+export function BrandGuidePage({ clientId }: { clientId: string }) {
+  const q = useBrandGuide(clientId)
+  const ai = useBuildGuide(clientId)
+  const [editing, setEditing] = useState<GuideSection | null>(null)
+  if (!q.data) return null
+  const g = resolveGuide(q.data)
+  const fill = guideFill(g)
+  const name = q.data.client.name
+  const logo = logoPublicUrl(q.data.client.logo_path)
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-line bg-surface p-4">
+        {logo && <img src={logo} alt={`Logo de ${name}`} className="size-14 shrink-0 rounded-2xl border border-line bg-white object-contain" />}
+        <div className="min-w-0 flex-1">
+          <p className="whitespace-nowrap font-semibold">Guia da marca</p>
+          <div className="mt-1 flex items-center gap-2">
+            <span className="h-1.5 w-32 overflow-hidden rounded-full bg-raised" aria-hidden="true"><span className="block h-full rounded-full bg-accent" style={{ width: `${fill}%` }} /></span>
+            <span className="text-[12px] tabular-nums text-muted">{fill}% pronto</span>
+          </div>
+        </div>
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+          {fill < 100 && (
+            <Button variant={fill > 0 ? 'secondary' : 'primary'} disabled={ai.isPending} onClick={() => ai.mutate()}>
+              <Sparkles size={15} aria-hidden="true" /> {ai.isPending ? 'Montando' : fill > 0 ? 'Completar com IA' : 'Montar com IA'}
+            </Button>
+          )}
+          {fill > 0 && <Button variant="secondary" onClick={() => printGuide(name, g, logo)}><FileDown size={15} aria-hidden="true" /> PDF</Button>}
+        </div>
+      </div>
+      {ai.isError && <p role="alert" className="text-[13px] font-medium text-warn-ink">{(ai.error as Error).message}</p>}
+      <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        {GUIDE_SECTIONS.map((s) => {
+          const done = sectionFilled(g, s.id)
+          return (
+            <li key={s.id} className="flex min-w-0 flex-col gap-3 rounded-3xl border border-line bg-surface p-4">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="flex items-center gap-2 font-semibold">
+                  <span className={cn('size-2 rounded-full', done ? 'bg-ok' : 'bg-line-strong')} aria-hidden="true" />{s.label}
+                  {q.data!.edited.includes(s.id) && <span className="rounded-full bg-ok-soft px-2 py-0.5 text-[11px] font-medium text-ok-ink">Revisado</span>}
+                </h3>
+                <Button variant="secondary" className="min-h-10 px-3 text-[13px]" onClick={() => setEditing(s.id)}><Pencil size={14} aria-hidden="true" /> Editar</Button>
+              </div>
+              <SectionView g={g} id={s.id} />
+            </li>
+          )
+        })}
+      </ul>
+      {editing && <SectionEditor clientId={clientId} section={editing} guide={g} onClose={() => setEditing(null)} />}
+    </div>
+  )
+}

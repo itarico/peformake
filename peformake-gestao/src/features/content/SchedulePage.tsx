@@ -105,13 +105,13 @@ function ScheduleDialog({ item, account, onClose }: { item: Ready; account: Acco
 }
 
 /** Social Media → Agendar: a arte aprovada pelo cliente vira publicação no Instagram com data e hora. */
-export function SchedulePage() {
+export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   const queryClient = useQueryClient()
   const [params, setParams] = useSearchParams()
   const { clients, clientName } = useProduction()
   const data = useQuery({ queryKey: ['ig-schedule'], queryFn: load, refetchInterval: 60000 })
   const [connecting, setConnecting] = useState(false)
-  const [pick, setPick] = useState(OWN)
+  const [pick, setPick] = useState(() => (clientId ? clientName(clientId) : OWN))
   const [scheduling, setScheduling] = useState<Ready | null>(null)
   const [posting, setPosting] = useState(false)
   const back = params.get('instagram')
@@ -135,7 +135,11 @@ export function SchedulePage() {
   }, [data.data])
   if (!data.data || !clients) return <LoadState isPending={data.isPending} isError={data.isError} refetch={() => void data.refetch()} />
 
-  const { accounts, ready, posts } = data.data
+  const all = data.data
+  // Dentro do cliente: só a conta, as artes e as publicações dele.
+  const accounts = clientId ? all.accounts.filter((a) => a.clientId === clientId) : all.accounts
+  const ready = clientId ? all.ready.filter((r) => r.clientId === clientId) : all.ready
+  const posts = clientId ? all.posts.filter((p) => accounts.some((a) => a.id === p.accountId)) : all.posts
   const scheduledItems = new Set(posts.filter((p) => p.status !== 'erro').map((p) => p.itemId))
   const waiting = ready.filter((r) => !scheduledItems.has(r.id))
   const accountById = new Map(accounts.map((a) => [a.id, a]))
