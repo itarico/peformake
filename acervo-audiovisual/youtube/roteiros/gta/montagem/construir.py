@@ -277,13 +277,15 @@ for k, (dx, rot, clip) in enumerate([(-160, -14, 'polygon(0 0,52% 0,44% 40%,56% 
 c.j(f'tl.fromTo(q1("#cam"),{{x:-12}},{{x:0,duration:.3,ease:"elastic.out(1,.3)"}},{c.r(t_quebrou)});')
 som(t_quebrou, 'impacto_3.mp3', 4)
 # 23 "em 2020, com um jogo de basquete"
-c = Cena('c23', c.fim, t_agora2 - 0.1 if TESTE else T('caminhos', 60, fim=True))
+c = Cena('c23', c.fim, t_agora2 - 0.1)
 c.texto('2020', T('2020', 58.5), 140, 300, 380, CREME)
 i = c.nid()
 c.h(f'<svg id="{i}" class="abs" style="left:1180px;top:200px;opacity:0" width="560" height="560"><circle cx="280" cy="280" r="260" fill="{LARANJA}" stroke="{ESCURO}" stroke-width="14"/>'
     f'<path d="M20,280 H540 M280,20 V540 M90,90 Q280,280 90,470 M470,90 Q280,280 470,470" fill="none" stroke="{ESCURO}" stroke-width="12"/></svg>')
 c.j(f'tl.fromTo(q1("#{i}"),{{opacity:0,y:-700}},{{opacity:1,y:0,duration:.5,ease:"bounce.out"}},{c.r(t_basq - 0.35)});')
 som(t_basq, 'impacto_1.mp3', 0)
+if not TESTE:
+    exec(open(pathlib.Path(__file__).with_name('cenas_resto.py'), encoding='utf-8').read())
 DUR = q(CENAS[-1].fim)
 
 # ======================================================================== escrever o projeto
@@ -340,6 +342,6 @@ hosts = '\n'.join(f'<div id="{c.id}" class="clip" data-composition-id="{c.id}" d
 for a, b in zip(CENAS, CENAS[1:]):
     if abs(a.fim - b.ini) > 1e-6: print('AVISO: buraco/sobreposição entre', a.id, b.id, a.fim, b.ini)
     if b.fim - b.ini < 0.4: print('AVISO: cena curta', b.id, round(b.fim - b.ini, 2))
-json.dump({'dur': DUR, 'eventos': sorted(EVENTOS, key=lambda e: e['t']), 'cenas': [{'id': c.id, 'ini': c.ini, 'fim': c.fim} for c in CENAS]},
+json.dump({'trechos': globals().get('TRECHOS', []), 'dur': DUR, 'eventos': sorted(EVENTOS, key=lambda e: e['t']), 'cenas': [{'id': c.id, 'ini': c.ini, 'fim': c.fim} for c in CENAS]},
           open(OUT / 'eventos.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('cenas', len(CENAS), 'duração', DUR, 's', 'efeitos', len(EVENTOS))

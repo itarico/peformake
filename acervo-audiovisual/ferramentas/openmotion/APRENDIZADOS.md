@@ -47,3 +47,16 @@ Primeiro uso: cenas novas do documentário do Taoísmo v70 (20/11/2026). Scripts
   sem foto e sem colagem destoa do estilo risografia/colagem aprovado nos quadros v3.
 - Regra: gráfico de conta também vira colagem (nota de dinheiro em meio-tom rasgada em fatias, envelopes, rabisco,
   grão). Manim só serve se o vídeo inteiro for de gráfico limpo, o que não é o caso do canal.
+
+## GTA VI (23/11/2026): render e mixagem
+- O export do OpenMotion ficou parado em "queued" por mais de 1 hora. Saída usada: `hyperframes render` local (o mesmo motor),
+  em partes de 70 s com `--start/--end` e TEMP/TMP apontando para o G: (o C: estava com 11 GB livres). 9 min (13.127 quadros)
+  saíram em cerca de 1 hora, depois `concat` sem recodificar.
+- Mixagem: o Italo achou música e efeitos mais altos que a voz. Regra que ficou (`youtube/roteiros/gta/montagem/sonorizar.py`):
+  trilha 20 dB abaixo da fala e mais 10 dB quando há fala; efeito sempre 10 a 14 dB abaixo da voz; master a -14 LUFS.
+- Trechos do trailer e planos de IA (Nim) entram como MOV com alfa numa faixa por cima (V3), nunca dentro das cenas: assim
+  o Premiere desliga um trecho sem refazer nada.
+- Nim (MCP `Nim`, https://mcp.nim.video/mcp): instalado com `claude mcp add --transport http --scope user Nim ...`; o login
+  é do Italo (`/mcp`). As ferramentas só aparecem numa sessão aberta depois do login. Seedance 2, 5 s em 1080p: 175 créditos
+  por plano. Plano de IA recebe cor puxada para a paleta, grão e a marca "ILUSTRAÇÃO".
+- Envio ao celular (Remote Control): limite de 30 MB por arquivo. Gerar uma cópia leve além da prévia de 45 MB.
