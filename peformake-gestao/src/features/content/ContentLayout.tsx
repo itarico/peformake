@@ -1,7 +1,8 @@
 import { NewArtButton } from './NewArt'
 import { Suspense } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { CONTENT_PLANNER_ROLES } from '@/lib/roles'
 import { useProduction } from '@/features/production/useProduction'
 import { SectionHeader, type SectionTab } from '@/components/layout/SectionTabs'
 import { monthLabel, monthStart } from '@/features/traffic/planRules'
@@ -9,12 +10,14 @@ import { useMonthParam } from './useMonthParam'
 
 const TABS: SectionTab[] = [
   // Só o trabalho do dia nas abas (pedido do Italo, 24/11: minimalista e funcional). Datas sazonais e Modelo rápido ficam em "Mais".
-  { to: '/conteudo/quadro', label: 'Peças' },
+  // O designer só enxerga a tela dele (Design); o resto é de quem planeja (pedido do Italo, 24/11).
+  { to: '/conteudo/quadro', label: 'Artes', roles: CONTENT_PLANNER_ROLES },
+  { to: '/conteudo/tarefas', label: 'Tarefas', roles: CONTENT_PLANNER_ROLES },
   { to: '/conteudo/design', label: 'Design' },
-  { to: '/conteudo/planejamento', label: 'Planejamento' },
+  { to: '/conteudo/planejamento', label: 'Planejamento', roles: CONTENT_PLANNER_ROLES },
   // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
-  { to: '/conteudo/datas', label: 'Datas sazonais', short: 'Datas', more: true },
-  { to: '/conteudo/automatico', label: 'Modelo rápido', short: 'Modelo', more: true },
+  { to: '/conteudo/datas', label: 'Datas sazonais', short: 'Datas', more: true, roles: CONTENT_PLANNER_ROLES },
+  { to: '/conteudo/automatico', label: 'Modelo rápido', short: 'Modelo', more: true, roles: CONTENT_PLANNER_ROLES },
 ]
 
 export function MonthSwitcher() {
@@ -39,11 +42,15 @@ export function ContentIndex() {
 }
 
 export function ContentLayout() {
+  const { isDesigner, canPlan } = useProduction()
+  const { pathname } = useLocation()
+  const designerOnly = isDesigner && !canPlan
+  if (designerOnly && pathname !== '/conteudo/design') return <Navigate to="/conteudo/design" replace />
   return (
     <>
       <SectionHeader
-        title="Social Media"
-        actions={<><MonthSwitcher /><NewArtButton iconOnMobile /></>}
+        title={designerOnly ? 'Design' : 'Social Media'}
+        actions={<><MonthSwitcher />{!designerOnly && <NewArtButton iconOnMobile />}</>}
         tabs={TABS}
       />
       <Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense>

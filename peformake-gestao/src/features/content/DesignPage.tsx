@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, Download, FileUp, Link2, Send } from 'lucide-react'
+import { ChevronDown, Download, FileUp, Image as ImageIcon, Link2, Send } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -11,6 +11,7 @@ import { supabase } from '@/lib/supabase'
 import { countdown } from '@/features/av/avRules'
 import { TONE_CLASS } from '@/features/av/AvShell'
 import { LoadState } from '@/features/traffic/LoadState'
+import { useAuth } from '@/auth/context'
 import { useProduction } from '@/features/production/useProduction'
 import { DesignerPanel } from './DesignerPanel'
 import { PriorityBadge } from './PriorityBadge'
@@ -106,13 +107,30 @@ function previewUrl(path: string): string {
 }
 
 /** Capa do cartão: a primeira foto de referência que a social media mandou (pedido do Italo, 20/11). */
-function RefCover({ images, title }: { images: string[]; title: string }) {
+function RefCover({ images, links, title }: { images: string[]; links: string[]; title: string }) {
   const [failed, setFailed] = useState(false)
-  if (images.length === 0 || failed) return null
+  // Sem foto mas com link (post do Instagram, Pinterest): busca a imagem do link para o cartão parecer a postagem.
+  const link = images.length === 0 ? links[0] : undefined
+  const thumb = useQuery({
+    queryKey: ['ref-thumb', link], enabled: !!link, staleTime: 3600e3, retry: false,
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('ref-thumb', { body: { links: [link] } })
+      return ((data as { thumbs?: Record<string, string> } | null)?.thumbs ?? {})[link!] ?? null
+    },
+  })
+  const src = images[0] ?? thumb.data ?? null
+  // Todo cartão tem o lugar da imagem, mesmo sem referência: a fila fica com o mesmo desenho.
+  if (!src || failed) {
+    return (
+      <div className="-mx-3 -mt-3 flex h-24 items-center justify-center gap-2 border-b border-line bg-raised text-[13px] text-muted">
+        <ImageIcon size={18} aria-hidden="true" /> {link && thumb.isPending ? 'Buscando a referência' : 'Sem imagem de referência'}
+      </div>
+    )
+  }
   return (
-    <a href={images[0]} target="_blank" rel="noopener noreferrer" aria-label={`Abrir a referência de ${title}`}
+    <a href={images[0] ?? link} target="_blank" rel="noopener noreferrer" aria-label={`Abrir a referência de ${title}`}
       className="relative -mx-3 -mt-3 block aspect-[16/9] overflow-hidden rounded-t-2xl border-b border-line bg-raised">
-      <img src={images[0]} alt="" loading="lazy" onError={() => setFailed(true)} className="size-full object-cover transition-transform duration-300 hover:scale-[1.03]" />
+      <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} className="size-full object-cover transition-transform duration-300 hover:scale-[1.03]" />
       {images.length > 1 && (
         <span className="absolute bottom-2 right-2 rounded-full bg-black/65 px-2 py-0.5 text-[11px] font-semibold text-white">+{images.length - 1} referência{images.length > 2 ? 's' : ''}</span>
       )}
@@ -140,7 +158,7 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
   const started = item.status === 'in_production'
   return (
     <li className={cn('flex flex-col gap-2.5 overflow-hidden rounded-2xl border bg-surface p-3', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
-      <RefCover images={images} title={itemTitle(item)} />
+      <RefCover images={images} links={otherLinks} title={itemTitle(item)} />
       <div className="flex items-center justify-between gap-2">
         <p className="min-w-0 truncate text-[12px] text-muted">{KIND_LABEL[item.kind]}{extra ? ` · ${extra}` : ''}{mine ? '' : ` · ${item.designerId ? staffName.split(' ')[0] : 'sem responsável'}`}</p>
         {c && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>{c.text}</span>}
@@ -186,6 +204,9 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
 
 /** Aba Design: a fila do designer, com o tempo de entrega, referências e a entrega em 3 toques. */
 export function DesignPage() {
+  const { state } = useAuth()
+  // Prazos do design são configuração: só o administrador abre. O designer vê só o tempo de cada arte.
+  const isAdmin = state.status === 'ready' && state.user.roles.includes('admin')
   const now = useNow()
   const { clients, staff, myStaffId, clientName, clientLogo, staffName, isPending, isError, refetch, isLive } = useProduction()
   const queue = useQuery({ queryKey: ['design-queue'], queryFn: listDesignQueue, refetchInterval: 120_000 })
@@ -222,7 +243,7 @@ export function DesignPage() {
               <input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} className="size-4" /> Só as minhas
             </label>
           )}
-          <DesignSlaButton />
+          {isAdmin && <DesignSlaButton />}
         </div>
       </div>
       {list.length === 0 ? (
