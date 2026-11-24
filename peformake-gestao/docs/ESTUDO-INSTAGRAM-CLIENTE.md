@@ -55,3 +55,21 @@ Nunca: criar segundo app, trocar e-mail/senha, remover administradores, pedir re
 1. Entrar na Meta no navegador do Claude (ou autorizar o uso do Chrome dele) para eu ver o motivo do bloqueio do app.
 2. Confirmar se a Verificação da Empresa da Peformake já foi feita no Gerenciador.
 3. Escolher um cliente-piloto com Instagram profissional já compartilhado com a Peformake.
+
+## Feito na Meta em 24/11 (pelo Chrome do Italo, com autorização dele)
+- App **PEFORMAKE-SERVIDOR** (1577712680824916, portfólio "Peformake CA 1 - thy", modo Em desenvolvimento): **sem restrição nenhuma**
+  (0 ações necessárias; o único alerta é a mensagem de boas-vindas da API de Marketing, de 03/11). O "bloqueio" de 04/11 não é do app.
+- Adicionado o caso de uso **Gerenciar mensagens e conteúdo no Instagram**.
+- Adicionadas as permissões ,  e  (status "Pronto para teste").
+   e  já estavam prontas.
+- Nada foi removido, nenhum token foi gerado ou lido, nenhum app novo foi criado.
+
+## Trava encontrada
+O portfólio tem 4 Instagrams (@oticamdprime, @ofornario, @fucturasolucoes e @thyfanyrayanne; os dois últimos com "Login necessário").
+**O Instagram da Peformake não está no portfólio.** Para adicionar é preciso entrar com a senha do Instagram: isso é do Italo.
+
+## Falta (do Italo)
+1. Configurações do portfólio → Contas do Instagram → Adicionar → entrar com o Instagram da Peformake.
+2. Usuários do sistema → atribuir esse Instagram e a Página ao usuário do sistema → gerar o token de novo marcando as 3 permissões
+   novas → colar no Supabase (segredo ).
+3. Liberar a escrita no banco para a tabela de agendamentos.
