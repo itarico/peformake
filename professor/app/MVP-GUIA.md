@@ -4,13 +4,12 @@
 
 Página: https://claude.ai/artifact/QhwHiXPtMUHxowNuHahM4V (código em `professor/app/rota-de-estudos.html`).
 
-| Aba | O que faz |
-|---|---|
-| Hoje | Nota do dia (% feito), agenda do Google Agenda (somente leitura), rotina fixa, estudo de 1 hora, tarefas de hoje e atrasadas, treino |
-| Semana | 7 dias com o % de cada um, o detalhe do dia escolhido e o programa de estudos |
-| Tarefas | Adicionar com data e frente; grupos atrasadas, hoje, próximos dias, sem data e feitas |
-| Estudos | Programa, medidor de ritmo da fala, aulas e acervo |
-| Progresso | Média de 7 dias, minutos de estudo, tarefas feitas e sequência por hábito |
+Versão minimalista (pedido do Italo em 24/11): **uma tela só**.
+
+- Topo: % do dia, barra e % da semana.
+- Três listas com a própria barra de progresso: **Rotina**, **Estudo** e **Tarefas** (inclui as atrasadas). Tocar em "ver" abre o detalhe, os links e as frases em inglês com áudio.
+- Campo para nova tarefa.
+- **Recado para o professor:** texto falado (botão Gravar quando o aparelho permite, ou o microfone do teclado do celular) salvo em `recados`. A rotina de segunda lê cada recado, transforma pedido em tarefa e marca como lido.
 
 **Como as tarefas entram hoje:** pela própria página, ou pelo chat do Claude ("anota: …"). Aí o Claude grava em `tarefas` com `origem: "chat"`.
 
@@ -22,13 +21,15 @@ Página: https://claude.ai/artifact/QhwHiXPtMUHxowNuHahM4V (código em `professo
 | `registro` | AAAA-MM-DD | data, habitos {id: true/false} |
 | `dias` | AAAA-MM-DD | plano de estudo: titulo, foco, blocos [{min, tipo, titulo, detalhe, links, falar}], feitos [índices], nota |
 | `tarefas` | automático | titulo, data (ou null), area, feita, feitaEm, origem ("app", "chat" ou "whatsapp"), criadaEm |
+| `recados` | automático | texto, data, criadoEm, lido |
 | `aulas`, `recursos` | id | aulas e acervo |
 | `meta` | `semana`, `corpo` | foco da semana e programa; próximo treino, divisão, link do acompanhamento |
 
 ### Limites conhecidos da fase 1
 - Só abre dentro do Claude, logado. Não instala como app.
 - Não recebe mensagem de WhatsApp.
-- A agenda é só leitura: a página não cria evento no Google.
+- A agenda do Google saiu da tela para manter o mínimo. Volta na fase 2.
+- O áudio não fica salvo como arquivo: vira texto na hora. O Claude não consegue ouvir arquivos de áudio daqui.
 - O treino detalhado fica na página de treino e nutrição (outra sessão). Aqui aparece só o resumo e o check semanal.
 
 ## Fase 2: app instalável e WhatsApp (só depois de 4 semanas de uso)

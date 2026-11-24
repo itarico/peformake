@@ -1,514 +1,234 @@
 <title>Guia do Italo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap">
 <style>
-/* Layout: app de bolso, uma coluna; barra de abas fixa embaixo no celular; "Hoje" junta rotina, estudo, tarefas, corpo e agenda */
+/* Layout: uma lista só. Topo com o % do dia; seções curtas com a própria barra; recado no fim */
 :root{
-  --bg:#F3F6F7; --surface:#FFFFFF; --ink:#13232B; --muted:#5B6B72; --line:#D9E2E5;
-  --sea:#0B6E79; --sea-soft:#DDEFF1; --sun:#C97A1E; --sun-soft:#FBEBD7; --ok:#2F8A4E; --ok-soft:#E1F2E6; --late:#B4442F;
+  --bg:#F4F6F6; --surface:#FFFFFF; --ink:#13232B; --muted:#6A7980; --line:#DDE4E6;
+  --ok:#1F8A5B; --accent:#0B6E79; --late:#B4442F;
   --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
   --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0D171B; --surface:#14232A; --ink:#E6EEF0; --muted:#94A6AD; --line:#24363E;
-  --sea:#4FC1CC; --sea-soft:#15353B; --sun:#F0AE5E; --sun-soft:#3A2A16; --ok:#5BC27D; --ok-soft:#173424; --late:#EE7F68; color-scheme:dark}}
+  --bg:#0E1619; --surface:#152227; --ink:#E7EFF1; --muted:#93A4AA; --line:#25363C; --ok:#5CC48B; --accent:#4FC1CC; --late:#EE7F68; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0D171B; --surface:#14232A; --ink:#E6EEF0; --muted:#94A6AD; --line:#24363E;
-  --sea:#4FC1CC; --sea-soft:#15353B; --sun:#F0AE5E; --sun-soft:#3A2A16; --ok:#5BC27D; --ok-soft:#173424; --late:#EE7F68; color-scheme:dark}
+  --bg:#0E1619; --surface:#152227; --ink:#E7EFF1; --muted:#93A4AA; --line:#25363C; --ok:#5CC48B; --accent:#4FC1CC; --late:#EE7F68; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 96px}
-.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
-h1{font-size:1.9rem;font-weight:800;letter-spacing:-.01em}
-h2{font-size:1.15rem;font-weight:700}
-h3{font-size:.98rem;font-weight:600}
-p{margin:0}
-.eyebrow{font:500 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.muted{color:var(--muted)}
-.small{font-size:.85rem}
-a{color:var(--sea);text-underline-offset:3px}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 button{font:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
-.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-.score{display:flex;align-items:center;gap:10px}
-.ring{--p:0;width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--ok) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center}
-.ring span{width:44px;height:44px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font:500 .82rem var(--mono)}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
-.card-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.num{font:500 .82rem var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted)}
-.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.item{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
-.item:first-child{border-top:0}
-.item input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ok)}
-.item .txt{min-width:0;display:flex;flex-direction:column;gap:3px}
-.item .txt>strong{font-weight:600;overflow-wrap:anywhere}
-.item.done .txt>strong{text-decoration:line-through;color:var(--muted)}
-.item .side{font:500 .75rem var(--mono);color:var(--muted);white-space:nowrap;padding-top:3px}
-.tag{display:inline-block;font:500 .66rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:6px;background:var(--sea-soft);color:var(--sea)}
-.tag.en,.tag.corpo{background:var(--sun-soft);color:var(--sun)}
-.tag.late{background:transparent;color:var(--late);padding-left:0}
-.links{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;align-items:center;font-size:.84rem;padding:6px 10px;border:1px solid var(--line);border-radius:99px;text-decoration:none;color:var(--ink);background:var(--bg)}
-.say{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:4px 10px;font-size:.82rem}
-.phrase{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-style:italic}
-.add{display:flex;gap:8px;flex-wrap:wrap}
-.add input[type=text]{flex:1 1 200px;min-width:0}
-input[type=text],input[type=date],input[type=number],select,textarea{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--bg);color:var(--ink);font:inherit}
-textarea{width:100%;min-height:80px;resize:vertical}
-.btn{border:0;border-radius:10px;padding:9px 14px;background:var(--sea);color:var(--surface);font-weight:600}
-.btn.ghost{background:transparent;color:var(--sea);border:1px solid var(--line)}
-.status{font-size:.84rem;color:var(--muted)}
-.empty{padding:12px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:.9rem}
-.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-.day{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 6px;display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--ink);min-width:0}
-.day[aria-pressed="true"]{border-color:var(--sea);box-shadow:inset 0 0 0 1px var(--sea)}
-.day .d{font:500 .66rem var(--mono);text-transform:uppercase;color:var(--muted)}
-.day .n{font:600 1rem var(--display)}
-.mini{width:100%;height:5px;border-radius:99px;background:var(--line);overflow:hidden}
-.mini i{display:block;height:100%;background:var(--ok)}
-.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;flex:1}
-.bar i{display:block;height:100%;background:var(--sun)}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.stat{border-top:3px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:2px}
-.stat b{font:700 1.4rem var(--display)}
-.stat.good{border-top-color:var(--ok)}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);
-  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));
-  display:flex;justify-content:center}
-.tabs nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;width:100%;max-width:720px}
-.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:10px;text-decoration:none;color:var(--muted);font-size:.74rem;font-weight:500}
-.tabs a[aria-current="page"]{color:var(--sea);background:var(--sea-soft)}
-.tabs svg{width:20px;height:20px}
-.ev{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
-.ev:first-child{border-top:0}
-.ev time{font:500 .8rem var(--mono);color:var(--sea)}
-details summary{cursor:pointer;color:var(--muted);font-size:.9rem}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;flex-direction:column;gap:8px}
+.date{color:var(--muted);font-size:.9rem}
+.big{font:800 3.2rem/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.sub{color:var(--muted);font-size:.85rem}
+section{display:flex;flex-direction:column;gap:8px}
+.sec-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sec-head h2{font:700 1rem var(--display);margin:0}
+.sec-head .n{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.sec-bar{height:4px}
+ul{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+li{border-top:1px solid var(--line)}
+li:first-child{border-top:0}
+.row{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center;padding:12px 14px}
+.row input{width:22px;height:22px;margin:0;accent-color:var(--ok)}
+.row label{min-width:0;overflow-wrap:anywhere;cursor:pointer}
+.row .meta{font-size:.8rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+li.done label{color:var(--muted);text-decoration:line-through}
+.late .meta{color:var(--late)}
+.more{border:0;background:none;color:var(--accent);font-size:.8rem;padding:0 0 0 2px}
+.detail{padding:0 14px 12px 54px;color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:6px}
+.detail a{color:var(--accent)}
+.say{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:3px 10px;font-size:.8rem;margin-left:6px}
+.add{display:flex;gap:8px}
+.add input{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--surface);color:var(--ink);font:inherit}
+.btn{border:0;border-radius:12px;padding:11px 16px;background:var(--accent);color:var(--surface);font-weight:600}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn[aria-pressed="true"]{background:var(--late);color:var(--surface)}
+textarea{width:100%;min-height:76px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--surface);color:var(--ink);font:inherit;resize:vertical}
+.empty{padding:14px;color:var(--muted);font-size:.9rem}
+.status{font-size:.85rem;color:var(--muted);min-height:1.2em}
+.sent{font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap">
   <div class="top">
-    <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
-      <span class="eyebrow" id="dateLine">Hoje</span>
-      <h1 id="viewTitle">Guia do Italo</h1>
-    </div>
-    <div class="score" aria-label="Progresso do dia">
-      <div class="ring" id="ring"><span id="ringNum">0%</span></div>
-      <div class="small muted" id="ringTxt">do dia feito</div>
-    </div>
+    <span class="date" id="date">Hoje</span>
+    <span class="big" id="pct">0%</span>
+    <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    <span class="sub" id="sub">Carregando o seu dia…</span>
   </div>
 
-  <!-- HOJE -->
-  <section id="v-hoje" data-view="hoje" style="display:flex;flex-direction:column;gap:16px">
-    <div class="card" aria-labelledby="hAgenda">
-      <div class="card-head"><h2 id="hAgenda">Agenda</h2><span class="num" id="agendaNote"></span></div>
-      <div id="agenda"><div class="empty">Toque em "Mostrar agenda" para ver os seus compromissos de hoje do Google Agenda. O Claude pede sua permissão uma vez.</div></div>
-      <div class="row"><button class="btn ghost" id="agendaBtn" type="button">Mostrar agenda</button></div>
-    </div>
+  <div id="list" style="display:flex;flex-direction:column;gap:22px"></div>
 
-    <div class="card" aria-labelledby="hRotina">
-      <div class="card-head"><h2 id="hRotina">Rotina fixa</h2><span class="num" id="rotinaNum"></span></div>
-      <ul class="items" id="rotina"><li class="empty">Carregando a rotina…</li></ul>
-    </div>
-
-    <div class="card" aria-labelledby="hEstudo">
-      <div class="card-head"><h2 id="hEstudo">Estudo do dia</h2><span class="num" id="estudoNum"></span></div>
-      <p class="muted small" id="estudoFoco"></p>
-      <ul class="items" id="estudo"><li class="empty">O plano de estudo de hoje aparece aqui.</li></ul>
-      <details><summary>Anotação do dia para o professor</summary>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-          <label for="note" class="small muted">O que travou, o que aprendeu, seus números (palavras por minuto, vícios).</label>
-          <textarea id="note"></textarea>
-          <div class="row"><button class="btn" id="saveNote" type="button">Salvar anotação</button><span class="status" id="noteStatus" role="status"></span></div>
-        </div>
-      </details>
-    </div>
-
-    <div class="card" aria-labelledby="hTarefasHoje">
-      <div class="card-head"><h2 id="hTarefasHoje">Tarefas de hoje</h2><span class="num" id="tarefasNum"></span></div>
-      <form class="add" id="quickAdd">
-        <label for="quickTitle" class="small muted" style="flex-basis:100%">Nova tarefa para hoje</label>
-        <input type="text" id="quickTitle" placeholder="Ex.: ligar para o contador" maxlength="200" autocomplete="off">
-        <button class="btn" type="submit">Adicionar</button>
-      </form>
-      <ul class="items" id="tarefasHoje"></ul>
-    </div>
-
-    <div class="card" aria-labelledby="hCorpoHoje">
-      <div class="card-head"><h2 id="hCorpoHoje">Corpo</h2><span class="num" id="corpoNum"></span></div>
-      <div id="corpoHoje" class="small"></div>
-    </div>
-  </section>
-
-  <!-- SEMANA -->
-  <section id="v-semana" data-view="semana" hidden style="display:flex;flex-direction:column;gap:16px">
-    <div class="week" id="week"></div>
-    <div class="card"><div class="card-head"><h2 id="semDayTitle">Dia</h2><span class="num" id="semDayNum"></span></div>
-      <div id="semDay" class="small"></div></div>
-    <div class="card"><h2>Foco da semana</h2><strong id="focusTitle"></strong><p class="muted" id="focusGoal"></p>
-      <div class="split" id="prog"></div></div>
-  </section>
-
-  <!-- TAREFAS -->
-  <section id="v-tarefas" data-view="tarefas" hidden style="display:flex;flex-direction:column;gap:16px">
-    <form class="card" id="fullAdd">
-      <h2>Nova tarefa</h2>
-      <label for="tTitle" class="small muted">O que precisa ser feito</label>
-      <input type="text" id="tTitle" maxlength="200" autocomplete="off">
-      <div class="row">
-        <label for="tDate" class="small muted">Quando</label><input type="date" id="tDate">
-        <label for="tArea" class="small muted">Frente</label>
-        <select id="tArea"><option>Peformake</option><option>Ellcazo</option><option>Gastromake</option><option>Shopee</option><option>Marca pessoal</option><option>Pessoal</option><option>Estudo</option></select>
-        <button class="btn" type="submit">Adicionar</button>
-      </div>
-      <span class="status" id="addStatus" role="status"></span>
+  <section aria-labelledby="hAdd">
+    <div class="sec-head"><h2 id="hAdd">Nova tarefa</h2></div>
+    <form class="add" id="addForm">
+      <input id="addInput" type="text" maxlength="200" placeholder="Ex.: ligar para o contador" aria-label="Nova tarefa para hoje" autocomplete="off">
+      <button class="btn" type="submit">Adicionar</button>
     </form>
-    <div id="tarefasAll"></div>
   </section>
 
-  <!-- ESTUDOS -->
-  <section id="v-estudos" data-view="estudos" hidden style="display:flex;flex-direction:column;gap:16px">
-    <div class="card"><h2>Programa atual</h2><strong id="focusTitle2"></strong><div class="split" id="prog2"></div></div>
-    <div class="card"><h2>Medidor de ritmo da fala</h2>
-      <p class="muted small">Grave 1 minuto, transcreva e conte as palavras. Para vender, a faixa confortável fica perto de 130 a 160 por minuto.</p>
-      <div class="row"><label for="words">Palavras em 1 minuto</label><input id="words" type="number" inputmode="numeric" min="0" max="400" value="150" style="width:90px"><span class="num" id="wpmOut"></span></div></div>
-    <div class="card"><h2>Aulas</h2><ul class="items" id="aulas"></ul></div>
-    <div class="card"><h2>Acervo</h2><ul class="items" id="recursos"></ul></div>
-  </section>
-
-  <!-- PROGRESSO -->
-  <section id="v-progresso" data-view="progresso" hidden style="display:flex;flex-direction:column;gap:16px">
-    <div class="split" id="stats"></div>
-    <div class="card"><h2>Últimos 7 dias</h2><div id="last7"></div></div>
-    <div class="card"><h2>Sequência por hábito</h2><ul class="items" id="streaks"></ul></div>
-    <p class="muted small">O professor lê estes números toda segunda para ajustar a semana. Semana fraca = semana seguinte mais leve.</p>
+  <section aria-labelledby="hRecado">
+    <div class="sec-head"><h2 id="hRecado">Recado para o professor</h2></div>
+    <textarea id="recado" placeholder="Fale ou escreva: o que fez, o que travou, uma tarefa nova…" aria-labelledby="hRecado"></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ghost" id="mic" type="button" hidden aria-pressed="false">Gravar</button>
+      <button class="btn" id="send" type="button">Enviar recado</button>
+    </div>
+    <span class="status" id="status" role="status"></span>
+    <span class="sub" id="micHint">Para falar em vez de digitar, toque no microfone do teclado do celular.</span>
+    <div class="sent" id="sent"></div>
   </section>
 </div>
-
-<div class="tabs"><nav aria-label="Seções">
-  <a href="#hoje" data-tab="hoje"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Hoje</a>
-  <a href="#semana" data-tab="semana"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Semana</a>
-  <a href="#tarefas" data-tab="tarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3" stroke-linecap="round"/></svg>Tarefas</a>
-  <a href="#estudos" data-tab="estudos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>Estudos</a>
-  <a href="#progresso" data-tab="progresso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3"/></svg>Progresso</a>
-</nav></div>
 
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
-  const TITLES = {hoje:"Hoje", semana:"Semana", tarefas:"Tarefas", estudos:"Estudos", progresso:"Progresso"};
-  const S = { db:null, tts:null, mcp:null, habitos:[], registro:{}, dias:{}, tarefas:[], aulas:[], recursos:[], meta:null, corpo:null, semSel:null };
-
+  const DOW = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
   const iso = d => { const z = new Date(d.getTime() - d.getTimezoneOffset()*60000); return z.toISOString().slice(0,10); };
   const TODAY = iso(new Date());
-  const addDays = (s, n) => { const [y,m,d] = s.split("-").map(Number); return iso(new Date(y, m-1, d+n)); };
-  const dowOf = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d).getDay(); };
-  const fmt = s => { const [y,m,d] = s.split("-").map(Number); return DOW[dowOf(s)] + " " + String(d).padStart(2,"0") + "/" + String(m).padStart(2,"0"); };
+  const addDays = (s,n) => { const [y,m,d] = s.split("-").map(Number); return iso(new Date(y,m-1,d+n)); };
+  const dowOf = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d).getDay(); };
+  const weekStart = s => addDays(s, -((dowOf(s)+6)%7));
+  const short = s => s.slice(8) + "/" + s.slice(5,7);
   const safeUrl = u => (typeof u === "string" && u.startsWith("https://")) ? u : null;
-  const el = (t, c, x) => { const e = document.createElement(t); if(c) e.className = c; if(x != null) e.textContent = String(x); return e; };
-  const weekStart = s => addDays(s, -((dowOf(s) + 6) % 7)); // segunda
+  const el = (t,c,x) => { const e = document.createElement(t); if(c) e.className = c; if(x != null) e.textContent = String(x); return e; };
+  const S = { db:null, tts:null, habitos:[], registro:{}, dias:{}, tarefas:[], recados:[], open:new Set() };
 
-  $("dateLine").textContent = fmt(TODAY);
+  { const [y,m,d] = TODAY.split("-").map(Number); $("date").textContent = DOW[dowOf(TODAY)] + ", " + d + "/" + String(m).padStart(2,"0"); }
 
-  // ---------- rotas ----------
-  function route(){
-    const v = (location.hash || "#hoje").slice(1);
-    const view = TITLES[v] ? v : "hoje";
-    document.querySelectorAll("[data-view]").forEach(s => s.hidden = s.dataset.view !== view);
-    document.querySelectorAll("[data-tab]").forEach(a => { if(a.dataset.tab === view) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
-    $("viewTitle").textContent = view === "hoje" ? "Guia do Italo" : TITLES[view];
-    window.scrollTo(0,0);
+  const doneMap = d => (S.registro[d] && S.registro[d].habitos) || {};
+  const applies = (h,d) => h.ativo !== false && (!Array.isArray(h.dias) || !h.dias.length || h.dias.includes(dowOf(d)));
+  const weekCount = (h,d) => { const ws = weekStart(d); let c = 0; for(let i=0;i<7;i++) if(doneMap(addDays(ws,i))[h.id]) c++; return c; };
+
+  // monta as seções do dia: cada item tem {key, label, meta, done, toggle, detail}
+  function sectionsFor(d){
+    const dm = doneMap(d);
+    const rotina = S.habitos.filter(h => applies(h,d)).map(h => ({
+      key:"h-"+h.id, label:h.titulo, done:!!dm[h.id],
+      meta: h.freq === "semana" ? weekCount(h,d) + "/" + (h.alvo||1) + " na semana" : (h.min ? h.min + " min" : ""),
+      toggle: on => setHabit(h,d,on), detail: h.detalhe ? { text:h.detalhe } : null }));
+    const st = S.dias[d]; const f = new Set((st && st.feitos) || []);
+    const estudo = st ? (st.blocos||[]).map((b,i) => ({
+      key:"s-"+i, label:b.titulo, done:f.has(i), meta:(b.min||0) + " min",
+      toggle: on => setStudy(st,i,on), detail: (b.detalhe || (b.links||[]).length || (b.falar||[]).length) ? { text:b.detalhe, links:b.links, falar:b.falar } : null })) : [];
+    const late = S.tarefas.filter(t => !t.feita && t.data && t.data < d && d === TODAY);
+    const hoje = S.tarefas.filter(t => t.data === d || (!t.data && !t.feita && d === TODAY));
+    const tarefas = late.map(t => ({ key:"t-"+t.id, label:t.titulo, done:false, meta:"desde " + short(t.data), late:true, toggle:on => setTask(t,on) }))
+      .concat(hoje.map(t => ({ key:"t-"+t.id, label:t.titulo, done:!!t.feita, meta:"", toggle:on => setTask(t,on) })));
+    return [["Rotina", rotina], ["Estudo", estudo], ["Tarefas", tarefas]];
   }
-  window.addEventListener("hashchange", route); route();
 
-  // ---------- regras de hábito ----------
-  function habitApplies(h, dateStr){
-    if(h.ativo === false) return false;
-    if(Array.isArray(h.dias) && h.dias.length) return h.dias.includes(dowOf(dateStr));
-    return true;
-  }
-  function habitsFor(dateStr){ return S.habitos.filter(h => habitApplies(h, dateStr) && h.freq !== "semana"); }
-  function weeklyHabits(){ return S.habitos.filter(h => h.ativo !== false && h.freq === "semana"); }
-  function doneMap(dateStr){ return (S.registro[dateStr] && S.registro[dateStr].habitos) || {}; }
-  function weeklyCount(h, dateStr){ const ws = weekStart(dateStr); let c = 0; for(let i=0;i<7;i++){ const d = addDays(ws,i); if(doneMap(d)[h.id]) c++; } return c; }
+  function render(){
+    const secs = sectionsFor(TODAY);
+    let total = 0, done = 0; secs.forEach(([,it]) => { total += it.length; done += it.filter(x=>x.done).length; });
+    const pct = total ? Math.round(100*done/total) : 0;
+    $("pct").textContent = pct + "%"; $("bar").style.width = pct + "%";
+    let wt = 0, wd = 0; const ws = weekStart(TODAY);
+    for(let i=0;i<7;i++){ const d = addDays(ws,i); if(d > TODAY) break; sectionsFor(d).forEach(([,it]) => { wt += it.length; wd += it.filter(x=>x.done).length; }); }
+    $("sub").textContent = done + " de " + total + " feitos hoje · semana " + (wt ? Math.round(100*wd/wt) : 0) + "%";
 
-  function studyFor(dateStr){ return S.dias[dateStr] || null; }
-  function studyMin(day){ return (day && day.blocos || []).reduce((s,b)=>s+(Number(b.min)||0),0); }
-  function studyDone(day){ if(!day) return 0; const f = new Set(day.feitos||[]); return (day.blocos||[]).reduce((s,b,i)=>s+(f.has(i)?(Number(b.min)||0):0),0); }
-  function tasksFor(dateStr){ return S.tarefas.filter(t => t.data === dateStr); }
+    const list = $("list"); list.replaceChildren();
+    secs.forEach(([name, items]) => {
+      if(!items.length && name !== "Tarefas") return;
+      const sec = el("section"); const head = el("div","sec-head");
+      const dn = items.filter(x=>x.done).length;
+      head.append(el("h2",null,name), el("span","n", dn + "/" + items.length)); sec.append(head);
+      const sb = el("div","bar sec-bar"); const si = document.createElement("i"); si.style.width = (items.length ? Math.round(100*dn/items.length) : 0) + "%"; sb.append(si); sec.append(sb);
+      const ul = el("ul");
+      if(!items.length) ul.append(el("li","empty","Nada para hoje."));
+      items.forEach(x => {
+        const li = el("li", (x.done ? "done" : "") + (x.late ? " late" : ""));
+        const row = el("div","row");
+        const cb = document.createElement("input"); cb.type = "checkbox"; cb.id = "c-" + x.key; cb.checked = x.done;
+        cb.addEventListener("change", () => x.toggle(cb.checked));
+        const lab = el("label",null,x.label); lab.htmlFor = cb.id;
+        const meta = el("span","meta", x.meta);
+        if(x.detail){ const m = el("button","more", S.open.has(x.key) ? "fechar" : "ver"); m.type = "button";
+          m.setAttribute("aria-expanded", S.open.has(x.key) ? "true" : "false");
+          m.addEventListener("click", () => { S.open.has(x.key) ? S.open.delete(x.key) : S.open.add(x.key); render(); }); meta.append(m); }
+        row.append(cb, lab, meta); li.append(row);
+        if(x.detail && S.open.has(x.key)){ const dt = el("div","detail");
+          if(x.detail.text) dt.append(el("span",null,x.detail.text));
+          (x.detail.falar||[]).forEach(p => { const r = el("span",null,p); r.style.fontStyle = "italic";
+            if(S.tts){ const b = el("button","say","Ouvir"); b.type = "button"; b.addEventListener("click", () => S.tts.speak(String(p), {language:"en", rate:0.9}).catch(()=>{})); r.append(b); } dt.append(r); });
+          (x.detail.links||[]).forEach(l => { const u = safeUrl(l.url); if(!u) return; const a = el("a",null,l.rotulo || "Abrir"); a.href = u; a.target = "_blank"; a.rel = "noopener"; dt.append(a); });
+          li.append(dt); }
+        ul.append(li);
+      });
+      sec.append(ul); list.append(sec);
+    });
 
-  function dayScore(dateStr){
-    const hs = habitsFor(dateStr), dm = doneMap(dateStr);
-    let total = hs.length, done = hs.filter(h => dm[h.id]).length;
-    const st = studyFor(dateStr); if(st && (st.blocos||[]).length){ total += (st.blocos||[]).length; done += (st.feitos||[]).length; }
-    const ts = tasksFor(dateStr); total += ts.length; done += ts.filter(t => t.feita).length;
-    return { total, done, pct: total ? Math.round(100*done/total) : 0 };
+    const sent = $("sent"); sent.replaceChildren();
+    S.recados.filter(r => r.data === TODAY).slice(-3).forEach(r => sent.append(el("span",null,"Enviado " + (r.criadoEm||"").slice(11,16) + " · " + String(r.texto||"").slice(0,80))));
   }
 
   // ---------- escrita ----------
-  async function setHabit(h, dateStr, on){
-    const reg = S.registro[dateStr] || { data: dateStr, habitos: {} };
-    reg.habitos = { ...(reg.habitos||{}), [h.id]: on };
-    S.registro[dateStr] = reg; renderAll();
-    if(!S.db) return;
-    try { await S.db.doc("registro/" + dateStr).set({ data: dateStr, habitos: reg.habitos, atualizado: new Date().toISOString() }); }
-    catch(e){ flash("Não salvou a marcação. Tente de novo."); }
+  const say = m => $("status").textContent = m;
+  async function setHabit(h,d,on){
+    const reg = S.registro[d] || { data:d, habitos:{} }; reg.habitos = { ...(reg.habitos||{}), [h.id]:on }; S.registro[d] = reg; render();
+    if(S.db) try { await S.db.doc("registro/" + d).set({ data:d, habitos:reg.habitos, atualizado:new Date().toISOString() }); } catch(e){ say("Não salvou a marcação. Tente de novo."); }
   }
-  async function setStudy(day, idx, on){
-    const f = new Set(day.feitos||[]); on ? f.add(idx) : f.delete(idx); day.feitos = [...f].sort((a,b)=>a-b); renderAll();
-    if(!S.db) return;
-    try { await S.db.doc("dias/" + day.data).update({ feitos: day.feitos }); } catch(e){ flash("Não salvou a marcação. Tente de novo."); }
+  async function setStudy(st,i,on){
+    const f = new Set(st.feitos||[]); on ? f.add(i) : f.delete(i); st.feitos = [...f].sort((a,b)=>a-b); render();
+    if(S.db) try { await S.db.doc("dias/" + st.data).update({ feitos:st.feitos }); } catch(e){ say("Não salvou a marcação. Tente de novo."); }
   }
-  async function setTask(t, on){
-    t.feita = on; renderAll();
-    if(!S.db) return;
-    try { await S.db.doc("tarefas/" + t.id).update({ feita: on, feitaEm: on ? new Date().toISOString() : null }); } catch(e){ flash("Não salvou a tarefa. Tente de novo."); }
+  async function setTask(t,on){
+    t.feita = on; t.feitaEm = on ? new Date().toISOString() : null;
+    if(on && !t.data) t.data = TODAY;
+    render();
+    if(S.db) try { await S.db.doc("tarefas/" + t.id).update({ feita:on, feitaEm:t.feitaEm, data:t.data }); } catch(e){ say("Não salvou a tarefa. Tente de novo."); }
   }
-  async function addTask(titulo, data, area){
-    titulo = titulo.trim().slice(0,200); if(!titulo) return false;
-    if(!S.db){ flash("Abra no Claude, logado, para salvar."); return false; }
-    try { await S.db.collection("tarefas").add({ titulo, data: data || null, area: area || "Pessoal", feita:false, origem:"app", criadaEm:new Date().toISOString() }); return true; }
-    catch(e){ flash("Não consegui adicionar. Tente de novo."); return false; }
-  }
-  function flash(msg){ $("noteStatus").textContent = msg; $("addStatus").textContent = msg; }
+  $("addForm").addEventListener("submit", async e => { e.preventDefault();
+    const v = $("addInput").value.trim().slice(0,200); if(!v) return;
+    if(!S.db){ say("Abra no Claude, logado, para salvar."); return; }
+    try { await S.db.collection("tarefas").add({ titulo:v, data:TODAY, area:"Pessoal", feita:false, origem:"app", criadaEm:new Date().toISOString() }); $("addInput").value = ""; }
+    catch(err){ say("Não consegui adicionar. Tente de novo."); } });
+  $("send").addEventListener("click", async () => {
+    const v = $("recado").value.trim().slice(0,4000); if(!v){ say("Escreva ou grave o recado primeiro."); return; }
+    if(!S.db){ say("Abra no Claude, logado, para enviar."); return; }
+    say("Enviando…");
+    try { await S.db.collection("recados").add({ texto:v, data:TODAY, criadoEm:new Date().toISOString(), lido:false }); $("recado").value = ""; say("Recado salvo. O professor lê na próxima rotina."); }
+    catch(err){ say("Não enviou. Tente de novo."); } });
 
-  // ---------- componentes ----------
-  function checkItem({id, label, checked, onChange, tag, tagCls, side, detail, extra}){
-    const li = el("li", "item" + (checked ? " done" : ""));
-    const cb = document.createElement("input"); cb.type = "checkbox"; cb.id = id; cb.checked = !!checked;
-    cb.setAttribute("aria-label", "Marcar como feito: " + label);
-    cb.addEventListener("change", () => onChange(cb.checked));
-    const txt = el("div","txt");
-    if(tag){ const tg = el("span","tag " + (tagCls||""), tag); tg.style.alignSelf = "flex-start"; txt.append(tg); }
-    txt.append(el("strong", null, label));
-    if(detail) txt.append(el("span","muted small", detail));
-    if(extra) txt.append(extra);
-    li.append(cb, txt, el("span","side", side || ""));
-    return li;
+  // ---------- ditado ----------
+  let dict = null, base = "";
+  function setupDictation(d){
+    dict = d; if(!d) return;
+    $("mic").hidden = false; $("micHint").hidden = true;
+    d.onPartial(({text}) => { $("recado").value = (base ? base + " " : "") + text; });
+    d.onFinal(({text}) => { base = (base ? base + " " : "") + text; $("recado").value = base; });
+    d.onState(({state, reason}) => { const on = state !== "idle"; $("mic").setAttribute("aria-pressed", on ? "true" : "false"); $("mic").textContent = on ? "Parar" : "Gravar";
+      if(state === "idle" && reason && reason !== "stopped" && reason !== "viewer_stopped" && reason !== "hidden") say("A gravação parou. Tente de novo ou use o microfone do teclado."); });
   }
-
-  function studyExtras(b){
-    const box = el("div"); box.style.display = "flex"; box.style.flexDirection = "column"; box.style.gap = "6px";
-    (Array.isArray(b.falar) ? b.falar : []).forEach(p => {
-      const row = el("div","phrase"); row.append(el("span", null, p));
-      if(S.tts){ const s = el("button","say","Ouvir"); s.type = "button";
-        s.addEventListener("click", () => S.tts.speak(String(p), {language:"en", rate:0.9}).catch(()=>{})); row.append(s); }
-      box.append(row);
-    });
-    const links = (b.links||[]).filter(l => safeUrl(l.url));
-    if(links.length){ const lw = el("div","links"); links.forEach(l => { const a = el("a","chip", l.rotulo || "Abrir"); a.href = safeUrl(l.url); a.target = "_blank"; a.rel = "noopener"; lw.append(a); }); box.append(lw); }
-    return box.childNodes.length ? box : null;
-  }
-
-  // ---------- HOJE ----------
-  function renderHoje(){
-    const sc = dayScore(TODAY);
-    $("ring").style.setProperty("--p", sc.pct); $("ringNum").textContent = sc.pct + "%";
-    $("ringTxt").textContent = sc.done + " de " + sc.total + " itens";
-
-    const ul = $("rotina"); ul.replaceChildren();
-    const hs = habitsFor(TODAY), dm = doneMap(TODAY);
-    if(!S.habitos.length) ul.append(el("li","empty","Sua rotina fixa aparece aqui quando o professor publicar."));
-    hs.forEach(h => ul.append(checkItem({ id:"h-"+h.id, label:h.titulo, checked:dm[h.id], onChange:on=>setHabit(h,TODAY,on),
-      tag:h.area, tagCls: h.area === "corpo" ? "corpo" : (h.area === "inglês" ? "en" : ""), side: h.min ? h.min + " min" : "", detail:h.detalhe })));
-    weeklyHabits().forEach(h => { const c = weeklyCount(h, TODAY);
-      ul.append(checkItem({ id:"h-"+h.id, label:h.titulo, checked:dm[h.id], onChange:on=>setHabit(h,TODAY,on),
-        tag:h.area, tagCls:"corpo", side: c + "/" + (h.alvo||1) + " sem", detail:h.detalhe })); });
-    $("rotinaNum").textContent = hs.filter(h=>dm[h.id]).length + "/" + hs.length;
-
-    const st = studyFor(TODAY), eu = $("estudo"); eu.replaceChildren();
-    if(!st){ eu.append(el("li","empty","Sem plano de estudo para hoje. O professor publica a semana toda segunda.")); $("estudoFoco").textContent = ""; $("estudoNum").textContent = ""; }
-    else {
-      $("estudoFoco").textContent = (st.titulo ? st.titulo + ". " : "") + (st.foco || "");
-      const f = new Set(st.feitos||[]);
-      (st.blocos||[]).forEach((b,i) => eu.append(checkItem({ id:"s-"+st.data+"-"+i, label:b.titulo, checked:f.has(i), onChange:on=>setStudy(st,i,on),
-        tag:b.tipo, tagCls: b.tipo === "inglês" ? "en" : "", side:(b.min||0)+" min", detail:b.detalhe, extra:studyExtras(b) })));
-      $("estudoNum").textContent = studyDone(st) + "/" + studyMin(st) + " min";
-      const n = $("note"); if(document.activeElement !== n) n.value = st.nota || "";
-    }
-
-    const tu = $("tarefasHoje"); tu.replaceChildren();
-    const late = S.tarefas.filter(t => !t.feita && t.data && t.data < TODAY);
-    const today = tasksFor(TODAY);
-    late.forEach(t => tu.append(taskItem(t, true)));
-    today.forEach(t => tu.append(taskItem(t, false)));
-    if(!late.length && !today.length) tu.append(el("li","empty","Nada marcado para hoje. Adicione acima ou me diga no chat: \"anota: …\"."));
-    $("tarefasNum").textContent = today.filter(t=>t.feita).length + "/" + today.length + (late.length ? " · " + late.length + " atrasada(s)" : "");
-
-    renderCorpo();
-  }
-  function taskItem(t, isLate){
-    return checkItem({ id:"t-"+t.id, label:t.titulo, checked:t.feita, onChange:on=>setTask(t,on),
-      tag: isLate ? "atrasada · " + fmt(t.data) : t.area, tagCls: isLate ? "late" : "", side: t.origem === "chat" ? "via chat" : "" });
-  }
-
-  function renderCorpo(){
-    const box = $("corpoHoje"); box.replaceChildren();
-    const c = S.corpo;
-    if(!c){ box.append(el("p","muted","Seu treino aparece aqui.")); return; }
-    if(c.proximo){ const p = el("p"); p.append(el("span","muted","Próximo treino: ")); p.append(el("strong",null,c.proximo)); box.append(p); }
-    if(Array.isArray(c.divisao) && c.divisao.length){ const p = el("p","muted"); p.textContent = "Divisão: " + c.divisao.join(" → "); box.append(p); }
-    if(c.dica) box.append(el("p","muted", c.dica));
-    const u = safeUrl(c.link); if(u){ const a = el("a",null,"Abrir o acompanhamento de treino e nutrição"); a.href = u; a.target = "_blank"; a.rel = "noopener"; box.append(a); }
-    const wh = weeklyHabits()[0]; $("corpoNum").textContent = wh ? weeklyCount(wh, TODAY) + "/" + (wh.alvo||4) + " treinos na semana" : "";
-  }
-
-  // ---------- SEMANA ----------
-  function renderSemana(){
-    const ws = weekStart(TODAY); const w = $("week"); w.replaceChildren();
-    if(!S.semSel) S.semSel = TODAY;
-    for(let i=0;i<7;i++){ const d = addDays(ws,i); const sc = dayScore(d);
-      const b = el("button","day"); b.type = "button"; b.setAttribute("aria-pressed", d === S.semSel ? "true" : "false");
-      b.setAttribute("aria-label", fmt(d) + ", " + sc.pct + "% feito");
-      b.append(el("span","d",DOW[dowOf(d)]), el("span","n",d.slice(8)));
-      const m = el("div","mini"); const iEl = document.createElement("i"); iEl.style.width = sc.pct + "%"; m.append(iEl); b.append(m);
-      b.addEventListener("click", () => { S.semSel = d; renderSemana(); }); w.append(b); }
-    const d = S.semSel, sc = dayScore(d), box = $("semDay"); box.replaceChildren();
-    $("semDayTitle").textContent = fmt(d) + (d === TODAY ? " · hoje" : ""); $("semDayNum").textContent = sc.done + "/" + sc.total;
-    const st = studyFor(d);
-    const p1 = el("p"); p1.append(el("span","muted","Estudo: ")); p1.append(el("strong",null, st ? (st.titulo + " (" + studyMin(st) + " min)") : "sem plano")); box.append(p1);
-    const ts = tasksFor(d); const p2 = el("p"); p2.append(el("span","muted","Tarefas: ")); p2.append(document.createTextNode(ts.length ? ts.map(t => (t.feita ? "✓ " : "") + t.titulo).join(" · ") : "nenhuma")); box.append(p2);
-    const dm = doneMap(d), hs = habitsFor(d); const p3 = el("p"); p3.append(el("span","muted","Rotina: ")); p3.append(document.createTextNode(hs.filter(h=>dm[h.id]).length + " de " + hs.length + " hábitos")); box.append(p3);
-    renderMeta();
-  }
-  function renderMeta(){
-    const m = S.meta; if(!m) return;
-    ["focusTitle","focusTitle2"].forEach(id => $(id).textContent = m.titulo || "");
-    $("focusGoal").textContent = m.objetivo || "";
-    ["prog","prog2"].forEach(id => { const p = $(id); p.replaceChildren();
-      (m.programa||[]).forEach(s => { const c = el("div","stat" + (s.atual ? " good" : ""));
-        c.append(el("span","eyebrow","Semana " + s.n + (s.datas ? " · " + s.datas : "")), el("strong",null,s.tema||""));
-        if(s.resultado) c.append(el("span","muted small",s.resultado)); p.append(c); }); });
-  }
-
-  // ---------- TAREFAS ----------
-  function renderTarefas(){
-    const box = $("tarefasAll"); box.replaceChildren();
-    const open = S.tarefas.filter(t => !t.feita);
-    const groups = [
-      ["Atrasadas", open.filter(t => t.data && t.data < TODAY), true],
-      ["Hoje", open.filter(t => t.data === TODAY), false],
-      ["Próximos dias", open.filter(t => t.data && t.data > TODAY).sort((a,b)=>a.data.localeCompare(b.data)), false],
-      ["Sem data", open.filter(t => !t.data), false]
-    ];
-    let any = false;
-    groups.forEach(([name, list, late]) => { if(!list.length) return; any = true;
-      const c = el("div","card"); const h = el("div","card-head"); h.append(el("h2",null,name), el("span","num", String(list.length))); c.append(h);
-      const ul = el("ul","items"); list.forEach(t => ul.append(checkItem({ id:"ta-"+t.id, label:t.titulo, checked:false, onChange:on=>setTask(t,on),
-        tag: late ? "atrasada · " + fmt(t.data) : t.area, tagCls: late ? "late" : "", side: t.data && !late && t.data !== TODAY ? fmt(t.data) : "" }))); c.append(ul); box.append(c); });
-    if(!any) box.append(el("div","empty","Nenhuma tarefa aberta. Adicione acima, ou me mande no chat: \"anota: ligar para o contador amanhã\"."));
-    const done = S.tarefas.filter(t => t.feita).slice(-15).reverse();
-    if(done.length){ const d = el("details","card"); d.append(el("summary",null,"Feitas recentemente (" + done.length + ")"));
-      const ul = el("ul","items"); done.forEach(t => ul.append(checkItem({ id:"td-"+t.id, label:t.titulo, checked:true, onChange:on=>setTask(t,on), tag:t.area }))); d.append(ul); box.append(d); }
-  }
-  $("tDate").value = TODAY;
-  $("fullAdd").addEventListener("submit", async e => { e.preventDefault();
-    const ok = await addTask($("tTitle").value, $("tDate").value, $("tArea").value);
-    if(ok){ $("tTitle").value = ""; $("addStatus").textContent = "Tarefa adicionada."; } });
-  $("quickAdd").addEventListener("submit", async e => { e.preventDefault();
-    const ok = await addTask($("quickTitle").value, TODAY, "Pessoal"); if(ok) $("quickTitle").value = ""; });
-
-  // ---------- ESTUDOS ----------
-  function renderEstudos(){
-    const au = $("aulas"); au.replaceChildren();
-    if(!S.aulas.length) au.append(el("li","empty","Nenhuma aula publicada ainda."));
-    S.aulas.slice().sort((a,b)=>(a.numero||0)-(b.numero||0)).forEach(a => {
-      const li = el("li","item"); li.style.gridTemplateColumns = "1fr auto";
-      const txt = el("div","txt"); const u = safeUrl(a.url);
-      if(u){ const l = el("a",null,"Aula " + a.numero + " · " + a.titulo); l.href = u; l.target = "_blank"; l.rel = "noopener"; const s = el("strong"); s.append(l); txt.append(s); }
-      else txt.append(el("strong",null,"Aula " + a.numero + " · " + a.titulo));
-      if(a.resumo) txt.append(el("span","muted small",a.resumo));
-      li.append(txt, el("span","tag" + (a.status === "feita" ? "" : " en"), a.status === "feita" ? "feita" : "aberta")); au.append(li); });
-    const ru = $("recursos"); ru.replaceChildren();
-    S.recursos.slice().sort((a,b)=>(a.ordem||0)-(b.ordem||0)).forEach(r => {
-      const li = el("li","item"); li.style.gridTemplateColumns = "1fr"; const txt = el("div","txt");
-      const tg = el("span","tag", r.tipo || "link"); tg.style.alignSelf = "flex-start"; txt.append(tg);
-      const u = safeUrl(r.url); if(u){ const a = el("a",null,r.titulo); a.href = u; a.target = "_blank"; a.rel = "noopener"; const s = el("strong"); s.append(a); txt.append(s); } else txt.append(el("strong",null,r.titulo));
-      if(r.porque) txt.append(el("span","muted small",r.porque)); li.append(txt); ru.append(li); });
-    renderMeta();
-  }
-  function wpm(){ const n = Number($("words").value)||0; $("wpmOut").textContent = !n ? "" : n < 120 ? n + " por min · devagar" : n <= 165 ? n + " por min · boa faixa" : n + " por min · rápido, use pausas"; }
-  $("words").addEventListener("input", wpm); wpm();
-
-  // ---------- PROGRESSO ----------
-  function renderProgresso(){
-    const days = []; for(let i=6;i>=0;i--) days.push(addDays(TODAY,-i));
-    const scores = days.map(d => ({ d, ...dayScore(d) }));
-    const avg = Math.round(scores.reduce((s,x)=>s+x.pct,0)/7);
-    let studyM = 0; days.forEach(d => studyM += studyDone(studyFor(d)));
-    const ws = weekStart(TODAY); let doneTasks = 0; S.tarefas.forEach(t => { if(t.feita && t.feitaEm && t.feitaEm.slice(0,10) >= ws) doneTasks++; });
-    const st = $("stats"); st.replaceChildren();
-    [["Média dos 7 dias", avg + "%", avg >= 70], ["Estudo em 7 dias", studyM + " min", studyM >= 300], ["Tarefas feitas na semana", String(doneTasks), doneTasks > 0]]
-      .forEach(([k,v,g]) => { const c = el("div","stat" + (g ? " good" : "")); c.append(el("span","eyebrow",k), el("b",null,v)); st.append(c); });
-    const l7 = $("last7"); l7.replaceChildren();
-    scores.forEach(x => { const r = el("div","row"); r.style.padding = "4px 0";
-      const lab = el("span","num", fmt(x.d)); lab.style.width = "84px";
-      const bar = el("div","bar"); const iEl = document.createElement("i"); iEl.style.width = x.pct + "%"; iEl.style.background = "var(--ok)"; bar.append(iEl);
-      r.append(lab, bar, el("span","num", x.pct + "%")); l7.append(r); });
-    const sk = $("streaks"); sk.replaceChildren();
-    S.habitos.filter(h => h.ativo !== false && h.freq !== "semana").forEach(h => {
-      let n = 0, d = TODAY; if(!doneMap(d)[h.id]) d = addDays(d,-1);
-      for(let k=0;k<365;k++){ if(!habitApplies(h,d)){ d = addDays(d,-1); continue; } if(doneMap(d)[h.id]){ n++; d = addDays(d,-1); } else break; }
-      const li = el("li","item"); li.style.gridTemplateColumns = "1fr auto"; li.append(el("strong",null,h.titulo), el("span","num", n + (n === 1 ? " dia" : " dias"))); sk.append(li); });
-  }
-
-  // ---------- agenda Google ----------
-  function eventTime(ev){ const s = ev && ev.start; if(!s) return ""; if(s.dateTime) return String(s.dateTime).slice(11,16); return "dia todo"; }
-  function renderAgenda(payload){
-    const box = $("agenda"); box.replaceChildren();
-    const list = (payload && (payload.events || payload.items)) || [];
-    if(!Array.isArray(list) || !list.length){ box.append(el("div","empty","Nenhum compromisso hoje no Google Agenda.")); return; }
-    list.forEach(ev => { const r = el("div","ev"); r.append(el("time",null,eventTime(ev)), el("span",null, ev.summary || ev.title || "(sem título)")); box.append(r); });
-  }
-  let agendaUnsub = null;
-  function startAgenda(){
-    if(!S.mcp || agendaUnsub) return;
-    $("agendaBtn").hidden = true; $("agendaNote").textContent = "Google Agenda";
-    agendaUnsub = S.mcp.watchTool("Google Calendar", "list_events",
-      { startTime: TODAY + "T00:00:00", endTime: addDays(TODAY,1) + "T00:00:00", orderBy: "startTime", pageSize: 20 },
-      ev => {
-        if(ev.type === "data"){ renderAgenda(ev.result && ev.result.payload); try{ localStorage.setItem("agenda-on","1"); }catch(e){} }
-        else { const code = ev.error && ev.error.code; $("agenda").replaceChildren(el("div","empty", code === "not_granted" || code === "denied" ? "Sem permissão para a agenda. Toque em Mostrar agenda para tentar de novo." : "Não consegui ler a agenda agora."));
-          $("agendaBtn").hidden = false; if(agendaUnsub){ agendaUnsub(); agendaUnsub = null; } }
-      }, { refetchInterval: 15*60*1000, cache: { staleTime: 5*60*1000 } });
-  }
-  $("agendaBtn").addEventListener("click", startAgenda);
-
-  // ---------- anotação ----------
-  $("saveNote").addEventListener("click", async () => {
-    const st = studyFor(TODAY); if(!st){ $("noteStatus").textContent = "Sem plano de estudo hoje para anotar."; return; }
-    if(!S.db){ $("noteStatus").textContent = "Abra no Claude, logado, para salvar."; return; }
-    const v = $("note").value.slice(0,4000); $("noteStatus").textContent = "Salvando…";
-    try { await S.db.doc("dias/" + st.data).update({ nota: v, notaEm: new Date().toISOString() }); st.nota = v; $("noteStatus").textContent = "Salvo. O professor vai ler."; }
-    catch(e){ $("noteStatus").textContent = "Não salvou. Tente de novo."; }
+  $("mic").addEventListener("click", () => {
+    if(!dict) return;
+    if(dict.active()){ dict.stop().catch(()=>{}); return; }
+    base = $("recado").value.trim();
+    dict.start().catch(e => { if(e && e.code === "not_granted"){ $("mic").hidden = true; $("micHint").hidden = false; } });
   });
 
-  function renderAll(){ renderHoje(); renderSemana(); renderTarefas(); renderEstudos(); renderProgresso(); }
-  renderAll();
+  render();
 
-  // ---------- dados ----------
   async function start(){
-    if(!(window.claude && window.claude.use)){ $("rotina").replaceChildren(el("li","empty","Abra esta página no Claude para ver o seu guia.")); return; }
-    window.claude.use("tts").then(t => { S.tts = t; renderHoje(); }).catch(()=>{});
-    window.claude.use("mcp").then(m => { S.mcp = m; if(!m){ $("agendaBtn").hidden = true; $("agenda").replaceChildren(el("div","empty","A agenda do Google não está disponível nesta tela.")); return; }
-      let on = false; try{ on = localStorage.getItem("agenda-on") === "1"; }catch(e){} if(on) startAgenda(); }).catch(()=>{});
+    if(!(window.claude && window.claude.use)){ $("sub").textContent = "Abra esta página no Claude para ver o seu dia."; return; }
+    window.claude.use("tts").then(t => { S.tts = t; render(); }).catch(()=>{});
+    window.claude.use("dictation").then(setupDictation).catch(()=>{});
     S.db = await window.claude.use("db").catch(()=>null);
-    if(!S.db){ $("rotina").replaceChildren(el("li","empty","Entre na sua conta do Claude para ver o seu guia.")); return; }
-    const timer = setTimeout(() => { if(!S.habitos.length) $("rotina").replaceChildren(el("li","empty","Está demorando para carregar. Confira a conexão.")); }, 10000);
+    if(!S.db){ $("sub").textContent = "Entre na sua conta do Claude para ver o seu dia."; return; }
+    const timer = setTimeout(() => { if(!S.habitos.length) $("sub").textContent = "Está demorando para carregar. Confira a conexão."; }, 10000);
     const ok = () => clearTimeout(timer);
-    S.db.collection("habitos").onSnapshot(s => { ok(); S.habitos = s.docs.map(x => ({ id:x.id, ...x.data() })).sort((a,b)=>(a.ordem||0)-(b.ordem||0)); renderAll(); }, ok);
-    S.db.collection("registro").where("data", ">=", addDays(TODAY,-60)).onSnapshot(s => { const r = {}; s.docs.forEach(x => { const d = x.data(); r[d.data || x.id] = d; }); S.registro = r; renderAll(); }, ()=>{});
-    S.db.collection("dias").onSnapshot(s => { const r = {}; s.docs.forEach(x => { const d = x.data(); d.data = d.data || x.id; r[d.data] = d; }); S.dias = r; renderAll(); }, ()=>{});
-    S.db.collection("tarefas").onSnapshot(s => { S.tarefas = s.docs.map(x => ({ id:x.id, ...x.data() })).sort((a,b)=>(a.criadaEm||"").localeCompare(b.criadaEm||"")); renderAll(); }, ()=>{});
-    S.db.collection("aulas").onSnapshot(s => { S.aulas = s.docs.map(x => x.data()); renderEstudos(); }, ()=>{});
-    S.db.collection("recursos").onSnapshot(s => { S.recursos = s.docs.map(x => x.data()); renderEstudos(); }, ()=>{});
-    S.db.doc("meta/semana").onSnapshot(s => { S.meta = s.exists ? s.data() : null; renderMeta(); }, ()=>{});
-    S.db.doc("meta/corpo").onSnapshot(s => { S.corpo = s.exists ? s.data() : null; renderCorpo(); }, ()=>{});
+    S.db.collection("habitos").onSnapshot(s => { ok(); S.habitos = s.docs.map(x => ({ id:x.id, ...x.data() })).sort((a,b)=>(a.ordem||0)-(b.ordem||0)); render(); }, ok);
+    S.db.collection("registro").where("data", ">=", addDays(TODAY,-14)).onSnapshot(s => { const r = {}; s.docs.forEach(x => { const d = x.data(); r[d.data||x.id] = d; }); S.registro = r; render(); }, ()=>{});
+    S.db.collection("dias").where("data", ">=", addDays(TODAY,-14)).onSnapshot(s => { const r = {}; s.docs.forEach(x => { const d = x.data(); d.data = d.data || x.id; r[d.data] = d; }); S.dias = r; render(); }, ()=>{});
+    S.db.collection("tarefas").onSnapshot(s => { S.tarefas = s.docs.map(x => ({ id:x.id, ...x.data() })).sort((a,b)=>(a.criadaEm||"").localeCompare(b.criadaEm||"")); render(); }, ()=>{});
+    S.db.collection("recados").where("data", "==", TODAY).onSnapshot(s => { S.recados = s.docs.map(x => x.data()).sort((a,b)=>(a.criadoEm||"").localeCompare(b.criadoEm||"")); render(); }, ()=>{});
   }
   start();
 })();
