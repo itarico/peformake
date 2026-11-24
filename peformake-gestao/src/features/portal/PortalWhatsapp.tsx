@@ -17,7 +17,7 @@ async function call(token: string, action: string, phone?: string): Promise<{ st
   return data
 }
 
-function QrImage({ value }: { value: string }) {
+export function QrImage({ value }: { value: string }) {
   const [src, setSrc] = useState<string | null>(null)
   useEffect(() => { void QRCode.toDataURL(value, { margin: 1, width: 280 }).then(setSrc).catch(() => setSrc(null)) }, [value])
   return src ? <img src={src} alt="QR code para conectar o WhatsApp" width={280} height={280} className="rounded-2xl border border-line bg-white p-2" /> : <div className="size-[280px] animate-pulse rounded-2xl bg-raised" />

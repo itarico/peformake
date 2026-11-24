@@ -12,6 +12,8 @@ export interface SectionTab {
   label: string
   /** Nome curto no celular (ex.: "Planejamento" em vez de "Planejamento do mês"). */
   short?: string
+  /** Tela de uso raro: fica sempre dentro de "Mais", no computador e no celular (a não ser quando é a aberta). */
+  more?: boolean
   /** Sem roles: todo mundo que abre a área vê a aba. */
   roles?: readonly AppRole[]
 }
@@ -54,14 +56,18 @@ const isActiveTab = (pathname: string, to: string, all: { to: string }[]) =>
  * Abas de uma área. No computador, todas na linha. No celular, com mais de 4, mostra 3 (a aberta sempre entre elas)
  * e o resto em "Mais". Caminhos absolutos (ex.: /trafego/painel).
  */
-export function AreaTabs({ tabs, label, keepMes }: { tabs: { to: string; label: string; short?: string }[]; label: string; keepMes?: string | null }) {
+export function AreaTabs({ tabs, label, keepMes }: { tabs: { to: string; label: string; short?: string; more?: boolean }[]; label: string; keepMes?: string | null }) {
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
   const box = useRef<HTMLDivElement>(null)
   const activeIdx = tabs.findIndex((t) => isActiveTab(pathname, t.to, tabs))
-  const many = tabs.length > 4
-  const shown = new Set(many ? (activeIdx >= 3 ? [0, 1, activeIdx] : [0, 1, 2]) : tabs.map((_, i) => i))
+  // Abas "more" só aparecem na linha quando são a aberta; fora isso moram em "Mais" em qualquer tela.
+  const tucked = (i: number) => !!tabs[i]?.more && i !== activeIdx
+  const line = tabs.map((_, i) => i).filter((i) => !tucked(i))
+  const many = line.length > 4
+  const shown = new Set(many ? (line.indexOf(activeIdx) >= 3 ? [line[0]!, line[1]!, activeIdx] : line.slice(0, 3)) : line)
   const rest = tabs.filter((_, i) => !shown.has(i))
+  const always = tabs.some((_, i) => tucked(i))
   useEffect(() => {
     if (!open) return
     const close = (e: MouseEvent | KeyboardEvent) => {
@@ -77,21 +83,21 @@ export function AreaTabs({ tabs, label, keepMes }: { tabs: { to: string; label: 
       <nav aria-label={label} className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((t, i) => (
           <NavLink key={t.to} to={href(t.to)} end={tabs.some((o) => o.to !== t.to && o.to.startsWith(`${t.to}/`))}
-            className={({ isActive }) => cn(tabClass(isActive), 'max-md:px-3', !shown.has(i) && 'max-md:hidden')}>
+            className={({ isActive }) => cn(tabClass(isActive), 'max-md:px-3', tucked(i) ? 'hidden' : !shown.has(i) && 'max-md:hidden')}>
             {t.short ? <><span className="md:hidden">{t.short}</span><span className="hidden md:inline">{t.label}</span></> : t.label}
           </NavLink>
         ))}
       </nav>
       {rest.length > 0 && (
         <button type="button" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}
-          className={cn(tabClass(rest.some((t) => isActiveTab(pathname, t.to, tabs))), 'shrink-0 cursor-pointer gap-1 max-md:px-2.5 md:hidden')}>
+          className={cn(tabClass(rest.some((t) => isActiveTab(pathname, t.to, tabs))), 'shrink-0 cursor-pointer gap-1 max-md:px-2.5', !always && 'md:hidden')}>
           Mais <ChevronDown size={15} aria-hidden="true" />
         </button>
       )}
       {open && rest.length > 0 && (
-        <div role="menu" className="absolute right-4 top-full z-30 mt-1 flex min-w-52 flex-col rounded-2xl border border-line bg-surface p-1 shadow-lg md:hidden">
+        <div role="menu" className={cn('absolute right-4 top-full z-30 mt-1 flex min-w-52 flex-col rounded-2xl border border-line bg-surface p-1 shadow-lg md:right-0', !always && 'md:hidden')}>
           {rest.map((t) => (
-            <NavLink key={t.to} role="menuitem" to={href(t.to)} onClick={() => setOpen(false)} className="flex min-h-11 items-center rounded-xl px-3 text-[14px] font-medium text-ink no-underline hover:bg-raised">{t.label}</NavLink>
+            <NavLink key={t.to} role="menuitem" to={href(t.to)} onClick={() => setOpen(false)} className={cn('flex min-h-11 items-center rounded-xl px-3 text-[14px] font-medium text-ink no-underline hover:bg-raised', !t.more && 'md:hidden')}>{t.label}</NavLink>
           ))}
         </div>
       )}

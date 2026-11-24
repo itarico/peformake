@@ -87,7 +87,7 @@ function Actions({ item, hasFinal, finals, className }: { item: ContentItem; has
         <Dialog open onClose={() => setPending(null)} size="sm" title={pending.label} description={itemTitle(item)}
           footer={<>
             <Button variant="secondary" onClick={() => setPending(null)}>Cancelar</Button>
-            <Button disabled={note.trim().length < 3 || move.isPending} onClick={() => move.mutate(pending)}>{move.isPending ? 'Salvando' : 'Mandar para o design'}</Button>
+            <Button disabled={note.trim().length < 3 || move.isPending} onClick={() => move.mutate(pending)}>{move.isPending ? 'Salvando' : pending.label}</Button>
           </>}>
           <label htmlFor="ajuste" className="text-[13px] font-semibold">O que precisa ajustar?</label>
           <textarea id="ajuste" rows={4} autoFocus value={note} onChange={(e) => setNote(e.target.value)} placeholder="Ex.: trocar o fundo para dourado e aumentar o preço" className={cn(field, 'mt-1')} />

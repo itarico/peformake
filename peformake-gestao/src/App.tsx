@@ -34,6 +34,7 @@ const AgentPage = lazy(() => import('@/features/traffic/AgentPage').then((m) => 
 const BalancePage = lazy(() => import('@/features/traffic/BalancePage').then((m) => ({ default: m.BalancePage })))
 const CampaignsPage = lazy(() => import('@/features/traffic/CampaignsPage').then((m) => ({ default: m.CampaignsPage })))
 const TasksPage = lazy(() => import('@/features/traffic/TasksPage').then((m) => ({ default: m.TasksPage })))
+const SalesPage = lazy(() => import('@/features/traffic/SalesPage').then((m) => ({ default: m.SalesPage })))
 const TrafficDashboard = lazy(() => import('@/features/traffic/TrafficDashboard').then((m) => ({ default: m.TrafficDashboard })))
 const TrafficLayout = lazy(() => import('@/features/traffic/TrafficLayout').then((m) => ({ default: m.TrafficLayout })))
 const TrafficSettingsPage = lazy(() => import('@/features/traffic/TrafficSettingsPage').then((m) => ({ default: m.TrafficSettingsPage })))
@@ -125,6 +126,7 @@ export function App() {
               <Route path="saldo" element={<BalancePage />} />
               <Route path="agente" element={<AgentPage />} />
               <Route path="campanhas" element={<CampaignsPage />} />
+              <Route path="vendas" element={<SalesPage />} />
               <Route path="tarefas" element={<TasksPage />} />
               <Route path="contas" element={<AccountsPage />} />
               <Route path="estrategia" element={<MovedTo to="/estrategia/trafego" />} />

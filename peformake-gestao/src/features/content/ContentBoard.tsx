@@ -11,7 +11,6 @@ import { DESIGN_AREAS, inArea, inAreas, useProduction } from '@/features/product
 import { TaskDialog, type Task } from '@/features/social/SocialPage'
 import { SOURCE_LABEL, SOURCE_TONE } from '@/features/social/socialRules'
 import { listItems } from './contentApi'
-import { DesignerSummary } from './DesignerPanel'
 import { PriorityBadge } from './PriorityBadge'
 import { useMonthParam } from './useMonthParam'
 import {
@@ -19,7 +18,6 @@ import {
   BOARD_COLUMNS,
   boardAlerts,
   boardColumn,
-  deliveryStats,
   briefingMissing,
   EMPTY_FILTERS,
   filterItems,
@@ -132,7 +130,6 @@ export function ContentBoard() {
     revisar: (n: number) => `${n} para revisar antes de ir ao cliente`,
   } as const
   const alerts = boardAlerts(visible, now)
-  const stats = deliveryStats(visible)
   const goTo = (col: BoardColumn) => { setTab(col); document.querySelector(`[data-conteudo] > section[aria-label="${BOARD_COLUMNS.find((c) => c.id === col)?.label}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 
   return (
@@ -145,13 +142,8 @@ export function ContentBoard() {
               {a.tone === 'warn' && <AlertTriangle size={14} aria-hidden="true" />}{ALERT_TEXT[a.id](a.count)}
             </button>
           ))}
-          {/* Métrica e resumo do design só no computador: no celular o topo fica só com o que pede ação. */}
-          <span className="hidden text-[12.5px] text-muted md:inline">
-            {stats.revisions > 0 && <>{stats.revisions} {stats.revisions === 1 ? 'ajuste' : 'ajustes'} no mês ({stats.withRevision} {stats.withRevision === 1 ? 'peça' : 'peças'})</>}
-          </span>
         </div>
       )}
-      <div className="hidden md:block"><DesignerSummary month={month} /></div>
 
       <div className="flex items-center gap-2 md:flex-wrap">
         <label className="relative min-w-0 flex-1 md:flex-none">

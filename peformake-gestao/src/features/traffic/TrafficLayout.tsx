@@ -6,6 +6,7 @@ import { AutomationsLink } from '@/features/settings/AutomationsCenter'
 const TABS = [
   { to: '/trafego/painel', label: 'Painel' },
   { to: '/trafego/campanhas', label: 'Campanhas' },
+  { to: '/trafego/vendas', label: 'Vendas' },
   { to: '/trafego/saldo', label: 'Saldo' },
   { to: '/trafego/agente', label: 'Agente' },
   { to: '/trafego/tarefas', label: 'Tarefas' },

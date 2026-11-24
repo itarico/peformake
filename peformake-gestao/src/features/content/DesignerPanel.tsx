@@ -32,8 +32,8 @@ export function DesignerPanel({ month }: { month: string }) {
   const { staffName, myStaffId, isDesigner, canPlan } = useProduction()
   const { stats } = useStats(month)
   const [pick, setPick] = useState<string | null>(null)
-  // No celular começa recolhido (uma linha): a fila, que é o trabalho, fica na primeira tela.
-  const [open, setOpen] = useState(() => typeof window === 'undefined' || window.matchMedia('(min-width: 768px)').matches)
+  // Começa recolhido (uma linha) em qualquer tela: a fila, que é o trabalho, vem primeiro. Os números abrem com um toque.
+  const [open, setOpen] = useState(false)
   if (!stats || stats.length === 0) return null
   const mineOnly = isDesigner && !canPlan && myStaffId
   const list = mineOnly ? stats.filter((s) => s.designerId === myStaffId) : stats

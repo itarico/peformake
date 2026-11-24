@@ -8,12 +8,13 @@ import { monthLabel, monthStart } from '@/features/traffic/planRules'
 import { useMonthParam } from './useMonthParam'
 
 const TABS: SectionTab[] = [
-  { to: '/conteudo/planejamento', label: 'Planejamento do mês', short: 'Planejamento' },
+  // Só o trabalho do dia nas abas (pedido do Italo, 24/11: minimalista e funcional). Datas sazonais e Modelo rápido ficam em "Mais".
   { to: '/conteudo/quadro', label: 'Peças' },
   { to: '/conteudo/design', label: 'Design' },
+  { to: '/conteudo/planejamento', label: 'Planejamento' },
   // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
-  { to: '/conteudo/datas', label: 'Datas sazonais', short: 'Datas' },
-  { to: '/conteudo/automatico', label: 'Modelo rápido', short: 'Modelo' },
+  { to: '/conteudo/datas', label: 'Datas sazonais', short: 'Datas', more: true },
+  { to: '/conteudo/automatico', label: 'Modelo rápido', short: 'Modelo', more: true },
 ]
 
 export function MonthSwitcher() {
