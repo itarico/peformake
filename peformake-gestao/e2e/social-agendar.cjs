@@ -45,7 +45,7 @@ async function mock(route) {
     const fn = p.split('/').pop()
     if (fn === 'ig_post_save') { saved.push(body); posts.push({ id: 'n' + saved.length, account_id: body._account, content_item_id: body._item, kind: body._kind, media_path: body._media_path, media_mime: body._media_mime, caption: body._caption, scheduled_at: body._at, status: 'agendado', permalink: null, error: null }); return json('n' + saved.length) }
     if (fn === 'ig_post_media_parts') { partsCalls.push(body); return json(null) }
-    if (fn === 'ig_post_create') { creates.push(body); return json(body._repeat_count || 1) }
+    if (fn === 'ig_post_create' || fn === 'ig_post_create_series') { creates.push(body); return json(body._ats ? body._ats.length : 1) }
     calls.push(fn)
     if (fn === 'ig_post_cancel') { canceled.push(body._id); posts = posts.filter((x) => x.id !== body._id); return json(null) }
     if (fn === 'ig_connect_start') { connectAsked = body; return json('a'.repeat(64)) }
@@ -141,13 +141,19 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       const tomorrow2 = new Date(Date.now() + 2 * 864e5).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' })
       await pg.locator('input[type=date]').fill(tomorrow2); await pg.locator('input[type=time]').fill('09:00')
       await pg.getByRole('button', { name: /^Repetir story/ }).click()
-      await pg.getByRole('radio', { name: 'Todo dia' }).click()
-      await pg.getByLabel('Quantas vezes').fill('5')
+      await pg.getByRole('radio', { name: 'Dias da semana' }).click()
+      for (const w of ['Seg', 'Qua']) await pg.getByRole('button', { name: w, exact: true }).click()
+      await pg.getByRole('button', { name: 'Horário', exact: true }).click()
+      await pg.getByLabel('Horário 2', { exact: true }).fill('18:00')
+      await pg.getByRole('radio', { name: '2 semanas' }).click()
+      await pg.waitForTimeout(300)
       const nS = creates.length
       await pg.getByRole('button', { name: 'Agendar', exact: true }).last().click()
       for (let t = 0; t < 30 && creates.length === nS; t++) await pg.waitForTimeout(300)
       const st = creates[nS]
-      if (!st || st._kind !== 'story' || st._repeat_every !== 'dia' || st._repeat_count !== 5 || st._at !== new Date(`${tomorrow2}T09:00:00-03:00`).toISOString()) fails.push(`${dev}: story repetido errado ${JSON.stringify(st)}`)
+      // Começa no dia escolhido às 09:00; repete seg e qua às 09:00 e 18:00 por 2 semanas (o dia de início, se for seg ou qua, também entra).
+      const want = (() => { const out = new Set([new Date(`${tomorrow2}T09:00:00-03:00`).toISOString()]); for (let k = 0; k < 14; k++) { const d = new Date(`${tomorrow2}T12:00:00-03:00`); d.setUTCDate(d.getUTCDate() + k); const iso = d.toISOString().slice(0, 10); const wd = new Date(`${iso}T12:00:00-03:00`).getDay(); if (wd === 1 || wd === 3) for (const h of ['09:00', '18:00']) { const x = new Date(`${iso}T${h}:00-03:00`).toISOString(); if (x > new Date(`${tomorrow2}T09:00:30-03:00`).toISOString()) out.add(x) } } return [...out].sort() })()
+      if (!st || st._kind !== 'story' || JSON.stringify(st._ats) !== JSON.stringify(want)) fails.push(`${dev}: story repetido errado ${JSON.stringify(st?._ats)} esperado ${JSON.stringify(want)}`)
       await pg.waitForTimeout(800)
 
       // Vídeo de 95 MB (acima do limite de 50 MB do Supabase): sobe em 3 partes.
@@ -185,12 +191,12 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pick('#massa-conta')
       await pg.getByLabel('Arquivos').setInputFiles([{ name: 's1.png', mimeType: 'image/png', buffer: PNG }, { name: 's2.png', mimeType: 'image/png', buffer: PNG }]); await pg.waitForTimeout(800)
       await pg.getByRole('group', { name: 'Formato de todos' }).getByRole('button', { name: 'Story' }).click()
-      await pg.getByLabel('Stories repetem').selectOption('semana'); await pg.getByLabel('Vezes').fill('4')
+      await pg.getByRole('radio', { name: 'Todo dia' }).click(); await pg.getByRole('radio', { name: '1 semana' }).click()
       const nT = creates.length
       await pg.getByRole('button', { name: /^Programar 2$/ }).click()
       for (let t = 0; t < 30 && creates.length < nT + 2; t++) await pg.waitForTimeout(300)
       const ss = creates.slice(nT)
-      if (ss.length !== 2 || !ss.every((x) => x._kind === 'story' && x._repeat_every === 'semana' && x._repeat_count === 4)) fails.push(`${dev}: stories em massa errados ${JSON.stringify(ss.map((x) => [x._kind, x._repeat_every, x._repeat_count]))}`)
+      if (ss.length !== 2 || !ss.every((x) => x._kind === 'story' && Array.isArray(x._ats) && x._ats.length === 7)) fails.push(`${dev}: stories em massa errados ${JSON.stringify(ss.map((x) => [x._kind, x._ats?.length]))}`)
       await pg.goto(`${BASE}/conteudo/agendar`); await pg.waitForTimeout(1200)
       await shot('2-depois')
     } catch (e) { fails.push(`${dev}: ${e.message.split('\n')[0]}`) }

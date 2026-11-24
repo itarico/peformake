@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, Copy, Crop as CropIcon, Images, Plus, Repeat, X } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, Copy, Crop as CropIcon, Images, Plus, X } from 'lucide-react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { SearchSelect } from '@/components/ui/SearchSelect'
 import { useProduction } from '@/features/production/useProduction'
@@ -9,7 +9,9 @@ import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { autoKind, CROPS, mediaIssue, readMedia, targetRatio, uploadMedia, type Crop, type PickedMedia } from './igMedia'
+import { RepeatEditor } from './RepeatEditor'
 import { KIND_LABEL_IG, scheduleError, toInstant, type IgKind } from './scheduleRules'
+import { defaultRule, repeatDates, repeatSummary, type RepeatRule } from './storyRepeat'
 
 // Tabelas e funções de 24/11/2026 (Instagram) ainda fora dos tipos gerados.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +32,6 @@ export function useIgAccounts() {
 
 export const IG_ACCEPT = 'image/jpeg,image/png,image/webp,video/mp4,video/quicktime'
 const IG_BLUE = 'text-[#0095F6] hover:text-[#00376B]'
-const REPEAT = [{ id: '', label: 'Não repetir' }, { id: 'dia', label: 'Todo dia' }, { id: 'semana', label: 'Toda semana' }] as const
 
 /** Arrastar e soltar arquivos, como na tela de criar do Instagram. */
 export function useDrop(onFiles: (files: FileList) => void) {
@@ -87,8 +88,7 @@ export function PostComposer() {
   const [now, setNow] = useState(true)
   const [day, setDay] = useState(today)
   const [hour, setHour] = useState('18:00')
-  const [repeat, setRepeat] = useState<'' | 'dia' | 'semana'>('')
-  const [times, setTimes] = useState(7)
+  const [rule, setRule] = useState<RepeatRule>(() => defaultRule('18:00', todayInBrazil()))
   const [step, setStep] = useState<string | null>(null)
   const [open, setOpen] = useState<Record<'formato' | 'quando' | 'repetir', boolean>>({ formato: false, quando: true, repetir: false })
   const toggle = (k: 'formato' | 'quando' | 'repetir') => setOpen((o) => ({ ...o, [k]: !o[k] }))
@@ -134,17 +134,20 @@ export function PostComposer() {
   const carousel = items.length > 1
   const kinds: IgKind[] = carousel ? ['post'] : items[0]?.video ? ['reels', 'story'] : ['post', 'story']
   const canCrop = kind === 'post' && items.length > 0 && !(items.length === 1 && items[0]!.video)
-  const blocked = !picked || !!issue || past
+  // Story que repete: as datas saem da regra (dias da semana, horários, período) a partir do Quando.
+  const startDay = now ? today : day
+  const dates = kind === 'story' && rule.freq !== 'nao' && at ? repeatDates(rule, startDay, at) : at ? [at] : []
+  const noDays = kind === 'story' && rule.freq === 'semana' && rule.weekdays.length === 0
+  const blocked = !picked || !!issue || past || noDays
 
   const save = useMutation({
     mutationFn: async () => {
       if (!picked) throw new Error('Escolha o Instagram.')
       const media = await uploadMedia(picked.id, kind, items, setStep, crop)
       setStep('Programando')
-      const { error } = await db.rpc('ig_post_create', {
-        _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _at: at,
-        _repeat_every: kind === 'story' && repeat ? repeat : null, _repeat_count: kind === 'story' && repeat ? times : 1,
-      })
+      const { error } = dates.length > 1
+        ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _ats: dates })
+        : await db.rpc('ig_post_create', { _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _at: at, _repeat_every: null, _repeat_count: 1 })
       if (error) throw error
       // Agora: chama a publicação na hora. Se falhar, a rotina (a cada minuto) publica.
       if (now) await db.rpc('ig_publish_now', {})
@@ -266,15 +269,9 @@ export function PostComposer() {
             )}
           </Row>
           {kind === 'story' && (
-            <Row label="Repetir story" value={repeat ? `${REPEAT.find((r) => r.id === repeat)!.label} · ${times}x` : 'Não'} open={open.repetir} onToggle={() => toggle('repetir')}>
-              <div role="radiogroup" aria-label="Repetir" className="flex flex-wrap gap-1.5">
-                {REPEAT.map((r) => <button key={r.id} type="button" role="radio" aria-checked={repeat === r.id} onClick={() => setRepeat(r.id)} className={chip(repeat === r.id)}>{r.label}</button>)}
-              </div>
-              {repeat && (
-                <label className="mt-2 flex items-center gap-2 text-[13px]"><Repeat size={14} aria-hidden="true" /> Quantas vezes
-                  <input type="number" min={2} max={30} value={times} onChange={(e) => setTimes(Math.max(2, Math.min(30, Number(e.target.value) || 2)))} className="min-h-10 w-20 rounded-xl border border-line-strong bg-surface px-3" />
-                </label>
-              )}
+            <Row label="Repetir story" value={rule.freq === 'nao' ? 'Não' : `${dates.length} vezes`} open={open.repetir} onToggle={() => toggle('repetir')}>
+              <RepeatEditor rule={rule} onChange={setRule} dates={dates} summary={repeatSummary(rule, dates)} minDay={startDay} startHour={now ? new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) : hour} />
+              {noDays && <p className="mt-2 text-[13px] text-warn-ink">Escolha pelo menos um dia da semana.</p>}
             </Row>
           )}
           <div className="flex flex-col gap-2 p-4">

@@ -11,7 +11,9 @@ import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { autoKind, mediaIssue, readMedia, uploadMedia, type PickedMedia } from './igMedia'
 import { IG_ACCEPT, useDrop, useIgAccounts } from './PostComposer'
+import { RepeatEditor } from './RepeatEditor'
 import { KIND_LABEL_IG, scheduleError, toInstant, type IgKind } from './scheduleRules'
+import { defaultRule, repeatDates, repeatSummary, type RepeatRule } from './storyRepeat'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
@@ -43,9 +45,9 @@ export function BulkSchedule() {
   const [start, setStart] = useState(addDays(today, 1))
   const [hour, setHour] = useState('18:00')
   const [every, setEvery] = useState(1)
-  // Stories do lote podem repetir (todo dia ou toda semana), como no Criar post.
-  const [repeat, setRepeat] = useState<'' | 'dia' | 'semana'>('')
-  const [times, setTimes] = useState(7)
+  // Stories do lote seguem a mesma regra de repetição do Criar post, a partir do dia e hora de cada linha.
+  const [rule, setRule] = useState<RepeatRule>(() => defaultRule('18:00', todayInBrazil()))
+  const datesOf = (r: Row) => { const at = toInstant(r.day, r.hour); return r.kind === 'story' && rule.freq !== 'nao' && at ? repeatDates(rule, r.day, at) : at ? [at] : [] }
 
   // Aberto de dentro do cliente (?cliente=): só o Instagram dele, sem trocar (mais seguro).
   const lockClient = params.get('cliente')
@@ -87,8 +89,10 @@ export function BulkSchedule() {
         set(i, { state: 'enviando', error: undefined })
         try {
           const media = await uploadMedia(picked.id, r.kind, [r.media], (t) => set(i, { progress: t }))
-          const story = r.kind === 'story' && repeat
-          const { error } = await db.rpc('ig_post_create', { _account: picked.id, _kind: r.kind, _media: media, _caption: r.kind === 'story' ? '' : r.caption, _at: toInstant(r.day, r.hour), _repeat_every: story ? repeat : null, _repeat_count: story ? times : 1 })
+          const ats = datesOf(r)
+          const { error } = ats.length > 1
+            ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: r.kind, _media: media, _caption: '', _ats: ats })
+            : await db.rpc('ig_post_create', { _account: picked.id, _kind: r.kind, _media: media, _caption: r.kind === 'story' ? '' : r.caption, _at: toInstant(r.day, r.hour), _repeat_every: null, _repeat_count: 1 })
           if (error) throw error
           set(i, { state: 'ok' })
         } catch (e) {
@@ -139,13 +143,11 @@ export function BulkSchedule() {
           </div>
         )}
         {rows.some((r) => r.kind === 'story') && (
-          <div className="flex flex-wrap items-end gap-2 md:col-span-2">
-            <label className="flex flex-col text-[12px] font-semibold">Stories repetem
-              <select aria-label="Stories repetem" value={repeat} onChange={(e) => setRepeat(e.target.value as '' | 'dia' | 'semana')} className={cn(field, 'mt-1 font-normal')}>
-                <option value="">Não</option><option value="dia">Todo dia</option><option value="semana">Toda semana</option>
-              </select>
-            </label>
-            {repeat && <label className="flex flex-col text-[12px] font-semibold">Vezes<input type="number" min={2} max={30} aria-label="Vezes" value={times} onChange={(e) => setTimes(Math.max(2, Math.min(30, Number(e.target.value) || 2)))} className={cn(field, 'mt-1 w-20 font-normal')} /></label>}
+          <div className="md:col-span-2">
+            <p className="mb-1 text-[13px] font-semibold">Stories repetem</p>
+            <RepeatEditor rule={rule} onChange={setRule} minDay={today} startHour={hour}
+              dates={(() => { const s = rows.find((r) => r.kind === 'story'); return s ? datesOf(s) : [] })()}
+              summary={(() => { const s = rows.find((r) => r.kind === 'story'); return s ? `${repeatSummary(rule, datesOf(s))} (cada story, a partir do dia dele)` : '' })()} />
           </div>
         )}
       </div>
@@ -170,7 +172,7 @@ export function BulkSchedule() {
               </div>
               <div className="col-span-2 flex items-center justify-end gap-2 md:col-span-1">
                 <span className={cn('rounded-full px-2.5 py-1 text-[12px] font-medium', r.state === 'ok' ? 'bg-ok-soft text-ok-ink' : r.state === 'enviando' ? 'bg-accent-soft text-ink' : r.state === 'erro' ? 'bg-warn-soft text-warn-ink' : 'bg-raised text-muted')}>
-                  {r.state === 'ok' ? (r.kind === 'story' && repeat ? `Programado ${times}x` : 'Programado') : r.state === 'enviando' ? (r.progress ?? 'Enviando') : r.state === 'erro' ? 'Falhou' : r.media.video && r.media.file.size > 45 * 1024 * 1024 ? `Pronto · ${Math.round(r.media.file.size / 1048576)} MB` : 'Pronto'}
+                  {r.state === 'ok' ? (datesOf(r).length > 1 ? `Programado ${datesOf(r).length}x` : 'Programado') : r.state === 'enviando' ? (r.progress ?? 'Enviando') : r.state === 'erro' ? 'Falhou' : r.media.video && r.media.file.size > 45 * 1024 * 1024 ? `Pronto · ${Math.round(r.media.file.size / 1048576)} MB` : 'Pronto'}
                 </span>
                 {r.state !== 'ok' && <button type="button" aria-label={`Tirar arquivo ${i + 1}`} onClick={() => setRows((cur) => cur.filter((_, n) => n !== i))} className="flex size-10 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink"><Trash2 size={16} aria-hidden="true" /></button>}
               </div>
