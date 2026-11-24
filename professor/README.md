@@ -9,9 +9,9 @@ Sistema de ensino pessoal no padrão de tutoria de Oxford, baseado em ciência d
 | `diario-de-aprendizagem.md` | Memória: aulas dadas, notas, fila de revisão espaçada |
 | `aulas/` | Uma aula por semana, gerada automaticamente toda segunda |
 
-## Rota de Estudos (página no celular)
+## Guia do Italo (página no celular)
 
-https://claude.ai/artifact/QhwHiXPtMUHxowNuHahM4V. O código fica em `professor/app/rota-de-estudos.html`. É o plano de 1 hora por dia: você marca os blocos e escreve a anotação, e o professor lê isso toda segunda antes de montar a semana seguinte. A conversa continua no chat do Claude.
+https://claude.ai/artifact/QhwHiXPtMUHxowNuHahM4V. O código fica em `professor/app/rota-de-estudos.html`. Rotina fixa, estudo de 1 hora, tarefas, treino, agenda e progresso. Você marca, e o professor lê toda segunda para montar a semana seguinte. Tarefas também entram pelo chat ("anota: ..."). Plano da fase 2 (app instalável e WhatsApp): `professor/app/MVP-GUIA.md`.
 
 ## Como usar
 
