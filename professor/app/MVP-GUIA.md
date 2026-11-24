@@ -4,12 +4,13 @@
 
 Página: https://claude.ai/artifact/QhwHiXPtMUHxowNuHahM4V (código em `professor/app/rota-de-estudos.html`).
 
-Versão minimalista (pedido do Italo em 24/11): **uma tela só**.
+Versão atual (24/11, pedido do Italo: o mínimo, regrado, foco em constância): **a agenda do dia por horário**.
 
-- Topo: % do dia, barra e % da semana.
-- Três listas com a própria barra de progresso: **Rotina**, **Estudo** e **Tarefas** (inclui as atrasadas). Tocar em "ver" abre o detalhe, os links e as frases em inglês com áudio.
-- Campo para nova tarefa.
-- **Recado para o professor:** texto falado (botão Gravar quando o aparelho permite, ou o microfone do teclado do celular) salvo em `recados`. A rotina de segunda lê cada recado, transforma pedido em tarefa e marca como lido.
+- Topo: **dias seguidos** (um dia conta com 70% dos blocos feitos), 7 bolinhas da semana e o % de hoje. Regra: nunca falhar 2 dias seguidos.
+- Linha do tempo: um bloco por horário com um check. O bloco atual aparece como "agora". "ver" abre o detalhe. O bloco de estudo mostra o tema do dia e os passos; o de trabalho mostra as tarefas e um campo "+ tarefa".
+- Recado para o professor (fechado por padrão): texto ou fala, salvo em `recados`.
+
+Agenda inicial (dias úteis): 05:30 acordar · 06:00 academia (quarta: caminhada) · 07:00 café com proteína · 07:30 leitura · 08:00 trabalho · 12:00 almoço · 12:40 Duolingo · 16:00 lanche · 19:00 estudo 1 h · 21:30 olhar o amanhã · 22:30 dormir. Fim de semana: 07:00 acordar · 08:00 praia ou caminhada · 09:00 café · 09:30 leitura · 10:00 estudo · 11:15 Duolingo · 12:30 almoço · 21:30 · 22:30.
 
 **Como as tarefas entram hoje:** pela própria página, ou pelo chat do Claude ("anota: …"). Aí o Claude grava em `tarefas` com `origem: "chat"`.
 
@@ -17,8 +18,9 @@ Versão minimalista (pedido do Italo em 24/11): **uma tela só**.
 
 | Coleção | Documento | Campos |
 |---|---|---|
-| `habitos` | id do hábito | titulo, min, area, freq ("diario" ou "semana"), alvo, dias [0-6], ativo, detalhe, ordem |
-| `registro` | AAAA-MM-DD | data, habitos {id: true/false} |
+| `meta/agenda` | — | regra; util, fds e d0..d6 (dia específico): listas de {h, id, titulo, detalhe, tipo ("trabalho" ou "estudo"), tarefas} |
+| `registro` | AAAA-MM-DD | data, habitos {id do bloco: true/false} |
+| `habitos` | — | versão anterior, não é mais usada pela página |
 | `dias` | AAAA-MM-DD | plano de estudo: titulo, foco, blocos [{min, tipo, titulo, detalhe, links, falar}], feitos [índices], nota |
 | `tarefas` | automático | titulo, data (ou null), area, feita, feitaEm, origem ("app", "chat" ou "whatsapp"), criadaEm |
 | `recados` | automático | texto, data, criadoEm, lido |
