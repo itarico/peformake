@@ -26,6 +26,9 @@ const files = [
   { item_id: 'i3', path: 'c2/moto.jpg', mime: 'image/jpeg', role: 'final', created_at: iso(-5) },
 ]
 const PIXEL = Buffer.from('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=', 'base64')
+const uploads = []
+// PNG 1x1 para testar a conversão para JPG no Postar avulso.
+const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
 async function mock(route) {
   const req = route.request(); const u = new URL(req.url())
   if (u.hostname.endsWith('facebook.com')) return route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Meta</h1>' })
@@ -34,6 +37,7 @@ async function mock(route) {
   const json = (b, s = 200) => route.fulfill({ status: s, contentType: 'application/json', headers: h, body: JSON.stringify(b) })
   if (req.method() === 'OPTIONS') return route.fulfill({ status: 200, headers: h, body: '' })
   const p = u.pathname; const body = (() => { try { return JSON.parse(req.postData() || '{}') } catch { return {} } })()
+  if (p.startsWith('/storage/') && req.method() === 'POST') { uploads.push(p); return json({ Key: p.split('/object/')[1] ?? p, Id: 'x' }) }
   if (p.startsWith('/storage/')) return route.fulfill({ status: 200, contentType: 'image/jpeg', headers: h, body: PIXEL })
   if (p.startsWith('/rest/v1/rpc/')) {
     const fn = p.split('/').pop()
@@ -98,6 +102,20 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pg.locator('section[aria-label="Agendadas"] li', { hasText: 'Reels' }).getByRole('button', { name: 'Cancelar' }).click(); await pg.waitForTimeout(300)
       await pg.getByRole('button', { name: 'Sim, confirmar' }).click(); await pg.waitForTimeout(700)
       if (canceled[0] !== 'p2') fails.push(`${dev}: cancelar não chamou o banco`)
+
+      // Postar avulso: escolhe o Instagram, sobe PNG (vira JPG), posta agora.
+      await pg.getByRole('button', { name: 'Postar', exact: true }).click(); await pg.waitForTimeout(350)
+      await pg.locator('#post-conta').click(); await pg.locator('#post-conta').pressSequentially('@peformake', { delay: 20 }); await pg.waitForTimeout(300); await pg.getByRole('option', { name: /@peformake/ }).first().click(); await pg.waitForTimeout(200)
+      await pg.getByLabel('Arquivo').setInputFiles({ name: 'foto.png', mimeType: 'image/png', buffer: PNG }); await pg.waitForTimeout(300)
+      await pg.getByLabel('Legenda').fill('Post avulso de teste')
+      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up Postar rola`)
+      await shot('pop-postar')
+      const before = saved.length
+      await pg.getByRole('dialog').getByRole('button', { name: 'Postar agora' }).click(); await pg.waitForTimeout(1200)
+      const q = saved[before]
+      if (!q || q._account !== 'a0' || q._item !== null || q._kind !== 'post' || q._media_mime !== 'image/jpeg' || !/^instagram\/avulso\/a0\/.+\.jpg$/.test(q._media_path) || q._caption !== 'Post avulso de teste') fails.push(`${dev}: post avulso salvo errado ${JSON.stringify(q)}`)
+      if (!uploads.some((u) => u.includes('content-files/instagram/avulso/a0/'))) fails.push(`${dev}: arquivo não subiu`)
+      if (await pg.locator('dialog[open]').count()) fails.push(`${dev}: pop-up Postar não fechou`)
       await shot('2-depois')
     } catch (e) { fails.push(`${dev}: ${e.message.split('\n')[0]}`) }
     if (errs.length) fails.push(`${dev}: erro no navegador: ${errs[0]}`)

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarClock, Camera, CheckCircle2, ExternalLink, Plus } from 'lucide-react'
+import { CalendarClock, Camera, CheckCircle2, ExternalLink, Plus, Send } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { ask } from '@/components/ui/confirm'
@@ -11,6 +11,7 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
+import { QuickPostDialog } from './QuickPostDialog'
 import { CONNECT_MESSAGE, defaultKind, igLoginUrl, KIND_LABEL_IG, mediaProblem, POST_STATUS, scheduleError, toInstant, type IgKind, type IgPostStatus } from './scheduleRules'
 
 // Tabelas e funções de 24/11/2026 (migração instagram_agendar): ainda fora dos tipos gerados.
@@ -112,6 +113,7 @@ export function SchedulePage() {
   const [connecting, setConnecting] = useState(false)
   const [pick, setPick] = useState(OWN)
   const [scheduling, setScheduling] = useState<Ready | null>(null)
+  const [posting, setPosting] = useState(false)
   const back = params.get('instagram')
 
   const connect = useMutation({
@@ -137,6 +139,8 @@ export function SchedulePage() {
   const scheduledItems = new Set(posts.filter((p) => p.status !== 'erro').map((p) => p.itemId))
   const waiting = ready.filter((r) => !scheduledItems.has(r.id))
   const accountById = new Map(accounts.map((a) => [a.id, a]))
+  // Postar avulso: qualquer Instagram conectado, escolhido pelo nome do cliente e pelo @.
+  const connected = accounts.filter((a) => a.status === 'conectado').map((a) => ({ id: a.id, label: `${a.clientId ? clientName(a.clientId) : 'Peformake'} · @${a.username}` }))
   const options = [OWN, ...clients.map((c) => c.name)]
   const pickedClient = pick === OWN ? null : clients.find((c) => c.name === pick)?.id ?? undefined
 
@@ -158,8 +162,12 @@ export function SchedulePage() {
           ))}
           {accounts.length === 0 && <li className="text-[14px] text-muted">Nenhum Instagram conectado ainda.</li>}
         </ul>
-        <Button variant="secondary" onClick={() => setConnecting(true)}><Plus size={16} aria-hidden="true" /> Conectar Instagram</Button>
+        <div className="flex flex-wrap gap-2">
+          {connected.length > 0 && <Button onClick={() => setPosting(true)}><Send size={16} aria-hidden="true" /> Postar</Button>}
+          <Button variant="secondary" onClick={() => setConnecting(true)}><Plus size={16} aria-hidden="true" /> Conectar Instagram</Button>
+        </div>
       </div>
+      {posting && <QuickPostDialog accounts={connected} onClose={() => setPosting(false)} />}
 
       <section aria-label="Prontas para agendar" className="flex flex-col gap-2">
         <h2 className="text-[15px] font-semibold">Prontas para agendar <span className="font-normal text-muted">{waiting.length}</span></h2>
