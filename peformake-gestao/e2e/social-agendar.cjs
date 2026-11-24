@@ -11,7 +11,7 @@ const OUT = process.env.OUT || 'e2e/capturas/agendar'; fs.mkdirSync(OUT, { recur
 const iso = (h) => new Date(Date.now() + h * 3600e3).toISOString()
 const C = [{ id: 'c1', name: 'Padaria Sol', is_active: true, areas: ['design', 'social'], recurring: true }, { id: 'c2', name: 'Will Motos', is_active: true, areas: ['design', 'social'], recurring: true }]
 const fails = []; let posts; let saved; let canceled; let connectAsked
-const reset = () => { saved = []; canceled = []; connectAsked = null; posts = [
+const reset = () => { updates.length = 0; saved = []; canceled = []; connectAsked = null; posts = [
   { id: 'p1', account_id: 'a1', content_item_id: 'i9', kind: 'post', media_path: 'c1/velha.jpg', media_mime: 'image/jpeg', caption: 'Promoção da semana', scheduled_at: iso(-20), status: 'publicado', permalink: 'https://www.instagram.com/p/abc/', error: null },
   { id: 'p2', account_id: 'a1', content_item_id: null, kind: 'reels', media_path: 'c1/video.mp4', media_mime: 'video/mp4', caption: null, scheduled_at: iso(30), status: 'agendado', permalink: null, error: null },
 ] }
@@ -29,6 +29,7 @@ const PIXEL = Buffer.from('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP///////////////////
 const uploads = []
 const partsCalls = []
 const creates = []; const calls = []
+const updates = []
 // PNG 1x1 para testar a conversão para JPG no Postar avulso.
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
 async function mock(route) {
@@ -47,6 +48,7 @@ async function mock(route) {
     if (fn === 'ig_post_media_parts') { partsCalls.push(body); return json(null) }
     if (fn === 'ig_post_create' || fn === 'ig_post_create_series') { creates.push(body); return json(body._ats ? body._ats.length : 1) }
     calls.push(fn)
+    if (fn === 'ig_post_update') { updates.push(body); return json(null) }
     if (fn === 'ig_post_cancel') { canceled.push(body._id); posts = posts.filter((x) => x.id !== body._id); return json(null) }
     if (fn === 'ig_connect_start') { connectAsked = body; return json('a'.repeat(64)) }
     return json({ production_clients: C, production_staff: [], my_staff_id: null }[fn] ?? null)
@@ -70,7 +72,9 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
     const shot = async (name) => { if (await sideScroll(pg)) fails.push(`${dev} ${name}: rolagem de lado`); await pg.screenshot({ path: path.join(OUT, `${dev}-${name}.png`) }) }
     try {
       await pg.goto(BASE + '/conteudo/agendar?instagram=ok', { waitUntil: 'networkidle' })
-      for (const t of ['Instagram conectado.', '@padariasol', '@peformake', 'Panetone de Natal', 'Revisão de moto', 'Instagram não conectado', 'Publicado', 'Agendado']) if (!(await pg.getByText(t).first().count())) fails.push(`${dev}: tela sem "${t}"`)
+      for (const t of ['Instagram conectado.', '@padariasol', '@peformake', 'Panetone de Natal', 'Revisão de moto', 'Instagram não conectado']) if (!(await pg.getByText(t).first().count())) fails.push(`${dev}: tela sem "${t}"`)
+      // Publicações viram cartões no calendário (publicada e agendada).
+      if ((await pg.locator('section[aria-label="Calendário"]').getByRole('button', { name: /: [1-9]\d* publicações$/ }).count()) < 1) fails.push(`${dev}: calendário sem publicações nos dias`)
       await shot('1-agendar')
 
       // Cliente sem Instagram: conectar.
@@ -104,9 +108,23 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (await pg.locator('section[aria-label="Prontas para agendar"] li', { hasText: 'Panetone de Natal' }).count()) fails.push(`${dev}: arte agendada continua na fila`)
 
       // Cancelar.
-      await pg.locator('section[aria-label="Agendadas"] li', { hasText: 'Reels' }).getByRole('button', { name: 'Cancelar' }).click(); await pg.waitForTimeout(300)
+      // Cartão no calendário: abre a publicação, edita a hora e depois exclui.
+      const p2day = new Date(iso(30)).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' })
+      const thisMonth = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }).slice(0, 7)
+      if (p2day.slice(0, 7) !== thisMonth) await pg.getByRole('button', { name: 'Próximo mês' }).click()
+      await pg.getByRole('button', { name: new RegExp(`^Dia ${Number(p2day.slice(8))}:`) }).click(); await pg.waitForTimeout(300)
+      await pg.locator('section[aria-label="Calendário"] ul').getByRole('button', { name: /^Reels das/ }).click(); await pg.waitForTimeout(400)
+      if (await popupScrolls(pg)) fails.push(`${dev}: janela da publicação rola`)
+      await shot('5-publicacao')
+      await pg.getByRole('button', { name: 'Editar' }).click(); await pg.waitForTimeout(200)
+      await pg.locator('dialog[open] input[type=time]').fill('21:15')
+      await pg.getByRole('button', { name: 'Salvar' }).click(); await pg.waitForTimeout(700)
+      const ed = updates[0]
+      if (!ed || ed._id !== 'p2' || new Date(ed._at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }) !== '21:15') fails.push(`${dev}: editar errado ${JSON.stringify(ed)}`)
+      await pg.locator('section[aria-label="Calendário"] ul').getByRole('button', { name: /^Reels das/ }).click(); await pg.waitForTimeout(400)
+      await pg.getByRole('button', { name: 'Excluir' }).click(); await pg.waitForTimeout(300)
       await pg.getByRole('button', { name: 'Sim, confirmar' }).click(); await pg.waitForTimeout(700)
-      if (canceled[0] !== 'p2') fails.push(`${dev}: cancelar não chamou o banco`)
+      if (canceled[0] !== 'p2') fails.push(`${dev}: excluir não chamou o banco`)
 
       // Calendário: o dia com publicação tem contador e filtra a lista.
       if (!(await pg.locator('section[aria-label="Calendário"]').count())) fails.push(`${dev}: sem calendário`)

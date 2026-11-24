@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarClock, Camera, CheckCircle2, ExternalLink, Layers, Plus, Send } from 'lucide-react'
+import { CalendarClock, Camera, Layers, Plus, Send } from 'lucide-react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
-import { ask } from '@/components/ui/confirm'
 import { Dialog } from '@/components/ui/Dialog'
 import { SearchSelect } from '@/components/ui/SearchSelect'
 import { useProduction } from '@/features/production/useProduction'
@@ -12,18 +11,18 @@ import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { IgCalendar } from './IgCalendar'
-import { CONNECT_MESSAGE, defaultKind, igLoginUrl, KIND_LABEL_IG, mediaProblem, POST_STATUS, scheduleError, toInstant, type IgKind, type IgPostStatus } from './scheduleRules'
+import { IgPostDialog } from './IgPostDialog'
+import { CONNECT_MESSAGE, defaultKind, igLoginUrl, KIND_LABEL_IG, mediaProblem, scheduleError, toInstant, type IgKind, type IgPostStatus } from './scheduleRules'
 
 // Tabelas e funções de 24/11/2026 (migração instagram_agendar): ainda fora dos tipos gerados.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 const OWN = 'Peformake (conta própria)'
 const fileUrl = (path: string) => supabase.storage.from('content-files').getPublicUrl(path).data.publicUrl
-const when = (iso: string) => new Date(iso).toLocaleString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })
 
 interface Account { id: string; clientId: string | null; username: string; status: string }
 interface Ready { id: string; clientId: string; kind: string; title: string; caption: string | null; path: string; mime: string }
-interface Post { id: string; accountId: string; itemId: string | null; kind: IgKind; path: string; mime: string; caption: string | null; at: string; status: IgPostStatus; permalink: string | null; error: string | null; count: number; series: string | null }
+interface Post { id: string; accountId: string; itemId: string | null; kind: IgKind; path: string; mime: string; caption: string | null; at: string; status: IgPostStatus; permalink: string | null; error: string | null; count: number; series: string | null; media: { path: string; mime: string }[] }
 
 async function load(): Promise<{ accounts: Account[]; ready: Ready[]; posts: Post[] }> {
   const [acc, items, posts] = await Promise.all([
@@ -49,6 +48,7 @@ async function load(): Promise<{ accounts: Account[]; ready: Ready[]; posts: Pos
       id: p.id!, accountId: p.account_id!, itemId: p.content_item_id, kind: p.kind as IgKind, path: p.media_path!, mime: p.media_mime!, caption: p.caption,
       at: p.scheduled_at!, status: p.status as IgPostStatus, permalink: p.permalink, error: p.error,
       count: Array.isArray(p.media) && p.media.length > 1 ? p.media.length : 1, series: p.series_id,
+      media: (Array.isArray(p.media) ? p.media : []) as { path: string; mime: string }[],
     })),
   }
 }
@@ -107,7 +107,6 @@ function ScheduleDialog({ item, account, onClose }: { item: Ready; account: Acco
 
 /** Social Media → Agendar: a arte aprovada pelo cliente vira publicação no Instagram com data e hora. */
 export function SchedulePage({ clientId }: { clientId?: string } = {}) {
-  const queryClient = useQueryClient()
   const [params, setParams] = useSearchParams()
   const { clients, clientName } = useProduction()
   // Enquanto algo está saindo (agendado vencido ou publicando), atualiza a cada 5 segundos para mostrar o resultado.
@@ -116,7 +115,7 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   const [connecting, setConnecting] = useState(false)
   const [pick, setPick] = useState(() => (clientId ? clientName(clientId) : OWN))
   const [scheduling, setScheduling] = useState<Ready | null>(null)
-  const [day, setDay] = useState<string | null>(null)
+  const [openPost, setOpenPost] = useState<string | null>(null)
   const location = useLocation()
   const back = params.get('instagram')
 
@@ -126,15 +125,6 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
       if (error) throw error
       window.location.assign(igLoginUrl(state as string, import.meta.env.VITE_SUPABASE_URL))
     },
-  })
-  const cancel = useMutation({
-    mutationFn: async (id: string) => { const { error } = await db.rpc('ig_post_cancel', { _id: id }); if (error) throw error },
-    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['ig-schedule'] }),
-  })
-  // Story que repete: cancela as próximas da série de uma vez.
-  const cancelSeries = useMutation({
-    mutationFn: async (series: string) => { const { error } = await db.rpc('ig_series_cancel', { _series: series }); if (error) throw error },
-    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['ig-schedule'] }),
   })
 
   const accountFor = useMemo(() => {
@@ -156,7 +146,7 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   // Criar e Em massa voltam para onde a pessoa estava; dentro do cliente a conta já vai escolhida.
   // Dentro do cliente (pedido do Italo, 24/11): Criar e Em massa ficam presos ao Instagram dele (?cliente=).
   const extra = `volta=${encodeURIComponent(location.pathname + location.search)}${connected.length === 1 ? `&conta=${connected[0]!.id}` : ''}${clientId ? `&cliente=${clientId}` : ''}`
-  const dayPosts = day ? posts.filter((p) => new Date(p.at).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) === day) : posts.filter((p) => p.status !== 'publicado' || new Date(p.at).getTime() > Date.now() - 2 * 864e5)
+  const viewing = openPost ? posts.find((p) => p.id === openPost) : undefined
   const options = [OWN, ...clients.map((c) => c.name)]
   const pickedClient = pick === OWN ? null : clients.find((c) => c.name === pick)?.id ?? undefined
 
@@ -208,42 +198,9 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
         </ul>
       </section>
 
-      <IgCalendar posts={posts} fileUrl={fileUrl} selected={day} onSelect={setDay} />
-
-      <section aria-label="Agendadas" className="flex flex-col gap-2">
-        <h2 className="flex items-center justify-between gap-2 text-[15px] font-semibold">
-          <span>{day ? `Dia ${day.slice(8)}/${day.slice(5, 7)}` : 'Próximas e recentes'} <span className="font-normal text-muted">{dayPosts.length}</span></span>
-          {day && <button type="button" onClick={() => setDay(null)} className="min-h-10 cursor-pointer text-[13px] font-medium text-accent-ink">Ver todas</button>}
-        </h2>
-        <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
-          {dayPosts.map((p) => {
-            const st = POST_STATUS[p.status]
-            return (
-              <li key={p.id} className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-b-0">
-                <Thumb path={p.path} mime={p.mime} />
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold first-letter:uppercase">{when(p.at)} <span className="font-normal text-muted">· {p.count > 1 ? `Carrossel · ${p.count}` : KIND_LABEL_IG[p.kind]}{p.series ? ' · repete' : ''} · @{accountById.get(p.accountId)?.username ?? '?'}</span></p>
-                  <p className="truncate text-[13px] text-muted">{p.caption ?? 'Sem legenda'}</p>
-                  {p.error && <p className="text-[13px] text-warn-ink">{p.error}</p>}
-                </div>
-                <div className="flex shrink-0 items-center gap-1.5">
-                  <span className={cn('inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-medium', st.tone)}>{p.status === 'publicado' && <CheckCircle2 size={13} aria-hidden="true" />}{st.label}</span>
-                  {p.permalink && <a href={p.permalink} target="_blank" rel="noopener noreferrer" aria-label="Ver no Instagram" className="flex size-10 items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink"><ExternalLink size={16} aria-hidden="true" /></a>}
-                  {(p.status === 'agendado' || p.status === 'erro') && (
-                    <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={cancel.isPending}
-                      onClick={() => { void ask(`Cancelar a publicação de ${when(p.at)}?`).then((ok) => { if (ok) cancel.mutate(p.id) }) }}>Cancelar</Button>
-                  )}
-                  {p.series && p.status === 'agendado' && (
-                    <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={cancelSeries.isPending}
-                      onClick={() => { void ask('Cancelar todas as próximas repetições deste story?').then((ok) => { if (ok) cancelSeries.mutate(p.series!) }) }}>Parar série</Button>
-                  )}
-                </div>
-              </li>
-            )
-          })}
-          {dayPosts.length === 0 && <li className="p-8 text-center text-muted">{day ? 'Nada neste dia.' : 'Nenhuma publicação agendada.'}</li>}
-        </ul>
-      </section>
+      {/* Cada publicação é um cartão no dia; tocar abre para ver, editar ou excluir (pedido do Italo, 24/11). */}
+      <IgCalendar posts={posts} fileUrl={fileUrl} onOpen={setOpenPost} />
+      {viewing && <IgPostDialog post={{ ...viewing, username: accountById.get(viewing.accountId)?.username ?? '?' }} fileUrl={fileUrl} onClose={() => setOpenPost(null)} />}
 
       <Dialog open={connecting} onClose={() => setConnecting(false)} title="Conectar Instagram" size="sm"
         description="Abre a tela da Meta. Quem entra é o dono da conta, com o Instagram dele."
