@@ -28,7 +28,7 @@ async function load(): Promise<{ accounts: Account[]; ready: Ready[]; posts: Pos
   const [acc, items, posts] = await Promise.all([
     db.from('ig_accounts').select('id, client_id, username, status').order('username'),
     db.from('content_items').select('id, client_id, kind, title, briefing, caption').eq('status', 'approved').order('publish_date').limit(80),
-    db.from('ig_posts').select('id, account_id, content_item_id, kind, media_path, media_mime, caption, scheduled_at, status, permalink, error, media, series_id')
+    db.from('ig_posts').select('id, account_id, content_item_id, kind, media_path, media_mime, caption, scheduled_at, status, permalink, error, media, series_id, media_parts')
       .neq('status', 'cancelado').gte('scheduled_at', new Date(Date.now() - 40 * 864e5).toISOString()).order('scheduled_at').limit(400),
   ])
   if (acc.error) throw acc.error
@@ -45,7 +45,9 @@ async function load(): Promise<{ accounts: Account[]; ready: Ready[]; posts: Pos
       id: i.id!, clientId: i.client_id!, kind: i.kind!, title: (i.title || i.briefing || 'Arte sem título')!.slice(0, 90), caption: i.caption, ...fileOf.get(i.id!)!,
     })),
     posts: (posts.data ?? []).map((p: Record<string, string | null> & { media?: unknown[] }) => ({
-      id: p.id!, accountId: p.account_id!, itemId: p.content_item_id, kind: p.kind as IgKind, path: p.media_path!, mime: p.media_mime!, caption: p.caption,
+      id: p.id!, accountId: p.account_id!, itemId: p.content_item_id, kind: p.kind as IgKind,
+      // Vídeo grande fica em partes (.part0, .part1...): a capa do cartão vem do começo, que é a parte 0.
+      path: Number(p.media_parts) > 0 ? `${p.media_path}.part0` : p.media_path!, mime: p.media_mime!, caption: p.caption,
       at: p.scheduled_at!, status: p.status as IgPostStatus, permalink: p.permalink, error: p.error,
       count: Array.isArray(p.media) && p.media.length > 1 ? p.media.length : 1, series: p.series_id,
       media: (Array.isArray(p.media) ? p.media : []) as { path: string; mime: string }[],

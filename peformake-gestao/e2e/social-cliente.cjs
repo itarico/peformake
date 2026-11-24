@@ -23,6 +23,7 @@ async function mock(route) {
   const json = (b) => route.fulfill({ status: 200, contentType: 'application/json', headers: h, body: JSON.stringify(b) })
   if (req.method() === 'OPTIONS') return route.fulfill({ status: 200, headers: h, body: '' })
   const p = u.pathname; const body = (() => { try { return JSON.parse(req.postData() || '{}') } catch { return {} } })()
+  if (p.startsWith('/functions/')) { calls.push({ fn: p.split('/').pop(), body }); return json({ ok: true }) }
   if (p.startsWith('/storage/')) return route.fulfill({ status: 200, contentType: 'image/jpeg', headers: h, body: PIXEL })
   if (p.startsWith('/rest/v1/rpc/')) {
     const fn = p.split('/').pop(); calls.push({ fn, body })
@@ -40,10 +41,13 @@ async function mock(route) {
       content_items: [item('i1', 'client_review', 'Panetone artesanal'), item('i2', 'in_production', 'Cesta de Natal'), item('i3', 'approved', 'Pão de queijo')],
       content_files: [{ id: 'f1', item_id: 'i1', role: 'final', path: 'c1/panetone.jpg', name: 'panetone.jpg', mime: 'image/jpeg', size_bytes: 10, created_at: MONTH }],
       ig_accounts: [{ id: 'a1', client_id: 'c1', username: 'padariasol', status: 'conectado' }],
+      ig_insights: [{ data: { username: 'padariasol', followers: 1200, posts: 80, picture: null, cur: { reach: 1500, views: 4000, total_interactions: 300, accounts_engaged: 90, new_followers: 25, profile_links_taps: 4 }, prev: { reach: 1000, views: 5000, total_interactions: 300, accounts_engaged: 100, profile_links_taps: 2 },
+        daily: [{ d: MONTH, reach: 100, followers: 2 }, { d: now, reach: 160, followers: 3 }], media: [{ id: 'm1', type: 'reels', at: new Date().toISOString(), permalink: 'https://instagram.com/p/x', thumb: null, caption: 'oi', likes: 30, comments: 2, reach: 900, views: 2000, saved: 3 }] }, fetched_at: new Date().toISOString() }],
       social_tasks: [{ id: 't1', client_id: 'c1', title: 'Responder comentários', description: null, status: 'a_fazer', source: 'manual', network: 'instagram', priority: false, due_date: null, created_at: MONTH },
         { id: 't2', client_id: 'c2', title: 'Tarefa de outro cliente', description: null, status: 'a_fazer', source: 'manual', network: 'instagram', priority: false, due_date: null, created_at: MONTH }],
     }
     const rows = T[p.split('/').pop()] ?? []
+    if (p.endsWith('/ig_insights')) return json(rows[0])
     return route.fulfill({ status: 200, contentType: 'application/json', headers: { ...h, 'content-range': `0-${rows.length}/${rows.length}` }, body: JSON.stringify(rows) })
   }
   return route.fulfill({ status: 404, body: '' })
@@ -72,17 +76,19 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pg.getByRole('link', { name: /Padaria Sol/ }).first().click(); await pg.waitForTimeout(1500)
       if (!/\/conteudo\/cliente\/c1/.test(pg.url())) fails.push(`${dev}: não abriu o cliente (${pg.url()})`)
       const t2 = await pg.evaluate(() => document.body.innerText)
-      for (const s of ['Panetone artesanal', 'Cesta de Natal', 'Pão de queijo', 'Faltam 5 de 8', 'Pauta do mês', 'Natal', 'Novo briefing']) if (!t2.includes(s)) fails.push(`${dev}: cliente sem "${s}"`)
-      if (!(await pg.getByRole('button', { name: 'Modelo rápido' }).count())) fails.push(`${dev}: sem botão Modelo rápido`)
+      // Aba Briefing (24/11): só criar, aprovar a arte pronta e mandar agendar. Sem Modelo rápido, Nova arte, pauta e datas.
+      for (const s of ['Panetone artesanal', 'Cesta de Natal', 'Pão de queijo', 'Faltam 5 de 8', 'Arte pronta para aprovar', 'Aprovada, falta agendar', 'Na produção', 'Novo briefing']) if (!t2.includes(s)) fails.push(`${dev}: cliente sem "${s}"`)
+      if (t2.includes('Pauta do mês')) fails.push(`${dev}: pauta ainda no Briefing`)
+      if (await pg.getByRole('button', { name: 'Modelo rápido' }).count()) fails.push(`${dev}: Modelo rápido ainda aparece`)
+      if (await pg.getByRole('button', { name: /Nova arte/ }).count()) fails.push(`${dev}: Nova arte ainda no cabeçalho`)
       if (await sideScroll(pg)) fails.push(`${dev}: cliente rola de lado`)
       await shot('2-cliente')
 
-      // 3. Revisar: aprovar chama o banco com 'approved'; pedir ajuste exige o texto.
-      await pg.getByRole('tab', { name: /Revisar/ }).click(); await pg.waitForTimeout(900)
+      // 3. Arte pronta: aprovar chama o banco com 'approved'; pedir ajuste exige o texto.
       await pg.getByRole('button', { name: 'Aprovar' }).first().click(); await pg.waitForTimeout(700)
       const ap = calls.find((c) => c.fn === 'content_item_set_status')
       if (!ap || ap.body._item_id !== 'i1' || ap.body._status !== 'approved') fails.push(`${dev}: aprovar errado ${JSON.stringify(ap)}`)
-      await pg.getByRole('button', { name: 'Ajuste' }).first().click(); await pg.waitForTimeout(300)
+      await pg.getByRole('button', { name: 'Pedir ajuste' }).first().click(); await pg.waitForTimeout(300)
       if (await popupScrolls(pg)) fails.push(`${dev}: pop-up ajuste rola`)
       await pg.getByLabel('O que ajustar').fill('Trocar a cor do fundo')
       await pg.getByRole('button', { name: 'Mandar para o design' }).click(); await pg.waitForTimeout(700)
@@ -95,6 +101,8 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pg.locator('li', { hasText: 'Arte da promoção de fim de ano' }).getByRole('button', { name: 'Aprovar' }).click(); await pg.waitForTimeout(700)
       const sg = calls.find((c) => c.fn === 'monthly_action_decide')
       if (!sg || sg.body._id !== 's1' || sg.body._approve !== true) fails.push(`${dev}: sugestão errada ${JSON.stringify(sg)}`)
+      const t4 = await pg.evaluate(() => document.body.innerText)
+      if (!t4.includes('Pauta do mês') || !t4.includes('Natal')) fails.push(`${dev}: Sugestões sem pauta ou datas`)
       await shot('4-sugestoes')
 
       // 5. Tarefas só do cliente.
@@ -113,11 +121,13 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!t6.includes('O pão quentinho do bairro') || !t6.includes('Voz e copy')) fails.push(`${dev}: guia sem as partes`)
       await shot('6-guia')
 
-      // 7. Modelo rápido abre com o cliente.
-      await pg.getByRole('button', { name: 'Modelo rápido' }).click(); await pg.waitForTimeout(400)
-      if (!(await pg.locator('dialog[open]').count())) fails.push(`${dev}: Modelo rápido não abriu`)
-      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up Modelo rápido rola`)
-      await shot('7-modelo')
+      // 7. Desempenho: cartões com variação, alcance por dia e posts que mais alcançaram.
+      await pg.getByRole('tab', { name: /Desempenho/ }).click(); await pg.waitForTimeout(1200)
+      const t7 = await pg.evaluate(() => document.body.innerText)
+      for (const s of ['@padariasol', 'Alcance', '+50%', 'Alcance por dia', 'Posts que mais alcançaram', 'Reels']) if (!t7.includes(s)) fails.push(`${dev}: desempenho sem "${s}"`)
+      if (calls.some((c) => c.fn === 'ig-insights')) fails.push(`${dev}: desempenho buscou de novo com cópia recente`)
+      if (await sideScroll(pg)) fails.push(`${dev}: desempenho rola de lado`)
+      await shot('7-desempenho')
     } catch (e) { fails.push(`${dev}: ${e.message.split('\n')[0]}`) }
     if (errs.length) fails.push(`${dev}: erro no navegador: ${errs[0]}`)
     await ctx.close()

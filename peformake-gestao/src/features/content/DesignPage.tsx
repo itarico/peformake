@@ -180,10 +180,10 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
         </p>
       )}
       <div className="mt-auto flex items-center gap-2 pt-1">
-        <Button className="flex-1" onClick={onDeliver}><Send size={15} aria-hidden="true" /> Entregar arte</Button>
+        <Button className="min-h-10 flex-1 px-3 text-[13px]" onClick={onDeliver}><Send size={14} aria-hidden="true" /> Entregar arte</Button>
         {started
           ? <span className="shrink-0 rounded-full bg-raised px-3 py-2 text-[12.5px] font-medium text-muted">{STATUS_LABEL.in_production}</span>
-          : <Button variant="secondary" className="shrink-0" disabled={start.isPending} onClick={() => start.mutate()}>{start.isPending ? 'Marcando' : 'Comecei'}</Button>}
+          : <Button variant="secondary" className="min-h-10 shrink-0 px-3 text-[13px]" disabled={start.isPending} onClick={() => start.mutate()}>{start.isPending ? 'Marcando' : 'Comecei'}</Button>}
       </div>
       <div className="-mb-1 flex items-center justify-between gap-2 border-t border-line pt-1">
         {item.clientId ? <GuideButton clientId={item.clientId} start="visual" className="-ml-2" /> : <span />}
@@ -272,7 +272,7 @@ export function DesignPage() {
                   <ChevronDown size={18} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
                 </button>
                 {isOpen && (
-                  <ul className="grid grid-cols-1 gap-3 border-t border-line p-3 md:grid-cols-2 xl:grid-cols-3">
+                  <ul className="grid grid-cols-1 gap-3 border-t border-line p-3 sm:grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
                     {items.map((i) => (
                       <QueueCard key={i.id} item={i} files={filesOf(i.id)} now={now} mine={i.designerId === myStaffId && !!myStaffId}
                         staffName={staffName(i.designerId)} onDeliver={() => setDelivering(i)} />

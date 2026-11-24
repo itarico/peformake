@@ -1,4 +1,3 @@
-import { NewArtButton } from './NewArt'
 import { Suspense } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
@@ -9,16 +8,15 @@ import { monthLabel, monthStart } from '@/features/traffic/planRules'
 import { useMonthParam } from './useMonthParam'
 
 const TABS: SectionTab[] = [
-  // Só o trabalho do dia nas abas (pedido do Italo, 24/11: minimalista e funcional). Datas sazonais e Modelo rápido ficam em "Mais".
+  // Só o trabalho do dia nas abas (pedido do Italo, 24/11: minimalista e funcional). Sem botão Nova arte no cabeçalho:
+  // o briefing nasce dentro do cliente (Planejamento → cliente → Briefing).
   // O designer só enxerga a tela dele (Design); o resto é de quem planeja (pedido do Italo, 24/11).
-  { to: '/conteudo/quadro', label: 'Artes', roles: CONTENT_PLANNER_ROLES },
-  { to: '/conteudo/tarefas', label: 'Tarefas', roles: CONTENT_PLANNER_ROLES },
-  { to: '/conteudo/design', label: 'Design' },
+  // Artes e Tarefas ficam só dentro de cada cliente (pedido do Italo, 24/11). As rotas continuam para os links antigos.
+  // Só Planejamento e Design no menu (pedido do Italo, 24/11). Agendar fica dentro de cada cliente; a rota geral continua.
   { to: '/conteudo/planejamento', label: 'Planejamento', roles: CONTENT_PLANNER_ROLES },
-  { to: '/conteudo/agendar', label: 'Agendar', roles: CONTENT_PLANNER_ROLES },
+  { to: '/conteudo/design', label: 'Design' },
   // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
-  { to: '/conteudo/datas', label: 'Datas sazonais', short: 'Datas', more: true, roles: CONTENT_PLANNER_ROLES },
-  { to: '/conteudo/automatico', label: 'Modelo rápido', short: 'Modelo', more: true, roles: CONTENT_PLANNER_ROLES },
+  // Datas sazonais e Modelo rápido saíram do menu (pedido do Italo, 24/11: "por enquanto"). As rotas continuam.
 ]
 
 export function MonthSwitcher() {
@@ -36,10 +34,10 @@ export function MonthSwitcher() {
   )
 }
 
-/** /conteudo: o designer cai direto na fila do design; quem planeja, nas peças. */
+/** /conteudo: o designer cai direto na fila do design; quem planeja, na lista de clientes. */
 export function ContentIndex() {
   const { isDesigner, canPlan } = useProduction()
-  return <Navigate to={isDesigner && !canPlan ? 'design' : 'quadro'} replace />
+  return <Navigate to={isDesigner && !canPlan ? 'design' : 'planejamento'} replace />
 }
 
 export function ContentLayout() {
@@ -51,7 +49,7 @@ export function ContentLayout() {
     <>
       <SectionHeader
         title={designerOnly ? 'Design' : 'Social Media'}
-        actions={<><MonthSwitcher />{!designerOnly && <NewArtButton iconOnMobile />}</>}
+        actions={<MonthSwitcher />}
         tabs={TABS}
       />
       <Suspense fallback={<p role="status" className="py-10 text-center text-[13px] text-muted">Carregando</p>}><Outlet /></Suspense>

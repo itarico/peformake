@@ -1,19 +1,19 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Check, CalendarHeart, PencilLine, Sparkles, X } from 'lucide-react'
+import { ArrowLeft, CalendarClock, CalendarHeart, Check, PencilLine, Send, Sparkles, X } from 'lucide-react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { BrandGuidePage } from '@/features/clients/BrandGuideCard'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { LoadState } from '@/features/traffic/LoadState'
-import { monthLabel, monthStart } from '@/features/traffic/planRules'
+import { monthStart } from '@/features/traffic/planRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { contentErrorMessage, fileUrl, listFiles, listItems, listPlans, setStatus } from './contentApi'
 import { PlanNotes } from './ContentPlanPage'
 import { KIND_LABEL, STATUS_LABEL, STATUS_TONE, type ContentItem } from './contentRules'
-import { QuickModelButton } from './AutoCreativePage'
+import { IgPerformance } from './IgPerformance'
 import { NewArtButton } from './NewArt'
 import { SchedulePage } from './SchedulePage'
 import { clientLogoUrl, socialClientsBoard } from './SocialClientsPage'
@@ -24,12 +24,12 @@ import { useMonthParam } from './useMonthParam'
 const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 
 const TABS = [
-  { id: 'meses', label: 'Planejamento' },
-  { id: 'revisar', label: 'Revisar' },
+  { id: 'briefing', label: 'Briefing' },
   { id: 'sugestoes', label: 'Sugestões' },
   { id: 'tarefas', label: 'Tarefas' },
   { id: 'agendar', label: 'Agendar' },
   { id: 'guia', label: 'Guia de marca' },
+  { id: 'desempenho', label: 'Desempenho' },
 ] as const
 type Tab = (typeof TABS)[number]['id']
 
@@ -64,9 +64,9 @@ function Thumb({ file, className }: { file?: { path: string; mime: string }; cla
       : <span className={cn('flex items-center justify-center bg-raised text-[11px] text-muted', className)}>Arquivo</span>
 }
 
-function ArtCard({ item, file }: { item: ContentItem; file?: { path: string; mime: string } }) {
+function ArtCard({ item, file, children }: { item: ContentItem; file?: { path: string; mime: string }; children?: React.ReactNode }) {
   return (
-    <li>
+    <li className="flex flex-col gap-1.5">
       <Link to={`/conteudo/peca/${item.id}`} className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface text-ink no-underline hover:border-line-strong">
         <Thumb file={file} className="aspect-[4/5] w-full" />
         <span className="flex flex-col gap-1 p-2.5">
@@ -75,88 +75,27 @@ function ArtCard({ item, file }: { item: ContentItem; file?: { path: string; mim
           <span className={cn('self-start rounded-full px-2 py-0.5 text-[11px] font-semibold', STATUS_TONE[item.status])}>{STATUS_LABEL[item.status]}</span>
         </span>
       </Link>
+      {children}
     </li>
   )
 }
 
-/** Aba Planejamento: o mês escolhido em cartões, os próximos meses em resumo e as datas sazonais do cliente prontas para virar arte. */
-function MonthsTab({ clientId, owed }: { clientId: string; owed: number }) {
-  const [month, setMonth] = useMonthParam()
-  const months = useMemo(() => [-1, 0, 1, 2].map((o) => monthStart(month, o)), [month])
-  const q = useClientItems(clientId, months)
-  // Pauta do mês e "Planejamento pronto" (conta na meta de planejamentos): os mesmos do planejamento antigo.
-  const plan = useQuery({ queryKey: ['content-plans', 'cliente', clientId, month], queryFn: async () => (await listPlans([month])).find((p) => p.clientId === clientId) ?? null })
-  const seasonal = useQuery({
-    queryKey: ['seasonal-board', 90],
-    staleTime: 60_000,
-    queryFn: async () => { const { data, error } = await rpc('seasonal_board', { _days: 90 }); if (error) throw error; return (data ?? []) as Seasonal[] },
-  })
-  if (!q.data) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
-  const inMonth = q.data.items.filter((i) => i.month === month)
-  const dates = (seasonal.data ?? []).filter((r) => r.client_id === clientId && !r.request).slice(0, 6)
-  const missing = Math.max(owed - inMonth.length, 0)
-  // Nova arte nasce no mês aberto: a data sugerida é o dia 1 (ou hoje, se o mês aberto é o atual).
-  const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' })
-  const startDate = today.slice(0, 7) === month.slice(0, 7) ? today : month
-
-  return (
-    <div className="flex flex-col gap-4">
-      <div role="group" aria-label="Meses" className="flex flex-wrap gap-1.5">
-        {months.map((m) => {
-          const n = q.data.items.filter((i) => i.month === m).length
-          return (
-            <button key={m} type="button" aria-pressed={m === month} onClick={() => setMonth(m)}
-              className={cn('min-h-10 cursor-pointer rounded-full px-3.5 text-[13px] font-medium first-letter:uppercase', m === month ? 'bg-fill text-on-fill' : 'border border-line text-muted hover:text-ink')}>
-              {monthLabel(m)} <span className="tabular-nums opacity-70">{n}</span>
-            </button>
-          )
-        })}
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className={cn('text-[14px]', missing > 0 ? 'font-medium text-warn-ink' : 'text-muted')}>
-          {owed ? (missing > 0 ? `Faltam ${missing} de ${owed} criativos neste mês` : `${inMonth.length} de ${owed} criativos planejados`) : `${inMonth.length} criativos no mês`}
-        </p>
-        <NewArtButton start={{ clientId, publishDate: startDate }} label="Novo briefing" />
-      </div>
-
-      {inMonth.length > 0
-        ? <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">{inMonth.map((i) => <ArtCard key={i.id} item={i} file={q.data.thumb.get(i.id)} />)}</ul>
-        : <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Nenhuma arte neste mês. Toque em Novo briefing ou aprove uma sugestão.</p>}
-
-      {plan.data && <PlanNotes plan={plan.data} canPlan />}
-
-      {dates.length > 0 && (
-        <section aria-label="Datas sazonais" className="flex flex-col gap-2">
-          <h2 className="flex items-center gap-1.5 text-[15px] font-semibold"><CalendarHeart size={16} aria-hidden="true" /> Datas que vêm aí</h2>
-          <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
-            {dates.map((r) => (
-              <li key={r.key} className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3 last:border-b-0">
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold">{r.name} <span className="font-normal text-muted">· {dm(r.date)} · {r.days === 0 ? 'hoje' : `em ${r.days} dias`}</span></p>
-                  <p className="line-clamp-2 text-[13px] text-muted">{r.idea}</p>
-                </div>
-                <NewArtButton start={{ clientId, text: `Post para a data ${r.name} (${dm(r.date)}), para publicar no dia. Ideia: ${r.idea}`, publishDate: r.date }}
-                  label="Virar arte" variant="secondary" className="min-h-10 px-3 text-[13px]" />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-    </div>
-  )
-}
-
-/** Aba Revisar: a arte que o design entregou volta para o social media aprovar, pedir ajuste ou não aprovar. */
-function ReviewTab({ clientId }: { clientId: string }) {
+/**
+ * Aba Briefing (pedido do Italo, 24/11/2026): uma função só. Criar o briefing da arte, mandar para a produção, receber a
+ * arte pronta (aprovar, pedir ajuste ou não aprovar) e mandar o que foi aprovado para agendar. Links antigos para as
+ * abas Planejamento e Revisar caem aqui.
+ */
+function BriefingTab({ clientId, owed }: { clientId: string; owed: number }) {
   const queryClient = useQueryClient()
   const [month] = useMonthParam()
+  const [, setParams] = useSearchParams()
   const months = useMemo(() => [-2, -1, 0, 1].map((o) => monthStart(month, o)), [month])
   const q = useClientItems(clientId, months)
   const [asking, setAsking] = useState<{ item: ContentItem; mode: 'ajuste' | 'reprovar' } | null>(null)
   const [note, setNote] = useState('')
   const act = useMutation({
-    mutationFn: async ({ item, mode, text }: { item: ContentItem; mode: 'aprovar' | 'ajuste' | 'reprovar'; text?: string }) => {
+    mutationFn: async ({ item, mode, text }: { item: ContentItem; mode: 'produzir' | 'aprovar' | 'ajuste' | 'reprovar'; text?: string }) => {
+      if (mode === 'produzir') return setStatus(item.id, 'ready', null)
       if (mode === 'aprovar') return setStatus(item.id, item.status === 'review' ? 'client_review' : 'approved', null)
       return setStatus(item.id, 'changes_requested', mode === 'reprovar' ? `Não aprovada, refazer: ${text}` : text ?? '')
     },
@@ -167,28 +106,52 @@ function ReviewTab({ clientId }: { clientId: string }) {
     },
   })
   if (!q.data) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
-  const list = q.data.items.filter((i) => i.status === 'review' || i.status === 'client_review')
+  const inMonth = q.data.items.filter((i) => i.month === month)
+  const missing = Math.max(owed - inMonth.length, 0)
+  const open = q.data.items.filter((i) => i.status !== 'published')
+  const toApprove = open.filter((i) => i.status === 'review' || i.status === 'client_review')
+  const toSchedule = open.filter((i) => i.status === 'approved')
+  const inProd = open.filter((i) => !['review', 'client_review', 'approved'].includes(i.status))
+  // Novo briefing nasce no mês aberto: a data sugerida é o dia 1 (ou hoje, se o mês aberto é o atual).
+  const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' })
+  const startDate = today.slice(0, 7) === month.slice(0, 7) ? today : month
+  const thumb = q.data.thumb
+  const small = 'min-h-10 px-2 text-[13px]'
+
+  const group = (title: string, list: ContentItem[], actions: (i: ContentItem) => React.ReactNode) => list.length > 0 && (
+    <section aria-label={title} className="flex flex-col gap-2">
+      <h2 className="text-[15px] font-semibold">{title} <span className="font-normal text-muted">{list.length}</span></h2>
+      <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {list.map((i) => <ArtCard key={i.id} item={i} file={thumb.get(i.id)}>{actions(i)}</ArtCard>)}
+      </ul>
+    </section>
+  )
 
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-[14px] text-muted">Artes que o design entregou. O cliente também recebe; quem aprovar primeiro libera para agendar.</p>
-      {list.length === 0 && <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Nada para revisar.</p>}
-      <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {list.map((i) => (
-          <li key={i.id} className="flex flex-col overflow-hidden rounded-3xl border border-line bg-surface">
-            <Link to={`/conteudo/peca/${i.id}`} aria-label={`Abrir ${i.title ?? 'arte'}`}><Thumb file={q.data.thumb.get(i.id)} className="aspect-[4/5] w-full" /></Link>
-            <div className="flex flex-col gap-2 p-3">
-              <p className="text-[12px] text-muted">#{i.number} · {KIND_LABEL[i.kind]} · {STATUS_LABEL[i.status]}{i.revisionCount ? ` · ${i.revisionCount}º ajuste` : ''}</p>
-              <p className="font-semibold leading-snug">{i.title || 'Sem título'}</p>
-              <div className="grid grid-cols-3 gap-1.5">
-                <Button className="min-h-10 px-2 text-[13px]" disabled={act.isPending} onClick={() => act.mutate({ item: i, mode: 'aprovar' })}><Check size={15} aria-hidden="true" /> Aprovar</Button>
-                <Button variant="secondary" className="min-h-10 px-2 text-[13px]" disabled={act.isPending} onClick={() => setAsking({ item: i, mode: 'ajuste' })}><PencilLine size={15} aria-hidden="true" /> Ajuste</Button>
-                <Button variant="secondary" className="min-h-10 px-2 text-[13px]" disabled={act.isPending} onClick={() => setAsking({ item: i, mode: 'reprovar' })}><X size={15} aria-hidden="true" /> Não</Button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col gap-5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className={cn('text-[14px]', missing > 0 ? 'font-medium text-warn-ink' : 'text-muted')}>
+          {owed ? (missing > 0 ? `Faltam ${missing} de ${owed} criativos neste mês` : `${inMonth.length} de ${owed} criativos no mês`) : `${inMonth.length} criativos no mês`}
+        </p>
+        <NewArtButton start={{ clientId, publishDate: startDate }} label="Novo briefing" />
+      </div>
+
+      {open.length === 0 && <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Nenhuma arte em andamento. Toque em Novo briefing.</p>}
+
+      {group('Arte pronta para aprovar', toApprove, (i) => (
+        <div className="grid grid-cols-3 gap-1">
+          <Button className={small} disabled={act.isPending} onClick={() => act.mutate({ item: i, mode: 'aprovar' })} aria-label="Aprovar" title="Aprovar"><Check size={15} aria-hidden="true" /></Button>
+          <Button variant="secondary" className={small} disabled={act.isPending} onClick={() => setAsking({ item: i, mode: 'ajuste' })} aria-label="Pedir ajuste" title="Pedir ajuste"><PencilLine size={15} aria-hidden="true" /></Button>
+          <Button variant="secondary" className={small} disabled={act.isPending} onClick={() => setAsking({ item: i, mode: 'reprovar' })} aria-label="Não aprovar" title="Não aprovar"><X size={15} aria-hidden="true" /></Button>
+        </div>
+      ))}
+      {group('Aprovada, falta agendar', toSchedule, () => (
+        <Button className={small} onClick={() => setParams((cur) => { const n = new URLSearchParams(cur); n.set('aba', 'agendar'); return n })}><CalendarClock size={15} aria-hidden="true" /> Agendar</Button>
+      ))}
+      {group('Na produção', inProd, (i) => i.status === 'briefing'
+        ? <Button className={small} disabled={act.isPending} onClick={() => act.mutate({ item: i, mode: 'produzir' })}><Send size={15} aria-hidden="true" /> Mandar produzir</Button>
+        : null)}
+
       {act.isError && !asking && <p role="alert" className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[14px] font-medium text-warn-ink">{contentErrorMessage(act.error)}</p>}
       {asking && (
         <Dialog open onClose={() => setAsking(null)} title={asking.mode === 'ajuste' ? 'Pedir ajuste' : 'Não aprovar'} description={asking.item.title ?? undefined} size="sm"
@@ -207,6 +170,14 @@ function ReviewTab({ clientId }: { clientId: string }) {
 /** Aba Sugestões: o que a estratégia do mês propôs para social e design, para aprovar (vira arte ou tarefa) ou recusar. */
 function SuggestionsTab({ clientId }: { clientId: string }) {
   const queryClient = useQueryClient()
+  const [month] = useMonthParam()
+  // Pauta do mês e "Planejamento pronto" (conta na meta de planejamentos): os mesmos do planejamento antigo.
+  const plan = useQuery({ queryKey: ['content-plans', 'cliente', clientId, month], queryFn: async () => (await listPlans([month])).find((p) => p.clientId === clientId) ?? null })
+  const seasonal = useQuery({
+    queryKey: ['seasonal-board', 90],
+    staleTime: 60_000,
+    queryFn: async () => { const { data, error } = await rpc('seasonal_board', { _days: 90 }); if (error) throw error; return (data ?? []) as Seasonal[] },
+  })
   const q = useQuery({
     queryKey: ['social-suggestions', clientId],
     queryFn: async () => { const { data, error } = await rpc('social_client_suggestions', { _client: clientId }); if (error) throw error; return data as Suggestions },
@@ -224,6 +195,7 @@ function SuggestionsTab({ clientId }: { clientId: string }) {
     },
   })
   if (!q.data) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
+  const dates = (seasonal.data ?? []).filter((r) => r.client_id === clientId && !r.request).slice(0, 6)
   const rows = [
     ...q.data.actions.map((a) => ({ kind: 'action' as const, id: a.id, title: a.title, sub: [a.area === 'design' ? 'Arte' : a.format === 'tarefa' ? 'Tarefa' : 'Pauta', a.week ? `semana ${a.week}` : null, a.due_date ? `até ${dm(a.due_date)}` : null].filter(Boolean).join(' · '), body: a.what })),
     ...q.data.cards.map((c) => ({ kind: 'card' as const, id: c.id, title: c.title, sub: ['Estratégia', c.kind].filter(Boolean).join(' · '), body: c.goal })),
@@ -250,26 +222,46 @@ function SuggestionsTab({ clientId }: { clientId: string }) {
       </ul>
       {decide.isError && <p role="alert" className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[14px] font-medium text-warn-ink">
         {decide.error && (decide.error as { code?: string }).code === '42501' ? 'Só o admin ou o head aprova esta sugestão.' : 'Não foi possível decidir. Tente de novo.'}</p>}
+
+      {plan.data && <PlanNotes plan={plan.data} canPlan />}
+
+      {dates.length > 0 && (
+        <section aria-label="Datas sazonais" className="flex flex-col gap-2">
+          <h2 className="flex items-center gap-1.5 text-[15px] font-semibold"><CalendarHeart size={16} aria-hidden="true" /> Datas que vêm aí</h2>
+          <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
+            {dates.map((r) => (
+              <li key={r.key} className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3 last:border-b-0">
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold">{r.name} <span className="font-normal text-muted">· {dm(r.date)} · {r.days === 0 ? 'hoje' : `em ${r.days} dias`}</span></p>
+                  <p className="line-clamp-2 text-[13px] text-muted">{r.idea}</p>
+                </div>
+                <NewArtButton start={{ clientId, text: `Post para a data ${r.name} (${dm(r.date)}), para publicar no dia. Ideia: ${r.idea}`, publishDate: r.date }}
+                  label="Virar arte" variant="secondary" className="min-h-10 px-3 text-[13px]" />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   )
 }
 
 /**
  * Social Media → cliente (pedido do Italo, 24/11/2026). Tudo do cliente num lugar só, com a logo sempre à vista:
- * planejamento por mês em cartões (com novo briefing e datas sazonais), revisão das artes que o design entregou,
- * sugestões da estratégia, tarefas, agendar no Instagram e guia de marca.
+ * briefing (criar, mandar produzir, aprovar a arte pronta e mandar agendar), sugestões da estratégia (com a pauta do
+ * mês e as datas sazonais), tarefas, agendar no Instagram, guia de marca e desempenho do Instagram.
  */
 export function SocialClientPage() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const [month] = useMonthParam()
-  const tab = (TABS.find((t) => t.id === params.get('aba'))?.id ?? 'meses') as Tab
+  const tab = (TABS.find((t) => t.id === params.get('aba'))?.id ?? 'briefing') as Tab
   const board = useQuery({ queryKey: ['social-clients', month], queryFn: () => socialClientsBoard(month) })
   const row = board.data?.find((r) => r.id === id)
   if (!board.data) return <LoadState isPending={board.isPending} isError={board.isError} refetch={() => void board.refetch()} />
   if (!row) return <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Este cliente não tem social media ou design ativo. <Link to="/conteudo/planejamento">Voltar</Link></p>
-  const badge: Partial<Record<Tab, number>> = { revisar: row.review, sugestoes: row.suggestions, tarefas: row.tasks }
-  const go = (t: Tab) => setParams((cur) => { const n = new URLSearchParams(cur); if (t === 'meses') n.delete('aba'); else n.set('aba', t); return n }, { replace: true })
+  const badge: Partial<Record<Tab, number>> = { briefing: row.review, sugestoes: row.suggestions, tarefas: row.tasks }
+  const go = (t: Tab) => setParams((cur) => { const n = new URLSearchParams(cur); if (t === 'briefing') n.delete('aba'); else n.set('aba', t); return n }, { replace: true })
 
   return (
     <div className="flex flex-col gap-4">
@@ -280,7 +272,6 @@ export function SocialClientPage() {
           <h1 className="truncate text-[22px] font-semibold tracking-tight md:text-2xl">{row.name}</h1>
           <p className="truncate text-[13px] text-muted">{row.owed ? `${row.planned} de ${row.owed} criativos no mês` : `${row.planned} criativos no mês`}</p>
         </div>
-        <QuickModelButton clientId={id} clientName={row.name} />
       </div>
 
       <div role="tablist" aria-label="Seções do cliente" className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1">
@@ -292,12 +283,12 @@ export function SocialClientPage() {
         ))}
       </div>
 
-      {tab === 'meses' && <MonthsTab clientId={id} owed={row.owed} />}
-      {tab === 'revisar' && <ReviewTab clientId={id} />}
+      {tab === 'briefing' && <BriefingTab clientId={id} owed={row.owed} />}
       {tab === 'sugestoes' && <SuggestionsTab clientId={id} />}
       {tab === 'tarefas' && <TasksBoard clientId={id} />}
       {tab === 'agendar' && <SchedulePage clientId={id} />}
       {tab === 'guia' && <BrandGuidePage clientId={id} />}
+      {tab === 'desempenho' && <IgPerformance clientId={id} />}
     </div>
   )
 }
