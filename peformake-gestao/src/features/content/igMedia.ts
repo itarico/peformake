@@ -8,10 +8,16 @@ import type { IgKind } from './scheduleRules'
 // - O plano gratuito do Supabase aceita até 50 MB por arquivo: vídeo maior sobe em partes de 45 MB (só fora do carrossel).
 
 export const PART_BYTES = 45 * 1024 * 1024
-export const MAX_VIDEO_BYTES = 1024 * 1024 * 1024
+// Limites oficiais da Meta (Content Publishing, conferido em 24/11/2026): Reels até 300 MB e 15 min; story de vídeo
+// até 100 MB e 60 s; vídeo com o índice (moov) no começo do arquivo.
+export const MAX_VIDEO_BYTES = 300 * 1024 * 1024
+export const MAX_STORY_VIDEO_BYTES = 100 * 1024 * 1024
 export const FEED_MIN = 4 / 5
 export const FEED_MAX = 1.91
 export const STORY = 9 / 16
+
+/** Como a foto entra no formato: preenche (corta o que sobra) ou inteira (com fundo desfocado da própria foto). */
+export type Fit = 'cobrir' | 'inteira'
 
 export interface PickedMedia {
   id: string
@@ -22,6 +28,32 @@ export interface PickedMedia {
   ratio: number
   /** segundos (vídeo) */
   duration: number | null
+  /** vídeo com o índice (moov) no começo; false = a Meta recusa. null = não deu para saber. */
+  fastStart?: boolean | null
+  fit?: Fit
+  /** ponto que fica no centro do corte (0 a 1), arrastado na prévia */
+  x?: number
+  y?: number
+}
+
+/** Lê os primeiros bytes do vídeo e diz se o índice (moov) vem antes dos dados (mdat). */
+async function videoFastStart(file: File): Promise<boolean | null> {
+  try {
+    const b = new DataView(await file.slice(0, 512 * 1024).arrayBuffer())
+    let o = 0
+    while (o + 8 <= b.byteLength) {
+      let size = b.getUint32(o)
+      const type = String.fromCharCode(b.getUint8(o + 4), b.getUint8(o + 5), b.getUint8(o + 6), b.getUint8(o + 7))
+      if (type === 'moov') return true
+      if (type === 'mdat') return false
+      if (size === 1) size = Number(b.getBigUint64(o + 8))
+      if (size < 8) return null
+      o += size
+    }
+    return null
+  } catch {
+    return null
+  }
 }
 
 export interface UploadedMedia { path: string; mime: string; parts?: number; size?: number }
@@ -32,14 +64,17 @@ export async function readMedia(file: File): Promise<PickedMedia> {
   const url = URL.createObjectURL(file)
   const video = file.type.startsWith('video/')
   if (video) {
+    // Alguns vídeos (HEVC no Windows) não abrem no navegador: depois de 5 s segue sem a duração em vez de travar.
     const meta = await new Promise<{ w: number; h: number; d: number }>((resolve) => {
       const el = document.createElement('video')
+      const t = setTimeout(() => resolve({ w: 9, h: 16, d: 0 }), 5000)
       el.preload = 'metadata'
-      el.onloadedmetadata = () => resolve({ w: el.videoWidth || 9, h: el.videoHeight || 16, d: Number.isFinite(el.duration) ? el.duration : 0 })
-      el.onerror = () => resolve({ w: 9, h: 16, d: 0 })
+      el.muted = true
+      el.onloadedmetadata = () => { clearTimeout(t); resolve({ w: el.videoWidth || 9, h: el.videoHeight || 16, d: Number.isFinite(el.duration) ? el.duration : 0 }) }
+      el.onerror = () => { clearTimeout(t); resolve({ w: 9, h: 16, d: 0 }) }
       el.src = url
     })
-    return { id: crypto.randomUUID(), file, url, video, ratio: meta.w / meta.h, duration: meta.d || null }
+    return { id: crypto.randomUUID(), file, url, video, ratio: meta.w / meta.h, duration: meta.d || null, fastStart: await videoFastStart(file) }
   }
   try {
     const bmp = await createImageBitmap(file)
@@ -79,7 +114,9 @@ export function mediaIssue(kind: IgKind, items: PickedMedia[]): string | null {
   if (items.length === 1 && kind === 'post' && one.video) return 'Vídeo no feed sai como Reels. Escolha Reels.'
   for (const m of items) {
     if (m.video && !['video/mp4', 'video/quicktime'].includes(m.file.type)) return 'O vídeo precisa ser MP4 ou MOV.'
-    if (m.video && m.file.size > MAX_VIDEO_BYTES) return 'Vídeo acima de 1 GB. Diminua o vídeo.'
+    if (m.video && m.fastStart === false) return 'Este vídeo foi salvo com o índice no fim do arquivo e a Meta recusa. Exporte de novo com "otimizar para web" (início rápido) ligado.'
+    if (m.video && kind === 'story' && m.file.size > MAX_STORY_VIDEO_BYTES) return `Story de vídeo aceita até 100 MB (este tem ${Math.round(m.file.size / 1048576)} MB). Diminua o vídeo ou poste como Reels.`
+    if (m.video && m.file.size > MAX_VIDEO_BYTES) return `Reels aceita até 300 MB (este tem ${Math.round(m.file.size / 1048576)} MB). Diminua o vídeo.`
     if (m.video && items.length > 1 && m.file.size > PART_BYTES) return 'Vídeo dentro do carrossel precisa ter até 45 MB.'
     if (m.video && kind === 'story' && (m.duration ?? 0) > 60) return 'Story de vídeo tem até 60 segundos.'
     if (m.video && kind === 'reels' && (m.duration ?? 0) > 900) return 'Reels tem até 15 minutos.'
@@ -88,34 +125,52 @@ export function mediaIssue(kind: IgKind, items: PickedMedia[]): string | null {
   return null
 }
 
-/** Foto em JPG, cortada no centro para a proporção `ratio` (exata) e com até 1440 px de largura. */
-export async function fitImage(file: File, ratio: number): Promise<File> {
+/**
+ * Foto em JPG no formato `ratio`, com 1080 px de largura. `cobrir`: preenche e corta o que sobra, mantendo no centro o
+ * ponto escolhido (x, y). `inteira`: a foto inteira no meio e, atrás, ela mesma ampliada e desfocada (como o Instagram faz
+ * no story). Nunca estica.
+ */
+export async function fitImage(file: File, ratio: number, fit: Fit = 'cobrir', x = 0.5, y = 0.5): Promise<File> {
   let bitmap: ImageBitmap
   try {
     bitmap = await createImageBitmap(file)
   } catch {
-    // Navegador não abriu a foto para cortar: JPG sobe como está (a Meta avisa se a proporção não servir).
+    // Navegador não abriu a foto: JPG sobe como está (a Meta avisa se a proporção não servir).
     if (file.type === 'image/jpeg') return file
     throw new Error('Não foi possível abrir esta imagem. Salve em JPG ou PNG e tente de novo.')
   }
-  let sx = 0, sy = 0, sw = bitmap.width, sh = bitmap.height
-  const r = sw / sh
-  if (Math.abs(r - ratio) > 0.01) {
-    if (r > ratio) { const w = sh * ratio; sx = (sw - w) / 2; sw = w } else { const h = sw / ratio; sy = (sh - h) / 2; sh = h }
-  }
-  const scale = Math.min(1, 1440 / sw)
+  const W = 1080
+  const H = Math.round(W / ratio)
   const canvas = document.createElement('canvas')
-  canvas.width = Math.round(sw * scale)
-  canvas.height = Math.round(sh * scale)
+  canvas.width = W
+  canvas.height = H
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Não foi possível preparar a imagem.')
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
-  ctx.drawImage(bitmap, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height)
+  const bw = bitmap.width, bh = bitmap.height
+  // Recorte que preenche W x H mantendo o ponto (x, y) o mais perto possível do centro.
+  const cover = () => {
+    const scale = Math.max(W / bw, H / bh)
+    const sw = W / scale, sh = H / scale
+    const sx = clamp(x * bw - sw / 2, 0, bw - sw), sy = clamp(y * bh - sh / 2, 0, bh - sh)
+    ctx.drawImage(bitmap, sx, sy, sw, sh, 0, 0, W, H)
+  }
+  if (fit === 'cobrir') {
+    cover()
+  } else {
+    ctx.filter = 'blur(40px) brightness(0.8)'
+    cover()
+    ctx.filter = 'none'
+    const scale = Math.min(W / bw, H / bh)
+    const dw = bw * scale, dh = bh * scale
+    ctx.drawImage(bitmap, (W - dw) / 2, (H - dh) / 2, dw, dh)
+  }
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9))
   if (!blob) throw new Error('Não foi possível preparar a imagem.')
   return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' })
 }
+
+/** Como a foto entra por padrão: story vai inteira (com fundo), feed preenche. */
+export const defaultFit = (kind: IgKind): Fit => (kind === 'story' ? 'inteira' : 'cobrir')
 
 /** Prepara e sobe os arquivos de uma publicação. Devolve o que o banco precisa (ig_post_create). */
 export async function uploadMedia(accountId: string, kind: IgKind, items: PickedMedia[], onStep?: (text: string) => void, crop: Crop = 'original'): Promise<UploadedMedia[]> {
@@ -125,7 +180,7 @@ export async function uploadMedia(accountId: string, kind: IgKind, items: Picked
   for (let n = 0; n < items.length; n++) {
     const m = items[n]!
     const label = items.length > 1 ? `arquivo ${n + 1} de ${items.length}` : 'arquivo'
-    const ready = m.video ? m.file : await fitImage(m.file, kind === 'story' ? STORY : items.length > 1 || crop !== 'original' ? ratio : clamp(m.ratio, FEED_MIN, FEED_MAX))
+    const ready = m.video ? m.file : await fitImage(m.file, kind === 'story' ? STORY : items.length > 1 || crop !== 'original' ? ratio : clamp(m.ratio, FEED_MIN, FEED_MAX), m.fit ?? defaultFit(kind), m.x ?? 0.5, m.y ?? 0.5)
     const ext = m.video ? (ready.type === 'video/quicktime' ? 'mov' : 'mp4') : 'jpg'
     const path = `instagram/avulso/${accountId}/${crypto.randomUUID()}.${ext}`
     const parts = m.video && items.length === 1 && ready.size > PART_BYTES ? Math.ceil(ready.size / PART_BYTES) : 0

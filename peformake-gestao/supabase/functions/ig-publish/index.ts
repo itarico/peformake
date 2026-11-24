@@ -10,40 +10,14 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 interface Job { id: string; kind: 'post' | 'reels' | 'story'; media_path: string; media_mime: string; caption: string | null; container_id: string | null; tries: number; ig_id: string; token: string | null; media_parts?: number; media_size?: number | null; media?: { path: string; mime: string }[] }
 
-const RUPLOAD = 'https://rupload.facebook.com/ig-api-upload/v27.0'
-
 /**
- * Vídeo grande (acima de 50 MB) chega em partes no armazenamento (<media_path>.part0, .part1, ...). Manda para a Meta em
- * sequência pelo upload retomável, a partir do byte que a Meta ainda não recebeu (se uma rodada anterior caiu no meio).
+ * Vídeo grande (acima de 50 MB) fica em partes no armazenamento (<media_path>.part0, .part1, ...). A Meta não aceita
+ * receber em pedaços ("Partial request"), então ela baixa o arquivo inteiro de uma vez pela função ig-media, que junta
+ * as partes na hora.
  */
-async function uploadParts(job: Job, container: string, partUrl: (i: number) => string) {
-  const total = Number(job.media_size ?? 0)
-  let sent = 0
-  try {
-    const st = await call(job.token!, 'GET', container, { fields: 'video_status' })
-    const up = st?.video_status?.uploading_phase
-    if (up?.status === 'complete') return
-    sent = Number(up?.bytes_transferred ?? 0)
-  } catch { /* contêiner novo: começa do zero */ }
-  let start = 0
-  for (let i = 0; i < Number(job.media_parts); i++) {
-    const res = await fetch(partUrl(i))
-    if (!res.ok) throw new Error(`não consegui ler a parte ${i + 1} do vídeo`)
-    let bytes = new Uint8Array(await res.arrayBuffer())
-    const end = start + bytes.length
-    if (end <= sent) { start = end; continue }
-    if (sent > start) bytes = bytes.subarray(sent - start)
-    const offset = Math.max(sent, start)
-    const up = await fetch(`${RUPLOAD}/${container}`, {
-      method: 'POST',
-      headers: { Authorization: `OAuth ${job.token}`, offset: String(offset), file_size: String(total) },
-      body: bytes,
-    })
-    const out = await up.json().catch(() => ({}))
-    if (!up.ok || out?.success === false || out?.debug_info) throw new Error(String(out?.debug_info?.message ?? out?.error?.message ?? `envio da parte ${i + 1} falhou (HTTP ${up.status})`))
-    sent = end
-    start = end
-  }
+function joinedUrl(job: Job): string {
+  const q = new URLSearchParams({ path: job.media_path, n: String(job.media_parts), size: String(job.media_size ?? 0) })
+  return `${Deno.env.get('SUPABASE_URL')}/functions/v1/ig-media?${q.toString()}`
 }
 
 function explain(message: string, code?: number): string {
@@ -107,18 +81,8 @@ Deno.serve(async (request) => {
         await db.from('ig_posts').update({ container_id: container }).eq('id', job.id)
       }
       const parts = video && items.length <= 1 ? Number(job.media_parts ?? 0) : 0
-      if (parts > 0) {
-        // Vídeo em partes: contêiner retomável e envio das partes direto para a Meta.
-        if (!container) {
-          const params: Record<string, string> = { media_type: job.kind === 'story' ? 'STORIES' : 'REELS', upload_type: 'resumable' }
-          if (job.caption && job.kind !== 'story') params.caption = job.caption
-          container = String((await call(job.token, 'POST', `${job.ig_id}/media`, params)).id)
-          await db.from('ig_posts').update({ container_id: container }).eq('id', job.id)
-        }
-        await uploadParts(job, container, (i) => db.storage.from('content-files').getPublicUrl(`${job.media_path}.part${i}`).data.publicUrl)
-      }
       if (!container) {
-        const params: Record<string, string> = video ? { video_url: fileUrl } : { image_url: fileUrl }
+        const params: Record<string, string> = video ? { video_url: parts > 0 ? joinedUrl(job) : fileUrl } : { image_url: fileUrl }
         if (job.kind === 'story') params.media_type = 'STORIES'
         else if (job.kind === 'reels') params.media_type = 'REELS'
         if (job.caption && job.kind !== 'story') params.caption = job.caption

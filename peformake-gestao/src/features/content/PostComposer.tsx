@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, Copy, Crop as CropIcon, Images, Plus, X } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, Crop as CropIcon, GripVertical, Images, Move, Plus, X } from 'lucide-react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { SearchSelect } from '@/components/ui/SearchSelect'
 import { useProduction } from '@/features/production/useProduction'
@@ -8,7 +8,7 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
-import { autoKind, CROPS, mediaIssue, readMedia, targetRatio, uploadMedia, type Crop, type PickedMedia } from './igMedia'
+import { autoKind, CROPS, defaultFit, mediaIssue, readMedia, targetRatio, uploadMedia, type Crop, type Fit, type PickedMedia } from './igMedia'
 import { RepeatEditor } from './RepeatEditor'
 import { KIND_LABEL_IG, scheduleError, toInstant, type IgKind } from './scheduleRules'
 import { defaultRule, repeatDates, repeatSummary, type RepeatRule } from './storyRepeat'
@@ -83,7 +83,8 @@ export function PostComposer() {
   const [kindTouched, setKindTouched] = useState(false)
   const [crop, setCrop] = useState<Crop>('original')
   const [cropOpen, setCropOpen] = useState(false)
-  const [stripOpen, setStripOpen] = useState(false)
+  const [dragFrom, setDragFrom] = useState<number | null>(null)
+  const pan = useRef<{ px: number; py: number; x: number; y: number; w: number; h: number } | null>(null)
   const [caption, setCaption] = useState('')
   const [now, setNow] = useState(true)
   const [day, setDay] = useState(today)
@@ -118,6 +119,7 @@ export function PostComposer() {
     setIndex((i) => Math.min(i, Math.max(next.length - 1, 0)))
     return next
   })
+  const patch = (id: string, p: Partial<PickedMedia>) => setItems((cur) => cur.map((m) => (m.id === id ? { ...m, ...p } : m)))
   const move = (from: number, to: number) => setItems((cur) => {
     if (to < 0 || to >= cur.length) return cur
     const next = [...cur]; const [m] = next.splice(from, 1); next.splice(to, 0, m!)
@@ -126,6 +128,7 @@ export function PostComposer() {
   })
 
   const picked = options.find((o) => o.label === account)
+  const fitOf = (m: PickedMedia): Fit => m.fit ?? defaultFit(kind)
   const issue = mediaIssue(kind, items)
   const at = now ? new Date().toISOString() : toInstant(day, hour)
   const past = !now && (!at || new Date(at).getTime() < Date.now())
@@ -175,12 +178,32 @@ export function PostComposer() {
         {/* Prévia: arrastar e soltar, ou escolher do computador. */}
         <div {...drop.props} className={cn('relative flex min-h-[420px] items-center justify-center bg-raised', drop.over && 'outline outline-2 -outline-offset-4 outline-[#0095F6]')}>
           {current ? (
-            <div className="relative w-full max-w-[560px]" style={{ aspectRatio: String(ratio) }}>
-              <div className="absolute inset-0 overflow-hidden bg-black">
+            <div className="flex w-full max-w-[560px] flex-col items-center gap-3 py-4">
+            {/* Altura limitada a 60% da tela para as miniaturas ficarem à vista. */}
+            <div className="relative" style={{ aspectRatio: String(ratio), width: `min(100%, calc(60vh * ${ratio}))` }}>
+              {/* Foto: arrastar muda o ponto que fica no centro do corte (Preencher); Inteira mostra a foto toda com fundo. */}
+              <div className="absolute inset-0 touch-none overflow-hidden bg-black"
+                onPointerDown={(e) => { if (current.video || fitOf(current) !== 'cobrir') return; (e.target as HTMLElement).setPointerCapture?.(e.pointerId); const r = e.currentTarget.getBoundingClientRect(); pan.current = { px: e.clientX, py: e.clientY, x: current.x ?? 0.5, y: current.y ?? 0.5, w: r.width, h: r.height } }}
+                onPointerMove={(e) => { const p0 = pan.current; if (!p0) return; patch(current.id, { x: Math.min(1, Math.max(0, p0.x - (e.clientX - p0.px) / p0.w)), y: Math.min(1, Math.max(0, p0.y - (e.clientY - p0.py) / p0.h)) }) }}
+                onPointerUp={() => { pan.current = null }} onPointerCancel={() => { pan.current = null }}>
                 {current.video
                   ? <video key={current.id} src={current.url} controls muted className="size-full object-contain" />
-                  : <img src={current.url} alt="" className="size-full object-cover" />}
+                  : fitOf(current) === 'inteira'
+                    ? <>
+                        <img src={current.url} alt="" aria-hidden="true" className="absolute inset-0 size-full scale-110 object-cover blur-2xl brightness-75" />
+                        <img src={current.url} alt="" className="relative size-full object-contain" />
+                      </>
+                    : <img src={current.url} alt="" draggable={false} className="size-full cursor-move select-none object-cover" style={{ objectPosition: `${(current.x ?? 0.5) * 100}% ${(current.y ?? 0.5) * 100}%` }} />}
               </div>
+              {!current.video && (
+                <div role="radiogroup" aria-label="Como a foto entra" className="absolute left-1/2 top-3 flex -translate-x-1/2 overflow-hidden rounded-full bg-black/70 text-[12px] font-semibold text-white">
+                  {([['cobrir', 'Preencher'], ['inteira', 'Inteira']] as [Fit, string][]).map(([f, label]) => (
+                    <button key={f} type="button" role="radio" aria-checked={fitOf(current) === f} onClick={() => patch(current.id, { fit: f })}
+                      className={cn('min-h-9 cursor-pointer px-3', fitOf(current) === f ? 'bg-white text-black' : 'text-white/80')}>{label}</button>
+                  ))}
+                </div>
+              )}
+              {!current.video && fitOf(current) === 'cobrir' && <span className="pointer-events-none absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-[11px] text-white"><Move size={12} aria-hidden="true" /> Arraste para ajustar</span>}
               {carousel && index > 0 && <button type="button" aria-label="Anterior" onClick={() => setIndex(index - 1)} className="absolute left-2 top-1/2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-black shadow"><ChevronLeft size={18} aria-hidden="true" /></button>}
               {carousel && index < items.length - 1 && <button type="button" aria-label="Próximo" onClick={() => setIndex(index + 1)} className="absolute right-2 top-1/2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-black shadow"><ChevronRight size={18} aria-hidden="true" /></button>}
               {carousel && (
@@ -202,30 +225,30 @@ export function PostComposer() {
                   <button type="button" aria-label="Corte" aria-expanded={cropOpen} onClick={() => setCropOpen((v) => !v)} className="flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/70 text-white"><CropIcon size={16} aria-hidden="true" /></button>
                 </div>
               )}
-              <div className="absolute bottom-3 right-3 flex flex-col items-end gap-2">
-                {stripOpen && (
-                  <ul aria-label="Arquivos" className="flex max-w-[min(480px,80vw)] gap-2 overflow-x-auto rounded-lg bg-black/80 p-2">
-                    {items.map((m, i) => (
-                      <li key={m.id} className={cn('relative shrink-0 overflow-hidden rounded border-2', i === index ? 'border-white' : 'border-transparent')}>
-                        <button type="button" onClick={() => setIndex(i)} aria-label={`Ver arquivo ${i + 1}`} className="block size-16 cursor-pointer">
-                          {m.video ? <video src={m.url} muted className="size-full object-cover" /> : <img src={m.url} alt="" className="size-full object-cover" />}
-                        </button>
-                        <button type="button" aria-label={`Tirar arquivo ${i + 1}`} onClick={() => remove(m.id)} className="absolute right-0.5 top-0.5 flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/70 text-white"><X size={13} aria-hidden="true" /></button>
-                        {carousel && i > 0 && <button type="button" aria-label={`Mover arquivo ${i + 1} para trás`} onClick={() => move(i, i - 1)} className="absolute bottom-0.5 left-0.5 flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/70 text-white"><ChevronLeft size={13} aria-hidden="true" /></button>}
-                      </li>
-                    ))}
-                    {items.length < 10 && <li className="shrink-0"><button type="button" aria-label="Adicionar arquivo" onClick={() => input.current?.click()} className="flex size-16 cursor-pointer items-center justify-center rounded border border-white/40 text-white"><Plus size={22} aria-hidden="true" /></button></li>}
-                  </ul>
-                )}
-                <button type="button" aria-label={stripOpen ? 'Fechar arquivos' : 'Ver arquivos'} aria-expanded={stripOpen} onClick={() => setStripOpen((v) => !v)} className="flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/70 text-white"><Copy size={16} aria-hidden="true" /></button>
-              </div>
+            </div>
+            <ul aria-label="Arquivos do post" className="flex max-w-full gap-2 overflow-x-auto px-1 pb-1">
+              {items.map((m, i) => (
+                <li key={m.id} draggable onDragStart={() => setDragFrom(i)} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); e.stopPropagation(); if (dragFrom !== null) move(dragFrom, i); setDragFrom(null) }}
+                  className={cn('relative shrink-0 overflow-hidden rounded-lg border-2 bg-black', i === index ? 'border-[#0095F6]' : 'border-transparent', dragFrom === i && 'opacity-50')}>
+                  <button type="button" onClick={() => setIndex(i)} aria-label={`Ver arquivo ${i + 1}`} className="block size-[72px] cursor-pointer">
+                    {m.video ? <video src={m.url} muted preload="metadata" className="size-full object-cover" /> : <img src={m.url} alt="" draggable={false} className="size-full object-cover" />}
+                  </button>
+                  {carousel && <span className="absolute bottom-0.5 left-0.5 rounded bg-black/70 px-1 text-[10px] font-semibold text-white">{i + 1}</span>}
+                  {carousel && <GripVertical size={14} className="pointer-events-none absolute right-0.5 bottom-0.5 text-white drop-shadow" aria-hidden="true" />}
+                  <button type="button" aria-label={`Tirar arquivo ${i + 1}`} onClick={() => remove(m.id)} className="absolute right-0.5 top-0.5 flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/70 text-white"><X size={13} aria-hidden="true" /></button>
+                  {carousel && i > 0 && <button type="button" aria-label={`Mover arquivo ${i + 1} para trás`} onClick={() => move(i, i - 1)} className="absolute left-0.5 top-0.5 flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/70 text-white"><ChevronLeft size={13} aria-hidden="true" /></button>}
+                </li>
+              ))}
+              {items.length < 10 && <li className="shrink-0"><button type="button" aria-label="Adicionar arquivo" onClick={() => input.current?.click()} className="flex size-[72px] cursor-pointer items-center justify-center rounded-lg border border-dashed border-line-strong text-muted hover:text-ink"><Plus size={22} aria-hidden="true" /></button></li>}
+            </ul>
+            {carousel && <p className="text-[12px] text-muted">Arraste as miniaturas para mudar a ordem.</p>}
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4 p-8 text-center">
               <Images size={72} strokeWidth={1} aria-hidden="true" />
               <p className="text-[20px]">Arraste as fotos e os vídeos aqui</p>
               <button type="button" onClick={() => input.current?.click()} className="min-h-10 cursor-pointer rounded-lg bg-[#0095F6] px-4 text-[14px] font-semibold text-white hover:bg-[#1877F2]">Selecionar do computador</button>
-              <p className="text-[12px] text-muted">Vários arquivos viram carrossel. Vídeo até 1 GB.</p>
+              <p className="text-[12px] text-muted">Vários arquivos viram carrossel. Reels até 300 MB; story de vídeo até 100 MB e 60 s.</p>
             </div>
           )}
           <input ref={input} type="file" multiple accept={IG_ACCEPT} className="hidden" aria-label="Arquivos" onChange={(e) => { void add(e.target.files); e.target.value = '' }} />
