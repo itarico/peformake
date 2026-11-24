@@ -1,4 +1,27 @@
-# Guia do Italo: MVP e próximas fases
+# Guia do Italo
+
+## Agora (desde 24/11/2026): app instalável
+
+- **Endereço:** https://guia-italo.vercel.app (demonstração: `/?demo`). Código em `guia-app/` (HTML, JS e service worker, sem build), publicado no projeto `guia-italo` da Vercel da Peformake.
+- **Instalar:** iPhone: Safari → Compartilhar → Adicionar à Tela de Início. Android: Chrome → Instalar app.
+- **Login:** a mesma conta do sistema da Peformake (Supabase `peformake-app`). Só o dono (`guia_config.owner`) lê e escreve as tabelas `guia_*`.
+- **Telas:** Hoje (missões por horário, nível, XP, sequência), Tarefas, Estudo (passos, inglês com áudio e recado) e Você (estatísticas, 14 dias, conquistas).
+- **Jogo:** missão +10 XP, tarefa +5, passo de estudo +5, dia que conta (70%) +20, dia perfeito +30. O nível L começa em 100·L·(L−1)/2 XP.
+- **WhatsApp:** o gatilho `guia_from_whatsapp` em `whatsapp_messages` (que o `wasender-webhook` da Peformake já alimenta) lê só texto enviado por ele na conversa consigo mesmo. `+ texto` vira tarefa de hoje; `recado: texto` vira recado. O resto é ignorado, e um erro no gatilho nunca bloqueia a gravação da mensagem.
+
+### Tabelas (Supabase)
+| Tabela | Conteúdo |
+|---|---|
+| `guia_doc` | `agenda` (util, fds, d0..d6), `corpo` (proximo, divisao), `semana` (titulo, objetivo) |
+| `guia_registro` | dia → feitos {id do bloco: true} |
+| `guia_estudo` | dia, titulo, foco, blocos, feitos, nota |
+| `guia_tarefas` | titulo, dia, area, feita, feita_em, origem (app, chat, whatsapp, recado) |
+| `guia_recados` | texto, dia, origem, lido |
+| `guia_config` | owner, sufixo do número do WhatsApp |
+
+---
+
+## Histórico: versão em página do Claude (artifact)
 
 ## Fase 1: no ar desde 24/11/2026 (MVP)
 
