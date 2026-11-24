@@ -154,7 +154,8 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   const accountById = new Map(accounts.map((a) => [a.id, a]))
   const connected = accounts.filter((a) => a.status === 'conectado')
   // Criar e Em massa voltam para onde a pessoa estava; dentro do cliente a conta já vai escolhida.
-  const extra = `volta=${encodeURIComponent(location.pathname + location.search)}${connected.length === 1 ? `&conta=${connected[0]!.id}` : ''}`
+  // Dentro do cliente (pedido do Italo, 24/11): Criar e Em massa ficam presos ao Instagram dele (?cliente=).
+  const extra = `volta=${encodeURIComponent(location.pathname + location.search)}${connected.length === 1 ? `&conta=${connected[0]!.id}` : ''}${clientId ? `&cliente=${clientId}` : ''}`
   const dayPosts = day ? posts.filter((p) => new Date(p.at).toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) === day) : posts.filter((p) => p.status !== 'publicado' || new Date(p.at).getTime() > Date.now() - 2 * 864e5)
   const options = [OWN, ...clients.map((c) => c.name)]
   const pickedClient = pick === OWN ? null : clients.find((c) => c.name === pick)?.id ?? undefined

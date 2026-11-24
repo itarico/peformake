@@ -39,6 +39,7 @@ async function mock(route) {
       content_plans: [{ id: 'pl1', client_id: 'c1', month: MONTH, notes: 'Natal e fim de ano', planned_at: null, sent_to_client_at: null }],
       content_items: [item('i1', 'client_review', 'Panetone artesanal'), item('i2', 'in_production', 'Cesta de Natal'), item('i3', 'approved', 'Pão de queijo')],
       content_files: [{ id: 'f1', item_id: 'i1', role: 'final', path: 'c1/panetone.jpg', name: 'panetone.jpg', mime: 'image/jpeg', size_bytes: 10, created_at: MONTH }],
+      ig_accounts: [{ id: 'a1', client_id: 'c1', username: 'padariasol', status: 'conectado' }],
       social_tasks: [{ id: 't1', client_id: 'c1', title: 'Responder comentários', description: null, status: 'a_fazer', source: 'manual', network: 'instagram', priority: false, due_date: null, created_at: MONTH },
         { id: 't2', client_id: 'c2', title: 'Tarefa de outro cliente', description: null, status: 'a_fazer', source: 'manual', network: 'instagram', priority: false, due_date: null, created_at: MONTH }],
     }
@@ -100,6 +101,11 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pg.getByRole('tab', { name: /Tarefas/ }).click(); await pg.waitForTimeout(900)
       const t5 = await pg.evaluate(() => document.body.innerText)
       if (!t5.includes('Responder comentários') || t5.includes('Tarefa de outro cliente')) fails.push(`${dev}: tarefas não filtraram pelo cliente`)
+
+      // 5b. Agendar dentro do cliente: Criar post abre preso ao Instagram do cliente.
+      await pg.getByRole('tab', { name: /Agendar/ }).click(); await pg.waitForTimeout(900)
+      const href = await pg.getByRole('link', { name: /Criar post/ }).getAttribute('href').catch(() => null)
+      if (!href || !href.includes('cliente=c1')) fails.push(`${dev}: Criar post de dentro do cliente sem trava (${href})`)
 
       // 6. Guia de marca organizado.
       await pg.getByRole('tab', { name: /Guia de marca/ }).click(); await pg.waitForTimeout(900)

@@ -55,9 +55,15 @@ export function autoKind(items: PickedMedia[]): IgKind {
   return 'post'
 }
 
+/** Corte do feed, como no Instagram: Original (dentro do permitido), 1:1, 4:5 ou 16:9. */
+export type Crop = 'original' | '1:1' | '4:5' | '16:9'
+export const CROPS: { id: Crop; label: string }[] = [{ id: 'original', label: 'Original' }, { id: '1:1', label: '1:1' }, { id: '4:5', label: '4:5' }, { id: '16:9', label: '16:9' }]
+const CROP_RATIO: Record<Exclude<Crop, 'original'>, number> = { '1:1': 1, '4:5': 4 / 5, '16:9': 16 / 9 }
+
 /** Proporção em que a peça vai sair (para a prévia e o corte). */
-export function targetRatio(kind: IgKind, items: PickedMedia[]): number {
+export function targetRatio(kind: IgKind, items: PickedMedia[], crop: Crop = 'original'): number {
   if (kind === 'story' || kind === 'reels') return STORY
+  if (crop !== 'original') return CROP_RATIO[crop]
   const first = items[0]
   if (!first) return 1
   return clamp(first.ratio, FEED_MIN, FEED_MAX)
@@ -112,14 +118,14 @@ export async function fitImage(file: File, ratio: number): Promise<File> {
 }
 
 /** Prepara e sobe os arquivos de uma publicação. Devolve o que o banco precisa (ig_post_create). */
-export async function uploadMedia(accountId: string, kind: IgKind, items: PickedMedia[], onStep?: (text: string) => void): Promise<UploadedMedia[]> {
-  const ratio = targetRatio(kind, items)
+export async function uploadMedia(accountId: string, kind: IgKind, items: PickedMedia[], onStep?: (text: string) => void, crop: Crop = 'original'): Promise<UploadedMedia[]> {
+  const ratio = targetRatio(kind, items, crop)
   const out: UploadedMedia[] = []
   const fail = () => new Error('Não foi possível enviar o arquivo. Confira a internet e tente de novo.')
   for (let n = 0; n < items.length; n++) {
     const m = items[n]!
     const label = items.length > 1 ? `arquivo ${n + 1} de ${items.length}` : 'arquivo'
-    const ready = m.video ? m.file : await fitImage(m.file, kind === 'story' ? STORY : items.length > 1 ? ratio : clamp(m.ratio, FEED_MIN, FEED_MAX))
+    const ready = m.video ? m.file : await fitImage(m.file, kind === 'story' ? STORY : items.length > 1 || crop !== 'original' ? ratio : clamp(m.ratio, FEED_MIN, FEED_MAX))
     const ext = m.video ? (ready.type === 'video/quicktime' ? 'mov' : 'mp4') : 'jpg'
     const path = `instagram/avulso/${accountId}/${crypto.randomUUID()}.${ext}`
     const parts = m.video && items.length === 1 && ready.size > PART_BYTES ? Math.ceil(ready.size / PART_BYTES) : 0

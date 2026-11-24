@@ -10,14 +10,14 @@ import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { autoKind, mediaIssue, readMedia, uploadMedia, type PickedMedia } from './igMedia'
-import { useIgAccounts } from './PostComposer'
+import { IG_ACCEPT, useDrop, useIgAccounts } from './PostComposer'
 import { KIND_LABEL_IG, scheduleError, toInstant, type IgKind } from './scheduleRules'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 const field = 'min-h-10 rounded-xl border border-line-strong bg-surface px-3 text-[13px]'
 
-interface Row { media: PickedMedia; kind: IgKind; caption: string; day: string; hour: string; state: 'novo' | 'enviando' | 'ok' | 'erro'; error?: string }
+interface Row { media: PickedMedia; kind: IgKind; caption: string; day: string; hour: string; state: 'novo' | 'enviando' | 'ok' | 'erro'; error?: string; progress?: string }
 
 const addDays = (iso: string, n: number) => {
   const d = new Date(`${iso}T12:00:00-03:00`); d.setDate(d.getDate() + n)
@@ -43,8 +43,13 @@ export function BulkSchedule() {
   const [start, setStart] = useState(addDays(today, 1))
   const [hour, setHour] = useState('18:00')
   const [every, setEvery] = useState(1)
+  // Stories do lote podem repetir (todo dia ou toda semana), como no Criar post.
+  const [repeat, setRepeat] = useState<'' | 'dia' | 'semana'>('')
+  const [times, setTimes] = useState(7)
 
-  const options = useMemo(() => (accounts.data ?? []).map((a) => ({ id: a.id, label: `${a.client_id ? clientName(a.client_id) : 'Peformake'} · @${a.username}` })), [accounts.data, clientName])
+  // Aberto de dentro do cliente (?cliente=): só o Instagram dele, sem trocar (mais seguro).
+  const lockClient = params.get('cliente')
+  const options = useMemo(() => (accounts.data ?? []).filter((a) => !lockClient || a.client_id === lockClient).map((a) => ({ id: a.id, label: `${a.client_id ? clientName(a.client_id) : 'Peformake'} · @${a.username}` })), [accounts.data, clientName, lockClient])
   useEffect(() => {
     if (account || options.length === 0) return
     const pre = options.find((o) => o.id === params.get('conta')) ?? (options.length === 1 ? options[0] : undefined)
@@ -60,6 +65,7 @@ export function BulkSchedule() {
       return [...cur, ...read.map((m, i) => ({ media: m, kind: autoKind([m]), caption: '', day: addDays(start, (base + i) * every), hour, state: 'novo' as const }))]
     })
   }
+  const drop = useDrop((f) => void add(f))
   const set = (i: number, patch: Partial<Row>) => setRows((cur) => cur.map((r, n) => (n === i ? { ...r, ...patch } : r)))
   const spread = () => setRows((cur) => cur.map((r, i) => ({ ...r, day: addDays(start, i * every), hour })))
 
@@ -80,8 +86,9 @@ export function BulkSchedule() {
         if (r.state === 'ok' || problems[i]) continue
         set(i, { state: 'enviando', error: undefined })
         try {
-          const media = await uploadMedia(picked.id, r.kind, [r.media])
-          const { error } = await db.rpc('ig_post_create', { _account: picked.id, _kind: r.kind, _media: media, _caption: r.kind === 'story' ? '' : r.caption, _at: toInstant(r.day, r.hour), _repeat_every: null, _repeat_count: 1 })
+          const media = await uploadMedia(picked.id, r.kind, [r.media], (t) => set(i, { progress: t }))
+          const story = r.kind === 'story' && repeat
+          const { error } = await db.rpc('ig_post_create', { _account: picked.id, _kind: r.kind, _media: media, _caption: r.kind === 'story' ? '' : r.caption, _at: toInstant(r.day, r.hour), _repeat_every: story ? repeat : null, _repeat_count: story ? times : 1 })
           if (error) throw error
           set(i, { state: 'ok' })
         } catch (e) {
@@ -110,7 +117,9 @@ export function BulkSchedule() {
       <div className="grid grid-cols-1 gap-3 rounded-3xl border border-line bg-surface p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
         <div>
           <label className="mb-1 block text-[13px] font-semibold" htmlFor="massa-conta">Instagram</label>
-          <SearchSelect id="massa-conta" value={account} onChange={setAccount} options={options.map((o) => o.label)} allowNew={false} placeholder="Cliente ou @" />
+          {lockClient && picked
+            ? <p id="massa-conta" className="min-h-11 content-center truncate text-[14px] font-semibold">{picked.label}</p>
+            : <SearchSelect id="massa-conta" value={account} onChange={setAccount} options={options.map((o) => o.label)} allowNew={false} placeholder="Cliente ou @" />}
         </div>
         <div className="flex flex-wrap items-end gap-2">
           <label className="flex flex-col text-[12px] font-semibold">Começar em<input type="date" min={today} value={start} onChange={(e) => setStart(e.target.value)} className={cn(field, 'mt-1 font-normal')} /></label>
@@ -122,6 +131,23 @@ export function BulkSchedule() {
           </label>
           <Button variant="secondary" disabled={rows.length === 0} onClick={spread}>Distribuir</Button>
         </div>
+        {rows.length > 0 && (
+          <div role="group" aria-label="Formato de todos" className="flex flex-wrap items-center gap-1.5 md:col-span-2">
+            <span className="text-[12px] font-semibold">Todos como</span>
+            <button type="button" onClick={() => setRows((cur) => cur.map((r) => (r.state === 'ok' ? r : { ...r, kind: 'story' })))} className="min-h-9 cursor-pointer rounded-full border border-line-strong px-3 text-[12px] font-medium">Story</button>
+            <button type="button" onClick={() => setRows((cur) => cur.map((r) => (r.state === 'ok' ? r : { ...r, kind: autoKind([r.media]) })))} className="min-h-9 cursor-pointer rounded-full border border-line-strong px-3 text-[12px] font-medium">Feed e Reels</button>
+          </div>
+        )}
+        {rows.some((r) => r.kind === 'story') && (
+          <div className="flex flex-wrap items-end gap-2 md:col-span-2">
+            <label className="flex flex-col text-[12px] font-semibold">Stories repetem
+              <select aria-label="Stories repetem" value={repeat} onChange={(e) => setRepeat(e.target.value as '' | 'dia' | 'semana')} className={cn(field, 'mt-1 font-normal')}>
+                <option value="">Não</option><option value="dia">Todo dia</option><option value="semana">Toda semana</option>
+              </select>
+            </label>
+            {repeat && <label className="flex flex-col text-[12px] font-semibold">Vezes<input type="number" min={2} max={30} aria-label="Vezes" value={times} onChange={(e) => setTimes(Math.max(2, Math.min(30, Number(e.target.value) || 2)))} className={cn(field, 'mt-1 w-20 font-normal')} /></label>}
+          </div>
+        )}
       </div>
 
       <ul className="flex flex-col gap-2">
@@ -144,7 +170,7 @@ export function BulkSchedule() {
               </div>
               <div className="col-span-2 flex items-center justify-end gap-2 md:col-span-1">
                 <span className={cn('rounded-full px-2.5 py-1 text-[12px] font-medium', r.state === 'ok' ? 'bg-ok-soft text-ok-ink' : r.state === 'enviando' ? 'bg-accent-soft text-ink' : r.state === 'erro' ? 'bg-warn-soft text-warn-ink' : 'bg-raised text-muted')}>
-                  {r.state === 'ok' ? 'Programado' : r.state === 'enviando' ? 'Enviando' : r.state === 'erro' ? 'Falhou' : 'Pronto'}
+                  {r.state === 'ok' ? (r.kind === 'story' && repeat ? `Programado ${times}x` : 'Programado') : r.state === 'enviando' ? (r.progress ?? 'Enviando') : r.state === 'erro' ? 'Falhou' : r.media.video && r.media.file.size > 45 * 1024 * 1024 ? `Pronto · ${Math.round(r.media.file.size / 1048576)} MB` : 'Pronto'}
                 </span>
                 {r.state !== 'ok' && <button type="button" aria-label={`Tirar arquivo ${i + 1}`} onClick={() => setRows((cur) => cur.filter((_, n) => n !== i))} className="flex size-10 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-raised hover:text-ink"><Trash2 size={16} aria-hidden="true" /></button>}
               </div>
@@ -153,12 +179,12 @@ export function BulkSchedule() {
         })}
       </ul>
 
-      <button type="button" onClick={() => input.current?.click()} className="flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border border-dashed border-line-strong bg-surface text-muted hover:text-ink">
+      <button type="button" {...drop.props} onClick={() => input.current?.click()} className={cn('flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border border-dashed bg-surface text-muted hover:text-ink', drop.over ? 'border-[#0095F6] text-ink' : 'border-line-strong')}>
         <ImagePlus size={28} aria-hidden="true" />
-        <span className="text-[14px] font-medium text-ink">{rows.length ? 'Adicionar mais arquivos' : 'Escolher fotos e vídeos'}</span>
-        <span className="text-[12px]">Cada arquivo vira uma publicação</span>
+        <span className="text-[14px] font-medium text-ink">{rows.length ? 'Arraste ou adicione mais arquivos' : 'Arraste as fotos e os vídeos aqui ou toque para escolher'}</span>
+        <span className="text-[12px]">Cada arquivo vira uma publicação. Vídeo até 1 GB.</span>
       </button>
-      <input ref={input} type="file" multiple accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime" className="hidden" aria-label="Arquivos" onChange={(e) => { void add(e.target.files); e.target.value = '' }} />
+      <input ref={input} type="file" multiple accept={IG_ACCEPT} className="hidden" aria-label="Arquivos" onChange={(e) => { void add(e.target.files); e.target.value = '' }} />
       {run.error && <p role="alert" className="text-[14px] font-medium text-warn-ink">{run.error instanceof Error ? run.error.message : 'Não foi possível programar.'}</p>}
     </div>
   )
