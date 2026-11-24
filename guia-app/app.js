@@ -63,6 +63,7 @@
       S.sb.from("guia_tarefas").select("*").order("criada_em", { ascending: true }).limit(500)]);
     const res = await S.sb.from("guia_resultados").select("dia,licao,trilha,tipo,nota,acertos,total,dados,texto,criado_em").order("criado_em", { ascending: true }).limit(2000);
     S.resultados = res.data || [];
+    S.sb.functions.invoke("guia-transcribe", { body: {} }).then(({ data }) => { if (data && data.transcritas) load(); }).catch(() => {});
     const err = docs.error || reg.error || est.error || tar.error;
     if (err) { toast("Não consegui carregar seus dados. Tente de novo."); console.error(err); return; }
     (docs.data || []).forEach(d => { if (d.key === "agenda") S.agenda = d.data; if (d.key === "corpo") S.corpo = d.data; if (d.key === "semana") S.semana = d.data; if (d.key === "cartoes") S.cartoes = (d.data && d.data.cards) || {}; });
@@ -281,7 +282,7 @@
   // ---------- a aula, um passo por vez ----------
   const P = { dia: null, gi: 0, step: 0, answers: {}, graded: null };
   const STEP_NAMES = ["Aula", "Exemplo", "Tarefa", "Prova"];
-  function openPlayer(dia, gi) { Object.assign(P, { dia, gi, step: 0, answers: {}, graded: null }); $("player").hidden = false; document.body.style.overflow = "hidden"; drawPlayer(); }
+  function openPlayer(dia, gi) { Object.assign(P, { dia, gi, step: 0, answers: {}, graded: null, check: null }); $("player").hidden = false; document.body.style.overflow = "hidden"; drawPlayer(); }
   function closePlayer() { $("player").hidden = true; document.body.style.overflow = ""; stopRecIfAny(); render(); }
   function drawPlayer() {
     const a = lessonsOf(P.dia)[P.gi]; if (!a) return closePlayer();
@@ -296,6 +297,12 @@
       if (a.objetivo) body.append(el("p", "muted small", "Objetivo: " + a.objetivo));
       (a.aula || []).forEach(p => body.append(el("p", "lesson-p", p)));
       btn.textContent = "Entendi, continuar";
+      if (a.checagem) { const q = a.checagem; const box = el("div", "recbox"); box.append(el("span", "lsec-h", "Pergunta rápida"), el("p", "qa-q", q.p));
+        q.opcoes.forEach((op, oi) => { const b = el("button", "opt"); b.type = "button"; b.textContent = op;
+          if (P.check != null) { b.disabled = true; if (oi === q.certa) b.classList.add("right"); else if (oi === P.check) b.classList.add("wrong"); }
+          b.addEventListener("click", () => { if (P.check == null) { P.check = oi; drawPlayer(); } }); box.append(b); });
+        if (P.check != null) box.append(el("p", "muted small", (P.check === q.certa ? "Isso. " : "Quase. ") + (q.explica || "")));
+        body.append(box); if (P.check == null) { btn.disabled = true; btn.textContent = "Responda a pergunta rápida"; } }
     } else if (P.step === 1) {
       body.append(el("span", "lsec-h", "Exemplo"), el("p", "lesson-ex", a.exemplo || ""));
       btn.textContent = "Continuar";
@@ -415,10 +422,11 @@
     w.append(el("p", "muted small", ppmOk ? "Ritmo bom para vender." : m.ppm > 165 ? "Rápido demais: use pausas." : "Devagar: ganhe energia."));
     return w;
   }
-  async function uploadAudio(blob) {
+  async function uploadAudio(blob) { return uploadAudioPath(blob, P.dia + "/" + P.gi); }
+  async function uploadAudioPath(blob, prefix) {
     if (DEMO || !S.sb) return null;
     const ext = blob.type.includes("mp4") ? "m4a" : blob.type.includes("ogg") ? "ogg" : "webm";
-    const path = P.dia + "/" + P.gi + "-" + Date.now() + "." + ext;
+    const path = prefix + "-" + Date.now() + "." + ext;
     const { error } = await S.sb.storage.from("guia-audios").upload(path, blob, { contentType: blob.type || "audio/webm" });
     return error ? null : path;
   }
@@ -473,30 +481,36 @@
   // ---------------- voz ----------------
   // Usa o reconhecimento de fala do aparelho quando existe; senão grava e manda para a transcrição do sistema.
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const IOS_APP = (window.navigator.standalone === true) || /iPhone|iPad/.test(navigator.userAgent);
   function startVoice(target, btn, status) {
     if (btn.dataset.on === "1") { btn._stop && btn._stop(); return; }
     const setOn = on => { btn.dataset.on = on ? "1" : ""; btn.classList.toggle("rec", on); btn.lastChild.textContent = on ? " Parar" : " Falar"; };
-    if (SR) {
-      const r = new SR(); r.lang = "pt-BR"; r.continuous = true; r.interimResults = true; const base = target.value ? target.value.trim() + " " : "";
+    if (SR && !IOS_APP) {
+      const r = new SR(); r.lang = "pt-BR"; r.continuous = true; r.interimResults = true; const base = target.value ? target.value.trim() + " " : ""; let failed = false;
       r.onresult = e => { let txt = ""; for (let i = 0; i < e.results.length; i++) txt += e.results[i][0].transcript; target.value = base + txt; };
-      r.onerror = e => { status.textContent = e.error === "not-allowed" ? "Libere o microfone para este app." : "O microfone parou. Tente de novo."; };
-      r.onend = () => setOn(false);
-      btn._stop = () => r.stop(); setOn(true); status.textContent = "Ouvindo… toque em Parar quando terminar."; try { r.start(); } catch (e) { setOn(false); }
+      r.onerror = () => { failed = true; };
+      r.onend = () => { setOn(false); if (failed) { status.textContent = "Vou gravar o áudio."; recordAudio(target, btn, status, setOn); } };
+      btn._stop = () => r.stop(); setOn(true); status.textContent = "Ouvindo… toque em Parar quando terminar."; try { r.start(); } catch (e) { setOn(false); recordAudio(target, btn, status, setOn); }
       return;
     }
-    if (!navigator.mediaDevices || !window.MediaRecorder) { status.textContent = "Este aparelho não grava aqui. Use o microfone do teclado."; return; }
+    recordAudio(target, btn, status, setOn);
+  }
+  function recordAudio(target, btn, status, setOn) {
+    if (!navigator.mediaDevices || !window.MediaRecorder) { status.textContent = "Use o microfone do teclado para falar."; return; }
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      const chunks = []; const rec = new MediaRecorder(stream);
+      const chunks = []; const rec = new MediaRecorder(stream); const t0 = Date.now();
       rec.ondataavailable = e => e.data.size && chunks.push(e.data);
       rec.onstop = async () => {
-        stream.getTracks().forEach(x => x.stop()); setOn(false); status.textContent = "Transcrevendo…";
-        const blob = new Blob(chunks, { type: rec.mimeType || "audio/webm" });
+        stream.getTracks().forEach(x => x.stop()); setOn(false); status.textContent = "Salvando…";
+        const blob = new Blob(chunks, { type: rec.mimeType || "audio/webm" }); const secs = (Date.now() - t0) / 1000;
         const text = await transcribe(blob);
-        if (text) { target.value = (target.value ? target.value.trim() + " " : "") + text; status.textContent = "Pronto. Confira e salve."; }
-        else status.textContent = "Não consegui transcrever agora. Use o microfone do teclado.";
+        if (text) { target.value = (target.value ? target.value.trim() + " " : "") + text; status.textContent = "Pronto. Confira e envie."; return; }
+        const path = await uploadAudioPath(blob, "recados");
+        if (path) { target.dataset.audio = path; target.dataset.secs = String(Math.round(secs)); status.textContent = "Áudio gravado (" + Math.round(secs) + " s). Toque em Enviar."; }
+        else status.textContent = "Não consegui salvar o áudio. Use o microfone do teclado.";
       };
       btn._stop = () => rec.state !== "inactive" && rec.stop(); rec.start(); setOn(true); status.textContent = "Gravando… toque em Parar quando terminar.";
-    }).catch(() => { status.textContent = "Libere o microfone para este app."; });
+    }).catch(() => { status.textContent = "Libere o microfone para o app nas configurações do celular."; });
   }
   async function transcribe(blob) {
     if (DEMO || !S.sb) return "";
@@ -510,8 +524,14 @@
   function voiceBox(prefix, placeholder) {
     const wrap = el("div", "comment"); const ta = el("textarea", "input"); ta.placeholder = placeholder; ta.setAttribute("aria-label", placeholder);
     const status = el("span", "small muted"); const row = el("div", "row"); const send = el("button", "btn small-btn", "Enviar ao professor"); send.type = "button";
-    send.addEventListener("click", async () => { const v = ta.value.trim().slice(0, 3800); if (!v) { status.textContent = "Fale ou escreva primeiro."; return; }
-      const ok = await saveRecado(prefix + v); status.textContent = ok ? "Enviado. O professor vai ler." : "Não enviou. Tente de novo."; if (ok) ta.value = ""; });
+    send.addEventListener("click", async () => {
+      const v = ta.value.trim().slice(0, 3800), audio = ta.dataset.audio;
+      if (!v && !audio) { status.textContent = "Fale ou escreva primeiro."; return; }
+      let ok = true;
+      if (audio && !DEMO) { const r = await S.sb.from("guia_resultados").insert({ dia: today(), licao: "recado:" + prefix.slice(0, 120), trilha: "recado", tipo: "gravacao", dados: { segundos: Number(ta.dataset.secs || 0) }, audio_path: audio }); ok = !r.error; }
+      if (v) ok = (await saveRecado(prefix + v)) && ok; else if (audio) ok = (await saveRecado(prefix + "[áudio gravado: " + audio + "]")) && ok;
+      status.textContent = ok ? "Enviado. O professor vai " + (audio && !v ? "ouvir." : "ler.") : "Não enviou. Tente de novo.";
+      if (ok) { ta.value = ""; delete ta.dataset.audio; delete ta.dataset.secs; } });
     row.append(micButton(ta, status), send); wrap.append(ta, row, status); return wrap;
   }
 

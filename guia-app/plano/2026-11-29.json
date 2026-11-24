@@ -59,11 +59,30 @@
      ],
      "certa": 1,
      "explica": ""
+    },
+    {
+     "p": "Aplicação: terça 185 palavras/min, domingo 150. O que isso mostra?",
+     "opcoes": [
+      "Piorou",
+      "Entrou na faixa boa para vender",
+      "Nada"
+     ],
+     "certa": 1,
+     "explica": "130 a 160 é a faixa boa."
     }
    ],
    "gravar": {
     "prompt": "Grave o pitch final. Ele será comparado com o de terça.",
     "segundos": 120
+   },
+   "checagem": {
+    "p": "A prova da semana compara:",
+    "opcoes": [
+     "A gravação de terça com a de domingo",
+     "Você com outros vendedores"
+    ],
+    "certa": 0,
+    "explica": ""
    }
   },
   {
@@ -130,8 +149,27 @@
      ],
      "certa": 0,
      "explica": "Liga direto com o que você estuda para o trabalho."
+    },
+    {
+     "p": "Aplicação: no diagnóstico você errou 6 de 10 em porcentagem. O que vem primeiro na semana seguinte?",
+     "opcoes": [
+      "Redação",
+      "Porcentagem e regra de três",
+      "Informática"
+     ],
+     "certa": 1,
+     "explica": "O erro escolhe a próxima aula."
     }
-   ]
+   ],
+   "checagem": {
+    "p": "Como se estuda para concurso?",
+    "opcoes": [
+     "Lendo teoria várias vezes",
+     "Fazendo questões da banca e revendo os erros"
+    ],
+    "certa": 1,
+    "explica": ""
+   }
   }
  ]
 }

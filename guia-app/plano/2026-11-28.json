@@ -65,11 +65,31 @@
      ],
      "certa": 1,
      "explica": ""
+    },
+    {
+     "p": "Aplicação: o cliente diz 'já tenho agência'. Qual a melhor resposta?",
+     "opcoes": [
+      "'A nossa é melhor.'",
+      "'Que bom. O que você gostaria que ela fizesse e ainda não faz?'",
+      "'Te faço um desconto.'"
+     ],
+     "certa": 1,
+     "explica": "Pergunta abre a dor que a agência atual não resolve."
     }
    ],
    "gravar": {
     "prompt": "Grave sua resposta para 'tá caro', 'vou pensar' e 'já tenho agência'.",
     "segundos": 180
+   },
+   "checagem": {
+    "p": "Primeiro passo diante de 'tá caro':",
+    "opcoes": [
+     "Dar desconto",
+     "Acolher e perguntar 'caro comparado com o quê?'",
+     "Encerrar a conversa"
+    ],
+    "certa": 1,
+    "explica": ""
    }
   },
   {
@@ -141,8 +161,27 @@
      ],
      "certa": 0,
      "explica": ""
+    },
+    {
+     "p": "Aplicação: você dormiu 4 horas. O que fazer às 6h?",
+     "opcoes": [
+      "Treino pesado igual",
+      "Trocar a academia por 30 min de caminhada",
+      "Pular o dia inteiro"
+     ],
+     "certa": 1,
+     "explica": "Mantém a sequência sem forçar o corpo."
     }
-   ]
+   ],
+   "checagem": {
+    "p": "Para acordar 5h30 com 7 h de sono, deitar às:",
+    "opcoes": [
+     "22h30",
+     "00h30"
+    ],
+    "certa": 0,
+    "explica": ""
+   }
   }
  ]
 }

@@ -74,8 +74,28 @@
      ],
      "certa": 1,
      "explica": ""
+    },
+    {
+     "p": "Aplicação: classifique 'Se a quarta enchesse, quanto entraria a mais no mês?'",
+     "opcoes": [
+      "Situação",
+      "Problema",
+      "Necessidade de solução"
+     ],
+     "certa": 2,
+     "explica": "O cliente diz o valor da solução."
     }
-   ]
+   ],
+   "checagem": {
+    "p": "Qual pergunta faz o cliente sentir o tamanho do problema?",
+    "opcoes": [
+     "Situação",
+     "Implicação",
+     "Necessidade"
+    ],
+    "certa": 1,
+    "explica": ""
+   }
   },
   {
    "trilha": "licitacao",
@@ -152,8 +172,27 @@
      ],
      "certa": 1,
      "explica": "A lei muda o edital inteiro."
+    },
+    {
+     "p": "Aplicação: a Câmara Municipal de Olinda quer um vídeo institucional. Onde você procura o edital?",
+     "opcoes": [
+      "No Petronect",
+      "No PNCP",
+      "No site da Petrobras"
+     ],
+     "certa": 1,
+     "explica": "Órgão público municipal segue a 14.133 e publica no PNCP."
     }
-   ]
+   ],
+   "checagem": {
+    "p": "A Transpetro segue qual lei?",
+    "opcoes": [
+     "14.133/2021",
+     "13.303/2016 com regulamento próprio"
+    ],
+    "certa": 1,
+    "explica": ""
+   }
   }
  ]
 }

@@ -65,11 +65,31 @@
      ],
      "certa": 0,
      "explica": "Número convence mais que adjetivo."
+    },
+    {
+     "p": "Aplicação: um dono de restaurante diz 'meu salão enche só no fim de semana'. Qual é a frase de CUSTO no pitch?",
+     "opcoes": [
+      "'A gente faz anúncio no Instagram.'",
+      "'Cada terça vazia são umas 40 mesas que não voltam.'",
+      "'Posso te mostrar em 15 minutos?'"
+     ],
+     "certa": 1,
+     "explica": "Custo é traduzir o problema em perda concreta."
     }
    ],
    "gravar": {
     "prompt": "Grave o pitch nas 5 partes: problema, custo, caminho, prova e próximo passo.",
     "segundos": 120
+   },
+   "checagem": {
+    "p": "Qual frase começa pelo problema do cliente?",
+    "opcoes": [
+     "'A Peformake tem 5 anos de mercado.'",
+     "'Sua agenda tem buraco no meio da semana?'",
+     "'Fazemos tráfego e conteúdo.'"
+    ],
+    "certa": 1,
+    "explica": "Começar pelo problema prende; começar por você afasta."
    }
   },
   {
@@ -148,11 +168,31 @@
      ],
      "certa": 1,
      "explica": "O cérebro guarda o pedaço pronto."
+    },
+    {
+     "p": "Aplicação: qual frase em inglês serve de próximo passo?",
+     "opcoes": [
+      "'Most clinics are invisible online.'",
+      "'Can I show you how in 15 minutes?'",
+      "'That costs them patients.'"
+     ],
+     "certa": 1,
+     "explica": "Próximo passo é um pedido pequeno."
     }
    ],
    "gravar": {
     "prompt": "Grave as 3 frases do pitch em inglês, sem ler.",
     "segundos": 45
+   },
+   "checagem": {
+    "p": "O que é shadowing?",
+    "opcoes": [
+     "Repetir junto com o áudio, imitando",
+     "Traduzir mentalmente",
+     "Ler em silêncio"
+    ],
+    "certa": 0,
+    "explica": ""
    }
   }
  ]

@@ -70,11 +70,31 @@
      ],
      "certa": 1,
      "explica": ""
+    },
+    {
+     "p": "Aplicação: você percebeu que fala 'né' entre as frases. Qual a troca certa?",
+     "opcoes": [
+      "Falar mais rápido",
+      "Trocar o 'né' por uma pausa curta",
+      "Falar mais alto"
+     ],
+     "certa": 1,
+     "explica": "A pausa ocupa o lugar do vício."
     }
    ],
    "gravar": {
     "prompt": "Grave o pitch com as pausas marcadas.",
     "segundos": 120
+   },
+   "checagem": {
+    "p": "Por que a pausa antes do número funciona?",
+    "opcoes": [
+     "Diz ao cliente 'isso importa'",
+     "Deixa o pitch mais longo",
+     "Esconde o nervosismo"
+    ],
+    "certa": 0,
+    "explica": ""
    }
   },
   {
@@ -152,8 +172,27 @@
      ],
      "certa": 1,
      "explica": "Por isso o regime do fornecedor importa para ele."
+    },
+    {
+     "p": "Aplicação: a integração da NFS-e da Peformake fica pronta em dezembro. O que vocês precisam prever?",
+     "opcoes": [
+      "Nada, a nota é igual",
+      "Os campos de IBS e CBS que passam a valer em janeiro",
+      "Trocar de CNPJ"
+     ],
+     "certa": 1,
+     "explica": "Sem isso, a nota de janeiro pode ser rejeitada."
     }
-   ]
+   ],
+   "checagem": {
+    "p": "O que entra na nota a partir de 1º/1/2027?",
+    "opcoes": [
+     "IBS e CBS",
+     "ICMS"
+    ],
+    "certa": 0,
+    "explica": ""
+   }
   }
  ]
 }
