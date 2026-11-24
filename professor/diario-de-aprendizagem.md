@@ -18,6 +18,7 @@ Memória do professor. Atualizar ao fim de cada aula. A tarefa semanal lê este 
 |---|---|---|---|---|---|---|
 | 04/11/2026 | 01 — Como a IA escolhe quem recomendar (GEO) | 1.1 + 2.1 | — | — | — | pendente (não entregue até 09/11) |
 | 09/11/2026 | 02 — A nota fiscal já mudou e o preço vai mudar em 2027 | 4.3 + ponto cego 8 + inglês | — | — | — | pendente |
+| 24/11/2026 | 03 (relâmpago) — Desconto de Black Friday sem pagar para vender | 3.2 + 4.1 + inglês | — | — | — | pendente |
 
 ## Fila de revisão espaçada
 
@@ -37,5 +38,6 @@ Formato: `data de revisão | conceito | origem`. Ao revisar: acertou → empurra
 
 ## Notas do professor sobre o próprio método
 
+- 24/11/2026: Os disparos de 16/11 e 23/11 só chegaram em 24/11 (a sessão ficou parada). Juntei os dois numa aula só, para não empilhar aulas não feitas. Nenhuma entrega das aulas 01 e 02 e nenhuma interação desde 04/11. Mudança aplicada: aula relâmpago de 15 min. Próximo passo, se continuar sem entrega: perguntar ao Italo pelo canal (página interativa no celular? aviso por e-mail?) em vez de continuar produzindo no mesmo formato. A fila de revisão de 11/11 e 16/11 está vencida: o aquecimento da aula 03 cobre 1 item de cada.
 - 09/11/2026: Aula 01 não foi entregue e as respostas das 3 perguntas iniciais não vieram. Aula 02 furou a fila por ter prazo fiscal real (NFS-e desde 1º/11, IBS/CBS em 1º/1/2027). Sinal a observar: se a Aula 02 também não for feita, o problema é o formato/canal, não o conteúdo. Testar a página HTML interativa que Italo considerou e uma aula mais curta (15 min).
 - 04/11/2026: Sistema criado. Hipótese: aula em markdown no repositório + aviso no celular. Validar na 2ª semana se Italo está lendo/fazendo; se não estiver, mudar o canal (Google Doc, e-mail ou artifact visual).
