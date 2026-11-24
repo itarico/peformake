@@ -1,29 +1,29 @@
 {
- "programa": "Oratória para vender · 4 semanas",
+ "programa": "Base de concurso + Oratória para vender · 4 semanas",
  "semanas": [
   {
    "n": 1,
    "de": "2026-11-24",
    "ate": "2026-11-29",
-   "tema": "Diagnóstico, estrutura do pitch e perguntas"
+   "tema": "Pitch, perguntas e diagnóstico de concurso"
   },
   {
    "n": 2,
    "de": "2026-11-30",
    "ate": "2026-12-06",
-   "tema": "Voz e presença"
+   "tema": "Base de Português, Matemática e Redação + voz"
   },
   {
    "n": 3,
    "de": "2026-12-07",
    "ate": "2026-12-13",
-   "tema": "Reunião de venda completa"
+   "tema": "Gramática que mais cai + reunião de venda"
   },
   {
    "n": 4,
    "de": "2026-12-14",
    "ate": "2026-12-20",
-   "tema": "Prova final e pitch em inglês"
+   "tema": "Raciocínio lógico, simulado + prova final de oratória"
   }
  ],
  "dias": [
@@ -100,8 +100,8 @@
      "tema": "Prova da semana 1"
     },
     {
-     "trilha": "marketing",
-     "tema": "GEO: aparecer quando o cliente pergunta para a IA"
+     "trilha": "portugues",
+     "tema": "Diagnóstico de concurso: Português e Matemática"
     }
    ]
   },
@@ -109,8 +109,21 @@
    "dia": "2026-11-30",
    "assuntos": [
     {
+     "trilha": "portugues",
+     "tema": "Interpretação de texto: como a banca pergunta"
+    },
+    {
      "trilha": "oratoria",
      "tema": "Voz: projeção e volume"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-01",
+   "assuntos": [
+    {
+     "trilha": "matematica",
+     "tema": "Fração, porcentagem e regra de três"
     },
     {
      "trilha": "licitacao",
@@ -119,28 +132,15 @@
    ]
   },
   {
-   "dia": "2026-12-01",
-   "assuntos": [
-    {
-     "trilha": "ingles",
-     "tema": "Perguntas de reunião em inglês"
-    },
-    {
-     "trilha": "programacao",
-     "tema": "APIs: como a NFS-e funciona por dentro"
-    }
-   ]
-  },
-  {
    "dia": "2026-12-02",
    "assuntos": [
     {
-     "trilha": "oratoria",
-     "tema": "Ritmo: velocidade e ênfase"
+     "trilha": "redacao",
+     "tema": "Estrutura da dissertação"
     },
     {
-     "trilha": "marketing",
-     "tema": "Google Meu Negócio que traz cliente"
+     "trilha": "oratoria",
+     "tema": "Ritmo: velocidade e ênfase"
     }
    ]
   },
@@ -148,12 +148,12 @@
    "dia": "2026-12-03",
    "assuntos": [
     {
-     "trilha": "vendas",
-     "tema": "Preço por valor, não por hora"
+     "trilha": "portugues",
+     "tema": "Concordância verbal"
     },
     {
-     "trilha": "desenvolvimento",
-     "tema": "Hábito: gatilho, rotina, recompensa"
+     "trilha": "vendas",
+     "tema": "Preço por valor, não por hora"
     }
    ]
   },
@@ -161,12 +161,12 @@
    "dia": "2026-12-04",
    "assuntos": [
     {
-     "trilha": "oratoria",
-     "tema": "Presença em câmera"
+     "trilha": "matematica",
+     "tema": "Porcentagem em problemas"
     },
     {
-     "trilha": "financas",
-     "tema": "Margem de contribuição"
+     "trilha": "oratoria",
+     "tema": "Presença em câmera"
     }
    ]
   },
@@ -174,8 +174,8 @@
    "dia": "2026-12-05",
    "assuntos": [
     {
-     "trilha": "licitacao",
-     "tema": "Ler um edital em 20 minutos"
+     "trilha": "redacao",
+     "tema": "Sua 1ª redação, corrigida pelo professor"
     },
     {
      "trilha": "ciencia",
@@ -187,12 +187,12 @@
    "dia": "2026-12-06",
    "assuntos": [
     {
-     "trilha": "oratoria",
-     "tema": "Prova da semana 2"
+     "trilha": "portugues",
+     "tema": "Revisão: as questões que você errou"
     },
     {
-     "trilha": "ingles",
-     "tema": "Listening: marketing sem legenda"
+     "trilha": "oratoria",
+     "tema": "Prova da semana 2"
     }
    ]
   },
@@ -200,12 +200,12 @@
    "dia": "2026-12-07",
    "assuntos": [
     {
-     "trilha": "vendas",
-     "tema": "Roteiro da reunião de diagnóstico"
+     "trilha": "portugues",
+     "tema": "Crase sem decorar"
     },
     {
-     "trilha": "licitacao",
-     "tema": "Documentos de habilitação"
+     "trilha": "vendas",
+     "tema": "Roteiro da reunião de diagnóstico"
     }
    ]
   },
@@ -213,12 +213,12 @@
    "dia": "2026-12-08",
    "assuntos": [
     {
-     "trilha": "oratoria",
-     "tema": "Storytelling: antes e depois"
+     "trilha": "matematica",
+     "tema": "Razão e proporção"
     },
     {
-     "trilha": "ia",
-     "tema": "Conferir o que a IA entrega"
+     "trilha": "oratoria",
+     "tema": "Storytelling: antes e depois"
     }
    ]
   },
@@ -226,12 +226,12 @@
    "dia": "2026-12-09",
    "assuntos": [
     {
-     "trilha": "vendas",
-     "tema": "Fechamento: próximo passo claro"
+     "trilha": "redacao",
+     "tema": "Argumentação: como provar uma ideia"
     },
     {
      "trilha": "marketing",
-     "tema": "Cases que vendem"
+     "tema": "GEO: aparecer quando o cliente pergunta para a IA"
     }
    ]
   },
@@ -239,12 +239,12 @@
    "dia": "2026-12-10",
    "assuntos": [
     {
-     "trilha": "ingles",
-     "tema": "E-mail para cliente em inglês"
+     "trilha": "portugues",
+     "tema": "Regência verbal e nominal"
     },
     {
-     "trilha": "gestao",
-     "tema": "Regras de decisão delegada"
+     "trilha": "ingles",
+     "tema": "E-mail para cliente em inglês"
     }
    ]
   },
@@ -252,12 +252,12 @@
    "dia": "2026-12-11",
    "assuntos": [
     {
-     "trilha": "vendas",
-     "tema": "Negociação: ancoragem e concessões"
+     "trilha": "matematica",
+     "tema": "Equações do 1º grau em problemas"
     },
     {
-     "trilha": "financas",
-     "tema": "Fluxo de caixa"
+     "trilha": "vendas",
+     "tema": "Negociação: ancoragem e concessões"
     }
    ]
   },
@@ -265,12 +265,12 @@
    "dia": "2026-12-12",
    "assuntos": [
     {
-     "trilha": "oratoria",
-     "tema": "Reunião simulada completa"
+     "trilha": "redacao",
+     "tema": "Sua 2ª redação, corrigida"
     },
     {
-     "trilha": "gastronomia",
-     "tema": "Ficha técnica e CMV"
+     "trilha": "oratoria",
+     "tema": "Reunião simulada completa"
     }
    ]
   },
@@ -278,12 +278,12 @@
    "dia": "2026-12-13",
    "assuntos": [
     {
-     "trilha": "aprender",
-     "tema": "Revisão geral do mês"
+     "trilha": "humanas",
+     "tema": "Atualidades: como estudar para a prova"
     },
     {
-     "trilha": "desenvolvimento",
-     "tema": "Nunca falhar 2 vezes"
+     "trilha": "matematica",
+     "tema": "Revisão: as questões que você errou"
     }
    ]
   },
@@ -291,8 +291,21 @@
    "dia": "2026-12-14",
    "assuntos": [
     {
+     "trilha": "portugues",
+     "tema": "Pontuação: a vírgula"
+    },
+    {
      "trilha": "oratoria",
      "tema": "Pitch de 60 s em inglês: roteiro"
+    }
+   ]
+  },
+  {
+   "dia": "2026-12-15",
+   "assuntos": [
+    {
+     "trilha": "matematica",
+     "tema": "Raciocínio lógico: proposições"
     },
     {
      "trilha": "licitacao",
@@ -301,28 +314,15 @@
    ]
   },
   {
-   "dia": "2026-12-15",
-   "assuntos": [
-    {
-     "trilha": "ingles",
-     "tema": "Ensaiar o pitch em inglês"
-    },
-    {
-     "trilha": "programacao",
-     "tema": "Banco de dados e Supabase"
-    }
-   ]
-  },
-  {
    "dia": "2026-12-16",
    "assuntos": [
     {
-     "trilha": "vendas",
-     "tema": "Objeções difíceis"
+     "trilha": "redacao",
+     "tema": "Conclusão com proposta"
     },
     {
-     "trilha": "marketing",
-     "tema": "CAC, LTV e churn"
+     "trilha": "vendas",
+     "tema": "Objeções difíceis"
     }
    ]
   },
@@ -330,12 +330,12 @@
    "dia": "2026-12-17",
    "assuntos": [
     {
-     "trilha": "oratoria",
-     "tema": "Prova final: reunião gravada"
+     "trilha": "portugues",
+     "tema": "Interpretação: inferência e ideia principal"
     },
     {
-     "trilha": "ciencia",
-     "tema": "Treino de força: progressão de carga"
+     "trilha": "oratoria",
+     "tema": "Prova final: reunião gravada"
     }
    ]
   },
@@ -343,8 +343,8 @@
    "dia": "2026-12-18",
    "assuntos": [
     {
-     "trilha": "ingles",
-     "tema": "Pitch final gravado"
+     "trilha": "matematica",
+     "tema": "Juros simples e compostos"
     },
     {
      "trilha": "financas",
@@ -356,12 +356,12 @@
    "dia": "2026-12-19",
    "assuntos": [
     {
-     "trilha": "aprender",
-     "tema": "Revisão do mês"
+     "trilha": "redacao",
+     "tema": "Sua 3ª redação, corrigida"
     },
     {
-     "trilha": "musica",
-     "tema": "Ritmo e corte de vídeo"
+     "trilha": "humanas",
+     "tema": "Atualidades do mês"
     }
    ]
   },
@@ -369,14 +369,15 @@
    "dia": "2026-12-20",
    "assuntos": [
     {
-     "trilha": "aprender",
-     "tema": "Avaliação do programa"
+     "trilha": "portugues",
+     "tema": "Simulado: Português e Matemática"
     },
     {
      "trilha": "aprender",
-     "tema": "Revisão espaçada: como você vai estudar sozinho"
+     "tema": "Avaliação do mês e próximo ciclo"
     }
    ]
   }
- ]
+ ],
+ "regra": "Todo dia: 1 matéria de concurso + 1 de trabalho. Concurso nunca sai do dia."
 }

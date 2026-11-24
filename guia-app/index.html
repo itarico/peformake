@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Guia">
 <link rel="manifest" href="/manifest.webmanifest">
+<script>try{var t=localStorage.getItem("tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <link rel="icon" href="/icon-192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,9 +22,12 @@
   --display:"Sora","Segoe UI",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:18px;
 }
-@media (prefers-color-scheme: dark){:root{
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0B1120; --surface:#131B2E; --ink:#EEF2FA; --muted:#98A2B8; --line:#222C43;
   --accent:#7B91FF; --accent-soft:#1D2750; --xp:#FFC53D; --xp-soft:#3A2D0B; --ok:#3DD68C; --ok-soft:#10301F; --flame:#FF8A4C; --late:#FF7A66; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1120; --surface:#131B2E; --ink:#EEF2FA; --muted:#98A2B8; --line:#222C43;
+  --accent:#7B91FF; --accent-soft:#1D2750; --xp:#FFC53D; --xp-soft:#3A2D0B; --ok:#3DD68C; --ok-soft:#10301F; --flame:#FF8A4C; --late:#FF7A66; color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--body);
   min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));overflow-x:hidden}
@@ -178,6 +182,9 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
 .fab svg{width:26px;height:26px}
 .sheet{position:fixed;inset:0;z-index:40;background:rgba(10,15,30,.45);display:flex;align-items:flex-end}
 .sheet-in{width:100%;max-width:560px;max-height:85dvh;overflow-y:auto;margin:0 auto;background:var(--surface);border-radius:24px 24px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:10px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{border:0;background:none;border-radius:10px;padding:10px 4px;font-weight:600;color:var(--muted);font-size:.88rem}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -253,6 +260,13 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
       <div class="stats" id="stats"></div>
       <div class="card"><h2>Últimos 14 dias</h2><div class="bars" id="bars"></div></div>
       <div class="card"><h2>Conquistas</h2><div class="badges" id="badges"></div></div>
+      <div class="card"><h2>Aparência</h2>
+        <div class="seg" role="radiogroup" aria-label="Tema">
+          <button type="button" role="radio" data-tema="auto">Automático</button>
+          <button type="button" role="radio" data-tema="light">Claro</button>
+          <button type="button" role="radio" data-tema="dark">Escuro</button>
+        </div>
+      </div>
       <button class="btn ghost" id="logout" type="button">Sair</button>
     </section>
   </div>

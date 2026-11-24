@@ -166,7 +166,23 @@ Pedido do Italo em 24/11/2026. Ponte direta com a Ellcazo: vídeo institucional,
 
 Ferramenta recomendada: plugin **vectorgov** (Lei 14.133, jurisprudência do TCU, catálogo CATMAT/CATSER, com link de fonte).
 
-## Como as 14 trilhas cabem numa aula por semana
+## Trilha 15 — Base de concurso (pedido de 24/11/2026)
+
+Italo tem acesso ao Gran Cursos e se considera fraco em Redação, Português e Matemática, além de Humanas e Exatas em geral.
+
+**Regra:** todo dia tem 1 matéria de concurso + 1 de trabalho. Concurso nunca sai do dia.
+
+| # | Tema | Como se estuda |
+|---|---|---|
+| 15.1 | Diagnóstico (29/11): 10 questões de Português e 10 de Matemática no Gran | Mede o ponto de partida; os erros escolhem as primeiras aulas |
+| 15.2 | Português: interpretação, concordância, crase, regência, pontuação | Questões da banca, erro anotado e revisado com repetição espaçada |
+| 15.3 | Matemática: fração, porcentagem, regra de três, razão, equações, juros, raciocínio lógico | Exemplo resolvido, depois meio-resolvido, depois sozinho; muitas questões |
+| 15.4 | Redação: estrutura, argumentação, conclusão com proposta | Ele escreve, manda foto ou texto, o professor corrige com os critérios da banca |
+| 15.5 | Humanas e atualidades | Depois de saber o concurso, pelo edital |
+
+**Falta saber:** qual concurso, cargo, banca e data da prova. Sem isso, o plano é base geral de nível médio (FGV ou Cebraspe como referência).
+
+## Como as trilhas cabem no dia
 
 As áreas que você listou são **sinais, não regra fixa**. O professor decide o que entra pelo momento. Cada aula tem:
 - **1 tema principal**, escolhido pela ordem de decisão do método;

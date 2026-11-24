@@ -1,5 +1,29 @@
 [
  {
+  "id": "portugues",
+  "nome": "Português",
+  "cor": "#2B8A3E",
+  "descricao": "Concurso: interpretação de texto e gramática que a banca cobra."
+ },
+ {
+  "id": "matematica",
+  "nome": "Matemática",
+  "cor": "#F08C00",
+  "descricao": "Concurso: do básico (fração, porcentagem) ao raciocínio lógico."
+ },
+ {
+  "id": "redacao",
+  "nome": "Redação",
+  "cor": "#5F3DC4",
+  "descricao": "Concurso: dissertação com estrutura, argumento e conclusão. O professor corrige."
+ },
+ {
+  "id": "humanas",
+  "nome": "Humanas e atualidades",
+  "cor": "#A61E4D",
+  "descricao": "Concurso: atualidades e conhecimentos gerais."
+ },
+ {
   "id": "oratoria",
   "nome": "Oratória",
   "cor": "#7C5CFF",

@@ -39,48 +39,43 @@
    "feynman": "Comente aqui os números de terça e de domingo, lado a lado."
   },
   {
-   "trilha": "marketing",
-   "tema": "GEO: aparecer quando o cliente pergunta para a IA",
-   "objetivo": "Ter a linha de base da Peformake nas IAs.",
+   "trilha": "portugues",
+   "tema": "Diagnóstico de concurso: Português e Matemática",
+   "objetivo": "Saber o seu nível real antes de estudar.",
    "aula": [
-    "SEO é convencer o Google a te colocar numa lista. GEO é convencer a IA a te citar pelo nome quando ela responde.",
-    "A IA faz três coisas: busca páginas, filtra as fontes confiáveis e resume citando quem usou. Você só aparece no resumo se passou na busca e no filtro.",
-    "Quatro sinais fazem a IA citar uma empresa: estar em muitos lugares com o mesmo nome e descrição, ter respostas diretas no site, ter prova com números e ser mencionada por terceiros.",
-    "Boa parte do que funciona para SEO também funciona para GEO. Você não começa do zero."
+    "Antes de estudar para concurso, o professor precisa saber onde você está. Estudar o que você já sabe é perder tempo; pular o que você não sabe é perder ponto.",
+    "Concurso é ganho em questões. O jeito mais eficiente de estudar é resolver questão da banca, errar, entender o erro e rever o erro depois. Ler teoria sem fazer questão é o erro mais comum.",
+    "Hoje você não vai estudar: vai fazer um diagnóstico curto. 10 questões de Português e 10 de Matemática, sem consultar, cronometrando. O resultado decide por onde a gente começa.",
+    "Errar hoje é ótimo. Cada erro vira uma aula sob medida nas próximas semanas."
    ],
-   "exemplo": "Uma clínica com Google Meu Negócio completo, 80 avaliações, uma página respondendo 'quanto custa harmonização em Recife' e uma matéria num portal do bairro tem muito mais chance de ser citada do que uma clínica só com Instagram bonito.",
+   "exemplo": "Resultado típico de quem está começando: Português 6 de 10, errando crase e vírgula; Matemática 3 de 10, errando porcentagem e regra de três. Com esse resultado, a semana seguinte começa por porcentagem e por interpretação de texto.",
    "pratica": [
     {
-     "min": 10,
-     "titulo": "Leia a Aula 01",
-     "links": [
-      {
-       "rotulo": "Abrir a aula",
-       "url": "https://github.com/itarico/peformake/blob/claude/personalized-oxford-professor-a8vnsm/professor/aulas/2026-11-04-aula-01-geo.md"
-      }
-     ]
+     "min": 12,
+     "titulo": "10 questões de Português no Gran",
+     "detalhe": "No banco de questões do Gran, filtre Língua Portuguesa, nível médio, a banca do seu concurso (se ainda não sabe, use FGV ou Cebraspe). Sem consultar. Anote acertos e os assuntos que errou."
     },
     {
-     "min": 15,
-     "titulo": "Pergunte a 3 IAs: 'melhor agência de marketing para clínicas em Recife'",
-     "detalhe": "ChatGPT, Gemini e Perplexity. Comente aqui quem apareceu: essa é a linha de base da Peformake."
+     "min": 13,
+     "titulo": "10 questões de Matemática no Gran",
+     "detalhe": "Filtre Matemática ou Raciocínio Lógico, nível médio. Sem calculadora. Anote acertos e os assuntos que errou."
     }
    ],
    "teste": [
     {
-     "p": "Qual a diferença entre SEO e GEO?",
-     "r": "SEO coloca você numa lista; GEO faz a IA te citar pelo nome na resposta."
+     "p": "Qual o jeito mais eficiente de estudar para concurso?",
+     "r": "Resolver questões da banca, entender cada erro e rever o erro depois."
     },
     {
-     "p": "Quais são os 4 sinais que fazem a IA citar uma empresa?",
-     "r": "Presença consistente, respostas diretas, prova com números e menção de terceiros."
+     "p": "Por que fazer um diagnóstico antes de estudar?",
+     "r": "Para não perder tempo com o que já sabe nem pular o que não sabe."
     },
     {
-     "p": "Anúncio pago faz a IA te recomendar?",
-     "r": "Não. Anúncio compra clique, não citação."
+     "p": "O que acontece com cada erro do diagnóstico?",
+     "r": "Vira aula sob medida nas próximas semanas."
     }
    ],
-   "feynman": "Explique GEO para um dono de clínica em 1 minuto, sem usar a palavra GEO."
+   "feynman": "Mande no recado: quantas acertou em cada matéria e quais assuntos errou. Se já souber o concurso, a banca e a data, mande também."
   }
  ]
 }

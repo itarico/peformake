@@ -392,6 +392,18 @@
   $("quickTask").addEventListener("click", async () => { const v = $("quickText").value.trim(); if (!v) return; if (await addTask(v)) { $("quickSheet").hidden = true; toast("Tarefa adicionada"); } });
   $("quickNote").addEventListener("click", async () => { const v = $("quickText").value.trim(); if (!v) return; if (await saveRecado("[recado falado] " + v)) { $("quickSheet").hidden = true; toast("Recado enviado ao professor"); } });
 
+  // tema: automático, claro ou escuro (guardado só neste aparelho)
+  function applyTheme(v) {
+    if (v === "light" || v === "dark") document.documentElement.setAttribute("data-theme", v); else document.documentElement.removeAttribute("data-theme");
+    try { localStorage.setItem("tema", v); } catch (e) {}
+    document.querySelectorAll("[data-tema]").forEach(b => b.setAttribute("aria-checked", b.dataset.tema === v ? "true" : "false"));
+    const dark = v === "dark" || (v !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", dark ? "#0B1120" : "#F5F7FB");
+  }
+  let tema = "auto"; try { tema = localStorage.getItem("tema") || "auto"; } catch (e) {}
+  applyTheme(tema);
+  document.querySelectorAll("[data-tema]").forEach(b => b.addEventListener("click", () => applyTheme(b.dataset.tema)));
+
   // ---------------- navegação e início ----------------
   function go(v) { document.querySelectorAll("[data-view]").forEach(s => s.hidden = s.dataset.view !== v); document.querySelectorAll("[data-tab]").forEach(b => { if (b.dataset.tab === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); }); window.scrollTo(0, 0); }
   document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
