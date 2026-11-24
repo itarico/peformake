@@ -3,7 +3,7 @@
 Gerado por `acervo-audiovisual/ferramentas/mapa_estruturas.py` a partir de `acervo-audiovisual/virais/`.
 Não editar à mão: escreva ou corrija a ficha e rode o script de novo.
 
-72 fichas · 52 códigos S com exemplo real · 20 candidatos a S-novo.
+73 fichas · 52 códigos S com exemplo real · 20 candidatos a S-novo.
 
 Porta de entrada: `acervo-audiovisual/MOTOR.md`. Como usar (motor de roteiro, M2 curador e M5 roteirista):
 1. Tire da mesa o que o cliente não consegue gravar (`ESTRUTURAS/FICHA-ENTRADA.md` e a tabela "Por exigência").

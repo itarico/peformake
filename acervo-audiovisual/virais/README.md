@@ -45,6 +45,7 @@ Estudos de perfil inteiro: `../perfis/` (ex.: [@salleszk](../perfis/salleszk.md)
 | Reflexão a dois à distância: história conhecida → princípio → aplicação, em collab · @salleszk (Wesley Salles) com @samir.andriola · 17/08/2026 | S44 | E22 | 1,5x | [ficha](2026-08-17_salleszk_DcKH3u_oMrd.md) |
 | Showreel com fio de videogame · @ahmedsami94 · 19/08/2026 | S-novo: "Showreel com fio narrativo" | E-novo: "Showreel temático" | 21,0x | [ficha](2026-08-19_ahmedsami94_DcOIGDdss_L.md) |
 | "Só eu que não sabia?" (função escondida do produto, só as mãos) · @omarcosvianna · 22/08/2026 | S53 | E22 + E21 | 9,8x | [ficha](2026-08-22_omarcosvianna_DcW3oCjvVro.md) |
+| "Treinei minha própria IA" (dor → em vez de X fiz Y → prova → isca) · @johnbucog · 24/08/2026 | S100 + S-novo: "Prompt × treino" | E1 + E16 | n/d | [ficha](2026-08-24_johnbucog_Dcb4oFBBSFH.md) |
 | Brandmotion no monitor (CleverMove) · @dacostamotion (José Emanuel) · 26/08/2026 | S40 | E38 | 98,6x | [ficha](2026-08-26_dacostamotion_DchQ4uzPqre.md) |
 | Tutorial com assinatura visual (fisheye + azul + laranja) · @_victorzk · 27/08/2026 | S50 | E9 | 13,0x | [ficha](2026-08-27__victorzk_DcjsyZRSkuA.md) |
 | Mural de investigação: dois personagens descobrem um padrão num quadro de fotos e fios · @salleszk (Wesley Salles) · 01/09/2026 | S-novo: mural de investigação encenado | E19 + E-novo: mural de investigação | 6,2x | [ficha](2026-09-01_salleszk_DcwrohHA3Ht.md) |

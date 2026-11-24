@@ -1,6 +1,6 @@
 # Making of "Transpetro Plástico Zero": estudo de roteiro do Reels
 
-Versão 1, de 24/11/2026. Ainda falta o vídeo de referência da edição, que o Italo vai mandar.
+Versão 2, de 24/11/2026. A referência de edição chegou: @johnbucog, "trained my own AI model". A ficha está em `../../../virais/2026-08-24_johnbucog_Dcb4oFBBSFH.md` e a aplicação está na seção "Versão pela referência", no fim deste arquivo.
 
 ## Briefing (palavras do Italo, 23/11/2026)
 - **Cliente:** Transpetro, na área de sustentabilidade, para uma campanha deles.
@@ -81,6 +81,27 @@ Isso é o mais importante deste estudo. O bastidor só existe se for gravado dur
 2. O custo pode aparecer no vídeo, ou só o tempo?
 3. A collab: perfil do Italo como autor e @performake como colaborador?
 4. A legenda do vídeo vai em português só, ou também em inglês (o vídeo da Transpetro tem legenda EN)?
+
+## Versão pela referência (@johnbucog, cerca de 25 s)
+A referência é mais curta e mais rápida que a estrutura de 60 a 75 s acima. Esta versão segue a mecânica dela e é a recomendada para o Reels. A de 60 s fica para um segundo vídeo ou para os cortes.
+
+| Tempo | Imagem | Fala | Texto gigante na tela |
+|---|---|---|---|
+| 0-3 s | risco de luz, corte para você no estúdio escuro, com a palavra atrás da cabeça | "Pera, eu acabei de fazer um filme 3D para a Transpetro com IA." | **3D** (e "Transpetro" pequeno) |
+| 3-6 s | grid da Marina com rostos diferentes, círculo vermelho rabiscado no rosto errado | "Toda IA muda o rosto do personagem a cada cena." | **OUTRO ROSTO** |
+| 6-7 s | cartela vermelha de 1 s | "E você torce para dar certo." | **TORCER** |
+| 7-10 s | o chat do Claude e o model sheet do ChatGPT flutuando sobre a cena | "Então, em vez de torcer, eu montei a ficha da Marina em todos os ângulos." | **TODOS OS ÂNGULOS** |
+| 10-15 s | "olha isso": a Marina em sequência de cenas, cartões empilhados, moldura rabiscada | "Olha. A mesma Marina em 30 cenas." | **30 CENAS** |
+| 15-17 s | você de frente | "E eu não sou animador 3D." | **ANIMADOR** |
+| 17-20 s | tela da OpenArt gerando, a ElevenLabs e o lip sync | "Claude para planejar, OpenArt frame a frame, voz e lip sync." | os nomes das ferramentas, um por corte |
+| 20-23 s | o vídeo final da Transpetro em monitor ou celular | "5 horas para o filme inteiro." | **5 HORAS** |
+| 23-25 s | plano aberto, luz mais clara | "Comenta MARINA que eu te mando o passo a passo." | **MARINA** |
+
+Para esta versão:
+- **Edição:** palavra-pico gigante atrás de você (recorte), corte a cada 1,5 s, rabisco à mão em vermelho e acento de cor da Transpetro no lugar do vermelho dele, se a marca permitir.
+- **Isca:** é preciso ter um passo a passo real para mandar (PDF ou vídeo). Sem ele, troque a isca por "Quer o tutorial completo no YouTube? Comenta SIM".
+- **Gravar a mais:** um take seu dizendo "Pera" com a mão em movimento, como na referência (0:01); o grid de rostos errados; e o vídeo final rodando num monitor ou celular, filmado.
+- **Formato:** a referência é 4:3. O Reels do Italo sai em 9:16, então a palavra gigante vai em cima ou atrás da cabeça, e não ao lado.
 
 ## Depois: tutorial no YouTube
 O mesmo material vira um vídeo longo no formato "explicado em passos", e o Reels serve de teste: se o "comenta IA" tiver volume, o tutorial tem demanda.
