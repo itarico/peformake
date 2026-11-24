@@ -109,7 +109,9 @@ export function SchedulePage({ clientId }: { clientId?: string } = {}) {
   const queryClient = useQueryClient()
   const [params, setParams] = useSearchParams()
   const { clients, clientName } = useProduction()
-  const data = useQuery({ queryKey: ['ig-schedule'], queryFn: load, refetchInterval: 60000 })
+  // Enquanto algo está saindo (agendado vencido ou publicando), atualiza a cada 5 segundos para mostrar o resultado.
+  const data = useQuery({ queryKey: ['ig-schedule'], queryFn: load,
+    refetchInterval: (q) => (q.state.data?.posts.some((p) => p.status === 'publicando' || (p.status === 'agendado' && new Date(p.at).getTime() <= Date.now() + 60000)) ? 5000 : 60000) })
   const [connecting, setConnecting] = useState(false)
   const [pick, setPick] = useState(() => (clientId ? clientName(clientId) : OWN))
   const [scheduling, setScheduling] = useState<Ready | null>(null)
