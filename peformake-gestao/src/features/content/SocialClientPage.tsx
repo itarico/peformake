@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, CalendarClock, CalendarHeart, Check, PencilLine, Send, Sparkles, X } from 'lucide-react'
+import { ArrowLeft, CalendarClock, Check, PencilLine, Send, X } from 'lucide-react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -9,34 +9,25 @@ import { ClientAvatar } from '@/features/clients/ClientAvatar'
 import { LoadState } from '@/features/traffic/LoadState'
 import { monthStart } from '@/features/traffic/planRules'
 import { cn } from '@/lib/cn'
-import { supabase } from '@/lib/supabase'
-import { contentErrorMessage, fileUrl, listFiles, listItems, listPlans, setStatus } from './contentApi'
-import { PlanNotes } from './ContentPlanPage'
+import { contentErrorMessage, fileUrl, listFiles, listItems, setStatus } from './contentApi'
 import { KIND_LABEL, STATUS_LABEL, STATUS_TONE, type ContentItem } from './contentRules'
+import { ClientPlanningTab } from './ClientPlanningTab'
 import { IgPerformance } from './IgPerformance'
 import { BriefDialog, NewArtButton } from './NewArt'
 import { SchedulePage } from './SchedulePage'
 import { clientLogoUrl, socialClientsBoard } from './SocialClientsPage'
 import { useMonthParam } from './useMonthParam'
 
-// RPCs de 24/11/2026 ainda fora dos tipos gerados.
-const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
 
 const TABS = [
   { id: 'briefing', label: 'Briefing' },
-  { id: 'sugestoes', label: 'Sugestões' },
+  { id: 'sugestoes', label: 'Planejamento' },
   { id: 'agendar', label: 'Agendar' },
   { id: 'desempenho', label: 'Desempenho' },
 ] as const
 type Tab = (typeof TABS)[number]['id']
 
 const dm = (iso: string | null) => (iso ? `${iso.slice(8, 10)}/${iso.slice(5, 7)}` : null)
-
-interface Suggestions {
-  actions: { id: string; area: 'social' | 'design'; title: string; what: string | null; format: string | null; due_date: string | null; week: number | null }[]
-  cards: { id: string; title: string; kind: string | null; goal: string | null; month: string | null }[]
-}
-interface Seasonal { client_id: string; key: string; name: string; date: string; days: number; idea: string; request: unknown }
 
 export function useClientItems(clientId: string, months: string[]) {
   return useQuery({
@@ -179,85 +170,6 @@ function BriefingTab({ clientId, owed }: { clientId: string; owed: number }) {
   )
 }
 
-/** Aba Sugestões: o que a estratégia do mês propôs para social e design, para aprovar (vira arte ou tarefa) ou recusar. */
-function SuggestionsTab({ clientId }: { clientId: string }) {
-  const queryClient = useQueryClient()
-  const [month] = useMonthParam()
-  // Pauta do mês e "Planejamento pronto" (conta na meta de planejamentos): os mesmos do planejamento antigo.
-  const plan = useQuery({ queryKey: ['content-plans', 'cliente', clientId, month], queryFn: async () => (await listPlans([month])).find((p) => p.clientId === clientId) ?? null })
-  const seasonal = useQuery({
-    queryKey: ['seasonal-board', 90],
-    staleTime: 60_000,
-    queryFn: async () => { const { data, error } = await rpc('seasonal_board', { _days: 90 }); if (error) throw error; return (data ?? []) as Seasonal[] },
-  })
-  const q = useQuery({
-    queryKey: ['social-suggestions', clientId],
-    queryFn: async () => { const { data, error } = await rpc('social_client_suggestions', { _client: clientId }); if (error) throw error; return data as Suggestions },
-  })
-  const decide = useMutation({
-    mutationFn: async ({ kind, id, approve }: { kind: 'action' | 'card'; id: string; approve: boolean }) => {
-      const { error } = kind === 'action' ? await rpc('monthly_action_decide', { _id: id, _approve: approve })
-        : approve ? await rpc('strategy_card_approve', { _id: id }) : await rpc('strategy_card_reject', { _id: id, _reason: 'Recusado pelo social media' })
-      if (error) throw error
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['social-suggestions', clientId] })
-      void queryClient.invalidateQueries({ queryKey: ['social-client-items'] })
-      void queryClient.invalidateQueries({ queryKey: ['social-clients'] })
-    },
-  })
-  if (!q.data) return <LoadState isPending={q.isPending} isError={q.isError} refetch={() => void q.refetch()} />
-  const dates = (seasonal.data ?? []).filter((r) => r.client_id === clientId && !r.request).slice(0, 6)
-  const rows = [
-    ...q.data.actions.map((a) => ({ kind: 'action' as const, id: a.id, title: a.title, sub: [a.area === 'design' ? 'Arte' : a.format === 'tarefa' ? 'Tarefa' : 'Pauta', a.week ? `semana ${a.week}` : null, a.due_date ? `até ${dm(a.due_date)}` : null].filter(Boolean).join(' · '), body: a.what })),
-    ...q.data.cards.map((c) => ({ kind: 'card' as const, id: c.id, title: c.title, sub: ['Estratégia', c.kind].filter(Boolean).join(' · '), body: c.goal })),
-  ]
-  return (
-    <div className="flex flex-col gap-3">
-      <p className="text-[14px] text-muted">Aprovar transforma em arte (vai para o design ou para o planejamento) ou em tarefa.</p>
-      {rows.length === 0 && <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Nenhuma sugestão esperando. As da estratégia do mês aparecem aqui.</p>}
-      <ul className="flex flex-col gap-2">
-        {rows.map((r) => (
-          <li key={r.id} className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4 md:flex-row md:items-start">
-            <Sparkles size={18} className="hidden shrink-0 text-accent-ink md:block" aria-hidden="true" />
-            <div className="min-w-0 flex-1">
-              <p className="text-[12px] text-muted">{r.sub}</p>
-              <p className="font-semibold leading-snug">{r.title}</p>
-              {r.body && <p className="mt-1 line-clamp-3 text-[13px] text-muted">{r.body}</p>}
-            </div>
-            <div className="flex shrink-0 gap-1.5">
-              <Button className="min-h-10 px-3 text-[13px]" disabled={decide.isPending} onClick={() => decide.mutate({ kind: r.kind, id: r.id, approve: true })}><Check size={15} aria-hidden="true" /> Aprovar</Button>
-              <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={decide.isPending} onClick={() => decide.mutate({ kind: r.kind, id: r.id, approve: false })}>Recusar</Button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      {decide.isError && <p role="alert" className="rounded-2xl bg-warn-soft px-4 py-2.5 text-[14px] font-medium text-warn-ink">
-        {decide.error && (decide.error as { code?: string }).code === '42501' ? 'Só o admin ou o head aprova esta sugestão.' : 'Não foi possível decidir. Tente de novo.'}</p>}
-
-      {plan.data && <PlanNotes plan={plan.data} canPlan />}
-
-      {dates.length > 0 && (
-        <section aria-label="Datas sazonais" className="flex flex-col gap-2">
-          <h2 className="flex items-center gap-1.5 text-[15px] font-semibold"><CalendarHeart size={16} aria-hidden="true" /> Datas que vêm aí</h2>
-          <ul className="overflow-hidden rounded-3xl border border-line bg-surface">
-            {dates.map((r) => (
-              <li key={r.key} className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3 last:border-b-0">
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold">{r.name} <span className="font-normal text-muted">· {dm(r.date)} · {r.days === 0 ? 'hoje' : `em ${r.days} dias`}</span></p>
-                  <p className="line-clamp-2 text-[13px] text-muted">{r.idea}</p>
-                </div>
-                <NewArtButton start={{ clientId, text: `Post para a data ${r.name} (${dm(r.date)}), para publicar no dia. Ideia: ${r.idea}`, publishDate: r.date }}
-                  label="Virar arte" variant="secondary" className="min-h-10 px-3 text-[13px]" />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-    </div>
-  )
-}
-
 /**
  * Social Media → cliente (pedido do Italo, 24/11/2026). Tudo do cliente num lugar só, com a logo sempre à vista:
  * briefing (criar, mandar produzir, aprovar a arte pronta e mandar agendar), sugestões da estratégia (com a pauta do
@@ -296,7 +208,7 @@ export function SocialClientPage() {
       </div>
 
       {tab === 'briefing' && <BriefingTab clientId={id} owed={row.owed} />}
-      {tab === 'sugestoes' && <SuggestionsTab clientId={id} />}
+      {tab === 'sugestoes' && <ClientPlanningTab clientId={id} />}
       {tab === 'agendar' && <SchedulePage clientId={id} />}
       {tab === 'desempenho' && <IgPerformance clientId={id} />}
     </div>

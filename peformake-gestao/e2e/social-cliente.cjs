@@ -31,6 +31,7 @@ async function mock(route) {
       production_clients: C, production_staff: [], my_staff_id: null, social_clients_board: BOARD,
       social_client_suggestions: { actions: [{ id: 's1', area: 'design', title: 'Arte da promoção de fim de ano', what: 'Duas artes com o panetone', format: 'post', due_date: MONTH, week: 1 }], cards: [{ id: 'k1', title: 'Bastidores da fornada', kind: 'reels', goal: 'Mostrar o processo', month: MONTH }] },
       seasonal_board: [{ client_id: 'c1', client: 'Padaria Sol', niche: null, mine: false, season_key: 'natal', key: 'natal', name: 'Natal', date: now, days: 10, ask_by: now, prepare_from: now, idea: 'Ceia com os pães da casa', kind: 'geral', request: null }],
+      social_client_strategy: { foco: 'Vender o panetone de Natal', mix: [{ papel: 'Posts de oferta', objetivo: 'vender', percentual: 60 }], status: 'pronto' },
       brand_guide_get: { client: { id: 'c1', name: 'Padaria Sol', segment: null, logo_path: null, brand_style: null }, voice: null, guide: { posicionamento: { frase: 'O pão quentinho do bairro', passar: ['Fresco', 'Perto'] } }, edited: [], ai_at: null, updated_at: null, has_diagnosis: false },
     }
     return json(R[fn] ?? null)
@@ -43,6 +44,7 @@ async function mock(route) {
       ig_accounts: [{ id: 'a1', client_id: 'c1', username: 'padariasol', status: 'conectado' }],
       ig_insights: [{ data: { username: 'padariasol', followers: 1200, posts: 80, picture: null, cur: { reach: 1500, views: 4000, total_interactions: 300, accounts_engaged: 90, new_followers: 25, profile_links_taps: 4 }, prev: { reach: 1000, views: 5000, total_interactions: 300, accounts_engaged: 100, profile_links_taps: 2 },
         daily: [{ d: MONTH, reach: 100, followers: 2 }, { d: now, reach: 160, followers: 3 }], media: [{ id: 'm1', type: 'reels', at: new Date().toISOString(), permalink: 'https://instagram.com/p/x', thumb: null, caption: 'oi', likes: 30, comments: 2, reach: 900, views: 2000, saved: 3 }] }, fetched_at: new Date().toISOString() }],
+      social_ideas: [{ id: 'd1', kind: 'diy', title: 'Gravar o forno às 5h', body: 'Mostrar a primeira fornada', source: 'agente', status: 'aberta' }],
       social_tasks: [{ id: 't1', client_id: 'c1', title: 'Responder comentários', description: null, status: 'a_fazer', source: 'manual', network: 'instagram', priority: false, due_date: null, created_at: MONTH },
         { id: 't2', client_id: 'c2', title: 'Tarefa de outro cliente', description: null, status: 'a_fazer', source: 'manual', network: 'instagram', priority: false, due_date: null, created_at: MONTH }],
     }
@@ -114,13 +116,23 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!sv || sv.body._item_id !== 'i2' || sv.body._data.headline !== 'Cesta completa' || sv.body._data.subtitle !== 'Entrega no bairro') fails.push(`${dev}: salvar briefing errado ${JSON.stringify(sv && sv.body._data)}`)
       await shot('3b-popup')
 
-      // 4. Sugestões: aprovar a ação do plano do mês.
-      await pg.getByRole('tab', { name: /Sugestões/ }).click(); await pg.waitForTimeout(900)
+      // 4. Planejamento do cliente (ex-Sugestões): aprovar a ação do plano do mês; cada item vira tarefa ou arte.
+      await pg.getByRole('tab', { name: /^Planejamento/ }).click(); await pg.waitForTimeout(1200)
       await pg.locator('li', { hasText: 'Arte da promoção de fim de ano' }).getByRole('button', { name: 'Aprovar' }).click(); await pg.waitForTimeout(700)
       const sg = calls.find((c) => c.fn === 'monthly_action_decide')
       if (!sg || sg.body._id !== 's1' || sg.body._approve !== true) fails.push(`${dev}: sugestão errada ${JSON.stringify(sg)}`)
       const t4 = await pg.evaluate(() => document.body.innerText)
-      if (!t4.includes('Pauta do mês') || !t4.includes('Natal')) fails.push(`${dev}: Sugestões sem pauta ou datas`)
+      for (const s of ['Estratégia do mês', 'Vender o panetone', 'Pauta do mês', 'Sugestões de arte', 'Datas sazonais', 'Melhorias de desempenho', 'Ideias para fazer com o cliente', 'Conteúdo para o cliente gravar', 'Gravar o forno às 5h']) if (!t4.includes(s)) fails.push(`${dev}: planejamento sem "${s}"`)
+      await pg.locator('li', { hasText: 'Gravar o forno às 5h' }).getByRole('button', { name: 'Virar tarefa' }).click(); await pg.waitForTimeout(600)
+      const idd = calls.find((c) => c.fn === 'social_idea_decide')
+      if (!idd || idd.body._id !== 'd1' || idd.body._to !== 'tarefa') fails.push(`${dev}: ideia não virou tarefa ${JSON.stringify(idd)}`)
+      await pg.locator('section[aria-label="Datas sazonais"] li', { hasText: 'Natal' }).getByRole('button', { name: 'Virar tarefa' }).click(); await pg.waitForTimeout(600)
+      const nt = calls.find((c) => c.fn === 'social_task_save')
+      if (!nt || nt.body._data.client_id !== 'c1' || !/Natal/.test(nt.body._data.title)) fails.push(`${dev}: data não virou tarefa ${JSON.stringify(nt)}`)
+      await pg.getByRole('button', { name: 'Ideia', exact: true }).click(); await pg.waitForTimeout(300)
+      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up Nova ideia rola`)
+      await pg.keyboard.press('Escape'); await pg.waitForTimeout(200)
+      if (await sideScroll(pg)) fails.push(`${dev}: planejamento rola de lado`)
       await shot('4-sugestoes')
 
       // 5b. Agendar dentro do cliente: Criar post abre preso ao Instagram do cliente.
