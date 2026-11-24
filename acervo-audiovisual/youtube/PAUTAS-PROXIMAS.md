@@ -132,3 +132,9 @@ não achei outlier, está escrito "lacuna, sem prova de demanda". Todo fato marc
 6. H6 (antes de 31/12).
 7. Janeiro de 2027: A3, A2, A4, A5, A6, A7, A8, voltando à proporção 70 % atemporal.
 Proporção nesta lista: 6 hype e 8 atemporais.
+
+## Série "GTA na vida real" (decisão do Italo, 24/11/2026)
+Se o vídeo "O que acontece com o seu cérebro depois de 100 horas de GTA VI (segundo a ciência)" der certo, virar série.
+Próximo da série: "Quantos anos de cadeia você pegaria por uma missão de GTA no Brasil" (cada ação vira artigo do Código
+Penal com a pena real, somadas pelo concurso de crimes; revisão de advogado antes de publicar). Estudo de demanda:
+`../pesquisas/curiosidade-2026-11-24/MAPA.md`.
