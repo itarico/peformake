@@ -29,7 +29,9 @@ Deno.serve(async (request) => {
   if (!secret) return back('erro', 'segredo')
 
   try {
-    const tokenRes = await fetch(`${GRAPH}/oauth/access_token?client_id=${APP_ID}&client_secret=${encodeURIComponent(secret)}&code=${encodeURIComponent(code)}`)
+    // A Meta exige o mesmo redirect_uri do login (igLoginUrl em scheduleRules.ts), senão recusa o código.
+    const redirect = `${Deno.env.get('SUPABASE_URL')!.replace(/\/$/, '')}/functions/v1/ig-connect`
+    const tokenRes = await fetch(`${GRAPH}/oauth/access_token?client_id=${APP_ID}&client_secret=${encodeURIComponent(secret)}&redirect_uri=${encodeURIComponent(redirect)}&code=${encodeURIComponent(code)}`)
     const tokenData = await tokenRes.json().catch(() => ({}))
     const token = tokenData?.access_token as string | undefined
     if (!tokenRes.ok || !token) { await note('token: ' + meta(tokenData)); return back('erro', 'token') }
