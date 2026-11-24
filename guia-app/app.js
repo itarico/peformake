@@ -393,10 +393,10 @@
   $("quickNote").addEventListener("click", async () => { const v = $("quickText").value.trim(); if (!v) return; if (await saveRecado("[recado falado] " + v)) { $("quickSheet").hidden = true; toast("Recado enviado ao professor"); } });
 
   // ---------------- navegação e início ----------------
-  function go(v) { document.querySelectorAll("[data-view]").forEach(s => s.hidden = s.dataset.view !== v); document.querySelectorAll("[data-tab]").forEach(b => { if (b.dataset.tab === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); }); $("quickMic").hidden = v !== "hoje"; window.scrollTo(0, 0); }
+  function go(v) { document.querySelectorAll("[data-view]").forEach(s => s.hidden = s.dataset.view !== v); document.querySelectorAll("[data-tab]").forEach(b => { if (b.dataset.tab === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); }); window.scrollTo(0, 0); }
   document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
-  function showApp() { $("login").hidden = true; $("main").hidden = false; $("tabs").hidden = false; $("quickMic").hidden = false; }
-  function showLogin() { $("login").hidden = false; $("main").hidden = true; $("tabs").hidden = true; $("quickMic").hidden = true; }
+  function showApp() { $("login").hidden = true; $("main").hidden = false; $("tabs").hidden = false; }
+  function showLogin() { $("login").hidden = false; $("main").hidden = true; $("tabs").hidden = true; }
 
   async function start() {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
