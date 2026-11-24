@@ -26,7 +26,13 @@ export interface TeamTask {
 
 const ORIGIN: Record<TeamTask['source'], TaskOrigin> = { manual: 'minha', pedido_cliente: 'cliente', sistema: 'sistema' }
 /** Para onde o cartão leva quando a tarefa nasceu de um registro do sistema. */
-const refLink = (t: TeamTask) => (t.ref_table === 'av_projects' && t.ref_id ? `/audiovisual/projeto/${t.ref_id}` : null)
+const refLink = (t: TeamTask) => {
+  if (!t.ref_id) return null
+  if (t.ref_table === 'av_projects') return `/audiovisual/projeto/${t.ref_id}`
+  // "Marcar a gravação de X" (nasce quando o cliente ganha serviço de audiovisual): abre a agenda já com o cliente escolhido.
+  if (t.ref_table === 'clients') return `/audiovisual?agendar=${t.ref_id}`
+  return null
+}
 
 function TaskForm({ area, task, clients, onClose }: { area: TeamArea; task: TeamTask | null; clients: { id: string; name: string }[]; onClose: () => void }) {
   const queryClient = useQueryClient()
@@ -108,7 +114,7 @@ export function TeamTasksBoard({ area, clientArea }: { area: TeamArea; clientAre
           <div className="flex flex-wrap items-center gap-1.5">
             {t.status === 'a_fazer' && <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'fazendo' })}><Play size={14} aria-hidden="true" /> Começar</Button>}
             {t.status === 'fazendo' && <Button variant="secondary" className="min-h-10 px-3 text-[13px]" disabled={move.isPending} onClick={() => move.mutate({ id: t.id, status: 'feito' })}><Check size={14} aria-hidden="true" /> Concluir</Button>}
-            {link && <Link to={link} className="inline-flex min-h-10 items-center gap-1 px-2 text-[13px] font-medium text-accent-ink no-underline hover:underline">Abrir <ChevronRight size={14} aria-hidden="true" /></Link>}
+            {link && <Link to={link} className="inline-flex min-h-10 items-center gap-1 px-2 text-[13px] font-medium text-accent-ink no-underline hover:underline">{t.ref_table === 'clients' ? 'Marcar' : 'Abrir'} <ChevronRight size={14} aria-hidden="true" /></Link>}
           </div>
         )}
       </li>

@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarPlus, Check, Plus, RefreshCw } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
@@ -34,6 +34,14 @@ export function AvAgenda() {
   // Cadastro pela agenda: quem gerencia clientes e a Ellcazo (regra do banco em av_client_create).
   const canManageClients = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing', 'ellcazo'])
   const [dialog, setDialog] = useState<{ client?: string; day?: string } | null>(null)
+  // /audiovisual?agendar=<cliente>: a tarefa "Marcar a gravação" abre o agendamento já com o cliente.
+  const [params, setParams] = useSearchParams()
+  const toSchedule = params.get('agendar')
+  useEffect(() => {
+    if (!toSchedule) return
+    setDialog({ client: toSchedule })
+    setParams((cur) => { cur.delete('agendar'); return cur }, { replace: true })
+  }, [toSchedule, setParams])
   const last = useMemo(() => { const d = new Date(`${month}T12:00:00Z`); d.setUTCMonth(d.getUTCMonth() + 1); return d.toISOString().slice(0, 10) }, [month])
 
   const projects = useQuery({ queryKey: ['av-projects', month], queryFn: () => listProjects(month) })
