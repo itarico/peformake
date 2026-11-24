@@ -3,6 +3,7 @@
   const SUPABASE_URL = "https://wkkzcjnxyylrqoolmmhi.supabase.co";
   const SUPABASE_KEY = "sb_publishable_t1g3kHG-weQdyGcG9jJHYg_l1hkYcYn";
   const DEMO = new URLSearchParams(location.search).has("demo");
+  const CHAT_URL = "https://claude.ai/code/session_01EkF52SZYYcRPcMb856WiJX";
   const VALID = 70; // % para o dia contar na sequência
 
   const $ = id => document.getElementById(id);
@@ -20,7 +21,7 @@
   const LEVELS = ["Iniciante", "Aprendiz", "Executor", "Constante", "Focado", "Disciplinado", "Imparável", "Referência", "Mestre", "Lenda"];
   const xpForLevel = L => 100 * L * (L - 1) / 2; // L1=0, L2=100, L3=300, L4=600…
 
-  const S = { sb: null, agenda: null, corpo: null, semana: null, registro: {}, estudo: {}, tarefas: [], view: "hoje", lastLevel: null, lastPct: null };
+  const S = { sb: null, agenda: null, corpo: null, semana: null, trilhas: [], registro: {}, estudo: {}, tarefas: [], view: "hoje", lastLevel: null, lastPct: null };
 
   // ---------------- dados ----------------
   function demoData() {
@@ -38,11 +39,15 @@
     const reg = {}; for (let i = 1; i < 6; i++) { const d = addDays(t, -i); const f = {}; util.forEach((s, k) => { if ((k + i) % 4) f[s.id] = true; }); reg[d] = f; }
     reg[t] = { acordar: true, academia: true, cafe: true };
     S.registro = reg;
-    S.estudo = { [t]: { dia: t, titulo: "Perguntar vende mais que falar", foco: "Método SPIN", feitos: [0], blocos: [
-      { min: 15, titulo: "Leia: as 4 perguntas do SPIN", links: [{ rotulo: "RD Station", url: "https://www.rdstation.com/blog/vendas/spin-selling/" }] },
-      { min: 20, titulo: "Escreva 8 perguntas para uma dona de clínica" },
-      { min: 20, titulo: "Simulação por voz no app do Claude" },
-      { min: 5, titulo: "Inglês", falar: ["Tell me how you get new clients today."] }] } };
+    S.trilhas = [{ id: "oratoria", nome: "Oratória", cor: "#7C5CFF", descricao: "Falar para vender.", proximos: ["Voz e dicção", "Pausa e ritmo"] },
+      { id: "vendas", nome: "Vendas", cor: "#E8590C", descricao: "Perguntas, objeções, preço.", proximos: ["Objeções", "Fechamento"] },
+      { id: "ingles", nome: "Inglês", cor: "#1C7ED6", proximos: ["Pitch em inglês"] }, { id: "licitacao", nome: "Licitação", cor: "#5C940D", proximos: ["O mapa"] }];
+    S.estudo = { [t]: { dia: t, titulo: "Vendas + Licitação", foco: "Perguntar vende mais que falar.", feitos: ["0.0"], blocos: [
+      { trilha: "vendas", tema: "SPIN: perguntar vende mais que falar", objetivo: "8 perguntas prontas.", passos: [
+        { min: 10, titulo: "Leia as 4 perguntas do SPIN", links: [{ rotulo: "RD Station", url: "https://www.rdstation.com/blog/vendas/spin-selling/" }] },
+        { min: 10, titulo: "Escreva 8 perguntas" }, { min: 10, titulo: "Simule por voz com o Claude" }] },
+      { trilha: "licitacao", tema: "O mapa: quem compra e por qual lei", objetivo: "Saber qual lei vale.", passos: [
+        { min: 15, titulo: "Entenda a divisão", detalhe: "Órgãos: Lei 14.133. Estatais: Lei 13.303." }, { min: 15, titulo: "Procure 1 edital no PNCP", falar: ["public tender"] }] }] } };
     S.tarefas = [
       { id: "1", titulo: "Perguntar ao contador sobre a nota fiscal", dia: t, feita: false, origem: "app" },
       { id: "2", titulo: "Decidir kits da Black Friday", dia: addDays(t, 1), feita: false, origem: "whatsapp" },
@@ -59,9 +64,11 @@
       S.sb.from("guia_tarefas").select("*").order("criada_em", { ascending: true }).limit(500)]);
     const err = docs.error || reg.error || est.error || tar.error;
     if (err) { toast("Não consegui carregar seus dados. Puxe para atualizar."); console.error(err); return; }
-    (docs.data || []).forEach(d => { if (d.key === "agenda") S.agenda = d.data; if (d.key === "corpo") S.corpo = d.data; if (d.key === "semana") S.semana = d.data; });
+    (docs.data || []).forEach(d => { if (d.key === "agenda") S.agenda = d.data; if (d.key === "corpo") S.corpo = d.data; if (d.key === "semana") S.semana = d.data; if (d.key === "trilhas") S.trilhas = (d.data && d.data.lista) || []; });
     S.registro = {}; (reg.data || []).forEach(r => S.registro[r.dia] = r.feitos || {});
     S.estudo = {}; (est.data || []).forEach(r => S.estudo[r.dia] = r);
+    const all = await S.sb.from("guia_estudo").select("dia,blocos,feitos").lt("dia", addDays(t, -30));
+    (all.data || []).forEach(r => { if (!S.estudo[r.dia]) S.estudo[r.dia] = r; });
     S.tarefas = tar.data || [];
     render();
   }
@@ -87,7 +94,12 @@
     return xp;
   }
   function levelOf(xp) { let L = 1; while (xpForLevel(L + 1) <= xp && L < 99) L++; return L; }
-  function studyMinutes() { let m = 0; Object.values(S.estudo).forEach(e => { const f = new Set(e.feitos || []); (e.blocos || []).forEach((b, i) => { if (f.has(i)) m += Number(b.min) || 0; }); }); return m; }
+  // formato novo: blocos = [{trilha, tema, objetivo, passos:[{min,titulo,…}]}], feitos = ["0.1", …]
+  function groupsOf(e) { const b = (e && e.blocos) || []; return b.length && b[0].passos ? b : (b.length ? [{ trilha: null, tema: e.titulo, passos: b }] : []); }
+  function isDone(e, gi, pi) { const f = (e.feitos || []).map(String); return f.includes(gi + "." + pi) || (!e.blocos[0]?.passos && f.includes(String(pi))); }
+  function minutesBy(trilha) { let m = 0; Object.values(S.estudo).forEach(e => groupsOf(e).forEach((g, gi) => { if (trilha && g.trilha !== trilha) return; (g.passos || []).forEach((p, pi) => { if (isDone(e, gi, pi)) m += Number(p.min) || 0; }); })); return m; }
+  function studyMinutes() { return minutesBy(null); }
+  const trilhaInfo = id => S.trilhas.find(x => x.id === id) || { id, nome: id || "Estudo", cor: "var(--accent)" };
   function countDone(id) { return Object.values(S.registro).filter(dm => dm[id]).length; }
   function openTasks(d) { return S.tarefas.filter(t => !t.feita && (t.dia === d || !t.dia || t.dia < d)); }
 
@@ -133,7 +145,7 @@
       if (s.id === "academia" && S.corpo && S.corpo.proximo) title += " · " + S.corpo.proximo;
       body.append(el("span", "ttl", title));
       if (s.tipo === "trabalho") { const n = openTasks(t).length; body.append(el("span", "sub", n ? n + (n === 1 ? " tarefa aberta" : " tarefas abertas") + " · tocar para ver" : "Sem tarefas abertas")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("tarefas")); }
-      else if (s.tipo === "estudo") { const e = S.estudo[t]; body.append(el("span", "sub", e ? e.titulo + " · tocar para abrir" : "Plano de estudo sai na segunda")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("estudo")); }
+      else if (s.tipo === "estudo") { const e = S.estudo[t]; body.append(el("span", "sub", e ? groupsOf(e).map(g => trilhaInfo(g.trilha).nome).join(" + ") + " · tocar para abrir" : "Plano de estudo sai na segunda")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("estudo")); }
       else if (s.detalhe) body.append(el("span", "sub", s.detalhe));
       li.append(body);
       const b = el("button", "chk"); b.type = "button"; b.innerHTML = CHECK_SVG; b.setAttribute("aria-pressed", done ? "true" : "false");
@@ -170,23 +182,66 @@
   function renderStudy(t) {
     const e = S.estudo[t];
     $("progName").textContent = (S.semana && S.semana.titulo) || "";
-    $("studyTitle").textContent = e ? e.titulo : "Estudo de hoje";
+    $("studyTitle").textContent = e ? "Hoje: " + groupsOf(e).length + (groupsOf(e).length === 1 ? " assunto" : " assuntos") : "Estudo de hoje";
     $("studyFoco").textContent = e ? (e.foco || "") : "O professor publica o plano da semana toda segunda.";
-    const ul = $("studyList"); ul.replaceChildren();
-    if (!e) { ul.hidden = true; return; } ul.hidden = false;
-    const f = new Set(e.feitos || []);
-    (e.blocos || []).forEach((bk, i) => {
-      const li = el("li", "li" + (f.has(i) ? " done" : "")); li.style.alignItems = "start";
-      const b = el("button", "chk"); b.type = "button"; b.innerHTML = CHECK_SVG; b.setAttribute("aria-pressed", f.has(i) ? "true" : "false");
-      b.setAttribute("aria-label", "Concluir: " + bk.titulo); b.addEventListener("click", ev => toggleStudy(e, i, !f.has(i), ev));
-      const body = el("div"); body.style.display = "flex"; body.style.flexDirection = "column"; body.style.gap = "6px"; body.style.minWidth = "0";
-      body.append(el("span", "ttl", bk.titulo));
-      if (bk.detalhe) body.append(el("span", "muted small", bk.detalhe));
-      (bk.falar || []).forEach(p => { const r = el("span", "phrase"); r.append(el("span", null, p));
-        if ("speechSynthesis" in window) { const s = el("button", "say", "Ouvir"); s.type = "button"; s.addEventListener("click", () => speak(p)); r.append(s); } body.append(r); });
-      (bk.links || []).forEach(l => { const u = safeUrl(l.url); if (!u) return; const a = el("a", "lnk", l.rotulo || "Abrir"); a.href = u; a.target = "_blank"; a.rel = "noopener"; body.append(a); });
-      li.append(b, body, el("span", "meta", (bk.min || 0) + " min")); ul.append(li);
+    const box = $("todayCards"); box.replaceChildren();
+    if (e) groupsOf(e).forEach((g, gi) => box.append(subjectCard(e, g, gi)));
+    // trilhas
+    const grid = $("trilhas"); grid.replaceChildren();
+    const todayIds = new Set(e ? groupsOf(e).map(g => g.trilha) : []);
+    S.trilhas.forEach(tr => {
+      const m = minutesBy(tr.id), pct = Math.min(100, Math.round(100 * m / 600));
+      const c = el("button", "tr" + (todayIds.has(tr.id) ? " today" : "")); c.type = "button"; c.style.setProperty("--c", tr.cor || "var(--accent)");
+      c.append(el("span", "tr-name", tr.nome), el("span", "tr-meta", (m >= 60 ? (Math.round(m / 6) / 10) + " h" : m + " min") + (todayIds.has(tr.id) ? " · hoje" : "")));
+      const bar = el("span", "tr-bar"); const i = el("i"); i.style.width = pct + "%"; bar.append(i); c.append(bar);
+      c.addEventListener("click", () => openTrilha(tr)); grid.append(c);
     });
+    $("trilhaDetail").hidden = true;
+  }
+  function subjectCard(e, g, gi) {
+    const tr = trilhaInfo(g.trilha);
+    const card = el("article", "subj"); card.style.setProperty("--c", tr.cor || "var(--accent)");
+    const total = (g.passos || []).reduce((a, p) => a + (Number(p.min) || 0), 0);
+    const done = (g.passos || []).filter((p, pi) => isDone(e, gi, pi)).length;
+    const head = el("div", "subj-head"); head.append(el("span", "subj-tag", tr.nome), el("span", "meta", done + "/" + (g.passos || []).length + " · " + total + " min"));
+    card.append(head, el("h3", "subj-title", g.tema || ""));
+    if (g.objetivo) card.append(el("p", "muted small", "Objetivo: " + g.objetivo));
+    const ul = el("ul", "list");
+    (g.passos || []).forEach((p, pi) => {
+      const ok = isDone(e, gi, pi);
+      const li = el("li", "li" + (ok ? " done" : "")); li.style.alignItems = "start";
+      const b = el("button", "chk"); b.type = "button"; b.innerHTML = CHECK_SVG; b.setAttribute("aria-pressed", ok ? "true" : "false");
+      b.setAttribute("aria-label", "Concluir: " + p.titulo); b.addEventListener("click", ev => toggleStudy(e, gi + "." + pi, !ok, ev));
+      const body = el("div"); body.style.cssText = "display:flex;flex-direction:column;gap:6px;min-width:0";
+      body.append(el("span", "ttl", p.titulo));
+      if (p.detalhe) body.append(el("span", "muted small", p.detalhe));
+      (p.falar || []).forEach(x => { const r = el("span", "phrase"); r.append(el("span", null, x));
+        if ("speechSynthesis" in window) { const sb = el("button", "say", "Ouvir"); sb.type = "button"; sb.addEventListener("click", () => speak(x)); r.append(sb); } body.append(r); });
+      (p.links || []).forEach(l => { const u = safeUrl(l.url); if (!u) return; const a = el("a", "lnk", l.rotulo || "Abrir"); a.href = u; a.target = "_blank"; a.rel = "noopener"; body.append(a); });
+      li.append(b, body, el("span", "meta", (p.min || 0) + " min")); ul.append(li);
+    });
+    card.append(ul);
+    // comentário sobre este assunto
+    const cbtn = el("button", "btn ghost small-btn", "Comentar sobre " + tr.nome.toLowerCase()); cbtn.type = "button";
+    const form = el("div", "comment"); form.hidden = true;
+    const ta = el("textarea", "input"); ta.placeholder = "Dúvida, o que aprendeu, seus números… (o professor lê)"; ta.setAttribute("aria-label", "Comentário sobre " + (g.tema || tr.nome));
+    const send = el("button", "btn", "Salvar comentário"); send.type = "button"; const msg = el("span", "small muted");
+    send.addEventListener("click", async () => { const v = ta.value.trim().slice(0, 3800); if (!v) return;
+      const ok = await saveRecado("[" + tr.nome + " · " + (g.tema || "") + " · " + e.dia + "] " + v);
+      msg.textContent = ok ? "Salvo. O professor vai ler." : "Não salvou. Tente de novo."; if (ok) ta.value = ""; });
+    form.append(ta, send, msg);
+    cbtn.addEventListener("click", () => { form.hidden = !form.hidden; if (!form.hidden) ta.focus(); });
+    card.append(cbtn, form);
+    return card;
+  }
+  function openTrilha(tr) {
+    const d = $("trilhaDetail"); d.replaceChildren(); d.hidden = false; d.style.setProperty("--c", tr.cor || "var(--accent)");
+    const h = el("div", "subj-head"); h.append(el("span", "subj-tag", tr.nome)); const x = el("button", "del", "Fechar"); x.type = "button"; x.addEventListener("click", () => d.hidden = true); h.append(x); d.append(h);
+    if (tr.descricao) d.append(el("p", "muted small", tr.descricao));
+    const past = Object.values(S.estudo).flatMap(e => groupsOf(e).filter(g => g.trilha === tr.id).map(g => ({ dia: e.dia, tema: g.tema }))).sort((a, b) => a.dia.localeCompare(b.dia));
+    if (past.length) { d.append(el("span", "group-h", "Estudado e planejado")); const ul = el("ul", "list"); past.forEach(p => { const li = el("li", "li"); li.style.gridTemplateColumns = "56px 1fr"; li.append(el("span", "meta", short(p.dia)), el("span", "ttl", p.tema)); ul.append(li); }); d.append(ul); }
+    if ((tr.proximos || []).length) { d.append(el("span", "group-h", "Próximos temas")); const ul = el("ul", "list"); tr.proximos.forEach(p => { const li = el("li", "li"); li.style.gridTemplateColumns = "1fr"; li.append(el("span", "ttl", p)); ul.append(li); }); d.append(ul); }
+    d.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   function speak(text) { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(String(text)); u.lang = "en-US"; u.rate = 0.9; speechSynthesis.speak(u); } catch (e) {} }
 
@@ -230,14 +285,19 @@
     if (DEMO) return;
     const { error } = await S.sb.from("guia_tarefas").delete().eq("id", task.id); if (error) toast("Não apagou a tarefa.");
   }
-  async function toggleStudy(e, i, on, ev) {
-    const f = new Set(e.feitos || []); on ? f.add(i) : f.delete(i); e.feitos = [...f].sort((a, b) => a - b); if (on) pop(ev, "+5 XP");
-    const all = (e.blocos || []).length && e.feitos.length === e.blocos.length;
-    if (all && !doneMap(e.dia).estudo) { S.registro[e.dia] = { ...doneMap(e.dia), estudo: true }; if (!DEMO) S.sb.from("guia_registro").upsert({ dia: e.dia, feitos: S.registro[e.dia], updated_at: new Date().toISOString() }); toast("Estudo do dia concluído"); }
+  async function toggleStudy(e, key, on, ev) {
+    const f = new Set((e.feitos || []).map(String)); on ? f.add(key) : f.delete(key); e.feitos = [...f].sort(); if (on) pop(ev, "+5 XP");
+    const totalP = groupsOf(e).reduce((a, g) => a + (g.passos || []).length, 0);
+    if (totalP && e.feitos.length >= totalP && !doneMap(e.dia).estudo) { S.registro[e.dia] = { ...doneMap(e.dia), estudo: true }; if (!DEMO) S.sb.from("guia_registro").upsert({ dia: e.dia, feitos: S.registro[e.dia], updated_at: new Date().toISOString() }); toast("Estudo do dia concluído"); }
     render();
     if (DEMO) return;
     const { error } = await S.sb.from("guia_estudo").update({ feitos: e.feitos, updated_at: new Date().toISOString() }).eq("dia", e.dia);
     if (error) toast("Não salvou o estudo.");
+  }
+  async function saveRecado(texto) {
+    if (DEMO) return true;
+    const { error } = await S.sb.from("guia_recados").insert({ texto, dia: today(), origem: "app" });
+    return !error;
   }
   $("taskForm").addEventListener("submit", async ev => {
     ev.preventDefault(); const v = $("taskInput").value.trim().slice(0, 300); if (!v) return; $("taskInput").value = "";
@@ -249,11 +309,11 @@
   });
   $("sendRecado").addEventListener("click", async () => {
     const v = $("recado").value.trim().slice(0, 4000); if (!v) { $("recadoMsg").textContent = "Escreva ou fale o recado primeiro."; return; }
-    if (DEMO) { $("recado").value = ""; $("recadoMsg").textContent = "Recado salvo (modo demonstração)."; return; }
-    const { error } = await S.sb.from("guia_recados").insert({ texto: v, dia: today(), origem: "app" });
-    if (error) { $("recadoMsg").textContent = "Não enviou. Tente de novo."; return; }
+    if (!(await saveRecado(v))) { $("recadoMsg").textContent = "Não enviou. Tente de novo."; return; }
     $("recado").value = ""; $("recadoMsg").textContent = "Recado salvo. O professor lê na próxima revisão.";
   });
+
+  $("chatBtn").href = CHAT_URL;
 
   // ---------------- navegação ----------------
   function go(v) {

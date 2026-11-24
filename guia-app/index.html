@@ -128,6 +128,21 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
 @keyframes fade{0%{opacity:0;transform:translate(-50%,10px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
 .login{min-height:80vh;display:flex;flex-direction:column;justify-content:center;gap:14px}
 .login h1{font-size:2rem;font-weight:800}
+/* estudo: assuntos do dia e trilhas */
+.subj{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.subj-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.subj-tag{font:700 .72rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--c)}
+.subj-title{font-size:1.15rem}
+.small-btn{padding:9px 12px;font-size:.88rem;align-self:flex-start}
+.comment{display:flex;flex-direction:column;gap:8px}
+.chat{text-align:center;text-decoration:none}
+.trs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tr{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px;text-align:left;min-width:0}
+.tr.today{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c)}
+.tr-name{font:700 .92rem var(--display);overflow-wrap:anywhere}
+.tr-meta{font-size:.74rem;color:var(--muted)}
+.tr-bar{height:5px;border-radius:99px;background:var(--line);overflow:hidden}
+.tr-bar i{display:block;height:100%;background:var(--c)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -181,13 +196,17 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
     <!-- ESTUDO -->
     <section data-view="estudo" hidden style="display:flex;flex-direction:column;gap:14px">
       <div><span class="small muted" id="progName"></span><h2 style="font-size:1.4rem" id="studyTitle">Estudo de hoje</h2><p class="muted small" id="studyFoco" style="margin:4px 0 0"></p></div>
-      <ul class="list card" id="studyList"></ul>
-      <div class="card">
-        <h2>Recado para o professor</h2>
-        <textarea class="input" id="recado" placeholder="O que fez, o que travou, uma dúvida. Use o microfone do teclado para falar." aria-label="Recado para o professor"></textarea>
-        <button class="btn" id="sendRecado" type="button">Enviar recado</button>
+      <div id="todayCards" style="display:flex;flex-direction:column;gap:12px"></div>
+      <a class="btn full chat" id="chatBtn" href="#" target="_blank" rel="noopener">Falar com o professor no chat</a>
+      <div class="row" style="justify-content:space-between"><h2>Suas trilhas</h2><span class="small muted">meta: 10 h por trilha</span></div>
+      <div class="trs" id="trilhas"></div>
+      <div class="card subj" id="trilhaDetail" hidden></div>
+      <details class="card">
+        <summary style="cursor:pointer;font-weight:600">Recado geral para o professor</summary>
+        <textarea class="input" id="recado" placeholder="O que fez, o que travou, uma dúvida. Use o microfone do teclado para falar." aria-label="Recado para o professor" style="margin-top:10px"></textarea>
+        <button class="btn" id="sendRecado" type="button" style="margin-top:8px">Enviar recado</button>
         <span class="small muted" id="recadoMsg" role="status"></span>
-      </div>
+      </details>
     </section>
 
     <!-- VOCÊ -->
