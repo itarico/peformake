@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { CalendarPlus, ChevronRight } from 'lucide-react'
+import { CalendarPlus, ChevronRight, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { NewClientDialog } from '@/features/clients/NewClientDialog'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
@@ -27,10 +28,11 @@ const DOT: Record<Urgency, string> = { urgente: 'bg-warn', marcar: 'bg-warn/50',
  * Ao lado da agenda: só os clientes com serviço de audiovisual, fixos e avulsos em abas.
  * Mostra há quanto tempo cada um gravou, quantas gravações tem no mês e quem precisa ser agendado (vermelho = passou de um mês).
  */
-export function AvClientsPanel({ onSchedule }: { onSchedule: (clientId: string) => void }) {
+export function AvClientsPanel({ onSchedule, canCreate = false }: { onSchedule: (clientId: string) => void; canCreate?: boolean }) {
   const today = todayInBrazil()
   const panel = useQuery({ queryKey: ['av-clients-panel'], queryFn: loadPanel })
   const [tab, setTab] = useState<'fixos' | 'avulsos'>('fixos')
+  const [creating, setCreating] = useState(false)
   const groups = useMemo(() => {
     const all = panel.data ?? []
     return { fixos: sortPanel(all.filter((c) => c.fixed), today), avulsos: sortPanel(all.filter((c) => !c.fixed), today) }
@@ -40,7 +42,10 @@ export function AvClientsPanel({ onSchedule }: { onSchedule: (clientId: string) 
 
   return (
     <aside aria-labelledby="clientes-av" className="flex flex-col gap-2 self-start rounded-3xl border border-line bg-surface p-4">
-      <h2 id="clientes-av" className="font-semibold">Clientes {pending > 0 && <span className="ml-1 rounded-full bg-warn-soft px-2 py-0.5 text-[12px] font-semibold text-warn-ink">{pending} para agendar</span>}</h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 id="clientes-av" className="font-semibold">Clientes {pending > 0 && <span className="ml-1 rounded-full bg-warn-soft px-2 py-0.5 text-[12px] font-semibold text-warn-ink">{pending} para agendar</span>}</h2>
+        {canCreate && <button type="button" onClick={() => setCreating(true)} aria-label="Cadastrar cliente novo" title="Cadastrar cliente novo" className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line-strong hover:border-ink"><Plus size={16} aria-hidden="true" /></button>}
+      </div>
       <div role="tablist" aria-label="Tipo de cliente" className="grid grid-cols-2 rounded-full border border-line p-0.5">
         {(['fixos', 'avulsos'] as const).map((t) => (
           <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
@@ -75,6 +80,8 @@ export function AvClientsPanel({ onSchedule }: { onSchedule: (clientId: string) 
         {panel.isPending && <li className="py-3 text-[13px] text-muted">Carregando</li>}
         {panel.data && list.length === 0 && <li className="py-3 text-[13px] text-muted">{tab === 'fixos' ? 'Nenhum cliente fixo com audiovisual.' : 'Nenhum cliente avulso com audiovisual.'}</li>}
       </ul>
+      {panel.data && <p className="text-[12px] text-muted">Cliente novo aparece aqui depois de ganhar um serviço de audiovisual na ficha dele.</p>}
+      <NewClientDialog open={creating} onClose={() => setCreating(false)} />
     </aside>
   )
 }

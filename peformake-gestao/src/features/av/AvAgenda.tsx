@@ -3,7 +3,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarPlus, Check, Plus, RefreshCw } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
+import { useAuth } from '@/auth/context'
 import { cn } from '@/lib/cn'
+import { hasAnyRole } from '@/lib/roles'
 import { supabase } from '@/lib/supabase'
 import { MonthSwitcher } from '@/features/content/ContentLayout'
 import { monthGrid } from '@/features/content/contentRules'
@@ -28,6 +30,9 @@ export function AvAgenda() {
   const [month] = useMonthParam()
   const today = todayInBrazil()
   const { clientName, isLive } = useProduction()
+  const { state } = useAuth()
+  // Cadastrar cliente é de quem gerencia clientes (mesma regra da tela Clientes).
+  const canManageClients = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing'])
   const [dialog, setDialog] = useState<{ client?: string; day?: string } | null>(null)
   const last = useMemo(() => { const d = new Date(`${month}T12:00:00Z`); d.setUTCMonth(d.getUTCMonth() + 1); return d.toISOString().slice(0, 10) }, [month])
 
@@ -166,7 +171,7 @@ export function AvAgenda() {
           <p className="mt-1 text-[12px] text-muted">Verde: gravação. Tracejado: entrega do vídeo. Cinza: Google Agenda. Clique no dia para agendar.</p>
         </div>
 
-        <AvClientsPanel onSchedule={(id) => setDialog({ client: id })} />
+        <AvClientsPanel onSchedule={(id) => setDialog({ client: id })} canCreate={canManageClients} />
       </div>
 
       {dialog && <ScheduleDialog clientId={dialog.client} day={dialog.day} onClose={() => setDialog(null)} onSaved={(id) => { void queryClient.invalidateQueries({ queryKey: ['av-clients-panel'] }); navigate(`/audiovisual/projeto/${id}`) }} />}

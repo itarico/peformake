@@ -25,12 +25,18 @@ export function AvTabs() {
   const { state } = useAuth()
   const manager = state.status === 'ready' && hasAnyRole(state.user.roles, AV_MANAGER_ROLES)
   const prices = state.status === 'ready' && hasAnyRole(state.user.roles, AV_PRICE_ROLES)
+  // Mesmas regras das Configurações: serviços e preços só administrador; prazos e avisos, administrador e head de marketing.
+  const admin = state.status === 'ready' && state.user.roles.includes('admin')
+  const settings = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing'])
   const tabs = [
     ...(manager ? [{ to: '/audiovisual', label: 'Agenda', end: true }] : []),
     { to: '/audiovisual/producao', label: 'Produção', end: false },
     { to: '/audiovisual/tarefas', label: 'Tarefas', end: false },
     ...(prices ? [{ to: '/audiovisual/orcamentos', label: 'Orçamentos', end: false }] : []),
     ...(manager ? [{ to: '/audiovisual/fotos', label: 'Fotos', end: false }] : []),
+    // Uso raro: ficam em "Mais". Serviços e preços são do administrador; prazos e avisos, de quem gerencia.
+    ...(admin ? [{ to: '/configuracoes/audiovisual/servicos', label: 'Serviços e preços', end: false, more: true }] : []),
+    ...(settings ? [{ to: '/configuracoes/audiovisual', label: 'Prazos e avisos', end: true, more: true }] : []),
   ]
   if (tabs.length < 2) return null
   return (
