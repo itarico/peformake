@@ -121,6 +121,7 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!(await pg.getByText('carrossel com 3').count())) fails.push(`${dev}: não reconheceu o carrossel`)
       if ((await pg.getByRole('list', { name: 'Arquivos do post' }).locator('img').count()) !== 3) fails.push(`${dev}: miniaturas do carrossel não aparecem`)
       if (!(await pg.getByRole('radio', { name: 'Inteira' }).count())) fails.push(`${dev}: sem a opção Inteira`)
+      if (!(await pg.getByRole('region', { name: 'Requisitos do Instagram' }).count()) && !(await pg.locator('section[aria-label="Requisitos do Instagram"]').count())) fails.push(`${dev}: sem as regras do Instagram`)
       await pg.getByRole('button', { name: 'Mover arquivo 3 para trás' }).click(); await pg.waitForTimeout(200)
       await pg.getByLabel('Legenda').fill('Carrossel de teste')
       if (await sideScroll(pg)) fails.push(`${dev}: criar post rola de lado`)
@@ -167,7 +168,9 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
         await pg.getByLabel('Arquivos').setInputFiles(big); await pg.waitForTimeout(1500)
         const nUp = uploads.length; const nV = creates.length
         await pg.getByRole('button', { name: 'Compartilhar' }).click()
-        for (let t = 0; t < 120 && creates.length === nV; t++) await pg.waitForTimeout(500)
+        let sawBar = false
+        for (let t = 0; t < 120 && creates.length === nV; t++) { if (!sawBar && await pg.getByRole('progressbar', { name: 'Envio' }).count()) sawBar = true; await pg.waitForTimeout(500) }
+        if (!sawBar) fails.push(`${dev}: não mostrou a barra de envio`)
         const ups = uploads.slice(nUp)
         if (ups.length !== 3 || !ups.every((u, k) => u.endsWith(`.mp4.part${k}`))) fails.push(`${dev}: vídeo grande não subiu em 3 partes ${JSON.stringify(ups)}`)
         const v = creates[nV]

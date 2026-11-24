@@ -172,32 +172,98 @@ export async function fitImage(file: File, ratio: number, fit: Fit = 'cobrir', x
 /** Como a foto entra por padrão: story vai inteira (com fundo), feed preenche. */
 export const defaultFit = (kind: IgKind): Fit => (kind === 'story' ? 'inteira' : 'cobrir')
 
+/**
+ * Sobe um arquivo para o armazenamento mostrando o progresso (o supabase-js não avisa o andamento, então vai por
+ * XMLHttpRequest direto no mesmo endereço, com a sessão de quem está logado).
+ */
+async function putFile(path: string, blob: Blob, onBytes: (loaded: number) => void): Promise<void> {
+  const { data } = await supabase.auth.getSession()
+  const token = data.session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+  await new Promise<void>((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/content-files/${path}`)
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+    xhr.setRequestHeader('apikey', import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)
+    xhr.setRequestHeader('Content-Type', blob.type || 'application/octet-stream')
+    xhr.setRequestHeader('x-upsert', 'false')
+    xhr.upload.onprogress = (e) => { if (e.lengthComputable) onBytes(e.loaded) }
+    xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(`envio ${xhr.status}`)))
+    xhr.onerror = () => reject(new Error('rede'))
+    xhr.send(blob)
+  })
+  onBytes(blob.size)
+}
+
+/** Andamento do envio: texto curto e porcentagem (0 a 100) de todos os arquivos do post. */
+export interface UploadProgress { text: string; pct: number }
+
 /** Prepara e sobe os arquivos de uma publicação. Devolve o que o banco precisa (ig_post_create). */
-export async function uploadMedia(accountId: string, kind: IgKind, items: PickedMedia[], onStep?: (text: string) => void, crop: Crop = 'original'): Promise<UploadedMedia[]> {
+export async function uploadMedia(accountId: string, kind: IgKind, items: PickedMedia[], onStep?: (text: string) => void, crop: Crop = 'original', onProgress?: (p: UploadProgress) => void): Promise<UploadedMedia[]> {
   const ratio = targetRatio(kind, items, crop)
   const out: UploadedMedia[] = []
   const fail = () => new Error('Não foi possível enviar o arquivo. Confira a internet e tente de novo.')
+  // Primeiro prepara tudo (fotos no formato certo) para saber o total de bytes e mostrar a porcentagem real.
+  onStep?.('Preparando')
+  onProgress?.({ text: 'Preparando', pct: 0 })
+  const ready: File[] = []
+  for (const m of items) {
+    ready.push(m.video ? m.file : await fitImage(m.file, kind === 'story' ? STORY : items.length > 1 || crop !== 'original' ? ratio : clamp(m.ratio, FEED_MIN, FEED_MAX), m.fit ?? defaultFit(kind), m.x ?? 0.5, m.y ?? 0.5))
+  }
+  const total = ready.reduce((a, f) => a + f.size, 0) || 1
+  let done = 0
+  const mb = (b: number) => (b / 1048576).toFixed(b > 10 * 1048576 ? 0 : 1)
+  const tick = (loaded: number, label: string) => {
+    const pct = Math.min(99, Math.round(((done + loaded) / total) * 100))
+    const text = `${label} ${pct}% · ${mb(done + loaded)} de ${mb(total)} MB`
+    onStep?.(`Enviando ${pct}%`)
+    onProgress?.({ text, pct })
+  }
   for (let n = 0; n < items.length; n++) {
     const m = items[n]!
-    const label = items.length > 1 ? `arquivo ${n + 1} de ${items.length}` : 'arquivo'
-    const ready = m.video ? m.file : await fitImage(m.file, kind === 'story' ? STORY : items.length > 1 || crop !== 'original' ? ratio : clamp(m.ratio, FEED_MIN, FEED_MAX), m.fit ?? defaultFit(kind), m.x ?? 0.5, m.y ?? 0.5)
-    const ext = m.video ? (ready.type === 'video/quicktime' ? 'mov' : 'mp4') : 'jpg'
+    const file = ready[n]!
+    const label = items.length > 1 ? `Arquivo ${n + 1} de ${items.length}:` : 'Enviando'
+    const ext = m.video ? (file.type === 'video/quicktime' ? 'mov' : 'mp4') : 'jpg'
     const path = `instagram/avulso/${accountId}/${crypto.randomUUID()}.${ext}`
-    const parts = m.video && items.length === 1 && ready.size > PART_BYTES ? Math.ceil(ready.size / PART_BYTES) : 0
-    if (parts > 0) {
-      for (let i = 0; i < parts; i++) {
-        onStep?.(`Enviando parte ${i + 1} de ${parts}`)
-        const blob = ready.slice(i * PART_BYTES, Math.min(ready.size, (i + 1) * PART_BYTES), ready.type)
-        const up = await supabase.storage.from('content-files').upload(`${path}.part${i}`, blob, { contentType: ready.type, upsert: false })
-        if (up.error) throw fail()
+    const parts = m.video && items.length === 1 && file.size > PART_BYTES ? Math.ceil(file.size / PART_BYTES) : 0
+    try {
+      if (parts > 0) {
+        for (let i = 0; i < parts; i++) {
+          const blob = file.slice(i * PART_BYTES, Math.min(file.size, (i + 1) * PART_BYTES), file.type)
+          await putFile(`${path}.part${i}`, blob, (l) => tick(l, label))
+          done += blob.size
+        }
+        out.push({ path, mime: file.type, parts, size: file.size })
+      } else {
+        await putFile(path, file, (l) => tick(l, label))
+        done += file.size
+        out.push({ path, mime: file.type })
       }
-      out.push({ path, mime: ready.type, parts, size: ready.size })
-    } else {
-      onStep?.(`Enviando ${label}`)
-      const up = await supabase.storage.from('content-files').upload(path, ready, { contentType: ready.type, upsert: false })
-      if (up.error) throw fail()
-      out.push({ path, mime: ready.type })
+    } catch {
+      throw fail()
     }
   }
+  onProgress?.({ text: 'Envio concluído', pct: 100 })
+  return out
+}
+
+/** Requisitos do Instagram para o formato escolhido, com o valor do arquivo e se passa (para a pessoa entender). */
+export interface Requirement { label: string; rule: string; value: string; ok: boolean | null }
+export function requirements(kind: IgKind, items: PickedMedia[]): Requirement[] {
+  const out: Requirement[] = []
+  const mbOf = (b: number) => `${(b / 1048576).toFixed(b > 10 * 1048576 ? 0 : 1)} MB`
+  const sec = (d: number | null) => (d === null ? 'não deu para ler' : d >= 60 ? `${Math.floor(d / 60)} min ${Math.round(d % 60)} s` : `${Math.round(d)} s`)
+  if (items.length > 1) out.push({ label: 'Carrossel', rule: 'de 2 a 10 arquivos, só no feed', value: `${items.length} arquivos`, ok: items.length <= 10 && kind === 'post' })
+  items.forEach((m, i) => {
+    const pre = items.length > 1 ? `Arquivo ${i + 1} · ` : ''
+    if (m.video) {
+      const max = kind === 'story' ? MAX_STORY_VIDEO_BYTES : items.length > 1 ? PART_BYTES : MAX_VIDEO_BYTES
+      out.push({ label: `${pre}Tamanho do vídeo`, rule: `até ${mbOf(max)}`, value: mbOf(m.file.size), ok: m.file.size <= max })
+      const maxD = kind === 'story' ? 60 : 900
+      out.push({ label: `${pre}Duração`, rule: `de 3 s a ${kind === 'story' ? '60 s' : '15 min'}`, value: sec(m.duration), ok: m.duration === null ? null : m.duration >= 3 && m.duration <= maxD })
+      out.push({ label: `${pre}Formato do arquivo`, rule: 'MP4 ou MOV, com início rápido', value: m.fastStart === false ? 'índice no fim do arquivo' : m.file.type === 'video/quicktime' ? 'MOV' : 'MP4', ok: ['video/mp4', 'video/quicktime'].includes(m.file.type) && m.fastStart !== false })
+    } else {
+      out.push({ label: `${pre}Foto`, rule: kind === 'story' ? '9:16, ajustada sozinha' : 'de 4:5 a 1,91:1, ajustada sozinha', value: m.ratio < 0.95 ? 'em pé' : m.ratio > 1.05 ? 'deitada' : 'quadrada', ok: true })
+    }
+  })
   return out
 }

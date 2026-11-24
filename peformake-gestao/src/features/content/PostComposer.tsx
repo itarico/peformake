@@ -8,7 +8,8 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
-import { autoKind, CROPS, defaultFit, mediaIssue, readMedia, targetRatio, uploadMedia, type Crop, type Fit, type PickedMedia } from './igMedia'
+import { autoKind, CROPS, defaultFit, mediaIssue, readMedia, requirements, targetRatio, uploadMedia, type Crop, type Fit, type PickedMedia, type UploadProgress } from './igMedia'
+import { Requirements, UploadBar } from './IgRequirements'
 import { RepeatEditor } from './RepeatEditor'
 import { KIND_LABEL_IG, scheduleError, toInstant, type IgKind } from './scheduleRules'
 import { defaultRule, repeatDates, repeatSummary, type RepeatRule } from './storyRepeat'
@@ -91,6 +92,7 @@ export function PostComposer() {
   const [hour, setHour] = useState('18:00')
   const [rule, setRule] = useState<RepeatRule>(() => defaultRule('18:00', todayInBrazil()))
   const [step, setStep] = useState<string | null>(null)
+  const [progress, setProgress] = useState<UploadProgress | null>(null)
   const [open, setOpen] = useState<Record<'formato' | 'quando' | 'repetir', boolean>>({ formato: false, quando: true, repetir: false })
   const toggle = (k: 'formato' | 'quando' | 'repetir') => setOpen((o) => ({ ...o, [k]: !o[k] }))
 
@@ -146,7 +148,7 @@ export function PostComposer() {
   const save = useMutation({
     mutationFn: async () => {
       if (!picked) throw new Error('Escolha o Instagram.')
-      const media = await uploadMedia(picked.id, kind, items, setStep, crop)
+      const media = await uploadMedia(picked.id, kind, items, setStep, crop, setProgress)
       setStep('Programando')
       const { error } = dates.length > 1
         ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _ats: dates })
@@ -156,7 +158,7 @@ export function PostComposer() {
       if (now) await db.rpc('ig_publish_now', {})
     },
     onSuccess: async () => { await queryClient.invalidateQueries({ queryKey: ['ig-schedule'] }); navigate(back) },
-    onSettled: () => setStep(null),
+    onSettled: () => { setStep(null); setProgress(null) },
   })
 
   if (!accounts.data) return <LoadState isPending={accounts.isPending} isError={accounts.isError} refetch={() => void accounts.refetch()} />
@@ -174,6 +176,7 @@ export function PostComposer() {
         </button>
       </div>
 
+      {save.isPending && progress && <UploadBar progress={progress} />}
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px]">
         {/* Prévia: arrastar e soltar, ou escolher do computador. */}
         <div {...drop.props} className={cn('relative flex min-h-[420px] items-center justify-center bg-raised', drop.over && 'outline outline-2 -outline-offset-4 outline-[#0095F6]')}>
@@ -298,6 +301,7 @@ export function PostComposer() {
             </Row>
           )}
           <div className="flex flex-col gap-2 p-4">
+            {items.length > 0 && <Requirements kind={kind} list={requirements(kind, items)} />}
             {issue && items.length > 0 && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] font-medium text-warn-ink">{issue}</p>}
             {!issue && past && <p className="text-[13px] text-warn-ink">Escolha um horário no futuro.</p>}
             {save.error && <p role="alert" className="text-[14px] font-medium text-warn-ink">{save.error instanceof Error && !('code' in save.error) ? save.error.message : scheduleError(save.error)}</p>}

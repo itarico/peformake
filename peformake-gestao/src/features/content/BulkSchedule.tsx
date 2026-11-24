@@ -19,7 +19,7 @@ import { defaultRule, repeatDates, repeatSummary, type RepeatRule } from './stor
 const db = supabase as any
 const field = 'min-h-10 rounded-xl border border-line-strong bg-surface px-3 text-[13px]'
 
-interface Row { media: PickedMedia; kind: IgKind; caption: string; day: string; hour: string; state: 'novo' | 'enviando' | 'ok' | 'erro'; error?: string; progress?: string }
+interface Row { media: PickedMedia; kind: IgKind; caption: string; day: string; hour: string; state: 'novo' | 'enviando' | 'ok' | 'erro'; error?: string; progress?: string; pct?: number }
 
 const addDays = (iso: string, n: number) => {
   const d = new Date(`${iso}T12:00:00-03:00`); d.setDate(d.getDate() + n)
@@ -88,7 +88,7 @@ export function BulkSchedule() {
         if (r.state === 'ok' || problems[i]) continue
         set(i, { state: 'enviando', error: undefined })
         try {
-          const media = await uploadMedia(picked.id, r.kind, [r.media], (t) => set(i, { progress: t }))
+          const media = await uploadMedia(picked.id, r.kind, [r.media], undefined, 'original', (p) => set(i, { progress: p.text, pct: p.pct }))
           const ats = datesOf(r)
           const { error } = ats.length > 1
             ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: r.kind, _media: media, _caption: '', _ats: ats })
@@ -169,6 +169,11 @@ export function BulkSchedule() {
                 </div>
                 {r.kind !== 'story' && <input aria-label={`Legenda do arquivo ${i + 1}`} maxLength={2200} value={r.caption} disabled={r.state === 'ok'} onChange={(e) => set(i, { caption: e.target.value })} placeholder="Legenda" className={cn(field, 'w-full')} />}
                 {(problems[i] || r.error) && <p className="text-[12px] font-medium text-warn-ink">{r.error ?? problems[i]}</p>}
+                {r.state === 'enviando' && r.pct !== undefined && (
+                  <div aria-label={`Envio do arquivo ${i + 1}`} role="progressbar" aria-valuenow={r.pct} aria-valuemin={0} aria-valuemax={100} className="h-1.5 overflow-hidden rounded-full bg-raised">
+                    <div className="h-full rounded-full bg-[#0095F6] transition-[width]" style={{ width: `${r.pct}%` }} />
+                  </div>
+                )}
               </div>
               <div className="col-span-2 flex items-center justify-end gap-2 md:col-span-1">
                 <span className={cn('rounded-full px-2.5 py-1 text-[12px] font-medium', r.state === 'ok' ? 'bg-ok-soft text-ok-ink' : r.state === 'enviando' ? 'bg-accent-soft text-ink' : r.state === 'erro' ? 'bg-warn-soft text-warn-ink' : 'bg-raised text-muted')}>
