@@ -9,7 +9,8 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
-import { autoKind, mediaIssue, readMedia, uploadMedia, type PickedMedia } from './igMedia'
+import { autoKind, defaultFit, MAX_STORY_VIDEO_BYTES, MAX_VIDEO_BYTES, mediaIssue, readMedia, targetRatio, uploadMedia, type AutoFix, type PickedMedia } from './igMedia'
+import { canPrepareVideo, prepareVideo } from './videoPrep'
 import { IG_ACCEPT, useDrop, useIgAccounts } from './PostComposer'
 import { RepeatEditor } from './RepeatEditor'
 import { KIND_LABEL_IG, scheduleError, toInstant, type IgKind } from './scheduleRules'
@@ -31,6 +32,30 @@ const addDays = (iso: string, n: number) => {
  * uma publicação com o formato certo (vídeo = Reels, foto = feed). "Distribuir" preenche um por dia (ou a cada N dias)
  * no mesmo horário; dá para ajustar linha por linha. "Programar tudo" sobe e agenda em sequência.
  */
+/**
+ * Prévia de como a peça vai sair: a moldura já no formato (story e Reels 9:16, feed de 4:5 a 1,91:1) e a foto como
+ * vai entrar (story inteira com fundo; feed preenchendo). Embaixo, o nome do formato.
+ */
+function FormatPreview({ media, kind }: { media: PickedMedia; kind: IgKind }) {
+  const ratio = targetRatio(kind, [media])
+  const fit = media.fit ?? defaultFit(kind)
+  const label = kind === 'post' ? (ratio > 1.05 ? 'deitado' : ratio < 0.95 ? '4:5' : '1:1') : '9:16'
+  return (
+    <div className="flex w-[76px] flex-col items-center gap-1">
+      <div className="relative flex h-[96px] w-[76px] items-center justify-center rounded-lg bg-raised">
+        <div className="relative overflow-hidden rounded bg-black" style={{ aspectRatio: String(ratio), height: ratio < 0.8 ? '100%' : undefined, width: ratio >= 0.8 ? '100%' : undefined }}>
+          {media.video
+            ? <video src={media.url} muted preload="metadata" className="size-full object-contain" />
+            : fit === 'inteira'
+              ? <><img src={media.url} alt="" aria-hidden="true" className="absolute inset-0 size-full scale-110 object-cover blur-md brightness-75" /><img src={media.url} alt="" className="relative size-full object-contain" /></>
+              : <img src={media.url} alt="" className="size-full object-cover" />}
+        </div>
+      </div>
+      <span className="text-[10px] font-semibold uppercase tracking-wide text-muted">{KIND_LABEL_IG[kind].replace('Post no feed', 'Feed')} · {label}</span>
+    </div>
+  )
+}
+
 export function BulkSchedule() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -47,6 +72,8 @@ export function BulkSchedule() {
   const [every, setEvery] = useState(1)
   // Stories do lote seguem a mesma regra de repetição do Criar post, a partir do dia e hora de cada linha.
   const [rule, setRule] = useState<RepeatRule>(() => defaultRule('18:00', todayInBrazil()))
+  // Ajuste automático dos vídeos do lote (como no Criar post): comprimir o que passa do limite e dividir story longo.
+  const [auto, setAuto] = useState<AutoFix>(() => ({ compress: canPrepareVideo(), split: canPrepareVideo() }))
   const datesOf = (r: Row) => { const at = toInstant(r.day, r.hour); return r.kind === 'story' && rule.freq !== 'nao' && at ? repeatDates(rule, r.day, at) : at ? [at] : [] }
 
   // Aberto de dentro do cliente (?cliente=): só o Instagram dele, sem trocar (mais seguro).
@@ -72,7 +99,7 @@ export function BulkSchedule() {
   const spread = () => setRows((cur) => cur.map((r, i) => ({ ...r, day: addDays(start, i * every), hour })))
 
   const problems = rows.map((r) => {
-    const issue = mediaIssue(r.kind, [r.media])
+    const issue = mediaIssue(r.kind, [r.media], auto)
     if (issue) return issue
     const at = toInstant(r.day, r.hour)
     return !at || new Date(at).getTime() < Date.now() ? 'Horário no passado.' : null
@@ -88,12 +115,23 @@ export function BulkSchedule() {
         if (r.state === 'ok' || problems[i]) continue
         set(i, { state: 'enviando', error: undefined })
         try {
-          const media = await uploadMedia(picked.id, r.kind, [r.media], undefined, 'original', (p) => set(i, { progress: p.text, pct: p.pct }))
-          const ats = datesOf(r)
-          const { error } = ats.length > 1
-            ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: r.kind, _media: media, _caption: '', _ats: ats })
-            : await db.rpc('ig_post_create', { _account: picked.id, _kind: r.kind, _media: media, _caption: r.kind === 'story' ? '' : r.caption, _at: toInstant(r.day, r.hour), _repeat_every: null, _repeat_count: 1 })
-          if (error) throw error
+          let groups: PickedMedia[] = [r.media]
+          if (r.media.video && (auto.compress || auto.split)) {
+            const prep = await prepareVideo(r.media.file, r.media.duration, r.media.fastStart,
+              { maxBytes: r.kind === 'story' ? MAX_STORY_VIDEO_BYTES : MAX_VIDEO_BYTES, compress: auto.compress, splitSeconds: r.kind === 'story' && auto.split ? 60 : null },
+              (text, pct) => set(i, { progress: `${text} ${pct}%`, pct }))
+            if (prep.changed) groups = prep.files.map((f) => ({ ...r.media, id: crypto.randomUUID(), file: f, fastStart: true, duration: null }))
+          }
+          // Story dividido: cada parte 90 s depois da anterior, na ordem.
+          for (let k = 0; k < groups.length; k++) {
+            const media = await uploadMedia(picked.id, r.kind, [groups[k]!], undefined, 'original', (p) => set(i, { progress: groups.length > 1 ? `Parte ${k + 1} de ${groups.length}: ${p.text}` : p.text, pct: p.pct }))
+            const shift = (iso: string) => new Date(new Date(iso).getTime() + k * 90_000).toISOString()
+            const ats = datesOf(r).map(shift)
+            const { error } = ats.length > 1
+              ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: r.kind, _media: media, _caption: '', _ats: ats })
+              : await db.rpc('ig_post_create', { _account: picked.id, _kind: r.kind, _media: media, _caption: r.kind === 'story' ? '' : r.caption, _at: shift(toInstant(r.day, r.hour)!), _repeat_every: null, _repeat_count: 1 })
+            if (error) throw error
+          }
           set(i, { state: 'ok' })
         } catch (e) {
           set(i, { state: 'erro', error: e instanceof Error && !('code' in e) ? e.message : scheduleError(e) })
@@ -135,6 +173,12 @@ export function BulkSchedule() {
           </label>
           <Button variant="secondary" disabled={rows.length === 0} onClick={spread}>Distribuir</Button>
         </div>
+        {rows.some((r) => r.media.video) && canPrepareVideo() && (
+          <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] md:col-span-2">
+            <label className="flex cursor-pointer items-center gap-2"><input type="checkbox" checked={auto.compress} onChange={(e) => setAuto((a) => ({ ...a, compress: e.target.checked }))} className="size-4" /> Comprimir vídeo que passar do limite</label>
+            <label className="flex cursor-pointer items-center gap-2"><input type="checkbox" checked={auto.split} onChange={(e) => setAuto((a) => ({ ...a, split: e.target.checked }))} className="size-4" /> Dividir story acima de 60 s em partes</label>
+          </div>
+        )}
         {rows.length > 0 && (
           <div role="group" aria-label="Formato de todos" className="flex flex-wrap items-center gap-1.5 md:col-span-2">
             <span className="text-[12px] font-semibold">Todos como</span>
@@ -156,8 +200,8 @@ export function BulkSchedule() {
         {rows.map((r, i) => {
           const kinds: IgKind[] = r.media.video ? ['reels', 'story'] : ['post', 'story']
           return (
-            <li key={r.media.id} className={cn('grid grid-cols-[64px_minmax(0,1fr)] gap-3 rounded-3xl border bg-surface p-3 md:grid-cols-[64px_minmax(0,1fr)_auto]', r.state === 'erro' || problems[i] ? 'border-warn/50' : r.state === 'ok' ? 'border-ok/50' : 'border-line')}>
-              {r.media.video ? <video src={r.media.url} muted className="size-16 rounded-xl bg-raised object-cover" /> : <img src={r.media.url} alt="" className="size-16 rounded-xl bg-raised object-cover" />}
+            <li key={r.media.id} className={cn('grid grid-cols-[76px_minmax(0,1fr)] gap-3 rounded-3xl border bg-surface p-3 md:grid-cols-[76px_minmax(0,1fr)_auto]', r.state === 'erro' || problems[i] ? 'border-warn/50' : r.state === 'ok' ? 'border-ok/50' : 'border-line')}>
+              <FormatPreview media={r.media} kind={r.kind} />
               <div className="flex min-w-0 flex-col gap-2">
                 <div className="flex flex-wrap items-center gap-1.5">
                   {kinds.map((k) => (
@@ -189,7 +233,7 @@ export function BulkSchedule() {
       <button type="button" {...drop.props} onClick={() => input.current?.click()} className={cn('flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border border-dashed bg-surface text-muted hover:text-ink', drop.over ? 'border-[#0095F6] text-ink' : 'border-line-strong')}>
         <ImagePlus size={28} aria-hidden="true" />
         <span className="text-[14px] font-medium text-ink">{rows.length ? 'Arraste ou adicione mais arquivos' : 'Arraste as fotos e os vídeos aqui ou toque para escolher'}</span>
-        <span className="text-[12px]">Cada arquivo vira uma publicação. Vídeo até 1 GB.</span>
+        <span className="text-[12px]">Cada arquivo vira uma publicação. Vídeo grande é comprimido sozinho.</span>
       </button>
       <input ref={input} type="file" multiple accept={IG_ACCEPT} className="hidden" aria-label="Arquivos" onChange={(e) => { void add(e.target.files); e.target.value = '' }} />
       {run.error && <p role="alert" className="text-[14px] font-medium text-warn-ink">{run.error instanceof Error ? run.error.message : 'Não foi possível programar.'}</p>}

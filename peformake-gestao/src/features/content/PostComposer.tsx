@@ -8,7 +8,8 @@ import { LoadState } from '@/features/traffic/LoadState'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { cn } from '@/lib/cn'
 import { supabase } from '@/lib/supabase'
-import { autoKind, CROPS, defaultFit, mediaIssue, readMedia, requirements, targetRatio, uploadMedia, type Crop, type Fit, type PickedMedia, type UploadProgress } from './igMedia'
+import { autoKind, CROPS, defaultFit, MAX_STORY_VIDEO_BYTES, MAX_VIDEO_BYTES, mediaIssue, readMedia, requirements, targetRatio, uploadMedia, type AutoFix, type Crop, type Fit, type PickedMedia, type UploadProgress } from './igMedia'
+import { canPrepareVideo, partsFor, prepareVideo } from './videoPrep'
 import { Requirements, UploadBar } from './IgRequirements'
 import { RepeatEditor } from './RepeatEditor'
 import { KIND_LABEL_IG, scheduleError, toInstant, type IgKind } from './scheduleRules'
@@ -93,6 +94,8 @@ export function PostComposer() {
   const [rule, setRule] = useState<RepeatRule>(() => defaultRule('18:00', todayInBrazil()))
   const [step, setStep] = useState<string | null>(null)
   const [progress, setProgress] = useState<UploadProgress | null>(null)
+  // Ajustes automáticos do vídeo (ligados por padrão quando o navegador consegue): comprimir e dividir story longo.
+  const [auto, setAuto] = useState<AutoFix>(() => ({ compress: canPrepareVideo(), split: canPrepareVideo() }))
   const [open, setOpen] = useState<Record<'formato' | 'quando' | 'repetir', boolean>>({ formato: false, quando: true, repetir: false })
   const toggle = (k: 'formato' | 'quando' | 'repetir') => setOpen((o) => ({ ...o, [k]: !o[k] }))
 
@@ -131,7 +134,7 @@ export function PostComposer() {
 
   const picked = options.find((o) => o.label === account)
   const fitOf = (m: PickedMedia): Fit => m.fit ?? defaultFit(kind)
-  const issue = mediaIssue(kind, items)
+  const issue = mediaIssue(kind, items, auto)
   const at = now ? new Date().toISOString() : toInstant(day, hour)
   const past = !now && (!at || new Date(at).getTime() < Date.now())
   const ratio = targetRatio(kind, items, crop)
@@ -144,16 +147,32 @@ export function PostComposer() {
   const dates = kind === 'story' && rule.freq !== 'nao' && at ? repeatDates(rule, startDay, at) : at ? [at] : []
   const noDays = kind === 'story' && rule.freq === 'semana' && rule.weekdays.length === 0
   const blocked = !picked || !!issue || past || noDays
+  const one = items.length === 1 ? items[0]! : null
+  const limitOf = kind === 'story' ? MAX_STORY_VIDEO_BYTES : MAX_VIDEO_BYTES
+  const oneVideoTooBig = !!one?.video && (one.file.size > limitOf || one.fastStart === false)
+  const oneVideoLong = !!one?.video && kind === 'story' && (one.duration ?? 0) > 60
 
   const save = useMutation({
     mutationFn: async () => {
       if (!picked) throw new Error('Escolha o Instagram.')
-      const media = await uploadMedia(picked.id, kind, items, setStep, crop, setProgress)
-      setStep('Programando')
-      const { error } = dates.length > 1
-        ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _ats: dates })
-        : await db.rpc('ig_post_create', { _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _at: at, _repeat_every: null, _repeat_count: 1 })
-      if (error) throw error
+      // Vídeo único: comprime e/ou divide antes de subir, se ligado e se precisar.
+      let groups: PickedMedia[][] = [items]
+      if (one?.video && (auto.compress || auto.split)) {
+        const prep = await prepareVideo(one.file, one.duration, one.fastStart, { maxBytes: limitOf, compress: auto.compress, splitSeconds: kind === 'story' && auto.split ? 60 : null },
+          (text, pct) => { setStep(`${text} ${pct}%`); setProgress({ text: `${text} ${pct}%`, pct }) })
+        if (prep.changed) groups = prep.files.map((f) => [{ ...one, id: crypto.randomUUID(), file: f, fastStart: true, duration: null }])
+      }
+      // Cada parte sai 90 s depois da anterior (no Instagram o story aparece na ordem em que foi publicado).
+      for (let k = 0; k < groups.length; k++) {
+        const media = await uploadMedia(picked.id, kind, groups[k]!, setStep, crop, (p) => setProgress(groups.length > 1 ? { ...p, text: `Parte ${k + 1} de ${groups.length}: ${p.text}` } : p))
+        setStep('Programando')
+        const shift = (iso: string) => new Date(new Date(iso).getTime() + k * 90_000).toISOString()
+        const ats = dates.map(shift)
+        const { error } = ats.length > 1
+          ? await db.rpc('ig_post_create_series', { _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _ats: ats })
+          : await db.rpc('ig_post_create', { _account: picked.id, _kind: kind, _media: media, _caption: kind === 'story' ? '' : caption, _at: at ? shift(at) : at, _repeat_every: null, _repeat_count: 1 })
+        if (error) throw error
+      }
       // Agora: chama a publicação na hora. Se falhar, a rotina (a cada minuto) publica.
       if (now) await db.rpc('ig_publish_now', {})
     },
@@ -301,7 +320,13 @@ export function PostComposer() {
             </Row>
           )}
           <div className="flex flex-col gap-2 p-4">
-            {items.length > 0 && <Requirements kind={kind} list={requirements(kind, items)} />}
+            {items.length === 1 && items[0]!.video && (oneVideoTooBig || oneVideoLong) && canPrepareVideo() && (
+              <div className="flex flex-col gap-1.5 rounded-xl border border-line px-3 py-2 text-[13px]">
+                {oneVideoTooBig && <label className="flex cursor-pointer items-start gap-2"><input type="checkbox" checked={auto.compress} onChange={(e) => setAuto((a) => ({ ...a, compress: e.target.checked }))} className="mt-0.5 size-4" /><span><b className="font-semibold">Comprimir para caber no limite</b><span className="block text-[12px] text-muted">Qualidade alta, no seu computador. Leva cerca de 1 a 2 minutos.</span></span></label>}
+                {oneVideoLong && <label className="flex cursor-pointer items-start gap-2"><input type="checkbox" checked={auto.split} onChange={(e) => setAuto((a) => ({ ...a, split: e.target.checked }))} className="mt-0.5 size-4" /><span><b className="font-semibold">Dividir em partes de 60 s</b><span className="block text-[12px] text-muted">{partsFor(items[0]!.duration, 60)} stories postados em sequência, um a cada 90 segundos.</span></span></label>}
+              </div>
+            )}
+            {items.length > 0 && <Requirements kind={kind} list={requirements(kind, items, auto)} />}
             {issue && items.length > 0 && <p role="alert" className="rounded-xl bg-warn-soft px-3 py-2 text-[13px] font-medium text-warn-ink">{issue}</p>}
             {!issue && past && <p className="text-[13px] text-warn-ink">Escolha um horário no futuro.</p>}
             {save.error && <p role="alert" className="text-[14px] font-medium text-warn-ink">{save.error instanceof Error && !('code' in save.error) ? save.error.message : scheduleError(save.error)}</p>}

@@ -104,8 +104,11 @@ export function targetRatio(kind: IgKind, items: PickedMedia[], crop: Crop = 'or
   return clamp(first.ratio, FEED_MIN, FEED_MAX)
 }
 
-/** O que impede publicar. Null quando está tudo certo. */
-export function mediaIssue(kind: IgKind, items: PickedMedia[]): string | null {
+/** Ajustes automáticos ligados na tela: comprimir o vídeo que passa do limite e dividir story longo. */
+export interface AutoFix { compress: boolean; split: boolean }
+
+/** O que impede publicar. Null quando está tudo certo. Com ajuste automático ligado, tamanho e duração não barram. */
+export function mediaIssue(kind: IgKind, items: PickedMedia[], auto: AutoFix = { compress: false, split: false }): string | null {
   if (items.length === 0) return 'Escolha uma foto ou um vídeo.'
   if (items.length > 10) return 'O carrossel tem no máximo 10 arquivos.'
   if (items.length > 1 && kind !== 'post') return 'Vários arquivos só no feed (carrossel).'
@@ -114,11 +117,13 @@ export function mediaIssue(kind: IgKind, items: PickedMedia[]): string | null {
   if (items.length === 1 && kind === 'post' && one.video) return 'Vídeo no feed sai como Reels. Escolha Reels.'
   for (const m of items) {
     if (m.video && !['video/mp4', 'video/quicktime'].includes(m.file.type)) return 'O vídeo precisa ser MP4 ou MOV.'
+    const single = items.length === 1
+    if (m.video && single && auto.compress && (m.fastStart === false || m.file.size > (kind === 'story' ? MAX_STORY_VIDEO_BYTES : MAX_VIDEO_BYTES))) continue
     if (m.video && m.fastStart === false) return 'Este vídeo foi salvo com o índice no fim do arquivo e a Meta recusa. Exporte de novo com "otimizar para web" (início rápido) ligado.'
     if (m.video && kind === 'story' && m.file.size > MAX_STORY_VIDEO_BYTES) return `Story de vídeo aceita até 100 MB (este tem ${Math.round(m.file.size / 1048576)} MB). Diminua o vídeo ou poste como Reels.`
     if (m.video && m.file.size > MAX_VIDEO_BYTES) return `Reels aceita até 300 MB (este tem ${Math.round(m.file.size / 1048576)} MB). Diminua o vídeo.`
     if (m.video && items.length > 1 && m.file.size > PART_BYTES) return 'Vídeo dentro do carrossel precisa ter até 45 MB.'
-    if (m.video && kind === 'story' && (m.duration ?? 0) > 60) return 'Story de vídeo tem até 60 segundos.'
+    if (m.video && kind === 'story' && (m.duration ?? 0) > 60 && !(single && auto.split)) return 'Story de vídeo tem até 60 segundos. Ligue "Dividir em partes de 60 s" ou corte o vídeo.'
     if (m.video && kind === 'reels' && (m.duration ?? 0) > 900) return 'Reels tem até 15 minutos.'
     if (m.video && m.duration !== null && m.duration < 3) return 'O vídeo precisa ter pelo menos 3 segundos.'
   }
@@ -248,7 +253,7 @@ export async function uploadMedia(accountId: string, kind: IgKind, items: Picked
 
 /** Requisitos do Instagram para o formato escolhido, com o valor do arquivo e se passa (para a pessoa entender). */
 export interface Requirement { label: string; rule: string; value: string; ok: boolean | null }
-export function requirements(kind: IgKind, items: PickedMedia[]): Requirement[] {
+export function requirements(kind: IgKind, items: PickedMedia[], auto: AutoFix = { compress: false, split: false }): Requirement[] {
   const out: Requirement[] = []
   const mbOf = (b: number) => `${(b / 1048576).toFixed(b > 10 * 1048576 ? 0 : 1)} MB`
   const sec = (d: number | null) => (d === null ? 'não deu para ler' : d >= 60 ? `${Math.floor(d / 60)} min ${Math.round(d % 60)} s` : `${Math.round(d)} s`)
@@ -257,10 +262,12 @@ export function requirements(kind: IgKind, items: PickedMedia[]): Requirement[] 
     const pre = items.length > 1 ? `Arquivo ${i + 1} · ` : ''
     if (m.video) {
       const max = kind === 'story' ? MAX_STORY_VIDEO_BYTES : items.length > 1 ? PART_BYTES : MAX_VIDEO_BYTES
-      out.push({ label: `${pre}Tamanho do vídeo`, rule: `até ${mbOf(max)}`, value: mbOf(m.file.size), ok: m.file.size <= max })
+      const fixSize = items.length === 1 && auto.compress && m.file.size > max
+      out.push({ label: `${pre}Tamanho do vídeo`, rule: `até ${mbOf(max)}`, value: fixSize ? `${mbOf(m.file.size)} → será comprimido` : mbOf(m.file.size), ok: m.file.size <= max || fixSize })
       const maxD = kind === 'story' ? 60 : 900
-      out.push({ label: `${pre}Duração`, rule: `de 3 s a ${kind === 'story' ? '60 s' : '15 min'}`, value: sec(m.duration), ok: m.duration === null ? null : m.duration >= 3 && m.duration <= maxD })
-      out.push({ label: `${pre}Formato do arquivo`, rule: 'MP4 ou MOV, com início rápido', value: m.fastStart === false ? 'índice no fim do arquivo' : m.file.type === 'video/quicktime' ? 'MOV' : 'MP4', ok: ['video/mp4', 'video/quicktime'].includes(m.file.type) && m.fastStart !== false })
+      const split = items.length === 1 && kind === 'story' && auto.split && (m.duration ?? 0) > 60
+      out.push({ label: `${pre}Duração`, rule: `de 3 s a ${kind === 'story' ? '60 s' : '15 min'}`, value: split ? `${sec(m.duration)} → ${Math.ceil((m.duration ?? 0) / 60)} partes` : sec(m.duration), ok: m.duration === null ? null : (m.duration >= 3 && m.duration <= maxD) || split })
+      out.push({ label: `${pre}Formato do arquivo`, rule: 'MP4 ou MOV, com início rápido', value: m.fastStart === false ? (items.length === 1 && auto.compress ? 'índice no fim → será corrigido' : 'índice no fim do arquivo') : m.file.type === 'video/quicktime' ? 'MOV' : 'MP4', ok: ['video/mp4', 'video/quicktime'].includes(m.file.type) && (m.fastStart !== false || (items.length === 1 && auto.compress)) })
     } else {
       out.push({ label: `${pre}Foto`, rule: kind === 'story' ? '9:16, ajustada sozinha' : 'de 4:5 a 1,91:1, ajustada sozinha', value: m.ratio < 0.95 ? 'em pé' : m.ratio > 1.05 ? 'deitada' : 'quadrada', ok: true })
     }

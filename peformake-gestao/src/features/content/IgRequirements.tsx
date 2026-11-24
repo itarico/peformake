@@ -10,14 +10,17 @@ import { KIND_LABEL_IG, type IgKind } from './scheduleRules'
  */
 export function Requirements({ kind, list }: { kind: IgKind; list: Requirement[] }) {
   const failing = list.some((r) => r.ok === false)
+  const adjusting = list.some((r) => r.value.includes('→'))
   const [open, setOpen] = useState(false)
-  const shown = open || failing
+  const shown = open || failing || adjusting
+  // Só aparece quando o arquivo esbarra num limite do Instagram ou vai ser ajustado (pedido do Italo, 24/11).
+  if (!failing && !adjusting) return null
   return (
     <section aria-label="Requisitos do Instagram" className={cn('rounded-xl border px-3 py-2', failing ? 'border-warn/50 bg-warn-soft/40' : 'border-line')}>
       <button type="button" aria-expanded={shown} onClick={() => setOpen((v) => !v)} className="flex min-h-9 w-full cursor-pointer items-center justify-between gap-2 text-left text-[13px] font-semibold">
         <span className="flex items-center gap-1.5"><Info size={14} aria-hidden="true" /> Regras do Instagram para {KIND_LABEL_IG[kind]}</span>
         <span className="flex items-center gap-1 text-[12px] font-medium">
-          {failing ? <span className="text-warn-ink">Precisa ajustar</span> : <span className="text-ok-ink">Tudo certo</span>}
+          {failing ? <span className="text-warn-ink">Precisa ajustar</span> : <span className="text-accent-ink">Será ajustado</span>}
           <ChevronDown size={14} className={cn('transition-transform', shown && 'rotate-180')} aria-hidden="true" />
         </span>
       </button>

@@ -121,7 +121,8 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!(await pg.getByText('carrossel com 3').count())) fails.push(`${dev}: não reconheceu o carrossel`)
       if ((await pg.getByRole('list', { name: 'Arquivos do post' }).locator('img').count()) !== 3) fails.push(`${dev}: miniaturas do carrossel não aparecem`)
       if (!(await pg.getByRole('radio', { name: 'Inteira' }).count())) fails.push(`${dev}: sem a opção Inteira`)
-      if (!(await pg.getByRole('region', { name: 'Requisitos do Instagram' }).count()) && !(await pg.locator('section[aria-label="Requisitos do Instagram"]').count())) fails.push(`${dev}: sem as regras do Instagram`)
+      // Regras do Instagram só aparecem quando algo esbarra no limite (aqui está tudo certo).
+      if (await pg.locator('section[aria-label="Requisitos do Instagram"]').count()) fails.push(`${dev}: regras aparecem sem motivo`)
       await pg.getByRole('button', { name: 'Mover arquivo 3 para trás' }).click(); await pg.waitForTimeout(200)
       await pg.getByLabel('Legenda').fill('Carrossel de teste')
       if (await sideScroll(pg)) fails.push(`${dev}: criar post rola de lado`)
