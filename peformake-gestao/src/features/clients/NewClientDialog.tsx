@@ -16,14 +16,15 @@ const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
  * vem depois, guiado pelos "Próximos passos" na ficha do cliente.
  * Sem nome da empresa = pessoa física: o cliente fica com o nome do responsável.
  */
-export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+/** `via` e `onCreated`: usados pela agenda do audiovisual, que cadastra e já segue para o agendamento sem sair da tela. */
+export function NewClientDialog({ open, onClose, via, onCreated }: { open: boolean; onClose: () => void; via?: 'audiovisual'; onCreated?: (id: string) => void }) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [company, setCompany] = useState('')
   const [person, setPerson] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
-  const [kind, setKind] = useState<'recurring' | 'one-off'>('recurring')
+  const [kind, setKind] = useState<'recurring' | 'one-off'>(via === 'audiovisual' ? 'one-off' : 'recurring')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [contactFail, setContactFail] = useState<{ id: string; message: string } | null>(null)
 
@@ -42,14 +43,15 @@ export function NewClientDialog({ open, onClose }: { open: boolean; onClose: () 
       const r = await createClientWithContact(draft, {
         name: person.trim(), role: 'dono', phone, email: email.trim(),
         gets_billing: true, gets_approvals: true, gets_reports: true, gets_contract: true,
-      })
+      }, via)
       return r
     },
     onSuccess: ({ id, contactError }) => {
       void queryClient.invalidateQueries({ queryKey: ['clients'] })
       if (contactError) { setContactFail({ id, message: contactError }); return }
       onClose()
-      navigate(`/clientes/${id}?novo=1`)
+      if (onCreated) { void queryClient.invalidateQueries({ queryKey: ['production-clients'] }); onCreated(id) }
+      else navigate(`/clientes/${id}?novo=1`)
     },
   })
 

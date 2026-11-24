@@ -274,10 +274,12 @@ async function saveLegal(savedId: string, draft: ClientDraft) {
  * Cliente novo e contato principal gravados numa função só (client_create): se um falhar, nada é gravado.
  * Enquanto a função não estiver no banco, grava em duas etapas e avisa se o contato falhar.
  */
-export async function createClientWithContact(draft: ClientDraft, contact: Record<string, unknown>): Promise<{ id: string; contactError: string | null }> {
+/** `via: 'audiovisual'`: cadastro feito pela agenda do audiovisual (a Ellcazo também pode); o cliente nasce marcado como do audiovisual. */
+export async function createClientWithContact(draft: ClientDraft, contact: Record<string, unknown>, via?: 'audiovisual'): Promise<{ id: string; contactError: string | null }> {
   // bind: sem ele o supabase.rpc perde o "this" e quebra antes de chegar ao banco ("Não foi possível salvar").
   const rpc = supabase.rpc.bind(supabase) as unknown as (fn: string, a: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string; code?: string } | null }>
-  const { data, error } = await rpc('client_create', { _data: clientSaveData(draft), _contact: contact })
+  const { data, error } = await rpc(via === 'audiovisual' ? 'av_client_create' : 'client_create', { _data: clientSaveData(draft), _contact: contact })
+  if (via === 'audiovisual') { if (error) throw error; return { id: data as string, contactError: null } }
   if (!error) {
     await saveLegal(data as string, draft)
     return { id: data as string, contactError: null }

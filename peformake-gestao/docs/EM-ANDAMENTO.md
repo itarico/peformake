@@ -24,3 +24,7 @@ o próximo passo exato, faz commit e push. Quem terminar a tarefa apaga o item.
 
 ## Portal: índice antigo de link (24/11)
 - Rodar no SQL Editor: `drop index if exists public.client_portal_links_one_team_link;`. O índice novo (`client_portal_links_one_per_origin`) já existe. Sem isso, mandar vídeo para o cliente aprovar falha quando ele já tem link de portal da equipe ou do briefing.
+
+## Mini curso do cliente no portal (pedido do Italo, 24/11): NÃO começado
+- Videoaulas dentro de Estratégia/Consultoria, liberadas no portal do cliente ao contratar: treinar a equipe comercial, gravar os próprios vídeos, atendimento dos leads do tráfego.
+- Próximo passo: propor a série (módulos e aulas) e o roteiro de cada aula para o Italo gravar; depois a área de aulas no portal.

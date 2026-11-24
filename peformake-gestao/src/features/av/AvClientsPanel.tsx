@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CalendarPlus, ChevronRight, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { NewClientDialog } from '@/features/clients/NewClientDialog'
@@ -29,6 +29,7 @@ const DOT: Record<Urgency, string> = { urgente: 'bg-warn', marcar: 'bg-warn/50',
  * Mostra há quanto tempo cada um gravou, quantas gravações tem no mês e quem precisa ser agendado (vermelho = passou de um mês).
  */
 export function AvClientsPanel({ onSchedule, canCreate = false }: { onSchedule: (clientId: string) => void; canCreate?: boolean }) {
+  const queryClient = useQueryClient()
   const today = todayInBrazil()
   const panel = useQuery({ queryKey: ['av-clients-panel'], queryFn: loadPanel })
   const [tab, setTab] = useState<'fixos' | 'avulsos'>('fixos')
@@ -80,8 +81,9 @@ export function AvClientsPanel({ onSchedule, canCreate = false }: { onSchedule: 
         {panel.isPending && <li className="py-3 text-[13px] text-muted">Carregando</li>}
         {panel.data && list.length === 0 && <li className="py-3 text-[13px] text-muted">{tab === 'fixos' ? 'Nenhum cliente fixo com audiovisual.' : 'Nenhum cliente avulso com audiovisual.'}</li>}
       </ul>
-      {panel.data && <p className="text-[12px] text-muted">Cliente novo aparece aqui depois de ganhar um serviço de audiovisual na ficha dele.</p>}
-      <NewClientDialog open={creating} onClose={() => setCreating(false)} />
+      {panel.data && <p className="text-[12px] text-muted">Toque no + para cadastrar um cliente novo e já marcar a gravação.</p>}
+      <NewClientDialog open={creating} onClose={() => setCreating(false)} via="audiovisual"
+        onCreated={(id) => { void queryClient.invalidateQueries({ queryKey: ['av-clients-panel'] }); onSchedule(id) }} />
     </aside>
   )
 }

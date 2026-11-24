@@ -31,8 +31,8 @@ export function AvAgenda() {
   const today = todayInBrazil()
   const { clientName, isLive } = useProduction()
   const { state } = useAuth()
-  // Cadastrar cliente é de quem gerencia clientes (mesma regra da tela Clientes).
-  const canManageClients = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing'])
+  // Cadastro pela agenda: quem gerencia clientes e a Ellcazo (regra do banco em av_client_create).
+  const canManageClients = state.status === 'ready' && hasAnyRole(state.user.roles, ['admin', 'head_marketing', 'ellcazo'])
   const [dialog, setDialog] = useState<{ client?: string; day?: string } | null>(null)
   const last = useMemo(() => { const d = new Date(`${month}T12:00:00Z`); d.setUTCMonth(d.getUTCMonth() + 1); return d.toISOString().slice(0, 10) }, [month])
 

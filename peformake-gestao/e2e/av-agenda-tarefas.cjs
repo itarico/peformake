@@ -26,7 +26,7 @@ const panel = [
   { id: 'c4', name: 'Casamento Ana', logo_path: null, fixed: false, last_shoot: null, next_shoot: null, next_project: null, shoots_month: 0, shoots_total: 0, days_since: null },
 ]
 const project = { id: 'p1', client_id: 'c1', kind: 'monthly', month, title: 'Vídeos do mês', status: 'scheduled', briefing: null, script: null, video_count: 4, format: null, reference_links: [], shoot_at: `${shootDay}T17:00:00Z`, shoot_end_at: `${shootDay}T20:00:00Z`, location: 'Boa Viagem', shoot_notes: null, videomaker_id: null, editor_id: null, raw_link: null, final_link: null, due_date: dueDay, revision_note: null, revision_count: 0, updated_at: now.toISOString(), script_status: 'aprovado', script_note: null, shoot_duration_min: 180, scriptwriter_id: null, owner_id: null, shoot_confirmed_at: null, checkin_at: null, checkin_distance_m: null, checkout_at: null, raw_sent_at: null, raw_links: [], edit_due_at: null, staff_token: null, google_event_id: null, location_lat: null, location_lng: null }
-let tasks; const fails = []; const saves = []
+let tasks; let created = null; const fails = []; const saves = []
 const reset = () => { saves.length = 0; tasks = [
   { id: 't1', area: 'audiovisual', client_id: 'c1', title: 'Entregar vídeos de Padaria Sol', description: null, status: 'a_fazer', source: 'sistema', priority: false, due_date: dueDay, ref_table: 'av_projects', ref_id: 'p1', created_at: now.toISOString() },
   { id: 't2', area: 'audiovisual', client_id: null, title: 'Marcar reunião com a Thyfany', description: null, status: 'fazendo', source: 'manual', priority: true, due_date: null, ref_table: null, ref_id: null, created_at: now.toISOString() },
@@ -41,6 +41,7 @@ async function mock(route) {
   if (p.includes('/functions/v1/av-calendar')) return json({ events: [], problems: [] })
   if (p.startsWith('/rest/v1/rpc/')) {
     const fn = p.split('/').pop()
+    if (fn === 'av_client_create') { created = body; C.push({ id: 'c9', name: body._data.name, is_active: true, areas: ['audiovisual'], recurring: false }); return json('c9') }
     if (fn === 'team_task_save') { saves.push(body); const t = tasks.find((x) => x.id === body._id); if (t && body._data.status) t.status = body._data.status; return json(body._id ?? 'novo') }
     return json({ production_clients: C, production_staff: [], my_staff_id: null, av_clients_panel: panel }[fn] ?? null)
   }
@@ -76,6 +77,20 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       if (!(await pg.locator('dialog[open]').count())) fails.push(`${dev}: tocar no cliente não abriu o agendamento`)
       if (await popupScrolls(pg)) fails.push(`${dev}: pop-up de agendar rola`)
       await pg.screenshot({ path: path.join(OUT, `${dev}-pop-agendar.png`) }); await pg.keyboard.press('Escape')
+
+      // Cadastrar cliente novo pela agenda e cair direto no agendamento dele.
+      created = null
+      await pg.getByRole('button', { name: 'Cadastrar cliente novo' }).click(); await pg.waitForTimeout(400)
+      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up Novo cliente rola`)
+      await pg.locator('input[name="pf-novo-cliente-empresa"]').fill('Buffet Bela Festa')
+      await pg.locator('input[name="pf-novo-cliente-responsavel"]').fill('Carla')
+      await pg.locator('#novo-cliente-whatsapp').click(); await pg.keyboard.type('81988887777'); await pg.keyboard.press('Tab'); await pg.waitForTimeout(200)
+      await pg.screenshot({ path: path.join(OUT, `${dev}-pop-cliente.png`) })
+      await pg.getByRole('button', { name: 'Criar cliente' }).click(); await pg.waitForTimeout(1200)
+      if (!created || created._data?.name !== 'Buffet Bela Festa') fails.push(`${dev}: cadastro pela agenda não chamou av_client_create (${JSON.stringify(created)?.slice(0, 120)})`)
+      if (!pg.url().includes('/audiovisual') || pg.url().includes('/clientes/')) fails.push(`${dev}: depois de cadastrar saiu do audiovisual (${pg.url()})`)
+      if (!(await pg.getByRole('dialog').getByText('Agendar gravação').count())) fails.push(`${dev}: depois de cadastrar não abriu o agendamento`)
+      await pg.keyboard.press('Escape')
 
       await pg.goto(BASE + '/audiovisual/tarefas', { waitUntil: 'networkidle' }); await pg.waitForTimeout(400)
       if (!(await pg.getByRole('link', { name: 'Tarefas', exact: true }).count())) fails.push(`${dev}: sem a aba Tarefas no audiovisual`)
