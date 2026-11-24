@@ -35,21 +35,53 @@
      "detalhe": "Transcreva 1 minuto e conte as palavras. Conte os vícios. Dê nota 0 a 10 para a primeira frase e para o fechamento."
     }
    ],
-   "teste": [
+   "feynman": "Grave 30 segundos explicando para um amigo por que medir a própria fala é o primeiro passo.",
+   "prova": [
     {
      "p": "Qual a faixa de ritmo boa para vender?",
-     "r": "Perto de 130 a 160 palavras por minuto."
+     "opcoes": [
+      "90 a 110 palavras por minuto",
+      "130 a 160 palavras por minuto",
+      "190 a 220 palavras por minuto"
+     ],
+     "certa": 1,
+     "explica": "Abaixo soa inseguro; acima soa ansioso."
     },
     {
      "p": "Quais são os 4 números da fala de venda?",
-     "r": "Ritmo, vícios, primeira frase e fechamento (próximo passo)."
+     "opcoes": [
+      "Ritmo, vícios, primeira frase e fechamento",
+      "Volume, roupa, sorriso e postura",
+      "Duração, preço, desconto e prazo"
+     ],
+     "certa": 0,
+     "explica": "É o que você mede em cada gravação."
     },
     {
-     "p": "Por que começar com 'a Peformake é…' é fraco?",
-     "r": "Porque começa por você, não pelo problema do cliente, e não prende nos primeiros segundos."
+     "p": "Por que 'a Peformake é uma agência que…' é uma abertura fraca?",
+     "opcoes": [
+      "Porque é longa demais",
+      "Porque começa por você, não pelo problema do cliente",
+      "Porque usa o nome da empresa"
+     ],
+     "certa": 1,
+     "explica": "O cliente presta atenção no problema dele."
+    },
+    {
+     "p": "Como deve terminar uma fala de venda?",
+     "opcoes": [
+      "Com o preço",
+      "Com um próximo passo claro e pequeno",
+      "Com a lista de serviços"
+     ],
+     "certa": 1,
+     "explica": "Sem próximo passo, a conversa morre."
     }
    ],
-   "feynman": "Grave 30 segundos explicando para um amigo por que medir a própria fala é o primeiro passo."
+   "gravar": {
+    "prompt": "Grave seu pitch de 2 minutos para um dono de clínica, sem roteiro.",
+    "segundos": 120
+   }
   },
   {
    "trilha": "vendas",
@@ -79,21 +111,48 @@
      "detalhe": "Margem cheia, margem com o desconto que você ia dar e margem do kit. Confira a taxa atual na Central do Vendedor."
     }
    ],
-   "teste": [
+   "feynman": "Explique em voz alta, como para um vendedor iniciante, por que 20% de desconto não é 20% a menos de lucro.",
+   "prova": [
     {
-     "p": "O que é margem de contribuição?",
-     "r": "Preço menos custo do produto menos taxas: o que sobra de cada venda."
+     "p": "Margem de contribuição é:",
+     "opcoes": [
+      "Preço menos custo do produto menos taxas",
+      "O lucro do mês",
+      "O preço com desconto"
+     ],
+     "certa": 0,
+     "explica": "É o que sobra de cada venda."
     },
     {
-     "p": "Margem de R$ 30 cai para R$ 15 com desconto. Quanto vender a mais para empatar?",
-     "r": "30 ÷ 15 − 1 = 100%, o dobro."
+     "p": "Margem cai de R$ 30 para R$ 15 com desconto. Quanto vender a mais para empatar?",
+     "opcoes": [
+      "50% a mais",
+      "100% a mais",
+      "15% a mais"
+     ],
+     "certa": 1,
+     "explica": "30 ÷ 15 − 1 = 1, ou seja, 100%."
     },
     {
-     "p": "Por que kit costuma ganhar de desconto?",
-     "r": "Dilui a taxa fixa e a embalagem e preserva a margem, enquanto o cliente percebe ganho."
+     "p": "20% de desconto significa 20% a menos de lucro?",
+     "opcoes": [
+      "Sim",
+      "Não, costuma ser bem mais, porque o desconto sai inteiro da margem"
+     ],
+     "certa": 1,
+     "explica": "A margem é bem menor que o preço."
+    },
+    {
+     "p": "Por que o kit costuma ganhar do desconto?",
+     "opcoes": [
+      "Porque é mais bonito",
+      "Porque dilui taxa fixa e embalagem e preserva a margem",
+      "Porque o cliente paga menos"
+     ],
+     "certa": 1,
+     "explica": "O cliente sente ganho e você protege a margem."
     }
-   ],
-   "feynman": "Explique em voz alta, como para um vendedor iniciante, por que 20% de desconto não é 20% a menos de lucro."
+   ]
   }
  ]
 }

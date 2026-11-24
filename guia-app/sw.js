@@ -1,5 +1,5 @@
 // Guarda a casca do app para abrir rápido e funcionar sem sinal. Os dados vêm sempre da rede.
-const CACHE = "guia-v7";
+const CACHE = "guia-v8";
 const SHELL = ["/", "/index.html", "/app.js", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", e => {

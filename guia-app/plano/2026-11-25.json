@@ -24,21 +24,53 @@
      "detalhe": "Mesmos 4 números: ritmo, vícios, primeira frase, fechamento."
     }
    ],
-   "teste": [
+   "feynman": "Explique a estrutura de 5 partes para alguém da sua equipe em 1 minuto, com um exemplo de cliente real.",
+   "prova": [
     {
-     "p": "Quais são as 5 partes do pitch?",
-     "r": "Problema, custo, caminho, prova e próximo passo."
+     "p": "Qual a ordem das 5 partes do pitch?",
+     "opcoes": [
+      "Prova, preço, problema, prazo, pedido",
+      "Problema, custo, caminho, prova, próximo passo",
+      "Empresa, serviços, preço, prova, contrato"
+     ],
+     "certa": 1,
+     "explica": "Começa pelo cliente, termina num pedido."
     },
     {
      "p": "Qual parte cria urgência e quase todo mundo pula?",
-     "r": "O custo do problema hoje."
+     "opcoes": [
+      "O caminho",
+      "O custo do problema hoje",
+      "A prova"
+     ],
+     "certa": 1,
+     "explica": "Sem custo, o problema vira 'um dia eu resolvo'."
     },
     {
-     "p": "Como deve ser o próximo passo?",
-     "r": "Pequeno e claro, como 15 minutos ou um diagnóstico gratuito."
+     "p": "Qual é um bom próximo passo?",
+     "opcoes": [
+      "'Fecha o contrato hoje?'",
+      "'Posso te mostrar em 15 minutos onde está o vazamento?'",
+      "'Qualquer coisa me chama.'"
+     ],
+     "certa": 1,
+     "explica": "Pequeno, concreto e fácil de aceitar."
+    },
+    {
+     "p": "A prova no pitch deve ter:",
+     "opcoes": [
+      "Um caso real com número",
+      "Uma opinião sua",
+      "O preço"
+     ],
+     "certa": 0,
+     "explica": "Número convence mais que adjetivo."
     }
    ],
-   "feynman": "Explique a estrutura de 5 partes para alguém da sua equipe em 1 minuto, com um exemplo de cliente real."
+   "gravar": {
+    "prompt": "Grave o pitch nas 5 partes: problema, custo, caminho, prova e próximo passo.",
+    "segundos": 120
+   }
   },
   {
    "trilha": "ingles",
@@ -75,21 +107,53 @@
      ]
     }
    ],
-   "teste": [
+   "feynman": "Fale as 3 frases em inglês para a câmera, sem ler, e comente aqui como se saiu.",
+   "prova": [
     {
-     "p": "Como se diz 'invisível na internet' na frase do pitch?",
-     "r": "Invisible online."
+     "p": "'That costs them new patients every week' fala de:",
+     "opcoes": [
+      "O caminho",
+      "O custo",
+      "O preço"
+     ],
+     "certa": 1,
+     "explica": "É a frase do custo."
     },
     {
-     "p": "Complete: 'That costs them new patients every ___.'",
-     "r": "Week."
+     "p": "'Invisible online' quer dizer:",
+     "opcoes": [
+      "Invisível na internet",
+      "Desligado",
+      "Sem estoque"
+     ],
+     "certa": 0,
+     "explica": ""
     },
     {
-     "p": "Qual a técnica de repetir junto com o áudio?",
-     "r": "Shadowing."
+     "p": "Shadowing é:",
+     "opcoes": [
+      "Ler em silêncio",
+      "Repetir junto com o áudio, imitando",
+      "Traduzir palavra por palavra"
+     ],
+     "certa": 1,
+     "explica": "É a técnica mais rápida para a pronúncia."
+    },
+    {
+     "p": "Como aprender inglês de negócios mais rápido?",
+     "opcoes": [
+      "Decorar palavras soltas",
+      "Aprender frases inteiras que você vai usar",
+      "Estudar só gramática"
+     ],
+     "certa": 1,
+     "explica": "O cérebro guarda o pedaço pronto."
     }
    ],
-   "feynman": "Fale as 3 frases em inglês para a câmera, sem ler, e comente aqui como se saiu."
+   "gravar": {
+    "prompt": "Grave as 3 frases do pitch em inglês, sem ler.",
+    "segundos": 45
+   }
   }
  ]
 }

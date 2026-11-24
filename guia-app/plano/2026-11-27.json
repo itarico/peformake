@@ -29,21 +29,53 @@
      "detalhe": "Pausa antes do número e antes do próximo passo."
     }
    ],
-   "teste": [
+   "feynman": "Grave 30 segundos lendo o pitch com pausas e comente se percebeu diferença.",
+   "prova": [
     {
-     "p": "Por que respirar pela barriga ajuda a não acelerar?",
-     "r": "Dá ar para terminar a frase sem correr no final."
+     "p": "Por que respirar pela barriga ajuda?",
+     "opcoes": [
+      "Deixa a voz mais aguda",
+      "Dá ar para terminar a frase sem acelerar",
+      "Diminui o volume"
+     ],
+     "certa": 1,
+     "explica": ""
     },
     {
-     "p": "Para que serve o exercício da caneta?",
-     "r": "Obriga a articular mais; sem a caneta, a fala sai mais limpa."
+     "p": "O exercício da caneta entre os dentes serve para:",
+     "opcoes": [
+      "Treinar a articulação",
+      "Treinar o volume",
+      "Treinar o ritmo"
+     ],
+     "certa": 0,
+     "explica": "Sem a caneta, a fala sai mais limpa."
     },
     {
-     "p": "Onde colocar pausa no pitch?",
-     "r": "Antes de números e antes do pedido (próximo passo)."
+     "p": "Onde colocar a pausa no pitch?",
+     "opcoes": [
+      "No começo de cada frase",
+      "Antes do número e antes do pedido",
+      "Só no final"
+     ],
+     "certa": 1,
+     "explica": "A pausa diz 'isso importa'."
+    },
+    {
+     "p": "A pausa também ajuda a:",
+     "opcoes": [
+      "Falar mais rápido",
+      "Substituir o 'né'",
+      "Aumentar o tempo do pitch"
+     ],
+     "certa": 1,
+     "explica": ""
     }
    ],
-   "feynman": "Grave 30 segundos lendo o pitch com pausas e comente se percebeu diferença."
+   "gravar": {
+    "prompt": "Grave o pitch com as pausas marcadas.",
+    "segundos": 120
+   }
   },
   {
    "trilha": "financas",
@@ -79,21 +111,49 @@
      ]
     }
    ],
-   "teste": [
+   "feynman": "Explique para o seu sócio em 1 minuto o que a integração da nota precisa ter pronto até janeiro.",
+   "prova": [
     {
-     "p": "Desde quando a ME e EPP de serviço emite pelo Emissor Nacional?",
-     "r": "1º de novembro de 2026."
+     "p": "Desde quando ME e EPP de serviço do Simples emitem pelo Emissor Nacional?",
+     "opcoes": [
+      "1º/1/2026",
+      "1º/11/2026",
+      "1º/1/2027"
+     ],
+     "certa": 1,
+     "explica": "Resolução CGSN 191/2026."
     },
     {
      "p": "O que entra na nota em 1º/1/2027?",
-     "r": "Os impostos IBS e CBS destacados."
+     "opcoes": [
+      "IBS e CBS",
+      "ICMS",
+      "Nada muda"
+     ],
+     "certa": 0,
+     "explica": "Os impostos da reforma tributária."
     },
     {
-     "p": "O que a emissão por API exige?",
-     "r": "Certificado digital (A1 ou A3) e o código certo do serviço."
+     "p": "Para emitir NFS-e por API é preciso:",
+     "opcoes": [
+      "Só o CNPJ",
+      "Certificado digital e o código do serviço",
+      "Senha do gov.br"
+     ],
+     "certa": 1,
+     "explica": ""
+    },
+    {
+     "p": "Custo líquido para um cliente grande é:",
+     "opcoes": [
+      "Preço da nota",
+      "Preço menos o crédito de imposto que ele recupera",
+      "Preço mais imposto"
+     ],
+     "certa": 1,
+     "explica": "Por isso o regime do fornecedor importa para ele."
     }
-   ],
-   "feynman": "Explique para o seu sócio em 1 minuto o que a integração da nota precisa ter pronto até janeiro."
+   ]
   }
  ]
 }

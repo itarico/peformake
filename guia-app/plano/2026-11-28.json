@@ -24,21 +24,53 @@
      "detalhe": "Peça para ele usar as 3 objeções contra você, uma de cada vez."
     }
    ],
-   "teste": [
+   "feynman": "Grave a sua resposta para 'já tenho agência' e comente aqui como ficou.",
+   "prova": [
     {
-     "p": "O que 'tá caro' costuma significar?",
-     "r": "Que o cliente ainda não viu valor suficiente."
+     "p": "'Tá caro' geralmente significa:",
+     "opcoes": [
+      "Não tenho dinheiro",
+      "Ainda não vi valor suficiente",
+      "Quero desconto de 50%"
+     ],
+     "certa": 1,
+     "explica": ""
     },
     {
-     "p": "Quais são os 3 passos para responder uma objeção?",
-     "r": "Acolher, perguntar e responder com valor (custo do problema + prova)."
+     "p": "Quais os 3 passos para responder uma objeção?",
+     "opcoes": [
+      "Acolher, perguntar, responder com valor",
+      "Concordar, baixar o preço, fechar",
+      "Ignorar, insistir, fechar"
+     ],
+     "certa": 0,
+     "explica": ""
     },
     {
      "p": "Por que não dar desconto como primeira resposta?",
-     "r": "Ensina que o preço era inventado e o desconto sai inteiro da margem."
+     "opcoes": [
+      "Porque ensina que o preço era inventado e corta a margem",
+      "Porque o cliente não gosta",
+      "Porque demora"
+     ],
+     "certa": 0,
+     "explica": ""
+    },
+    {
+     "p": "Boa pergunta para 'vou pensar':",
+     "opcoes": [
+      "'Pensa e me avisa.'",
+      "'Claro. O que ficou em dúvida para você?'",
+      "'A promoção acaba hoje.'"
+     ],
+     "certa": 1,
+     "explica": ""
     }
    ],
-   "feynman": "Grave a sua resposta para 'já tenho agência' e comente aqui como ficou."
+   "gravar": {
+    "prompt": "Grave sua resposta para 'tá caro', 'vou pensar' e 'já tenho agência'.",
+    "segundos": 180
+   }
   },
   {
    "trilha": "ciencia",
@@ -68,21 +100,49 @@
      "detalhe": "Comente aqui. Elas entram na sua agenda."
     }
    ],
-   "teste": [
+   "feynman": "Explique em voz alta por que o bloco das 22h30 é o mais importante da sua agenda.",
+   "prova": [
     {
      "p": "O que o cérebro faz com o que você estudou enquanto dorme?",
-     "r": "Organiza e consolida o aprendizado."
+     "opcoes": [
+      "Apaga",
+      "Organiza e fixa",
+      "Nada"
+     ],
+     "certa": 1,
+     "explica": ""
     },
     {
-     "p": "Por que falta de sono parece falta de disciplina?",
-     "r": "Porque derruba força de vontade, humor e decisão."
+     "p": "Falta de sono costuma parecer:",
+     "opcoes": [
+      "Falta de disciplina",
+      "Excesso de energia",
+      "Fome"
+     ],
+     "certa": 0,
+     "explica": "Derruba força de vontade e decisão."
     },
     {
-     "p": "Quais são 2 regras de ambiente para dormir melhor?",
-     "r": "Quarto escuro e fresco, celular longe da cama."
+     "p": "Para acordar 5h30 com 7 horas de sono, deitar às:",
+     "opcoes": [
+      "21h30",
+      "22h30",
+      "00h00"
+     ],
+     "certa": 1,
+     "explica": ""
+    },
+    {
+     "p": "Uma regra de ambiente que ajuda a dormir:",
+     "opcoes": [
+      "Celular longe da cama",
+      "Café à noite",
+      "Luz acesa"
+     ],
+     "certa": 0,
+     "explica": ""
     }
-   ],
-   "feynman": "Explique em voz alta por que o bloco das 22h30 é o mais importante da sua agenda."
+   ]
   }
  ]
 }

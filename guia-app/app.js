@@ -25,7 +25,7 @@
   const xpForLevel = L => 100 * L * (L - 1) / 2;
 
   const S = { sb: null, agenda: null, corpo: null, semana: null, trilhas: [], crono: null, aulas: {}, registro: {}, estudo: {}, tarefas: [], cartoes: {},
-    open: new Set(), reveal: new Set(), lastLevel: null, lastPct: null, cronoAll: false };
+    resultados: [], open: new Set(), reveal: new Set(), lastLevel: null, lastPct: null, cronoAll: false };
 
   // ---------------- dados ----------------
   async function fetchJSON(path) { try { const r = await fetch(path, { cache: "no-cache" }); return r.ok ? await r.json() : null; } catch (e) { return null; } }
@@ -61,6 +61,8 @@
       S.sb.from("guia_registro").select("dia,feitos").gte("dia", addDays(t, -180)),
       S.sb.from("guia_estudo").select("dia,titulo,foco,blocos,feitos"),
       S.sb.from("guia_tarefas").select("*").order("criada_em", { ascending: true }).limit(500)]);
+    const res = await S.sb.from("guia_resultados").select("dia,licao,trilha,tipo,nota,acertos,total,dados,texto,criado_em").order("criado_em", { ascending: true }).limit(2000);
+    S.resultados = res.data || [];
     const err = docs.error || reg.error || est.error || tar.error;
     if (err) { toast("Não consegui carregar seus dados. Tente de novo."); console.error(err); return; }
     (docs.data || []).forEach(d => { if (d.key === "agenda") S.agenda = d.data; if (d.key === "corpo") S.corpo = d.data; if (d.key === "semana") S.semana = d.data; if (d.key === "cartoes") S.cartoes = (d.data && d.data.cards) || {}; });
@@ -87,6 +89,7 @@
     S.tarefas.forEach(t => { if (t.feita) xp += 5; });
     Object.values(S.estudo).forEach(e => { xp += (e.feitos || []).length * 5; });
     Object.values(S.cartoes).forEach(c => { xp += (c.acertos || 0) * 3; });
+    S.resultados.forEach(r => { if (r.tipo === "prova") xp += (r.acertos || 0) * 5; if (r.tipo === "gravacao") xp += 10; });
     return xp;
   }
   function levelOf(xp) { let L = 1; while (xpForLevel(L + 1) <= xp && L < 99) L++; return L; }
@@ -129,7 +132,7 @@
       let title = s.titulo; if (s.id === "academia" && S.corpo && S.corpo.proximo) title += " · " + S.corpo.proximo;
       body.append(el("span", "ttl", title));
       if (s.tipo === "trabalho") { const n = openTasks(t).length; body.append(el("span", "sub", n ? n + (n === 1 ? " tarefa aberta" : " tarefas abertas") + " · tocar para ver" : "Sem tarefas abertas")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("tarefas")); }
-      else if (s.tipo === "estudo") { const ls = lessonsOf(t); body.append(el("span", "sub", ls.length ? "Aula: " + ls.map(x => trilhaInfo(x.trilha).nome).join(" + ") + " · tocar para abrir" : "Plano de estudo sai na segunda")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("estudo")); }
+      else if (s.tipo === "estudo") { const ls = lessonsOf(t); body.append(el("span", "sub", ls.length ? ls.map(x => trilhaInfo(x.trilha).nome).join(" + ") + " · tocar para estudar" : "Plano de estudo sai na segunda")); body.style.cursor = "pointer"; body.addEventListener("click", () => go("estudo")); }
       else if (s.detalhe) body.append(el("span", "sub", s.detalhe));
       li.append(body);
       const btn = el("button", "chk"); btn.type = "button"; btn.innerHTML = CHECK_SVG; btn.setAttribute("aria-pressed", done ? "true" : "false");
@@ -160,24 +163,26 @@
   }
 
   // ---------------- estudo: o professor ----------------
+  const lessonId = (dia, gi) => dia + ":" + gi;
+  const provaOf = (dia, gi) => S.resultados.filter(r => r.tipo === "prova" && r.licao === lessonId(dia, gi)).sort((a, b) => (b.criado_em || "").localeCompare(a.criado_em || ""))[0];
+  const gravOf = (dia, gi) => S.resultados.filter(r => r.tipo === "gravacao" && r.licao === lessonId(dia, gi)).sort((a, b) => (b.criado_em || "").localeCompare(a.criado_em || ""))[0];
+  const fmtNota = n => (Math.round(Number(n) * 10) / 10).toString().replace(".", ",");
+
   function renderStudy(t) {
     const ls = lessonsOf(t);
     const prog = S.crono && S.crono.semanas ? S.crono.semanas.find(w => t >= w.de && t <= w.ate) : null;
     $("progName").textContent = prog ? "Semana " + prog.n + " de " + S.crono.semanas.length + " · " + prog.tema : "";
-    $("studyTitle").textContent = "Estudo";
-    $("todayN").textContent = ls.length ? ls.map(a => trilhaInfo(a.trilha).nome).join(" + ") : "sem aula hoje";
-    $("trilhasN").textContent = S.trilhas.length ? Math.round(minutesBy(null) / 6) / 10 + " h estudadas" : "";
+    $("todayN").textContent = ls.length ? ls.filter((a, gi) => provaOf(t, gi)).length + " de " + ls.length + " feitas" : "sem aula hoje";
     renderReview();
     const box = $("todayCards"); box.replaceChildren();
+    if (!ls.length) box.append(el("p", "muted small", "O professor publica as aulas toda segunda."));
     ls.forEach((a, gi) => box.append(lessonCard(t, a, gi)));
-    renderCrono(t); renderTrilhas(t);
+    renderNotas(); renderCrono(t);
   }
-
   function renderReview() {
     const box = $("review"); box.replaceChildren(); const due = dueCards();
     $("foldReview").hidden = !due.length; if (!due.length) return;
     $("reviewN").textContent = due.length + (due.length === 1 ? " pergunta" : " perguntas");
-    box.append(el("p", "muted small", "Responda de memória antes de ver a resposta."));
     due.forEach(([id, c]) => box.append(qaItem(id, c.p, c.r, trilhaInfo(c.trilha))));
   }
   function qaItem(id, p, r, tr) {
@@ -189,91 +194,201 @@
     ok.addEventListener("click", ev => gradeCard(id, true, ev, tr.id, p, r)); bad.addEventListener("click", ev => gradeCard(id, false, ev, tr.id, p, r));
     row.append(ok, bad); it.append(row); return it;
   }
-
   function lessonCard(dia, a, gi) {
-    const tr = trilhaInfo(a.trilha), f = feitosOf(dia), key = dia + ":" + gi, opened = S.open.has(key);
-    const card = el("article", "subj"); card.style.setProperty("--c", tr.cor);
-    const nP = (a.pratica || []).length, nDone = (a.pratica || []).filter((p, pi) => f.has(gi + "." + pi)).length + (f.has(gi + ".aula") ? 1 : 0);
-    const mins = 5 + (a.pratica || []).reduce((s, p) => s + (Number(p.min) || 0), 0);
-    const head = el("button", "lesson-head"); head.type = "button"; head.setAttribute("aria-expanded", opened ? "true" : "false");
-    const top = el("div", "subj-head"); top.append(el("span", "subj-tag", tr.nome), el("span", "meta", nDone + "/" + (nP + 1) + " · " + mins + " min")); head.append(top);
-    head.append(el("h3", "subj-title", a.tema));
-    const bar = el("span", "tr-bar"); const bi = el("i"); bi.style.width = Math.round(100 * nDone / (nP + 1)) + "%"; bar.append(bi); head.append(bar);
-    if (opened && a.objetivo) head.append(el("span", "muted small", "Objetivo: " + a.objetivo));
-    head.addEventListener("click", () => { opened ? S.open.delete(key) : S.open.add(key); render(); });
-    card.append(head);
-    if (!opened) return card;
-
-    // 1. aula
-    const sec1 = el("section", "lsec"); sec1.append(el("span", "lsec-h", "1 · Aula"));
-    (a.aula || []).forEach(p => sec1.append(el("p", "lesson-p", p)));
-    sec1.append(checkLine(dia, gi + ".aula", "Li e entendi a aula", f.has(gi + ".aula"), "5 min"));
-    card.append(sec1);
-    // 2. exemplo
-    if (a.exemplo) { const s2 = el("section", "lsec"); s2.append(el("span", "lsec-h", "2 · Exemplo"), el("p", "lesson-ex", a.exemplo)); card.append(s2); }
-    // 3. prática
-    const s3 = el("section", "lsec"); s3.append(el("span", "lsec-h", "3 · Prática")); const ul = el("ul", "list");
-    (a.pratica || []).forEach((p, pi) => {
-      const li = checkLine(dia, gi + "." + pi, p.titulo, f.has(gi + "." + pi), (p.min || 0) + " min");
-      const body = li.querySelector(".lbody");
-      if (p.detalhe) body.append(el("span", "muted small", p.detalhe));
-      (p.falar || []).forEach(x => { const r = el("span", "phrase"); r.append(el("span", null, x)); if ("speechSynthesis" in window) { const sb = el("button", "say", "Ouvir"); sb.type = "button"; sb.addEventListener("click", () => speak(x)); r.append(sb); } body.append(r); });
-      (p.links || []).forEach(l => { const u = safeUrl(l.url); if (!u) return; const an = el("a", "lnk", l.rotulo || "Abrir"); an.href = u; an.target = "_blank"; an.rel = "noopener"; body.append(an); });
-      ul.append(li);
-    });
-    s3.append(ul); card.append(s3);
-    // 4. teste
-    if ((a.teste || []).length) { const s4 = el("section", "lsec"); s4.append(el("span", "lsec-h", "4 · Teste sem consultar"));
-      a.teste.forEach((q, qi) => { const id = dia + "-" + gi + "-" + qi; const c = S.cartoes[id];
-        if (c && c.respondida) { const done = el("div", "qa done-qa"); done.append(el("p", "qa-q", q.p), el("span", "meta", c.ultimo ? "Acertou · volta em " + c.int + (c.int === 1 ? " dia" : " dias") : "Errou · volta amanhã")); s4.append(done); }
-        else s4.append(qaItem(id, q.p, q.r, tr)); });
-      card.append(s4); }
-    // 5. explique
-    const s5 = el("section", "lsec"); s5.append(el("span", "lsec-h", "5 · Explique com suas palavras"));
-    if (a.feynman) s5.append(el("p", "lesson-p", a.feynman));
-    s5.append(el("p", "muted small", "Grave e mande para o professor. Se travar em algum ponto, é ali que está a dúvida."));
-    s5.append(voiceBox("[" + tr.nome + " · " + a.tema + " · " + dia + "] ", "Explicação, dúvida ou seus números…"));
-    card.append(s5);
+    const tr = trilhaInfo(a.trilha), pv = provaOf(dia, gi);
+    const card = el("button", "lcard"); card.type = "button"; card.style.setProperty("--c", tr.cor);
+    const left = el("div", "lcard-l"); left.append(el("span", "subj-tag", tr.nome), el("span", "lcard-t", a.tema));
+    const right = el("div", "lcard-r");
+    if (pv) { right.append(el("b", "nota" + (pv.nota >= 7 ? " boa" : ""), fmtNota(pv.nota)), el("span", "meta", "nota")); }
+    else right.append(el("span", "lcard-go", "Começar"));
+    card.append(left, right);
+    card.addEventListener("click", () => openPlayer(dia, gi));
     return card;
   }
-  function checkLine(dia, key, label, on, meta) {
+  function renderNotas() {
+    const box = $("notas"); box.replaceChildren();
+    const provas = S.resultados.filter(r => r.tipo === "prova");
+    $("notasN").textContent = provas.length ? "média " + fmtNota(provas.reduce((s, r) => s + Number(r.nota), 0) / provas.length) : "ainda sem provas";
+    if (!provas.length) { box.append(el("p", "muted small", "Cada aula termina com uma prova. As notas aparecem aqui, por matéria.")); return; }
+    const by = {}; provas.forEach(r => { (by[r.trilha] = by[r.trilha] || []).push(Number(r.nota)); });
+    Object.entries(by).sort((x, y) => avg(x[1]) - avg(y[1])).forEach(([id, ns]) => {
+      const tr = trilhaInfo(id); const row = el("div", "nrow"); row.style.setProperty("--c", tr.cor);
+      const bar = el("span", "tr-bar"); const i = el("i"); i.style.width = (avg(ns) * 10) + "%"; bar.append(i);
+      const nm = el("div"); nm.style.cssText = "display:flex;flex-direction:column;gap:4px;min-width:0"; nm.append(el("span", "ttl", tr.nome), bar);
+      row.append(nm, el("b", "nota" + (avg(ns) >= 7 ? " boa" : ""), fmtNota(avg(ns)))); box.append(row);
+    });
+    box.append(el("p", "muted small", "A matéria com a menor nota fica em cima: é ela que volta primeiro."));
+  }
+  const avg = ns => ns.reduce((s, n) => s + n, 0) / ns.length;
+
+  // ---------- a aula, um passo por vez ----------
+  const P = { dia: null, gi: 0, step: 0, answers: {}, graded: null };
+  const STEP_NAMES = ["Aula", "Exemplo", "Tarefa", "Prova"];
+  function openPlayer(dia, gi) { Object.assign(P, { dia, gi, step: 0, answers: {}, graded: null }); $("player").hidden = false; document.body.style.overflow = "hidden"; drawPlayer(); }
+  function closePlayer() { $("player").hidden = true; document.body.style.overflow = ""; stopRecIfAny(); render(); }
+  function drawPlayer() {
+    const a = lessonsOf(P.dia)[P.gi]; if (!a) return closePlayer();
+    const tr = trilhaInfo(a.trilha); const pl = $("player"); pl.style.setProperty("--c", tr.cor);
+    $("plTag").textContent = tr.nome;
+    const dots = $("plDots"); dots.replaceChildren();
+    STEP_NAMES.forEach((n, i) => { const d = el("span", "pdot" + (i < P.step ? " done" : "") + (i === P.step ? " on" : "")); d.title = n; dots.append(d); });
+    const body = $("plBody"); body.replaceChildren(); body.scrollTop = 0;
+    const btn = $("plNext"); btn.disabled = false;
+    if (P.step === 0) {
+      body.append(el("span", "lsec-h", "Aula"), el("h2", "pl-title", a.tema));
+      if (a.objetivo) body.append(el("p", "muted small", "Objetivo: " + a.objetivo));
+      (a.aula || []).forEach(p => body.append(el("p", "lesson-p", p)));
+      btn.textContent = "Entendi, continuar";
+    } else if (P.step === 1) {
+      body.append(el("span", "lsec-h", "Exemplo"), el("p", "lesson-ex", a.exemplo || ""));
+      btn.textContent = "Continuar";
+    } else if (P.step === 2) {
+      body.append(el("span", "lsec-h", "Tarefa"));
+      const f = feitosOf(P.dia); const ul = el("ul", "list");
+      (a.pratica || []).forEach((p, pi) => {
+        const li = checkLine(P.dia, P.gi + "." + pi, p.titulo, f.has(P.gi + "." + pi), (p.min || 0) + " min", true);
+        const b = li.querySelector(".lbody");
+        if (p.detalhe) b.append(el("span", "muted small", p.detalhe));
+        (p.falar || []).forEach(x => { const r = el("span", "phrase"); r.append(el("span", null, x)); if ("speechSynthesis" in window) { const sb = el("button", "say", "Ouvir"); sb.type = "button"; sb.addEventListener("click", () => speak(x)); r.append(sb); } b.append(r); });
+        (p.links || []).forEach(l => { const u = safeUrl(l.url); if (!u) return; const an = el("a", "lnk", l.rotulo || "Abrir"); an.href = u; an.target = "_blank"; an.rel = "noopener"; b.append(an); });
+        ul.append(li);
+      });
+      body.append(ul);
+      if (a.gravar) body.append(recorderBox(a, tr));
+      btn.textContent = "Ir para a prova";
+    } else if (P.step === 3) {
+      body.append(el("span", "lsec-h", "Prova · sem consultar"));
+      (a.prova || []).forEach((q, qi) => body.append(questionBox(q, qi)));
+      if (!P.graded) { btn.textContent = "Corrigir"; btn.disabled = Object.keys(P.answers).length < (a.prova || []).length; }
+      else btn.textContent = "Ver minha nota";
+    } else {
+      const g = P.graded; body.append(el("span", "lsec-h", "Resultado"));
+      const big = el("div", "result"); big.append(el("b", "nota-big" + (g.nota >= 7 ? " boa" : ""), fmtNota(g.nota)), el("span", "muted", g.acertos + " de " + g.total + " certas"));
+      body.append(big);
+      body.append(el("p", "lesson-p", g.nota >= 9 ? "Excelente. Esse assunto volta só em revisão." : g.nota >= 7 ? "Bom. As que você errou voltam na revisão amanhã." : "Ainda não fixou. As erradas voltam amanhã e o professor retoma este assunto na semana."));
+      if (a.feynman) { body.append(el("span", "lsec-h", "Para fixar (opcional)"), el("p", "lesson-p", a.feynman), voiceBox("[" + tr.nome + " · " + a.tema + " · " + P.dia + "] ", "Explique com suas palavras…")); }
+      btn.textContent = "Fechar aula";
+    }
+  }
+  function questionBox(q, qi) {
+    const box = el("div", "qbox"); box.append(el("p", "qa-q", (qi + 1) + ". " + q.p));
+    q.opcoes.forEach((op, oi) => {
+      const b = el("button", "opt"); b.type = "button"; b.textContent = op;
+      const chosen = P.answers[qi] === oi;
+      if (P.graded) { b.disabled = true; if (oi === q.certa) b.classList.add("right"); else if (chosen) b.classList.add("wrong"); }
+      else if (chosen) b.classList.add("chosen");
+      b.addEventListener("click", () => { if (P.graded) return; P.answers[qi] = oi; drawPlayer(); });
+      box.append(b);
+    });
+    if (P.graded && q.explica) box.append(el("p", "muted small", q.explica));
+    return box;
+  }
+  async function gradeProva() {
+    const a = lessonsOf(P.dia)[P.gi]; const qs = a.prova || [];
+    const acertos = qs.filter((q, qi) => P.answers[qi] === q.certa).length;
+    const nota = Math.round(100 * acertos / qs.length) / 10;
+    P.graded = { nota, acertos, total: qs.length };
+    // erradas viram cartões de revisão para amanhã
+    qs.forEach((q, qi) => { if (P.answers[qi] !== q.certa) { const id = P.dia + "-" + P.gi + "-" + qi; S.cartoes[id] = { trilha: a.trilha, p: q.p, r: q.opcoes[q.certa] + (q.explica ? ". " + q.explica : ""), int: 1, due: addDays(today(), 1), erros: 1, acertos: 0, respondida: true }; } });
+    const row = { dia: P.dia, licao: lessonId(P.dia, P.gi), trilha: a.trilha, tipo: "prova", nota, acertos, total: qs.length, dados: { respostas: P.answers } };
+    S.resultados.push({ ...row, criado_em: new Date().toISOString() });
+    if (!DEMO) {
+      const r1 = await S.sb.from("guia_resultados").insert(row); if (r1.error) toast("Não salvou a nota. Confira a internet.");
+      await S.sb.from("guia_doc").upsert({ key: "cartoes", data: { cards: S.cartoes }, updated_at: new Date().toISOString() });
+    }
+    if (acertos) toast("+" + acertos * 5 + " XP");
+    drawPlayer();
+  }
+  $("plNext").addEventListener("click", async () => {
+    if (P.step === 0) { if (!feitosOf(P.dia).has(P.gi + ".aula")) toggleStudy(P.dia, P.gi + ".aula", true); P.step = 1; }
+    else if (P.step === 1) P.step = 2;
+    else if (P.step === 2) { stopRecIfAny(); P.step = 3; }
+    else if (P.step === 3) { if (!P.graded) { await gradeProva(); return; } P.step = 4; }
+    else return closePlayer();
+    drawPlayer();
+  });
+  $("plClose").addEventListener("click", closePlayer);
+
+  // ---------- gravação da tarefa: o professor mede ----------
+  let REC = null;
+  function stopRecIfAny() { if (REC && REC.state !== "inactive") REC.stop(); }
+  const VICIOS = ["né", "tipo", "assim", "então", "aí", "entendeu"];
+  function metrics(text, secs) {
+    const words = (text.toLowerCase().match(/[\p{L}\p{N}']+/gu) || []);
+    const v = {}; VICIOS.forEach(w => { const n = words.filter(x => x === w).length; if (n) v[w] = n; });
+    return { palavras: words.length, segundos: Math.round(secs), ppm: secs ? Math.round(words.length * 60 / secs) : 0, vicios: v };
+  }
+  function recorderBox(a, tr) {
+    const box = el("div", "recbox"); const last = gravOf(P.dia, P.gi);
+    box.append(el("span", "lsec-h", "Grave aqui"), el("p", "lesson-p", a.gravar.prompt));
+    const time = el("span", "rec-time", "0:00"); const btn = el("button", "btn full rec-btn", "Gravar"); btn.type = "button";
+    const out = el("div", "rec-out"); if (last) out.append(metricView(last.dados || {}, last.texto, true));
+    btn.addEventListener("click", async () => {
+      if (REC && REC.state === "recording") { REC.stop(); return; }
+      if (!navigator.mediaDevices || !window.MediaRecorder) { out.replaceChildren(el("p", "muted small", "Este aparelho não grava aqui. Grave no celular e mande pelo WhatsApp para você mesmo começando com 'recado'.")); return; }
+      let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { out.replaceChildren(el("p", "muted small", "Libere o microfone para o app nas configurações do celular.")); return; }
+      const chunks = []; REC = new MediaRecorder(stream); const t0 = Date.now();
+      const tick = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); time.textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }, 250);
+      REC.ondataavailable = e => e.data.size && chunks.push(e.data);
+      REC.onstop = async () => {
+        clearInterval(tick); stream.getTracks().forEach(x => x.stop()); btn.textContent = "Gravar de novo"; btn.classList.remove("on");
+        const secs = (Date.now() - t0) / 1000; const blob = new Blob(chunks, { type: REC.mimeType || "audio/webm" });
+        out.replaceChildren(el("p", "muted small", "Salvando e analisando…"));
+        const path = await uploadAudio(blob); const text = await transcribe(blob);
+        const m = text ? metrics(text, secs) : { segundos: Math.round(secs) };
+        const row = { dia: P.dia, licao: lessonId(P.dia, P.gi), trilha: a.trilha, tipo: "gravacao", dados: m, texto: text || null, audio_path: path };
+        S.resultados.push({ ...row, criado_em: new Date().toISOString() });
+        if (!DEMO) { const r = await S.sb.from("guia_resultados").insert(row); if (r.error) toast("Não salvou a gravação."); }
+        out.replaceChildren(metricView(m, text, false));
+      };
+      REC.start(); btn.textContent = "Parar"; btn.classList.add("on");
+    });
+    box.append(time, btn, out); return box;
+  }
+  function metricView(m, text, old) {
+    const w = el("div", "metrics");
+    if (!text) { w.append(el("p", "muted small", (old ? "Última gravação salva. " : "Gravação salva (" + (m.segundos || 0) + " s). ") + "A análise automática liga quando a transcrição estiver ativa; o professor ouve na revisão.")); return w; }
+    const g = el("div", "mgrid");
+    const ppmOk = m.ppm >= 120 && m.ppm <= 165;
+    [[m.ppm + "", "palavras/min", ppmOk], [String(Object.values(m.vicios || {}).reduce((s, n) => s + n, 0)), "vícios", !Object.keys(m.vicios || {}).length], [m.segundos + " s", "duração", true]]
+      .forEach(([v, k, ok]) => { const c = el("div", "mcell" + (ok ? " ok" : " warn")); c.append(el("b", null, v), el("span", null, k)); g.append(c); });
+    w.append(g);
+    const vs = Object.entries(m.vicios || {}); if (vs.length) w.append(el("p", "small", "Vícios: " + vs.map(([k, n]) => "“" + k + "” " + n + "x").join(", ")));
+    w.append(el("p", "muted small", ppmOk ? "Ritmo bom para vender." : m.ppm > 165 ? "Rápido demais: use pausas." : "Devagar: ganhe energia."));
+    return w;
+  }
+  async function uploadAudio(blob) {
+    if (DEMO || !S.sb) return null;
+    const ext = blob.type.includes("mp4") ? "m4a" : blob.type.includes("ogg") ? "ogg" : "webm";
+    const path = P.dia + "/" + P.gi + "-" + Date.now() + "." + ext;
+    const { error } = await S.sb.storage.from("guia-audios").upload(path, blob, { contentType: blob.type || "audio/webm" });
+    return error ? null : path;
+  }
+
+  function checkLine(dia, key, label, on, meta, inPlayer) {
     const li = el("li", "li" + (on ? " done" : "")); li.style.alignItems = "start";
     const b = el("button", "chk"); b.type = "button"; b.innerHTML = CHECK_SVG; b.setAttribute("aria-pressed", on ? "true" : "false");
-    b.setAttribute("aria-label", (on ? "Desmarcar: " : "Concluir: ") + label); b.addEventListener("click", ev => toggleStudy(dia, key, !on, ev));
+    b.setAttribute("aria-label", (on ? "Desmarcar: " : "Concluir: ") + label);
+    b.addEventListener("click", async ev => { await toggleStudy(dia, key, !on, ev); if (inPlayer) drawPlayer(); });
     const body = el("div", "lbody"); body.append(el("span", "ttl", label));
     li.append(b, body, el("span", "meta", meta || "")); return li;
   }
-
   function renderCrono(t) {
     const box = $("crono"); box.replaceChildren(); if (!S.crono) return;
+    if (S.crono.concurso) { const c = el("p", "muted small"); c.textContent = "Concurso: " + S.crono.concurso.alvo + ". " + S.crono.concurso.situacao; box.append(c); }
     const days = S.crono.dias.filter(d => S.cronoAll || (d.dia >= addDays(t, -1) && d.dia <= addDays(t, 6)));
     days.forEach(d => {
-      const f = feitosOf(d.dia), ls = lessonsOf(d.dia);
-      const total = ls.reduce((s, a) => s + (a.pratica || []).length + 1, 0);
-      const done = total && f.size >= total;
       const row = el("div", "crow" + (d.dia === t ? " today" : "") + (d.dia < t ? " past" : ""));
       const dt = el("div", "cdate"); dt.append(el("b", null, d.dia.slice(8)), el("span", null, DOW3[dowOf(d.dia)])); row.append(dt);
       const items = el("div", "citems");
-      d.assuntos.forEach(a => { const tr = trilhaInfo(a.trilha); const c = el("span", "citem"); c.style.setProperty("--c", tr.cor); c.append(el("b", null, tr.nome), document.createTextNode(" · " + a.tema)); items.append(c); });
+      d.assuntos.forEach((a, gi) => { const tr = trilhaInfo(a.trilha); const c = el("span", "citem"); c.style.setProperty("--c", tr.cor); c.append(el("b", null, tr.nome), document.createTextNode(" · " + a.tema)); items.append(c); });
       row.append(items);
-      row.append(el("span", "cstat", d.dia === t ? "hoje" : done ? "✓" : d.dia < t ? (f.size ? "parcial" : "") : ""));
+      const notas = d.assuntos.map((a, gi) => provaOf(d.dia, gi)).filter(Boolean);
+      row.append(el("span", "cstat", notas.length ? fmtNota(avg(notas.map(n => Number(n.nota)))) : d.dia === t ? "hoje" : ""));
       box.append(row);
     });
-    const more = el("button", "btn ghost small-btn", S.cronoAll ? "Mostrar só esta semana" : "Ver as 4 semanas"); more.type = "button";
+    const more = el("button", "btn ghost small-btn", S.cronoAll ? "Só esta semana" : "Ver tudo"); more.type = "button";
     more.addEventListener("click", () => { S.cronoAll = !S.cronoAll; renderCrono(t); }); box.append(more);
-  }
-  function renderTrilhas(t) {
-    const grid = $("trilhas"); grid.replaceChildren();
-    const todayIds = new Set(lessonsOf(t).map(a => a.trilha));
-    S.trilhas.forEach(tr => {
-      const m = minutesBy(tr.id), pct = Math.min(100, Math.round(100 * m / 600));
-      const next = S.crono ? S.crono.dias.filter(d => d.dia >= t).flatMap(d => d.assuntos.filter(a => a.trilha === tr.id).map(a => ({ dia: d.dia, tema: a.tema }))) : [];
-      const c = el("div", "tr" + (todayIds.has(tr.id) ? " today" : "")); c.style.setProperty("--c", tr.cor);
-      c.append(el("span", "tr-name", tr.nome), el("span", "tr-meta", (m >= 60 ? (Math.round(m / 6) / 10) + " h" : m + " min") + " de 10 h"));
-      const bar = el("span", "tr-bar"); const i = el("i"); i.style.width = pct + "%"; bar.append(i); c.append(bar);
-      if (next.length) c.title = "Próxima: " + short(next[0].dia) + " · " + next[0].tema;
-      grid.append(c);
-    });
   }
   function speak(text) { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(String(text)); u.lang = "en-US"; u.rate = 0.9; speechSynthesis.speak(u); } catch (e) {} }
 
@@ -327,7 +442,7 @@
     const xp = totalXP(), L = levelOf(xp); const st = $("stats"); st.replaceChildren();
     const acertos = Object.values(S.cartoes).reduce((s, c) => s + (c.acertos || 0), 0);
     [[String(streakAt(t)), "dias seguidos"], [String(bestStreak()), "melhor sequência"], [String(L), "nível"],
-     [String(countDone("academia")), "treinos"], [String(Math.round(minutesBy(null) / 6) / 10) + " h", "de estudo"], [String(acertos), "acertos no teste"]]
+     [String(countDone("academia")), "treinos"], [String(Math.round(minutesBy(null) / 6) / 10) + " h", "de estudo"], [S.resultados.some(r => r.tipo === "prova") ? fmtNota(avg(S.resultados.filter(r => r.tipo === "prova").map(r => Number(r.nota)))) : "–", "média nas provas"]]
       .forEach(([v, k]) => { const c = el("div", "stat"); c.append(el("b", null, v), el("span", null, k)); st.append(c); });
     const bars = $("bars"); bars.replaceChildren();
     for (let i = 13; i >= 0; i--) { const d = addDays(t, -i), p = dayPct(d); const c = el("div"); const bar = el("i"); bar.style.height = Math.max(3, p) + "%"; if (p >= VALID) bar.style.background = "var(--flame)"; c.append(bar, el("span", null, DOW1[dowOf(d)])); bars.append(c); }

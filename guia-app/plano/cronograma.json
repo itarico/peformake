@@ -1,5 +1,5 @@
 {
- "programa": "Base de concurso + Oratória para vender · 4 semanas",
+ "programa": "Base para o Banco do Brasil + Oratória para vender",
  "semanas": [
   {
    "n": 1,
@@ -123,7 +123,7 @@
    "assuntos": [
     {
      "trilha": "matematica",
-     "tema": "Fração, porcentagem e regra de três"
+     "tema": "Porcentagem e regra de três"
     },
     {
      "trilha": "licitacao",
@@ -148,8 +148,8 @@
    "dia": "2026-12-03",
    "assuntos": [
     {
-     "trilha": "portugues",
-     "tema": "Concordância verbal"
+     "trilha": "bancarios",
+     "tema": "Sistema Financeiro Nacional: quem é quem"
     },
     {
      "trilha": "vendas",
@@ -213,8 +213,8 @@
    "dia": "2026-12-08",
    "assuntos": [
     {
-     "trilha": "matematica",
-     "tema": "Razão e proporção"
+     "trilha": "matfin",
+     "tema": "Juros simples"
     },
     {
      "trilha": "oratoria",
@@ -239,8 +239,8 @@
    "dia": "2026-12-10",
    "assuntos": [
     {
-     "trilha": "portugues",
-     "tema": "Regência verbal e nominal"
+     "trilha": "bancarios",
+     "tema": "Produtos bancários: conta, crédito e investimento"
     },
     {
      "trilha": "ingles",
@@ -252,8 +252,8 @@
    "dia": "2026-12-11",
    "assuntos": [
     {
-     "trilha": "matematica",
-     "tema": "Equações do 1º grau em problemas"
+     "trilha": "matfin",
+     "tema": "Juros compostos"
     },
     {
      "trilha": "vendas",
@@ -278,8 +278,8 @@
    "dia": "2026-12-13",
    "assuntos": [
     {
-     "trilha": "humanas",
-     "tema": "Atualidades: como estudar para a prova"
+     "trilha": "mercado",
+     "tema": "Atualidades do mercado financeiro: como estudar"
     },
     {
      "trilha": "matematica",
@@ -343,8 +343,8 @@
    "dia": "2026-12-18",
    "assuntos": [
     {
-     "trilha": "matematica",
-     "tema": "Juros simples e compostos"
+     "trilha": "matfin",
+     "tema": "Descontos e taxas equivalentes"
     },
     {
      "trilha": "financas",
@@ -356,8 +356,8 @@
    "dia": "2026-12-19",
    "assuntos": [
     {
-     "trilha": "redacao",
-     "tema": "Sua 3ª redação, corrigida"
+     "trilha": "informatica",
+     "tema": "Segurança da informação: o que mais cai"
     },
     {
      "trilha": "humanas",
@@ -379,5 +379,20 @@
    ]
   }
  ],
- "regra": "Todo dia: 1 matéria de concurso + 1 de trabalho. Concurso nunca sai do dia."
+ "regra": "Todo dia: 1 matéria do concurso (Banco do Brasil) + 1 de trabalho.",
+ "concurso": {
+  "alvo": "Banco do Brasil · Escriturário",
+  "situacao": "Edital esperado para 2027; banca ainda não definida. Matérias tomadas do edital de 2022 (Cesgranrio) até sair o novo.",
+  "materias": [
+   "Língua Portuguesa",
+   "Língua Inglesa",
+   "Matemática",
+   "Atualidades do Mercado Financeiro",
+   "Matemática Financeira",
+   "Conhecimentos Bancários",
+   "Conhecimentos de Informática",
+   "Vendas e Negociação",
+   "Redação"
+  ]
+ }
 }

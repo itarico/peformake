@@ -22,21 +22,49 @@
      "detalhe": "Ritmo, vícios, primeira frase, fechamento."
     }
    ],
-   "teste": [
+   "feynman": "Comente aqui os números de terça e de domingo, lado a lado.",
+   "prova": [
     {
-     "p": "Quais são as 5 partes do pitch?",
-     "r": "Problema, custo, caminho, prova e próximo passo."
+     "p": "As 5 partes do pitch são:",
+     "opcoes": [
+      "Problema, custo, caminho, prova, próximo passo",
+      "Empresa, serviço, preço, prova, contrato"
+     ],
+     "certa": 0,
+     "explica": ""
+    },
+    {
+     "p": "Faixa de ritmo boa para vender:",
+     "opcoes": [
+      "130 a 160 palavras por minuto",
+      "200 palavras por minuto"
+     ],
+     "certa": 0,
+     "explica": ""
     },
     {
      "p": "Onde vai a pausa?",
-     "r": "Antes de números e antes do pedido."
+     "opcoes": [
+      "Antes do número e antes do pedido",
+      "Depois de cada palavra"
+     ],
+     "certa": 0,
+     "explica": ""
     },
     {
-     "p": "Qual faixa de ritmo é boa para vender?",
-     "r": "Perto de 130 a 160 palavras por minuto."
+     "p": "Qual a pergunta mais poderosa do SPIN?",
+     "opcoes": [
+      "Situação",
+      "Implicação"
+     ],
+     "certa": 1,
+     "explica": ""
     }
    ],
-   "feynman": "Comente aqui os números de terça e de domingo, lado a lado."
+   "gravar": {
+    "prompt": "Grave o pitch final. Ele será comparado com o de terça.",
+    "segundos": 120
+   }
   },
   {
    "trilha": "portugues",
@@ -61,21 +89,49 @@
      "detalhe": "Filtre Matemática ou Raciocínio Lógico, nível médio. Sem calculadora. Anote acertos e os assuntos que errou."
     }
    ],
-   "teste": [
+   "feynman": "Mande no recado: quantas acertou em cada matéria e quais assuntos errou. Se já souber o concurso, a banca e a data, mande também.",
+   "prova": [
     {
-     "p": "Qual o jeito mais eficiente de estudar para concurso?",
-     "r": "Resolver questões da banca, entender cada erro e rever o erro depois."
+     "p": "O jeito mais eficiente de estudar para concurso é:",
+     "opcoes": [
+      "Ler a teoria várias vezes",
+      "Resolver questões da banca e rever os erros",
+      "Assistir videoaulas sem anotar"
+     ],
+     "certa": 1,
+     "explica": ""
     },
     {
-     "p": "Por que fazer um diagnóstico antes de estudar?",
-     "r": "Para não perder tempo com o que já sabe nem pular o que não sabe."
+     "p": "Por que fazer um diagnóstico antes?",
+     "opcoes": [
+      "Para não perder tempo com o que já sabe",
+      "Para terminar mais rápido",
+      "Porque a banca exige"
+     ],
+     "certa": 0,
+     "explica": ""
     },
     {
-     "p": "O que acontece com cada erro do diagnóstico?",
-     "r": "Vira aula sob medida nas próximas semanas."
+     "p": "Qual banca fez o último concurso do Banco do Brasil (2022)?",
+     "opcoes": [
+      "FGV",
+      "Cesgranrio",
+      "Cebraspe"
+     ],
+     "certa": 1,
+     "explica": "A banca do próximo ainda não foi definida."
+    },
+    {
+     "p": "Qual destas matérias caiu no último edital do BB?",
+     "opcoes": [
+      "Vendas e Negociação",
+      "Direito Penal",
+      "Química"
+     ],
+     "certa": 0,
+     "explica": "Liga direto com o que você estuda para o trabalho."
     }
-   ],
-   "feynman": "Mande no recado: quantas acertou em cada matéria e quais assuntos errou. Se já souber o concurso, a banca e a data, mande também."
+   ]
   }
  ]
 }

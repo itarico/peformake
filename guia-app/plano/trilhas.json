@@ -106,5 +106,29 @@
   "nome": "Aprender a aprender",
   "cor": "#868E96",
   "descricao": "O método por trás de tudo."
+ },
+ {
+  "id": "matfin",
+  "nome": "Matemática Financeira",
+  "cor": "#E8590C",
+  "descricao": "BB: juros, descontos, amortização."
+ },
+ {
+  "id": "bancarios",
+  "nome": "Conhecimentos Bancários",
+  "cor": "#1864AB",
+  "descricao": "BB: sistema financeiro, produtos e serviços bancários."
+ },
+ {
+  "id": "mercado",
+  "nome": "Atualidades do Mercado Financeiro",
+  "cor": "#0B7285",
+  "descricao": "BB: o que está acontecendo no mercado."
+ },
+ {
+  "id": "informatica",
+  "nome": "Informática",
+  "cor": "#495057",
+  "descricao": "BB: segurança, internet, planilhas e noções de TI."
  }
 ]
