@@ -15,6 +15,7 @@ const TABS: SectionTab[] = [
   { to: '/conteudo/tarefas', label: 'Tarefas', roles: CONTENT_PLANNER_ROLES },
   { to: '/conteudo/design', label: 'Design' },
   { to: '/conteudo/planejamento', label: 'Planejamento', roles: CONTENT_PLANNER_ROLES },
+  { to: '/conteudo/agendar', label: 'Agendar', roles: CONTENT_PLANNER_ROLES },
   // Calendário, Redes sociais e Novidades desligados até existir a integração com o Instagram (pedido do Italo, 12/11). O código fica.
   { to: '/conteudo/datas', label: 'Datas sazonais', short: 'Datas', more: true, roles: CONTENT_PLANNER_ROLES },
   { to: '/conteudo/automatico', label: 'Modelo rápido', short: 'Modelo', more: true, roles: CONTENT_PLANNER_ROLES },

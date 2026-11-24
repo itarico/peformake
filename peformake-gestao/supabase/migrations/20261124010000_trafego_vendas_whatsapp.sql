@@ -16,7 +16,6 @@ create table if not exists public.client_tracking (
   updated_by uuid
 );
 alter table public.client_tracking enable row level security;
-drop policy if exists client_tracking_select on public.client_tracking;
 create policy client_tracking_select on public.client_tracking for select to authenticated using ((select public.can_access_traffic()));
 
 -- 2. Conversas do WhatsApp do cliente (uma por contato) ----------------------------------------------------------
@@ -41,7 +40,6 @@ create table if not exists public.wa_leads (
 );
 create index if not exists wa_leads_client_last on public.wa_leads (client_id, last_at desc);
 alter table public.wa_leads enable row level security;
-drop policy if exists wa_leads_select on public.wa_leads;
 create policy wa_leads_select on public.wa_leads for select to authenticated using ((select public.can_access_traffic()));
 
 -- 3. Vendas marcadas ---------------------------------------------------------------------------------------------
@@ -61,7 +59,6 @@ create table if not exists public.client_sales (
 );
 create index if not exists client_sales_client_sold on public.client_sales (client_id, sold_at desc);
 alter table public.client_sales enable row level security;
-drop policy if exists client_sales_select on public.client_sales;
 create policy client_sales_select on public.client_sales for select to authenticated using ((select public.can_access_traffic()));
 
 -- 4. Cada mensagem do número do cliente alimenta a conversa (e guarda o anúncio de origem) ------------------------
@@ -121,8 +118,8 @@ begin
 end $$;
 revoke execute on function public.wa_lead_on_message() from public, anon, authenticated;
 
-drop trigger if exists whatsapp_messages_lead on public.whatsapp_messages;
-create trigger whatsapp_messages_lead after insert on public.whatsapp_messages
+
+create or replace trigger whatsapp_messages_lead after insert on public.whatsapp_messages
 for each row execute function public.wa_lead_on_message();
 
 -- As conversas do número do cliente são dos clientes dele: não entram no Comercial da Peformake.

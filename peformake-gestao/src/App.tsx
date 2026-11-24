@@ -25,6 +25,7 @@ const ContentLayout = lazy(() => import('@/features/content/ContentLayout').then
 const ContentIndex = lazy(() => import('@/features/content/ContentLayout').then((m) => ({ default: m.ContentIndex })))
 const DesignPage = lazy(() => import('@/features/content/DesignPage').then((m) => ({ default: m.DesignPage })))
 const SocialTasksBoard = lazy(() => import('@/features/content/TasksBoard').then((m) => ({ default: m.TasksBoard })))
+const SchedulePage = lazy(() => import('@/features/content/SchedulePage').then((m) => ({ default: m.SchedulePage })))
 const SeasonalPage = lazy(() => import('@/features/content/SeasonalPage').then((m) => ({ default: m.SeasonalPage })))
 const ContentPlanPage = lazy(() => import('@/features/content/ContentPlanPage').then((m) => ({ default: m.ContentPlanPage })))
 const NotificationsPage = lazy(() => import('@/features/notifications/NotificationsPage').then((m) => ({ default: m.NotificationsPage })))
@@ -150,6 +151,7 @@ export function App() {
               <Route index element={<ContentIndex />} />
               <Route path="quadro" element={<ContentBoard />} />
               <Route path="tarefas" element={<SocialTasksBoard />} />
+              <Route path="agendar" element={<SchedulePage />} />
               <Route path="design" element={<DesignPage />} />
               <Route path="calendario" element={<MovedTo to="/conteudo/quadro" />} />
               <Route path="planejamento" element={<ContentPlanPage />} />

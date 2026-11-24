@@ -1,0 +1,84 @@
+// Social Media → Agendar: publica no Instagram o que venceu. Chamada pela rotina ig-publish (a cada 5 minutos).
+// Passos da API oficial (Content Publishing): cria o contêiner em /{ig}/media, espera o vídeo processar (status_code)
+// e publica em /{ig}/media_publish. Imagem precisa ser JPG e o arquivo precisa estar num link público (balde content-files).
+// Vídeo que ainda está processando fica "aguardando" e a próxima rodada termina. Depois de 6 tentativas vira erro.
+import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
+
+const GRAPH = 'https://graph.facebook.com/v27.0'
+const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { 'Content-Type': 'application/json' } })
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+interface Job { id: string; kind: 'post' | 'reels' | 'story'; media_path: string; media_mime: string; caption: string | null; container_id: string | null; tries: number; ig_id: string; token: string | null }
+
+function explain(message: string, code?: number): string {
+  if (code === 190 || /access token|OAuth/i.test(message)) return 'O Instagram desconectou. Conecte a conta de novo em Agendar.'
+  if (/aspect ratio|resolution|format|codec/i.test(message)) return `O Instagram recusou o arquivo (formato ou proporção). ${message}`.slice(0, 280)
+  if (code === 9 || code === 4 || /limit/i.test(message)) return 'Limite de publicações do Instagram atingido. Tente mais tarde.'
+  return `O Instagram recusou: ${message}`.slice(0, 280)
+}
+
+async function call(token: string, method: 'GET' | 'POST', path: string, params: Record<string, string>) {
+  const qs = new URLSearchParams(params).toString()
+  const res = await fetch(`${GRAPH}/${path}${method === 'GET' && qs ? `?${qs}` : ''}`, {
+    method, headers: { Authorization: `Bearer ${token}`, ...(method === 'POST' ? { 'Content-Type': 'application/x-www-form-urlencoded' } : {}) },
+    body: method === 'POST' ? qs : undefined,
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok || data?.error) throw Object.assign(new Error(String(data?.error?.message ?? `HTTP ${res.status}`)), { code: Number(data?.error?.code) })
+  return data
+}
+
+Deno.serve(async (request) => {
+  if (request.method !== 'POST') return json({ error: 'Use POST' }, 405)
+  const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } })
+  const { data: okSecret } = await db.rpc('traffic_cron_secret_ok', { _secret: request.headers.get('x-cron-secret') ?? '' })
+  if (okSecret !== true) return json({ error: 'unauthorized' }, 401)
+
+  const { data: queue } = await db.rpc('ig_publish_queue', { _limit: 5 })
+  const jobs = (queue ?? []) as Job[]
+  const done = (id: string, state: 'publicado' | 'erro' | 'aguardando', extra: { container?: string | null; media?: string | null; link?: string | null; error?: string | null } = {}) =>
+    db.rpc('ig_publish_done', { _id: id, _state: state, _container: extra.container ?? null, _media_id: extra.media ?? null, _permalink: extra.link ?? null, _error: extra.error ?? null })
+
+  const results: Record<string, string> = {}
+  for (const job of jobs) {
+    try {
+      if (!job.token) { await done(job.id, 'erro', { error: 'O Instagram desconectou. Conecte a conta de novo em Agendar.' }); results[job.id] = 'sem token'; continue }
+      const fileUrl = db.storage.from('content-files').getPublicUrl(job.media_path).data.publicUrl
+      const video = job.media_mime.startsWith('video/')
+
+      let container = job.container_id
+      if (!container) {
+        const params: Record<string, string> = video ? { video_url: fileUrl } : { image_url: fileUrl }
+        if (job.kind === 'story') params.media_type = 'STORIES'
+        else if (job.kind === 'reels') params.media_type = 'REELS'
+        if (job.caption && job.kind !== 'story') params.caption = job.caption
+        container = String((await call(job.token, 'POST', `${job.ig_id}/media`, params)).id)
+      }
+
+      // Vídeo: o Instagram baixa e processa antes de liberar. Espera até ~50 s nesta rodada.
+      let ready = !video
+      for (let i = 0; i < 10 && !ready; i++) {
+        const st = await call(job.token, 'GET', container, { fields: 'status_code' })
+        if (st.status_code === 'FINISHED') ready = true
+        else if (st.status_code === 'ERROR' || st.status_code === 'EXPIRED') throw new Error('o vídeo não pôde ser processado (confira formato MP4, proporção e duração)')
+        else await sleep(5000)
+      }
+      if (!ready) {
+        if (job.tries >= 6) { await done(job.id, 'erro', { container, error: 'O Instagram não terminou de processar o vídeo. Tente com um arquivo menor.' }); results[job.id] = 'desistiu' }
+        else { await done(job.id, 'aguardando', { container }); results[job.id] = 'aguardando' }
+        continue
+      }
+
+      const published = await call(job.token, 'POST', `${job.ig_id}/media_publish`, { creation_id: container })
+      let link: string | null = null
+      try { link = String((await call(job.token, 'GET', String(published.id), { fields: 'permalink' })).permalink ?? '') || null } catch { /* story não tem link público */ }
+      await done(job.id, 'publicado', { container, media: String(published.id), link })
+      results[job.id] = 'publicado'
+    } catch (e) {
+      const err = e as Error & { code?: number }
+      await done(job.id, 'erro', { error: explain(err.message, err.code) })
+      results[job.id] = 'erro'
+    }
+  }
+  return json({ ok: true, results })
+})
