@@ -32,7 +32,7 @@ function useNow(): number {
 async function downloadAll(files: readonly ContentFile[]) {
   for (const f of files) {
     const a = document.createElement('a')
-    a.href = downloadUrl(f.path, f.name)
+    a.href = downloadUrl(f.path, f.name, f.parts, f.realSize ?? f.sizeBytes)
     a.rel = 'noopener'
     document.body.appendChild(a)
     a.click()
@@ -86,7 +86,7 @@ export function DeliverDialog({ item, finals, clientName, onClose }: { item: Con
         </Button>
       </>}>
       <div className="flex flex-col gap-3">
-        <input ref={input} id="entrega-arquivo" type="file" multiple accept="image/*,video/mp4,video/quicktime,application/pdf" className="sr-only"
+        <input ref={input} id="entrega-arquivo" type="file" multiple className="sr-only"
           onChange={(e) => { setProblem(null); setPicked([...(e.target.files ?? [])]) }} />
         <label htmlFor="entrega-arquivo" className="flex min-h-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-line-strong px-4 py-3 text-center hover:border-ink">
           <FileUp size={22} aria-hidden="true" />

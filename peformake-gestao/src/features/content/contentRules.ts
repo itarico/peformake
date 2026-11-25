@@ -274,20 +274,22 @@ export function summarize(items: readonly ContentItem[], today: string): PlanSum
   }
 }
 
-const SAFE_EXT = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'mp4', 'mov', 'pdf', 'webm', 'mp3', 'ogg', 'opus', 'm4a', 'wav', 'aac']
 const MIME_BY_EXT: Record<string, string> = {
   png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif',
   mp4: 'video/mp4', mov: 'video/quicktime', pdf: 'application/pdf', webm: 'audio/webm', mp3: 'audio/mpeg',
   // Áudio do briefing (WhatsApp manda .ogg/.opus; iPhone, .m4a). 24/11.
   ogg: 'audio/ogg', opus: 'audio/ogg', m4a: 'audio/mp4', wav: 'audio/wav', aac: 'audio/aac',
+  heic: 'image/heic', tif: 'image/tiff', tiff: 'image/tiff', svg: 'image/svg+xml', psd: 'image/vnd.adobe.photoshop', zip: 'application/zip', ai: 'application/postscript', eps: 'application/postscript',
 }
 
 export function fileCheck(name: string, size: number): { ext: string; mime: string } | string {
-  const ext = name.split('.').pop()?.toLowerCase() ?? ''
-  if (!SAFE_EXT.includes(ext)) return 'Formato não aceito. Use imagem, vídeo, PDF ou áudio.'
-  if (size > 50 * 1024 * 1024) return 'Arquivo acima de 50 MB.'
+  // Qualquer tipo e tamanho (pedido do Italo, 25/11). Acima de 50 MB o envio vai em partes (uploadFile).
   if (size <= 0) return 'Arquivo vazio.'
-  return { ext: ext === 'jpeg' ? 'jpg' : ext, mime: MIME_BY_EXT[ext] as string }
+  // Programa (exe, bat, script) não entra: o balde é público e o arquivo vai para o cliente.
+  if (/\.(exe|bat|cmd|com|msi|scr|ps1|vbs|sh|jar|apk|dll)$/i.test(name)) return 'Programa não é aceito. Mande imagem, vídeo, PDF, áudio ou o arquivo de design.'
+  const raw = name.includes('.') ? name.split('.').pop()!.toLowerCase() : ''
+  const ext = /^[a-z0-9]{2,5}$/.test(raw) ? (raw === 'jpeg' ? 'jpg' : raw) : 'bin'
+  return { ext, mime: MIME_BY_EXT[raw] ?? MIME_BY_EXT[ext] ?? 'application/octet-stream' }
 }
 
 /** No quadro só entra peça com briefing lançado (pedido do Italo, 12/11). Peça vazia fica só na pauta do mês. */

@@ -19,6 +19,9 @@ export interface ContentFile {
   mime: string
   sizeBytes: number
   createdAt: string
+  /** Arquivo acima de 50 MB fica em partes (.part0, .part1...): baixa pela função content-download. */
+  parts?: number
+  realSize?: number | null
 }
 
 export interface ContentEvent {
@@ -93,9 +96,12 @@ export async function getItem(id: string): Promise<{ item: ContentItem; plan: Co
 
 export async function listFiles(itemIds: readonly string[]): Promise<ContentFile[]> {
   if (itemIds.length === 0) return []
-  const { data, error } = await supabase.from('content_files').select('id, item_id, role, path, name, mime, size_bytes, created_at').in('item_id', [...itemIds]).order('created_at')
+  // parts e real_size (25/11) ainda fora dos tipos gerados.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).from('content_files').select('id, item_id, role, path, name, mime, size_bytes, created_at, parts, real_size').in('item_id', [...itemIds]).order('created_at')
   if (error) throw error
-  return (data ?? []).map((f) => ({ id: f.id, itemId: f.item_id, role: f.role as ContentFile['role'], path: f.path, name: f.name, mime: f.mime, sizeBytes: f.size_bytes, createdAt: f.created_at }))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return ((data ?? []) as any[]).map((f) => ({ id: f.id, itemId: f.item_id, role: f.role as ContentFile['role'], path: f.path, name: f.name, mime: f.mime, sizeBytes: f.size_bytes, createdAt: f.created_at, parts: f.parts ?? 0, realSize: f.real_size ?? null }))
 }
 
 export async function listEvents(itemId: string): Promise<ContentEvent[]> {
@@ -112,8 +118,19 @@ export function fileUrl(path: string): string {
 }
 
 /** Link que já baixa o arquivo com o nome original. */
-export function downloadUrl(path: string, name: string): string {
-  return supabase.storage.from('content-files').getPublicUrl(path, { download: name || true }).data.publicUrl
+/**
+ * Link para baixar no MESMO formato do arquivo (Italo, 25/11): o nome sai sempre com a extensão original (arquivo do
+ * WhatsApp vinha sem extensão). Arquivo em partes baixa inteiro pela função content-download.
+ */
+export function downloadUrl(path: string, name: string, parts = 0, size = 0): string {
+  const ext = path.split('.').pop() ?? ''
+  const fixed = (name || 'arquivo').replace(/[\\/:*?"<>|]/g, '-')
+  const full = ext && !fixed.toLowerCase().endsWith(`.${ext}`) ? `${fixed}.${ext}` : fixed
+  if (parts > 0) {
+    const q = new URLSearchParams({ path, n: String(parts), size: String(size), name: full })
+    return `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/content-download?${q.toString()}`
+  }
+  return supabase.storage.from('content-files').getPublicUrl(path, { download: full }).data.publicUrl
 }
 
 /**
@@ -245,14 +262,31 @@ export async function comment(id: string, message: string): Promise<void> {
   if (error) throw error
 }
 
+const PART = 45 * 1024 * 1024
 export async function uploadFile(itemId: string, role: 'final' | 'reference', file: File, ext: string, mime: string): Promise<void> {
   const path = `${itemId}/${crypto.randomUUID()}.${ext}`
-  const up = await supabase.storage.from('content-files').upload(path, file, { contentType: mime, upsert: false })
-  if (up.error) throw up.error
-  const { error } = await supabase.rpc('content_file_register', { _item_id: itemId, _role: role, _path: path, _name: file.name, _mime: mime, _size: file.size })
-  if (error) {
-    await supabase.storage.from('content-files').remove([path])
-    throw error
+  const store = supabase.storage.from('content-files')
+  // Plano gratuito do Supabase: até 50 MB por arquivo. Maior sobe em partes de 45 MB (Italo, 25/11: qualquer tamanho).
+  const parts = file.size > PART ? Math.ceil(file.size / PART) : 0
+  const sent: string[] = []
+  const undo = () => store.remove(sent)
+  if (parts) {
+    for (let i = 0; i < parts; i++) {
+      const p = `${path}.part${i}`
+      const up = await store.upload(p, file.slice(i * PART, (i + 1) * PART), { contentType: 'application/octet-stream', upsert: false })
+      if (up.error) { await undo(); throw up.error }
+      sent.push(p)
+    }
+  } else {
+    const up = await store.upload(path, file, { contentType: mime, upsert: false })
+    if (up.error) throw up.error
+    sent.push(path)
+  }
+  const { data: id, error } = await supabase.rpc('content_file_register', { _item_id: itemId, _role: role, _path: path, _name: file.name, _mime: mime, _size: Math.min(file.size, 52428800) })
+  if (error) { await undo(); throw error }
+  if (parts) {
+    const r = await (supabase.rpc as unknown as (f: string, a: Record<string, unknown>) => Promise<{ error: unknown }>)('content_file_parts', { _file_id: id, _parts: parts, _size: file.size })
+    if (r.error) throw r.error
   }
 }
 
@@ -260,7 +294,8 @@ export async function uploadFile(itemId: string, role: 'final' | 'reference', fi
 export async function removeFile(fileId: string): Promise<{ storageFailed: boolean }> {
   const { data, error } = await supabase.rpc('content_file_delete', { _file_id: fileId })
   if (error) throw error
-  const removed = await supabase.storage.from('content-files').remove([data])
+  // Arquivo grande fica em partes (.part0, .part1...): apaga junto (nome que não existe é ignorado).
+  const removed = await supabase.storage.from('content-files').remove([data, ...Array.from({ length: 40 }, (_, i) => `${data}.part${i}`)])
   return { storageFailed: !!removed.error }
 }
 

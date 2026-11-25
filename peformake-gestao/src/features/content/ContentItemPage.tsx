@@ -170,7 +170,7 @@ function Files({ item, files, canUploadFinal, canUploadRef }: { item: ContentIte
           <h3 className="text-[13px] font-semibold">Arte final</h3>
           {canUploadFinal && !locked && (
             <>
-              <input ref={finalInput} type="file" multiple accept="image/*,video/mp4,video/quicktime,application/pdf" className="sr-only" id="up-final"
+              <input ref={finalInput} type="file" multiple className="sr-only" id="up-final"
                 onChange={(e) => { setProblem(null); const list = [...(e.target.files ?? [])]; if (list.length) upload.mutate({ role: 'final', list }) }} />
               <label htmlFor="up-final" className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-medium hover:border-ink">
                 <FileUp size={15} aria-hidden="true" /> {upload.isPending ? 'Enviando' : 'Enviar arte'}
@@ -185,7 +185,7 @@ function Files({ item, files, canUploadFinal, canUploadRef }: { item: ContentIte
           <h3 className="text-[13px] font-semibold">Referências</h3>
           {canUploadRef && !locked && (
             <>
-              <input ref={refInput} type="file" multiple accept="image/*,application/pdf,audio/*" className="sr-only" id="up-ref"
+              <input ref={refInput} type="file" multiple className="sr-only" id="up-ref"
                 onChange={(e) => { setProblem(null); const list = [...(e.target.files ?? [])]; if (list.length) upload.mutate({ role: 'reference', list }) }} />
               <label htmlFor="up-ref" className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-medium hover:border-ink">
                 <FileUp size={15} aria-hidden="true" /> Adicionar

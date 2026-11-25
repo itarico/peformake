@@ -62,10 +62,12 @@ describe('monthGrid', () => {
 })
 
 describe('fileCheck', () => {
-  it('aceita imagem e recusa executável e arquivo grande', () => {
+  it('aceita qualquer arquivo e tamanho (25/11), recusa programa', () => {
     expect(fileCheck('arte.PNG', 1000)).toEqual({ ext: 'png', mime: 'image/png' })
     expect(typeof fileCheck('programa.exe', 10)).toBe('string')
-    expect(typeof fileCheck('video.mp4', 60 * 1024 * 1024)).toBe('string')
+    expect(fileCheck('video.mp4', 300 * 1024 * 1024)).toEqual({ ext: 'mp4', mime: 'video/mp4' })
+    expect(fileCheck('arte.psd', 10)).toEqual({ ext: 'psd', mime: 'image/vnd.adobe.photoshop' })
+    expect(fileCheck('sem-extensao', 10)).toEqual({ ext: 'bin', mime: 'application/octet-stream' })
   })
 })
 

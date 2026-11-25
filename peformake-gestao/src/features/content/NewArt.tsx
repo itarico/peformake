@@ -213,7 +213,7 @@ function BriefForm({ start, item, onDone, readOnly = false }: { start: NewArtSta
             <textarea rows={3} maxLength={600} value={slides[cardNo] ?? ''} onChange={(e) => setSlides((cur) => cur.map((s, i) => (i === cardNo ? e.target.value : s)))}
               placeholder={cardNo === 0 ? 'Capa: a frase que faz a pessoa passar para o lado' : cardNo === slides.length - 1 ? 'Último card: a chamada (WhatsApp, comprar, salvar)' : 'O que este card mostra e fala'} className={field} />
           </label>
-          <input ref={slideRef} type="file" multiple accept="image/*,video/mp4,video/quicktime" className="sr-only"
+          <input ref={slideRef} type="file" multiple className="sr-only"
             onChange={(e) => { const add = [...(e.target.files ?? [])]; setSlidePhotos((cur) => { const n = [...cur]; n[cardNo] = [...(n[cardNo] ?? []), ...add].slice(0, 4); return n }); e.target.value = '' }} />
           <button type="button" onClick={() => slideRef.current?.click()} className={pick}><ImagePlus size={18} aria-hidden="true" /> Foto de referência do card {cardNo + 1}</button>
           {chips(slidePhotos[cardNo] ?? [], (i) => setSlidePhotos((cur) => { const n = [...cur]; n[cardNo] = (n[cardNo] ?? []).filter((_, j) => j !== i); return n }))}
@@ -242,7 +242,7 @@ function BriefForm({ start, item, onDone, readOnly = false }: { start: NewArtSta
 
         {step === 'material' && <>
           <div hidden={!editable} className="grid grid-cols-2 gap-2">
-            <input ref={photoRef} type="file" multiple accept="image/*,application/pdf,video/mp4,video/quicktime" className="sr-only" onChange={(e) => setPhotos((p) => [...p, ...(e.target.files ?? [])].slice(0, 10))} />
+            <input ref={photoRef} type="file" multiple className="sr-only" onChange={(e) => setPhotos((p) => [...p, ...(e.target.files ?? [])].slice(0, 10))} />
             <button type="button" onClick={() => photoRef.current?.click()} className={pick}><ImagePlus size={18} aria-hidden="true" /> {carousel ? 'Fotos gerais' : 'Fotos de referência'}</button>
             <input ref={audioRef} type="file" multiple accept="audio/*,.ogg,.opus,.m4a" className="sr-only" onChange={(e) => setAudios((p) => [...p, ...(e.target.files ?? [])].slice(0, 4))} />
             <button type="button" onClick={() => audioRef.current?.click()} className={pick}><Mic size={18} aria-hidden="true" /> Áudio</button>
@@ -316,7 +316,7 @@ function BriefDossier({ item, onDeliver }: { item: ContentItem; onDeliver?: () =
   const downloadAll = async () => {
     setBusy(true)
     for (const f of refs) {
-      const a = document.createElement('a'); a.href = downloadUrl(f.path, f.name); a.rel = 'noopener'
+      const a = document.createElement('a'); a.href = downloadUrl(f.path, f.name, f.parts, f.realSize ?? f.sizeBytes); a.rel = 'noopener'
       document.body.appendChild(a); a.click(); a.remove()
       await new Promise((r) => setTimeout(r, 350))
     }
@@ -376,7 +376,7 @@ function BriefDossier({ item, onDeliver }: { item: ContentItem; onDeliver?: () =
               ? <ul className="grid grid-cols-6 gap-1.5 md:grid-cols-3">
                   {images.slice(0, 6).map((f) => (
                     <li key={f.id} className="relative">
-                      <a href={downloadUrl(f.path, f.name)} aria-label={`Baixar ${f.name}`} className="block aspect-square overflow-hidden rounded-xl bg-raised">
+                      <a href={downloadUrl(f.path, f.name, f.parts, f.realSize ?? f.sizeBytes)} aria-label={`Baixar ${f.name}`} className="block aspect-square overflow-hidden rounded-xl bg-raised">
                         {f.mime.startsWith('video/') ? <video src={fileUrl(f.path)} muted className="size-full object-cover" /> : <img src={fileUrl(f.path)} alt="" className="size-full object-cover" />}
                       </a>
                       {/^Card \d+ - /.test(f.name) && <span className="absolute left-1 top-1 rounded-full bg-black/65 px-1.5 text-[10.5px] font-semibold text-white">{f.name.split(' - ')[0]}</span>}
@@ -385,7 +385,7 @@ function BriefDossier({ item, onDeliver }: { item: ContentItem; onDeliver?: () =
                 </ul>
               : <p className="text-[13px] text-muted">Sem foto de referência.</p>}
             {images.length > 6 && <p className="text-[12px] text-muted">+{images.length - 6} no Baixar tudo</p>}
-            {others.map((f) => <a key={f.id} href={downloadUrl(f.path, f.name)} className="truncate text-[13px] font-medium">{f.name}</a>)}
+            {others.map((f) => <a key={f.id} href={downloadUrl(f.path, f.name, f.parts, f.realSize ?? f.sizeBytes)} className="truncate text-[13px] font-medium">{f.name}</a>)}
             {item.referenceLinks.map((l) => <a key={l} href={l} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 truncate text-[13px] font-medium"><Link2 size={13} aria-hidden="true" /> {l.replace(/^https?:\/\/(www\.)?/, '').slice(0, 45)}</a>)}
             {refs.length > 0 && <Button variant="secondary" className="min-h-10" disabled={busy} onClick={() => void downloadAll()}><Download size={15} aria-hidden="true" /> {busy ? 'Baixando' : 'Baixar tudo'}</Button>}
           </>)}

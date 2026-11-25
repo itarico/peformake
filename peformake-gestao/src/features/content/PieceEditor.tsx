@@ -291,7 +291,7 @@ export function PieceEditor({ item, startAtType, onClose }: { item: ContentItem;
         <div>
           <div className="mb-1 flex items-center justify-between gap-2">
             <label htmlFor="pe-links" className="text-[13px] font-semibold">Referências</label>
-            <input ref={refInput} id="pe-ref" type="file" multiple accept="image/*,application/pdf,audio/*" className="sr-only"
+            <input ref={refInput} id="pe-ref" type="file" multiple className="sr-only"
               onChange={(e) => { setProblem(null); const list = [...(e.target.files ?? [])]; if (list.length) upload.mutate(list) }} />
             <label htmlFor="pe-ref" className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-medium hover:border-ink">
               <FileUp size={14} aria-hidden="true" /> {upload.isPending ? 'Enviando' : upload.isSuccess ? `${upload.data} enviada${upload.data > 1 ? 's' : ''}` : 'Enviar arquivo'}
