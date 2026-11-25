@@ -126,11 +126,7 @@ function BriefingTab({ clientId, owed }: { clientId: string; owed: number }) {
         <p className={cn('text-[14px]', missing > 0 ? 'font-medium text-warn-ink' : 'text-muted')}>
           {owed ? (missing > 0 ? `Faltam ${missing} de ${owed} criativos neste mês` : `${inMonth.length} de ${owed} criativos no mês`) : `${inMonth.length} criativos no mês`}
         </p>
-        <div className="flex items-center gap-2">
-          {/* Guia de marca resumido dentro do Briefing (pedido do Italo, 24/11): abre em pop-up. */}
-          <GuideButton clientId={clientId} start="posicionamento" />
-          <NewArtButton start={{ clientId, publishDate: startDate }} label="Novo briefing" />
-        </div>
+        <NewArtButton start={{ clientId, publishDate: startDate }} label="Novo briefing" />
       </div>
 
       {open.length === 0 && <p className="rounded-3xl border border-line bg-surface p-8 text-center text-muted">Nenhuma arte em andamento. Toque em Novo briefing.</p>}
@@ -192,10 +188,12 @@ export function SocialClientPage() {
       <div className="flex items-center gap-3">
         <Link to={`/conteudo/planejamento?mes=${month}`} aria-label="Voltar aos clientes" className="flex size-11 shrink-0 items-center justify-center rounded-full border border-line text-ink hover:bg-raised"><ArrowLeft size={18} aria-hidden="true" /></Link>
         <ClientAvatar name={row.name} url={clientLogoUrl(row)} size="md" />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0">
           <h1 className="truncate text-[22px] font-semibold tracking-tight md:text-2xl">{row.name}</h1>
           <p className="truncate text-[13px] text-muted">{row.owed ? `${row.planned} de ${row.owed} criativos no mês` : `${row.planned} criativos no mês`}</p>
         </div>
+        {/* Guia da marca do lado da logo (pedido do Italo, 25/11). */}
+        <GuideButton clientId={id} start="posicionamento" className="shrink-0" />
       </div>
 
       <div role="tablist" aria-label="Seções do cliente" className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1">

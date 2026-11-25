@@ -63,7 +63,7 @@ const sideScroll = (p) => p.evaluate(() => document.documentElement.scrollWidth 
       if (role === 'admin' && url !== '/conteudo/planejamento') bad(`${dev} admin abriu ${url}`);
       await p.goto(`http://localhost:${PORT}/conteudo/design`); await p.waitForTimeout(1200);
       // Abre os clientes fechados um por um (a lista muda a cada clique; o 1º já vem aberto).
-      for (let n = 0; n < 20; n++) { const c = p.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]'); if (!(await c.count())) break; await c.first().click(); await p.waitForTimeout(100) }
+      for (let n = 0; n < 20; n++) { const c = p.locator('ul[aria-label="Fila do design por cliente"] > li > div > button[aria-expanded="false"]'); if (!(await c.count())) break; await c.first().click(); await p.waitForTimeout(100) }
       const cards = await p.locator('ul[aria-label="Fila do design por cliente"] > li ul > li').count();
       if (cards !== 4) bad(`${dev} ${role}: ${cards} cartões na fila`);
       const first = await p.locator('ul[aria-label="Fila do design por cliente"] > li ul > li').first().innerText();

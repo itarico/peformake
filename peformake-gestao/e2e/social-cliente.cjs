@@ -105,6 +105,8 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pg.keyboard.press('Escape'); await pg.waitForTimeout(300)
       await pg.getByRole('button', { name: 'Abrir Cesta de Natal' }).click(); await pg.waitForTimeout(700)
       if (!/\/conteudo\/cliente\/c1/.test(pg.url())) fails.push(`${dev}: tocar na arte saiu da tela`)
+      // Abre no dossiê; a social media toca em Editar briefing (25/11).
+      await pg.getByRole('button', { name: 'Editar briefing' }).click(); await pg.waitForTimeout(300)
       await pg.getByLabel('Título da arte').fill('Cesta completa')
       await pg.getByLabel('Subtítulo').fill('Entrega no bairro')
       if (await popupScrolls(pg)) { fails.push(`${dev}: pop-up do briefing rola (texto)`); await shot('3b-texto-rola') }

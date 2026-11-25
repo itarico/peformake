@@ -112,7 +112,7 @@ const status = (id) => items.find((x) => x.id === id)?.status
       s = await open('designer')
       await s.pg.goto(BASE + '/conteudo/design', { waitUntil: 'networkidle' })
       // Clientes começam fechados (24/11): abre o grupo. Sem "Comecei": abrir o briefing já marca Em produção.
-      for (let n = 0; n < 20; n++) { const g = s.pg.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]'); if (!(await g.count())) break; await g.first().click(); await s.pg.waitForTimeout(100) }
+      for (let n = 0; n < 20; n++) { const g = s.pg.locator('ul[aria-label="Fila do design por cliente"] > li > div > button[aria-expanded="false"]'); if (!(await g.count())) break; await g.first().click(); await s.pg.waitForTimeout(100) }
       const card = s.pg.locator('li', { hasText: 'Carrossel com os 3 sabores' }).last()
       await card.getByRole('button', { name: /Abrir o briefing/ }).click(); await s.pg.waitForTimeout(700)
       if (status(id) !== 'in_production') fails.push(`${dev}: abrir o briefing não marcou em produção (${status(id)})`)

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Download, ImagePlus, Link2, Mic, Plus, Send, X } from 'lucide-react'
+import { Download, ImagePlus, Link2, Mic, PencilLine, Plus, Send, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { VoiceNote } from '@/components/ui/VoiceNote'
@@ -308,6 +308,7 @@ function BriefForm({ start, item, onDone, readOnly = false }: { start: NewArtSta
 function BriefDossier({ item, onDeliver }: { item: ContentItem; onDeliver?: () => void }) {
   const files = useQuery({ queryKey: ['content-files', item.id], queryFn: () => listFiles([item.id]) })
   const refs = (files.data ?? []).filter((f) => f.itemId === item.id && f.role === 'reference')
+  const finals = (files.data ?? []).filter((f) => f.itemId === item.id && f.role === 'final')
   const images = refs.filter((f) => f.mime.startsWith('image/') || f.mime.startsWith('video/'))
   const audios = refs.filter((f) => f.mime.startsWith('audio/'))
   const others = refs.filter((f) => !images.includes(f) && !audios.includes(f))
@@ -343,24 +344,33 @@ function BriefDossier({ item, onDeliver }: { item: ContentItem; onDeliver?: () =
         <span className="rounded-full bg-raised px-2.5 py-1">Entregar até {due}</span>
         <span className="rounded-full bg-raised px-2.5 py-1">Publicar {publish}</span>
       </div>
-      {item.status === 'changes_requested' && item.revisionNote && <p className="line-clamp-3 rounded-xl bg-warn-soft px-3 py-2 text-[13.5px] text-warn-ink"><b>Ajuste pedido:</b> {item.revisionNote}</p>}
+      {item.status === 'changes_requested' && item.revisionNote && <p className="whitespace-pre-line rounded-xl bg-warn-soft px-3 py-2 text-[13.5px] text-warn-ink"><b>Ajuste pedido:</b> {item.revisionNote}</p>}
 
       <div className="grid grid-cols-1 gap-4 max-md:gap-2 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-3 max-md:gap-2">
           {block('Textos da arte', <>{val('Título', item.headline)}{val('Subtítulo', item.subtitle)}{item.cta ? val('Chamada', item.cta) : null}</>, !item.headline && !item.subtitle && !item.cta)}
           {item.carouselSlides.length > 0 && block('Cards', (
             <ol className="flex flex-col gap-1 text-[13px]">
-              {item.carouselSlides.map((s, i) => <li key={i} className="line-clamp-2 max-md:line-clamp-1"><b>Card {i + 1}:</b> {s.text || <span className="text-muted">sem texto</span>}</li>)}
+              {item.carouselSlides.map((s, i) => <li key={i}><b>Card {i + 1}:</b> {s.text || <span className="text-muted">sem texto</span>}</li>)}
             </ol>
           ))}
           {block('Briefing', item.briefing
-            ? <p className="line-clamp-6 whitespace-pre-line rounded-xl bg-raised px-3 py-2 text-[13.5px] max-md:line-clamp-3">{item.briefing}</p>
+            ? <p className="whitespace-pre-line break-words rounded-xl bg-raised px-3 py-2 text-[13.5px]">{item.briefing}</p>
             : <p className="text-[13px] text-muted">Sem briefing escrito.</p>, !item.briefing)}
           {block('Áudio', audios.length
             ? <div className="flex flex-col gap-1.5">{audios.map((f) => <audio key={f.id} src={fileUrl(f.path)} controls className="h-10 w-full" aria-label={f.name} />)}</div>
             : <p className="text-[13px] text-muted">Sem áudio.</p>, audios.length === 0)}
         </div>
-        <div className="flex min-w-0 flex-col gap-3">
+        <div className="flex min-w-0 flex-col gap-3 max-md:gap-2">
+          {finals.length > 0 && block('Arte entregue', (
+            <ul className="grid grid-cols-3 gap-1.5">
+              {finals.slice(0, 3).map((f) => (
+                <li key={f.id}><a href={fileUrl(f.path)} target="_blank" rel="noopener noreferrer" aria-label={`Abrir ${f.name}`} className="block aspect-[4/5] overflow-hidden rounded-xl bg-raised">
+                  {f.mime.startsWith('video/') ? <video src={fileUrl(f.path)} muted className="size-full object-cover" /> : <img src={fileUrl(f.path)} alt="Arte entregue" className="size-full object-cover" />}
+                </a></li>
+              ))}
+            </ul>
+          ))}
           {block(`Referências${refs.length ? ` (${refs.length})` : ''}`, <>
             {images.length > 0
               ? <ul className="grid grid-cols-6 gap-1.5 md:grid-cols-3">
@@ -388,9 +398,13 @@ function BriefDossier({ item, onDeliver }: { item: ContentItem; onDeliver?: () =
 
 /** Pop-up de uma arte que já existe (cartão do cliente): ver a arte entregue e o briefing, e mudar o que ainda pode. */
 export function BriefDialog({ item, onClose, readOnly = false, onDeliver }: { item: ContentItem; onClose: () => void; readOnly?: boolean; onDeliver?: () => void }) {
+  // Abre sempre no dossiê (ver tudo organizado); quem planeja toca em "Editar briefing" para mudar (Italo, 25/11).
+  const [editing, setEditing] = useState(false)
+  const canEdit = !readOnly && EDITABLE.includes(item.status)
   return (
-    <Dialog open onClose={onClose} title={`#${item.number} · ${item.title || 'Arte'}`} description={STATUS_LABEL[item.status]} size={readOnly ? 'lg' : 'md'}>
-      {readOnly ? <BriefDossier item={item} onDeliver={onDeliver ? () => { onClose(); onDeliver() } : undefined} /> : <BriefForm start={{}} item={item} onDone={onClose} />}
+    <Dialog open onClose={onClose} title={`#${item.number} · ${item.title || 'Arte'}`} description={STATUS_LABEL[item.status]} size={editing ? 'md' : 'lg'}
+      footer={!editing && canEdit ? <Button onClick={() => setEditing(true)}><PencilLine size={15} aria-hidden="true" /> Editar briefing</Button> : undefined}>
+      {editing ? <BriefForm start={{}} item={item} onDone={onClose} /> : <BriefDossier item={item} onDeliver={onDeliver ? () => { onClose(); onDeliver() } : undefined} />}
     </Dialog>
   )
 }

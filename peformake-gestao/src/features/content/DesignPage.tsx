@@ -189,7 +189,7 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
         <Button className="min-h-10 w-full px-3 text-[13px]" onClick={onDeliver}><Send size={14} aria-hidden="true" /> Entregar arte</Button>
       </div>
       <div className="-mb-1 flex items-center justify-between gap-2 border-t border-line pt-1">
-        {item.clientId ? <GuideButton clientId={item.clientId} start="visual" className="-ml-2" /> : <span />}
+        <span />
         {refs.length > 0 && (
           <button type="button" disabled={busy} onClick={() => {
             setBusy(true)
@@ -267,8 +267,9 @@ export function DesignPage() {
             const prio = items.filter((x) => x.priority).length
             return (
               <li key={cid} className="rounded-2xl border border-line bg-surface">
+                <div className="flex items-center gap-1 pr-2">
                 <button type="button" aria-expanded={isOpen} onClick={() => toggle(cid)}
-                  className="flex min-h-14 w-full cursor-pointer items-center gap-3 px-3 py-2 text-left">
+                  className="flex min-h-14 min-w-0 flex-1 cursor-pointer items-center gap-3 px-3 py-2 text-left">
                   <ClientAvatar name={clientName(cid)} url={clientLogo(cid)} size="row" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">{clientName(cid)}</span>
@@ -279,6 +280,9 @@ export function DesignPage() {
                     {late && <AlertTriangle size={13} aria-label="Atrasada" />}{!late && <span className="hidden sm:inline">Próxima </span>}{c.text}</span>}
                   <ChevronDown size={18} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
                 </button>
+                {/* Guia da marca do lado da logo do cliente (pedido do Italo, 25/11), uma vez por cliente. */}
+                <GuideButton clientId={cid} start="visual" className="shrink-0" />
+                </div>
                 {isOpen && (
                   <ul className="grid grid-cols-2 gap-3 border-t border-line p-3 md:grid-cols-3 xl:grid-cols-4">
                     {items.map((i) => (

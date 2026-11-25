@@ -104,7 +104,7 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       for (const t of ['Artes', 'Tarefas', 'Planejamento']) if (await s.pg.getByRole('link', { name: t, exact: true }).count()) fails.push(`${dev}: designer vê a aba ${t}`)
       if (await s.pg.getByRole('button', { name: 'Prazos' }).count()) fails.push(`${dev}: designer vê o botão Prazos`)
       if (await s.pg.getByRole('button', { name: 'Nova arte' }).count()) fails.push(`${dev}: designer vê Nova arte`)
-      for (let n = 0; n < 5; n++) { const c = s.pg.locator('ul[aria-label="Fila do design por cliente"] > li > button[aria-expanded="false"]'); if (!(await c.count())) break; await c.first().click(); await s.pg.waitForTimeout(100) }
+      for (let n = 0; n < 5; n++) { const c = s.pg.locator('ul[aria-label="Fila do design por cliente"] > li > div > button[aria-expanded="false"]'); if (!(await c.count())) break; await c.first().click(); await s.pg.waitForTimeout(100) }
       const covers = await s.pg.getByText('Sem referência').count()
       if (covers !== 2) fails.push(`${dev}: ${covers} cartões com o lugar da imagem (esperado 2)`)
       if (!(await s.pg.getByText(/em \d dia/).count())) fails.push(`${dev}: designer não vê o tempo da arte`)
