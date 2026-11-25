@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Download, ImagePlus, Link2, Mic, PencilLine, Plus, Send, X } from 'lucide-react'
+import { Download, ImagePlus, Link2, Mic, PencilLine, Plus, Send, Trash2, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { ask } from '@/components/ui/confirm'
 import { Dialog } from '@/components/ui/Dialog'
 import { VoiceNote } from '@/components/ui/VoiceNote'
 import { fillBrief } from '@/lib/voiceFill'
@@ -9,7 +10,7 @@ import { SearchSelect } from '@/components/ui/SearchSelect'
 import { cn } from '@/lib/cn'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
 import { inArea, useProduction } from '@/features/production/useProduction'
-import { contentErrorMessage, downloadUrl, draftOf, ensurePlan, fileUrl, listFiles, removeFile, saveItem, setStatus, uploadFile } from './contentApi'
+import { contentErrorMessage, deleteItem, downloadUrl, draftOf, ensurePlan, fileUrl, listFiles, removeFile, saveItem, setStatus, uploadFile } from './contentApi'
 import { fileCheck, STATUS_LABEL, type ContentItem, type ContentKind } from './contentRules'
 import { toInstant } from './scheduleRules'
 
@@ -401,9 +402,19 @@ export function BriefDialog({ item, onClose, readOnly = false, onDeliver }: { it
   // Abre sempre no dossiê (ver tudo organizado); quem planeja toca em "Editar briefing" para mudar (Italo, 25/11).
   const [editing, setEditing] = useState(false)
   const canEdit = !readOnly && EDITABLE.includes(item.status)
+  const queryClient = useQueryClient()
+  const drop = useMutation({
+    mutationFn: () => deleteItem(item.id),
+    onSuccess: () => { for (const k of ['social-client-items', 'social-clients', 'design-queue', 'designer-arts', 'content-items']) void queryClient.invalidateQueries({ queryKey: [k] }); onClose() },
+  })
+  const remove = () => { void ask(`Apagar a arte "${item.title || 'Arte'}"? Ela some do planejamento, do design e do cliente. Não dá para desfazer.`).then((ok) => { if (ok) drop.mutate() }) }
   return (
     <Dialog open onClose={onClose} title={`#${item.number} · ${item.title || 'Arte'}`} description={STATUS_LABEL[item.status]} size={editing ? 'md' : 'lg'}
-      footer={!editing && canEdit ? <Button onClick={() => setEditing(true)}><PencilLine size={15} aria-hidden="true" /> Editar briefing</Button> : undefined}>
+      footer={!editing && !readOnly ? <>
+        {item.status !== 'published' && <Button variant="secondary" disabled={drop.isPending} onClick={remove}><Trash2 size={15} aria-hidden="true" /> {drop.isPending ? 'Apagando' : 'Apagar'}</Button>}
+        {canEdit && <Button onClick={() => setEditing(true)}><PencilLine size={15} aria-hidden="true" /> Editar briefing</Button>}
+        {drop.isError && <p role="alert" className="w-full text-[13px] font-medium text-warn-ink">{contentErrorMessage(drop.error)}</p>}
+      </> : undefined}>
       {editing ? <BriefForm start={{}} item={item} onDone={onClose} /> : <BriefDossier item={item} onDeliver={onDeliver ? () => { onClose(); onDeliver() } : undefined} />}
     </Dialog>
   )

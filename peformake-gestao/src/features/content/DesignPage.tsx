@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { AlertTriangle, ChevronDown, Download, FileUp, Image as ImageIcon, Link2, Send } from 'lucide-react'
+import { AlertTriangle, ChevronDown, Download, FileUp, Image as ImageIcon, Send, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { ask } from '@/components/ui/confirm'
 import { Dialog } from '@/components/ui/Dialog'
 import { GuideButton } from '@/features/clients/BrandGuideCard'
 import { ClientAvatar } from '@/features/clients/ClientAvatar'
@@ -17,10 +18,10 @@ import { DesignerPanel } from './DesignerPanel'
 import { BriefDialog } from './NewArt'
 import { PriorityBadge } from './PriorityBadge'
 import { DesignSlaButton } from './DesignSla'
-import { contentErrorMessage, downloadUrl, listDesignQueue, listFiles, setStatus, uploadFile, type ContentFile } from './contentApi'
+import { contentErrorMessage, deleteItem, downloadUrl, listDesignQueue, listFiles, setStatus, uploadFile, type ContentFile } from './contentApi'
 import { monthStart } from '@/features/traffic/planRules'
 import { todayInBrazil } from '@/features/traffic/metricsRules'
-import { deliveryTarget, designQueue, fileCheck, itemTitle, KIND_LABEL, shortBriefing, specSummary, type ContentItem } from './contentRules'
+import { deliveryTarget, designQueue, fileCheck, itemTitle, KIND_LABEL, specSummary, type ContentItem } from './contentRules'
 
 function useNow(): number {
   const [now, setNow] = useState(() => Date.now())
@@ -39,10 +40,6 @@ async function downloadAll(files: readonly ContentFile[]) {
     a.remove()
     await new Promise((r) => setTimeout(r, 350))
   }
-}
-
-function hostOf(url: string): string {
-  try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url }
 }
 
 /** Entregar arte: escolhe o arquivo e manda. Vai direto ao portal do cliente, que recebe aviso no WhatsApp. */
@@ -123,14 +120,14 @@ function RefCover({ images, links, title, onOpen }: { images: string[]; links: s
   // Todo cartão tem o lugar da imagem, mesmo sem referência: a fila fica com o mesmo desenho.
   if (!src || failed) {
     return (
-      <button type="button" onClick={onOpen} aria-label={`Abrir o briefing de ${title}`} className="-mx-3 -mt-3 flex aspect-[4/5] cursor-pointer flex-col items-center justify-center gap-2 border-b border-line bg-raised text-[13px] text-muted">
+      <button type="button" onClick={onOpen} aria-label={`Abrir o briefing de ${title}`} className="-mx-2.5 -mt-2.5 flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 border-b border-line bg-raised text-[13px] text-muted">
         <ImageIcon size={22} aria-hidden="true" /> {link && thumb.isPending ? 'Buscando a referência' : 'Sem referência'}
       </button>
     )
   }
   return (
     <button type="button" onClick={onOpen} aria-label={`Abrir o briefing de ${title}`}
-      className="relative -mx-3 -mt-3 block aspect-[4/5] cursor-pointer overflow-hidden rounded-t-2xl border-b border-line bg-raised">
+      className="relative -mx-2.5 -mt-2.5 block aspect-square cursor-pointer overflow-hidden rounded-t-2xl border-b border-line bg-raised">
       <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} className="size-full object-cover transition-transform duration-300 hover:scale-[1.03]" />
       {images.length > 1 && (
         <span className="absolute bottom-2 right-2 rounded-full bg-black/65 px-2 py-0.5 text-[11px] font-semibold text-white">+{images.length - 1} referência{images.length > 2 ? 's' : ''}</span>
@@ -158,10 +155,11 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
   const otherLinks = item.referenceLinks.filter((l) => !isImageLink(l))
   const started = item.status === 'in_production'
   const [viewing, setViewing] = useState(false)
+  const drop = useMutation({ mutationFn: () => deleteItem(item.id), onSuccess: () => { for (const k of ['design-queue', 'designer-arts', 'social-client-items', 'social-clients']) void queryClient.invalidateQueries({ queryKey: [k] }) } })
   // Abrir o briefing já marca Em produção e o tempo conta (sem botão "Comecei", pedido do Italo, 24/11).
   const view = () => { setViewing(true); if (!started && !start.isPending) start.mutate() }
   return (
-    <li className={cn('flex flex-col gap-2.5 overflow-hidden rounded-2xl border bg-surface p-3', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
+    <li className={cn('flex flex-col gap-1.5 overflow-hidden rounded-2xl border bg-surface p-2.5', c?.tone === 'red' || item.priority ? 'border-warn/60' : 'border-line')}>
       <RefCover images={images} links={otherLinks} title={itemTitle(item)} onOpen={view} />
       <div className="flex items-center justify-between gap-2">
         <p className="min-w-0 truncate text-[12px] text-muted">{KIND_LABEL[item.kind]}{extra ? ` · ${extra}` : ''}{mine ? '' : ` · ${item.designerId ? staffName.split(' ')[0] : 'sem responsável'}`}</p>
@@ -173,33 +171,23 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
       </button>
       {viewing && <BriefDialog item={item} readOnly onDeliver={onDeliver} onClose={() => setViewing(false)} />}
       {item.priority && <PriorityBadge />}
-      {item.status === 'changes_requested' && item.revisionNote
-        ? <p className="line-clamp-2 rounded-xl bg-warn-soft px-2.5 py-1.5 text-[12.5px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>
-        : shortBriefing(item) && <p className="line-clamp-2 text-[13px] text-muted">{shortBriefing(item)}</p>}
-      {otherLinks.length > 0 && (
-        <p className="flex flex-wrap gap-1.5">
-          {otherLinks.slice(0, 3).map((l) => (
-            <a key={l} href={l} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-[180px] items-center gap-1 truncate rounded-full border border-line px-2 py-0.5 text-[12px]">
-              <Link2 size={11} aria-hidden="true" /> {hostOf(l)}
-            </a>
-          ))}
-        </p>
-      )}
-      <div className="mt-auto flex items-center gap-2 pt-1">
-        <Button className="min-h-10 w-full px-3 text-[13px]" onClick={onDeliver}><Send size={14} aria-hidden="true" /> Entregar arte</Button>
-      </div>
-      <div className="-mb-1 flex items-center justify-between gap-2 border-t border-line pt-1">
-        <span />
+      {item.status === 'changes_requested' && item.revisionNote && <p className="line-clamp-1 rounded-lg bg-warn-soft px-2 py-1 text-[12px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>}
+      <div className="mt-auto flex items-center gap-1 pt-0.5">
+        <Button className="min-h-10 min-w-0 flex-1 px-2 text-[13px]" onClick={onDeliver}><Send size={14} aria-hidden="true" /> Entregar arte</Button>
         {refs.length > 0 && (
           <button type="button" disabled={busy} onClick={() => {
             setBusy(true)
             // Baixou as referências: a peça já fica Em produção e o tempo começa a contar.
             if (!started) start.mutate()
             void downloadAll(refs).finally(() => setBusy(false))
-          }} aria-label={`Baixar referências (${refs.length})`} className="inline-flex min-h-9 cursor-pointer items-center gap-1 rounded-full px-2 text-[12.5px] font-medium text-muted hover:bg-raised hover:text-ink">
-            <Download size={14} aria-hidden="true" /> {busy ? 'Baixando' : `Baixar (${refs.length})`}
+          }} aria-label={`Baixar referências (${refs.length})`} title="Baixar referências" className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-muted hover:bg-raised hover:text-ink">
+            {busy ? <span className="text-[11px]">...</span> : <Download size={15} aria-hidden="true" />}
           </button>
         )}
+        {/* Apagar a arte (Italo, 25/11): pergunta antes; publicada não apaga. */}
+        <button type="button" aria-label={`Apagar ${itemTitle(item)}`} title="Apagar" disabled={drop.isPending}
+          onClick={() => { void ask(`Apagar a arte "${itemTitle(item)}"? Ela some da fila e do cliente. Não dá para desfazer.`).then((ok) => { if (ok) drop.mutate() }) }}
+          className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-muted hover:border-warn hover:text-warn-ink"><Trash2 size={15} aria-hidden="true" /></button>
       </div>
     </li>
   )
@@ -269,22 +257,25 @@ export function DesignPage() {
               <li key={cid} className="rounded-2xl border border-line bg-surface">
                 <div className="flex items-center gap-1 pr-2">
                 <button type="button" aria-expanded={isOpen} onClick={() => toggle(cid)}
-                  className="flex min-h-14 min-w-0 flex-1 cursor-pointer items-center gap-3 px-3 py-2 text-left">
+                  className="flex min-h-14 min-w-0 cursor-pointer items-center gap-3 py-2 pl-3 text-left">
                   <ClientAvatar name={clientName(cid)} url={clientLogo(cid)} size="row" />
-                  <span className="min-w-0 flex-1">
+                  <span className="min-w-0">
                     <span className="block truncate font-semibold">{clientName(cid)}</span>
                     <span className="block text-[12.5px] text-muted">{items.length} {items.length === 1 ? 'arte' : 'artes'} para fazer{adjust ? ` · ${adjust} com ajuste` : ''}{prio ? <b className="font-semibold text-warn-ink"> · {prio} prioridade</b> : ''}</span>
                   </span>
+                </button>
+                {/* Guia da marca do lado da logo e do nome do cliente (pedido do Italo, 25/11). */}
+                <GuideButton clientId={cid} start="visual" className="shrink-0" />
+                <button type="button" aria-expanded={isOpen} aria-label={isOpen ? 'Fechar' : 'Abrir'} onClick={() => toggle(cid)}
+                  className="flex min-h-14 flex-1 cursor-pointer items-center justify-end gap-2">
                   {/* Atrasado: ícone de alerta e quanto tempo (no lugar do contorno vermelho). */}
                   {c && <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold', TONE_CLASS[c.tone])}>
                     {late && <AlertTriangle size={13} aria-label="Atrasada" />}{!late && <span className="hidden sm:inline">Próxima </span>}{c.text}</span>}
                   <ChevronDown size={18} aria-hidden="true" className={cn('shrink-0 text-muted transition-transform', isOpen && 'rotate-180')} />
                 </button>
-                {/* Guia da marca do lado da logo do cliente (pedido do Italo, 25/11), uma vez por cliente. */}
-                <GuideButton clientId={cid} start="visual" className="shrink-0" />
                 </div>
                 {isOpen && (
-                  <ul className="grid grid-cols-2 gap-3 border-t border-line p-3 md:grid-cols-3 xl:grid-cols-4">
+                  <ul className="grid grid-cols-2 gap-2.5 border-t border-line p-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {items.map((i) => (
                       <QueueCard key={i.id} item={i} files={filesOf(i.id)} now={now} mine={i.designerId === myStaffId && !!myStaffId}
                         staffName={staffName(i.designerId)} onDeliver={() => setDelivering(i)} />
