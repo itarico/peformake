@@ -43,7 +43,7 @@ async function mock(route) {
     const fn = p.split('/').pop(); const body = JSON.parse(req.postData() || '{}'); calls.push(fn)
     const set = (id, st) => { const it = items.find((x) => x.id === id); if (it) { events.push({ id: 'e' + events.length, item_id: id, kind: 'status', from_status: it.status, to_status: st, message: null, actor_name: 'Equipe', created_at: new Date().toISOString() }); it.status = st; it.updated_at = new Date().toISOString() } }
     if (fn === 'content_plan_ensure') return json('p1')
-    if (fn === 'content_item_save') { const d = body._data || {}; const id = 'n' + (++newId); items.push({ ...base, id, number: items.length + 1, status: 'briefing', title: d.title, briefing: d.briefing, kind: d.kind || 'post', publish_date: d.publish_date || null }); return json(id) }
+    if (fn === 'content_item_save') { const d = body._data || {}; const id = 'n' + (++newId); items.push({ ...base, id, number: items.length + 1, status: 'briefing', title: d.title, briefing: d.briefing, kind: d.kind || 'post', publish_date: d.publish_date || null, headline: d.headline || null, carousel_slides: d.carousel_slides || [], spec: d.spec || {} }); return json(id) }
     if (fn === 'content_item_set_status') { set(body._item_id, body._status); return json(null) }
     if (fn === 'content_file_register') { files.push({ id: 'f' + files.length, item_id: body._item_id, role: body._role, path: body._path, name: body._name, mime: body._mime, size_bytes: 1, created_at: new Date().toISOString() }); return json(null) }
     if (fn === 'portal_get') return json({ name: 'Padaria Sol', segment: 'Padaria', logo_path: null, services: ['Social media'], team: [], has_traffic: false })
@@ -87,11 +87,21 @@ const status = (id) => items.find((x) => x.id === id)?.status
       await s.pg.goto(BASE + '/conteudo/cliente/c1', { waitUntil: 'networkidle' })
       await s.pg.getByRole('button', { name: 'Novo briefing' }).first().click(); await s.pg.waitForTimeout(400)
       if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Novo briefing rola`)
+      // Carrossel por etapas (25/11): quantos cards, texto e foto de cada card, briefing geral, material e publicar.
       await s.pg.getByRole('radio', { name: 'Carrossel' }).click(); await s.pg.waitForTimeout(200)
-      await s.pg.getByLabel('Briefing: o que a arte precisa ter').fill('Carrossel com os 3 sabores de panetone e o preço de cada um.')
+      await s.pg.getByRole('radio', { name: '3' }).click()
+      await s.pg.getByRole('button', { name: 'Continuar' }).click(); await s.pg.waitForTimeout(150)
+      for (const [n, t] of [[1, 'Os 3 sabores de panetone'], [2, 'Chocolate, frutas e doce de leite'], [3, 'Peça no WhatsApp']]) {
+        await s.pg.getByLabel(`Texto do card ${n}`).fill(t)
+        if (!(await s.pg.getByRole('button', { name: `Foto de referência do card ${n}` }).count())) fails.push(`${dev}: card ${n} sem foto de referência`)
+        if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up do card ${n} rola`)
+        await s.pg.getByRole('button', { name: 'Continuar' }).click(); await s.pg.waitForTimeout(150)
+      }
+      await s.pg.getByLabel('Briefing geral do carrossel').fill('Carrossel com os 3 sabores de panetone e o preço de cada um.')
       if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Novo briefing (texto) rola`)
-      await s.pg.getByRole('button', { name: 'Continuar' }).click(); await s.pg.waitForTimeout(300)
-      if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Nova arte (fotos) rola`)
+      await s.pg.getByRole('button', { name: 'Continuar' }).click(); await s.pg.waitForTimeout(150)
+      if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Novo briefing (fotos) rola`)
+      await s.pg.getByRole('button', { name: 'Continuar' }).click(); await s.pg.waitForTimeout(150)
       await s.pg.getByRole('button', { name: 'Mandar para o design' }).click(); await s.pg.waitForTimeout(1200)
       const id = items[0]?.id
       if (status(id) !== 'ready') fails.push(`${dev}: pedido não foi para o design (status ${status(id)})`)
@@ -108,6 +118,10 @@ const status = (id) => items.find((x) => x.id === id)?.status
       if (status(id) !== 'in_production') fails.push(`${dev}: abrir o briefing não marcou em produção (${status(id)})`)
       if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up do briefing no Design rola`)
       if (await s.pg.getByRole('button', { name: 'Salvar' }).count()) fails.push(`${dev}: designer consegue editar o briefing`)
+      // Dossiê (25/11): tudo numa tela, só para ver e baixar; nenhum campo para digitar.
+      const dos = await s.pg.locator('dialog[open]').innerText()
+      if (!dos.includes('Card 1:') || !dos.includes('Os 3 sabores de panetone') || !dos.includes('Carrossel · 3 cards')) fails.push(`${dev}: dossiê sem os cards (${dos.slice(0, 200)})`)
+      if (await s.pg.locator('dialog[open] input, dialog[open] textarea').count()) fails.push(`${dev}: dossiê tem campo editável`)
       await s.pg.keyboard.press('Escape'); await s.pg.waitForTimeout(300)
       await card.getByRole('button', { name: 'Entregar arte' }).click(); await s.pg.waitForTimeout(400)
       if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Entregar arte rola`)

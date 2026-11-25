@@ -105,10 +105,13 @@ const popupScrolls = (p) => p.evaluate(() => { const d = [...document.querySelec
       await pg.keyboard.press('Escape'); await pg.waitForTimeout(300)
       await pg.getByRole('button', { name: 'Abrir Cesta de Natal' }).click(); await pg.waitForTimeout(700)
       if (!/\/conteudo\/cliente\/c1/.test(pg.url())) fails.push(`${dev}: tocar na arte saiu da tela`)
-      await pg.getByLabel('Título (headline)').fill('Cesta completa')
+      await pg.getByLabel('Título da arte').fill('Cesta completa')
       await pg.getByLabel('Subtítulo').fill('Entrega no bairro')
       if (await popupScrolls(pg)) { fails.push(`${dev}: pop-up do briefing rola (texto)`); await shot('3b-texto-rola') }
-      await pg.getByRole('tab', { name: 'Material' }).click(); await pg.waitForTimeout(300)
+      // Por etapas (25/11): Texto > Briefing > Material.
+      await pg.getByRole('button', { name: 'Continuar' }).click(); await pg.waitForTimeout(200)
+      if (await popupScrolls(pg)) fails.push(`${dev}: pop-up do briefing rola (briefing)`)
+      await pg.getByRole('button', { name: 'Continuar' }).click(); await pg.waitForTimeout(300)
       if (!(await pg.getByRole('button', { name: /Áudio/ }).count())) fails.push(`${dev}: sem botão de áudio`)
       if (await popupScrolls(pg)) fails.push(`${dev}: pop-up do briefing rola (material)`)
       await pg.getByRole('button', { name: 'Salvar' }).click(); await pg.waitForTimeout(700)
