@@ -12,6 +12,7 @@ import { TONE_CLASS } from '@/features/av/AvShell'
 import { LoadState } from '@/features/traffic/LoadState'
 import { useAuth } from '@/auth/context'
 import { useProduction } from '@/features/production/useProduction'
+import { DesignerArts } from './DesignerArts'
 import { DesignerPanel } from './DesignerPanel'
 import { BriefDialog } from './NewArt'
 import { PriorityBadge } from './PriorityBadge'
@@ -170,7 +171,7 @@ function QueueCard({ item, files, now, mine, staffName, onDeliver }: {
       <button type="button" onClick={view} className="-mt-1 cursor-pointer text-left text-ink hover:underline">
         <p className="line-clamp-2 text-[14px] font-semibold leading-snug">{itemTitle(item)}</p>
       </button>
-      {viewing && <BriefDialog item={item} readOnly onClose={() => setViewing(false)} />}
+      {viewing && <BriefDialog item={item} readOnly onDeliver={onDeliver} onClose={() => setViewing(false)} />}
       {item.priority && <PriorityBadge />}
       {item.status === 'changes_requested' && item.revisionNote
         ? <p className="line-clamp-2 rounded-xl bg-warn-soft px-2.5 py-1.5 text-[12.5px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>
@@ -238,6 +239,7 @@ export function DesignPage() {
 
   return (
     <>
+      <DesignerArts month={month} />
       <DesignerPanel month={month} />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-[14px] text-muted"><b className="text-ink">{all.length}</b> {all.length === 1 ? 'arte' : 'artes'} para fazer{mineCount ? ` · ${mineCount} suas` : ''}</p>

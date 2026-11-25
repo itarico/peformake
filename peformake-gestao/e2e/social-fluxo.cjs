@@ -122,6 +122,8 @@ const status = (id) => items.find((x) => x.id === id)?.status
       const dos = await s.pg.locator('dialog[open]').innerText()
       if (!dos.includes('Card 1:') || !dos.includes('Os 3 sabores de panetone') || !dos.includes('Carrossel · 3 cards')) fails.push(`${dev}: dossiê sem os cards (${dos.slice(0, 200)})`)
       if (await s.pg.locator('dialog[open] input, dialog[open] textarea').count()) fails.push(`${dev}: dossiê tem campo editável`)
+      for (const t of [...(dev === "desk" ? ["textos da arte", "áudio"] : []), "briefing", "referências", "entregar arte", "entregar até"]) if (!dos.toLowerCase().includes(t)) fails.push(`${dev}: dossiê sem "${t}"`)
+      if (!(await s.pg.getByRole('button', { name: /Feitas/ }).count()) || !(await s.pg.getByRole('button', { name: /Com alteração/ }).count())) fails.push(`${dev}: Design sem os números do mês`)
       await s.pg.keyboard.press('Escape'); await s.pg.waitForTimeout(300)
       await card.getByRole('button', { name: 'Entregar arte' }).click(); await s.pg.waitForTimeout(400)
       if (await popupScrolls(s.pg)) fails.push(`${dev}: pop-up Entregar arte rola`)

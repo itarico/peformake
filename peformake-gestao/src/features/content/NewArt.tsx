@@ -301,10 +301,11 @@ function BriefForm({ start, item, onDone, readOnly = false }: { start: NewArtSta
 }
 
 /**
- * Dossiê da arte para o designer (pedido do Italo, 25/11): tudo numa tela, só para ver e baixar. À esquerda as
- * referências (com "Baixar tudo"); à direita o formato, os textos, os cards do carrossel, o áudio, o link e a data.
+ * Dossiê da arte para o designer (pedido do Italo, 25/11): tudo organizado em blocos, só para ver e baixar. Ajuste
+ * pedido em destaque; textos da arte; cards; briefing; áudio para ouvir; referências com "Baixar tudo"; e o
+ * "Entregar arte" para mandar a arte pronta sem sair dali.
  */
-function BriefDossier({ item }: { item: ContentItem }) {
+function BriefDossier({ item, onDeliver }: { item: ContentItem; onDeliver?: () => void }) {
   const files = useQuery({ queryKey: ['content-files', item.id], queryFn: () => listFiles([item.id]) })
   const refs = (files.data ?? []).filter((f) => f.itemId === item.id && f.role === 'reference')
   const images = refs.filter((f) => f.mime.startsWith('image/') || f.mime.startsWith('video/'))
@@ -321,54 +322,75 @@ function BriefDossier({ item }: { item: ContentItem }) {
     setBusy(false)
   }
   const label = KINDS.find((k) => k.id === item.kind)?.label ?? 'Arte'
-  const when = item.spec.scheduleAt
-    ? new Date(item.spec.scheduleAt).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })
-    : item.publishDate ? `${item.publishDate.slice(8)}/${item.publishDate.slice(5, 7)}` : null
-  const line = (k: string, v: string | null | undefined) => v ? <p className="text-[14px]"><span className="text-muted">{k}:</span> <b className="font-semibold">{v}</b></p> : null
+  const fmt = (iso: string) => new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })
+  const publish = item.spec.scheduleAt ? fmt(item.spec.scheduleAt) : item.publishDate ? `${item.publishDate.slice(8)}/${item.publishDate.slice(5, 7)}` : 'sem data'
+  const due = item.designDueAt ? fmt(item.designDueAt) : item.deadline ? `${item.deadline.slice(8)}/${item.deadline.slice(5, 7)}` : 'sem prazo'
+  // Uma tela só (Italo, 25/11): no celular os blocos vazios somem e os textos ficam mais curtos.
+  const block = (title: string, body: React.ReactNode, empty = false) => (
+    <section className={cn('flex flex-col gap-1', empty && 'max-md:hidden')}>
+      <h3 className="text-[11.5px] font-semibold uppercase tracking-wide text-muted">{title}</h3>
+      {body}
+    </section>
+  )
+  const val = (k: string, v: string | null | undefined) => (
+    <p className={cn('text-[14px]', !v && 'max-md:hidden')}><span className="text-muted">{k}: </span>{v ? <b className="font-semibold">{v}</b> : <span className="text-muted">não informado</span>}</p>
+  )
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
-      <div className="flex flex-col gap-2">
-        {images.length > 0
-          ? <ul className="grid grid-cols-3 gap-1.5 sm:grid-cols-2">
-              {images.slice(0, 6).map((f) => (
-                <li key={f.id} className="relative">
-                  <a href={downloadUrl(f.path, f.name)} aria-label={`Baixar ${f.name}`} className="block aspect-square overflow-hidden rounded-xl bg-raised">
-                    {f.mime.startsWith('video/') ? <video src={fileUrl(f.path)} muted className="size-full object-cover" /> : <img src={fileUrl(f.path)} alt="" className="size-full object-cover" />}
-                  </a>
-                  {/^Card \d+ - /.test(f.name) && <span className="absolute left-1 top-1 rounded-full bg-black/65 px-1.5 text-[10.5px] font-semibold text-white">{f.name.split(' - ')[0]}</span>}
-                </li>
-              ))}
-            </ul>
-          : <p className="flex min-h-24 items-center justify-center rounded-xl bg-raised text-[13px] text-muted">Sem foto de referência</p>}
-        {images.length > 6 && <p className="text-[12px] text-muted">+{images.length - 6} no Baixar tudo</p>}
-        {audios.map((f) => <audio key={f.id} src={fileUrl(f.path)} controls className="h-10 w-full" />)}
-        {others.map((f) => <a key={f.id} href={downloadUrl(f.path, f.name)} className="truncate text-[13px] font-medium">{f.name}</a>)}
-        {refs.length > 0 && <Button variant="secondary" className="min-h-11" disabled={busy} onClick={() => void downloadAll()}><Download size={15} aria-hidden="true" /> {busy ? 'Baixando' : `Baixar tudo (${refs.length})`}</Button>}
+    <div className="flex flex-col gap-3 max-md:gap-2">
+      <div className="flex flex-wrap gap-1.5 text-[12.5px] font-semibold">
+        <span className="rounded-full bg-accent-soft px-2.5 py-1 text-accent-ink">{label}{item.carouselSlides.length ? ` · ${item.carouselSlides.length} cards` : ''}</span>
+        <span className="rounded-full bg-raised px-2.5 py-1">Entregar até {due}</span>
+        <span className="rounded-full bg-raised px-2.5 py-1">Publicar {publish}</span>
       </div>
-      <div className="flex min-w-0 flex-col gap-2">
-        <p className="self-start rounded-full bg-accent-soft px-2.5 py-0.5 text-[12px] font-semibold text-accent-ink">{label}{item.carouselSlides.length ? ` · ${item.carouselSlides.length} cards` : ''}{when ? ` · publicar ${when}` : ''}</p>
-        {line('Título', item.headline)}
-        {line('Subtítulo', item.subtitle)}
-        {line('Chamada', item.cta)}
-        {item.carouselSlides.length > 0 && (
-          <ol className="flex flex-col gap-1 text-[13px]">
-            {item.carouselSlides.map((s, i) => <li key={i} className="line-clamp-2"><b>Card {i + 1}:</b> {s.text || <span className="text-muted">sem texto</span>}</li>)}
-          </ol>
-        )}
-        {item.briefing && <p className="line-clamp-[8] whitespace-pre-line rounded-xl bg-raised px-3 py-2 text-[13.5px]">{item.briefing}</p>}
-        {item.status === 'changes_requested' && item.revisionNote && <p className="line-clamp-4 rounded-xl bg-warn-soft px-3 py-2 text-[13px] text-warn-ink"><b>Ajuste:</b> {item.revisionNote}</p>}
-        {item.referenceLinks.map((l) => <a key={l} href={l} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 truncate text-[13px] font-medium"><Link2 size={13} aria-hidden="true" /> {l.replace(/^https?:\/\/(www\.)?/, '').slice(0, 50)}</a>)}
+      {item.status === 'changes_requested' && item.revisionNote && <p className="line-clamp-3 rounded-xl bg-warn-soft px-3 py-2 text-[13.5px] text-warn-ink"><b>Ajuste pedido:</b> {item.revisionNote}</p>}
+
+      <div className="grid grid-cols-1 gap-4 max-md:gap-2 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div className="flex min-w-0 flex-col gap-3 max-md:gap-2">
+          {block('Textos da arte', <>{val('Título', item.headline)}{val('Subtítulo', item.subtitle)}{item.cta ? val('Chamada', item.cta) : null}</>, !item.headline && !item.subtitle && !item.cta)}
+          {item.carouselSlides.length > 0 && block('Cards', (
+            <ol className="flex flex-col gap-1 text-[13px]">
+              {item.carouselSlides.map((s, i) => <li key={i} className="line-clamp-2 max-md:line-clamp-1"><b>Card {i + 1}:</b> {s.text || <span className="text-muted">sem texto</span>}</li>)}
+            </ol>
+          ))}
+          {block('Briefing', item.briefing
+            ? <p className="line-clamp-6 whitespace-pre-line rounded-xl bg-raised px-3 py-2 text-[13.5px] max-md:line-clamp-3">{item.briefing}</p>
+            : <p className="text-[13px] text-muted">Sem briefing escrito.</p>, !item.briefing)}
+          {block('Áudio', audios.length
+            ? <div className="flex flex-col gap-1.5">{audios.map((f) => <audio key={f.id} src={fileUrl(f.path)} controls className="h-10 w-full" aria-label={f.name} />)}</div>
+            : <p className="text-[13px] text-muted">Sem áudio.</p>, audios.length === 0)}
+        </div>
+        <div className="flex min-w-0 flex-col gap-3">
+          {block(`Referências${refs.length ? ` (${refs.length})` : ''}`, <>
+            {images.length > 0
+              ? <ul className="grid grid-cols-6 gap-1.5 md:grid-cols-3">
+                  {images.slice(0, 6).map((f) => (
+                    <li key={f.id} className="relative">
+                      <a href={downloadUrl(f.path, f.name)} aria-label={`Baixar ${f.name}`} className="block aspect-square overflow-hidden rounded-xl bg-raised">
+                        {f.mime.startsWith('video/') ? <video src={fileUrl(f.path)} muted className="size-full object-cover" /> : <img src={fileUrl(f.path)} alt="" className="size-full object-cover" />}
+                      </a>
+                      {/^Card \d+ - /.test(f.name) && <span className="absolute left-1 top-1 rounded-full bg-black/65 px-1.5 text-[10.5px] font-semibold text-white">{f.name.split(' - ')[0]}</span>}
+                    </li>
+                  ))}
+                </ul>
+              : <p className="text-[13px] text-muted">Sem foto de referência.</p>}
+            {images.length > 6 && <p className="text-[12px] text-muted">+{images.length - 6} no Baixar tudo</p>}
+            {others.map((f) => <a key={f.id} href={downloadUrl(f.path, f.name)} className="truncate text-[13px] font-medium">{f.name}</a>)}
+            {item.referenceLinks.map((l) => <a key={l} href={l} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 truncate text-[13px] font-medium"><Link2 size={13} aria-hidden="true" /> {l.replace(/^https?:\/\/(www\.)?/, '').slice(0, 45)}</a>)}
+            {refs.length > 0 && <Button variant="secondary" className="min-h-10" disabled={busy} onClick={() => void downloadAll()}><Download size={15} aria-hidden="true" /> {busy ? 'Baixando' : 'Baixar tudo'}</Button>}
+          </>)}
+          {onDeliver && block('Arte pronta', <Button className="min-h-12" onClick={onDeliver}><Send size={16} aria-hidden="true" /> Entregar arte</Button>)}
+        </div>
       </div>
     </div>
   )
 }
 
 /** Pop-up de uma arte que já existe (cartão do cliente): ver a arte entregue e o briefing, e mudar o que ainda pode. */
-export function BriefDialog({ item, onClose, readOnly = false }: { item: ContentItem; onClose: () => void; readOnly?: boolean }) {
+export function BriefDialog({ item, onClose, readOnly = false, onDeliver }: { item: ContentItem; onClose: () => void; readOnly?: boolean; onDeliver?: () => void }) {
   return (
     <Dialog open onClose={onClose} title={`#${item.number} · ${item.title || 'Arte'}`} description={STATUS_LABEL[item.status]} size={readOnly ? 'lg' : 'md'}>
-      {readOnly ? <BriefDossier item={item} /> : <BriefForm start={{}} item={item} onDone={onClose} />}
+      {readOnly ? <BriefDossier item={item} onDeliver={onDeliver ? () => { onClose(); onDeliver() } : undefined} /> : <BriefForm start={{}} item={item} onDone={onClose} />}
     </Dialog>
   )
 }

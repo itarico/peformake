@@ -116,6 +116,22 @@ export function downloadUrl(path: string, name: string): string {
   return supabase.storage.from('content-files').getPublicUrl(path, { download: name || true }).data.publicUrl
 }
 
+/**
+ * Artes do designer no mês (25/11): entregues no mês ou ainda na fila, com a data da entrega. Para os números do topo
+ * do Design (feitas, faltam, aprovadas, com alteração) e a lista que abre ao tocar.
+ */
+export async function listDesignerArts(month: string): Promise<(ContentItem & { deliveredAt: string | null })[]> {
+  const [y, m] = month.split('-').map(Number) as [number, number]
+  const next = `${m === 12 ? y + 1 : y}-${String(m === 12 ? 1 : m + 1).padStart(2, '0')}-01`
+  const q = supabase.from('content_items') as unknown as {
+    select: (c: string) => { not: (c: string, op: string, v: null) => { or: (f: string) => { limit: (n: number) => Promise<{ data: Record<string, unknown>[] | null; error: unknown }> } } }
+  }
+  const { data, error } = await q.select(`${ITEM_COLUMNS}, delivered_at`).not('designer_id', 'is', null)
+    .or(`and(delivered_at.gte.${month},delivered_at.lt.${next}),status.in.(ready,in_production,changes_requested)`).limit(2000)
+  if (error) throw error
+  return ((data ?? []) as unknown as (ItemRow & { delivered_at: string | null })[]).map((r) => ({ ...toItem(r, ''), deliveredAt: r.delivered_at }))
+}
+
 /** Fila do design: peças com o designer agora, de qualquer mês. */
 export async function listDesignQueue(): Promise<ContentItem[]> {
   const { data, error } = await supabase.from('content_items').select(ITEM_COLUMNS).in('status', DESIGN_QUEUE).limit(500)
