@@ -1,27 +1,228 @@
 {
- "status": "aguardando",
- "mensagem": "O plano com gramas precisa vir da sua nutricionista. Mande a foto ou o PDF do plano dela aqui que o professor transforma em refeições com horário e quantidade.",
- "provisorio": {
-  "aviso": "Enquanto o plano dela não chega: só o básico combinado na sessão de treino e nutrição, sem gramas inventadas.",
-  "refeicoes": {
-   "cafe": [
-    "3 ovos",
-    "Pão (como você já come)",
-    "Copo de água ao acordar"
-   ],
-   "almoco": [
-    "Prato normal com porção maior de frango ou carne",
-    "1ª garrafa de água até aqui"
-   ],
-   "lanche": [
-    "Iogurte natural ou 1 copo de leite",
-    "2ª garrafa de água até o fim da tarde"
-   ]
-  },
-  "cuidados": [
-   "Você relatou hipoglicemia: não fique mais de 4 horas sem comer.",
-   "Gases e barriga estufada: anote o que comeu quando acontecer e mande no recado."
-  ]
+ "status": "professor",
+ "fonte": "Plano do professor (provisório), calculado pela sua ficha: gasto estimado de cerca de 2.400 kcal por dia (fórmula de Mifflin-St Jeor com atividade moderada) e um déficit pequeno para reduzir a barriga sem perder massa. Proteína de cerca de 2 g por kg. Não substitui sua nutricionista: quando o plano dela chegar, ele toma o lugar deste.",
+ "metas": {
+  "kcal": 2147,
+  "proteina": 155,
+  "carbo": 227,
+  "gordura": 67,
+  "agua": "2,5 litros (35 ml por kg)"
  },
- "refeicoes": {}
+ "refeicoes": {
+  "pre": {
+   "hora": "05:40",
+   "nome": "Pré-treino",
+   "itens": [
+    {
+     "alimento": "Banana",
+     "qtd": "1 média (100 g)",
+     "kcal": 90,
+     "p": 1,
+     "c": 23,
+     "g": 0
+    },
+    {
+     "alimento": "Pasta de amendoim",
+     "qtd": "1 colher de sopa (15 g)",
+     "kcal": 90,
+     "p": 4,
+     "c": 3,
+     "g": 7.5
+    }
+   ],
+   "nota": "Treinar em jejum aumenta o risco de hipoglicemia, que você já teve."
+  },
+  "cafe": {
+   "hora": "07:00",
+   "nome": "Café da manhã (pós-treino)",
+   "itens": [
+    {
+     "alimento": "Ovos inteiros",
+     "qtd": "3 unidades (150 g)",
+     "kcal": 216,
+     "p": 19,
+     "c": 1,
+     "g": 14
+    },
+    {
+     "alimento": "Pão francês",
+     "qtd": "1 unidade (50 g)",
+     "kcal": 150,
+     "p": 4.5,
+     "c": 29,
+     "g": 1.5
+    },
+    {
+     "alimento": "Queijo branco",
+     "qtd": "1 fatia (30 g)",
+     "kcal": 80,
+     "p": 5,
+     "c": 1,
+     "g": 6
+    },
+    {
+     "alimento": "Mamão",
+     "qtd": "1 fatia (150 g)",
+     "kcal": 60,
+     "p": 0.7,
+     "c": 15,
+     "g": 0
+    }
+   ],
+   "nota": "Café preto sem açúcar à vontade."
+  },
+  "almoco": {
+   "hora": "12:00",
+   "nome": "Almoço",
+   "itens": [
+    {
+     "alimento": "Arroz branco cozido",
+     "qtd": "4 colheres de sopa cheias (150 g)",
+     "kcal": 192,
+     "p": 3.8,
+     "c": 42,
+     "g": 0.3
+    },
+    {
+     "alimento": "Feijão cozido",
+     "qtd": "1 concha pequena (86 g)",
+     "kcal": 65,
+     "p": 4,
+     "c": 12,
+     "g": 0.4
+    },
+    {
+     "alimento": "Peito de frango grelhado",
+     "qtd": "1 filé médio (150 g)",
+     "kcal": 240,
+     "p": 48,
+     "c": 0,
+     "g": 4.5
+    },
+    {
+     "alimento": "Salada de folhas",
+     "qtd": "à vontade",
+     "kcal": 15,
+     "p": 1,
+     "c": 3,
+     "g": 0
+    },
+    {
+     "alimento": "Legumes cozidos",
+     "qtd": "1 xícara (100 g)",
+     "kcal": 30,
+     "p": 1,
+     "c": 6,
+     "g": 0
+    },
+    {
+     "alimento": "Azeite",
+     "qtd": "1 colher de chá (5 ml)",
+     "kcal": 45,
+     "p": 0,
+     "c": 0,
+     "g": 5
+    }
+   ],
+   "nota": "1ª garrafa de água até aqui."
+  },
+  "lanche": {
+   "hora": "16:00",
+   "nome": "Lanche da tarde",
+   "itens": [
+    {
+     "alimento": "Iogurte natural",
+     "qtd": "1 pote (170 g)",
+     "kcal": 100,
+     "p": 7,
+     "c": 9,
+     "g": 5
+    },
+    {
+     "alimento": "Aveia em flocos",
+     "qtd": "3 colheres de sopa (30 g)",
+     "kcal": 115,
+     "p": 4,
+     "c": 20,
+     "g": 2
+    },
+    {
+     "alimento": "Maçã",
+     "qtd": "1 média (130 g)",
+     "kcal": 70,
+     "p": 0.3,
+     "c": 18,
+     "g": 0
+    }
+   ],
+   "nota": "2ª garrafa de água até o fim da tarde."
+  },
+  "jantar": {
+   "hora": "20:15",
+   "nome": "Jantar",
+   "itens": [
+    {
+     "alimento": "Carne magra (patinho)",
+     "qtd": "1 bife ou 4 colheres de moída (120 g)",
+     "kcal": 264,
+     "p": 42,
+     "c": 0,
+     "g": 10
+    },
+    {
+     "alimento": "Batata-doce cozida",
+     "qtd": "1 média (150 g)",
+     "kcal": 115,
+     "p": 1.5,
+     "c": 27,
+     "g": 0
+    },
+    {
+     "alimento": "Legumes cozidos",
+     "qtd": "1 xícara e meia (150 g)",
+     "kcal": 45,
+     "p": 2,
+     "c": 9,
+     "g": 0
+    },
+    {
+     "alimento": "Azeite",
+     "qtd": "1 colher de chá (5 ml)",
+     "kcal": 45,
+     "p": 0,
+     "c": 0,
+     "g": 5
+    }
+   ],
+   "nota": "Depois do estudo das 19h."
+  },
+  "ceia": {
+   "hora": "21:45",
+   "nome": "Ceia (se tiver fome)",
+   "itens": [
+    {
+     "alimento": "Leite",
+     "qtd": "1 copo (200 ml)",
+     "kcal": 120,
+     "p": 6,
+     "c": 9,
+     "g": 6
+    }
+   ],
+   "nota": "Evita acordar com fome e ajuda a não ficar muitas horas sem comer."
+  }
+ },
+ "substituicoes": [
+  "Frango (150 g) ↔ peixe (180 g) ↔ carne magra (130 g) ↔ 4 ovos",
+  "Arroz (150 g) ↔ macarrão cozido (150 g) ↔ cuscuz (150 g) ↔ batata-doce (220 g)",
+  "Pão francês (50 g) ↔ tapioca com 3 colheres de goma (40 g) ↔ 2 fatias de pão integral",
+  "Iogurte natural (170 g) ↔ leite (200 ml)",
+  "Mamão ou maçã ↔ qualquer fruta de tamanho parecido"
+ ],
+ "cuidados": [
+  "Hipoglicemia: não fique mais de 4 horas sem comer; não treine em jejum.",
+  "Gases e barriga estufada: feijão em porção pequena, deixado de molho antes de cozinhar; anote no recado quando acontecer e com o quê.",
+  "Creatina: 3 a 5 g por dia, em qualquer refeição.",
+  "Pesar no começo é chato, mas só precisa por 1 ou 2 semanas: depois você aprende a medir no olho."
+ ]
 }

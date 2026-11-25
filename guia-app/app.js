@@ -116,7 +116,7 @@
     S.lastLevel = L; S.lastPct = pct;
     const wk = $("week"); wk.replaceChildren();
     for (let i = 6; i >= 0; i--) { const d = addDays(t, -i); const c = el("div", "wd" + (dayPct(d) >= VALID ? " ok" : "") + (d === t ? " today" : "")); c.append(el("span", null, DOW1[dowOf(d)]), el("i")); wk.append(c); }
-    renderMissions(t); renderTasks(t); renderStudy(t); renderYou(t);
+    renderMissions(t); renderTasks(t); renderStudy(t); renderCorpo(t); renderYou(t);
   }
   function nowId(sl) { const n = new Date(); const hm = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0"); let cur = null; sl.forEach(s => { if (s.h <= hm) cur = s; }); return cur && cur.id; }
   function renderMissions(t) {
@@ -173,7 +173,7 @@
   }
 
   function workoutFor(d) { const w = S.treino; return w && w.dias ? w.dias[String(dowOf(d))] || null : null; }
-  const MEAL = { cafe: "cafe", almoco: "almoco", lanche: "lanche", jantar: "jantar" };
+  const MEAL = { pre: "pre", cafe: "cafe", almoco: "almoco", lanche: "lanche", jantar: "jantar", ceia: "ceia" };
   function missionDetail(s, t, onlyCheck) {
     if (s.id === "academia" && workoutFor(t)) return onlyCheck ? true : workoutView(t);
     if (MEAL[s.id] && S.nutri) return onlyCheck ? true : mealView(s.id);
@@ -183,8 +183,8 @@
   }
   function lastLoad(exId) { const r = S.resultados.filter(x => x.tipo === "treino" && x.dados && x.dados.exercicio === exId && x.dia < today()).sort((a, b) => b.dia.localeCompare(a.dia))[0]; return r ? r.dados.carga : null; }
   function todayLoad(exId, t) { const r = S.resultados.filter(x => x.tipo === "treino" && x.dados && x.dados.exercicio === exId && x.dia === t).pop(); return r ? r.dados : null; }
-  function workoutView(t) {
-    const w = workoutFor(t), box = el("div", "mdetail");
+  function workoutView(t, wArg, canLog = true) {
+    const w = wArg || workoutFor(t), box = el("div", "mdetail");
     box.append(el("b", "wk-title", w.nome));
     const strat = el("details", "mini-fold"); strat.append(el("summary", null, "Como fazer: " + S.treino.estrategia.titulo));
     const ol = el("ol", "strat"); S.treino.estrategia.passos.forEach(p => ol.append(el("li", null, p))); strat.append(ol, el("p", "muted small", S.treino.estrategia.drop));
@@ -201,7 +201,7 @@
       if (done) inp.value = done.carga || "";
       const ok = el("button", "btn small-btn" + (done ? " ok-btn" : ""), done ? "Feito" : "Feito?"); ok.type = "button";
       ok.addEventListener("click", ev => logExercise(t, x, inp.value, ev));
-      form.append(inp, ok); info.append(form);
+      if (canLog) { form.append(inp, ok); info.append(form); } else if (prev) info.append(el("span", "muted small", "Última carga: " + prev + " kg"));
       card.append(img, info); box.append(card);
     });
     box.append(el("p", "muted small", "Toque na foto para ver o movimento. " + S.treino.cardio));
@@ -215,15 +215,56 @@
     if (all && !doneMap(t).academia) toggleSlot(t, "academia", true); else renderMissions(t);
     if (!DEMO) { const r = await S.sb.from("guia_resultados").insert(row); if (r.error) toast("Não salvou o exercício."); }
   }
+  function mealItems(m) {
+    const ul = el("ul", "meal");
+    (m.itens || []).forEach(i => { const li = el("li"); li.append(el("span", null, i.alimento), el("b", null, i.qtd)); ul.append(li); });
+    return ul;
+  }
+  function mealTotals(m) { const s = k => Math.round((m.itens || []).reduce((a, i) => a + (Number(i[k]) || 0), 0)); return s("kcal") + " kcal · " + s("p") + " g proteína · " + s("c") + " g carbo · " + s("g") + " g gordura"; }
   function mealView(id) {
-    const n = S.nutri, box = el("div", "mdetail");
-    const real = n.refeicoes && n.refeicoes[id];
-    if (real) { const ul = el("ul", "plain"); real.forEach(i => ul.append(el("li", null, i))); box.append(ul); return box; }
-    box.append(el("p", "small", n.mensagem));
-    const prov = n.provisorio; if (prov && prov.refeicoes[id]) { box.append(el("span", "lsec-h", "Por enquanto")); const ul = el("ul", "plain"); prov.refeicoes[id].forEach(i => ul.append(el("li", null, i))); box.append(ul); }
-    if (prov) prov.cuidados.forEach(c => box.append(el("p", "muted small", c)));
-    box.append(fileButton("Enviar o plano da nutricionista (foto ou PDF)", { tipo: "plano_nutricionista" }, "nutricao"));
+    const n = S.nutri, box = el("div", "mdetail"), m = n.refeicoes && n.refeicoes[id];
+    if (!m || !m.itens) { box.append(el("p", "small", "Sem plano para esta refeição ainda.")); return box; }
+    box.append(mealItems(m), el("span", "muted small", mealTotals(m)));
+    if (m.nota) box.append(el("p", "muted small", m.nota));
+    const go2 = el("button", "lnk", "Ver o plano do dia e as substituições"); go2.type = "button"; go2.style.cssText = "border:0;background:none;padding:0;text-align:left"; go2.addEventListener("click", () => go("corpo")); box.append(go2);
     return box;
+  }
+
+
+  // ---------------- corpo: nutrição e treino ----------------
+  function renderCorpo(t) {
+    const n = S.nutri, tw = S.treino; if (!$("corpoMetas")) return;
+    const mt = $("corpoMetas"); mt.replaceChildren();
+    if (n && n.metas) [[n.metas.kcal, "kcal"], [n.metas.proteina + " g", "proteína"], [n.metas.carbo + " g", "carbo"], [n.metas.gordura + " g", "gordura"]]
+      .forEach(([v, k]) => { const c = el("div", "stat"); c.append(el("b", null, v), el("span", null, k)); mt.append(c); });
+    $("corpoAgua").textContent = n && n.metas ? "Água: " + n.metas.agua : "";
+    $("corpoFonte").textContent = n ? n.fonte || "" : "";
+    const ml = $("corpoMeals"); ml.replaceChildren();
+    const hm = new Date().toTimeString().slice(0, 5);
+    const meals = n && n.refeicoes ? Object.entries(n.refeicoes).sort((a, b) => a[1].hora.localeCompare(b[1].hora)) : [];
+    let cur = null; meals.forEach(([id, m]) => { if (m.hora <= hm) cur = id; });
+    meals.forEach(([id, m]) => { const c = el("div", "mealcard" + (id === cur ? " now" : "")); const h = el("div", "row"); h.style.justifyContent = "space-between";
+      h.append(el("b", null, m.hora + " · " + m.nome), el("span", "muted small", Math.round((m.itens || []).reduce((s, i) => s + (Number(i.kcal) || 0), 0)) + " kcal")); c.append(h, mealItems(m)); if (m.nota) c.append(el("p", "muted small", m.nota)); ml.append(c); });
+    const sb = $("corpoSubs"); sb.replaceChildren(); ((n && n.substituicoes) || []).forEach(s => sb.append(el("li", null, s)));
+    const cu = $("corpoCuidados"); cu.replaceChildren(); ((n && n.cuidados) || []).forEach(s => cu.append(el("li", null, s)));
+    const wk = $("corpoTreino"); wk.replaceChildren();
+    if (tw && tw.dias) {
+      const todayKey = String(dowOf(t));
+      [["1", "Segunda"], ["2", "Terça"], ["3", "Quarta"], ["4", "Quinta"], ["5", "Sexta"], ["6", "Sábado"], ["0", "Domingo"]].forEach(([k, nome]) => {
+        const w = tw.dias[k]; const d = el("details", "fold inner"); if (k === todayKey) d.open = true;
+        const s = el("summary"); s.append(el("span", null, nome + (k === todayKey ? " · hoje" : "")), el("span", "fold-n", w ? w.nome.replace(/^[A-D] · /, "") : (tw.outros && tw.outros[k] ? tw.outros[k].split(":")[1].trim() : "descanso")));
+        d.append(s); const b = el("div", "fold-body");
+        if (w) b.append(workoutView(t, w, k === todayKey)); else b.append(el("p", "small", (tw.outros && tw.outros[k]) || "Descanso."));
+        d.append(b); wk.append(d);
+      });
+      $("corpoTreinoInfo").textContent = tw.fonte || "";
+    }
+    const cg = $("corpoCargas"); cg.replaceChildren();
+    const loads = {}; S.resultados.filter(r => r.tipo === "treino" && r.dados && r.dados.carga).forEach(r => { (loads[r.dados.nome || r.dados.exercicio] = loads[r.dados.nome || r.dados.exercicio] || []).push({ d: r.dia, c: r.dados.carga }); });
+    const names = Object.keys(loads); $("cargasN").textContent = names.length ? names.length + " exercícios" : "";
+    if (!names.length) cg.append(el("p", "muted small", "Anote a carga da última série em cada exercício e a evolução aparece aqui."));
+    names.forEach(nm => { const arr = loads[nm].sort((a, b) => a.d.localeCompare(b.d)); const first = arr[0].c, last = arr[arr.length - 1].c;
+      const r = el("div", "nrow"); r.append(el("span", "ttl", nm), el("b", "nota" + (last >= first ? " boa" : ""), (arr.length > 1 ? first + " → " : "") + last + " kg")); cg.append(r); });
   }
 
   // ---------------- tarefas ----------------

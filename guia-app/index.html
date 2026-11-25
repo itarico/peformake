@@ -122,7 +122,7 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
 /* abas */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);
   padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-.tabs nav{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.tabs nav{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
 .tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:14px;color:var(--muted);font-size:.72rem;font-weight:600}
 .tabs button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 .tabs svg{width:22px;height:22px}
@@ -249,6 +249,18 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
 .timer-clock{font:800 2.6rem var(--display);font-variant-numeric:tabular-nums}
 #plSpeak{padding:7px 12px}
 .pdots{margin-left:auto}
+.stats.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.stats.four .stat{padding:10px 6px;align-items:center}
+.stats.four .stat b{font-size:1.05rem}
+.meal{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.meal li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
+.meal li:first-child{border-top:0}
+.meal li b{font-weight:600;text-align:right;color:var(--accent);flex:none;max-width:55%}
+.mealcard{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.mealcard.now{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fold.inner{border-radius:14px;background:var(--bg)}
+.fold.inner>summary{padding:12px 14px;font-size:.95rem}
+.fold.inner .mdetail{margin:0;border:0;padding:0;background:transparent}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -314,6 +326,19 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
       <details class="fold"><summary><span>Falar com o professor</span></summary><div class="fold-body"><div id="generalVoice"></div><a class="lnk" id="chatBtn" href="#" target="_blank" rel="noopener">Abrir o chat do professor</a></div></details>
     </section>
 
+    <!-- CORPO -->
+    <section data-view="corpo" hidden style="display:flex;flex-direction:column;gap:10px">
+      <h2 style="font-size:1.45rem">Corpo</h2>
+      <div class="stats four" id="corpoMetas"></div>
+      <span class="small muted" id="corpoAgua"></span>
+      <details class="fold" open><summary><span>Plano alimentar</span><span class="fold-n">com gramas</span></summary><div class="fold-body"><div id="corpoMeals" style="display:flex;flex-direction:column;gap:10px"></div></div></details>
+      <details class="fold"><summary><span>Substituições</span></summary><div class="fold-body"><ul class="plain" id="corpoSubs"></ul></div></details>
+      <details class="fold"><summary><span>Cuidados</span></summary><div class="fold-body"><ul class="plain" id="corpoCuidados"></ul></div></details>
+      <details class="fold"><summary><span>Plano de treino</span><span class="fold-n">semana</span></summary><div class="fold-body"><div id="corpoTreino" style="display:flex;flex-direction:column;gap:8px"></div><p class="muted small" id="corpoTreinoInfo"></p></div></details>
+      <details class="fold"><summary><span>Minhas cargas</span><span class="fold-n" id="cargasN"></span></summary><div class="fold-body" id="corpoCargas"></div></details>
+      <p class="muted small" id="corpoFonte"></p>
+    </section>
+
     <!-- VOCÊ -->
     <section data-view="voce" hidden style="display:flex;flex-direction:column;gap:14px">
       <h2 style="font-size:1.4rem">Você</h2>
@@ -357,6 +382,7 @@ textarea.input{min-height:90px;resize:vertical;width:100%}
   <button data-tab="hoje" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.6"/></svg>Hoje</button>
   <button data-tab="tarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>Tarefas</button>
   <button data-tab="estudo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5.5c2.5-1 5.5-1 8 .5 2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>Estudo</button>
+  <button data-tab="corpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M4 9v6M20 9v6M2 11v2M22 11v2M6.5 6.5v11M17.5 6.5v11"/></svg>Corpo</button>
   <button data-tab="voce"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-7M21 20H3"/></svg>Você</button>
 </nav></div>
 
