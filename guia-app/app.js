@@ -451,7 +451,15 @@
   // ouvir: lê em voz alta o que está na tela da aula
   let speaking = false;
   function stopSpeak() { try { speechSynthesis.cancel(); } catch (e) {} speaking = false; $("plSpeak").textContent = "Ouvir"; $("plSpeak").classList.remove("rec"); }
-  function ptVoice() { const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || []; return vs.find(v => /pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null; }
+  // escolhe a voz mais natural em português que o aparelho tiver (Premium/Aprimorada > Natural/Google > Luciana > qualquer pt-BR)
+  function ptVoice() {
+    const vs = ((window.speechSynthesis && speechSynthesis.getVoices()) || []).filter(v => /^pt/i.test(v.lang));
+    if (!vs.length) return null;
+    const score = v => (/premium/i.test(v.name) ? 50 : 0) + (/enhanced|aprimorad|melhorad/i.test(v.name) ? 40 : 0) + (/natural|neural|online/i.test(v.name) ? 30 : 0)
+      + (/google/i.test(v.name) ? 20 : 0) + (/luciana|francisca|thalita|felipe/i.test(v.name) ? 10 : 0) + (/pt[-_]BR/i.test(v.lang) ? 5 : 0) + (v.localService ? 0 : 2);
+    return vs.sort((a, b) => score(b) - score(a))[0];
+  }
+  if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = () => {};
   $("plSpeak").addEventListener("click", () => {
     if (!("speechSynthesis" in window)) { toast("Este aparelho não lê em voz alta."); return; }
     if (speaking) return stopSpeak();
@@ -459,7 +467,7 @@
     if (!parts.length) return;
     speechSynthesis.cancel(); speaking = true; $("plSpeak").textContent = "Parar"; $("plSpeak").classList.add("rec");
     const v = ptVoice();
-    parts.forEach((txt, i) => { const u = new SpeechSynthesisUtterance(txt); u.lang = "pt-BR"; if (v) u.voice = v; u.rate = 1.05; if (i === parts.length - 1) u.onend = stopSpeak; speechSynthesis.speak(u); });
+    parts.forEach((txt, i) => { const u = new SpeechSynthesisUtterance(txt); u.lang = "pt-BR"; if (v) u.voice = v; u.rate = 1.0; u.pitch = 1.0; if (i === parts.length - 1) u.onend = stopSpeak; speechSynthesis.speak(u); });
   });
 
   // ---------- gravação da tarefa: o professor mede ----------
