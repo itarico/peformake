@@ -62,6 +62,7 @@ Monte a tabela antes de escrever a fala. Uma linha por bloco: função (ruptura,
 - Comece materializando a promessa: cena, pergunta, afirmação ou contradição. Nada de "olá pessoal" nem pedido de inscrição antes de entregar valor.
 - Até os 30 s: o que está em jogo e por que assistir até o fim (o macro loop).
 - A abertura confirma o título e a thumb. Escreva 3 versões de abertura para testar.
+- Repertório de primeira frase (opcional, para variar as 3 versões e os ganchos dos Shorts): G1 a G12 em `video-tools/estilos/estudo_narrativas.md` §2 e o estudo `acervo-audiovisual/pesquisas/ganchos-lucureau-2026-11/ESTUDO.md` (dado para estudo, não regra).
 
 ### 5. Roteiro de fala (Módulo 09)
 - Escreva para ser ouvido: uma ideia por frase, verbos concretos, ordem direta, termo técnico explicado na hora.

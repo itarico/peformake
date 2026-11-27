@@ -9,7 +9,7 @@ abaixo. Nada aqui é regra fixa: é a ordem das perguntas e o repertório para r
 | Camada | Código principal | Onde | Apelidos antigos (mesma coisa) |
 |---|---|---|---|
 | Estrutura do vídeo (o esqueleto) | **S1–S117** | `ESTRUTURAS/S__.md` (gramática das 117; skill `estrutura-video`) · catálogo completo em `peformake-gestao/docs/ESTUDO-ROTEIRO-AUDIOVISUAL.md` §3c | M1–M49, H, V → ver `ESTRUTURAS/EQUIVALENCIAS.md` |
-| Gancho (os 3 primeiros segundos) | **G1–G12** | `video-tools/estilos/estudo_narrativas.md` | §5 do ESTUDO-ROTEIRO |
+| Gancho (os 3 primeiros segundos) | **G1–G12** | `video-tools/estilos/estudo_narrativas.md` · repertório externo para testar (candidatos G13 a G16, não oficiais): `pesquisas/ganchos-lucureau-2026-11/ESTUDO.md` | §5 do ESTUDO-ROTEIRO |
 | Linguagem de edição (como fica na tela) | **E1–E40** | `video-tools/estilos/catalogo_estilos.md` + `receitas_estilos.md` | técnicas T, R, V, EE, DC dos estudos de editor |
 | Vídeo longo de YouTube | blocos com loop (MDD) | skill `roteiro-retencao` + `acervo-audiovisual/youtube/` | — |
 

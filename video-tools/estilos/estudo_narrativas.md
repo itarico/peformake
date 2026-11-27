@@ -176,6 +176,8 @@ por IA") · BT bastidor/erro no fim.
 | G10 | **Diálogo / esquete** | uma fala de personagem em conflito, sem apresentação | ≈3 | entreter, vender (lançamento) | "Kairo, por que o meu pede arrego em 10 minutos?" |
 | G11 | **Confissão / segredo relutante** | "Tenho medo de mostrar isso…" / "Ninguém te conta" | 1 de abertura (mas "ninguém te conta" aparece no MEIO de ≈8) | lead | "Estou com um pouco de medo de mostrar isso…" |
 | G12 | **Desafio / transformação ao vivo** | "Meu desafio hoje é [transformar personagem] em [tempo]" | 1 | vender curso/serviço | "Esse é o Esteve… meu desafio é fazer esse homem gravar." |
+
+> Estudo complementar (27/11/2026, dado para estudo, não regra): `acervo-audiovisual/pesquisas/ganchos-lucureau-2026-11/ESTUDO.md` cruza um guia externo de 50 ganchos com G1 a G12 e propõe 4 candidatos para testar no placar: G13 Alerta/erro, G14 Chamada de público (POV, "se você é"), G15 Lista anunciada, G16 Pergunta para comentar.
 | — | POV | "POV: um(a) ___ em ___" | 0 aqui (está em M4) | educar, entreter | — |
 
 **O que os números dizem**

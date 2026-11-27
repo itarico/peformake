@@ -78,6 +78,7 @@ Primeiro: `perfis/salleszk.md`. Transições: `perfis/willrvail.md` (Will Vail, 
 
 ## 5e. YouTube (canal)
 - `youtube/pesquisas/<tema>-<data>/`: outliers (skill `youtube-outliers`) e o `MAPA.md` com a lacuna e as pautas.
+- `pesquisas/ganchos-lucureau-2026-11/ESTUDO.md`: guia externo de 50 ganchos cruzado com G1 a G12, candidatos G13 a G16 para testar (estudo, não regra).
 - `youtube/roteiros/`: roteiros longos (skill `roteiro-retencao`, MDD). Primeiro: GTA 6 e a ciência da espera (20/11/2026).
 - `youtube/roteiros/taoismo/`: "O livro mais famoso da China estava ao contrário" (canal Por Dentro): roteiro-v1, checagem,
   fontes e mídia, narração para gravar e plano de cenas e animação. Mídia baixada fica fora do Git em `C:\Claude\canal-youtube	aoismo\midia\`.
