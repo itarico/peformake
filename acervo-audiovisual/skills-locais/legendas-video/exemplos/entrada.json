@@ -1,0 +1,19 @@
+{
+ "config": {
+  "preset": "brio",
+  "saida": "LEGENDAS",
+  "destacar": ["delivery"]
+ },
+ "videos": {
+  "M01": [
+   [0.00, 1.60, "Essa é a *operação*"],
+   [1.60, 3.85, "dos hambúrgueres *mais gostosos* de São Lourenço"],
+   [3.90, 4.65, "Deixa eu te *mostrar*"]
+  ],
+  "M02": {"srt": "C:\\caminho\\M02.srt"},
+  "M03": {"palavras": "C:\\caminho\\M03_whisper.json"}
+ },
+ "janelas": {
+  "M01": [[10.0, 14.7], {"ini": 34.3, "fim": 62.5}]
+ }
+}
