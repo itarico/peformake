@@ -2,6 +2,25 @@
 
 Legenda queimada em Reels vertical 1080x1920 (sequência dos clientes em 2160x3840). Cada estilo tem: quando usar, quantas linhas, tom e como fazer (preset do `scripts/legendas.py` ou template do Legendas Master).
 
+## 0. Padrão do dia a dia: nível Legendas Master (modo hierarquia)
+
+Regra do Italo (27/11/2026): legenda é do nível Legendas Master para cima. Caixa alta com contorno preto grosso (Hormozi, Beast) só em coisa simples.
+Estrutura: linha de apoio pequena + palavra-pico gigante (+ apoio depois), linhas encostadas ou sobrepostas, pico com glow, cor, gradiente ou serifada.
+Texto: `*palavra*` vira o pico; `|` força as linhas (`"isso muda | *tudo* | no seu negócio"`); sem marcação, a palavra mais longa vira o pico.
+
+| Preset | Pico | Apoio | Equivale no Legendas Master | Quando usar |
+|---|---|---|---|---|
+| `lm_viral` | Poppins Black Italic branca com glow | Poppins SemiBold | Viral 2 linhas T10, T11, al/2 T7 a T9 ("hook viral / template") | Padrão de Reels falado, qualquer nicho |
+| `lm_vermelho` | Anton caixa alta vermelha com glow vermelho | Poppins SemiBold Italic | Viral T02, T05, al/3 T7 ("TEMPLATE / this is two") | Gancho, oferta, urgência, food |
+| `lm_serif` | Instrument Serif Italic grande, apoio em escada | Poppins Medium | Viral T22, al/3 T1 ("frase modelo / template") | Premium, estética, beleza, reflexão |
+| `lm_gradiente` | Poppins Black Italic em degradê azul > roxo > rosa | Poppins Medium | Viral T16 | Marca colorida, tech, jovem |
+| `lm_ouro` | DM Serif Display Italic dourada | SF UI Light caixa alta | Viral T18 ("OLD Money") | Luxo, imóvel, joia, gastronomia premium |
+| `lm_apple` | SF UI Display Bold | SF UI Light cinza | Apple style "Destaque / frase de apoio" | Institucional, saúde, clínica, B2B |
+| `lm_condensada` | Bebas Neue amarela com glow | Poppins SemiBold Italic | Viral T20 ("ARTIFICIAL"), al/4 T1 ("HIGHLIGHT") | Dado, número, título de bloco |
+
+Animações próprias desse nível (`animar.py`): `duas_vozes` (apoio sobe, pico entra 3 q depois com punch e foco), `duas_vozes_sobe` (pico sobe com snappy), `duas_vozes_letra` (pico letra a letra com desfoque). O pico e o apoio que vem depois dele seguem a ordem de leitura.
+Ajustes por cliente no `config`: `cor_destaque`, `gradiente`, `glow` (`cor`, `raio`, `forca`), `fonte`/`fonte_apoio`, `escala_apoio`, `folga_hier`, `alinhar` (`centro` ou `escada`).
+
 ## 1. Padrões da casa (já postados)
 
 | Estilo | Visual | Linhas / palavras | Quando usar | Como fazer |
@@ -43,7 +62,7 @@ Achar a ficha: `grep -liE "<termo>" C:/Claude/peformake/acervo-audiovisual/virai
 
 Cuidados de leitura (todas as fichas): legenda nunca briga com o texto de motion (janela sem legenda); troca de fonte = troca de mundo (só muda de estilo quando a cena muda de linguagem); palavra-pico no máximo 1 por tela.
 
-## 4. Estilos de criadores e apps (pesquisa de 27/11/2026)
+## 4. Estilos de criadores e apps (pesquisa de 27/11/2026; Hormozi, Beast e Ali = só para coisa simples)
 
 Fonte e detalhes: `pesquisa-2026-11.md`. Nenhum criador publicou a fonte oficial; os valores são de quem recria o estilo.
 

@@ -9,8 +9,8 @@ Tudo o que a agência já estudou e usa de legenda queimada. Some aqui o que for
 
 Arquivos:
 - `referencias/catalogo-estilos.md`: estilos, quando usar, linhas, tom (padrões da casa, Legendas Master, acervo).
-- `scripts/legendas.py`: gerador único de PNG (presets `sn`, `brio`, `disalp`, `palavra`, `marca_texto`, `viral`, `apple`, `filme`, `caixa`, `atras`, `hormozi`, `beast`, `ali`).
-- `scripts/animar.py`: animador. Mesmo layout e presets, gera .mov com alfa: 28 animações, 5 efeitos contínuos, 5 saídas, 30 curvas de velocidade e 4 velocidades.
+- `scripts/legendas.py`: gerador único de PNG (presets `sn`, `brio`, `disalp`, `palavra`, `marca_texto`, `viral`, `apple`, `filme`, `caixa`, `atras`, `hormozi`, `beast`, `ali` e o nível Legendas Master `lm_viral`, `lm_vermelho`, `lm_serif`, `lm_gradiente`, `lm_ouro`, `lm_apple`, `lm_condensada`).
+- `scripts/animar.py`: animador. Mesmo layout e presets, gera .mov com alfa: 31 animações (3 de duas vozes), 5 efeitos contínuos, 5 saídas, 30 curvas de velocidade e 4 velocidades.
 - `referencias/animacoes.md`: catálogo de animações, curvas e regras de ritmo. `referencias/fontes.md`: fontes instaladas, a instalar e licenças.
 - `referencias/pesquisa-2026-11.md`: pesquisa completa com links (estilos de criadores e apps, valores de animação, 51 fontes).
 - `scripts/premiere_lote.py`: transforma o `plano.json` nos argumentos da ponte MCP.
@@ -18,6 +18,8 @@ Arquivos:
 - `exemplos/entrada.json`: modelo de entrada.
 
 ## Regras fixas
+
+0. **Nível mínimo = Legendas Master**: hierarquia apoio + pico (`"modo": "hierarquia"`). No texto, `*palavra*` vira o pico e `|` separa as linhas.
 
 1. **Zona segura do Reels (1080x1920)**: rosto e conteúdo entre y 380 e 1150; nada de texto abaixo de y 1530 nem acima de 380; lateral direita livre a partir de y 1000 (coluna de botões, x > 900). Na sequência 2160x3840 os valores dobram. O gerador avisa (`ZONA ...`) e, com `lateral_livre` (padrão), estreita a linha sozinho.
 2. **Legenda nativa do Premiere (trilha de legenda) não é lida nem editada por script.** Por isso a legenda da agência é PNG transparente numa trilha V, acima do vídeo e abaixo do logo. A legenda nativa e o Legendas Master só quando o Italo for fazer à mão.
@@ -29,6 +31,7 @@ Arquivos:
 ## Passo a passo
 
 ### 1. Escolher o estilo
+**Padrão da agência: nível Legendas Master** (`lm_*`, seção 0 do catálogo) com animação `duas_vozes*`. Hormozi, Beast e Ali só em vídeo simples ou quando pedirem.
 Ler `referencias/catalogo-estilos.md`. Cliente já com padrão (SN, BRIO, DISALP) = usar o preset dele. Cliente novo: propor 2 estilos ao Italo com prévia (passo 3) antes de gerar tudo.
 
 ### 2. Montar a entrada

@@ -170,6 +170,18 @@ ANIMACOES = {
                        "entrada": {"s": [[0, .85], [5, 1, "easeOutBack"]], "op": [[0, 0], [2, 1]]}, "karaoke": {"escala": 1.12}},
     "karaoke_caixa":  {"desc": "Caixa colorida corre atras da palavra falada. Submagic/CapCut 'highlight'.", "unidade": "palavra",
                        "entrada": {"op": [[0, 0], [3, 1]]}, "karaoke": {"escala": 1.06, "caixa": True}},
+    "duas_vozes":     {"desc": "Nivel Legendas Master: apoio sobe suave (stagger 1 q) e o pico entra 3 q depois com punch e foco (130% > 100%, desfoque 10 > 0).", "unidade": "palavra", "stagger": 1,
+                       "entrada": {"dy": [[0, 24], [6, 0, "easeOutCubic"]], "op": [[0, 0], [4, 1, "easeOutQuad"]]},
+                       "entrada_pico": {"s": [[0, 1.3], [7, 1, "easeOutExpo"]], "blur": [[0, 10], [6, 0, "easeOutCubic"]], "op": [[0, 0], [2, 1]]},
+                       "atraso_pico": 3, "saida": "fade_saida"},
+    "duas_vozes_sobe": {"desc": "Apoio aparece e o pico sobe de baixo com passada do ponto (snappy). Premium, Apple/serifada.", "unidade": "palavra", "stagger": 1,
+                       "entrada": {"op": [[0, 0], [5, 1, "easeOutQuad"]]},
+                       "entrada_pico": {"dy": [[0, 60], [9, 0, "snappy"]], "s": [[0, .92], [9, 1, "snappy"]], "op": [[0, 0], [4, 1]]},
+                       "atraso_pico": 2, "saida": "desfoque_saida"},
+    "duas_vozes_letra": {"desc": "Apoio em fade; o pico surge letra a letra com desfoque (stagger 1 q). Gancho, titulo.", "unidade": "letra", "stagger": 1,
+                       "entrada": {"op": [[0, 0], [4, 1]]},
+                       "entrada_pico": {"blur": [[0, 12], [6, 0, "easeOutCubic"]], "dy": [[0, 20], [6, 0, "easeOutCubic"]], "op": [[0, 0], [3, 1]]},
+                       "atraso_pico": 2, "saida": "fade_saida"},
     "hormozi_bloco":  {"desc": "Pop por bloco 80% > 110% > 100% em 8 q, palavra-chave em cor. Valores da pesquisa (Kreateflo, Filmscribe).", "unidade": "bloco",
                        "entrada": {"s": [[0, .8], [4, 1.1, "easeOutQuad"], [8, 1, "easeInOutSine"]], "op": [[0, 0], [3, 1]]}, "saida": "fade_saida"},
     "pulso_palavra":  {"desc": "Frase parada; a palavra falada pulsa 100 > 118 > 100% (8 q). Pico na silaba tonica.", "unidade": "palavra",
@@ -202,27 +214,9 @@ VELOCIDADES = {"lento": 1.4, "normal": 1.0, "rapido": 0.7, "frenetico": 0.5}
 
 
 # ======================= sprites =======================
-def sprite(texto, ff, fill, cfg, corpo, caixa=None):
-    """Imagem RGBA da unidade com sombra/contorno/caixa e o deslocamento (ox, oy) em relacao ao ponto de texto."""
-    st = int(cfg["contorno"]) if cfg["contorno"] else 0
-    blur = cfg["sombra_desfoque"] if cfg["sombra"] else 0
-    pad = int(st + blur * 3 + max(abs(cfg["sombra_dx"]), abs(cfg["sombra_dy"])) + corpo * 0.3)
-    bb = ff.getbbox(texto)
-    w, h = int(bb[2] - bb[0]) + 2 * pad + 4, int(bb[3] - bb[1]) + 2 * pad + 4
-    ox, oy = bb[0] - pad, bb[1] - pad
-    img = Image.new("RGBA", (max(w, 1), max(h, 1)), (0, 0, 0, 0))
-    p = (-ox, -oy)
-    if caixa:
-        bp = corpo * 0.18
-        ImageDraw.Draw(img).rounded_rectangle([p[0] + bb[0] - bp, p[1] + bb[1] - bp, p[0] + bb[2] + bp, p[1] + bb[3] + bp],
-                                               radius=bp * .6, fill=L.cor(caixa))
-    if cfg["sombra"]:
-        sb = Image.new("RGBA", img.size, (0, 0, 0, 0))
-        ImageDraw.Draw(sb).text((p[0] + cfg["sombra_dx"], p[1] + cfg["sombra_dy"]), texto, font=ff, fill=L.cor(cfg["cor_sombra"]))
-        img = Image.alpha_composite(img, sb.filter(ImageFilter.GaussianBlur(blur)))
-    kw = {"stroke_width": st, "stroke_fill": L.cor(cfg["cor_contorno"])} if st else {}
-    ImageDraw.Draw(img).text(p, texto, font=ff, fill=fill, **kw)
-    return img, ox, oy
+def sprite(texto, ff, fill, cfg, corpo, caixa=None, efeitos=None):
+    """Mesmo desenho do PNG parado (legendas.render_palavra): caixa, sombra, glow, contorno e gradiente."""
+    return L.render_palavra(texto, ff, fill, cfg, corpo, caixa, efeitos)
 
 
 def unidades(texto, cfg, A):
@@ -232,8 +226,8 @@ def unidades(texto, cfg, A):
     cor_ativa = L.cor((kar or {}).get("cor") or cfg["cor_destaque"])
     out = []
     for i, (x, yy, pal, dest, ff) in enumerate(pos):
-        marca = dest and cfg["estilo_destaque"] == "marca_texto"
-        fill = L.cor(cfg["cor_texto_caixa"]) if marca else (L.cor(cfg["cor_destaque"]) if dest else L.cor(cfg["cor"]))
+        fill, caixa_cor, ef = L.estilo_palavra(dest, cfg)
+        marca = caixa_cor is not None
         letra = A["unidade"] == "letra"
         partes = [(pal, x)] if not letra else [(c, x + ff.getlength(pal[:k])) for k, c in enumerate(pal) if c.strip()]
         if letra and marca:
@@ -242,15 +236,15 @@ def unidades(texto, cfg, A):
             out.append({"x": x, "y": yy, "txt": pal, "i": i, "corpo": corpo, "fundo": True,
                         "normal": sprite(pal, ff, (0, 0, 0, 0), cfg_sem, corpo, cfg["cor_caixa"])})
         for txt, xx in partes:
-            u = {"x": xx, "y": yy, "txt": txt, "i": i, "corpo": corpo}
-            u["normal"] = sprite(txt, ff, fill, cfg, corpo, cfg["cor_caixa"] if (marca and not letra) else None)
+            u = {"x": xx, "y": yy, "txt": txt, "i": i, "corpo": corpo, "dest": dest}
+            u["normal"] = sprite(txt, ff, fill, cfg, corpo, caixa_cor if (marca and not letra) else None, ef)
             if kar and kar.get("cor_futura"):
-                u["futuro"] = sprite(txt, ff, L.cor(kar["cor_futura"]), cfg, corpo)
+                u["futuro"] = sprite(txt, ff, L.cor(kar["cor_futura"]), cfg, corpo, None, {"glow": None})
             if kar:
                 if kar.get("caixa"):
                     u["ativo"] = sprite(txt, ff, L.cor(cfg["cor_texto_caixa"]), cfg, corpo, kar.get("cor_caixa") or cfg["cor_caixa"])
                 else:
-                    u["ativo"] = sprite(txt, ff, cor_ativa, cfg, corpo)
+                    u["ativo"] = sprite(txt, ff, cor_ativa, cfg, corpo, None, ef)
             out.append(u)
     return out, len(pos), caixa_total
 
@@ -281,9 +275,12 @@ def render_legenda(item, cfg, A, fps, k):
     tp = [round(t * fps) - q0 for t in tempos_palavras(item, n_pal)]
     tp_fim = tp[1:] + [nq]
     ent = {p: escala_q(v, k) for p, v in A["entrada"].items()}
+    # duas vozes: o pico pode ter entrada propria e atraso em relacao ao apoio
+    ent_pico = {p: escala_q(v, k) for p, v in A.get("entrada_pico", A["entrada"]).items()}
+    atraso_pico = A.get("atraso_pico", 0) * k
     sai = {p: escala_q(v, k) for p, v in SAIDAS.get(A.get("saida", "corte"), {}).items()}
     dur_sai = max([c[-1][0] for c in sai.values()] or [0])
-    dur_ent = max([c[-1][0] for c in ent.values()] or [0])
+    dur_ent = max([c[-1][0] for c in list(ent.values()) + list(ent_pico.values())] or [0]) + atraso_pico
     q_sai = max(nq - dur_sai, min(dur_ent, nq * .5))
     ant = A.get("antecipar_q", 1)
     st = A.get("stagger", 0) * k
@@ -292,7 +289,7 @@ def render_legenda(item, cfg, A, fps, k):
     sx_ref = cfg["largura"] / L.ZONA["ref_w"]
     # centro do bloco (origem da escala quando unidade = bloco)
     bcx, bcy = (cx[0] + cx[2]) / 2, (cx[1] + cx[3]) / 2
-    margem = int(us[0]["corpo"] * 1.2 + 120 * sx_ref)
+    margem = int(us[0]["corpo"] * 1.2 + 120 * sx_ref + ((cfg.get("glow") or {}).get("raio", 0) * 3))
     rx0, ry0 = max(int(cx[0]) - margem, 0), max(int(cx[1]) - margem, 0)
     rx1, ry1 = min(int(cx[2]) + margem, cfg["largura"]), min(int(cx[3]) + margem, cfg["altura"])
     rnd = random.Random(int(a * 1000))
@@ -300,6 +297,7 @@ def render_legenda(item, cfg, A, fps, k):
     for q in range(nq):
         reg = Image.new("RGBA", (rx1 - rx0, ry1 - ry0), (0, 0, 0, 0))
         jl = 0
+        passou_pico = False
         for u in us:
             j = jl
             if not u.get("fundo"):
@@ -310,13 +308,17 @@ def render_legenda(item, cfg, A, fps, k):
                 qi = 0
             else:
                 qi = j * st
+            if u.get("dest"):
+                passou_pico = True
+            if passou_pico:  # pico e tudo que vem depois dele seguem a ordem de leitura
+                qi += atraso_pico
             if A.get("sincronizar") and q < qi:
                 continue
             lq = q - qi
             P = {"op": 1.0, "s": 1.0, "sx": 1.0, "sy": 1.0, "dx": 0.0, "dy": 0.0, "rot": 0.0, "blur": 0.0, "rev": 1.0}
             if lq < 0:
                 P["op"] = 0.0
-            for p, ch in ent.items():
+            for p, ch in (ent_pico if u.get("dest") else ent).items():
                 P[p] = valor(ch, max(lq, 0)) if lq >= 0 else P[p]
                 if lq < 0 and p == "op":
                     P[p] = 0.0
