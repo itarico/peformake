@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BucketBars, DailyBars, FunnelBars, KpiRow, Panel, RankBars, ScoreGauge, SegmentedBar, StatTile, type Part, type ScoreBand } from '@/components/charts/Charts'
 import { fillDays, fmt, pctChange } from '@/components/charts/chartRules'
 import { Dialog } from '@/components/ui/Dialog'
+import { cn } from '@/lib/cn'
 import { useAuth } from '@/auth/context'
 import { ACTIVITY_LABEL } from '@/features/clients/intelApi'
 import { NicheChart } from '@/features/clients/NicheChart'
@@ -222,6 +223,19 @@ export function ClientsSummary() {
   const churn = monthlyChurn(d.flow)
   const nps = npsScore(d.nps)
   const b = d.tenure.buckets
+  const year = d.flow.slice(-12)
+  const joined12 = year.reduce((n, m) => n + m.joined, 0)
+  const left12 = year.reduce((n, m) => n + m.left, 0)
+  const pct = (n: number, t: number) => (t ? Math.round((n / t) * 100) : 0)
+  const svcTotal = d.services.reduce((n, x) => n + x.n, 0)
+  const tenureKnown = b.lt3 + b['3to6'] + b['6to12'] + (b['12to24'] ?? b.gt12) + (b.gt24 ?? 0)
+  const overYear = (b['12to24'] ?? b.gt12) + (b.gt24 ?? 0)
+  const mini = (label: string, value: string, tone?: 'ok' | 'warn') => (
+    <div className="min-w-0 rounded-2xl bg-raised px-3 py-2">
+      <p className={cn('text-[18px] font-semibold tabular-nums leading-tight', tone === 'ok' && 'text-ok-ink', tone === 'warn' && 'text-warn-ink')}>{value}</p>
+      <p className="text-[12px] leading-tight text-muted">{label}</p>
+    </div>
+  )
   return (
     <>
       <KpiRow label="Clientes em números">
@@ -248,8 +262,27 @@ export function ClientsSummary() {
             { label: 'Neutros (7 e 8)', value: d.nps.neutral, color: 'bg-line-strong' },
             { label: 'Detratores (0 a 6)', value: d.nps.detractors, color: 'bg-warn' },
           ]} />
+          {d.nps.answers > 0 && (
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {mini(`Promotores (${d.nps.promoters})`, `${pct(d.nps.promoters, d.nps.answers)}%`, 'ok')}
+              {mini(`Neutros (${d.nps.neutral})`, `${pct(d.nps.neutral, d.nps.answers)}%`)}
+              {mini(`Detratores (${d.nps.detractors})`, `${pct(d.nps.detractors, d.nps.answers)}%`, d.nps.detractors ? 'warn' : undefined)}
+            </div>
+          )}
+          <p className="mt-2 text-[13px] text-muted">{nps === null ? 'Sem nota ainda.' : `Nota ${nps}: ${npsLabel(nps).toLowerCase()}.`}</p>
         </Panel>
-        {(d.lost_suggested?.length ?? 0) > 0 && <LostSuggestions rows={d.lost_suggested!} />}
+        {/* O que pede ação na carteira agora (preenche o 3º lugar da linha). */}
+        <Panel title="Atenção agora">
+          <div className="grid grid-cols-2 gap-2">
+            {mini('Em risco', fmt.int(atRisk), atRisk ? 'warn' : 'ok')}
+            {mini('Sem avaliação há 45 dias', fmt.int(d.unassessed), d.unassessed ? 'warn' : undefined)}
+            {mini('Vencem em 60 dias', fmt.int(d.renewals_60d), d.renewals_60d ? 'warn' : undefined)}
+            {mini('Saíram em 90 dias', fmt.int(d.lost_90d), d.lost_90d ? 'warn' : undefined)}
+            {mini('Entraram em 12 meses', fmt.int(joined12), 'ok')}
+            {mini('Saldo em 12 meses', `${joined12 - left12 >= 0 ? '+' : ''}${joined12 - left12}`, joined12 - left12 < 0 ? 'warn' : 'ok')}
+          </div>
+        </Panel>
+        {(d.lost_suggested?.length ?? 0) > 0 && <div className="md:col-span-2 xl:col-span-3"><LostSuggestions rows={d.lost_suggested!} /></div>}
       </div>
       <h2 className="mt-2 px-1 text-[13px] font-semibold uppercase tracking-wide text-muted">Entradas e saídas</h2>
       <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
@@ -265,6 +298,10 @@ export function ClientsSummary() {
         <NicheChart />
         <Panel title="Serviços mais contratados">
           <RankBars label="Clientes ativos por serviço" format={fmt.int} rows={d.services.slice(0, 5).map((s) => ({ label: s.name, value: s.n }))} />
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {mini('Serviços por cliente', d.active ? (svcTotal / d.active).toFixed(1).replace('.', ',') : '-')}
+            {mini('Contratos de serviço', fmt.int(svcTotal))}
+          </div>
         </Panel>
         <Panel title="Tempo de casa" action={<span className="text-[12px] text-muted">Clientes ativos</span>}>
           <BucketBars label="Clientes por tempo com a gente" rows={[
@@ -275,6 +312,10 @@ export function ClientsSummary() {
             { label: '2 anos ou mais', value: b.gt24 ?? 0 },
             ...(b.unknown ? [{ label: 'Sem data', value: b.unknown }] : []),
           ]} />
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {mini('Há mais de 1 ano', `${pct(overYear, tenureKnown)}%`, 'ok')}
+            {mini('Quem saiu ficou', monthsText(d.tenure.lost_avg_months))}
+          </div>
         </Panel>
       </div>
       <AvulsosBlock />
