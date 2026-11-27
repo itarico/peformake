@@ -12,6 +12,7 @@ Arquivos:
 - `scripts/legendas.py`: gerador único de PNG (presets `sn`, `brio`, `disalp`, `palavra`, `marca_texto`, `viral`, `apple`, `filme`, `caixa`, `atras`, `hormozi`, `beast`, `ali` e o nível Legendas Master `lm_viral`, `lm_vermelho`, `lm_serif`, `lm_gradiente`, `lm_ouro`, `lm_apple`, `lm_condensada`).
 - `scripts/animar.py`: animador. Mesmo layout e presets, gera .mov com alfa: 31 animações (3 de duas vozes), 5 efeitos contínuos, 5 saídas, 30 curvas de velocidade e 4 velocidades.
 - `referencias/animacoes.md`: catálogo de animações, curvas e regras de ritmo. `referencias/fontes.md`: fontes instaladas, a instalar e licenças.
+- `referencias/envato.md`: fontes e pacotes .mogrt de animação de texto do Envato (links, o que foi confirmado, ordem para baixar; .mogrt entra pela ponte com `add_text_overlay`).
 - `referencias/pesquisa-2026-11.md`: pesquisa completa com links (estilos de criadores e apps, valores de animação, 51 fontes).
 - `scripts/premiere_lote.py`: transforma o `plano.json` nos argumentos da ponte MCP.
 - `scripts/recorte_pessoa.py`: recorte da pessoa com rembg para o texto atrás dela.
