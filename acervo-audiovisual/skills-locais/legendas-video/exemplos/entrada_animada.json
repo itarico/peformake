@@ -1,0 +1,9 @@
+{
+ "config": {"preset": "hormozi", "saida": "LEGENDAS_ANIMADAS"},
+ "animacao": {"nome": "hormozi_bloco", "velocidade": "normal", "fps": "30000/1001", "saida": "fade_saida", "modo": "por_video"},
+ "videos": {
+  "M01": [[0.20, 1.50, "Essa é a *operação*"], [1.50, 3.00, "dos hambúrgueres *mais gostosos*"]],
+  "M02": {"palavras": "C:\caminho\M02_whisper.json"}
+ },
+ "janelas": {"M01": [[10.0, 14.7]]}
+}

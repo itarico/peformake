@@ -42,3 +42,27 @@ Achar a ficha: `grep -liE "<termo>" C:/Claude/peformake/acervo-audiovisual/virai
 | **Texto atrás da pessoa** | palavra gigante condensada atrás do recorte do corpo | Gancho, palavra-tese, nome do produto (1 a 3 vezes por vídeo, não a legenda inteira) | `atras` + `recorte_pessoa.py` (rembg 2.0.87) | salleszk (DefVZvwgS2s), omarcosvianna, viashaan, vaishmediafilms, melikazaghari; skill edicao-motion |
 
 Cuidados de leitura (todas as fichas): legenda nunca briga com o texto de motion (janela sem legenda); troca de fonte = troca de mundo (só muda de estilo quando a cena muda de linguagem); palavra-pico no máximo 1 por tela.
+
+## 4. Estilos de criadores e apps (pesquisa de 27/11/2026)
+
+Fonte e detalhes: `pesquisa-2026-11.md`. Nenhum criador publicou a fonte oficial; os valores são de quem recria o estilo.
+
+| Estilo | Visual | Palavras | Quando usar | Como fazer |
+|---|---|---|---|---|
+| **Hormozi** | Montserrat 900 caixa alta branca, contorno preto puro grosso, 1 palavra amarela por bloco | 2 a 3, até 2 linhas, abaixo do queixo | Vendas, negócio, educação direta, anúncio | `"preset": "hormozi"` + animação `hormozi_bloco` ou `hormozi`; marcar a palavra com `*` |
+| **Beast** | Fonte cartoon pesada, contorno preto muito grosso, amarelo/vermelho, pop e tremor | 1 a 2 | Entretenimento, desafio, humor, público jovem | `"preset": "beast"` (instalar Luckiest Guy) + `pop_palavra` ou `squash`, `"durante": "shake"` no clímax |
+| **Ali Abdaal** | Inter Bold, sem contorno nem sombra, caixa normal; palavra acende ao ser dita | 4 por linha, 2 linhas | Educação calma, produtividade, B2B, premium | `"preset": "ali"` + `dois_tons` |
+| **Karaokê** | linha inteira, palavra falada muda de cor ou cresce | 3 a 6 | Talking head, tutorial | `karaoke`, `karaoke_pop`, `pulso_palavra` |
+| **Caixa na palavra** | pílula colorida pula de palavra em palavra | 3 a 5 | Alta retenção, tutorial | `karaoke_caixa` (`cor_caixa` no config) |
+| **Uma palavra por vez** | 1 palavra grande e pesada | 1 | Gancho, punchline | `"preset": "palavra"` + `palavra_a_palavra` |
+| **Palavra gigante intercalada** | 1 palavra domina, contexto pequeno em volta | 1 + 2 a 4 | Número, nome, promessa | `"preset": "viral"` (`estilo_destaque: gigante`) + `punch` |
+| **Placa clean** | branco em placa preta, sem animação | ~5 por linha | Entrevista, institucional, acessibilidade | `"preset": "caixa"` + `corte` ou `fade` |
+| **Glow néon** | itálico com halo colorido | 2 a 4 | Noite, música, tech | `sombra` com `cor_sombra` colorida (ex. `#00E5FFCC`), `sombra_dx/dy` 0, `sombra_desfoque` 18 + `blur_slide` |
+| **Máquina de escrever** | mono, letra a letra | frase | Investigação, dossiê, Estilo Story | `"fonte": "IBMPlexMono-Bold.ttf"` + `maquina` |
+| **Glitch** | tremida e pisca | 1 a 3 | Games, tech, mistério | `glitch` |
+| **Editorial serifado** | serifa em negrito, contorno fino ou nenhum | 2 a 4 | Moda, reflexão, revista | `"fonte": "DMSerifDisplay-Regular.ttf"` + `fade` ou `desfoque` |
+| **Gancho com bloco** | caixa vibrante, tipografia de impacto, pop com inclinação | 2 a 4, topo da zona segura | Primeiros 3 s | `"preset": "marca_texto"` + `rotacao`, `y_centro` 0.30 |
+
+Ainda não feitos no gerador (pedem After Effects ou motion à parte): 3D extrudado, gradiente no preenchimento, vidro fosco, knockout (texto vazado), sublinhado desenhado à mão, flip 3D, tracking abrindo, texto preso a objeto (tracking de câmera). Presets por nome nos apps (Submagic, Captions.ai, CaptionCraft) na seção 1.3 da pesquisa, para comparar com pedido de cliente.
+
+Zona segura de terceiros (pesquisa): topo 14%, base 35% (y 1248), laterais 6%; anúncio com aviso: base 40% (y 1152). A regra da casa (base y 1530) vale para orgânico; em anúncio pago, subir a legenda (`y_centro` até 0.58).

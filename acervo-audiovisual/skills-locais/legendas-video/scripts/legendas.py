@@ -89,6 +89,15 @@ PRESETS = {
     "atras": {"fonte": "BebasNeue Bold.otf", "peso": 0, "corpo": 520, "corpo_min": 300, "caixa_alta": True,
               "max_linhas": 2, "entrelinha": 0.92, "largura_max": 0.95, "y_centro": 0.36, "sombra": 0,
               "cor_destaque": "#FFD400", "palavras_por_tela": 1},
+    # estilos de criador (pesquisa 27/11/2026, referencias/pesquisa-2026-11.md). Valores da pesquisa em 1080x1920, aqui dobrados.
+    "hormozi": {"fonte": "Montserrat-VariableFont_wght.ttf", "peso": 900, "corpo": 184, "corpo_min": 130, "caixa_alta": True,
+                "contorno": 18, "cor_contorno": "#000000FF", "sombra": 1, "sombra_dx": 0, "sombra_dy": 6, "sombra_desfoque": 6,
+                "cor_destaque": "#FFE500", "y_centro": 0.62, "max_linhas": 2, "entrelinha": 1.05, "palavras_por_tela": 3},
+    "beast": {"fonte": "LuckiestGuy-Regular.ttf", "peso": 0, "corpo": 192, "corpo_min": 130, "caixa_alta": True,
+              "contorno": 22, "cor_contorno": "#000000FF", "sombra": 0, "cor_destaque": "#FFE500", "y_centro": 0.60,
+              "max_linhas": 2, "entrelinha": 1.0, "palavras_por_tela": 2},
+    "ali": {"fonte": "Inter-Bold.otf", "peso": 0, "corpo": 140, "corpo_min": 100, "contorno": 0, "sombra": 0,
+            "cor_destaque": "#FFFFFF", "y_centro": 0.68, "max_linhas": 2, "palavras_por_tela": 4},
     "caixa": {"fonte": "Inter-Bold.otf", "peso": 0, "corpo": 84, "caixa_linha": True, "sombra": 0,
               "y_centro": 0.72, "max_linhas": 2},
 }
@@ -105,6 +114,9 @@ def cor(h):
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4, 6))
 
 
+_AVISADAS = set()
+
+
 def acha_fonte(nome):
     if os.path.isabs(nome) and os.path.exists(nome):
         return nome
@@ -112,12 +124,20 @@ def acha_fonte(nome):
         c = os.path.join(p, nome)
         if os.path.exists(c):
             return c
-    sys.exit(f"Fonte nao encontrada: {nome} (procurei em {PASTAS_FONTE})")
+    reserva = os.path.join(PASTAS_FONTE[0], PADRAO["fonte"])
+    if nome in _AVISADAS:
+        return reserva
+    _AVISADAS.add(nome)
+    print(f"  AVISO fonte nao instalada: {nome}. Usando {PADRAO['fonte']}. Baixe e instale (ver referencias/fontes.md).")
+    return reserva
 
 
 def carrega_fonte(cfg, corpo):
-    f = ImageFont.truetype(acha_fonte(cfg["fonte"]), int(corpo))
-    if cfg.get("peso"):
+    caminho = acha_fonte(cfg["fonte"])
+    f = ImageFont.truetype(caminho, int(corpo))
+    if caminho.endswith(PADRAO["fonte"]) and not cfg["fonte"].endswith(PADRAO["fonte"]):
+        f.set_variation_by_axes([PADRAO["peso"]])  # fonte reserva no peso da casa
+    elif cfg.get("peso"):
         try:
             f.set_variation_by_axes([cfg["peso"]])
         except Exception:
@@ -177,7 +197,8 @@ def le_palavras(caminho, cfg):
         pausa = prox and prox["a"] - w["b"] > 0.35
         if len(grupo) >= n or pontua or pausa or not prox or (w["b"] - grupo[0]["a"]) > lim:
             fim = w["b"] if (not prox or pausa) else prox["a"]
-            itens.append([grupo[0]["a"], fim, " ".join(g["w"] for g in grupo)])
+            # 4o campo: tempo de cada palavra (usado pelo animador para karaoke e palavra a palavra)
+            itens.append([grupo[0]["a"], fim, " ".join(g["w"] for g in grupo), [[g["a"], g["b"]] for g in grupo]])
             grupo = []
     return itens
 
@@ -189,7 +210,9 @@ def aplica_janelas(itens, janelas, margem):
         a, b = (j["ini"], j["fim"]) if isinstance(j, dict) else (j[0], j[1])
         js.append((a - margem, b + margem))
     out, cortadas = [], 0
-    for a, b, t in itens:
+    for item in itens:
+        a, b, t = item[:3]
+        extra = list(item[3:])
         pedacos = [(a, b)]
         for ja, jb in js:
             novo = []
@@ -205,7 +228,7 @@ def aplica_janelas(itens, janelas, margem):
             pedacos = novo
         for pa, pb in pedacos:
             if (pa, pb) == (a, b) or pb - pa >= 0.25:  # sobra curta de um corte por janela nao vale legenda
-                out.append([round(pa, 3), round(pb, 3), t])
+                out.append([round(pa, 3), round(pb, 3), t] + extra)
     return out, cortadas
 
 
@@ -243,7 +266,8 @@ def layout(texto, cfg):
         corpo -= 6
 
 
-def desenha(texto, cfg, caminho):
+def posicoes(texto, cfg):
+    """Posicao de cada palavra no quadro: ([(x, y, palavra, destaque, fonte)], corpo, caixa_total)."""
     W, H = cfg["largura"], cfg["altura"]
     f, fg, linhas, corpo = layout(texto, cfg)
     esp = f.getlength(" ")
@@ -263,7 +287,12 @@ def desenha(texto, cfg, caminho):
             caixa = [min(caixa[0], x + bb[0]), min(caixa[1], yy + bb[1]), max(caixa[2], x + bb[2]), max(caixa[3], yy + bb[3])]
             x += ff.getlength(t[0]) + esp
         y += alt
+    return pos, corpo, caixa
 
+
+def desenha(texto, cfg, caminho):
+    W, H = cfg["largura"], cfg["altura"]
+    pos, corpo, caixa = posicoes(texto, cfg)
     img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     pad = corpo * 0.18
     if cfg["caixa_linha"]:
@@ -355,7 +384,8 @@ def main():
         itens, cortadas = aplica_janelas(sorted(itens), E.get("janelas", {}).get(video), cfg["margem_janela"])
         pasta = os.path.join(saida, video); os.makedirs(pasta, exist_ok=True)
         plano[video] = []
-        for n, (ini, fim, txt) in enumerate(itens, 1):
+        for n, item in enumerate(itens, 1):
+            ini, fim, txt = item[:3]
             p = os.path.join(pasta, f"{n:03d}.png")
             caixa = desenha(txt, cfg, p)
             for av in confere_zona(caixa, cfg):

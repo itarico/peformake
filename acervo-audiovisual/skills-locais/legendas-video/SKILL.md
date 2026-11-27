@@ -1,6 +1,6 @@
 ---
 name: legendas-video
-description: Legenda queimada em vídeo vertical (Reels, TikTok, Shorts 1080x1920) da Peformake. Escolhe o estilo (padrões SN, BRIO e DISALP, famílias do Legendas Master, estilos do acervo como palavra a palavra, duas vozes, legenda de filme e texto atrás da pessoa), gera os PNGs transparentes com um script único (fonte, cor de destaque, altura, palavras por tela, janelas sem legenda, zona segura) e coloca no Premiere pela ponte MCP premiere-pro. Use quando pedirem "legenda", "legendar", "legendar o vídeo", "estilo de legenda", "Legendas Master", "texto atrás da pessoa", "legenda palavra por palavra", "legenda no Premiere", "tirar a legenda enquanto tem motion". Não é para texto/legenda de post (copy): para isso, caption-writer.
+description: Legenda queimada em vídeo vertical (Reels, TikTok, Shorts 1080x1920) da Peformake. Escolhe o estilo (padrões SN, BRIO e DISALP, famílias do Legendas Master, estilos do acervo como palavra a palavra, duas vozes, legenda de filme e texto atrás da pessoa), gera os PNGs transparentes com um script único (fonte, cor de destaque, altura, palavras por tela, janelas sem legenda, zona segura) e coloca no Premiere pela ponte MCP premiere-pro. Use quando pedirem "legenda", "legendar", "legendar o vídeo", "estilo de legenda", "Legendas Master", "texto atrás da pessoa", "legenda palavra por palavra", "legenda no Premiere", "tirar a legenda enquanto tem motion", "legenda animada", "animação de legenda", "legenda estilo Hormozi", "karaokê", "fonte para legenda". Não é para texto/legenda de post (copy): para isso, caption-writer.
 ---
 
 # Legendas em vídeo (Peformake)
@@ -9,7 +9,10 @@ Tudo o que a agência já estudou e usa de legenda queimada. Some aqui o que for
 
 Arquivos:
 - `referencias/catalogo-estilos.md`: estilos, quando usar, linhas, tom (padrões da casa, Legendas Master, acervo).
-- `scripts/legendas.py`: gerador único de PNG (presets `sn`, `brio`, `disalp`, `palavra`, `marca_texto`, `viral`, `apple`, `filme`, `caixa`, `atras`).
+- `scripts/legendas.py`: gerador único de PNG (presets `sn`, `brio`, `disalp`, `palavra`, `marca_texto`, `viral`, `apple`, `filme`, `caixa`, `atras`, `hormozi`, `beast`, `ali`).
+- `scripts/animar.py`: animador. Mesmo layout e presets, gera .mov com alfa: 28 animações, 5 efeitos contínuos, 5 saídas, 30 curvas de velocidade e 4 velocidades.
+- `referencias/animacoes.md`: catálogo de animações, curvas e regras de ritmo. `referencias/fontes.md`: fontes instaladas, a instalar e licenças.
+- `referencias/pesquisa-2026-11.md`: pesquisa completa com links (estilos de criadores e apps, valores de animação, 51 fontes).
 - `scripts/premiere_lote.py`: transforma o `plano.json` nos argumentos da ponte MCP.
 - `scripts/recorte_pessoa.py`: recorte da pessoa com rembg para o texto atrás dela.
 - `exemplos/entrada.json`: modelo de entrada.
@@ -42,6 +45,21 @@ python C:\Users\User\.claude\skills\legendas-video\scripts\legendas.py entrada.j
 ```
 Saída: `<saida>/<VIDEO>/NNN.png`, `previa_NNN.jpg` (zona vermelha = proibida, laranja = botões, linha verde = fim da área do rosto) e `<saida>/plano.json`. Abrir 2 ou 3 prévias antes de seguir. Zerar os avisos `ZONA` e `SOBREPOE`. `--so VIDEO` regera um vídeo só.
 
+### 3b. Legenda animada (opcional)
+Mesma entrada, mais o bloco `"animacao"` (ver `referencias/animacoes.md`):
+```
+"animacao": {"nome": "hormozi_bloco", "velocidade": "normal", "fps": "30000/1001", "saida": "fade_saida"}
+```
+`fps` = o da sequência (29,97 = `30000/1001`). Rodar:
+```
+python C:\Users\User\.claude\skills\legendas-video\scripts\animar.py entrada.json --quadros --previa trecho.mp4
+```
+- `--quadros`: folha `<VIDEO>_quadros.jpg` com a 1a legenda quadro a quadro (conferir a curva). `--previa`: legenda sobre o vídeo em 540x960.
+- Modo `por_video` (padrão): 1 arquivo `<VIDEO>.mov` (QuickTime Animation com alfa) do tempo 0 até a última legenda. No Premiere: `import_media` e `add_to_timeline` na trilha V vazia no tempo 0 (ou no início do trecho). Não precisa cortar duração.
+- Modo `por_legenda`: `<VIDEO>/NNN.mov`, um por legenda (para mexer em uma só depois); colocar com `premiere_lote.py` usando `plano_animado.json`.
+- Tempo: cerca de 8 quadros por segundo em 2160x3840 (30 s de Reels = 2 min). Teste rápido: `"largura": 1080, "altura": 1920`.
+- Palavra a palavra, karaokê e `dois_tons` ficam precisos com entrada `{"palavras": "whisper.json"}`; com frases ou SRT o tempo de cada palavra é estimado pelo tamanho.
+
 ### 4. Colocar no Premiere (ponte MCP `premiere-pro`)
 Só com o Premiere liberado para esta sessão.
 1. `verify_premiere_connection`; `list_sequences` para pegar o `sequenceId`; `invoke_tool list_sequence_tracks` para achar uma trilha V vazia (acima do vídeo, abaixo do logo). Se faltar trilha, criar (buscar com `search_tools` "add track").
@@ -65,4 +83,4 @@ Legenda já existente em trilha nativa e com motion por cima (caso DISALP): o sc
 Quando o Italo quiser um template animado do plugin: indicar família e template pelo catálogo (`G:\lucas\NOVEMBRO\SN\_RECURSOS\legendas_master_catalogo.jpg`, nome tipo `Viral/2 linhas/T12`). O plugin pede login e roda no painel; os `.cgt` são criptografados, então não dá para gerar nem editar por script.
 
 ## Somar daqui para frente
-Novo padrão aprovado de cliente: adicionar preset em `PRESETS` no script e uma linha na seção 1 do catálogo, com a data e o vídeo de referência. Depois espelhar em `C:\Claude\peformake\acervo-audiovisual\skills-locais\legendas-video` e fazer commit e push (regra do acervo).
+Novo padrão aprovado de cliente: adicionar preset em `PRESETS` no script e uma linha na seção 1 do catálogo, com a data e o vídeo de referência. Animação nova: entrada em `ANIMACOES` no `animar.py` (trilhas com quadros-chave) e uma linha em `referencias/animacoes.md`. Fonte nova: instalar e registrar em `referencias/fontes.md`. Depois espelhar em `C:\Claude\peformake\acervo-audiovisual\skills-locais\legendas-video` e fazer commit e push (regra do acervo).
