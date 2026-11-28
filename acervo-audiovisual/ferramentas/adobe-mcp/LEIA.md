@@ -11,3 +11,10 @@ Instalação no Mac (28/11/2026): `bash acervo-audiovisual/ferramentas/adobe-mcp
 - After: código ExtendScript livre fica **desligado** por padrão (`AE_MCP_ENABLE_EVAL`); modo só leitura: `AE_MCP_READONLY=1`.
 - Premiere: dicas de uso real em `../openmotion/APRENDIZADOS.md` (importar em lote, ~130 clipes por chamada, reabrir a ponte).
 - No PC Windows o Premiere já estava instalado; o After por MCP foi revisado em 07/11 e ficou de fora (decisão antiga). No Mac o Italo pediu os dois (28/11).
+
+## Testado no Mac em 28/11/2026: os dois conectados
+- Premiere 27.0 (build 88): `verify_premiere_connection` = connected, bridge responsive. After 27.0x78: `ae_version_info` ok (saveFrameToPng, socket).
+- **Premiere:** o conector só acha o painel com `PREMIERE_TEMP_DIR=/tmp/premiere-mcp-bridge` no env (sem isso cria pasta própria e diz "bridge_unavailable" mesmo com o painel ligado). O painel não abre sozinho: abrir um projeto, depois Janela > Extensões > MCP Bridge (CEP) > Start Bridge.
+- **After 2027:** o conector só procura até 2026; precisa de `AE_MCP_EXE` apontando o .app (o instalador acha sozinho, ignorando o Render Engine).
+- Apontar os comandos para a pasta real do Node (`~/.local/node-vXX-darwin-arm64/bin`), não para o atalho `~/.local/node`: outro instalador trocou o atalho por uma cópia limpa e os conectores sumiram dele.
+- Configuração do Claude só é lida ao abrir sessão: mudou `~/.claude.json`, abrir sessão nova.
