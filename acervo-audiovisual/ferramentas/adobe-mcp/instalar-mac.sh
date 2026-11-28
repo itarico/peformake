@@ -49,7 +49,7 @@ s = d.setdefault("mcpServers", {})
 s["premiere-pro"] = {"type": "stdio", "command": f"{bindir}/premiere-pro-mcp", "args": [],
                      "env": {**env, "PREMIERE_MCP_TELEMETRY": "0"}}
 import glob
-ae = sorted(glob.glob('/Applications/Adobe After Effects */Adobe After Effects *.app'))
+ae = sorted(a for a in glob.glob('/Applications/Adobe After Effects */Adobe After Effects *.app') if 'Render Engine' not in a)
 aenv = {**env, **({'AE_MCP_EXE': ae[-1]} if ae else {})}
 s["aftereffects"] = {"type": "stdio", "command": f"{bindir}/mcp-aftereffects", "args": [], "env": aenv}
 if not os.path.exists(s["aftereffects"]["command"]):
