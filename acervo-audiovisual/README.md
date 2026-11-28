@@ -9,6 +9,7 @@ nesta pasta e no Git no mesmo dia. Nunca fica só no PC.
 - **Comece por aqui: `MOTOR.md`.** Motor audiovisual único: a ordem das decisões (Reels e YouTube longo) e qual arquivo ou
   skill responde cada passo. Estrutura = código S, com a gramática das 117 em `ESTRUTURAS/S__.md` (skill `estrutura-video`, modo de escolha, nichos, intenção e nota por etapa), a ficha de
   entrada do cliente em `ESTRUTURAS/FICHA-ENTRADA.md` e os apelidos antigos (M, H, V, E) em `ESTRUTURAS/EQUIVALENCIAS.md`.
+- **Claude no Premiere e After (MCP):** `ferramentas/adobe-mcp/LEIA.md`.
 - **Base do ofício (corte, ritmo, som, cor, técnica, fluxo, entrega, checklist):** `FUNDAMENTOS-EDICAO.md`.
 - **Todos os vídeos estudados (556), com link e pasta:** `INDICE-VIDEOS.md` (gerado por `ferramentas/indice_videos.py`).
 
