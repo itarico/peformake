@@ -48,7 +48,10 @@ env = {"PATH": f"{bindir}:/usr/bin:/bin:/usr/sbin:/sbin"}
 s = d.setdefault("mcpServers", {})
 s["premiere-pro"] = {"type": "stdio", "command": f"{bindir}/premiere-pro-mcp", "args": [],
                      "env": {**env, "PREMIERE_MCP_TELEMETRY": "0"}}
-s["aftereffects"] = {"type": "stdio", "command": f"{bindir}/mcp-aftereffects", "args": [], "env": env}
+import glob
+ae = sorted(glob.glob('/Applications/Adobe After Effects */Adobe After Effects *.app'))
+aenv = {**env, **({'AE_MCP_EXE': ae[-1]} if ae else {})}
+s["aftereffects"] = {"type": "stdio", "command": f"{bindir}/mcp-aftereffects", "args": [], "env": aenv}
 if not os.path.exists(s["aftereffects"]["command"]):
     s["aftereffects"] = {"type": "stdio", "command": f"{bindir}/npx",
                          "args": ["-y", "@kumoproductions/mcp-aftereffects"], "env": env}
