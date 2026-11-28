@@ -39,7 +39,7 @@ echo "== 3/4 MCP do After Effects"
 npm install -g @kumoproductions/mcp-aftereffects
 
 echo "== 4/4 Registrando no Claude Code"
-/usr/bin/python3 -I - "$NODE_DIR/bin" <<'PY'
+/usr/bin/python3 -I - "$(cd "$NODE_DIR/bin" && pwd -P)" <<'PY'
 import json, os, sys
 bindir = sys.argv[1]
 p = os.path.expanduser("~/.claude.json")
@@ -47,7 +47,7 @@ d = json.load(open(p)) if os.path.exists(p) else {}
 env = {"PATH": f"{bindir}:/usr/bin:/bin:/usr/sbin:/sbin"}
 s = d.setdefault("mcpServers", {})
 s["premiere-pro"] = {"type": "stdio", "command": f"{bindir}/premiere-pro-mcp", "args": [],
-                     "env": {**env, "PREMIERE_MCP_TELEMETRY": "0"}}
+                     "env": {**env, "PREMIERE_MCP_TELEMETRY": "0", "PREMIERE_TEMP_DIR": "/tmp/premiere-mcp-bridge"}}
 import glob
 ae = sorted(a for a in glob.glob('/Applications/Adobe After Effects */Adobe After Effects *.app') if 'Render Engine' not in a)
 aenv = {**env, **({'AE_MCP_EXE': ae[-1]} if ae else {})}
